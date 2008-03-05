@@ -1,0 +1,24 @@
+<binding>  
+  <format type="java.lang.String[]" 
+          serializer="org.exoplatform.portal.config.serialize.JibxArraySerialize.serializeStringArray"
+          deserializer="org.exoplatform.portal.config.serialize.JibxArraySerialize.deserializeStringArray"/>
+          
+  <mapping name="content-navigation" class="org.exoplatform.content.model.ContentNavigation">
+    <value name="owner" field="owner"/>
+    <value name="description" field="description" usage="optional"/>
+    <collection name="content-nodes" field="contentNodes" usage="optional"
+                    item-type="org.exoplatform.content.model.ContentNode"/>
+  </mapping>
+  
+  <mapping name="content-node" label="content-node"
+           class="org.exoplatform.content.model.ContentNode">
+    <value name="id" field="id"/>
+    <value name="url" field="url" usage="optional"/>
+    <value name="label" field="label" usage="optional"/>
+    <value name="icon" field="icon" usage="optional"/>
+    <value name="description" field="description" usage="optional"/>
+    <value name="type" field="type" usage="optional"/>
+    <collection field="children" usage="optional" item-type="org.exoplatform.content.model.ContentNode"/>
+  </mapping>
+  
+</binding>

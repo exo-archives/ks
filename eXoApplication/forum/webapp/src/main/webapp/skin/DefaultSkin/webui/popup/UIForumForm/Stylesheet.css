@@ -1,0 +1,56 @@
+.UIForumForm {
+	padding: 10px;
+	background: #f7f7f7;
+}
+
+.UIForumForm .AddForumInCategpry .HorizontalLayout {
+	border: none;
+	padding: 5px;
+}
+
+.UIForumForm .HorizontalLayout .newForum {
+	width: 400px;
+	padding: 15px 0px;
+}
+
+.UIForumForm .HorizontalLayout .newForum textarea {
+	height: 100px;
+}
+
+.UIForumPortlet .UIForm .forumPermission .textareaMultil {
+	height: 46px;
+}
+
+.UIForumForm .HorizontalLayout .moderationOptions  {
+	width: 510px;
+	padding: 20px 0px 60px 0px;
+}
+
+.UIForumForm .HorizontalLayout .moderationOptions textarea {
+	width: 340px;
+	height: 40px;
+}
+
+.UIForumForm .ForumPermission {
+	padding: 5px;
+}
+
+.UIForumForm .ForumPermission input {
+	float: left ;
+}
+
+.UIForumForm .ForumPermission .SelectUserIcon {
+	background: url('../skinIcons/16x16/icons/SmallUserIcon.gif') no-repeat;
+}
+
+.UIForumForm .ForumPermission .SelectMemberIcon {
+	background: url('../skinIcons/16x16/icons/SmallGroupIcon.gif') no-repeat;
+}
+
+.UIForumForm .ForumPermission .AddAnyIcon {
+	background: url('../skinIcons/16x16/icons/SmallMemberIcon.gif') no-repeat;
+}
+
+.UIForumForm .ForumPermission .UIAction {
+	padding: 0px 0px 5px 0px;
+}

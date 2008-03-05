@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<page-set>
+	
+	<page>
+  	<page-id>group::platform/users::collaboration</page-id>
+  	<owner-type>group</owner-type>
+    <owner-id>platform/users</owner-id>
+    <name>collaboration</name>
+    <factory-id>Desktop</factory-id>
+    <access-permissions>*:/platform/users</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    <show-max-window>true</show-max-window>
+    
+    <application>
+      <instance-id>group#platform/users:/forum/ForumPortlet/forum</instance-id>    
+      <title>Forum Portlet</title>
+      <show-info-bar>true</show-info-bar>
+      <show-application-state>true</show-application-state>
+    </application>
+    
+    <application>
+      <instance-id>group#platform/users:/mail/MailPortlet/mail</instance-id>    
+      <title>Mail Portlet</title>
+      <show-info-bar>true</show-info-bar>
+      <show-application-state>true</show-application-state>
+    </application>
+    
+    <application>
+      <instance-id>group#platform/users:/calendar/CalendarPortlet/calendar</instance-id>    
+      <title>Calendar Portlet</title>
+      <show-info-bar>true</show-info-bar>
+      <show-application-state>true</show-application-state>
+    </application>
+    
+    <application>
+      <instance-id>group#platform/users:/contact/ContactPortlet/contact</instance-id>    
+      <title>Contact Portlet</title>
+      <show-info-bar>true</show-info-bar>
+      <show-application-state>true</show-application-state>
+    </application>
+    
+    <application>
+      <instance-id>group#platform/users:/content/RSSReaderPortlet/content</instance-id>    
+      <title>RSS Reader Portlet</title>
+      <show-info-bar>true</show-info-bar>
+      <show-application-state>true</show-application-state>
+    </application>
+          
+  </page>
+  
+	<page>
+  	<page-id>group::platform/users::forum</page-id>
+  	<owner-type>group</owner-type>
+    <owner-id>platform/users</owner-id>
+    <name>forum</name>
+    <access-permissions>*:/platform/users</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    
+    <application>
+      <instance-id>group#platform/users:/forum/ForumPortlet/forum</instance-id>    
+      <title>Forum Portlet</title>
+      <show-info-bar>true</show-info-bar>      
+    </application>  
+  </page>
+  
+  <page>
+ 		<page-id>group::platform/users::mail</page-id>
+  	<owner-type>group</owner-type>
+    <owner-id>platform/users</owner-id>
+    <name>mail</name>
+    <access-permissions>*:/platform/users</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    
+    <application>
+      <instance-id>group#platform/users:/mail/MailPortlet/mail</instance-id>    
+      <title>Mail Portlet</title>
+      <show-info-bar>true</show-info-bar>      
+    </application>  
+  </page>
+  
+  <page>
+  	<page-id>group::platform/users::calendar</page-id>
+  	<owner-type>group</owner-type>
+    <owner-id>platform/users</owner-id>
+    <name>calendar</name>
+    <access-permissions>*:/platform/users</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    
+    <application>
+      <instance-id>group#platform/users:/calendar/CalendarPortlet/calendar</instance-id>    
+      <title>Calendar Portlet</title>
+      <show-info-bar>true</show-info-bar>      
+    </application>  
+  </page>
+  
+  <page>
+  	<page-id>group::platform/users::contact</page-id>
+  	<owner-type>group</owner-type>
+    <owner-id>platform/users</owner-id>
+    <name>contact</name>
+    <access-permissions>*:/platform/users</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    
+    <application>
+      <instance-id>group#platform/users:/contact/ContactPortlet/contact</instance-id>    
+      <title>Contact Portlet</title>
+      <show-info-bar>true</show-info-bar>      
+    </application>  
+  </page>
+  
+  <page>
+  	<page-id>group::platform/users::content</page-id>
+  	<owner-type>group</owner-type>
+    <owner-id>platform/users</owner-id>
+    <name>content</name>
+    <access-permissions>*:/platform/users</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    
+    <application>
+      <instance-id>group#platform/users:/content/RSSReaderPortlet/content</instance-id>    
+      <title>RSS Reader Portlet</title>
+      <show-info-bar>true</show-info-bar>      
+    </application>  
+  </page>
+  
+  <page>
+  	<page-id>group::platform/users::sitemap</page-id>
+  	<owner-type>group</owner-type>
+    <owner-id>platform/users</owner-id>
+    <name>sitemap</name>
+    <access-permissions>*:platform/users</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    
+    <application>
+      <instance-id>group#platform/users:/web/SiteMapPortlet/sitemapportlet</instance-id>
+      <title>Site Map</title>
+      <show-info-bar>false</show-info-bar>      
+    </application>  
+  </page>
+    	  
+</page-set>
+

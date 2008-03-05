@@ -1,0 +1,69 @@
+<%  
+	import org.exoplatform.forum.service.Post ;
+	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.service.UserProfile ;
+%>
+<div class="UIViewTopic">
+  <% uiform.begin() %>  
+	<% Post post = uicomponent.getPostView(); 
+		 String title = post.getSubject();	
+		 String messager = ForumFormatUtils.convertCodeHTML(post.getMessage());
+		 String classIcon = post.getIcon() ;
+		 UserProfile userProfile = uicomponent.getUserProfile();
+		 String postCreatedDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),post.getCreatedDate());	
+		 List attachments = post.getAttachments() ;
+	%>
+	<div class="ViewContainer">
+		<div class="PostViewTitle">
+	  	<div class="PostViewIcon $classIcon">$title</div>
+	  	<div class="PostTime">$postCreatedDate</div>
+	  </div>
+	  		
+	  <div class="PostContent">
+	  	<br/><div>$messager</div><br/>
+	  </div>
+	<% if(attachments != null && attachments.size() > 0) {%>  		
+	  <div class="AttachmentContainer">
+	  	<div class="AttachmentTitle">Attachments:</div>
+	  	<div class="AttachmentContent">
+	  	<% for(attachment in attachments) {
+	  	 	   String fileName = attachment.getName() ;
+	  	 	   long sizeNumber = attachment.getSize() ;
+	  	 	   String size = "" + sizeNumber ;
+	  	%>
+	  		<div class="AttachmentBox">
+					<div class="AttachmentIcon WordIcon"><span/></div>
+					<a class="AttachmentLabel" href="#">$fileName</a>
+					<div style="clear: left;"><span/></div>
+					<div class="Size">Size: ${size}K</div>
+	  		</div>
+	  	<% } %>
+	  		<div style="clear: left;"><span/></div>
+	  	</div>
+	  </div>
+	  <% } %>
+	</div>
+	
+	<div class="UIAction"> 
+	  <table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+	    <% for(action in uicomponent.getActions()) { 
+	    	 String actionLabel = "Close";// _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	       String link = uicomponent.event(action) ;
+	    %>
+			<a href="$link" class="ActionButton LightBlueStyle">
+	  	  	<div class="ButtonLeft">
+	    	  	<div class="ButtonRight">
+	      	  	<div class="ButtonMiddle"> $actionLabel </div>
+	        	</div>
+	      	</div>
+	    	</a>
+	    <%}%>
+	    </td>
+			</tr>
+	 	</table> 
+	</div>
+  <%uiform.end()%>
+</div>
+

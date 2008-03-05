@@ -1,0 +1,35 @@
+<project>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>config</artifactId>
+    <version>trunk</version>
+  </parent> 
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>exo.ks.eXoApplication.content.webapp</artifactId>
+  <version>${org.exoplatform.ks.version}</version>
+  <packaging>war</packaging>
+  <name>eXo Content application</name>
+  <url>http://www.exoplatform.org</url>
+  <description>eXo Content application</description>
+  
+  <dependencies> 
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.portal</artifactId>
+      <version>${org.exoplatform.portal.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.content.service</artifactId>
+      <version>${org.exoplatform.ks.version}</version>
+      <scope>provided</scope>
+    </dependency>    
+  </dependencies>
+
+  <build>
+    <finalName>content</finalName>
+  </build>
+</project>

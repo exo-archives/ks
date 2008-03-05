@@ -1,0 +1,49 @@
+.UIForumLinks {
+	margin: 0px 10px;
+}
+
+.UIForumLinks .HorizontalLayout {
+	width: 360px;
+	border: none;
+	float: right;
+}
+
+.UIForumLinks .HorizontalLayout .UIFormGrid td.FieldLabel {
+	line-height: 20px;
+	white-space:nowrap;
+	padding: 0px 4px;
+}
+
+.UIForumLinks .HorizontalLayout .UIFormGrid .UIActionForum {
+	float: left;
+	margin-left: 4px;
+}
+
+.UIForumLinks .UIForm .HorizontalLayout select {
+	float:left;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.UIForumLinks .categoryLink {
+	line-height: 16px;
+	background: #eaf2fb ;
+}
+
+.UIForumLinks .forumLink {
+	line-height: 16px;
+	white-space:nowrap;
+}
+
+.UIForumLinks .hompage {
+	line-height: 16px;
+	font-weight: bold;
+}
+
+.UIForumPortlet .optionSelected {
+	background-color: #8eb3da ;
+}
+
+.UIForumPortlet .timeZone {
+	line-height: 16px;
+}

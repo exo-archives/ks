@@ -1,0 +1,165 @@
+<div class="UIUserTitleManagerForm">
+	<div class="UserManagementContainer">
+		<div class="UIUserTitleList">
+			<table cellspacing="0" borderspacing="0" id="UIGrid" class="UIGrid">
+  			<thead>
+  				<tr>
+  					<th>User Title</th>
+  					<th>Minimum Posts</th>
+		      	<th>Action</th>
+		    	</tr>
+  			</thead>
+  			<tbody>
+ 					<tr class="EvenRow">
+  					<td class="text">Junior Member</td>
+						<td class="text">3</td>
+						<td>         
+							<div style="margin: 0px auto;" class="ActionContainer">
+  							<div style="margin: auto;" class="OverflowContainer">          
+				        	<a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
+				        	<a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+ 								</div>
+							</div>
+  					</td>
+					</tr>
+  				<tr class="OddRow">
+					  <td class="text">Great Member</td>
+						<td class="text">3</td>
+  					<td>         
+			        <div style="margin: 0px auto;" class="ActionContainer">
+			          <div style="margin: auto;" class="OverflowContainer">          
+			            <a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
+			            <a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+			          </div>
+   						</div>
+  					</td>
+			    </tr>
+ 					<tr class="EvenRow">
+					  <td class="text">Senior Member</td>
+						<td class="text">3</td>
+  					<td>         
+			        <div style="margin: 0px auto;" class="ActionContainer">
+			          <div style="margin: auto;" class="OverflowContainer">          
+			            <a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
+			            <a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+			          </div>
+			        </div>
+			      </td>
+				  </tr>
+  				<tr class="OddRow">
+					  <td class="text">Special Member</td>
+						<td class="text">3</td>
+ 						<td>         
+			        <div style="margin: 0px auto;" class="ActionContainer">
+			          <div style="margin: auto;" class="OverflowContainer">          
+			            <a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
+			            <a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+			          </div>
+			        </div>
+			      </td>
+				  </tr>
+  				<tr class="EvenRow">
+					  <td class="text">Super Member</td>
+						<td class="text">3</td>
+  					<td>         
+			        <div style="margin: 0px auto;" class="ActionContainer">
+			          <div style="margin: auto;" class="OverflowContainer">          
+			            <a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
+			            <a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+			          </div>
+			        </div>
+			      </td>
+				  </tr>
+				</tbody>
+			</table>
+			<div class="UIPageIterator">
+				<div class="PageIteratorContainer">
+ 					<div class="RightPageIteratorBlock">
+  					<a title="Back 10 pages" class="Icon DisableLastTopPageIcon"></a>        
+  					<a title="Previous Page" class="Icon DisableLastPageIcon"><span></span></a>
+						<div class="Number">
+						  <a class="PageSelected" href="#">1</a>
+			        <a href="#">2</a>
+			        <a href="#">3</a>
+						</div>
+		    	  <a title="Next Page" class="Icon NextPageIcon" href="#"></a>
+		    	  <a title="Next 10 pages" class="Icon DisableNextTopPageIcon"><span></span></a>
+		    		<div style="clear: left;"><span><span/></div>
+			  	</div>
+		  		<div class="LeftPageIteratorBlock">
+			  		<div class="TotalPages">Total pages:</div>
+			  		<div class="PagesTotalNumber">3</div>
+			  		<div style="clear: left;"><span></span></div>
+		  		</div>
+	  		</div>
+			  <div style="clear: right;"><span></span></div>
+			</div>
+		</div>
+		<div style="clear: left;"><span></span></div>
+		<div class="AddUserManagement">
+		  <div class="UIFormWithTitle UIMembershipTypeForm">
+				<div class="TitleBar">Add User Title</div>
+	  		<div class="HorizontalLayout">
+	   			<div class="FormContainer">
+	     			<table class="UIFormGrid">
+	            <tbody>
+	             	<tr>
+	  	           	<td class="FieldLabel">User Title:</td>
+	  	            <td class="FieldComponent"><input type="text" id="name" name="name"/></td>
+		            </tr>
+		            <tr>
+	  	           	<td class="FieldLabel">Minimum Posts:</td>
+	  	            <td class="FieldComponent"><input type="text" id="name" name="name"/></td>
+		            </tr>
+	      			</tbody>
+	      		</table>
+      			<div class="UIAction"> 
+					    <table class="ActionContainer" align="center">
+							  <tr>
+								  <td align="center">
+  									<a href="#" class="ActionButton LightBlueStyle">
+				          	  <div class="ButtonLeft">
+				            	  <div class="ButtonRight">
+				              	  <div class="ButtonMiddle"> Save </div>
+				                </div>
+				              </div>
+				            </a>
+				            <a href="#" class="ActionButton LightBlueStyle">
+				          	  <div class="ButtonLeft">
+				            	  <div class="ButtonRight">
+				              	  <div class="ButtonMiddle"> Reset  </div>
+					              </div>
+					            </div>
+					          </a>
+  								</td>
+								</tr>
+ 	            </table>
+						</div>
+			    </div>
+			  </div>
+      </div>
+ 		</div>
+	</div>
+	<div class="UIAction"> 
+    <table class="ActionContainer" align="center">
+		  <tr>
+			  <td align="center">
+  				<a href="#" class="ActionButton LightBlueStyle">
+      	  	<div class="ButtonLeft">
+        	  	<div class="ButtonRight">
+          	  	<div class="ButtonMiddle"> Ok </div>
+            	</div>
+          	</div>
+        	</a>
+        	<a href="#" class="ActionButton LightBlueStyle">
+      	  	<div class="ButtonLeft">
+        	  	<div class="ButtonRight">
+          	  	<div class="ButtonMiddle"> Close  </div>
+              </div>
+            </div>
+          </a>
+  			</td>
+			</tr>
+ 	  </table>
+	</div>
+</div>

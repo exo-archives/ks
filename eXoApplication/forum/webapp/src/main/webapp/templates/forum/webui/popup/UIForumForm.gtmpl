@@ -1,0 +1,106 @@
+<%  
+	import org.exoplatform.forum.ForumSessionUtils ;
+	import org.exoplatform.services.organization.User;
+	import org.exoplatform.web.application.JavascriptManager;
+  def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setMenuTextAreaMutil('UIForumForm');");
+%>
+<div class="UIForumForm">	
+  <% uiform.begin() %>  
+  <div class="UIForm AddForumInCategpry">
+    <div class="HorizontalLayout">
+      <table class="UIFormGrid">
+        <tbody>
+          <tr>
+            <td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</td>
+            <td class="FieldComponent">
+              <% uiform.renderChild(uiform.FIELD_CATEGORY_SELECTBOX) %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="UIFormTabPane">
+    <div class="UITabPane">
+      <div class="TabPaneContent">
+        
+        <div class="WorkingArea">
+           <div class="UIHorizontalTabs">
+             <div class="LeftHorizontalTabs">
+               <div class="RightHorizontalTabs">
+                 <div class="CenterHorizontalTabs">
+                  <div class="TabsContainer">
+                    <%String classCss = "SelectedTab" ; 
+                  	for(tabconten in uiform.getChildren()){ 
+                  		if(tabconten.id.equals("Category")) continue ;
+                  	%>  
+                    <div class="UITab NormalTabStyle">
+                      <div class="$classCss">
+                        <div class="LeftTab">
+                          <div class="RightTab">
+                            <div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                	<% classCss = "NormalTab" ;  
+                		} %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+					<div class="UIForm">
+            <div class="HorizontalLayout">
+              <div class="UITabContentContainer">
+                <% 
+                	String display =  "block";
+                	for(tabconten in uiform.getChildren()){
+                		if(tabconten.id.equals("Category")) continue ;
+                %>
+                <div style="display: $display;" id="UITabContent" class="UITabContent">
+                  <% uiform.renderChild(tabconten.id) ; %>
+                </div>
+                <% display = "none"; %>
+            	<% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>  
+    </div>  
+  </div>
+  <div class="UIAction"> 
+	  <table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+        <% for(action in uicomponent.getActions()) { 
+        		 if(action.indexOf("Values") > 0) continue ; 
+        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
+        		<a href="$link" class="ActionButton LightBlueStyle">
+	      	  	<div class="ButtonLeft">
+	        	  	<div class="ButtonRight">
+	          	  	<div class="ButtonMiddle"> $actionLabel </div>
+	            	</div>
+	          	</div>
+	        	</a>
+          <%}%>
+          </td>
+				</tr>
+	 	  </table> 
+    </div>
+    <div id="ActionsTextAreaMulil" >
+    <% for(childId in uicomponent.getChildIds()) { 
+    	 	String link = uicomponent.event("AddValuesUser",childId);
+    %>
+			<a class="ChildAction" id="Add${childId}" href="$link">$link</a>
+		<% } %>
+		</div>
+  <%uiform.end()%>
+</div>

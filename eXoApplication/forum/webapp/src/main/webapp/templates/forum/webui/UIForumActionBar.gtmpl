@@ -1,0 +1,52 @@
+<%  
+	import org.exoplatform.forum.service.UserProfile ;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	boolean isAdmin = false ;
+	if(userProfile.getUserRole() == 0) isAdmin = true ;
+%>
+<div class="UIForumActionBar">
+	<div class="LeftForumActionBar">
+		<div class="RightForumActionBar">
+			<div class="CenterForumActionBar">
+				<div class="ControlbarCotainer">
+				<%
+				if(isAdmin) { 
+					String[] actions = ["AddCategory","AddForum","ManageModerator"];
+					for(action in actions){  
+				%>
+					<div class="DefaultStyle ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+						<a href="<%=uicomponent.event(action)%>">
+							<div class="LeftOverButton">
+								<div class="RightOverButton">
+									<div class="CenterOverButton">
+										<div class="Icon $action">
+											<%= _ctx.appRes("UIForumActionBar.label." + action); %>
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="SeparatorLine"><span></span></div>
+				<%  } 
+					}
+				%>
+					<div class="DefaultStyle ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+						<a href="<%=uicomponent.event("EditProfile")%>">
+							<div class="LeftOverButton">
+								<div class="RightOverButton">
+									<div class="CenterOverButton">
+										<div class="Icon ForumOption">
+											<%= _ctx.appRes("UIForumActionBar.label.EditProfile"); %>
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div style="clear: left;"><span></span></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

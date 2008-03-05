@@ -1,0 +1,159 @@
+<%
+	import org.exoplatform.forum.service.Category; 
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Topic; 
+	import org.exoplatform.forum.service.Post; 
+	import java.util.GregorianCalendar;
+	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.service.UserProfile ;
+	UserProfile userProfile = uicomponent.getUserProfile();
+%>
+<div class="UICategories" id="$uicomponent.id">
+	<div class="UIForumWorkingWorkspace">
+		<div class="UIForumCategories">
+		<% // Start ForumCategory%>
+		<%
+			List categories = uicomponent.getCategoryList();
+			 for(category in categories) {
+			   if(uicomponent.getIsPrivate(userProfile,category)) {
+					 String title = category.getCategoryName();
+					 String description = category.getDescription()
+			 
+		 %>
+			<div class="UIForumCategory">
+				<div class="ForumToolbar">
+					<div class="LeftBar">
+						<div class="RightBar">
+							<div class="CenterBar">
+								<div class="Title" title="$description"><a href="<%=uicomponent.event("OpenCategory", category.getId())%>">$title</a></div>
+								<div class="CollapseButton" title="Collapse"	onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+								<div style="clear: both;"><span></span></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ContentContainer">
+					<div class="ForumList">
+						<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+							<thead>
+								<tr>
+									<th style="width: 40px;"></th>
+									<th>Forums</th>
+									<th style="width: 30%;">Last posts</th>
+									<th style="width: 50px;">Threads</th>
+									<th style="width: 50px;">Posts</th>
+					 				<th style="width: 170px;">Moderator</th>
+								</tr>
+							</thead>
+							<tbody>
+							<% 
+								List forums = uicomponent.getForumList(category.getId());
+								if(forums.size() == 0) {
+							%>
+								<tr>
+									<td></td>
+									<td class="Tdbox">Not Forum !</td>
+									<td class="Tdbox">Not Theard !</td>
+									<td class="Tdbox">0</td>
+									<td class="Tdbox">0</td>
+									<td></td>
+								</tr>
+							<% }else {%>
+								<%
+									GregorianCalendar calendar = new GregorianCalendar() ;
+									long toDay = calendar.getTimeInMillis();
+									String classRow = "whileRow";
+									int i = 0;
+				 					for(forum in forums) {
+										if(i%2 == 0) classRow = "whileRow";
+										else classRow = "OddRow";
+										++i;
+										String classIconForum = "ForumNormalIcon";
+										String titleIconForum = "Forum Contains No New Post";
+										String forumTitle = forum.getForumName();
+										String forumDescription = forum.getDescription();
+										String topicNewPostIcon = "";
+										String topicNewPostTitle = "";
+										String lastPostBy = "";
+										String dateTime = "";
+										String openLinkLastPost = "#";
+										long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+										
+				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
+				 						if(topicNewPost != null) {
+											topicNewPostIcon = topicNewPost.getIcon();
+											if(topicNewPostIcon.length() <= 0)
+												topicNewPostIcon = "NormalTopicIcon" ;
+											topicNewPostTitle = topicNewPost.getTopicName();
+											lastPostBy = topicNewPost.getLastPostBy();
+											Date postDate = topicNewPost.getLastPostDate();
+											postDate.setTime(postDate.getTime() - setTime);
+											dateTime = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
+											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
+											if((toDay-createdDate)/86400000 < 4){
+												classIconForum = "ForumNewPostIcon";
+												titleIconForum = "Forum Contains New Posts";
+											}
+											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+","+forum.getId()+","+topicNewPost.getId()))
+										}
+										if(forum.getIsLock() == true){
+											classIconForum = "ForumLockedIcon";
+											titleIconForum = "Forum is Locked for Posting";
+										}
+										if(forum.getIsClosed() == true){
+											classIconForum = "ForumLockedIcon";//TODO: Rename class ForumLockedIcon into ForumCloseIcon
+											titleIconForum = "Forum is Closed for Posting";
+										}
+										String topicCount = (String)forum.getTopicCount();
+										String postCount = (String)forum.getPostCount();
+										String [] forumModerators = forum.getModerators();
+										String id = category.getId() + "," + forum.getId();
+										
+								%>
+										<tr class="$classRow">
+											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
+											<td >
+												<a href="<%=uicomponent.event("OpenForumLink", id)%>" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;(5 viewing)</span>
+												<div class="ForumDescription">$forumDescription</div>
+											</td>
+										 	<% if(topicNewPost != null) { %>
+										 	<%  
+										 	 String postTitle = ("Go to first new post in thread ' " + topicNewPostTitle + " '").replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
+										 	%>
+										 	<td >
+										 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
+										 		<a href="$openLinkLastPost" title=$postTitle class="LastPostTitle">$topicNewPostTitle</a>
+												<div style="clear: left;"><span></span></div>
+												<div class="LastPostInfos">by&nbsp;<a style="color: #058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
+											<%} else { %>	
+											<td class="Tdbox" style="height: 40px;">
+													<%=_ctx.appRes("UICategory.label.notTheard"); %>
+											<% } %>
+											</td>
+										 	<td class="Tdbox">$topicCount</td>
+											<td class="Tdbox">$postCount</td>
+											<td >
+											<% for(forumModerator in forumModerators) {%>
+												<div class="ModeratorContent">
+													<div class="EmoticonsIcon BigGrinIcon"><span></span></div>
+													<a href="#" class="Moderator">$forumModerator</a>
+													<div style="clear: left;"><span></span></div>
+												</div>
+											<% } %>
+												<div style="clear: left;"><span></span></div>
+											</td>
+							 			</tr>
+						 		<% } 
+						 		 }
+							%>
+							</tbody>
+						</table>							
+						
+					</div>
+				</div>
+			</div>	
+		<%   } // End if private%>
+		<% }// End for and End ForumCategory%>
+		</div>
+	</div>
+</div>

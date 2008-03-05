@@ -1,0 +1,19 @@
+<%  
+	import org.exoplatform.forum.webui.UITopicPoll ;
+	import org.exoplatform.forum.webui.UITopicDetail ;
+	import org.exoplatform.forum.service.Topic ;
+%>
+<div class="UITopicDetailContainer" id="$uicomponent.id">
+	<% 
+		List children = uicomponent.getChildren() ;
+		Topic topic = uicomponent.getChild(UITopicDetail.class).getTopic() ;
+		if(topic != null) {
+			uicomponent.getChild(UITopicPoll.class).setRendered(topic.getIsPoll()) ;
+		}
+    for(component in children) {
+      if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ;      
+      }
+    }
+	%>
+</div>

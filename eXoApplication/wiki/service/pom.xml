@@ -1,0 +1,36 @@
+<project>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>config</artifactId>
+    <version>trunk</version>
+  </parent> 
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>exo.ks.eXoApplication.wiki.service</artifactId>
+  <version>${org.exoplatform.ks.version}</version>
+  <packaging>jar</packaging>
+  <name>eXo Wiki service</name>
+  <url>http://www.exoplatform.org</url>
+  <description>eXo Wiki service</description>
+  
+  <dependencies> 
+  	<dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.security</artifactId>
+      <version>${org.exoplatform.core.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.resources</artifactId>
+      <version>${org.exoplatform.portal.version}</version>
+    </dependency>
+    
+  	<dependency>
+      <groupId>org.exoplatform.jcr</groupId>
+      <artifactId>exo.jcr.component.ext</artifactId>
+      <version>${org.exoplatform.jcr.version}</version>      
+    </dependency> 
+    
+  </dependencies>
+</project>

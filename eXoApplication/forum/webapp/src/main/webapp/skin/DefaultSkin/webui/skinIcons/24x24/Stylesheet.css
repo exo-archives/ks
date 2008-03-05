@@ -1,0 +1,72 @@
+.UIForumPortlet .Icon24x24 {
+	width: 24px;
+	height: 24px;
+}
+
+.UIForumPortlet .ForumNewPostIcon {
+	background: url('icons/ForumNewPostIcon.gif') no-repeat;
+}
+
+.UIForumPortlet .ForumLockedIcon {
+	background: url('icons/ForumCloseIcon.gif') no-repeat ;
+}
+
+.UIForumPortlet .ForumCloseIcon {
+	background: url('icons/ForumCloseIcon.gif') no-repeat ;
+}
+
+.UIForumPortlet .ForumNormalIcon {
+	background: url('icons/ForumNormalIcon.gif') no-repeat ;
+}
+
+
+.UIForumPortlet .HotThreadNewPost {
+	background: url('icons/HotThreadNewPost.gif') no-repeat ;
+}
+
+.UIForumPortlet .HotThreadNoNewPost {
+	background: url('icons/HotThreadNoNewPost.gif') no-repeat ;
+}
+
+.UIForumPortlet .ThreadIsClose {
+	background: url('icons/ThreadIsClose.gif') no-repeat ;
+}
+
+.UIForumPortlet .ThreadNewPost {
+	background: url('icons/ThreadNewPost.gif') no-repeat ;
+}
+
+.UIForumPortlet .ThreadNoNewPost {
+	background: url('icons/ThreadNoNewPost.gif') no-repeat ;
+}
+
+.UIForumPortlet .HotThreadNewLockPost {
+	background: url('icons/HotThreadNewLockPost.gif') no-repeat ;
+}
+/*******************************  MenuCategoryIcon    **************************************/
+
+.UIForumPortlet .AddForumIcon {
+	background: url('icons/AddNewForum.gif') no-repeat ;
+}
+
+.UIForumPortlet .AddForum {
+	background: url('icons/AddNewForum.gif') no-repeat ;
+}
+
+.UIForumPortlet .ForumOption {
+	background: url('icons/ForumOption.gif') no-repeat ;
+}
+
+/*===========================thread bar menu icon===========================*/
+
+.UIForumPortlet .DeleteThisForumIcon {
+	background: url('icons/DeleteThisForumIcon.gif') no-repeat ;
+}
+
+.UIForumPortlet .MoveThreadsIcon {
+	background: url('icons/MoveThreadsIcon.gif') no-repeat ;
+}
+
+.UIForumPortlet .DeleteThreadsIcon {
+	background: url('icons/DeleteThreadsIcon.gif') no-repeat ;
+}

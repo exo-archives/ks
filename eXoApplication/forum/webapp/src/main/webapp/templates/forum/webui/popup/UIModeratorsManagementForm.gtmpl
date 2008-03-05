@@ -1,0 +1,65 @@
+<%  
+	import org.exoplatform.forum.service.UserProfile;
+%>
+<div class="UIModeratorsManagementForm">
+	<% uiform.begin() %>
+  <div class="ModeratorsManagementContainer">
+		<div class="ManagementContent">	  	
+		 
+			<div class="ModeratorsGroup">
+			  <table cellspacing="0" borderspacing="0" id="PermissionInfo" class="UIGrid">
+				  <thead>
+				  	<tr>
+				      <th width="30%">User Name</th>
+				      <th width="20%">User Group</th>
+				      <th width="20%">User Role</th>
+				      <th>Action</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  <% 
+				  	String classRowTable = "EvenRow";
+				  	List listUser = uiform.getListProFileUser() ;  
+				  	for(user in listUser) {
+				  %>
+			      <tr class="$classRowTable">
+						  <td class="text"><%=user.getUserId()%></td>
+							<td class="text"><%=user.getUserTitle()%></td>
+							<td class="text"><%=user.getUserRole()%></td>
+						  <td>         
+				        <div style="margin: 0px auto;" class="ActionContainer">
+				          <div style="margin: auto;" class="OverflowContainer">          
+					           <a title="Edit Profile" href="<%=uicomponent.event("EditProfile",user.getUserId());%>" class="EditIcon"><span/></a>		          
+					           <a title="View Profile" href="<%=uicomponent.event("ViewProfile",user.getUserId());%>" class="ViewProfileIcon"><span/></a>		          
+				          </div>
+				        </div>
+				      </td>
+				    </tr>
+				   <% 
+				   if(classRowTable.equals("EvenRow")) classRowTable = "OddRow";
+				   else classRowTable = "EvenRow"; 
+				   	} 
+				   %>
+				  </tbody>
+				</table> <!--End UIGrid-->              
+			</div>
+			 
+		</div>
+	</div>
+  <div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+					<a href="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></div>
+							</div>
+						</div>
+					</a>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
+	<%uiform.end()%>
+</div>

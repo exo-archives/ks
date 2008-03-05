@@ -1,0 +1,24 @@
+<%
+	import org.exoplatform.forum.webui.popup.UIPopupAction ;
+	import org.exoplatform.web.application.JavascriptManager;
+  def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.importJavascript('eXo.forum.UIForumPortlet', '/forum/javascript/');
+%>
+
+<div class="UIForumPortlet" id="$uicomponent.id">
+	<%
+		List children = uicomponent.getChildren() ;
+    for(component in children) {
+      if(component.isRendered()){
+				if(component.getId().equals("UIForumLinks")) {
+					if(uicomponent.getIsJumpRendered())
+						uicomponent.renderChild(component.getClass()) ;
+				} else {
+					uicomponent.renderChild(component.getClass()) ; 
+				}
+      }
+    }
+	%>
+	<%uicomponent.renderPopupMessages();%>
+</div>

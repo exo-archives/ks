@@ -1,0 +1,34 @@
+<%  
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumSessionUtils ;
+	UserProfile userProfile = uicomponent.getUserProfile();
+	boolean isBan = userProfile.getIsBanned() ;
+	boolean isShow = ForumSessionUtils.isAnonim();
+	String not = "";
+	if(isBan || isShow) {
+		not = "not";
+	}
+%>
+<div id="$uicomponent.id" class="UIPostRules">
+	<div class="ForumCategory">
+	  <div class="ForumToolbar">
+		  <div class="LeftBar">
+		  	<div class="RightBar">
+		  		<div class="CenterBar">
+		  			<div class="Title">Forum Rules</div>
+			  		<div class="CollapseButton" title="Collapse"  onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+						<div style="clear: both;"><span></span></div>
+		  		</div>
+		  	</div>
+		  </div>
+	  </div>
+	  <div class="ContentContainer">
+		  <div class="ForumList">
+		  	<div class="text">You <span class="BoldTitle">can $not</span> post new thread</div>
+		  	<div class="text">You <span class="BoldTitle">can $not</span> post replies</div>
+		  	<div class="text">You <span class="BoldTitle">can $not</span> post attachments</div>
+		  	<div class="text">You <span class="BoldTitle">can $not</span> edit your posts</div>
+	  	</div>
+	  </div>
+  </div>
+</div>

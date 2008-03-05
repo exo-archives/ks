@@ -1,0 +1,31 @@
+<div class="UIBreadcumbs" id="$uicomponent.id">
+	<div class="LeftBreadcumbs">
+		<div class="RightBreadcumbs"> 
+			<div class="CenterBreadcumbs">
+				<div class="BreadcumbsInfoBar">
+					<div class="OpenIcon"><span></span></div>
+				<% int t = 1 ;
+					for(namePath in uicomponent.getBreadcumbs()) {
+						String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
+						if(t < uicomponent.getMaxPath()) {
+				%>
+					<a href="$link" class="Selected">$namePath</a>
+					<div class="RightArrowIcon"><span></span></div>
+				 <% } else {%>
+					<div class="Selected">$namePath</div>
+				 <% } %>
+			  <% t = t + 1 ;} %>
+			  	<div style="clear: left"><span></span></div>
+				</div>
+				<div class="RSSBar">
+					<a href="<%=uicomponent.event("Rss");%>" >
+					<div class="SeparatorLine">
+						<div class="RSSIcon" >RSS</div>	
+					</div>	
+					</a>						
+				</div>
+				<div style="clear: both"><span></span></div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,69 @@
+<div class="UIMergeTopicForm">
+	<form method="post" action="" class="UIForm">
+		<div class="HorizontalLayout">
+			<div class="UIFormInputSet">
+				<table class="UIFormGrid">
+					<tbody>
+						<tr>
+							<td class="FieldLabel">Destination Thread:</td>
+							<td class="FieldComponent">
+								<select name="user.gender" class="selectbox">
+									<option value="" selected="selected">eXo VN Vacations</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel">Merged Thread Title:</td>
+							<td class="FieldComponent"><input type="text" id="" name=""/></td>
+						</tr>
+						<tr>
+							<td class="FieldLabel">Thread Summary:</td>
+							<td class="FieldComponent"><input type="text" id="" name=""/></td>
+						</tr>
+						<tr>
+							<td class="FieldLabel">Redirect Expires in:</td>
+							<td class="FieldComponent"><input type="text" id="" name=""/></td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="UIFormGrid">
+					<tbody>
+						<tr>
+							<td class="FieldLabel" style="width: 147px;">Redirect Expires in:</td>
+							<td class="FieldComponent" style="width: 88px;"><input style="width: 80px;" type="text" id="" name=""/></td>
+							<td class="FieldComponent">
+								<select style="width: 100px;" name="user.gender" class="selectbox">
+									<option value="" selected="selected">Month</option>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div class="UIAction"> 
+	    <table class="ActionContainer" align="center">
+			  <tr>
+				  <td align="center">
+  					<a href="#" class="ActionButton LightBlueStyle">
+          	  <div class="ButtonLeft">
+            	  <div class="ButtonRight">
+              	  <div class="ButtonMiddle"> Merge Threads </div>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="ActionButton LightBlueStyle">
+          	  <div class="ButtonLeft">
+            	  <div class="ButtonRight">
+              	  <div class="ButtonMiddle"> Cancel  </div>
+	              </div>
+	            </div>
+	          </a>
+  				</td>
+				</tr>
+ 	    </table>
+		</div>
+		
+	</form>
+</div>

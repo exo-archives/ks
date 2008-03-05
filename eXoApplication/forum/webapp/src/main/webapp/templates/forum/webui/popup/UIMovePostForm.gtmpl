@@ -1,0 +1,91 @@
+<%  
+	import org.exoplatform.forum.service.Category ;
+	import org.exoplatform.forum.service.Forum ;
+	import org.exoplatform.forum.webui.popup.UIMoveTopicForm ;
+%>
+
+<div class="UIMovePostForm UIMoveTopicForm">
+  <% uiform.begin() %>
+	<div class="TitleMoveThreads">Choose a Destination Forum:</div>
+	<div class="UITree ScrollArea">
+	  <div class="TreeContainer ParentNode">
+		<% 
+			List categories = uicomponent.getCategories(); 
+			for(category in categories) {
+				String display = "display:none;" ;
+				String iconClass = "SmallGrayMinus" ;
+				boolean selectForum = false ;
+		  	String categoryName = category.getCategoryName() ;
+		  	selectForum = uicomponent.getSelectForum(category.getId()) ;
+		  	if(selectForum){ 
+	  			display = "display:block;" ;
+	  			iconClass = "SmallGrayPlus" ;
+	  		}
+		%>
+	    <div class="Node $iconClass">
+	     	<div class="Icon ForumIcon"><span></span></div>  
+	     	<div class="NodeLabel" onclick = "eXo.forum.UIForumPortlet.showTreeNode(this);">
+	     		<div class="NodeSelected"><a>$categoryName</a></div> 
+	      </div> 		  
+	      <div style="clear: left;"><span></span></div>
+	      <div class="ChildNodeContainer ParentNode" style="$display">
+	      <% 
+	      	List forums =  uicomponent.getForums(category.getId());
+	      	for(forum in forums) {
+	      		String forumName = forum.getForumName() ;
+	      		iconClass = "SmallGrayMinus" ;
+	      		display = "display:none;" ;
+	      		selectForum = uicomponent.getSelectForum(forum.getId()) ;
+	      		if(selectForum){ 
+	      			display = "display:block;" ;
+	      			iconClass = "SmallGrayPlus" ;
+	      		}
+	      %>
+				  <div class="Node $iconClass">
+			      <div class="Icon ThreadsIcon"><span></span></div>
+			      <div class="NodeLabel"  onclick = "eXo.forum.UIForumPortlet.showTreeNode(this);"> 
+				      <div><a>$forumName</a></div>
+				    </div>
+				    <div style="clear: left;"><span></span></div>
+				    <div class="ChildNodeContainer" style="$display">
+					    <%  
+					    	List topics = uicomponent.getTopics(category.getId(), forum.getId()) ;
+					    	for(topic in topics) {
+			      			String link = uicomponent.event("Save", topic.getPath()) ;
+						    	String topicName = topic.getTopicName();
+					    %>
+					    	<div class="Node">
+						      <div class="Icon PostsIcon"><span></span></div>
+						      <div class="NodeLabel"> 
+							      <div><a href="$link">$topicName</a></div>
+							    </div>
+					    	</div>
+						   <% } %>
+						</div>
+			    </div>
+		    <% } %>		
+	      </div>
+		  </div>
+		<% } %>	
+		 </div>  
+	</div>
+	<div class="UIAction"> 
+    <table class="ActionContainer" align="center">
+		  <tr>
+			  <td align="center">
+	      <% String link = uicomponent.event("Cancel") ; %>
+	    		<a href="$link" class="ActionButton LightBlueStyle">
+		  	  	<div class="ButtonLeft">
+		    	  	<div class="ButtonRight">
+		      	  	<div class="ButtonMiddle">Cancel
+		      	  		<%//=_ctx.appRes(uicomponent.getName() + ".action.Cancel")%>
+		      	  	</div>
+		        	</div>
+		      	</div>
+	    		</a>
+      	</td>
+			</tr>
+ 	  </table> 
+	</div>
+	<%uiform.end()%>
+</div>

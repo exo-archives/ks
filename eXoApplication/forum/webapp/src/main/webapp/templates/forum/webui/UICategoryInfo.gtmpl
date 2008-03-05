@@ -1,0 +1,40 @@
+<div class="ForumInfos">
+  <div class="ForumToolbar">
+	  <div class="LeftBar">
+	  	<div class="RightBar">
+	  		<div class="CenterBar">
+	  			<div class="Title">What's Going on?</div>
+	  			<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+					<div style="clear: both;"><span></span></div>
+	  		</div>
+	  	</div>
+	  </div>
+  </div>
+  <div class="ContentContainer">
+	  <div class="ForumStatsList">
+	  	<table cellspacing="0" borderspacing="0" id="UIListUsers" class="UIGrid">
+		    <tbody>
+	  			<tr>
+						<td style="width: 40px; border-right: 1px solid #ffffff; border-top: 1px solid #c7c7c7;" ><div class="UserIcon" ><span></span></div></td>
+					 	<td class="text" style="border-top: 1px solid #c7c7c7;">Current Active Users: 234</td>
+	   			</tr>
+					<tr class="OddRow">
+						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
+					 	<td >
+							<div class="text">Most Users ever online was : 755 , 07/15/2007 at 10:20 am</div>
+							<div class="text" style="padding-bottom: 5px;">Online Users (15): <a href="#"> benjamin.mestrallet </a>,<a href="#"> brice.revenant </a> ,<a href="#"> dung.nguyen </a> ,<a href="#"> jeremi </a> ,<a href="#"> hieu.luong </a> ,<a href="#"> tuan.nguyen </a>,<a href="#"> tuan.pham </a>   </div>
+						</td>
+	   			</tr>
+				  <tr>
+						<td style="width: 40px; border-right: 1px solid #ffffff;"><div class="ChartIcon" ><span></span></div></td>
+					 	<td class="text">eXo Forums Statistics</td>
+	   			</tr>
+				  <tr class="OddRow">
+						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
+					 	<td class="text">Total Threads: 31,553, Total Posts: 181,092, Total Members: 468 - Welcome to our newest member:<a href="#"> jeremi </a>  -  Today's birthdays: <a href="#">nguyet.nguyen</a></td>
+	   			</tr>
+	      </tbody>
+		  </table>							
+	  </div>
+  </div>
+</div>

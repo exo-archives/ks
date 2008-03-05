@@ -1,0 +1,45 @@
+<%  
+	import org.exoplatform.forum.service.Category ;
+	import org.exoplatform.forum.service.Forum ;
+	import org.exoplatform.forum.webui.popup.UIMoveTopicForm ;
+%>
+
+<div class="UIMoveForumForm UIMoveTopicForm">
+  <% uiform.begin() %>
+	<div class="TitleMoveThreads"><%= _ctx.appRes("UIMoveForumForm.title.chooseCategory"); %></div>
+	<div class="UITree">
+	  <div class="TreeContainer">
+		<% 
+			List categories = uicomponent.getCategories(); 
+			for(category in categories) {
+		  	String categoryName = category.getCategoryName() ;
+		  	String link = uicomponent.event("Save", category.getPath());
+		%>
+	    <div class="Node">
+	     	<div class="Icon ForumIcon"><span></span></div>
+	     	<div class="NodeLabel">
+	     		<div class="NodeSelected"><a href="$link">$categoryName</a></div>
+	      </div>
+	      <div style="clear: left;"><span></span></div>
+		  </div>
+		<% } %>
+		 </div>
+	</div>
+	
+  <div class="UIAction">
+    <table class="ActionContainer" align="center">
+		  <tr>
+			  <td align="center">
+	    		<a href="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+		  	  	<div class="ButtonLeft">
+		    	  	<div class="ButtonRight">
+		      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></div>
+		        	</div>
+		      	</div>
+	    		</a>
+      	</td>
+			</tr>
+ 	  </table>
+	</div>
+	<%uiform.end()%>
+</div>

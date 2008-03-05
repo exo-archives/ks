@@ -1,0 +1,64 @@
+.UIModeratorsManagementForm {
+	padding: 10px;
+	background:#ffffff;
+}
+
+.UIModeratorsManagementForm .ModeratorsManagementContainer {
+	border: 1px solid #b7b7b7;
+}
+
+.UIModeratorsManagementForm .ModeratorsManagementContainer .ManagementContent {
+	background: #f3f3f3;
+	padding: 10px;
+}
+
+.UIModeratorsManagementForm .ModeratorsManagement .HorizontalLayout {
+	border: none;
+	padding: 5px;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup {
+	padding: 5px;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .UIFormWithTitle {
+	margin: 10px auto 0px auto;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .HorizontalLayout .UIFormInputSet {
+	padding: 0px;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .UIFormInputSet .FormContainer {
+	border: none;
+	padding: 0px;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .UIGrid .OverflowContainer {
+	width: 50px;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .UIFormGrid td.FieldLabel {
+	width: 100px;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .UIFormGrid input.radio {
+	margin: 0px;	
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .AddIcon16x16 {
+	width: 16px;	height: 16px;
+	margin: 0px 2px;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .SelectUserIcon {
+	background: url('../skinIcons/16x16/icons/SmallUserIcon.gif') no-repeat;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .SelectMemberIcon {
+	background: url('../skinIcons/16x16/icons/SmallGroupIcon.gif') no-repeat;
+}
+
+.UIModeratorsManagementForm .ModeratorsGroup .AddAnyIcon {
+	background: url('../skinIcons/16x16/icons/SmallMemberIcon.gif') no-repeat;
+}

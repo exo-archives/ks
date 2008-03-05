@@ -1,0 +1,42 @@
+<project>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>config</artifactId>
+    <version>trunk</version>
+  </parent> 
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
+  <version>${org.exoplatform.ks.version}</version>
+  <packaging>war</packaging>
+  <name>eXo FAQ application</name>
+  <url>http://www.exoplatform.org</url>
+  <description>eXo FAQ application</description>
+  
+  <dependencies> 
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.portal</artifactId>
+      <version>${org.exoplatform.portal.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.exoplatform.jcr</groupId>
+      <artifactId>exo.jcr.component.ext</artifactId>
+      <version>${org.exoplatform.jcr.version}</version>      
+      <scope>provided</scope>
+    </dependency>
+    
+    <!--dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
+      <version>${org.exoplatform.ks.version}</version>
+      <scope>provided</scope>
+    </dependency-->  
+  </dependencies>
+
+  <build>
+    <finalName>faq</finalName>
+  </build>
+</project>

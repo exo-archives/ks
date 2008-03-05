@@ -1,0 +1,45 @@
+<project>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>config</artifactId>
+    <version>trunk</version>
+  </parent> 
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>exo.ks.web.portal</artifactId>
+  <packaging>war</packaging> 
+  <version>${org.exoplatform.ks.version}</version>
+  <name>eXo KS Portal web module</name>
+  <build>    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <webResources>            
+            <resource>
+              <directory>${exo.projects.directory.src}/portal/branches/2.0/web/portal/src/main/webapp</directory>
+              <excludes>              	
+              	<exclude>index.jsp</exclude>
+                <exclude>WEB-INF/web.xml</exclude>                     
+                <exclude>WEB-INF/conf/</exclude>
+								<exclude>WEB-INF/classes/locale/navigation/</exclude>
+                <exclude>templates/groovy/webui/component/UIHomePagePortlet.gtmpl</exclude>
+                <exclude>templates/skin/webui/component/UIHomePagePortlet/</exclude>                     												
+              </excludes>
+            </resource>
+            <resource>
+              <directory>${exo.projects.directory.src}/portal/branches/2.0/web/portal/target/exo.portal.web.portal-${org.exoplatform.portal.version}</directory>
+              <includes>
+                <include>WEB-INF/classes/locale/portal/</include>
+								<include>WEB-INF/conf/uiconf/</include>
+								<include>WEB-INF/conf/script/</include>
+              </includes>
+            </resource>            
+          </webResources>
+         </configuration>
+       </plugin>
+    </plugins>
+  </build>
+</project>
