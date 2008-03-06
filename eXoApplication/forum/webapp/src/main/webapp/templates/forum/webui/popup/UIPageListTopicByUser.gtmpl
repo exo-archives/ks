@@ -1,0 +1,156 @@
+<% 
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Topic; 
+	import org.exoplatform.forum.service.Post;
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.service.JCRPageList ;
+	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.ForumFormatUtils ; 
+	import org.exoplatform.forum.ForumSessionUtils; 
+	import java.util.GregorianCalendar;
+	import java.util.Date ; 
+  UserProfile userProfile = uicomponent.getUserProfile() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+  List topics = uicomponent.getTopicsByUser() ;
+%>
+<div class="$uicomponent.id" id=="$uicomponent.id">
+	<div class="UITopicContainer">
+   	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th style="width: 40px;"></th>
+								<th style="width: 40px;"></th>
+								<th>Thread/Thread starter</th>
+								<th style="width: 96px;">Rating</th>
+								<th style="width: 40px;">Tag</th>
+								<th style="width: 130px;"><div class="DownArrow1Icon">Last posts</div></th>
+								<th style="width: 50px;">Replies</th>
+								<th style="width: 50px;">Views</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+								String classRow = "whileRow";
+								int i = 0;
+								 for(topic in topics){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String topicId = topic.getId();
+									String topicPath = topic.getPath() ;
+									JCRPageList pageList = uicomponent.getPageListPost(topicPath) ;
+									long max_page = pageList.getAvailablePage() ;
+									String iconClassTopic = topic.getIcon();
+									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
+									String topicTitle = topic.getTopicName();
+									String topicBy = topic.getOwner();
+									String postNewBy = topic.getLastPostBy() ;
+									Date postDate = topic.getLastPostDate() ;
+									postDate.setTime(postDate.getTime() + setTime);
+									String lastPostDate = ForumFormatUtils.getFormatDate(formatDate,postDate);								
+									String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
+									if(titlePost.length() > 100) {
+										titlePost = titlePost.substring(0, 99) + "...";
+									}
+									String postCount = String.valueOf(topic.getPostCount());
+									String postView = String.valueOf(topic.getViewCount());
+									String titleTopicStatus = "Hot thread with new post" ;
+									String iconTopicStatus = "HotThreadNewPost" ;
+									if(topic.getIsLock()) {
+										iconTopicStatus = "HotThreadNewLockPost" ;
+										titleTopicStatus = "Hot thread with new post lock" ;
+									}
+									String number = "1";
+									boolean isReadTopic = ForumFormatUtils.isReadTopic(userProfile.getReadTopic(), topicId);
+									String title = "";
+									if(isReadTopic) {
+										title = "TitleNorman";
+									} else {
+										title = "TitleBold";
+									}
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
+									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
+									<td >
+										<div >
+										<% if(topic.getIsSticky()) {%>
+											<span class="Text StickyIcon">Sticky:</span>
+										<% } %>
+											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
+											<% if(max_page > 1) { %>
+											<span>(</span>	
+											<%	int t = 1;
+												while(t <= max_page) {
+												if(t <= 5) { 
+													number = String.valueOf(t) ;
+											%>
+											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">$number</a>
+											<% }
+											t = t + 1 ;
+											}
+											if(max_page > 5) { 
+												number = String.valueOf(max_page) ;
+											%>
+											<span>... <a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">Last page</a> )</span>
+											<%} else {%>
+											<span>)</span>
+											<%} 
+											} %>
+										</div>
+										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
+									</td>
+									<td class="Tdbox">
+										<div class="RatingInfoContainer">
+										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
+											 String SumVote = classNames[5] ;
+										%>
+					 						<div class="AvgRatingImages" title="Thread Rating: $SumVote votes, 5 average">
+					 					<%	
+											for(className in classNames) {
+												if(className.equals("star")) className = "Voted" ;
+												if(className.equals("notStar")) className = "Unvoted" ;
+												if(className.equals("halfStar")) className = "HalfVoted" ;
+												if(className.equals(classNames[5])) break ;
+										%>
+								 				<div class="VoteIcon $className"><span/></div>
+										 <% } %>
+							 					<div style="clear: left;"><span></span></div>
+				 							</div>
+					 					</div>
+									</td>
+									<td class="Tdbox">
+									<% List tags = uicomponent.getTagsByTopic(topic.getTagId()); 
+										for(tag in tags) {
+											String color = tag.getColor() ;
+											String description = tag.getDescription() ;
+									%>
+										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$description"><span></span></div></a>
+									<% } %>
+									</td>
+								 	<td >
+								 		<div class="DateTime">$lastPostDate</div>
+								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
+										<div class="PostInfos LastPostInfos">by <a href="#" class="PostBy">$postNewBy</a></div>
+										<div style="clear: right;"><span></span></div>
+									</td>
+								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
+									<td class="Tdbox" align="center">$postView</td>
+					 			</tr>
+						 	<% i = i + 1;} %>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

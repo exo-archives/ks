@@ -376,6 +376,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	    uiForm.removeChildById("ForumUserOption") ;
 	    uiForm.removeChildById("ForumUserBan") ;
 	    uiForm.removeChild(UIPageListTopicByUser.class) ;
+	    uiForm.removeChild(UIPageListPostByUser.class) ;
 			uiForm.initUserProfileForm();
 			uiForm.isEdit = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;

@@ -1,0 +1,65 @@
+<% 
+	import org.exoplatform.forum.webui.UIForumPageIterator ;
+	import org.exoplatform.forum.service.Post ; 
+	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.service.UserProfile ;
+	List posts = uicomponent.getPostsByUser() ;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+%>
+<div class="UIPageListPostByUser" id="uicomponent.id">
+	<div class="UITopicContainer">
+   	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>terterter
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th style="width: 40px;"></th>
+								<th>Post name</th>
+								<th style="width: 120px;">Created Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+								String classRow = "whileRow";
+								int i = 0;
+								 for(post in posts){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String postTitle = post.getSubject() ;
+									String message = ForumFormatUtils.getStringCleanHtmlCode(post.getMessage()) ;
+									String titlePost ;
+									if(message.length() > 100) titlePost = message.substring(0, 100) + "..." ;
+									else titlePost = message ;
+									String iconPost = post.getIcon() ;
+									Date postDate = post.getCreatedDate() ;
+									postDate.setTime(postDate.getTime() + setTime) ;
+									String createdDate = ForumFormatUtils.getFormatDate(formatDate,postDate) ;
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
+									<td >
+										<div >
+											<a href="#" title="$titlePost" class="title">$postTitle</a>
+										</div>
+									</td>
+									<td class="Tdbox">
+										<div class="RatingInfoContainer">$createdDate</div>
+									</td>
+					 			</tr>
+						 	<% i = i + 1;} %>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
