@@ -2,14 +2,21 @@
 <page-set>
 	
 	<page>
-  	<page-id>group::platform/users::collaboration</page-id>
+  	<page-id>group::platform/users::knowledge</page-id>
   	<owner-type>group</owner-type>
     <owner-id>platform/users</owner-id>
-    <name>collaboration</name>
+    <name>knowledge</name>
     <factory-id>Desktop</factory-id>
     <access-permissions>*:/platform/users</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
     <show-max-window>true</show-max-window>
+    
+    <application>
+      <instance-id>group#platform/users:/content/RSSReaderPortlet/content</instance-id>    
+      <title>RSS Reader Portlet</title>
+      <show-info-bar>true</show-info-bar>
+      <show-application-state>true</show-application-state>
+    </application>
     
     <application>
       <instance-id>group#platform/users:/forum/ForumPortlet/forum</instance-id>    
@@ -19,33 +26,41 @@
     </application>
     
     <application>
-      <instance-id>group#platform/users:/mail/MailPortlet/mail</instance-id>    
-      <title>Mail Portlet</title>
+      <instance-id>group#platform/users:/blog/BlogPortlet/blog</instance-id>    
+      <title>Blog Portlet</title>
       <show-info-bar>true</show-info-bar>
       <show-application-state>true</show-application-state>
     </application>
     
     <application>
-      <instance-id>group#platform/users:/calendar/CalendarPortlet/calendar</instance-id>    
-      <title>Calendar Portlet</title>
+      <instance-id>group#platform/users:/wiki/WikiPortlet/wiki</instance-id>    
+      <title>Wiki Portlet</title>
       <show-info-bar>true</show-info-bar>
       <show-application-state>true</show-application-state>
     </application>
     
     <application>
-      <instance-id>group#platform/users:/contact/ContactPortlet/contact</instance-id>    
-      <title>Contact Portlet</title>
+      <instance-id>group#platform/users:/faq/FAQPortlet/faq</instance-id>    
+      <title>FAQ Portlet</title>
       <show-info-bar>true</show-info-bar>
       <show-application-state>true</show-application-state>
     </application>
+              
+  </page>
+  
+  <page>
+  	<page-id>group::platform/users::content</page-id>
+  	<owner-type>group</owner-type>
+    <owner-id>platform/users</owner-id>
+    <name>content</name>
+    <access-permissions>*:/platform/users</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
     
     <application>
       <instance-id>group#platform/users:/content/RSSReaderPortlet/content</instance-id>    
       <title>RSS Reader Portlet</title>
-      <show-info-bar>true</show-info-bar>
-      <show-application-state>true</show-application-state>
-    </application>
-          
+      <show-info-bar>true</show-info-bar>      
+    </application>  
   </page>
   
 	<page>
@@ -64,64 +79,49 @@
   </page>
   
   <page>
- 		<page-id>group::platform/users::mail</page-id>
+ 		<page-id>group::platform/users::blog</page-id>
   	<owner-type>group</owner-type>
     <owner-id>platform/users</owner-id>
-    <name>mail</name>
+    <name>blog</name>
     <access-permissions>*:/platform/users</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
     
     <application>
-      <instance-id>group#platform/users:/mail/MailPortlet/mail</instance-id>    
-      <title>Mail Portlet</title>
+      <instance-id>group#platform/users:/blog/BlogPortlet/blog</instance-id>    
+      <title>Blog Portlet</title>
       <show-info-bar>true</show-info-bar>      
     </application>  
   </page>
   
   <page>
-  	<page-id>group::platform/users::calendar</page-id>
+  	<page-id>group::platform/users::wiki</page-id>
   	<owner-type>group</owner-type>
     <owner-id>platform/users</owner-id>
-    <name>calendar</name>
+    <name>wiki</name>
     <access-permissions>*:/platform/users</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
     
     <application>
-      <instance-id>group#platform/users:/calendar/CalendarPortlet/calendar</instance-id>    
-      <title>Calendar Portlet</title>
+      <instance-id>group#platform/users:/wiki/WikiPortlet/wiki</instance-id>    
+      <title>Wiki Portlet</title>
       <show-info-bar>true</show-info-bar>      
     </application>  
   </page>
   
   <page>
-  	<page-id>group::platform/users::contact</page-id>
+  	<page-id>group::platform/users::faq</page-id>
   	<owner-type>group</owner-type>
     <owner-id>platform/users</owner-id>
-    <name>contact</name>
+    <name>faq</name>
     <access-permissions>*:/platform/users</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
     
     <application>
-      <instance-id>group#platform/users:/contact/ContactPortlet/contact</instance-id>    
-      <title>Contact Portlet</title>
+      <instance-id>group#platform/users:/faq/FAQPortlet/faq</instance-id>    
+      <title>FAQ Portlet</title>
       <show-info-bar>true</show-info-bar>      
     </application>  
-  </page>
-  
-  <page>
-  	<page-id>group::platform/users::content</page-id>
-  	<owner-type>group</owner-type>
-    <owner-id>platform/users</owner-id>
-    <name>content</name>
-    <access-permissions>*:/platform/users</access-permissions>
-    <edit-permission>*:/platform/administrators</edit-permission>
-    
-    <application>
-      <instance-id>group#platform/users:/content/RSSReaderPortlet/content</instance-id>    
-      <title>RSS Reader Portlet</title>
-      <show-info-bar>true</show-info-bar>      
-    </application>  
-  </page>
+  </page> 
   
   <page>
   	<page-id>group::platform/users::sitemap</page-id>

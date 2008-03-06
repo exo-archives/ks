@@ -7,44 +7,44 @@
   
   <page-nodes>  	
 	  <node>
-	    <uri>collaboration</uri>
-	    <name>collaboration</name>
-	    <label>#{platform.users.collaboration}</label>
-	    <page-reference>group::platform/users::collaboration</page-reference>
+	    <uri>knowledge</uri>
+	    <name>knowledge</name>
+	    <label>#{platform.users.knowledge}</label>
+	    <page-reference>group::platform/users::knowledge</page-reference>
 	    	    
 	    <node>
-		    <uri>collaboration/rss</uri>
-		    <name>contact</name>
-		    <label>#{platform.users.collaboration.rss}</label>
+		    <uri>knowledge/rss</uri>
+		    <name>Rss</name>
+		    <label>#{platform.users.knowledge.rss}</label>
 		    <page-reference>group::platform/users::rss</page-reference>
 	  	</node>
 	  	
 	    <node>
-		    <uri>collaboration/forum</uri>
-		    <name>contact</name>
-		    <label>#{platform.users.collaboration.forum}</label>
+		    <uri>knowledge/forum</uri>
+		    <name>Forum</name>
+		    <label>#{platform.users.knowledge.forum}</label>
 		    <page-reference>group::platform/users::forum</page-reference>
 	  	</node>
 	  	
 	    <node>
-		    <uri>collaboration/contact</uri>
-		    <name>contact</name>
-		    <label>#{platform.users.collaboration.contact}</label>
-		    <page-reference>group::platform/users::contact</page-reference>
+		    <uri>knowledge/blog</uri>
+		    <name>Blog</name>
+		    <label>#{platform.users.knowledge.blog}</label>
+		    <page-reference>group::platform/users::blog</page-reference>
 	  	</node>
 	  	
 	  	<node>
-		    <uri>collaboration/mail</uri>
-		    <name>mail</name>
-		    <label>#{platform.users.collaboration.mail}</label>
-		    <page-reference>group::platform/users::mail</page-reference>
+		    <uri>knowledge/wiki</uri>
+		    <name>Wiki</name>
+		    <label>#{platform.users.knowledge.wiki}</label>
+		    <page-reference>group::platform/users::wiki</page-reference>
 	  	</node>
 	  	
 	  	<node>
-		    <uri>collaboration/calendar</uri>
-		    <name>calendar</name>
-		    <label>#{platform.users.collaboration.calendar}</label>
-		    <page-reference>group::platform/users::calendar</page-reference>
+		    <uri>knowledge/faq</uri>
+		    <name>FAQ</name>
+		    <label>#{platform.users.knowledge.faq}</label>
+		    <page-reference>group::platform/users::faq</page-reference>
 	  	</node>	  	
 	  </node>
 	  <node>
