@@ -13,10 +13,10 @@
 	    <page-reference>group::platform/users::knowledge</page-reference>
 	    	    
 	    <node>
-		    <uri>knowledge/rss</uri>
+		    <uri>knowledge/content</uri>
 		    <name>Rss</name>
 		    <label>#{platform.users.knowledge.rss}</label>
-		    <page-reference>group::platform/users::rss</page-reference>
+		    <page-reference>group::platform/users::content</page-reference>
 	  	</node>
 	  	
 	    <node>
