@@ -158,7 +158,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	public void deActivate() throws Exception {}
   
 	@SuppressWarnings("unused")
-  public boolean getIsEdit() {
+  private boolean getIsEdit() {
 		return this.isEdit ;
 	}
 	
