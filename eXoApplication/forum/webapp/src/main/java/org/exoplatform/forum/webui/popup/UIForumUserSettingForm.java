@@ -96,18 +96,18 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			list.add(new SelectItemOption<String>(string + "/timeZone", ForumFormatUtils.getTimeZoneNumberInString(string))) ;
 		}
 		UIFormSelectBoxForum timeZone = new UIFormSelectBoxForum(FIELD_TIMEZONE_SELECTBOX, FIELD_TIMEZONE_SELECTBOX, list) ;
-		Date date = new Date() ;
-		double timeZoneMyHost = userProfile.getTimeZone() ;
-		String mark = "+";
-		if(timeZoneMyHost < 0) {
-			timeZoneMyHost = -timeZoneMyHost ;
-		} else if(timeZoneMyHost > 0){
-			mark = "-" ;
+		double timeZoneOld = userProfile.getTimeZone() ;
+		Date date = getNewDate(timeZoneOld) ;
+		String mark = "-";
+		if(timeZoneOld < 0) {
+			timeZoneOld = -timeZoneOld ;
+		} else if(timeZoneOld > 0){
+			mark = "+" ;
 		} else {
-			timeZoneMyHost = 0.0 ;
+			timeZoneOld = 0.0 ;
 			mark = "";
 		}
-		timeZone.setValue(mark + timeZoneMyHost + "0");
+		timeZone.setValue(mark + timeZoneOld + "0");
 
 		list = new ArrayList<SelectItemOption<String>>() ;
 		String []format = new String[] {"M-d-yyyy", "M-d-yy", "MM-dd-yy", "MM-dd-yyyy","yyyy-MM-dd", "yy-MM-dd", "dd-MM-yyyy", "dd-MM-yy",
@@ -186,6 +186,15 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		addUIFormInput(inputSetOption);
   }
 	
+	@SuppressWarnings("deprecation")
+  private Date getNewDate(double timeZoneOld) {
+		Date date = new Date() ;
+		long timeZoneMyHost = (long)date.getTimezoneOffset() ;
+		if(timeZoneMyHost == 0) {
+			date.setTime(date.getTime() + (long)(timeZoneOld*3600000));
+		}
+		return date ;
+	}
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
 		return	findComponentById(name) ;
 	}
@@ -219,7 +228,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setSignature(signature);
 			userProfile.setIsDisplaySignature(isDisplaySignature);
 			userProfile.setIsDisplayAvatar(isDisplayAvatar);
-			userProfile.setTimeZone(-timeZone) ;
+			userProfile.setTimeZone(timeZone) ;
 			userProfile.setTimeFormat(timeFormat.replace('=', ' '));
 			userProfile.setShortDateFormat(shortDateFormat);
 			userProfile.setLongDateFormat(longDateFormat.replace('=', ' '));

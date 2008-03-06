@@ -1324,11 +1324,11 @@ public class JCRDataStorage{
   private Calendar getGreenwichMeanTime() {
 		Date date = new Date() ;
 		double hostZone = date.getTimezoneOffset() ;
-		date.setMinutes(date.getMinutes() + (int)hostZone);
+		date.setTime(date.getTime() - (int)(hostZone*60000));
 		TimeZone timeZone2 = TimeZone.getTimeZone("GMT+00:00") ;
 		Calendar calendar  = GregorianCalendar.getInstance(timeZone2) ;
-		calendar.setTimeZone(timeZone2);
 		calendar.setTime(date);
+		calendar.setTimeZone(timeZone2);
 		return calendar ;
 	}
 	

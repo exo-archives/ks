@@ -287,6 +287,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			if(!uiForm.isForumUpdate) {
 				if(uiForm.isCategoriesUpdate) {
 					UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
+					uiCategories.setIsgetForumList(true) ;
 					context.addUIComponentToUpdateByAjax(uiCategories) ;
 				}else {
 					UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class) ;

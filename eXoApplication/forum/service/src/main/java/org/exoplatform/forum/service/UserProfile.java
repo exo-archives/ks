@@ -70,7 +70,7 @@ public class UserProfile {
 		readTopic = new String[] {} ;
 		banReasonSummary = new String[] {} ;
 		Date dateHost = new Date() ;
-		timeZone = (double)dateHost.getTimezoneOffset()/ 60 ;
+		timeZone = -(double)dateHost.getTimezoneOffset()/ 60 ;
 		shortDateformat = "MM/dd/yyyy";
 		longDateformat = "DDD,MMM dd,yyyy";
 		timeFormat = "hh:mm a";

@@ -26,8 +26,6 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.Tag;
-import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIFormTextAreaMultilInput;
 import org.exoplatform.forum.webui.UIForumLinks;
@@ -153,6 +151,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   	return userProfile ;
   }
   
+  public UserProfile getProfile() {
+	  return this.userProfile ;
+  }
   public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
   
@@ -160,8 +161,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   private boolean getIsEdit() {
 		return this.isEdit ;
 	}
-	
-	
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
   private void initUserProfileForm() throws Exception {
@@ -195,18 +194,19 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			list.add(new SelectItemOption<String>(string, ForumFormatUtils.getTimeZoneNumberInString(string))) ;
 		}
 		UIFormSelectBox timeZone = new UIFormSelectBox(FIELD_TIMEZONE_SELECTBOX, FIELD_TIMEZONE_SELECTBOX, list) ;
-		Date date = new Date() ;
-		double timeZoneMyHost = userProfile.getTimeZone() ;
-		String mark = "+";
-		if(timeZoneMyHost < 0) {
-			timeZoneMyHost = -timeZoneMyHost ;
-		} else if(timeZoneMyHost > 0){
-			mark = "-" ;
+		double timeZoneOld = userProfile.getTimeZone() ;
+		Date date = getNewDate(timeZoneOld) ;
+		String mark = "-";
+		if(timeZoneOld < 0) {
+			timeZoneOld = -timeZoneOld ;
+		} else if(timeZoneOld > 0){
+			mark = "+" ;
 		} else {
-			timeZoneMyHost = 0.0 ;
+			timeZoneOld = 0.0 ;
 			mark = "";
 		}
-		timeZone.setValue(mark + timeZoneMyHost + "0");
+		timeZone.setValue(mark + timeZoneOld + "0");
+		
 		list = new ArrayList<SelectItemOption<String>>() ;
 		String []format = new String[] {"M-d-yyyy", "M-d-yy", "MM-dd-yy", "MM-dd-yyyy","yyyy-MM-dd", "yy-MM-dd", "dd-MM-yyyy", "dd-MM-yy",
 				"M/d/yyyy", "M/d/yy", "MM/dd/yy", "MM/dd/yyyy","yyyy/MM/dd", "yy/MM/dd", "dd/MM/yyyy", "dd/MM/yy"} ;
@@ -258,7 +258,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			date.setTime(until) ;
 			list.add(new SelectItemOption<String>("Banned until: " + ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date), ("Until_" + until))) ;
 		}
-		date = new Date();
+		date = getNewDate(timeZoneOld);
 		until = date.getTime() + oneDate;
 		date.setTime(until);
 		list.add(new SelectItemOption<String>("1 Day ("+ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date)+")", "Until_" + until)) ;
@@ -270,10 +270,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			if(i == 7 && dv.equals("Months")){i = 1; dv = "Year" ;}
 			if(i == 2 && dv.equals("Year")){dv = "Years" ;}
 			if(i == 3 && dv.equals("Years")){break;}
-			if(dv.equals("Days")){ date = new Date(); until = date.getTime() + i*oneDate ; date.setTime(until);}
-			if(dv.equals("Weeks")){ date = new Date();until = date.getTime() + i*oneDate*7; date.setTime(until);}
-			if(dv.equals("Month")||dv.equals("Months")){ date = new Date(); date.setMonth(date.getMonth() + i) ; until = date.getTime();}
-			if(dv.equals("Years")||dv.equals("Year")){ date = new Date(); date.setYear(date.getYear() + i) ; until = date.getTime();}
+			if(dv.equals("Days")){ date = getNewDate(timeZoneOld); until = date.getTime() + i*oneDate ; date.setTime(until);}
+			if(dv.equals("Weeks")){ date = getNewDate(timeZoneOld);until = date.getTime() + i*oneDate*7; date.setTime(until);}
+			if(dv.equals("Month")||dv.equals("Months")){ date = getNewDate(timeZoneOld); date.setMonth(date.getMonth() + i) ; until = date.getTime();}
+			if(dv.equals("Years")||dv.equals("Year")){ date = getNewDate(timeZoneOld); date.setYear(date.getYear() + i) ; until = date.getTime();}
 			list.add(new SelectItemOption<String>(i+" "+dv+" ("+ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date)+")", ("Until_" + until))) ;
 			++i;
 		}
@@ -324,6 +324,18 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		inputSetBan.addUIFormInput(banReasonSummary);
 		inputSetBan.addUIFormInput(createdDateBan);
 		addUIFormInput(inputSetBan);
+		addChild(UIPageListTopicByUser.class, null, null) ;
+		addChild(UIPageListPostByUser.class, null, null) ;
+	}
+	
+	@SuppressWarnings("deprecation")
+  private Date getNewDate(double timeZoneOld) {
+		Date date = new Date() ;
+		long timeZoneMyHost = (long)date.getTimezoneOffset() ;
+		if(timeZoneMyHost == 0) {
+			date.setTime(date.getTime() + (long)(timeZoneOld*3600000));
+		}
+		return date ;
 	}
 	
 	private void setForumLinks() throws Exception {
@@ -342,46 +354,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM) ;
 		inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(values) ;
   }
-	
-	private JCRPageList getPageTopicByUser(String userName) throws Exception {
-	  return this.forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), userName) ;
-  }
-	
-	@SuppressWarnings({ "unchecked", "unused" })
-  private List<Topic> getTopicsByUser() throws Exception {
-		String userName = this.userProfile.getUserId() ;
-		JCRPageList pageListTopic = getPageTopicByUser(userName) ; 
-		pageListTopic.setPageSize(10) ;
-		List<Topic> topics = pageListTopic.getPage(1) ;
-		return topics ;
-	}
-	
-	@SuppressWarnings("unused")
-	private String[] getStarNumber(Topic topic) throws Exception {
-		double voteRating = topic.getVoteRating() ;
-		return ForumFormatUtils.getStarNumber(voteRating) ;
-	}
-	
-	@SuppressWarnings("unused")
-	private String getStringCleanHtmlCode(String sms) {
-		return ForumFormatUtils.getStringCleanHtmlCode(sms);
-	}
-
-	@SuppressWarnings("unused")
-	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), tagIds);	
-	}
-	
-	@SuppressWarnings("unused")
-  private JCRPageList getPageListPost(String topicPath) throws Exception {
-		String []id = topicPath.split("/") ;
-		int i = id.length ;
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2], id[i-1])	; 
-//		long maxPost = getUserProfile().getMaxTopicInPage() ;
-//		if(maxPost > 0) this.maxPost = maxPost ;
-//		pageListPost.setPageSize(this.maxPost) ;
-		return pageListPost;
-	}
 	
   static  public class ViewProfileActionListener extends EventListener<UIModeratorManagementForm> {
     public void execute(Event<UIModeratorManagementForm> event) throws Exception {
@@ -403,6 +375,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	    uiForm.removeChildById("ForumUserProfile") ;
 	    uiForm.removeChildById("ForumUserOption") ;
 	    uiForm.removeChildById("ForumUserBan") ;
+	    uiForm.removeChild(UIPageListTopicByUser.class) ;
 			uiForm.initUserProfileForm();
 			uiForm.isEdit = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
@@ -469,19 +442,20 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	}
     	String banReason = inputSetBan.getUIFormTextAreaInput(FIELD_BANREASON_TEXTAREA).getValue() ;
     	String banReasonSummarys =  ForumFormatUtils.unSplitForForum(userProfile.getBanReasonSummary());
-    	Date date = new Date();
+    	double timeZoneOld = userProfile.getTimeZone() ;
+    	Date date = uiForm.getNewDate(timeZoneOld);
     	int banCounter = 0;
     	date.setTime(banUntil) ;
     	if(banReasonSummarys != null && banReasonSummarys.length() > 0){
     		if(isBanned) {
     			banReasonSummarys = banReasonSummarys + 
-    			"Ban Reason: " + banReason + " From Date: " + (ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", new Date())) + 
+    			"Ban Reason: " + banReason + " From Date: " + (ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getNewDate(timeZoneOld))) + 
     			" To Date: " + ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", date) + ";";
     			banCounter = userProfile.getBanCounter() + 1;
     		}
     	} else {
     		if(isBanned) {
-    			banReasonSummarys = "Ban Reason: " + banReason + " From Date: " + (ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", new Date())) + 
+    			banReasonSummarys = "Ban Reason: " + banReason + " From Date: " + (ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getNewDate(timeZoneOld))) + 
     			" To Date: " + ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", date) + ";";
     			banCounter = 1;
     		}

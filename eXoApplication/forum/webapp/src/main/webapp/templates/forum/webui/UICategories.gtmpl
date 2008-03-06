@@ -78,7 +78,6 @@
 										String dateTime = "";
 										String openLinkLastPost = "#";
 										long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-										
 				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
 				 						if(topicNewPost != null) {
 											topicNewPostIcon = topicNewPost.getIcon();
@@ -87,7 +86,7 @@
 											topicNewPostTitle = topicNewPost.getTopicName();
 											lastPostBy = topicNewPost.getLastPostBy();
 											Date postDate = topicNewPost.getLastPostDate();
-											postDate.setTime(postDate.getTime() - setTime);
+											postDate.setTime(postDate.getTime() + setTime);
 											dateTime = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 											if((toDay-createdDate)/86400000 < 4){

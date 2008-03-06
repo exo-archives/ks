@@ -349,18 +349,18 @@
 					classIconPost = "NormalTopicIcon" ;
 				String subject = post.getSubject() ;
 				Date createdPostDate = post.getCreatedDate() ;
-				createdPostDate.setTime(createdPostDate.getTime() - setTime);
+				createdPostDate.setTime(createdPostDate.getTime() + setTime);
 				String createdDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
 				String message = ForumFormatUtils.convertCodeHTML(post.getMessage()) ;
 				String editBy = post.getModifiedBy() ;
 				Date modifileDate = post.getModifiedDate() ;
-				modifileDate.setTime(modifileDate.getTime() - setTime);
+				modifileDate.setTime(modifileDate.getTime() + setTime);
 				String editDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),modifileDate);
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + post.getId().substring(15);
 				User user = ForumSessionUtils.getUserByUserId(owner) ; 
 				Date userCreated = user.getCreatedDate() ;
-				userCreated.setTime(userCreated.getTime() - setTime);
+				userCreated.setTime(userCreated.getTime() + setTime);
 				String joinDate = ForumFormatUtils.getFormatDate("DDD yyyy",userCreated) ;
 		%>
 
@@ -384,7 +384,7 @@
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
-											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
+											 lastPostOfUser.setTime(lastPostOfUser.getTime() + setTime);
 											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),lastPostOfUser) ;
 									%>
 									<div>Posts: $totalPost</div>

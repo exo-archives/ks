@@ -3,6 +3,18 @@
 	background:#ffffff;
 }
 
+.UIModeratorsManagementForm .UIForumPageIterator {
+	padding: 0px;
+}
+
+.UIModeratorsManagementForm .UITabPane .UITabContentContainer .UITabContent {
+	border-bottom: none ;
+}
+
+.UIModeratorsManagementForm .UITabPane .UIAction {
+	border-bottom: white ;
+}
+
 .UIModeratorsManagementForm .ModeratorsManagementContainer {
 	border: 1px solid #b7b7b7;
 }
