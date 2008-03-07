@@ -21,8 +21,8 @@
     <module>eXoApplication/forum/webapp</module>
     <module>eXoApplication/forum/service</module>
     
-    <module>eXoApplication/content/webapp</module>
-    <module>eXoApplication/content/service</module>
+    <!--module>eXoApplication/content/webapp</module>
+    <module>eXoApplication/content/service</module-->
   </modules>
 
   <build>

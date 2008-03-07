@@ -12,12 +12,12 @@
 	    <label>#{platform.users.knowledge}</label>
 	    <page-reference>group::platform/users::knowledge</page-reference>
 	    	    
-	    <node>
+	    <!--node>
 		    <uri>knowledge/content</uri>
 		    <name>Rss</name>
 		    <label>#{platform.users.knowledge.rss}</label>
 		    <page-reference>group::platform/users::content</page-reference>
-	  	</node>
+	  	</node-->
 	  	
 	    <node>
 		    <uri>knowledge/forum</uri>

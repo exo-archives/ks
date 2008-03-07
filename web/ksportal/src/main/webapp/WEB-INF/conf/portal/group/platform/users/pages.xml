@@ -11,12 +11,12 @@
     <edit-permission>*:/platform/administrators</edit-permission>
     <show-max-window>true</show-max-window>
     
-    <application>
+    <!--application>
       <instance-id>group#platform/users:/content/RSSReaderPortlet/content</instance-id>    
       <title>RSS Reader Portlet</title>
       <show-info-bar>true</show-info-bar>
       <show-application-state>true</show-application-state>
-    </application>
+    </application-->
     
     <application>
       <instance-id>group#platform/users:/forum/ForumPortlet/forum</instance-id>    
@@ -48,7 +48,7 @@
               
   </page>
   
-  <page>
+  <!--page>
   	<page-id>group::platform/users::content</page-id>
   	<owner-type>group</owner-type>
     <owner-id>platform/users</owner-id>
@@ -61,7 +61,7 @@
       <title>RSS Reader Portlet</title>
       <show-info-bar>true</show-info-bar>      
     </application>  
-  </page>
+  </page-->
   
 	<page>
   	<page-id>group::platform/users::forum</page-id>
