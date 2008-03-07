@@ -413,6 +413,28 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 //    	} else {
 //    		moderateTopics = userProfile.getModerateTopics() ;
 //    	}
+    	List<String> NewModerates = new ArrayList<String> ();
+    	for (String string : moderateForums) {
+    		NewModerates.add(string);
+      }
+    	String [] OldModerateForums = userProfile.getModerateForums() ;
+    	List<String> DeleteModerateForums = new ArrayList<String> ();
+    	if(NewModerates.isEmpty()){
+    		for (String string : OldModerateForums) {
+    			DeleteModerateForums.add(string) ;
+    		}
+    	} else {
+    		for (String string : OldModerateForums) {
+    			if(NewModerates.contains(string)) {
+    				NewModerates.remove(string);
+    			} else {
+    				DeleteModerateForums.add(string) ;
+    			}
+    		}
+    		//save
+    	}
+    		
+    	
     	if(moderateForums.length > 0 || moderateForums.length > 0) {
     		if(userRole >= 2) userRole = 1;
     	}

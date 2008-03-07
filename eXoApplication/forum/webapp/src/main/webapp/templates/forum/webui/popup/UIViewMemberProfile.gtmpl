@@ -10,12 +10,12 @@
 	UserProfile userProfile = uiform.getUserProfile() ;
 	String userName = userProfile.getUserId() ;
 	User user = uiform.getUser() ;
-	Contact contact = uiform.getPersonalContact(userName) ;
+	//Contact contact = uiform.getPersonalContact(userName) ;
 	String birthDay = "" ;
-	Date birthDayDate = contact.getBirthday() ;
+	Date birthDayDate = ""//contact.getBirthday() ;
 	if(birthDayDate != null) birthDay = ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat(),birthDayDate) ;
 	String location = "" ;
-	if(contact.getHomeCountry() != null )location = contact.getHomeCity() + ", " + contact.getHomeCountry() ;
+	//if(contact.getHomeCountry() != null )location = contact.getHomeCity() + ", " + contact.getHomeCountry() ;
 	String createdDate = ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat(),user.getCreatedDate()) ;
 	long totalPost = userProfile.getTotalPost();
 %>
@@ -47,8 +47,10 @@
   							<tbody>
   							<% 
   								String []labels = uiform.getLabelProfile();  
-  								String []contents = [userName,user.getFirstName(),user.getLastName(),birthDay,contact.getGender(),user.getEmail(),
-  								  contact.getJobTitle(),location,contact.getWorkPhone1(),contact.getMobilePhone(),contact.getPersonalSite()]; 
+  								//String []contents = [userName,user.getFirstName(),user.getLastName(),birthDay,contact.getGender(),user.getEmail(),
+  								  //contact.getJobTitle(),location,contact.getWorkPhone1(),contact.getMobilePhone(),contact.getPersonalSite()]; 
+  								String []contents = [userName,user.getFirstName(),user.getLastName(),birthDay,user.getEmail(),
+  								  location]; 
   								int i = 0 ;
   								for(label in labels) {
   									String content = contents[i];

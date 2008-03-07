@@ -45,6 +45,7 @@ public interface DataStorage {
 	public List<Forum> getForums(SessionProvider sProvider, String categoryId)throws Exception;
 	public Forum getForum(SessionProvider sProvider, String categoryId, String forumId)throws Exception;	
 	public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception;
+	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths) throws Exception;
 	public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId)throws Exception;	
 	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath)throws Exception;	
 	

@@ -103,6 +103,8 @@ public interface ForumService {
 	 * @throws Exception
 	 */
 	public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception;
+	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths) throws Exception;
+	
 	/**
 	 * This method should:
 	 * 1. Check the mandatory fields

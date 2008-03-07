@@ -94,10 +94,10 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 				linkForum = new ArrayList<ForumLinkData>() ;
 			} else if(forumLink.getType().equals("forum") && forumLink.getPath().indexOf(categoryId) >= 0){
 				linkForum.add(forumLink) ;
-				if(getUIFormCheckBoxInput(forumLink.getId()) != null) {
-					getUIFormCheckBoxInput(forumLink.getId()).setChecked(false) ;
+				if(getUIFormCheckBoxInput(forumLink.getPath()) != null) {
+					getUIFormCheckBoxInput(forumLink.getPath()).setChecked(false) ;
 				}else {
-					addUIFormInput(new UIFormCheckBoxInput(forumLink.getId(), forumLink.getId(), false) );
+					addUIFormInput(new UIFormCheckBoxInput(forumLink.getPath(), forumLink.getPath(), false) );
 				}
 				isPut = true ;
 				linkTopic = new ArrayList<ForumLinkData>() ;
@@ -134,7 +134,7 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 	
 	private String getNameForumLinkData(String id) throws Exception {
 		for (ForumLinkData linkData : this.forumLinks ) {
-			if(linkData.getId().equals(id)) return linkData.getName() ;
+			if(linkData.getPath().equals(id)) return linkData.getName() ;
 		}
 		return null ;
 	}

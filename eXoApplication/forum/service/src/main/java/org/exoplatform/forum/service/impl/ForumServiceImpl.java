@@ -64,7 +64,11 @@ public class ForumServiceImpl implements ForumService{
 	public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception {
 		storage_.saveForum(sProvider, categoryId, forum, isNew);
 	}
-
+	
+	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths) throws Exception {
+		storage_.saveModerateOfForums(sProvider, forumPaths) ;
+	}
+	
 	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath) throws Exception {
 		storage_.moveForum(sProvider, forums, destCategoryPath);
 	}

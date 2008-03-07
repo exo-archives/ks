@@ -245,6 +245,13 @@ public class JCRDataStorage{
 		}
 	}
 	
+	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		for (String forumPath : forumPaths) {
+			
+		}
+	}
+	
 	private Forum getForum(Node forumNode) throws Exception {
 		Forum forum = new Forum() ;
 		if(forumNode.hasProperty("exo:id")) forum.setId(forumNode.getProperty("exo:id").getString()) ;

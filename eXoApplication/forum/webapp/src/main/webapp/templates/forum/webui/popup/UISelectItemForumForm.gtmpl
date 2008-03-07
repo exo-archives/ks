@@ -42,7 +42,7 @@
 	      		//}
 	      %>
 				  <div class="Node">
-				  	<div style="float:left"><%uicomponent.renderChild(forum.getId())%></div>
+				  	<div style="float:left"><%uicomponent.renderChild(forum.getPath())%></div>
 			      <div class="Icon ThreadsIcon"><span></span></div>
 			      <div class="NodeLabel"> 
 				      <div>$forumName</div>
