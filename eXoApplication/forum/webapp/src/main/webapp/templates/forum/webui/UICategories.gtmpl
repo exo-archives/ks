@@ -152,7 +152,9 @@
 				</div>
 			</div>	
 		<%   } // End if private%>
-		<% }// End for and End ForumCategory%>
+		<% }// End for and End ForumCategory
+		 uicomponent.setIsgetForumList(false) ;
+		%>
 		</div>
 	</div>
 </div>

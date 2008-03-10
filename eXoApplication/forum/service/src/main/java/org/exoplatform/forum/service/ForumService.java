@@ -103,7 +103,7 @@ public interface ForumService {
 	 * @throws Exception
 	 */
 	public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception;
-	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths) throws Exception;
+	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths, String userName, boolean isDelete) throws Exception;
 	
 	/**
 	 * This method should:

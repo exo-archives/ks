@@ -210,7 +210,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
     String values = fieldInput.getValue() ;
     if(values != null && values.length() > 0) {
-    	values = "," + value ;
+    	values = values + value + ",";
     } else {
     	values = value ;
     }
@@ -282,6 +282,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				forumService.saveForum(ForumSessionUtils.getSystemProvider(), categoryId, newForum, true);
 			}
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
+			
 			forumPortlet.cancelAction() ;
 			WebuiRequestContext context = event.getRequestContext() ;
 			if(!uiForm.isForumUpdate) {

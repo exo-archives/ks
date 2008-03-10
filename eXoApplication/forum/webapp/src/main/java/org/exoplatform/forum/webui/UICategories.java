@@ -89,15 +89,16 @@ public class UICategories extends UIContainer	{
     this.isGetForumList = isGetForumList ;
   }
 	private List<Forum> getForumList(String categoryId) throws Exception {
-		if(!mapListForum.isEmpty()) {
+		if(!mapListForum.isEmpty() && !isGetForumList) {
 			this.forumList = mapListForum.get(categoryId) ;
-			if(this.forumList == null || this.forumList.size() <= 0 || isGetForumList) {
+			if(this.forumList == null || this.forumList.size() <= 0) {
 				this.forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
+				mapListForum.remove(categoryId) ;
 				mapListForum.put(categoryId, this.forumList) ;
-        isGetForumList = false ;
 			}
 		} else {
 			this.forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
+			mapListForum.remove(categoryId) ;
 			mapListForum.put(categoryId, this.forumList) ;
 		}
 		return this.forumList;

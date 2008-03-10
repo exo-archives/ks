@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UIFormTextAreaMultilInput;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -157,6 +158,14 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
   
+	private List<String> getModerateList(String []forumsModerate) {
+		List<String> list = new ArrayList<String>() ;
+		for (String string : forumsModerate) {
+			string = string.substring(string.indexOf("(category")+1, string.lastIndexOf(")")) ;
+			list.add(string);
+    }
+		return list; 
+	}
 	@SuppressWarnings("unused")
   private boolean getIsEdit() {
 		return this.isEdit ;
@@ -395,17 +404,15 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     public void execute(Event<UIModeratorManagementForm> event) throws Exception {
     	UIModeratorManagementForm uiForm = event.getSource() ;
     	UserProfile userProfile = uiForm.userProfile ;
-    	
+    	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
     	UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
     	String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
     	long userRole = Long.parseLong(inputSetProfile.getUIFormSelectBox(FIELD_USERROLE_SELECTBOX).getValue().substring(2));
     	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
-    	String []moderateForums ;
+    	String []moderateForums = new String[]{} ;
     	if(moderateForum != null && moderateForum.length() > 0) {
     		moderateForums = ForumFormatUtils.splitForForum(moderateForum) ;
-    	} else {
-    		moderateForums = userProfile.getModerateForums() ;
-    	}
+    	} 
 //    	String moderateTopic = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATETOPICS_MULTIVALUE).getValue() ;
 //    	String []moderateTopics ;
 //    	if(moderateTopic != null && moderateTopic.length() > 0) {
@@ -414,15 +421,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 //    		moderateTopics = userProfile.getModerateTopics() ;
 //    	}
     	List<String> NewModerates = new ArrayList<String> ();
-    	for (String string : moderateForums) {
-    		NewModerates.add(string);
-      }
-    	String [] OldModerateForums = userProfile.getModerateForums() ;
+    	NewModerates = uiForm.getModerateList(moderateForums);
+    	List<String> OldModerateForums = uiForm.getModerateList(userProfile.getModerateForums()) ;
     	List<String> DeleteModerateForums = new ArrayList<String> ();
+    	boolean isSetGetNewListForum = false ;
     	if(NewModerates.isEmpty()){
-    		for (String string : OldModerateForums) {
-    			DeleteModerateForums.add(string) ;
-    		}
+    		DeleteModerateForums = OldModerateForums;
     	} else {
     		for (String string : OldModerateForums) {
     			if(NewModerates.contains(string)) {
@@ -431,9 +435,14 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     				DeleteModerateForums.add(string) ;
     			}
     		}
-    		//save
+    		uiForm.forumService.saveModerateOfForums(ForumSessionUtils.getSystemProvider(), NewModerates, userProfile.getUserId(), false);
+    		isSetGetNewListForum = true ;
     	}
-    		
+    	if(DeleteModerateForums.size() > 0) {
+    		uiForm.forumService.saveModerateOfForums(ForumSessionUtils.getSystemProvider(), DeleteModerateForums, userProfile.getUserId(), true);
+    		isSetGetNewListForum = true ;
+    	}
+    	if(isSetGetNewListForum)forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
     	
     	if(moderateForums.length > 0 || moderateForums.length > 0) {
     		if(userRole >= 2) userRole = 1;
@@ -512,7 +521,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
       	e.printStackTrace() ;
       }
       if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
-      	uiForm.getAncestorOfType(UIForumPortlet.class).setUserProfile() ;
+      	forumPortlet.setUserProfile() ;
       }
       uiForm.isEdit = false ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
@@ -531,7 +540,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			selectItemForum.setForumLinks() ;
 			selectItemForum.setIsTopic(isTopic, idChild) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-  		
   	}
   }
 
@@ -539,6 +547,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   	public void execute(Event<UIModeratorManagementForm> event) throws Exception {
   		UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
   		forumPortlet.cancelAction() ;
+  		event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
   	}
   }
 }

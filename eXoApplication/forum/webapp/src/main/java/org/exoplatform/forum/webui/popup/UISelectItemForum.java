@@ -88,36 +88,24 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 		boolean isPut = true ;
 		List<ForumLinkData> linkForum = new ArrayList<ForumLinkData>() ;
 		List<ForumLinkData> linkTopic = new ArrayList<ForumLinkData>() ;
+		String cateId = "" ;
 		for (ForumLinkData forumLink : this.forumLinks) {
-			if(forumLink.getType().equals("category")) {
-				categoryId = forumLink.getId() ;
+			if(forumLink.getType().equals("category")){
+				cateId = forumLink.getId() ;
+				for (ForumLinkData forumlist : this.forumLinks) {
+					if(forumlist.getType().equals("forum") && forumlist.getPath().indexOf(cateId) >= 0) {
+						linkForum.add(forumlist) ;
+						if(getUIFormCheckBoxInput(forumlist.getPath()) != null) {
+							getUIFormCheckBoxInput(forumlist.getPath()).setChecked(false) ;
+						}else {
+							addUIFormInput(new UIFormCheckBoxInput(forumlist.getPath(), forumlist.getPath(), false) );
+						}
+					}
+				}
+				mapListForum.put(cateId, linkForum) ;
 				linkForum = new ArrayList<ForumLinkData>() ;
-			} else if(forumLink.getType().equals("forum") && forumLink.getPath().indexOf(categoryId) >= 0){
-				linkForum.add(forumLink) ;
-				if(getUIFormCheckBoxInput(forumLink.getPath()) != null) {
-					getUIFormCheckBoxInput(forumLink.getPath()).setChecked(false) ;
-				}else {
-					addUIFormInput(new UIFormCheckBoxInput(forumLink.getPath(), forumLink.getPath(), false) );
-				}
-				isPut = true ;
-				linkTopic = new ArrayList<ForumLinkData>() ;
-				forumId = forumLink.getId() ;
-			} else {
-				if(isPut) {
-					mapListForum.put(categoryId, linkForum) ;
-					isPut = false ;
-				}
 			}
-			if(forumLink.getType().equals("topic") && forumLink.getPath().indexOf(forumId) >= 0){
-				linkTopic.add(forumLink) ;
-			}
-			if(forumLink.getType().equals("category") && linkTopic.size() > 0) {
-				mapListTopic.put(forumId, linkTopic) ;
-				linkTopic = new ArrayList<ForumLinkData>() ;
-			}
-		}
-		if(linkTopic.size() > 0) {
-			mapListTopic.put(forumId, linkTopic) ;
+			
 		}
 		return this.forumLinks ;
 	}
@@ -129,7 +117,7 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private List<ForumLinkData> getTopics(String forumId) {
-		return mapListForum.get(forumId) ;
+		return mapListTopic.get(forumId) ;
 	}
 	
 	private String getNameForumLinkData(String id) throws Exception {

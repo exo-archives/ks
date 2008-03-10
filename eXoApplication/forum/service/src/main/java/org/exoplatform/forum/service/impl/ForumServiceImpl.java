@@ -65,8 +65,8 @@ public class ForumServiceImpl implements ForumService{
 		storage_.saveForum(sProvider, categoryId, forum, isNew);
 	}
 	
-	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths) throws Exception {
-		storage_.saveModerateOfForums(sProvider, forumPaths) ;
+	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths, String userName, boolean isDelete) throws Exception {
+		storage_.saveModerateOfForums(sProvider, forumPaths, userName, isDelete) ;
 	}
 	
 	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath) throws Exception {

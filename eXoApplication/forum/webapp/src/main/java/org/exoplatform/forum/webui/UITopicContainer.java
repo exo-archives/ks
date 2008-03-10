@@ -320,11 +320,13 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			Forum forum = uiTopicContainer.getForum() ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIForumForm forumForm = popupAction.createUIComponent(UIForumForm.class, null, null) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null) ;
 			forumForm.setCategoryValue(uiTopicContainer.categoryId, false) ;
 			forumForm.setForumValue(forum, true);
-			forumForm.setForumUpdate(true);
-			popupAction.activate(forumForm, 662, 466) ;
+			forumForm.setForumUpdate(true) ;
+			popupContainer.setId("EditForumForm") ;
+			popupAction.activate(popupContainer, 650, 450) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			uiTopicContainer.isUpdate = true ;
 		}

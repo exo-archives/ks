@@ -76,9 +76,13 @@ public class UIForumLinks extends UIForm {
 	public void setUpdateForumLinks() throws Exception {
 		this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider());
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>("Forum Home Page;hompage", "ForumService")) ;
+		list.add(new SelectItemOption<String>("Forum Home Page/hompage", "ForumService")) ;
+		String space = "&nbsp; &nbsp; ",  type = "/categoryLink"; 
 		for(ForumLinkData linkData : forumLinks) {
-			list.add(new SelectItemOption<String>(linkData.getName(), linkData.getPath())) ;
+			if(linkData.getType().equals("forum")) {type = "/forumLink"; space = "&nbsp; &nbsp; &nbsp; &nbsp; " ;}
+			if(linkData.getType().equals("category")) {type = "/categoryLink"; space = "&nbsp; &nbsp; " ;}
+			if(linkData.getType().equals("topic")) continue ;
+			list.add(new SelectItemOption<String>(space + linkData.getName() + type, linkData.getPath())) ;
 		}
 		this.getChild(UIFormSelectBoxForum.class).setOptions(list) ;
 	}

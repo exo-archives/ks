@@ -49,6 +49,8 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
+import com.sun.org.apache.xpath.internal.FoundIndex;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
@@ -237,19 +239,91 @@ public class JCRDataStorage{
 			forumNode.setProperty("exo:viewForumRole", forum.getViewForumRole()) ;
 			forumNode.setProperty("exo:createTopicRole", forum.getCreateTopicRole()) ;
 			forumNode.setProperty("exo:replyTopicRole", forum.getReplyTopicRole()) ;
-			forumNode.setProperty("exo:moderators", forum.getModerators()) ;
-			
+			String []oldModeratoForums = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()); 
+			{//seveProfile
+				Node userProfileHomeNode = getUserProfileNode(sProvider) ;
+				Node userProfileNode ;
+				List<String>list = new ArrayList<String>() ;
+				for (String string : forum.getModerators()) {
+					list = new ArrayList<String>() ;
+					try {
+						userProfileNode = userProfileHomeNode.getNode(string) ; 
+						String [] moderatorForums = ValuesToStrings(userProfileNode.getProperty("exo:moderateForums").getValues()); 
+						boolean hasMod = false;
+						for (String string2 : moderatorForums) {
+	            if(string2.indexOf(forum.getId()) > 0) {hasMod = true; }
+	            list.add(string) ;
+            }
+						if(!hasMod) {
+							list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId()+");\n");
+							userProfileNode.setProperty("exo:moderateForums", getStrings(list));
+						}
+          } catch (PathNotFoundException e) {
+          	userProfileNode = userProfileHomeNode.addNode(string,"exo:userProfile") ; 
+          }
+        }
+				//remove 
+				for (String string : oldModeratoForums) {
+					boolean isDelete = true ;
+          for (String string2 : forum.getModerators()) {
+	          if(string.equals(string2)) {isDelete = false; break ;}
+          }
+          if(isDelete) {
+          	try {
+          		list = new ArrayList<String>() ;
+          		userProfileNode = userProfileHomeNode.getNode(string) ; 
+          		String [] moderatorForums = ValuesToStrings(userProfileNode.getProperty("exo:moderateForums").getValues());
+          		for (String string2 : moderatorForums) {
+  	            if(string2.indexOf(forum.getId()) < 0) {
+  	            	list.add(string) ;
+  	            }
+              }
+          		userProfileNode.setProperty("exo:moderateForums", getStrings(list));
+          	} catch (PathNotFoundException e) {
+            }
+          }
+        }
+				forumNode.setProperty("exo:moderators", forum.getModerators()) ;
+				userProfileHomeNode.getSession().save() ;
+			}
 			//forumHomeNode.save() ;
 			forumHomeNode.getSession().save() ;
 		} catch (PathNotFoundException e) {
 		}
 	}
 	
-	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths) throws Exception {
+	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths, String userName, boolean isDelete) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
-		for (String forumPath : forumPaths) {
-			
+		for (String path : forumPaths) {
+			String forumPath = forumHomeNode.getPath() + "/" + path ;
+			Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath) ;
+			if(isDelete) {
+				if(forumNode.hasProperty("exo:moderators")){ 
+					String []oldUserNamesModerate = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()) ;
+					List<String>list = new ArrayList<String>() ;
+					for (String string : oldUserNamesModerate) {
+						if(!string.equals(userName)){
+							list.add(string);
+						}
+          }
+					forumNode.setProperty("exo:moderators",getStrings(list)) ;
+				}
+			} else {
+				String []oldUserNamesModerate = new String[] {} ;
+				if(forumNode.hasProperty("exo:moderators")){
+					oldUserNamesModerate = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()) ;
+				}
+				List<String>list = new ArrayList<String>() ;
+				for (String string : oldUserNamesModerate) {
+					if(!string.equals(userName)){
+						list.add(string) ;
+					}
+        }
+				list.add(userName) ;
+				forumNode.setProperty("exo:moderators", getStrings(list)) ;
+			}
 		}
+		forumHomeNode.getSession().save() ;
 	}
 	
 	private Forum getForum(Node forumNode) throws Exception {
@@ -1001,13 +1075,12 @@ public class JCRDataStorage{
 		Node topicNode = (Node)getForumHomeNode(sProvider).getSession().getItem(topicPath);
 		if(topicNode.hasProperty("exo:tagId")) {
 			String []oldTagsId = ValuesToStrings(topicNode.getProperty("exo:tagId").getValues()) ;
-			int t = oldTagsId.length ;
-			String []newTagsId = new String[t+1];
-			for (int i = 0; i < t; i++) {
-				newTagsId[i] = oldTagsId[i];
+			List<String>list = new ArrayList<String>();
+			for (String string : oldTagsId) {
+				list.add(string);
 			}
-			newTagsId[t] = tagId ;
-			topicNode.setProperty("exo:tagId", newTagsId);
+			list.add(tagId) ;
+			topicNode.setProperty("exo:tagId", getStrings(list));
 			forumHomeNode.save() ;
 			forumHomeNode.getSession().save() ;
 		}
@@ -1017,15 +1090,13 @@ public class JCRDataStorage{
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		Node topicNode = (Node)getForumHomeNode(sProvider).getSession().getItem(topicPath);
 		String []oldTagsId = ValuesToStrings(topicNode.getProperty("exo:tagId").getValues()) ;
-		int t = oldTagsId.length, j = 0 ;
-		String []newTagsId = new String[t-1];
-		for (int i = 0; i < t; i++) {
-			if(!oldTagsId[i].equals(tagId)){
-				newTagsId[j] = oldTagsId[i];
-				++j ;
+		List<String>list = new ArrayList<String>();
+		for (String string : oldTagsId) {
+			if(!string.equals(tagId)){
+				list.add(string);
 			}
 		}
-		topicNode.setProperty("exo:tagId", newTagsId);
+		topicNode.setProperty("exo:tagId", getStrings(list));
 		forumHomeNode.save() ;
 		forumHomeNode.getSession().save() ;
 	}
@@ -1325,6 +1396,16 @@ public class JCRDataStorage{
 			Str[i] = Val[i].getString() ;
 		}
 		return Str;
+	}
+	
+	private static String[] getStrings(List<String> list) throws Exception {
+		String[] object = new String[list.size()] ;
+		int i = 0;
+		for (String object2 : list) {
+			object[i] = object2 ;
+			++i;
+    }
+		return object ;
 	}
 	
 	@SuppressWarnings("deprecation")
