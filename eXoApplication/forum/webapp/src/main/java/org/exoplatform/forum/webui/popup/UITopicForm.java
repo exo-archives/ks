@@ -108,7 +108,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		UIFormSelectBox topicStatus = new UIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATUS_SELECTBOX, ls1) ;
 		topicStatus.setDefaultValue("unlock");
 		
-		UIFormCheckBoxInput approved = new UIFormCheckBoxInput<Boolean>(FIELD_APPROVED_CHECKBOX, FIELD_APPROVED_CHECKBOX, false);
+		//UIFormCheckBoxInput approved = new UIFormCheckBoxInput<Boolean>(FIELD_APPROVED_CHECKBOX, FIELD_APPROVED_CHECKBOX, false);
 		UIFormCheckBoxInput moderatePost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
 		UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX, false);
 		UIFormCheckBoxInput sticky = new UIFormCheckBoxInput<Boolean>(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
@@ -121,7 +121,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		
 		addUIFormInput(topicState);
 		addUIFormInput(topicStatus);
-		addUIFormInput(approved);
+		//addUIFormInput(approved);
 		addUIFormInput(moderatePost);
 		addUIFormInput(checkWhenAddPost);
 		addUIFormInput(sticky);
@@ -194,7 +194,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		switch (Tab) {
 			case 1:actions = new String[] {FIELD_TOPICTITLE_INPUT, FIELD_MESSAGECONTENT, FIELD_FROM_INPUT} ;	break;
 			case 2:actions = new String[] {} ;	break;
-			case 3:actions = new String[] {FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATE_SELECTBOX, FIELD_APPROVED_CHECKBOX, "ModeratePost", 
+			case 3:actions = new String[] {FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATE_SELECTBOX, "ModeratePost", 
 																		 FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_STICKY_CHECKBOX} ;	break;
 			case 4:actions = new String[] {FIELD_CANVIEW_INPUT, FIELD_CANPOST_INPUT} ;	break;
 		 default:actions = new String[] {}; break;
@@ -222,7 +222,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 			if(topic.getIsLock()) stat = "locked";
 			else stat = "unlock";
 			getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).setValue(stat);
-			getUIFormCheckBoxInput(FIELD_APPROVED_CHECKBOX).setChecked(topic.getIsApproved());
+			//getUIFormCheckBoxInput(FIELD_APPROVED_CHECKBOX).setChecked(topic.getIsApproved());
 			getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(topic.getIsModeratePost());
 			getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(topic.getIsNotifyWhenAddPost());
 			getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(topic.getIsSticky());
@@ -295,7 +295,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 				String topicState = uiForm.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
 				String topicStatus = uiForm.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
 				
-				Boolean approved = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_APPROVED_CHECKBOX).getValue();
+				//Boolean approved = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_APPROVED_CHECKBOX).getValue();
 				Boolean moderatePost = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
 				Boolean whenNewPost = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
 				Boolean sticky = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
@@ -324,7 +324,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 					topicNew.setIsLock(true) ;
 				}
 				topicNew.setIsSticky(sticky);
-				topicNew.setIsApproved(approved);	
+				//topicNew.setIsApproved(approved);	
 				
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				topicNew.setIcon(uiIconSelector.getSelectedIcon());

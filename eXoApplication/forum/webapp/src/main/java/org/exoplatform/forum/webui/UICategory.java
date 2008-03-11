@@ -141,12 +141,13 @@ public class UICategory extends UIForm	{
 	}
 	
 	private Topic getTopic(String topicId) throws Exception {
-	if(this.topicLastList.size() > 0) {
-		for(Topic topic : this.topicLastList) {
-			if(topic.getId().equals(topicId)) return topic ;
+		Topic topic_ = new Topic() ;
+		if(this.topicLastList.size() > 0) {
+			for(Topic topic : this.topicLastList) {
+				if(topicId.equals(topic.getId())){topic_ = topic; break;}
+			}
 		}
-	}
-	return null ;
+		return topic_ ;
 	}
 	
 	static public class EditCategoryActionListener extends EventListener<UICategory> {
@@ -442,7 +443,7 @@ public class UICategory extends UIForm	{
     public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource();
 			String Id = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String []id = Id.trim().split(",");
+			String []id = Id.trim().split("/");
 			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(2);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
@@ -451,7 +452,7 @@ public class UICategory extends UIForm	{
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForumIds(uiCategory.categoryId, id[0]);
 			Topic topic = uiCategory.getTopic(id[1]) ;
-			if(topic == null) {
+			if(topic.getTopicName() == null || topic.getTopicName().length() <= 0) {
 				topic = uiCategory.forumService.getTopic(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, id[0], id[1], "Guest");
 			}
 			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic, true) ;

@@ -164,7 +164,7 @@
 									classIconForum = "ForumNewPostIcon";
 									titleIconForum = "Forum Contains New Posts";
 								}
-								openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+","+topicNewPost.getId()))
+								openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId()))
 							}
 							String isLock = "false";
 							String isClose = "false";
@@ -175,6 +175,7 @@
 							}
 							if(forum.getIsClosed() == true){
 								isClose = "true" ;
+								if(userProfile.getUserRole() != 0) continue ;
 								classIconForum = "ForumLockedIcon";//TODO: Rename class ForumLockedIcon into ForumCloseIcon
 								titleIconForum = "Forum is Closed for Posting";
 							}

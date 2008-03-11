@@ -50,13 +50,18 @@
 			}
 		}
 	}
+	
+	boolean isLock = false;
+	if(!isLock && forum != null)isLock = forum.getIsLock() ;
+	if(!isLock && topic != null)isLock = topic.getIsLock() ;
+	if(!isLock && forum != null)isLock = forum.getIsClosed() ;
+	if(!isLock && topic != null)isLock = topic.getIsClosed() ;
 %>
-
 <div class="UITopicDetail">
 <% uiform.begin() %>
 	<% if(topic != null) {%>
 	<div class="ButtomAndPageListContainer">
-	<% if(topic.getIsLock() || !isShowMenu) { %>
+	<% if(isLock || !isShowMenu) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -66,7 +71,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(topic.getIsLock() || !isShowMenu) { %>
+							<% if(isLock || !isShowMenu) { %>
 									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
@@ -299,7 +304,7 @@
 															 		
 															 		
 															 		if(action.indexOf("Close") > 0 || action.indexOf("Open") > 0 || action.indexOf("intPa") > 0
-															 			 || action.indexOf("plitTo") > 0 || action.indexOf("Approve") > 0) {
+															 			 || action.indexOf("Approve") > 0) {
 														 %>
 															<div class="MenuItem" style="opacity: 0.3; cursor: none;">	 
 																<div class="ItemIcon $classIcon">
@@ -499,7 +504,7 @@
 													if(action.equals("Edit")||action.equals("Delete"))continue ;
 												}
 											}
-											if(topic.getIsLock()&&(action.equals("Edit")||action.equals("Quote"))) continue ;
+											if(isLock&&(action.equals("Edit")||action.equals("Quote"))) continue ;
 											String actionLink = uicomponent.event(action, post.getId());
 											if(action.equals("Delete")) actionLink = "javascript:if(confirm('Are you sure you want to Delete this Post?')){"+uicomponent.event(action, post.getId())+"}"
 									%>
@@ -538,7 +543,7 @@
 	</div>	
 <!-- End PostsInThreadContainer -->
 	<div class="ButtomAndPageListContainer">
-		<% if(topic.getIsLock() || !isShowMenu) { %>
+		<% if(isLock || !isShowMenu) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -548,7 +553,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(topic.getIsLock() || !isShowMenu) { %>
+							<% if(isLock || !isShowMenu) { %>
 									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
@@ -613,7 +618,7 @@
 	</div>
 	<% } else { %>
 	
-		Topic da bi xoa hoac da bi chuyen di !
+		This topic is deleted or removed !
 	
 	<% } %>
 <%uiform.end()%>

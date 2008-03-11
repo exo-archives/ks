@@ -37,6 +37,7 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
 import org.exoplatform.forum.webui.popup.UIRatingForm;
+import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITagForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -602,8 +603,16 @@ public class UITopicDetail extends UIForm {
 
 	static public class SplitTopicActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
-//			UITopicDetail topicDetail = event.getSource() ;
-		}
+			UITopicDetail topicDetail = event.getSource() ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UISplitTopicForm splitTopicForm = popupAction.createUIComponent(UISplitTopicForm.class, null, null) ;
+			splitTopicForm.setListPost(topicDetail.posts) ;
+			splitTopicForm.setTopic(topicDetail.topic) ;
+			splitTopicForm.setUserProfile(topicDetail.userProfile) ;
+			popupAction.activate(splitTopicForm, 700, 550) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
 	}
 
 	static public class SetApproveTopicActionListener extends EventListener<UITopicDetail> {

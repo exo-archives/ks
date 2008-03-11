@@ -51,7 +51,6 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UICategories extends UIContainer	{
 	protected ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-	private List<Forum> forumList = null ;
 	private Map<String, List<Forum>> mapListForum = new HashMap<String, List<Forum>>() ;
 	private Map<String, Topic> maptopicLast = new HashMap<String, Topic>() ;
 	private List<Category> categoryList = new ArrayList<Category>() ;
@@ -89,26 +88,33 @@ public class UICategories extends UIContainer	{
     this.isGetForumList = isGetForumList ;
   }
 	private List<Forum> getForumList(String categoryId) throws Exception {
+		List<Forum> forumList = null ;
 		if(!mapListForum.isEmpty() && !isGetForumList) {
-			this.forumList = mapListForum.get(categoryId) ;
-			if(this.forumList == null || this.forumList.size() <= 0) {
-				this.forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
+			forumList = mapListForum.get(categoryId) ;
+			if(forumList == null || forumList.size() <= 0) {
+				forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
 				mapListForum.remove(categoryId) ;
-				mapListForum.put(categoryId, this.forumList) ;
+				mapListForum.put(categoryId, forumList) ;
 			}
 		} else {
-			this.forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
+			forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
 			mapListForum.remove(categoryId) ;
-			mapListForum.put(categoryId, this.forumList) ;
+			mapListForum.put(categoryId, forumList) ;
 		}
-		return this.forumList;
+		return forumList;
 	}
 	
-	private Forum getForumById(String forumId) throws Exception {
-		for(Forum forum : this.forumList) {
-			if(forum.getId().equals(forumId)) return forum ;
+	private Forum getForumById(String categoryId, String forumId) throws Exception {
+		Forum forum_ = new Forum() ; 
+		if(!mapListForum.isEmpty() && !isGetForumList) {
+			for(Forum forum : mapListForum.get(categoryId)) {
+				if(forum.getId().equals(forumId)) {forum_ = forum ; break;}
+			}
 		}
-		return null ;
+		if(forum_ == null) {
+			forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId) ;
+		}
+		return forum_ ;
 	}
 	
 	@SuppressWarnings("unused")
@@ -186,18 +192,17 @@ public class UICategories extends UIContainer	{
 	static public class OpenLastTopicLinkActionListener extends EventListener<UICategories> {
     public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiContainer = event.getSource();
-			String Id = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String []id = Id.trim().split(",");
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String []id = path.trim().split("/");
 			UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(2);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 			uiForumContainer.setIsRenderChild(false) ;
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-			String path = id[0]+"/"+id[1] + "/" + id[2];
 			uiForumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
 			uiTopicDetail.setTopicFromCate(id[0], id[1],uiContainer.getTopic(id[2], path), true) ;
-			uiTopicDetail.setUpdateForum(uiContainer.getForumById(id[1])) ;
+			uiTopicDetail.setUpdateForum(uiContainer.getForumById(id[0], id[1])) ;
 			uiTopicDetail.setIdPostView("true") ;
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], id[2]) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));

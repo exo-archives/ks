@@ -277,7 +277,22 @@
 }
 
 
+.UIForumPortlet .UISplitTopicForm .label {
+	line-height: 20px;
+	padding-right: 10px;
+}
 
+.UIForumPortlet .UISplitTopicForm .ListPost {
+	padding-top: 10px;
+}
+
+.UIForumPortlet .UISplitTopicForm input {
+	width: 300px;
+}
+
+.UIForumPortlet .UISplitTopicForm input.checkbox {
+	width: 30px;
+}
 
 
 

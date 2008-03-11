@@ -161,8 +161,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private List<String> getModerateList(String []forumsModerate) {
 		List<String> list = new ArrayList<String>() ;
 		for (String string : forumsModerate) {
-			string = string.substring(string.indexOf("(category")+1, string.lastIndexOf(")")) ;
-			list.add(string);
+			if(string.indexOf('(') > 0) {
+				string = string.substring(string.indexOf('(')+1, string.lastIndexOf(')')) ;
+				list.add(string);
+			}
     }
 		return list; 
 	}

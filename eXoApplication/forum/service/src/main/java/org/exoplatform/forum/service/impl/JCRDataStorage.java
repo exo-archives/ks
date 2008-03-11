@@ -49,8 +49,6 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
-import com.sun.org.apache.xpath.internal.FoundIndex;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
@@ -239,55 +237,60 @@ public class JCRDataStorage{
 			forumNode.setProperty("exo:viewForumRole", forum.getViewForumRole()) ;
 			forumNode.setProperty("exo:createTopicRole", forum.getCreateTopicRole()) ;
 			forumNode.setProperty("exo:replyTopicRole", forum.getReplyTopicRole()) ;
-			String []oldModeratoForums = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()); 
+			
+			String []oldModeratoForums = new String[]{};
+			if(!isNew)ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()); 
+			forumNode.setProperty("exo:moderators", forum.getModerators()) ;
+			forumHomeNode.getSession().save() ;
 			{//seveProfile
 				Node userProfileHomeNode = getUserProfileNode(sProvider) ;
 				Node userProfileNode ;
 				List<String>list = new ArrayList<String>() ;
-				for (String string : forum.getModerators()) {
-					list = new ArrayList<String>() ;
-					try {
-						userProfileNode = userProfileHomeNode.getNode(string) ; 
-						String [] moderatorForums = ValuesToStrings(userProfileNode.getProperty("exo:moderateForums").getValues()); 
-						boolean hasMod = false;
-						for (String string2 : moderatorForums) {
-	            if(string2.indexOf(forum.getId()) > 0) {hasMod = true; }
-	            list.add(string) ;
-            }
-						if(!hasMod) {
-							list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId()+");\n");
-							userProfileNode.setProperty("exo:moderateForums", getStrings(list));
-						}
-          } catch (PathNotFoundException e) {
-          	userProfileNode = userProfileHomeNode.addNode(string,"exo:userProfile") ; 
-          }
-        }
+				if(forum.getModerators().length > 0) {
+					for (String string : forum.getModerators()) {
+						list = new ArrayList<String>() ;
+						try {
+							userProfileNode = userProfileHomeNode.getNode(string) ; 
+							String [] moderatorForums = ValuesToStrings(userProfileNode.getProperty("exo:moderateForums").getValues()); 
+							boolean hasMod = false;
+							for (String string2 : moderatorForums) {
+		            if(string2.indexOf(forum.getId()) > 0) {hasMod = true; }
+		            list.add(string2) ;
+	            }
+							if(!hasMod) {
+								list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId()+");\n");
+								userProfileNode.setProperty("exo:moderateForums", getStrings(list));
+							}
+	          } catch (PathNotFoundException e) {
+	          	userProfileNode = userProfileHomeNode.addNode(string,"exo:userProfile") ; 
+	          }
+	        }
+				}
 				//remove 
-				for (String string : oldModeratoForums) {
-					boolean isDelete = true ;
-          for (String string2 : forum.getModerators()) {
-	          if(string.equals(string2)) {isDelete = false; break ;}
-          }
-          if(isDelete) {
-          	try {
-          		list = new ArrayList<String>() ;
-          		userProfileNode = userProfileHomeNode.getNode(string) ; 
-          		String [] moderatorForums = ValuesToStrings(userProfileNode.getProperty("exo:moderateForums").getValues());
-          		for (String string2 : moderatorForums) {
-  	            if(string2.indexOf(forum.getId()) < 0) {
-  	            	list.add(string) ;
-  	            }
-              }
-          		userProfileNode.setProperty("exo:moderateForums", getStrings(list));
-          	} catch (PathNotFoundException e) {
-            }
-          }
-        }
-				forumNode.setProperty("exo:moderators", forum.getModerators()) ;
+				if(!isNew) {
+					for (String string : oldModeratoForums) {
+						boolean isDelete = true ;
+	          for (String string2 : forum.getModerators()) {
+		          if(string.equals(string2)) {isDelete = false; break ;}
+	          }
+	          if(isDelete) {
+	          	try {
+	          		list = new ArrayList<String>() ;
+	          		userProfileNode = userProfileHomeNode.getNode(string) ; 
+	          		String [] moderatorForums = ValuesToStrings(userProfileNode.getProperty("exo:moderateForums").getValues());
+	          		for (String string2 : moderatorForums) {
+	  	            if(string2.indexOf(forum.getId()) < 0) {
+	  	            	list.add(string) ;
+	  	            }
+	              }
+	          		userProfileNode.setProperty("exo:moderateForums", getStrings(list));
+	          	} catch (PathNotFoundException e) {
+	            }
+	          }
+	        }
+				}
 				userProfileHomeNode.getSession().save() ;
 			}
-			//forumHomeNode.save() ;
-			forumHomeNode.getSession().save() ;
 		} catch (PathNotFoundException e) {
 		}
 	}
