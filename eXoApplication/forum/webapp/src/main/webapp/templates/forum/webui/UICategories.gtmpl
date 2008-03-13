@@ -7,6 +7,9 @@
 	import org.exoplatform.forum.ForumFormatUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	UserProfile userProfile = uicomponent.getUserProfile();
+	String userLogin = userProfile.getUserId() ;
+	boolean isAdmin = false ;
+	if(userProfile.userRole == 0) isAdmin = true ;
 %>
 <div class="UICategories" id="$uicomponent.id">
 	<div class="UIForumWorkingWorkspace">
@@ -72,11 +75,15 @@
 										String titleIconForum = "Forum Contains No New Post";
 										String forumTitle = forum.getForumName();
 										String forumDescription = forum.getDescription();
+										String [] forumModerators = forum.getModerators();
+										String topicCount = (String)forum.getTopicCount();
+										String postCount = (String)forum.getPostCount();
 										String topicNewPostIcon = "";
 										String topicNewPostTitle = "";
 										String lastPostBy = "";
 										String dateTime = "";
 										String openLinkLastPost = "#";
+										String titleTopic = "" ;
 										long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
 				 						if(topicNewPost != null) {
@@ -93,7 +100,18 @@
 												classIconForum = "ForumNewPostIcon";
 												titleIconForum = "Forum Contains New Posts";
 											}
-											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId()))
+											titleTopic = ("Go to first new post in thread ' " + topicNewPostTitle + " '") ;
+											if(topicNewPost.getIsClosed()) {
+												if(ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin) {
+													openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
+												} else {
+													openLinkLastPost = "javascript:void(0)";
+													titleTopic ="This thread '" + topicNewPostTitle + "' is Closed" ;
+												}
+											} else {
+												openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
+											}
+											titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
 										}
 										if(forum.getIsLock() == true){
 											classIconForum = "ForumLockedIcon";
@@ -104,9 +122,6 @@
 											classIconForum = "ForumLockedIcon";//TODO: Rename class ForumLockedIcon into ForumCloseIcon
 											titleIconForum = "Forum is Closed";
 										}
-										String topicCount = (String)forum.getTopicCount();
-										String postCount = (String)forum.getPostCount();
-										String [] forumModerators = forum.getModerators();
 										String id = category.getId() + "," + forum.getId();
 										
 								%>
@@ -116,19 +131,16 @@
 												<a href="<%=uicomponent.event("OpenForumLink", id)%>" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;(5 viewing)</span>
 												<div class="ForumDescription">$forumDescription</div>
 											</td>
-										 	<% if(topicNewPost != null) { %>
-										 	<%  
-										 	 String postTitle = ("Go to first new post in thread ' " + topicNewPostTitle + " '").replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
-										 	%>
+											<%if(topicNewPost != null) {%>
 										 	<td >
 										 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
-										 		<a href="$openLinkLastPost" title=$postTitle class="LastPostTitle">$topicNewPostTitle</a>
+										 		<a href="$openLinkLastPost" title="$titleTopic" class="LastPostTitle">$topicNewPostTitle</a>
 												<div style="clear: left;"><span></span></div>
 												<div class="LastPostInfos">by&nbsp;<a style="color: #058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
 											<%} else { %>	
 											<td class="Tdbox" style="height: 40px;">
 													<%=_ctx.appRes("UICategory.label.notTheard"); %>
-											<% } %>
+											<%} %>
 											</td>
 										 	<td class="Tdbox">$topicCount</td>
 											<td class="Tdbox">$postCount</td>

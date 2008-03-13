@@ -210,8 +210,8 @@ public class ForumFormatUtils {
 		buffer.append(s);
 		return buffer.toString() ;
   }
-	
-	public static boolean isReadTopic(String []topicIds, String topicId) {
+	//isReadTopic
+	public static boolean isStringInStrings(String []topicIds, String topicId) {
 	  for (String string : topicIds) {
 	    if(topicId.equals(string)) return true ;
     }

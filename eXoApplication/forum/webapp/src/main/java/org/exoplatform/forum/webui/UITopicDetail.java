@@ -162,7 +162,7 @@ public class UITopicDetail extends UIForm {
 				if(this.userProfile != null) {
 					String []topicsRead = this.userProfile.getReadTopic() ;
 					if(topicsRead != null && topicsRead.length > 0) {
-						if(!ForumFormatUtils.isReadTopic(topicsRead, this.topicId)) {
+						if(!ForumFormatUtils.isStringInStrings(topicsRead, this.topicId)) {
 							isGetService = true ;
 						} 
 					} else isGetService = true ;
@@ -196,7 +196,7 @@ public class UITopicDetail extends UIForm {
 				if(this.userProfile != null) {
 					String []topicsRead = this.userProfile.getReadTopic() ;
 					if(topicsRead != null && topicsRead.length > 0) {
-						if(!ForumFormatUtils.isReadTopic(topicsRead, this.topicId)) {
+						if(!ForumFormatUtils.isStringInStrings(topicsRead, this.topicId)) {
 							isGetService = true ;
 						} 
 					} else isGetService = true ;

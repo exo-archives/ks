@@ -50,12 +50,15 @@
 			}
 		}
 	}
-	
+	boolean isClosed = false;
 	boolean isLock = false;
 	if(!isLock && forum != null)isLock = forum.getIsLock() ;
 	if(!isLock && topic != null)isLock = topic.getIsLock() ;
 	if(!isLock && forum != null)isLock = forum.getIsClosed() ;
 	if(!isLock && topic != null)isLock = topic.getIsClosed() ;
+
+	if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
+	if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>

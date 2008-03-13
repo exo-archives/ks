@@ -340,7 +340,7 @@
 										titleTopicStatus = "Hot thread with new post lock" ;
 									}
 									String number = "1";
-									boolean isReadTopic = ForumFormatUtils.isReadTopic(userProfile.getReadTopic(), topicId);
+									boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
 									String title = "";
 									if(isReadTopic) {
 										title = "TitleNorman";
