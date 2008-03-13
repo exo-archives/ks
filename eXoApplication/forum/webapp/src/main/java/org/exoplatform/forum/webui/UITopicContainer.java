@@ -478,7 +478,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			if(topics.size() > 0 && sms.length() == 0) {
 				for(Topic topic : topics) {
 					topic.setIsClosed(false) ;
-					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false) ;
+					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
 				}
 			} 
 			if(topics.size() == 0 && sms.length() == 0){
@@ -514,7 +514,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			if(topics.size() > 0 && sms.length() == 0) {
 				for(Topic topic : topics) {
 					topic.setIsClosed(true) ;
-					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false) ;
+					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
 				}
 			} 
 			if(topics.size() == 0 && sms.length() == 0){
@@ -550,7 +550,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			if(topics.size() > 0 && sms.length() == 0) {
 				for(Topic topic : topics) {
 					topic.setIsLock(true) ;
-					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false) ;
+					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
 				}
 			} 
 			if(topics.size() == 0 && sms.length() == 0){
@@ -586,7 +586,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			if(topics.size() > 0 && sms.length() == 0) {
 				for(Topic topic : topics) {
 					topic.setIsLock(false) ;
-					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false) ;
+					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
 				}
 			} 
 			if(topics.size() == 0 && sms.length() == 0){
@@ -622,7 +622,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			if(topics.size() > 0 && sms.length() == 0) {
 				for(Topic topic : topics) {
 					topic.setIsSticky(false) ;
-					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false) ;
+					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
 				}
 			} 
 			if(topics.size() == 0 && sms.length() == 0){
@@ -658,7 +658,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			if(topics.size() > 0 && sms.length() == 0) {
 				for(Topic topic : topics) {
 					topic.setIsSticky(true) ;
-					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false) ;
+					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
 				}
 			} 
 			if(topics.size() == 0 && sms.length() == 0){

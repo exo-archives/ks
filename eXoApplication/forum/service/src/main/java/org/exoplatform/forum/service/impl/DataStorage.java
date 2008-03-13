@@ -55,7 +55,7 @@ public interface DataStorage {
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;		
 	public Topic getTopicByPath(SessionProvider sProvider, String topicPath) throws Exception;
 	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
-	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew) throws Exception;
+	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception;
 	public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
 	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception;
 	

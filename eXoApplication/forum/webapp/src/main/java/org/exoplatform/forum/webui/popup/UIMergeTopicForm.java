@@ -106,7 +106,7 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 				forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId()) ;
 			}
 			topicMerge.setTopicName(topicMergeTitle) ;
-			forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicMerge, false) ;
+			forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicMerge, false, false) ;
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

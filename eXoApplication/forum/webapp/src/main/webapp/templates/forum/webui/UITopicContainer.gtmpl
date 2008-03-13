@@ -306,6 +306,13 @@
 								String classRow = "whileRow";
 								int i = 0;
 								 for(topic in topics){
+									boolean isLockTopic = topic.getIsLock() ;
+									if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
+									if(topic.getIsClosed()) {
+										if(!canEdit) {
+											continue ;
+										}
+									}
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
@@ -328,7 +335,7 @@
 									String postView = String.valueOf(topic.getViewCount());
 									String titleTopicStatus = "Hot thread with new post" ;
 									String iconTopicStatus = "HotThreadNewPost" ;
-									if(topic.getIsLock() || isLock) {
+									if(isLockTopic || isLock) {
 										iconTopicStatus = "HotThreadNewLockPost" ;
 										titleTopicStatus = "Hot thread with new post lock" ;
 									}

@@ -499,7 +499,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsClosed()) {
 				topic.setIsClosed(false) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false) ;
+				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -516,7 +516,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsClosed()) {
 				topic.setIsClosed(true) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false) ;
+				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -533,7 +533,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsLock()) {
 				topic.setIsLock(true) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false) ;
+				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -550,7 +550,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsLock()) {
 				topic.setIsLock(false) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false) ;
+				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -582,7 +582,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsSticky()) {
 				topic.setIsSticky(true) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false) ;
+				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -599,7 +599,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsSticky()) {
 				topic.setIsSticky(false) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false) ;
+				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -613,14 +613,20 @@ public class UITopicDetail extends UIForm {
 	static public class SplitTopicActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UISplitTopicForm splitTopicForm = popupAction.createUIComponent(UISplitTopicForm.class, null, null) ;
-			splitTopicForm.setListPost(topicDetail.AllPost) ;
-			splitTopicForm.setTopic(topicDetail.topic) ;
-			splitTopicForm.setUserProfile(topicDetail.userProfile) ;
-			popupAction.activate(splitTopicForm, 700, 550) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			List<Post>list = topicDetail.AllPost ;
+			if(list.size() > 1) {
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+				UISplitTopicForm splitTopicForm = popupAction.createUIComponent(UISplitTopicForm.class, null, null) ;
+				splitTopicForm.setListPost(list) ;
+				splitTopicForm.setTopic(topicDetail.topic) ;
+				splitTopicForm.setUserProfile(topicDetail.userProfile) ;
+				popupAction.activate(splitTopicForm, 700, 550) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.NotSplit", args, ApplicationMessage.WARNING)) ;
+			}
     }
 	}
 

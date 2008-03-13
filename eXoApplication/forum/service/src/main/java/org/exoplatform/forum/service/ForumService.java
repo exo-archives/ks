@@ -194,12 +194,12 @@ public interface ForumService {
 	 * @param forumId
 	 * @param topic
 	 * @param isNew
+	 * @param isMove TODO
 	 * @param username
-	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew) throws Exception;
+	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception;
 	/**
 	 * This method should:
 	 * 1. Check the user permission

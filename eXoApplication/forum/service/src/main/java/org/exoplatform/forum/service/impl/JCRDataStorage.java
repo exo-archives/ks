@@ -550,7 +550,7 @@ public class JCRDataStorage{
 		}
   }
 	
-	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew) throws Exception {
+	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try{
 			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
@@ -606,35 +606,37 @@ public class JCRDataStorage{
 				topicNode.setProperty("exo:numberAttachments", 0) ;
 				//forumHomeNode.save() ;
 				forumHomeNode.getSession().save() ;
-				if(isNew) {
-					// createPost first
-					String id = topic.getId().replaceFirst("topic", "post").toUpperCase() ;
-					Post post = new Post() ;
-					post.setId(id) ;
-					post.setOwner(topic.getOwner()) ;
-					post.setCreatedDate(new Date()) ;
-					post.setModifiedBy(topic.getModifiedBy()) ;
-					post.setModifiedDate(new Date()) ;
-					post.setSubject(topic.getTopicName()) ;
-					post.setMessage(topic.getDescription()) ;
-					post.setRemoteAddr("") ;
-					post.setIcon(topic.getIcon()) ;
-					post.setIsApproved(false) ;
-					post.setAttachments(topic.getAttachments()) ;
-					
-					savePost(sProvider, categoryId, forumId, topic.getId(), post, true) ;
-				} else {
-					String id = topic.getId().replaceFirst("topic", "post").toUpperCase() ;
-					if(topicNode.hasNode(id)) {
-						Node fistPostNode = topicNode.getNode(id) ;
-						Post post = getPost(fistPostNode) ;
+				if(!isMove) {
+					if(isNew) {
+						// createPost first
+						String id = topic.getId().replaceFirst("topic", "post") ;
+						Post post = new Post() ;
+						post.setId(id) ;
+						post.setOwner(topic.getOwner()) ;
+						post.setCreatedDate(new Date()) ;
 						post.setModifiedBy(topic.getModifiedBy()) ;
 						post.setModifiedDate(new Date()) ;
 						post.setSubject(topic.getTopicName()) ;
 						post.setMessage(topic.getDescription()) ;
+						post.setRemoteAddr("") ;
 						post.setIcon(topic.getIcon()) ;
+						post.setIsApproved(false) ;
 						post.setAttachments(topic.getAttachments()) ;
-						savePost(sProvider, categoryId, forumId, topic.getId(), post, false) ;
+						
+						savePost(sProvider, categoryId, forumId, topic.getId(), post, true) ;
+					} else {
+						String id = topic.getId().replaceFirst("topic", "post") ;
+						if(topicNode.hasNode(id)) {
+							Node fistPostNode = topicNode.getNode(id) ;
+							Post post = getPost(fistPostNode) ;
+							post.setModifiedBy(topic.getModifiedBy()) ;
+							post.setModifiedDate(new Date()) ;
+							post.setSubject(topic.getTopicName()) ;
+							post.setMessage(topic.getDescription()) ;
+							post.setIcon(topic.getIcon()) ;
+							post.setAttachments(topic.getAttachments()) ;
+							savePost(sProvider, categoryId, forumId, topic.getId(), post, false) ;
+						}
 					}
 				}
 			}catch (PathNotFoundException e) {
@@ -869,6 +871,7 @@ public class JCRDataStorage{
 					long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1 ;
 					topicNode.setProperty("exo:postCount", topicPostCount ) ;
 					topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime()) ;
+					topicNode.setProperty("exo:lastPostBy", post.getOwner()) ;
 					long newNumberAttach =	topicNode.getProperty("exo:numberAttachments").getLong() + numberAttach ;
 					topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 					// set InfoPost for Forum
