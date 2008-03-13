@@ -97,7 +97,7 @@ public class ForumPageList extends JCRPageList {
 		if(iterAll_ != null) {
 			Node currentNode ;
 			listPageAll_ = new ArrayList<Object>() ;
-			while (iterAll_.hasNext()) {
+			while(iterAll_.hasNext()) {
 				currentNode = iterAll_.nextNode() ;
 				if(currentNode.isNodeType("exo:post")) {
 					listPageAll_.add(getPost(currentNode)) ;
