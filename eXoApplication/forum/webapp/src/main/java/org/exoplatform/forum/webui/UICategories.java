@@ -54,11 +54,10 @@ public class UICategories extends UIContainer	{
 	private Map<String, List<Forum>> mapListForum = new HashMap<String, List<Forum>>() ;
 	private Map<String, Topic> maptopicLast = new HashMap<String, Topic>() ;
 	private List<Category> categoryList = new ArrayList<Category>() ;
+	private Map<String, Forum> AllForum = new HashMap<String, Forum>() ;
 	private boolean isGetForumList = false ;
   
-  
-	public UICategories() throws Exception {
-	}
+	public UICategories() throws Exception {}
 
 	@SuppressWarnings({ "deprecation", "unused" })
   private UserProfile getUserProfile() {
@@ -66,27 +65,34 @@ public class UICategories extends UIContainer	{
 	}
 	
 	//Function Public getObject 
-	public List<Category> getCategorys() {
-	  return this.categoryList ;
-  }
-	
-	public List<Forum> getForums(String categoryId) {
-	  return mapListForum.get(categoryId) ;
-  }
+	public List<Category> getCategorys() { return this.categoryList ; }
+	public List<Category> getPrivateCategories() {
+		List<Category> list = new ArrayList<Category>() ;
+		for (Category cate : this.categoryList) {
+	    if(cate.getUserPrivate() != null && cate.getUserPrivate().length() > 1) {
+	    	list.add(cate) ;
+	    }
+    }
+		return list;
+	}
+	public List<Forum> getForums(String categoryId) { return mapListForum.get(categoryId) ; }
+	public Map<String, Forum> getAllForum() { 
+		return AllForum ;
+	}
+	  
 	
 	private List<Category> getCategoryList() throws Exception {
 		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath("ForumService") ;
-		List<Category> categoryList = forumService.getCategories(ForumSessionUtils.getSystemProvider());
-		if(categoryList.size() > 0)
+		this.categoryList = forumService.getCategories(ForumSessionUtils.getSystemProvider());
+		if(this.categoryList.size() > 0)
 			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(true) ;
 		else 
 			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(false) ;
-		return categoryList;
+		return this.categoryList;
 	}	
 	
-  public void setIsgetForumList(boolean isGetForumList) {
-    this.isGetForumList = isGetForumList ;
-  }
+  public void setIsgetForumList(boolean isGetForumList) { this.isGetForumList = isGetForumList ; }
+  
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		List<Forum> forumList = null ;
 		if(!mapListForum.isEmpty() && !isGetForumList) {
@@ -101,6 +107,12 @@ public class UICategories extends UIContainer	{
 			mapListForum.remove(categoryId) ;
 			mapListForum.put(categoryId, forumList) ;
 		}
+		String forumId ;
+		for (Forum forum : forumList) {
+			forumId = forum.getId() ;
+			if(AllForum.containsKey(forumId)) AllForum.remove(forumId) ;
+			AllForum.put(forumId, forum) ;
+    }
 		return forumList;
 	}
 	
