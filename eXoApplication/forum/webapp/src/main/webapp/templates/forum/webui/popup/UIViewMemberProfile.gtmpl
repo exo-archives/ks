@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.forum.ForumFormatUtils;
-	import org.exoplatform.contact.service.Contact;
+	//import org.exoplatform.contact.service.Contact;
 %>
 <div class="UIViewMemberProfile">
 <% uiform.begin() %>

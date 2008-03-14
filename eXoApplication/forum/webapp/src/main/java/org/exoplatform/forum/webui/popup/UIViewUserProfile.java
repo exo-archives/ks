@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -57,15 +55,15 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return this.userProfile ;
 	}
 	
-	@SuppressWarnings("unused")
-  private Contact getPersonalContact(String userId) throws Exception {
-		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
-		if(contact == null) {
-			contact = new Contact() ;
-			contact.setId(userId) ;
-		}
-		return contact ;
-	}
+//	@SuppressWarnings("unused")
+//  private Contact getPersonalContact(String userId) throws Exception {
+//		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+//		if(contact == null) {
+//			contact = new Contact() ;
+//			contact.setId(userId) ;
+//		}
+//		return contact ;
+//	}
 	
 	@SuppressWarnings("unused")
   private String[] getLabelProfile() {

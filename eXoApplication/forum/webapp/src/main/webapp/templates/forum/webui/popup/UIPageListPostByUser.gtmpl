@@ -14,7 +14,7 @@
 			<div class="ContentContainer">
 				<div class="UITopicList">
 					<div style="overflow:auto; margin: 2px 0px;">
-						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>terterter
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 					</div>
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 						<thead>
