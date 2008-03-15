@@ -186,8 +186,10 @@ public class ForumFormatUtils {
 			if(t < 0 ) break;
 			String first = s.substring(0, t) ;
 			int t1 = s.indexOf(']');
+			if(t1 < 0) break ;
 			String usernam = s.substring((t+7), t1) ;
 			int t2 = s.indexOf('['+"/QUOTE");
+			if(t2 < 0) break ;
 			String content = s.substring(t1+1, t2);
 			s = s.substring(t2+8) ;
 			buffer.append(first).append("<div>Quote:</div><div class=\"ClassQuote\"><div>Originally Posted by <strong>").append(usernam).
@@ -204,6 +206,7 @@ public class ForumFormatUtils {
 			if(t < 0 ) break;
 			String first = s.substring(0, t) ;
 			int t2 = s.indexOf('['+"/QUOTE");
+			if(t2 < 0) break ;
 			buffer.append(first+"</br>");
 			s = s.substring(t2+8);
 		}

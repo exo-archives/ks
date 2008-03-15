@@ -38,6 +38,7 @@
 			String []moderatorsByForum = forum.getModerators() ;
 			if(moderatorsByForum != null || moderatorsByForum.length > 0) {
 				for(user in moderatorsByForum) {
+				System.out.println("fdsf dsiofds f: " + user + userProfile.getUserId()) ;
 					if(user.indexOf(userProfile.getUserId()) >= 0) {
 						canEdit = true;
 						break ;

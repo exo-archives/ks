@@ -32,6 +32,8 @@ import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -43,8 +45,8 @@ import org.exoplatform.webui.core.UIContainer;
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
 		events = {
-				@EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
-				@EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class )
+				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class ),
+				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicsTagActionListener.class )
 		}
 )
 public class UIPageListTopicByUser extends UIContainer{
@@ -96,6 +98,15 @@ public class UIPageListTopicByUser extends UIContainer{
 //		pageListPost.setPageSize(this.maxPost) ;
 		return pageListPost;
 	}
-	
+	static	public class OpenTopicActionListener extends EventListener<UIPageListTopicByUser> {
+    public void execute(Event<UIPageListTopicByUser> event) throws Exception {
+			//UIPageListPostByUser uiForm = event.getSource() ;
+		}
+	}
+	static	public class OpenTopicsTagActionListener extends EventListener<UIPageListTopicByUser> {
+		public void execute(Event<UIPageListTopicByUser> event) throws Exception {
+			//UIPageListPostByUser uiForm = event.getSource() ;
+		}
+	}
 	
 }

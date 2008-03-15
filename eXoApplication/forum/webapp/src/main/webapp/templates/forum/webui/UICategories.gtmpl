@@ -5,6 +5,7 @@
 	import org.exoplatform.forum.service.Post; 
 	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	String userLogin = userProfile.getUserId() ;
@@ -21,7 +22,6 @@
 			   if(uicomponent.getIsPrivate(userProfile,category)) {
 					 String title = category.getCategoryName();
 					 String description = category.getDescription()
-			 
 		 %>
 			<div class="UIForumCategory">
 				<div class="ForumToolbar">

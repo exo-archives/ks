@@ -260,6 +260,11 @@ public class JCRDataStorage{
 							if(!hasMod) {
 								list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId()+");\n");
 								userProfileNode.setProperty("exo:moderateForums", getStrings(list));
+								if(userProfileNode.hasProperty("exo:userRole")) {
+									if(userProfileNode.getProperty("exo:userRole").getLong() >= 2) {
+										userProfileNode.setProperty("exo:userRole", 1);
+									}
+								}
 							}
 	          } catch (PathNotFoundException e) {
 	          	userProfileNode = userProfileHomeNode.addNode(string,"exo:userProfile") ; 
@@ -284,6 +289,9 @@ public class JCRDataStorage{
 	  	            }
 	              }
 	          		userProfileNode.setProperty("exo:moderateForums", getStrings(list));
+	          		if(list.size() <= 0) {
+	          			userProfileNode.setProperty("exo:userRole", 2);
+	          		}
 	          	} catch (PathNotFoundException e) {
 	            }
 	          }
@@ -543,7 +551,17 @@ public class JCRDataStorage{
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes(); 
 		JCRPageList pagelist = new ForumPageList(iter, 10, forumHomeNode.getPath(), false) ;
-		return pagelist ;
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		try {
+	    Node userNode = userProfileNode.getNode(userName) ;
+	    if(userNode.hasProperty("exo:totalTopic")) {
+	    	userNode.setProperty("exo:totalTopic", pagelist.getAvailable());
+	    	userProfileNode.getSession().save() ;
+	    }
+    } catch (PathNotFoundException e) {
+	    // TODO: handle exception
+    }
+    return pagelist ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
 			return null ;
@@ -580,6 +598,7 @@ public class JCRDataStorage{
 					}catch (PathNotFoundException e) {
 						newProfileNode = userProfileNode.addNode(topic.getOwner(), "exo:userProfile") ;
 						newProfileNode.setProperty("exo:userId", topic.getOwner());
+						newProfileNode.setProperty("exo:userTitle", "User");
 						newProfileNode.setProperty("exo:totalTopic", 1);
 					}
 					userProfileNode.getSession().save() ;
@@ -741,6 +760,16 @@ public class JCRDataStorage{
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes(); 
 		JCRPageList pagelist = new ForumPageList(iter, 10, forumHomeNode.getPath(), false) ;
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		try {
+	    Node userNode = userProfileNode.getNode(userName) ;
+	    if(userNode.hasProperty("exo:totalPost")) {
+	    	userNode.setProperty("exo:totalPost", pagelist.getAvailable());
+	    	userProfileNode.getSession().save() ;
+	    }
+    } catch (PathNotFoundException e) {
+	    // TODO: handle exception
+    }
 		return pagelist ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
@@ -834,6 +863,7 @@ public class JCRDataStorage{
 					}catch (PathNotFoundException e) {
 						newProfileNode = userProfileNode.addNode(post.getOwner(), "exo:userProfile") ;
 						newProfileNode.setProperty("exo:userId", post.getOwner());
+						newProfileNode.setProperty("exo:userTitle", "User");
 						newProfileNode.setProperty("exo:totalPost", 1);
 					}
 					newProfileNode.setProperty("exo:lastPostDate", getGreenwichMeanTime()) ;
@@ -1230,7 +1260,7 @@ public class JCRDataStorage{
 		Node newProfileNode ;
 		try {	
 			newProfileNode = userProfileNode.getNode(userName) ;
-				if(newProfileNode.hasProperty("exo:userId"))userProfile.setUserId(userName);
+				userProfile.setUserId(userName);
 				if(newProfileNode.hasProperty("exo:userTitle"))userProfile.setUserTitle(newProfileNode.getProperty("exo:userTitle").getString());
 				if(newProfileNode.hasProperty("exo:userRole"))userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
 				if(newProfileNode.hasProperty("exo:signature"))userProfile.setSignature(newProfileNode.getProperty("exo:signature").getString());
@@ -1281,7 +1311,7 @@ public class JCRDataStorage{
 		Node newProfileNode ;
 		try {	
 			newProfileNode = userProfileNode.getNode(userName) ;
-				if(newProfileNode.hasProperty("exo:userId"))userProfile.setUserId(userName);
+				userProfile.setUserId(userName);
 				if(newProfileNode.hasProperty("exo:userTitle"))userProfile.setUserTitle(newProfileNode.getProperty("exo:userTitle").getString());
 				if(newProfileNode.hasProperty("exo:userRole"))userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
 				if(newProfileNode.hasProperty("exo:signature"))userProfile.setSignature(newProfileNode.getProperty("exo:signature").getString());
@@ -1309,56 +1339,58 @@ public class JCRDataStorage{
 		Node userProfileNode = getUserProfileNode(sProvider) ;
 		Node newProfileNode ;
 		String userName = newUserProfile.getUserId() ;
-		try {
-			newProfileNode = userProfileNode.getNode(userName) ;
-		}catch (PathNotFoundException e) {
-			newProfileNode = userProfileNode.addNode(userName, "exo:userProfile") ;
-			newProfileNode.setProperty("exo:userId", userName);
-			newProfileNode.setProperty("exo:totalPost", 0);
-			newProfileNode.setProperty("exo:totalTopic", 0);
-			newProfileNode.setProperty("exo:readTopic", new String[]{});
-		}
-		if(newUserProfile.getUserRole() >= 2) {
-			newUserProfile.setUserRole((long)2);
-		}
-			newProfileNode.setProperty("exo:userRole", newUserProfile.getUserRole());
-			newProfileNode.setProperty("exo:userTitle", newUserProfile.getUserTitle());
-			newProfileNode.setProperty("exo:signature", newUserProfile.getSignature());
-			
-			newProfileNode.setProperty("exo:moderateForums", newUserProfile.getModerateForums());
-			newProfileNode.setProperty("exo:moderateTopics", newUserProfile.getModerateTopics());
-			Calendar calendar = GregorianCalendar.getInstance();
-			if(newUserProfile.getLastLoginDate() != null)
-				calendar.setTime(newUserProfile.getLastLoginDate()) ;
-			newProfileNode.setProperty("exo:lastLoginDate", calendar);
-			newProfileNode.setProperty("exo:isDisplaySignature", newUserProfile.getIsDisplaySignature());
-			newProfileNode.setProperty("exo:isDisplayAvatar", newUserProfile.getIsDisplayAvatar());
-		//UserOption
-		if(isOption) {
-			newProfileNode.setProperty("exo:timeZone", newUserProfile.getTimeZone());
-			newProfileNode.setProperty("exo:shortDateformat", newUserProfile.getShortDateFormat());
-			newProfileNode.setProperty("exo:longDateformat", newUserProfile.getLongDateFormat());
-			newProfileNode.setProperty("exo:timeFormat", newUserProfile.getTimeFormat());
-			newProfileNode.setProperty("exo:maxPost", newUserProfile.getMaxPostInPage());
-			newProfileNode.setProperty("exo:maxTopic", newUserProfile.getMaxTopicInPage());
-			newProfileNode.setProperty("exo:isShowForumJump", newUserProfile.getIsShowForumJump());
-		}
-		//UserBan
-		if(isBan){
-			if(newProfileNode.hasProperty("exo:isBanned")) {
-				if(!newProfileNode.getProperty("exo:isBanned").getBoolean() && newUserProfile.getIsBanned()) {
+		if(userName != null && userName.length() > 0) {
+			try {
+				newProfileNode = userProfileNode.getNode(userName) ;
+			}catch (PathNotFoundException e) {
+				newProfileNode = userProfileNode.addNode(userName, "exo:userProfile") ;
+				newProfileNode.setProperty("exo:userId", userName);
+				newProfileNode.setProperty("exo:totalPost", 0);
+				newProfileNode.setProperty("exo:totalTopic", 0);
+				newProfileNode.setProperty("exo:readTopic", new String[]{});
+			}
+			if(newUserProfile.getUserRole() >= 2) {
+				newUserProfile.setUserRole((long)2);
+			}
+				newProfileNode.setProperty("exo:userRole", newUserProfile.getUserRole());
+				newProfileNode.setProperty("exo:userTitle", newUserProfile.getUserTitle());
+				newProfileNode.setProperty("exo:signature", newUserProfile.getSignature());
+				
+				newProfileNode.setProperty("exo:moderateForums", newUserProfile.getModerateForums());
+				newProfileNode.setProperty("exo:moderateTopics", newUserProfile.getModerateTopics());
+				Calendar calendar = GregorianCalendar.getInstance();
+				if(newUserProfile.getLastLoginDate() != null)
+					calendar.setTime(newUserProfile.getLastLoginDate()) ;
+				newProfileNode.setProperty("exo:lastLoginDate", calendar);
+				newProfileNode.setProperty("exo:isDisplaySignature", newUserProfile.getIsDisplaySignature());
+				newProfileNode.setProperty("exo:isDisplayAvatar", newUserProfile.getIsDisplayAvatar());
+			//UserOption
+			if(isOption) {
+				newProfileNode.setProperty("exo:timeZone", newUserProfile.getTimeZone());
+				newProfileNode.setProperty("exo:shortDateformat", newUserProfile.getShortDateFormat());
+				newProfileNode.setProperty("exo:longDateformat", newUserProfile.getLongDateFormat());
+				newProfileNode.setProperty("exo:timeFormat", newUserProfile.getTimeFormat());
+				newProfileNode.setProperty("exo:maxPost", newUserProfile.getMaxPostInPage());
+				newProfileNode.setProperty("exo:maxTopic", newUserProfile.getMaxTopicInPage());
+				newProfileNode.setProperty("exo:isShowForumJump", newUserProfile.getIsShowForumJump());
+			}
+			//UserBan
+			if(isBan){
+				if(newProfileNode.hasProperty("exo:isBanned")) {
+					if(!newProfileNode.getProperty("exo:isBanned").getBoolean() && newUserProfile.getIsBanned()) {
+						newProfileNode.setProperty("exo:createdDateBan", GregorianCalendar.getInstance() );
+					}
+				} else {
 					newProfileNode.setProperty("exo:createdDateBan", GregorianCalendar.getInstance() );
 				}
-			} else {
-				newProfileNode.setProperty("exo:createdDateBan", GregorianCalendar.getInstance() );
+				newProfileNode.setProperty("exo:isBanned", newUserProfile.getIsBanned());
+				newProfileNode.setProperty("exo:banUntil", newUserProfile.getBanUntil());
+				newProfileNode.setProperty("exo:banReason", newUserProfile.getBanReason());
+				newProfileNode.setProperty("exo:banCounter", "" + newUserProfile.getBanCounter());
+				newProfileNode.setProperty("exo:banReasonSummary", newUserProfile.getBanReasonSummary());
 			}
-			newProfileNode.setProperty("exo:isBanned", newUserProfile.getIsBanned());
-			newProfileNode.setProperty("exo:banUntil", newUserProfile.getBanUntil());
-			newProfileNode.setProperty("exo:banReason", newUserProfile.getBanReason());
-			newProfileNode.setProperty("exo:banCounter", "" + newUserProfile.getBanCounter());
-			newProfileNode.setProperty("exo:banReasonSummary", newUserProfile.getBanReasonSummary());
+			userProfileNode.getSession().save() ;
 		}
-		userProfileNode.getSession().save() ;
   }
 	
 	private void saveUserReadTopic(SessionProvider sProvider, String userName, String topicId) throws Exception {
@@ -1389,6 +1421,7 @@ public class JCRDataStorage{
 		}catch (PathNotFoundException e) {
 			newProfileNode = userProfileNode.addNode(userName, "exo:userProfile") ;
 			newProfileNode.setProperty("exo:userId", userName);
+			newProfileNode.setProperty("exo:userTitle", "User");
 			newProfileNode.setProperty("exo:readTopic", new String[]{topicId});
 			userProfileNode.getSession().save() ;
 		}	

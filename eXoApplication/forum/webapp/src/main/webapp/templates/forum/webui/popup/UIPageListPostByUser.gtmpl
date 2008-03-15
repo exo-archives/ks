@@ -45,7 +45,7 @@
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
 									<td >
 										<div >
-											<a href="#" title="$titlePost" class="title">$postTitle</a>
+											<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$titlePost" class="title">$postTitle</a>
 										</div>
 									</td>
 									<td class="Tdbox">

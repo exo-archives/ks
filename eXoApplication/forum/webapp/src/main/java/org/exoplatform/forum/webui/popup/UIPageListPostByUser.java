@@ -27,7 +27,10 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -38,9 +41,7 @@ import org.exoplatform.webui.core.UIContainer;
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/popup/UIPageListPostByUser.gtmpl",
 		events = {
-//			@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
-//			@EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
-//			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class)
+			@EventConfig(listeners = UIPageListPostByUser.OpenPostLinkActionListener.class)
 		}
 )
 public class UIPageListPostByUser extends UIContainer{
@@ -64,4 +65,11 @@ public class UIPageListPostByUser extends UIContainer{
 		List<Post> posts = pageList.getPage(page) ;
 		return posts ;
 	}
+	
+	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostByUser> {
+    public void execute(Event<UIPageListPostByUser> event) throws Exception {
+			//UIPageListPostByUser uiForm = event.getSource() ;
+		}
+	}
+	
 }

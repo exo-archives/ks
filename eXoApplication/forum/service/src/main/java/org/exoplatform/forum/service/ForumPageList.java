@@ -208,7 +208,7 @@ public class ForumPageList extends JCRPageList {
 	
 	private UserProfile getUserProfile(Node userProfileNode) throws Exception {
 		UserProfile userProfile = new UserProfile() ;
-		if(userProfileNode.hasProperty("exo:userId"))userProfile.setUserId(userProfileNode.getProperty("exo:userId").getString());
+		userProfile.setUserId(userProfileNode.getName());
 		if(userProfileNode.hasProperty("exo:userTitle"))userProfile.setUserTitle(userProfileNode.getProperty("exo:userTitle").getString());
 		if(userProfileNode.hasProperty("exo:userRole"))userProfile.setUserRole(userProfileNode.getProperty("exo:userRole").getLong());
 		if(userProfileNode.hasProperty("exo:signature"))userProfile.setSignature(userProfileNode.getProperty("exo:signature").getString());
