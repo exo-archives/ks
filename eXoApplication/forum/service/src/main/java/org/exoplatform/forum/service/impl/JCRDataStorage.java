@@ -392,13 +392,19 @@ public class JCRDataStorage{
 	}
 	
 	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try {
 			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
 			Node forumNode = CategoryNode.getNode(forumId) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
-			String pathQuery = "/jcr:root" + forumNode.getPath() + "//element(*,exo:topic) order by @exo:isSticky descending,@exo:createdDate descending";
+			StringBuffer stringBuffer = new StringBuffer() ;
+			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)");
+			if(isApproved != null && isApproved.length() > 0){
+				stringBuffer.append("[@exo:isApproved='").append(isApproved).append("'] ");
+			} 
+			stringBuffer.append("order by @exo:isSticky descending,@exo:createdDate descending") ;
+			String pathQuery = stringBuffer.toString();
 			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes(); 
@@ -546,7 +552,10 @@ public class JCRDataStorage{
 		try {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
-		String pathQuery = "/jcr:root" + forumHomeNode.getPath() + "//element(*,exo:topic)[@exo:owner='"+userName+"']";
+		StringBuffer stringBuffer = new StringBuffer() ;
+		stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:topic)[@exo:owner='")
+								.append(userName).append("']") ;
+		String pathQuery =  stringBuffer.toString();
 		Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes(); 
@@ -730,10 +739,12 @@ public class JCRDataStorage{
 
 	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		Node categoryNode ;
 		try{
-			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
+			categoryNode = forumHomeNode.getNode(categoryId) ;
+			Node forumNode ;
 			try {
-				Node forumNode = CategoryNode.getNode(forumId) ;
+				forumNode = categoryNode.getNode(forumId) ;
 				try {
 					Node topicNode = forumNode.getNode(topicId) ;
 					NodeIterator iter = topicNode.getNodes() ; 
@@ -1358,7 +1369,7 @@ public class JCRDataStorage{
 				
 				newProfileNode.setProperty("exo:moderateForums", newUserProfile.getModerateForums());
 				newProfileNode.setProperty("exo:moderateTopics", newUserProfile.getModerateTopics());
-				Calendar calendar = GregorianCalendar.getInstance();
+				Calendar calendar = getGreenwichMeanTime();
 				if(newUserProfile.getLastLoginDate() != null)
 					calendar.setTime(newUserProfile.getLastLoginDate()) ;
 				newProfileNode.setProperty("exo:lastLoginDate", calendar);
@@ -1378,10 +1389,10 @@ public class JCRDataStorage{
 			if(isBan){
 				if(newProfileNode.hasProperty("exo:isBanned")) {
 					if(!newProfileNode.getProperty("exo:isBanned").getBoolean() && newUserProfile.getIsBanned()) {
-						newProfileNode.setProperty("exo:createdDateBan", GregorianCalendar.getInstance() );
+						newProfileNode.setProperty("exo:createdDateBan", getGreenwichMeanTime() );
 					}
 				} else {
-					newProfileNode.setProperty("exo:createdDateBan", GregorianCalendar.getInstance() );
+					newProfileNode.setProperty("exo:createdDateBan", getGreenwichMeanTime() );
 				}
 				newProfileNode.setProperty("exo:isBanned", newUserProfile.getIsBanned());
 				newProfileNode.setProperty("exo:banUntil", newUserProfile.getBanUntil());

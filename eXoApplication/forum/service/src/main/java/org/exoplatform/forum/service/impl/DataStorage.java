@@ -49,7 +49,7 @@ public interface DataStorage {
 	public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId)throws Exception;	
 	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath)throws Exception;	
 	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved) throws Exception;
 	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception ;
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;		

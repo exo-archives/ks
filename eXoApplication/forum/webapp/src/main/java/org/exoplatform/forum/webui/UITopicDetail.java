@@ -134,7 +134,7 @@ public class UITopicDetail extends UIForm {
 		this.forumId = forumId ;
 		this.topicId = topicId ;
 		this.viewTopic = viewTopic ;
-		this.isUpdatePageList = false ;
+		this.isUpdatePageList = true ;
 		String userName = ForumSessionUtils.getCurrentUser() ;
 		if(userName ==null || userName.length() <= 0 || !this.viewTopic) {
 			userName = "guest" ;
@@ -150,7 +150,7 @@ public class UITopicDetail extends UIForm {
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
 		this.viewTopic = viewTopic ;
-		this.isUpdatePageList = false ;
+		this.isUpdatePageList = true ;
 		String userName = ForumSessionUtils.getCurrentUser() ;
 		if(userName ==null || userName.length() <= 0 || !this.viewTopic) {
 			userName = "guest" ;
@@ -244,7 +244,7 @@ public class UITopicDetail extends UIForm {
 
 	public void setUpdatePageList(JCRPageList pageList) throws Exception {
 		this.pageList = pageList ;
-		this.isUpdatePageList = true ;
+		this.isUpdatePageList = false ;
 	}
 	@SuppressWarnings("unused")
 	private Topic getTopic() throws Exception {
@@ -269,9 +269,8 @@ public class UITopicDetail extends UIForm {
 	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		if(this.isUpdatePageList) {
-			this.isUpdatePageList = false ;
-		} else {
 			this.pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId) ;
+			this.isUpdatePageList = false ;
 		}
 		long maxPost = getUserProfile().getMaxPostInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost ;

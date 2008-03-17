@@ -27,6 +27,7 @@
 	</div>
 	<div style="overflow:auto; padding-bottom: 2px;">
 	<% uiform.renderChild(UIForumPageIterator.class) ; %>
+	<div style="clear: right;"><span></span></div>
 	</div>
 	<div class="ForumContainer">
 		<div class="ForumCategory">
@@ -233,6 +234,7 @@
 	</div>
 	<div style="overflow:auto; padding-top: -2px;">
 	<% uiform.renderChild(UIForumPageIterator.class) ; %>
+	<div style="clear: right;"><span></span></div>
 	</div>
 </div>
 <%uiform.end()%>

@@ -180,7 +180,16 @@
 										titleTopic ="This thread '" + topicNewPostTitle + "' is Closed" ;
 									}
 								} else {
-									openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
+									if(forum.getIsModerateTopic()) {
+										if(topicNewPost.getIsApproved() || ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin){
+											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
+										} else {
+											openLinkLastPost = "javascript:void(0)";
+											titleTopic ="This thread '" + topicNewPostTitle + "' is UnApproved" ;
+										}
+									} else {
+										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
+									}
 								}
 								titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
 							}

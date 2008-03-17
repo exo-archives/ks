@@ -1,10 +1,6 @@
 <%  
 	import org.exoplatform.forum.ForumSessionUtils ;
 	import org.exoplatform.services.organization.User;
-	import org.exoplatform.web.application.JavascriptManager;
-  def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setMenuTextAreaMutil('UIForumForm');");
 %>
 <div class="UIForumForm">	
   <% uiform.begin() %>  
@@ -91,16 +87,9 @@
 	          	</div>
 	        	</a>
           <%}%>
-          </td>
-				</tr>
-	 	  </table> 
-    </div>
-    <div id="ActionsTextAreaMulil" >
-    <% for(childId in uicomponent.getChildIds()) { 
-    	 	String link = uicomponent.event("AddValuesUser",childId);
-    %>
-			<a class="ChildAction" id="Add${childId}" href="$link">$link</a>
-		<% } %>
-		</div>
+      	</td>
+			</tr>
+	  </table> 
+  </div>
   <%uiform.end()%>
 </div>

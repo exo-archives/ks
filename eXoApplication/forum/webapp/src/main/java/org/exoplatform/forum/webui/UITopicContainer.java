@@ -147,7 +147,17 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
+		String isApprove = "" ;
+		if(this.forum.getIsModerateTopic()) {
+			long role = this.userProfile.getUserRole() ;
+			if(role >=2) isApprove = "true" ;
+			if(role == 1) {
+				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+					isApprove = "true" ;
+				}
+			}
+		}
+		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, isApprove);
 		long maxTopic = userProfile.getMaxTopicInPage() ;
 		if(maxTopic > 0) this.maxTopic = maxTopic ;
 		this.pageList.setPageSize(this.maxTopic);

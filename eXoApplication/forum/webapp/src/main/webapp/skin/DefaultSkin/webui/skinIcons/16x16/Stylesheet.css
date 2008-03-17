@@ -318,6 +318,16 @@
 	background: url('icons/StickThreadsIcon.gif') no-repeat left center;
 }
 
+.UIForumPortlet .SmallGroupIcon {
+	background: url('icons/SmallGroupIcon.gif') no-repeat left center;
+}
+
+.UIForumPortlet .SelectUserIcon {
+	width: 16px;
+	height: 16px;
+	background: url('icons/UserIcon.png') no-repeat left center;
+}
+
 .UIForumPortlet .SetUnStickIcon {
 	background: url('icons/StickThreadsIcon.gif') no-repeat left center;
 }

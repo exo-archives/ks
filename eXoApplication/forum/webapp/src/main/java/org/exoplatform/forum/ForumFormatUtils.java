@@ -214,9 +214,9 @@ public class ForumFormatUtils {
 		return buffer.toString() ;
   }
 	//isReadTopic
-	public static boolean isStringInStrings(String []topicIds, String topicId) {
-	  for (String string : topicIds) {
-	    if(topicId.equals(string)) return true ;
+	public static boolean isStringInStrings(String []strings, String string) {
+	  for (String string1 : strings) {
+	    if(string.equals(string1)) return true ;
     }
 	  return false;
   }

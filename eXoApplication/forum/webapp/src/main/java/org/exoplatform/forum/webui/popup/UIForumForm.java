@@ -26,12 +26,10 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.EmptyNameValidator;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
-import org.exoplatform.forum.webui.UIFormTextAreaMultilInput;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -48,6 +46,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
@@ -122,10 +121,10 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormTextAreaInput notifyWhenAddPost = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE, null);
 		UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
 		
-		UIFormTextAreaMultilInput moderator = new UIFormTextAreaMultilInput(FIELD_MODERATOR_MULTIVALUE, FIELD_MODERATOR_MULTIVALUE, null);
-		UIFormTextAreaMultilInput viewer = new UIFormTextAreaMultilInput(FIELD_VIEWER_MULTIVALUE, FIELD_VIEWER_MULTIVALUE, null);
-		UIFormTextAreaMultilInput postable = new UIFormTextAreaMultilInput(FIELD_POSTABLE_MULTIVALUE, FIELD_POSTABLE_MULTIVALUE, null);
-		UIFormTextAreaMultilInput topicable = new UIFormTextAreaMultilInput(FIELD_TOPICABLE_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, null);
+		UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE, FIELD_MODERATOR_MULTIVALUE, null);
+		UIFormTextAreaInput viewer = new UIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE, FIELD_VIEWER_MULTIVALUE, null);
+		UIFormTextAreaInput postable = new UIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE, FIELD_POSTABLE_MULTIVALUE, null);
+		UIFormTextAreaInput topicable = new UIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, null);
 		
 		UIFormCheckBoxInput checkWhenAddTopic = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
 		UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
@@ -149,6 +148,18 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		forumPermission.addUIFormInput(viewer) ;
 		forumPermission.addUIFormInput(topicable) ;
 		forumPermission.addUIFormInput(postable) ;
+		List<ActionData> actions ;
+		ActionData ad ;
+		for(String string : this.getChildIds()) {
+			actions = new ArrayList<ActionData>() ;
+			ad = new ActionData() ;
+			ad.setActionListener("AddValuesUser") ;
+			ad.setActionParameter(string) ;
+			ad.setCssIconClass("SelectUserIcon") ;
+			ad.setActionName("SelectUser");
+			actions.add(ad) ;
+			forumPermission.setActionField(string, actions);
+		}
 		
 		addUIFormInput(newForum);
 		addUIFormInput(moderationOptions);
@@ -311,7 +322,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
 	      uiGroupSelector.setType("0") ;
-	      uiGroupSelector.setSelectedGroups(null) ;
+	      //uiGroupSelector.setSelectedGroups(null) ;
 	      uiGroupSelector.setComponent(forumForm, new String[]{childId}) ;
 	      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     	}

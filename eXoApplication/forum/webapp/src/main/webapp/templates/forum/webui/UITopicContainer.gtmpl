@@ -10,8 +10,8 @@
 	import java.util.GregorianCalendar;
 %>
 <%	
-	uicomponent.initPage() ;
 	Forum forum = uicomponent.getForum() ;
+	uicomponent.initPage() ;
 	String forumName = forum.getForumName();
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
 	UserProfile userProfile = uicomponent.getUserProfile();
@@ -38,7 +38,6 @@
 			String []moderatorsByForum = forum.getModerators() ;
 			if(moderatorsByForum != null || moderatorsByForum.length > 0) {
 				for(user in moderatorsByForum) {
-				System.out.println("fdsf dsiofds f: " + user + userProfile.getUserId()) ;
 					if(user.indexOf(userProfile.getUserId()) >= 0) {
 						canEdit = true;
 						break ;
@@ -49,6 +48,7 @@
 	}
 	boolean isLock = forum.getIsLock() ;
 	if(!isLock)isLock = forum.getIsClosed() ;
+	boolean isModerate = forum.getIsModerateTopic() ;
 %>
 <div class="UITopicContainer">
 	<% uiform.begin() %>
@@ -347,6 +347,10 @@
 										title = "TitleNorman";
 									} else {
 										title = "TitleBold";
+									}
+									String approved = "" ;
+									if(isModerate){
+										if(!topic.getIsApproved()) approved = "(This thread is pending for approval !)" ;
 									}
 							%>
 								<tr class="$classRow">

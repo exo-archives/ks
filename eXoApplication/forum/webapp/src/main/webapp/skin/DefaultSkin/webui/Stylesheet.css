@@ -164,6 +164,18 @@
 }
 
 /******************************	OverButton	***************************************/
+*html .UIForumPortlet .UITopicContainer .DefaultStyle {
+	width: 112px;
+}
+
+*html .UIForumPortlet .UITopicDetail .DefaultStyle {
+	width: 115px;
+}
+
+*html .UIForumPortlet .UIForumActionBar .DefaultStyle {
+	width: 139px;
+}
+
 .UIForumPortlet .DefaultStyle .LeftOverButton {
 	padding-left: 5px;
 }
