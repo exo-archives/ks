@@ -75,7 +75,11 @@
 						 	<% i = i + 1;} 
 						 	} else {
 					 		%>
-						 		<div class="ContentNotPost">Empty</div>
+					 			<tr>
+					 				<td colspan="5" align="center">
+					 					<div class="ContentNotPost">Empty</div>
+					 				</td>
+					 			</tr>
 					 		<%}%>
 						</tbody>
 					</table>
