@@ -65,7 +65,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),	
 			@EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
 			@EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class ),
-//			@EventConfig(listeners = UITopicContainer.DisplayOptionActionListener.class ),//Menu Forum
+			@EventConfig(listeners = UITopicContainer.ApproveTopicsActionListener.class ),//Menu Forum
 			@EventConfig(listeners = UITopicContainer.EditForumActionListener.class ),	
 			@EventConfig(listeners = UITopicContainer.SetLockedForumActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetUnLockForumActionListener.class),
@@ -177,7 +177,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private String[] getActionMenuTopic() throws Exception {
-		String []actions = {"EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic"}; 
+		String []actions = {"EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "ApproveTopic"}; 
 		return actions;
 	}
 	
@@ -390,9 +390,10 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		}
 	} 
 	
-	static public class DisplayOptionActionListener extends EventListener<UITopicContainer> {
+	static public class ApproveTopicsActionListener extends EventListener<UITopicContainer> {
     public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
+			
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer) ;
 		}
 	}	

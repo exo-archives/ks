@@ -55,8 +55,8 @@
 							%>
 								<tr>
 									<td></td>
-									<td class="Tdbox">Not Forum !</td>
-									<td class="Tdbox">Not Theard !</td>
+									<td class="Tdbox">No Forum !</td>
+									<td class="Tdbox">No Theard !</td>
 									<td class="Tdbox">0</td>
 									<td class="Tdbox">0</td>
 									<td></td>
@@ -137,7 +137,7 @@
 										<tr class="$classRow">
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 											<td >
-												<a href="<%=uicomponent.event("OpenForumLink", id)%>" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;(5 viewing)</span>
+												<a href="<%=uicomponent.event("OpenForumLink", id)%>" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 												<div class="ForumDescription">$forumDescription</div>
 											</td>
 											<%if(topicNewPost != null) {%>

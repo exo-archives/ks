@@ -48,7 +48,6 @@
 	}
 	boolean isLock = forum.getIsLock() ;
 	if(!isLock)isLock = forum.getIsClosed() ;
-	boolean isModerate = forum.getIsModerateTopic() ;
 %>
 <div class="UITopicContainer">
 	<% uiform.begin() %>
@@ -349,9 +348,10 @@
 										title = "TitleBold";
 									}
 									String approved = "" ;
-									if(isModerate){
-										if(!topic.getIsApproved()) approved = "(This thread is pending for approval !)" ;
+									if(canEdit){
+										if(!topic.getIsApproved()) approved = "(<span style='color:#f77617;'>This thread is pending for approval !</span>)" ;
 									}
+									System.out.println(topic.getIsApproved()) ;
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
@@ -381,6 +381,7 @@
 											<span>)</span>
 											<%} 
 											} %>
+											$approved
 										</div>
 										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
