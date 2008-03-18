@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -28,11 +29,18 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
+import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -42,19 +50,24 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
+    lifecycle = UIFormLifecycle.class,
 		template =	"app:/templates/forum/webui/popup/UIPageListTopicUnApprove.gtmpl",
 		events = {
 				@EventConfig(listeners = UIPageListTopicUnApprove.OpenTopicActionListener.class ),
-				@EventConfig(listeners = UIPageListTopicUnApprove.OpenTopicsTagActionListener.class )
+				@EventConfig(listeners = UIPageListTopicUnApprove.ApproveTopicActionListener.class ),
+				@EventConfig(listeners = UIPageListTopicUnApprove.CancelActionListener.class,phase = Phase.DECODE )
 		}
 )
-public class UIPageListTopicUnApprove extends UIContainer{
+public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String categoryId, forumId ;
+  private List<Topic> topics ;
 	public UIPageListTopicUnApprove() throws Exception {
 		addChild(UIForumPageIterator.class, null, "PageListTopicUnApprove") ;
   }
-	
+  public void activate() throws Exception {  }
+  public void deActivate() throws Exception {  }
+  
 	@SuppressWarnings("unused")
   private UserProfile getUserProfile() throws Exception {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
@@ -65,51 +78,81 @@ public class UIPageListTopicUnApprove extends UIContainer{
   }
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-  private List<Topic> getTopicsByUser() throws Exception {
+  private List<Topic> getTopicsUnApprove() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		JCRPageList pageList  = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "false") ;
 		forumPageIterator.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
 		List<Topic> topics = pageList.getPage(page) ;
+    for (Topic topic : topics) {
+      if(getUIFormCheckBoxInput(topic.getId()) != null) {
+        getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;
+      }else {
+        addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false) );
+      }
+    }
+    this.topics = topics ;
 		return topics ;
 	}
 	
-	@SuppressWarnings("unused")
-	private String[] getStarNumber(Topic topic) throws Exception {
-		double voteRating = topic.getVoteRating() ;
-		return ForumFormatUtils.getStarNumber(voteRating) ;
-	}
+
 	
 	@SuppressWarnings("unused")
 	private String getStringCleanHtmlCode(String sms) {
 		return ForumFormatUtils.getStringCleanHtmlCode(sms);
 	}
 
-	@SuppressWarnings("unused")
-	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), tagIds);	
-	}
-	
-	@SuppressWarnings("unused")
-  private JCRPageList getPageListPost(String topicPath) throws Exception {
-		String []id = topicPath.split("/") ;
-		int i = id.length ;
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2], id[i-1])	; 
-//		long maxPost = getUserProfile().getMaxTopicInPage() ;
-//		if(maxPost > 0) this.maxPost = maxPost ;
-//		pageListPost.setPageSize(this.maxPost) ;
-		return pageListPost;
-	}
+
+  private Topic getTopic(String topicId) throws Exception {
+    List<Topic> listTopic = this.topics ;
+    for (Topic topic : listTopic) {
+      if(topic.getId().equals(topicId)) return topic ;
+    }
+    return null ;
+  }
+  
+  
 	static	public class OpenTopicActionListener extends EventListener<UIPageListTopicUnApprove> {
     public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
-			//UIPageListPostByUser uiForm = event.getSource() ;
 		}
 	}
-	static	public class OpenTopicsTagActionListener extends EventListener<UIPageListTopicUnApprove> {
-		public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
-			//UIPageListPostByUser uiForm = event.getSource() ;
-		}
-	}
-	
+
+  static  public class ApproveTopicActionListener extends EventListener<UIPageListTopicUnApprove> {
+    public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
+      UIPageListTopicUnApprove topicUnApprove = event.getSource() ;
+      List<UIComponent> listChild = topicUnApprove.getChildren() ;
+      List<Topic> listTopic = new ArrayList<Topic>() ;
+      for(UIComponent child : listChild) {
+        if(child instanceof UIFormCheckBoxInput) {
+          if(((UIFormCheckBoxInput)child).isChecked()) {
+            Topic topic = topicUnApprove.getTopic(child.getName()) ;
+            if (topic != null) {
+              listTopic.add(topic) ;
+            }
+          }
+        }
+      }
+      if(!listTopic.isEmpty()) {
+        for(Topic topic : listTopic) {
+          topic.setIsApproved(true);
+          topicUnApprove.forumService.saveTopic(ForumSessionUtils.getSessionProvider(), topicUnApprove.categoryId, topicUnApprove.forumId, topic, false, false) ;
+        }
+      } else {
+        Object[] args = { };
+        throw new MessageException(new ApplicationMessage("UIPageListTopicUnApprove.sms.notCheck", args, ApplicationMessage.WARNING)) ;
+      }
+      UIForumPortlet forumPortlet = topicUnApprove.getAncestorOfType(UIForumPortlet.class) ;
+      forumPortlet.cancelAction() ;
+      UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+    }
+  }
+  
+  static  public class CancelActionListener extends EventListener<UIPageListTopicUnApprove> {
+    public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
+      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+      forumPortlet.cancelAction() ;
+    }
+  }
 }

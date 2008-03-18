@@ -32,6 +32,7 @@ import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIMergeTopicForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
+import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupComponent;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
@@ -177,7 +178,8 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private String[] getActionMenuTopic() throws Exception {
-		String []actions = {"EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "ApproveTopic"}; 
+		String []actions = {"EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic",
+        "SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "ApproveTopics"}; 
 		return actions;
 	}
 	
@@ -393,8 +395,12 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	static public class ApproveTopicsActionListener extends EventListener<UITopicContainer> {
     public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer) ;
+      UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+      UIPageListTopicUnApprove pageListTopicUnApprove  = popupAction.createUIComponent(UIPageListTopicUnApprove.class, null, null) ;
+      pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
+      popupAction.activate(pageListTopicUnApprove, 500, 365) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	
 	

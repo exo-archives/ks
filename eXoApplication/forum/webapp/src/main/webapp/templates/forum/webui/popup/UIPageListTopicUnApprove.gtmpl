@@ -1,6 +1,113 @@
 <% 
-
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Topic; 
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.ForumFormatUtils ; 
+  UserProfile userProfile = uicomponent.getUserProfile() ;
+  List topics = uicomponent.getTopicsUnApprove() ;
 %>
-<div class="$uicomponent.id" id=="$uicomponent.id">
-	UIPageListTopicByUser.gtmpl
+<div class="$uicomponent.id">
+  <% uiform.begin() %> 
+	<div class="UITopicContainer">
+   	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th style="width: 40px;"></th>
+								<th style="width: 40px;"></th>
+								<th>Thread/Thread starter</th>
+								<th style="width: 50px;">Views</th>
+								<th style="width: 50px;">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+								String classRow = "whileRow";
+								if(topics != null && topics.size() > 0) {
+								int i = 0;
+								 for(topic in topics){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String topicId = topic.getId();
+									String iconClassTopic = topic.getIcon();
+									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
+									String topicTitle = topic.getTopicName();
+									String topicBy = topic.getOwner();
+									String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
+									if(titlePost.length() > 100) {
+										titlePost = titlePost.substring(0, 99) + "...";
+									}
+									String postView = String.valueOf(topic.getViewCount());
+									String titleTopicStatus = "Hot thread with new post" ;
+									String iconTopicStatus = "HotThreadNewPost" ;
+									if(topic.getIsLock()) {
+										iconTopicStatus = "HotThreadNewLockPost" ;
+										titleTopicStatus = "Hot thread with new post lock" ;
+									}
+									boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
+									String title = "";
+									if(isReadTopic) {
+										title = "TitleNorman";
+									} else {
+										title = "TitleBold";
+									}
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
+									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
+									<td >
+										<div >
+										<% if(topic.getIsSticky()) {%>
+											<span class="Text StickyIcon">Sticky:</span>
+										<% } %>
+											<a href="<%=uicomponent.event("OpenTopic", (topicId+",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
+										</div>
+									</td>
+								 	<td class="Tdbox" align="center"><div>$postView</div></td>
+									<td class="Tdbox" align="center"><% uicomponent.renderChild(topic.getId()); %></td>
+					 			</tr>
+						 	<% i = i + 1;} 
+						 	} else {
+					 		%>
+						 		<div class="ContentNotPost">Empty</div>
+					 		<%}%>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="UIAction"> 
+	  <table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+        <% for(action in uicomponent.getActions()) { 
+        		 if(action.indexOf("Open") >= 0) continue ; 
+        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
+        		<a href="$link" class="ActionButton LightBlueStyle">
+	      	  	<div class="ButtonLeft">
+	        	  	<div class="ButtonRight">
+	          	  	<div class="ButtonMiddle"> $actionLabel </div>
+	            	</div>
+	          	</div>
+	        	</a>
+          <%}%>
+      	</td>
+			</tr>
+	  </table> 
+  </div>
+  <%uiform.end()%>
 </div>
+
+
