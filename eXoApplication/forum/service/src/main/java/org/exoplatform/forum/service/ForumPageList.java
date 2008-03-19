@@ -45,24 +45,18 @@ public class ForumPageList extends JCRPageList {
 		iter_ = iter ;
 		value_ = value ;
 		isQuery_ = isQuery ;
-		if(iter_ != null)	setAvailablePage(iter.getSize()) ;		
+		if(iter_ == null) {
+			iter_ = setQuery(isQuery_, value_) ;
+		}
+		if(iter_ != null)setAvailablePage(iter_.getSize()) ;		
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected void populateCurrentPage(long page) throws Exception	{
 		if(iter_ == null) {
-			Session session = this.getJCRSession() ;
-			if(isQuery_) {
-				QueryManager qm = session.getWorkspace().getQueryManager() ;
-				Query query = qm.createQuery(value_, Query.XPATH);
-				QueryResult result = query.execute();
-				iter_ = result.getNodes();
-			} else {
-				Node node = (Node)session.getItem(value_) ;
-				iter_ = node.getNodes() ;
-			}
+			iter_ = setQuery(isQuery_, value_) ;
 		}
-		setAvailablePage(iter_.getSize()) ;
+		if(iter_ != null)setAvailablePage(iter_.getSize()) ;
 		Node currentNode ;
 		long pageSize = 0 ;
 		if(page > 0) {
@@ -94,7 +88,22 @@ public class ForumPageList extends JCRPageList {
 		iter_ = null ;
 		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
 	}
-
+	
+	private NodeIterator setQuery(boolean isQuery, String value) throws Exception {
+		Session session = this.getJCRSession() ;
+		NodeIterator iter ;
+		if(isQuery) {
+			QueryManager qm = session.getWorkspace().getQueryManager() ;
+			Query query = qm.createQuery(value, Query.XPATH);
+			QueryResult result = query.execute();
+			iter = result.getNodes();
+		} else {
+			Node node = (Node)session.getItem(value) ;
+			iter = node.getNodes() ;
+		}
+		return iter ;
+	}
+	
 	private Post getPost(Node postNode) throws Exception {
 		Post postNew = new Post() ;
 		if(postNode.hasProperty("exo:id")) postNew.setId(postNode.getProperty("exo:id").getString()) ;
