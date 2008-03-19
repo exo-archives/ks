@@ -1,14 +1,17 @@
 <% 
-	import org.exoplatform.forum.webui.UIForumPageIterator ;
-	import org.exoplatform.forum.service.Post ; 
-	import org.exoplatform.forum.ForumFormatUtils;
-	import org.exoplatform.forum.service.UserProfile ;
-	List posts = uicomponent.getPostsByUser() ;
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Post; 
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.ForumFormatUtils ;
+	
 	UserProfile userProfile = uicomponent.getUserProfile() ;
-	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+  List posts = uicomponent.getPostsUnApprove() ;
+  long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+  String formatDate = userProfile.getShortDateFormat() ;
 %>
-<div class="UIPageListPostByUser" id="$uicomponent.id">
+<div>
+  <% uiform.begin() %>
 	<div class="UITopicContainer">
    	<div class="UIForumContainer">
 			<div class="ContentContainer">
@@ -22,6 +25,7 @@
 								<th style="width: 40px;"></th>
 								<th>Post name</th>
 								<th style="width: 120px;">Created Date</th>
+								<th width="40px">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -51,6 +55,7 @@
 									<td class="Tdbox">
 										<div class="RatingInfoContainer">$createdDate</div>
 									</td>
+									<td class="Tdbox" align="center"><% uicomponent.renderChild(post.getId()); %></td>
 					 			</tr>
 						 	<% i = i + 1;} %>
 						</tbody>
@@ -62,4 +67,5 @@
 			</div>
 		</div>
 	</div>
+  <%uiform.end()%>
 </div>
