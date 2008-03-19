@@ -171,7 +171,7 @@
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
 														<%	
-															String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetUnApprovePost", "SetApproveAttachment", "SetUnApproveAttachment", "DeletePost"];
+															String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetUnApproveAttachment", "DeletePost"];
 															for( action in actionMenuPost ) {
 																String link = uicomponent.event(action) ;
 																String classIcon = action + "Icon";
@@ -180,22 +180,12 @@
 																	String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
 																	link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
 																}
-																
-																
-																if(action.indexOf("Approve") > 0) {
-														 %>
-															<div class="MenuItem" style="opacity: 0.3; cursor: none;">	 
-																<div class="ItemIcon $classIcon">
-																	$itemLabel
-																</div>
-															</div>
-															<% } else { %>
+															%>
 															<a class="MenuItem" href="$link">	 
 																<div class="ItemIcon $classIcon">
 																	$itemLabel
 																</div>
 															</a>
-															<% } %>
 															<% } %>
 														</div>
 													</div>
