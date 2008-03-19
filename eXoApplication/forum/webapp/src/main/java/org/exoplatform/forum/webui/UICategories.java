@@ -95,18 +95,20 @@ public class UICategories extends UIContainer	{
   
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		List<Forum> forumList = null ;
-		if(!mapListForum.isEmpty() && !isGetForumList) {
-			forumList = mapListForum.get(categoryId) ;
-			if(forumList == null || forumList.size() <= 0) {
-				forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
-				mapListForum.remove(categoryId) ;
-				mapListForum.put(categoryId, forumList) ;
-			}
-		} else {
+//		if(!mapListForum.isEmpty() && !isGetForumList) {
+//			forumList = mapListForum.get(categoryId) ;
+//			if(forumList == null || forumList.size() <= 0) {
+//				forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
+//				mapListForum.remove(categoryId) ;
+//				mapListForum.put(categoryId, forumList) ;
+//			}
+//		} else {
 			forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
-			mapListForum.remove(categoryId) ;
+			if(mapListForum.containsKey(categoryId)) {
+				mapListForum.remove(categoryId) ;
+			}
 			mapListForum.put(categoryId, forumList) ;
-		}
+//		}
 		String forumId ;
 		for (Forum forum : forumList) {
 			forumId = forum.getId() ;

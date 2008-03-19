@@ -38,6 +38,7 @@ public class Poll {
 	private String[] userVote;
 	private boolean isMultiCheck = false ;
 	private boolean isClosed = false ;
+	private boolean isAgainVote = false ;
 	
 	
 	public Poll() {
@@ -93,4 +94,7 @@ public class Poll {
 
 	public boolean getIsClosed() { return isClosed;}
 	public void setIsClosed(boolean isClosed) { this.isClosed = isClosed;}
+
+	public boolean getIsAgainVote() {return isAgainVote;}
+	public void setIsAgainVote(boolean isAgainVote) {this.isAgainVote = isAgainVote;}
 }

@@ -41,6 +41,7 @@ public class Post {
 	private String remoteAddr;
 	private String icon; 
 	private boolean isApproved = false ;
+	private boolean isHidden = false ;
 	private List<ForumAttachment> attachments ;
 	
 	
@@ -93,4 +94,7 @@ public class Post {
 
 	public List<ForumAttachment> getAttachments() { return this.attachments;}
 	public void setAttachments( List<ForumAttachment> attachments) { this.attachments = attachments;}
+
+	public boolean getIsHidden() {return isHidden;}
+	public void setIsHidden(boolean isHidden) {this.isHidden = isHidden;}
 }

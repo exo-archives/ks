@@ -113,7 +113,6 @@ public class UITopicDetail extends UIForm {
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
 	private List<Post>  posts ;
-	private List<Post>  AllPost ;
 	
 	private long maxPost = 10 ;
 	private UserProfile userProfile = null;
@@ -289,12 +288,6 @@ public class UITopicDetail extends UIForm {
 		}
 		if(this.pageList == null || this.pageSelect < 1) return null ;
 		this.posts = this.pageList.getPage(this.pageSelect) ;
-		this.AllPost = this.pageList.getAll() ;
-		if(this.AllPost == null || this.AllPost.size() <= 0) {
-			JCRPageList pageList = this.pageList ;
-			pageList.setPageSize(pageList.getAvailable()+1);
-			this.AllPost = pageList.getPage(1) ;
-		}
 		if(this.posts.size() > 0 && this.posts != null) {
 			for (Post post : this.posts) {
 				if(getUIFormCheckBoxInput(post.getId()) != null) {
@@ -309,8 +302,9 @@ public class UITopicDetail extends UIForm {
 		return this.posts ;
 	}
 	
-	@SuppressWarnings("unused")
-  private List<Post> getAllPost() {return this.AllPost ;}
+	@SuppressWarnings({ "unused", "unchecked" })
+  private List<Post> getAllPost() throws Exception {return this.pageList.getPage(0) ;}
+	
 	private Post getPost(String postId) throws Exception {
 		for(Post post : this.posts) {
 			if(post.getId().equals(postId)) return post;
@@ -613,7 +607,7 @@ public class UITopicDetail extends UIForm {
 	static public class SplitTopicActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			List<Post>list = topicDetail.AllPost ;
+			List<Post>list = topicDetail.getAllPost() ;
 			if(list.size() > 1) {
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;

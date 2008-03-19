@@ -85,9 +85,9 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
   private List<Post> getPostsUnApprove() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		JCRPageList pageList  = forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "false");
-		System.out.println("=========> " + pageList.getCurrentPage() + "  : " + pageList.getAvailablePage()+ "\n\n");
+		System.out.println("=========> " + pageList.getAvailable() + "  : " + pageList.getAvailablePage()+ "\n\n");
 		forumPageIterator.updatePageList(pageList) ;
-		pageList.setPageSize(6) ;
+		//pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
     System.out.println("=========> " + page + "  : " + pageList.getAvailablePage()+ "\n\n");
 		List<Post> posts = pageList.getPage(1) ;

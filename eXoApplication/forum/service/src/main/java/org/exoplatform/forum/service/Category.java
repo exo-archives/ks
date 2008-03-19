@@ -34,7 +34,7 @@ public class Category {
 	 private String name;
 	 private String description;	 
 	 private String userPrivate = new String() ;
-	 
+	 private long forumCount = 0;
 	 public Category(){
 		 id = "category" + IdGenerator.generate() ;
 	 }
@@ -68,4 +68,7 @@ public class Category {
 
 	 public String getUserPrivate(){return userPrivate;}	 
 	 public void setUserPrivate(String userPrivate){this.userPrivate = userPrivate;}
+
+	 public long getForumCount() {return forumCount;}
+	 public void setForumCount(long forumCount) {this.forumCount = forumCount;}
 }

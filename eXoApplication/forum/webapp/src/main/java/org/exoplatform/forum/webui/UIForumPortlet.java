@@ -44,7 +44,6 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isJumpRendered = false;
 	private UserProfile userProfile = null;
 	public UIForumPortlet() throws Exception {
-		setUserProfile();
 		addChild(UIBreadcumbs.class, null, null) ;
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;

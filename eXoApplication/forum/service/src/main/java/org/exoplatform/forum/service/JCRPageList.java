@@ -32,7 +32,6 @@ abstract public class JCRPageList {
 	protected long availablePage_	= 1;
 	protected long currentPage_ = 1 ;
 	protected List currentListPage_ ;
-	protected List listPageAll_ ;
 	
 	public JCRPageList(long pageSize) {
 		pageSize_ = pageSize ;
@@ -63,19 +62,9 @@ abstract public class JCRPageList {
 		populateCurrentPage(page) ;
 		return currentListPage_ ;
 	}
-	
-	abstract protected void getListAll() throws Exception	 ;
-	
-	@SuppressWarnings("unchecked")
-  public List getAll() throws Exception {
-		if(listPageAll_ == null) {
-			getListAll() ;
-		}
-		return listPageAll_ ;
-	};
-	
+		
 	protected void checkAndSetPage(long page) throws Exception	{
-		if(page < 1 || page > availablePage_) {
+		if(page < 0 || page > availablePage_) {
 			Object[] args = { Long.toString(page), Long.toString(availablePage_) } ;
 			throw new ExoMessageException("PageList.page-out-of-range", args) ;
 		}

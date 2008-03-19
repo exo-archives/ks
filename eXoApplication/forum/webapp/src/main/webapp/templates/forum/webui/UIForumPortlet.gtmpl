@@ -8,6 +8,7 @@
 
 <div class="UIForumPortlet" id="$uicomponent.id">
 	<%
+		uicomponent.setUserProfile();
 		List children = uicomponent.getChildren() ;
     for(component in children) {
       if(component.isRendered()){

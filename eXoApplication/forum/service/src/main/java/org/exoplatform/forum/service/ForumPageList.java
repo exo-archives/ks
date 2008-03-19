@@ -37,14 +37,12 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 public class ForumPageList extends JCRPageList {
 	
 	private NodeIterator iter_ = null ;
-	private NodeIterator iterAll_ = null ;
 	private boolean isQuery_ = false ;
 	private String value_ ;
 	
 	public ForumPageList(NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
 		super(pageSize) ;
 		iter_ = iter ;
-		iterAll_ = iter ;
 		value_ = value ;
 		isQuery_ = isQuery ;
 		if(iter_ != null)	setAvailablePage(iter.getSize()) ;		
@@ -66,12 +64,17 @@ public class ForumPageList extends JCRPageList {
 		}
 		setAvailablePage(iter_.getSize()) ;
 		Node currentNode ;
-		long pageSize = getPageSize() ;
-		long position = 0 ;
-		if(page == 1) position = 0;
-		else {
-			position = (page-1) * pageSize ;
-			iter_.skip(position) ;
+		long pageSize = 0 ;
+		if(page > 0) {
+			long position = 0 ;
+			pageSize = getPageSize() ;
+			if(page == 1) position = 0;
+			else {
+				position = (page-1) * pageSize ;
+				iter_.skip(position) ;
+			}
+		} else {
+			pageSize = iter_.getSize() ;
 		}
 		currentListPage_ = new ArrayList<Object>() ;
 		for(int i = 0; i < pageSize; i ++) {
@@ -91,26 +94,7 @@ public class ForumPageList extends JCRPageList {
 		iter_ = null ;
 		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
 	}
-	
-	@SuppressWarnings("unchecked")
-  protected void getListAll() throws Exception {  
-		if(iterAll_ != null) {
-			Node currentNode ;
-			listPageAll_ = new ArrayList<Object>() ;
-			while(iterAll_.hasNext()) {
-				currentNode = iterAll_.nextNode() ;
-				if(currentNode.isNodeType("exo:post")) {
-					listPageAll_.add(getPost(currentNode)) ;
-				}else if(currentNode.isNodeType("exo:topic")) {
-					listPageAll_.add(getTopic(currentNode)) ;
-				}else if(currentNode.isNodeType("exo:userProfile")) {
-					listPageAll_.add(getUserProfile(currentNode)) ;
-				}
-			}
-		}
-		iterAll_ = null ;
-	}
-	
+
 	private Post getPost(Node postNode) throws Exception {
 		Post postNew = new Post() ;
 		if(postNode.hasProperty("exo:id")) postNew.setId(postNode.getProperty("exo:id").getString()) ;

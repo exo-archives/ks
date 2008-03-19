@@ -62,7 +62,7 @@ public class UITopicPoll extends UIForm	{
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private Poll poll_ ;
 	private String categoryId, forumId, topicId ;
-	private boolean isMultiCheck = false ;
+	private boolean isAgainVote = false ;
 	private boolean isEditPoll = false ;
 	private Topic topic ;
 	
@@ -129,7 +129,7 @@ public class UITopicPoll extends UIForm	{
 			Date today = new Date() ;
 			if((today.getTime() - this.poll_.getCreatedDate().getTime()) >= poll_.getTimeOut()*86400000) return true ;
 		}
-		if(this.isMultiCheck) {
+		if(this.isAgainVote) {
 			return false ;
 		}
 		String[] userVotes = poll_.getUserVote() ;
@@ -195,7 +195,7 @@ public class UITopicPoll extends UIForm	{
 				}
 				String[] setUserVote ; int index = 0 ;
 				String userVote = ForumSessionUtils.getCurrentUser() ;
-				if(topicPoll.isMultiCheck) {
+				if(topicPoll.isAgainVote) {
 					setUserVote = new String[size] ;
 					for (int t = 0; t < size; t++) {
 						String string = temporary[t].substring(0, temporary[t].length() - 2) ;
@@ -216,7 +216,7 @@ public class UITopicPoll extends UIForm	{
 				}
 				String[] votes = topicPoll.poll_.getVote() ;
 				double onePercent = (double)100/size;
-				if(topicPoll.isMultiCheck) {
+				if(topicPoll.isAgainVote) {
 					char tmp = temporary[index].charAt((temporary[index].length() - 1));
 					int k = (new Integer(tmp)).intValue() - 48;
 					if( k < votes.length) votes[k] = String.valueOf((Double.parseDouble(votes[k]) - onePercent)) ;
@@ -236,7 +236,7 @@ public class UITopicPoll extends UIForm	{
 				poll.setVote(votes) ;
 				poll.setUserVote(setUserVote) ;
 				topicPoll.forumService.savePoll(ForumSessionUtils.getSystemProvider(), topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll, false, true) ;
-				topicPoll.isMultiCheck = false ;
+				topicPoll.isAgainVote = false ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll.getParent()) ;
 			}
 		}
@@ -271,7 +271,7 @@ public class UITopicPoll extends UIForm	{
 	static public class VoteAgainPollActionListener extends EventListener<UITopicPoll> {
     public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
-			topicPoll.isMultiCheck = true ;
+			topicPoll.isAgainVote = true ;
 			topicPoll.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll) ;
 		}
@@ -283,7 +283,7 @@ public class UITopicPoll extends UIForm	{
 			Poll poll = topicPoll.poll_ ;
 			poll.setIsClosed(!poll.getIsClosed()) ;
 			topicPoll.forumService.setClosedPoll(ForumSessionUtils.getSystemProvider(), topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll) ;
-			topicPoll.isMultiCheck = false ;
+			topicPoll.isAgainVote = false ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll) ;
 		}
 	}
