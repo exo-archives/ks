@@ -103,7 +103,7 @@ public class UITopicsTag extends UIForm {
 	@SuppressWarnings("unused")
   private long getMaxPagePost(String Id) throws Exception {
 		String Ids[] = Id.split("/") ;
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)])	; 
+		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], "")	; 
 		long maxPost = getUserProfile().getMaxTopicInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost;
 		pageListPost.setPageSize(this.maxPost) ;

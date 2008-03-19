@@ -59,7 +59,7 @@ public interface DataStorage {
 	public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
 	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception;
 	
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId)throws Exception;
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved)throws Exception;
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception ;
 	public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId)throws Exception;
 	public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew)throws Exception;

@@ -47,7 +47,7 @@ public class ForumPageList extends JCRPageList {
 		iterAll_ = iter ;
 		value_ = value ;
 		isQuery_ = isQuery ;
-		setAvailablePage(iter.getSize()) ;		
+		if(iter_ != null)	setAvailablePage(iter.getSize()) ;		
 	}
 	
 	@SuppressWarnings("unchecked")

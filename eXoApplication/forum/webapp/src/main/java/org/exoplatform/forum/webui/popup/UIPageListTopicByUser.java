@@ -28,7 +28,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -92,7 +91,7 @@ public class UIPageListTopicByUser extends UIContainer{
   private JCRPageList getPageListPost(String topicPath) throws Exception {
 		String []id = topicPath.split("/") ;
 		int i = id.length ;
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2], id[i-1])	; 
+		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2], id[i-1], "")	; 
 //		long maxPost = getUserProfile().getMaxTopicInPage() ;
 //		if(maxPost > 0) this.maxPost = maxPost ;
 //		pageListPost.setPageSize(this.maxPost) ;

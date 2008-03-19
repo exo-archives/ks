@@ -342,9 +342,9 @@
 		</div>
 		
 <!-- Start ContentContainer -->
-
 		<%	
-			List posts = uicomponent.getPostPageList() ;
+		List posts = uicomponent.getPostPageList() ;
+		if(posts != null && posts.size() > 0) {
 			int checked = 0 ;
 			for(post in posts) {
 				String owner = post.getOwner() ;
@@ -534,7 +534,11 @@
 				</tbody>
 			</table>
 		</div>
-		<% } %>
+		<% }//end for
+		 } else {
+		%>
+		<div class="ContentNotPost">Post(s) in thread is UnApprove or Hidden !</div>
+	<% } %>
 <!-- End ContentContainer -->
 <%
 	String idLastPost = uicomponent.getIdPostView() ;

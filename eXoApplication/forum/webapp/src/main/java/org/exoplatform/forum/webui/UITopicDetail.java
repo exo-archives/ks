@@ -269,7 +269,7 @@ public class UITopicDetail extends UIForm {
 	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		if(this.isUpdatePageList) {
-			this.pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId) ;
+			this.pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "") ;
 			this.isUpdatePageList = false ;
 		}
 		long maxPost = getUserProfile().getMaxPostInPage() ;

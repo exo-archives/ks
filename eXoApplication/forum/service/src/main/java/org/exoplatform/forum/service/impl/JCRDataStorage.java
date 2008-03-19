@@ -544,7 +544,7 @@ public class JCRDataStorage{
 	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
 		TopicView topicview = new TopicView() ;
 		topicview.setTopicView(getTopic(sProvider, categoryId, forumId, topicId, "")) ;
-		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId)) ;
+		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId, "")) ;
 		return topicview;
 	}
 
@@ -737,7 +737,7 @@ public class JCRDataStorage{
 	}
 	
 
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		Node categoryNode ;
 		try{
@@ -747,8 +747,17 @@ public class JCRDataStorage{
 				forumNode = categoryNode.getNode(forumId) ;
 				try {
 					Node topicNode = forumNode.getNode(topicId) ;
-					NodeIterator iter = topicNode.getNodes() ; 
-					JCRPageList pagelist = new ForumPageList(iter, 10, topicNode.getPath(), false) ;
+					JCRPageList pagelist ;
+					if(isApproved != null && isApproved.length() > 0){
+						StringBuffer stringBuffer = new StringBuffer() ;
+						stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
+						stringBuffer.append("[@exo:isApproved='").append(isApproved).append("'] ");
+						stringBuffer.append("order by @exo:createdDate ascending") ;
+						pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true) ;
+					} else {
+						NodeIterator iter = topicNode.getNodes() ; 
+						pagelist = new ForumPageList(iter, 10, topicNode.getPath(), false) ;
+					}
 					return pagelist ;
 				}catch (PathNotFoundException e) {
 					return null ;
