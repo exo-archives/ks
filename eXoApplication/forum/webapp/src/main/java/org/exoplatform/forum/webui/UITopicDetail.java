@@ -90,9 +90,9 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicDetail.MergePostActionListener.class ), //Post Menu 
 			@EventConfig(listeners = UITopicDetail.MovePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetApprovePostActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetUnApprovePostActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetApproveAttachmentActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
+//			@EventConfig(listeners = UITopicDetail.SetUnApprovePostActionListener.class ),	
+//			@EventConfig(listeners = UITopicDetail.SetApproveAttachmentActionListener.class ),	
+//			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class )	
 		}
 )
