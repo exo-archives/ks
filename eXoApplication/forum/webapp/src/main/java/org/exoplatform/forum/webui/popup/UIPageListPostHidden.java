@@ -51,17 +51,17 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
     lifecycle = UIFormLifecycle.class,
 		template =	"app:/templates/forum/webui/popup/UIPageListPostUnApprove.gtmpl",
 		events = {
-			@EventConfig(listeners = UIPageListPostUnApprove.OpenPostLinkActionListener.class),
-			@EventConfig(listeners = UIPageListPostUnApprove.UnApproveActionListener.class),
-			@EventConfig(listeners = UIPageListPostUnApprove.CancelActionListener.class,phase = Phase.DECODE )
+			@EventConfig(listeners = UIPageListPostHidden.OpenPostLinkActionListener.class),
+			@EventConfig(listeners = UIPageListPostHidden.UnHiddenActionListener.class),
+			@EventConfig(listeners = UIPageListPostHidden.CancelActionListener.class,phase = Phase.DECODE )
 		}
 )
-public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent {
+public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String categoryId, forumId, topicId ;
   private List<Post> listPost = new ArrayList<Post>() ;
   
-	public UIPageListPostUnApprove() throws Exception {
+	public UIPageListPostHidden() throws Exception {
 		addChild(UIForumPageIterator.class, null, "PageListPostUnApprove") ;
 	}
 
@@ -80,7 +80,7 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Post> getPostsUnApprove() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		JCRPageList pageList  = forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "false", false);
+		JCRPageList pageList  = forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", true);
 		forumPageIterator.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
@@ -105,15 +105,15 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
     return null ;
   }
 	
-	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostUnApprove> {
-    public void execute(Event<UIPageListPostUnApprove> event) throws Exception {
+	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostHidden> {
+    public void execute(Event<UIPageListPostHidden> event) throws Exception {
 			//UIPageListPostByUser uiForm = event.getSource() ;
 		}
 	}
 
-  static  public class UnApproveActionListener extends EventListener<UIPageListPostUnApprove> {
-    public void execute(Event<UIPageListPostUnApprove> event) throws Exception {
-      UIPageListPostUnApprove postUnApprove = event.getSource() ;
+  static  public class UnHiddenActionListener extends EventListener<UIPageListPostHidden> {
+    public void execute(Event<UIPageListPostHidden> event) throws Exception {
+      UIPageListPostHidden postUnApprove = event.getSource() ;
       List<UIComponent>listChild = postUnApprove.getChildren() ;
       //List<Post> listPost = new ArrayList<Post>() ;
       SessionProvider sessionProvider = ForumSessionUtils.getSessionProvider();
@@ -139,8 +139,8 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
     }
   }
   
-  static  public class CancelActionListener extends EventListener<UIPageListPostUnApprove> {
-    public void execute(Event<UIPageListPostUnApprove> event) throws Exception {
+  static  public class CancelActionListener extends EventListener<UIPageListPostHidden> {
+    public void execute(Event<UIPageListPostHidden> event) throws Exception {
       UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
       forumPortlet.cancelAction() ;
     }

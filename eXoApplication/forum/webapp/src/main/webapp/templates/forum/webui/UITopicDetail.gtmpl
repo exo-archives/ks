@@ -171,7 +171,7 @@
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
 														<%	
-															String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetHiddenPost", "DeletePost"];
+															String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetHiddenPost", "SetUnHiddenPost", "DeletePost"];
 															for( action in actionMenuPost ) {
 																String link = uicomponent.event(action) ;
 																String classIcon = action + "Icon";

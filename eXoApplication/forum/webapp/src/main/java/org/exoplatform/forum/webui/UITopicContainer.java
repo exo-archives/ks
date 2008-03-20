@@ -221,7 +221,6 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				}
 			}
 		}
-		System.out.println("\n\n======> isforum: "+this.forum.getIsModeratePost()+"isApprove: " + isApprove + "  isH : " + isHidden);
 		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden)	; 
 		long maxPost = getUserProfile().getMaxTopicInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost ;

@@ -32,6 +32,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIMovePostForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
+import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
 import org.exoplatform.forum.webui.popup.UIPageListPostUnApprove;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
@@ -92,7 +93,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicDetail.MovePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetApprovePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),	
-//			@EventConfig(listeners = UITopicDetail.SetApproveAttachmentActionListener.class ),	
+			@EventConfig(listeners = UITopicDetail.SetUnHiddenPostActionListener.class ),	
 //			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class )	
 		}
@@ -727,8 +728,15 @@ public class UITopicDetail extends UIForm {
 		}
 	}
 
-	static public class SetApproveAttachmentActionListener extends EventListener<UITopicDetail> {
+	static public class SetUnHiddenPostActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
+    	UITopicDetail topicDetail = event.getSource() ;
+    	UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+    	UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+    	UIPageListPostHidden listPostHidden = popupAction.createUIComponent(UIPageListPostHidden.class, null, null) ;
+    	listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
+    	popupAction.activate(listPostHidden, 500, 360) ;
+    	event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
