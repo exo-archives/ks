@@ -926,6 +926,7 @@ public class JCRDataStorage{
 				postNode.setProperty("exo:remoteAddr", post.getRemoteAddr()) ;
 				postNode.setProperty("exo:icon", post.getIcon()) ;
 				postNode.setProperty("exo:isApproved", post.getIsApproved()) ;
+				postNode.setProperty("exo:isHidden", post.getIsHidden()) ;
 				long numberAttach = 0 ;
 				List<ForumAttachment> attachments = post.getAttachments();
 				if(attachments != null) { 

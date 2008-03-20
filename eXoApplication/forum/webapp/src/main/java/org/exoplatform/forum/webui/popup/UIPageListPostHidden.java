@@ -62,7 +62,7 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
   private List<Post> listPost = new ArrayList<Post>() ;
   
 	public UIPageListPostHidden() throws Exception {
-		addChild(UIForumPageIterator.class, null, "PageListPostUnApprove") ;
+		addChild(UIForumPageIterator.class, null, "PageListPostHidden") ;
 	}
 
   public void activate() throws Exception {}
@@ -78,7 +78,7 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
   }
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-  private List<Post> getPostsUnApprove() throws Exception {
+  private List<Post> getPosts() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		JCRPageList pageList  = forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", true);
 		forumPageIterator.updatePageList(pageList) ;
@@ -112,10 +112,10 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
 	}
 
   static  public class UnHiddenActionListener extends EventListener<UIPageListPostHidden> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UIPageListPostHidden> event) throws Exception {
-      UIPageListPostHidden postUnApprove = event.getSource() ;
-      List<UIComponent>listChild = postUnApprove.getChildren() ;
-      //List<Post> listPost = new ArrayList<Post>() ;
+      UIPageListPostHidden postHidden = event.getSource() ;
+      List<UIComponent>listChild = postHidden.getChildren() ;
       SessionProvider sessionProvider = ForumSessionUtils.getSessionProvider();
       Post post = new Post() ;
       boolean haveCheck = false ;
@@ -123,16 +123,16 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
         if (child instanceof UIFormCheckBoxInput) {
           if(((UIFormCheckBoxInput)child).isChecked()) {
             haveCheck = true ;
-            post = postUnApprove.getPost(child.getName()) ;
-            post.setIsApproved(true) ;
-            postUnApprove.forumService.savePost(sessionProvider, postUnApprove.categoryId, postUnApprove.forumId, postUnApprove.topicId, post, false) ;
+            post = postHidden.getPost(child.getName()) ;
+            post.setIsHidden(false) ;
+            postHidden.forumService.savePost(sessionProvider, postHidden.categoryId, postHidden.forumId, postHidden.topicId, post, false) ;
           }
         }
       }
       if(!haveCheck) {
         throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null)) ;
       }
-      UIForumPortlet forumPortlet = postUnApprove.getAncestorOfType(UIForumPortlet.class) ;
+      UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class) ;
       forumPortlet.cancelAction() ;
       UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;

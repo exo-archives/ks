@@ -6,7 +6,7 @@
 	import org.exoplatform.forum.ForumFormatUtils ;
 	
 	UserProfile userProfile = uicomponent.getUserProfile() ;
-  List posts = uicomponent.getPostsUnApprove() ;
+  List posts = uicomponent.getPosts() ;
   long setTime = (long)(userProfile.getTimeZone()*3600000) ;
   String formatDate = userProfile.getShortDateFormat() ;
 %>
