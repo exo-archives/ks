@@ -769,12 +769,13 @@ public class JCRDataStorage{
 					StringBuffer stringBuffer = new StringBuffer() ;
 					if(isApproved != null && isApproved.length() > 0){
 						stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
-						stringBuffer.append("[@exo:isApproved='").append(isApproved).append("'] ");
+						stringBuffer.append("[(@exo:isApproved='").append(isApproved).append("') ");
 						if(isHidden){
-							stringBuffer.append("and [@exo:isHidden='").append(isHidden).append("']") ;
+							stringBuffer.append("and (@exo:isHidden='").append(isHidden).append("')") ;
 						}
-						stringBuffer.append("order by @exo:createdDate ascending") ;
+						stringBuffer.append("] order by @exo:createdDate ascending") ;
 						pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true) ;
+						System.out.println("\n\n===>> " + stringBuffer.toString());
 					} else {
 						if(isHidden){
 							stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
@@ -861,6 +862,7 @@ public class JCRDataStorage{
 		if(postNode.hasProperty("exo:remoteAddr")) postNew.setRemoteAddr(postNode.getProperty("exo:remoteAddr").getString()) ;
 		if(postNode.hasProperty("exo:icon")) postNew.setIcon(postNode.getProperty("exo:icon").getString()) ;
 		if(postNode.hasProperty("exo:isApproved")) postNew.setIsApproved(postNode.getProperty("exo:isApproved").getBoolean()) ;
+		if(postNode.hasProperty("exo:isHidden")) postNew.setIsHidden(postNode.getProperty("exo:isHidden").getBoolean()) ;
 		if(postNode.hasProperty("exo:numberAttach")) {
 			if(postNode.getProperty("exo:numberAttach").getLong() > 0) {
 				NodeIterator postAttachments = postNode.getNodes();
