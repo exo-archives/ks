@@ -409,7 +409,7 @@
 								<% checked = 1;
 									} else { %>
 								<div class="PostViewTitle" style="float: left;">
-									<div class="PostViewIcon $classIconPost">$subject</div>
+									<div class="PostViewIcon $classIconPost">$subject $isHedden</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<div class="CheckPost" style="float: right;">

@@ -42,6 +42,7 @@ import org.exoplatform.forum.webui.popup.UIRatingForm;
 import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITagForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -643,7 +644,7 @@ public class UITopicDetail extends UIForm {
 			UITopicDetail topicDetail = event.getSource() ;
       Topic topic = topicDetail.topic;
       topic.setIsApproved(false) ;
-      topicDetail.forumService.saveTopic(ForumSessionUtils.getSessionProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
+      topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
       topicDetail.viewTopic = false ;
       topicDetail.isEditTopic = true ;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -655,7 +656,7 @@ public class UITopicDetail extends UIForm {
       UITopicDetail topicDetail = event.getSource() ;
       Topic topic = topicDetail.topic;
       topic.setIsApproved(true) ;
-      topicDetail.forumService.saveTopic(ForumSessionUtils.getSessionProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
+      topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
       topicDetail.viewTopic = false ;
       topicDetail.isEditTopic = true ;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -724,7 +725,25 @@ public class UITopicDetail extends UIForm {
 	
 	static public class SetHiddenPostActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
-    	System.out.println("\n\n Hidden \n\n");
+      UITopicDetail topicDetail = event.getSource() ;
+      boolean haveCheck = false ;
+      Post post = new Post() ;
+      List<UIComponent> children = topicDetail.getChildren() ;
+      for(UIComponent child : children) {
+        if(child instanceof UIFormCheckBoxInput) {
+          if(((UIFormCheckBoxInput)child).isChecked()) {
+            haveCheck = true ;
+            post = topicDetail.getPost(((UIFormCheckBoxInput)child).getName());
+            post.setIsHidden(true) ;
+            topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, false) ;
+          }
+        }
+      }
+      if(haveCheck) {
+        event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+      } else {
+        throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", new String[]{}, ApplicationMessage.WARNING)) ;
+      }
 		}
 	}
 
