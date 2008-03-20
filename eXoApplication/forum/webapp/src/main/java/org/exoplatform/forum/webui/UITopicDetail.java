@@ -91,7 +91,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicDetail.MergePostActionListener.class ), //Post Menu 
 			@EventConfig(listeners = UITopicDetail.MovePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetApprovePostActionListener.class ),	
-//			@EventConfig(listeners = UITopicDetail.SetUnApprovePostActionListener.class ),	
+			@EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),	
 //			@EventConfig(listeners = UITopicDetail.SetApproveAttachmentActionListener.class ),	
 //			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class )	
@@ -269,10 +269,23 @@ public class UITopicDetail extends UIForm {
 	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		if(this.isUpdatePageList) {
-			this.pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "") ;
+			String isApprove = "" ;
+			boolean isHidden = false ;
+			Topic topic = this.topic ;
+			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
+				long role = this.userProfile.getUserRole() ;
+				if(role >=2){ isApprove = "true" ; isHidden = true ;}
+				if(role == 1) {
+					if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+						isApprove = "true" ; isHidden = true ;
+					}
+				}
+			}
+			System.out.println("isApprove: " + isApprove + "  isH : " + isHidden);
+			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden)	; 
 			this.isUpdatePageList = false ;
 		}
-		long maxPost = getUserProfile().getMaxPostInPage() ;
+		long maxPost = this.userProfile.getMaxPostInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost ;
 		pageList.setPageSize(this.maxPost) ;
 		this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
@@ -696,8 +709,9 @@ public class UITopicDetail extends UIForm {
 		}
 	}
 	
-	static public class SetUnApprovePostActionListener extends EventListener<UITopicDetail> {
+	static public class SetHiddenPostActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
+    	System.out.println("\n\n Hidden \n\n");
 		}
 	}
 

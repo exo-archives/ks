@@ -70,7 +70,7 @@ public class UITopicsTag extends UIForm {
 	private long maxTopic = 10 ;
 	private boolean isUpdateTag = true ;
 	private boolean isUpdateTopicTag = true ;
-	private UserProfile UserProfile = null;
+	private UserProfile userProfile = null;
 	public UITopicsTag() throws Exception {
 		addChild(UIForumPageIterator.class, null, "TagPageIterator") ;
 	}
@@ -79,17 +79,18 @@ public class UITopicsTag extends UIForm {
 		this.tagId = tagId ;
 		this.isUpdateTag = true ;
 		this.isUpdateTopicTag = true ;
-		this.UserProfile  = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		this.userProfile  = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
   }
 	
-	private UserProfile getUserProfile() {
-		return UserProfile ;
+	@SuppressWarnings("unused")
+  private UserProfile getUserProfile() {
+		return userProfile ;
 	}
 	
 	@SuppressWarnings("unused")
   private void getListTopicTag() throws Exception {
 		this.listTopic = forumService.getTopicsByTag(ForumSessionUtils.getSystemProvider(), this.tagId) ;
-		long maxTopic = this.UserProfile.getMaxTopicInPage() ;
+		long maxTopic = this.userProfile.getMaxTopicInPage() ;
 		if(maxTopic > 0) this.maxTopic = maxTopic;
 		this.listTopic.setPageSize(this.maxTopic) ;
 		this.getChild(UIForumPageIterator.class).updatePageList(this.listTopic) ;
@@ -103,8 +104,21 @@ public class UITopicsTag extends UIForm {
 	@SuppressWarnings("unused")
   private long getMaxPagePost(String Id) throws Exception {
 		String Ids[] = Id.split("/") ;
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], "")	; 
-		long maxPost = getUserProfile().getMaxTopicInPage() ;
+		String isApprove = "" ;
+		boolean isHidden = false ;
+		Forum forum = this.forumService.getForum(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)]);
+		Topic topic = getTopic(Ids[(Ids.length - 1)]) ;
+		if(forum.getIsModerateTopic() || topic.getIsModeratePost()) {
+			long role = this.userProfile.getUserRole() ;
+			if(role >=2){ isApprove = "true" ; isHidden = true ;}
+			if(role == 1) {
+				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+					isApprove = "true" ; isHidden = true ;
+				}
+			}
+		}
+		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden)	; 
+		long maxPost = this.userProfile.getMaxTopicInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost;
 		pageListPost.setPageSize(this.maxPost) ;
 		this.mapPostPage.put(Ids[(Ids.length - 1)], pageListPost) ; 

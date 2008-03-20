@@ -562,7 +562,7 @@ public class JCRDataStorage{
 	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
 		TopicView topicview = new TopicView() ;
 		topicview.setTopicView(getTopic(sProvider, categoryId, forumId, topicId, "")) ;
-		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId, "")) ;
+		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId, "", false)) ;
 		return topicview;
 	}
 
@@ -755,7 +755,7 @@ public class JCRDataStorage{
 	}
 	
 
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved) throws Exception {
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, boolean isHidden) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		Node categoryNode ;
 		try{
@@ -766,15 +766,25 @@ public class JCRDataStorage{
 				try {
 					Node topicNode = forumNode.getNode(topicId) ;
 					JCRPageList pagelist ;
+					StringBuffer stringBuffer = new StringBuffer() ;
 					if(isApproved != null && isApproved.length() > 0){
-						StringBuffer stringBuffer = new StringBuffer() ;
 						stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
 						stringBuffer.append("[@exo:isApproved='").append(isApproved).append("'] ");
+						if(isHidden){
+							stringBuffer.append("and [@exo:isHidden='").append(isHidden).append("']") ;
+						}
 						stringBuffer.append("order by @exo:createdDate ascending") ;
 						pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true) ;
 					} else {
-						NodeIterator iter = topicNode.getNodes() ; 
-						pagelist = new ForumPageList(iter, 10, topicNode.getPath(), false) ;
+						if(isHidden){
+							stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
+							stringBuffer.append("[@exo:isHidden='").append(isHidden).append("']") ;
+							stringBuffer.append("order by @exo:createdDate ascending") ;
+							pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true) ;
+						} else {
+							NodeIterator iter = topicNode.getNodes() ; 
+							pagelist = new ForumPageList(iter, 10, topicNode.getPath(), false) ;
+						}
 					}
 					return pagelist ;
 				}catch (PathNotFoundException e) {

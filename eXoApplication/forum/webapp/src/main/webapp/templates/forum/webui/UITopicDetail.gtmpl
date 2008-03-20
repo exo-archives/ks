@@ -171,7 +171,7 @@
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
 														<%	
-															String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetUnApproveAttachment", "DeletePost"];
+															String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetHiddenPost", "DeletePost"];
 															for( action in actionMenuPost ) {
 																String link = uicomponent.event(action) ;
 																String classIcon = action + "Icon";
@@ -357,6 +357,10 @@
 				Date userCreated = user.getCreatedDate() ;
 				userCreated.setTime(userCreated.getTime() + setTime);
 				String joinDate = ForumFormatUtils.getFormatDate("DDD yyyy",userCreated) ;
+				String isHedden = "" ;
+				if(post.getIsHidden()) {
+					isHedden = "(<span style='color:#f77617;'>This post is pending for block!</span>)" ;
+				}
 		%>
 
 		<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
@@ -399,7 +403,7 @@
 							<div class="PostViewHeader">
 							<% if(checked == 0) {%>
 								<div class="PostViewTitle">
-									<div class="PostViewIcon $classIconPost">$subject</div>
+									<div class="PostViewIcon $classIconPost">$subject $isHedden</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<% checked = 1;
