@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -221,12 +222,21 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
     String values = fieldInput.getValue() ;
-    if(values != null && values.length() > 0) {
-    	values = values + value + ",";
+    boolean canAdd = true ;
+    if(values != null && values.trim().length() > 0) {
+      if(!ForumFormatUtils.isStringInStrings(values.split(","), value)){
+        if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
+        else values = values.trim() + ",";
+      } else {
+        canAdd = false ;
+      }
     } else {
-    	values = value ;
+      values = "" ;
     }
-    fieldInput.setValue(values) ;
+    if(canAdd) {
+      values = values.trim() + value ;
+      fieldInput.setValue(values) ;
+    }
   }
 	
 	static	public class SaveActionListener extends EventListener<UIForumForm> {

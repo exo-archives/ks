@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -236,10 +237,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		longDateFormat.setValue(userProfile.getLongDateFormat());
 		list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>("12-hour ("+ForumFormatUtils.getFormatDate("h:mm a", date)+")", "h:mm=a")) ;
-		list.add(new SelectItemOption<String>("12-hour ("+ForumFormatUtils.getFormatDate("hh:mm a", date)+")", "hh:mm=a")) ;
-		list.add(new SelectItemOption<String>("24-hour ("+ForumFormatUtils.getFormatDate("H:mm", date)+")", "H:mm")) ;
-		list.add(new SelectItemOption<String>("24-hour ("+ForumFormatUtils.getFormatDate("HH:mm", date)+")", "HH:mm")) ;
-		UIFormSelectBox timeFormat = new UIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX, FIELD_TIMEFORMAT_SELECTBOX, list) ;
+    list.add(new SelectItemOption<String>("12-hour ("+ForumFormatUtils.getFormatDate("hh:mm a", date)+")", "hh:mm=a")) ;
+    list.add(new SelectItemOption<String>("24-hour ("+ForumFormatUtils.getFormatDate("H:mm", date)+")", "H:mm")) ;
+    list.add(new SelectItemOption<String>("24-hour ("+ForumFormatUtils.getFormatDate("HH:mm", date)+")", "HH:mm")) ;
+    UIFormSelectBox timeFormat = new UIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX, FIELD_TIMEFORMAT_SELECTBOX, list) ;
 		timeFormat.setValue(userProfile.getTimeFormat().replace(' ', '='));
 		list = new ArrayList<SelectItemOption<String>>() ;
 		for(int i=5; i <= 45; i = i + 5) {
@@ -273,7 +274,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		until = date.getTime() + oneDate;
 		date.setTime(until);
 		list.add(new SelectItemOption<String>("1 Day ("+ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date)+")", "Until_" + until)) ;
-		while(true) {
+    while(true) {
 			if(i == 8 && dv.equals("Days")) i = 10;
 			if(i == 11) {i = 2; dv = "Weeks";}
 			if(i == 4 && dv.equals("Weeks")) {i = 1; dv = "Month" ;}
@@ -286,13 +287,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			if(dv.equals("Month")||dv.equals("Months")){ date = getNewDate(timeZoneOld); date.setMonth(date.getMonth() + i) ; until = date.getTime();}
 			if(dv.equals("Years")||dv.equals("Year")){ date = getNewDate(timeZoneOld); date.setYear(date.getYear() + i) ; until = date.getTime();}
 			list.add(new SelectItemOption<String>(i+" "+dv+" ("+ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date)+")", ("Until_" + until))) ;
-			++i;
+      ++i;
 		}
 		UIFormSelectBox banUntil = new UIFormSelectBox(FIELD_BANUNTIL_SELECTBOX,FIELD_BANUNTIL_SELECTBOX, list) ;
 		if(isBan) {
 			banUntil.setValue("Until_" + userProfile.getBanUntil()) ;
 		}
-		
 		UIFormTextAreaInput banReason = new UIFormTextAreaInput(FIELD_BANREASON_TEXTAREA, FIELD_BANREASON_TEXTAREA, null);
 		UIFormStringInput banCounter = new UIFormStringInput(FIELD_BANCOUNTER_INPUT, FIELD_BANCOUNTER_INPUT, null) ;
 		banCounter.setValue(userProfile.getBanCounter() + "");
@@ -305,7 +305,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		} else {
 			banReason.setEnable(true);
 		}
-		
 		UIFormInputWithActions inputSetProfile = new UIFormInputWithActions(FIELD_USERPROFILE_FORM); 
 		inputSetProfile.addUIFormInput(userId);
 		inputSetProfile.addUIFormInput(userTitle);
@@ -468,6 +467,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			boolean isShowForumJump = (Boolean)inputSetOption.getUIFormCheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).getValue() ;
 			
     	UIFormInputWithActions inputSetBan = uiForm.getChildById(FIELD_USERBAN_FORM) ;
+      boolean wasBanned = userProfile.getIsBanned() ;
     	boolean isBanned = (Boolean)inputSetBan.getUIFormCheckBoxInput(FIELD_ISBANNED_CHECKBOX).getValue() ;
     	String until = inputSetBan.getUIFormSelectBox(FIELD_BANUNTIL_SELECTBOX).getValue() ;
     	long banUntil = 0;
@@ -475,27 +475,35 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     		banUntil = Long.parseLong(until.substring(6));
     	}
     	String banReason = inputSetBan.getUIFormTextAreaInput(FIELD_BANREASON_TEXTAREA).getValue() ;
-    	String banReasonSummarys =  ForumFormatUtils.unSplitForForum(userProfile.getBanReasonSummary());
+      
+    	String []banReasonSummaries =  userProfile.getBanReasonSummary();
     	double timeZoneOld = userProfile.getTimeZone() ;
     	Date date = uiForm.getNewDate(timeZoneOld);
-    	int banCounter = 0;
+    	int banCounter = userProfile.getBanCounter();
     	date.setTime(banUntil) ;
-    	if(banReasonSummarys != null && banReasonSummarys.length() > 0){
-    		if(isBanned) {
-    			banReasonSummarys = banReasonSummarys + 
-    			"Ban Reason: " + banReason + " From Date: " + (ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getNewDate(timeZoneOld))) + 
-    			" To Date: " + ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", date) + ";";
-    			banCounter = userProfile.getBanCounter() + 1;
-    		}
-    	} else {
-    		if(isBanned) {
-    			banReasonSummarys = "Ban Reason: " + banReason + " From Date: " + (ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getNewDate(timeZoneOld))) + 
-    			" To Date: " + ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", date) + ";";
-    			banCounter = 1;
-    		}
-    	}
-    	String []banReasonSummary = ForumFormatUtils.splitForForum(banReasonSummarys);
-    	
+      StringBuffer stringBuffer = new StringBuffer();
+      stringBuffer.append("Ban Reason: ").append(banReason).append(" From Date: ") 
+          .append(ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getNewDate(timeZoneOld))) 
+          .append(" To Date: ").append(ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", date)) ;
+      if(isBanned) {
+      	if(banReasonSummaries != null && banReasonSummaries.length > 0){
+          if(wasBanned){
+            banReasonSummaries[0] = stringBuffer.toString() ;
+          } else {
+            String []temp = new String [banReasonSummaries.length + 1] ;
+            int i = 1;
+            for (String string : banReasonSummaries) {
+              temp[i++] = string ;
+            }
+            temp[0] = stringBuffer.toString() ;
+            banReasonSummaries = temp ;
+      			banCounter = banCounter + 1;
+          }
+      	} else {
+            banReasonSummaries = new String[] {stringBuffer.toString()} ;
+      			banCounter = 1;
+      	}
+      }
     	userProfile.setUserTitle(userTitle);
     	userProfile.setUserRole(userRole) ;
     	userProfile.setSignature(signature);
@@ -516,7 +524,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	userProfile.setBanUntil(banUntil) ;
     	userProfile.setBanReason(banReason);
     	userProfile.setBanCounter(banCounter);
-    	userProfile.setBanReasonSummary(banReasonSummary);
+    	userProfile.setBanReasonSummary(banReasonSummaries);
     	try {
     		uiForm.forumService.saveUserProfile(ForumSessionUtils.getSystemProvider(), userProfile, true, true) ;
       } catch (Exception e) {
@@ -526,6 +534,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
       	forumPortlet.setUserProfile() ;
       }
       uiForm.isEdit = false ;
+      uiForm.setPageListUserProfile();
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
     }
   }

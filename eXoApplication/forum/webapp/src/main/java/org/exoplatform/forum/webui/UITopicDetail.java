@@ -639,13 +639,25 @@ public class UITopicDetail extends UIForm {
 
 	static public class SetApproveTopicActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
-//			UITopicDetail topicDetail = event.getSource() ;
-		}
-	}
-
+			UITopicDetail topicDetail = event.getSource() ;
+      Topic topic = topicDetail.topic;
+      topic.setIsApproved(false) ;
+      topicDetail.forumService.saveTopic(ForumSessionUtils.getSessionProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
+      topicDetail.viewTopic = false ;
+      topicDetail.isEditTopic = true ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+    }
+  }
+  
 	static public class SetUnApproveTopicActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
-//			UITopicDetail topicDetail = event.getSource() ;
+      UITopicDetail topicDetail = event.getSource() ;
+      Topic topic = topicDetail.topic;
+      topic.setIsApproved(true) ;
+      topicDetail.forumService.saveTopic(ForumSessionUtils.getSessionProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
+      topicDetail.viewTopic = false ;
+      topicDetail.isEditTopic = true ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
 

@@ -294,7 +294,7 @@
 															 			String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
 															 			link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}";
 															 		}
-															 		if(action.indexOf("intPa") > 0 || action.indexOf("Approve") > 0) {
+															 		if(action.indexOf("intPa") > 0) {
 														 %>
 															<div class="MenuItem" style="opacity: 0.3; cursor: none;">	 
 																<div class="ItemIcon $classIcon">
