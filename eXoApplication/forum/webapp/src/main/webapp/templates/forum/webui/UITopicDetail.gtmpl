@@ -359,7 +359,7 @@
 				String joinDate = ForumFormatUtils.getFormatDate("DDD yyyy",userCreated) ;
 				String isHedden = "" ;
 				if(post.getIsHidden()) {
-					isHedden = "(<span style='color:#f77617;'>This post is pending for block!</span>)" ;
+					isHedden = "(<span style='color:#f77617;'>This post is hidden!</span>)" ;
 				}
 		%>
 
