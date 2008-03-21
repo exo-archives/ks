@@ -164,8 +164,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	  String outPut = "" ;
 	  if(!values.isEmpty()) {
 	    for(String value : values) {
+	    	System.out.println(value + "\n\n");
 	      if(value != null && value.trim().length() > 0){ 
-	        outPut += value.substring(0, value.indexOf('(')) + "\n" ;
+	      	if(value.indexOf('(') > 0){
+	      		outPut += value.substring(0, value.indexOf('(')) + "\n" ;
+	      	}
 	      }
 	    }
 	  }
@@ -175,8 +178,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private List<String> getModerateList(List<String> forumsModerate) {
 		List<String> list = new ArrayList<String>() ;
 		for (String string : forumsModerate) {
-			string = string.substring((string.indexOf('(')+1)) ;
-			list.add(string);
+			if(string.indexOf('(') > 0) {
+				string = string.substring((string.indexOf('(')+1)) ;
+				list.add(string);
+			}
     }
 		return list; 
 	}
@@ -213,6 +218,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
 		UIFormTextAreaMultilInput moderateForums = new UIFormTextAreaMultilInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
     moderateForums.setValue(stringProcess(Arrays.asList(userProfile.getModerateForums()))) ;
+    moderateForums.setEditable(false);
 //		UIFormTextAreaMultilInput moderateTopics = new UIFormTextAreaMultilInput(FIELD_MODERATETOPICS_MULTIVALUE, FIELD_MODERATETOPICS_MULTIVALUE, null);
 		UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
 		isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar()) ;

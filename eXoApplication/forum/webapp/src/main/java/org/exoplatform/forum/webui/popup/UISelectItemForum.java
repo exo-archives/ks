@@ -47,7 +47,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 	lifecycle = UIFormLifecycle.class,
 	template = "app:/templates/forum/webui/popup/UISelectItemForumForm.gtmpl",
 	events = {
-		@EventConfig(listeners = UISelectItemForum.SaveActionListener.class), 
+		@EventConfig(listeners = UISelectItemForum.AddActionListener.class), 
 		@EventConfig(listeners = UISelectItemForum.CancelActionListener.class,phase = Phase.DECODE)
 	}
 )
@@ -127,7 +127,7 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 		return null ;
 	}
 
-	static	public class SaveActionListener extends EventListener<UISelectItemForum> {
+	static	public class AddActionListener extends EventListener<UISelectItemForum> {
 		@SuppressWarnings("unchecked")
 		public void execute(Event<UISelectItemForum> event) throws Exception {
 			UISelectItemForum uiForm = event.getSource() ;

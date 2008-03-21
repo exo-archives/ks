@@ -289,7 +289,7 @@ public class JCRDataStorage{
 	          		String [] moderatorForums = ValuesToStrings(userProfileNode.getProperty("exo:moderateForums").getValues());
 	          		for (String string2 : moderatorForums) {
 	  	            if(string2.indexOf(forum.getId()) < 0) {
-	  	            	list.add(string) ;
+	  	            	list.add(string2) ;
 	  	            }
 	              }
 	          		userProfileNode.setProperty("exo:moderateForums", getStrings(list));

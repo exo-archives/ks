@@ -78,7 +78,7 @@
 			<tr>
 				<td align="center">
 			<% for(action in uicomponent.getActions()) { 
-				 //String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+				 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 				 String link = uicomponent.event(action) ;
 			%>
 					<a href="$link" class="ActionButton LightBlueStyle">
