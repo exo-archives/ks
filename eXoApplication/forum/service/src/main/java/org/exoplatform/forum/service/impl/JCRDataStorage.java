@@ -262,7 +262,7 @@ public class JCRDataStorage{
 		            list.add(string2) ;
 	            }
 							if(!hasMod) {
-								list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId()+");\n");
+								list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId());
 								userProfileNode.setProperty("exo:moderateForums", getStrings(list));
 								if(userProfileNode.hasProperty("exo:userRole")) {
 									if(userProfileNode.getProperty("exo:userRole").getLong() >= 2) {
@@ -1493,13 +1493,7 @@ public class JCRDataStorage{
 	}
 	
 	private static String[] getStrings(List<String> list) throws Exception {
-		String[] object = new String[list.size()] ;
-		int i = 0;
-		for (String object2 : list) {
-			object[i] = object2 ;
-			++i;
-    }
-		return object ;
+		return list.toArray(new String[] {}) ;
 	}
 	
 	@SuppressWarnings("deprecation")
