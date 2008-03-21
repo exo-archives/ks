@@ -188,16 +188,20 @@ public class UICategories extends UIContainer	{
 	
 	static public class OpenForumLinkActionListener extends EventListener<UICategories> {
     public void execute(Event<UICategories> event) throws Exception {
-			UICategories uiContainer = event.getSource();
+			UICategories categories = event.getSource();
 			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = forumId.trim().split(",");
-			UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(2);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			uiForumContainer.setIsRenderChild(true) ;
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
+      
+      UIPostRules postRules = uiForumContainer.findFirstComponentOfType(UIPostRules.class) ;
+      postRules.setLock(categories.getForumById(id[0], id[1]).getIsLock()) ;
+      
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

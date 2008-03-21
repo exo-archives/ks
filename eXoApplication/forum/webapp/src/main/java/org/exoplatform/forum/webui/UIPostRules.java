@@ -16,6 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.Arrays;
+
+import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -31,12 +34,36 @@ import org.exoplatform.webui.core.UIContainer;
 		template =	"app:/templates/forum/webui/UIPostRules.gtmpl"
 )
 public class UIPostRules extends UIContainer	{
+  private boolean isLock = false ;
+  private boolean isMorderate = false ;
+  private String[] morderate = new String[]{} ;
+  private UserProfile userProfile ;
+  
+  
 	public UIPostRules() throws Exception {		
 	}	
 	
 	@SuppressWarnings("unused")
   private UserProfile getUserProfile() {
-		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		return userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
-	
+  
+	public boolean isLock() {
+    return isLock;
+  }
+
+  public void setLock(boolean isLock) {
+    this.isLock = isLock;
+  }
+
+  public boolean isMorderate() {
+    return isMorderate;
+  }
+
+  public void setMorderate(String[]morderate) {
+    this.morderate = morderate;
+  }
+  public boolean getIsMorderate() {
+    return ForumFormatUtils.isStringInStrings(this.morderate, userProfile.getUserId()) ;
+  }
 }

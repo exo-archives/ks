@@ -40,6 +40,8 @@ public class UIForumInfos extends UIContainer	{
   }
 
 	public void setModeratorsForum(String[] moderators) {
+    getChild(UIPostRules.class).setMorderate(moderators) ;
 		this.moderators = moderators ;
 	}
+  
 }
