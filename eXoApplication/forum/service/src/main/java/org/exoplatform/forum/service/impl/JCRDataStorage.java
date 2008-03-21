@@ -311,32 +311,37 @@ public class JCRDataStorage{
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		for (String path : forumPaths) {
 			String forumPath = forumHomeNode.getPath() + "/" + path ;
-			Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath) ;
-			if(isDelete) {
-				if(forumNode.hasProperty("exo:moderators")){ 
-					String []oldUserNamesModerate = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()) ;
+			Node forumNode;
+			try {
+				forumNode= (Node) forumHomeNode.getSession().getItem(forumPath) ;
+				if(isDelete) {
+					if(forumNode.hasProperty("exo:moderators")){ 
+						String []oldUserNamesModerate = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()) ;
+						List<String>list = new ArrayList<String>() ;
+						for (String string : oldUserNamesModerate) {
+							if(!string.equals(userName)){
+								list.add(string);
+							}
+	          }
+						forumNode.setProperty("exo:moderators",getStrings(list)) ;
+					}
+				} else {
+					String []oldUserNamesModerate = new String[] {} ;
+					if(forumNode.hasProperty("exo:moderators")){
+						oldUserNamesModerate = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()) ;
+					}
 					List<String>list = new ArrayList<String>() ;
 					for (String string : oldUserNamesModerate) {
 						if(!string.equals(userName)){
-							list.add(string);
+							list.add(string) ;
 						}
-          }
-					forumNode.setProperty("exo:moderators",getStrings(list)) ;
+	        }
+					list.add(userName) ;
+					forumNode.setProperty("exo:moderators", getStrings(list)) ;
 				}
-			} else {
-				String []oldUserNamesModerate = new String[] {} ;
-				if(forumNode.hasProperty("exo:moderators")){
-					oldUserNamesModerate = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()) ;
-				}
-				List<String>list = new ArrayList<String>() ;
-				for (String string : oldUserNamesModerate) {
-					if(!string.equals(userName)){
-						list.add(string) ;
-					}
-        }
-				list.add(userName) ;
-				forumNode.setProperty("exo:moderators", getStrings(list)) ;
-			}
+			} catch (PathNotFoundException e) {
+	      e.printStackTrace() ;
+      }
 		}
 		forumHomeNode.getSession().save() ;
 	}
