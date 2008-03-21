@@ -19,11 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.ListModel;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
@@ -112,18 +108,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
   }
 	
-	private String stringProcess(List<String> values) {
-	  String outPut = "" ;
-	  if(!values.isEmpty()) {
-	    for(String value : values) {
-	      if(value != null && value.trim().length() > 0){ 
-	        outPut += value.substring(0, value.indexOf('(')) + "\n" ;
-	      }
-	    }
-	  }
-	  return outPut ;
-	}
-	
   @SuppressWarnings("unused")
   public JCRPageList setPageListUserProfile() throws Exception {
     List<User> listUser = ForumSessionUtils.getAllUser() ;
@@ -176,6 +160,18 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
   
+	private String stringProcess(List<String> values) {
+	  String outPut = "" ;
+	  if(!values.isEmpty()) {
+	    for(String value : values) {
+	      if(value != null && value.trim().length() > 0){ 
+	        outPut += value.substring(0, value.indexOf('(')) + "\n" ;
+	      }
+	    }
+	  }
+	  return outPut ;
+	}
+	
 	private List<String> getModerateList(List<String> forumsModerate) {
 		List<String> list = new ArrayList<String>() ;
 		for (String string : forumsModerate) {
@@ -188,6 +184,13 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   private boolean getIsEdit() {
 		return this.isEdit ;
 	}
+	
+	public void setValues(List<String> values) {
+    this.listModerate = values ;
+		UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM) ;
+    String value = stringProcess(values) ;
+		inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value) ;
+  }
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
   private void initUserProfileForm() throws Exception {
@@ -209,10 +212,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
 		UIFormTextAreaMultilInput moderateForums = new UIFormTextAreaMultilInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
-		//moderateForums.setValue(ForumFormatUtils.unSplitForForum(userProfile.getModerateForums()));
     moderateForums.setValue(stringProcess(Arrays.asList(userProfile.getModerateForums()))) ;
 //		UIFormTextAreaMultilInput moderateTopics = new UIFormTextAreaMultilInput(FIELD_MODERATETOPICS_MULTIVALUE, FIELD_MODERATETOPICS_MULTIVALUE, null);
-//		moderateTopics.setValue(ForumFormatUtils.unSplitForForum(userProfile.getModerateTopics()));
 		UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
 		isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar()) ;
 		//Option
@@ -376,13 +377,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	  return this.forumLinks ;
   }
 	
-	public void setValues(List<String> values) {
-    this.listModerate = values ;
-		UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM) ;
-    String value = stringProcess(values) ;
-		inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value) ;
-  }
-	
   static  public class ViewProfileActionListener extends EventListener<UIModeratorManagementForm> {
     public void execute(Event<UIModeratorManagementForm> event) throws Exception {
     	UIModeratorManagementForm uiForm = event.getSource() ;
@@ -430,7 +424,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
       List<String> moderateForums = new ArrayList<String>() ;
     	if(moderateForum != null && moderateForum.length() > 0) {
-    		//moderateForums = ForumFormatUtils.splitForForum(moderateForum) ;
         moderateForums = uiForm.listModerate ;
     	} 
 //    	String moderateTopic = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATETOPICS_MULTIVALUE).getValue() ;
