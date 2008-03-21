@@ -131,18 +131,18 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 		@SuppressWarnings("unchecked")
 		public void execute(Event<UISelectItemForum> event) throws Exception {
 			UISelectItemForum uiForm = event.getSource() ;
-			String idSelected = "" ;
+			List<String> listIdSelected = new ArrayList<String>() ;
 			List<UIComponent> children = uiForm.getChildren() ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-						idSelected = idSelected + uiForm.getNameForumLinkData(child.getName()) +" ("+ child.getName() + ");\n";
+            listIdSelected.add(uiForm.getNameForumLinkData(child.getName()) +"("+ child.getName());
 					}
 				}
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIModeratorManagementForm managementForm = popupContainer.getChild(UIModeratorManagementForm.class) ;
-			managementForm.setValuesTextArea(idSelected) ;
+			managementForm.setValues(listIdSelected) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}

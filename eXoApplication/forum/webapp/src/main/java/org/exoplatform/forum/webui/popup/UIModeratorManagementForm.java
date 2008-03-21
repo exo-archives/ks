@@ -19,7 +19,11 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.ListModel;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
@@ -73,6 +77,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private boolean isEdit = false ;
 	private UserProfile userProfile = new UserProfile();
 	private List<ForumLinkData> forumLinks = null;
+  private List<String> listModerate = new ArrayList<String>();
 	
 	public static final String FIELD_USERPROFILE_FORM = "ForumUserProfile" ;
 	public static final String FIELD_USEROPTION_FORM = "ForumUserOption" ;
@@ -102,10 +107,22 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_BANCOUNTER_INPUT = "BanCounter" ;
 	public static final String FIELD_BANREASONSUMMARY_MULTIVALUE = "BanReasonSummary" ;
 	public static final String FIELD_CREATEDDATEBAN_INPUT = "CreatedDateBan" ;
-
+  
 	public UIModeratorManagementForm() throws Exception {
 		addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
   }
+	
+	private String stringProcess(List<String> values) {
+	  String outPut = "" ;
+	  if(!values.isEmpty()) {
+	    for(String value : values) {
+	      if(value != null && value.trim().length() > 0){ 
+	        outPut += value.substring(0, value.indexOf('(')) + "\n" ;
+	      }
+	    }
+	  }
+	  return outPut ;
+	}
 	
   @SuppressWarnings("unused")
   public JCRPageList setPageListUserProfile() throws Exception {
@@ -159,13 +176,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
   
-	private List<String> getModerateList(String []forumsModerate) {
+	private List<String> getModerateList(List<String> forumsModerate) {
 		List<String> list = new ArrayList<String>() ;
 		for (String string : forumsModerate) {
-			if(string.indexOf('(') > 0) {
-				string = string.substring(string.indexOf('(')+1, string.lastIndexOf(')')) ;
-				list.add(string);
-			}
+			string = string.substring((string.indexOf('(')+1)) ;
+			list.add(string);
     }
 		return list; 
 	}
@@ -194,7 +209,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
 		UIFormTextAreaMultilInput moderateForums = new UIFormTextAreaMultilInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
-		moderateForums.setValue(ForumFormatUtils.unSplitForForum(userProfile.getModerateForums()));
+		//moderateForums.setValue(ForumFormatUtils.unSplitForForum(userProfile.getModerateForums()));
+    moderateForums.setValue(stringProcess(Arrays.asList(userProfile.getModerateForums()))) ;
 //		UIFormTextAreaMultilInput moderateTopics = new UIFormTextAreaMultilInput(FIELD_MODERATETOPICS_MULTIVALUE, FIELD_MODERATETOPICS_MULTIVALUE, null);
 //		moderateTopics.setValue(ForumFormatUtils.unSplitForForum(userProfile.getModerateTopics()));
 		UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
@@ -360,9 +376,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	  return this.forumLinks ;
   }
 	
-	public void setValuesTextArea(String values) {
+	public void setValues(List<String> values) {
+    this.listModerate = values ;
 		UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM) ;
-		inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(values) ;
+    String value = stringProcess(values) ;
+		inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value) ;
   }
 	
   static  public class ViewProfileActionListener extends EventListener<UIModeratorManagementForm> {
@@ -410,9 +428,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
     	long userRole = Long.parseLong(inputSetProfile.getUIFormSelectBox(FIELD_USERROLE_SELECTBOX).getValue().substring(2));
     	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
-    	String []moderateForums = new String[]{} ;
+      List<String> moderateForums = new ArrayList<String>() ;
     	if(moderateForum != null && moderateForum.length() > 0) {
-    		moderateForums = ForumFormatUtils.splitForForum(moderateForum) ;
+    		//moderateForums = ForumFormatUtils.splitForForum(moderateForum) ;
+        moderateForums = uiForm.listModerate ;
     	} 
 //    	String moderateTopic = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATETOPICS_MULTIVALUE).getValue() ;
 //    	String []moderateTopics ;
@@ -423,7 +442,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 //    	}
     	List<String> NewModerates = new ArrayList<String> ();
     	NewModerates = uiForm.getModerateList(moderateForums);
-    	List<String> OldModerateForums = uiForm.getModerateList(userProfile.getModerateForums()) ;
+    	List<String> OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums())) ;
     	List<String> DeleteModerateForums = new ArrayList<String> ();
     	boolean isSetGetNewListForum = false ;
     	if(NewModerates.isEmpty()){
@@ -445,7 +464,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	}
     	if(isSetGetNewListForum)forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
     	
-    	if(moderateForums.length > 0 || moderateForums.length > 0) {
+    	if(!moderateForums.isEmpty()) {
     		if(userRole >= 2) userRole = 1;
     	}
     	if(userTitle.indexOf("Admin") >= 0 || userTitle.equals("Moderator") || userTitle.equals("User") || userTitle.equals("Guest")) {
@@ -508,7 +527,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	userProfile.setUserRole(userRole) ;
     	userProfile.setSignature(signature);
     	userProfile.setIsDisplaySignature(isDisplaySignature);
-    	userProfile.setModerateForums(moderateForums);
+    	userProfile.setModerateForums(moderateForums.toArray(new String[]{}));
 //    	userProfile.setModerateTopics(moderateTopics);
     	userProfile.setIsDisplayAvatar(isDisplayAvatar);
     	
