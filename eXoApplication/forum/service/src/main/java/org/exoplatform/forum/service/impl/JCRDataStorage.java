@@ -243,7 +243,7 @@ public class JCRDataStorage{
 			forumNode.setProperty("exo:replyTopicRole", forum.getReplyTopicRole()) ;
 			
 			String []oldModeratoForums = new String[]{};
-			if(!isNew)ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()); 
+			if(!isNew)oldModeratoForums = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()); 
 			forumNode.setProperty("exo:moderators", forum.getModerators()) ;
 			forumHomeNode.getSession().save() ;
 			{//seveProfile

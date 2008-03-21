@@ -128,7 +128,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormTextAreaInput topicable = new UIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, null);
 		
 		UIFormCheckBoxInput checkWhenAddTopic = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
-		UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
+		//UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
 		
 		addUIFormInput(categoryId) ;
 		UIFormInputWithActions newForum = new UIFormInputWithActions(FIELD_NEWFORUM_FORM);
@@ -142,7 +142,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		moderationOptions.addUIFormInput(notifyWhenAddPost);
 		moderationOptions.addUIFormInput(notifyWhenAddTopic);
 		moderationOptions.addUIFormInput(checkWhenAddTopic);
-		moderationOptions.addUIFormInput(checkWhenAddPost);
+	//	moderationOptions.addUIFormInput(checkWhenAddPost);
 
 		UIFormInputWithActions forumPermission = new UIFormInputWithActions(FIELD_FORUMPERMISSION_FORM);
 		forumPermission.addUIFormInput(moderator) ;
@@ -196,7 +196,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).setDefaultValue(this.unSplitForForum(forum.getNotifyWhenAddPost()));
 			moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).setDefaultValue(this.unSplitForForum(forum.getNotifyWhenAddTopic()));
 			moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).setChecked(forum.getIsModerateTopic());
-			moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(forum.getIsModeratePost());
+		//	moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(forum.getIsModeratePost());
 			
 			UIFormInputWithActions forumPermission = this.getChildById(FIELD_FORUMPERMISSION_FORM);
 			forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).setValue(unSplitForForum(forum.getModerators()));
@@ -258,7 +258,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String[] notifyWhenAddTopic = uiForm.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).getValue()) ;
 			String[] notifyWhenAddPost = uiForm.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue()) ;
 			Boolean	ModerateTopic = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).getValue();
-			Boolean	ModeratePost = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
+		//	Boolean	ModeratePost = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
 			
 			UIFormInputWithActions forumPermission = uiForm.getChildById(FIELD_FORUMPERMISSION_FORM);
 			String[] setModerator = uiForm.splitForForum(forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue()) ;
@@ -282,7 +282,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			newForum.setTopicCount(0);
 			newForum.setNotifyWhenAddPost(notifyWhenAddPost);
 			newForum.setNotifyWhenAddTopic(notifyWhenAddTopic);
-			newForum.setIsModeratePost(ModeratePost);
+		//	newForum.setIsModeratePost(ModeratePost);
+			newForum.setIsModeratePost(false);
 			newForum.setIsModerateTopic(ModerateTopic);
 			if(forumState.equals("closed")) {
 				newForum.setIsClosed(true);
