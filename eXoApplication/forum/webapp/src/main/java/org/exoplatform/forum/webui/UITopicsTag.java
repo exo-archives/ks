@@ -105,17 +105,18 @@ public class UITopicsTag extends UIForm {
   private long getMaxPagePost(String Id) throws Exception {
 		String Ids[] = Id.split("/") ;
 		String isApprove = "" ;
-		boolean isHidden = false ;
+		String isHidden = "" ;
 		Forum forum = this.forumService.getForum(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)]);
 		Topic topic = getTopic(Ids[(Ids.length - 1)]) ;
-		if(forum.getIsModerateTopic() || topic.getIsModeratePost()) {
-			long role = this.userProfile.getUserRole() ;
-			if(role >=2){ isApprove = "true" ; isHidden = true ;}
-			if(role == 1) {
-				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
-					isApprove = "true" ; isHidden = true ;
-				}
+		long role = this.userProfile.getUserRole() ;
+		if(role >=2){ isHidden = "flase" ;}
+		if(role == 1) {
+			if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+				isHidden = "flase" ;
 			}
+		}
+		if(forum.getIsModeratePost() || topic.getIsModeratePost()) {
+			if(isHidden.equals("false")) isApprove = "true" ;
 		}
 		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden)	; 
 		long maxPost = this.userProfile.getMaxTopicInPage() ;

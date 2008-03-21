@@ -239,7 +239,7 @@ public interface ForumService {
 	 * @return
 	 * @throws Exception
 	 */
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, boolean isHidden )throws Exception;
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden )throws Exception;
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception ;
 	/**
 	 * This method should:

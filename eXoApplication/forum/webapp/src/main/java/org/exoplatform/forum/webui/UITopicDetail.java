@@ -42,7 +42,6 @@ import org.exoplatform.forum.webui.popup.UIRatingForm;
 import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITagForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -272,18 +271,18 @@ public class UITopicDetail extends UIForm {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		if(this.isUpdatePageList) {
 			String isApprove = "" ;
-			boolean isHidden = false ;
+			String isHidden = "" ;
 			Topic topic = this.topic ;
-			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-				long role = this.userProfile.getUserRole() ;
-				if(role >=2){ isApprove = "true" ; isHidden = true ;}
-				if(role == 1) {
-					if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
-						isApprove = "true" ; isHidden = true ;
-					}
+			long role = this.userProfile.getUserRole() ;
+			if(role >=2){ isHidden = "false" ;}
+			if(role == 1) {
+				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+					isHidden = "false" ;
 				}
 			}
-			System.out.println("isApprove: " + isApprove + "  isH : " + isHidden);
+			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
+				if(isHidden.equals("false")) isApprove = "true" ;
+			}
 			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden)	; 
 			this.isUpdatePageList = false ;
 		}
@@ -724,6 +723,7 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	static public class SetHiddenPostActionListener extends EventListener<UITopicDetail> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UITopicDetail> event) throws Exception {
       UITopicDetail topicDetail = event.getSource() ;
       boolean haveCheck = false ;

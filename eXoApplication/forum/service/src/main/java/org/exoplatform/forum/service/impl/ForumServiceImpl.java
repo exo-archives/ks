@@ -125,7 +125,7 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getPost(sProvider, categoryId, forumId, topicId, postId);
 	}
 
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, boolean isHidden) throws Exception {
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden) throws Exception {
 		return storage_.getPosts(sProvider, categoryId, forumId, topicId, isApproved, isHidden);
 	}
 	
