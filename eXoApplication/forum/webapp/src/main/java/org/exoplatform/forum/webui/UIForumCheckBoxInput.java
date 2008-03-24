@@ -100,8 +100,9 @@ public class UIForumCheckBoxInput<T> extends UIFormCheckBoxInput<T>{
     }
     if(checked) w.write(" checked ") ;
     if (!enable_)  w.write(" disabled ");    
-    w.write(" class='checkbox'/>") ;
-    if (this.isMandatory()) w.write(" *");
+    w.write(" class='checkbox'/> ") ;
+    w.write(name + "<br/>") ;
+    //if (this.isMandatory()) w.write(" *");
   }
 
 }

@@ -216,7 +216,6 @@ public class ForumFormatUtils {
 	//isReadTopic
 	public static boolean isStringInStrings(String []strings, String string) {
 	  for (String string1 : strings) {
-	  	System.out.println(string1 + " : " + string);
 	    if(string.equals(string1)) return true ;
     }
 	  return false;

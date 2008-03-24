@@ -101,6 +101,9 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			getUIStringInput(FIELD_QUESTION_INPUT).setValue(poll.getQuestion()) ;
 			getUIStringInput(FIELD_TIMEOUT_INPUT).setValue(String.valueOf(poll.getTimeOut())) ;
 			getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(poll.getIsAgainVote()) ;
+      UIFormCheckBoxInput multiVoteCheckInput = getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX) ;
+      multiVoteCheckInput.setChecked(poll.getIsMultiCheck());
+      multiVoteCheckInput.setEnable(false);
 			this.isUpdate = isUpdate ;
 		}
 	}
@@ -132,6 +135,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			long timeOut = 0;
 			if(timeOutStr != null && timeOutStr.length() > 0) timeOut = Long.parseLong(timeOutStr) ; 
 			boolean isAgainVote = uiForm.getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).isChecked() ;
+      boolean isMultiVote = uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).isChecked() ;
 			String sms = "";
 			int i = 0 ; 
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
@@ -204,6 +208,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				poll.setModifiedBy(userName) ;
 				poll.setModifiedDate(new Date()) ;
 				poll.setIsAgainVote(isAgainVote) ;
+				poll.setIsMultiCheck(isMultiVote) ;
 				poll.setOption(options) ;
 				poll.setVote(vote) ;
 				poll.setTimeOut(timeOut) ;
