@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.Arrays;
-
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -35,7 +33,6 @@ import org.exoplatform.webui.core.UIContainer;
 )
 public class UIPostRules extends UIContainer	{
   private boolean isLock = false ;
-  private boolean isMorderate = false ;
   private String[] morderate = new String[]{} ;
   private UserProfile userProfile ;
   
@@ -48,22 +45,24 @@ public class UIPostRules extends UIContainer	{
 		return userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
   
-	public boolean isLock() {
-    return isLock;
-  }
-
   public void setLock(boolean isLock) {
-    this.isLock = isLock;
+    System.out.println("isloc befor set values: " + this.isLock);
+    this.isLock = isLock ;
+    System.out.println("set lock : " + this.isLock);
   }
-
-  public boolean isMorderate() {
-    return isMorderate;
+  
+	@SuppressWarnings("unused")
+  private boolean getIsLock() {
+    System.out.println("this.isLock()" + this.isLock);
+    return this.isLock;
   }
 
   public void setMorderate(String[]morderate) {
     this.morderate = morderate;
   }
-  public boolean getIsMorderate() {
+  
+  @SuppressWarnings("unused")
+  private boolean getIsMorderate() {
     return ForumFormatUtils.isStringInStrings(this.morderate, userProfile.getUserId()) ;
   }
 }
