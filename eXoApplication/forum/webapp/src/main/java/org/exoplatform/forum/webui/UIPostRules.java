@@ -36,7 +36,6 @@ public class UIPostRules extends UIContainer	{
   private String[] morderate = new String[]{} ;
   private UserProfile userProfile ;
   
-  
 	public UIPostRules() throws Exception {		
 	}	
 	
@@ -46,14 +45,11 @@ public class UIPostRules extends UIContainer	{
 	}
   
   public void setLock(boolean isLock) {
-    System.out.println("isloc befor set values: " + this.isLock);
     this.isLock = isLock ;
-    System.out.println("set lock : " + this.isLock);
   }
   
 	@SuppressWarnings("unused")
   private boolean getIsLock() {
-    System.out.println("this.isLock()" + this.isLock);
     return this.isLock;
   }
 
@@ -63,6 +59,7 @@ public class UIPostRules extends UIContainer	{
   
   @SuppressWarnings("unused")
   private boolean getIsMorderate() {
+  	if(userProfile.getUserRole() < 1) return true ;
     return ForumFormatUtils.isStringInStrings(this.morderate, userProfile.getUserId()) ;
   }
 }

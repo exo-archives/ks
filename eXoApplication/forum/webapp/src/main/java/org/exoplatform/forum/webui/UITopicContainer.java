@@ -141,7 +141,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			this.isUpdate = false ;
 		}
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
-		forumPortlet.findFirstComponentOfType(UIForumInfos.class).setModeratorsForum(this.forum.getModerators());
+		forumPortlet.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
 		return this.forum ;
 	}
 	

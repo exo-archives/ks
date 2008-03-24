@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -35,13 +36,16 @@ public class UIForumInfos extends UIContainer	{
 		addChild(UIPostRules.class, null, null);
 	}
 
-	public String[] getModeratorsForum() {
-	  return this.moderators ;
-  }
-
-	public void setModeratorsForum(String[] moderators) {
-    getChild(UIPostRules.class).setMorderate(moderators) ;
-		this.moderators = moderators ;
+	@SuppressWarnings("unused")
+  private String[] getModeratorsForum() throws Exception {
+		return moderators ;
+	}
+	
+	public void setForum(Forum forum) {
+		UIPostRules postRules = getChild(UIPostRules.class); 
+		postRules.setLock(forum.getIsLock()) ;
+		this.moderators = forum.getModerators() ;
+		postRules.setMorderate(this.moderators) ;
 	}
   
 }

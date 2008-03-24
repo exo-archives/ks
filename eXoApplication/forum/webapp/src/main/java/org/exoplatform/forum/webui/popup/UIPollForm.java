@@ -61,7 +61,8 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_QUESTION_INPUT = "Question" ;
 	final static public String FIELD_OPTIONS = "Option" ;
 	public static final String FIELD_TIMEOUT_INPUT = "TimeOut" ;
-	public static final String FIELD_AGAINVOTE_CHECKBOX = "MultiVote" ;
+	public static final String FIELD_AGAINVOTE_CHECKBOX = "VoteAgain" ;
+	public static final String FIELD_MULTIVOTE_CHECKBOX = "MultiVote" ;
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(FIELD_OPTIONS,FIELD_OPTIONS) ;
 	private String TopicPath ;
 	private Poll poll ;
@@ -71,11 +72,13 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	public UIPollForm() throws Exception {
 		UIFormStringInput question = new UIFormStringInput(FIELD_QUESTION_INPUT, FIELD_QUESTION_INPUT, null);
 		UIFormStringInput timeOut = new UIFormStringInput(FIELD_TIMEOUT_INPUT, FIELD_TIMEOUT_INPUT, null);
-		UIFormCheckBoxInput checkBox = new UIFormCheckBoxInput<Boolean>(FIELD_AGAINVOTE_CHECKBOX, FIELD_AGAINVOTE_CHECKBOX, false) ; 
+		UIFormCheckBoxInput VoteAgain = new UIFormCheckBoxInput<Boolean>(FIELD_AGAINVOTE_CHECKBOX, FIELD_AGAINVOTE_CHECKBOX, false) ; 
+		UIFormCheckBoxInput MultiVote = new UIFormCheckBoxInput<Boolean>(FIELD_MULTIVOTE_CHECKBOX, FIELD_MULTIVOTE_CHECKBOX, false) ; 
 		timeOut.addValidator(PositiveNumberFormatValidator.class) ;
 		addUIFormInput(question) ;
 		addUIFormInput(timeOut) ;
-		addUIFormInput(checkBox);
+		addUIFormInput(VoteAgain);
+		addUIFormInput(MultiVote);
 	}
 
 	private void initMultiValuesField(List<String> list) throws Exception {

@@ -198,13 +198,6 @@ public class UICategories extends UIContainer	{
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
-      
-      Forum forum = categories.getForumById(id[0], id[1]) ;
-      UIPostRules postRules = uiForumContainer.findFirstComponentOfType(UIPostRules.class) ;
-      System.out.println(">>>>>>>>>> forum.getIsLock()" + forum.getIsLock());
-      postRules.setLock(forum.getIsLock()) ;
-      postRules.setMorderate(forum.getModerators()) ;
-      
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

@@ -41,7 +41,7 @@
 								<td class="Label"><%=_ctx.appRes("UIPollForm.label.DayFromNow"); %></td>
 							</tr>
 							<tr>
-								<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%>:</td>
+								<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</td>
 								<td class="FieldComponent">
 		              <% uiform.renderChild(uicomponent.FIELD_MULTIVOTE_CHECKBOX) %>
 								</td>
