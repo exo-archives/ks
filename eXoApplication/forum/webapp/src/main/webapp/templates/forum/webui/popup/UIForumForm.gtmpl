@@ -30,19 +30,28 @@
                  <div class="CenterHorizontalTabs">
                   <div class="TabsContainer">
                     <%String classCss = "SelectedTab" ; 
+                    int i = 0;
                   	for(tabconten in uiform.getChildren()){ 
                   		if(tabconten.id.equals("Category")) continue ;
+                  		String link = "";
+                  		if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
+                  		else {
+                  			classCss = "NormalTab" ;
+                  			link = uicomponent.event("SelectTab",""+i) ;
+                  		}
                   	%>  
                     <div class="UITab NormalTabStyle">
                       <div class="$classCss">
                         <div class="LeftTab">
                           <div class="RightTab">
-                            <div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+                          <a href="$link">
+                            <div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+                          </a>
                           </div>
                         </div>
                       </div>
                     </div>
-                	<% classCss = "NormalTab" ;  
+                	<%   ++i;
                 		} %>
                   </div>
                 </div>
@@ -54,14 +63,16 @@
               <div class="UITabContentContainer">
                 <% 
                 	String display =  "block";
+                	int j = 0;
                 	for(tabconten in uiform.getChildren()){
                 		if(tabconten.id.equals("Category")) continue ;
+                		if(uiform.getIsSelected(j))display =  "block";
+                  	else display = "none";
                 %>
                 <div style="display: $display;" id="UITabContent" class="UITabContent">
                   <% uiform.renderChild(tabconten.id) ; %>
                 </div>
-                <% display = "none"; %>
-            	<% } %>
+            	<% ++j;} %>
               </div>
             </div>
           </div>
@@ -75,7 +86,7 @@
 			<tr>
 				<td align="center">
         <% for(action in uicomponent.getActions()) { 
-        		 if(action.indexOf("Values") > 0) continue ; 
+        		 if(action.indexOf("Values") > 0 || action.indexOf("Tab") > 0) continue ; 
         	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
            String link = uicomponent.event(action) ;
         %>

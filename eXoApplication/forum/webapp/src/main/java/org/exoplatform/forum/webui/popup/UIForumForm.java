@@ -61,7 +61,8 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		events = {
 			@EventConfig(listeners = UIForumForm.SaveActionListener.class), 
 			@EventConfig(listeners = UIForumForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIForumForm.CancelActionListener.class, phase=Phase.DECODE)
+			@EventConfig(listeners = UIForumForm.CancelActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIForumForm.SelectTabActionListener.class, phase=Phase.DECODE)
 		}
 )
 public class UIForumForm extends UIForm implements UIPopupComponent, UISelector {
@@ -69,7 +70,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	private boolean isCategoriesUpdate = true;
 	private boolean isForumUpdate = false;
 	private String forumId = "";
-	
+	private int id = 0 ;
 	public static final String FIELD_NEWFORUM_FORM = "newForum" ;
 	public static final String FIELD_MODERATOROPTION_FORM = "moderationOptions" ;
 	public static final String FIELD_FORUMPERMISSION_FORM = "forumPermission" ;
@@ -168,7 +169,11 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
-	
+	@SuppressWarnings("unused")
+  private boolean getIsSelected(int id) {
+		if(this.id == id) return true ;
+		return false ;
+	}
 	private String[] splitForForum (String str) throws Exception {
 		return ForumFormatUtils.splitForForum(str);
 	}
@@ -343,6 +348,15 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     public void execute(Event<UIForumForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
+		}
+	}
+
+	static	public class SelectTabActionListener extends EventListener<UIForumForm> {
+		public void execute(Event<UIForumForm> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIForumForm forumForm = event.getSource();
+			forumForm.id = Integer.parseInt(id);
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumForm) ;
 		}
 	}
 }

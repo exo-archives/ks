@@ -3,7 +3,6 @@
 	import org.exoplatform.forum.ForumSessionUtils ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isBan = userProfile.getIsBanned() ;
-	System.out.println("\n\n\n\n isBan : " + userProfile.getUserId()+ "\t" + userProfile.getTimeFormat() + "\t" + isBan) ;
 	boolean isNotLogin= ForumSessionUtils.isAnonim();
 	boolean isLock = uicomponent.getIsLock() ;
 	boolean isMorderate = uicomponent.getIsMorderate() ;
@@ -12,7 +11,6 @@
 		not = "not";
 	}
 	if(not == "" || not.length() < 0) {
-		System.out.println("isLock : " + isLock) ;
 		if(isLock) {
 			if(!isMorderate) not = "not";
 		}

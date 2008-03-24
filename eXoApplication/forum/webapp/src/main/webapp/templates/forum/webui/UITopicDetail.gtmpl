@@ -529,15 +529,13 @@
 			</table>
 		</div>
 		<% }//end for
+			String idLastPost = uicomponent.getIdPostView() ;
+			jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('"+idLastPost+"');");
 		 } else {
 		%>
 		<div class="ContentNotPost">Post(s) in thread is UnApprove or Hidden !</div>
 	<% } %>
 <!-- End ContentContainer -->
-<%
-	String idLastPost = uicomponent.getIdPostView() ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('"+idLastPost+"');");
-%>
 	</div>	
 <!-- End PostsInThreadContainer -->
 	<div class="ButtomAndPageListContainer">
