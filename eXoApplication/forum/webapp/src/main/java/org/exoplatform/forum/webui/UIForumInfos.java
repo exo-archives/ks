@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -32,6 +33,7 @@ import org.exoplatform.webui.core.UIContainer;
 )
 public class UIForumInfos extends UIContainer	{
 	private String [] moderators ;
+  private UserProfile userProfile ;
 	public UIForumInfos() throws Exception { 
 		addChild(UIPostRules.class, null, null);
 	}
@@ -42,10 +44,12 @@ public class UIForumInfos extends UIContainer	{
 	}
 	
 	public void setForum(Forum forum) {
+		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		postRules.setLock(forum.getIsLock()) ;
 		this.moderators = forum.getModerators() ;
 		postRules.setMorderate(this.moderators) ;
+		postRules.setUserProfile(this.userProfile) ;
 	}
   
 }

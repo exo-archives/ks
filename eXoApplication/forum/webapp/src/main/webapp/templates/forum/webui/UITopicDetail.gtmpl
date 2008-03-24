@@ -618,7 +618,9 @@
 	
 		This topic is deleted or removed !
 	
-	<% } %>
+	<% } 
+	uicomponent.setPostRules() ;
+	%>
 <%uiform.end()%>
 <% uicomponent.renderChild(UIPostRules.class) %>
 <%// uicomponent.renderChild(UIForumLinks.class) %>

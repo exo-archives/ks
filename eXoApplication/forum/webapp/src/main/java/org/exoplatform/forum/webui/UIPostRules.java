@@ -41,9 +41,13 @@ public class UIPostRules extends UIContainer	{
 	
 	@SuppressWarnings("unused")
   private UserProfile getUserProfile() {
-		return userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		return this.userProfile ;
 	}
   
+	public void setUserProfile(UserProfile userProfile ) {
+		this.userProfile = userProfile ;
+	}
+	
   public void setLock(boolean isLock) {
     this.isLock = isLock ;
   }

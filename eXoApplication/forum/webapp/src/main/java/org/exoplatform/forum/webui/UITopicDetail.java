@@ -326,6 +326,19 @@ public class UITopicDetail extends UIForm {
 		return null ;
 	}
 	
+	@SuppressWarnings("unused")
+  private void setPostRules() {
+		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		UIPostRules postRules = getChild(UIPostRules.class); 
+		boolean isLock = this.forum.getIsLock() ;
+		if(!isLock) {
+			if(this.topic != null) 
+				isLock = this.topic.getIsLock() ;
+		}
+		postRules.setLock(isLock) ;
+		postRules.setMorderate(this.forum.getModerators()) ;
+		postRules.setUserProfile(this.userProfile) ;
+	}
 	
 	@SuppressWarnings("unused")
   private UserProfile getUserInfo(String userName) throws Exception {
