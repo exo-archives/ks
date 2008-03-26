@@ -103,9 +103,7 @@ public class UITopicPoll extends UIForm	{
 				addUIFormInput(input);
       } else {int i=0;
       	while(i<10) {
-      		if(this.hasChildren()){this.removeChild(UIForumCheckBoxInput.class) ;
-      		System.out.println("\n\n test ========>>>>");	
-      		}
+      		if(this.hasChildren())this.removeChild(UIForumCheckBoxInput.class) ;
       		else break ;
       		++i;
       	}
@@ -338,15 +336,14 @@ public class UITopicPoll extends UIForm	{
     public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
 			topicPoll.forumService.removePoll(ForumSessionUtils.getSystemProvider(), topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId) ;
-      List<UIComponent> children = topicPoll.getChildren() ;
-      for(UIComponent child : children) {
-        if(child instanceof UIFormRadioBoxInput) {
-          topicPoll.removeChild(UIFormRadioBoxInput.class) ;
+			if(topicPoll.poll_.getIsMultiCheck()) {
+				List<UIComponent> children = topicPoll.getChildren() ;
+				for (int i = 0; i < children.size(); i++) {
+					topicPoll.removeChild(UIForumCheckBoxInput.class) ;
         }
-        if(child instanceof UIForumCheckBoxInput) {
-          topicPoll.removeChild(UIForumCheckBoxInput.class) ;
-        }
-      }
+			} else {
+        topicPoll.removeChild(UIFormRadioBoxInput.class) ;
+			}
 			UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer)topicPoll.getParent() ;
 			topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true) ;
 			topicPoll.isEditPoll = false ;
