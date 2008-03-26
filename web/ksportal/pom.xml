@@ -25,6 +25,7 @@
                 <exclude>WEB-INF/web.xml</exclude>                     
                 <exclude>WEB-INF/conf/</exclude>
 								<exclude>WEB-INF/classes/locale/navigation/</exclude>
+								<exclude>fckeditor/fckconfig.js</exclude>
                 <exclude>templates/groovy/webui/component/UIHomePagePortlet.gtmpl</exclude>
                 <exclude>templates/skin/webui/component/UIHomePagePortlet/</exclude>                     												
               </excludes>
