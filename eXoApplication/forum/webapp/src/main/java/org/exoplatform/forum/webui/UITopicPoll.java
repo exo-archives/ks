@@ -145,7 +145,7 @@ public class UITopicPoll extends UIForm	{
 		}
 		String[] userVotes = poll_.getUserVote() ;
 		for (String string : userVotes) {
-			string = string.substring(0, string.length() - 2) ;
+			string = string.substring(0, string.indexOf(":")) ;
 			if(string.equalsIgnoreCase(userVote)) return true ;
 		}
 		return false ;
@@ -155,7 +155,14 @@ public class UITopicPoll extends UIForm	{
 	private String[] getInfoVote() throws Exception {
 		Poll poll = poll_ ;
 		String[] voteNumber = poll.getVote() ;
-		long size = poll.getUserVote().length	;
+		long size = 0 ;
+    if(!poll.getIsMultiCheck()) {
+      size = poll.getUserVote().length	;
+    } else {
+      for(String user : poll.getUserVote()) {
+        size += user.split(":").length -1 ;
+      }
+    }
 		if(size == 0) size = 1;
 		String[] infoVote = new String[(voteNumber.length + 1)] ;
 		int i = 0;
@@ -265,51 +272,73 @@ public class UITopicPoll extends UIForm	{
         }
         if(!listValue.isEmpty()) {
           votes = topicPoll.poll_.getVote() ;
-          double min = 0 ;
           double totalVote = 0 ;
-          double vote[] = new double[votes.length] ;
-          int i = 0 ;
-          for(String v : topicPoll.poll_.getVote()) {
-            vote[i] = Double.parseDouble(v) ;
-            if( min == 0 && vote[i] != 0) min = vote[i] ;
-            else if(min != 0) {
-              if(min > vote[i] && vote[i] > 0) min = vote[i] ;
+          double doubleVote[] = new double[votes.length] ;
+          String[] listUserVoted = topicPoll.poll_.getUserVote() ;
+          if(listUserVoted.length > 0) {
+            for(String us : listUserVoted) {
+              totalVote += us.split(":").length - 1 ;
             }
-            i ++ ;
           }
-          if(min > 0)
-            for( i = 0 ; i < vote.length ; i ++) {
-              vote[i] /= min ;
-              totalVote += vote[i] ;
+          int i = 0 ;
+          int pos = 0 ;
+          if( votes!= null && votes.length > 0) {
+            for(String v : votes) {
+              doubleVote[i++] = Double.parseDouble(v) ;
             }
+          }
+          if(totalVote > 0) {
+            for( i = 0 ; i < doubleVote.length ; i ++) {
+              doubleVote[i] = (doubleVote[i]*totalVote)/100 ;
+            }
+          }
           if(!topicPoll.isAgainVote) {
             i = 0 ;
+            pos = size ;
             setUserVote = new String[size  + 1] ;
             for(String userHaveVoted : poll.getUserVote())
               setUserVote[i++] = userHaveVoted ;
             setUserVote[i] = userVote ;
-            
-            i = 0 ;
-            for(String option : topicPoll.poll_.getOption()) {
-              if(listValue.contains(option)) {
-                vote[i] ++ ;
-                totalVote ++ ;
-                setUserVote[i] += ":" + i ;
-              }
-              if(totalVote > 0)
-                votes[i] = (vote[i]/totalVote) + "" ;
-              else
-                votes[i] = "0" ;
-              i ++ ;
-            }
-            
-            // save UserVote:
-            poll.setUserVote(setUserVote) ;
           } else {
-            
+            setUserVote = poll.getUserVote() ;
+            for( i = 0 ; i < setUserVote.length ; i ++) {
+              if(setUserVote[i].split(":")[0].equals(userVote)) {
+                pos = i ;
+                break ;
+              }
+            }
+            String[] posHaveVoted = (setUserVote[pos].substring(setUserVote[pos].indexOf(":"))).split(":") ;
+            setUserVote[pos] = setUserVote[pos].substring(0, setUserVote[pos].indexOf(":")) ;
+            for(String posVoted : posHaveVoted) {
+              if(posVoted != null && posVoted.trim().length() > 0) {
+                doubleVote[Integer.parseInt(posVoted)] -= 1 ;
+                totalVote -= 1 ;
+              }
+            }
+          }
+          i = 0 ;
+          for(String option : topicPoll.poll_.getOption()) {
+            if(listValue.contains(option)) {
+              doubleVote[i] += 1 ;
+              totalVote += 1 ;
+              setUserVote[pos] += ":" + i ;
+            }
+            i ++ ;
+          }
+          i = 0 ;
+          for(double dv : doubleVote) {
+            if(totalVote > 0)
+              votes[i] = ((dv/totalVote)*100) + "" ;
+            else
+              votes[i] = "0" ;
+            i ++ ;
           }
           // save votes:
+          poll.setUserVote(setUserVote) ;
           poll.setVote(votes) ;
+        } else {
+          UIApplication uiApp = topicPoll.getAncestorOfType(UIApplication.class) ;
+          uiApp.addMessage(new ApplicationMessage("UITopicPoll.msg.notCheck", null, ApplicationMessage.WARNING)) ;
         }
       }
 			topicPoll.forumService.savePoll(ForumSessionUtils.getSystemProvider(), topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll, false, true) ;
