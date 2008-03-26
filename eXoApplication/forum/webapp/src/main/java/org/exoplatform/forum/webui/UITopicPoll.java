@@ -91,22 +91,24 @@ public class UITopicPoll extends UIForm	{
 
 	@SuppressWarnings("unchecked")
   private void init() throws Exception {
+		if(this.hasChildren()){
+			this.removeChild(UIFormRadioBoxInput.class) ;
+			int i=0;
+			while(i<10) {
+				if(this.hasChildren())this.removeChild(UIForumCheckBoxInput.class) ;
+				else break ; ++i;
+			}
+		}
 		if(poll_ != null) {
       if(!poll_.getIsMultiCheck()) {
         List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>() ;
 				for (String s : poll_.getOption()) {
 					options.add( new SelectItemOption<String>(s, s) ) ;
 				}
-				if(this.hasChildren())this.removeChild(UIFormRadioBoxInput.class) ;
 				UIFormRadioBoxInput input = new UIFormRadioBoxInput("vote", "vote", options);
 				input.setAlign(1) ;
 				addUIFormInput(input);
-      } else {int i=0;
-      	while(i<10) {
-      		if(this.hasChildren())this.removeChild(UIForumCheckBoxInput.class) ;
-      		else break ;
-      		++i;
-      	}
+      } else {
         for(String s : poll_.getOption()) {
           addUIFormInput(new UIForumCheckBoxInput(s,s, false) );
         }

@@ -37,73 +37,24 @@
 		      </div>
 		    	<div class="HorizontalLayout">
 		        <div class="UITabContentContainer">
-	            <div style="display: block;" class="UITabContent">
-	              <div class="ThreadContent">
-	              	<table class="UIFormGrid">
-	              		<tbody>
-	              			<% 
-	              			for(action in uiform.getIdChild(1)) {
-	              				String label = uicomponent.getLabel(action) ;
-	              				uicomponent.getChildById(action).setRendered(true);
-	              		%>
-	              			<tr>
-                         <td class="FieldLabel">$label</td>
-                         <td class="FieldComponent">
-                          <% uiform.renderChild(action) %>
-                         </td>
-                       </tr>
-                    <% } %>
-	              		</tbody>
-	              	</table>
+	          <% 
+	            	String display =  "block";
+	            	for(tabconten in uiform.getChildren()){
+	          %>
+	            <div style="display: $display;" id="UITabContent" class="UITabContent">
+	            	<div class="$tabconten.id">
+	              <% 
+	              	if(!tabconten.id.equals("ThreadIcon")) {
+	              		uiform.renderChild(tabconten.id) ; 
+	              	} else {
+	              		uiform.renderChild(UIFormInputIconSelector.class);
+	              	}
+	              	
+	              %>
 	              </div>
 	            </div>
-	            <div class="UITabContent" style="display: none;">
-	            	<% uiform.renderChild(UIFormInputIconSelector.class) %>
-	            </div>
-	            <div style="display: none;" class="UITabContent">
-	              <div class="ThreadOptions">
-	              	<table class="UIFormGrid">
-	              		<tbody>
-	              		<% 
-	              			for(action in uiform.getIdChild(3)) {
-	              				String label = uicomponent.getLabel(action) ;
-	              				uicomponent.getChildById(action).setRendered(true);
-	              		%>
-	              			<tr>
-                         <td class="FieldLabel">$label:</td>
-                         <td class="FieldComponent">
-                          <% uiform.renderChild(action) %>
-                         </td>
-                       </tr>
-                    <% } %>
-	              		</tbody>
-	              	</table>
-	              </div>
-	            </div>
-	            
-	            <div class="UITabContent" style="display: none;">
- 								<div class="ThreadPermission">
-	              	<table class="UIFormGrid">
-	              		<tbody>
-	              		<% 
-	              			for(action in uiform.getIdChild(4)) {
-	              				String label = uicomponent.getLabel(action) ;
-	              				uicomponent.getChildById(action).setRendered(true);
-	              		%>
-	              			<tr>
-                         <td class="FieldLabel">$label:</td>
-                         <td class="FieldComponent">
-                          <% uiform.renderChild(action)%>
-                          <div class="Icon24x24 AddIcon16x16" title="<%= _ctx.appRes("UITopicForm.tooltip.addAction"); %>"><span></span></div>
-                          <div style="clear: left" ><span></span></div>
-                         </td>
-                       </tr>
-                    <% } %>
-	              		</tbody>
-	              	</table>
-								</div>
-	            
-	            </div>
+	            <% display = "none"; %>
+	        	<% } %>
 	          </div>
 			    </div>
 			  </div>
