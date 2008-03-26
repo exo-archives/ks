@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.text.html.ListView;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
@@ -99,16 +97,20 @@ public class UITopicPoll extends UIForm	{
 				for (String s : poll_.getOption()) {
 					options.add( new SelectItemOption<String>(s, s) ) ;
 				}
+				if(this.hasChildren())this.removeChild(UIFormRadioBoxInput.class) ;
 				UIFormRadioBoxInput input = new UIFormRadioBoxInput("vote", "vote", options);
 				input.setAlign(1) ;
 				addUIFormInput(input);
-      } else {
+      } else {int i=0;
+      	while(i<10) {
+      		if(this.hasChildren()){this.removeChild(UIForumCheckBoxInput.class) ;
+      		System.out.println("\n\n test ========>>>>");	
+      		}
+      		else break ;
+      		++i;
+      	}
         for(String s : poll_.getOption()) {
-          if(getUIFormCheckBoxInput(s) != null) {
-            getUIFormCheckBoxInput(s).setChecked(false) ;
-          }else {
-            addUIFormInput(new UIFormCheckBoxInput(s,s, false) );
-          }
+          addUIFormInput(new UIForumCheckBoxInput(s,s, false) );
         }
       }
 		}
@@ -339,10 +341,10 @@ public class UITopicPoll extends UIForm	{
       List<UIComponent> children = topicPoll.getChildren() ;
       for(UIComponent child : children) {
         if(child instanceof UIFormRadioBoxInput) {
-          topicPoll.removeChildById(child.getId()) ;
+          topicPoll.removeChild(UIFormRadioBoxInput.class) ;
         }
         if(child instanceof UIForumCheckBoxInput) {
-          topicPoll.removeChildById(child.getId()) ;
+          topicPoll.removeChild(UIForumCheckBoxInput.class) ;
         }
       }
 			UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer)topicPoll.getParent() ;
