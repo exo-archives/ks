@@ -209,20 +209,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		return attachments_ ;
 	}
 
-	public	String[] getIdChild(int Tab) throws Exception {
-		String[] actions ;
-		switch (Tab) {
-			case 1:actions = new String[] {FIELD_TOPICTITLE_INPUT, FIELD_MESSAGECONTENT, FIELD_THREADCONTEN_TAB} ;	break;
-			case 2:actions = new String[] {} ;	break;
-			case 3:actions = new String[] {FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATE_SELECTBOX, "ModeratePost", 
-																		 FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_STICKY_CHECKBOX} ;	break;
-			case 4:actions = new String[] {FIELD_CANVIEW_INPUT, FIELD_CANPOST_INPUT} ;	break;
-		 default:actions = new String[] {}; break;
-		}
-		return actions;
-	}
-	
-	
 	private String[] splitForForum (String str) throws Exception {
 		return ForumFormatUtils.splitForForum(str);
 	}
@@ -234,20 +220,24 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 	public void setUpdateTopic(Topic topic, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			this.topicId = topic.getId() ;
-			getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(topic.getTopicName());
-			getChild(UIFormWYSIWYGInput.class).setValue(topic.getDescription());
+			UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
+			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(topic.getTopicName());
+			threadContent.getChild(UIFormWYSIWYGInput.class).setValue(topic.getDescription());
+			
+			UIFormInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);
 			String stat = "open";
 			if(topic.getIsClosed()) stat = "closed";
-			getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).setValue(stat);
+			threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).setValue(stat);
 			if(topic.getIsLock()) stat = "locked";
 			else stat = "unlock";
-			getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).setValue(stat);
-			//getUIFormCheckBoxInput(FIELD_APPROVED_CHECKBOX).setChecked(topic.getIsApproved());
-			getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(topic.getIsModeratePost());
-			getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(topic.getIsNotifyWhenAddPost());
-			getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(topic.getIsSticky());
-			getUIStringInput(FIELD_CANVIEW_INPUT).setValue(unSplitForForum(topic.getCanView()));
-			getUIStringInput(FIELD_CANPOST_INPUT).setValue(unSplitForForum(topic.getCanPost()));
+			threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).setValue(stat);
+			threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(topic.getIsModeratePost());
+			threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(topic.getIsNotifyWhenAddPost());
+			threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(topic.getIsSticky());
+			
+			UIFormInputWithActions threadPermission = this.getChildById(FIELD_THREADPERMISSION_TAB);
+			threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).setValue(unSplitForForum(topic.getCanView()));
+			threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).setValue(unSplitForForum(topic.getCanPost()));
 			
 			getChild(UIFormInputIconSelector.class).setSelectedIcon(topic.getIcon());
 		}
@@ -257,10 +247,11 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UITopicForm> event) throws Exception {
 			UITopicForm uiForm = event.getSource() ;
 			int t = 0, k = 1 ;
-			UIFormStringInput stringInputTitle = uiForm.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
+			UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
+			UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
 			String topicTitle = "  " + stringInputTitle.getValue();
 			topicTitle = topicTitle.trim() ;
-			String message = "  " +	uiForm.getChild(UIFormWYSIWYGInput.class).getValue();
+			String message = "  " +	threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			message = message.trim() ;
 			t = message.length() ;
 			if(topicTitle.length() <= 3) {k = 0;}
@@ -303,25 +294,26 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 			UITopicForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			int t = 0, k = 1 ;
-			UIFormStringInput stringInputTitle = uiForm.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
+			UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
+			UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
 			String topicTitle = "  " + stringInputTitle.getValue();
 			topicTitle = topicTitle.trim() ;
-			String message = "  " +	uiForm.getChild(UIFormWYSIWYGInput.class).getValue();
+			String message = "  " +	threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			message = message.trim() ;
 			t = message.length() ;
 			if(topicTitle.length() <= 3) {k = 0;}
 			if(t >= 20 && k != 0) {	
+				UIFormInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
 				// uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
-				String topicState = uiForm.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
-				String topicStatus = uiForm.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
+				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
+				String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
 				
-				//Boolean approved = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_APPROVED_CHECKBOX).getValue();
-				Boolean moderatePost = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
-				Boolean whenNewPost = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
-				Boolean sticky = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
-				
-				String[] canView = uiForm.splitForForum(uiForm.getUIStringInput(FIELD_CANVIEW_INPUT).getValue()) ;
-				String[] canPost = uiForm.splitForForum(uiForm.getUIStringInput(FIELD_CANPOST_INPUT).getValue()) ;
+				Boolean moderatePost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
+				Boolean whenNewPost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
+				Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
+				UIFormInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
+				String[] canView = uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue()) ;
+				String[] canPost = uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue()) ;
 				
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Topic topicNew = new Topic();
