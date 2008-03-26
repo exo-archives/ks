@@ -66,7 +66,8 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 			@EventConfig(listeners = UITopicForm.SubmitThreadActionListener.class), 
 			@EventConfig(listeners = UITopicForm.AttachmentActionListener.class), 
 			@EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class), 
-			@EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE)
+			@EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
+			@EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE)
 		}
 )
 public class UITopicForm extends UIForm implements UIPopupComponent {
@@ -98,6 +99,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 	private String categoryId; 
 	private String forumId ;
 	private String topicId ;
+	private int id = 0;
 	@SuppressWarnings("unchecked")
 	public UITopicForm() throws Exception {
 		UIFormStringInput topicTitle = new UIFormStringInput(FIELD_TOPICTITLE_INPUT, FIELD_TOPICTITLE_INPUT, null);
@@ -171,6 +173,11 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		// TODO Auto-generated method stub
 	}
 	
+	@SuppressWarnings("unused")
+  private boolean getIsSelected(int id) {
+		if(this.id == id) return true ;
+		return false ;
+	}
 	
 	public List<ActionData> getUploadFileList() { 
 		List<ActionData> uploadedFiles = new ArrayList<ActionData>() ;
@@ -403,6 +410,15 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UITopicForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
+		}
+	}
+
+	static	public class SelectTabActionListener extends EventListener<UITopicForm> {
+		public void execute(Event<UITopicForm> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UITopicForm topicForm = event.getSource();
+			topicForm.id = Integer.parseInt(id);
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
 		}
 	}
 }

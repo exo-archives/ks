@@ -6,7 +6,7 @@
 	<div class="UIFormTabPane">
 	  <div class="UITabPane">
 			<div class="TabPaneContent">
-	      
+			
 		    <div class="WorkingArea">
 		     	<div class="UIHorizontalTabs">
 		     	  <div class="LeftHorizontalTabs">
@@ -15,19 +15,28 @@
 					        <div class="TabsContainer">
 				            <%
 				            	 String classCss = "SelectedTab" ;
-				            	 String []labels = ["threadContent", "threadIcon", "threadOption", "threadPermisstion"] ;
-				            		for(label in labels) {
+				            	 int i =0; 
+				            	 String href = "";
+				            	 for(tabconten in uiform.getChildren()){
+				            	 	 href ="javascript:void(0);";
+					            	 if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
+		                  	 else {
+		                  	 	 classCss = "NormalTab" ;
+		                  	 	 href = uicomponent.event("SelectTab",""+i) ;
+		                  	 }
 				             %>
 			              <div class="UITab NormalTabStyle">
 			                <div class="$classCss">
 			                  <div class="LeftTab">
 			                    <div class="RightTab">
-					                  <div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%= _ctx.appRes("UITopicForm.label." + label); %></div>
+			                    	<a href="$href">
+					                  	<div class="MiddleTab"><%= _ctx.appRes("UITopicForm.label." + tabconten.id); %></div>
+					                	</a>
 					                </div>
 			                  </div>
 			                </div>
 			              </div>
-		            		<% classCss = "NormalTab" ; 
+		            		<% ++i ; 
 		            			}
 		            		%>
 					        </div>
@@ -39,7 +48,10 @@
 		        <div class="UITabContentContainer">
 	          <% 
 	            	String display =  "block";
+	            	int j = 0;
 	            	for(tabconten in uiform.getChildren()){
+	            		if(uiform.getIsSelected(j))display =  "block";
+                  else display = "none";
 	          %>
 	            <div style="display: $display;" id="UITabContent" class="UITabContent">
 	            	<div class="$tabconten.id">
@@ -49,12 +61,10 @@
 	              	} else {
 	              		uiform.renderChild(UIFormInputIconSelector.class);
 	              	}
-	              	
 	              %>
 	              </div>
 	            </div>
-	            <% display = "none"; %>
-	        	<% } %>
+	        	<% ++j;} %>
 	          </div>
 			    </div>
 			  </div>
@@ -67,7 +77,7 @@
 		  <tr>
 			  <td align="center">
     <% for(action in uicomponent.getActions()) { 
-       if(action.indexOf("emoveAt") > 0) continue ;
+       if(action.indexOf("emoveAt") > 0 || action.indexOf("Tab") > 0) continue ;
     	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
        String link = uicomponent.event(action) ;
     %>

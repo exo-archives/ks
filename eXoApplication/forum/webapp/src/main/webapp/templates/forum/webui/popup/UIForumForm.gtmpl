@@ -33,7 +33,7 @@
                     int i = 0;
                   	for(tabconten in uiform.getChildren()){ 
                   		if(tabconten.id.equals("Category")) continue ;
-                  		String link = "";
+                  		String link = "javascript:void(0);";
                   		if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
                   		else {
                   			classCss = "NormalTab" ;
