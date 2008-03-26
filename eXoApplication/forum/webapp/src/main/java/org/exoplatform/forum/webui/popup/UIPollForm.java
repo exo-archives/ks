@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -164,29 +165,48 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				if(uiForm.isUpdate) {
 					String[] oldVote = uiForm.poll.getVote() ;
 					if(sizeOption < oldVote.length) {
+					  List<String> voteRemoved = new ArrayList<String>() ;
 						String[] oldUserVote = uiForm.poll.getUserVote() ; 
 						long temps = oldUserVote.length ;
 						double rmPecent = 0;
 						for(int j = sizeOption; j < oldVote.length; j++) {
 							rmPecent = rmPecent + Double.parseDouble(oldVote[j]) ;
+              voteRemoved.add(j+"") ;
 						}
 						rmPecent = 100 - rmPecent ;
 						for(int k = 0; k < sizeOption; ++k) {
 							double newVote = Double.parseDouble(oldVote[k]) ;
 							vote[k] = String.valueOf((newVote*100)/rmPecent) ;
 						}
-						int newSize	= (int) Math.round((temps*rmPecent)/100) ;
-						newUser = new String[newSize] ;
-						int l = 0 ;
-						for (String string : oldUserVote) {
-							boolean check = true ; 
-							for(int j = sizeOption; j < oldVote.length; j++) {
-								String x = ":" + j ;
-								if(string.indexOf(x) > 0) check = false ;
-							}
-							if(check) {newUser[l] = string ; 
-							++l ;}
-						}
+            if(!uiForm.poll.getIsMultiCheck()) {
+  						int newSize	= (int) Math.round((temps*rmPecent)/100) ;
+  						newUser = new String[newSize] ;
+  						int l = 0 ;
+  						for (String string : oldUserVote) {
+  							boolean check = true ; 
+  							for(int j = sizeOption; j < oldVote.length; j++) {
+  								String x = ":" + j ;
+  								if(string.indexOf(x) > 0) check = false ;
+  							}
+  							if(check) {newUser[l] = string ; 
+  							++l ;}
+  						}
+            } else {
+              List<String> newUserVote = new ArrayList<String>() ;
+              String userInfo = "" ;
+              for(String uv : oldUserVote) {
+                userInfo = "" ;
+                for(String string : uv.split(":")) {
+                  if(!voteRemoved.contains(string)) {
+                    if(userInfo.length() > 0) userInfo += ":" ;
+                    userInfo += string ;
+                  }
+                }
+                if(userInfo.split(":").length >= 2)
+                  newUserVote.add(userInfo) ;
+                newUser = newUserVote.toArray(new String[]{}) ;
+              }
+            }
 					} else {
 						for(int j = 0; j < sizeOption; j++) {
 							if( j < oldVote.length) {
