@@ -70,6 +70,13 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 		}
 )
 public class UITopicForm extends UIForm implements UIPopupComponent {
+	
+	public static final String FIELD_THREADCONTEN_TAB = "ThreadContent" ;
+	public static final String FIELD_THREADICON_TAB = "ThreadIcon" ;
+	public static final String FIELD_THREADOPTION_TAB = "ThreadOption" ;
+	public static final String FIELD_THREADPERMISSION_TAB = "ThreadPermission" ;
+	
+	
 	public static final String FIELD_TOPICTITLE_INPUT = "ThreadTitle" ;
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	final static public String FIELD_MESSAGECONTENT = "messageContent" ;
@@ -85,7 +92,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_CANPOST_INPUT = "CanPost" ;
 	final static public String ACT_REMOVE = "remove" ;
 	final static public String FIELD_ATTACHMENTS = "attachments" ;
-	final static public String FIELD_FROM_INPUT = "fromInput" ;
+	
 	
 	private List<ForumAttachment> attachments_ = new ArrayList<ForumAttachment>() ;
 	private String categoryId; 
@@ -108,7 +115,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		UIFormSelectBox topicStatus = new UIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATUS_SELECTBOX, ls1) ;
 		topicStatus.setDefaultValue("unlock");
 		
-		//UIFormCheckBoxInput approved = new UIFormCheckBoxInput<Boolean>(FIELD_APPROVED_CHECKBOX, FIELD_APPROVED_CHECKBOX, false);
 		UIFormCheckBoxInput moderatePost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
 		UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX, false);
 		UIFormCheckBoxInput sticky = new UIFormCheckBoxInput<Boolean>(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
@@ -116,26 +122,36 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		UIFormStringInput canView = new UIFormStringInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
 		UIFormStringInput canPost = new UIFormStringInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
 		
-		addUIFormInput(topicTitle);
+		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true);
+//		addUIFormInput(topicTitle);
 	 // addUIFormInput(message);
 		
 		addUIFormInput(topicState);
 		addUIFormInput(topicStatus);
-		//addUIFormInput(approved);
 		addUIFormInput(moderatePost);
 		addUIFormInput(checkWhenAddPost);
 		addUIFormInput(sticky);
 		
 		addUIFormInput(canView);
 		addUIFormInput(canPost);
+		
 		UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector("Icon", "Icon") ;
 		uiIconSelector.setSelectedIcon("IconsView");
-		addUIFormInput(uiIconSelector) ;
-		addUIFormInput(new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true));
-		UIFormInputWithActions inputSet = new UIFormInputWithActions(FIELD_FROM_INPUT); 
-		inputSet.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
-		inputSet.setActionField(FIELD_FROM_INPUT, getUploadFileList()) ;
-		addUIFormInput(inputSet) ;
+		
+		
+		UIFormInputWithActions threadContent = new UIFormInputWithActions(FIELD_THREADCONTEN_TAB);
+		threadContent.addUIFormInput(topicTitle);
+		threadContent.addUIFormInput(formWYSIWYGInput);
+		threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
+		threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
+		addUIFormInput(threadContent) ;
+
+		UIFormInputWithActions threadIcon = new UIFormInputWithActions(FIELD_THREADCONTEN_TAB);
+		threadIcon.addUIFormInput(uiIconSelector) ;
+		
+		
+		
+		
 	}
 	
 	public void setTopicIds(String categoryId, String forumId) {
@@ -173,7 +189,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		return uploadedFiles ;
 	}
 	public void refreshUploadFileList() throws Exception {
-		UIFormInputWithActions inputSet = getChildById(FIELD_FROM_INPUT) ;
+		UIFormInputWithActions inputSet = getChildById(FIELD_THREADCONTEN_TAB) ;
 		inputSet.setActionField(FIELD_ATTACHMENTS, getUploadFileList()) ;
 	}
 	public void addToUploadFileList(ForumAttachment attachfile) {
@@ -192,7 +208,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 	public	String[] getIdChild(int Tab) throws Exception {
 		String[] actions ;
 		switch (Tab) {
-			case 1:actions = new String[] {FIELD_TOPICTITLE_INPUT, FIELD_MESSAGECONTENT, FIELD_FROM_INPUT} ;	break;
+			case 1:actions = new String[] {FIELD_TOPICTITLE_INPUT, FIELD_MESSAGECONTENT, FIELD_THREADCONTEN_TAB} ;	break;
 			case 2:actions = new String[] {} ;	break;
 			case 3:actions = new String[] {FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATE_SELECTBOX, "ModeratePost", 
 																		 FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_STICKY_CHECKBOX} ;	break;

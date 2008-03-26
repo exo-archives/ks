@@ -18,11 +18,10 @@ package org.exoplatform.forum.webui;
 
 import java.io.Writer;
 
-import org.apache.poi.hssf.record.formula.functions.T;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInput;
+import org.exoplatform.webui.form.UIFormInputBase;
 
 /**
  * Created by The eXo Platform SAS
@@ -31,7 +30,7 @@ import org.exoplatform.webui.form.UIFormInput;
  * 24 Mar 2008, 08:00:59
  */
 @SuppressWarnings("hiding")
-public class UIForumCheckBoxInput<T> extends UIFormCheckBoxInput<T>{
+public class UIForumCheckBoxInput<T> extends UIFormInputBase<T>{
 	 /**
    * Whether this checkbox is checked
    */
@@ -76,7 +75,15 @@ public class UIForumCheckBoxInput<T> extends UIFormCheckBoxInput<T>{
     if(componentEvent_ == null)  return uiForm.event(onchange_, null);
     return  uiForm.event(onchange_, componentEvent_ , (String)null);
   }
-
+  
+  final public boolean isChecked() { return checked; }  
+  
+  @SuppressWarnings("unchecked")
+  final public UIForumCheckBoxInput setChecked(boolean check) { 
+    checked = check;
+    return this ;
+  } 
+  
   @SuppressWarnings("unused")
   public void decode(Object input, WebuiRequestContext context)  throws Exception {
     if (!isEnable()) return ;    
@@ -94,15 +101,12 @@ public class UIForumCheckBoxInput<T> extends UIFormCheckBoxInput<T>{
     w.write("' ");
     if(onchange_ != null) {
       UIForm uiForm = getAncestorOfType(UIForm.class) ;
-      //TODO TrongTT: The onchange don't affect in IE. 
-//      w.append(" onchange=\"").append(renderOnChangeEvent(uiForm)).append("\"");
       w.append(" onclick=\"").append(renderOnChangeEvent(uiForm)).append("\"");
     }
     if(checked) w.write(" checked ") ;
     if (!enable_)  w.write(" disabled ");    
     w.write(" class='checkbox'/> ") ;
     w.write(name + "<br/>") ;
-    //if (this.isMandatory()) w.write(" *");
   }
 
 }
