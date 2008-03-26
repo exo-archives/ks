@@ -1,10 +1,16 @@
 var eXoPlugin = {};
 
+
+FCKConfig.ToolbarSets["eXoBar"] = [
+	['Sample Button']
+];
+
 FCKConfig.eXoPath = FCKConfig.BasePath.substr(0, FCKConfig.BasePath.length - 7) + "exo/" ;
 
 //Forum plugins
 FCKConfig.eXoForumPlugins = FCKConfig.eXoPath + "plugins/forum/" ;
-FCKConfig.Plugins.Add( 'sampleButton', null, eXoForumPlugins) ;
+
+FCKConfig.Plugins.Add( 'sampleButton', null, FCKConfig.eXoForumPlugins) ;
 
 //Other plugins like bog, wiki...
 eXoPlugin.switchToolBar = function(R) {
