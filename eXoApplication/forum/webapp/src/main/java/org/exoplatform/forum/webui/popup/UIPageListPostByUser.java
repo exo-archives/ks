@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -24,8 +25,10 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -46,6 +49,7 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIPageListPostByUser extends UIContainer{
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+  private List<Post> posts = new ArrayList<Post>() ;
 	public UIPageListPostByUser() throws Exception {
 		addChild(UIForumPageIterator.class, null, "PageListPostByUser") ;
 	}
@@ -63,12 +67,28 @@ public class UIPageListPostByUser extends UIContainer{
 		pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
 		List<Post> posts = pageList.getPage(page) ;
+    this.posts = posts ;
 		return posts ;
 	}
+  
+  private Post getPostById(String postId) {
+    for(Post post : this.posts) {
+      if(post.getId().equals(postId)) return post ;
+    }
+    return null ;
+  }
 	
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostByUser> {
     public void execute(Event<UIPageListPostByUser> event) throws Exception {
-			//UIPageListPostByUser uiForm = event.getSource() ;
+			UIPageListPostByUser uiForm = event.getSource() ;
+      String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      Post post = uiForm.getPostById(postId) ;
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+      UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
+      viewTopic.setPostView(post) ;
+      viewTopic.setViewUserInfo(true) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	

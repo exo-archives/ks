@@ -30,9 +30,8 @@
 								<th>Thread/Thread starter</th>
 								<th style="width: 96px;">Rating</th>
 								<th style="width: 40px;">Tag</th>
-								<th style="width: 130px;"><div class="DownArrow1Icon">Last posts</div></th>
-								<th style="width: 50px;">Replies</th>
-								<th style="width: 50px;">Views</th>
+								<th style="width: 40px;">Replies</th>
+								<th style="width: 40px;">Views</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -44,16 +43,10 @@
 									else classRow = "OddRow";
 									String topicId = topic.getId();
 									String topicPath = topic.getPath() ;
-									JCRPageList pageList = uicomponent.getPageListPost(topicPath) ;
-									long max_page = pageList.getAvailablePage() ;
 									String iconClassTopic = topic.getIcon();
 									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
-									String postNewBy = topic.getLastPostBy() ;
-									Date postDate = topic.getLastPostDate() ;
-									postDate.setTime(postDate.getTime() + setTime);
-									String lastPostDate = ForumFormatUtils.getFormatDate(formatDate,postDate);								
 									String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
 									if(titlePost.length() > 100) {
 										titlePost = titlePost.substring(0, 99) + "...";
@@ -66,7 +59,6 @@
 										iconTopicStatus = "HotThreadNewLockPost" ;
 										titleTopicStatus = "Hot thread with new post lock" ;
 									}
-									String number = "1";
 									boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
 									String title = "";
 									if(isReadTopic) {
@@ -83,26 +75,7 @@
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon">Sticky:</span>
 										<% } %>
-											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
-											<% if(max_page > 1) { %>
-											<span>(</span>	
-											<%	int t = 1;
-												while(t <= max_page) {
-												if(t <= 5) { 
-													number = String.valueOf(t) ;
-											%>
-											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">$number</a>
-											<% }
-											t = t + 1 ;
-											}
-											if(max_page > 5) { 
-												number = String.valueOf(max_page) ;
-											%>
-											<span>... <a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">Last page</a> )</span>
-											<%} else {%>
-											<span>)</span>
-											<%} 
-											} %>
+											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="$title">$topicTitle</a>
 										</div>
 										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
@@ -133,12 +106,6 @@
 									%>
 										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$description"><span></span></div></a>
 									<% } %>
-									</td>
-								 	<td >
-								 		<div class="DateTime">$lastPostDate</div>
-								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
-										<div class="PostInfos LastPostInfos">by <a href="#" class="PostBy">$postNewBy</a></div>
-										<div style="clear: right;"><span></span></div>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">$postView</td>

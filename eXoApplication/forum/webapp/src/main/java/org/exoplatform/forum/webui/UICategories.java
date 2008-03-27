@@ -196,7 +196,7 @@ public class UICategories extends UIContainer	{
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			uiForumContainer.setIsRenderChild(true) ;
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-			uiForumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
+			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
@@ -205,22 +205,22 @@ public class UICategories extends UIContainer	{
 	
 	static public class OpenLastTopicLinkActionListener extends EventListener<UICategories> {
     public void execute(Event<UICategories> event) throws Exception {
-			UICategories uiContainer = event.getSource();
+			UICategories categories = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
-			UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(2);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 			uiForumContainer.setIsRenderChild(false) ;
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-			uiForumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
-			uiTopicDetail.setTopicFromCate(id[0], id[1],uiContainer.getTopic(id[2], path), true) ;
-			uiTopicDetail.setUpdateForum(uiContainer.getForumById(id[0], id[1])) ;
+			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
+			uiTopicDetail.setTopicFromCate(id[0], id[1],categories.getTopic(id[2], path), true) ;
+			uiTopicDetail.setUpdateForum(categories.getForumById(id[0], id[1])) ;
 			uiTopicDetail.setIdPostView("true") ;
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], id[2]) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
-			uiContainer.maptopicLast.clear() ;
+			categories.maptopicLast.clear() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

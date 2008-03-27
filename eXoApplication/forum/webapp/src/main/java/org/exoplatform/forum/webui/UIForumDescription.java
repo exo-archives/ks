@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import org.apache.poi.hssf.record.formula.functions.False;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
@@ -36,18 +37,29 @@ import org.exoplatform.webui.core.UIContainer;
 public class UIForumDescription extends UIContainer	{
 	private String forumId ;
 	private String categoryId ;
+  private Forum forum = null ;
+  private boolean isForum = false;
 	public UIForumDescription() throws Exception {		
 	}
 	
+  public void setForum(Forum forum) {
+    this.forum = forum ;
+    this.isForum = false ;
+  }
 	public void setForumIds(String categoryId, String forumId) {
+    this.isForum = true;
 		this.forumId = forumId ;
 		this.categoryId = categoryId ;
 	}
 	
 	@SuppressWarnings("unused")
 	private Forum getForum() throws Exception {
-		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-		return forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
+    if(forum == null || this.isForum) {
+  		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+  		return forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
+    } else {
+      return this.forum ;
+    }
 	}
 	
 }

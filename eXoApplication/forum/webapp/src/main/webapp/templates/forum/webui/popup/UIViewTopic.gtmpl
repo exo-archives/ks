@@ -18,52 +18,112 @@
 	  	<div class="PostViewIcon $classIcon">$title</div>
 	  	<div class="PostTime">$postCreatedDate</div>
 	  </div>
-	  		
-	  <div class="PostContent">
-	  	<br/><div>$messager</div><br/>
+	  
+	  <div class="PostContentContainer">
+		  <div class="PostContent">
+		  	<br/><div>$messager</div><br/>
+		  </div>
+		<% if(attachments != null && attachments.size() > 0) {
+				if(!uicomponent.getIsViewUserInfo()) {
+		%>  		
+				  <div class="AttachmentContainer">
+				  	<div class="AttachmentTitle">Attachments:</div>
+				  	<div class="AttachmentContent">
+				  	<% for(attachment in attachments) {
+				  	 	   String fileName = attachment.getName() ;
+				  	 	   long sizeNumber = attachment.getSize() ;
+				  	 	   String size = "" + sizeNumber ;
+				  	%>
+				  		<div class="AttachmentBox">
+								<div class="AttachmentIcon WordIcon"><span/></div>
+								<a class="AttachmentLabel" href="#">$fileName</a>
+								<div style="clear: left;"><span/></div>
+								<div class="Size">Size: ${size}K</div>
+				  		</div>
+				  	<% } %>
+				  		<div style="clear: left;"><span/></div>
+				  	</div>
+				  </div>
+		  <% 
+		  	} else {
+		  %>
+		  			<div class="AttachmentContainer">
+							<div class="AttachmentTitle">Attachments:</div>
+							<div class="AttachmentContent">
+							
+							<%
+								for(attachment in attachments) {
+									 String urlFile = uicomponent.getFileSource(attachment) ;
+							 		 String fileName = attachment.getName() ;
+							 		 String unit = "Bytes" ;
+							 		 double sizeNumber = attachment.getSize() ;
+							 		 if(sizeNumber > 1024) {
+							 		 	 sizeNumber = sizeNumber/1024 ;
+							 		 	 unit = "Kb" ;
+							 		 }
+							 		 if(sizeNumber > 1024) {
+							 		 	 sizeNumber = sizeNumber/1024 ;
+							 		 	 unit = "Mb" ;
+							 		 }
+							 		 String size = "" + sizeNumber ;
+							 		 if(size.length() > 5) size = size.substring(0,5);
+							 		 String typeFile = attachment.mimeType ;
+							%>
+									<div class="AttachmentBox">
+									<% if(typeFile.indexOf("jpeg") > 0) {%>
+						        <div class="Image"><img src="$urlFile" height="100px;"/></div>
+					 	        <div class="LabelBox">
+					 	          <div class="AttachmentIcon JPGIcon"><span></span></div>
+					 	          <a href="$urlFile" class="AttachmentLabel" >$fileName</a>
+					 	          <div style="clear: left;"><span></span></div>
+					 	          <div class="Size">Size: ${size} ${unit}</div>
+					 	          <div class="Action">
+					 	            <div class="Icon View" onclick="this.url='$urlFile'">View</div>
+					 	            <div class="Icon Download"><a href="$urlFile">Download</a></div>
+					 	          </div>
+					 	        </div>
+						 	      <div style="clear: left;"><span></span></div>
+								<% } else {
+											String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
+								%>
+									<div class="LabelBox">
+										<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
+										<a class="AttachmentLabel" href="$urlFile">$fileName</a>
+										<div style="clear: left;"><span/></div>
+										<div class="Size">Size: ${size} ${unit}</div>
+									</div>
+								<% }%>
+								</div>
+							<% } %>
+								<div style="clear: left;"><span/></div>
+							</div>
+						</div>
+		  <%
+		  	}
+		  } %>
 	  </div>
-	<% if(attachments != null && attachments.size() > 0) {%>  		
-	  <div class="AttachmentContainer">
-	  	<div class="AttachmentTitle">Attachments:</div>
-	  	<div class="AttachmentContent">
-	  	<% for(attachment in attachments) {
-	  	 	   String fileName = attachment.getName() ;
-	  	 	   long sizeNumber = attachment.getSize() ;
-	  	 	   String size = "" + sizeNumber ;
-	  	%>
-	  		<div class="AttachmentBox">
-					<div class="AttachmentIcon WordIcon"><span/></div>
-					<a class="AttachmentLabel" href="#">$fileName</a>
-					<div style="clear: left;"><span/></div>
-					<div class="Size">Size: ${size}K</div>
-	  		</div>
-	  	<% } %>
-	  		<div style="clear: left;"><span/></div>
-	  	</div>
-	  </div>
-	  <% } %>
 	</div>
 	
-	<div class="UIAction"> 
-	  <table class="ActionContainer" align="center">
-			<tr>
-				<td align="center">
-	    <% for(action in uicomponent.getActions()) { 
-	    	 String actionLabel = "Close";// _ctx.appRes(uicomponent.getName() + ".action." + action); 
-	       String link = uicomponent.event(action) ;
-	    %>
-			<a href="$link" class="ActionButton LightBlueStyle">
-	  	  	<div class="ButtonLeft">
-	    	  	<div class="ButtonRight">
-	      	  	<div class="ButtonMiddle"> $actionLabel </div>
-	        	</div>
-	      	</div>
-	    	</a>
-	    <%}%>
-	    </td>
-			</tr>
-	 	</table> 
-	</div>
   <%uiform.end()%>
+</div>
+<div class="UIAction"> 
+  <table class="ActionContainer" align="center">
+		<tr>
+			<td align="center">
+    <% for(action in uicomponent.getActions()) { 
+    	 String actionLabel = "Close";// _ctx.appRes(uicomponent.getName() + ".action." + action); 
+       String link = uicomponent.event(action) ;
+    %>
+		<a href="$link" class="ActionButton LightBlueStyle">
+  	  	<div class="ButtonLeft">
+    	  	<div class="ButtonRight">
+      	  	<div class="ButtonMiddle"> $actionLabel </div>
+        	</div>
+      	</div>
+    	</a>
+    <%}%>
+    </td>
+		</tr>
+ 	</table>
 </div>
 

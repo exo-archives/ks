@@ -435,7 +435,7 @@ public class UICategory extends UIForm	{
 			forumPortlet.updateIsRendered(2);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			uiForumContainer.setIsRenderChild(true) ;
-			uiForumContainer.getChild(UIForumDescription.class).setForumIds(uiCategory.categoryId, forumId);
+			uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(forumId));
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
 			uiTopicContainer.setUpdateForum(uiCategory.categoryId, uiCategory.getForum(forumId)) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
@@ -455,11 +455,8 @@ public class UICategory extends UIForm	{
 			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 			uiForumContainer.setIsRenderChild(false) ;
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-			uiForumContainer.getChild(UIForumDescription.class).setForumIds(uiCategory.categoryId, id[0]);
+			uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
 			Topic topic = uiCategory.getTopic(id[1]) ;
-//			if(topic.getTopicName() == null || topic.getTopicName().length() <= 0) {
-//				topic = uiCategory.forumService.getTopic(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, id[0], id[1], "Guest");
-//			}
 			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic, true) ;
 			uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0])) ;
 			uiTopicDetail.setIdPostView("true") ;

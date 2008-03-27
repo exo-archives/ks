@@ -16,18 +16,29 @@
  */
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.UIBreadcumbs;
+import org.exoplatform.forum.webui.UIForumContainer;
+import org.exoplatform.forum.webui.UIForumDescription;
+import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.forum.webui.UITopicDetailContainer;
+import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -50,13 +61,15 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIPageListTopicByUser extends UIContainer{
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+  private List<Topic> topics = new ArrayList<Topic>() ;
+  private UserProfile userProfile ;
 	public UIPageListTopicByUser() throws Exception {
 		addChild(UIForumPageIterator.class, null, "PageListTopicByUser") ;
   }
 	
 	@SuppressWarnings("unused")
   private UserProfile getUserProfile() throws Exception {
-		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		return this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
@@ -68,8 +81,16 @@ public class UIPageListTopicByUser extends UIContainer{
 		pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
 		List<Topic> topics = pageList.getPage(page) ;
+    this.topics = topics ;
 		return topics ;
 	}
+  
+  public Topic getTopicById(String topicId) {
+    for(Topic topic : this.topics) {
+      if(topic.getId().equals(topicId)) return topic ;
+    }
+    return null ;
+  }
 	
 	@SuppressWarnings("unused")
 	private String[] getStarNumber(Topic topic) throws Exception {
@@ -92,14 +113,39 @@ public class UIPageListTopicByUser extends UIContainer{
 		String []id = topicPath.split("/") ;
 		int i = id.length ;
 		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2], id[i-1], "", "")	; 
-//		long maxPost = getUserProfile().getMaxTopicInPage() ;
-//		if(maxPost > 0) this.maxPost = maxPost ;
-//		pageListPost.setPageSize(this.maxPost) ;
+		long maxPost = this.userProfile.getMaxTopicInPage() ;
+		if(maxPost > 0)	pageListPost.setPageSize(maxPost) ;
 		return pageListPost;
 	}
 	static	public class OpenTopicActionListener extends EventListener<UIPageListTopicByUser> {
     public void execute(Event<UIPageListTopicByUser> event) throws Exception {
-			//UIPageListPostByUser uiForm = event.getSource() ;
+			UIPageListTopicByUser uiForm = event.getSource() ;
+      String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      Topic topic = uiForm.getTopicById(topicId) ;
+      
+      String []id = topic.getPath().split("/") ;
+      int i = id.length ;
+      String categoryId = id[i-3];
+      String forumId = id[i-2] ;
+      //id[i-1] ; 
+      Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2]) ;
+      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+      forumPortlet.updateIsRendered(2);
+      UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+      UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+      uiForumContainer.setIsRenderChild(false) ;
+      uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+      UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+      
+      uiTopicDetail.setUpdateContainer(categoryId, forumId, topic, 1) ;
+      
+      uiTopicDetail.setUpdatePageList(uiForm.getPageListPost(topic.getPath())) ;
+      uiTopicDetail.setUpdateForum(forum) ;
+      uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
+      forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));
+      uiTopicDetail.setIdPostView("false") ;
+      forumPortlet.cancelAction() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	static	public class OpenTopicsTagActionListener extends EventListener<UIPageListTopicByUser> {

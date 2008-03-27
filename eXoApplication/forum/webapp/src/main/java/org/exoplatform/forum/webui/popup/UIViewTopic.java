@@ -16,6 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import org.exoplatform.download.DownloadService;
+import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -42,6 +45,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private Post post;
+  private boolean isViewUserInfo = false ;
 	
 	public UIViewTopic() {
 	}
@@ -50,6 +54,12 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
   private UserProfile getUserProfile() {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
+  
+  @SuppressWarnings("unused")
+  private String getFileSource(ForumAttachment attachment) throws Exception {
+    DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+    return ForumSessionUtils.getFileSource(attachment, dservice);
+  }
 	
 	public void setPostView(Post post) throws Exception {
 		this.post = post ;
@@ -62,6 +72,15 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+  
+  public void setViewUserInfo(boolean isView){
+    this.isViewUserInfo = isView ;
+  }
+  
+  @SuppressWarnings("unused")
+  private boolean getIsViewUserInfo(){
+    return this.isViewUserInfo ;
+  }
 	
 	static	public class CloseActionListener extends EventListener<UIViewTopic> {
     public void execute(Event<UIViewTopic> event) throws Exception {

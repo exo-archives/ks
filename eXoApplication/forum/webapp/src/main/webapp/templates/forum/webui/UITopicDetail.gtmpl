@@ -451,18 +451,17 @@
 										<div class="AttachmentBox">
 										<% if(typeFile.indexOf("jpeg") > 0) {%>
 							        <div class="Image"><img src="$urlFile" height="100px;"/></div>
-							 	        <div class="LabelBox">
-							 	          <div class="AttachmentIcon JPGIcon"><span></span></div>
-							 	          <a href="$urlFile" class="AttachmentLabel" >$fileName</a>
-							 	          <div style="clear: left;"><span></span></div>
-							 	          <div class="Size">Size: ${size} ${unit}</div>
-							 	          <div class="Action">
-							 	            <div class="Icon View" onclick="this.url='$urlFile'">View</div>
-							 	            <div class="Icon Download"><a href="$urlFile">Download</a></div>
-							 	          </div>
-							 	        </div>
+						 	        <div class="LabelBox">
+						 	          <div class="AttachmentIcon JPGIcon"><span></span></div>
+						 	          <a href="$urlFile" class="AttachmentLabel" >$fileName</a>
+						 	          <div style="clear: left;"><span></span></div>
+						 	          <div class="Size">Size: ${size} ${unit}</div>
+						 	          <div class="Action">
+						 	            <div class="Icon View" onclick="this.url='$urlFile'">View</div>
+						 	            <div class="Icon Download"><a href="$urlFile">Download</a></div>
+						 	          </div>
+						 	        </div>
 							 	      <div style="clear: left;"><span></span></div>
-							 	    </div>
 									<% }else { 
 												String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
 									%>
