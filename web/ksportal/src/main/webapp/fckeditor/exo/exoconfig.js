@@ -2,15 +2,21 @@ var eXoPlugin = {};
 
 
 FCKConfig.ToolbarSets["eXoBar"] = [
-	['Sample Button']
+	
 ];
+
+FCKConfig.ToolbarSets["eXoForum"] = [
+	['Bold','Italic','Underline','StrikeThrough','-','OrderedList','UnorderedList','-','Outdent','Indent'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
+	['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat','-','Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text']
+] ;
 
 FCKConfig.eXoPath = FCKConfig.BasePath.substr(0, FCKConfig.BasePath.length - 7) + "exo/" ;
 
 //Forum plugins
 FCKConfig.eXoForumPlugins = FCKConfig.eXoPath + "plugins/forum/" ;
 
-FCKConfig.Plugins.Add( 'sampleButton', null, FCKConfig.eXoForumPlugins) ;
+FCKConfig.Plugins.Add( 'forumButton', null, FCKConfig.eXoForumPlugins) ;
 
 //Other plugins like bog, wiki...
 eXoPlugin.switchToolBar = function(R) {
@@ -27,6 +33,7 @@ eXoPlugin.switchToolBar = function(R) {
 };
 
 //eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoBar"});
+eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoForum"});
 eXoPlugin.addBar = function(R) {
 	var Setting = {
 		newBar: R.newBar || "",
@@ -58,7 +65,7 @@ eXoPlugin.getContent = function() {
 	else return null;
 };
 
-eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Basic" });
-eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Default" });
+//eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Basic" });
+//eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Default" });
 
 FCK["eXoPlugin"] = eXoPlugin;

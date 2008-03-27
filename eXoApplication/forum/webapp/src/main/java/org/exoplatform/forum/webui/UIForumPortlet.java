@@ -105,7 +105,7 @@ public class UIForumPortlet extends UIPortletApplication {
     } catch (Exception e) {
     	e.printStackTrace() ;
     }
-  	this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userId, true, false) ;
+  	this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userId, true, true) ;
   	this.isJumpRendered = this.userProfile.getIsShowForumJump() ;
   }
 }

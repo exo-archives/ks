@@ -14,7 +14,7 @@
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
   List topics = uicomponent.getTopicsByUser() ;
 %>
-<div class="$uicomponent.id" id=="$uicomponent.id">
+<div class="$uicomponent.id" id="$uicomponent.id">
 	<div class="UITopicContainer">
    	<div class="UIForumContainer">
 			<div class="ContentContainer">

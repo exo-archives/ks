@@ -237,7 +237,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				//uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			if(message != null && message.length() > 0) message = message.trim() ;
-			t = message.length() ;
+			message = message.replaceAll('['+"QUOTE][/QUOTE"+']', "").replaceAll('['+"CODE][/CODE"+']', "") ;
+			t = ForumFormatUtils.clearQuote(message).length() ;
 			if(postTitle.length() <= 3) {k = 0;}
 			if(t >= 20 && k != 0) {	
 				Post post = new Post() ;
