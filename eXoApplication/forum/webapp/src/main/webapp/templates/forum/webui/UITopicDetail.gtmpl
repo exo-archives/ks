@@ -170,23 +170,52 @@
 												<div class="MiddleLeftRightClickPopupMenu">
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
-														<%	
+															
+															<%
 															String[] actionMenuPost = ["MovePost", "SetApprovePost", "SetHiddenPost", "SetUnHiddenPost", "DeletePost"];
-															for( action in actionMenuPost ) {
-																String link = uicomponent.event(action) ;
-																String classIcon = action + "Icon";
-														 		String itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-																if(action.indexOf("eleteP") > 0) {
-																	String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
+															String link = new String() ;
+															String classIcon = new String() ;
+															String itemLabel = new String() ;
+															String confirm = new String() ;
+															for(action in actionMenuPost) {
+																link = uicomponent.event(action) ;
+																classIcon = action + "Icon";
+														 		itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+														 		if(action.indexOf("eleteP") > 0) {
+																	confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
 																	link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
 																}
+																boolean isView = false ;
+																if(action.equals("SetApprovePost")){
+														      if(topic.getIsModeratePost()) {
+														      	isView = true ;
+														      }
+																} else if(action.equals("SetUnHiddenPost")) {
+																	for(Post post : uicomponent.posts) {
+															      if(post.getIsHidden()) {
+															      	isView = true ;
+															      	break ;
+															      }
+																	}
+																} else {
+																	isView = false;
+																}
+																if(isView) {
+																%>
+																	<a class="MenuItem" href="$link">
+																<%
+																} else {
+																%>
+																	<a class="MenuItem" href="javaScript: void(0)" style="opacity: 0.3; cursor: none;">
+																<%}%>
+																		<div class="ItemIcon $classIcon">
+																			$itemLabel
+																		</div>
+																	</a>
+																<%
+															}
 															%>
-															<a class="MenuItem" href="$link">	 
-																<div class="ItemIcon $classIcon">
-																	$itemLabel
-																</div>
-															</a>
-															<% } %>
+
 														</div>
 													</div>
 												</div>
@@ -278,37 +307,64 @@
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
 															<% 
-															String[] menuTopicActions = ["EditTopic", "PrintPage", "AddPoll", "SetOpenTopic", "SetCloseTopic", 
-															"SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SplitTopic", 
-															"SetApproveTopic", "SetUnApproveTopic", "SetMoveTopic", "SetDeleteTopic"] ;
+																String[] menuTopicActions = ["EditTopic", "PrintPage", "AddPoll", "SetOpenTopic", "SetCloseTopic", 
+																"SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SplitTopic", 
+																"SetApproveTopic", "SetUnApproveTopic", "SetMoveTopic", "SetDeleteTopic"] ;
+																String link = new String() ;
+														 		String itemLabel = new String() ;
+														 		String classIcon = new String() ;
 														 		for(action in menuTopicActions) {
+														 			boolean isView = false ;
 														 			if(topic.getIsPoll()){
 														 				if(action.equals("AddPoll")) continue ;
 														 			}
-														 			String link = uicomponent.event(action) ;
-															 		String itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-															 		String classIcon = null;
+														 			link = uicomponent.event(action) ;
+															 		itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+															 		classIcon = null;
 															 		if(action.length() < 11) classIcon = action + "Icon";
 															 		else classIcon = action.replaceFirst("Topic", "Icon");
 															 		if(action.indexOf("Delete") > 0) {
 															 			String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
 															 			link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}";
 															 		}
-															 		if(action.indexOf("intPa") > 0) {
-														 %>
-															<div class="MenuItem" style="opacity: 0.3; cursor: none;">	 
-																<div class="ItemIcon $classIcon">
-																	$itemLabel
-																</div>
-															</div>
-															<% } else { %>
-															<a class="MenuItem" href="$link">	 
-																<div class="ItemIcon $classIcon">
-																	$itemLabel
-																</div>
-															</a>
-															<% } %>
-														 <% } %>
+															 		
+															 		if(action.equals(menuTopicActions[3])){
+															 			isView = topic.getIsClosed() ;
+															 		} else if(action.equals(menuTopicActions[4])){
+															 			isView = (!topic.getIsClosed()) ;
+															 		} else if(action.equals(menuTopicActions[5])){
+															 			isView = !topic.getIsLock() ;
+															 		} else if(action.equals(menuTopicActions[6])){
+															 			isView = topic.getIsLock() ;
+															 		} else if(action.equals(menuTopicActions[7])){
+															 			isView = !topic.getIsSticky() ;
+															 		} else if(action.equals(menuTopicActions[8])){
+															 			isView = topic.getIsSticky() ;
+															 		} else if(action.equals(menuTopicActions[10])){
+															 			isView = !topic.getIsApproved();
+															 		} else if(action.equals(menuTopicActions[11])){
+															 			isView = topic.getIsApproved();
+															 		}else if(action.equals(menuTopicActions[1])){
+															 			isView = false ;
+															 		} else {
+															 			isView = true ;
+															 		} 
+															 		if(!isView){ 
+													 		%>
+														 				<div class="MenuItem" style="opacity: 0.3; cursor: none;">	 
+																			<div class="ItemIcon $classIcon">
+																				$itemLabel
+																			</div>
+																		</div>
+													 		<%
+															 		} else { %>
+																			<a class="MenuItem" href="$link">	 
+																				<div class="ItemIcon $classIcon">
+																					$itemLabel
+																				</div>
+																			</a>
+																<% } %>
+														  <% } %>
 														</div>
 													</div>
 												</div>

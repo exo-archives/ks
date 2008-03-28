@@ -746,16 +746,16 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			if(topics.size() > 0) {
+			if(topics.size() > 1) {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIMergeTopicForm mergeTopicForm = popupAction.createUIComponent(UIMergeTopicForm.class, null, null) ;
 				mergeTopicForm.updateTopics(topics) ;
 				popupAction.activate(mergeTopicForm, 560, 260) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} 
-			if(topics.size() == 0){
+			if(topics.size() <= 1){
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckThreads", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

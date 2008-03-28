@@ -243,23 +243,49 @@
 																</div>
 															</a>
 														 <% } 
-														 		for(action in uicomponent.getActionMenuForum()) {
-														 		String link = uicomponent.event(action) ;
+													 		boolean isView = false ;
+													 		String link = new String() ;
+													 		String confirm = new String() ;
+													 		String itemLabel = new String() ;
+													 		String classIcon = new String() ;
+													 		String[] actionMenuForum = uicomponent.getActionMenuForum() ;
+													 		System.out.println("actionMenuForum.length " + actionMenuForum.length) ;
+													 		for(action in actionMenuForum) {
+														 		link = uicomponent.event(action) ;
 														 		if(action.indexOf("emove") > 0) {
-															 		String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
+															 		confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
 														 			link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
 														 		}
-														 		String itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-														 		String classIcon = null;
+														 		itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+														 		classIcon = null;
 														 		if(action.length() < 12) classIcon = action + "Icon" ;
 														 		else classIcon = action.replaceFirst("Forum", "") + "Icon" ;
+														 		if(action.equals(actionMenuForum[1])){
+														 			isView = !forum.getIsLock() ;
+														 		} else if(action.equals(actionMenuForum[2])){
+														 			isView = forum.getIsLock() ;
+														 		} else if(action.equals(actionMenuForum[3])){
+														 			isView = forum.getIsClosed() ;
+														 		} else if(action.equals(actionMenuForum[4])){
+														 			isView = !forum.getIsClosed() ;
+														 		} else {
+														 			isView = true ;
+														 		}
+														 		if(isView == false){
 														 %>
-															<a class="MenuItem" href="$link">	 
-																<div class="ItemIcon $classIcon">
-																	$itemLabel
-																</div>
-															</a>
-														 <% } %>
+																	<a class="MenuItem" href="javaScript: void(0)">	 
+																		<div class="ItemIcon $classIcon" style="opacity: 0.3; cursor: none;">
+																			$itemLabel
+																		</div>
+																	</a>
+															<% } else { %>
+																	<a class="MenuItem" href="$link">	 
+																		<div class="ItemIcon $classIcon">
+																			$itemLabel
+																		</div>
+																	</a>
+															<% } %>
+													 <% } %>
 														</div>
 													</div>
 												</div>
@@ -267,7 +293,7 @@
 													<div class="BottomRightRightClickPopupMenu">
 														<div class="BottomCenterRightClickPopupMenu"><span></span></div>
 													</div>
-											</div>
+												</div>
 											</div>
 										</div>
 									</div>
