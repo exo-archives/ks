@@ -51,11 +51,13 @@
 	            	int j = 0;
 	            	for(tabconten in uiform.getChildren()){
 	            		if(uiform.getIsSelected(j))display =  "block";
-                  else display = "none";
+                  else {display = "none";}
+                  ++j;
 	          %>
 	            <div style="display: $display;" id="UITabContent" class="UITabContent">
 	            	<div class="$tabconten.id">
 	              <% 
+	              	tabconten.setRendered(true);
 	              	if(!tabconten.id.equals("ThreadIcon")) {
 	              		uiform.renderChild(tabconten.id) ; 
 	              	} else {
@@ -64,7 +66,7 @@
 	              %>
 	              </div>
 	            </div>
-	        	<% ++j;} %>
+	        	<% } %>
 	          </div>
 			    </div>
 			  </div>

@@ -418,7 +418,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UITopicForm topicForm = event.getSource();
 			topicForm.id = Integer.parseInt(id);
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
+//			UIPopupContainer popupContainer = topicForm.getAncestorOfType(UIPopupContainer.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicForm.getParent()) ;
 		}
 	}
 }
