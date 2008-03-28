@@ -291,4 +291,8 @@ public interface ForumService {
 	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan) throws Exception ;
 	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception ;
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception ;
+
+	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception ;
+	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception ;
+	
 }

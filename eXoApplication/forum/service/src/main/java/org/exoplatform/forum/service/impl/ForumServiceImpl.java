@@ -22,6 +22,7 @@ import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
@@ -222,5 +223,13 @@ public class ForumServiceImpl implements ForumService{
 
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception {
 	  return storage_.getPagePostByUser(sProvider, userName);
+  }
+
+	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {
+	  return storage_.getForumStatistic(sProvider);
+  }
+
+	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception {
+		storage_.saveForumStatistic(sProvider, forumStatistic) ;
   }
 }

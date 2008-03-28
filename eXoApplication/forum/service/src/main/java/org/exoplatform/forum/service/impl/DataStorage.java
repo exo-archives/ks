@@ -21,6 +21,7 @@ import java.util.List;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
+import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
@@ -89,4 +90,7 @@ public interface DataStorage {
 	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan) throws Exception ;
 	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception ;
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception ;
+	
+	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception ;
+	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception ;
 }

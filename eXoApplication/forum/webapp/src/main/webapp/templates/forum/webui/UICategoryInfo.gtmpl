@@ -1,4 +1,12 @@
-<div class="ForumInfos">
+<%  
+  import org.exoplatform.forum.service.ForumStatistic ;
+  ForumStatistic forumStatistic = uicomponent.getForumStatistic() ;
+  String topics = String.valueOf(forumStatistic.getTopicCount());
+  String posts = String.valueOf(forumStatistic.getPostCount());
+  String members = String.valueOf(forumStatistic.getMembersCount());
+  String newMember = forumStatistic.getNewMembers();
+%>
+<div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
   <div class="ForumToolbar">
 	  <div class="LeftBar">
 	  	<div class="RightBar">
@@ -31,7 +39,10 @@
 	   			</tr>
 				  <tr class="OddRow">
 						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
-					 	<td class="text">Total Threads:  Total Posts:  Total Members: Welcome to our newest member:  -  Today's birthdays: </td>
+					 	<td class="text">
+					 		<div class="text">Total Threads: $topics, Total Posts: $posts, Total Members: $members, Active Members:</div>
+							<div class="text" style="padding-bottom: 5px;">Welcome to our newest member: <a>$newMember</a></div>
+					 	</td>
 	   			</tr>
 	      </tbody>
 		  </table>							
