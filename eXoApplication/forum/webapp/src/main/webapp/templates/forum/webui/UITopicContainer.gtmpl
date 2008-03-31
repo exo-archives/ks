@@ -135,7 +135,7 @@
 						<div class="CenterBar" style="padding-right: 10px;">
 							<div class="Title"><span style="font-weight: normal;">Thread in forum: </span>$forumName</div>
 						<% if(isShowMenu && canEdit) { %>	
-							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+							<div class="ContentAction" onclick="eXo.forum.UIForumPortlet.checkActionTopic(this, event);">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 									<div class="LeftOverButton">
 										<div class="RightOverButton">
@@ -159,7 +159,7 @@
 												</div>
 												<div class="MiddleLeftRightClickPopupMenu">
 													<div class="MiddleRightRightClickPopupMenu">
-														<div class="UIRightPopupMenuContainer">
+														<div class="UIRightPopupMenuContainer" id="ModerationMenu">
 														 <% 
 														 	for(action in uicomponent.getActionMenuTopic()) {
 														 		String link = uicomponent.event(action) ;
@@ -171,6 +171,10 @@
 														 		String classIcon = null;
 														 		if(action.length() < 11) classIcon = action + "Icon";
 														 		else classIcon = action.replaceFirst("Topic", "Icon");
+														 		if(!isApproveTopic && action.indexOf("Approve") > -1) {  
+														 			classIcon = classIcon + " DisableMenuItem";
+														 			link = "javaScript: void(0)" ;
+														 		}
   													 %> 
 															<a class="MenuItem" href="$link">	 
 																<div class="ItemIcon $classIcon">
@@ -244,10 +248,7 @@
 															</a>
 														 <% } 
 													 		boolean isView = false ;
-													 		String link = new String() ;
-													 		String confirm = new String() ;
-													 		String itemLabel = new String() ;
-													 		String classIcon = new String() ;
+													 		String link , confirm, itemLabel, classIcon, classDisable="";
 													 		String[] actionMenuForum = uicomponent.getActionMenuForum() ;
 													 		System.out.println("actionMenuForum.length " + actionMenuForum.length) ;
 													 		for(action in actionMenuForum) {
@@ -257,7 +258,6 @@
 														 			link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
 														 		}
 														 		itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-														 		classIcon = null;
 														 		if(action.length() < 12) classIcon = action + "Icon" ;
 														 		else classIcon = action.replaceFirst("Forum", "") + "Icon" ;
 														 		if(action.equals(actionMenuForum[1])){
@@ -271,20 +271,17 @@
 														 		} else {
 														 			isView = true ;
 														 		}
-														 		if(isView == false){
+														 		classDisable = "" ;
+														 		if(!isView){
+														 			link = "javaScript: void(0);" ;
+														 			classDisable = "DisableMenuItem" ;
+														 		}
 														 %>
-																	<a class="MenuItem" href="javaScript: void(0)">	 
-																		<div class="ItemIcon $classIcon" style="opacity: 0.3; cursor: none;">
-																			$itemLabel
-																		</div>
-																	</a>
-															<% } else { %>
-																	<a class="MenuItem" href="$link">	 
-																		<div class="ItemIcon $classIcon">
-																			$itemLabel
-																		</div>
-																	</a>
-															<% } %>
+																<a class="MenuItem $classDisable" href="$link">	 
+																	<div class="ItemIcon $classIcon">
+																		$itemLabel
+																	</div>
+																</a>
 													 <% } %>
 														</div>
 													</div>
@@ -307,7 +304,7 @@
 				</div>
 			</div>
 			
-			<div class="ContentContainer">
+			<div class="ContentContainer" id="UITopicContent">
 				<div class="UITopicList">
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 						<thead>

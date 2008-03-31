@@ -92,6 +92,43 @@ UIForumPortlet.prototype.checkAction = function(obj, evt) {
 		}
 	}
 } ;
+
+UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
+	eXo.webui.UIPopupSelectCategory.show(obj, evt) ;
+	var parentMenu = document.getElementById("ModerationMenu") ;
+	var menuItems = parentMenu.getElementsByTagName("a") ;
+	var parentContent = document.getElementById("UITopicContent") ;
+	var checkBoxs = eXo.core.DOMUtil.findDescendantsByClass(parentContent, "input", "checkbox") ;
+	var clen = checkBoxs.length ;
+	var mlen = menuItems.length ;
+	var j = 0 ;
+	for(var i = 1 ; i < clen ; i ++) {
+		if (checkBoxs[i].checked){ 
+			j = 1 ;
+			break ;
+		}
+	}
+	if(j === 0) {
+		for(var k = 0; k < mlen-1; k ++) {
+			if(!menuItems[k].getAttribute("tmpClass")) {
+				menuItems[k].setAttribute("tmpClass",menuItems[k].className) ;
+				menuItems[k].setAttribute("tmpHref",menuItems[k].href) ;
+				menuItems[k].className = "DisableMenuItem" ;
+				menuItems[k].href = "javascript:void(0);" ;
+			}	
+		}	
+	} else {
+		for(var n = 0 ; n < mlen ; n++) {
+			if(menuItems[n].getAttribute("tmpClass")) {
+				menuItems[n].className = menuItems[n].getAttribute("tmpClass") ;
+				menuItems[n].href = menuItems[n].getAttribute("tmpHref") ;
+				menuItems[n].removeAttribute("tmpClass") ;
+				menuItems[n].removeAttribute("tmpHref") ;
+			}			
+		}
+	}
+};
+
 UIForumPortlet.prototype.expandCollapse = function(obj) {
 	var forumToolbar = eXo.core.DOMUtil.findAncestorByClass(obj,"ForumToolbar") ;
 	var contentContainer = eXo.core.DOMUtil.findNextElementByTagName(forumToolbar, "div") ;
@@ -125,7 +162,6 @@ UIForumPortlet.prototype.showTreeNode = function(obj) {
 	}	
 };
 
-//Duytu
 UIForumPortlet.prototype.OverButton = function(oject) {
 	if(oject.className.indexOf("Action") > 0){
 		var Srt = "";
@@ -136,7 +172,6 @@ UIForumPortlet.prototype.OverButton = function(oject) {
 	}	else oject.className = oject.className + "Action";
 };
 
-//Duy Tu
 UIForumPortlet.prototype.initVote = function(voteId, rate) {
 	var vote = document.getElementById(voteId) ;
 	var DOMUtil = eXo.core.DOMUtil ;
@@ -256,15 +291,5 @@ UIForumPortlet.prototype.setMenuTextAreaMutil = function(ParendId) {
 		}
 	}
 };
-
-
-
-
-
-
-
-
-
-
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

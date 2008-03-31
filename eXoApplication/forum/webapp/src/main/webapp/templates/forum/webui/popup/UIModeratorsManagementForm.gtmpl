@@ -136,7 +136,7 @@
   </div>
 	<div id="ActionsTextAreaMulil" style="display: none;">
 		<a class="ChildAction" id="AddModForums" href="<%=uicomponent.event("AddValuesArea","ModForums");%>"><%=uicomponent.event("AddValuesArea","ModForums");%></a>
-		<a class="ChildAction" id="AddMosTopics" href="<%=uicomponent.event("AddValuesArea","MosTopics");%>"><%=uicomponent.event("AddValuesArea","MosTopics");%></a>
+		<a class="ChildAction" id="AddMosTopics" href="<%=uicomponent.event("AddValuesArea","ModTopics");%>"><%=uicomponent.event("AddValuesArea","MosTopics");%></a>
 	</div>
 <% } %>
   <div class="UIAction"> 

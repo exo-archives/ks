@@ -339,3 +339,11 @@
 	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif') no-repeat center;
 	cursor: pointer;
 }
+
+.UIForumPortlet .MergeTopicIcon {
+	background: url('icons/MergeTopicIcon.gif') no-repeat left center;
+}
+
+.UIForumPortlet .ApproveIcons {
+	background: url('icons/ApproveTopicsIcon.gif') no-repeat left center;
+}
