@@ -20,7 +20,8 @@
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-	if(userProfile.getIsBanned()) {
+	boolean isBanned = userProfile.getIsBanned() ;
+	if(isBanned) {
 		isShowMenu = false ;
 	}
 	boolean canEdit = false ;
@@ -56,9 +57,19 @@
 	if(!isLock && topic != null)isLock = topic.getIsLock() ;
 	if(!isLock && forum != null)isLock = forum.getIsClosed() ;
 	if(!isLock && topic != null)isLock = topic.getIsClosed() ;
+	
+	String[] listUsers = topic.getCanPost() ;
+	if(listUsers != null && listUsers.length > 0) {
+		if(!isLock || !isBanned) isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
+	}
 
 	if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
 	if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
+	
+	listUsers = topic.getCanView() ;
+	if(listUsers !=null && listUsers.length > 0) {
+		if(!isClosed || !canEdit) isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
+	}
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
@@ -390,7 +401,7 @@
 <!-- Start ContentContainer -->
 		<%	
 		List posts = uicomponent.getPostPageList() ;
-		if(posts != null && posts.size() > 0) {
+		if(posts != null && posts.size() > 0 && !isClosed) {
 			int checked = 0 ;
 			for(post in posts) {
 				String owner = post.getOwner() ;
@@ -588,7 +599,7 @@
 			jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('"+idLastPost+"');");
 		 } else {
 		%>
-		<div class="ContentNotPost">Post(s) in thread is UnApprove or Hidden !</div>
+		<div class="ContentNotPost">Post(s) in thread is UnApprove or Hidden or Closed!</div>
 	<% } %>
 <!-- End ContentContainer -->
 	</div>	

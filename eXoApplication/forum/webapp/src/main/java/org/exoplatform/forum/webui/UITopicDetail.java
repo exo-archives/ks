@@ -247,6 +247,7 @@ public class UITopicDetail extends UIForm {
 		this.pageList = pageList ;
 		this.isUpdatePageList = false ;
 	}
+  
 	@SuppressWarnings("unused")
 	private Topic getTopic() throws Exception {
 		try {

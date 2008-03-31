@@ -49,6 +49,7 @@ import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 
@@ -67,10 +68,11 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 			@EventConfig(listeners = UITopicForm.AttachmentActionListener.class), 
 			@EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class), 
 			@EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
-			@EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE)
+			@EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UITopicForm.AddValuesUserActionListener.class, phase=Phase.DECODE)
 		}
 )
-public class UITopicForm extends UIForm implements UIPopupComponent {
+public class UITopicForm extends UIForm implements UIPopupComponent, UISelector {
 	
 	public static final String FIELD_THREADCONTEN_TAB = "ThreadContent" ;
 	public static final String FIELD_THREADICON_TAB = "ThreadIcon" ;
@@ -121,8 +123,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX, false);
 		UIFormCheckBoxInput sticky = new UIFormCheckBoxInput<Boolean>(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
 		
-		UIFormStringInput canView = new UIFormStringInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
-		UIFormStringInput canPost = new UIFormStringInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
+    UIFormTextAreaInput canView = new UIFormTextAreaInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
+    UIFormTextAreaInput canPost = new UIFormTextAreaInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
 		
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true);
 //		addUIFormInput(topicTitle);
@@ -152,6 +154,20 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 		UIFormInputWithActions threadPermission = new UIFormInputWithActions(FIELD_THREADPERMISSION_TAB);
 		threadPermission.addUIFormInput(canView);
 		threadPermission.addUIFormInput(canPost);
+    
+    String[] childIds = new String[]{FIELD_CANVIEW_INPUT, FIELD_CANPOST_INPUT} ;
+    List<ActionData> actions ;
+    ActionData ad ;
+    for(String string : childIds) {
+      actions = new ArrayList<ActionData>() ;
+      ad = new ActionData() ;
+      ad.setActionListener("AddValuesUser") ;
+      ad.setActionParameter(string) ;
+      ad.setCssIconClass("SelectUserIcon") ;
+      ad.setActionName("SelectUser");
+      actions.add(ad) ;
+      threadPermission.setActionField(string, actions);
+    }
 		
 		addUIFormInput(threadContent) ;
 		addUIFormInput(uiIconSelector) ;
@@ -422,4 +438,40 @@ public class UITopicForm extends UIForm implements UIPopupComponent {
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicForm.getParent()) ;
 		}
 	}
+  
+  public void updateSelect(String selectField, String value ) throws Exception {
+    UIFormTextAreaInput stringInput = getUIFormTextAreaInput(selectField) ;
+    String values = stringInput.getValue() ;
+    boolean canAdd = true ;
+    if(values != null && values.trim().length() > 0) {
+      if(!ForumFormatUtils.isStringInStrings(values.split(","), value)){
+        if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
+        else values = values.trim() + ",";
+      } else {
+        canAdd = false ;
+      }
+    } else {
+      values = "" ;
+    }
+    if(canAdd) {
+      values = values.trim() + value ;
+      stringInput.setValue(values) ;
+    }
+  }
+  
+  static  public class AddValuesUserActionListener extends EventListener<UITopicForm> {
+    public void execute(Event<UITopicForm> event) throws Exception {
+      UITopicForm uiTopicForm = event.getSource() ;
+      String childId = event.getRequestContext().getRequestParameter(OBJECTID)  ;
+      if(childId != null && childId.length() > 0) {
+        UIPopupContainer popupContainer = uiTopicForm.getAncestorOfType(UIPopupContainer.class) ;
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+        UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
+        uiGroupSelector.setType("0") ;
+        //uiGroupSelector.setSelectedGroups(null) ;
+        uiGroupSelector.setComponent(uiTopicForm, new String[]{childId}) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      }
+    }
+  }
 }
