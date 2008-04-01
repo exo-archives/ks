@@ -11,8 +11,9 @@
 		Topic topic = uiTopicDetail.getTopic() ;
 		if(topic != null) {
 			UITopicPoll uiTopicPoll = uicomponent.getChild(UITopicPoll.class) ;
-			uiTopicPoll.setRendered(topic.getIsPoll()) ;
-			uiTopicPoll.setForum(uiTopicDetail.getForum()) ;
+			boolean isPoll = topic.getIsPoll() ;
+			uiTopicPoll.setRendered(isPoll) ;
+			if(isPoll) uiTopicPoll.setForum(uiTopicDetail.getForum()) ;
 		}
     for(component in children) {
       if(component.isRendered()){
