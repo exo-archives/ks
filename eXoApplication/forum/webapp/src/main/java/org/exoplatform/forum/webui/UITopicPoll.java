@@ -145,7 +145,6 @@ public class UITopicPoll extends UIForm	{
   
   @SuppressWarnings("unused")
   private boolean getIsEditPoll() {
-    System.out.println("isEditPoll : " + this.isEditPoll);
     return this.isEditPoll ;
   }
 	

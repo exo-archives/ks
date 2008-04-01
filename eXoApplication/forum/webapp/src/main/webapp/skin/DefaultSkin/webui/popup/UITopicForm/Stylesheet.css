@@ -49,13 +49,18 @@
 	padding-top: 8px;
 }
 
+.UIForm .HorizontalLayout .UIFormInputSet {
+	width: 70% ;
+	margin: auto;
+}
+
 .UITopicForm .UIFormWithTitle {
 	margin: auto;
 	padding-top: 5px;
 }
 
 .UITopicForm .HorizontalLayout .ThreadPermission td.FieldLabel {
-	width: 100px;
+	width: 000px;
 }
 
 .UITopicForm .ThreadPermission input {
