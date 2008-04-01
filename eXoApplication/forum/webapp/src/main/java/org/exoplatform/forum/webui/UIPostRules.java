@@ -16,10 +16,15 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.List;
+
 import org.exoplatform.forum.ForumFormatUtils;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
  * Created by The eXo Platform SARL

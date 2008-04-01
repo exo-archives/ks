@@ -60,7 +60,7 @@
 	
 	String[] listUsers = topic.getCanPost() ;
 	if(listUsers != null && listUsers.length > 0) {
-		if(!isLock || !isBanned) isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
+		if(!isLock && !isBanned) isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
 	}
 
 	if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
@@ -68,7 +68,10 @@
 	
 	listUsers = topic.getCanView() ;
 	if(listUsers !=null && listUsers.length > 0) {
-		if(!isClosed || !canEdit) isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
+		if(!isClosed && !canEdit) isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
+	}
+	if(isLock || isClosed) {
+		uicomponent.setIsRole(true) ;
 	}
 %>
 <div class="UITopicDetail">

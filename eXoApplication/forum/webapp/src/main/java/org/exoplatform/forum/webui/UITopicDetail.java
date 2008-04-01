@@ -111,6 +111,7 @@ public class UITopicDetail extends UIForm {
 	private boolean isGopage = false ;
 	private boolean isEditTopic = false ;
 	private boolean isUpdatePageList = false ;
+	private boolean isLockRole = false ;
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
 	private List<Post>  posts ;
@@ -327,6 +328,10 @@ public class UITopicDetail extends UIForm {
 		return null ;
 	}
 	
+  @SuppressWarnings("unused")
+  private void setIsRole(boolean isLockRole) {
+    this.isLockRole = isLockRole ;
+  }
 	@SuppressWarnings("unused")
   private void setPostRules() {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
@@ -336,6 +341,10 @@ public class UITopicDetail extends UIForm {
 			if(this.topic != null) 
 				isLock = this.topic.getIsLock() ;
 		}
+    if(this.isLockRole) {
+      isLock = true;
+      this.isLockRole = false ;
+    }
 		postRules.setLock(isLock) ;
 		postRules.setMorderate(this.forum.getModerators()) ;
 		postRules.setUserProfile(this.userProfile) ;

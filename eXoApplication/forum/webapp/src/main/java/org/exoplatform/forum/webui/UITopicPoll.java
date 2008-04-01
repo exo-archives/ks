@@ -21,12 +21,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -125,7 +127,11 @@ public class UITopicPoll extends UIForm	{
 		if(categoryId != null && categoryId.length() > 0) {
 			if(this.isEditPoll) {
 				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "guest") ;
-				this.isEditPoll = false ;
+        UserProfile userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+        String userId = userProfile.getUserId() ;
+        long userRole = userProfile.getUserRole() ;
+        if(userRole == 0 || ForumFormatUtils.isStringInStrings(this.forum.getModerators(), userId)) this.isEditPoll = true ;
+        else this.isEditPoll = false ;
 			}
 			if(this.topic.getIsPoll()) {
 				Poll poll = forumService.getPoll(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId) ; 
@@ -136,6 +142,12 @@ public class UITopicPoll extends UIForm	{
 		}
 		return null ;
 	}
+  
+  @SuppressWarnings("unused")
+  private boolean getIsEditPoll() {
+    System.out.println("isEditPoll : " + this.isEditPoll);
+    return this.isEditPoll ;
+  }
 	
 	@SuppressWarnings("unused")
 	private boolean getIsVoted() throws Exception {
