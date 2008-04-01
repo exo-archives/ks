@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Topic;
@@ -65,6 +66,7 @@ public class UITopicPoll extends UIForm	{
 	private boolean isAgainVote = false ;
 	private boolean isEditPoll = false ;
 	private Topic topic ;
+	private Forum forum ;
 	
 	public UITopicPoll() throws Exception {
 	}
@@ -74,6 +76,9 @@ public class UITopicPoll extends UIForm	{
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
 	
+	public void setForum(Forum forum) {
+	  this.forum = forum ;
+  }
 	public void updatePoll(String categoryId, String forumId, Topic topic) throws Exception {
 		this.categoryId = categoryId; 
 		this.forumId = forumId; 
