@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -96,7 +95,8 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 		this.TopicPath = topicPath ;
 	}
 	
-	public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
+	@SuppressWarnings("unchecked")
+  public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			this.poll = poll ;
 			getUIStringInput(FIELD_QUESTION_INPUT).setValue(poll.getQuestion()) ;

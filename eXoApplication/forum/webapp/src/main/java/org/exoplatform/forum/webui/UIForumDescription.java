@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import org.apache.poi.hssf.record.formula.functions.False;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;

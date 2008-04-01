@@ -118,6 +118,7 @@ public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent
 	}
 
   static  public class ApproveTopicActionListener extends EventListener<UIPageListTopicUnApprove> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
       UIPageListTopicUnApprove topicUnApprove = event.getSource() ;
       List<UIComponent> listChild = topicUnApprove.getChildren() ;

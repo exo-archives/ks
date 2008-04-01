@@ -112,6 +112,7 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
 	}
 
   static  public class UnApproveActionListener extends EventListener<UIPageListPostUnApprove> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UIPageListPostUnApprove> event) throws Exception {
       UIPageListPostUnApprove postUnApprove = event.getSource() ;
       List<UIComponent>listChild = postUnApprove.getChildren() ;

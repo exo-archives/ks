@@ -22,7 +22,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
-import org.exoplatform.services.organization.User ;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 

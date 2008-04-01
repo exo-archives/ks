@@ -250,7 +250,6 @@
 													 		boolean isView = false ;
 													 		String link , confirm, itemLabel, classIcon, classDisable="";
 													 		String[] actionMenuForum = uicomponent.getActionMenuForum() ;
-													 		System.out.println("actionMenuForum.length " + actionMenuForum.length) ;
 													 		for(action in actionMenuForum) {
 														 		link = uicomponent.event(action) ;
 														 		if(action.indexOf("emove") > 0) {
