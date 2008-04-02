@@ -60,7 +60,7 @@
 	
 	String[] listUsers = topic.getCanPost() ;
 	if(listUsers != null && listUsers.length > 0) {
-		if(!isLock && !isBanned) isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
+		if(!isLock || !isBanned) isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
 	}
 
 	if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
@@ -68,10 +68,7 @@
 	
 	listUsers = topic.getCanView() ;
 	if(listUsers !=null && listUsers.length > 0) {
-		if(!isClosed && !canEdit) isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
-	}
-	if(isLock || isClosed) {
-		uicomponent.setIsRole(true) ;
+		if(!isClosed || !canEdit) isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
 	}
 %>
 <div class="UITopicDetail">
@@ -199,20 +196,11 @@
 																	confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
 																	link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
 																}
-																boolean isView = false ;
+																boolean isView = true ;
 																if(action.equals("SetApprovePost")){
-														      if(topic.getIsModeratePost()) {
-														      	isView = true ;
+														      if(!topic.getIsModeratePost()) {
+														      	isView = false ;
 														      }
-																} else if(action.equals("SetUnHiddenPost")) {
-																	for(Post post : uicomponent.posts) {
-															      if(post.getIsHidden()) {
-															      	isView = true ;
-															      	break ;
-															      }
-																	}
-																} else {
-																	isView = false;
 																}
 																if(isView) {
 																%>
@@ -323,7 +311,7 @@
 															<% 
 																String[] menuTopicActions = ["EditTopic", "PrintPage", "AddPoll", "SetOpenTopic", "SetCloseTopic", 
 																"SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SplitTopic", 
-																"SetApproveTopic", "SetUnApproveTopic", "SetMoveTopic", "SetDeleteTopic"] ;
+																"SetApproveTopic", "SetMoveTopic", "SetDeleteTopic"] ;
 																String link = new String() ;
 														 		String itemLabel = new String() ;
 														 		String classIcon = new String() ;
@@ -341,7 +329,7 @@
 															 			String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
 															 			link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}";
 															 		}
-															 		
+															 		boolean isModerateTopic = forum.getIsModerateTopic() ;
 															 		if(action.equals(menuTopicActions[3])){
 															 			isView = topic.getIsClosed() ;
 															 		} else if(action.equals(menuTopicActions[4])){
@@ -355,10 +343,12 @@
 															 		} else if(action.equals(menuTopicActions[8])){
 															 			isView = topic.getIsSticky() ;
 															 		} else if(action.equals(menuTopicActions[10])){
-															 			isView = !topic.getIsApproved();
-															 		} else if(action.equals(menuTopicActions[11])){
-															 			isView = topic.getIsApproved();
-															 		}else if(action.equals(menuTopicActions[1])){
+															 			if(isModerateTopic) {
+															 				isView = !topic.getIsApproved();
+															 			} else {
+															 				continue ;
+															 			}
+															 		} else if(action.equals(menuTopicActions[1])){
 															 			isView = false ;
 															 		} else {
 															 			isView = true ;

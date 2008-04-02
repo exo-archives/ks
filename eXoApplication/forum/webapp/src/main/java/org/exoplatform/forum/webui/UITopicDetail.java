@@ -665,7 +665,7 @@ public class UITopicDetail extends UIForm {
     public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
       Topic topic = topicDetail.topic;
-      topic.setIsApproved(false) ;
+      topic.setIsApproved(true) ;
       topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
       topicDetail.viewTopic = false ;
       topicDetail.isEditTopic = true ;
@@ -677,7 +677,7 @@ public class UITopicDetail extends UIForm {
     public void execute(Event<UITopicDetail> event) throws Exception {
       UITopicDetail topicDetail = event.getSource() ;
       Topic topic = topicDetail.topic;
-      topic.setIsApproved(true) ;
+      topic.setIsApproved(false) ;
       topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
       topicDetail.viewTopic = false ;
       topicDetail.isEditTopic = true ;
