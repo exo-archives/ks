@@ -143,7 +143,8 @@ UIForumPortlet.prototype.expandCollapse = function(obj) {
 	}
 } ;
 //Edit by Duy Tu 14-11-07
-UIForumPortlet.prototype.showTreeNode = function(obj) {
+UIForumPortlet.prototype.showTreeNode = function(obj, isShow) {
+	if(isShow === "false") return ;
 	var DOMUtil = eXo.core.DOMUtil ;
 	var parentNode = DOMUtil.findAncestorByClass(obj, "ParentNode") ;
 	var nodes = DOMUtil.findChildrenByClass(parentNode, "div", "Node") ;
@@ -156,7 +157,8 @@ UIForumPortlet.prototype.showTreeNode = function(obj) {
 			childrenContainer.style.display = "block" ;
 			nodes[i].className = "Node SmallGrayPlus" ;
 		} else {		
-			childrenContainer.style.display = "none" ;			
+			childrenContainer.style.display = "none" ;
+			if(nodes[i].className === "Node SmallGrayPlus false") continue ;			
 			nodes[i].className = "Node SmallGrayMinus" ;
 		}
 	}	

@@ -14,6 +14,7 @@
 			 if(category.getType().equals("category")) {
 				String display = "display:none;" ;
 				String iconClass = "SmallGrayMinus" ;
+				String isShow = "true";
 				//boolean selectForum = false ;
 		  	String categoryName = category.getName() ;
 		  	//selectForum = uicomponent.getSelectForum(category.getId()) ;
@@ -21,16 +22,17 @@
 	  		//	display = "display:block;" ;
 	  		//	iconClass = "SmallGrayPlus" ;
 	  		//}
+		  	List forums =  uicomponent.getForums(category.getId());
+	  		if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
 		%>
 	    <div class="Node $iconClass">
 	     	<div class="Icon ForumIcon"><span></span></div>  
-	     	<div class="NodeLabel" onclick = "eXo.forum.UIForumPortlet.showTreeNode(this);">
+	     	<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
 	     		<div class="NodeSelected"><a>$categoryName</a></div> 
 	      </div> 		  
 	      <div style="clear: left;"><span></span></div>
 	      <div class="ChildNodeContainer ParentNode" style="$display">
 	      <% 
-	      	List forums =  uicomponent.getForums(category.getId());
 	      	for(forum in forums) {
 	      		String forumName = forum.getName() ;
 	      		iconClass = "SmallGrayMinus" ;
@@ -48,23 +50,6 @@
 				      <div>$forumName</div>
 				    </div>
 				    <div style="clear: left;"><span></span></div>
-				    <div class="ChildNodeContainer" style="$display">
-				    <% if(IsTopic) { %>
-					    <%  
-					    	List topics = uicomponent.getTopics(forum.getId()) ;
-					    	for(topic in topics) {
-			      		//	String link = uicomponent.event("Save", topic.getPath()) ;
-						    	String topicName = topic.getName();
-					    %>
-					    	<div class="Node">
-						      <div class="Icon PostsIcon"><span></span></div>
-						      <div class="NodeLabel"> 
-							      <div><a href="link">$topicName</a></div>
-							    </div>
-					    	</div>
-						   <% } %>
-				    <% } %>
-						</div>
 			    </div>
 		    <% } %>		
 	      </div>

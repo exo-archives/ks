@@ -194,8 +194,9 @@ public class ForumFormatUtils {
 			String content = s.substring(t1+1, t2);
 			s = s.substring(t2+8) ;
 			if(content != null && content.length() > 0) {
-				buffer.append(first).append("<div>Quote:</div><div class=\"ClassQuote\"><div>Originally Posted by <strong>").append(usernam).
-					append("</strong></div><div>").append(content).append("</div></div>") ;
+				buffer.append(first).append("<div>Quote:</div><div class=\"ClassQuote\">") ;
+				if(usernam.length() > 0)buffer.append("<div>Originally Posted by <strong>").append(usernam).append("</strong></div>") ;
+				buffer.append("<div>").append(content).append("</div></div>") ;
 			}
 		}
 		buffer.append(s);

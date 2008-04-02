@@ -1350,7 +1350,7 @@ public class JCRDataStorage{
 				if(newProfileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:isDisplaySignature"))userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
-				if(newProfileNode.hasProperty("exo:isDisplayAvatar"))userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
+				if(newProfileNode.hasProperty("exo:isDisplayAvatar"))userProfile.setIsDisplayAvatar(newProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
 			if(isGetOption) {
 				if(newProfileNode.hasProperty("exo:timeZone"))userProfile.setTimeZone(newProfileNode.getProperty("exo:timeZone").getDouble());
 				if(newProfileNode.hasProperty("exo:shortDateformat"))userProfile.setShortDateFormat(newProfileNode.getProperty("exo:shortDateformat").getString());
@@ -1398,7 +1398,7 @@ public class JCRDataStorage{
 				if(newProfileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:isDisplaySignature"))userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
-				if(newProfileNode.hasProperty("exo:isDisplayAvatar"))userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
+				if(newProfileNode.hasProperty("exo:isDisplayAvatar"))userProfile.setIsDisplayAvatar(newProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
 			return userProfile;
 		}catch(PathNotFoundException e) {
 			userProfile.setUserId(userName) ;

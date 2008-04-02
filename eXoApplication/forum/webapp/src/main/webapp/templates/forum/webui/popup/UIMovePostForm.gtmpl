@@ -15,41 +15,45 @@
 				String display = "display:none;" ;
 				String iconClass = "SmallGrayMinus" ;
 				boolean selectForum = false ;
+				String isShow = "true";
 		  	String categoryName = category.getCategoryName() ;
 		  	selectForum = uicomponent.getSelectForum(category.getId()) ;
 		  	if(selectForum){ 
 	  			display = "display:block;" ;
 	  			iconClass = "SmallGrayPlus" ;
 	  		}
+	      	List forums =  uicomponent.getForums(category.getId());
+	      	if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
 		%>
 	    <div class="Node $iconClass">
-	     	<div class="Icon ForumIcon"><span></span></div>  
-	     	<div class="NodeLabel" onclick = "eXo.forum.UIForumPortlet.showTreeNode(this);">
-	     		<div class="NodeSelected"><a>$categoryName</a></div> 
+	      <div class="Icon ForumIcon"><span></span></div>  
+	      <div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
+     		<div class="NodeSelected"><a>$categoryName</a></div> 
 	      </div> 		  
 	      <div style="clear: left;"><span></span></div>
 	      <div class="ChildNodeContainer ParentNode" style="$display">
 	      <% 
-	      	List forums =  uicomponent.getForums(category.getId());
 	      	for(forum in forums) {
 	      		String forumName = forum.getForumName() ;
 	      		iconClass = "SmallGrayMinus" ;
 	      		display = "display:none;" ;
+	      		isShow = "true";
 	      		selectForum = uicomponent.getSelectForum(forum.getId()) ;
 	      		if(selectForum){ 
 	      			display = "display:block;" ;
 	      			iconClass = "SmallGrayPlus" ;
 	      		}
+		    	List topics = uicomponent.getTopics(category.getId(), forum.getId()) ;
+		    	if(topics.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
 	      %>
 				  <div class="Node $iconClass">
 			      <div class="Icon ThreadsIcon"><span></span></div>
-			      <div class="NodeLabel"  onclick = "eXo.forum.UIForumPortlet.showTreeNode(this);"> 
+			      <div class="NodeLabel"  onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'> 
 				      <div><a>$forumName</a></div>
 				    </div>
 				    <div style="clear: left;"><span></span></div>
 				    <div class="ChildNodeContainer" style="$display">
 					    <%  
-					    	List topics = uicomponent.getTopics(category.getId(), forum.getId()) ;
 					    	for(topic in topics) {
 			      			String link = uicomponent.event("Save", topic.getPath()) ;
 						    	String topicName = topic.getTopicName();
