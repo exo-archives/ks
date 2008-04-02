@@ -260,9 +260,9 @@
 														 		if(action.length() < 12) classIcon = action + "Icon" ;
 														 		else classIcon = action.replaceFirst("Forum", "") + "Icon" ;
 														 		if(action.equals(actionMenuForum[1])){
-														 			isView = !forum.getIsLock() ;
-														 		} else if(action.equals(actionMenuForum[2])){
 														 			isView = forum.getIsLock() ;
+														 		} else if(action.equals(actionMenuForum[2])){
+														 			isView = !forum.getIsLock() ;
 														 		} else if(action.equals(actionMenuForum[3])){
 														 			isView = forum.getIsClosed() ;
 														 		} else if(action.equals(actionMenuForum[4])){
