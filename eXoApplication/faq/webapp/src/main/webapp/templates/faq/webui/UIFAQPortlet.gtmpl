@@ -1,1 +1,126 @@
-Hello, this is FAQ portlet!
+<div class="UIFAQPortlet">
+	<div class="UIBreadcumbs">
+		<div class="LeftBreadcumbsBar">
+			<div class="RightBreadcumbsBar"> 
+				<div class="CenterBreadcumbsBar">
+					<div class="BreadcumbsInfoBar">
+						<div class="OpenIcon"><span/></div>
+						<div class="Selected">eXo FAQ</div>
+				  	<div style="clear: left;"><span/></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="UICategoriesSummary">	
+  	<div class="FAQToolbar">
+  		<div class="LeftBar">
+  			<div class="RightBar">
+  				<div class="CenterBar">
+  					<div class="ControlbarCotainer">
+				
+							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+								<a href="">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="Icon AddCategory">
+													Add Category 
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+							<div class="SeparatorLine"><span/></div>
+							
+							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+								<a href="">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="Icon ShowQuestions">
+													Show questions not yet answered 
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+							<div class="SeparatorLine"><span/></div>
+						
+							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+								<a href="">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="Icon Setting">
+													Setting
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+							<div class="SeparatorLine"><span/></div>
+						
+							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"   class="DefaultStyle FAQBar">
+								<a href="">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="Icon Print">
+													Print
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+							<div class="SeparatorLine"><span/></div>
+						
+							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+								<a href="">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="Icon Rss">
+													RSS
+												</div>
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+							<div style="clear: left;"><span/></div>
+						</div>
+						<div class="SearchForm">
+							<form method="post" action="/portal/private/classic/?portal:componentId=calendar&portal:type=action&portal:isSecure=false&uicomponent=UISearchForm" id="UISearchForm" name="UISearchForm" class="UIForm"><input type="hidden" value="" name="formOp"/>
+								<div class="UISearchForm">
+									<div title="Advanced Search" class="AdvancedSearch"><span/></div>
+									<div title="Search" class="SearchIcon"><span/></div>
+									<input type="text" id="value" name="value"/>
+									<div style="clear: right;"><span/></div>
+								</div>
+								</form>
+						</div>
+						<div style="clear: both;"><span></span></div>
+  				</div>
+				</div>
+			</div>
+		</div>
+		<div class="FAQContainer">
+			<div class="FAQContent">
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts</a><span>(5 Questions, 2 no answear)</span></div>
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Buying Music, Bookmarks, Backstage, and Profile Pages</a><span>(6 Questions, 2 no answear)</span></div>
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Advanced Station Tuning / Optimizing</a><span>(7 Questions, 2 no answear)</span></div>
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Station Pages and Sharing Stations</a><span>(8 Questions, 2 no answear)</span></div>
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Advanced Profile Page and Pandora Community Options</a><span>(9 Questions, 2 no answear)</span></div>
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Keyboard Shortcuts / Access for the Visually Impaired</a><span>(10 Questions, 2 no answear)</span></div>
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Adding Pandora Links to Your Blog, Webpage or RSS Aggregator</a><span>(5 Questions, 2 no answear)</span></div>
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Other Browser Settings Issues</a><span>(7 Questions, 2 no answear)</span></div>
+				<div class="Sup-Icon"><a  class="Sup-Title" href="">Genre and Content Questions</a><span>(5 Questions, 2 no answear)</span></div>
+			</div>
+		</div>
+	</div>
+</div>
