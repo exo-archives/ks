@@ -28,7 +28,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -40,6 +39,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 
@@ -67,6 +67,7 @@ public class UITopicPoll extends UIForm	{
 	private String categoryId, forumId, topicId ;
 	private boolean isAgainVote = false ;
 	private boolean isEditPoll = false ;
+  private boolean canViewEditMenu = false ;
 	private Topic topic ;
 	private Forum forum ;
 	
@@ -127,12 +128,12 @@ public class UITopicPoll extends UIForm	{
 		if(categoryId != null && categoryId.length() > 0) {
 			if(this.isEditPoll) {
 				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "guest") ;
-        UserProfile userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-        String userId = userProfile.getUserId() ;
-        long userRole = userProfile.getUserRole() ;
-        if(userRole == 0 || ForumFormatUtils.isStringInStrings(this.forum.getModerators(), userId)) this.isEditPoll = true ;
-        else this.isEditPoll = false ;
 			}
+			UserProfile userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+			String userId = userProfile.getUserId() ;
+			long userRole = userProfile.getUserRole() ;
+			if(userRole == 0 || ForumFormatUtils.isStringInStrings(this.forum.getModerators(), userId)) this.canViewEditMenu = true ;
+			else this.canViewEditMenu = false ;
 			if(this.topic.getIsPoll()) {
 				Poll poll = forumService.getPoll(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId) ; 
 				poll_ = poll ;
@@ -146,6 +147,11 @@ public class UITopicPoll extends UIForm	{
   @SuppressWarnings("unused")
   private boolean getIsEditPoll() {
     return this.isEditPoll ;
+  }
+  
+  @SuppressWarnings("unused")
+  private boolean getCanViewEditMenu(){
+    return this.canViewEditMenu ;
   }
 	
 	@SuppressWarnings("unused")
@@ -224,8 +230,8 @@ public class UITopicPoll extends UIForm	{
   				}
   			}
   			if(radioInput.getValue().equalsIgnoreCase("vote")) {
-  				UIApplication uiApp = topicPoll.getAncestorOfType(UIApplication.class) ;
-  				uiApp.addMessage(new ApplicationMessage("UITopicPoll.msg.notCheck", null, ApplicationMessage.WARNING)) ;
+          Object[] args = { };
+          throw new MessageException(new ApplicationMessage("UITopicPoll.msg.notCheck", args, ApplicationMessage.WARNING)) ;
   			} else {
   				// order number
   				List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>() ;
@@ -354,8 +360,8 @@ public class UITopicPoll extends UIForm	{
           poll.setUserVote(setUserVote) ;
           poll.setVote(votes) ;
         } else {
-          UIApplication uiApp = topicPoll.getAncestorOfType(UIApplication.class) ;
-          uiApp.addMessage(new ApplicationMessage("UITopicPoll.msg.notCheck", null, ApplicationMessage.WARNING)) ;
+          Object[] args = { };
+          throw new MessageException(new ApplicationMessage("UITopicPoll.msg.notCheck", args, ApplicationMessage.WARNING)) ;
         }
       }
 			topicPoll.forumService.savePoll(ForumSessionUtils.getSystemProvider(), topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll, false, true) ;
