@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +33,9 @@ import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.webui.application.UIApplication;
+import org.exoplatform.services.organization.User;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -40,6 +44,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
@@ -48,6 +53,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
+import org.jgroups.demos.wb.UserInfoDialog;
 
 /**
  * Created by The eXo Platform SARL
@@ -71,6 +77,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	private boolean isForumUpdate = false;
 	private String forumId = "";
 	private int id = 0 ;
+  private String userInvalid = "" ;
 	public static final String FIELD_NEWFORUM_FORM = "newForum" ;
 	public static final String FIELD_MODERATOROPTION_FORM = "moderationOptions" ;
 	public static final String FIELD_FORUMPERMISSION_FORM = "forumPermission" ;
@@ -123,13 +130,9 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
 		
 		UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE, FIELD_MODERATOR_MULTIVALUE, null);
-    moderator.setEnable(false) ;
 		UIFormTextAreaInput viewer = new UIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE, FIELD_VIEWER_MULTIVALUE, null) ;
-    viewer.setEnable(false) ;
 		UIFormTextAreaInput postable = new UIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE, FIELD_POSTABLE_MULTIVALUE, null);
-    postable.setEnable(false) ;
 		UIFormTextAreaInput topicable = new UIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, null);
-    topicable.setEnable(false) ;
 		
 		UIFormCheckBoxInput checkWhenAddTopic = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
 		//UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
@@ -246,6 +249,21 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
       fieldInput.setValue(values) ;
     }
   }
+  
+  private String[] pilterUser(String[] users) {
+    List<String> userValid = new ArrayList<String>() ;
+    try{
+      for(String user : users) {
+        if(ForumSessionUtils.getUserByUserId(user.trim()) != null)
+          userValid.add(user.trim()) ;
+        else {
+          if(this.userInvalid != null && this.userInvalid.trim().length() > 0) this.userInvalid += ", " ;
+          this.userInvalid += user ;
+        }
+      }
+    } catch(Exception e) {}
+    return userValid.toArray(new String[]{}) ;
+  }
 	
 	static	public class SaveActionListener extends EventListener<UIForumForm> {
     public void execute(Event<UIForumForm> event) throws Exception {
@@ -299,6 +317,16 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			if(forumStatus.equals("locked")) {
 				newForum.setIsLock(true) ;
 			}
+      
+      uiForm.userInvalid = "" ;
+      setModerator = uiForm.pilterUser(setModerator) ;
+      setPostable = uiForm.pilterUser(setPostable) ;
+      setViewer = uiForm.pilterUser(setViewer) ;
+      setTopicable = uiForm.pilterUser(setTopicable) ;
+      if(uiForm.userInvalid != null && uiForm.userInvalid.trim().length() > 0) {
+        throw new MessageException(new ApplicationMessage("UIForumForm.sms.userhavenotfound", new String[]{uiForm.userInvalid}, ApplicationMessage.WARNING)) ;
+      }
+      
 			newForum.setModerators(setModerator);
 			newForum.setCreateTopicRole(setPostable);
 			newForum.setViewForumRole(setViewer);

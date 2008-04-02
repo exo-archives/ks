@@ -42,6 +42,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
@@ -102,6 +103,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private String forumId ;
 	private String topicId ;
 	private int id = 0;
+  private String userInvalid = "" ;
 	@SuppressWarnings("unchecked")
 	public UITopicForm() throws Exception {
 		UIFormStringInput topicTitle = new UIFormStringInput(FIELD_TOPICTITLE_INPUT, FIELD_TOPICTITLE_INPUT, null);
@@ -122,12 +124,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormCheckBoxInput moderatePost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
 		UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_NOTIFYWHENADDPOST_CHECKBOX, FIELD_NOTIFYWHENADDPOST_CHECKBOX, false);
 		UIFormCheckBoxInput sticky = new UIFormCheckBoxInput<Boolean>(FIELD_STICKY_CHECKBOX, FIELD_STICKY_CHECKBOX, false);
-		
     UIFormTextAreaInput canView = new UIFormTextAreaInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
-    canView.setEnable(false) ;
     UIFormTextAreaInput canPost = new UIFormTextAreaInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
-    canPost.setEnable(false) ;
-		
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true);
 //		addUIFormInput(topicTitle);
 	 // addUIFormInput(message);
@@ -267,6 +265,21 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			getChild(UIFormInputIconSelector.class).setSelectedIcon(topic.getIcon());
 		}
 	}
+  
+  private String[] pilterUser(String[] users) {
+    List<String> validUsers = new ArrayList<String>() ;
+    try{
+      for(String user : users) {
+        if(ForumSessionUtils.getUserByUserId(user.trim()) != null) {
+          validUsers.add(user.trim()) ;
+        } else {
+          if(this.userInvalid.length() > 0) this.userInvalid += ", " ;
+          this.userInvalid += user.trim() ;
+        }
+      }
+    } catch(Exception e){}
+    return validUsers.toArray(new String[]{}) ;
+  }
 	
 	static	public class PreviewThreadActionListener extends EventListener<UITopicForm> {
     public void execute(Event<UITopicForm> event) throws Exception {
@@ -337,8 +350,12 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				Boolean whenNewPost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
 				Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
 				UIFormInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
-				String[] canView = uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue()) ;
-				String[] canPost = uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue()) ;
+        uiForm.userInvalid = "" ;
+				String[] canView = uiForm.pilterUser(uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue())) ;
+				String[] canPost = uiForm.pilterUser(uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue())) ;
+        if(uiForm.userInvalid.length() > 0) {
+          throw new MessageException(new ApplicationMessage("UITopicForm.sms.userhavenotfound", new String[]{uiForm.userInvalid}, ApplicationMessage.WARNING)) ;
+        }
 				
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Topic topicNew = new Topic();

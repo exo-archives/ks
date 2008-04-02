@@ -26,7 +26,7 @@
 	  				<span>${question}?</span>
 	  			</div>
 	  			<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-	  		<% if(!isAnonim && uicomponent.getIsEditPoll()) { %>	
+	  		<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>	
 	  			<div class="SeparatorLine"><span></span></div>
 	  			<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">

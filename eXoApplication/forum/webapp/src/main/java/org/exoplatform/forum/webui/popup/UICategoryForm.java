@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
@@ -32,6 +33,7 @@ import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIFormTextAreaMultilInput;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -39,6 +41,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -123,7 +126,23 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setDescription(description) ;
 			cat.setModifiedBy(userName) ;
 			cat.setModifiedDate(new Date()) ;
-			cat.setUserPrivate(userPrivate) ;
+      
+      String[] listUser = ForumFormatUtils.splitForForum(userPrivate) ;
+      String userInvalid = "" ;
+      String userValid = "" ;
+      for(String user : listUser) {
+        if(ForumSessionUtils.getUserByUserId(user.trim()) != null) {
+          if(userValid.trim().length() > 0) userValid += "," ;
+          userValid += user.trim() ;
+        } else {
+          if(userInvalid.trim().length() > 0) userInvalid += ", " ;
+          userInvalid += user.trim() ;
+        }
+      }
+      if(userInvalid.length() > 0) 
+        throw new MessageException(new ApplicationMessage("UICateforyForm.sms.userhavenotfound", new String[]{userInvalid}, ApplicationMessage.WARNING)) ;
+			
+      cat.setUserPrivate(userValid) ;
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
