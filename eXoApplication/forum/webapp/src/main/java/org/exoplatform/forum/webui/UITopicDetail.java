@@ -42,6 +42,10 @@ import org.exoplatform.forum.webui.popup.UIRatingForm;
 import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITagForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
+import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
+import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
+import org.exoplatform.forum.webui.popup.UIViewUserProfile;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -95,7 +99,10 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetUnHiddenPostActionListener.class ),	
 //			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class )	
+			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class ), 
+			@EventConfig(listeners = UITopicDetail.ViewPostedByUserActionListener.class ), 
+			@EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
+			@EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ) 
 		}
 )
 public class UITopicDetail extends UIForm {
@@ -788,7 +795,7 @@ public class UITopicDetail extends UIForm {
     public void execute(Event<UITopicDetail> event) throws Exception {
 		}
 	}
-	
+  
 	static public class DeletePostActionListener extends EventListener<UITopicDetail> {
     @SuppressWarnings("unchecked")
 		public void execute(Event<UITopicDetail> event) throws Exception {
@@ -814,4 +821,51 @@ public class UITopicDetail extends UIForm {
 		}
 	}
 
+	static public class ViewPublicUserInfoActionListener extends EventListener<UITopicDetail> {
+	  public void execute(Event<UITopicDetail> event) throws Exception {
+	    UITopicDetail topicDetail = event.getSource() ;
+      String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+      UIViewUserProfile viewUserProfile = popupAction.createUIComponent(UIViewUserProfile.class, null, null) ;
+      UserProfile userProfile = topicDetail.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userId) ;
+      User user = ForumSessionUtils.getUserByUserId(userId) ; 
+      userProfile.setUser(user) ;
+      viewUserProfile.setUserProfile(userProfile) ;
+      popupAction.activate(viewUserProfile, 670, 400, true) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	  }
+	}
+	static public class ViewPostedByUserActionListener extends EventListener<UITopicDetail> {
+	  public void execute(Event<UITopicDetail> event) throws Exception {
+      UITopicDetail topicDetail = event.getSource() ;
+      String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      @SuppressWarnings("unused")
+      UIViewPostedByUser viewPostedByUser = popupContainer.addChild(UIViewPostedByUser.class, null, null) ;
+      viewPostedByUser.setUserProfile(userId) ;
+      popupContainer.setId("ViewPostedByUser") ;
+      popupAction.activate(popupContainer, 760, 350) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	  }
+	}
+  
+	static public class ViewThreadByUserActionListener extends EventListener<UITopicDetail> {
+	  public void execute(Event<UITopicDetail> event) throws Exception {
+	    UITopicDetail topicDetail = event.getSource() ;
+	    String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	    UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+	    UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+	    UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+	    @SuppressWarnings("unused")
+	    UIViewTopicCreatedByUser topicCreatedByUser = popupContainer.addChild(UIViewTopicCreatedByUser.class, null, null) ;
+      topicCreatedByUser.setUserId(userId) ;
+	    popupContainer.setId("ViewTopicCreatedByUser") ;
+	    popupAction.activate(popupContainer, 760, 350) ;
+	    event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	  }
+	}
+  
 }

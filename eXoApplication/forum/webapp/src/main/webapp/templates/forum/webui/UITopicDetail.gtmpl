@@ -270,7 +270,7 @@
 							<% } %>
 							<div class="ContentAction">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-									<a href="#">
+									<a href="javaScript:void(0)">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
@@ -302,6 +302,7 @@
 									<div class="UIPopupCategory" style="display: none; ">
 										<div class="UIRightClickPopupMenu" style="display: block;">
 											<div class="UIContextMenuContainer">
+											
 												<div class="TopLeftRightClickPopupMenu">
 													<div class="TopRightRightClickPopupMenu">
 														<div class="TopCenterRightClickPopupMenu"><span></span></div>
@@ -379,6 +380,7 @@
 													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
 												</div>
 											</div>
+											
 											</div>
 										</div>
 									</div>
@@ -432,15 +434,62 @@
 			<table class="TablePost" cellspacing="0" borderspacing="0">
 				<tbody>
 					<tr>
-<!-- Start MemberContainer -->		
+<!-- Start MemberContainer -->
+					<div class="UIPopupCategory" style="display: none; ">
 						<td class="MemberContainer">
 							<div class="MemberContent">
-								<div class="MemberName">
-									<div class="State AvailableIcon" title="Phuong's Available"><span></span></div>
-									<div class="Name">$owner</div>
-									<div class="Action"><span></span></div>
-									<div style="clear: left;"><span></span></div>
+							
+								<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+									<div style="position: relative;">
+							
+										<div class="MemberName">
+											<div class="State AvailableIcon" title="Phuong's Available"><span></span></div>
+											<div class="Name">$owner</div>
+											<div class="Action"><span></span></div>
+											<div style="clear: left;"><span></span></div>
+										</div>
+										
+										<div class="UIPopupCategory" style="display: none; left: 65px; ">
+											<div class="UIRightClickPopupMenu" style="display: block;">
+												<div class="UIContextMenuContainer">											
+													<div class="TopLeftRightClickPopupMenu">
+														<div class="TopRightRightClickPopupMenu">
+															<div class="TopCenterRightClickPopupMenu"><span></span></div>
+														</div>
+													</div>
+													<div class="MiddleLeftRightClickPopupMenu">
+														<div class="MiddleRightRightClickPopupMenu">
+															<div class="UIRightPopupMenuContainer">
+																<%
+																	String[] menuViewInfos = ["ViewPublicUserInfo","ViewPostedByUser", "ViewThreadByUser"] ;
+																	String[] labelViews = ["View public info", "View posted by user", "View thread by user"] ;
+																	int i = 0 ;
+																	for(String viewAction : menuViewInfos ) {
+																		String linkView = uicomponent.event(viewAction, owner) ;
+																		//String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																		String itemLavelView = labelViews[i++] ;
+																%>
+																		<a class="MenuItem" href="$linkView" style="margin: 0px 5px 0px 3px">
+																			$itemLavelView
+																		</a>
+																<%
+																	}
+																%>
+															</div>
+														</div>
+													</div>
+													<div class="BottomLeftRightClickPopupMenu">
+														<div class="BottomRightRightClickPopupMenu">
+															<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										
+									</div>
 								</div>
+								
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<img src="/forum/skin/DefaultSkin/webui/background/Avatar1.gif" class="Img" />
 								<div class="InfoMember">
@@ -460,6 +509,7 @@
 								</div>
 							</div>
 						</td>
+					</div>
 	<!-- End MemberContainer -->
 	<!-- Start PostViewContainer -->
 						<td class="PostViewContainer">

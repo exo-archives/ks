@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -87,8 +88,14 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
     public void execute(Event<UIViewUserProfile> event) throws Exception {
     	UIViewUserProfile uiForm = event.getSource() ;
     	UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			popupContainer.getChild(UIPopupAction.class).deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      if(popupContainer == null) {
+        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+        forumPortlet.cancelAction() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+      } else {
+        popupContainer.getChild(UIPopupAction.class).deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      }
     }
   }
 	

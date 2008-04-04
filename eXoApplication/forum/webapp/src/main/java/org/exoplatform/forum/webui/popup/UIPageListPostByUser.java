@@ -47,20 +47,39 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIPageListPostByUser extends UIContainer{
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+  private UserProfile userProfile = new UserProfile() ;
+  private String userName = new String() ;
   private List<Post> posts = new ArrayList<Post>() ;
 	public UIPageListPostByUser() throws Exception {
+    this.userProfile = null ;
+    this.userName = null ;
 		addChild(UIForumPageIterator.class, null, "PageListPostByUser") ;
 	}
 	
 	@SuppressWarnings("unused")
   private UserProfile getUserProfile() throws Exception {
-		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+    if(this.userProfile == null) {
+      this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+    }
+		return this.userProfile ;
 	}
+  public void setUserProfile(String userId) {
+    this.userName = userId ;
+    try {
+      this.userProfile = new UserProfile() ;
+      this.userProfile.setUser(ForumSessionUtils.getUserByUserId(userId)) ;
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+  
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Post> getPostsByUser() throws Exception {
-		String userName = ((UIModeratorManagementForm)this.getParent()).getProfile().getUserId() ;
+    if(this.userName == null)
+      this.userName = ((UIModeratorManagementForm)this.getParent()).getProfile().getUserId() ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		JCRPageList pageList  = forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), userName) ;
+		JCRPageList pageList  = forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), this.userName) ;
 		forumPageIterator.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;

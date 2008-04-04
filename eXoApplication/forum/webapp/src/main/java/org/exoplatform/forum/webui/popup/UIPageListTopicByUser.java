@@ -60,7 +60,9 @@ public class UIPageListTopicByUser extends UIContainer{
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
   private List<Topic> topics = new ArrayList<Topic>() ;
   private UserProfile userProfile ;
+  private String userName = new String() ;
 	public UIPageListTopicByUser() throws Exception {
+    this.userName = null ;
 		addChild(UIForumPageIterator.class, null, "PageListTopicByUser") ;
   }
 	
@@ -69,11 +71,16 @@ public class UIPageListTopicByUser extends UIContainer{
 		return this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
 	
+  public void setUserName(String userName) {
+    this.userName = userName ;
+  }
+  
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Topic> getTopicsByUser() throws Exception {
-		String userName = ((UIModeratorManagementForm)this.getParent()).getProfile().getUserId() ;
+    if(this.userName == null)
+      this.userName = ((UIModeratorManagementForm)this.getParent()).getProfile().getUserId() ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		JCRPageList pageList  = forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), userName) ;
+		JCRPageList pageList  = forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), this.userName) ;
 		forumPageIterator.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
