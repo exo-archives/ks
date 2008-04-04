@@ -158,9 +158,14 @@ public class ForumFormatUtils {
 			}else {
 				j = 0;
 				String temp = s.substring(i) ;
+				int []Int = {32,33,34,39,40,41,42,44,60,91,93,94,123,124,125,8221,8220};
+				boolean isEnd = false ;
 				while(true) {
 					char c = temp.charAt(j);
-					if(c == ' ' || c == ',' || c == ';' || c == '<' || c == '\'' || c == '\"') break ;
+					for (int k : Int) {
+	          if(k == (int)c){isEnd=true; break ;}
+          }
+					if(isEnd) break ;
 					j++ ;
 					if(j == temp.length()) break;
 				}
@@ -224,8 +229,17 @@ public class ForumFormatUtils {
     }
 	  return false;
   }
-	
-	
+//for (You	
+	public static String convetToCode(String s) {
+//		String []commands = {"for","do","while","continue","break","if","else","new","public","import","final","private","void","static","class","extends","implements",
+//  			"throws","try","catch","return","this","int","long","double","char","null","true","false"} ;
+//  	for (String string : commands) {
+//  		if(s.indexOf(string) > -1) {
+//  			 s = s.replaceAll(string, "<span style=\"color:#7f0055;\">"+string+"</span>") ;
+//  		}
+//    }
+	  return s;
+  }
 	
 	
 	

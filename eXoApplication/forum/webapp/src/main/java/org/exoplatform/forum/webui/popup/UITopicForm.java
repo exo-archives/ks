@@ -293,7 +293,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			message = message.trim() ;
 			t = message.length() ;
 			if(topicTitle.length() <= 3) {k = 0;}
-			if(t >= 20 && k != 0) {
+			if(t >= 3 && k != 0) {
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Post postNew = new Post();
 				postNew.setOwner(userName);
@@ -316,10 +316,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				if(k == 0) {
 					sms = "Thread Title" ;
-					if(t < 20) sms = "Thread Title and Message";
+					if(t < 3) sms = "Thread Title and Message";
 					Object[] args = { sms };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-				} else if(t < 20) {
+				} else if(t < 3) {
 					Object[] args = { "Message" };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
 				}
@@ -340,7 +340,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			message = message.trim() ;
 			t = message.length() ;
 			if(topicTitle.length() <= 3) {k = 0;}
-			if(t >= 20 && k != 0) {	
+			if(t >= 3 && k != 0) {	
 				UIFormInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
 				// uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
@@ -404,10 +404,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				if(k == 0) {
 					sms = "Thread Title" ;
-					if(t < 20) sms = "Thread Title and Message";
+					if(t < 3) sms = "Thread Title and Message";
 					Object[] args = { sms };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-				} else if(t < 20) {
+				} else if(t < 3) {
 					Object[] args = { "Message" };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
 				}

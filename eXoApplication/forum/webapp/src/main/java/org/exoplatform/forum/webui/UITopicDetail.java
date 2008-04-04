@@ -111,7 +111,6 @@ public class UITopicDetail extends UIForm {
 	private boolean isGopage = false ;
 	private boolean isEditTopic = false ;
 	private boolean isUpdatePageList = false ;
-	private boolean isLockRole = false ;
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
 	private List<Post>  posts ;
@@ -328,25 +327,28 @@ public class UITopicDetail extends UIForm {
 		return null ;
 	}
 	
-  @SuppressWarnings("unused")
-  private void setIsRole(boolean isLockRole) {
-    this.isLockRole = isLockRole ;
-  }
 	@SuppressWarnings("unused")
   private void setPostRules() {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
-		boolean isLock = this.forum.getIsLock() ;
+		boolean isLock = this.forum.getIsClosed() ;
+		if(!isLock)isLock = this.forum.getIsLock() ;
 		if(!isLock) {
-			if(this.topic != null) 
-				isLock = this.topic.getIsLock() ;
+			if(this.topic != null) { 
+				isLock = this.topic.getIsClosed() ;
+				if(!isLock) isLock = this.topic.getIsLock() ;
+			}
 		}
-    if(this.isLockRole) {
-      isLock = true;
-      this.isLockRole = false ;
-    }
+		if(!isLock && this.forum.getCreateTopicRole() != null && this.forum.getCreateTopicRole().length > 0) {
+			isLock = !ForumFormatUtils.isStringInStrings(this.forum.getCreateTopicRole(), this.userProfile.getUserId()) ;
+		}
+		if(!isLock && this.forum.getReplyTopicRole() != null && this.forum.getReplyTopicRole().length > 0) {
+			isLock = !ForumFormatUtils.isStringInStrings(this.forum.getReplyTopicRole(), this.userProfile.getUserId()) ;
+		}
+		if(!isLock && this.topic.getCanPost() != null && this.topic.getCanPost().length > 0) {
+			isLock = !ForumFormatUtils.isStringInStrings(this.topic.getCanPost(), this.userProfile.getUserId()) ;
+		}
 		postRules.setLock(isLock) ;
-		postRules.setMorderate(this.forum.getModerators()) ;
 		postRules.setUserProfile(this.userProfile) ;
 	}
 	
@@ -533,7 +535,7 @@ public class UITopicDetail extends UIForm {
 				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Open", args, ApplicationMessage.WARNING)) ;
@@ -550,7 +552,7 @@ public class UITopicDetail extends UIForm {
 				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Close", args, ApplicationMessage.WARNING)) ;
@@ -567,7 +569,7 @@ public class UITopicDetail extends UIForm {
 				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Locked", args, ApplicationMessage.WARNING)) ;
@@ -584,7 +586,7 @@ public class UITopicDetail extends UIForm {
 				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.UnLock", args, ApplicationMessage.WARNING)) ;

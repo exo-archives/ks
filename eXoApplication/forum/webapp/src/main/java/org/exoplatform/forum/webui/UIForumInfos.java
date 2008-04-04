@@ -45,10 +45,11 @@ public class UIForumInfos extends UIContainer	{
 	
 	public void setForum(Forum forum) {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		UIPostRules postRules = getChild(UIPostRules.class); 
-		postRules.setLock(forum.getIsLock()) ;
 		this.moderators = forum.getModerators() ;
-		postRules.setMorderate(this.moderators) ;
+		UIPostRules postRules = getChild(UIPostRules.class); 
+		boolean isLock = forum.getIsClosed() ;
+		if(!isLock) isLock = forum.getIsLock() ;
+		postRules.setLock(isLock) ;
 		postRules.setUserProfile(this.userProfile) ;
 	}
   

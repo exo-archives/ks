@@ -5,14 +5,13 @@
 	boolean isBan = userProfile.getIsBanned() ;
 	boolean isNotLogin= ForumSessionUtils.isAnonim();
 	boolean isLock = uicomponent.getIsLock() ;
-	boolean isMorderate = uicomponent.getIsMorderate() ;
 	String not = "";
 	if(isBan || isNotLogin) {
 		not = "not";
 	}
-	if(not == "" || not.length() < 0) {
+	if(not.length() == 0) {
 		if(isLock) {
-			if(!isMorderate) not = "not";
+			not = "not";
 		}
 	}
 %>

@@ -61,14 +61,4 @@ public class UIPostRules extends UIContainer	{
   private boolean getIsLock() {
     return this.isLock;
   }
-
-  public void setMorderate(String[]morderate) {
-    this.morderate = morderate;
-  }
-  
-  @SuppressWarnings("unused")
-  private boolean getIsMorderate() {
-  	if(userProfile.getUserRole() < 1) return true ;
-    return ForumFormatUtils.isStringInStrings(this.morderate, userProfile.getUserId()) ;
-  }
 }

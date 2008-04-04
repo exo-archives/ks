@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +32,6 @@ import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.portal.webui.application.UIApplication;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -53,7 +50,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
-import org.jgroups.demos.wb.UserInfoDialog;
 
 /**
  * Created by The eXo Platform SARL

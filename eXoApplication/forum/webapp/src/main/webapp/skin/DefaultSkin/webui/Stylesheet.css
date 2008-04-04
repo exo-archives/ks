@@ -306,8 +306,15 @@
 	width: 30px;
 }
 
+/*********************PopUp***************************/
 
-
+.UIForumPortlet .UIGroupMembershipSelector .UIBreadcumbs {
+	background: none;
+	border: none;
+	height: auto;
+	margin: 0px;
+	padding: 0px;
+}
 
 
 

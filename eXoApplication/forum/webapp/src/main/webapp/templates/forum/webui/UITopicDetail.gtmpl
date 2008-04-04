@@ -21,12 +21,14 @@
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	boolean isBanned = userProfile.getIsBanned() ;
+	boolean isAdmin = false ;
+	if(userProfile.getUserRole() == 0) isAdmin = true;
 	if(isBanned) {
 		isShowMenu = false ;
 	}
 	boolean canEdit = false ;
 	if(isShowMenu) {
-		if(userProfile.getUserRole() == 0) canEdit = true;
+		if(isAdmin) canEdit = true;
 		if(userProfile.getUserRole() == 1) {
 			String []moderatorsByUser = userProfile.getModerateForums() ;
 			if(moderatorsByUser == null || moderatorsByUser.length <= 0) canEdit = true;
@@ -42,12 +44,7 @@
 		if(!canEdit && forum != null) {
 			String []moderatorsByForum = forum.getModerators() ;
 			if(moderatorsByForum != null || moderatorsByForum.length > 0) {
-				for(user in moderatorsByForum) {
-					if(user.indexOf(userProfile.getUserId()) >= 0) {
-						canEdit = true;
-						break ;
-					}
-				}
+				canEdit = ForumFormatUtils.isStringInStrings(moderatorsByForum, userProfile.getUserId()) ;
 			}
 		}
 	}
@@ -57,18 +54,23 @@
 	if(!isLock && topic != null)isLock = topic.getIsLock() ;
 	if(!isLock && forum != null)isLock = forum.getIsClosed() ;
 	if(!isLock && topic != null)isLock = topic.getIsClosed() ;
-	
-	String[] listUsers = topic.getCanPost() ;
-	if(listUsers != null && listUsers.length > 0) {
-		if(!isBanned || !isLock) isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
-	}
-
 	if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
 	if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
 	
-	listUsers = topic.getCanView() ;
-	if(listUsers !=null && listUsers.length > 0) {
-		if(!canEdit)if(!isClosed)isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
+	if(!canEdit) {
+		String[] listUsers = topic.getCanPost() ;
+		if(listUsers != null && listUsers.length > 0) {
+			if(!isBanned || !isLock) {
+				isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
+			}
+		}
+	
+		listUsers = topic.getCanView() ;
+		if(listUsers !=null && listUsers.length > 0) {
+			if(!isClosed){ 
+			  isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
+			}
+		}
 	}
 %>
 <div class="UITopicDetail">
@@ -392,9 +394,11 @@
 		</div>
 		
 <!-- Start ContentContainer -->
-		<%	
+		<%
+		boolean isShowPost = true ;
+		if(isClosed && !canEdit)	isShowPost = false ;
 		List posts = uicomponent.getPostPageList() ;
-		if(posts != null && posts.size() > 0 && !isClosed) {
+		if(posts != null && posts.size() > 0 && isShowPost) {
 			int checked = 0 ;
 			for(post in posts) {
 				String owner = post.getOwner() ;
@@ -407,6 +411,7 @@
 				createdPostDate.setTime(createdPostDate.getTime() + setTime);
 				String createdDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
 				String message = ForumFormatUtils.convertCodeHTML(post.getMessage()) ;
+				//message = ForumFormatUtils.convetToCode(message) ;
 				String editBy = post.getModifiedBy() ;
 				Date modifileDate = post.getModifiedDate() ;
 				modifileDate.setTime(modifileDate.getTime() + setTime);
@@ -451,12 +456,11 @@
 									<% } else {%>
 									<div><strong>$owner</strong> has no post!</div>
 									<% } %>
-									<div>Location: Hanoi, Vietnam</div>
+									<div>Location: Hanoi, Vietnam </div>
 								</div>
 							</div>
 						</td>
 	<!-- End MemberContainer -->
-	
 	<!-- Start PostViewContainer -->
 						<td class="PostViewContainer">
 							

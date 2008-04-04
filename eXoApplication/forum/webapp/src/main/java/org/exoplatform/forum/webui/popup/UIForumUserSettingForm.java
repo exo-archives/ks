@@ -193,6 +193,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		}
 		return date ;
 	}
+	
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
 		return	findComponentById(name) ;
 	}

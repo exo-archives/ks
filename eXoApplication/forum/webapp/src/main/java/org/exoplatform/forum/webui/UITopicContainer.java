@@ -188,6 +188,8 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		if(!this.isGoPage) {
 			this.page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
 		}
+		long maxPage = this.pageList.getAvailablePage() ;
+		if(this.page > maxPage)this.page = maxPage ;
 		this.topicList = this.pageList.getPage(this.page);
 		for(Topic topic : this.topicList) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
