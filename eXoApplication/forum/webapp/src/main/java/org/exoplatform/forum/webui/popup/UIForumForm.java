@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -260,6 +261,34 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     } catch(Exception e) {}
     return userValid.toArray(new String[]{}) ;
   }
+  
+  private String[] addStringToString(String[] input, String[] output) {
+    if(output.length > 0) {
+      if(input.length > 0) {
+        try{
+          String result = new String() ;
+          for(String str : output) {
+            if(str.trim().length() > 0) {
+              if(result != null && result.trim().length() > 0) result += "," ;
+              result += str.trim() ;
+            }
+          }
+          for(String string : input) {
+            if(string != null && string.trim().length() > 0 && !ForumFormatUtils.isStringInStrings(output, string)) {
+              if(result.trim().length() > 0) result += "," ;
+              result += string ;
+            }
+          }
+          output = ForumFormatUtils.splitForForum(result) ;
+        } catch (Exception e) {
+          e.printStackTrace() ;
+        }
+      } else {
+        output = input ;
+      }
+    }
+    return output ;
+  }
 	
 	static	public class SaveActionListener extends EventListener<UIForumForm> {
     public void execute(Event<UIForumForm> event) throws Exception {
@@ -322,6 +351,9 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
       if(uiForm.userInvalid != null && uiForm.userInvalid.trim().length() > 0) {
         throw new MessageException(new ApplicationMessage("UIForumForm.sms.userhavenotfound", new String[]{uiForm.userInvalid}, ApplicationMessage.WARNING)) ;
       }
+      setPostable = uiForm.addStringToString(setTopicable, setPostable);
+      setViewer = uiForm.addStringToString(setTopicable, setViewer) ;
+      setViewer = uiForm.addStringToString(setPostable, setViewer) ;
       
 			newForum.setModerators(setModerator);
 			newForum.setCreateTopicRole(setPostable);

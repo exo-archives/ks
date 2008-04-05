@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -431,13 +432,22 @@ public class UICategory extends UIForm	{
     public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource();
 			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+      Forum forum = uiCategory.getForum(forumId) ;
+      UserProfile userProfile = uiCategory.getUserProfile() ;
+      if(userProfile.getUserRole() > 1) {
+        String[] viewForumRole = forum.getViewForumRole() ;
+        if(viewForumRole != null && viewForumRole.length > 0 
+            && !ForumFormatUtils.isStringInStrings(forum.getViewForumRole(), userProfile.getUserId())){
+            throw new MessageException(new ApplicationMessage("UICategory.sms.havenotviewpermission", null, ApplicationMessage.WARNING)) ;
+        }
+      }
 			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(2);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			uiForumContainer.setIsRenderChild(true) ;
-			uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(forumId));
+			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-			uiTopicContainer.setUpdateForum(uiCategory.categoryId, uiCategory.getForum(forumId)) ;
+			uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

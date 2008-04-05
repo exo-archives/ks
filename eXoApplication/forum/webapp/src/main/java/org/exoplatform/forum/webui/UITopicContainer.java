@@ -98,7 +98,12 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	private boolean isUpdate = false;
 	private long maxTopic = 10 ;
 	private long maxPost = 10 ;
+  @SuppressWarnings("unused")
+  private boolean canAddNewThread = false ;
+  @SuppressWarnings("unused")
+  private boolean canViewThreads = false ;
 	private UserProfile userProfile = null;
+  
 	public UITopicContainer() throws Exception {
 		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
 		addUIFormInput( new UIFormStringInput("gopage2", null)) ;
@@ -112,7 +117,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
-	
+  
 	public void setUpdateForum(String categoryId, Forum forum) throws Exception {
 		this.forum = forum ;
 		this.forumId = forum.getId() ;
@@ -134,7 +139,11 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
 		}
 	}
-	
+
+  public boolean getCanAddNewThread(){
+    return this.canAddNewThread ;
+  }
+  
 	private Forum getForum() throws Exception {
 		if(this.isUpdate) {
 			this.forum = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
@@ -149,8 +158,24 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		String isApprove = "" ;
+		long role = this.userProfile.getUserRole() ;
+    
+		if(role <= 1) {
+		  this.canAddNewThread = true ;
+      this.canViewThreads = true ;
+		} else {
+		  String userId = this.userProfile.getUserId() ;
+      if(ForumFormatUtils.isStringInStrings(this.forum.getCreateTopicRole(), userId))
+		    this.canAddNewThread = true ;
+		  else
+		    this.canAddNewThread = false ;
+      if(ForumFormatUtils.isStringInStrings(this.forum.getViewForumRole(), userId))
+        this.canViewThreads = true ;
+      else
+        this.canViewThreads = false ;
+		}
+    
 		if(this.forum.getIsModerateTopic()) {
-			long role = this.userProfile.getUserRole() ;
 			if(role >=2) isApprove = "true" ;
 			if(role == 1) {
 				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
@@ -163,6 +188,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		if(maxTopic > 0) this.maxTopic = maxTopic ;
 		this.pageList.setPageSize(this.maxTopic);
 		this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
+    
 	}
 	
 	@SuppressWarnings("unused")

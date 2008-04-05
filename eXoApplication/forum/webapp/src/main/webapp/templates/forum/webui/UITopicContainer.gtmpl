@@ -47,13 +47,13 @@
 		}
 	}
 	boolean isLock = forum.getIsLock() ;
-	if(!isLock)isLock = forum.getIsClosed() ;
+	if(!isLock) isLock = forum.getIsClosed() ;
 	boolean isApproveTopic = forum.getIsModerateTopic();
 %>
 <div class="UITopicContainer">
 	<% uiform.begin() %>
 	<div class="ButtomAndPageListContainer">
-	<% if(isLock || !isShowMenu) { %>
+	<% if(isLock || !isShowMenu || !uicomponent.canAddNewThread) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -63,7 +63,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu) { %>
+							<% if(isLock || !isShowMenu || !uicomponent.canAddNewThread) { %>
 									<div class="IconButton LockIcon" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span>New Thread</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddTopic")%>">
@@ -325,131 +325,143 @@
 						</thead>
 						<tbody>
 							<% 
-							List topics = uicomponent.getTopicPageLits() ;
-								String classRow = "whileRow";
-								int i = 0;
-								 for(topic in topics){
-									boolean isLockTopic = topic.getIsLock() ;
-									if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
-									if(topic.getIsClosed()) {
-										if(!canEdit) {
-											continue ;
-										}
-									}
-									if(i%2 == 0) classRow = "whileRow";
-									else classRow = "OddRow";
-									String topicId = topic.getId();
-									JCRPageList pageList = uicomponent.getPageListPost(topicId) ;
-									long max_page = pageList.getAvailablePage() ;
-									String iconClassTopic = topic.getIcon();
-									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
-									String topicTitle = topic.getTopicName();
-									String topicBy = topic.getOwner();
-									String postNewBy = topic.getLastPostBy() ;
-									Date postDate = topic.getLastPostDate() ;
-									postDate.setTime(postDate.getTime() + setTime);
-									String lastPostDate = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
-									String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
-									if(titlePost.length() > 100) {
-										titlePost = titlePost.substring(0, 99) + "...";
-									}
-									String attachment = String.valueOf(topic.getNumberAttachment());
-									String postCount = String.valueOf(topic.getPostCount());
-									String postView = String.valueOf(topic.getViewCount());
-									String titleTopicStatus = "Hot thread with new post" ;
-									String iconTopicStatus = "HotThreadNewPost" ;
-									if(isLockTopic || isLock) {
-										iconTopicStatus = "HotThreadNewLockPost" ;
-										titleTopicStatus = "Hot thread with new post lock" ;
-									}
-									String number = "1";
-									boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
-									String title = "";
-									if(isReadTopic) {
-										title = "TitleNorman";
-									} else {
-										title = "TitleBold";
-									}
-									String approved = "" ;
-									if(canEdit && isApproveTopic){
-										if(!topic.getIsApproved()) approved = "(<span style='color:#f77617;'>This thread is pending for approval !</span>)" ;
-									}
-							%>
-								<tr class="$classRow">
-									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
-									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
-									<td >
-										<div >
-										<% if(topic.getIsSticky()) {%>
-											<span class="Text StickyIcon">Sticky:</span>
-										<% } %>
-											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
-											<% if(max_page > 1) { %>
-											<span>(</span>	
-											<%	int t = 1;
-												while(t <= max_page) {
-												if(t <= 5) { 
-													number = String.valueOf(t) ;
-											%>
-											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">$number</a>
-											<% }
-											t = t + 1 ;
+							if(uicomponent.canViewThreads) {
+								List topics = uicomponent.getTopicPageLits() ;
+									String classRow = "whileRow";
+									int i = 0;
+									 for(topic in topics){
+										boolean isLockTopic = topic.getIsLock() ;
+										if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
+										if(topic.getIsClosed()) {
+											if(!canEdit) {
+												continue ;
 											}
-											if(max_page > 5) { 
-												number = String.valueOf(max_page) ;
+										}
+										if(i%2 == 0) classRow = "whileRow";
+										else classRow = "OddRow";
+										String topicId = topic.getId();
+										JCRPageList pageList = uicomponent.getPageListPost(topicId) ;
+										long max_page = pageList.getAvailablePage() ;
+										String iconClassTopic = topic.getIcon();
+										if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
+										String topicTitle = topic.getTopicName();
+										String topicBy = topic.getOwner();
+										String postNewBy = topic.getLastPostBy() ;
+										Date postDate = topic.getLastPostDate() ;
+										postDate.setTime(postDate.getTime() + setTime);
+										String lastPostDate = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
+										String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
+										if(titlePost.length() > 100) {
+											titlePost = titlePost.substring(0, 99) + "...";
+										}
+										String attachment = String.valueOf(topic.getNumberAttachment());
+										String postCount = String.valueOf(topic.getPostCount());
+										String postView = String.valueOf(topic.getViewCount());
+										String titleTopicStatus = "Hot thread with new post" ;
+										String iconTopicStatus = "HotThreadNewPost" ;
+										if(isLockTopic || isLock) {
+											iconTopicStatus = "HotThreadNewLockPost" ;
+											titleTopicStatus = "Hot thread with new post lock" ;
+										}
+										String number = "1";
+										boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
+										String title = "";
+										if(isReadTopic) {
+											title = "TitleNorman";
+										} else {
+											title = "TitleBold";
+										}
+										String approved = "" ;
+										if(canEdit && isApproveTopic){
+											if(!topic.getIsApproved()) approved = "(<span style='color:#f77617;'>This thread is pending for approval !</span>)" ;
+										}
+								%>
+									<tr class="$classRow">
+										<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
+										<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
+										<td >
+											<div >
+											<% if(topic.getIsSticky()) {%>
+												<span class="Text StickyIcon">Sticky:</span>
+											<% } %>
+												<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
+												<% if(max_page > 1) { %>
+												<span>(</span>	
+												<%	int t = 1;
+													while(t <= max_page) {
+													if(t <= 5) { 
+														number = String.valueOf(t) ;
+												%>
+												<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">$number</a>
+												<% }
+												t = t + 1 ;
+												}
+												if(max_page > 5) { 
+													number = String.valueOf(max_page) ;
+												%>
+												<span>... <a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">Last page</a> )</span>
+												<%} else {%>
+												<span>)</span>
+												<%} 
+												} %>
+												$approved
+											</div>
+											<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
+										</td>
+										<td class="Tdbox"><div class="StatusIcon ModeratedIcon" title="2 Moderated posts"><span></span></div></td>
+										<td class="Tdbox">$attachment</td>
+										<td class="Tdbox">
+											<div class="RatingInfoContainer">
+											<% String[] classNames = uicomponent.getStarNumber(topic) ; 
+												 String SumVote = classNames[5] ;
 											%>
-											<span>... <a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">Last page</a> )</span>
-											<%} else {%>
-											<span>)</span>
-											<%} 
-											} %>
-											$approved
-										</div>
-										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
-									</td>
-									<td class="Tdbox"><div class="StatusIcon ModeratedIcon" title="2 Moderated posts"><span></span></div></td>
-									<td class="Tdbox">$attachment</td>
-									<td class="Tdbox">
-										<div class="RatingInfoContainer">
-										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
-											 String SumVote = classNames[5] ;
+						 						<div class="AvgRatingImages" title="Thread Rating: $SumVote votes, 5 average">
+						 					<%	
+												for(className in classNames) {
+													if(className.equals("star")) className = "Voted" ;
+													if(className.equals("notStar")) className = "Unvoted" ;
+													if(className.equals("halfStar")) className = "HalfVoted" ;
+													if(className.equals(classNames[5])) break ;
+											%>
+									 				<div class="VoteIcon $className"><span/></div>
+											 <% } %>
+								 					<div style="clear: left;"><span></span></div>
+					 							</div>
+						 					</div>
+										</td>
+										<td class="Tdbox">
+										<% List tags = uicomponent.getTagsByTopic(topic.getTagId()); 
+											for(tag in tags) {
+												String color = tag.getColor() ;
+												String description = tag.getDescription() ;
 										%>
-					 						<div class="AvgRatingImages" title="Thread Rating: $SumVote votes, 5 average">
-					 					<%	
-											for(className in classNames) {
-												if(className.equals("star")) className = "Voted" ;
-												if(className.equals("notStar")) className = "Unvoted" ;
-												if(className.equals("halfStar")) className = "HalfVoted" ;
-												if(className.equals(classNames[5])) break ;
-										%>
-								 				<div class="VoteIcon $className"><span/></div>
-										 <% } %>
-							 					<div style="clear: left;"><span></span></div>
-				 							</div>
-					 					</div>
-									</td>
-									<td class="Tdbox">
-									<% List tags = uicomponent.getTagsByTopic(topic.getTagId()); 
-										for(tag in tags) {
-											String color = tag.getColor() ;
-											String description = tag.getDescription() ;
-									%>
-										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$description"><span></span></div></a>
-									<% } %>
-									</td>
-								 	<td >
-								 		<div class="DateTime">$lastPostDate</div>
-								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
-										<div class="PostInfos LastPostInfos">by <a href="#" class="PostBy">$postNewBy</a></div>
-										<div style="clear: right;"><span></span></div>
-									</td>
-								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
-									<td class="Tdbox" align="center">$postView</td>
-									<% if(canEdit) { %>
-									<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><%uicomponent.renderChild(topic.getId())%></td>
-					 				<% } %>
-					 			</tr>
-						 	<% i = i + 1;} %>
+											<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$description"><span></span></div></a>
+										<% } %>
+										</td>
+									 	<td >
+									 		<div class="DateTime">$lastPostDate</div>
+									 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
+											<div class="PostInfos LastPostInfos">by <a href="#" class="PostBy">$postNewBy</a></div>
+											<div style="clear: right;"><span></span></div>
+										</td>
+									 	<td class="Tdbox" align="center"><div>$postCount</div></td>
+										<td class="Tdbox" align="center">$postView</td>
+										<% if(canEdit) { %>
+										<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><%uicomponent.renderChild(topic.getId())%></td>
+						 				<% } %>
+						 			</tr>
+						 	<% 
+						 			i = i + 1;} 
+						 		} else {
+						 	%>
+						 			<tr>
+						 				<td colspan="10" align="center">
+						 					<div style="margin: 15px 0px 20px 0px"><b>You have not permission to view topics in this forum</b></div>
+						 				</td>
+						 			</tr>
+						 	<%
+						 		}
+						 	%>
 						</tbody>
 					</table>							
 				</div>
@@ -458,7 +470,7 @@
 		</div>
 	</div>
 	<div class="ButtomAndPageListContainer">
-		<% if(isLock || !isShowMenu) { %>
+		<% if(isLock || !isShowMenu  || !uicomponent.canAddNewThread) { %>
 			<div class="LockActionForum UIActionForum" style="float: left;">
 		<% } else { %>
 			<div class="UIActionForum" style="float: left;">
@@ -468,7 +480,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu) { %>
+							<% if(isLock || !isShowMenu || !uicomponent.canAddNewThread) { %>
 								<div class="IconButton LockIcon" title="Forum is Closed for Posting"><span class="LockLabel"></span>New Thread</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddTopic")%>">

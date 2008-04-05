@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -383,6 +384,27 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				topicNew.setIcon(uiIconSelector.getSelectedIcon());
 				//topicNew.setAttachmentFirstPost(0) ;
+        if(canView.length > 0) {
+          String output = new String() ;
+          for(String str : canView) {
+            if(str.trim().length() > 0) {
+              if(output != null && output.trim().length() > 0) output += "," ;
+              output += str.trim() ;
+            }
+          }
+          if(canPost.length > 0) {
+            for(String string : canPost) {
+              if(string != null && string.trim().length() > 0 && !ForumFormatUtils.isStringInStrings(canView, string)) {
+                if(output.trim().length() > 0) output += "," ;
+                output += string ;
+              }
+            }
+            canView = ForumFormatUtils.splitForForum(output) ;
+          } else {
+            canView = canPost ;
+          }
+        }
+        
 				topicNew.setCanView(canView);
 				topicNew.setCanPost(canPost);
 				
