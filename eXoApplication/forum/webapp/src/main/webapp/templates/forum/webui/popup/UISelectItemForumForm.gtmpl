@@ -37,11 +37,7 @@
 	      		String forumName = forum.getName() ;
 	      		iconClass = "SmallGrayMinus" ;
 	      		display = "display:none;" ;
-	      		//selectForum = uicomponent.getSelectForum(forum.getId()) ;
-	      		//if(selectForum){ 
-	      		//	display = "display:block;" ;
 	      			iconClass = "SmallGrayPlus" ;
-	      		//}
 	      %>
 				  <div class="Node">
 				  	<div style="float:left"><%uicomponent.renderChild(forum.getPath())%></div>
