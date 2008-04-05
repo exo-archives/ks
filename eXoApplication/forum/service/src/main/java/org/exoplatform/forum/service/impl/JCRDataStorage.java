@@ -954,17 +954,25 @@ public class JCRDataStorage{
 				if(attachments != null) { 
 					Iterator<ForumAttachment> it = attachments.iterator();
 					while (it.hasNext()) {
-						BufferAttachment file = (BufferAttachment)it.next();
-						Node nodeFile = null;
-						if (!postNode.hasNode(file.getName())) nodeFile = postNode.addNode(file.getName(), "nt:file");
-						else nodeFile = postNode.getNode(file.getName());
-						Node nodeContent = null;
-						if (!nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
-						else nodeContent = nodeFile.getNode("jcr:content");
-						nodeContent.setProperty("jcr:mimeType", file.getMimeType());
-						nodeContent.setProperty("jcr:data", file.getInputStream());
-						nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
 						++ numberAttach ;
+						BufferAttachment file = null;
+						try {
+							file = (BufferAttachment)it.next();
+							Node nodeFile = null;
+							if (!postNode.hasNode(file.getName())) nodeFile = postNode.addNode(file.getName(), "nt:file");
+							else nodeFile = postNode.getNode(file.getName());
+							Node nodeContent = null;
+							if (!nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
+							else {
+								continue ;
+								//nodeContent = nodeFile.getNode("jcr:content");
+							}
+							nodeContent.setProperty("jcr:mimeType", file.getMimeType());
+							nodeContent.setProperty("jcr:data", file.getInputStream());
+							nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+						} catch (Exception e) {
+							//e.printStackTrace() ;
+						}
 					}
 				}				
 				if(isNew) {

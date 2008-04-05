@@ -294,4 +294,18 @@ UIForumPortlet.prototype.setMenuTextAreaMutil = function(ParendId) {
 	}
 };
 
+UIForumPortlet.prototype.openPicture = function(obj,id) {
+	var img = document.getElementById(id) ;
+	if(img != null) {
+		if(img.offsetHeight <= 101) {
+			img.style.height = "300px" ;
+			img.className = "Icon MiniView" ;
+		} else {
+			img.style.height = "100px" ;
+			img.className = "Icon MaxView" ;
+		}
+	}
+};
+
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

@@ -27,7 +27,7 @@ import java.io.InputStream;
  */
 public class BufferAttachment extends ForumAttachment {
 	
-	private byte[] imageBytes ;
+	private byte[] bytes ;
 	
 //	public InputStream getInputStream()throws Exception{
 //		/*DownloadService downloadService = (DownloadService)PortalContainer.getComponent(DownloadService.class) ;
@@ -36,15 +36,15 @@ public class BufferAttachment extends ForumAttachment {
 //		return inputStream ; 
 //	}
   public InputStream getInputStream() throws Exception { 
-    if(imageBytes != null) return new ByteArrayInputStream(imageBytes) ;
+    if(bytes != null) return new ByteArrayInputStream(bytes) ;
     return null ;
   }
 //	public void setInputStream(InputStream is){ inputStream = is ; }
   public void setInputStream(InputStream input) throws Exception {
     if (input != null) {
-      imageBytes = new byte[input.available()] ; 
-      input.read(imageBytes) ;
+      bytes = new byte[input.available()] ; 
+      input.read(bytes) ;
     }
-    else imageBytes = null ;
+    else bytes = null ;
   }
 }

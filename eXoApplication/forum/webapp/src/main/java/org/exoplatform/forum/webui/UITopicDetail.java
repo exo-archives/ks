@@ -121,7 +121,7 @@ public class UITopicDetail extends UIForm {
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
 	private List<Post>  posts ;
-	
+	private boolean isEdit = false ;
 	private long maxPost = 10 ;
 	private UserProfile userProfile = null;
 	private String userName = " " ;
@@ -349,6 +349,10 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
+  private void setIsEdit( boolean isEdit) {
+		this.isEdit = isEdit ;
+	}
+	@SuppressWarnings("unused")
   private void setPostRules() {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
@@ -361,13 +365,13 @@ public class UITopicDetail extends UIForm {
 			}
 		}
 		if(!isLock && this.forum.getCreateTopicRole() != null && this.forum.getCreateTopicRole().length > 0) {
-			isLock = !ForumFormatUtils.isStringInStrings(this.forum.getCreateTopicRole(), this.userProfile.getUserId()) ;
+			if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.forum.getCreateTopicRole(), this.userProfile.getUserId()) ;
 		}
 		if(!isLock && this.forum.getReplyTopicRole() != null && this.forum.getReplyTopicRole().length > 0) {
-			isLock = !ForumFormatUtils.isStringInStrings(this.forum.getReplyTopicRole(), this.userProfile.getUserId()) ;
+			if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.forum.getReplyTopicRole(), this.userProfile.getUserId()) ;
 		}
 		if(!isLock && this.topic.getCanPost() != null && this.topic.getCanPost().length > 0) {
-			isLock = !ForumFormatUtils.isStringInStrings(this.topic.getCanPost(), this.userProfile.getUserId()) ;
+			if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.topic.getCanPost(), this.userProfile.getUserId()) ;
 		}
 		postRules.setLock(isLock) ;
 		postRules.setUserProfile(this.userProfile) ;

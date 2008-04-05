@@ -100,7 +100,7 @@
 				</requiredPrimaryTypes>
 			</childNodeDefinition>		
 		</childNodeDefinitions>
- 	 	</nodeType> 
+ 	</nodeType> 
  	 
 	<nodeType name="exo:topic" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>

@@ -163,8 +163,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
 			} else {//edit
 				getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getSubject()) ;
-//				this.attachments_ = post.getAttachments();
-//				this.refreshUploadFileList();
+				if(post.getAttachments() != null && post.getAttachments().size() > 0) {
+					this.attachments_ = post.getAttachments();
+					this.refreshUploadFileList();
+				}
 				getChild(UIFormWYSIWYGInput.class).setValue(message);
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
 			}
@@ -303,6 +305,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			for (ForumAttachment att : uiPostForm.attachments_) {
 				if (att.getId().equals(attFileId)) {
 					attachfile = (BufferAttachment) att;
+					break;
 				}
 			}
 			uiPostForm.removeFromUploadFileList(attachfile);

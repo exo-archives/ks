@@ -203,7 +203,11 @@
 	cursor: pointer;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .Action .View {
+.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MaxView {
+	background: url('icons/16x16/ViewIcon.gif') no-repeat left center;
+}
+
+.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MiniView {
 	background: url('icons/16x16/ViewIcon.gif') no-repeat left center;
 }
 

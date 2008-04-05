@@ -16,7 +16,6 @@
  */
 package org.exoplatform.forum.service;
 
-import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
  * Created by The eXo Platform SAS

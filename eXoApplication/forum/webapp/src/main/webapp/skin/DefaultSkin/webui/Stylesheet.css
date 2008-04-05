@@ -316,7 +316,12 @@
 	padding: 0px;
 }
 
-
+.UIForumPortlet .ViewImg {
+	width: 700px;
+	height: auto ;
+	min-height: 200px;
+	
+}
 
 
 

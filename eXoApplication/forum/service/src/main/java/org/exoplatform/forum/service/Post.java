@@ -42,7 +42,7 @@ public class Post {
 	private String icon; 
 	private boolean isApproved = false ;
 	private boolean isHidden = false ;
-	private List<ForumAttachment> attachments ;
+	private List<ForumAttachment> attachments = null ;
 	
 	
 	public Post() {
