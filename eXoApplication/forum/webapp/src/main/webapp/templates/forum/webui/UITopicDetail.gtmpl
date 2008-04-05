@@ -64,7 +64,6 @@
 				isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
 			}
 		}
-	
 		listUsers = topic.getCanView() ;
 		if(listUsers !=null && listUsers.length > 0) {
 			if(!isClosed){ 
