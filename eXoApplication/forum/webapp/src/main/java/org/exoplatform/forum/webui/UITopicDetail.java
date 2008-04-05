@@ -225,6 +225,20 @@ public class UITopicDetail extends UIForm {
 	public void setUpdateForum(Forum forum) throws Exception {
 		this.forum = forum ;
 	}
+  
+  @SuppressWarnings("unused")
+  private boolean isCanPostReply(){
+    UserProfile userProfile = this.getUserProfile() ;
+    if(userProfile.getUserRole() > 1) {
+      String[] userCanView = this.forum.getCreateTopicRole() ;
+      if(userCanView != null && userCanView.length > 0) {
+        if(!ForumFormatUtils.isStringInStrings(userCanView, userProfile.getUserId())) {
+          return false ;
+        }
+      }
+    }
+    return true ;
+  }
 	
 	@SuppressWarnings("unused")
   private Forum getForum() throws Exception {

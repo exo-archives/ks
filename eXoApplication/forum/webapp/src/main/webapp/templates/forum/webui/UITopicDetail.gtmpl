@@ -76,7 +76,7 @@
 <% uiform.begin() %>
 	<% if(topic != null) {%>
 	<div class="ButtomAndPageListContainer">
-	<% if(isLock || !isShowMenu) { %>
+	<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -86,7 +86,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu) { %>
+							<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
 									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
@@ -651,7 +651,7 @@
 	</div>	
 <!-- End PostsInThreadContainer -->
 	<div class="ButtomAndPageListContainer">
-		<% if(isLock || !isShowMenu) { %>
+		<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -661,7 +661,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu) { %>
+							<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
 									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
