@@ -33,7 +33,6 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
@@ -207,6 +206,7 @@ public class UITopicPoll extends UIForm	{
 	}
 	
 	static public class VoteActionListener extends EventListener<UITopicPoll> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
       Poll poll = topicPoll.poll_ ; 
@@ -286,7 +286,7 @@ public class UITopicPoll extends UIForm	{
         UIForumCheckBoxInput forumCheckBox = null ;
         List<String> listValue = new ArrayList<String>() ;
         for(UIComponent child : children) {
-          if(child instanceof UIForumCheckBoxInput) {
+          if(child instanceof UIForumCheckBoxInput){
             forumCheckBox = ((UIForumCheckBoxInput)child) ;
             if(forumCheckBox.isChecked()) {
               listValue.add(forumCheckBox.getName()) ;

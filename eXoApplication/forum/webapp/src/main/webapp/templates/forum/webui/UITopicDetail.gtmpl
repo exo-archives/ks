@@ -462,15 +462,15 @@
 															<div class="UIRightPopupMenuContainer">
 																<%
 																	String[] menuViewInfos = ["ViewPublicUserInfo","ViewPostedByUser", "ViewThreadByUser"] ;
-																	String[] labelViews = ["View public info", "View posted by user", "View thread by user"] ;
-																	int i = 0 ;
-																	for(String viewAction : menuViewInfos ) {
+																	for(viewAction in menuViewInfos) {
 																		String linkView = uicomponent.event(viewAction, owner) ;
-																		//String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-																		String itemLavelView = labelViews[i++] ;
+																		String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																		if(!viewAction.equals("ViewPublicUserInfo")) itemLabelView = itemLabelView + " " + owner ;
 																%>
-																		<a class="MenuItem" href="$linkView" style="margin: 0px 5px 0px 3px">
-																			$itemLavelView
+																		<a class="MenuItem" href="$linkView">
+																			<div class="ItemIcon">
+																				$itemLabelView
+																			</div>
 																		</a>
 																<%
 																	}

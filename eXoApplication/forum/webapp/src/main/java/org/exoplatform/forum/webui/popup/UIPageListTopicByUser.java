@@ -62,7 +62,6 @@ public class UIPageListTopicByUser extends UIContainer{
   private UserProfile userProfile ;
   private String userName = new String() ;
 	public UIPageListTopicByUser() throws Exception {
-    this.userName = null ;
 		addChild(UIForumPageIterator.class, null, "PageListTopicByUser") ;
   }
 	
@@ -77,8 +76,6 @@ public class UIPageListTopicByUser extends UIContainer{
   
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Topic> getTopicsByUser() throws Exception {
-    if(this.userName == null)
-      this.userName = ((UIModeratorManagementForm)this.getParent()).getProfile().getUserId() ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		JCRPageList pageList  = forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), this.userName) ;
 		forumPageIterator.updatePageList(pageList) ;

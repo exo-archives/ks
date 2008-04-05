@@ -91,7 +91,6 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
       if(popupContainer == null) {
         UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
         forumPortlet.cancelAction() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
       } else {
         popupContainer.getChild(UIPopupAction.class).deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;

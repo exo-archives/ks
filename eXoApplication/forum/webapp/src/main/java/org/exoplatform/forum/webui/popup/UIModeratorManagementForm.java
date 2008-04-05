@@ -355,6 +355,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		inputSetBan.addUIFormInput(createdDateBan);
 		addUIFormInput(inputSetBan);
 		addChild(UIPageListTopicByUser.class, null, null) ;
+		getChild(UIPageListTopicByUser.class).setUserName(this.userProfile.getUserId()) ;
 		addChild(UIPageListPostByUser.class, null, null) ;
 	}
 	
