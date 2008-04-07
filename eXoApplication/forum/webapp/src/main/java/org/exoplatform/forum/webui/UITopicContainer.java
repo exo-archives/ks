@@ -160,6 +160,8 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
+    this.canViewThreads = true ;
+    this.canAddNewThread = true ;
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		String isApprove = "" ;
 		long role = this.userProfile.getUserRole() ;
