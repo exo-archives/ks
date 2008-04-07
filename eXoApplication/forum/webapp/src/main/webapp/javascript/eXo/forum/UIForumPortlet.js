@@ -235,16 +235,20 @@ UIForumPortlet.prototype.cancel = function(evt) {
 } ;
 
 UIForumPortlet.prototype.goLastPost = function(idLastPost) {
+//	alert(idLastPost);
 	var isDesktop = document.getElementById('UIPageDesktop') ;
 	if(isDesktop === null){
 		if(idLastPost === "false") {
 				script:scroll(0,0);
+				var postForm = document.getElementById('banner') ;
+				if(postForm != null) {
+					postForm.scrollIntoView(true) ;
+				}
 		} else {
 			var obj = document.getElementById(idLastPost);
 			obj.scrollIntoView(true);
 		}
 	}
-			//document.getElementById('UIForumContainer').scrollIntoView(true) ;
 };
 
 UIForumPortlet.prototype.setEnableInput = function() {

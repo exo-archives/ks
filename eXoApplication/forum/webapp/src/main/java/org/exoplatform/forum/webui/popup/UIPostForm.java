@@ -197,7 +197,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			if(message != null && message.length() > 0) message = message.trim() ;
 			t = message.length() ;
 			if(postTitle.length() <= 3) {k = 0;}
-			if(t >= 20 && k != 0) {	
+			if(t >= 3 && k != 0) {	
 				Post post = new Post() ;
 				post.setSubject(postTitle.trim()) ;
 				post.setMessage(message) ;
@@ -220,9 +220,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String[] args = { ""} ;
 				if(k == 0) {
 					args = new String[] { "Thread Title" } ;
-					if(t < 20) args = new String[] { "Thread Title and Message" } ;
+					if(t < 3) args = new String[] { "Thread Title and Message" } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
-				} else if(t < 20) {
+				} else if(t < 3) {
 					args = new String[] { "Message" } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 				}
@@ -242,7 +242,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			//message = message.replaceAll("[QUOTE][/QUOTE]", "").replaceAll('['+"CODE][/CODE"+']', "") ;
 			t = ForumFormatUtils.clearQuote(message).length() ;
 			if(postTitle.length() <= 3) {k = 0;}
-			if(t >= 20 && k != 0) {	
+			if(t >= 3 && k != 0) {	
 				Post post = new Post() ;
 				post.setSubject(postTitle.trim()) ;
 				post.setMessage(message) ;
@@ -276,9 +276,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String[] args = { ""} ;
 				if(k == 0) {
 					args = new String[] { "Thread Title" } ;
-					if(t < 20) args = new String[] { "Thread Title and Message" } ;
+					if(t < 3) args = new String[] { "Thread Title and Message" } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
-				} else if(t < 20) {
+				} else if(t < 3) {
 					args = new String[] { "Message" } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 				}

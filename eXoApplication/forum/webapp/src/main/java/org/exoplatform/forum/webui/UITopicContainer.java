@@ -99,9 +99,9 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	private long maxTopic = 10 ;
 	private long maxPost = 10 ;
   @SuppressWarnings("unused")
-  private boolean canAddNewThread = false ;
+  private boolean canAddNewThread = true ;
   @SuppressWarnings("unused")
-  private boolean canViewThreads = false ;
+  private boolean canViewThreads = true ;
 	private UserProfile userProfile = null;
   
 	public UITopicContainer() throws Exception {
@@ -164,27 +164,18 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		String isApprove = "" ;
 		long role = this.userProfile.getUserRole() ;
 		String userId = this.userProfile.getUserId() ;
-    
-		if(role <= 1 || ForumFormatUtils.isStringInStrings(this.forum.getModerators(), userId)) {
-		  this.canAddNewThread = true ;
-      this.canViewThreads = true ;
-		} else {
-      String[] canCreateTopic = this.forum.getCreateTopicRole() ;
-      if( canCreateTopic == null || canCreateTopic.length < 1  || ForumFormatUtils.isStringInStrings(canCreateTopic, userId))
-		    this.canAddNewThread = true ;
-		  else
-		    this.canAddNewThread = false ;
-      String[] canViewForum = this.forum.getViewForumRole() ;
-      if(canViewForum == null || canViewForum.length < 1 || ForumFormatUtils.isStringInStrings(canViewForum, userId))
-        this.canViewThreads = true ;
-      else
-        this.canViewThreads = false ;
-		}
-    
-		if(this.forum.getIsModerateTopic()) {
+    String[] strings = this.forum.getCreateTopicRole() ;
+    if( strings != null && strings.length > 0)
+	    this.canAddNewThread = ForumFormatUtils.isStringInStrings(strings, userId) ;
+
+    strings = this.forum.getViewForumRole() ;
+    if(strings != null && strings.length > 0)
+      this.canViewThreads = ForumFormatUtils.isStringInStrings(strings, userId) ;
+
+     if(this.forum.getIsModerateTopic()) {
 			if(role >=2) isApprove = "true" ;
 			if(role == 1) {
-				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), userId)){
 					isApprove = "true" ;
 				}
 			}
