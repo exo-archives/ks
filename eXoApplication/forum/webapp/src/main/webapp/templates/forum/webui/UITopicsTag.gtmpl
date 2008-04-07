@@ -13,6 +13,10 @@
 	String tagName = tag_.getName() ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String description = tag_.getDescription() ;
+	if(description == null || description.length() <=0) {
+		description = " ";
+	}
 %>
 <div class="UIForumContainer">
 	<div class="UIForumDescription">
@@ -20,7 +24,7 @@
 			<div class="RightDescription">
 				<div class="CenterDescription">
 					<span class="NameForum">Description:</span> 
-					<span class="Description"><%=tag_.getDescription()%></span>
+					<span class="Description">$description</span>
 				</div>
 			</div>
 		</div>
@@ -208,9 +212,9 @@
 									<% List tags = uicomponent.getTagsByTopic(topic.getTagId()); 
 										for(tag in tags) {
 											String color = tag.getColor() ;
-											String description = tag.getDescription() ;
+											String tagName = tag.getName();
 									%>
-										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$description"><span></span></div></a>
+										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$tagName"><span></span></div></a>
 									<% } %>
 									</td>
 								 	<td >

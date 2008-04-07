@@ -311,5 +311,23 @@ UIForumPortlet.prototype.openPicture = function(obj,id) {
 	}
 };
 
+UIForumPortlet.prototype.setOnkeyup = function() {
+	var post = document.getElementById('CanPost');
+	var view = document.getElementById('CanView') ;
+	if(post === null) return ;
+	view.disabled = 'disabled' ;
+	if(post.value === '') {
+		view.disabled = 'disabled' ;
+	} else {
+		view.disabled = '' ;
+	}
+	post.onkeyup= function() {
+		if(this.value != '') {
+			view.disabled = '' ;
+		} else {
+			view.disabled = 'disabled' ;
+		}
+	};
+};
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

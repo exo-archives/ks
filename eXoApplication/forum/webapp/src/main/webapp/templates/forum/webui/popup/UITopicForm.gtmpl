@@ -1,5 +1,9 @@
 <%  
 	import org.exoplatform.webui.form.UIFormInputIconSelector ;
+	import org.exoplatform.web.application.JavascriptManager;  
+	def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setOnkeyup();");
 %>
 <div class="UITopicForm">
 	<% uiform.begin() %>
