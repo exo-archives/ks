@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -49,6 +50,14 @@ public class UIForumInfos extends UIContainer	{
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		boolean isLock = forum.getIsClosed() ;
 		if(!isLock) isLock = forum.getIsLock() ;
+    if(!isLock && userProfile.getUserRole()!=0) {
+  		String[] listUser = forum.getModerators() ;
+      if(!ForumFormatUtils.isStringInStrings(listUser, userProfile.getUserId())) {
+        listUser = forum.getCreateTopicRole() ;
+        if(listUser != null && listUser.length > 0)
+          isLock = !ForumFormatUtils.isStringInStrings(listUser, userProfile.getUserId()) ;
+      }
+    }
 		postRules.setLock(isLock) ;
 		postRules.setUserProfile(this.userProfile) ;
 	}

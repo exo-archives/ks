@@ -152,8 +152,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		threadOption.addUIFormInput(sticky);
 		
 		UIFormInputWithActions threadPermission = new UIFormInputWithActions(FIELD_THREADPERMISSION_TAB);
-		threadPermission.addUIFormInput(canView);
 		threadPermission.addUIFormInput(canPost);
+		threadPermission.addUIFormInput(canView);
     
     String[] childIds = new String[]{FIELD_CANVIEW_INPUT, FIELD_CANPOST_INPUT} ;
     List<ActionData> actions ;
