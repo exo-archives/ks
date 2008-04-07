@@ -251,10 +251,11 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     List<String> userValid = new ArrayList<String>() ;
     try{
       for(String user : users) {
-        if(ForumSessionUtils.getUserByUserId(user.trim()) != null)
-          userValid.add(user.trim()) ;
+        user = user.trim() ;
+        if(user != null && user.length() > 0 && ForumSessionUtils.getUserByUserId(user) != null)
+          userValid.add(user) ;
         else {
-          if(this.userInvalid != null && this.userInvalid.trim().length() > 0) this.userInvalid += ", " ;
+          if(this.userInvalid != null && this.userInvalid.length() > 0) this.userInvalid += ", " ;
           this.userInvalid += user ;
         }
       }
@@ -355,9 +356,9 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
       setViewer = uiForm.addStringToString(setPostable, setViewer) ;
       
 			newForum.setModerators(setModerator);
-			newForum.setCreateTopicRole(setPostable);
+			newForum.setCreateTopicRole(setTopicable);
+			newForum.setReplyTopicRole(setPostable);
 			newForum.setViewForumRole(setViewer);
-			newForum.setReplyTopicRole(setTopicable);
 			
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			if(uiForm.forumId.length() > 0)	{
