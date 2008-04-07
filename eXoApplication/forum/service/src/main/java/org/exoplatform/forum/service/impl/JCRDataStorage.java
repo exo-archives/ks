@@ -269,11 +269,16 @@ public class JCRDataStorage{
 								if(userProfileNode.hasProperty("exo:userRole")) {
 									if(userProfileNode.getProperty("exo:userRole").getLong() >= 2) {
 										userProfileNode.setProperty("exo:userRole", 1);
+										userProfileNode.setProperty("exo:userTitle", "Moderator");
 									}
 								}
 							}
 	          } catch (PathNotFoundException e) {
 	          	userProfileNode = userProfileHomeNode.addNode(string,"exo:userProfile") ; 
+	          	String []strings = new String[] {(forum.getForumName() + "(" + categoryId + "/" + forum.getId())} ;
+							userProfileNode.setProperty("exo:moderateForums", strings);
+							userProfileNode.setProperty("exo:userRole", 1);
+							userProfileNode.setProperty("exo:userTitle", "Moderator");
 	          }
 	        }
 				}

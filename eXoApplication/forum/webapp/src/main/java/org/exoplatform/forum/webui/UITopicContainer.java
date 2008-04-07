@@ -175,7 +175,9 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
      if(this.forum.getIsModerateTopic()) {
 			if(role >=2) isApprove = "true" ;
 			if(role == 1) {
-				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), userId)){
+				boolean test = ForumFormatUtils.isStringInStrings(forum.getModerators(), userId) ; 
+				System.out.println(test + "  :  " + userId);
+				if(!test){
 					isApprove = "true" ;
 				}
 			}
