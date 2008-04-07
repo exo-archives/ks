@@ -263,8 +263,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
   }
   
   private String[] addStringToString(String[] input, String[] output) {
-    if(output.length > 0) {
-      if(input.length > 0) {
+    if(output != null && output.length > 0) {
+      if(input!= null && input.length > 0) {
         try{
           String result = new String() ;
           for(String str : output) {
@@ -352,7 +352,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
         throw new MessageException(new ApplicationMessage("UIForumForm.sms.userhavenotfound", new String[]{uiForm.userInvalid}, ApplicationMessage.WARNING)) ;
       }
       setPostable = uiForm.addStringToString(setTopicable, setPostable);
-      setViewer = uiForm.addStringToString(setTopicable, setViewer) ;
       setViewer = uiForm.addStringToString(setPostable, setViewer) ;
       
 			newForum.setModerators(setModerator);

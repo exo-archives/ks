@@ -75,7 +75,7 @@
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
-	<% if(topic != null) {%>
+	<% if(topic != null) {System.out.println("~~~~uicomponent.isCanPostReply()" + uicomponent.isCanPostReply()) ;%>
 	<div class="ButtomAndPageListContainer">
 	<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
@@ -464,13 +464,14 @@
 																	String[] menuViewInfos = ["ViewPublicUserInfo","ViewPostedByUser", "ViewThreadByUser"] ;
 																	for(viewAction in menuViewInfos) {
 																		String linkView = uicomponent.event(viewAction, owner) ;
+																		String classIcon = "" ;
 																		String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
 																		if(!viewAction.equals("ViewPublicUserInfo")) itemLabelView = itemLabelView + " " + owner ;
+																		if(viewAction.equals("ViewPublicUserInfo")) classIcon = "ViewProfileIcon" ;
+																		else classIcon = "IconsView" ;
 																%>
 																		<a class="MenuItem" href="$linkView">
-																			<div class="ItemIcon">
-																				$itemLabelView
-																			</div>
+																			<div class="ItemIcon $classIcon" style="padding-left: 20px;">$itemLabelView</div>
 																		</a>
 																<%
 																	}

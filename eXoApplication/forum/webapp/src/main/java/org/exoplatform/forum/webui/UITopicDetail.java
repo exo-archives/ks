@@ -229,7 +229,7 @@ public class UITopicDetail extends UIForm {
   @SuppressWarnings("unused")
   private boolean isCanPostReply(){
     UserProfile userProfile = this.getUserProfile() ;
-    if(userProfile.getUserRole() > 1) {
+    if(userProfile.getUserRole() > 1 && !ForumFormatUtils.isStringInStrings(this.forum.getModerators(), this.userName)) {
       String[] userCanView = this.forum.getCreateTopicRole() ;
       if(userCanView != null && userCanView.length > 0) {
         if(!ForumFormatUtils.isStringInStrings(userCanView, userProfile.getUserId())) {

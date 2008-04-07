@@ -434,10 +434,10 @@ public class UICategory extends UIForm	{
 			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
       Forum forum = uiCategory.getForum(forumId) ;
       UserProfile userProfile = uiCategory.getUserProfile() ;
-      if(userProfile.getUserRole() > 1) {
+      if(userProfile.getUserRole() > 1 && !ForumFormatUtils.isStringInStrings(forum.getModerators(), userProfile.getUserId())) {
         String[] viewForumRole = forum.getViewForumRole() ;
         if(viewForumRole != null && viewForumRole.length > 0 
-            && !ForumFormatUtils.isStringInStrings(forum.getViewForumRole(), userProfile.getUserId())){
+            && !ForumFormatUtils.isStringInStrings(viewForumRole, userProfile.getUserId())){
             throw new MessageException(new ApplicationMessage("UICategory.sms.havenotviewpermission", null, ApplicationMessage.WARNING)) ;
         }
       }

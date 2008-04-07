@@ -144,6 +144,10 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
     return this.canAddNewThread ;
   }
   
+  public boolean getCanViewThread(){
+    return this.canViewThreads ;
+  }
+  
 	private Forum getForum() throws Exception {
 		if(this.isUpdate) {
 			this.forum = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
@@ -159,17 +163,19 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		String isApprove = "" ;
 		long role = this.userProfile.getUserRole() ;
+		String userId = this.userProfile.getUserId() ;
     
-		if(role <= 1) {
+		if(role <= 1 || ForumFormatUtils.isStringInStrings(this.forum.getModerators(), userId)) {
 		  this.canAddNewThread = true ;
       this.canViewThreads = true ;
 		} else {
-		  String userId = this.userProfile.getUserId() ;
-      if(ForumFormatUtils.isStringInStrings(this.forum.getCreateTopicRole(), userId))
+      String[] canCreateTopic = this.forum.getCreateTopicRole() ;
+      if( canCreateTopic == null || canCreateTopic.length < 1  || ForumFormatUtils.isStringInStrings(canCreateTopic, userId))
 		    this.canAddNewThread = true ;
 		  else
 		    this.canAddNewThread = false ;
-      if(ForumFormatUtils.isStringInStrings(this.forum.getViewForumRole(), userId))
+      String[] canViewForum = this.forum.getViewForumRole() ;
+      if(canViewForum == null || canViewForum.length < 1 || ForumFormatUtils.isStringInStrings(canViewForum, userId))
         this.canViewThreads = true ;
       else
         this.canViewThreads = false ;
