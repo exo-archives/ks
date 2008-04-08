@@ -33,6 +33,4 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 public class UIFAQPortlet extends UIPortletApplication {
   public UIFAQPortlet() throws Exception {
   }
-  
-
 } 

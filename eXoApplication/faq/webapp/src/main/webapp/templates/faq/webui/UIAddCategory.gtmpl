@@ -1,0 +1,741 @@
+<div class="UIFAQPortlet">
+			<div class="UIForm UIAddCategory">
+ 				<form class="UIForm">
+ 					<div class="UIHorizontalLayout">
+ 							<div class="UIPermissionManager">
+ 								<div class="UIPermissionInfo">
+ 									<table class="UIGrid" cellspacing="0" borderspacing="0">
+ 										<thead>
+ 											<tr>
+ 												<th>Event Category</th>
+ 												<th>Description</th>
+ 												<th>Action</th>
+ 											</tr>
+ 										</thead>
+ 										<tbody>
+ 											<tr class="EvenRow">
+ 												<td class="text">Meeting</td>
+ 												<td class="text"></td>
+ 												<td style="width: 50px;">
+ 													<div class="ActionContainer" style="margin: 0px auto;">
+ 														<div class="OverflowContainer" style="margin: auto;">
+ 															<a class="EditIcon" title="Edit" href="#"><span></span></a>
+ 															<a class="DeleteIcon" title="Delete" href="#"><span></span></a>
+ 														</div>
+ 													</div>
+ 												</td>
+ 											</tr>
+ 											<tr class="OddRow">
+ 												<td class="text">Football</td>
+ 												<td class="text"></td>
+ 												<td style="width: 50px;">
+ 													<div class="ActionContainer" style="margin: 0px auto;">
+ 														<div class="OverflowContainer" style="margin: auto;">
+ 															<a class="EditIcon" title="Edit" href="#"><span></span></a>
+ 															<a class="DeleteIcon" title="Delete" href="#"><span></span></a>
+ 														</div>
+ 													</div>
+ 												</td>
+ 											</tr>
+ 											<tr class="EvenRow">
+ 												<td class="text">Football</td>
+ 												<td class="text"></td>
+ 												<td style="width: 50px;">
+ 													<div class="ActionContainer" style="margin: 0px auto;">
+ 														<div class="OverflowContainer" style="margin: auto;">
+ 															<a class="EditIcon" title="Edit" href="#"><span></span></a>
+ 															<a class="DeleteIcon" title="Delete" href="#"><span></span></a>
+ 														</div>
+ 													</div>
+ 												</td>
+ 											</tr>
+ 											<tr class="OddRow">
+ 												<td class="text">Holiday</td>
+ 												<td class="text"></td>
+ 												<td style="width: 50px;">
+ 													<div class="ActionContainer" style="margin: 0px auto;">
+ 														<div class="OverflowContainer" style="margin: auto;">
+ 															<a class="EditIcon" title="Edit" href="#"><span></span></a>
+ 															<a class="DeleteIcon" title="Delete" href="#"><span></span></a>
+ 														</div>
+ 													</div>
+ 												</td>
+ 											</tr>
+ 											<tr class="EvenRow">
+ 											<td class="text">Tennis</td>
+ 											<td class="text"></td>
+ 											<td style="width: 50px;">
+ 												<div class="ActionContainer" style="margin: 0px auto;">
+ 													<div class="OverflowContainer" style="margin: auto;">
+ 														<a class="EditIcon" title="Edit" href="#"><span></span></a>
+ 														<a class="DeleteIcon" title="Delete" href="#"><span></span></a>
+ 													</div>
+ 												</div>
+ 											</td>
+ 										</tr>
+ 									</tbody>
+ 								</table>
+								<div class="UIPageIterator">
+									<div class="PageIteratorContainer">
+										<div class="RightPageIteratorBlock">
+							    	  <a href="#" class="Icon LastTopPageIcon" title=""></a>
+							    	  <a class="Icon DisableLastTopPageIcon" title=""></a>        
+							    	  <a href="#" class="Icon LastPageIcon" title=""></a>
+							    	  <a class="Icon DisableLastPageIcon" title=""><span></span></a>
+										 	<div class="Number">
+						           	<a href="#" class="PageSelected">1</a>
+						           	<a href="#">2</a>
+										 	</div>
+							    	 	<a href="#" class="Icon NextPageIcon" title=""><span></span></a>
+							    	  <a class="Icon DisableNextPageIcon" title=""><span></span></a>
+							    	  <a href="#" class="Icon NextTopPageIcon" title=""></a>
+							    	  <a class="Icon DisableNextTopPageIcon" title=""><span></span></a>
+										  <div style="clear: left"><span></span></div>
+										</div>
+										<div class="LeftPageIteratorBlock">
+										  <div class="TotalPages">Total pages</div>
+										  <div class="PagesTotalNumber">1</div>
+										  <div style="clear: left"><span></span></div>
+										</div>
+									</div>
+									<div style="clear: right"><span></span></div>
+								</div>        												
+	 							<div class="UIFormWithTitle UIPermissionForm">
+	 								<div class="TitleBar">Add/Edit a Category</div>
+	 									<form class="UIForm">
+	 										<div class="HorizontalLayout">
+	 											<div class="UIFormGrid">
+	 												<div class="UIFormInputSetWithAction">
+	 													<div class="FormContainer">
+				         							<table class="UIFormGrid">
+				         								<tbody>
+				         									<tr>
+				         										<td class="FieldLabel">Category:</td>
+				         										<td class="FieldComponent">
+				         											<input type="text" value="" name="3"/>
+		         												</td>
+		         											</tr>
+		         											<tr>
+		         												<td class="FieldLabel">Description:</td>
+		         												<td class="FieldComponent">
+		         													<textarea class="textarea" name="description"></textarea>
+		         												</td>
+		         											</tr>
+		         										</tbody>
+		         									</table>
+		         								</div>
+ 													</div>
+ 												</div>
+ 											<div class="UIAction"> 
+										    <table class="ActionContainer" align="center">
+												  <tr>
+													  <td align="center">
+  															<a href="#" class="ActionButton LightBlueStyle">
+										          	<div class="ButtonLeft">
+										            	<div class="ButtonRight">
+										              	<div class="ButtonMiddle"> Save </div>
+										              </div>
+										            </div>
+										          </a>
+										          <a href="#" class="ActionButton LightBlueStyle">
+										          	<div class="ButtonLeft">
+										            	<div class="ButtonRight">
+										              	<div class="ButtonMiddle"> Cancel </div>
+										              </div>
+										            </div>
+										          </a>
+        										</td>
+    											</tr>
+ 	                      </table>
+										  </div>
+										</div>
+ 									</div>
+ 								</div>
+ 							</div>
+ 						</form>
+ 					</div>
+ 				</div>
+ 				
+ 				
+ 				
+ 				
+ 				<div class="UIAddquestion">
+ 					<form class="UIForm">
+	 					<div class="HorizontalLayout">
+			 					<table class="UIFormGrid">
+				      		<tbody>
+				      			<tr>
+				              <td class="FieldLabel">Author:</td>
+				              <td class="FieldComponent">
+				                <input type="text" />
+				              </td>
+				          	</tr>
+				          	<tr>
+				              <td class="FieldLabel">Email address:</td>
+				              <td class="FieldComponent">
+				                <input type="text" />
+				              </td>
+				          	</tr>
+					  				<tr>
+					          	<td class="FieldLabel">Question:</td>
+					          	<td class="FieldComponent">
+					            	<iframe width="100%" scrolling="no" height="300" frameborder="0" src="/portal/fckeditor/editor/fckeditor.html?InstanceName=messageContent&Toolbar=Basic" id="messageContent___Frame"></iframe>
+					          		<textarea name="messageContent" id="messageContent" style="display: none;"></textarea>
+					          		<div class="AddLanguage">
+					          			<div class="LanguageTitle">Language: English (Default)</div>
+					          			<div class="UIAction"> 
+												    <table class="ActionContainer" align="center">
+														  <tr>
+															  <td align="center">
+	  															<a href="#" class="ActionButton LightBlueStyle">
+												          	<div class="ButtonLeft">
+												            	<div class="ButtonRight">
+												              	<div class="ButtonMiddle"> Add Language </div>
+												              </div>
+												            </div>
+												          </a>
+	            									</td>
+	        										</tr>
+	 	                        </table>
+												  </div>
+												  <div style="clear: both"><span></span></div>
+					          		</div>
+					          	</td>
+					      		</tr>
+				      			<tr>
+				      				<td class="FieldLabel">Attach File:</td>
+				      				<td class="FieldComponent">
+												<div id="28275996" class="UIFormUploadInput">
+												  <input type="file" onkeypress="return false;" value="" id="file" name="file"/>    <img src="/eXoResources/skin/sharedImages/Blank.gif" onclick="eXo.webui.UIUpload.upload(this, 28275996)" class="UploadButton"/>
+												</div>
+											</td>
+					      		</tr>
+				      		</tbody>
+				      	</table>
+				 		</div>
+				 	</form>
+				 	<div class="UIAction"> 
+				    <table class="ActionContainer" align="center">
+						  <tr>
+							  <td align="center">
+  								<a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Add  </div>
+				              </div>
+				            </div>
+				          </a>
+				          <a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Cancel </div>
+				              </div>
+				            </div>
+				          </a>
+								</td>
+							</tr>
+ 	          </table>
+				  </div>
+				</div>
+			 	
+			 	
+			 	
+			 	
+			 	
+			 	<div class="UIResponse">
+ 					<form class="UIForm">
+	 					<div class="HorizontalLayout">
+		 					<table class="UIFormGrid">
+			      		<tbody>
+			      			<tr>
+			              <td class="FieldLabel">Question:</td>
+			              <td class="FieldComponent">
+			                <input type="text" />
+			              </td>
+			          	</tr>
+			          	<tr>
+			              <td class="FieldLabel">Language:</td>
+			              <td class="FieldComponent">
+			                <select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>English</option>
+ 												<option>France</option>
+ 												<option>vietnames</option>
+ 											</select>
+			              </td>
+			          	</tr>
+				  				<tr>
+				          	<td class="FieldLabel">Response:</td>
+				          	<td class="FieldComponent">
+				            	<iframe width="100%" scrolling="no" height="300" frameborder="0" src="/portal/fckeditor/editor/fckeditor.html?InstanceName=messageContent&Toolbar=Basic" id="messageContent___Frame"></iframe>
+				          		<textarea name="messageContent" id="messageContent" style="display: none;"></textarea>
+				          		<div class="AddLanguage">
+				          			<div class="LanguageTitle">Language: English (Default)</div>
+				          			<div class="UIAction"> 
+											    <table class="ActionContainer" align="center">
+													  <tr>
+														  <td align="center">
+  															<a href="#" class="ActionButton LightBlueStyle">
+											          	<div class="ButtonLeft">
+											            	<div class="ButtonRight">
+											              	<div class="ButtonMiddle"> Add Language </div>
+											              </div>
+											            </div>
+											          </a>
+            									</td>
+        										</tr>
+ 	                        </table>
+											  </div>
+											  <div style="clear: both"><span></span></div>
+				          		</div>
+				          	</td>
+				      		</tr>
+			      			<tr>
+			      				<td class="FieldLabel">Attach File:</td>
+			      				<td class="FieldComponent">
+											<div id="28275996" class="UIFormUploadInput">
+											  <input type="file" onkeypress="return false;" value="" id="file" name="file"/>    <img src="/eXoResources/skin/sharedImages/Blank.gif" onclick="eXo.webui.UIUpload.upload(this, 28275996)" class="UploadButton"/>
+											</div>
+										</td>
+				      		</tr>
+				      		<tr>
+			      				<td class="FieldLabel">Relation:</td>
+			      				<td class="FieldComponent">
+										  <select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>aaa</option>
+ 											</select>
+ 											<a href="" title="Add relation" ><img class="AddNewNodeIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/></a>
+										</td>
+				      		</tr>
+				      		<tr>
+			      				<td class="FieldLabel">Show answer:</td>
+			      				<td class="FieldComponent">
+										  <input type="checkbox" class="checkbox" value="false" />
+										</td>
+				      		</tr>
+			      		</tbody>
+			      	</table>
+				 		</div>
+				 	</form>
+				 	<div class="UIAction"> 
+				    <table class="ActionContainer" align="center">
+						  <tr>
+							  <td align="center">
+  								<a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Add  </div>
+				              </div>
+				            </div>
+				          </a>
+				          <a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Cancel </div>
+				              </div>
+				            </div>
+				          </a>
+								</td>
+							</tr>
+ 	          </table>
+				  </div>
+				</div>
+				
+				
+				
+			 	
+			 	
+			 	
+			 	<div class="UIAdvanceSearch">
+			 		<form class="UIForm">
+	 					<div class="HorizontalLayout">
+		 					<table class="UIFormGrid">
+			      		<tbody>
+			      			<tr>
+			              <td class="FieldLabel">Search Object:</td>
+			              <td class="FieldComponent">
+			                <select class="selectbox" name="calendartimezone">
+ 												<option>Category</option>
+ 												<option>Questions</option>
+ 												<option>Response</option>
+ 											</select>
+			              </td>
+			          	</tr>
+			      		</tbody>
+			      	</table>
+				 		</div>
+				 	</form>
+				 	<div class="SearchContent">
+					 	<form class="UIForm">
+		 					<div class="HorizontalLayout">
+				      	<table class="UIFormGrid">
+								  <tr>
+			              <td class="FieldLabel">Name:</td>
+			              <td class="FieldComponent" colspan="5">
+			                <input type="text" />
+			              </td>
+				          </tr>
+								  <tr>
+			              <td class="FieldLabel">Deascription:</td>
+			              <td class="FieldComponent" colspan="5">
+			                <input type="text" />
+			              </td>
+				          </tr>
+								  <tr>
+								    <td class="FieldComponent" style="text-align: right;"><input style="width: 12px;" name="radiobutton" type="radio" value="radiobutton"></td>
+								    <td colspan="2" class="FieldLabel" style="width: 200px;">Search Categoryes Created date within:</td>
+								    <td colspan="3" class="FieldComponent" >
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>Category</option>
+ 												<option>Questions</option>
+ 												<option>Response</option>
+ 											</select>
+ 										</td>
+								  </tr>
+								  <tr>
+								    <td class="FieldComponent" style="text-align: right;"><input style="width: 12px;" name="radiobutton" type="radio" value="radiobutton"></td>
+								    <td class="FieldLabel" >Search by date arranger:</td>
+								    <td class="FieldLabel" style="width: 65px;">After:</td>
+								    <td  class="FieldComponent" style="width: 120px;">
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>dd/mm/yy</option>
+ 											</select>
+ 										</td>
+								    <td class="FieldLabel" style="width: 55px;">Before:</td>
+								    <td  class="FieldComponent" >
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>dd/mm/yy</option>
+ 											</select>
+ 										</td>
+								  </tr>
+								</table>
+					 		</div>
+					 	</form>
+					</div>
+				 	<div class="UIAction"> 
+				    <table class="ActionContainer" align="center">
+						  <tr>
+							  <td align="center">
+  								<a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Search  </div>
+				              </div>
+				            </div>
+				          </a>
+				          <a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Cancel </div>
+				              </div>
+				            </div>
+				          </a>
+								</td>
+							</tr>
+ 	          </table>
+				  </div>
+			 	</div>	
+			 	
+			 	
+			 	
+			 	
+			 	
+			 	
+			 	<div class="UIAdvanceSearch">
+			 		<form class="UIForm">
+	 					<div class="HorizontalLayout">
+		 					<table class="UIFormGrid">
+			      		<tbody>
+			      			<tr>
+			              <td class="FieldLabel">Search Object:</td>
+			              <td class="FieldComponent">
+			                <select class="selectbox" name="calendartimezone">
+			                	<option>Questions</option>
+ 												<option>Category</option>
+ 												<option>Response</option>
+ 											</select>
+			              </td>
+			          	</tr>
+			      		</tbody>
+			      	</table>
+				 		</div>
+				 	</form>
+				 	<div class="SearchContent">
+					 	<form class="UIForm">
+		 					<div class="HorizontalLayout">
+				      	<table class="UIFormGrid">
+								  <tr>
+			              <td class="FieldLabel">Author:</td>
+			              <td class="FieldComponent" colspan="5">
+			                <input type="text" />
+			              </td>
+				          </tr>
+								  <tr>
+			              <td class="FieldLabel">Email address:</td>
+			              <td class="FieldComponent" colspan="5">
+			                <input type="text" />
+			              </td>
+				          </tr>
+				          <tr>
+			              <td class="FieldLabel">Language:</td>
+			              <td class="FieldComponent" colspan="5">
+			                <select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>English</option>
+ 												<option>France</option>
+ 												<option>vietnames</option>
+ 											</select>
+			              </td>
+				          </tr>
+				          <tr>
+			              <td class="FieldLabel">Question:</td>
+			              <td class="FieldComponent" colspan="5">
+			                <input type="text" />
+			              </td>
+				          </tr>
+								  <tr>
+								    <td class="FieldComponent" style="text-align: right;"><input style="width: 12px;" name="radiobutton" type="radio" value="radiobutton"></td>
+								    <td colspan="2" class="FieldLabel" style="width: 200px;">Search Categoryes Created date within:</td>
+								    <td colspan="3" class="FieldComponent" >
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>Category</option>
+ 												<option>Questions</option>
+ 												<option>Response</option>
+ 											</select>
+ 										</td>
+								  </tr>
+								  <tr>
+								    <td class="FieldComponent" style="text-align: right;"><input style="width: 12px;" name="radiobutton" type="radio" value="radiobutton"></td>
+								    <td class="FieldLabel" >Search by date arranger:</td>
+								    <td class="FieldLabel" style="width: 65px;">After:</td>
+								    <td  class="FieldComponent" style="width: 120px;">
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>dd/mm/yy</option>
+ 											</select>
+ 										</td>
+								    <td class="FieldLabel" style="width: 55px;">Before:</td>
+								    <td  class="FieldComponent" >
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>dd/mm/yy</option>
+ 											</select>
+ 										</td>
+								  </tr>
+								</table>
+					 		</div>
+					 	</form>
+					</div>
+				 	<div class="UIAction"> 
+				    <table class="ActionContainer" align="center">
+						  <tr>
+							  <td align="center">
+  								<a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Search  </div>
+				              </div>
+				            </div>
+				          </a>
+				          <a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Cancel </div>
+				              </div>
+				            </div>
+				          </a>
+								</td>
+							</tr>
+ 	          </table>
+				  </div>
+			 	</div>		
+			 	
+			 	
+			 	
+			 	
+			 	
+			 	
+			 	<div class="UIAdvanceSearch">
+			 		<form class="UIForm">
+	 					<div class="HorizontalLayout">
+		 					<table class="UIFormGrid">
+			      		<tbody>
+			      			<tr>
+			              <td class="FieldLabel">Search Object:</td>
+			              <td class="FieldComponent">
+			                <select class="selectbox" name="calendartimezone">
+			                	<option>Response</option>
+ 												<option>Category</option>
+ 												<option>Questions</option>
+ 											</select>
+			              </td>
+			          	</tr>
+			      		</tbody>
+			      	</table>
+				 		</div>
+				 	</form>
+				 	<div class="SearchContent">
+					 	<form class="UIForm">
+		 					<div class="HorizontalLayout">
+				      	<table class="UIFormGrid">
+				          <tr>
+			              <td class="FieldLabel">Language:</td>
+			              <td class="FieldComponent" colspan="5">
+			                <select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>English</option>
+ 												<option>France</option>
+ 												<option>vietnames</option>
+ 											</select>
+			              </td>
+				          </tr>
+				          <tr>
+			              <td class="FieldLabel">Response:</td>
+			              <td class="FieldComponent" colspan="5">
+			                <input type="text" />
+			              </td>
+				          </tr>
+								  <tr>
+								    <td class="FieldComponent" style="text-align: right;"><input style="width: 12px;" name="radiobutton" type="radio" value="radiobutton"></td>
+								    <td colspan="2" class="FieldLabel" style="width: 200px;">Search Categoryes Created date within:</td>
+								    <td colspan="3" class="FieldComponent" >
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>Category</option>
+ 												<option>Questions</option>
+ 												<option>Response</option>
+ 											</select>
+ 										</td>
+								  </tr>
+								  <tr>
+								    <td class="FieldComponent" style="text-align: right;"><input style="width: 12px;" name="radiobutton" type="radio" value="radiobutton"></td>
+								    <td class="FieldLabel" >Search by date arranger:</td>
+								    <td class="FieldLabel" style="width: 65px;">After:</td>
+								    <td  class="FieldComponent" style="width: 120px;">
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>dd/mm/yy</option>
+ 											</select>
+ 										</td>
+								    <td class="FieldLabel" style="width: 55px;">Before:</td>
+								    <td  class="FieldComponent" >
+								    	<select class="selectbox" name="calendartimezone" style="width: 120px;">
+ 												<option>dd/mm/yy</option>
+ 											</select>
+ 										</td>
+								  </tr>
+								</table>
+					 		</div>
+					 	</form>
+					</div>
+				 	<div class="UIAction"> 
+				    <table class="ActionContainer" align="center">
+						  <tr>
+							  <td align="center">
+  								<a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Search  </div>
+				              </div>
+				            </div>
+				          </a>
+				          <a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Cancel </div>
+				              </div>
+				            </div>
+				          </a>
+								</td>
+							</tr>
+ 	          </table>
+				  </div>
+			 	</div>		
+			 	
+			 	
+			 	
+			 	
+			 	
+			 	<div class="UISenToFriend">
+			 		<div class="UIForm">
+	          <div class="HorizontalLayout">
+	          	<div>
+		            <table class="UIFormGrid">
+		            	<tr>
+		                <td class="FieldLabel" style="width: 120px;">From name :</td>
+		                <td class="FieldComponent" colspan="2" ><input type="text" style="width: 92%;"/></td>
+		              </tr>
+		              <tr>
+		                <td class="FieldLabel">From :</td>
+		                <td class="FieldComponent" colspan="2"><input type="text" style="width: 92%;" /></td>
+		              </tr>
+		              <tr>
+		                <td class="FieldLabel"><a href="#">To</a> :</td>
+		                <td class="FieldComponent"  >
+		                  <input type="text"style="width: 95%;" />
+		                </td>
+		                <td class="FieldCCAndBCC" style=" width: 180px; padding-top: 6px;">
+		                  <a  href="#">|Add CC|</a> 
+		                  <a  href="#">Add BCC|</a>
+		                </td>
+		              </tr>
+		              <tr>
+		                <td class="FieldLabel"><a href="#">Cc</a> :</td>
+		                <td class="FieldComponent" colspan="2" >
+		                  <input type="text" style="width: 92%;" />
+		                </td>
+		              </tr>
+									<tr>
+		                <td class="FieldLabel"><a href="#">Bcc</a> :</td>
+		                <td class="FieldComponent" colspan="2" >
+		                  <input type="text" style="width: 92%;" />
+		                </td>
+		              </tr>
+		              <tr>
+		                <td class="FieldLabel">Subject :</td>
+		                <td class="FieldComponent" colspan="2" style="padding:4px;">
+		                  <input type="text" style="width: 92%;"/>
+		                </td>
+		              </tr>
+		              <tr>
+		                <td class="FieldLabel">Message :</td>
+		                <td class="FieldComponent" colspan="2" style="padding:4px;">
+		                  <iframe width="100%" scrolling="no" height="300" frameborder="0" src="/portal/fckeditor/editor/fckeditor.html?InstanceName=messageContent&Toolbar=Basic" id="messageContent___Frame"></iframe>
+					          	<textarea name="messageContent" id="messageContent" style="display: none;"></textarea>
+		                </td>
+		              </tr>
+		              <tr>
+			      				<td class="FieldLabel">Attach File:</td>
+			      				<td class="FieldComponent">
+											<div id="28275996" class="UIFormUploadInput">
+											  <input type="file" onkeypress="return false;" value="" id="file" name="file"/>    <img src="/eXoResources/skin/sharedImages/Blank.gif" onclick="eXo.webui.UIUpload.upload(this, 28275996)" class="UploadButton"/>
+											</div>
+										</td>
+				      		</tr>
+		            </table>
+		          </div>
+	          </div>
+					</div>
+				 	<div class="UIAction"> 
+				    <table class="ActionContainer" align="center">
+						  <tr>
+							  <td align="center">
+  								<a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Send  </div>
+				              </div>
+				            </div>
+				          </a>
+				          <a href="#" class="ActionButton LightBlueStyle">
+				          	<div class="ButtonLeft">
+				            	<div class="ButtonRight">
+				              	<div class="ButtonMiddle"> Cancel </div>
+				              </div>
+				            </div>
+				          </a>
+								</td>
+							</tr>
+ 	          </table>
+				  </div>
+			 	</div>
+			 	
+			 	
+			 	
+			 	
+			 	
+			 	
+</div>

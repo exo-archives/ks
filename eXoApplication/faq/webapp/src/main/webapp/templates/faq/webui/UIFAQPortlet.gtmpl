@@ -111,16 +111,90 @@
 		</div>
 		<div class="FAQContainer">
 			<div class="FAQContent">
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts</a><span>(5 Questions, 2 no answear)</span></div>
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Buying Music, Bookmarks, Backstage, and Profile Pages</a><span>(6 Questions, 2 no answear)</span></div>
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Advanced Station Tuning / Optimizing</a><span>(7 Questions, 2 no answear)</span></div>
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Station Pages and Sharing Stations</a><span>(8 Questions, 2 no answear)</span></div>
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Advanced Profile Page and Pandora Community Options</a><span>(9 Questions, 2 no answear)</span></div>
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Keyboard Shortcuts / Access for the Visually Impaired</a><span>(10 Questions, 2 no answear)</span></div>
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Adding Pandora Links to Your Blog, Webpage or RSS Aggregator</a><span>(5 Questions, 2 no answear)</span></div>
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Other Browser Settings Issues</a><span>(7 Questions, 2 no answear)</span></div>
-				<div class="Sup-Icon"><a  class="Sup-Title" href="">Genre and Content Questions</a><span>(5 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts Getting Started: Registration and Accounts</a><span>(5 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Buying Music, Bookmarks, Backstage, and Profile Pages</a><span>(6 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Advanced Station Tuning / Optimizing</a><span>(7 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Station Pages and Sharing Stations</a><span>(8 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Advanced Profile Page and Pandora Community Options</a><span>(9 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Keyboard Shortcuts / Access for the Visually Impaired</a><span>(10 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Adding Pandora Links to Your Blog, Webpage or RSS Aggregator</a><span>(5 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Other Browser Settings Issues</a><span>(7 Questions, 2 no answear)</span></div>
+				<div class="FAQCategory"><a  class="Sup-Title" href="">Genre and Content Questions</a><span>(5 Questions, 2 no answear)</span></div>
 			</div>
 		</div>
+		
+		
+		
+		
+		
+		
+<% /*Begin Popup Menu*/ %>
+	<div style="position: relative;">
+	  <div class="UIPopupCategory" style="display: block;">
+	  	<div class="UIRightClickPopupMenu" style="display: block; left: 80px;">
+	  		<div class="UIContextMenuContainer">
+			  	<div class="TopLeftRightClickPopupMenu">
+	  				<div class="TopRightRightClickPopupMenu">
+							<div class="TopCenterRightClickPopupMenu"><span></span></div>
+	  				</div>
+					</div>
+	    		<div class="MiddleLeftRightClickPopupMenu">
+	      		<div class="MiddleRightRightClickPopupMenu">
+	  					<div class="UIRightPopupMenuContainer">
+	  						<a class="MenuItem" href="#">   
+									<div class="ItemIcon EditCategory">
+	  								Edit category
+	 								</div>
+	  						</a>
+	  						<a class="MenuItem" href="#">   
+									<div class="ItemIcon DeleteCategory">
+	  								Delete category
+									</div>
+	 							 </a> 
+	 							 <a class="MenuItem" href="#">   
+									<div class="ItemIcon MoveCategory">
+	  								Move this category
+	 								</div>
+	  						</a>
+	  						<a class="MenuItem" href="#">   
+									<div class="ItemIcon MoveDown">
+	  								Move down
+	 								</div>
+	  						</a>
+	  						<a class="MenuItem" href="#">   
+									<div class="ItemIcon MoveUp">
+	  								Move up
+	 								</div>
+	  						</a>
+	  						<a class="MenuItem" href="#">   
+									<div class="ItemIcon CategorySetting">
+	  								Category setting
+	 								</div>
+	  						</a>
+	  						<a class="MenuItem" href="#">   
+									<div class="ItemIcon Watch">
+	  								Watch
+	 								</div>
+	  						</a>
+							</div>
+	      		</div>
+	    		</div>
+			    <div class="BottomLeftRightClickPopupMenu">
+		        <div class="BottomRightRightClickPopupMenu">
+		          <div class="BottomCenterRightClickPopupMenu"><span></span></div>
+		        </div>
+		      </div>
+	  		</div>
+		  </div>
+	  </div>
+	</div>
+<% /*End Popup Menu*/ %>
+
+
+
+
+
+
 	</div>
 </div>
+

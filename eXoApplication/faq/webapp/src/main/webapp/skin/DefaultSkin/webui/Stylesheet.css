@@ -143,15 +143,15 @@
 }
 
 .UIFAQPortlet .FAQBarAction .LeftOverButton {
-	background: url('background/FAQPortlet.gif') no-repeat left -432px;
+	background: url('background/FAQPortlet.gif') no-repeat left -440px;
 }
 
 .UIFAQPortlet .FAQBarAction .RightOverButton {
-	background: url('background/FAQPortlet.gif') no-repeat right -432px;
+	background: url('background/FAQPortlet.gif') no-repeat right -440px;
 }
 
 .UIFAQPortlet .FAQBarAction .CenterOverButton {
-	background: url('background/FAQPortlet.gif') repeat-x center -409px;
+	background: url('background/FAQPortlet.gif') repeat-x center -417px;
 	line-height: 22px;
 }
 
@@ -170,8 +170,8 @@
 	height: 400px;
 }
 
-.UIFAQPortlet .FAQContainer .FAQContent .Sup-Icon {
-	background: url('background/FAQPortlet.gif') no-repeat left -166px;
+.UIFAQPortlet .FAQContainer .FAQContent .FAQCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -465px;
 	padding-left: 28px;
 	height: 18px;
 	line-height: 18px;
@@ -182,6 +182,205 @@
 .UIFAQPortlet .FAQContainer .FAQContent .Sup-Title {
 	font-weight: bold;
 }
+
+/******************************	UIFAQ Sup-Category	***************************************/
+
+.UIFAQPortlet .UIFAQSupCategory{
+	margin: 5px;
+}
+
+
+.UIFAQPortlet .FAQContainer .FAQContent .Sup-Icon {
+	background: url('background/FAQPortlet.gif') no-repeat left -166px;
+	padding-left: 28px;
+	height: 18px;
+	line-height: 18px;
+	margin: 8px 0px;
+	white-space: nowrap;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .Question {
+	background: url('background/FAQPortlet.gif') no-repeat left -818px;
+	padding-left: 28px;
+	height: 18px;
+	line-height: 18px;
+	margin: 8px 0px;
+	white-space: nowrap;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .Question-Title {
+	color: #1555b5;
+}
+
+/******************************	Response	***************************************/
+
+.UIFAQPortlet .FAQContainer .FAQContent .ResponseContent {
+	padding: 0px 8px 8px 26px;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .Response {
+	background: url('background/DotLine.gif') repeat-x bottom;
+	padding-bottom: 4px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent {
+	background: url('background/DotLine.gif') repeat-x bottom;
+	padding-bottom: 4px;
+}
+
+.UIFAQPortlet .ResponseContent .RelatedQuestions {
+	background: url('background/DotLine.gif') repeat-x bottom;
+	padding: 4px 0px;
+}
+
+.UIFAQPortlet .ResponseContent .ResponsActions {
+	border-bottom: 1px solid #c7c7c7;
+	padding: 4px 0px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .AttachmentBox {
+	float: left;
+	padding: 10px 10px 0px 10px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .LabelBox {
+	float: left;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .Image {
+	float: left;
+	margin: 0px 10px 0px 0px;
+	width: 100px; height: 100px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .AttachmentIcon {
+	float:left;
+	height:20px;
+	width:20px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .AttachmentLabel {
+	color:#1555B5;
+	float:left;
+	font-weight:bold;
+	line-height:20px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .Action {
+	padding-top:50px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .Action .View {
+	background: url('background/FAQPortlet.gif') no-repeat left -729px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .Action .Icon {
+	cursor:pointer;
+	float:left;
+	line-height:20px;
+	margin-right:10px;
+	padding-left:20px;
+}
+
+.UIFAQPortlet .ResponseContent .AttachmentContent .Download {
+	background: url('background/FAQPortlet.gif') no-repeat left -752px;
+}
+
+.UIFAQPortlet .ResponseContent .ResponsActions .UIAction {
+	float: right;
+	margin: 0px;
+	width: 500px;
+}
+
+.UIFAQPortlet .ResponseContent .ResponsActions .UserResponse {
+	float: left;
+	padding: 8px;
+}
+
+.UIFAQPortlet .ResponseContent .ResponsActions .UIAction .ActionContainer {
+	margin: 0px;
+}
+
+.UIFAQPortlet .ResponseContent .ResponsActions .UIAction .IconButton {
+	line-height: 22px;
+	padding-left: 20px;
+}
+
+/******************************	UI Add	***************************************/
+
+.UIFAQPortlet .UIAddCategory {
+	padding: 8px;
+	border: 1px solid #c7c7c7;
+	background: #f7f7f7;
+}
+
+.UIFAQPortlet .UIAddquestion {
+	padding: 8px;
+	border: 1px solid #c7c7c7;
+}
+
+.UIFAQPortlet .UIResponse .HorizontalLayout {
+	padding: 8px;
+	background: #f7f7f7;
+}
+
+.UIFAQPortlet .UIAddquestion .HorizontalLayout {
+	padding: 8px;
+	background: #f7f7f7;
+}
+
+.UIFAQPortlet .UIFormUploadInput input{
+	width: auto;
+}
+
+.UIFAQPortlet .AddLanguage {
+	background: url('background/FAQPortlet.gif') repeat-x center -838px;
+	height: 28px;
+	border: 1px solid #c7c7c7;
+}
+
+.UIFAQPortlet .AddLanguage .LanguageTitle {
+	float: left;
+	padding:6px 0px 0px 12px;
+}
+
+.UIFAQPortlet .AddLanguage .UIAction {
+	float: right;
+	width: 140px;
+	padding: 3px 0px 0px 0px;
+}
+
+/******************************	 Search	***************************************/
+
+.UIFAQPortlet .UIAdvanceSearch {
+	padding: 8px;
+	border: 1px solid #c7c7c7;
+}
+
+.UIFAQPortlet .UIAdvanceSearch .HorizontalLayout {
+	padding: 8px;
+	background: #f7f7f7;
+}
+
+.UIFAQPortlet .UIAdvanceSearch .SearchContent .HorizontalLayout {
+	padding: 8px;
+	background: #ffffff;
+	border-top: 0px;
+}
+
+/******************************	UISenToFriend	***************************************/
+
+.UIFAQPortlet .UISenToFriend {
+	padding: 8px;
+	background: #ffffff;
+	border-top: 0px;
+}
+
+.UIFAQPortlet .UISenToFriend .HorizontalLayout {
+	padding: 8px;
+	background: #f7f7f7;
+}
+
 
 /******************************	Icon	***************************************/
 
@@ -210,5 +409,94 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -143px;
 }
 
+.UIFAQPortlet .FAQToolbar .AddSubCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -485px;
+}
 
+.UIFAQPortlet .FAQToolbar .AddQuestion {
+	background: url('background/FAQPortlet.gif') no-repeat left -510px;
+}
 
+.UIFAQPortlet .Langguage {
+	background: url('background/FAQPortlet.gif') no-repeat left -773px;
+}
+
+.UIFAQPortlet .ActionsPrint {
+	background: url('background/FAQPortlet.gif') no-repeat left -685px;
+}
+
+.UIFAQPortlet .ActionsEdit {
+	background: url('background/FAQPortlet.gif') no-repeat left -619px;
+}
+
+.UIFAQPortlet .ActionsDelete {
+	background: url('background/FAQPortlet.gif') no-repeat left -642px;
+}
+
+.UIFAQPortlet .SendToFriend {
+	background: url('background/FAQPortlet.gif') no-repeat left -707px;
+}
+
+.UIFAQPortlet .EditCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -258px;
+}
+
+.UIFAQPortlet .DeleteCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -279px;
+}
+
+.UIFAQPortlet .MoveCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -302px;
+}
+
+.UIFAQPortlet .MoveDown {
+	background: url('background/FAQPortlet.gif') no-repeat left -325px;
+}
+
+.UIFAQPortlet .MoveUp {
+	background: url('background/FAQPortlet.gif') no-repeat left -346px;
+}
+
+.UIFAQPortlet .CategorySetting {
+	background: url('background/FAQPortlet.gif') no-repeat left -368px;
+}
+
+.UIFAQPortlet .Watch {
+	background: url('background/FAQPortlet.gif') no-repeat left -391px;
+}
+
+.UIFAQPortlet .EditSupCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -527px;
+}
+
+.UIFAQPortlet .DeleteSupCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -551px;
+}
+
+.UIFAQPortlet .MoveSupCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -572px;
+}
+
+.UIFAQPortlet .Response {
+	background: url('background/FAQPortlet.gif') no-repeat left -595px;
+}
+
+.UIFAQPortlet .MoveQuestion {
+	background: url('background/FAQPortlet.gif') no-repeat left -660px;
+}
+
+.UIFAQPortlet .Edit {
+	background: url('background/FAQPortlet.gif') no-repeat left -616px;
+}
+
+.UIFAQPortlet .Delete {
+	background: url('background/FAQPortlet.gif') no-repeat left -638px;
+}
+
+.UIFAQPortlet .Print {
+	background: url('background/FAQPortlet.gif') no-repeat left -682px;
+}
+
+.UIFAQPortlet .SendMail {
+	background: url('background/FAQPortlet.gif') no-repeat left -704px;
+}
