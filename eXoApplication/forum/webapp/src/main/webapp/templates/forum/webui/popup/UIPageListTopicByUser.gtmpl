@@ -102,9 +102,9 @@
 									<% List tags = uicomponent.getTagsByTopic(topic.getTagId()); 
 										for(tag in tags) {
 											String color = tag.getColor() ;
-											String description = tag.getDescription() ;
+											String tagName = tag.getName() ;
 									%>
-										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$description"><span></span></div></a>
+										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$tagName"><span></span></div></a>
 									<% } %>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>

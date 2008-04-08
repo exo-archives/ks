@@ -311,21 +311,79 @@ UIForumPortlet.prototype.openPicture = function(obj,id) {
 	}
 };
 
-UIForumPortlet.prototype.setOnkeyup = function() {
+UIForumPortlet.prototype.setDisableTopicForm = function() {
 	var post = document.getElementById('CanPost');
 	var view = document.getElementById('CanView') ;
 	if(post === null) return ;
+	var parentView = eXo.core.DOMUtil.findAncestorByClass(view, "FieldComponent") ;
+	var tagA = parentView.getElementsByTagName('a')[0] ;
+	tagA.setAttribute("tmpHref",tagA.href) ;
 	view.disabled = 'disabled' ;
+	tagA.href = "javascript:void(0);" ;
 	if(post.value === '') {
 		view.disabled = 'disabled' ;
+		tagA.href = "javascript:void(0);" ;
 	} else {
 		view.disabled = '' ;
+		tagA.href = tagA.getAttribute("tmpHref") ;
 	}
 	post.onkeyup= function() {
 		if(this.value != '') {
 			view.disabled = '' ;
+			tagA.href = tagA.getAttribute("tmpHref") ;
 		} else {
 			view.disabled = 'disabled' ;
+			tagA.href = "javascript:void(0);" ;
+		}
+	};
+};
+
+UIForumPortlet.prototype.setDisableForumForm = function() {
+	var post = document.getElementById('Postable');
+	var topic = document.getElementById('Topicable') ;
+	var view = document.getElementById('Viewer') ;
+	if(post === null) return ;
+	var parentView = eXo.core.DOMUtil.findAncestorByClass(view, "FieldComponent") ;
+	var tagA = parentView.getElementsByTagName('a')[0] ;
+
+	tagA.setAttribute("tmpHref",tagA.href) ;
+	var values = post.value ;
+	if(values === '') values = topic.value ;
+	view.disabled = 'disabled' ;
+	tagA.href = "javascript:void(0);" ;
+	if(values === '') {
+		view.disabled = 'disabled' ;
+		tagA.href = "javascript:void(0);" ;
+	} else {
+		view.disabled = '' ;
+		tagA.href = tagA.getAttribute("tmpHref") ;
+	}
+	post.onkeyup= function() {
+		if(topic.value == '') {
+			if(this.value != '') {
+				view.disabled = '' ;
+				tagA.href = tagA.getAttribute("tmpHref") ;
+			} else {
+				view.disabled = 'disabled' ;
+				tagA.href = "javascript:void(0);" ;
+			}
+		}else {
+			view.disabled = '' ;
+			tagA.href = tagA.getAttribute("tmpHref") ;
+		}
+	};
+	topic.onkeyup= function() {
+		if(post.value == '') {
+			if(this.value != '') {
+				view.disabled = '' ;
+				tagA.href = tagA.getAttribute("tmpHref") ;
+			} else {
+				view.disabled = 'disabled' ;
+				tagA.href = "javascript:void(0);" ;
+			}
+		} else {
+			view.disabled = '' ;
+			tagA.href = tagA.getAttribute("tmpHref") ;
 		}
 	};
 };

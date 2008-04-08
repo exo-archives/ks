@@ -1,6 +1,10 @@
 <%  
 	import org.exoplatform.forum.ForumSessionUtils ;
 	import org.exoplatform.services.organization.User;
+	import org.exoplatform.web.application.JavascriptManager;  
+	def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableForumForm();");
 %>
 <div class="UIForumForm">	
   <% uiform.begin() %>  
