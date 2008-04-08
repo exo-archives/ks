@@ -143,6 +143,7 @@ public class UIForumLinks extends UIForm {
 			UIForumLinks uiForm = event.getSource() ;
 			UIFormSelectBoxForum selectBoxForum = uiForm.getUIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX) ;
 			String path = selectBoxForum.getValue();
+			System.out.println("\n\n Path: " + path);
 			if(!path.equals(uiForm.path)) {
 				uiForm.path = path ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
@@ -152,6 +153,7 @@ public class UIForumLinks extends UIForm {
 					forumPortlet.updateIsRendered(1);
 				}else if(path.indexOf("forum") > 0) {
 					String id[] = path.trim().split("/");
+					System.out.println("\n\n No chay vao day 2 !!! ");
 					forumPortlet.updateIsRendered(2);
 					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
 					forumContainer.setIsRenderChild(true) ;

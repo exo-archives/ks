@@ -335,6 +335,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(3) ;
+			forumPortlet.getChild(UIForumLinks.class).setValueOption("ForumService") ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId) ;
 			forumPortlet.getChild(UITopicsTag.class).setIdTag(tagId) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;

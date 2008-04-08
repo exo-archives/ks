@@ -518,8 +518,7 @@
 									<div class="PostViewIcon $classIconPost">$subject $isHedden</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
-								<% checked = 1;
-									} else { %>
+								<% } else { %>
 								<div class="PostViewTitle" style="float: left;">
 									<div class="PostViewIcon $classIconPost">$subject $isHedden</div>
 									<div class="PostTime">Posted: $createdDate</div>
@@ -609,6 +608,9 @@
 													if(action.equals("Edit")||action.equals("Delete"))continue ;
 												}
 											}
+											if(checked == 0){ 
+												if(action.equals("Edit")||action.equals("Delete"))continue ;
+											}
 											if(isLock&&(action.equals("Edit")||action.equals("Quote"))) continue ;
 											String actionLink = uicomponent.event(action, post.getId());
 											if(action.equals("Delete")) actionLink = "javascript:if(confirm('Are you sure you want to Delete this Post?')){"+uicomponent.event(action, post.getId())+"}"
@@ -626,8 +628,9 @@
 												</div>
 											</div>
 										</div>
-										<% } %>
-									<% } %>
+										<% } 
+										checked = 1; 
+										 } %>
 									</div>
 								</div>
 								<div style="clear: both"><span></span></div>

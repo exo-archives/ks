@@ -323,5 +323,13 @@
 	
 }
 
-
+.UIForumPortlet .MaskLayerForum {
+	display:block;
+	left: 0px;
+	top: 0px;
+	visibility:visible;
+	z-index:5;
+	position: absolute ;
+	border: solid 1px red;
+}
 

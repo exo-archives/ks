@@ -10,7 +10,7 @@
 <%  
 	List topics = uicomponent.getTopicsTag() ; 
 	Tag tag_ = uicomponent.getTagById() ;
-	String tagName = tag_.getName() ;
+	String tagName_ = tag_.getName() ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String description = tag_.getDescription() ;
@@ -39,7 +39,7 @@
 				<div class="LeftBar">
 					<div class="RightBar">
 						<div class="CenterBar">
-							<div class="Title"><span style="font-weight: normal;">Tag Name:</span>$tagName</div>
+							<div class="Title"><span style="font-weight: normal;">Tag Name:</span>$tagName_</div>
 							<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 							<div class="SeparatorLine" style="margin-right: 7px;"><span></span></div>
 							<div class="ToolbarActionsTag" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">

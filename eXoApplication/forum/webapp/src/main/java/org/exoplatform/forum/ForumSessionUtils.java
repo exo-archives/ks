@@ -23,8 +23,6 @@ import java.util.List;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -118,10 +116,10 @@ public class ForumSessionUtils {
   }
   
 
-  public static Contact getPersonalContact(String userId) throws Exception {
-  	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;
-	  return contactService.getPersonalContact(userId);
-  }
+//  public static Contact getPersonalContact(String userId) throws Exception {
+//  	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;
+//	  return contactService.getPersonalContact(userId);
+//  }
 
 
 

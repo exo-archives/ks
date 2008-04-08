@@ -104,6 +104,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private String topicId ;
 	private int id = 0;
   private String userInvalid = "" ;
+  private Topic topic = new Topic() ;
 	@SuppressWarnings("unchecked")
 	public UITopicForm() throws Exception {
 		UIFormStringInput topicTitle = new UIFormStringInput(FIELD_TOPICTITLE_INPUT, FIELD_TOPICTITLE_INPUT, null);
@@ -242,6 +243,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	
 	public void setUpdateTopic(Topic topic, boolean isUpdate) throws Exception {
 		if(isUpdate) {
+			this.topic =  topic ;
 			this.topicId = topic.getId() ;
 			UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
 			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(topic.getTopicName());
@@ -358,7 +360,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
         }
 				
 				String userName = ForumSessionUtils.getCurrentUser() ;
-				Topic topicNew = new Topic();
+				Topic topicNew = uiForm.topic;
 				topicNew.setOwner(userName);
 				topicNew.setTopicName(topicTitle);
 				topicNew.setCreatedDate(new Date());
@@ -417,6 +419,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					topicNew.setUserVoteRating(new String[] {}) ;
 					forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, true, false);
 				}
+				uiForm.topic = new Topic();
 				forumPortlet.cancelAction() ;
 				WebuiRequestContext context = RequestContext.getCurrentInstance() ;
 				context.addUIComponentToUpdateByAjax(forumPortlet) ;
@@ -474,7 +477,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UITopicForm topicForm = event.getSource();
 			topicForm.id = Integer.parseInt(id);
-//			UIPopupContainer popupContainer = topicForm.getAncestorOfType(UIPopupContainer.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicForm.getParent()) ;
 		}
 	}

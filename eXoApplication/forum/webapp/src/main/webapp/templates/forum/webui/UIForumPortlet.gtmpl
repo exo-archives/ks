@@ -22,4 +22,5 @@
     }
 	%>
 	<%uicomponent.renderPopupMessages();%>
+	<div class="MaskLayerForum" id="MaskLayerForum"><span></span></div>
 </div>
