@@ -30,12 +30,14 @@ import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicsTag;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -114,8 +116,13 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIAddTagForm> event) throws Exception {
 			UIAddTagForm uiForm = event.getSource() ;
 			UIFormStringInput tagNameInput = uiForm.getUIStringInput(FIELD_TAGNAME_INPUT) ;
-			tagNameInput.addValidator(EmptyNameValidator.class) ;
+			//tagNameInput.addValidator(EmptyNameValidator.class) ;
 			String tagName = tagNameInput.getValue() ;
+			
+			if(tagName == null || tagName.trim().length() < 1) {
+			  throw new MessageException(new ApplicationMessage("UIAddTagForm.ms.tagnameisnull", null, ApplicationMessage.WARNING)) ;
+			}
+			
 			String color = uiForm.getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).getValue() ;
 			String descriptiom = uiForm.getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).getValue() ;
 			Tag newTag = new Tag() ;
