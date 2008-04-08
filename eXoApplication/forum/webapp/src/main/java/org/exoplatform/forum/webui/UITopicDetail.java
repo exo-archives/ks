@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -229,10 +230,13 @@ public class UITopicDetail extends UIForm {
   @SuppressWarnings("unused")
   private boolean isCanPostReply(){
     UserProfile userProfile = this.getUserProfile() ;
-    if(userProfile.getUserRole() > 1 && !ForumFormatUtils.isStringInStrings(this.forum.getModerators(), this.userName)) {
-      String[] userCanView = this.forum.getCreateTopicRole() ;
-      if(userCanView != null && userCanView.length > 0) {
-        if(!ForumFormatUtils.isStringInStrings(userCanView, userProfile.getUserId())) {
+    if(userProfile.getUserRole() > 0 && !ForumFormatUtils.isStringInStrings(this.forum.getModerators(), this.userName)) {
+      List<String> listUser = new ArrayList<String>() ;
+      listUser.addAll(Arrays.asList(this.topic.getCanPost())) ;
+      int size = listUser.size() ;
+      listUser.addAll(size, Arrays.asList(this.forum.getReplyTopicRole())) ;
+      if(!listUser.isEmpty() && listUser.size() > 0) {
+        if(!listUser.contains(userProfile.getUserId())) {
           return false ;
         }
       }

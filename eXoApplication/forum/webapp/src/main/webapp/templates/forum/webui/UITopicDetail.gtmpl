@@ -59,13 +59,10 @@
 	if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
 	
 	if(!canEdit) {
-		String[] listUsers = topic.getCanPost() ;
-		if(listUsers != null && listUsers.length > 0) {
-			if(!isBanned || !isLock) {
-				isLock = !ForumFormatUtils.isStringInStrings(listUsers, userProfile.getUserId());
-			}
+		if(!isBanned || !isLock) {
+			isLock = !uicomponent.isCanPostReply();
 		}
-		listUsers = topic.getCanView() ;
+		String[] listUsers = topic.getCanView() ;
 		if(listUsers !=null && listUsers.length > 0) {
 			if(!isClosed){ 
 			  isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
@@ -77,7 +74,7 @@
 <% uiform.begin() %>
 	<% if(topic != null) {%>
 	<div class="ButtomAndPageListContainer">
-	<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
+	<%if(isLock || !isShowMenu) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -87,7 +84,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
+							<% if(isLock || !isShowMenu) { %>
 									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
@@ -653,7 +650,7 @@
 	</div>	
 <!-- End PostsInThreadContainer -->
 	<div class="ButtomAndPageListContainer">
-		<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
+		<% if(isLock || !isShowMenu) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -663,7 +660,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu || !uicomponent.isCanPostReply()) { %>
+							<% if(isLock || !isShowMenu) { %>
 									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
