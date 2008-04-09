@@ -73,18 +73,19 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_LABEL_QUOTE = "ReUser" ;
 	
 	final static public String ACT_REMOVE = "remove" ;
-	final static public String FIELD_ATTACHMENTS = "attachments" ;
-	final static public String FIELD_FROM_INPUT = "fromInput" ;
-	final static public String FIELD_MESSAGECONTENT = "messageContent" ;
+	final static public String FIELD_ATTACHMENTS = "Attachments" ;
+	final static public String FIELD_FROM_INPUT = "FromInput" ;
+	final static public String FIELD_MESSAGECONTENT = "MessageContent" ;
 	final static public String FIELD_ORIGINALLY = "Originally" ;
   
-  public static final String FIELD_THREADCONTEN_TAB = "threadContent" ;
-  public static final String FIELD_THREADICON_TAB = "iconAndSmiley" ;
+  public static final String FIELD_THREADCONTEN_TAB = "ThreadContent" ;
+  public static final String FIELD_THREADICON_TAB = "IconAndSmiley" ;
   private int tabId = 0 ;
 	
 	private List<ForumAttachment> attachments_ = new ArrayList<ForumAttachment>() ;
 	private String categoryId; 
 	private String forumId ;
+  
 	private String topicId ;
 	private String postId ;
 	private boolean isQuote = false ;
