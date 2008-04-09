@@ -513,7 +513,6 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UICategory.msg.notCheck", args, ApplicationMessage.WARNING)) ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}	
 	

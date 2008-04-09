@@ -93,7 +93,7 @@
 											topicNewPostTitle = topicNewPost.getTopicName();
 											lastPostBy = topicNewPost.getLastPostBy();
 											Date postDate = topicNewPost.getLastPostDate();
-											postDate.setTime(postDate.getTime() + setTime);
+											postDate.setTime(postDate.getTime() - setTime);
 											dateTime = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 											if((toDay-createdDate)/86400000 < 4){

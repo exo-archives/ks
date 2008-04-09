@@ -1572,11 +1572,12 @@ public class JCRDataStorage{
   private Calendar getGreenwichMeanTime() {
 		Date date = new Date() ;
 		double hostZone = date.getTimezoneOffset() ;
-		date.setTime(date.getTime() - (int)(hostZone*60000));
+		date.setTime(date.getTime() + (int)(hostZone*60000));
 		TimeZone timeZone2 = TimeZone.getTimeZone("GMT+00:00") ;
 		Calendar calendar  = GregorianCalendar.getInstance(timeZone2) ;
 		calendar.setTime(date);
 		calendar.setTimeZone(timeZone2);
+		System.out.println("\n\nSau Do  Zone: " +  hostZone + "  : " + date.getTime() + "  :  " + calendar.getTimeZone() + " : " + calendar.getTime() +"\n\n");
 		return calendar ;
 	}
 	

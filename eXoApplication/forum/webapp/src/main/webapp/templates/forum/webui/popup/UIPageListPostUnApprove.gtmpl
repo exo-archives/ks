@@ -43,7 +43,7 @@
 									else titlePost = message ;
 									String iconPost = post.getIcon() ;
 									Date postDate = post.getCreatedDate() ;
-									postDate.setTime(postDate.getTime() + setTime) ;
+									postDate.setTime(postDate.getTime() - setTime) ;
 									String createdDate = ForumFormatUtils.getFormatDate(formatDate,postDate) ;
 							%>
 								<tr class="$classRow">

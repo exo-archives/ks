@@ -45,7 +45,7 @@
 		  <%  
 		  	for(post in posts) {
 			  	Date createdPostDate = post.getCreatedDate() ;
-			  	createdPostDate.setTime(createdPostDate.getTime() + setTime);
+			  	createdPostDate.setTime(createdPostDate.getTime() - setTime);
 					String createdDate = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
 			  	String classIconPost = post.getIcon() ;
 					if(classIconPost.length() <= 0) 

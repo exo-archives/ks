@@ -388,19 +388,4 @@ UIForumPortlet.prototype.setDisableForumForm = function() {
 	};
 };
 
-UIForumPortlet.prototype.setMaskLayer = function() {
-	var popup = document.getElementById('UIPopupWindow') ;
-	var forumPortlet = document.getElementById('UIForumPortlet') ;
-	var masklayer = document.getElementById('MaskLayerForum') ;
- 	if(popup != null) {
-		forumPortlet.style.position = "relative" ;
-		masklayer.style.width = forumPortlet.offsetWidth + "px";
-		masklayer.style.height = forumPortlet.offsetHeight + "px";
-	} else {
-		forumPortlet.style.position = "static" ;
-		masklayer.style.width = "1px" ;
-		masklayer.style.height = "1px" ;
-	}
-};
-
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
