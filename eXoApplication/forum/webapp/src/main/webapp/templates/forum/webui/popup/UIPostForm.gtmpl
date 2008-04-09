@@ -13,69 +13,66 @@
 		     	    <div class="RightHorizontalTabs">
 		     	      <div class="CenterHorizontalTabs">
 					        <div class="TabsContainer">
-				            
-			              <div class="UITab NormalTabStyle">
-			                <div class="SelectedTab">
-			                  <div class="LeftTab">
-			                    <div class="RightTab">
-					                  <div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%=_ctx.appRes("UIPostForm.tittle.threadContent")%></div>
-					                </div>
-			                  </div>
-			                </div>
-			              </div>
-		            
-			              <div class="UITab NormalTabStyle">
-			                <div class="NormalTab">
-			                  <div class="LeftTab">
-			                    <div class="RightTab">
-					                  <div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%=_ctx.appRes("UIPostForm.tittle.iconAndSmiley")%></div>
-					                </div>
-			                  </div>
-			                </div>
-			              </div>
+			            <%
+				            String classCss = "SelectedTab" ; 
+                    int i = 0;
+                  	for(String tabconten : uicomponent.getChildren()){ 
+                  		String link = "javascript:void(0);";
+                  		if(uiform.tabIsSelected(i)) classCss = "SelectedTab" ;
+                  		else {
+                  			classCss = "NormalTab" ;
+                  			link = uicomponent.event("SelectTab",""+i) ;
+                  		}
+              		%> 
+				              <div class="UITab NormalTabStyle">
+	                      <div class="$classCss">
+	                        <div class="LeftTab">
+	                          <div class="RightTab">
+	                          		<a href="$link">
+						                  		<div class="MiddleTab"><%=_ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+						                  	</a>
+						                </div>
+				                  </div>
+				                </div>
+				              </div>
+		            	<%
+		            			i++ ;
+		            		}
+		            	%>
 				            
 					        </div>
 					      </div>
 					    </div>
 					  </div>
 		      </div>
-		    	<div class="HorizontalLayout">
-		        <div class="UITabContentContainer">
-	            <div style="display: block;" id="UITabContent" class="UITabContent">
-	              <div class="UIFormInputSet ThreadContent">
-	              	<table class="UIFormGrid">
-	              		<tbody>
-	              		
-	              			<tr>
-	                      <td class="FieldLabel"><%=_ctx.appRes("UITopicForm.label.ThreadTitle")%>:</td>
-	                      <td class="FieldComponent">
-	                        <% uicomponent.getChildById("PostTitle").setRendered(true);
-	                           uiform.renderChild("PostTitle");
-	                        %>
-	                      </td>
-                      </tr>
-	              			<tr>
-	                      <td class="FieldLabel"><%=_ctx.appRes("UITopicForm.label.Message")%>:</td>
-	                      <td class="FieldComponent">
-	                        <% uicomponent.getChildById(uiform.FIELD_MESSAGECONTENT).setRendered(true);
-	                           uiform.renderChild(uiform.FIELD_MESSAGECONTENT); %>
-	                      </td>
-                      </tr>
-                      
-	              			<tr>
-	              				<td class="FieldLabel">Attach File:</td>
-	              				<td class="FieldComponent">
-	              					<%uiform.renderChild("fromInput"); %>
-	              			</tr>
-	              		</tbody>
-	              	</table>
-	              </div>
-	            </div>
-	          	<div style="display: none;" class="UITabContent">
-	          	<% uiform.renderChild(UIFormInputIconSelector.class) %>
-	          	</div>
-	          </div>
-			    </div>
+		      <div class="UIForm">
+			    	<div class="HorizontalLayout">
+			        <div class="UITabContentContainer">
+		        	<% 
+            	String display =  "block";
+            	int j = 0;
+            	for(tabconten in uiform.getChildren()){
+            		if(uiform.tabIsSelected(j))display =  "block";
+              	else {display = "none";}
+	          	%>
+			            <div style="display: $display;" id="UITabContent" class="UITabContent">
+			              <% 
+		              		//uiform.renderChild(tabconten.id) ; 
+			              	tabconten.setRendered(true);
+			              	if(!tabconten.id.equals("iconAndSmiley")) {
+			              		uiform.renderChild(tabconten.id) ; 
+			              	} else {
+			              		uiform.renderChild(UIFormInputIconSelector.class);
+			              	}
+			              %>
+			          	</div>
+				      <%
+				      	j ++ ;
+				      	}
+				      %>
+		          </div>
+				    </div>
+			  	</div>
 			  </div>
 			  
 			</div>  
@@ -87,7 +84,7 @@
 			  <tr>
 				  <td align="center">
         <% for(action in uicomponent.getActions()) { 
-        	 if(action.indexOf("emoveAt") > 0) continue ;
+        	 if(action.indexOf("emoveAt") >= 0 || action.indexOf("SelectTab") >= 0 ) continue ;
         	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
            String link = uicomponent.event(action) ;
         %>

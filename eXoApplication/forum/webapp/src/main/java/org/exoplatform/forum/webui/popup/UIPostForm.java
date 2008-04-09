@@ -62,7 +62,8 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 			@EventConfig(listeners = UIPostForm.SubmitPostActionListener.class), 
 			@EventConfig(listeners = UIPostForm.AttachmentActionListener.class), 
 			@EventConfig(listeners = UIPostForm.RemoveAttachmentActionListener.class), 
-			@EventConfig(listeners = UIPostForm.CancelActionListener.class,phase = Phase.DECODE)
+			@EventConfig(listeners = UIPostForm.SelectTabActionListener.class, phase = Phase.DECODE), 
+			@EventConfig(listeners = UIPostForm.CancelActionListener.class, phase = Phase.DECODE)
 		}
 )
 public class UIPostForm extends UIForm implements UIPopupComponent {
@@ -76,6 +77,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	final static public String FIELD_FROM_INPUT = "fromInput" ;
 	final static public String FIELD_MESSAGECONTENT = "messageContent" ;
 	final static public String FIELD_ORIGINALLY = "Originally" ;
+  
+  public static final String FIELD_THREADCONTEN_TAB = "threadContent" ;
+  public static final String FIELD_THREADICON_TAB = "iconAndSmiley" ;
+  private int tabId = 0 ;
 	
 	private List<ForumAttachment> attachments_ = new ArrayList<ForumAttachment>() ;
 	private String categoryId; 
@@ -84,25 +89,34 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private String postId ;
 	private boolean isQuote = false ;
 	public UIPostForm() throws Exception {
-		UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
-		postTitle.addValidator(EmptyNameValidator.class) ;
-		addUIFormInput(postTitle);
-		//UIFormTextAreaInput message = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);
-		//message.addValidator(EmptyNameValidator.class) ;
-		//addUIFormInput(message);
-		
-		UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector("Icon", "Icon") ;
-		uiIconSelector.setSelectedIcon("IconsView");
-		addUIFormInput(uiIconSelector) ;
-		
-		addUIFormInput(new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true));
-		
-		UIFormInputWithActions inputSet = new UIFormInputWithActions(FIELD_FROM_INPUT); 
-		inputSet.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
-		inputSet.setActionField(FIELD_FROM_INPUT, getUploadFileList()) ;
-		addUIFormInput(inputSet) ;
+    UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
+    postTitle.addValidator(EmptyNameValidator.class) ;
+    
+    UIFormInputWithActions threadContent = new UIFormInputWithActions(FIELD_THREADCONTEN_TAB) ;
+    threadContent.addChild(postTitle) ;
+    threadContent.addChild(new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true)) ;
+    threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
+    threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
+    
+    UIFormInputIconSelector inputIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
+    inputIconSelector.setSelectedIcon("IconsView") ;
+    
+    addUIFormInput(threadContent) ;
+    addUIFormInput(inputIconSelector) ;
 	}
 	
+  @SuppressWarnings("unused")
+  private boolean tabIsSelected(int tabId) {
+    if(this.tabId == tabId) return true ;
+    else return false ;
+  }
+  
+  @SuppressWarnings("unused")
+  private String[] getTabName(){
+    String[] tab = {"UIPostForm.tittle.threadContent", "UIPostForm.tittle.iconAndSmiley"};
+    return tab ;
+  }
+  
 	public void setPostIds(String categoryId, String forumId, String topicId) {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
@@ -130,8 +144,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		return uploadedFiles ;
 	}
 	public void refreshUploadFileList() throws Exception {
-		UIFormInputWithActions inputSet = getChildById(FIELD_FROM_INPUT) ;
-		inputSet.setActionField(FIELD_ATTACHMENTS, getUploadFileList()) ;
+    UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
+    threadContent.setActionField(FIELD_ATTACHMENTS, getUploadFileList()) ;
 	}
 	public void addToUploadFileList(ForumAttachment attachfile) {
 		attachments_.add(attachfile) ;
@@ -149,6 +163,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	public void updatePost(String postId, boolean isQuote) throws Exception {
 		this.postId = postId ;
 		this.isQuote = isQuote ;
+		UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
 		if(this.postId != null && this.postId.length() > 0) {
 			Post post = this.forumService.getPost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, postId) ;
 			String message = post.getMessage() ;
@@ -156,25 +171,25 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String title = "" ;
 				if(post.getSubject().indexOf(": ") > 0) title = post.getSubject() ;
 				else title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getSubject() ;
-				getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
 				String value = "[QUOTE=" + post.getOwner() + "]" + ForumFormatUtils.clearQuote(message) + "[/QUOTE]<br/>";
-				getChild(UIFormWYSIWYGInput.class).setValue(value);
+        threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
 			} else {//edit
-				getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getSubject()) ;
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getSubject()) ;
 				if(post.getAttachments() != null && post.getAttachments().size() > 0) {
 					this.attachments_ = post.getAttachments();
 					this.refreshUploadFileList();
 				}
-				getChild(UIFormWYSIWYGInput.class).setValue(message);
-				getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
+        threadContent.getChild(UIFormWYSIWYGInput.class).setValue(message);
+        getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
 			}
 		} else {
 			if(!isQuote) {//reply
 				Topic topic = this.forumService.getTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "guest") ;
 				String title = topic.getTopicName() ;
-				getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(topic.getIcon());
 			}
 		}
@@ -190,9 +205,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	static	public class PreviewPostActionListener extends EventListener<UIPostForm> {
     public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
+      UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
-			String postTitle = uiForm.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue().trim();
-			String message = uiForm.getChild(UIFormWYSIWYGInput.class).getValue();
+			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue().trim();
+			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			if(message != null && message.length() > 0) message = message.trim() ;
 			t = message.length() ;
@@ -233,9 +249,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	static	public class SubmitPostActionListener extends EventListener<UIPostForm> {
     public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
+      UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
-			String postTitle = uiForm.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue().trim();
-			String message = uiForm.getChild(UIFormWYSIWYGInput.class).getValue();
+			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue().trim();
+			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 				//uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			if(message != null && message.length() > 0) message = message.trim() ;
@@ -295,6 +312,15 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			attachFileForm.updateIsTopicForm(false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
+	}
+	static public class SelectTabActionListener extends EventListener<UIPostForm> {
+	  public void execute(Event<UIPostForm> event) throws Exception {
+      String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIPostForm postForm = event.getSource();
+      postForm.tabId = Integer.parseInt(id);
+      
+      event.getRequestContext().addUIComponentToUpdateByAjax(postForm.getParent()) ;
+	  }
 	}
 	
 	static public class RemoveAttachmentActionListener extends EventListener<UIPostForm> {
