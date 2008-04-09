@@ -62,11 +62,8 @@
 		if(!isBanned || !isLock) {
 			isLock = !uicomponent.isCanPostReply();
 		}
-		String[] listUsers = topic.getCanView() ;
-		if(listUsers !=null && listUsers.length > 0) {
-			if(!isClosed){ 
-			  isClosed = !ForumFormatUtils.isStringInStrings(listUsers,userProfile.getUserId()) ;
-			}
+		if(!isClosed){ 
+		  isClosed = !uicomponent.userCanView() ;
 		}
 	}
 %>

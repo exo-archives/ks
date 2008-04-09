@@ -286,6 +286,22 @@ public class UITopicDetail extends UIForm {
 			return null ;
 		}
 	}
+  
+  private boolean userCanView() {
+    try {
+      List<String> listUser = new ArrayList<String>() ;
+      Topic topic = this.getTopic() ;
+      listUser.addAll(Arrays.asList(topic.getCanView())) ;
+      Forum forum = this.getForum() ;
+      listUser.addAll(Arrays.asList(forum.getViewForumRole())) ;
+      if(listUser.isEmpty()|| listUser.size() == 0 || listUser.contains(this.getUserProfile().getUserId())) return true;
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return false ;
+  }
+  
 	@SuppressWarnings("unused")
   private String getFileSource(ForumAttachment attachment) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
