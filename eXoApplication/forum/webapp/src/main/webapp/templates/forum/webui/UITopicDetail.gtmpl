@@ -66,6 +66,7 @@
 		  isClosed = !uicomponent.userCanView() ;
 		}
 	}
+	List posts = uicomponent.getPostPageList() ;
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
@@ -198,6 +199,7 @@
 														      	isView = false ;
 														      }
 																}
+																if(posts.size() <= 1)isView = false ;
 																if(isView) {
 																%>
 																	<a class="MenuItem" href="$link">
@@ -393,7 +395,6 @@
 		<%
 		boolean isShowPost = true ;
 		if(isClosed && !canEdit)	isShowPost = false ;
-		List posts = uicomponent.getPostPageList() ;
 		if(posts != null && posts.size() > 0 && isShowPost) {
 			int checked = 0 ;
 			for(post in posts) {

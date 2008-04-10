@@ -322,6 +322,7 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 	tagA.href = "javascript:void(0);" ;
 	if(objCmdElm.value === '') {
 		objElm.disabled = 'disabled' ;
+		objElm.value = '' ;
 		tagA.href = "javascript:void(0);" ;
 	} else {
 		objElm.disabled = '' ;
@@ -333,7 +334,11 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 			tagA.href = tagA.getAttribute("tmpHref") ;
 		} else {
 			objElm.disabled = 'disabled' ;
+			objElm.value = '' ;
 			tagA.href = "javascript:void(0);" ;
+			if(elm === 'Postable') {
+				eXo.forum.UIForumPortlet.setDisableInput('Viewer','Postable') ;
+			}
 		}
 	};
 };

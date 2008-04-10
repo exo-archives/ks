@@ -258,6 +258,14 @@
 	background: url('icons/MoveSelectedPostIcon.gif') no-repeat left center;
 }
 
+.UIForumPortlet .SetHiddenPostIcon {
+	background: url('icons/UnHiddenPostIcon.gif') no-repeat left center;
+}
+
+.UIForumPortlet .SetUnHiddenPostIcon {
+	background: url('icons/HiddenPostIcon.gif') no-repeat left center;
+}
+
 .UIForumPortlet .MovethisForumIcon {
 	background: url('icons/MovethisForumIcon.gif') no-repeat left center;
 }

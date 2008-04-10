@@ -682,7 +682,7 @@ public class JCRDataStorage{
 						post.setMessage(topic.getDescription()) ;
 						post.setRemoteAddr("") ;
 						post.setIcon(topic.getIcon()) ;
-						post.setIsApproved(false) ;
+						post.setIsApproved(true) ;
 						post.setAttachments(topic.getAttachments()) ;
 						
 						savePost(sProvider, categoryId, forumId, topic.getId(), post, true) ;
