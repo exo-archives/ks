@@ -23,7 +23,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -261,7 +260,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			t = ForumFormatUtils.clearQuote(message).length() ;
 			if(postTitle.length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0) {	
-				Post post = new Post() ;
+				//Post post = new Post() ;
+        Post post = new Post() ;
 				post.setSubject(postTitle.trim()) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
@@ -327,14 +327,15 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiPostForm = event.getSource() ;
 			String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
-			BufferAttachment attachfile = new BufferAttachment();
+			//BufferAttachment attachfile = new BufferAttachment();
 			for (ForumAttachment att : uiPostForm.attachments_) {
 				if (att.getId().equals(attFileId)) {
-					attachfile = (BufferAttachment) att;
+					//attachfile = (BufferAttachment) att;
+					uiPostForm.removeFromUploadFileList(att);
+          uiPostForm.attachments_.remove(att) ;
 					break;
 				}
 			}
-			uiPostForm.removeFromUploadFileList(attachfile);
 			uiPostForm.refreshUploadFileList() ;
 		}
 	}

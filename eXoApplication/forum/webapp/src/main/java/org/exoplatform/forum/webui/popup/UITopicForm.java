@@ -252,7 +252,13 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			UIFormInputWithActions threadPermission = this.getChildById(FIELD_THREADPERMISSION_TAB);
 			threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).setValue(unSplitForForum(topic.getCanView()));
 			threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).setValue(unSplitForForum(topic.getCanPost()));
-			
+      ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+      String postId = topicId.replaceFirst("topic", "post") ;
+      Post post = forumService.getPost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, postId);
+      if(post.getAttachments() != null && post.getAttachments().size() > 0) {
+        this.attachments_ = post.getAttachments();
+        this.refreshUploadFileList();
+      }
 			getChild(UIFormInputIconSelector.class).setSelectedIcon(topic.getIcon());
 		}
 	}
@@ -443,13 +449,15 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     public void execute(Event<UITopicForm> event) throws Exception {
 			UITopicForm uiTopicForm = event.getSource() ;
 			String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
-			BufferAttachment attachfile = new BufferAttachment();
+			//BufferAttachment attachfile = new BufferAttachment();
 			for (ForumAttachment att : uiTopicForm.attachments_) {
 				if (att.getId().equals(attFileId)) {
-					attachfile = (BufferAttachment) att;
+					//attachfile = (BufferAttachment) att;
+					uiTopicForm.removeFromUploadFileList(att);
+          uiTopicForm.attachments_.remove(att) ;
+          break ;
 				}
 			}
-			uiTopicForm.removeFromUploadFileList(attachfile);
 			uiTopicForm.refreshUploadFileList() ;
 		}
 	}
