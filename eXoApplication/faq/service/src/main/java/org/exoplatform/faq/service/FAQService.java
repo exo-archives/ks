@@ -18,6 +18,8 @@ package org.exoplatform.faq.service;
 
 import java.util.List;
 
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
@@ -33,15 +35,14 @@ public interface FAQService {
    * @param is new category
    * @throws Exception
    */
-  public void saveCategory(Category cat, boolean isAddNew) throws Exception ;
-  
+	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception ;  
   /**
    * This method should:
    * 1. Check exists of category and remove it
    * @param Category identify
    * @throws Exception
    */
-  public void removeCategory(String categoryId) throws Exception ;
+  public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup category node via identify 
@@ -50,8 +51,7 @@ public interface FAQService {
    * @return Category
    * @throws Exception
    */
-  public Category getCategoryById(String categoryId) throws Exception ;
-  
+  public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception ;  
   /**
    * This method should:
    * 1. Lookup all the categories node
@@ -59,8 +59,7 @@ public interface FAQService {
    * @return Category list
    * @throws Exception
    */
-  public List<Category> getAllCategories() throws Exception ;
-  
+  public List<Category> getAllCategories(SessionProvider sProvider) throws Exception ;  
   /**
    * This method should:
    * 1. Lookup all sub-categories of a category
@@ -69,7 +68,7 @@ public interface FAQService {
    * @return Category list
    * @throws Exception
    */
-  public List<Category> getSubCategories(String categoryId) throws Exception ;
+  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception ;
   
   /**
    * This method should:
@@ -78,7 +77,7 @@ public interface FAQService {
    * @param is new question
    * @throws Exception
    */
-  public void saveQuestion(Question question, boolean isAddNew) throws Exception ;
+  public void saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Check exists question and remove it
@@ -86,7 +85,7 @@ public interface FAQService {
    * @param Question identify
    * @throws Exception
    */
-  public void removeQuestion(String categoryId, String questionId) throws Exception ;
+  public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup the question node via identify
@@ -95,7 +94,7 @@ public interface FAQService {
    * @return Question 
    * @throws Exception
    */
-  public Question getQuestionById(String questionId) throws Exception ;
+  public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup all questions node
@@ -103,7 +102,7 @@ public interface FAQService {
    * @return List of question
    * @throws Exception
    */
-  public List<Question> getAllQuestions() throws Exception ;
+  public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions node via category identify
@@ -112,7 +111,7 @@ public interface FAQService {
    * @return Question list
    * @throws Exception
    */
-  public List<Question> getQuestionsByCatetory(String categoryId) throws Exception ;
+  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions via question identify and from category identify
@@ -123,8 +122,6 @@ public interface FAQService {
    * @param destination category identify
    * @throws Exception
    */
-  public void moveQuestions(List<String> questions, String srcCategoryId, String destCategoryId) throws Exception ;
-  
-  
+  public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception ;  
   
 }

@@ -21,6 +21,9 @@ import java.util.List;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionPageList;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 /**
  * Created by The eXo Platform SARL
@@ -29,61 +32,52 @@ import org.exoplatform.faq.service.Question;
  * Mar 04, 2008  
  */
 public class FAQServiceImpl implements FAQService{
-
-	public List<Category> getAllCategories() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	private JCRDataStorage jcrData_ ;
+	
+	public FAQServiceImpl(NodeHierarchyCreator nodeHierarchy) throws Exception {
+		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
+	}
+	public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {
+		return jcrData_.getAllCategories(sProvider);
 	}
 
-	public List<Question> getAllQuestions() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
+		return jcrData_.getAllQuestions(sProvider);
 	}
 
-	public Category getCategoryById(String categoryId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getCategoryById(categoryId, sProvider);
 	}
 
-	public Question getQuestionById(String questionId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getQuestionById(questionId, sProvider);
 	}
 
-	public List<Question> getQuestionsByCatetory(String categoryId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getQuestionsByCatetory(categoryId, sProvider);
 	}
 
-	public List<Category> getSubCategories(String categoryId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getSubCategories(categoryId, sProvider);
 	}
 
-	public void moveQuestions(List<String> questions, String srcCategoryId, String destCategoryId) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception {
+		jcrData_.moveQuestions(questions, destCategoryId, sProvider) ;
 	}
 
-	public void removeCategory(String categoryId) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception {
+		jcrData_.removeCategory(categoryId, sProvider) ;
 	}
 
-	public void removeQuestion(String categoryId, String questionId) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception {
+		jcrData_.removeQuestion(questionId, sProvider) ;
 	}
 
-	public void saveCategory(Category cat, boolean isAddNew) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
+		jcrData_.saveCategory(parentId, cat, isAddNew, sProvider) ;
 	}
 
-	public void saveQuestion(Question question, boolean isAddNew) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
+		jcrData_.saveQuestion(question, isAddNew, sProvider) ;
 	}
-  
-  
 }

@@ -37,12 +37,12 @@ public class Question {
   private boolean isApproved = true ;
   private Date createdDate ;
   private String categoryId ;
-  private List<String> response ;
+  private List<String> responses ;
   private List<String> relations ;
   
   
   public Question() {
-    id = "Category" + IdGenerator.generate() ;
+    id = "Question" + IdGenerator.generate() ;
   }
   
   public String getId() { return id ; }
@@ -51,8 +51,8 @@ public class Question {
   public String getQuestion() { return question ; }
   public void setQuestion(String name) { this.question = name ; }
 
-  public List<String> getResponse() { return response ; }
-  public void setResponse(List<String> rp) { this.response = rp ; }	
+  public List<String> getResponses() { return responses ; }
+  public void setResponses(List<String> rp) { this.responses = rp ; }	
   
   public List<String> getRelations() { return relations ; }
   public void setRelations(List<String> rl) { this.relations = rl ; }
