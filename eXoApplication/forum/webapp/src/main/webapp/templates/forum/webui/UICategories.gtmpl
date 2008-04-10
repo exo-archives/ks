@@ -72,7 +72,7 @@
 										else classRow = "OddRow";
 										++i;
 										String classIconForum = "ForumNormalIcon";
-										String titleIconForum = "Forum Contains No New Post";
+										String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
 										String forumTitle = forum.getForumName();
 										String forumDescription = forum.getDescription();
 										String [] forumModerators = forum.getModerators();
@@ -82,7 +82,7 @@
 										String topicNewPostTitle = "";
 										String lastPostBy = "";
 										String dateTime = "";
-										String openLinkLastPost = "#";
+										String openLinkLastPost = "javascript:void(0)";
 										String titleTopic = "" ;
 										long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
@@ -98,14 +98,13 @@
 											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 											if((toDay-createdDate)/86400000 < 4){
 												classIconForum = "ForumNewPostIcon";
-												titleIconForum = "Forum Contains New Posts";
+												titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 											}
-											titleTopic = ("Go to first new post in thread ' " + topicNewPostTitle + " '") ;
+											titleTopic = "Go to first new post in thread ' " + topicNewPostTitle + " '";
 											if(topicNewPost.getIsClosed()) {
 												if(ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin) {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
 												} else {
-													openLinkLastPost = "javascript:void(0)";
 													titleTopic ="This thread '" + topicNewPostTitle + "' is Closed" ;
 												}
 											} else {
@@ -113,7 +112,6 @@
 													if(topicNewPost.getIsApproved() || ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin){
 														openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
 													} else {
-														openLinkLastPost = "javascript:void(0)";
 														titleTopic ="This thread '" + topicNewPostTitle + "' is UnApproved" ;
 													}
 												} else {
@@ -124,12 +122,12 @@
 										}
 										if(forum.getIsLock() == true){
 											classIconForum = "ForumLockedIcon";
-											titleIconForum = "Forum is Locked for Posting";
+											titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryLockedPosts");
 										}
 										if(forum.getIsClosed() == true){
 											if(userProfile.getUserRole() != 0) continue ;
-											classIconForum = "ForumLockedIcon";//TODO: Rename class ForumLockedIcon into ForumCloseIcon
-											titleIconForum = "Forum is Closed";
+											classIconForum = "ForumCloseIcon";
+											titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 										}
 										String id = category.getId() + "," + forum.getId();
 										

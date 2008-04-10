@@ -228,7 +228,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			list.add(new SelectItemOption<String>(string, ForumFormatUtils.getTimeZoneNumberInString(string))) ;
 		}
 		UIFormSelectBox timeZone = new UIFormSelectBox(FIELD_TIMEZONE_SELECTBOX, FIELD_TIMEZONE_SELECTBOX, list) ;
-		double timeZoneOld = userProfile.getTimeZone() ;
+		double timeZoneOld = -userProfile.getTimeZone() ;
 		Date date = getNewDate(timeZoneOld) ;
 		String mark = "-";
 		if(timeZoneOld < 0) {
@@ -528,7 +528,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 //    	userProfile.setModerateTopics(moderateTopics);
     	userProfile.setIsDisplayAvatar(isDisplayAvatar);
     	
-    	userProfile.setTimeZone(timeZone);
+    	userProfile.setTimeZone(-timeZone);
     	userProfile.setShortDateFormat(shortDateFormat);
     	userProfile.setLongDateFormat(longDateFormat.replace('=', ' ')) ;
     	userProfile.setTimeFormat(timeFormat.replace('=', ' '));

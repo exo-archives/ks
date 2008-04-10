@@ -321,3 +321,8 @@
 	height: auto ;
 	min-height: 200px;
 }
+
+.UIForumPortlet #MessageContent___Frame {
+	width: 435px;
+	height: 200px;
+}

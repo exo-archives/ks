@@ -108,7 +108,6 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			mark = "";
 		}
 		timeZone.setValue(mark + timeZoneOld + "0");
-		System.out.println("\n\n =====> Id ZoneSave: " + mark + timeZoneOld + "0");
 		list = new ArrayList<SelectItemOption<String>>() ;
 		String []format = new String[] {"M-d-yyyy", "M-d-yy", "MM-dd-yy", "MM-dd-yyyy","yyyy-MM-dd", "yy-MM-dd", "dd-MM-yyyy", "dd-MM-yy",
 				"M/d/yyyy", "M/d/yy", "MM/dd/yy", "MM/dd/yyyy","yyyy/MM/dd", "yy/MM/dd", "dd/MM/yyyy", "dd/MM/yy"} ;
@@ -220,7 +219,6 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			String longDateFormat = inputSetOption.getUIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX).getValue();
 			String timeFormat = inputSetOption.getUIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX).getValue();
 			boolean isJump = (Boolean)inputSetOption.getUIFormCheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).getValue() ;
-			System.out.println("\n\n =====> ZoneSave: " + (-timeZone) + "\n");
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UserProfile userProfile = uiForm.userProfile ;

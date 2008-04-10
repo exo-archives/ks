@@ -311,79 +311,29 @@ UIForumPortlet.prototype.openPicture = function(obj,id) {
 	}
 };
 
-UIForumPortlet.prototype.setDisableTopicForm = function() {
-	var post = document.getElementById('CanPost');
-	var view = document.getElementById('CanView') ;
-	if(post === null) return ;
-	var parentView = eXo.core.DOMUtil.findAncestorByClass(view, "FieldComponent") ;
-	var tagA = parentView.getElementsByTagName('a')[0] ;
+UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
+	var objCmdElm = document.getElementById(cmdElm);
+	var objElm = document.getElementById(elm) ;
+	if(objCmdElm === null) return ;
+	var parentElm = eXo.core.DOMUtil.findAncestorByClass(objElm, "FieldComponent") ;
+	var tagA = parentElm.getElementsByTagName('a')[0] ;
 	tagA.setAttribute("tmpHref",tagA.href) ;
-	view.disabled = 'disabled' ;
+	objElm.disabled = 'disabled' ;
 	tagA.href = "javascript:void(0);" ;
-	if(post.value === '') {
-		view.disabled = 'disabled' ;
+	if(objCmdElm.value === '') {
+		objElm.disabled = 'disabled' ;
 		tagA.href = "javascript:void(0);" ;
 	} else {
-		view.disabled = '' ;
+		objElm.disabled = '' ;
 		tagA.href = tagA.getAttribute("tmpHref") ;
 	}
-	post.onkeyup= function() {
+	objCmdElm.onkeyup= function() {
 		if(this.value != '') {
-			view.disabled = '' ;
+			objElm.disabled = '' ;
 			tagA.href = tagA.getAttribute("tmpHref") ;
 		} else {
-			view.disabled = 'disabled' ;
+			objElm.disabled = 'disabled' ;
 			tagA.href = "javascript:void(0);" ;
-		}
-	};
-};
-
-UIForumPortlet.prototype.setDisableForumForm = function() {
-	var post = document.getElementById('Postable');
-	var topic = document.getElementById('Topicable') ;
-	var view = document.getElementById('Viewer') ;
-	if(post === null) return ;
-	var parentView = eXo.core.DOMUtil.findAncestorByClass(view, "FieldComponent") ;
-	var tagA = parentView.getElementsByTagName('a')[0] ;
-
-	tagA.setAttribute("tmpHref",tagA.href) ;
-	var values = post.value ;
-	if(values === '') values = topic.value ;
-	view.disabled = 'disabled' ;
-	tagA.href = "javascript:void(0);" ;
-	if(values === '') {
-		view.disabled = 'disabled' ;
-		tagA.href = "javascript:void(0);" ;
-	} else {
-		view.disabled = '' ;
-		tagA.href = tagA.getAttribute("tmpHref") ;
-	}
-	post.onkeyup= function() {
-		if(topic.value == '') {
-			if(this.value != '') {
-				view.disabled = '' ;
-				tagA.href = tagA.getAttribute("tmpHref") ;
-			} else {
-				view.disabled = 'disabled' ;
-				tagA.href = "javascript:void(0);" ;
-			}
-		}else {
-			view.disabled = '' ;
-			tagA.href = tagA.getAttribute("tmpHref") ;
-		}
-	};
-	topic.onkeyup= function() {
-		if(post.value == '') {
-			if(this.value != '') {
-				view.disabled = '' ;
-				tagA.href = tagA.getAttribute("tmpHref") ;
-			} else {
-				view.disabled = 'disabled' ;
-				tagA.href = "javascript:void(0);" ;
-			}
-		} else {
-			view.disabled = '' ;
-			tagA.href = tagA.getAttribute("tmpHref") ;
 		}
 	};
 };

@@ -8,7 +8,7 @@
 }
 
 .UIForumPortlet .ForumLockedIcon {
-	background: url('icons/ForumCloseIcon.gif') no-repeat ;
+	background: url('icons/ForumLockedIcon.gif') no-repeat ;
 }
 
 .UIForumPortlet .ForumCloseIcon {

@@ -3,7 +3,7 @@
 	import org.exoplatform.web.application.JavascriptManager;  
 	def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableTopicForm();");
+  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('CanView','CanPost');");
 %>
 <div class="UITopicForm">
 	<% uiform.begin() %>

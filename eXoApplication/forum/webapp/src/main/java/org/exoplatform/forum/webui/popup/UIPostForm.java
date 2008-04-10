@@ -319,7 +319,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
       String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIPostForm postForm = event.getSource();
       postForm.tabId = Integer.parseInt(id);
-      
       event.getRequestContext().addUIComponentToUpdateByAjax(postForm.getParent()) ;
 	  }
 	}

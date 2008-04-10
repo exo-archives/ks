@@ -142,7 +142,7 @@
 							else classRow = "OddRow";
 							++i;
 							String classIconForum = "ForumNormalIcon";
-							String titleIconForum = "Forum Contains No New Post";
+							String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
 							String forumTitle = forum.getForumName();
 							String forumDescription = forum.getDescription();
 							String topicCount = (String)forum.getTopicCount();
@@ -169,9 +169,9 @@
 								long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 								if((toDay-createdDate)/86400000 < 4){
 									classIconForum = "ForumNewPostIcon";
-									titleIconForum = "Forum Contains New Posts";
+									titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 								}
-								titleTopic = ("Go to first new post in thread ' " + topicNewPostTitle + " '") ;
+								titleTopic = "Go to first new post in thread ' " + topicNewPostTitle + " '" ;
 								if(topicNewPost.getIsClosed()) {
 									if(ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin) {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
@@ -198,13 +198,13 @@
 							if(forum.getIsLock() == true){
 								isLock = "true";
 								classIconForum = "ForumLockedIcon";
-								titleIconForum = "Forum is Locked for Posting";
+								titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryLockedPosts");
 							}
 							if(forum.getIsClosed() == true){
 								isClose = "true" ;
 								if(userProfile.getUserRole() != 0) continue ;
-								classIconForum = "ForumLockedIcon";//TODO: Rename class ForumLockedIcon into ForumCloseIcon
-								titleIconForum = "Forum is Closed for Posting";
+								classIconForum = "ForumCloseIcon";
+								titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 							}
 					%>
 								<tr class="$classRow">

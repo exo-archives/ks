@@ -128,9 +128,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     UIFormTextAreaInput canView = new UIFormTextAreaInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
     UIFormTextAreaInput canPost = new UIFormTextAreaInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true);
-//		addUIFormInput(topicTitle);
-	 // addUIFormInput(message);
-		
 		
 		UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
 		uiIconSelector.setSelectedIcon("IconsView");
@@ -142,9 +139,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
 		threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
 
-//		UIFormInputWithActions threadIcon = new UIFormInputWithActions(FIELD_THREADICON_TAB);
-//		addUIFormInput(uiIconSelector) ;
-		
 		UIFormInputWithActions threadOption = new UIFormInputWithActions(FIELD_THREADOPTION_TAB);
 		threadOption.addUIFormInput(topicState);
 		threadOption.addUIFormInput(topicStatus);
@@ -182,13 +176,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		this.forumId = forumId ;
 	}
 	
-	public void activate() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-	public void deActivate() throws Exception {
-		// TODO Auto-generated method stub
-	}
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 	
 	@SuppressWarnings("unused")
   private boolean getIsSelected(int id) {
