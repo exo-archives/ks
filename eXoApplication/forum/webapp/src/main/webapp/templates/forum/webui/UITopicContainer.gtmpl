@@ -333,6 +333,7 @@
 							if(!canEdit)isCanView = uicomponent.getCanViewThread() ;
 							if(isCanView) {
 								List topics = uicomponent.getTopicPageLits() ;
+								if(!topics.isEmpty()) {
 									String classRow = "whileRow";
 									int i = 0;
 									 for(topic in topics){
@@ -458,6 +459,15 @@
 						 			</tr>
 						 	<% 
 						 			i = i + 1;} 
+						 			} else {
+						 				%>
+						 				<tr>
+							 				<td colspan="10" align="center">
+							 					<div style="margin: 15px 0px 20px 0px"><b>This forum is empty</b></div>
+							 				</td>
+							 			</tr>
+						 				<%
+						 			}
 						 		} else {
 						 	%>
 						 			<tr>

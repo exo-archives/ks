@@ -26,6 +26,7 @@
 						</thead>
 						<tbody>
 							<% 
+							if(!posts.isEmpty()) {
 								String classRow = "whileRow";
 								int i = 0;
 								 for(post in posts){
@@ -52,7 +53,17 @@
 										<div class="RatingInfoContainer">$createdDate</div>
 									</td>
 					 			</tr>
-						 	<% i = i + 1;} %>
+						 	<% i = i + 1;}
+						 		} else {
+						 		%>
+						 		<tr>
+						 				<td colspan="3" align="center">
+						 					<div style="margin: 5px 0px 10px 0px"><b>Have not anny post</b></div>
+						 				</td>
+						 			</tr>
+						 		<%
+						 		}
+						 	 %>
 						</tbody>
 					</table>
 					<div style="overflow:auto;">

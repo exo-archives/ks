@@ -22,8 +22,8 @@
 				  <thead>
 				  	<tr>
 				      <th width="30%">User Name</th>
+				      <th width="20%">User Title</th>
 				      <th width="20%">User Group</th>
-				      <th width="20%">User Role</th>
 				      <th>Action</th>
 				    </tr>
 				  </thead>
@@ -31,12 +31,26 @@
 				  <% 
 				  	String classRowTable = "EvenRow";
 				  	List listUser = uiform.getListProFileUser() ;  
+				  	String userRole = "" ;
 				  	for(user in listUser) {
+				  		switch (user.getUserRole()) {
+						    case 0:
+						      userRole = "Adminstrator" ;
+						      break;
+						    case 1:
+						      userRole = "Moderator" ;
+						      break;
+						    case 2:
+						      userRole = "User" ;
+						      break;
+						    default:
+						      break;
+					    }
 				  %>
 			      <tr class="$classRowTable">
 						  <td class="text"><%=user.getUserId()%></td>
 							<td class="text"><%=user.getUserTitle()%></td>
-							<td class="text"><%=user.getUserRole()%></td>
+							<td class="text"><%=userRole%></td>
 						  <td>         
 				        <div style="margin: 0px auto;" class="ActionContainer">
 				          <div style="margin: auto;" class="OverflowContainer">          
