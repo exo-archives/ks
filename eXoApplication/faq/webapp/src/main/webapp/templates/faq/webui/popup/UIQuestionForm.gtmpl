@@ -1,0 +1,5 @@
+<div class="UIQuestionForm $uicomponent.id">
+	<% uiform.begin() %>
+		This is Question form	
+	<%uiform.end()%>
+</div>

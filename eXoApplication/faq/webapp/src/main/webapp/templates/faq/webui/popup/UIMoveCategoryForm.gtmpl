@@ -1,0 +1,5 @@
+<div class="UIMoveCategoryForm $uicomponent.id">
+	<% uiform.begin() %>
+		This is Move Category form	
+	<%uiform.end()%>
+</div>

@@ -1,0 +1,5 @@
+<div class="UIWatchForm $uicomponent.id">
+	<% uiform.begin() %>
+		This is Watch form	
+	<%uiform.end()%>
+</div>

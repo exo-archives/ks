@@ -16,24 +16,31 @@
  */
 package org.exoplatform.faq.webui;
 
-import org.exoplatform.faq.webui.popup.UIPopupAction;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
- * Author : Hung Nguyen Quang
+ * Created by The eXo Platform SARL
+ * Author : Hung Nguyen
  *          hung.nguyen@exoplatform.com
- * Mar 04, 2008
+ * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfig(
-   lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/faq/webui/UIFAQPortlet.gtmpl"
+    template =  "app:/templates/faq/webui/UIFAQContainer.gtmpl",
+    events = {
+        //@EventConfig(listeners = UIFAQContainer.SendEmailActionListener.class)   
+    }     
 )
-public class UIFAQPortlet extends UIPortletApplication {
-  public UIFAQPortlet() throws Exception {
-  	addChild(UIFAQContainer.class, null, null) ;
-  	addChild(UIPopupAction.class, null, null) ;
-  }
-} 
+public class UIFAQContainer extends UIContainer  {
+  
+  public UIFAQContainer() throws Exception {
+    addChild(UIBreadcumbs.class, null, null) ;
+    addChild(UIQuestions.class, null, null) ;    
+  } 
+  
+}

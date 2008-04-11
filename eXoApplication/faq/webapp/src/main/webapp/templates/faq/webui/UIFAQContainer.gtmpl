@@ -1,0 +1,8 @@
+<div class="UIFAQContainer">
+	<!--  render UIBreadcumbs-->
+	<% uicomponent.renderChild(UIBreadcumbs.class) ;%>		
+	
+  <!--  render UIQuestions-->
+	<% uicomponent.renderChild(UIQuestions.class) ;%>	
+		
+</div>
