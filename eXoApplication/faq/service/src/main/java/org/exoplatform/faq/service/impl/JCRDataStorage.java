@@ -31,8 +31,10 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
@@ -302,4 +304,39 @@ public class JCRDataStorage {
     }    
   	return catList ;
   }
+  
+  public void saveFAQSetting(String usercategoryId, FAQSetting newSetting, SessionProvider sProvider) throws Exception {
+    Node categoryHome = getCategoryHome(sProvider, null) ;
+    Node settingNode = null;
+    try {
+      settingNode = categoryHome.getNode(Utils.KEY_FAQ_SETTING) ;
+    } catch(PathNotFoundException e) {
+      settingNode = categoryHome.addNode(Utils.KEY_FAQ_SETTING, Utils.EXO_FAQ_SETTING) ;
+      categoryHome.save();
+    }
+   
+    if (settingNode != null) {
+      settingNode.setProperty(Utils.EXO_PROCESSING_MODE, newSetting.getProcessingMode());
+      settingNode.setProperty(Utils.EXO_DISPLAY_TYPE, newSetting.getDisplayMode());
+      // saves change
+      settingNode.save();
+    }
+  }
+  
+  public FAQSetting  getFAQSetting(String categoryId, SessionProvider sProvider) throws Exception  {
+  	Node categoryHome = getCategoryHome(sProvider, null) ;		
+    Node settingNode = null;
+    if (categoryHome.hasNode(Utils.KEY_FAQ_SETTING)) settingNode = categoryHome.getNode(Utils.KEY_FAQ_SETTING) ;
+    FAQSetting setting = new FAQSetting();
+    if (settingNode != null ){
+      try {
+        setting.setProcessingMode((settingNode.getProperty(Utils.EXO_PROCESSING_MODE).getBoolean()));
+      } catch(Exception e) { }
+      try { 
+        setting.setDisplayMode((settingNode.getProperty(Utils.EXO_DISPLAY_TYPE).getString()));
+      } catch(Exception e) { }
+    }
+  	return setting ;
+  }
+
 }

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -80,4 +81,12 @@ public class FAQServiceImpl implements FAQService{
 	public void saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
 		jcrData_.saveQuestion(question, isAddNew, sProvider) ;
 	}
+	
+  public FAQSetting getFAQSetting(String categoryId, SessionProvider sProvider) throws Exception {
+    return jcrData_.getFAQSetting(categoryId, sProvider);
+  }  
+  
+  public void saveFAQSetting(String categoryId, FAQSetting newSetting, SessionProvider sProvider) throws Exception {
+  	jcrData_.saveFAQSetting(categoryId, newSetting, sProvider);
+  }
 }

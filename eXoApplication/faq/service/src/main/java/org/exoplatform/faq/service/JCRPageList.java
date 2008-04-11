@@ -53,7 +53,7 @@ abstract public class JCRPageList {
     return currentListPage_  ;
   }
   
-  public void setContact(List<Question> questions, boolean isUpdate) throws Exception {
+  public void setQuestion(List<Question> questions, boolean isUpdate) throws Exception {
   	if(currentListPage_ == null) return ;
   	for(Question qt : questions) {
   		for(int i = 0; i < currentListPage_.size(); i ++) {
