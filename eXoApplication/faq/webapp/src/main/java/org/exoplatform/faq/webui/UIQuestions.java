@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui;
 
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
+import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -49,14 +50,10 @@ public class UIQuestions extends UIContainer {
     	System.out.println("\n\n AddCategoryActionListener");
       UIFAQPortlet uiPortlet = uiActionBar.getAncestorOfType(UIFAQPortlet.class);
       UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-//      UIPopupActionContainer uiPopupContainer = popupAction.createUIComponent(UIPopupActionContainer.class, null, "UIPopupActionAddressContainer");
-//      popupAction.activate(uiPopupContainer, 510, 270) ;
-//      UICategoryForm uiCategoryForm = uiPopupContainer.createUIComponent(UICategoryForm.class, null, null);
-//      uiPopupContainer.addChild(uiCategoryForm) ;
-//      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-//      
-      UICategoryForm categoryForm = popupAction.createUIComponent(UICategoryForm.class, null, null) ;
-			popupAction.activate(categoryForm, 510, 20) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.addChild(UICategoryForm.class, null, null) ;
+			popupContainer.setId("AddCategoryForm") ;
+			popupAction.activate(popupContainer, 510, 270) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
   	}
   }
