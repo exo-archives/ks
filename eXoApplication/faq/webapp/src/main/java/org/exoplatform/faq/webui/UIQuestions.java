@@ -46,9 +46,15 @@ public class UIQuestions extends UIContainer {
 	static  public class AddCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
     	UIQuestions uiActionBar = event.getSource() ; 
-    	System.out.println("\n\n==== AddCategoryActionListenerest");
+    	System.out.println("\n\n AddCategoryActionListener");
       UIFAQPortlet uiPortlet = uiActionBar.getAncestorOfType(UIFAQPortlet.class);
       UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+//      UIPopupActionContainer uiPopupContainer = popupAction.createUIComponent(UIPopupActionContainer.class, null, "UIPopupActionAddressContainer");
+//      popupAction.activate(uiPopupContainer, 510, 270) ;
+//      UICategoryForm uiCategoryForm = uiPopupContainer.createUIComponent(UICategoryForm.class, null, null);
+//      uiPopupContainer.addChild(uiCategoryForm) ;
+//      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+//      
       UICategoryForm categoryForm = popupAction.createUIComponent(UICategoryForm.class, null, null) ;
 			popupAction.activate(categoryForm, 510, 20) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -57,8 +63,6 @@ public class UIQuestions extends UIContainer {
 	
 	static  public class AddQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-    	UIQuestions uiActionBar = event.getSource() ; 
-    	System.out.println("\n\n==== AddQuestionActionListener");
     	}
     }
 }
