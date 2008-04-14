@@ -326,3 +326,15 @@
 	width: 435px;
 	height: 200px;
 }
+
+.UIForumPortlet .ParentMaskLayer {
+	position: relative ;
+}
+
+.UIForumPortlet .ParentMaskLayer .MaskLayerForum {
+	left: 0px;
+	top: 0px;
+	visibility:visible;
+	z-index:1;
+	position: absolute ;
+}

@@ -40,6 +40,7 @@ public class UIPopupAction extends UIContainer {
 		context.getWriter().append("<span class=\"").append(getId()).append("\" id=\"").append(getId()).append("\">");
 		renderChildren(context) ;
 		context.getWriter().append("</span>");
+		context.getJavascriptManager().addOnLoadJavascript("eXo.forum.UIForumPortlet.setMaskLayer") ; 
 	}
 
 	public <T extends UIComponent> T activate(Class<T> type, int width) throws Exception {

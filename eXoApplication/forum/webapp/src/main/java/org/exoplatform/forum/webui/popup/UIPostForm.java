@@ -260,7 +260,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			t = ForumFormatUtils.clearQuote(message).length() ;
 			if(postTitle.length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0) {	
-				//Post post = new Post() ;
         Post post = new Post() ;
 				post.setSubject(postTitle.trim()) ;
 				post.setMessage(message) ;

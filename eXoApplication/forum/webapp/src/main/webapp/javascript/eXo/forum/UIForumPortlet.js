@@ -343,4 +343,20 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 	};
 };
 
+UIForumPortlet.prototype.setMaskLayer = function() {
+	var forumPortlet = document.getElementById('UIForumPortlet') ;
+	var masklayer = document.getElementById('MaskLayerForum') ;
+	var popupAction = document.getElementById('UIPopupAction') ;
+	var popupWindow = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "UIPopupWindow") ;
+	masklayer.style.width = "auto";
+	masklayer.style.height = "auto";
+ 	if(popupWindow != null) {
+	 	if(popupWindow.style.display == "block") {
+			masklayer.style.width = forumPortlet.offsetWidth - 20 + "px";
+			masklayer.style.height = forumPortlet.offsetHeight - 20 + "px";
+		}
+	}
+}
+
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

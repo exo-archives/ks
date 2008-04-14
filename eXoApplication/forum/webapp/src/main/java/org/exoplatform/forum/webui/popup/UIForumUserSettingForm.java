@@ -127,8 +127,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list) ;
 		longDateFormat.setValue(userProfile.getLongDateFormat());
 		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>("12-hour ("+ForumFormatUtils.getFormatDate("hh:mm a", date)+")", "hh:mm=a")) ;
-		list.add(new SelectItemOption<String>("24-hour ("+ForumFormatUtils.getFormatDate("HH:mm", date)+")", "HH:mm")) ;
+		list.add(new SelectItemOption<String>("12-hour","hh:mm=a")) ;
+		list.add(new SelectItemOption<String>("24-hour","HH:mm")) ;
 		UIFormSelectBox timeFormat = new UIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX, FIELD_TIMEFORMAT_SELECTBOX, list) ;
 		timeFormat.setValue(userProfile.getTimeFormat().replace(' ', '='));
 		list = new ArrayList<SelectItemOption<String>>() ;
@@ -207,6 +207,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
+			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
 			String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
     	Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;
@@ -222,6 +223,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UserProfile userProfile = uiForm.userProfile ;
+			userProfile.setUserTitle(userTitle);
 			userProfile.setSignature(signature);
 			userProfile.setIsDisplaySignature(isDisplaySignature);
 			userProfile.setIsDisplayAvatar(isDisplayAvatar);

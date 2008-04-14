@@ -124,8 +124,8 @@
 						<td></td>
 						<td><%=_ctx.appRes("UICategory.label.noForum");%></td>
 						<td><%=_ctx.appRes("UICategory.label.noPost");%></td>
-						<td><%=_ctx.appRes("UICategory.label.0");%></td>
-						<td><%=_ctx.appRes("UICategory.label.0");%></td>
+						<td>0</td>
+						<td>0</td>
 						<td></td>
 						<% if(isShowMenu){ %>
 						<td></td>
@@ -171,13 +171,13 @@
 									classIconForum = "ForumNewPostIcon";
 									titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 								}
-								titleTopic = "Go to first new post in thread ' " + topicNewPostTitle + " '" ;
+								titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle) ;
 								if(topicNewPost.getIsClosed()) {
 									if(ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin) {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
 									} else {
 										openLinkLastPost = "javascript:void(0)";
-										titleTopic ="This thread '" + topicNewPostTitle + "' is Closed" ;
+										titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
 									}
 								} else {
 									if(forum.getIsModerateTopic()) {
@@ -185,7 +185,7 @@
 											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
 										} else {
 											openLinkLastPost = "javascript:void(0)";
-											titleTopic ="This thread '" + topicNewPostTitle + "' is UnApproved" ;
+											titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 										}
 									} else {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;

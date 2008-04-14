@@ -42,10 +42,10 @@
 								<tr>
 									<th style="width: 40px;"></th>
 									<th>Forums</th>
-									<th style="width: 30%;">Last posts</th>
-									<th style="width: 50px;">Threads</th>
-									<th style="width: 50px;">Posts</th>
-					 				<th style="width: 170px;">Moderator</th>
+									<th style="width: 30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+									<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
+									<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
+					 				<th style="width: 170px;"><%=_ctx.appRes("UICategory.label.moderator");%></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -55,8 +55,8 @@
 							%>
 								<tr>
 									<td></td>
-									<td class="Tdbox">No Forum !</td>
-									<td class="Tdbox">No Theard !</td>
+									<td class="Tdbox"><%=_ctx.appRes("UICategory.label.noForum");%></td>
+									<td class="Tdbox"><%=_ctx.appRes("UICategory.label.noPost");%></td>
 									<td class="Tdbox">0</td>
 									<td class="Tdbox">0</td>
 									<td></td>
@@ -100,19 +100,19 @@
 												classIconForum = "ForumNewPostIcon";
 												titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 											}
-											titleTopic = "Go to first new post in thread ' " + topicNewPostTitle + " '";
+											titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle);
 											if(topicNewPost.getIsClosed()) {
 												if(ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin) {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
 												} else {
-													titleTopic ="This thread '" + topicNewPostTitle + "' is Closed" ;
+													titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
 												}
 											} else {
 												if(forum.getIsModerateTopic()) {
 													if(topicNewPost.getIsApproved() || ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin){
 														openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
 													} else {
-														titleTopic ="This thread '" + topicNewPostTitle + "' is UnApproved" ;
+														titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 													}
 												} else {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;

@@ -72,7 +72,7 @@
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddTopic")%>">
 									<div class="IconButton AddTheradIcon"><span class="LabelIcon"></span>
-										<%=_ctx.appRes(uicomponent.getName() + ".action.NewTheard");%>
+										<%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 									</div>
 								</a>
 							<% } %>
@@ -501,7 +501,7 @@
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddTopic")%>">
 									<div class="IconButton AddTheradIcon"><span class="LabelIcon"></span>
-										<%=_ctx.appRes(uicomponent.getName() + ".action.NewTheard");%>
+										<%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
 									</div>
 								</a>
 							<% } %>

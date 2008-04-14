@@ -115,18 +115,6 @@ public class ForumFormatUtils {
 		return className ;
 	}
 	
-	public static String getStringCleanHtmlCode(String sms) {
-		StringBuffer string = new StringBuffer();
-		char c; boolean get = true ;
-		for (int i = 0; i < sms.length(); i++) {
-			c = sms.charAt(i);
-			if(c == '<') get = false ;
-			if(get) string.append(c);
-			if(c == '>') get = true ;
-		}
-		return string.toString();
-	}
-	
 	public static String[] splitForForum (String str) throws Exception {
 		if(str != null && str.length() > 0) {
 			if(str.contains(",")) return str.trim().split(",") ;
@@ -144,10 +132,24 @@ public class ForumFormatUtils {
 		return rtn.toString() ;
 	}
 	
+	public static String getStringCleanHtmlCode(String sms) {
+		if(sms == null || sms.length() <= 0) return "" ;
+		StringBuffer string = new StringBuffer();
+		char c; boolean get = true ;
+		for (int i = 0; i < sms.length(); i++) {
+			c = sms.charAt(i);
+			if(c == '<') get = false ;
+			if(get) string.append(c);
+			if(c == '>') get = true ;
+		}
+		return string.toString();
+	}
+	
 	public static String convertCodeHTML(String s) {
+		String link = "";
+		if(s == null || s.length() <= 0) return link ;
 		int i = 0, j = 0 ;
 		StringBuffer buffer = new StringBuffer();
-		String link = "";
 		while (true) {
 			i = s.indexOf("http://");
 			if(i < 0)break ;
@@ -209,6 +211,7 @@ public class ForumFormatUtils {
   }
 	
 	public static String clearQuote(String s) {
+		if(s == null || s.length() <= 0) return "" ;
 		StringBuffer buffer = new StringBuffer();
 		while(true) {
 			int t = s.indexOf('['+"QUOTE");
@@ -229,7 +232,24 @@ public class ForumFormatUtils {
     }
 	  return false;
   }
-//for (You	
+
+	public static String getLabel(String label, String key) {
+	  return label.replaceFirst("<keyWord>", key) ;
+  }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public static String convetToCode(String s) {
 //		String []commands = {"for","do","while","continue","break","if","else","new","public","import","final","private","void","static","class","extends","implements",
 //  			"throws","try","catch","return","this","int","long","double","char","null","true","false"} ;

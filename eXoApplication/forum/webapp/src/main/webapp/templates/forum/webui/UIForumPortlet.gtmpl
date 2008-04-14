@@ -4,9 +4,13 @@
   def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
   jsmanager.importJavascript('eXo.forum.UIForumPortlet', '/forum/javascript/');
+  jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.setMaskLayer');
 %>
 
 <div class="UIForumPortlet" id="$uicomponent.id">
+	<div class="ParentMaskLayer">
+		<div id="MaskLayerForum" class="MaskLayerForum"><span></span></div>
+	</div>
 	<%
 		uicomponent.setUserProfile();
 		List children = uicomponent.getChildren() ;

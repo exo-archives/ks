@@ -258,8 +258,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list) ;
 		longDateFormat.setValue(userProfile.getLongDateFormat());
 		list = new ArrayList<SelectItemOption<String>>() ;
-    list.add(new SelectItemOption<String>("12-hour ("+ForumFormatUtils.getFormatDate("hh:mm a", date)+")", "hh:mm=a")) ;
-    list.add(new SelectItemOption<String>("24-hour ("+ForumFormatUtils.getFormatDate("HH:mm", date)+")", "HH:mm")) ;
+		list.add(new SelectItemOption<String>("12-hour","hh:mm=a")) ;
+		list.add(new SelectItemOption<String>("24-hour","HH:mm")) ;
     UIFormSelectBox timeFormat = new UIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX, FIELD_TIMEFORMAT_SELECTBOX, list) ;
 		timeFormat.setValue(userProfile.getTimeFormat().replace(' ', '='));
 		list = new ArrayList<SelectItemOption<String>>() ;
@@ -463,6 +463,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	
     	if(!moderateForums.isEmpty()) {
     		if(userRole >= 2) userRole = 1;
+    	} else {
+    		if(userRole >= 1) userRole = 2;
     	}
     	if(userTitle.indexOf("Admin") >= 0 || userTitle.equals("Moderator") || userTitle.equals("User") || userTitle.equals("Guest")) {
     		if(userRole == 0) userTitle = "Administrator" ;
