@@ -16,23 +16,16 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -50,21 +43,44 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UICategoryForm extends UIForm	{
-	 
+	final private static String EVENT_CATEGORY_NAME = "eventCategoryName" ; 
+  final private static String DESCRIPTION = "description" ;
+  final private static String MODERATOR = "moderator" ;
 	public UICategoryForm() throws Exception {
-	}
+		addUIFormInput(new UIFormStringInput(EVENT_CATEGORY_NAME, EVENT_CATEGORY_NAME, null)) ;
+    addUIFormInput(new UIFormTextAreaInput(DESCRIPTION, DESCRIPTION, null)) ;
+    addUIFormInput(new UIFormStringInput(MODERATOR, MODERATOR, null)) ;
+  }
+  protected String getCategoryName() {return getUIStringInput(EVENT_CATEGORY_NAME).getValue() ;}
+  protected void setCategoryName(String value) {getUIStringInput(EVENT_CATEGORY_NAME).setValue(value) ;}
+
+  protected String getCategoryDescription() {return getUIStringInput(DESCRIPTION).getValue() ;}
+  protected void setCategoryDescription(String value) {getUIFormTextAreaInput(DESCRIPTION).setValue(value) ;}
 	
+  protected String getModerator() {return getUIStringInput(MODERATOR).getValue() ;}
+  protected void setModerator(String value) {getUIStringInput(MODERATOR).setValue(value) ;}
+  
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;			
 			System.out.println("========> Save") ;
+			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+      UIFAQPortlet uiPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
+      String name = uiCategory.getUIStringInput(UICategoryForm.EVENT_CATEGORY_NAME).getValue() ;
+//      if(Utils.isEmptyField(name)) {
+//        uiApp.addMessage(new ApplicationMessage("UIEventCategoryForm.msg.name-required", null)) ;
+//        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+//        return ;
+//      }
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;			
-			System.out.println("==========> Cancel") ;
+      UIPopupAction uiPopupAction = uiCategory.getAncestorOfType(UIPopupAction.class) ;
+      uiPopupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
 	

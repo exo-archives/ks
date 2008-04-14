@@ -16,10 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;

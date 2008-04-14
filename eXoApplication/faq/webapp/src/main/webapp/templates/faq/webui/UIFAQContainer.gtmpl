@@ -1,3 +1,8 @@
+<%
+  import org.exoplatform.faq.webui.UIBreadcumbs ;
+	import org.exoplatform.faq.webui.UIQuestions ;
+	
+%>
 <div class="UIFAQContainer">
 	<!--  render UIBreadcumbs-->
 	<% uicomponent.renderChild(UIBreadcumbs.class) ;%>		
@@ -6,3 +11,4 @@
 	<% uicomponent.renderChild(UIQuestions.class) ;%>	
 		
 </div>
+

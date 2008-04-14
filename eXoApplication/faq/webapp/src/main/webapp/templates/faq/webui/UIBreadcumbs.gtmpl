@@ -1,3 +1,15 @@
 <div class="UIBreadcumbs" id="$uicomponent.id">
-	This is breadcumbs component!
+	<div class="UIBreadcumbs">
+	<div class="LeftBreadcumbsBar">
+		<div class="RightBreadcumbsBar"> 
+			<div class="CenterBreadcumbsBar">
+				<div class="BreadcumbsInfoBar">
+					<div class="OpenIcon"><span/></div>
+					<div class="Selected">eXo FAQ</div>
+			  	<div style="clear: left;"><span/></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 </div>

@@ -33,6 +33,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 )
 public class UIFAQPortlet extends UIPortletApplication {
   public UIFAQPortlet() throws Exception {
+//  	addChild(UIFAQBreadcumds.java, null, null) ;
   	addChild(UIFAQContainer.class, null, null) ;
   	addChild(UIPopupAction.class, null, null) ;
   }
