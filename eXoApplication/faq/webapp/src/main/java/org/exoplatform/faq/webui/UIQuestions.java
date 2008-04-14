@@ -16,10 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -35,7 +31,8 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(
 		template =	"app:/templates/faq/webui/UIQuestions.gtmpl" ,
 		events = {
-				
+				@EventConfig(listeners = UIQuestions.AddCatelogyActionListener.class),
+	      @EventConfig(listeners = UIQuestions.AddQuestionActionListener.class)
 		}
 )
 public class UIQuestions extends UIContainer {
@@ -43,6 +40,20 @@ public class UIQuestions extends UIContainer {
 	public UIQuestions()throws Exception {
 		
 	}
-	
-	
+	static  public class AddCatelogyActionListener extends EventListener<UIQuestions> {
+    public void execute(Event<UIQuestions> event) throws Exception {
+//    	UIQuestions uiActionBar = event.getSource() ; 
+//      UIFAQPortlet uiPortlet = uiActionBar.getAncestorOfType(UIFAQPortlet.class);
+//      UIPopupAction uiPopupAction = uiPortlet.findFirstComponentOfType(UIPopupAction.class);
+//      UIPopupActionContainer uiPopupContainer = uiPopupAction.createUIComponent(UIPopupActionContainer.class, null, "UIPopupActionAddressContainer");
+//      uiPopupAction.activate(uiPopupContainer, 800, 0, true) ;
+//      UICatelogyForm uiAddressBookForm = uiPopupContainer.createUIComponent(UIAddressBookForm.class, null, null);
+//      uiPopupContainer.addChild(uiAddressBookForm) ;
+//      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
+    	}
+    }
+	static  public class AddQuestionActionListener extends EventListener<UIQuestions> {
+    public void execute(Event<UIQuestions> event) throws Exception {
+    	}
+    }
 }
