@@ -403,7 +403,7 @@
 				String classIconPost = post.getIcon() ;
 				if(classIconPost.length() <= 0) 
 					classIconPost = "NormalTopicIcon" ;
-				String subject = post.getSubject() ;
+				String namePost = post.getName() ;
 				Date createdPostDate = post.getCreatedDate() ;
 				createdPostDate.setTime(createdPostDate.getTime() - setTime);
 				String createdDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
@@ -513,12 +513,12 @@
 							<div class="PostViewHeader">
 							<% if(checked == 0) {%>
 								<div class="PostViewTitle">
-									<div class="PostViewIcon $classIconPost">$subject $isHedden</div>
+									<div class="PostViewIcon $classIconPost">$namePost $isHedden</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<% } else { %>
 								<div class="PostViewTitle" style="float: left;">
-									<div class="PostViewIcon $classIconPost">$subject $isHedden</div>
+									<div class="PostViewIcon $classIconPost">$namePost $isHedden</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<div class="CheckPost" style="float: right;">

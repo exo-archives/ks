@@ -169,15 +169,15 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String message = post.getMessage() ;
 			if(isQuote) {//quote
 				String title = "" ;
-				if(post.getSubject().indexOf(": ") > 0) title = post.getSubject() ;
-				else title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getSubject() ;
+				if(post.getName().indexOf(": ") > 0) title = post.getName() ;
+				else title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getName() ;
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
 				String value = "[QUOTE=" + post.getOwner() + "]" + ForumFormatUtils.clearQuote(message) + "[/QUOTE]<br/>";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
 			} else {//edit
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getSubject()) ;
+        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName()) ;
 				if(post.getAttachments() != null && post.getAttachments().size() > 0) {
 					this.attachments_ = post.getAttachments();
 					this.refreshUploadFileList();
@@ -215,7 +215,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			if(postTitle.length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0) {	
 				Post post = new Post() ;
-				post.setSubject(postTitle.trim()) ;
+				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
 				post.setCreatedDate(new Date()) ;
@@ -261,7 +261,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			if(postTitle.length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0) {	
         Post post = new Post() ;
-				post.setSubject(postTitle.trim()) ;
+				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
 				post.setCreatedDate(new Date()) ;

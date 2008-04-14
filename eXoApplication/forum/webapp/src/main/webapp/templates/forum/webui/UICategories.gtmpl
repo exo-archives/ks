@@ -14,6 +14,12 @@
 %>
 <div class="UICategories" id="$uicomponent.id">
 	<div class="UIForumWorkingWorkspace">
+	<%  
+		if(uicomponent.getIsRendered()) {
+			uicomponent.renderChildren() ;
+		} else {
+	%>
+	
 		<div class="UIForumCategories">
 		<% // Start ForumCategory%>
 		<%
@@ -171,10 +177,11 @@
 					</div>
 				</div>
 			</div>	
-		<%   } // End if private%>
-		<% }// End for and End ForumCategory
+		<%   } // End if private
+		   }// End for and End ForumCategory
 		 uicomponent.setIsgetForumList(false) ;
 		%>
 		</div>
+	<% } %>
 	</div>
 </div>

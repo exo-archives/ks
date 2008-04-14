@@ -44,7 +44,12 @@
 							</div>
 						</a>
 					</div>
-					<div style="clear: left;"><span></span></div>
+					<div style="float:right;"> 
+					<%  
+						uicomponent.renderChildren() ;
+					%>
+					</div>
+					<div style="clear: both;"><span></span></div>
 				</div>
 			</div>
 		</div>

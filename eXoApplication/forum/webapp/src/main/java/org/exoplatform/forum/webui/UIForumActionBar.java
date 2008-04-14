@@ -49,7 +49,8 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIForumActionBar extends UIContainer	{
 	private boolean hasCategory = false ;
-	public UIForumActionBar() throws Exception {		
+	public UIForumActionBar() throws Exception {
+		addChild(UIQuickSeachForm.class, null, null) ;
 	} 
 	
 	@SuppressWarnings("unused")

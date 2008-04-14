@@ -66,29 +66,34 @@ public class UIBreadcumbs extends UIContainer {
 			breadcumbs_.clear() ;
 			path_.add("ForumService") ;
 			breadcumbs_.add("eXo Forum") ;
+			if(path.equals("ForumSeach")) {
+				breadcumbs_.add("Search Forums") ;
+				path_.add("/ForumSeach") ;
+			} else {
 			String tempPath = "";
-			for (String string : temp) {
-				pathNode = pathNode + "/" + string;
-				if(t == 0) {
-					tempPath = string;
-					if(string.indexOf("ategory")> 0) {
-						Category category = (Category)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
-						breadcumbs_.add(category.getCategoryName()) ;
-					} else {
-						Tag tag = (Tag)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
-						breadcumbs_.add(tag.getName()) ;
+				for (String string : temp) {
+					pathNode = pathNode + "/" + string;
+					if(t == 0) {
+						tempPath = string;
+						if(string.indexOf("ategory")> 0) {
+							Category category = (Category)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
+							breadcumbs_.add(category.getCategoryName()) ;
+						} else {
+							Tag tag = (Tag)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
+							breadcumbs_.add(tag.getName()) ;
+						}
+					}else if(t == 1) {
+						tempPath = tempPath + "/" + string ;
+						Forum forum = (Forum)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
+						breadcumbs_.add(forum.getForumName()) ;
+					}else if(t == 2) {
+						tempPath = tempPath + "/" + string ;
+						Topic topic = (Topic)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
+						breadcumbs_.add(topic.getTopicName()) ;
 					}
-				}else if(t == 1) {
-					tempPath = tempPath + "/" + string ;
-					Forum forum = (Forum)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
-					breadcumbs_.add(forum.getForumName()) ;
-				}else if(t == 2) {
-					tempPath = tempPath + "/" + string ;
-					Topic topic = (Topic)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
-					breadcumbs_.add(topic.getTopicName()) ;
+					path_.add(tempPath) ;
+					++t;
 				}
-				path_.add(tempPath) ;
-				++t;
 			}
 		} else {
 			path_.clear() ;
@@ -119,11 +124,17 @@ public class UIBreadcumbs extends UIContainer {
 			UIBreadcumbs uiBreadcums = event.getSource() ;			
 			String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = uiBreadcums.getAncestorOfType(UIForumPortlet.class) ;
-			if(path.equals("ForumService")) {
+			if(path.indexOf("ForumSeach") > 0) {
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				forumPortlet.updateIsRendered(1);
-			}else if(path.indexOf("forum") > 0) {
+				forumPortlet.findFirstComponentOfType(UICategories.class).setIsRenderChild(false) ;
+			}else if(path.equals("ForumService")){
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				forumPortlet.updateIsRendered(1);
+				forumPortlet.findFirstComponentOfType(UICategories.class).setIsRenderChild(false) ;
+			}else	if(path.indexOf("forum") > 0) {
 				String id[] = path.split("/");
 				forumPortlet.updateIsRendered(2);
 				UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);

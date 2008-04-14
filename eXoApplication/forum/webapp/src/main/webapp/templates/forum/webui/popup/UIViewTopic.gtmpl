@@ -6,7 +6,7 @@
 <div class="UIViewTopic">
   <% uiform.begin() %>  
 	<% Post post = uicomponent.getPostView(); 
-		 String title = post.getSubject();	
+		 String title = post.getName();	
 		 String messager = ForumFormatUtils.convertCodeHTML(post.getMessage());
 		 String classIcon = post.getIcon() ;
 		 UserProfile userProfile = uicomponent.getUserProfile();

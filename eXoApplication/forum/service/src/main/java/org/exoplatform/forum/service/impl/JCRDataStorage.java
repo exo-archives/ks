@@ -43,6 +43,7 @@ import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
@@ -678,7 +679,7 @@ public class JCRDataStorage{
 						post.setCreatedDate(new Date()) ;
 						post.setModifiedBy(topic.getModifiedBy()) ;
 						post.setModifiedDate(new Date()) ;
-						post.setSubject(topic.getTopicName()) ;
+						post.setName(topic.getTopicName()) ;
 						post.setMessage(topic.getDescription()) ;
 						post.setRemoteAddr("") ;
 						post.setIcon(topic.getIcon()) ;
@@ -693,7 +694,7 @@ public class JCRDataStorage{
 							Post post = getPost(fistPostNode) ;
 							post.setModifiedBy(topic.getModifiedBy()) ;
 							post.setModifiedDate(new Date()) ;
-							post.setSubject(topic.getTopicName()) ;
+							post.setName(topic.getTopicName()) ;
 							post.setMessage(topic.getDescription()) ;
 							post.setIcon(topic.getIcon()) ;
 							post.setAttachments(topic.getAttachments()) ;
@@ -784,6 +785,7 @@ public class JCRDataStorage{
 			try {
 				forumNode = categoryNode.getNode(forumId) ;
 				try {
+					// TODO: comment
 					Node topicNode = forumNode.getNode(topicId) ;
 					JCRPageList pagelist ;
 					StringBuffer stringBuffer = new StringBuffer() ;
@@ -879,7 +881,7 @@ public class JCRDataStorage{
 		if(postNode.hasProperty("exo:createdDate")) postNew.setCreatedDate(postNode.getProperty("exo:createdDate").getDate().getTime()) ;
 		if(postNode.hasProperty("exo:modifiedBy")) postNew.setModifiedBy(postNode.getProperty("exo:modifiedBy").getString()) ;
 		if(postNode.hasProperty("exo:modifiedDate")) postNew.setModifiedDate(postNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
-		if(postNode.hasProperty("exo:subject")) postNew.setSubject(postNode.getProperty("exo:subject").getString()) ;
+		if(postNode.hasProperty("exo:name")) postNew.setName(postNode.getProperty("exo:name").getString()) ;
 		if(postNode.hasProperty("exo:message")) postNew.setMessage(postNode.getProperty("exo:message").getString()) ;
 		if(postNode.hasProperty("exo:remoteAddr")) postNew.setRemoteAddr(postNode.getProperty("exo:remoteAddr").getString()) ;
 		if(postNode.hasProperty("exo:icon")) postNew.setIcon(postNode.getProperty("exo:icon").getString()) ;
@@ -948,7 +950,7 @@ public class JCRDataStorage{
 				}
 				postNode.setProperty("exo:modifiedBy", post.getModifiedBy()) ;
 				postNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
-				postNode.setProperty("exo:subject", post.getSubject()) ;
+				postNode.setProperty("exo:name", post.getName()) ;
 				postNode.setProperty("exo:message", post.getMessage()) ;
 				postNode.setProperty("exo:remoteAddr", post.getRemoteAddr()) ;
 				postNode.setProperty("exo:icon", post.getIcon()) ;
@@ -1335,7 +1337,6 @@ public class JCRDataStorage{
 	}
 	
 	
-	//TODO: coding !
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception {
 		Node userProfileNode = getUserProfileNode(sProvider) ;
 		NodeIterator iterator = userProfileNode.getNodes() ;
@@ -1588,7 +1589,7 @@ public class JCRDataStorage{
 				Post post = new Post() ;
 				post.setId(myNode.getName()) ;
 				post.setPath(path);
-				post.setSubject(myNode.getProperty("exo:subject").getString()) ;
+				post.setName(myNode.getProperty("exo:name").getString()) ;
 				object = (Object)post ;
 			}else if(path.indexOf("topic") > 0) {
 				Topic topic = new Topic() ;
@@ -1668,6 +1669,56 @@ public class JCRDataStorage{
 		}
 		return forumLinks ;
 	}
+
+// TODO: coding
+	public List<ForumSeach> getSeachEvent(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+		if(pathQuery == null || pathQuery.length() <= 0) {
+			pathQuery = forumHomeNode.getPath() ;
+		}
+		List<ForumSeach> listSeachEvent = new ArrayList<ForumSeach>() ;
+		String types[] = new String[] {"forum", "topic", "post"} ;
+		for (String type : types) {
+			StringBuffer queryString = new StringBuffer() ;
+			queryString.append("/jcr:root").append(pathQuery).append("//element(*,exo:").append(type).append(")");
+			//boolean hasConjuntion = false ;
+	    queryString.append("[") ;
+	    //desclared full text query
+	    if(textQuery != null && textQuery.length() > 0) {
+	      queryString.append("jcr:contains(., '").append(textQuery).append("')") ;
+	    //  hasConjuntion = true ;
+	    }
+	    queryString.append("]") ;
+	//		if(hasConjuntion) {
+	//			stringBuffer.append("@exo:name='").append(arg0)
+	//		}
+	    Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes() ;
+			ForumSeach seachEvent ;
+			while (iter.hasNext()) {
+				seachEvent = new ForumSeach() ;
+				Node nodeObj = (Node) iter.nextNode();
+				seachEvent.setId(nodeObj.getName());
+				seachEvent.setName(nodeObj.getProperty("exo:name").getString());
+				seachEvent.setType(type);
+				seachEvent.setPath(nodeObj.getPath()) ;
+				listSeachEvent.add(seachEvent) ;
+			}
+		}
+		return listSeachEvent ;
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+
 
 }
 

@@ -56,9 +56,18 @@ public class UICategories extends UIContainer	{
 	private List<Category> categoryList = new ArrayList<Category>() ;
 	private Map<String, Forum> AllForum = new HashMap<String, Forum>() ;
 	private boolean isGetForumList = false ;
-  
-	public UICategories() throws Exception {}
-
+  private boolean isRenderChild = false ;
+	public UICategories() throws Exception {
+		addChild(UIForumListSeach.class, null, null).setRendered(isRenderChild) ;
+	}
+	
+	public void setIsRenderChild(boolean isRenderChild) {this.isRenderChild = isRenderChild ;}
+	@SuppressWarnings("unused")
+  private boolean getIsRendered() throws Exception {
+		this.getChild(UIForumListSeach.class).setRendered(isRenderChild) ;
+		return isRenderChild ;
+	}
+	
 	@SuppressWarnings({ "deprecation", "unused" })
   private UserProfile getUserProfile() {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;

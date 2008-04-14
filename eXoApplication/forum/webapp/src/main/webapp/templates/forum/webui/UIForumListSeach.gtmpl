@@ -1,0 +1,33 @@
+<%  
+	import org.exoplatform.forum.service.ForumSeach ;
+	List seachEvents = uicomponent.getListEvent() ;
+%>
+<div class="UIForumListSeach">
+	<div class="ContentContainer" id="UITopicContent">
+		<div class="UITopicList">
+			<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+				<thead>
+					<tr>
+						<th style="width: 80px;"> Type </th>
+						<th> Name </th>
+					</tr>
+				</thead>
+			  <tbody>
+			  <%
+			  	int i = 0;  
+			  	for(seachEvent in seachEvents) {
+			  		if(i%2 == 0) classRow = "whileRow";
+						else classRow = "OddRow";
+			  %>
+			  	<tr class="$classRow">
+			  		<td class="Tdbox"><div class="" title=""><%=seachEvent.getType()%></div></td>
+						<td class="Tdbox"><div class="" ><%=seachEvent.getName()%></div></td>
+			  	</tr>
+			  <% 
+						i = i + 1;
+				  } %> 
+			  </tbody>
+			</table>
+	  </div>
+	</div>
+</div>

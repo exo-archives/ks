@@ -23,7 +23,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -294,7 +293,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Post postNew = new Post();
 				postNew.setOwner(userName);
-				postNew.setSubject(topicTitle);
+				postNew.setName(topicTitle);
 				postNew.setCreatedDate(new Date());
 				postNew.setModifiedBy(userName);
 				postNew.setModifiedDate(new Date());

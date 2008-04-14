@@ -53,7 +53,7 @@
 		  %>
 			  <tr class="EvenRow">
 		 			 <td class="text"><div class="Icon24x24 $classIconPost"><span></span></div></td>
-		 			 <td class="text"><%=post.getSubject();%></td>
+		 			 <td class="text"><%=post.getName();%></td>
 		 			 <td class="text">$createdDate</td>
 		 			 <td class="text"><%=post.getOwner();%></td>
 		 			 <td class="text"><div><%uiform.renderChild(post.getId());%></div></td>
