@@ -18,8 +18,6 @@ package org.exoplatform.faq.webui;
 
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
-import org.exoplatform.faq.webui.popup.UIPopupActionContainer;
-import org.exoplatform.forum.webui.popup.UIForumUserSettingForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
