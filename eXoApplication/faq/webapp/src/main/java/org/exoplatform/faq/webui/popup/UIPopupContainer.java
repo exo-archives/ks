@@ -23,9 +23,9 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 
 /**
  * Created by The eXo Platform SARL
- * Author : Vu Duy Tu
- *					tu.duy@exoplatform.com
- * Octo 26, 2007 9:48:18 AM 
+ * Author : Truong Nguyen
+ *					truong.nguyen@exoplatform.com
+ * Apr 10, 2008, 2:07:25 PM
  */
 @ComponentConfig(lifecycle = UIContainerLifecycle.class)
 public class UIPopupContainer extends UIContainer implements UIPopupComponent {

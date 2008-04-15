@@ -17,6 +17,8 @@
 package org.exoplatform.faq.webui;
 
 import org.exoplatform.faq.webui.popup.UIPopupAction;
+import org.exoplatform.web.application.RequestContext;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
@@ -37,4 +39,10 @@ public class UIFAQPortlet extends UIPortletApplication {
   	addChild(UIFAQContainer.class, null, null) ;
   	addChild(UIPopupAction.class, null, null) ;
   }
+  public void cancelAction() throws Exception {
+		WebuiRequestContext context = RequestContext.getCurrentInstance() ;
+		UIPopupAction popupAction = getChild(UIPopupAction.class) ;
+		popupAction.deActivate() ;
+		context.addUIComponentToUpdateByAjax(popupAction) ;
+	}
 } 

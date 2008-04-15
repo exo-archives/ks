@@ -350,6 +350,22 @@
 	padding: 3px 0px 0px 0px;
 }
 
+.UIFAQPortlet .AddIcon16x16 {
+	width: 16px; height: 16px;
+	padding: 3px;
+}
+
+.UIFAQPortlet .SelectUserIcon {
+	background: url('background/Worker2.png') no-repeat left ;
+}
+
+.UIFAQPortlet .SelectMemberIcon {
+	background: url('background/Worker2.png') no-repeat left ;
+}
+
+.UIFAQPortlet .AddAnyIcon {
+	background: url('background/Worker2.png') no-repeat left ;
+}
 /******************************	 Search	***************************************/
 
 .UIFAQPortlet .UIAdvanceSearch {
