@@ -93,18 +93,8 @@ public class QuestionPageList extends JCRPageList {
   	question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
   	question.setActivated(questionNode.getProperty("exo:activated").getBoolean()) ;
   	question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
-  	Value[] values = questionNode.getProperty("exo:responses").getValues() ;
-  	List<String> list = new ArrayList<String>() ;
-  	for(Value vl : values) {
-  		list.add(vl.getString()) ;
-  	}
-  	question.setResponses(list) ;
-  	values = questionNode.getProperty("exo:relatives").getValues() ;
-  	list.clear() ;
-  	for(Value vl : values) {
-  		list.add(vl.getString()) ;
-  	}
-  	question.setResponses(list) ;  	
+  	question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
+  	question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
   	return question ;
   }
   

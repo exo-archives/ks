@@ -57,6 +57,14 @@
   			<valueConstraints/>
   		</propertyDefinition> 		  		
   	</propertyDefinitions>
+  	<!-- childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:faqCategory" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:faqCategory</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions-->
   </nodeType>	
   
   <nodeType name="exo:faqWatch" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">

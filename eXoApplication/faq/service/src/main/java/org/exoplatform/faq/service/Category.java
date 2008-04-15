@@ -31,7 +31,7 @@ public class Category {
   private String id ;
   private String name ;
   private String description ;
-  private List<String> moderators ;
+  private String[] moderators ;
   private Date createdDate ;
   
   
@@ -48,8 +48,8 @@ public class Category {
   public String getDescription() { return description ; }
   public void setDescription(String description) { this.description = description ; }	
   
-  public List<String> getModerators() { return moderators ; }
-  public void setModerators(List<String> mods) { this.moderators = mods ; }
+  public String[] getModerators() { return moderators ; }
+  public void setModerators(String[] mods) { this.moderators = mods ; }
   
   public Date getCreatedDate() { return createdDate ; }
   public void setCreatedDate(Date date) { this.createdDate = date ; }

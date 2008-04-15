@@ -38,8 +38,6 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
-
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
@@ -102,8 +100,8 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:categoryId", question.getCategoryId()) ;
   	questionNode.setProperty("exo:isActivated", question.isActivated()) ;
   	questionNode.setProperty("exo:isApproved", question.isApproved()) ;
-  	questionNode.setProperty("exo:response", question.getResponses().toArray(new String[]{})) ;
-  	questionNode.setProperty("exo:relations", question.getRelations().toArray(new String[]{})) ;  	
+  	questionNode.setProperty("exo:response", question.getResponses()) ;
+  	questionNode.setProperty("exo:relations", question.getRelations()) ;  	
   	
   }
   
@@ -140,18 +138,8 @@ public class JCRDataStorage {
   	question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
   	question.setActivated(questionNode.getProperty("exo:activated").getBoolean()) ;
   	question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
-  	Value[] values = questionNode.getProperty("exo:responses").getValues() ;
-  	List<String> list = new ArrayList<String>() ;
-  	for(Value vl : values) {
-  		list.add(vl.getString()) ;
-  	}
-  	question.setResponses(list) ;
-  	values = questionNode.getProperty("exo:relatives").getValues() ;
-  	list.clear() ;
-  	for(Value vl : values) {
-  		list.add(vl.getString()) ;
-  	}
-  	question.setResponses(list) ;  	
+  	question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
+  	question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
   	return question ;
   }
   
@@ -205,12 +193,12 @@ public class JCRDataStorage {
   	GregorianCalendar cal = new GregorianCalendar() ;
   	cal.setTime(category.getCreatedDate()) ;
   	categoryNode.setProperty("exo:createdDate", cal.getInstance()) ;
-  	categoryNode.setProperty("exo:moderators", category.getModerators().toArray(new String[]{})) ;
+  	categoryNode.setProperty("exo:moderators", category.getModerators()) ;
   }
   
   public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
   	Node categoryHome = getCategoryHome(sProvider, null) ;
-  	if(parentId != null) {  		
+  	if(parentId != null && parentId.length() > 0) {	
     	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
                                                   + "//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
@@ -219,7 +207,7 @@ public class JCRDataStorage {
       QueryResult result = query.execute();
       Node parentCategory = result.getNodes().nextNode() ;
       if(isAddNew) {
-      	Node catNode = parentCategory.addNode(cat.getId(), NT_UNSTRUCTURED) ;
+      	Node catNode = parentCategory.addNode(cat.getId(), "exo:faqCategory") ;
       	saveCategory(catNode, cat) ;
       	parentCategory.save() ;
       }else {
@@ -228,9 +216,9 @@ public class JCRDataStorage {
       	catNode.save() ;
       }
   	}else {
-  		Node catNode = categoryHome.addNode(cat.getId(), NT_UNSTRUCTURED) ;
+  		Node catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
     	saveCategory(catNode, cat) ;
-    	categoryHome.save() ;
+    	categoryHome.getSession().save() ;
   	}  	
   }
   
@@ -251,14 +239,10 @@ public class JCRDataStorage {
   private Category getCategory(Node categoryNode) throws Exception {
   	Category cat = new Category() ;
   	cat.setId(categoryNode.getName()) ;
+  	cat.setName(categoryNode.getProperty("exo:name").getString()) ;
   	cat.setDescription(categoryNode.getProperty("exo:description").getString()) ;
   	cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
-  	Value[] values = categoryNode.getProperty("exo:moderators").getValues() ;
-  	List<String> moders = new ArrayList<String>() ;
-  	for(Value vl : values) {
-  		moders.add(vl.getString()) ;
-  	}
-  	cat.setModerators(moders) ;
+  	cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
   	return cat;
   }
   
@@ -339,4 +323,14 @@ public class JCRDataStorage {
   	return setting ;
   }
 
+  private String [] ValuesToStrings(Value[] Val) throws Exception {
+		if(Val.length < 1) return new String[]{} ;
+		if(Val.length == 1) return new String[]{Val[0].getString()} ;
+		String[] Str = new String[Val.length] ;
+		for(int i = 0; i < Val.length; ++i) {
+			Str[i] = Val[i].getString() ;
+		}
+		return Str;
+	}
+  
 }

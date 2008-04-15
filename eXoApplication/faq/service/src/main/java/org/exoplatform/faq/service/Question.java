@@ -37,8 +37,8 @@ public class Question {
   private boolean isApproved = true ;
   private Date createdDate ;
   private String categoryId ;
-  private List<String> responses ;
-  private List<String> relations ;
+  private String[] responses ;
+  private String[] relations ;
   
   
   public Question() {
@@ -51,15 +51,15 @@ public class Question {
   public String getQuestion() { return question ; }
   public void setQuestion(String name) { this.question = name ; }
 
-  public List<String> getResponses() { return responses ; }
-  public void setResponses(List<String> rp) { this.responses = rp ; }	
-  
-  public List<String> getRelations() { return relations ; }
-  public void setRelations(List<String> rl) { this.relations = rl ; }
-
 	public void setAuthor(String author) { this.author = author; }
 	public String getAuthor() { return author; }
 
+	public String[] getResponses() {return responses;}
+	public void setResponses(String[] responses) {this.responses = responses;}
+
+	public String[] getRelations() {return relations;}
+	public void setRelations(String[] relations) {this.relations = relations;}
+	
 	public void setEmail(String email) { this.email = email; }
 	public String getEmail() { return email; }
 
