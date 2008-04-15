@@ -45,7 +45,14 @@
 		    <name>FAQ</name>
 		    <label>#{platform.users.knowledge.faq}</label>
 		    <page-reference>group::platform/users::faq</page-reference>
-	  	</node>	  	
+	  	</node>	 
+	  	
+	  	<node>
+		    <uri>knowledge/contact</uri>
+		    <name>contact</name>
+		    <label>#{platform.users.collaboration.contact}</label>
+		    <page-reference>group::platform/users::contact</page-reference>
+	  	</node> 	
 	  </node>
 	  <node>
 		    <uri>sitemap</uri>

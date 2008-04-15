@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration>  
+  <external-component-plugins>
+  	<target-component>org.exoplatform.services.organization.OrganizationService</target-component>
+	  <component-plugin>
+	    <name>cs.new.user.event.listener</name>
+	    <set-method>addListenerPlugin</set-method>
+	    <type>org.exoplatform.contact.service.impl.NewUserListener</type>
+	    <description>description</description>	    
+	  </component-plugin>
+	  <component-plugin>
+	    <name>cs.new.membership.event.listener</name>
+	    <set-method>addListenerPlugin</set-method>
+	    <type>org.exoplatform.contact.service.impl.NewMembershipListener</type>
+	    <description>description</description>	    
+	  </component-plugin>	  
+  </external-component-plugins>   
+</configuration>
