@@ -27,13 +27,13 @@
       <version>${org.exoplatform.jcr.version}</version>      
       <scope>provided</scope>
     </dependency>
-    
-    <!--dependency>
+
+    <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
       <version>${org.exoplatform.ks.version}</version>
       <scope>provided</scope>
-    </dependency-->  
+    </dependency> 
   </dependencies>
 
   <build>
