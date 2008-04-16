@@ -28,6 +28,7 @@ public class ForumSeach {
 	private String type ;
 	private String name ;
 	private String content ;
+	private String icon ;
 	
 	public ForumSeach() {}
 	
@@ -60,5 +61,13 @@ public class ForumSeach {
   }
 	public void setContent(String content) {
   	this.content = content;
+  }
+
+	public String getIcon() {
+  	return icon;
+  }
+
+	public void setIcon(String icon) {
+  	this.icon = icon;
   }
 }

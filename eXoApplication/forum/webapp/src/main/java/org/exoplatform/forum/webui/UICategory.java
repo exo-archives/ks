@@ -461,7 +461,7 @@ public class UICategory extends UIForm	{
 			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic, true) ;
 			uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0])) ;
 			uiTopicDetail.setIdPostView("true") ;
-			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[0], id[1]) ;
+			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiCategory.categoryId, id[0], topic) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+id[0] + " "));
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

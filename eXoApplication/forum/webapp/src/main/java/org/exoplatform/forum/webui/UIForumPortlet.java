@@ -41,6 +41,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isCategoryRendered = true;
 	private boolean isForumRendered = false;
 	private boolean isTagRendered = false;
+	private boolean isSeachRendered = false;
 	private boolean isJumpRendered = false;
 	private UserProfile userProfile = null;
 	public UIForumPortlet() throws Exception {
@@ -48,6 +49,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
 		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
+		addChild(UISearchForm.class, null, null).setRendered(isSeachRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(false) ;
 		addChild(UIPopupAction.class, null, null) ;
 	}
@@ -57,22 +59,29 @@ public class UIForumPortlet extends UIPortletApplication {
 			isCategoryRendered = true ;
 			isForumRendered = false ;
 			isTagRendered = false ;
+			isSeachRendered = false ;
+		} else if(selected == 2) {
+			isForumRendered = true ;
+			isCategoryRendered = false ;
+			isTagRendered = false ;
+			isSeachRendered = false ;
+		} else if(selected == 3) {
+			isTagRendered = true ;
+			isForumRendered = false ;
+			isCategoryRendered = false ;
+			isSeachRendered = false ;
 		} else {
-			if(selected == 2) {
-				isForumRendered = true ;
-				isCategoryRendered = false ;
-				isTagRendered = false ;
-			} else {
-				isTagRendered = true ;
-				isForumRendered = false ;
-				isCategoryRendered = false ;
-			}
+			isTagRendered = false ;
+			isForumRendered = false ;
+			isCategoryRendered = false ;
+			isSeachRendered = true ;
 		}
 		UICategoryContainer categoryContainer = getChild(UICategoryContainer.class).setRendered(isCategoryRendered) ;
 		categoryContainer.setIsRenderJump(isJumpRendered) ;
 		UIForumContainer forumContainer = getChild(UIForumContainer.class).setRendered(isForumRendered) ;
 		forumContainer.setIsRenderJump(isJumpRendered) ;
 		getChild(UITopicsTag.class).setRendered(isTagRendered) ;
+		getChild(UISearchForm.class).setRendered(isSeachRendered) ;
 	}
 	
 	@SuppressWarnings("unused")

@@ -50,6 +50,13 @@
 	margin: -3px 7px;
 }
 
+.UIForumPortlet .UISearchForm {
+	padding: 10px ;
+}
+
+.UIForumPortlet .UISearchForm .HorizontalLayout {
+	padding: 20px ;
+}
 /******************************************** UIBreadcumbs ****************************************/
 
 .UIForumPortlet .UIBreadcumbs {
@@ -283,6 +290,7 @@
 	padding: 0px;
 	text-align: center;
 	vertical-align: middle;
+	background-position: center;
 }
 
 .UIForumPortlet .ContentContainer .ForumDescription {

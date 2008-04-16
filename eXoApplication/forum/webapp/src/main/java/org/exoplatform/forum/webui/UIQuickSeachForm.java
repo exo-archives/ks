@@ -61,7 +61,7 @@ public class UIQuickSeachForm extends UIForm {
 			UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 			categories.setIsRenderChild(true) ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text, "");
+			List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text+",,all", "");
 			UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 			listSeachEvent.setListSeachEvent(list) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
@@ -72,6 +72,28 @@ public class UIQuickSeachForm extends UIForm {
 	static	public class AdvancedSearchActionListener extends EventListener<UIQuickSeachForm> {
 		public void execute(Event<UIQuickSeachForm> event) throws Exception {
 			UIQuickSeachForm uiForm = event.getSource() ;
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.updateIsRendered(4) ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

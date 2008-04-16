@@ -1673,26 +1673,30 @@ public class JCRDataStorage{
 // TODO: coding
 	public List<ForumSeach> getSeachEvent(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		List<ForumSeach> listSeachEvent = new ArrayList<ForumSeach>() ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 		if(pathQuery == null || pathQuery.length() <= 0) {
 			pathQuery = forumHomeNode.getPath() ;
 		}
-		List<ForumSeach> listSeachEvent = new ArrayList<ForumSeach>() ;
-		String types[] = new String[] {"forum", "topic", "post"} ;
+		String []valueQuery = textQuery.split(",") ;//text, user, type
+		String types[] = new String[] {"forum", "topic", "post"} ;;
+		if(!valueQuery[2].equals("all")) {
+			types = new String[] {valueQuery[2]} ;
+		}
+		boolean isOwner = false ;
 		for (String type : types) {
 			StringBuffer queryString = new StringBuffer() ;
 			queryString.append("/jcr:root").append(pathQuery).append("//element(*,exo:").append(type).append(")");
-			//boolean hasConjuntion = false ;
 	    queryString.append("[") ;
-	    //desclared full text query
-	    if(textQuery != null && textQuery.length() > 0) {
-	      queryString.append("jcr:contains(., '").append(textQuery).append("')") ;
-	    //  hasConjuntion = true ;
+	    if(!valueQuery[1].equals("null")) {
+	    	queryString.append("(@exo:owner='").append(valueQuery[1]).append("')") ;
+	    	isOwner = true;
+	    }
+	    if(!valueQuery[0].equals("null")) {
+	    	if(isOwner) queryString.append(" and ");
+	    	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
 	    }
 	    queryString.append("]") ;
-	//		if(hasConjuntion) {
-	//			stringBuffer.append("@exo:name='").append(arg0)
-	//		}
 	    Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
@@ -1702,6 +1706,12 @@ public class JCRDataStorage{
 				Node nodeObj = (Node) iter.nextNode();
 				seachEvent.setId(nodeObj.getName());
 				seachEvent.setName(nodeObj.getProperty("exo:name").getString());
+				seachEvent.setType(type);
+				if(!type.equals("forum")){
+					seachEvent.setIcon(nodeObj.getProperty("exo:icon").getString());
+				}else{
+					seachEvent.setIcon("ForumNormalIcon");
+				}
 				seachEvent.setType(type);
 				seachEvent.setPath(nodeObj.getPath()) ;
 				listSeachEvent.add(seachEvent) ;

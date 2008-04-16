@@ -16,9 +16,12 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
@@ -287,6 +290,7 @@ public class UITopicDetail extends UIForm {
 		}
 	}
   
+  @SuppressWarnings("unused")
   private boolean userCanView() {
     try {
       List<String> listUser = new ArrayList<String>() ;
@@ -304,10 +308,26 @@ public class UITopicDetail extends UIForm {
   
 	@SuppressWarnings("unused")
   private String getFileSource(ForumAttachment attachment) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		return ForumSessionUtils.getFileSource(attachment, dservice);
-	}
+    DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+    try {
+    	InputStream input = attachment.getInputStream() ;
+    	String fileName = attachment.getName() ;
+    	return ForumSessionUtils.getFileSource(input, fileName, dservice);
+    } catch (PathNotFoundException e) {
+	    return null;
+    }
+  }
 
+//	@SuppressWarnings("unused")
+//private Contact getPersonalContact(String userId) throws Exception {
+//	Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+//	if(contact == null) {
+//		contact = new Contact() ;
+//		contact.setId(userId) ;
+//	}
+//	return contact ;
+//}
+	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;

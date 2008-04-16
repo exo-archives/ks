@@ -269,6 +269,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			uiForm.getUIStringInput(FIELD_QUESTION_INPUT).setValue("") ;
 			uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).setValue("0") ;
 			uiForm.getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(false) ;
+			uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).setChecked(false) ;
 		}
 	}
 	

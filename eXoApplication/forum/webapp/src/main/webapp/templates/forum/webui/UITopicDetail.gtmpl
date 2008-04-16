@@ -501,7 +501,7 @@
 									<% } else {%>
 									<div><strong>$owner</strong> has no post!</div>
 									<% } %>
-									<div>Location: Hanoi, Vietnam </div>
+									<div>Location: </div>
 								</div>
 							</div>
 						</td>

@@ -18,7 +18,12 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSeach;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -34,6 +39,7 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/UIForumListSeach.gtmpl",
 		events = {
+			@EventConfig(listeners = UIForumListSeach.OpentContentActionListener.class),
 			@EventConfig(listeners = UIForumListSeach.CloseActionListener.class)			
 		}
 )
@@ -49,8 +55,51 @@ public class UIForumListSeach extends UIContainer {
 	public List<ForumSeach> getListEvent() {
 	  return this.listEvent ;
   }
-	static	public class CloseActionListener extends EventListener<UIForumListSeach> {
+	
+	static	public class OpentContentActionListener extends EventListener<UIForumListSeach> {
     public void execute(Event<UIForumListSeach> event) throws Exception {
+			UIForumListSeach uiForm = event.getSource() ;
+    	String []objId = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
+    	String type = objId[0];
+    	String path = objId[1];
+    	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+    	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+    	if(type.equals("forum")) {
+    		String []id = path.split("/") ;
+    		int length = id.length ;
+    		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;
+  			forumPortlet.updateIsRendered(2);
+  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+  			uiForumContainer.setIsRenderChild(true) ;
+  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+  			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
+  			uiTopicContainer.setUpdateForum(id[length-2], forum) ;
+  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-2]+"/"+id[length-1]));
+  			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+    	} else if(type.equals("topic")){
+    		String []id = path.split("/") ;
+    		int length = id.length ;
+    		forumPortlet.updateIsRendered(2);
+  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+  			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+  			uiForumContainer.setIsRenderChild(false) ;
+  			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+  			Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-3] , id[length-2] ) ;
+  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+  			Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path) ;
+  			uiTopicDetail.setTopicFromCate(id[length-3], id[length-2] , topic, true) ;
+  			uiTopicDetail.setUpdateForum(forum) ;
+  			uiTopicDetail.setIdPostView("true") ;
+  			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
+  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
+  			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+    	} else {
+    		
+    	}
+		}
+	}
+	static	public class CloseActionListener extends EventListener<UIForumListSeach> {
+		public void execute(Event<UIForumListSeach> event) throws Exception {
 			//UISearchForm uiForm = event.getSource() ;
 		}
 	}

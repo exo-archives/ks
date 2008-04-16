@@ -9,23 +9,34 @@
 				<thead>
 					<tr>
 						<th style="width: 80px;"> Type </th>
+						<th style="width: 40px;">&nbsp;</th>
 						<th> Name </th>
 					</tr>
 				</thead>
 			  <tbody>
 			  <%
-			  	int i = 0;  
+		  	int i = 0;
+		  	String classRow = "OddRow" ;
+		  	if(seachEvents.size() > 0) {  
 			  	for(seachEvent in seachEvents) {
 			  		if(i%2 == 0) classRow = "whileRow";
 						else classRow = "OddRow";
+						String classIcon = seachEvent.getIcon();
+						String objId = seachEvent.getType() + "," + seachEvent.getPath();
 			  %>
 			  	<tr class="$classRow">
 			  		<td class="Tdbox"><div class="" title=""><%=seachEvent.getType()%></div></td>
-						<td class="Tdbox"><div class="" ><%=seachEvent.getName()%></div></td>
+						<td class="Tdbox $classIcon">&nbsp;</td>
+						<td class="Tdbox"><a class="" href="<%=uicomponent.event("OpentContent",objId);%>"><%=seachEvent.getName()%></a></td>
 			  	</tr>
 			  <% 
 						i = i + 1;
-				  } %> 
+				  } 
+				} else {%>
+			  	<tr class="$classRow">
+						<td class="Tdbox" colspan="10"><div class="" >Sorry - no matches. Please try some different terms.</div></td>
+			  	</tr>
+				<% } %> 
 			  </tbody>
 			</table>
 	  </div>

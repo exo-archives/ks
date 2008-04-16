@@ -61,27 +61,40 @@ public class ForumSessionUtils {
     return SessionProvider.createAnonimProvider();
   }
   
-  public static String getFileSource(ForumAttachment attachment,
-      DownloadService dservice) throws Exception {
-    if (attachment != null) {
-      try {
-        InputStream input = attachment.getInputStream();
-        byte[] imageBytes = null;
-        if (input != null) {
-          imageBytes = new byte[input.available()];
-          input.read(imageBytes);
-          ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-          InputStreamDownloadResource dresource = new InputStreamDownloadResource(
-              byteImage, "image");
-          dresource.setDownloadName(attachment.getName());
-          return dservice.getDownloadLink(dservice
-              .addDownloadResource(dresource));
-        }
-      } catch (PathNotFoundException ex) {
-        return null;
-      }
-    }
-    return null;
+//  public static String getFileSource(ForumAttachment attachment, DownloadService dservice) throws Exception {
+//    if (attachment != null) {
+//      try {
+//        InputStream input = attachment.getInputStream();
+//        byte[] imageBytes = null;
+//        if (input != null) {
+//          imageBytes = new byte[input.available()];
+//          input.read(imageBytes);
+//          ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+//          InputStreamDownloadResource dresource = new InputStreamDownloadResource(
+//              byteImage, "image");
+//          dresource.setDownloadName(attachment.getName());
+//          return dservice.getDownloadLink(dservice
+//              .addDownloadResource(dresource));
+//        }
+//      } catch (PathNotFoundException ex) {
+//        return null;
+//      }
+//    }
+//    return null;
+//  }
+
+  public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+		byte[] imageBytes = null;
+		if (input != null) {
+			imageBytes = new byte[input.available()];
+			input.read(imageBytes);
+			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+			InputStreamDownloadResource dresource = new InputStreamDownloadResource(
+					byteImage, "image");
+			dresource.setDownloadName(fileName);
+			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+		}
+  	return null;
   }
   
   public static String[] getUserGroups() throws Exception {

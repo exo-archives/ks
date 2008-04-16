@@ -224,10 +224,11 @@ public class UICategories extends UIContainer	{
 			uiForumContainer.setIsRenderChild(false) ;
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
-			uiTopicDetail.setTopicFromCate(id[0], id[1],categories.getTopic(id[2], path), true) ;
+			Topic topic = categories.getTopic(id[2], path) ;
+			uiTopicDetail.setTopicFromCate(id[0], id[1], topic, true) ;
 			uiTopicDetail.setUpdateForum(categories.getForumById(id[0], id[1])) ;
 			uiTopicDetail.setIdPostView("true") ;
-			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], id[2]) ;
+			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1], topic) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
 			categories.maptopicLast.clear() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
