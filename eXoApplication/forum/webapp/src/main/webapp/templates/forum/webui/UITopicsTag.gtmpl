@@ -114,7 +114,6 @@
 								<th style="width: 40px;"></th>
 								<th style="width: 40px;"></th>
 								<th>Thread/Thread starter</th>
-								<th style="width: 40px;"></th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
 								<th style="width: 96px;">Rating</th>
 								<th style="width: 40px;">Tag</th>
@@ -145,7 +144,9 @@
 									if(titlePost.length() > 100) {
 										titlePost = titlePost.substring(0, 99) + "...";
 									}
-									String attachment = String.valueOf(topic.getNumberAttachment());
+									int att = topic.getNumberAttachment() ;
+									if(att < 0) att = 0;
+									String attachment = String.valueOf(att);
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
 									String titleTopicStatus = "Hot thread with new post" ;
@@ -187,7 +188,6 @@
 										</div>
 										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
-									<td class="Tdbox"><div class="StatusIcon ModeratedIcon" title="2 Moderated posts"><span></span></div></td>
 									<td class="Tdbox">$attachment</td>
 									<td class="Tdbox">
 										<div class="RatingInfoContainer">

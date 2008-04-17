@@ -126,7 +126,7 @@
 						<td><%=_ctx.appRes("UICategory.label.noPost");%></td>
 						<td>0</td>
 						<td>0</td>
-						<td></td>
+						<td>&nbsp;</td>
 						<% if(isShowMenu){ %>
 						<td></td>
 						<% } %>

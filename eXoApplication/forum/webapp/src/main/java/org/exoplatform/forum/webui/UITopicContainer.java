@@ -23,6 +23,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
@@ -62,6 +63,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		lifecycle = UIFormLifecycle.class,
 		template =	"app:/templates/forum/webui/UITopicContainer.gtmpl", 
 		events = {
+			@EventConfig(listeners = UITopicContainer.SearchFormActionListener.class ),	
 			@EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class ),	
 			@EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),	
 			@EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
@@ -107,6 +109,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	public UITopicContainer() throws Exception {
 		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
 		addUIFormInput( new UIFormStringInput("gopage2", null)) ;
+		addUIFormInput( new UIFormStringInput("search", null)) ;
 		addChild(UIForumPageIterator.class, null, "ForumPageIterator") ;
 	}
 	
@@ -273,6 +276,33 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
 		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), tagIds);	
+	}
+	
+	static public class SearchFormActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiTopicContainer = event.getSource() ;
+			//String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String path = uiTopicContainer.forum.getPath() ;
+			UIFormStringInput formStringInput = uiTopicContainer.getUIStringInput("search") ;
+			String text = formStringInput.getValue() ;
+			if(text != null && text.length() > 0 && path != null) {
+				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateIsRendered(1) ;
+				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
+				categories.setIsRenderChild(true) ;
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text+",,topic/post", path);
+				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
+				listSeachEvent.setListSeachEvent(list) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+				formStringInput.setValue("") ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+			}
+			
+		}
 	}
 	
 	static public class GoNumberPageActionListener extends EventListener<UITopicContainer> {

@@ -20,14 +20,15 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumSeach;
-import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 
@@ -56,16 +57,23 @@ public class UIQuickSeachForm extends UIForm {
 	static	public class SearchActionListener extends EventListener<UIQuickSeachForm> {
     public void execute(Event<UIQuickSeachForm> event) throws Exception {
 			UIQuickSeachForm uiForm = event.getSource() ;
-			String text = uiForm.getUIStringInput(FIELD_SEARCHVALUE).getValue() ;
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
-			categories.setIsRenderChild(true) ;
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text+",,all", "");
-			UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
-			listSeachEvent.setListSeachEvent(list) ;
-			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
+			String text = formStringInput.getValue() ;
+			if(text != null && text.length() > 0) {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
+				categories.setIsRenderChild(true) ;
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text+",,all", "");
+				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
+				listSeachEvent.setListSeachEvent(list) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+				formStringInput.setValue("") ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+			}
 		}
 	}
 

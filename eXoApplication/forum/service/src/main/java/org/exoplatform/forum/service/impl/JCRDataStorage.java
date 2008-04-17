@@ -1681,18 +1681,18 @@ public class JCRDataStorage{
 		String []valueQuery = textQuery.split(",") ;//text, user, type
 		String types[] = new String[] {"forum", "topic", "post"} ;;
 		if(!valueQuery[2].equals("all")) {
-			types = new String[] {valueQuery[2]} ;
+			types = valueQuery[2].split("/") ;
 		}
 		boolean isOwner = false ;
 		for (String type : types) {
 			StringBuffer queryString = new StringBuffer() ;
 			queryString.append("/jcr:root").append(pathQuery).append("//element(*,exo:").append(type).append(")");
 	    queryString.append("[") ;
-	    if(!valueQuery[1].equals("null")) {
+	    if(valueQuery[1] != null && valueQuery[1].length() > 0 && !valueQuery[1].equals("null")) {
 	    	queryString.append("(@exo:owner='").append(valueQuery[1]).append("')") ;
 	    	isOwner = true;
 	    }
-	    if(!valueQuery[0].equals("null")) {
+	    if(valueQuery[0] != null && valueQuery[0].length() > 0 && !valueQuery[0].equals("null")) {
 	    	if(isOwner) queryString.append(" and ");
 	    	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
 	    }

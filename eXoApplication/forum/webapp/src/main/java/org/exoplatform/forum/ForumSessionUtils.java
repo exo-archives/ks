@@ -20,13 +20,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.jcr.PathNotFoundException;
-
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.contact.service.Contact;
+import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
-import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -61,28 +60,6 @@ public class ForumSessionUtils {
     return SessionProvider.createAnonimProvider();
   }
   
-//  public static String getFileSource(ForumAttachment attachment, DownloadService dservice) throws Exception {
-//    if (attachment != null) {
-//      try {
-//        InputStream input = attachment.getInputStream();
-//        byte[] imageBytes = null;
-//        if (input != null) {
-//          imageBytes = new byte[input.available()];
-//          input.read(imageBytes);
-//          ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-//          InputStreamDownloadResource dresource = new InputStreamDownloadResource(
-//              byteImage, "image");
-//          dresource.setDownloadName(attachment.getName());
-//          return dservice.getDownloadLink(dservice
-//              .addDownloadResource(dresource));
-//        }
-//      } catch (PathNotFoundException ex) {
-//        return null;
-//      }
-//    }
-//    return null;
-//  }
-
   public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
 		byte[] imageBytes = null;
 		if (input != null) {
@@ -129,10 +106,10 @@ public class ForumSessionUtils {
   }
   
 
-//  public static Contact getPersonalContact(String userId) throws Exception {
-//  	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;
-//	  return contactService.getPersonalContact(userId);
-//  }
+  public static Contact getPersonalContact(String userId) throws Exception {
+  	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;
+	  return contactService.getPersonalContact(userId);
+  }
 
 
 

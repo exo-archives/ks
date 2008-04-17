@@ -16,6 +16,14 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.io.InputStream;
+
+import javax.jcr.PathNotFoundException;
+
+import org.exoplatform.contact.service.Contact;
+import org.exoplatform.contact.service.ContactAttachment;
+import org.exoplatform.download.DownloadService;
+import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.organization.User;
@@ -56,15 +64,28 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return this.userProfile ;
 	}
 	
-//	@SuppressWarnings("unused")
-//  private Contact getPersonalContact(String userId) throws Exception {
-//		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
-//		if(contact == null) {
-//			contact = new Contact() ;
-//			contact.setId(userId) ;
-//		}
-//		return contact ;
-//	}
+	@SuppressWarnings("unused")
+  private Contact getPersonalContact(String userId) throws Exception {
+		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+		if(contact == null) {
+			contact = new Contact() ;
+			contact.setId(userId) ;
+		}
+		return contact ;
+	}
+	
+	@SuppressWarnings("unused")
+  private String getAvatarUrl(Contact contact) throws Exception {
+		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		try {
+			ContactAttachment attachment = contact.getAttachment() ; 
+    	InputStream input = attachment.getInputStream() ;
+    	String fileName = attachment.getFileName() ;
+    	return ForumSessionUtils.getFileSource(input, fileName, dservice);
+    } catch (NullPointerException e) {
+	    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+    }
+	}
 	
 	@SuppressWarnings("unused")
   private String[] getLabelProfile() {

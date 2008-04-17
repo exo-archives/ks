@@ -23,12 +23,15 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.exoplatform.contact.service.Contact;
+import org.exoplatform.contact.service.ContactAttachment;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
@@ -78,6 +81,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicDetail.RatingTopicActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.AddTagTopicActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.GoNumberPageActionListener.class ),
+			@EventConfig(listeners = UITopicDetail.SearchFormActionListener.class ),
 			
 			@EventConfig(listeners = UITopicDetail.PrintActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.EditActionListener.class ),	
@@ -132,6 +136,7 @@ public class UITopicDetail extends UIForm {
 	public UITopicDetail() throws Exception {
 		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
 		addUIFormInput( new UIFormStringInput("gopage2", null)) ;
+		addUIFormInput( new UIFormStringInput("search", null)) ;
 		addChild(UIForumPageIterator.class, null, "TopicPageIterator") ;
 		addChild(UIPostRules.class, null, null);
 	}
@@ -318,16 +323,28 @@ public class UITopicDetail extends UIForm {
     }
   }
 
-//	@SuppressWarnings("unused")
-//private Contact getPersonalContact(String userId) throws Exception {
-//	Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
-//	if(contact == null) {
-//		contact = new Contact() ;
-//		contact.setId(userId) ;
-//	}
-//	return contact ;
-//}
+		@SuppressWarnings("unused")
+	private Contact getPersonalContact(String userId) throws Exception {
+		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+		if(contact == null) {
+			contact = new Contact() ;
+			contact.setId(userId) ;
+		}
+		return contact ;
+	}
 	
+	@SuppressWarnings("unused")
+  private String getAvatarUrl(Contact contact) throws Exception {
+		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		try {
+			ContactAttachment attachment = contact.getAttachment() ; 
+    	InputStream input = attachment.getInputStream() ;
+    	String fileName = attachment.getFileName() ;
+    	return ForumSessionUtils.getFileSource(input, fileName, dservice);
+    } catch (NullPointerException e) {
+	    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+    }
+	}
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
@@ -476,8 +493,35 @@ public class UITopicDetail extends UIForm {
 		}
 	}
 
-	static public class PrintActionListener extends EventListener<UITopicDetail> {
+	static public class SearchFormActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			String path = topicDetail.topic.getPath() ;
+			UIFormStringInput formStringInput = topicDetail.getUIStringInput("search") ;
+			String text = formStringInput.getValue() ;
+			if(text != null && text.length() > 0 && path != null) {
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateIsRendered(1) ;
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				UICategories categories = categoryContainer.getChild(UICategories.class);
+				categories.setIsRenderChild(true) ;
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text+",,post", path);
+				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
+				listSeachEvent.setListSeachEvent(list) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+				formStringInput.setValue("") ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+			}
+		}
+	}
+
+	static public class PrintActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 //			UITopicDetail topicDetail = event.getSource() ;
 		}
 	}

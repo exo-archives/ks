@@ -215,11 +215,14 @@ UIForumPortlet.prototype.overVote = function(event) {
 
 
 UIForumPortlet.prototype.showPopup = function(elevent,e) {
-	document.getElementById("goPage1").onclick = eXo.forum.UIForumPortlet.cancel ;
-	document.getElementById("goPage2").onclick = eXo.forum.UIForumPortlet.cancel ;
+	var strs = ["gopage1","gopage2","search"];
+	for(var t = 0 ; t < strs.length; t ++) {
+		var elm = document.getElementById(strs[t]);
+		if(elm)elm.onclick = eXo.forum.UIForumPortlet.cancel ;
+	}
 	if(!e) e = window.event ;
 		e.cancelBubble = true ;
-	var parend = eXo.core.DOMUtil.findAncestorByClass(elevent, "GotoPageIcon") ;
+	var parend = eXo.core.DOMUtil.findAncestorByTagName(elevent, "div") ;
 	var popup = eXo.core.DOMUtil.findFirstDescendantByClass(parend, "div", "UIPopupCategory") ;
 	if(popup.style.display === "none") {
 		popup.style.display = "block" ;
@@ -356,7 +359,34 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 			masklayer.style.height = forumPortlet.offsetHeight - 20 + "px";
 		}
 	}
-}
+};
+
+UIForumPortlet.prototype.setOnsubmit = function(frmElmId,action) {
+	var frmElm = document.getElementById(frmElmId) ;
+	var linkAction = "javascript:eXo.webui.UIForm.submitForm('forum#"+frmElmId+"','"+action+"',true)";
+	frmElm.onsubmit="'"+linkAction+"'";
+};
+
+UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
+	if(imgElm.width > 130){  
+		imgElm.style.width = "130px" ;
+	}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

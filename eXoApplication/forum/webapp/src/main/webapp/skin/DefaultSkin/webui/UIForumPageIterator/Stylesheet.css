@@ -128,8 +128,18 @@
 	z-index: 1010;
 }
 
+.UIForumPortlet .SearchForm .UIPopupCategory .InputPage {
+	padding: 2px 6px;
+}
+
+.UIForumPortlet .SearchForm .UIPopupCategory .InputPage input{
+	width: 95px;
+	height: 12px;
+	font-size: 12px;
+}
+
 .UIForumPortlet .GotoPageIcon .UIPopupCategory .InputPage {
-	padding-right: 6px;
+	padding:2px 6px 0px 0px;
 }
 
 .UIForumPortlet .GotoPageIcon .UIPopupCategory .InputPage input{

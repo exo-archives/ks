@@ -125,15 +125,15 @@ public class UIBreadcumbs extends UIContainer {
 			String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = uiBreadcums.getAncestorOfType(UIForumPortlet.class) ;
 			if(path.indexOf("ForumSeach") > 0) {
+				forumPortlet.updateIsRendered(1);
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(1);
-				forumPortlet.findFirstComponentOfType(UICategories.class).setIsRenderChild(false) ;
+				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 			}else if(path.equals("ForumService")){
+				forumPortlet.updateIsRendered(1);
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(1);
-				forumPortlet.findFirstComponentOfType(UICategories.class).setIsRenderChild(false) ;
+				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 			}else	if(path.indexOf("forum") > 0) {
 				String id[] = path.split("/");
 				forumPortlet.updateIsRendered(2);

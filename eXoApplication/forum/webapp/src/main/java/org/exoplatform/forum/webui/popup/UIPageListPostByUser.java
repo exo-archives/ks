@@ -104,7 +104,7 @@ public class UIPageListPostByUser extends UIContainer{
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
       viewTopic.setPostView(post) ;
-      viewTopic.setViewUserInfo(true) ;
+      viewTopic.setViewUserInfo(false) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

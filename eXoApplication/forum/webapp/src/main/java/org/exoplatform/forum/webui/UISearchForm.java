@@ -45,7 +45,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
 		events = {
-			@EventConfig(listeners = UISearchForm.SearchActionListener.class)			
+			@EventConfig(listeners = UISearchForm.SearchActionListener.class),	
+			@EventConfig(listeners = UISearchForm.OnchangeActionListener.class)			
 		}
 )
 public class UISearchForm extends UIForm {
@@ -63,6 +64,7 @@ public class UISearchForm extends UIForm {
 		list.add(new SelectItemOption<String>("Topic", "topic")) ;
 		list.add(new SelectItemOption<String>("Post", "post")) ;
 		UIFormSelectBox seachType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list) ;
+		seachType.setOnChange("Onchange") ;
 		addUIFormInput(seachType) ;
 
 		//addUIFormInput(new UIFormStringInput(FIELD_SEARCHIN_SELECTBOX, FIELD_SEARCHIN_SELECTBOX, null)) ;
@@ -77,7 +79,6 @@ public class UISearchForm extends UIForm {
 			String query = text+","+user ;
 			if(!query.equals("null,null")){
 				query = query +","+type ;
-				System.out.println("\n\n test:  " + query);
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(1) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
@@ -94,6 +95,24 @@ public class UISearchForm extends UIForm {
 			}
 		}
 	}
+	static	public class OnchangeActionListener extends EventListener<UISearchForm> {
+		public void execute(Event<UISearchForm> event) throws Exception {
+			UISearchForm uiForm = event.getSource() ;
+			String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
+			
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
 }
 
 

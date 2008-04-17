@@ -130,7 +130,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			fileUpload.setActionListener("") ;
 			fileUpload.setActionType(ActionData.TYPE_ICON) ;
 			fileUpload.setCssIconClass("AttachmentIcon") ;
-			fileUpload.setActionName(attachdata.getName() + " ("+attachdata.getSize()/1024 +" Kb)" ) ;
+			fileUpload.setActionName(attachdata.getName() + " ("+attachdata.getSize()/1048576 +" Kb)" ) ;
 			fileUpload.setShowLabel(true) ;
 			uploadedFiles.add(fileUpload) ;
 			ActionData removeAction = new ActionData() ;

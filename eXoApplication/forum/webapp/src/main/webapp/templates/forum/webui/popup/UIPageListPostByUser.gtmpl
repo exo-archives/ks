@@ -32,7 +32,7 @@
 								 for(post in posts){
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
-									String postTitle = post.getSubject() ;
+									String postTitle = post.getName() ;
 									String message = ForumFormatUtils.getStringCleanHtmlCode(post.getMessage()) ;
 									String titlePost ;
 									if(message.length() > 100) titlePost = message.substring(0, 100) + "..." ;

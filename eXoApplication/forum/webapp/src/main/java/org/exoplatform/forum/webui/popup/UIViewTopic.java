@@ -49,8 +49,8 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private Post post;
-  private boolean isViewUserInfo = false ;
-	
+  private boolean isViewUserInfo = true ;
+	private boolean isPopupComponent = true ;
 	public UIViewTopic() {
 	}
 	
@@ -82,22 +82,26 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+	
+	public boolean getIsPopupComponent() { return isPopupComponent;}
+	public void setPopupComponent(boolean isPopupComponent) { this.isPopupComponent = isPopupComponent;}
   
-  public void setViewUserInfo(boolean isView){
-    this.isViewUserInfo = isView ;
-  }
-  
-  @SuppressWarnings("unused")
-  private boolean getIsViewUserInfo(){
-    return this.isViewUserInfo ;
-  }
+  public void setViewUserInfo(boolean isView){ this.isViewUserInfo = isView ;}
+  public boolean getIsViewUserInfo(){ return this.isViewUserInfo ;}
 	
 	static	public class CloseActionListener extends EventListener<UIViewTopic> {
     public void execute(Event<UIViewTopic> event) throws Exception {
 			UIViewTopic uiForm = event.getSource() ;
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			popupContainer.getChild(UIPopupAction.class).deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			if(uiForm.getIsPopupComponent()) {
+				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+				popupContainer.getChild(UIPopupAction.class).deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			} else {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+				uiForm.isPopupComponent = true ;
+			}
 		}
 	}
+
 }

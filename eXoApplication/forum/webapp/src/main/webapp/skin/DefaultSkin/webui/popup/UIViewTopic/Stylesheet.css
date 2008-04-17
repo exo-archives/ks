@@ -1,10 +1,13 @@
 .UIForumPortlet .UIViewTopic {
 	margin: 10px;
+}
+
+.UIViewTopic .ViewContainer {
 	border: 1px solid #c7c7c7;
 	background: #f7f7f7;
 }
 
-.UIViewTopic .ViewContainer {
+.UIViewTopic .ViewTopicContent {
 	border: 1px solid white;
 	padding: 10px;
 }

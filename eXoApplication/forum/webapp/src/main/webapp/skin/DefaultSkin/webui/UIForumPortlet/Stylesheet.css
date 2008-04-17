@@ -233,6 +233,7 @@
 .UIForumPortlet .ContentContainer .UIGrid th {
 	background: url(background/ForumTitleBar1x19.gif) repeat-x;
 	border: 1px solid #d2d4dc;
+	padding: 0px;
 }
 
 .UIForumPortlet .ContentContainer .UIGrid td {
