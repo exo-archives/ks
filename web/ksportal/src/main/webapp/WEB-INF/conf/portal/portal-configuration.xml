@@ -22,7 +22,7 @@
       </value-param>
       
       <value-param>
-        <name>portal.cretor.groups</name>
+        <name>portal.creator.groups</name>
         <description>groups with membership type have permission to manage portal</description>
         <value>*:/platform/administrations,*:/organization/management/executive-board</value>	    
       </value-param>
