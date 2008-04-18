@@ -153,7 +153,7 @@ public class JCRDataStorage {
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
                                                 + "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
-    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
@@ -167,7 +167,7 @@ public class JCRDataStorage {
                                                 + "//element(*,exo:faqQuestion)[@exo:category='").
                                                 append(categoryId).
                                                 append("']").append("order by @exo:createdDate ascending");
-    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
@@ -202,7 +202,7 @@ public class JCRDataStorage {
     	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
                                                   + "//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
-      System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+//      System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       Node parentCategory = result.getNodes().nextNode() ;
@@ -228,7 +228,6 @@ public class JCRDataStorage {
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
                                                 + "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     Node categoryNode = result.getNodes().nextNode() ;
@@ -239,10 +238,10 @@ public class JCRDataStorage {
   private Category getCategory(Node categoryNode) throws Exception {
   	Category cat = new Category() ;
   	cat.setId(categoryNode.getName()) ;
-  	cat.setName(categoryNode.getProperty("exo:name").getString()) ;
-  	cat.setDescription(categoryNode.getProperty("exo:description").getString()) ;
-  	cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
-  	cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
+  	if(categoryNode.hasProperty("exo:name")) cat.setName(categoryNode.getProperty("exo:name").getString()) ;
+  	if(categoryNode.hasProperty("exo:description")) cat.setDescription(categoryNode.getProperty("exo:description").getString()) ;
+  	if(categoryNode.hasProperty("exo:createdDate")) cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
+  	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
   	return cat;
   }
   
@@ -251,7 +250,7 @@ public class JCRDataStorage {
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
                                                 + "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
   	return getCategory(result.getNodes().nextNode()) ;
@@ -261,7 +260,7 @@ public class JCRDataStorage {
   	Node categoryHome = getCategoryHome(sProvider, null) ;
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() + "//element(*,exo:faqCategory)") ;
-    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
   	NodeIterator iter = result.getNodes() ;
@@ -278,7 +277,7 @@ public class JCRDataStorage {
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
                                                 + "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     Node catNode = result.getNodes().nextNode() ;

@@ -17,7 +17,6 @@
 package org.exoplatform.faq.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
