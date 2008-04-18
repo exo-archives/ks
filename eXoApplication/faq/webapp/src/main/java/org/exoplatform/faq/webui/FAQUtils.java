@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -30,6 +31,10 @@ import org.exoplatform.services.organization.User;
  * Apr 14, 2008, 2:56:30 PM
  */
 public class FAQUtils {
+	
+	static public FAQService getFAQService() throws Exception {
+    return (FAQService)PortalContainer.getComponent(FAQService.class) ;
+  }
 	
 	public static User getUserByUserId(String userId) throws Exception {
   	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);

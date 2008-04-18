@@ -6,64 +6,60 @@
  					<div class="UIFormInputSetWithAction">
  						<div class="FormContainer">
  							<table class="UIFormGrid">
- 								<tbody>
- 									<tr>
- 										<td class="FieldLabel">Category:</td>
- 										<td class="FieldComponent">
- 											<input type="text" name="eventCategoryName" name="3"/>
- 										</td>
- 									</tr>
- 									<tr>
- 										<td class="FieldLabel">Description:</td>
- 										<td class="FieldComponent">
- 											<textarea class="textarea" name="description"></textarea>
- 										</td>
- 									</tr>
- 									<tr>
- 										<td class="FieldLabel">Moderator:</td>
- 										<td class="FieldComponent">
-	                		<input type="text" readonly="readonly" id="userOrGroup" name="userOrGroup"/>      
-	                    <a title="SelectUser" href="javascript:eXo.webui.UIForm.submitForm('UIPermissionForm', 'SelectUser', true)">
-	                      <img src="/eXoResources/skin/DefaultSkin/background/Blank.gif" class="AddIcon16x16 SelectUserIcon"/>
-	                    </a>
-	                   
-	                    <a title="SelectMember" href="javascript:eXo.webui.UIForm.submitForm('UIPermissionForm', 'SelectMember', true)">
-	                      <img src="/eXoResources/skin/DefaultSkin/background/Blank.gif" class="AddIcon16x16 SelectMemberIcon"/>
-	                    </a>
-	                   
-	                    <a title="AddAny" href="javascript:eXo.webui.UIForm.submitForm('UIPermissionForm', 'AddAny', true)">
-	                      <img src="/eXoResources/skin/DefaultSkin/background/Blank.gif" class="AddIcon16x16 AddAnyIcon"/>
-	                    </a>
-                		</td>
- 									</tr>
- 								</tbody>
- 							</table>
+								<tbody>						
+							<% 
+								for(field in uiform.getChildren()) { 
+									if(field.isRendered()) {
+							%>
+										<tr>
+											<%fieldName = uicomponent.getLabel(field.getName());%>
+											<%if(!fieldName.equals(uicomponent.getId())) { %>												
+												<td class="FieldLabel">
+													<%if(fieldName != null && fieldName.length() > 0) {%> 
+														<%=uicomponent.getLabel(field.getName()) %>
+													<%}%>
+												</td>
+												<td class="FieldComponent">
+														<% uiform.renderField(field) %>
+												</td>
+											<%} else {%>
+												<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+											<%}%>
+										</tr>
+							<%
+									}
+								}
+							%>						
+								</tbody>
+						</table>
  						</div>
  					</div>
  				</div>
  			</div>
  		</div>
  	<div class="UIAction"> 
-	  <table class="ActionContainer" align="center">
-			<tr>
-			  <td align="center">
-  				<a href="<%=uicomponent.event("Save")%>" class="ActionButton LightBlueStyle">
-	         	<div class="ButtonLeft">
-	          	<div class="ButtonRight">
-	             	<div class="ButtonMiddle"> Save </div>
-	            </div>
-	          </div>
-	        </a>
-	        <a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
-	          <div class="ButtonLeft">
-	            <div class="ButtonRight">
-	             	<div class="ButtonMiddle"> Cancel </div>
-	            </div>
-	          </div>
-	        </a>
-			  </td>
-			</tr>
- 	  </table>
-	</div>
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+				<% for(action in uicomponent.getActions()) {
+						 if(action.indexOf("Values") > 0) continue ; 
+						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+						 String link = uicomponent.event(action) ;
+				%>
+						<a href="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"> $actionLabel </div>
+								</div>
+							</div>
+						</a>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+		<div id="ActionsText" style="display:none;">
+			<a class="ChildAction" id="SelectUser" href="<%=uicomponent.event("SelectUserAction");%>">ChildAction</a>
+		</div>
 	<%uiform.end()%>
 </div>

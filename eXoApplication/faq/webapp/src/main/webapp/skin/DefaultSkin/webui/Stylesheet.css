@@ -350,21 +350,31 @@
 	padding: 3px 0px 0px 0px;
 }
 
-.UIFAQPortlet .AddIcon16x16 {
+.UIFAQPortlet .SelectUserIcon {
+	background: url('background/Worker2.png') no-repeat left ;
 	width: 16px; height: 16px;
 	padding: 3px;
 }
 
-.UIFAQPortlet .SelectUserIcon {
-	background: url('background/Worker2.png') no-repeat left ;
-}
-
 .UIFAQPortlet .SelectMemberIcon {
 	background: url('background/Worker2.png') no-repeat left ;
+	width: 16px; height: 16px;
+	padding: 3px;
 }
 
 .UIFAQPortlet .AddAnyIcon {
 	background: url('background/Worker2.png') no-repeat left ;
+	width: 16px; height: 16px;
+	padding: 3px;
+}
+
+.UIFAQPortlet .UISettingForm {
+	padding:8px;
+}
+
+.UIFAQPortlet .UISettingForm .UIForm .HorizontalLayout {
+	padding: 8px;
+	background-color: #EFEFEF;
 }
 /******************************	 Search	***************************************/
 

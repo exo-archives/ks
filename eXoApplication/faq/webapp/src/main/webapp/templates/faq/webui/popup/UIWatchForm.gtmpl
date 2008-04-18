@@ -1,5 +1,50 @@
 <div class="UIWatchForm $uicomponent.id">
 	<% uiform.begin() %>
-		This is Watch form	
+		<div class="HorizontalLayout">
+ 				<div class="UIFormGrid">
+ 					<div class="UIFormInputSetWithAction">
+ 						<div class="FormContainer">
+ 							<table class="UIFormGrid">
+ 								<tbody>
+ 									<tr>
+ 										<td class="FieldLabel">User name: </td>
+ 										<td class="FieldComponent">
+ 											<input type="text" name="userName" name="3"/>
+ 										</td>
+ 									</tr>
+ 									<tr>
+ 										<td class="FieldLabel">Email address: </td>
+ 										<td class="FieldComponent">
+ 											<input type="text" name="emailAddress"/>
+ 										</td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+ 				</div>
+ 			</div>
+ 	<div class="UIAction"> 
+	  <table class="ActionContainer" align="center">
+			<tr>
+			  <td align="center">
+  				<a href="<%=uicomponent.event("Save")%>" class="ActionButton LightBlueStyle">
+	         	<div class="ButtonLeft">
+	          	<div class="ButtonRight">
+	             	<div class="ButtonMiddle"> Save </div>
+	            </div>
+	          </div>
+	        </a>
+	        <a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+	          <div class="ButtonLeft">
+	            <div class="ButtonRight">
+	             	<div class="ButtonMiddle"> Cancel </div>
+	            </div>
+	          </div>
+	        </a>
+			  </td>
+			</tr>
+ 	  </table>
+	</div>
 	<%uiform.end()%>
 </div>

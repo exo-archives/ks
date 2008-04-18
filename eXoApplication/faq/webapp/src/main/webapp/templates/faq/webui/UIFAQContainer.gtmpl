@@ -3,12 +3,8 @@
 	import org.exoplatform.faq.webui.UIQuestions ;
 	
 %>
-<div class="UIFAQContainer">
-	<!--  render UIBreadcumbs-->
-	<% uicomponent.renderChild(UIBreadcumbs.class) ;%>		
-	
-  <!--  render UIQuestions-->
-	<% uicomponent.renderChild(UIQuestions.class) ;%>	
-		
+<div class="UIFAQContainer" id="<%=uicomponent.getId()%>">
+		<% uicomponent.renderChildren()%>
+	  <%uicomponent.renderPopupMessages()%>
 </div>
 

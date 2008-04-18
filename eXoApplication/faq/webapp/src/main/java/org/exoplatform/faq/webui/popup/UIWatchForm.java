@@ -63,8 +63,10 @@ public class UIWatchForm extends UIForm	{
 
 	static public class CancelActionListener extends EventListener<UIWatchForm> {
     public void execute(Event<UIWatchForm> event) throws Exception {
-			UIWatchForm uiCategory = event.getSource() ;			
-			System.out.println("==========> Cancel") ;
+			UIWatchForm uiCategory = event.getSource() ;						
+      UIPopupAction uiPopupAction = uiCategory.getAncestorOfType(UIPopupAction.class) ;
+      uiPopupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; ;
 		}
 	}
 	

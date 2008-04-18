@@ -16,12 +16,9 @@
  */
 package org.exoplatform.faq.webui;
 
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 
 /**
  * Created by The eXo Platform SARL
@@ -31,7 +28,7 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-    template =  "app:/templates/faq/webui/UIFAQContainer.gtmpl",
+		lifecycle=UIContainerLifecycle.class,
     events = {
         //@EventConfig(listeners = UIFAQContainer.SendEmailActionListener.class)   
     }     

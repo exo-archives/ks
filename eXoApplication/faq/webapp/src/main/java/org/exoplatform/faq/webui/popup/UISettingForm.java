@@ -17,22 +17,23 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.popup.UIPopupComponent;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.UIFormSelectBox;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -49,22 +50,64 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
-public class UISettingForm extends UIForm	{
-	 
-	public UISettingForm() throws Exception {
+public class UISettingForm extends UIForm implements UIPopupComponent	{
+	public static final String SHOW_MODE = "show-mode".intern(); 
+	public static final String DISPLAY_TYPE = "display-type".intern(); 
+	
+	public UISettingForm() throws Exception {}
+	
+	public void init() throws Exception {
+		
+		List<SelectItemOption<String>> showMode = new ArrayList<SelectItemOption<String>>();
+		showMode.add(new SelectItemOption<String>("Do not process question befor showing", "true"));
+		showMode.add(new SelectItemOption<String>("Process question befor showing","false" ));
+		addUIFormInput(new UIFormSelectBox(SHOW_MODE, SHOW_MODE, showMode));
+		
+		List<SelectItemOption<String>> displayType = new ArrayList<SelectItemOption<String>>();
+		displayType.add(new SelectItemOption<String>("Relevence",FAQSetting.DISPLAY_TYPE_RELEVANCE));
+		displayType.add(new SelectItemOption<String>("Post date",FAQSetting.DISPLAY_TYPE_POSTDATE ));
+		displayType.add(new SelectItemOption<String>("Alphabet",FAQSetting.DISPLAY_TYPE_ALPHABET ));
+		addUIFormInput(new UIFormSelectBox(DISPLAY_TYPE, DISPLAY_TYPE, displayType));
+//		fillData() ;
 	}
 	
+	public void fillData() throws Exception {    
+    FAQService mailSrv = getApplicationComponent(FAQService.class);
+    String username = Util.getPortalRequestContext().getRemoteUser();
+    FAQSetting setting = mailSrv.getFAQSetting(username, SessionProviderFactory.createSystemProvider()) ;
+    if (setting != null) {
+      getUIFormSelectBox(SHOW_MODE).setValue(String.valueOf(setting.getProcessingMode())) ;
+      getUIFormSelectBox(DISPLAY_TYPE).setValue(String.valueOf(setting.getDisplayMode()));
+      
+    }
+  }
+  
+  public String[] getActions() { return new String[]{"Save", "Cancel"}; }
+  
+  public void activate() throws Exception { }
+
+  public void deActivate() throws Exception { }
+	
 	static public class SaveActionListener extends EventListener<UISettingForm> {
-    public void execute(Event<UISettingForm> event) throws Exception {
-			UISettingForm uiCategory = event.getSource() ;			
+		public void execute(Event<UISettingForm> event) throws Exception {
 			System.out.println("========> Save") ;
+			UISettingForm uiCategory = event.getSource() ;			
+			UIFAQPortlet uiPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class);
+			FAQService service = FAQUtils.getFAQService() ;
+			FAQSetting faqSetting = new FAQSetting() ;
+			
+			faqSetting.setProcessingMode(Boolean.valueOf(uiCategory.getUIFormSelectBox(SHOW_MODE).getValue()));
+			faqSetting.setDisplayMode(String.valueOf(uiCategory.getUIFormSelectBox(DISPLAY_TYPE).getValue())) ;
+//			service.saveFAQSetting(categoryId, faqSetting, SessionProviderFactory.createSystemProvider()) ;
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UISettingForm> {
-    public void execute(Event<UISettingForm> event) throws Exception {
+		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm uiCategory = event.getSource() ;			
-			System.out.println("==========> Cancel") ;
+      UIPopupAction uiPopupAction = uiCategory.getAncestorOfType(UIPopupAction.class) ;
+      uiPopupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
 	
