@@ -139,6 +139,7 @@ public class UITopicDetail extends UIForm {
 		addUIFormInput( new UIFormStringInput("search", null)) ;
 		addChild(UIForumPageIterator.class, null, "TopicPageIterator") ;
 		addChild(UIPostRules.class, null, null);
+		this.setSubmitAction("GoNumberPage") ;
 	}
 	
 	@SuppressWarnings("unused")
@@ -507,7 +508,7 @@ public class UITopicDetail extends UIForm {
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text+",,post", path);
+				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,post", path);
 				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 				listSeachEvent.setListSeachEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;

@@ -361,11 +361,6 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 	}
 };
 
-UIForumPortlet.prototype.setOnsubmit = function(frmElmId,action) {
-	var frmElm = document.getElementById(frmElmId) ;
-	var linkAction = "javascript:eXo.webui.UIForm.submitForm('forum#"+frmElmId+"','"+action+"',true)";
-	frmElm.onsubmit="'"+linkAction+"'";
-};
 
 UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
 	if(imgElm.width > 130){  

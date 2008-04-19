@@ -13,8 +13,10 @@
 								<%if(!fieldName.equals(uicomponent.getId())) { %>												
 									<td class="FieldLabel">
 										<%if(fieldName != null && fieldName.length() > 0) {%> 
-											<%=uicomponent.getLabel(field.getName()) %>
-										<%}%>
+											<%=fieldName%>
+										<%} else {%>
+											<%=field%>
+										<% } %>
 									</td>
 									<td class="FieldComponent">
 											<% uiform.renderField(field) %>

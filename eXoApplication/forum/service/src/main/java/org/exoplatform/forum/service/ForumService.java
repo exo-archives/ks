@@ -295,5 +295,19 @@ public interface ForumService {
 	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception ;
 	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception ;
 	
-	public List<ForumSeach> getSeachEvent(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception ;
+	public List<ForumSeach> getQuickSeach(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception ;
+	public List<ForumSeach> getAdvancedSeach(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception ;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

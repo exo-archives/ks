@@ -49,8 +49,9 @@ import org.exoplatform.webui.form.UIFormStringInput;
 public class UIQuickSeachForm extends UIForm {
 	final static	private String FIELD_SEARCHVALUE = "inputValue" ;
 	
-	public UIQuickSeachForm() {
+	public UIQuickSeachForm() throws Exception {
 		addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
+		this.setSubmitAction(this.event("Search")) ;
 	}
 
 	
@@ -64,7 +65,7 @@ public class UIQuickSeachForm extends UIForm {
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text+",,all", "");
+				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,all", "");
 				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 				listSeachEvent.setListSeachEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;

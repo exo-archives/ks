@@ -36,6 +36,7 @@ import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumStatistic;
@@ -1671,7 +1672,7 @@ public class JCRDataStorage{
 	}
 
 // TODO: coding
-	public List<ForumSeach> getSeachEvent(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
+	public List<ForumSeach> getQuickSeach(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		List<ForumSeach> listSeachEvent = new ArrayList<ForumSeach>() ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
@@ -1719,6 +1720,44 @@ public class JCRDataStorage{
 		}
 		return listSeachEvent ;
 	}
+
+	public List<ForumSeach> getAdvancedSeach(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		List<ForumSeach> listSeachEvent = new ArrayList<ForumSeach>() ;
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+		String path = eventQuery.getPath() ;
+		if(path == null || path.length() <= 0) {
+			path = forumHomeNode.getPath() ;
+		}
+		eventQuery.setPath(path) ;
+		String type = eventQuery.getType() ;
+		String queryString = eventQuery.getPathQuery() ;
+//		System.out.println("\n\n=====> queryPath: " +  queryString + "\n======> Path: " + eventQuery.getPath());
+		try {
+			Query query = qm.createQuery(queryString, Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes() ;
+			ForumSeach forumSeach ;
+			while (iter.hasNext()) {
+				forumSeach = new ForumSeach() ;
+				Node nodeObj = (Node) iter.nextNode();
+				forumSeach.setId(nodeObj.getName());
+				forumSeach.setName(nodeObj.getProperty("exo:name").getString());
+				forumSeach.setType(type);
+				if(!type.equals("forum")){
+					forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
+				}else{
+					forumSeach.setIcon("ForumNormalIcon");
+				}
+				forumSeach.setType(type);
+				forumSeach.setPath(nodeObj.getPath()) ;
+				listSeachEvent.add(forumSeach) ;
+			}
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+	  return listSeachEvent;
+  }
 
 
 	

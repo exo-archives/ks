@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
@@ -234,7 +235,27 @@ public class ForumServiceImpl implements ForumService{
 		storage_.saveForumStatistic(sProvider, forumStatistic) ;
   }
 
-	public List<ForumSeach> getSeachEvent(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
-	  return storage_.getSeachEvent(sProvider, textQuery, pathQuery);
+	public List<ForumSeach> getQuickSeach(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
+	  return storage_.getQuickSeach(sProvider, textQuery, pathQuery);
+  }
+
+	public List<ForumSeach> getAdvancedSeach(SessionProvider sProvider,ForumEventQuery eventQuery) throws Exception {
+	  return storage_.getAdvancedSeach(sProvider, eventQuery);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

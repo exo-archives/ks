@@ -9,6 +9,7 @@
 @import url('UITopicDetail/Stylesheet.css') ;
 @import url('UITopicPoll/Stylesheet.css') ;
 @import url('UIForumPageIterator/Stylesheet.css') ;
+@import url('UISearchForm/Stylesheet.css') ;
 
 .UIWindow .UIForumPortlet {
 	margin: 0px;

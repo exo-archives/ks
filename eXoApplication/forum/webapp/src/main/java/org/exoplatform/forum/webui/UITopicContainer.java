@@ -291,7 +291,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = forumService.getSeachEvent(ForumSessionUtils.getSystemProvider(), text+",,topic/post", path);
+				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,topic/post", path);
 				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 				listSeachEvent.setListSeachEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;

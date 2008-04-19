@@ -13,11 +13,5 @@
 		<div class="SeparatorLine" style="float:right;"><span></span></div>
 		<div style="clear:both;"><span></span></div>
 	</div>
-	<%
-	import org.exoplatform.web.application.JavascriptManager;  
-	def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setOnsubmit('UIQuickSeachForm','Search');");
-%>
   <%uiform.end()%>
 </div>

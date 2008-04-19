@@ -22,7 +22,9 @@ package org.exoplatform.forum;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -77,6 +79,14 @@ public class ForumFormatUtils {
 		}
   }
 	
+  public static Calendar getInstanceTempCalendar() { 
+    Calendar  calendar = GregorianCalendar.getInstance() ;
+    calendar.setLenient(false) ;
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
+    return  calendar;
+  }
+  
 	public static String getTimeZoneNumberInString(String string) {
 		if(string != null && string.length() > 0) {
 			StringBuffer stringBuffer = new StringBuffer();

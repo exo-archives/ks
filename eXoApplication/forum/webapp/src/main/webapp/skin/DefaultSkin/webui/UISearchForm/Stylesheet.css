@@ -1,0 +1,19 @@
+.UIForumPortlet .UISearchForm td.FieldComponent  {
+	padding: 4px 0px;
+}
+
+.UIForumPortlet .UISearchForm td.FieldLabel {
+	/*width: 250px;*/
+	padding: 4px 8px;
+	line-height: 18px;
+}
+
+.UIForumPortlet .UISearchForm td.FieldLabelDate {
+	width: 250px;
+	padding: 4px 8px;
+	line-height: 18px;
+}
+
+.UIForumPortlet .UISearchForm .textIn select {
+	width: 150px;
+}

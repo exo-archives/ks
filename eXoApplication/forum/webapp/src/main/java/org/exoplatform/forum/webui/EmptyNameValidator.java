@@ -24,21 +24,29 @@ package org.exoplatform.forum.webui;
  */
 
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.exception.MessageException;
+import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.validator.Validator;
 
 public class EmptyNameValidator implements Validator {
   @SuppressWarnings("unchecked")
   public void validate(UIFormInput uiInput) throws Exception {
+  	UIComponent uiComponent = (UIComponent) uiInput ;
+    UIForm uiForm = uiComponent.getAncestorOfType(UIForm.class) ;    
+    String label = uiForm.getLabel(uiInput.getName());
+    if(label == null) label = uiInput.getName();
+    label = label.trim();
+    if(label.charAt(label.length() - 1) == ':') label = label.substring(0, label.length() - 1);
     String s = (String)uiInput.getValue();
     if(s == null || s.length() == 0) {
-      Object[] args = { uiInput.getName(), uiInput.getBindingField() };
+      Object[] args = { label, uiInput.getBindingField() };
       throw new MessageException(new ApplicationMessage("NameValidator.msg.empty-input", args)) ;
     } else {
     	s = s.trim() ;
     	if(s == null || s.length() == 0) {
-        Object[] args = { uiInput.getName(), uiInput.getBindingField() };
+        Object[] args = {label , uiInput.getBindingField() };
         throw new MessageException(new ApplicationMessage("NameValidator.msg.empty-input", args)) ;
     	}
     }
