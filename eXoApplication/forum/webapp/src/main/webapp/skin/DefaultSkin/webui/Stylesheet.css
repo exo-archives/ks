@@ -22,6 +22,9 @@
 	margin: 7px;
 }
 
+.UIPageDesktop #UIWindow-forum {
+	width: 870px;
+}
 /**************************** UIActionForum *********************************/
 .UIForumPortlet .UIActionForum {
 	padding: 2px 3px;
