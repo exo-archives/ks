@@ -34,7 +34,9 @@
 								<div class="LeftOverButton">
 									<div class="RightOverButton">
 										<div class="CenterOverButton">
-											<div class="ManageCategoryButton"><%= _ctx.appRes("UICategory.label.manageCategory"); %></div>
+											<div class="ManageCategoryButton">
+												<div class="DownArrow1Icon"><%= _ctx.appRes("UICategory.label.manageCategory"); %></div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -56,7 +58,7 @@
 													<div class="UIRightPopupMenuContainer">
 														<%
 															for(action in uicomponent.getActions()) {
-																if(action.indexOf("Link") > 0) continue ;
+																if(action.indexOf("Link") > 0 || action.indexOf("Search") >= 0) continue ;
 																String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
 																String classIconItem = action + "Icon";
 																String link = uicomponent.event(action) ;
@@ -94,6 +96,62 @@
 						</div>
 					</div>
 					<% } %>
+					<div class="ContentAction" style="float:right; padding: 2px 0px 0px 0px;">
+						<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
+							<div style="position: relative;">
+								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+									<div class="LeftOverButton" title="Search in this Category">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="StatusIcon SeachIcon">
+													<div class="DownArrow1Icon">Search Category</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							<% /*Begin Popup Menu*/ %>
+								<div class="UIPopupCategory" style="display: none; ">
+									<div class="UIRightClickPopupMenu" style="display: block;">
+										<div class="UIContextMenuContainer">
+											<div class="TopLeftRightClickPopupMenu">
+												<div class="TopRightRightClickPopupMenu">
+													<div class="TopCenterRightClickPopupMenu"><span></span></div>
+												</div>
+											</div>
+											<div class="MiddleLeftRightClickPopupMenu">
+												<div class="MiddleRightRightClickPopupMenu">
+													<div class="UIRightPopupMenuContainer">
+														<div class="InputPage" style="float:left;">
+															<% uicomponent.renderChild("search") ; %>
+														</div>
+														<div class="UIActionForum" style="float:left;">
+															<div class="NormalButtom">
+																<div class="ButtonLeft">
+																	<div class="ButtonRight">
+																		<div class="ButtonMiddle">
+																		 <a href="<%=uicomponent.event("SearchForm")%>">&nbsp;Search&nbsp;</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div style="clear: left;"><span></span></div>
+													</div>
+												</div>
+											</div>
+											<div class="BottomLeftRightClickPopupMenu">
+												<div class="BottomRightRightClickPopupMenu">
+													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							<% /*End Popup Menu*/ %>
+							</div>
+						</div>
+					</div>
 					<div style="clear: both;"><span></span></div>
 				</div>
 			</div>

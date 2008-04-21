@@ -207,6 +207,10 @@ public class ForumEventQuery {
     		if(isAnd) queryString.append(" and ");
     		queryString.append("(@exo:").append(property).append(" <= '").append(max).append("' and @exo:").append(property).append(" >= '").append(min).append("'");
     		isAnd = true ;
+    	} else if(Integer.parseInt(max) == Integer.parseInt(min)) {
+    		if(isAnd) queryString.append(" and ");
+    		queryString.append("(@exo:").append(property).append("='").append(max).append("'");
+    		isAnd = true ;
     	}
     } else if(max != null) {
     	if(Integer.parseInt(max) > 0) {
@@ -233,8 +237,10 @@ public class ForumEventQuery {
 			isAnd = true ;
 		} else if(fromDate != null){
 			queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
+			isAnd = true ;
 		} else if(toDate != null){
-			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ") ;
+			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
+			isAnd = true ;
 		}
 		return queryString.toString() ;
 	}

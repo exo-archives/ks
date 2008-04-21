@@ -60,7 +60,7 @@ public class UIQuickSeachForm extends UIForm {
 			UIQuickSeachForm uiForm = event.getSource() ;
 			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
 			String text = formStringInput.getValue() ;
-			if(text != null && text.length() > 0) {
+			if(text != null && text.trim().length() > 0) {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;
@@ -72,6 +72,7 @@ public class UIQuickSeachForm extends UIForm {
 				formStringInput.setValue("") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
+				formStringInput.setValue("") ;
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
 			}
@@ -84,6 +85,9 @@ public class UIQuickSeachForm extends UIForm {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(4) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+			UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class) ;
+			searchForm.setUserProfile(forumPortlet.getUserProfile()) ;
+			searchForm.setSelectedForum() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

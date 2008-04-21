@@ -38,3 +38,15 @@
 	width: 2px; height: 19px;
 	margin: 0px 5px 0px 5px;
 }
+
+.UIForumCategory .ForumToolbar .StatusIcon {
+	background-position:left center;
+	line-height:22px;
+	margin:0px;
+	padding-left:22px;
+}
+
+.UIForumCategory .ForumToolbar .DownArrow1Icon {
+	background-position:right center;
+	padding-right:16px;
+}

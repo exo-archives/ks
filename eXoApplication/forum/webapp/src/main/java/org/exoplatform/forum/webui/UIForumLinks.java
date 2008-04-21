@@ -149,6 +149,7 @@ public class UIForumLinks extends UIForm {
 				if(path.indexOf("orumServic") > 0) {
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.updateIsRender(true) ;
+					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 					forumPortlet.updateIsRendered(1);
 				}else if(path.indexOf("forum") > 0) {
 					String id[] = path.trim().split("/");

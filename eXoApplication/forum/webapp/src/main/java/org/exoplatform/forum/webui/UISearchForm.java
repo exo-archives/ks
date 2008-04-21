@@ -26,6 +26,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -51,12 +52,13 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		events = {
 			@EventConfig(listeners = UISearchForm.SearchActionListener.class),	
 			@EventConfig(listeners = UISearchForm.OnchangeActionListener.class, phase = Phase.DECODE),	
+			@EventConfig(listeners = UISearchForm.ResetFieldActionListener.class, phase = Phase.DECODE),	
 			@EventConfig(listeners = UISearchForm.CancelActionListener.class, phase = Phase.DECODE)			
 		}
 )
 public class UISearchForm extends UIForm {
 	final static	private String FIELD_SEARCHVALUE_INPUT = "SearchValue" ;
-	final static	private String FIELD_SEARCHVALUEIN_INPUT = "SearchValueIn" ;
+	final static	private String FIELD_SEARCHVALUEIN_SELECTBOX = "SearchValueIn" ;
 	final static	private String FIELD_SEARCHUSER_INPUT = "SearchUser" ;
 	final static	private String FIELD_SEARCHTYPE_SELECTBOX = "SearchType" ;
 	
@@ -66,10 +68,9 @@ public class UISearchForm extends UIForm {
 	final static	private String FIELD_POSTCOUNTMAX_INPUT = "PostCountMax" ;
 	final static	private String FIELD_VIEWCOUNTMAX_INPUT = "ViewCountMin" ;
 	final static	private String FIELD_VIEWCOUNTMIN_INPUT = "ViewCountMax" ;
-	final static	private String FIELD_ISLOCK_INPUT = "IsLock" ;
-	final static	private String FIELD_ISCLOSED_INPUT = "IsClosed" ;
+	final static	private String FIELD_ISLOCK_SELECTBOX = "IsLock" ;
+	final static	private String FIELD_ISCLOSED_SELECTBOX = "IsClosed" ;
 	final static	private String FIELD_MODERATOR_INPUT = "Moderator" ;
-	
 	
 	final static	private String FROMDATECREATED = "FromDateCreated" ;
 	final static	private String TODATECREATED = "ToDateCreated" ;
@@ -83,6 +84,21 @@ public class UISearchForm extends UIForm {
 //  final static  private String TO = "To" ;
 //	final static	private String FIELD_SEARCHIN_SELECTBOX = "seachIn" ;
 	
+	private UserProfile userProfile = null;
+	
+	public void setUserProfile(UserProfile userProfile) {
+		try {
+			this.userProfile = userProfile ;
+    } catch (Exception e) {
+    	this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+    }
+  }
+	private boolean getIsAdmin() {
+		if(this.userProfile != null) {
+			if(this.userProfile.getUserRole() == 0) return true ;
+		}
+		return false ;
+	}
 	public UISearchForm() throws Exception {
 		UIFormStringInput searchValue = new UIFormStringInput(FIELD_SEARCHVALUE_INPUT, FIELD_SEARCHVALUE_INPUT, null) ;
 		UIFormStringInput searchUser = new UIFormStringInput(FIELD_SEARCHUSER_INPUT, FIELD_SEARCHUSER_INPUT, null) ;
@@ -92,21 +108,24 @@ public class UISearchForm extends UIForm {
 		list.add(new SelectItemOption<String>("Post", "post")) ;
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
+		list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>("Search Entire", "entire")) ;
+		list.add(new SelectItemOption<String>("Search Titles Only", "title")) ;
+		UIFormSelectBox textIn = new UIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX, FIELD_SEARCHVALUEIN_SELECTBOX, list) ;
+		textIn.setValue("entire");
 		
 		list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>("All", "all")) ;
 		list.add(new SelectItemOption<String>("UnLock", "false")) ;
 		list.add(new SelectItemOption<String>("Locked", "true")) ;
-		UIFormSelectBox isLock = new UIFormSelectBox(FIELD_ISLOCK_INPUT, FIELD_ISLOCK_INPUT, list) ;
+		UIFormSelectBox isLock = new UIFormSelectBox(FIELD_ISLOCK_SELECTBOX, FIELD_ISLOCK_SELECTBOX, list) ;
 		isLock.setValue("all");
-		UIFormSelectBox isClosed = new UIFormSelectBox(FIELD_ISCLOSED_INPUT, FIELD_ISCLOSED_INPUT, list) ;
-		isLock.setValue("all");
-
 		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>("Search Entire", "entire")) ;
-		list.add(new SelectItemOption<String>("Search Titles Only", "title")) ;
-		UIFormSelectBox textIn = new UIFormSelectBox(FIELD_SEARCHVALUEIN_INPUT, FIELD_SEARCHVALUEIN_INPUT, list) ;
-		isLock.setValue("entire");
+		list.add(new SelectItemOption<String>("All", "all")) ;
+		list.add(new SelectItemOption<String>("UnClose", "false")) ;
+		list.add(new SelectItemOption<String>("Closed", "true")) ;
+		UIFormSelectBox isClosed = new UIFormSelectBox(FIELD_ISCLOSED_SELECTBOX, FIELD_ISCLOSED_SELECTBOX, list) ;
+		isLock.setValue("all");
 		
 		UIFormDateTimeInput FromDateCreated = new UIFormDateTimeInput(FROMDATECREATED, FROMDATECREATED, null, false) ;
 		UIFormDateTimeInput ToDateCreated = new UIFormDateTimeInput(TODATECREATED, TODATECREATED, null, false) ;
@@ -151,11 +170,11 @@ public class UISearchForm extends UIForm {
 //		addUIFormInput(new UIFormStringInput(FIELD_SEARCHIN_SELECTBOX, FIELD_SEARCHIN_SELECTBOX, null)) ;
 	}
 	
-	private void setSelectedForum(){
+	public void setSelectedForum(){
 		getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setRendered(false) ;
 		getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(false) ;
-		getUIFormSelectBox(FIELD_ISLOCK_INPUT).setRendered(true);
-		getUIFormSelectBox(FIELD_ISCLOSED_INPUT).setRendered(true);
+		getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setRendered(true);
+		getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(getIsAdmin());
 		getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).setRendered(true);
 		getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setRendered(true);
 		getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(true);
@@ -168,8 +187,8 @@ public class UISearchForm extends UIForm {
 	private void setSelectedTopic(){
 		getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setRendered(true) ;
 		getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(true) ;
-		getUIFormSelectBox(FIELD_ISLOCK_INPUT).setRendered(true);
-		getUIFormSelectBox(FIELD_ISCLOSED_INPUT).setRendered(true);
+		getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setRendered(true);
+		getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(getIsAdmin());
 		getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).setRendered(false);
 		getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setRendered(false);
 		getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(true);
@@ -181,8 +200,8 @@ public class UISearchForm extends UIForm {
 	private void setSelectedPost(){
 		getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setRendered(false) ;
 		getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(false) ;
-		getUIFormSelectBox(FIELD_ISLOCK_INPUT).setRendered(false);
-		getUIFormSelectBox(FIELD_ISCLOSED_INPUT).setRendered(false);
+		getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setRendered(false);
+		getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(false);
 		getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).setRendered(false);
 		getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setRendered(false);
 		getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(false);
@@ -202,18 +221,18 @@ public class UISearchForm extends UIForm {
   }
   
   public String[] getActions() {
-    return new String[]{"Search","Cancel"} ;
+    return new String[]{"Search","ResetField", "Cancel"} ;
   }
 	static	public class SearchActionListener extends EventListener<UISearchForm> {
     public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
 			String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
 			String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
-			String valueIn = uiForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_INPUT).getValue() ;
+			String valueIn = uiForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).getValue() ;
 			String path = "" ;
 			String byUser = uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).getValue() ;
-			String isLock = uiForm.getUIFormSelectBox(FIELD_ISLOCK_INPUT).getValue();
-			String isClosed = uiForm.getUIFormSelectBox(FIELD_ISCLOSED_INPUT).getValue();
+			String isLock = uiForm.getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).getValue();
+			String isClosed = uiForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).getValue();
 			String topicCountMin = uiForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).getValue();
 			String topicCountMax = uiForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
 			String postCountMin = uiForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
@@ -273,11 +292,22 @@ public class UISearchForm extends UIForm {
 			} else {
 				uiForm.setSelectedPost() ;
 			}
-			System.out.println("\n\n-------->Type: "+type);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	
+	static	public class ResetFieldActionListener extends EventListener<UISearchForm> {
+		public void execute(Event<UISearchForm> event) throws Exception {
+			UISearchForm uiForm = event.getSource() ;
+			uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue("forum");
+			uiForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).setValue("entire");
+			uiForm.getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setValue("all");
+			uiForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setValue("all");
+			uiForm.setSelectedForum() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+
 	static	public class CancelActionListener extends EventListener<UISearchForm> {
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;

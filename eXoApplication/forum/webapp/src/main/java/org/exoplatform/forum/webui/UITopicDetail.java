@@ -500,7 +500,7 @@ public class UITopicDetail extends UIForm {
 			String path = topicDetail.topic.getPath() ;
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput("search") ;
 			String text = formStringInput.getValue() ;
-			if(text != null && text.length() > 0 && path != null) {
+			if(text != null && text.trim().length() > 0 && path != null) {
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(1) ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;

@@ -116,7 +116,6 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
     public void execute(Event<UIPageListPostHidden> event) throws Exception {
       UIPageListPostHidden postHidden = event.getSource() ;
       List<UIComponent>listChild = postHidden.getChildren() ;
-      SessionProvider sessionProvider = ForumSessionUtils.getSessionProvider();
       Post post = new Post() ;
       boolean haveCheck = false ;
       for (UIComponent child : listChild) {
@@ -125,7 +124,7 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
             haveCheck = true ;
             post = postHidden.getPost(child.getName()) ;
             post.setIsHidden(false) ;
-            postHidden.forumService.savePost(sessionProvider, postHidden.categoryId, postHidden.forumId, postHidden.topicId, post, false) ;
+            postHidden.forumService.savePost(ForumSessionUtils.getSystemProvider(), postHidden.categoryId, postHidden.forumId, postHidden.topicId, post, false) ;
           }
         }
       }

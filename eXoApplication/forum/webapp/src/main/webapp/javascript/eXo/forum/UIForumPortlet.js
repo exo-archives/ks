@@ -368,6 +368,14 @@ UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
 	}
 };
 
+UIForumPortlet.prototype.resetFielForm = function(idElm) {
+	var elm = document.getElementById(idElm) ;
+	var inputs = elm.getElementsByTagName("input") ;
+	for(var i=0; i<inputs.length; i++) {
+		inputs[i].value = "" ;
+	}
+};
+
 
 
 

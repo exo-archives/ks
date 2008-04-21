@@ -285,7 +285,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			String path = uiTopicContainer.forum.getPath() ;
 			UIFormStringInput formStringInput = uiTopicContainer.getUIStringInput("search") ;
 			String text = formStringInput.getValue() ;
-			if(text != null && text.length() > 0 && path != null) {
+			if(text != null && text.trim().length() > 0 && path != null) {
 				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(1) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);

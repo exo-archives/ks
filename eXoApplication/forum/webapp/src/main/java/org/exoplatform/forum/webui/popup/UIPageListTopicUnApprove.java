@@ -136,7 +136,7 @@ public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent
       if(!listTopic.isEmpty()) {
         for(Topic topic : listTopic) {
           topic.setIsApproved(true);
-          topicUnApprove.forumService.saveTopic(ForumSessionUtils.getSessionProvider(), topicUnApprove.categoryId, topicUnApprove.forumId, topic, false, false) ;
+          topicUnApprove.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicUnApprove.categoryId, topicUnApprove.forumId, topic, false, false) ;
         }
       } else {
         Object[] args = { };

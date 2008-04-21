@@ -288,8 +288,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String message = "  " +	threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			message = message.trim() ;
 			t = message.length() ;
-			if(topicTitle.length() <= 3) {k = 0;}
-			if(t >= 3 && k != 0) {
+			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
+			if(t >= 3 && k != 0 && !message.equals("null")) {
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Post postNew = new Post();
 				postNew.setOwner(userName);
@@ -335,8 +335,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String message = "  " +	threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			message = message.trim() ;
 			t = message.length() ;
-			if(topicTitle.length() <= 3) {k = 0;}
-			if(t >= 3 && k != 0) {	
+			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
+			if(t >= 4 && k != 0 && !message.equals("null")) {	
 				UIFormInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
 				// uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();

@@ -117,7 +117,6 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
       UIPageListPostUnApprove postUnApprove = event.getSource() ;
       List<UIComponent>listChild = postUnApprove.getChildren() ;
       //List<Post> listPost = new ArrayList<Post>() ;
-      SessionProvider sessionProvider = ForumSessionUtils.getSessionProvider();
       Post post = new Post() ;
       boolean haveCheck = false ;
       for (UIComponent child : listChild) {
@@ -126,7 +125,7 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
             haveCheck = true ;
             post = postUnApprove.getPost(child.getName()) ;
             post.setIsApproved(true) ;
-            postUnApprove.forumService.savePost(sessionProvider, postUnApprove.categoryId, postUnApprove.forumId, postUnApprove.topicId, post, false) ;
+            postUnApprove.forumService.savePost(ForumSessionUtils.getSystemProvider(), postUnApprove.categoryId, postUnApprove.forumId, postUnApprove.topicId, post, false) ;
           }
         }
       }

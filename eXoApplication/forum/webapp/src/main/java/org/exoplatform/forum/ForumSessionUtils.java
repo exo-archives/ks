@@ -26,8 +26,8 @@ import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -47,18 +47,18 @@ public class ForumSessionUtils {
   }
   
   public static SessionProvider getSystemProvider() {
-    return SessionProvider.createSystemProvider();
+    return SessionProviderFactory.createSystemProvider();
   }
   
-  public static SessionProvider getSessionProvider() {
-    SessionProviderService service = (SessionProviderService) PortalContainer
-        .getComponent(SessionProviderService.class);
-    return service.getSessionProvider(null);
-  }
+//  public static SessionProvider getSessionProvider() {
+//    SessionProviderService service = (SessionProviderService) PortalContainer
+//        .getComponent(SessionProviderService.class);
+//    return service.getSessionProvider(null);
+//  }
   
-  public static SessionProvider getAnonimProvider() {
-    return SessionProvider.createAnonimProvider();
-  }
+//  public static SessionProvider getAnonimProvider() {
+//    return SessionProvider.createAnonimProvider();
+//  }
   
   public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
 		byte[] imageBytes = null;
@@ -104,7 +104,6 @@ public class ForumSessionUtils {
   	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   	return organizationService.getUserHandler().findUserByName(userId) ;
   }
-  
 
   public static Contact getPersonalContact(String userId) throws Exception {
   	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;

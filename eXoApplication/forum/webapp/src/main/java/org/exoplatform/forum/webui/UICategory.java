@@ -25,6 +25,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -44,6 +45,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -56,6 +58,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/forum/webui/UICategory.gtmpl",
 		events = {
+				@EventConfig(listeners = UICategory.SearchFormActionListener.class),
 				@EventConfig(listeners = UICategory.EditCategoryActionListener.class),
 				@EventConfig(listeners = UICategory.DeleteCategoryActionListener.class),
 				@EventConfig(listeners = UICategory.AddForumActionListener.class),
@@ -79,6 +82,7 @@ public class UICategory extends UIForm	{
 	private List<Forum> forums = new ArrayList<Forum>() ;
 	private Map<String, Topic> MaptopicLast =new HashMap<String, Topic>(); 
 	public UICategory() throws Exception {
+		addUIFormInput( new UIFormStringInput("search", null)) ;
 	}
 	
 	private UserProfile getUserProfile() {
@@ -464,6 +468,34 @@ public class UICategory extends UIForm	{
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiCategory.categoryId, id[0], topic) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+id[0] + " "));
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+	
+	static public class SearchFormActionListener extends EventListener<UICategory> {
+		public void execute(Event<UICategory> event) throws Exception {
+			UICategory uiCategory = event.getSource() ;
+			String path = uiCategory.category.getPath() ;
+			UIFormStringInput formStringInput = uiCategory.getUIStringInput("search") ;
+			String text = formStringInput.getValue() ;
+			if(text != null && text.trim().length() > 0 && path != null) {
+				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateIsRendered(1) ;
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				UICategories categories = categoryContainer.getChild(UICategories.class);
+				categories.setIsRenderChild(true) ;
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,forum/topic/post", path);
+				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
+				listSeachEvent.setListSeachEvent(list) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+				formStringInput.setValue("") ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+			}
+			
 		}
 	}
 }
