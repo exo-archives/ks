@@ -1,0 +1,117 @@
+<div class="UIResponse $uicomponent.id">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout" style="margin: 10px 10px 30px 10px;background-color:#F3F3F3;">
+			<div class="UIFormInput">
+				<table class="UIFormGrid">
+					<tbody>						
+					<% 
+					for(field in uiform.getChildren()) { 
+						if(field.isRendered()) {
+					%>
+						<tr>
+							<%fieldName = uicomponent.getLabel(field.getName());
+								if(!fieldName.equals(uicomponent.getId())) { %>												
+								<td class="FieldLabel" style="width: auto;">
+									<%=uicomponent.getLabel(field.getName()) %> :
+								</td>
+								<td class="FieldComponent" style="width: auto;">
+									<%if(field.getName().equals("QuestionRespone")){
+											String action = uicomponent.getActions()[1] ;
+											String link = uicomponent.event(action) ;
+											String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+											int i = 0 ;
+											String[] listLanguage = uicomponent.getListLanguageToReponse() ;
+											for(fck in field.getChildren())  {
+												String language = listLanguage[i++] ;
+									%>
+												<% uiform.renderField(fck) %>
+												<div class="LanguageQuestion"> 
+													<table border="0px" cellpadding="0px" cellspacing="0px">
+														<tr>
+															<td width="80%">
+																<div style="vertical-align: middle; padding-left: 5px;">
+																		Language: $language 
+																	</div>
+															</td>
+															<td>
+																<div class="UIAction" style="vertical-align: middle; padding: 3px 0px;">
+																	<a href="$link" class="ActionButton LightBlueStyle">
+												      	  	<div class="ButtonLeft" style="float:right;">
+												        	  	<div class="ButtonRight">
+												          	  	<div class="ButtonMiddle"> $actionLabel </div>
+												            	</div>
+												          	</div>
+												        	</a>
+																</div>
+															</td>
+														</tr>
+													</table>
+												</div>
+									<%	}
+										} else if(field.getName().equals("QuestionAttach")){
+											String action = uicomponent.getActions()[4] ;
+											String link = uicomponent.event(action) ;
+											String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+									%>
+											<table class="ActionContainer" align="center" width="100%">
+												<tr>
+													<td align="left" width="70%" style="vertical-align: middle; padding-left: 5px;">
+														<% uiform.renderField(field) %>
+													</td>
+													<td align="right" width="30%" class="UIAction" valign="top">
+														<a href="$link" class="ActionButton LightBlueStyle">
+									      	  	<div class="ButtonLeft" style="float:right;">
+									        	  	<div class="ButtonRight">
+									          	  	<div class="ButtonMiddle"> $actionLabel </div>
+									            	</div>
+									          	</div>
+									        	</a>
+													</td>
+												</tr>
+											</table>
+									<%}else if(field.getName().equals("QuestionRelation")){ 
+											String link = uicomponent.event(uicomponent.getActions()[3]) ;
+									%>
+											<div style="float: left">
+												<% uiform.renderField(field) %>
+											</div>
+												<a href="$link" style="float: left; margin-left: 5px;"><div class="AddIcon16x16"><span></span></div></a>
+									<%} else {%>
+											<% uiform.renderField(field) %><br>
+									<%}%>
+								</td>
+							<%} else {%>
+								<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+							<%}%>
+						</tr>
+					<%}
+					}
+					%>						
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="UIAction"> 
+				<table class="ActionContainer" align="center">
+					<tr>
+						<td align="center">
+		        <% for(action in uicomponent.getActions()) { 
+		        		 if(action.indexOf("Language") >= 0 || action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
+		        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+		           String link = uicomponent.event(action) ;
+		        %>
+		        		<a href="$link" class="ActionButton LightBlueStyle">
+			      	  	<div class="ButtonLeft">
+			        	  	<div class="ButtonRight">
+			          	  	<div class="ButtonMiddle"> $actionLabel </div>
+			            	</div>
+			          	</div>
+			        	</a>
+		          <%}%>
+		      	</td>
+					</tr>
+			  </table> 
+			</div>
+		</div>
+	<%uiform.end()%>
+</div>

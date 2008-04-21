@@ -68,7 +68,7 @@ public class UIQuestions extends UIContainer {
   private String[] secondTollbar = new String[]{"AddCategory", "AddNewQuestion", "CategorySetting"} ; 
 	private boolean isUpdate = true;
 	private boolean	isEditCategory = false ;
-	private	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIQuestions()throws Exception {
 		setCategories() ;
 	}
@@ -89,8 +89,12 @@ public class UIQuestions extends UIContainer {
   }
   
   public void setCategories() throws Exception  {
-  	FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		categories_ = faqService.getAllCategories(FAQUtils.getSystemProvider());
+    if(this.categoryId == null || this.categoryId.trim().length() < 1) {
+  		categories_ = faqService.getAllCategories(FAQUtils.getSystemProvider());
+    } else {
+      categories_ = faqService.getSubCategories(this.categoryId, FAQUtils.getSessionProvider()) ;
+    }
+    System.out.println("number of category : " + categories_.size());
   }
 	
 	@SuppressWarnings("unused")
@@ -98,6 +102,12 @@ public class UIQuestions extends UIContainer {
 		return categories_ ;
 	}
   
+  public void setListQuestion() throws Exception {
+    SessionProvider sessionProvider = FAQUtils.getSessionProvider() ;
+    this.categories_.clear() ;
+    this.categories_ = faqService.getSubCategories(categoryId, sessionProvider) ;
+    this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId, sessionProvider).getAll() ;
+  }
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() {
     return this.listQuestion_ ;
@@ -147,6 +157,8 @@ public class UIQuestions extends UIContainer {
 		  UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 		  category.init() ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
+      UIFAQContainer fAQContainer = question.getAncestorOfType(UIFAQContainer.class) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 		}
 	}
   
@@ -174,21 +186,10 @@ public class UIQuestions extends UIContainer {
   
   static public class OpenCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-      System.out.println("========> AddQuestionActionListener") ;
       UIQuestions questions = event.getSource() ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       questions.setCategoryId(categoryId) ;
-      FAQService fAQservice = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-      SessionProvider sessionProvider = FAQUtils.getSessionProvider() ;
-      questions.categories_.clear() ;
-      questions.categories_ = fAQservice.getSubCategories(categoryId, sessionProvider) ;
-      
-      System.out.println("-----> category is select to view : ") ;
-      for(Category category : fAQservice.getSubCategories(categoryId, sessionProvider)) {
-        System.out.println("category: " + category.getName()) ;
-      }
-      
-      questions.listQuestion_ = fAQservice.getQuestionsByCatetory(categoryId, sessionProvider).getAll() ;
+      questions.setListQuestion() ;
       
       UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;

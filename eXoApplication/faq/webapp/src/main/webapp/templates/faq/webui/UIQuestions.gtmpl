@@ -174,15 +174,16 @@
 			} 
 		%>
 		<%
-			List listQuestion = uicomponent.getListQuestion() ;
-			String questionContent = new String() ;
-			for(question in listQuestion) {
-				questionContent = question.getQuestion()
+			if(cateId!=null) {
+				List listQuestion = uicomponent.getListQuestion() ;
+				String questionContent = new String() ;
+				for(question in listQuestion) {
+					questionContent = question.getQuestion()
 		%>
-				<div class="Question">
-					$questionContent
-				</div>
-		<%
+					<div class="Question">
+						$questionContent
+					</div>
+		<%	}
 			}
 		%>
 		</div>
