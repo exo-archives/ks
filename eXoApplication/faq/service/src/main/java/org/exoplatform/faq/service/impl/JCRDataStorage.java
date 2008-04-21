@@ -249,8 +249,7 @@ public class JCRDataStorage {
   	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
   	return cat;
   }
-  
-  public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
+  private Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
   	Node categoryHome = getCategoryHome(sProvider, null) ;		
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
@@ -258,7 +257,11 @@ public class JCRDataStorage {
 //    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-  	return getCategory(result.getNodes().nextNode()) ;
+  	return result.getNodes().nextNode() ;
+  }
+  
+  public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
+  	return getCategory(getCategoryNodeById(categoryId, sProvider)) ;
   }
   
   public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {
@@ -278,15 +281,13 @@ public class JCRDataStorage {
   
   public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
   	List<Category> catList = new ArrayList<Category>() ;
-  	Node categoryHome = getCategoryHome(sProvider, null) ;		
-  	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-                                                + "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
-    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-    QueryResult result = query.execute();
-    Node catNode = result.getNodes().nextNode() ;
-    NodeIterator iter = catNode.getNodes() ;
+  	Node parentCategory ;
+  	if(categoryId != null) {
+  		parentCategory = getCategoryNodeById(categoryId, sProvider) ;
+  	}else {
+  		parentCategory = getCategoryHome(sProvider, null) ;
+  	}
+  	NodeIterator iter = parentCategory.getNodes() ;
     while(iter.hasNext()) {
     	catList.add(getCategory(iter.nextNode())) ;
     }    
