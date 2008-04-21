@@ -179,6 +179,24 @@
 	white-space: nowrap;
 }
 
+.UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIFAQPopupCategory {
+	left: 40px;
+	position: absolute;
+	top: 15px;
+	width: auto;
+	z-index: 100;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIContextMenuContainer {
+	width:140px;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIContextMenuContainer .LineMenu {
+	width:150px;
+	margin: 4px auto;
+	border-top: solid 1px #7b7b7b;
+}
+
 .UIFAQPortlet .FAQContainer .FAQContent .Sup-Title {
 	font-weight: bold;
 }
@@ -333,6 +351,15 @@
 	width: auto;
 }
 
+.UIFAQPortlet .LanguageQuestion {
+	background: url('background/FAQPortlet.gif') repeat-x center 0px;
+	height: 28px;
+	border: 1px solid #c7c7c7;
+	line-height: 28px ;
+	float: left ;
+	margin: 0px 0px 5px 0px ;
+}
+
 .UIFAQPortlet .AddLanguage {
 	background: url('background/FAQPortlet.gif') repeat-x center -838px;
 	height: 28px;
@@ -352,6 +379,7 @@
 
 .UIFAQPortlet .SelectUserIcon {
 	background: url('background/Worker2.png') no-repeat left ;
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif') no-repeat center;
 	width: 16px; height: 16px;
 	padding: 3px;
 }
@@ -444,7 +472,9 @@
 }
 
 .UIFAQPortlet .Langguage {
-	background: url('background/FAQPortlet.gif') no-repeat left -773px;
+	background: url('background/FAQPortlet.gif') no-repeat left -800px;
+	height: 12px;
+	width: 12px;
 }
 
 .UIFAQPortlet .ActionsPrint {

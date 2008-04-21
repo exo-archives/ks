@@ -27,7 +27,7 @@
 					<div class="SeparatorLine"><span/></div>
 					
 					<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
-						<a href="">
+						<a href="<%=uicomponent.event("AddQuestion")%>">
 							<div class="LeftOverButton">
 								<div class="RightOverButton">
 									<div class="CenterOverButton">
@@ -107,67 +107,70 @@
 %>
 <div class="FAQContainer">
 	<div class="FAQContent">
-		<%  
-			String id = "";
-			for(category in categories) {
+	<%  
+		String id = "";
+		String[] categoryAction = uicomponent.getActionCategory() ;
+		int i = 0 ;
+		for(category in categories) {
 			String categoryName = category.getName() ;
-			id = category.getId();
-			
-			String link = uicomponent.event("EditCategory", id) ;
-		%>
-		<div class="FAQCategory">
-			<a  class="Sup-Title" href="$link " onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIQuestionPopupMenu', '', null, 1)">$categoryName </a>
-			<span>(5 Questions, 2 no answear)</span>
-		</div>
-		<% } %>
+			categoryId = category.getId();
+			String link = uicomponent.event("OpenCategory", categoryId) ;
+	%>
+			<div class="FAQCategory">
+				<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
+						<!-- category name -->
+						<a href="$link">
+							$categoryName
+						</a>
+						<!-- action of this category -->
+					  
+						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
+							<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+								<div class="UIContextMenuContainer">
+																
+									<div class="TopLeftRightClickPopupMenu">
+										<div class="TopRightRightClickPopupMenu">
+											<div class="TopCenterRightClickPopupMenu"><span></span></div>
+											<div class="RightClickCustomItem" style="display: none;">Open</div>
+										</div>
+									</div>
+									
+									<div class="MiddleLeftRightClickPopupMenu">
+										<div class="MiddleRightRightClickPopupMenu">
+											<div class="UIRightPopupMenuContainer">
+												<%
+													for(viewAction in categoryAction) {
+														String linkView = uicomponent.event(viewAction, categoryId) ;
+														String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+												%>
+														<a href="$linkView" class="MenuItem">
+															<div class="ItemIcon $viewAction" style="padding:5px 0px 5px 5px;">
+																	<div style="padding-left: 20px;">$itemLabelView</div>
+															</div>
+														</a>
+												<%
+													}
+												%>
+											</div>
+										</div>
+									</div>
+									
+									<div class="BottomLeftRightClickPopupMenu">
+										<div class="BottomRightRightClickPopupMenu">
+											<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+										</div>
+									</div>
+							
+								</div>
+							</div>
+						</div>
+					
+				</div>
+			</div>
+	<% i ++ ;
+		} 
+	%>
 	</div>
 </div>
 <% /* End View category*/ %>
-
-<% /*Pop up menu for catagory*/ %>
-	<div class="UIRightClickPopupMenu" id="UIQuestionPopupMenu"  onmousedown="event.cancelBubble=true ;" >
-    <div class="UIContextMenuContainer">
-      <div class="TopLeftRightClickPopupMenu">
-        <div class="TopRightRightClickPopupMenu">
-          <div class="TopCenterRightClickPopupMenu"><span></span></div>
-          <div class="RightClickCustomItem" style="display: none;">Open</div>
-        </div>
-      </div>
-      
-      <div class="MiddleLeftRightClickPopupMenu">
-	      <div class="MiddleRightRightClickPopupMenu">
-	  			<div class="UIRightPopupMenuContainer">
-	  				<a class="MenuItem" href="<%=uicomponent.event("EditCategory", "id")  %> ">   
-							<div class="ItemIcon EditCategory"><%=_ctx.appRes(uicomponent.id+ ".label.edit-category") %></div>
-	  				</a>
-	  			 	<a class="MenuItem" href="<%=uicomponent.event("DeleteCategory", "id") %>">   
-							<div class="ItemIcon DeleteCategory"><%=_ctx.appRes(uicomponent.id+ ".label.delete-category")%></div>
-	 					 </a> 
-	 				 <a class="MenuItem" href="<%=uicomponent.event("MoveCategory", "id") %>">   
-							<div class="ItemIcon MoveCategory"><%=_ctx.appRes(uicomponent.id+ ".lablel.move-category") %></div>
-	  				</a>
-	    			<a class="MenuItem" href="<%=uicomponent.event("MoveDown", "id")  %>">   
-							<div class="ItemIcon MoveDown"><%=_ctx.appRes(uicomponent.id+ ".label.move-down")  %></div>
-	  				</a>
-	  				<a class="MenuItem" href="<%=uicomponent.event("MoveUp", "id") %>">   
-							<div class="ItemIcon MoveUp"><%=_ctx.appRes(uicomponent.id+ ".label.move-up")  %></div>
-	  				</a>
-	  				<a class="MenuItem" href="<%=uicomponent.event("CategorySetting", "id") %>">   
-							<div class="ItemIcon CategorySetting"><%=_ctx.appRes(uicomponent.id+ ".label.category-setting")  %></div>
-	  				 </a>
-	  				<a class="MenuItem" href="<%=uicomponent.event("Watch", "id") %>">   
-							<div class="ItemIcon Watch"><%=_ctx.appRes(uicomponent.id+ ".label.watch") %></div>
-	  				 </a>
-					</div>
-	      </div>
-	    </div>
-			    <div class="BottomLeftRightClickPopupMenu">
-		        <div class="BottomRightRightClickPopupMenu">
-		          <div class="BottomCenterRightClickPopupMenu"><span></span></div>
-		        </div>
-		      </div>
-      
-    </div>
-  </div>
-	<% /*End popup menu*/ %>
 </div>
