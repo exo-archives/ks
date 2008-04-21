@@ -100,21 +100,26 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:categoryId", question.getCategoryId()) ;
   	questionNode.setProperty("exo:isActivated", question.isActivated()) ;
   	questionNode.setProperty("exo:isApproved", question.isApproved()) ;
-  	questionNode.setProperty("exo:response", question.getResponses()) ;
-  	questionNode.setProperty("exo:relations", question.getRelations()) ;  	
+  	questionNode.setProperty("exo:responses", question.getResponses()) ;
+  	questionNode.setProperty("exo:relatives", question.getRelations()) ;  	
   	
   }
   
   public void saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
   	if(isAddNew) {
   		Node questionHome = getQuestionHome(sProvider, null) ;
-  		Node questionNode = questionHome.addNode(question.getId(), "exo:question") ;
+      Node questionNode ;
+      try {
+        questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion") ;
+      } catch (PathNotFoundException e) {
+        questionNode = questionHome.getNode(question.getId());
+      }
   		saveQuestion(questionNode, question) ;
-  		questionHome.save() ;
+  		questionHome.getSession().save() ;
   	}else {
   		Node questionNode = getQuestionHome(sProvider, null).getNode(question.getId()) ;
   		saveQuestion(questionNode, question) ;
-  		questionNode.save() ;
+      questionNode.getSession().save() ;
   	}  	
   }
   
@@ -164,7 +169,7 @@ public class JCRDataStorage {
   	Node questionHome = getQuestionHome(sProvider, null) ;
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-                                                + "//element(*,exo:faqQuestion)[@exo:category='").
+                                                + "//element(*,exo:faqQuestion)[@exo:categoryId='").
                                                 append(categoryId).
                                                 append("']").append("order by @exo:createdDate ascending");
 //    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;

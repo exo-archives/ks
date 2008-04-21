@@ -87,12 +87,12 @@ public class QuestionPageList extends JCRPageList {
   	Question question = new Question() ;
   	question.setId(questionNode.getName()) ;
   	question.setQuestion(questionNode.getProperty("exo:question").getString()) ;
-  	question.setAuthor(questionNode.getProperty("exo:Author").getString()) ;
+  	question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
   	question.setEmail(questionNode.getProperty("exo:email").getString()) ;
   	question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
   	question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
-  	question.setActivated(questionNode.getProperty("exo:activated").getBoolean()) ;
-  	question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
+  	question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
+  	question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
   	question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
   	question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
   	return question ;

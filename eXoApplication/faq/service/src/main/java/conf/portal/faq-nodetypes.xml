@@ -7,9 +7,9 @@
   		<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>
-  		<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  		<propertyDefinition name="exo:question" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-  		</propertyDefinition> 
+  		</propertyDefinition>
   		<propertyDefinition name="exo:author" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>	
@@ -35,7 +35,15 @@
   			<valueConstraints/>
   		</propertyDefinition> 		  		
   	</propertyDefinitions>
+  	<childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="nt:file" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
+				<requiredPrimaryTypes>
+				<requiredPrimaryType>nt:file</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>		
+		</childNodeDefinitions>
   </nodeType>
+  
   <nodeType name="exo:faqCategory" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
   	<supertypes>
   		<supertype>nt:base</supertype>
@@ -96,6 +104,7 @@
       </childNodeDefinition>
     </childNodeDefinitions>
   </nodeType>
+  
   <nodeType name="exo:faqSetting" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
     <propertyDefinitions>
       <propertyDefinition name="exo:processingMode" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">

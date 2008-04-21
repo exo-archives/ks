@@ -17,11 +17,14 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.record.formula.functions.Isref;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -45,29 +48,81 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/faq/webui/popup/UILanguageForm.gtmpl",
 		events = {
-				@EventConfig(listeners = UILanguageForm.SaveActionListener.class),
-				@EventConfig(listeners = UILanguageForm.CancelActionListener.class)
+		  @EventConfig(listeners = UILanguageForm.SelectedLanguageActionListener.class),
+			@EventConfig(listeners = UILanguageForm.SaveActionListener.class),
+			@EventConfig(listeners = UILanguageForm.CancelActionListener.class)
 		}
 )
-public class UILanguageForm extends UIForm	{
+public class UILanguageForm extends UIForm implements UIPopupComponent	{
+  private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
+  private List<String> LANGAUGE_SELECT = new ArrayList<String>() ;
+  
+  private boolean isReponse = false ;
+  
+  public void activate() throws Exception { }
+  public void deActivate() throws Exception { }
+  
+  public void setResponse(boolean isResponse) {
+    this.isReponse = isResponse ;
+  }
 	 
 	public UILanguageForm() throws Exception {
+    LIST_LANGUAGE.addAll(Arrays.asList(new String[]{"English", "France", "Vietnamese", "Ukrainnian"})) ;
 	}
+  
+  public void setListSelected(List<String> language) {
+    this.LANGAUGE_SELECT.clear();
+    this.LANGAUGE_SELECT.addAll(language);
+  }
+  
+  private List<String> getListLanguage(){
+    return this.LIST_LANGUAGE ;
+  }
+  
+  private List<String> getListSelected(){
+    return this.LANGAUGE_SELECT ;
+  }
 	
+	static public class SelectedLanguageActionListener extends EventListener<UILanguageForm> {
+	  public void execute(Event<UILanguageForm> event) throws Exception {
+      UILanguageForm languageForm = event.getSource() ;
+      String languageIsSelect = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      if(languageForm.LANGAUGE_SELECT.contains(languageIsSelect) && languageForm.LANGAUGE_SELECT.size() > 1){
+        languageForm.LANGAUGE_SELECT.remove(languageIsSelect) ;
+      } else {
+        languageForm.LANGAUGE_SELECT.add(languageIsSelect) ;
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(languageForm) ;
+	  }
+	}
+  
 	static public class SaveActionListener extends EventListener<UILanguageForm> {
     public void execute(Event<UILanguageForm> event) throws Exception {
-			UILanguageForm uiCategory = event.getSource() ;			
-			System.out.println("========> Save") ;
+			UILanguageForm languageForm = event.getSource() ;
+			UIPopupContainer popupContainer = languageForm.getAncestorOfType(UIPopupContainer.class) ;
+      if(!languageForm.isReponse) {
+  			UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
+  			questionForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;
+        questionForm.initPage(true) ;
+      } else {
+        UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
+        responseForm.setListLanguageToReponse(languageForm.LANGAUGE_SELECT) ;
+        responseForm.initPage(true) ;
+      }
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      //event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UILanguageForm> {
     public void execute(Event<UILanguageForm> event) throws Exception {
 			UILanguageForm uiCategory = event.getSource() ;			
-			System.out.println("==========> Cancel") ;
+			UIPopupContainer popupContainer = uiCategory.getAncestorOfType(UIPopupContainer.class) ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-	
-	
-	
 }
