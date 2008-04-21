@@ -31,7 +31,6 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -64,6 +63,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 )
 public class UICategoryForm extends UIForm implements UIPopupComponent, UISelector 	{
 	private String categoryId_ = "";
+	private String parentPath_ ;
 	final private static String EVENT_CATEGORY_NAME = "eventCategoryName" ; 
   final private static String DESCRIPTION = "description" ;
   final private static String MODERATOR = "moderator" ;
@@ -109,7 +109,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   public String[] getActions() { return new String[] {"Save","Cancel"} ; }
   public void activate() throws Exception {}
   public void deActivate() throws Exception {}
-
+  
+  public String getParentPath() { return parentPath_; }
+  public void setParentPath(String s) { parentPath_ = s ; }
+  
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
     Map<String, String> permission ;
@@ -129,7 +132,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   } 
 
 	public void setCategoryValue(String categoryId, boolean isUpdate) throws Exception{
-//		if(isUpdate) {
+		if(isUpdate) {
 		  FAQService faqService = FAQUtils.getFAQService();
       SessionProvider sessionProvider = SessionProviderFactory.createSessionProvider() ;
 		  Category cat = faqService.getCategoryById(categoryId, sessionProvider) ;
@@ -142,7 +145,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	      moderator += str ;
 	    }    
 			getUIStringInput(MODERATOR).setValue(moderator) ;
-//		}
+		}
 	}
   protected String getCategoryName() {return getUIStringInput(EVENT_CATEGORY_NAME).getValue() ;}
   protected void setCategoryName(String value) {getUIStringInput(EVENT_CATEGORY_NAME).setValue(value) ;}
@@ -178,18 +181,21 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			if(uiCategory.categoryId_.length() > 0) {
-				System.out.println("========> Save 1") ;
-				cat.setId(uiCategory.categoryId_) ;
-				faqService.saveCategory(null, cat, false, FAQUtils.getSystemProvider());
+					System.out.println("========> Save 1") ;
+					cat.setId(uiCategory.categoryId_) ;
+					faqService.saveCategory(null, cat, false, FAQUtils.getSystemProvider());
+					faqPortlet.cancelAction() ;
+			} 
+			String parentCate =uiCategory.getParentPath() ;
+			System.out.println("========>parentCate:::" + parentCate) ;
+			if(parentCate != null && parentCate.length() > 0) {
+				System.out.println("========> Save Sub category") ;
+				faqService.saveCategory(uiCategory.getParentPath(), cat, true, FAQUtils.getSystemProvider());
 				faqPortlet.cancelAction() ;
-				WebuiRequestContext context = event.getRequestContext() ;
-//				context.addUIComponentToUpdateByAjax(faqPortlet.getChild(UIBreadcumbs.class)) ;
-				context.addUIComponentToUpdateByAjax(uiCategory) ;
 			} else {
 				System.out.println("========> Save 2") ;
 				faqService.saveCategory(null, cat, true, FAQUtils.getSystemProvider());
 				faqPortlet.cancelAction() ;
-				
 			}
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
