@@ -17,22 +17,19 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -50,10 +47,21 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UIMoveCategoryForm extends UIForm	{
-	 
+	private String categoryId_ ;
 	public UIMoveCategoryForm() throws Exception {
 	}
 	
+	@SuppressWarnings("unused")
+  private List<Category> getCategories() throws Exception {
+		FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		List<Category> categorys =	new ArrayList<Category>();
+		for (Category category :faqService.getAllCategories(FAQUtils.getSystemProvider())) {
+			if( !category.getId().equals(categoryId_) ) {
+				categorys.add(category) ;
+			}
+		}
+		return categorys ;
+	}
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
     public void execute(Event<UIMoveCategoryForm> event) throws Exception {
 			UIMoveCategoryForm uiCategory = event.getSource() ;			
@@ -64,7 +72,8 @@ public class UIMoveCategoryForm extends UIForm	{
 	static public class CancelActionListener extends EventListener<UIMoveCategoryForm> {
     public void execute(Event<UIMoveCategoryForm> event) throws Exception {
 			UIMoveCategoryForm uiCategory = event.getSource() ;			
-			System.out.println("==========> Cancel") ;
+			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
+			faqPortlet.cancelAction() ;
 		}
 	}
 	

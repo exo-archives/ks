@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui;
 
 import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -64,10 +65,9 @@ public class UIQuestions extends UIContainer {
 	private List<Category> categories_ = null ;
   private List<Question> listQuestion_ =  null ;
   private String categoryId = null ;
+  private String parentId_ = null ;
   private String[] firstTollbar = new String[]{"AddCategory","ShowQuestionNotYetAnswer"} ;
   private String[] secondTollbar = new String[]{"AddCategory", "AddNewQuestion", "CategorySetting"} ; 
-	private boolean isUpdate = true;
-	private boolean	isEditCategory = false ;
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIQuestions()throws Exception {
 		setCategories() ;
@@ -88,12 +88,18 @@ public class UIQuestions extends UIContainer {
     return action ;
   }
   
+  @SuppressWarnings("unused")
+  private String getParentId(){
+    return this.parentId_ ;
+  }
+  
+  public void setParentId(String parentId_) {
+    this.parentId_ = parentId_ ;
+  }
+	
+  
   public void setCategories() throws Exception  {
-    if(this.categoryId == null || this.categoryId.trim().length() < 1) {
-  		categories_ = faqService.getAllCategories(FAQUtils.getSystemProvider());
-    } else {
-      categories_ = faqService.getSubCategories(this.categoryId, FAQUtils.getSessionProvider()) ;
-    }
+    categories_ = faqService.getSubCategories(this.categoryId, FAQUtils.getSessionProvider()) ;
     System.out.println("number of category : " + categories_.size());
   }
 	
@@ -124,25 +130,27 @@ public class UIQuestions extends UIContainer {
 	
 	public void moveDownUp(Event<UIQuestions> event, int i) {
   	String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+  	System.out.println(" categoryId : " + categoryId) ;
   	int index = 0 ;
-  	for (Category c : categories_) {
-  		if (c.getId().equals(categoryId)) {
+  	for (Category cate : categories_) {
+  		System.out.println(" Ban dau: " + cate.getId()) ;
+  		if (cate.getId().equals(categoryId)) {
   			break ;
   		} else {
   			index ++ ;
   		}
   	}
 
-  	if(index < 0) return ;
-  	if( index ==0 && i == -1) return ;
-  	if (index == 1 && i==1 ) return ;
+  	if (index < 0) return ;
+  	if ( index ==0 && i == -1) return ;
+  	if (index == categories_.size()-1 && i==1) return ;
   	Category category = categories_.remove(index) ;
   	for (Category cate : categories_) {
-  		System.out.println(" cate sau remove : " + cate) ;
+  		System.out.println(" cate sau remove : " + cate.getId()) ;
   	}
   	categories_.add(index+i, category) ;
   	for (Category cate : categories_) {
-  		System.out.println(" cate sau add : " + cate) ;
+  		System.out.println(" cate sau add lai : " + cate.getId()) ;
   	}
   }	
 	
@@ -210,19 +218,19 @@ public class UIQuestions extends UIContainer {
 			uiCategoryForm.init();
 			uiCategoryForm.setCategoryValue(categoryId, true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			question.isEditCategory = true ;
 			}
 		}
 	
 	static	public class DeleteCategoryActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			System.out.println("\n\n DeleteCategoryActionListener");
-			UIQuestions uiQuestion = event.getSource() ; 			
+			UIQuestions question = event.getSource() ; 			
 			String CategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet uiPortlet = uiQuestion.getAncestorOfType(UIFAQPortlet.class);
+			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			if(CategoryId != null) {
-				uiQuestion.faqService.removeCategory(CategoryId, FAQUtils.getSessionProvider()) ;
+				question.faqService.removeCategory(CategoryId, FAQUtils.getSessionProvider()) ;
 			}
+			question.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
 	}
@@ -245,6 +253,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
 			question.moveDownUp(event, -1);
+			question.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
 	}
   
@@ -253,6 +262,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
 			question.moveDownUp(event, 1);
+			question.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
 	}
   
@@ -296,7 +306,7 @@ public class UIQuestions extends UIContainer {
 		  uiPopupContainer.setId("SubCategoryForm") ;
 		  UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 		  category.setParentPath(CategoryId) ;
-		  System.out.println("=====>>>>>>CategoryId: ") ;
+		  System.out.println("=====>>>>>>CategoryId: " + CategoryId) ;
 		  category.init() ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}

@@ -16,29 +16,17 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
- * Aus 01, 2007 2:48:18 PM 
- */
+import org.exoplatform.webui.form.UIFormStringInput;
 
 @SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
@@ -50,14 +38,35 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UIWatchForm extends UIForm	{
-	 
+	public static final String USER_NAME = "userName" ; 
+	public static final String EMAIL_ADDRESS = "emailAddress" ;
+  
 	public UIWatchForm() throws Exception {
+		UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
+		UIFormStringInput emailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, null);
+		addUIFormInput(userName);
+		addUIFormInput(emailAddress);
 	}
+
 	
+	public String[] getActions() { return new String[] {"Save","Cancel"} ; }
+  public void activate() throws Exception {}
+  public void deActivate() throws Exception {}
+  
 	static public class SaveActionListener extends EventListener<UIWatchForm> {
     public void execute(Event<UIWatchForm> event) throws Exception {
-			UIWatchForm uiCategory = event.getSource() ;			
-			System.out.println("========> Save") ;
+			UIWatchForm uiCategory = event.getSource() ;
+			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+      String name = uiCategory.getUIStringInput(UIWatchForm.USER_NAME).getValue() ;
+      String email = uiCategory.getUIStringInput(UIWatchForm.EMAIL_ADDRESS).getValue() ;
+      if (email == null || email.trim().length() <= 0) {
+        uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.email-required", null,
+          ApplicationMessage.INFO)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ; 
+      }
+      FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+
 		}
 	}
 

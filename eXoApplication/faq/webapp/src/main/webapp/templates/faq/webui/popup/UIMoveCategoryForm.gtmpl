@@ -1,5 +1,43 @@
+<%  
+	import org.exoplatform.faq.service.Category;
+%>
 <div class="UIMoveCategoryForm $uicomponent.id">
 	<% uiform.begin() %>
-		This is Move Category form	
+	<div class="TitleMoveThreads"><%= _ctx.appRes("UIMoveFAQForm.title.chooseCategory"); %></div>
+	<div class="UITree">
+	  <div class="TreeContainer">
+		<% 
+			List categories = uicomponent.getCategories(); 
+			for(category in categories) {
+		  	String categoryName = category.getName() ;
+		  	
+		%>
+		<!--String link = uicomponent.event("Save", category.getPath());-->
+	    <div class="Node">
+	     	<div class="Icon FAQIcon"><span></span></div>
+	     	<div class="NodeLabel">
+	     		<div class="NodeSelected"><a href="">$categoryName</a></div>
+	      </div>
+	      <div style="clear: left;"><span></span></div>
+		  </div>
+		<% } %>
+		 </div>
+	</div>
+	
+  <div class="UIAction">
+    <table class="ActionContainer" align="center">
+		  <tr>
+			  <td align="center">
+	    		<a href="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+		  	  	<div class="ButtonLeft">
+		    	  	<div class="ButtonRight">
+		      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></div>
+		        	</div>
+		      	</div>
+	    		</a>
+      	</td>
+			</tr>
+ 	  </table>
+	</div>
 	<%uiform.end()%>
 </div>

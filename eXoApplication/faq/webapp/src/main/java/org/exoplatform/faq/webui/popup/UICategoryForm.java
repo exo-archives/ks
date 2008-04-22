@@ -180,17 +180,21 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
-			if(uiCategory.categoryId_.length() > 0) {
-					System.out.println("========> Save 1") ;
-					cat.setId(uiCategory.categoryId_) ;
-					faqService.saveCategory(null, cat, false, FAQUtils.getSystemProvider());
-					faqPortlet.cancelAction() ;
-			} 
-			String parentCate =uiCategory.getParentPath() ;
+			String parentCate = uiCategory.getParentPath() ;
 			System.out.println("========>parentCate:::" + parentCate) ;
 			if(parentCate != null && parentCate.length() > 0) {
 				System.out.println("========> Save Sub category") ;
 				faqService.saveCategory(uiCategory.getParentPath(), cat, true, FAQUtils.getSystemProvider());
+				faqPortlet.cancelAction() ;
+				UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				questions.setCategories() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				return ;
+			} 
+			if(uiCategory.categoryId_.length() > 0) {
+				System.out.println("========> Save 1") ;
+				cat.setId(uiCategory.categoryId_) ;
+				faqService.saveCategory(null, cat, false, FAQUtils.getSystemProvider());
 				faqPortlet.cancelAction() ;
 			} else {
 				System.out.println("========> Save 2") ;
@@ -198,7 +202,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				faqPortlet.cancelAction() ;
 			}
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-      questions.setCategories() ;
+			questions.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 		}
 	}
