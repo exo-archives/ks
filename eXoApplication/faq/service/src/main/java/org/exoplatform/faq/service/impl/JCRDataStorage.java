@@ -221,8 +221,10 @@ public class JCRDataStorage {
       	catNode.save() ;
       }
   	}else {
-  		Node catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
-    	saveCategory(catNode, cat) ;
+  		Node catNode ;
+  		if(isAddNew) catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
+      else catNode = categoryHome.getNode(cat.getId()) ;
+  		saveCategory(catNode, cat) ;
     	categoryHome.getSession().save() ;
   	}  	
   }

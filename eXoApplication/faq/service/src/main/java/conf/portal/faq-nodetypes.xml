@@ -46,7 +46,7 @@
   
   <nodeType name="exo:faqCategory" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
   	<supertypes>
-  		<supertype>nt:base</supertype>
+  		<supertype>nt:unstructured</supertype>
   	</supertypes>
   	<propertyDefinitions>
   		<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -65,14 +65,20 @@
   			<valueConstraints/>
   		</propertyDefinition> 		  		
   	</propertyDefinitions>
-  	<!-- childNodeDefinitions>
+  	<childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:faqQuestion" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:faqQuestion</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
       <childNodeDefinition name="*" defaultPrimaryType="exo:faqCategory" autoCreated="false" mandatory="false"
         onParentVersion="COPY" protected="false" sameNameSiblings="false">
         <requiredPrimaryTypes>
-          <requiredPrimaryType>exo:faqCategory</requiredPrimaryType>
+          <requiredPrimaryType>nt:base</requiredPrimaryType>
         </requiredPrimaryTypes>
       </childNodeDefinition>
-    </childNodeDefinitions-->
+    </childNodeDefinitions>
   </nodeType>	
   
   <nodeType name="exo:faqWatch" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
