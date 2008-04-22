@@ -1,0 +1,41 @@
+<div class="FAQUIMoveQuestionForm $uicomponent.id">
+	<% uiform.begin() %>
+		<div style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; border: 1px solid #E6F3F3">
+			<table>
+				<tr>
+					<td align="right" width="50%"> <div style="margin: 5px 10px 5px 2px;"> Do you want move this question to: </div></td>
+					<td align="left"> <div style="margin: 5px 10px 5px 2px;">
+						<%for(field in uiform.getChildren()) { 
+								if(field.isRendered() && field != null) {
+						%>
+									<% uiform.renderField(field) %>
+						<%	}
+							}%>
+					</div></td>
+				</tr>
+			</table>
+			
+		</div>
+		
+		<div class="UIAction"> 
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+	        <% for(action in uicomponent.getActions()) { 
+	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	           String link = uicomponent.event(action) ;
+	        %>
+	        		<a href="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle"> $actionLabel </div>
+		            	</div>
+		          	</div>
+		        	</a>
+          <%}%>
+	      	</td>
+				</tr>
+		  </table> 
+		</div>
+	<%uiform.end()%>
+</div>

@@ -25,6 +25,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
 import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
+import org.exoplatform.faq.webui.popup.UIMoveQuestionForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
@@ -374,7 +375,16 @@ public class UIQuestions extends UIContainer {
   
   static  public class MoveQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-      UIQuestions question = event.getSource() ; 
+      UIQuestions questions = event.getSource() ; 
+      String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      UIMoveQuestionForm moveQuestionForm = popupContainer.addChild(UIMoveQuestionForm.class, null, null) ;
+      moveQuestionForm.setQuestionId(questionId) ;
+      popupContainer.setId("FAQMoveQuestion") ;
+      popupAction.activate(popupContainer, 400, 200) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
   
