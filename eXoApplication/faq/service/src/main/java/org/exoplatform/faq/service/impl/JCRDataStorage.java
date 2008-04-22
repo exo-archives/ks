@@ -136,21 +136,26 @@ public class JCRDataStorage {
   private Question getQuestion(Node questionNode) throws Exception {
   	Question question = new Question() ;
   	question.setId(questionNode.getName()) ;
-  	question.setQuestion(questionNode.getProperty("exo:question").getString()) ;
-  	question.setAuthor(questionNode.getProperty("exo:Author").getString()) ;
-  	question.setEmail(questionNode.getProperty("exo:email").getString()) ;
-  	question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
-  	question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
-  	question.setActivated(questionNode.getProperty("exo:activated").getBoolean()) ;
-  	question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
-  	question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
-  	question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
+  	if(questionNode.hasProperty("exo:question")) question.setQuestion(questionNode.getProperty("exo:question").getString()) ;
+    if(questionNode.hasProperty("exo:Author")) question.setAuthor(questionNode.getProperty("exo:Author").getString()) ;
+    if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
+    if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
+    if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
+    if(questionNode.hasProperty("exo:activated")) question.setActivated(questionNode.getProperty("exo:activated").getBoolean()) ;
+    if(questionNode.hasProperty("exo:approvedn")) question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
+    if(questionNode.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
+    if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
   	return question ;
   }
   
   public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {
-  	Node questionHome = getQuestionHome(sProvider, null) ;
-  	return getQuestion(questionHome) ;
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    try{
+      return getQuestion(questionHome.getNode(questionId)) ;
+    }catch(Exception e) {
+      e.printStackTrace() ;
+    }
+    return null ;
   }
   
   public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {

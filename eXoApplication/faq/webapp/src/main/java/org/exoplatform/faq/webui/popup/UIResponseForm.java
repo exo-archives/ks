@@ -20,10 +20,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
@@ -66,6 +72,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private static final String FILE_ATTACHMENTS = "FileAttach" ;
   private static final String RELATIONS = "QuestionRelation" ;
   private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
+  private static Question question = null ;
+  private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   // form input :
   private UIFormStringInput questionContent_ ;
   private UIFormSelectBox questionLanguages_ ;
@@ -85,16 +93,31 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void deActivate() throws Exception { }
   
   public UIResponseForm() throws Exception {
-    // set info of question
-    this.setListLanguage() ;
-    // set info for form
-    this.setListLanguageToReponse(Arrays.asList(new String[]{"English"})) ;
+    
+  }
+  
+  public void setQuestionId(String questionId){
+    try{
+      question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+      this.setListRelation();
+      this.setListLanguage() ;
+      // set info for form
+      this.setListLanguageToReponse(Arrays.asList(new String[]{"English"})) ;
+    } catch (Exception e) {
+      e.printStackTrace() ;
+    }
+    this.questionId_ = questionId ;
     initPage(false) ;
+  }
+  @SuppressWarnings("unused")
+  private String getQuestionId(){ 
+    return questionId_ ; 
   }
   
   public void initPage(boolean isEdit) {
     if(!isEdit) {
       questionContent_ = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
+      questionContent_.setValue(question.getQuestion()) ;
       questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguage()) ;
       reponseQuestion_ = new UIFormInputWithActions(RESPONSE_CONTENT) ;
       questionRelation_ = new UIFormSelectBox(RELATIONS, RELATIONS, getListRelation()) ;
@@ -114,12 +137,17 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       this.removeChildById(RELATIONS) ; 
       this.removeChildById(SHOW_ANSWER) ; 
       reponseQuestion_ = new UIFormInputWithActions(RESPONSE_CONTENT) ;
+      questionLanguages_.setOptions(getListLanguage()) ;
+      questionRelation_.setOptions(getListRelation()) ;
     }
     
     //for(int i = 0 ; i < listLanguage.size() ; i++) {
     for(int i = 0 ; i < this.getListLanguageToReponse().length ; i++) {
       reponseQuestion_.addUIFormInput( new UIFormWYSIWYGInput(RESPONSE_CONTENT + i, null, null, true) );
     }
+    
+    System.out.println("\n\n\n\n>>>> initPage() --->question Id: " + question.getId());
+    System.out.println("\n\n\n\n>>>> initPage() --->question content: " + question.getQuestion());
     
     addChild(questionContent_) ;
     addChild(questionLanguages_) ;
@@ -162,17 +190,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   }
   
   private void setListRelation() {
-    
+    String[] relations = question.getRelations() ;
+    if(relations != null && relations.length > 0)
+      for(String relation : relations) {
+        listRelation.add(new SelectItemOption<String>(relation, relation)) ;
+      }
   }
   private List<SelectItemOption<String>> getListRelation() {
    return listRelation ; 
-  }
-  
-  public void setQuestionId(String questionId) {
-    this.questionId_ = questionId ;
-  }
-  private String getQuestionId(){ 
-    return questionId_ ; 
   }
   
   // get and set form info:
@@ -191,15 +216,51 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIResponseForm> event) throws Exception {
       UIResponseForm response = event.getSource() ;
       UIFormInputWithActions listFormFCK = response.getChildById(RESPONSE_CONTENT) ;
-      List<String> listRespon = new ArrayList<String>() ;
+      List<String> listString = new ArrayList<String>() ;
       String value = new String() ;
       for(int i = 0 ; i < listFormFCK.getChildren().size(); i ++) {
         value = ((UIFormWYSIWYGInput)listFormFCK.getChild(i)).getValue() ;
         if(value != null && value.trim().length() > 0) 
-          listRespon.add(value) ;
+          listString.add(value) ;
       }
-      if(listRespon.isEmpty()) {
+      if(listString.isEmpty()) {
+        UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return ; 
       }
+      
+      //get question by id:
+      List<String>listContent = Arrays.asList(question.getResponses()) ;
+      
+      //set response of question
+      if(listContent.size() > 0)
+        listString.addAll(listContent) ;
+      question.setResponses(listString.toArray(new String[]{}));
+      
+      // set relateion of question:
+      listString.clear() ;
+      UIFormSelectBox selectBox = response.getUIFormSelectBox(RELATIONS) ;
+      for(SelectItemOption<String> selectOption : selectBox.getOptions()){
+        listString.add(selectOption.getValue()) ;
+      }
+      listContent = Arrays.asList(question.getRelations()) ;
+      for(String relation : listString){
+        if(!listContent.contains(relation)) {
+          listContent.add(relation) ;
+        }
+      }
+      question.setRelations(listContent.toArray(new String[]{})) ;
+      
+      // set show question:
+      question.setActivated((Boolean) response.getUIFormCheckBoxInput(SHOW_ANSWER).getValue()) ;
+      faqService.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
+      
+      //cancel
+      UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
   static public class AddLanguageActionListener extends EventListener<UIResponseForm> {

@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import java.util.List;
+
 import org.exoplatform.commons.exception.ExoMessageException;
 
 /**

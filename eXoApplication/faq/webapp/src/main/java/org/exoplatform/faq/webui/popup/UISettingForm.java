@@ -23,7 +23,6 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.faq.webui.popup.UIPopupComponent;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

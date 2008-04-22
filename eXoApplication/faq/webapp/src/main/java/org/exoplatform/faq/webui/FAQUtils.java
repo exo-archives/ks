@@ -18,8 +18,8 @@ package org.exoplatform.faq.webui;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -49,15 +49,9 @@ public class FAQUtils {
 	}
 	
 	 public static SessionProvider getSystemProvider() {
-	    return SessionProvider.createSystemProvider();
+	    return SessionProviderFactory.createSystemProvider();
 	  }
 	  
-	  public static SessionProvider getSessionProvider() {
-	    SessionProviderService service = (SessionProviderService) PortalContainer
-	        .getComponent(SessionProviderService.class);
-	    return service.getSessionProvider(null);
-	  }
-	
   static public String getCurrentUser() throws Exception {
     return Util.getPortalRequestContext().getRemoteUser();
   }

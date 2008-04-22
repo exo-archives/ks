@@ -86,15 +86,15 @@ public class QuestionPageList extends JCRPageList {
   private Question getQuestion(Node questionNode) throws Exception {
   	Question question = new Question() ;
   	question.setId(questionNode.getName()) ;
-  	question.setQuestion(questionNode.getProperty("exo:question").getString()) ;
-  	question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
-  	question.setEmail(questionNode.getProperty("exo:email").getString()) ;
-  	question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
-  	question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
-  	question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
-  	question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
-  	question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
-  	question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
+  	if(questionNode.hasProperty("exo:question")) question.setQuestion(questionNode.getProperty("exo:question").getString()) ;
+    if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
+    if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
+    if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
+    if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
+    if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
+    if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
+    if(questionNode.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
+    if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
   	return question ;
   }
   

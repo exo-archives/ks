@@ -12,7 +12,7 @@
   					<div class="ControlbarCotainer">
 							<%
 							String cateId = uicomponent.getCategoryId() ;
-							if(cateId != null) {
+							if(cateId != null && cateId.trim().length() > 0) {
 								String[] actionTollbar = uicomponent.getActionTollbar() ;
 								for(String action in actionTollbar) {
 								String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
@@ -174,16 +174,66 @@
 			} 
 		%>
 		<%
-			if(cateId!=null) {
+			if(cateId != null && cateId.trim().length() > 0) {
 				List listQuestion = uicomponent.getListQuestion() ;
 				String questionContent = new String() ;
+				int questionId = 0 ;
+				String[] questionActions = uicomponent.getActionQuestion() ;
 				for(question in listQuestion) {
-					questionContent = question.getQuestion()
+					questionContent = question.getQuestion() ;
+					String qId = question.getId()
 		%>
-					<div class="Question">
-						$questionContent
+					<div class="FAQCategory Question">
+						<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+								<!-- question content -->
+								$questionContent
+								<!-- action of this question -->
+							  
+								<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
+									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+										<div class="UIContextMenuContainer">
+																		
+											<div class="TopLeftRightClickPopupMenu">
+												<div class="TopRightRightClickPopupMenu">
+													<div class="TopCenterRightClickPopupMenu"><span></span></div>
+													<div class="RightClickCustomItem" style="display: none;">Open</div>
+												</div>
+											</div>
+											
+											<div class="MiddleLeftRightClickPopupMenu">
+												<div class="MiddleRightRightClickPopupMenu">
+													<div class="UIRightPopupMenuContainer">
+														<%
+															for(viewAction in questionActions) {
+																String linkView = uicomponent.event(viewAction, qId) ;
+																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+														%>
+																<a href="$linkView" class="MenuItem">
+																	<div class="ItemIcon $viewAction" style="padding:3px 0px 5px 5px;">
+																			<div style="padding-left: 20px;">$itemLabelView</div>
+																	</div>
+																</a>
+														<%
+															}
+														%>
+													</div>
+												</div>
+											</div>
+											
+											<div class="BottomLeftRightClickPopupMenu">
+												<div class="BottomRightRightClickPopupMenu">
+													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+												</div>
+											</div>
+									
+										</div>
+									</div>
+								</div>
+							
+						</div>
 					</div>
-		<%	}
+		<%		questionId ++ ;
+				}
 			}
 		%>
 		</div>

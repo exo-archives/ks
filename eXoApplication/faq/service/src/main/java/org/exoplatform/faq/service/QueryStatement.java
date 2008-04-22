@@ -19,8 +19,6 @@ package org.exoplatform.faq.service;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.commons.utils.ISO8601;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang

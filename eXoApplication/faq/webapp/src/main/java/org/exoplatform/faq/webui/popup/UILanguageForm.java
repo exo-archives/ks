@@ -18,24 +18,14 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.poi.hssf.record.formula.functions.Isref;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen

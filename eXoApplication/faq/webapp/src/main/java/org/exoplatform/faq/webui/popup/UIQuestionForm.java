@@ -20,9 +20,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import javax.faces.component.UIComponent;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
@@ -32,21 +29,18 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.portal.webui.application.UIApplication;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 
@@ -76,15 +70,21 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   public static final String ATTACHMENTS = "Attachment" ;
   public static final String FILE_ATTACHMENTS = "FileAttach" ;
   public static final String REMOVE_FILE_ATTACH = "RemoveFile" ;
+  
+  private static FAQService fAQService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  private static Question question = null ;
+  
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
   private static UIFormInputWithActions listFormWYSIWYGInput ;
   private String categoryId = new String() ;
+  private String questionId = null ;
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
 	
   public UIQuestionForm() throws Exception {
+    this.questionId = new String() ;
     if(LIST_LANGUAGE.isEmpty())
       LIST_LANGUAGE.add("English") ;
     initPage(false) ;
@@ -115,6 +115,22 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, null)) ;
     addChild(listFormWYSIWYGInput) ;
     addUIFormInput(inputWithActions) ;
+  }
+  
+  @SuppressWarnings("static-access")
+  public void setQuestionId(String questionId){
+    this.questionId = questionId ;
+    try {
+      question = this.fAQService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+      UIFormStringInput authorQ = this.getChildById(AUTHOR) ;
+      authorQ.setValue(question.getAuthor()) ;
+      UIFormStringInput emailQ = this.getChildById(EMAIL_ADDRESS);
+      emailQ.setValue(question.getEmail()) ;
+      // set value for the first fcd input form:
+      ((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(0)).setValue(question.getQuestion()) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
   
   private String getCategoryId(){
@@ -156,7 +172,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
 	static public class SaveActionListener extends EventListener<UIQuestionForm> {
     public void execute(Event<UIQuestionForm> event) throws Exception {
 			UIQuestionForm questionForm = event.getSource() ;			
-      FAQService fAQService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
       DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
       java.util.Date date = new java.util.Date();
       String dateStr = dateFormat.format(date) ;
@@ -171,19 +186,26 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       }
             
       if(listQuestionContent.isEmpty()) {
-        Object[] args = { } ;
-        throw new MessageException(new ApplicationMessage("UIQuestionForm.sms.inputisnull", args, ApplicationMessage.WARNING)) ;
+        UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return ;
       }
-      
-      Question question = new Question() ;
-      question.setCategoryId(questionForm.getCategoryId()) ;
+      if(questionForm.questionId == null || questionForm.questionId.trim().length() < 1) {
+        question = new Question() ;
+        question.setCategoryId(questionForm.getCategoryId()) ;
+        question.setRelations(new String[]{}) ;
+        question.setResponses(new String[]{}) ;
+      }
       question.setAuthor(author) ;
       question.setEmail(emailAddress) ;
       question.setQuestion(listQuestionContent.get(0)) ;
       question.setCreatedDate(date) ;
-      question.setRelations(new String[]{}) ;
-      question.setResponses(new String[]{}) ;
-      fAQService.saveQuestion(question, true, FAQUtils.getSessionProvider()) ;
+      if(questionForm.questionId == null || questionForm.questionId.trim().length() < 1) {
+        fAQService.saveQuestion(question, true, FAQUtils.getSystemProvider()) ;
+      } else {
+        fAQService.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
+      }
       
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
