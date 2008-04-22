@@ -411,25 +411,28 @@ public class UITopicDetail extends UIForm {
 		this.isEdit = isEdit ;
 	}
 	@SuppressWarnings("unused")
-  private void setPostRules() {
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+  private void setPostRules(boolean isNull) {
+		boolean isLock = isNull ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
-		boolean isLock = this.forum.getIsClosed() ;
-		if(!isLock)isLock = this.forum.getIsLock() ;
-		if(!isLock) {
-			if(this.topic != null) { 
-				isLock = this.topic.getIsClosed() ;
-				if(!isLock) isLock = this.topic.getIsLock() ;
+		if(!isNull) {
+			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+			isLock = this.forum.getIsClosed() ;
+			if(!isLock)isLock = this.forum.getIsLock() ;
+			if(!isLock) {
+				if(this.topic != null) { 
+					isLock = this.topic.getIsClosed() ;
+					if(!isLock) isLock = this.topic.getIsLock() ;
+				}
 			}
-		}
-		if(!isLock && this.forum.getCreateTopicRole() != null && this.forum.getCreateTopicRole().length > 0) {
-			if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.forum.getCreateTopicRole(), this.userProfile.getUserId()) ;
-		}
-		if(!isLock && this.forum.getReplyTopicRole() != null && this.forum.getReplyTopicRole().length > 0) {
-			if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.forum.getReplyTopicRole(), this.userProfile.getUserId()) ;
-		}
-		if(!isLock && this.topic.getCanPost() != null && this.topic.getCanPost().length > 0) {
-			if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.topic.getCanPost(), this.userProfile.getUserId()) ;
+			if(!isLock && this.forum.getCreateTopicRole() != null && this.forum.getCreateTopicRole().length > 0) {
+				if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.forum.getCreateTopicRole(), this.userProfile.getUserId()) ;
+			}
+			if(!isLock && this.forum.getReplyTopicRole() != null && this.forum.getReplyTopicRole().length > 0) {
+				if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.forum.getReplyTopicRole(), this.userProfile.getUserId()) ;
+			}
+			if(!isLock && this.topic.getCanPost() != null && this.topic.getCanPost().length > 0) {
+				if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.topic.getCanPost(), this.userProfile.getUserId()) ;
+			}
 		}
 		postRules.setLock(isLock) ;
 		postRules.setUserProfile(this.userProfile) ;
@@ -447,8 +450,8 @@ public class UITopicDetail extends UIForm {
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-			postForm.updatePost("", false) ;
+			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+			postForm.updatePost("", false, null) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIAddPostContainer") ;
 			popupAction.activate(popupContainer, 670, 440) ;
@@ -565,8 +568,8 @@ public class UITopicDetail extends UIForm {
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-			postForm.updatePost(postId, false) ;
+			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+			postForm.updatePost(postId, false, topicDetail.getPost(postId)) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIEditPostContainer") ;
 			popupAction.activate(popupContainer, 670, 440) ;
@@ -591,8 +594,8 @@ public class UITopicDetail extends UIForm {
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-			postForm.updatePost(postId, true) ;
+			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+			postForm.updatePost(postId, true, topicDetail.getPost(postId)) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIQuoteContainer") ;
 			popupAction.activate(popupContainer, 670, 440) ;

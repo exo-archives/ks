@@ -422,10 +422,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				if(k == 0) {
 					sms = "Thread Title" ;
-					if(t < 3) sms = "Thread Title and Message";
+					if(t <= 4) sms = "Thread Title and Message";
 					Object[] args = { sms };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-				} else if(t < 3) {
+				} else if(t <= 4) {
 					Object[] args = { "Message" };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
 				}

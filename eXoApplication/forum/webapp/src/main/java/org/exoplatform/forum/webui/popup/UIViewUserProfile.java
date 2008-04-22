@@ -18,8 +18,6 @@ package org.exoplatform.forum.webui.popup;
 
 import java.io.InputStream;
 
-import javax.jcr.PathNotFoundException;
-
 import org.exoplatform.contact.service.Contact;
 import org.exoplatform.contact.service.ContactAttachment;
 import org.exoplatform.download.DownloadService;

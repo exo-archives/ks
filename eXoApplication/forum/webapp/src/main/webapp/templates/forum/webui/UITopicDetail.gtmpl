@@ -15,70 +15,82 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 %>
 <%
-	uicomponent.initPage() ;	
-	Topic topic = uicomponent.getTopic() ;
-	Forum forum = uicomponent.getForum() ;
-	boolean isShowMenu = !ForumSessionUtils.isAnonim();
-	UserProfile userProfile = uicomponent.getUserProfile();
-	String userLogin = userProfile.getUserId() ;
-	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-	boolean isBanned = userProfile.getIsBanned() ;
+	boolean isNull = false ;
+	boolean isShowMenu;
+	long setTime = 0;
+	String userLogin ;
+	boolean isBanned = false;
 	boolean isAdmin = false ;
-	if(userProfile.getUserRole() == 0) isAdmin = true;
-	if(isBanned) {
-		isShowMenu = false ;
-	}
 	boolean canEdit = false ;
-	if(isShowMenu) {
-		if(isAdmin) canEdit = true;
-		if(userProfile.getUserRole() == 1) {
-			String []moderatorsByUser = userProfile.getModerateForums() ;
-			if(moderatorsByUser == null || moderatorsByUser.length <= 0) canEdit = true;
-			else {
-				for(forumId in moderatorsByUser) {
-					if(forumId.indexOf(forum.getId()) >= 0) {
-						canEdit = true;
-						break ;
+	boolean isClosed = false;
+	boolean isLock = false;
+	boolean isUserCreatedTopic = false;
+	List posts = null;
+	UserProfile userProfile = null;
+	Forum forum = uicomponent.getForum() ;
+	if(forum == null) isNull = true;
+	Topic topic = null;
+	if(!isNull) {
+		 topic = uicomponent.getTopic() ;
+	}
+	if(topic == null) isNull = true;
+	if(!isNull) {
+		uicomponent.initPage() ;
+		isShowMenu = !ForumSessionUtils.isAnonim();
+		userProfile = uicomponent.getUserProfile();	
+		userLogin = userProfile.getUserId() ;
+		setTime = (long)(userProfile.getTimeZone()*3600000) ;
+		isBanned = userProfile.getIsBanned() ;
+		if(userProfile.getUserRole() == 0) isAdmin = true;
+		if(isBanned) {
+			isShowMenu = false ;
+		}
+		if(isShowMenu) {
+			if(isAdmin) canEdit = true;
+			if(userProfile.getUserRole() == 1) {
+				String []moderatorsByUser = userProfile.getModerateForums() ;
+				if(moderatorsByUser == null || moderatorsByUser.length <= 0) canEdit = true;
+				else {
+					for(forumId in moderatorsByUser) {
+						if(forumId.indexOf(forum.getId()) >= 0) {
+							canEdit = true;
+							break ;
+						}
 					}
 				}
 			}
-		}
-		if(!canEdit && forum != null) {
-			String []moderatorsByForum = forum.getModerators() ;
-			if(moderatorsByForum != null || moderatorsByForum.length > 0) {
-				canEdit = ForumFormatUtils.isStringInStrings(moderatorsByForum, userLogin) ;
+			if(!canEdit && forum != null) {
+				String []moderatorsByForum = forum.getModerators() ;
+				if(moderatorsByForum != null || moderatorsByForum.length > 0) {
+					canEdit = ForumFormatUtils.isStringInStrings(moderatorsByForum, userLogin) ;
+				}
 			}
 		}
-	}
-	uicomponent.setIsEdit(canEdit) ;
-	boolean isClosed = false;
-	boolean isLock = false;
-	if(!isLock && forum != null)isLock = forum.getIsLock() ;
-	if(!isLock && topic != null)isLock = topic.getIsLock() ;
-	if(!isLock && forum != null)isLock = forum.getIsClosed() ;
-	if(!isLock && topic != null)isLock = topic.getIsClosed() ;
-	if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
-	if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
-	
-	if(!canEdit) {
-		if(!isLock) {
-			if(!isBanned)
-				isLock = !uicomponent.isCanPostReply();
+		uicomponent.setIsEdit(canEdit) ;
+		if(!isLock && forum != null)isLock = forum.getIsLock() ;
+		if(!isLock && topic != null)isLock = topic.getIsLock() ;
+		if(!isLock && forum != null)isLock = forum.getIsClosed() ;
+		if(!isLock && topic != null)isLock = topic.getIsClosed() ;
+		if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
+		if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
+		if(!canEdit) {
+			if(!isLock) {
+				if(!isBanned)
+					isLock = !uicomponent.isCanPostReply();
+			}
+			if(!isClosed){ 
+				isClosed = !uicomponent.userCanView() ;
+			}
 		}
-		if(!isClosed){ 
-			isClosed = !uicomponent.userCanView() ;
+		if(!canEdit) {
+			if(topic.getOwner().equals(userLogin))isUserCreatedTopic = true;
 		}
+		posts = uicomponent.getPostPageList() ;
 	}
-	
-	boolean isUserCreatedTopic = false;
-	if(!canEdit) {
-		if(topic.getOwner().equals(userLogin))isUserCreatedTopic = true;
-	}
-	List posts = uicomponent.getPostPageList() ;
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
-	<% if(topic != null) {%>
+	<% if(!isNull) {%>
 	<div class="ButtomAndPageListContainer">
 	<%if(isLock || !isShowMenu) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
@@ -497,8 +509,6 @@
 					if(isCity)location = location + ", ";
 					location = location + contact.getHomeCountry() ;
 				}
-				
-				
 				UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 				String classIconPost = post.getIcon() ;
 				if(classIconPost.length() <= 0) 
@@ -824,13 +834,12 @@
 		<div style="clear: left;"><span></span></div>
 	</div>
 	<% } else { %>
-	
+	<div class="EmptyContent">
 		This topic is deleted or removed !
-	
+	</div>
 	<% } 
-	uicomponent.setPostRules() ;
+	uicomponent.setPostRules(isNull) ;
 	%>
 <%uiform.end()%>
 <% uicomponent.renderChild(UIPostRules.class) %>
-<%// uicomponent.renderChild(UIForumLinks.class) %>
 </div>

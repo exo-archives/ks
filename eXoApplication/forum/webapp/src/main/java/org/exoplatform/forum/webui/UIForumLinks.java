@@ -80,14 +80,16 @@ public class UIForumLinks extends UIForm {
 			if(linkData.getType().equals("topic")) continue ;
 			list.add(new SelectItemOption<String>(space + linkData.getName() + type, linkData.getPath())) ;
 		}
+		UIFormSelectBoxForum forumLink ;
 		if(getChild(UIFormSelectBoxForum.class) != null) {
-			UIFormSelectBoxForum forumLink = this.getChild(UIFormSelectBoxForum.class).setOptions(list) ;
+			forumLink = this.getChild(UIFormSelectBoxForum.class).setOptions(list) ;
 			forumLink.setValue(path.trim()) ;
 		} else {
-			UIFormSelectBoxForum forumLink = new UIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX, FIELD_FORUMLINK_SELECTBOX, list) ;
+			forumLink = new UIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX, FIELD_FORUMLINK_SELECTBOX, list) ;
 			forumLink.setValue(path.trim()) ;
 			addUIFormInput(forumLink) ;
 		}
+		forumLink.setOnChange("Select") ;
 	}
 	
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {

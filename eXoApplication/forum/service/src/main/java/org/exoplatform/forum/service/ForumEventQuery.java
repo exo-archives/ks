@@ -197,6 +197,7 @@ public class ForumEventQuery {
     }
     stringBuffer.append("]");
     if(isAnd) queryString.append(stringBuffer.toString()) ;
+//    System.out.println("\n\n--->>PathQR:  " + queryString.toString() + "\n\n");
 	  return queryString.toString();
   }
 	
@@ -205,23 +206,23 @@ public class ForumEventQuery {
 		if(max !=null && min != null){
     	if(Integer.parseInt(max) > Integer.parseInt(min)) {
     		if(isAnd) queryString.append(" and ");
-    		queryString.append("(@exo:").append(property).append(" <= '").append(max).append("' and @exo:").append(property).append(" >= '").append(min).append("'");
+    		queryString.append("(@exo:").append(property).append(">=").append(min).append(" and @exo:").append(property).append("<=").append(max).append(")");
     		isAnd = true ;
     	} else if(Integer.parseInt(max) == Integer.parseInt(min)) {
     		if(isAnd) queryString.append(" and ");
-    		queryString.append("(@exo:").append(property).append("='").append(max).append("'");
+    		queryString.append("(@exo:").append(property).append("=").append(max).append(")");
     		isAnd = true ;
     	}
     } else if(max != null) {
     	if(Integer.parseInt(max) > 0) {
     		if(isAnd) queryString.append(" and ");
-    		queryString.append("(@exo:").append(property).append(" <= '").append(max).append("')") ;
+    		queryString.append("(@exo:").append(property).append("<=").append(max).append(")") ;
     		isAnd = true ;
     	}
     } else if(min != null) {
     	if(Integer.parseInt(min) > 0) {
     		if(isAnd) queryString.append(" and ") ;
-    		queryString.append("(@exo:").append(property).append(" >= ").append(min).append("')") ;
+    		queryString.append("(@exo:").append(property).append(">=").append(min).append(")") ;
     		isAnd = true ;
     	}
     }
@@ -245,22 +246,3 @@ public class ForumEventQuery {
 		return queryString.toString() ;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

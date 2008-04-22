@@ -289,3 +289,11 @@
 	border: solid 1px #b7b7b7 ;
 	border-top: none ;
 }
+
+.UITopicDetail .EmptyContent {
+	border: 1px outset ;
+	line-height: 30px;
+	margin-bottom: 6px;
+	text-align: center;
+	font-weight: bold;
+}

@@ -87,6 +87,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
   
 	private String topicId ;
 	private String postId ;
+	private Topic topic ;
 	private boolean isQuote = false ;
 	public UIPostForm() throws Exception {
     UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
@@ -117,10 +118,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
     return tab ;
   }
   
-	public void setPostIds(String categoryId, String forumId, String topicId) {
+	public void setPostIds(String categoryId, String forumId, String topicId, Topic topic) {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topicId ;
+		this.topic = topic ;
 	}
 	
 	public List<ActionData> getUploadFileList() { 
@@ -160,12 +162,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		return attachments_ ;
 	}
 	 
-	public void updatePost(String postId, boolean isQuote) throws Exception {
+	public void updatePost(String postId, boolean isQuote, Post post) throws Exception {
 		this.postId = postId ;
 		this.isQuote = isQuote ;
 		UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
 		if(this.postId != null && this.postId.length() > 0) {
-			Post post = this.forumService.getPost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, postId) ;
 			String message = post.getMessage() ;
 			if(isQuote) {//quote
 				String title = "" ;
@@ -175,7 +176,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String value = "[QUOTE=" + post.getOwner() + "]" + ForumFormatUtils.clearQuote(message) + "[/QUOTE]<br/>";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
-				getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
+				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			} else {//edit
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName()) ;
 				if(post.getAttachments() != null && post.getAttachments().size() > 0) {
@@ -187,10 +188,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			}
 		} else {
 			if(!isQuote) {//reply
-				Topic topic = this.forumService.getTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "guest") ;
-				String title = topic.getTopicName() ;
+				String title = this.topic.getTopicName() ;
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
-				getChild(UIFormInputIconSelector.class).setSelectedIcon(topic.getIcon());
+				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			}
 		}
 	}
@@ -236,9 +236,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String[] args = { ""} ;
 				if(k == 0) {
 					args = new String[] { "Thread Title" } ;
-					if(t < 3) args = new String[] { "Thread Title and Message" } ;
+					if(t < 4) args = new String[] { "Thread Title and Message" } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
-				} else if(t < 3) {
+				} else if(t < 4) {
 					args = new String[] { "Message" } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 				}
@@ -274,28 +274,30 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setAttachments(uiForm.attachments_) ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
+				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
 				if(uiForm.postId != null && uiForm.postId.length() > 0) {
 					if(uiForm.isQuote) {
 						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
-						topicDetailContainer.getChild(UITopicDetail.class).setIdPostView("true");
+						topicDetail.setIdPostView("true");
 					} else {
 						post.setId(uiForm.postId) ;
 						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false) ;
-						topicDetailContainer.getChild(UITopicDetail.class).setIdPostView(uiForm.postId);
+						topicDetail.setIdPostView(uiForm.postId);
 					}
 				} else {
 					uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
-					topicDetailContainer.getChild(UITopicDetail.class).setIdPostView("true");
+          topicDetail.setIdPostView("true");
 				}
 				forumPortlet.cancelAction() ;
+				topicDetail.setIsEditTopic(true) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
 			}else {
 				String[] args = { ""} ;
 				if(k == 0) {
 					args = new String[] { "Thread Title" } ;
-					if(t < 3) args = new String[] { "Thread Title and Message" } ;
+					if(t < 4) args = new String[] { "Thread Title and Message" } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
-				} else if(t < 3) {
+				} else if(t < 4) {
 					args = new String[] { "Message" } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 				}
