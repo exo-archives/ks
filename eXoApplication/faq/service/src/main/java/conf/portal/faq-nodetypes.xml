@@ -112,6 +112,9 @@
   </nodeType>
   
   <nodeType name="exo:faqSetting" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+    <supertypes>
+  		<supertype>nt:base</supertype>
+  	</supertypes>
     <propertyDefinitions>
       <propertyDefinition name="exo:processingMode" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
         <valueConstraints/>
