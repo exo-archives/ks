@@ -112,7 +112,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   
   public String getParentPath() { return parentPath_; }
   public void setParentPath(String s) { parentPath_ = s ; }
-  
+
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
     Map<String, String> permission ;
@@ -183,12 +183,19 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String parentCate = uiCategory.getParentPath() ;
 			System.out.println("========>parentCate:::" + parentCate) ;
 			if(parentCate != null && parentCate.length() > 0) {
-				System.out.println("========> Save Sub category") ;
-				faqService.saveCategory(uiCategory.getParentPath(), cat, true, FAQUtils.getSystemProvider());
-				faqPortlet.cancelAction() ;
-				UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-				questions.setCategories() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				if(uiCategory.categoryId_.length() > 0) {
+					System.out.println("========> Save Sub category edit") ;
+					cat.setId(uiCategory.categoryId_) ;
+					faqService.saveCategory(parentCate, cat, false, FAQUtils.getSystemProvider());
+					faqPortlet.cancelAction() ;
+				} else {
+					System.out.println("========>New Save Sub category") ;
+					faqService.saveCategory(parentCate, cat, true, FAQUtils.getSystemProvider());
+					faqPortlet.cancelAction() ;
+				}
+					UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+					questions.setCategories() ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 				return ;
 			} 
 			if(uiCategory.categoryId_.length() > 0) {

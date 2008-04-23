@@ -36,9 +36,9 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 public class UIFAQPortlet extends UIPortletApplication {
   public UIFAQPortlet() throws Exception {
   	addChild(UIFAQContainer.class, null, null) ;
-  	 UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
-     uiPopup.setId("UIFAQPopupAction") ;
-     uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow") ;
+  	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
+    uiPopup.setId("UIFAQPopupAction") ;
+    uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow") ;
   }
   
   public void cancelAction() throws Exception {

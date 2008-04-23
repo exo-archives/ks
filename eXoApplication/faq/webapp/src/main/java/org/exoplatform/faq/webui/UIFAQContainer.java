@@ -36,8 +36,11 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 public class UIFAQContainer extends UIContainer  {
   
   public UIFAQContainer() throws Exception {
-    addChild(UIBreadcumbs.class, null, null) ;
-    addChild(UIQuestions.class, null, null) ;    
+    addChild(UIBreadcumbs.class, null, null).setRendered(true) ; 
+    addChild(UIQuestions.class, null, null).setRendered(true) ;    
   } 
-  
+  public void updateIsRender(boolean isRender) throws Exception {
+		getChild(UIBreadcumbs.class).setRendered(isRender) ;
+		getChild(UIQuestions.class).setRendered(isRender) ;	
+	}
 }

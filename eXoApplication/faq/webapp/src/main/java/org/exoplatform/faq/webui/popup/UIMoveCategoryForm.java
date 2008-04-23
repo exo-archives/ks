@@ -64,8 +64,8 @@ public class UIMoveCategoryForm extends UIForm	{
 	}
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
     public void execute(Event<UIMoveCategoryForm> event) throws Exception {
-			UIMoveCategoryForm uiCategory = event.getSource() ;			
-			System.out.println("========> Save") ;
+			UIMoveCategoryForm moveCategory = event.getSource() ;			
+			System.out.println("========> Save + categoryId_" + moveCategory.categoryId_) ;
 		}
 	}
 

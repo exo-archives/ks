@@ -24,7 +24,6 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -52,6 +51,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String SHOW_MODE = "show-mode".intern(); 
 	public static final String DISPLAY_TYPE = "display-type".intern(); 
+	private String categoryId_ = "";
 	
 	public UISettingForm() throws Exception {}
 	
@@ -67,13 +67,15 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		displayType.add(new SelectItemOption<String>("Post date",FAQSetting.DISPLAY_TYPE_POSTDATE ));
 		displayType.add(new SelectItemOption<String>("Alphabet",FAQSetting.DISPLAY_TYPE_ALPHABET ));
 		addUIFormInput(new UIFormSelectBox(DISPLAY_TYPE, DISPLAY_TYPE, displayType));
-//		fillData() ;
+		fillData() ;
 	}
+	
+	public String getCategoryID() { return categoryId_; }
+  public void setCategoryID(String s) { categoryId_ = s ; }
 	
 	public void fillData() throws Exception {    
     FAQService mailSrv = getApplicationComponent(FAQService.class);
-    String username = Util.getPortalRequestContext().getRemoteUser();
-    FAQSetting setting = mailSrv.getFAQSetting(username, SessionProviderFactory.createSystemProvider()) ;
+    FAQSetting setting = mailSrv.getFAQSetting(categoryId_, SessionProviderFactory.createSystemProvider()) ;
     if (setting != null) {
       getUIFormSelectBox(SHOW_MODE).setValue(String.valueOf(setting.getProcessingMode())) ;
       getUIFormSelectBox(DISPLAY_TYPE).setValue(String.valueOf(setting.getDisplayMode()));
@@ -90,21 +92,25 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	static public class SaveActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			System.out.println("========> Save") ;
-			UISettingForm uiCategory = event.getSource() ;			
-			UIFAQPortlet uiPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class);
+			UISettingForm settingForm = event.getSource() ;			
+			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQService service = FAQUtils.getFAQService() ;
 			FAQSetting faqSetting = new FAQSetting() ;
+			String cate = settingForm.getCategoryID() ;
+			faqSetting.setProcessingMode(Boolean.valueOf(settingForm.getUIFormSelectBox(SHOW_MODE).getValue()));
+			faqSetting.setDisplayMode(String.valueOf(settingForm.getUIFormSelectBox(DISPLAY_TYPE).getValue())) ;
+			service.saveFAQSetting(cate, faqSetting, SessionProviderFactory.createSystemProvider()) ;
 			
-			faqSetting.setProcessingMode(Boolean.valueOf(uiCategory.getUIFormSelectBox(SHOW_MODE).getValue()));
-			faqSetting.setDisplayMode(String.valueOf(uiCategory.getUIFormSelectBox(DISPLAY_TYPE).getValue())) ;
-//			service.saveFAQSetting(categoryId, faqSetting, SessionProviderFactory.createSystemProvider()) ;
+			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
+      uiPopupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
-			UISettingForm uiCategory = event.getSource() ;			
-      UIPopupAction uiPopupAction = uiCategory.getAncestorOfType(UIPopupAction.class) ;
+			UISettingForm settingForm = event.getSource() ;			
+      UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}

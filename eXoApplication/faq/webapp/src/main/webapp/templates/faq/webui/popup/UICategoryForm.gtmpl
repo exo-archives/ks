@@ -58,8 +58,5 @@
 				</tr>
 	 		</table> 
 		</div>
-		<div id="ActionsText" style="display:none;">
-			<a class="ChildAction" id="SelectUser" href="<%=uicomponent.event("SelectUserAction");%>">ChildAction</a>
-		</div>
 	<%uiform.end()%>
 </div>
