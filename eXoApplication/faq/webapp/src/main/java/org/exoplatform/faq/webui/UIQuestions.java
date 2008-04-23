@@ -144,6 +144,12 @@ public class UIQuestions extends UIContainer {
     this.categories_ = faqService.getSubCategories(categoryId, sessionProvider) ;
     this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId, sessionProvider).getAll() ;
   }
+  
+  public void setList(String category) throws Exception {
+    SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+    listQuestion_ = faqService.getQuestionsByCatetory(category, sessionProvider).getAll() ;
+  }
+  
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() {
     return this.listQuestion_ ;
