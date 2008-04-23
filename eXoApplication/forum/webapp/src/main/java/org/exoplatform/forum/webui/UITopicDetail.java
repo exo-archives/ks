@@ -361,19 +361,24 @@ public class UITopicDetail extends UIForm {
 				}
 			}
 			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-				if(isHidden.equals("false")) isApprove = "true" ;
+				if(isHidden.equals("false") && !(this.topic.getOwner().equals(this.userProfile.getUserId()))) isApprove = "true" ;
 			}
+			System.out.println("\n\n Approve: " + isApprove);
 			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden)	; 
 			this.isUpdatePageList = false ;
 		}
 		long maxPost = this.userProfile.getMaxPostInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost ;
 		pageList.setPageSize(this.maxPost) ;
-		this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
+		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
+		forumPageIterator.updatePageList(this.pageList) ;
 		if(IdPostView.equals("true")){
-			getChild(UIForumPageIterator.class).setSelectPage(pageList.getAvailablePage()) ;
+			forumPageIterator.setSelectPage(pageList.getAvailablePage()) ;
 		}
 	}
+	
+	@SuppressWarnings("unused")
+  private long getPageSelect() {return this.pageSelect ;}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {

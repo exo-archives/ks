@@ -83,7 +83,7 @@
 			}
 		}
 		if(!canEdit) {
-			if(topic.getOwner().equals(userLogin))isUserCreatedTopic = true;
+			if(topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
 		}
 		posts = uicomponent.getPostPageList() ;
 	}
@@ -430,24 +430,30 @@
 																<% } %>
 															<% } 
 															 } else {
-																 String[] menuTopicActions = ["EditTopic", "AddPoll", "SetLockedTopic", "SetUnLockTopic", "SetDeleteTopic"] ;
+																 String[] menuTopicActions = ["EditTopic", "AddPoll", "SetLockedTopic", "SetUnLockTopic", "SetDeleteTopic", "SetApprovePost"] ;
 																 String link = new String() ;
 														 		 String itemLabel = new String() ;
 														 		 String classIcon = new String() ;
+														 		 boolean isApprove = false ;
 														 		 for(action in menuTopicActions) {
 														 		 	 boolean isView = true ;
 														 			 if(topic.getIsPoll()){
 														 				 if(action.equals("AddPoll")) continue ;
 														 			 }
-														 			 link = uicomponent.event(action) ;
-															 		 itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 															 		 classIcon = null;
 															 		 if(action.length() < 11) classIcon = action + "Icon";
 															 		 else classIcon = action.replaceFirst("Topic", "Icon");
+															 		 if(action.equals("SetApprovePost")){
+															 		   isApprove = true;
+															 		   if(!topic.getIsModeratePost()) continue ;
+															 		   else classIcon = "SetApprovePostIcon" ;
+																	 }
 															 		 if(action.indexOf("Delete") > 0) {
 															 			 String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
 															 			 link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}";
 															 		 }
+														 			 link = uicomponent.event(action) ;
+															 		 itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 															 		 if(action.equals(menuTopicActions[2])){
 															 			 isView = !topic.getIsLock() ;
 															 		 } else if(action.equals(menuTopicActions[3])){
@@ -457,13 +463,16 @@
 													 			%>
 														 				<div class="MenuItem" style="opacity: 0.3; cursor: none;">	 
 																			<div class="ItemIcon $classIcon">
-																				$itemLabel
+																				<%=itemLabel%>
 																			</div>
 																		</div>
 													 			<% } else { %>
+																 		<% if(isApprove) { %>
+														 						<div class="LineMenu"><span></span></div>
+														 				<% } %>
 																			<a class="MenuItem" href="$link">	 
 																				<div class="ItemIcon $classIcon">
-																					$itemLabel
+																				<%=itemLabel%>
 																				</div>
 																			</a>
 																<% } 
@@ -497,7 +506,7 @@
 		boolean isShowPost = true ;
 		if(isClosed && !canEdit)	isShowPost = false ;
 		if(posts != null && posts.size() > 0 && isShowPost) {
-			int checked = 0 ;
+			int checked = (int)(uiform.getPageSelect()) - 1;
 			for(post in posts) {
 				String owner = post.getOwner() ;
 				Contact contact = uiform.getPersonalContact(owner) ;
@@ -620,12 +629,7 @@
 						<td class="PostViewContainer">
 							
 							<div class="PostViewHeader">
-							<% if(checked == 0) {%>
-								<div class="PostViewTitle">
-									<div class="PostViewIcon $classIconPost">$namePost $isHedden</div>
-									<div class="PostTime">Posted: $createdDate</div>
-								</div>
-								<% } else { %>
+							<% if(checked > 0 && canEdit) {%>
 								<div class="PostViewTitle" style="float: left;">
 									<div class="PostViewIcon $classIconPost">$namePost $isHedden</div>
 									<div class="PostTime">Posted: $createdDate</div>
@@ -634,6 +638,11 @@
 									<% uiform.renderChild(post.getId()) %>
 								</div>
 								<div style="clear: both;"><span></span></div>
+								<% } else { %>
+								<div class="PostViewTitle">
+									<div class="PostViewIcon $classIconPost">$namePost $isHedden</div>
+									<div class="PostTime">Posted: $createdDate</div>
+								</div>
 								<% } %>
 							</div>
 						<div class="PostContentContainer">	

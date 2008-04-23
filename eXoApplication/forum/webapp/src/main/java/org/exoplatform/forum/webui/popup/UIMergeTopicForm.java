@@ -26,6 +26,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -33,6 +34,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -88,28 +90,34 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIMergeTopicForm> event) throws Exception {
 			UIMergeTopicForm uiForm = event.getSource() ;
 			String topicMergeId = uiForm.getUIFormSelectBox("destination").getValue() ;
-			String topicMergeTitle = uiForm.getUIStringInput("title").getValue() ;
-			Topic topicMerge = new Topic() ;
-			for(Topic topic : uiForm.listTopic) {
-				if(topicMergeId.equals(topic.getId())) {topicMerge = topic; break ;}
+			String topicMergeTitle = " " + uiForm.getUIStringInput("title").getValue() ;
+			topicMergeTitle = topicMergeTitle.trim() ;
+			if(topicMergeTitle != null && topicMergeTitle.length() > 0 && !topicMergeTitle.equals("null")) {
+				Topic topicMerge = new Topic() ;
+				for(Topic topic : uiForm.listTopic) {
+					if(topicMergeId.equals(topic.getId())) {topicMerge = topic; break ;}
+				}
+				String destTopicPath = topicMerge.getPath() ;
+				String temp[] = destTopicPath.split("/") ;
+				String categoryId = temp[temp.length - 3] ;
+				String forumId = temp[temp.length - 2] ;
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				for(Topic topic : uiForm.listTopic) {
+					if(topicMergeId.equals(topic.getId())) {continue ;}
+					JCRPageList pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), "", "") ;
+					List<Post> posts = pageList.getPage(0) ;
+					forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath) ;
+					forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId()) ;
+				}
+				topicMerge.setTopicName(topicMergeTitle) ;
+				forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicMerge, false, false) ;
+				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+				forumPortlet.cancelAction() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UIMergeTopicForm.msg.checkEmptyTitle", args, ApplicationMessage.WARNING)) ;
 			}
-			String destTopicPath = topicMerge.getPath() ;
-			String temp[] = destTopicPath.split("/") ;
-			String categoryId = temp[temp.length - 3] ;
-			String forumId = temp[temp.length - 2] ;
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			for(Topic topic : uiForm.listTopic) {
-				if(topicMergeId.equals(topic.getId())) {continue ;}
-				JCRPageList pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), "", "") ;
-				List<Post> posts = pageList.getPage(0) ;
-				forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath) ;
-				forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId()) ;
-			}
-			topicMerge.setTopicName(topicMergeTitle) ;
-			forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicMerge, false, false) ;
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
-			forumPortlet.cancelAction() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}
 	}
 	
