@@ -357,9 +357,9 @@ public class JCRDataStorage{
 	
 	private Forum getForum(Node forumNode) throws Exception {
 		Forum forum = new Forum() ;
-		if(forumNode.hasProperty("exo:id")) forum.setId(forumNode.getProperty("exo:id").getString()) ;
+		forum.setId(forumNode.getName()) ;
+		forum.setPath(forumNode.getPath()) ;
 		if(forumNode.hasProperty("exo:owner")) forum.setOwner(forumNode.getProperty("exo:owner").getString()) ;
-		if(forumNode.hasProperty("exo:path")) forum.setPath(forumNode.getPath()) ;
 		if(forumNode.hasProperty("exo:name")) forum.setForumName(forumNode.getProperty("exo:name").getString()) ;
 		if(forumNode.hasProperty("exo:forumOrder")) forum.setForumOrder(Integer.valueOf(forumNode.getProperty("exo:forumOrder").getString())) ;
 		if(forumNode.hasProperty("exo:createdDate")) forum.setCreatedDate(forumNode.getProperty("exo:createdDate").getDate().getTime()) ;
@@ -487,17 +487,22 @@ public class JCRDataStorage{
 	}
 	
 	public Topic getTopicByPath(SessionProvider sProvider, String topicPath)throws Exception {
+		Topic topic = null ;
 		try {
-			//TODO: Need to review this way to get Topic node
-			return getTopicNode((Node)getForumHomeNode(sProvider).getSession().getItem(topicPath)) ;
+			topic = getTopicNode((Node)getForumHomeNode(sProvider).getSession().getItem(topicPath)) ;
+			if(topic == null) {
+				if(topicPath != null && topicPath.length() > 0) {
+					String forumPath = topicPath.substring(0, topicPath.lastIndexOf("/")) ;
+					topic = getTopicNode(queryLastTopic(sProvider, forumPath)) ;
+				}
+			}
 		}catch(Exception e) {
 			if(topicPath != null && topicPath.length() > 0) {
 				String forumPath = topicPath.substring(0, topicPath.lastIndexOf("/")) ;
-				return getTopicNode(queryLastTopic(sProvider, forumPath)) ;
-			} else {
-				return null ;
+				topic = getTopicNode(queryLastTopic(sProvider, forumPath)) ;
 			}
 		}
+		return topic;
 	}
 	
 	private Node queryLastTopic(SessionProvider sProvider, String forumPath) throws Exception {
@@ -513,9 +518,9 @@ public class JCRDataStorage{
 	private Topic getTopicNode(Node topicNode) throws Exception {
 		if(topicNode == null ) return null ;
 		Topic topicNew = new Topic() ;		
-		if(topicNode.hasProperty("exo:id")) topicNew.setId(topicNode.getProperty("exo:id").getString()) ;
+		topicNew.setId(topicNode.getName()) ;
+		topicNew.setPath(topicNode.getPath()) ;
 		if(topicNode.hasProperty("exo:owner")) topicNew.setOwner(topicNode.getProperty("exo:owner").getString()) ;
-		if(topicNode.hasProperty("exo:path")) topicNew.setPath(topicNode.getPath()) ;
 		if(topicNode.hasProperty("exo:name")) topicNew.setTopicName(topicNode.getProperty("exo:name").getString()) ;
 		if(topicNode.hasProperty("exo:createdDate")) topicNew.setCreatedDate(topicNode.getProperty("exo:createdDate").getDate().getTime()) ;
 		if(topicNode.hasProperty("exo:modifiedBy")) topicNew.setModifiedBy(topicNode.getProperty("exo:modifiedBy").getString()) ;
@@ -876,9 +881,9 @@ public class JCRDataStorage{
 
 	private Post getPost(Node postNode) throws Exception {
 		Post postNew = new Post() ;
-		if(postNode.hasProperty("exo:id")) postNew.setId(postNode.getProperty("exo:id").getString()) ;
+		postNew.setId(postNode.getName()) ;
+		postNew.setPath(postNode.getPath()) ;
 		if(postNode.hasProperty("exo:owner")) postNew.setOwner(postNode.getProperty("exo:owner").getString()) ;
-		if(postNode.hasProperty("exo:path")) postNew.setPath(postNode.getProperty("exo:path").getString()) ;
 		if(postNode.hasProperty("exo:createdDate")) postNew.setCreatedDate(postNode.getProperty("exo:createdDate").getDate().getTime()) ;
 		if(postNode.hasProperty("exo:modifiedBy")) postNew.setModifiedBy(postNode.getProperty("exo:modifiedBy").getString()) ;
 		if(postNode.hasProperty("exo:modifiedDate")) postNew.setModifiedDate(postNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
