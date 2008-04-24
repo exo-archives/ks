@@ -353,4 +353,33 @@ public class JCRDataStorage {
 		return Str;
 	}
   
+  public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception {
+  	Node watchingNode = null;
+  	if(type == 1) { // add watch to category
+  		watchingNode = getCategoryNodeById(id, sProvider) ;
+  	}else if (type == 2) {
+  		watchingNode = getQuestionHome(sProvider, null).getNode(id) ;
+  	}
+  	
+  	//add watching for node
+  	if(watchingNode.isNodeType("exo:faqWatching")) {
+			if(watchType == 1) {//send email when had changed on category
+				Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
+  			List<String> vls = new ArrayList<String>() ;
+  			for(Value vl : values) {
+  				vls.add(vl.getString()) ;
+  			}
+  			vls.add(value) ;
+  			watchingNode.setProperty("exo:emailWatching", vls.toArray(new String[]{})) ;
+			}
+			watchingNode.save() ;
+		}else {
+			watchingNode.addMixin("exo:faqWatching") ;
+			if(watchType == 1) { //send email when had changed on category 
+				watchingNode.setProperty("exo:emailWatching", new String[]{value}) ;
+			}
+			watchingNode.save() ;
+		}
+  	watchingNode.getSession().save();
+  }
 }

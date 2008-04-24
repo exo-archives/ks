@@ -71,6 +71,7 @@ public interface FAQService {
   public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception ;
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception ;
   
+  
   /**
    * This method should:
    * 1. Check exists question or NOT to create new or update exists question
@@ -133,5 +134,6 @@ public interface FAQService {
    * @throws Exception
    *  */
   public void saveFAQSetting(String categoryId, FAQSetting newSetting, SessionProvider sProvider) throws Exception;  
-
+  
+  public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception ;
 }

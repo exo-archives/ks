@@ -33,6 +33,9 @@ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
  * Mar 04, 2008  
  */
 public class FAQServiceImpl implements FAQService{
+	public static final int CATEGORY = 1 ;
+	public static final int QUESTION = 2 ;
+	public static final int SEND_EMAIL = 1 ;
 	private JCRDataStorage jcrData_ ;
 	
 	public FAQServiceImpl(NodeHierarchyCreator nodeHierarchy) throws Exception {
@@ -91,6 +94,10 @@ public class FAQServiceImpl implements FAQService{
   }
   
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
+  	
+  }
+  
+  public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception {
   	
   }
 }
