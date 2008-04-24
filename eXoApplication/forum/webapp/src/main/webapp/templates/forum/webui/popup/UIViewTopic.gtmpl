@@ -33,13 +33,13 @@
 							<% for(attachment in attachments) {
 							 		 String fileName = attachment.getName() ;
 							 		 long sizeNumber = attachment.getSize() ;
-							 		 String size = "" + sizeNumber ;
+							 		 String size =ForumFormatUtils.getSizeFile(sizeNumber) ;
 							%>
 								<div class="AttachmentBox">
 									<div class="AttachmentIcon WordIcon"><span/></div>
 									<a class="AttachmentLabel" href="#">$fileName</a>
 									<div style="clear: left;"><span/></div>
-									<div class="Size">Size: ${size}K</div>
+									<div class="Size">Size: ${size}</div>
 								</div>
 							<% } %>
 								<div style="clear: left;"><span/></div>
@@ -58,16 +58,7 @@
 								 		 String fileName = attachment.getName() ;
 								 		 String unit = "Bytes" ;
 								 		 double sizeNumber = attachment.getSize() ;
-								 		 if(sizeNumber > 1024) {
-								 		 	 sizeNumber = sizeNumber/1024 ;
-								 		 	 unit = "Kb" ;
-								 		 }
-								 		 if(sizeNumber > 1024) {
-								 		 	 sizeNumber = sizeNumber/1024 ;
-								 		 	 unit = "Mb" ;
-								 		 }
-								 		 String size = "" + sizeNumber ;
-								 		 if(size.length() > 5) size = size.substring(0,5);
+								 		 String size = ForumFormatUtils.getSizeFile(sizeNumber);
 								 		 String typeFile = attachment.mimeType ;
 								%>
 										<div class="AttachmentBox">
@@ -77,7 +68,7 @@
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 						 						<a href="$urlFile" class="AttachmentLabel" >$fileName</a>
 						 						<div style="clear: left;"><span></span></div>
-						 						<div class="Size">Size: ${size} ${unit}</div>
+						 						<div class="Size">Size: ${size}</div>
 						 						<div class="Action">
 						 							<div class="Icon View" onclick="this.url='$urlFile'">View</div>
 						 							<div class="Icon Download"><a href="$urlFile">Download</a></div>
@@ -91,7 +82,7 @@
 											<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
 											<a class="AttachmentLabel" href="$urlFile">$fileName</a>
 											<div style="clear: left;"><span/></div>
-											<div class="Size">Size: ${size} ${unit}</div>
+											<div class="Size">Size: ${size}</div>
 										</div>
 									<% }%>
 									</div>

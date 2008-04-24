@@ -689,8 +689,6 @@ public class JCRDataStorage{
 						post.setId(id) ;
 						post.setOwner(topic.getOwner()) ;
 						post.setCreatedDate(new Date()) ;
-						post.setModifiedBy(topic.getModifiedBy()) ;
-						post.setModifiedDate(new Date()) ;
 						post.setName(topic.getTopicName()) ;
 						post.setMessage(topic.getDescription()) ;
 						post.setRemoteAddr("") ;
@@ -706,6 +704,7 @@ public class JCRDataStorage{
 							Post post = getPost(fistPostNode) ;
 							post.setModifiedBy(topic.getModifiedBy()) ;
 							post.setModifiedDate(new Date()) ;
+							post.setEditReason(topic.getEditReason()) ;
 							post.setName(topic.getTopicName()) ;
 							post.setMessage(topic.getDescription()) ;
 							post.setIcon(topic.getIcon()) ;
@@ -893,6 +892,7 @@ public class JCRDataStorage{
 		if(postNode.hasProperty("exo:createdDate")) postNew.setCreatedDate(postNode.getProperty("exo:createdDate").getDate().getTime()) ;
 		if(postNode.hasProperty("exo:modifiedBy")) postNew.setModifiedBy(postNode.getProperty("exo:modifiedBy").getString()) ;
 		if(postNode.hasProperty("exo:modifiedDate")) postNew.setModifiedDate(postNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
+		if(postNode.hasProperty("exo:editReason")) postNew.setEditReason(postNode.getProperty("exo:editReason").getString()) ;
 		if(postNode.hasProperty("exo:name")) postNew.setName(postNode.getProperty("exo:name").getString()) ;
 		if(postNode.hasProperty("exo:message")) postNew.setMessage(postNode.getProperty("exo:message").getString()) ;
 		if(postNode.hasProperty("exo:remoteAddr")) postNew.setRemoteAddr(postNode.getProperty("exo:remoteAddr").getString()) ;
@@ -960,8 +960,11 @@ public class JCRDataStorage{
 				} else {
 					postNode = topicNode.getNode(post.getId()) ;
 				}
-				postNode.setProperty("exo:modifiedBy", post.getModifiedBy()) ;
-				postNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
+				if(post.getModifiedBy() != null && post.getModifiedBy().length() > 0) {
+					postNode.setProperty("exo:modifiedBy", post.getModifiedBy()) ;
+					postNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
+					postNode.setProperty("exo:editReason", post.getEditReason()) ;
+				}
 				postNode.setProperty("exo:name", post.getName()) ;
 				postNode.setProperty("exo:message", post.getMessage()) ;
 				postNode.setProperty("exo:remoteAddr", post.getRemoteAddr()) ;

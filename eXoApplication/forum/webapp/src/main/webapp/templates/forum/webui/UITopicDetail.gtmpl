@@ -529,9 +529,12 @@
 				String message = ForumFormatUtils.convertCodeHTML(post.getMessage()) ;
 				//message = ForumFormatUtils.convetToCode(message) ;
 				String editBy = post.getModifiedBy() ;
-				Date modifileDate = post.getModifiedDate() ;
-				modifileDate.setTime(modifileDate.getTime() - setTime);
-				String editDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),modifileDate);
+				String editDate ;
+				if(editBy != null && editBy.length() > 0) {
+					Date modifileDate = post.getModifiedDate() ;// modifile
+					modifileDate.setTime(modifileDate.getTime() - setTime);
+					editDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),modifileDate);
+				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + post.getId().substring(15);
 				User user = ForumSessionUtils.getUserByUserId(owner) ; 
@@ -605,7 +608,11 @@
 								</div>
 								
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
+								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();  
+									if(isDisplayAvatar) {
+								%>
 								<img src="$avatarUrl" class="Img" onload ="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+								<% } %>
 								<div class="InfoMember">
 									<div>Join Date: $joinDate</div>
 									<% long totalPost = userInfo.getTotalPost();
@@ -645,8 +652,15 @@
 								</div>
 								<% } %>
 							</div>
-						<div class="PostContentContainer">	
+						<div class="PostContentContainer">rrr
+						<% 
+						boolean hasAttachment = false ;
+						if(attachments != null && attachments.size() > 0) hasAttachment = true;
+						if(isDisplayAvatar && !hasAttachment) { %>	
 							<div class="PostContent">
+						<% } else { %>
+							<div class="PostContentNote">
+						<% } %>
 								<div style="padding-top: 8px" id="$idMessage">$message</div>
 							</div>
 								<%	
@@ -654,25 +668,15 @@
 								%>
 								<div class="Signature">__________________<br><%= userInfo.getSignature(); %></div>
 								<% } %>
-							<% if(attachments != null && attachments.size() > 0) {%>
+							<% if(hasAttachment) {%>
 							<div class="AttachmentContainer">
 								<div class="AttachmentTitle">Attachments:</div>
 								<div class="AttachmentContent">
 								<% for(attachment in attachments) {
 										 String urlFile = uicomponent.getFileSource(attachment) ;
 								 		 String fileName = attachment.getName() ;
-								 		 String unit = "Bytes" ;
 								 		 double sizeNumber = attachment.getSize() ;
-								 		 if(sizeNumber > 1024) {
-								 		 	 sizeNumber = sizeNumber/1024 ;
-								 		 	 unit = "Kb" ;
-								 		 }
-								 		 if(sizeNumber > 1024) {
-								 		 	 sizeNumber = sizeNumber/1024 ;
-								 		 	 unit = "Mb" ;
-								 		 }
-								 		 String size = "" + sizeNumber ;
-								 		 if(size.length() > 5) size = size.substring(0,5);
+								 		 String size = ForumFormatUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
 								%>
 										<div class="AttachmentBox">
@@ -682,7 +686,7 @@
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 						 						<a href="$urlFile" class="AttachmentLabel" >$fileName</a>
 						 						<div style="clear: left;"><span></span></div>
-						 						<div class="Size">Size: ${size} ${unit}</div>
+						 						<div class="Size">Size: ${size}</div>
 						 						<div class="Action">
 						 							<div class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.openPicture(this,'imgView${fileName}')">View</div>
 						 							<div class="Icon Download"><a href="$urlFile">Download</a></div>
@@ -696,7 +700,7 @@
 											<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
 											<a class="AttachmentLabel" href="$urlFile">$fileName</a>
 											<div style="clear: left;"><span/></div>
-											<div class="Size">Size: ${size} ${unit}</div>
+											<div class="Size">Size: ${size}</div>
 										</div>
 									<% } %>
 									</div>
@@ -708,8 +712,18 @@
 						</div>
 							<div class="FootPost">
 								<div class="PostInfo">
+								<%  
+									if(editBy != null && editBy.length() > 0) {
+								%>
 									<div>Last edited by <a href="#">$editBy</a> on $editDate</div>
-									<div>Reason: Add new</div>
+									<%
+										String reason = post.getEditReason() ;
+										if(reason != null && reason.trim().length() > 0) { 
+										reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
+									%>
+									<div>$reason</div>
+									<% } %>
+								<%} %>
 								</div>
 								<div class="ButtonContainer">
 									<div class="UIActionForum">

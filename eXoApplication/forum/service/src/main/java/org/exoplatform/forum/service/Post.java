@@ -36,6 +36,7 @@ public class Post {
 	private Date createdDate;
 	private String modifiedBy;
 	private Date modifiedDate;
+	private String editReason ;
 	private String name;
 	private String message;
 	private String remoteAddr;
@@ -97,4 +98,7 @@ public class Post {
 
 	public boolean getIsHidden() {return isHidden;}
 	public void setIsHidden(boolean isHidden) {this.isHidden = isHidden;}
+
+	public String getEditReason() {return editReason;}
+	public void setEditReason(String editReason) { this.editReason = editReason;}
 }

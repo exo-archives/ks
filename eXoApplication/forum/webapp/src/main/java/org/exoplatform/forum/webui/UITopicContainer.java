@@ -252,7 +252,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			}
 		}
 		if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-			if(isHidden.equals("false")) isApprove = "true" ;
+			if(isHidden.equals("false") && !(topic.getOwner().equals(this.userProfile.getUserId()))) isApprove = "true" ;
 		}
 		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden)	; 
 		long maxPost = getUserProfile().getMaxTopicInPage() ;

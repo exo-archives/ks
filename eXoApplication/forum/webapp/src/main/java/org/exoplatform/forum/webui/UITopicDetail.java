@@ -363,7 +363,6 @@ public class UITopicDetail extends UIForm {
 			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
 				if(isHidden.equals("false") && !(this.topic.getOwner().equals(this.userProfile.getUserId()))) isApprove = "true" ;
 			}
-			System.out.println("\n\n Approve: " + isApprove);
 			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden)	; 
 			this.isUpdatePageList = false ;
 		}

@@ -87,6 +87,25 @@ public class ForumFormatUtils {
     return  calendar;
   }
   
+  public static String getSizeFile(double size) {
+  	String unit = " Byte" ;
+		if(size >= 1000) {
+			size = size/1024 ;
+			unit = " Kb" ;
+		}
+		if(size >= 1000) {
+			size = size/1024 ;
+			unit = " Mb" ;
+		}
+		String str = String.valueOf(size) ;
+		int t = str.indexOf("."); 
+		if(t > 0) {
+			if(str.length() > (t+4))
+				str = str.substring(0,(t+4)) ;
+		}
+	  return (str + unit);
+  }
+  
 	public static String getTimeZoneNumberInString(String string) {
 		if(string != null && string.length() > 0) {
 			StringBuffer stringBuffer = new StringBuffer();
@@ -143,7 +162,7 @@ public class ForumFormatUtils {
 	}
 	
 	public static String getStringCleanHtmlCode(String sms) {
-		if(sms == null || sms.length() <= 0) return "" ;
+		if(sms == null || sms.trim().length() <= 0) return "" ;
 		StringBuffer string = new StringBuffer();
 		char c; boolean get = true ;
 		for (int i = 0; i < sms.length(); i++) {

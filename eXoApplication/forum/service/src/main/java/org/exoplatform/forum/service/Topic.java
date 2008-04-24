@@ -32,6 +32,7 @@ public class Topic {
 	private Date createdDate;
 	private String modifiedBy;
 	private Date modifiedDate;
+	private String editReason;
 	private String lastPostBy;
 	private Date lastPostDate;
 	private String name;
@@ -78,6 +79,9 @@ public class Topic {
 		
 	public Date getModifiedDate(){return modifiedDate;}
 	public void setModifiedDate(Date modifiedDate){this.modifiedDate = modifiedDate;}
+	
+	public String getEditReason() {return editReason;}
+	public void setEditReason(String editReason) { this.editReason = editReason;}
 	
 	public String getLastPostBy(){return lastPostBy;}
 	public void setLastPostBy(String lastPostBy){this.lastPostBy = lastPostBy;}

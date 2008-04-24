@@ -41,7 +41,7 @@
 }
 
 .UITopicForm .UITabContent {
-	height: 280px;
+	height: auto;
 }
 
 .UITopicForm .UIFormTabPane .ThreadPermission .HorizontalLayout {

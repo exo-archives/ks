@@ -81,6 +81,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	
 	
 	public static final String FIELD_TOPICTITLE_INPUT = "ThreadTitle" ;
+	public static final String FIELD_EDITREASON_INPUT = "editReason" ;
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	final static public String FIELD_MESSAGECONTENT = "messageContent" ;
 	public static final String FIELD_TOPICSTATUS_SELECTBOX = "TopicStatus" ;
@@ -108,6 +109,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	public UITopicForm() throws Exception {
 		UIFormStringInput topicTitle = new UIFormStringInput(FIELD_TOPICTITLE_INPUT, FIELD_TOPICTITLE_INPUT, null);
 		topicTitle.addValidator(EmptyNameValidator.class) ;
+//		UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
+//		editReason.setRendered(false) ;
 //		UIFormTextAreaInput message = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);
 		
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
@@ -134,6 +137,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		
 		UIFormInputWithActions threadContent = new UIFormInputWithActions(FIELD_THREADCONTEN_TAB);
 		threadContent.addUIFormInput(topicTitle);
+//		threadContent.addUIFormInput(editReason);
 		threadContent.addUIFormInput(formWYSIWYGInput);
 		threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
 		threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
@@ -167,12 +171,20 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		addUIFormInput(uiIconSelector) ;
 		addUIFormInput(threadOption) ;
 		addUIFormInput(threadPermission) ;
-		
+		this.setActions(new String[]{"PreviewThread","SubmitThread","Attachment","Cancel"}) ;
 	}
 	
 	public void setTopicIds(String categoryId, String forumId) {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
+		this.topic = new Topic();
+		UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
+		try {
+			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT) ;
+			threadContent.removeChildById(FIELD_EDITREASON_INPUT) ;
+    } catch (NullPointerException e) {
+    }
+//		threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(false) ;
 	}
 	
 	public void activate() throws Exception {}
@@ -191,7 +203,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			fileUpload.setActionListener("") ;
 			fileUpload.setActionType(ActionData.TYPE_ICON) ;
 			fileUpload.setCssIconClass("AttachmentIcon ZipFileIcon") ;
-			fileUpload.setActionName(attachdata.getName() + " ("+attachdata.getSize()+" Kb)" ) ;
+			String size = ForumFormatUtils.getSizeFile((double)attachdata.getSize()) ;
+			fileUpload.setActionName(attachdata.getName() + "("+size+")") ;
 			fileUpload.setShowLabel(true) ;
 			uploadedFiles.add(fileUpload) ;
 			ActionData removeAction = new ActionData() ;
@@ -233,7 +246,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		if(isUpdate) {
 			this.topic =  topic ;
 			this.topicId = topic.getId() ;
+			UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
 			UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
+			threadContent.addChild(editReason) ;
+//			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
 			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(topic.getTopicName());
 			threadContent.getChild(UIFormWYSIWYGInput.class).setValue(topic.getDescription());
 			
@@ -262,7 +278,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		}
 	}
   
-  private String[] pilterUser(String[] users) {
+  private String[] filterUser(String[] users) {
     List<String> validUsers = new ArrayList<String>() ;
     try{
       for(String user : users) {
@@ -282,14 +298,16 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			UITopicForm uiForm = event.getSource() ;
 			int t = 0, k = 1 ;
 			UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
+//			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 			UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
 			String topicTitle = "  " + stringInputTitle.getValue();
 			topicTitle = topicTitle.trim() ;
-			String message = "  " +	threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			message = message.trim() ;
-			t = message.length() ;
+			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
-			if(t >= 3 && k != 0 && !message.equals("null")) {
+			if(t >= 3 && k != 0 && !checksms.equals("null")) {
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Post postNew = new Post();
 				postNew.setOwner(userName);
@@ -301,7 +319,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				postNew.setAttachments(uiForm.attachments_) ;
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				postNew.setIcon(uiIconSelector.getSelectedIcon());
-				
+//				postNew.setEditReason(editReason) ;
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 670) ;
@@ -332,11 +350,13 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
 			String topicTitle = "  " + stringInputTitle.getValue();
 			topicTitle = topicTitle.trim() ;
-			String message = "  " +	threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			message = message.trim() ;
-			t = message.length() ;
+//			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
+			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
-			if(t >= 4 && k != 0 && !message.equals("null")) {	
+			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				UIFormInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
 				// uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
@@ -347,8 +367,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
 				UIFormInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
         uiForm.userInvalid = "" ;
-				String[] canView = uiForm.pilterUser(uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue())) ;
-				String[] canPost = uiForm.pilterUser(uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue())) ;
+				String[] canView = uiForm.filterUser(uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue())) ;
+				String[] canPost = uiForm.filterUser(uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue())) ;
         if(uiForm.userInvalid.length() > 0) {
           throw new MessageException(new ApplicationMessage("UITopicForm.sms.userhavenotfound", new String[]{uiForm.userInvalid}, ApplicationMessage.WARNING)) ;
         }
@@ -363,7 +383,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setLastPostBy(userName);
 				topicNew.setLastPostDate(new Date());
 				topicNew.setDescription(message);
-				
 				topicNew.setIsNotifyWhenAddPost(whenNewPost);
 				topicNew.setIsModeratePost(moderatePost);
 				topicNew.setAttachments(uiForm.attachments_) ;
@@ -406,6 +425,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				if(uiForm.topicId != null && uiForm.topicId.length() > 0) {
 					topicNew.setId(uiForm.topicId);
+					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
+					topicNew.setEditReason(editReason) ;
 					forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, false, false);
 					forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
 				} else {

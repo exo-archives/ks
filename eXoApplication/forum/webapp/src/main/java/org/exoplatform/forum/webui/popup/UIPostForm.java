@@ -68,6 +68,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 public class UIPostForm extends UIForm implements UIPopupComponent {
 	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	public static final String FIELD_POSTTITLE_INPUT = "PostTitle" ;
+	public static final String FIELD_EDITREASON_INPUT = "editReason" ;
 	//public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public static final String FIELD_LABEL_QUOTE = "ReUser" ;
 	
@@ -92,9 +93,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	public UIPostForm() throws Exception {
     UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
     postTitle.addValidator(EmptyNameValidator.class) ;
-    
+//    UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
+//    editReason.setRendered(false) ;
     UIFormInputWithActions threadContent = new UIFormInputWithActions(FIELD_THREADCONTEN_TAB) ;
     threadContent.addChild(postTitle) ;
+//    threadContent.addChild(editReason) ;
     threadContent.addChild(new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true)) ;
     threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
     threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
@@ -104,6 +107,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
     
     addUIFormInput(threadContent) ;
     addUIFormInput(inputIconSelector) ;
+    this.setActions(new String[] {"PreviewPost", "SubmitPost", "Attachment", "Cancel"}) ;
 	}
 	
   @SuppressWarnings("unused")
@@ -123,6 +127,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		this.forumId = forumId ;
 		this.topicId = topicId ;
 		this.topic = topic ;
+//		UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
+//		threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(false) ;
 	}
 	
 	public List<ActionData> getUploadFileList() { 
@@ -132,7 +138,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			fileUpload.setActionListener("") ;
 			fileUpload.setActionType(ActionData.TYPE_ICON) ;
 			fileUpload.setCssIconClass("AttachmentIcon") ;
-			fileUpload.setActionName(attachdata.getName() + " ("+attachdata.getSize()/1048576 +" Kb)" ) ;
+			String size = ForumFormatUtils.getSizeFile((double)attachdata.getSize()) ;
+			fileUpload.setActionName(attachdata.getName() + "("+size+")") ;
 			fileUpload.setShowLabel(true) ;
 			uploadedFiles.add(fileUpload) ;
 			ActionData removeAction = new ActionData() ;
@@ -166,6 +173,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		this.postId = postId ;
 		this.isQuote = isQuote ;
 		UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
+		try {
+			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
+			threadContent.removeChildById(FIELD_EDITREASON_INPUT) ;
+    } catch (Exception e) {
+    }
 		if(this.postId != null && this.postId.length() > 0) {
 			String message = post.getMessage() ;
 			if(isQuote) {//quote
@@ -178,6 +190,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			} else {//edit
+//				threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
+				UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
+				threadContent.addChild(editReason) ;
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName()) ;
 				if(post.getAttachments() != null && post.getAttachments().size() > 0) {
 					this.attachments_ = post.getAttachments();
@@ -198,22 +213,20 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	public String[] getActionsTopic() throws Exception {
-		return (new String [] {"PreviewPost", "SubmitPost", "Cancel"});
-	}
-		
 	static	public class PreviewPostActionListener extends EventListener<UIPostForm> {
     public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
       UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
-			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue().trim();
-			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+			String postTitle = " " +threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
+//			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
-			if(message != null && message.length() > 0) message = message.trim() ;
-			t = message.length() ;
+			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			t = checksms.trim().length() ;
 			if(postTitle.length() <= 3) {k = 0;}
-			if(t >= 3 && k != 0) {	
+			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				Post post = new Post() ;
 				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
@@ -226,7 +239,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setIcon(uiIconSelector.getSelectedIcon());
 				post.setIsApproved(false) ;
 				post.setAttachments(uiForm.attachments_) ;
-				
+//				post.setEditReason(editReason) ;
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true)	;
 				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 670) ;
@@ -251,22 +264,20 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			UIPostForm uiForm = event.getSource() ;
       UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
-			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue().trim();
-			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+			String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
 				//uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
-			if(message != null && message.length() > 0) message = message.trim() ;
-			//message = message.replaceAll("[QUOTE][/QUOTE]", "").replaceAll('['+"CODE][/CODE"+']', "") ;
-			t = ForumFormatUtils.clearQuote(message).length() ;
-			if(postTitle.length() <= 3) {k = 0;}
-			if(t >= 3 && k != 0) {	
+			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			t = checksms.trim().length() ;
+			if(postTitle.trim().length() <= 3) {k = 0;}
+			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
         Post post = new Post() ;
 				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
 				post.setCreatedDate(new Date()) ;
-				post.setModifiedBy(userName) ;
-				post.setModifiedDate(new Date()) ;
 				post.setRemoteAddr("") ;
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				post.setIcon(uiIconSelector.getSelectedIcon());
@@ -280,7 +291,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
 						topicDetail.setIdPostView("true");
 					} else {
+						String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 						post.setId(uiForm.postId) ;
+						post.setModifiedBy(userName) ;
+						post.setModifiedDate(new Date()) ;
+						post.setEditReason(editReason) ;
 						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false) ;
 						topicDetail.setIdPostView(uiForm.postId);
 					}
