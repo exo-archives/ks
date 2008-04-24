@@ -25,7 +25,9 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -258,6 +260,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       //cancel
       UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
+      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+      questions.setListQuestion() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -286,6 +291,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   static public class AddRelationActionListener extends EventListener<UIResponseForm> {
     public void execute(Event<UIResponseForm> event) throws Exception {
       UIResponseForm response = event.getSource() ;
+      System.out.println("\n\n\n\n>>>>AddRelationActionListener() : ");
+      UIAddRelationForm addRelationForm = new UIAddRelationForm() ;
+      System.out.println("----------------> finish");
     }
   }
   static public class AttachmentActionListener extends EventListener<UIResponseForm> {

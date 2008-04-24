@@ -537,7 +537,7 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -572px;
 }
 
-.UIFAQPortlet .Response {
+.UIFAQPortlet .ResponseQuestion {
 	background: url('background/FAQPortlet.gif') no-repeat left -595px;
 }
 
@@ -557,6 +557,12 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -682px;
 }
 
-.UIFAQPortlet .SendMail {
-	background: url('background/FAQPortlet.gif') no-repeat left -704px;
+.UIFAQPortlet .Send {
+	background: url('background/FAQPortlet.gif') no-repeat left -706px;
+}
+.AddRelation {
+	background: url('background/AddIcon.gif') no-repeat;
+	height:16px;
+	width:16px;
+	margin-left: 5px;
 }

@@ -53,29 +53,25 @@
 											String link = uicomponent.event(action) ;
 											String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 									%>
-											<table class="ActionContainer" align="center" width="100%">
-												<tr>
-													<td align="left" width="70%" style="vertical-align: middle; padding-left: 5px;">
-														<% uiform.renderField(field) %>
-													</td>
-													<td align="right" width="30%" class="UIAction" valign="top">
-														<a href="$link" class="ActionButton LightBlueStyle">
-									      	  	<div class="ButtonLeft" style="float:right;">
-									        	  	<div class="ButtonRight">
-									          	  	<div class="ButtonMiddle"> $actionLabel </div>
-									            	</div>
-									          	</div>
-									        	</a>
-													</td>
-												</tr>
-											</table>
+										<div style="float: left"> 
+											<% uiform.renderField(field) %>
+											<div class="UIAction">
+												<a href="$link" class="ActionButton LightBlueStyle">
+							      	  	<div class="ButtonLeft" style="float:right;">
+							        	  	<div class="ButtonRight">
+							          	  	<div class="ButtonMiddle"> $actionLabel </div>
+							            	</div>
+							          	</div>
+							        	</a>
+											</div>
+										</div>
 									<%}else if(field.getName().equals("QuestionRelation")){ 
 											String link = uicomponent.event(uicomponent.getActions()[3]) ;
 									%>
 											<div style="float: left">
 												<% uiform.renderField(field) %>
 											</div>
-												<a href="$link" style="float: left; margin-left: 5px;"><div class="AddIcon16x16"><span></span></div></a>
+											<a href="$link" style="float: left"><div class="Icon AddRelation"><span></span></div></a>
 									<%} else {%>
 											<% uiform.renderField(field) %><br>
 									<%}%>

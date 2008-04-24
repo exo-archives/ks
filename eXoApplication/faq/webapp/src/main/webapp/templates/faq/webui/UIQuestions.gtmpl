@@ -1,5 +1,6 @@
 <% 
 	import org.exoplatform.faq.service.Category;
+	import org.exoplatform.faq.service.Question;
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
@@ -179,14 +180,16 @@
 				String questionContent = new String() ;
 				int questionId = 0 ;
 				String[] questionActions = uicomponent.getActionQuestion() ;
+				String linkQuestion = "" ;
 				for(question in listQuestion) {
 					questionContent = question.getQuestion() ;
 					String qId = question.getId()
+					linkQuestion=uicomponent.event("ViewQuestion", qId) ;
 		%>
 					<div class="FAQCategory Question">
 						<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 								<!-- question content -->
-								$questionContent
+								<a href="$linkQuestion"> $questionContent</a>
 								<!-- action of this question -->
 							  
 								<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
@@ -204,12 +207,17 @@
 												<div class="MiddleRightRightClickPopupMenu">
 													<div class="UIRightPopupMenuContainer">
 														<%
+															String iconView = "" ;
 															for(viewAction in questionActions) {
+																if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
+																	iconView = viewAction.replace("Question", "") ;
+																else
+																	iconView = viewAction ;
 																String linkView = uicomponent.event(viewAction, qId) ;
 																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
 														%>
 																<a href="$linkView" class="MenuItem">
-																	<div class="ItemIcon $viewAction" style="padding:3px 0px 5px 5px;">
+																	<div class="ItemIcon $iconView" style="padding:3px 0px 5px 5px;">
 																			<div style="padding-left: 20px;">$itemLabelView</div>
 																	</div>
 																</a>
@@ -232,6 +240,55 @@
 							
 						</div>
 					</div>
+					<%if(uicomponent.getQuestionView().equals(qId) && question.getResponses().length > 0) {
+					%>
+						<div class="ResponseContent">
+							<div class="Response">
+								<% for(String response : question.getResponses()) { %>
+										$response<br>
+								<% } %>
+							</div>
+							<div class="AttachmentContent">attachment:<br></div>
+							<div class="RelatedQuestions"><b>Related question:</b><br>
+								<% for(String relation : question.getRelations()) { %>
+										$relation<br>
+								<% } %>
+							</div>
+							<div class="UIAction ResponsActions" style="float: left">
+									<div style="float:left">Response by:</div>
+									<div style="float:right">
+										<a href="" class="ActionButton LightBlueStyle">
+					      	  	<div class="ButtonLeft">
+					        	  	<div class="ButtonRight">
+					          	  	<div class="ButtonMiddle"> Language </div>
+					            	</div>
+					          	</div>
+					        	</a>
+										<a href="" class="ActionButton LightBlueStyle">
+					      	  	<div class="ButtonLeft">
+					        	  	<div class="ButtonRight">
+					          	  	<div class="ButtonMiddle"> Print </div>
+					            	</div>
+					          	</div>
+					        	</a>
+						        <% for(action in uicomponent.getActionQuestion()) { 
+					        		 	if(action.indexOf("Response") >= 0 || action.indexOf("Move") >= 0 || action.indexOf("Print") >= 0) continue ; 
+						        	 	String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+						           	String link = uicomponent.event(action,qId) ;
+						        %>
+					        		<a href="$link" class="ActionButton LightBlueStyle">
+						      	  	<div class="ButtonLeft">
+						        	  	<div class="ButtonRight">
+						          	  	<div class="ButtonMiddle"> $actionLabel </div>
+						            	</div>
+						          	</div>
+						        	</a>
+					          <%}%>
+									</div>
+							</div>
+							<div style="clear: left"><span></span></div>
+						</div>
+					<%}%>
 		<%		questionId ++ ;
 				}
 			}

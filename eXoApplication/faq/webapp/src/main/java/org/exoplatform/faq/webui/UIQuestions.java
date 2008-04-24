@@ -65,6 +65,7 @@ import org.exoplatform.webui.event.EventListener;
 	    @EventConfig(listeners = UIQuestions.WatchActionListener.class),
       
       // action of question:
+	    @EventConfig(listeners = UIQuestions.ViewQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.ResponseQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.EditQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.DeleteQuestionActionListener.class),
@@ -79,6 +80,7 @@ public class UIQuestions extends UIContainer {
   private List<Question> listQuestion_ =  null ;
   private String categoryId = null ;
   private String parentId_ = null ;
+  private String questionView_ = "" ;
   private String[] firstTollbar = new String[]{"AddCategory","ShowQuestionNotYetAnswer"} ;
   private String[] secondTollbar = new String[]{"SubCategory", "AddNewQuestion", "CategorySetting"} ; 
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -153,6 +155,15 @@ public class UIQuestions extends UIContainer {
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() {
     return this.listQuestion_ ;
+  }
+  
+  @SuppressWarnings("unused")
+  private String getQuestionView(){
+    return this.questionView_ ;
+  }
+  
+  public void setQuestionView(String questionid){
+    this.questionView_ = questionid ;
   }
   
   @SuppressWarnings("unused")
@@ -367,6 +378,19 @@ public class UIQuestions extends UIContainer {
 	}
   
   // action for question :
+	static  public class ViewQuestionActionListener extends EventListener<UIQuestions> {
+	  public void execute(Event<UIQuestions> event) throws Exception {
+	    UIQuestions uiQuestions = event.getSource() ; 
+      String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      String questionViewed = uiQuestions.questionView_ ;
+	    if( questionViewed == null || questionViewed.trim().length() < 1 || !questionViewed.equals(questionId)){
+	      uiQuestions.questionView_ = questionId ; 
+      } else {
+        uiQuestions.questionView_ = "" ;
+      }
+	  }
+	}
+  
   static  public class ResponseQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions question = event.getSource() ; 
