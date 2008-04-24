@@ -89,4 +89,8 @@ public class FAQServiceImpl implements FAQService{
   public void saveFAQSetting(String categoryId, FAQSetting newSetting, SessionProvider sProvider) throws Exception {
   	jcrData_.saveFAQSetting(categoryId, newSetting, sProvider);
   }
+  
+  public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
+  	
+  }
 }

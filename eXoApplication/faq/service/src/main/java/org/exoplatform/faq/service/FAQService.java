@@ -69,6 +69,7 @@ public interface FAQService {
    * @throws Exception
    */
   public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception ;
+  public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception ;
   
   /**
    * This method should:

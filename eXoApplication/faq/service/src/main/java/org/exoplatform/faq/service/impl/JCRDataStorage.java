@@ -301,6 +301,14 @@ public class JCRDataStorage {
   	return catList ;
   }
   
+  public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
+  	Node catNode = getCategoryNodeById(categoryId, sProvider) ;
+  	Node destCatNode = getCategoryNodeById(destCategoryId, sProvider) ;
+  	destCatNode.getSession().move(catNode.getPath(), destCatNode.getPath() +"/"+ categoryId) ;
+  	catNode.getSession().save() ;
+  	destCatNode.getSession().save() ;
+  }
+  
   public void saveFAQSetting(String usercategoryId, FAQSetting newSetting, SessionProvider sProvider) throws Exception {
     Node categoryHome = getCategoryHome(sProvider, null) ;
     Node settingNode = null;
