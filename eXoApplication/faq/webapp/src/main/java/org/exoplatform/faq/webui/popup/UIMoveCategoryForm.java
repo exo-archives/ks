@@ -48,9 +48,11 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIMoveCategoryForm extends UIForm	{
 	private String categoryId_ ;
-	public UIMoveCategoryForm() throws Exception {
-	}
+	public UIMoveCategoryForm() throws Exception {}
 	
+	public String getCategoryID() { return categoryId_; }
+  public void setCategoryID(String s) { categoryId_ = s ; }
+  
 	@SuppressWarnings("unused")
   private List<Category> getCategories() throws Exception {
 		FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -64,8 +66,15 @@ public class UIMoveCategoryForm extends UIForm	{
 	}
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
     public void execute(Event<UIMoveCategoryForm> event) throws Exception {
-			UIMoveCategoryForm moveCategory = event.getSource() ;			
-			System.out.println("========> Save + categoryId_" + moveCategory.categoryId_) ;
+    	System.out.println("========> Save") ;
+    	UIMoveCategoryForm moveCategory = event.getSource() ;			
+    	String categoryIDDis = event.getRequestContext().getRequestParameter(OBJECTID);
+    	FAQService faService  = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+    	System.out.println("========> categoryIDDis:::" +categoryIDDis) ;
+    	System.out.println("====>>>>> categoryId" + moveCategory.getCategoryID()) ;
+//    	String categoryId = path.substring((path.lastIndexOf("/")+1))	;
+//    	System.out.println("========> path + categoryId:::"+ categoryId ) ;
+//    	faService.m
 		}
 	}
 

@@ -95,6 +95,14 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     selectGroupAction.setCssIconClass("SelectMemberIcon") ;
     selectGroupAction.setActionParameter(UISelectComponent.TYPE_GROUP) ;
     actionData.add(selectGroupAction) ;
+    
+    ActionData selectMemberShipAction = new ActionData() ;
+    selectMemberShipAction.setActionListener("SelectPermission") ;
+    selectMemberShipAction.setActionName("SelectMemberShip") ;    
+    selectMemberShipAction.setActionType(ActionData.TYPE_ICON) ;
+    selectMemberShipAction.setCssIconClass("SelectMemberShipIcon") ;
+    selectMemberShipAction.setActionParameter(UISelectComponent.TYPE_MEMBERSHIP) ;
+    actionData.add(selectMemberShipAction) ;
     inputset.setActionField(MODERATOR, actionData) ; 
     addChild(inputset) ;
   }

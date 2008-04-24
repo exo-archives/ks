@@ -127,7 +127,8 @@ public class UIQuestions extends UIContainer {
   }
 	
   public void setCategories(String categoryId) throws Exception  {
-      categories_ = faqService.getSubCategories(categoryId, FAQUtils.getSystemProvider()) ;
+  	this.categoryId = categoryId ;
+    categories_ = faqService.getSubCategories(categoryId, FAQUtils.getSystemProvider()) ;
   }
   
 	@SuppressWarnings("unused")

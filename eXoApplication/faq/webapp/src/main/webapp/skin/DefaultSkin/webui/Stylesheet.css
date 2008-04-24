@@ -379,19 +379,18 @@
 
 .UIFAQPortlet .SelectUserIcon {
 	background: url('background/Worker2.png') no-repeat left ;
-	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif') no-repeat center;
 	width: 16px; height: 16px;
 	padding: 3px;
 }
 
 .UIFAQPortlet .SelectMemberIcon {
-	background: url('background/Worker2.png') no-repeat left ;
+	background: url('background/group.png') no-repeat left ;
 	width: 16px; height: 16px;
 	padding: 3px;
 }
 
-.UIFAQPortlet .AddAnyIcon {
-	background: url('background/Worker2.png') no-repeat left ;
+.UIFAQPortlet .SelectMemberShipIcon {
+	background: url('background/membership.png') no-repeat left ;
 	width: 16px; height: 16px;
 	padding: 3px;
 }
@@ -463,8 +462,8 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -143px;
 }
 
-.UIFAQPortlet .FAQToolbar .AddSubCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -485px;
+.UIFAQPortlet .FAQToolbar .SubCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -58px;
 }
 
 .UIFAQPortlet .FAQToolbar .AddQuestion {
