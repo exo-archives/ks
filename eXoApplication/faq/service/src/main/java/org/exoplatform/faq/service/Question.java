@@ -36,7 +36,7 @@ public class Question {
   private boolean isApproved = true ;
   private Date createdDate ;
   private String categoryId ;
-  private String[] responses ;
+  private String responses ;
   private String[] relations ;
   
   
@@ -53,8 +53,8 @@ public class Question {
 	public void setAuthor(String author) { this.author = author; }
 	public String getAuthor() { return author; }
 
-	public String[] getResponses() {return responses;}
-	public void setResponses(String[] responses) {this.responses = responses;}
+	public String getResponses() {return responses;}
+	public void setResponses(String responses) {this.responses = responses;}
 
 	public String[] getRelations() {return relations;}
 	public void setRelations(String[] relations) {this.relations = relations;}
