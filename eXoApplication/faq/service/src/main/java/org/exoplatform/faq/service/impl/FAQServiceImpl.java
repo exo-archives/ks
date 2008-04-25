@@ -94,7 +94,7 @@ public class FAQServiceImpl implements FAQService{
   }
   
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
-  	
+  	jcrData_.moveCategory(categoryId, destCategoryId, sProvider);
   }
   
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception {
