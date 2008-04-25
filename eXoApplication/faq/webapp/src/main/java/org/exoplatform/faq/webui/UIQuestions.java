@@ -81,6 +81,7 @@ public class UIQuestions extends UIContainer {
   private String categoryId = null ;
   private String parentId_ = null ;
   private String questionView_ = "" ;
+  public static String newPath_ = "" ;
   private String[] firstTollbar = new String[]{"AddCategory","ShowQuestionNotYetAnswer"} ;
   private String[] secondTollbar = new String[]{"SubCategory", "AddNewQuestion", "Setting"} ; 
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -248,10 +249,12 @@ public class UIQuestions extends UIContainer {
       questions.setListQuestion() ;
       UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
       String oldPath = breadcumbs.getPaths() ;
-      if(oldPath != null && oldPath.trim().length() > 0) 
-      	if(!oldPath.contains(categoryId))
+      if(oldPath != null && oldPath.trim().length() > 0) {
+      	if(!oldPath.contains(categoryId)) {
+      		newPath_ = oldPath + "/" +categoryId ;
       		breadcumbs.setUpdataPath(oldPath + "/" +categoryId);
-      else breadcumbs.setUpdataPath(categoryId);
+      	}
+      } else breadcumbs.setUpdataPath(categoryId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
       UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
@@ -374,16 +377,17 @@ public class UIQuestions extends UIContainer {
     	System.out.println("\n\n EditSubCategoryActionListener");
     	UIQuestions question = event.getSource() ; 
     	String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
-			UIPopupAction uiPopupAction = uiPortlet.getChild(UIPopupAction.class) ; 
+			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
+			UIPopupAction uiPopupAction = faqPortlet.getChild(UIPopupAction.class) ; 
       UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,520) ;  
-		  String parent = question.getParentId() ;
-		  System.out.println("=====>>>>>>CategoryId: " + parent) ;
-		  System.out.println("=====>>>>>>CategoryId: " + categoryId) ;
       uiPopupContainer.setId("EditSubCategoryForm") ;
 		  UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 		  categoryForm.init() ;
-		  categoryForm.setParentPath(categoryId) ;
+		  System.out.println("=====>>>>>>newPath_: " + newPath_) ;
+		  String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
+		  System.out.println("=====>>>>>>parentCategoryId: " + parentCategoryId) ;
+		  System.out.println("=====>>>>>>CategoryId: " + categoryId) ;
+		  categoryForm.setParentPath(parentCategoryId) ;
 		  categoryForm.setCategoryValue(categoryId, true) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}

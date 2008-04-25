@@ -20,6 +20,14 @@
 	margin: 5px;
 }
 
+.UIFAQPortlet .FAQIcon{
+	background: url('background/FAQPortlet.gif') no-repeat left -465px;
+	padding-left: 28px;
+	height: 18px;
+	line-height: 18px;
+	margin: 8px 0px;
+	white-space: nowrap;
+}
 /**************************** UIForumPortlet ForumToolBar *********************************/
 .UIFAQPortlet .FAQToolbar {
 	height: 28px;

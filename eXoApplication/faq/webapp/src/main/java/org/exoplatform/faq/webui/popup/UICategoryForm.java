@@ -120,7 +120,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   
   public String getParentPath() { return parentPath_; }
   public void setParentPath(String s) { parentPath_ = s ; }
-
+  
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
     Map<String, String> permission ;
