@@ -466,10 +466,14 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	} else {
     		if(userRole >= 1) userRole = 2;
     	}
-    	if(userTitle.indexOf("Admin") >= 0 || userTitle.equals("Moderator") || userTitle.equals("User") || userTitle.equals("Guest")) {
-    		if(userRole == 0) userTitle = "Administrator" ;
-    		if(userRole == 1) userTitle = "Moderator" ;
-    		if(userRole == 2) userTitle = "User" ;
+    	String userTt = userProfile.getUserTitle() ;
+    	if(userTitle == null || userTitle.trim().length() == 0) {
+				userTitle = userTt ;
+			}
+    	if(userTitle.equals("Administrator") || userTitle.equals("Moderator") || userTitle.equals("User") || userTitle.equals("Guest")) {
+	    		if(userRole == 0) userTitle = "Administrator" ;
+	    		if(userRole == 1) userTitle = "Moderator" ;
+	    		if(userRole == 2) userTitle = "User" ;
     	}
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;

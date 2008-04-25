@@ -29,7 +29,6 @@
 								<th style="width: 40px;"></th>
 								<th>Thread/Thread starter</th>
 								<th style="width: 96px;">Rating</th>
-								<th style="width: 40px;">Tag</th>
 								<th style="width: 40px;">Replies</th>
 								<th style="width: 40px;">Views</th>
 							</tr>
@@ -98,15 +97,6 @@
 							 					<div style="clear: left;"><span></span></div>
 				 							</div>
 					 					</div>
-									</td>
-									<td class="Tdbox">
-									<% List tags = uicomponent.getTagsByTopic(topic.getTagId()); 
-										for(tag in tags) {
-											String color = tag.getColor() ;
-											String tagName = tag.getName() ;
-									%>
-										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$tagName"><span></span></div></a>
-									<% } %>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">$postView</td>

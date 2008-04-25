@@ -46,8 +46,10 @@
 	padding: 0px;
 }
 
-.UIModeratorsManagementForm .ModeratorsGroup .UIGrid .OverflowContainer {
-	width: 50px;
+.UIModeratorsManagementForm .ModeratorsGroup .UIGrid .IconContent {
+	width: 55px;
+	margin: auto;
+	overflow: auto;
 }
 
 .UIModeratorsManagementForm .ModeratorsGroup .UIFormGrid td.FieldLabel {

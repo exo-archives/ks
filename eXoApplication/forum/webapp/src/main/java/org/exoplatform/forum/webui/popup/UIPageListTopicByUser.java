@@ -105,11 +105,6 @@ public class UIPageListTopicByUser extends UIContainer{
 	}
 
 	@SuppressWarnings("unused")
-	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), tagIds);	
-	}
-	
-	@SuppressWarnings("unused")
   private JCRPageList getPageListPost(String topicPath) throws Exception {
 		String []id = topicPath.split("/") ;
 		int i = id.length ;

@@ -62,6 +62,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 			@EventConfig(listeners = UIPostForm.AttachmentActionListener.class), 
 			@EventConfig(listeners = UIPostForm.RemoveAttachmentActionListener.class), 
 			@EventConfig(listeners = UIPostForm.SelectTabActionListener.class, phase = Phase.DECODE), 
+			@EventConfig(listeners = UIPostForm.SelectIconActionListener.class, phase = Phase.DECODE), 
 			@EventConfig(listeners = UIPostForm.CancelActionListener.class, phase = Phase.DECODE)
 		}
 )
@@ -353,6 +354,18 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				}
 			}
 			uiPostForm.refreshUploadFileList() ;
+		}
+	}
+	
+	static public class SelectIconActionListener extends EventListener<UIPostForm> {
+		public void execute(Event<UIPostForm> event) throws Exception {
+			String iconName = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIPostForm postForm = event.getSource();
+			UIFormInputIconSelector iconSelector = postForm.getChild(UIFormInputIconSelector.class);
+			if(!iconSelector.getValue().equals(iconName)) {
+				iconSelector.setSelectedIcon(iconName) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(postForm.getParent()) ;
+			}
 		}
 	}
 	

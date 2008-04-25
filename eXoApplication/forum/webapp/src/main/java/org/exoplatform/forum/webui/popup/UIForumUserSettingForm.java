@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.EmptyNameValidator;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -207,7 +208,13 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
-			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
+			UIFormStringInput stringInput = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT) ;
+			stringInput.addValidator(EmptyNameValidator.class) ;
+			String userTitle = stringInput.getValue() ;
+			UserProfile userProfile = uiForm.userProfile ;
+			if(userTitle == null || userTitle.trim().length() == 0) {
+				userTitle = userProfile.getUserTitle() ;
+			}
 			String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
     	Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;
@@ -222,7 +229,6 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			boolean isJump = (Boolean)inputSetOption.getUIFormCheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).getValue() ;
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			UserProfile userProfile = uiForm.userProfile ;
 			userProfile.setUserTitle(userTitle);
 			userProfile.setSignature(signature);
 			userProfile.setIsDisplaySignature(isDisplaySignature);

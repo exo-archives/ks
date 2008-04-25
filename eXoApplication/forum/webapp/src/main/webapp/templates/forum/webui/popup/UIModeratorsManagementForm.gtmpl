@@ -22,7 +22,7 @@
 				  <thead>
 				  	<tr>
 				      <th width="30%">User Name</th>
-				      <th width="20%">User Title</th>
+				      <th width="30%">User Title</th>
 				      <th width="20%">User Group</th>
 				      <th>Action</th>
 				    </tr>
@@ -53,10 +53,14 @@
 							<td class="text"><%=userRole%></td>
 						  <td>         
 				        <div style="margin: 0px auto;" class="ActionContainer">
-				          <div style="margin: auto;" class="OverflowContainer">          
-					           <a title="Edit Profile" href="<%=uicomponent.event("EditProfile",user.getUserId());%>" class="EditIcon"><span/></a>		          
-					           <a title="View Profile" href="<%=uicomponent.event("ViewProfile",user.getUserId());%>" class="ViewProfileIcon"><span/></a>		          
-				          </div>
+				        <div class="IconContent">
+				        	<a style="float:left" href="<%=uicomponent.event("EditProfile",user.getUserId());%>">
+					           <div title="Edit Profile" class="Icon16x16 EditIcon"><span></span></div>		          
+				        	</a>
+				        	<a style="float:left" href="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
+					           <div title="View Profile" class="Icon16x16 ViewProfileIcon"><span></span></div>		          
+				        	</a>
+				        </div>
 				        </div>
 				      </td>
 				    </tr>

@@ -69,6 +69,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 			@EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class), 
 			@EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
 			@EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UITopicForm.SelectIconActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UITopicForm.AddValuesUserActionListener.class, phase=Phase.DECODE)
 		}
 )
@@ -495,6 +496,18 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			UITopicForm topicForm = event.getSource();
 			topicForm.id = Integer.parseInt(id);
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicForm.getParent()) ;
+		}
+	}
+	
+	static public class SelectIconActionListener extends EventListener<UITopicForm> {
+		public void execute(Event<UITopicForm> event) throws Exception {
+			String iconName = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UITopicForm topicForm = event.getSource();
+			UIFormInputIconSelector iconSelector = topicForm.getChild(UIFormInputIconSelector.class);
+			if(!iconSelector.getValue().equals(iconName)) {
+				iconSelector.setSelectedIcon(iconName) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicForm.getParent()) ;
+			}
 		}
 	}
   

@@ -1,3 +1,6 @@
+.UIForumPortlet .Icon16x16 {
+	width: 16px; height: 16px;
+}
 .UIForumPortlet .BusyIcon {
 	background: url('icons/BusyIcon.gif') no-repeat ;
 }
