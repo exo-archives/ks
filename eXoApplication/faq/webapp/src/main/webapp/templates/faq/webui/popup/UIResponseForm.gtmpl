@@ -25,27 +25,10 @@
 												String language = listLanguage[i++] ;
 									%>
 												<% uiform.renderField(fck) %>
-												<div class="LanguageQuestion"> 
-													<table border="0px" cellpadding="0px" cellspacing="0px">
-														<tr>
-															<td width="80%">
-																<div style="vertical-align: middle; padding-left: 5px;">
-																		Language: $language 
-																	</div>
-															</td>
-															<td>
-																<div class="UIAction" style="vertical-align: middle; padding: 3px 0px;">
-																	<a href="$link" class="ActionButton LightBlueStyle">
-												      	  	<div class="ButtonLeft" style="float:right;">
-												        	  	<div class="ButtonRight">
-												          	  	<div class="ButtonMiddle"> $actionLabel </div>
-												            	</div>
-												          	</div>
-												        	</a>
-																</div>
-															</td>
-														</tr>
-													</table>
+												<div class="LanguageQuestion" style="width: 100%;"> 
+													<div style="vertical-align: middle; padding-left: 5px;">
+														Language: $language 
+													</div>
 												</div>
 									<%	}
 										} else if(field.getName().equals("QuestionAttach")){
@@ -92,7 +75,7 @@
 					<tr>
 						<td align="center">
 		        <% for(action in uicomponent.getActions()) { 
-		        		 if(action.indexOf("Language") >= 0 || action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
+		        		 if(action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
 		        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		           String link = uicomponent.event(action) ;
 		        %>
