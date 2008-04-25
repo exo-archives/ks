@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
@@ -83,7 +84,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     setListCate() ;
-    System.out.println(renderBox()) ;
+   /* System.out.println(renderBox()) ;*/
   }
   
   private void setListCate() throws Exception {
@@ -116,76 +117,58 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     }
   }
   
-  private String renderBox() {
-    List<String> listCateid = new ArrayList<String>() ;
+/*  private String renderBox() {
+    Stack<String> stackCateid = new Stack<String>() ;
     StringBuffer stringBuffer = new StringBuffer() ;
     int n = this.listCate.size() ;
-    System.out.println("this number of cate in listCate: " + n);
     Cate cate = null ;
     for(int i = 0; i < n; i ++) {
       cate = listCate.get(i) ;
-      listCateid.add(cate.getCategory().getId()) ;
-      if(cate.getDeft() == 0) {
-        if(i == 0) {
-          System.out.println(cate.getCategory().getName());
-        } else {
-          if(listCate.get(i - 1).getDeft() - cate.getDeft() == 0) {
-            System.out.println("<div>");
-            for(Question question : getQuestions(listCateid.get(listCateid.size() - 2))) {
-              System.out.println("\tQuestion: " + question.getQuestion());
-            }
-            listCateid.remove(listCateid.get(listCateid.size() - 2)) ;
-            System.out.println("</div>");
-          } else {
-            for(int j = 0 ; j < listCate.get(i - 1).getDeft() - cate.getDeft(); j ++) {
-              for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
-                System.out.println("\tQuestion: " + question.getQuestion());
-              }
-              listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
-              System.out.println("</div>");
-            }
-          }
-          System.out.println(cate.getCategory().getName());
-        }
-      } else {
+      if(i == 0) {
+          stringBuffer.append(cate.getCategory().getName()) ;
+      } else if(i > 0) {
         int sub = cate.getDeft() - listCate.get(i - 1).getDeft() ;
         if(sub == 0) {
-          System.out.println("<div>");
-          for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
-            System.out.println("\tQuestion: " + question.getQuestion());
+          stringBuffer.append("<div>") ;
+          for(Question question : getQuestions(stackCateid.pop())) {
+            stringBuffer.append(question.getQuestion()) ;
           }
-          listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
-          System.out.println("</div>");
-          System.out.println(cate.getCategory().getName());
+          stringBuffer.append("</div>") ;
+          
+          stringBuffer.append(cate.getCategory().getName()) ;
         } else if(sub > 0) {
-          System.out.println("<div>" + cate.getCategory().getName());
+          stringBuffer.append("<div>" + cate.getCategory().getName()) ;
         } else {
-          System.out.println("<div>");
-          for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
-            System.out.println("\tQuestion: " + question.getQuestion());
+          stringBuffer.append("<div>") ;
+          for(Question question : getQuestions(stackCateid.pop())) {
+            stringBuffer.append( question.getQuestion()) ;
           }
-          listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
-          System.out.println("</div>");
+          stringBuffer.append("</div>") ;
           for(int j = 0 ; j < (-1*sub); j ++) {
-            for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
-              System.out.println("\tQuestion: " + question.getQuestion());
+            for(Question question : getQuestions(stackCateid.pop())) {
+              stringBuffer.append(question.getQuestion()) ;
             }
-            listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
-            System.out.println("</div>");
+            stringBuffer.append("</div>") ;
           }
-          System.out.println(cate.getCategory().getName());
+          stringBuffer.append(cate.getCategory().getId()) ;
         }
       }
+      stackCateid.push(cate.getCategory().getId()) ;
     }
+    stringBuffer.append("<div>") ;
+    for(Question question : getQuestions(stackCateid.pop())) {
+      stringBuffer.append(question.getQuestion()) ;
+    }
+    stringBuffer.append("</div>") ;
+    
     for(int i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {
-      for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
-        System.out.println("\tQuestion: " + question.getQuestion());
+      for(Question question : getQuestions(stackCateid.pop())) {
+        stringBuffer.append(question.getQuestion()) ;
       }
-      listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
-      System.out.println("</div>");
+      stringBuffer.append("</div>") ;
     }
     return stringBuffer.toString() ;
-  }
+  }*/
   
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {
