@@ -195,7 +195,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         question = new Question() ;
         question.setCategoryId(questionForm.getCategoryId()) ;
         question.setRelations(new String[]{}) ;
-        question.setResponses(new String[]{}) ;
+        question.setResponses(new String()) ;
       }
       question.setAuthor(author) ;
       question.setEmail(emailAddress) ;
