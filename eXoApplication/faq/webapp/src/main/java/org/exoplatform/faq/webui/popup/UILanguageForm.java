@@ -19,10 +19,14 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
+import org.exoplatform.services.resources.LocaleConfig;
+import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
@@ -45,6 +49,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UILanguageForm extends UIForm implements UIPopupComponent	{
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
+  private List<String> listLocaldName = new ArrayList<String>() ;
   private List<String> LANGAUGE_SELECT = new ArrayList<String>() ;
   
   private boolean isReponse = false ;
@@ -57,7 +62,20 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
   }
 	 
 	public UILanguageForm() throws Exception {
-    LIST_LANGUAGE.addAll(Arrays.asList(new String[]{"English", "France", "Vietnamese", "Ukrainnian"})) ;
+    List<String> listLanguage = new ArrayList<String>() ;
+    
+    LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
+    for(Object object:configService.getLocalConfigs()) {      
+      LocaleConfig localeConfig = (LocaleConfig)object ;
+      Locale locale = localeConfig.getLocale() ;
+      String displayName = locale.getDisplayLanguage() ;
+      String lang = locale.getLanguage() ;
+      String localedName = locale.getDisplayName(locale) ;   
+      listLanguage.add(displayName) ;
+      listLocaldName.add(localedName) ;
+    }
+    //LIST_LANGUAGE.addAll(Arrays.asList(new String[]{"English", "France", "Vietnamese", "Ukrainnian"})) ;\
+    LIST_LANGUAGE.addAll(listLanguage) ;
 	}
   
   public void setListSelected(List<String> language) {
@@ -67,6 +85,10 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
   
   private List<String> getListLanguage(){
     return this.LIST_LANGUAGE ;
+  }
+  
+  private String[] getLocaledLanguage(){
+    return this.listLocaldName.toArray(new String[]{}) ;
   }
   
   private List<String> getListSelected(){

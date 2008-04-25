@@ -56,10 +56,10 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/faq/webui/popup/UIQuestionForm.gtmpl",
 		events = {
-				@EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
-				@EventConfig(listeners = UIQuestionForm.AddLanguageActionListener.class),
-				@EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
-				@EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class)
+		  @EventConfig(listeners = UIQuestionForm.AddLanguageActionListener.class),
+			@EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
+			@EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
+			@EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class)
 		}
 )
 public class UIQuestionForm extends UIForm implements UIPopupComponent 	{

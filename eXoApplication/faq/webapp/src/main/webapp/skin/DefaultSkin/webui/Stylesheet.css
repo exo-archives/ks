@@ -505,7 +505,7 @@
 }
 
 .UIFAQPortlet .AddNewQuestion {
-	background: url('background/FAQPortlet.gif') no-repeat left -510px;
+	background: url('background/FAQPortlet.gif') no-repeat left -508px;
 }
 
 .UIFAQPortlet .MoveDown {
@@ -573,8 +573,4 @@
 	height:16px;
 	width:16px;
 	margin-left: 5px;
-}
-
-.UIFAQPortlet .AddQuestion #Question0___Frame {
- width: 450px;
 }
