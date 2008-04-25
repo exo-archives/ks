@@ -16,6 +16,8 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -150,7 +152,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     }
     
     if(question.getResponses() != null) {
-      ((UIFormWYSIWYGInput)reponseQuestion_.getChildById(RESPONSE_CONTENT + "0")).setValue(question.getResponses()) ;
+      String[] values = question.getResponses().split("/") ;
+      String responsed = "" ;
+      for(int i = 2; i < values.length ; i ++) {
+        responsed += values[i] ;
+      }
+      ((UIFormWYSIWYGInput)reponseQuestion_.getChildById(RESPONSE_CONTENT + "0")).setValue(responsed) ;
     }
     
     addChild(questionContent_) ;
@@ -235,9 +242,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ; 
       }
-      
+      String user = FAQUtils.getCurrentUser() ;
+      DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
+      java.util.Date date = new java.util.Date();
+      String dateStr = dateFormat.format(date) ;
+      date = dateFormat.parse(dateStr) ;
       //set response of question
-      question.setResponses(listString.get(0));
+      question.setResponses(user + "/" + date + "/" + listString.get(0));
       
       // set relateion of question:
       listString.clear() ;

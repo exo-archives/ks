@@ -13,7 +13,9 @@
   					<div class="ControlbarCotainer">
 							<%
 							String cateId = uicomponent.getCategoryId() ;
+							String[] categoryAction = null ;
 							if(cateId != null && cateId.trim().length() > 0) {
+								categoryAction = uicomponent.getSecondActionCategory() ;
 								String[] actionTollbar = uicomponent.getActionTollbar() ;
 								for(String action in actionTollbar) {
 								String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
@@ -35,6 +37,7 @@
 							<%
 								}
 							} else {
+								categoryAction = uicomponent.getActionCategory() ;
 								String[] actionTollbar = uicomponent.getFirstTollbar() ;
 								for(String action in actionTollbar) {
 								String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
@@ -113,7 +116,6 @@
 		<div class="FAQContent">
 		<%  
 			String id = "";
-			String[] categoryAction = uicomponent.getActionCategory() ;
 			int i = 0 ;
 			for(category in categories) {
 				String categoryName = category.getName() ;
@@ -240,13 +242,18 @@
 							
 						</div>
 					</div>
-					<%if(uicomponent.getQuestionView().equals(qId) && question.getResponses().length > 0) {
+					<%if(uicomponent.getQuestionView().equals(qId) && question.getResponses().length() > 0) {
+						String[] arrayString = question.getResponses().split("/") ;
+						String responseBy = arrayString[0] ;
+						String date = arrayString[1] ;
+						String response = "" ;
+						for(int t = 2 ; t < arrayString.length ; t ++) {
+							response += arrayString[t] ;
+						}
 					%>
 						<div class="ResponseContent">
 							<div class="Response">
-								<% for(String response : question.getResponses()) { %>
-										$response<br>
-								<% } %>
+								$response<br>
 							</div>
 							<div class="AttachmentContent">attachment:<br></div>
 							<div class="RelatedQuestions"><b>Related question:</b><br>
@@ -255,7 +262,7 @@
 								<% } %>
 							</div>
 							<div class="UIAction ResponsActions" style="float: left">
-									<div style="float:left">Response by:</div>
+									<div style="float:left">Response by: $responseBy , $date</div>
 									<div style="float:right">
 										<a href="" class="ActionButton LightBlueStyle">
 					      	  	<div class="ButtonLeft">
