@@ -1,3 +1,5 @@
+@import url('UIMoveCategoryForm/Stylesheet.css') ;
+
 .UIFAQPortlet {
 	padding: 5px; height: 400px;
 }
@@ -476,6 +478,10 @@
 	width: 12px;
 }
 
+.UIFAQPortlet .SubCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -58px;
+}
+
 .UIFAQPortlet .ActionsPrint {
 	background: url('background/FAQPortlet.gif') no-repeat left -685px;
 }
@@ -516,7 +522,7 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -346px;
 }
 
-.UIFAQPortlet .CategorySetting {
+.UIFAQPortlet .Setting {
 	background: url('background/FAQPortlet.gif') no-repeat left -368px;
 }
 
@@ -524,8 +530,8 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -391px;
 }
 
-.UIFAQPortlet .EditSupCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -527px;
+.UIFAQPortlet .EditSubCategory {
+	background: url('background/FAQPortlet.gif') no-repeat left -258px;
 }
 
 .UIFAQPortlet .DeleteSupCategory {

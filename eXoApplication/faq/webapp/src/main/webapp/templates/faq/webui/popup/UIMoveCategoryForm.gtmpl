@@ -7,10 +7,10 @@
 	<div class="UITree">
 	  <div class="TreeContainer">
 		<% 
-			List categories = uicomponent.getCategories(); 
+			List categories = uicomponent.getCategories();
 			for(category in categories) {
-		  	String categoryName = category.getName() ;
-		  	String link = uicomponent.event("Save",category.getId());
+		    String categoryName = category.getName() ;
+		 	  String link = uicomponent.event("Save",category.getId());
 		%>
 	    <div class="Node">
 	     	<div class="Icon FAQIcon"><span></span></div>

@@ -39,7 +39,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/UIQuickSeachForm.gtmpl",
+		template = "app:/templates/forum/webui/UIQuickSeach.gtmpl",
 		events = {
 			@EventConfig(listeners = UIQuickSeach.SearchActionListener.class),			
 			@EventConfig(listeners = UIQuickSeach.AdvancedSearchActionListener.class)			

@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui.popup;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -37,45 +38,65 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UIWatchForm.CancelActionListener.class)
 		}
 )
-public class UIWatchForm extends UIForm	{
+public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	public static final String USER_NAME = "userName" ; 
 	public static final String EMAIL_ADDRESS = "emailAddress" ;
-  
-	public UIWatchForm() throws Exception {
-		UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
+	private String categoryId_ = "";
+	public UIWatchForm() throws Exception {}
+  public void init() {
+  	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
 		UIFormStringInput emailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, null);
 		addUIFormInput(userName);
 		addUIFormInput(emailAddress);
-	}
-
+  }
 	
 	public String[] getActions() { return new String[] {"Save","Cancel"} ; }
   public void activate() throws Exception {}
   public void deActivate() throws Exception {}
   
+  public String getCategoryID() { return categoryId_; }
+  public void setCategoryID(String s) { categoryId_ = s ; }
+  
 	static public class SaveActionListener extends EventListener<UIWatchForm> {
     public void execute(Event<UIWatchForm> event) throws Exception {
-			UIWatchForm uiCategory = event.getSource() ;
-			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
-      String name = uiCategory.getUIStringInput(UIWatchForm.USER_NAME).getValue() ;
-      String email = uiCategory.getUIStringInput(UIWatchForm.EMAIL_ADDRESS).getValue() ;
+			UIWatchForm uiWatchForm = event.getSource() ;
+			UIApplication uiApp = uiWatchForm.getAncestorOfType(UIApplication.class) ;
+      String name = uiWatchForm.getUIStringInput(UIWatchForm.USER_NAME).getValue() ;
+      String email = uiWatchForm.getUIStringInput(UIWatchForm.EMAIL_ADDRESS).getValue() ;
       if (email == null || email.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.email-required", null,
           ApplicationMessage.INFO)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ; 
       }
-      FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-
+      String categoryId = uiWatchForm.getCategoryID() ;
+      String watchId = categoryId.substring(0, 4) ;
+      if (categoryId != null) {
+      	FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+      	if(watchId.equals("Cate")) {
+      		System.out.println("\n\n Save vao category");
+      		faqService.addWatch(1, 1, categoryId , email, FAQUtils.getSystemProvider()) ;
+      	} else {
+      		System.out.println("\n\n Save vao question");
+      		faqService.addWatch(2, 1, categoryId , email, FAQUtils.getSystemProvider()) ;
+      	}	
+      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
+      			ApplicationMessage.INFO)) ;
+       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      }
+      UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
+      uiPopupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; 
+      return ;
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UIWatchForm> {
     public void execute(Event<UIWatchForm> event) throws Exception {
-			UIWatchForm uiCategory = event.getSource() ;						
-      UIPopupAction uiPopupAction = uiCategory.getAncestorOfType(UIPopupAction.class) ;
+			UIWatchForm uiWatchForm = event.getSource() ;						
+      UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
 	

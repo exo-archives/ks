@@ -24,6 +24,7 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -46,12 +47,16 @@ import org.exoplatform.webui.form.UIForm;
 				@EventConfig(listeners = UIMoveCategoryForm.CancelActionListener.class)
 		}
 )
-public class UIMoveCategoryForm extends UIForm	{
+public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
 	public UIMoveCategoryForm() throws Exception {}
 	
+	public void init() {}
 	public String getCategoryID() { return categoryId_; }
   public void setCategoryID(String s) { categoryId_ = s ; }
+  
+  public void activate() throws Exception {}
+  public void deActivate() throws Exception {}
   
 	@SuppressWarnings("unused")
   private List<Category> getCategories() throws Exception {
@@ -64,17 +69,21 @@ public class UIMoveCategoryForm extends UIForm	{
 		}
 		return categorys ;
 	}
+	
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
     public void execute(Event<UIMoveCategoryForm> event) throws Exception {
-    	System.out.println("========> Save") ;
-    	UIMoveCategoryForm moveCategory = event.getSource() ;			
-    	String categoryIDDis = event.getRequestContext().getRequestParameter(OBJECTID);
-    	FAQService faService  = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-    	System.out.println("========> categoryIDDis:::" +categoryIDDis) ;
-    	System.out.println("====>>>>> categoryId" + moveCategory.getCategoryID()) ;
-//    	String categoryId = path.substring((path.lastIndexOf("/")+1))	;
-//    	System.out.println("========> path + categoryId:::"+ categoryId ) ;
-//    	faService.m
+    	UIMoveCategoryForm moveCategory = event.getSource() ;	
+    	UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
+    	String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+    	FAQService faqService  = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+    	if (destCategoryId != null && moveCategory.getCategoryID() != null) {
+    		faqService.moveCategory(moveCategory.getCategoryID(), destCategoryId, FAQUtils.getSystemProvider()) ;
+    	}
+    	UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			questions.setCategories() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+			faqPortlet.cancelAction() ;
+		return ;
 		}
 	}
 
