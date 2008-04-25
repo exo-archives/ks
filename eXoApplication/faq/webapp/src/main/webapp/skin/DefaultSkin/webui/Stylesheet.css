@@ -556,6 +556,15 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -682px;
 }
 
+.FAQCategoryView {
+	float: left;
+	background: url('background/FAQPortlet.gif') no-repeat left -465px;
+	height:18px;
+	width:18px;
+	margin-left: 5px;
+	margin-right: 5px ;
+}
+
 .UIFAQPortlet .Send {
 	background: url('background/FAQPortlet.gif') no-repeat left -706px;
 }
@@ -564,4 +573,8 @@
 	height:16px;
 	width:16px;
 	margin-left: 5px;
+}
+
+.UIFAQPortlet .AddQuestion #Question0___Frame {
+ width: 450px;
 }

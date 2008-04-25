@@ -17,20 +17,20 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import net.sf.ehcache.Cache;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -40,15 +40,18 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
  */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class ,
-    template =  "app:/templates/faq/webui/popup/UIAddRelationForms.gtmpl",
+    template =  "app:/templates/faq/webui/popup/UIAddRelationForm.gtmpl",
     events = {
-      @EventConfig(listeners = UILanguageForm.SelectedLanguageActionListener.class),
-      @EventConfig(listeners = UILanguageForm.SaveActionListener.class),
-      @EventConfig(listeners = UILanguageForm.CancelActionListener.class)
+      @EventConfig(listeners = UIAddRelationForm.SelectedQuestionActionListener.class),
+      @EventConfig(listeners = UIAddRelationForm.SaveActionListener.class),
+      @EventConfig(listeners = UIAddRelationForm.CancelActionListener.class)
     }
 )
 
-public class UIAddRelationForm {
+public class UIAddRelationForm extends UIForm implements UIPopupComponent {
+  public void activate() throws Exception { }
+  public void deActivate() throws Exception { }
+ 
   public class Cate{
     private Category category;
     private int deft ;
@@ -66,14 +69,21 @@ public class UIAddRelationForm {
     }
   }
   
+  @SuppressWarnings("unused")
   private static List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCate = new ArrayList<Cate>() ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
   
+  @SuppressWarnings("unused")
+  private List<Cate> getListCate(){
+    return this.listCate ;
+  }
+  
   public UIAddRelationForm() throws Exception {
+    setActions(new String[]{"Save", "Cancel"}) ;
     setListCate() ;
-    renderBox() ;
+    System.out.println(renderBox()) ;
   }
   
   private void setListCate() throws Exception {
@@ -104,43 +114,107 @@ public class UIAddRelationForm {
         }
       }
     }
-    
-    System.out.println("~~~~~~~~~~> fiish set listCate --> number of category: " + this.listCate.size());
-    for(Cate cate : this.listCate) {
-      System.out.println("\t" + cate.getCategory().getName() + "\t\t" + cate.getDeft());
-    }
-    System.out.println("~~~~~~~~~~> fiish view listCate --> number of category: " + this.listCate.size());
   }
   
-  private void renderBox() {
+  private String renderBox() {
+    List<String> listCateid = new ArrayList<String>() ;
+    StringBuffer stringBuffer = new StringBuffer() ;
     int n = this.listCate.size() ;
     System.out.println("this number of cate in listCate: " + n);
     Cate cate = null ;
     for(int i = 0; i < n; i ++) {
       cate = listCate.get(i) ;
+      listCateid.add(cate.getCategory().getId()) ;
       if(cate.getDeft() == 0) {
         if(i == 0) {
           System.out.println(cate.getCategory().getName());
         } else {
-          for(int j = 0 ; j < listCate.get(i - 1).getDeft() - cate.getDeft(); j ++) {
+          if(listCate.get(i - 1).getDeft() - cate.getDeft() == 0) {
+            System.out.println("<div>");
+            for(Question question : getQuestions(listCateid.get(listCateid.size() - 2))) {
+              System.out.println("\tQuestion: " + question.getQuestion());
+            }
+            listCateid.remove(listCateid.get(listCateid.size() - 2)) ;
             System.out.println("</div>");
+          } else {
+            for(int j = 0 ; j < listCate.get(i - 1).getDeft() - cate.getDeft(); j ++) {
+              for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
+                System.out.println("\tQuestion: " + question.getQuestion());
+              }
+              listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
+              System.out.println("</div>");
+            }
           }
           System.out.println(cate.getCategory().getName());
         }
       } else {
         int sub = cate.getDeft() - listCate.get(i - 1).getDeft() ;
         if(sub == 0) {
+          System.out.println("<div>");
+          for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
+            System.out.println("\tQuestion: " + question.getQuestion());
+          }
+          listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
+          System.out.println("</div>");
           System.out.println(cate.getCategory().getName());
         } else if(sub > 0) {
-          System.out.println("<div>" + cate.getCategory().getName()) ;
+          System.out.println("<div>" + cate.getCategory().getName());
         } else {
-          for(int j = 0 ; j < (-1*sub); j ++)
+          System.out.println("<div>");
+          for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
+            System.out.println("\tQuestion: " + question.getQuestion());
+          }
+          listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
+          System.out.println("</div>");
+          for(int j = 0 ; j < (-1*sub); j ++) {
+            for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
+              System.out.println("\tQuestion: " + question.getQuestion());
+            }
+            listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
             System.out.println("</div>");
+          }
           System.out.println(cate.getCategory().getName());
         }
       }
     }
-    for(int i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) 
+    for(int i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {
+      for(Question question : getQuestions(listCateid.get(listCateid.size() - 1))) {
+        System.out.println("\tQuestion: " + question.getQuestion());
+      }
+      listCateid.remove(listCateid.get(listCateid.size() - 1)) ;
       System.out.println("</div>");
+    }
+    return stringBuffer.toString() ;
+  }
+  
+  @SuppressWarnings("unused")
+  private List<Question> getQuestions(String cateId) {
+    try {
+      return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null ;
+    }
+  }
+  
+  static public class SaveActionListener extends EventListener<UIAddRelationForm> {
+    public void execute(Event<UIAddRelationForm> event) throws Exception {
+      //UIAddRelationForm addRelationForm = event.getSource() ;
+    }
+  }
+  static public class SelectedQuestionActionListener extends EventListener<UIAddRelationForm> {
+    public void execute(Event<UIAddRelationForm> event) throws Exception {
+      //UIAddRelationForm addRelationForm = event.getSource() ;
+    }
+  }
+  static public class CancelActionListener extends EventListener<UIAddRelationForm> {
+    public void execute(Event<UIAddRelationForm> event) throws Exception {
+      UIAddRelationForm addRelationForm = event.getSource() ;     
+      UIPopupContainer popupContainer = addRelationForm.getAncestorOfType(UIPopupContainer.class) ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
   }
 }
