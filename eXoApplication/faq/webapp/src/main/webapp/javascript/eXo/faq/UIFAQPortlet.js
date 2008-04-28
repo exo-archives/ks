@@ -10,4 +10,15 @@ UIFAQPortlet.prototype.OverButton = function(oject) {
 	}	else oject.className = oject.className + "Action";
 };
 
+UIFAQPortlet.prototype.viewDivById = function(id) {
+	var obj = document.getElementById(id) ;
+	if(obj.style.display === "none") {
+		obj.style.display = "block" ;
+	} else {
+		obj.style.display = "none" ;
+		document.getElementById(id.replace("div", "")).value = "" ;
+	}
+};
+
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;

@@ -433,13 +433,26 @@
 
 /******************************	UISenToFriend	***************************************/
 
-.UIFAQPortlet .UISenToFriend {
+.UIFAQPortlet .UISendMailForm {
 	padding: 8px;
 	background: #ffffff;
 	border-top: 0px;
 }
 
-.UIFAQPortlet .UISenToFriend .HorizontalLayout {
+.UIFAQPortlet .UISendMailForm input{
+	width: 500px ;
+}
+
+.UIFAQPortlet .UISendMailForm #Message___Frame{
+	width: 500px ;
+	height: 200px;
+}
+
+.UIFAQPortlet .UISendMailForm #To{
+	width: 400px ;
+}
+
+.UIFAQPortlet .UISendMailForm .HorizontalLayout {
 	padding: 8px;
 	background: #f7f7f7;
 }

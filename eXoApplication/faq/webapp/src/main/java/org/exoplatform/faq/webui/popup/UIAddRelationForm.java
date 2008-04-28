@@ -24,11 +24,9 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.portal.webui.application.UIPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -90,9 +88,6 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     setListCate() ;
-    
-   /* System.out.println(renderBox()) ;*/
-    //this.getChildById(arg0)
   }
   
   public void setRelationed(List<String> listRelation) {

@@ -30,6 +30,7 @@ import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
+import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -504,7 +505,15 @@ public class UIQuestions extends UIContainer {
   
   static  public class SendQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-      UIQuestions question = event.getSource() ; 
+      UIQuestions uiQuestions = event.getSource() ; 
+      String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      UISendMailForm sendMailForm = popupContainer.addChild(UISendMailForm.class, null, null) ;
+      popupContainer.setId("FAQSendMailForm") ;
+      popupAction.activate(popupContainer, 700, 1000) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
 
