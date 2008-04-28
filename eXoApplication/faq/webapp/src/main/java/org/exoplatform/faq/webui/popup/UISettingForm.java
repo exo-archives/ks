@@ -51,7 +51,6 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String SHOW_MODE = "show-mode".intern(); 
 	public static final String DISPLAY_TYPE = "display-type".intern(); 
-	private String categoryId_ = "";
 	
 	public UISettingForm() throws Exception {}
 	
@@ -70,12 +69,9 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		fillData() ;
 	}
 	
-	public String getCategoryID() { return categoryId_; }
-  public void setCategoryID(String s) { categoryId_ = s ; }
-	
 	public void fillData() throws Exception {    
     FAQService mailSrv = getApplicationComponent(FAQService.class);
-    FAQSetting setting = mailSrv.getFAQSetting(categoryId_, SessionProviderFactory.createSystemProvider()) ;
+    FAQSetting setting = mailSrv.getFAQSetting(SessionProviderFactory.createSystemProvider()) ;
     if (setting != null) {
       getUIFormSelectBox(SHOW_MODE).setValue(String.valueOf(setting.getProcessingMode())) ;
       getUIFormSelectBox(DISPLAY_TYPE).setValue(String.valueOf(setting.getDisplayMode()));
@@ -96,10 +92,9 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQService service = FAQUtils.getFAQService() ;
 			FAQSetting faqSetting = new FAQSetting() ;
-			String cate = settingForm.getCategoryID() ;
 			faqSetting.setProcessingMode(Boolean.valueOf(settingForm.getUIFormSelectBox(SHOW_MODE).getValue()));
 			faqSetting.setDisplayMode(String.valueOf(settingForm.getUIFormSelectBox(DISPLAY_TYPE).getValue())) ;
-			service.saveFAQSetting(cate, faqSetting, SessionProviderFactory.createSystemProvider()) ;
+			service.saveFAQSetting(faqSetting, SessionProviderFactory.createSystemProvider()) ;
 			
 			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;

@@ -82,7 +82,7 @@ public class UIQuestions extends UIContainer {
   private String parentId_ = null ;
   private String questionView_ = "" ;
   public static String newPath_ = "" ;
-  private String[] firstTollbar = new String[]{"AddCategory","ShowQuestionNotYetAnswer"} ;
+  private String[] firstTollbar = new String[]{"AddCategory","ShowQuestionNotYetAnswer", "Setting"} ;
   private String[] secondTollbar = new String[]{"SubCategory", "AddNewQuestion", "Setting"} ; 
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIQuestions()throws Exception {
@@ -101,7 +101,7 @@ public class UIQuestions extends UIContainer {
   
   @SuppressWarnings("unused")
   private String[] getActionCategory(){
-    String[] action = new String[]{"SubCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Setting", "Watch"} ;
+    String[] action = new String[]{"SubCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
     return action ;
   }
   private String[] getSecondActionCategory() {
@@ -336,7 +336,6 @@ public class UIQuestions extends UIContainer {
 		}
 	static	public class SettingActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
-			System.out.println("\n\n CategorySettingActionListener");
     	UIQuestions question = event.getSource() ; 
     	String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
@@ -344,7 +343,6 @@ public class UIQuestions extends UIContainer {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
 			UISettingForm uiSetting = popupAction.activate(UISettingForm.class, 400) ;
 			popupContainer.setId("CategorySettingForm") ;
-			uiSetting.setCategoryID(cateId) ;
       uiSetting.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
