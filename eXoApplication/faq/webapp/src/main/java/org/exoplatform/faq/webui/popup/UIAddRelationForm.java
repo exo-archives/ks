@@ -55,6 +55,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 
 public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   private static List<Question> listQuestion = new ArrayList<Question>() ;
+  private static List<String> quesIdsSelect = new ArrayList<String>() ;
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
  
@@ -89,14 +90,31 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     setListCate() ;
+    
+   /* System.out.println(renderBox()) ;*/
+    //this.getChildById(arg0)
+  }
+  
+  public void setRelationed(List<String> listRelation) {
+    quesIdsSelect = listRelation ;
+    try {
+      initPage() ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+  
+  private void initPage() throws Exception {
     listQuestion = faqService.getAllQuestions(FAQUtils.getSystemProvider()).getAll() ;
     UIFormCheckBoxInput checkQuestion ;
     for(Question question : listQuestion) {
-      checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false) ;
+      if(quesIdsSelect.contains(question.getId())) {
+        checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false).setChecked(true) ;
+      } else {
+        checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false) ;
+      }
       addChild(checkQuestion) ;
     }
-   /* System.out.println(renderBox()) ;*/
-    //this.getChildById(arg0)
   }
   
   private void setListCate() throws Exception {
@@ -201,13 +219,12 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
       
       List<String> listQuestionId = new ArrayList<String>() ;
-      if(!responseForm.getListIdQuesRela().isEmpty()) 
-        listQuestionId.addAll(responseForm.getListIdQuesRela()) ;
+   /*   if(!responseForm.getListIdQuesRela().isEmpty()) 
+        listQuestionId.addAll(responseForm.getListIdQuesRela()) ;*/
       for(Question question : addRelationForm.listQuestion) {
         if(addRelationForm.getUIFormCheckBoxInput(question.getId()).isChecked()) {
-          if(!listQuestionId.contains(question.getId()))
-            listQuestionId.add(question.getId()) ;
-          System.out.println("ischecked: " + question.getQuestion() + "\t id: " + question.getId()) ;
+          //if(!listQuestionId.contains(question.getId()))
+          listQuestionId.add(question.getId()) ;
         }
       }
       responseForm.setListIdQuesRela(listQuestionId) ;

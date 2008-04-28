@@ -248,7 +248,8 @@
 						String date = arrayString[1] ;
 						String response = "" ;
 						for(int t = 2 ; t < arrayString.length ; t ++) {
-							response += arrayString[t] ;
+							if(arrayString[t].trim().length() > 0)
+								response += arrayString[t];
 						}
 					%>
 						<div class="ResponseContent">

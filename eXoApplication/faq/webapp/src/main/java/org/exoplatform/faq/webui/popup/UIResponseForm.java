@@ -244,9 +244,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       List<String> listString = new ArrayList<String>() ;
       String value = new String() ;
       for(int i = 0 ; i < listFormFCK.getChildren().size(); i ++) {
-        value = ((UIFormWYSIWYGInput)listFormFCK.getChild(i)).getValue() ;
-        if(value != null && value.trim().length() > 0) 
-          listString.add(value) ;
+        value = ((UIFormWYSIWYGInput)listFormFCK.getChild(i)).getValue().trim() ;
+        if(value != null && value.length() > 0) 
+          listString.add(value.replaceAll("<p/>", "")) ;
       }
       if(listString.isEmpty()) {
         UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
@@ -305,8 +305,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIResponseForm response = event.getSource() ;
       UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      @SuppressWarnings("unused")
       UIAddRelationForm addRelationForm = popupAction.activate(UIAddRelationForm.class, 500) ;
+      addRelationForm.setRelationed(response.getListIdQuesRela()) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
   }
