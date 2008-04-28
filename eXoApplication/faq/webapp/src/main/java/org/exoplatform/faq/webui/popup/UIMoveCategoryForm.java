@@ -22,9 +22,11 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -52,11 +54,81 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	public UIMoveCategoryForm() throws Exception {}
 	
 	public void init() {}
+	
 	public String getCategoryID() { return categoryId_; }
   public void setCategoryID(String s) { categoryId_ = s ; }
   
   public void activate() throws Exception {}
   public void deActivate() throws Exception {}
+	
+	public class Cate{
+    private Category category;
+    private int deft ;
+    public Category getCategory() {
+      return category;
+    }
+    public void setCategory(Category category) {
+      this.category = category;
+    }
+    public int getDeft() {
+      return deft;
+    }
+    public void setDeft(int deft) {
+      this.deft = deft;
+    }
+  }
+  
+	@SuppressWarnings("unused")
+  private static List<String> listCateSelected = new ArrayList<String>() ;
+  private List<Cate> listCate = new ArrayList<Cate>() ;
+  private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  private SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+  
+  @SuppressWarnings("unused")
+  public List<Cate> getListCate(){
+    return this.listCate ;
+  }
+  
+  public void setListCate() throws Exception {
+    List<Cate> listCate = new ArrayList<Cate>() ;
+    Cate parentCate = null ;
+    Cate childCate = null ;
+    
+    for(Category category : faqService.getSubCategories(null, sessionProvider)) {
+      if(category != null && !category.getId().equals(categoryId_)) {
+        Cate cate = new Cate() ;
+        cate.setCategory(category) ;
+        cate.setDeft(0) ;
+        listCate.add(cate) ;
+      }
+    }
+    
+    while (!listCate.isEmpty()) {
+      parentCate = new Cate() ;
+      parentCate = listCate.get(listCate.size() - 1) ;
+      listCate.remove(parentCate) ;
+      this.listCate.add(parentCate) ;
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider)){
+        if(category != null && !category.getId().equals(categoryId_)) {
+          childCate = new Cate() ;
+          childCate.setCategory(category) ;
+          childCate.setDeft(parentCate.getDeft() + 1) ;
+          listCate.add(childCate) ;
+        }
+      }
+    }
+  }
+	
+  @SuppressWarnings("unused")
+  private List<Question> getQuestions(String cateId) {
+    try {
+      return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null ;
+    }
+  }
   
 	@SuppressWarnings("unused")
   private List<Category> getCategories() throws Exception {
