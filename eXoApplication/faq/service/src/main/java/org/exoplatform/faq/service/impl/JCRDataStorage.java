@@ -313,36 +313,37 @@ public class JCRDataStorage {
   	}
   }
   
-  public void saveFAQSetting(String usercategoryId, FAQSetting newSetting, SessionProvider sProvider) throws Exception {
-    Node categoryHome = getCategoryHome(sProvider, null) ;
+  public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception {
+    Node faqServiceHome = getFAQServiceHome(sProvider) ;
     Node settingNode = null;
     try {
-      settingNode = categoryHome.getNode(Utils.KEY_FAQ_SETTING) ;
+      settingNode = faqServiceHome.getNode(Utils.KEY_FAQ_SETTING) ;
     } catch(PathNotFoundException e) {
-      settingNode = categoryHome.addNode(Utils.KEY_FAQ_SETTING, Utils.EXO_FAQ_SETTING) ;
-      categoryHome.save();
+      settingNode = faqServiceHome.addNode(Utils.KEY_FAQ_SETTING, Utils.EXO_FAQ_SETTING) ;      
     }
    
-    if (settingNode != null) {
-      settingNode.setProperty(Utils.EXO_PROCESSING_MODE, newSetting.getProcessingMode());
-      settingNode.setProperty(Utils.EXO_DISPLAY_TYPE, newSetting.getDisplayMode());
-      // saves change
-      settingNode.save();
-    }
+    settingNode.setProperty(Utils.EXO_PROCESSING_MODE, newSetting.getProcessingMode());
+    settingNode.setProperty(Utils.EXO_DISPLAY_TYPE, newSetting.getDisplayMode());
+    if(!settingNode.isNew()) settingNode.save();
+    else settingNode.getSession().save() ;
   }
   
-  public FAQSetting  getFAQSetting(String categoryId, SessionProvider sProvider) throws Exception  {
-  	Node categoryHome = getCategoryHome(sProvider, null) ;		
+  public FAQSetting  getFAQSetting(SessionProvider sProvider) throws Exception  {
+  	Node faqServiceHome = getFAQServiceHome(sProvider);		
     Node settingNode = null;
-    if (categoryHome.hasNode(Utils.KEY_FAQ_SETTING)) settingNode = categoryHome.getNode(Utils.KEY_FAQ_SETTING) ;
+    try{
+    	settingNode = faqServiceHome.getNode(Utils.KEY_FAQ_SETTING) ;
+    }catch(PathNotFoundException e) {
+    	return new FAQSetting() ;
+    }
     FAQSetting setting = new FAQSetting();
     if (settingNode != null ){
       try {
         setting.setProcessingMode((settingNode.getProperty(Utils.EXO_PROCESSING_MODE).getBoolean()));
-      } catch(Exception e) { }
-      try { 
         setting.setDisplayMode((settingNode.getProperty(Utils.EXO_DISPLAY_TYPE).getString()));
-      } catch(Exception e) { }
+      } catch(Exception e) { 
+      	e.printStackTrace() ;
+      }      
     }
   	return setting ;
   }

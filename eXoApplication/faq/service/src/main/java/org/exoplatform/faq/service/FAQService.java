@@ -126,14 +126,14 @@ public interface FAQService {
    */
   public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception ;  
   
-  public FAQSetting  getFAQSetting(String categoryId, SessionProvider sProvider) throws Exception ;  
+  public FAQSetting  getFAQSetting(SessionProvider sProvider) throws Exception ;  
   /**
    * This method to update FAQ setting
    * @param categoryId
    * @param newSetting
    * @throws Exception
    *  */
-  public void saveFAQSetting(String categoryId, FAQSetting newSetting, SessionProvider sProvider) throws Exception;  
+  public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception;  
   
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception ;
 }

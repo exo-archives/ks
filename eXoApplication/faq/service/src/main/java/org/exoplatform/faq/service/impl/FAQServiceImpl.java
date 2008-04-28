@@ -85,12 +85,12 @@ public class FAQServiceImpl implements FAQService{
 		jcrData_.saveQuestion(question, isAddNew, sProvider) ;
 	}
 	
-  public FAQSetting getFAQSetting(String categoryId, SessionProvider sProvider) throws Exception {
-    return jcrData_.getFAQSetting(categoryId, sProvider);
+  public FAQSetting getFAQSetting(SessionProvider sProvider) throws Exception {
+    return jcrData_.getFAQSetting(sProvider);
   }  
   
-  public void saveFAQSetting(String categoryId, FAQSetting newSetting, SessionProvider sProvider) throws Exception {
-  	jcrData_.saveFAQSetting(categoryId, newSetting, sProvider);
+  public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception {
+  	jcrData_.saveFAQSetting(newSetting, sProvider);
   }
   
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
