@@ -30,8 +30,10 @@
     <%
           for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
             <div style="margin: 5px 0px 5px 0px ;">
-		    			<div class="Icon FAQQuestionView"><span></span></div>
-		    			<div id="FAQCate$i" style="float: left"><%= question.getQuestion();%></div>
+		        	<div id="FAQCate$i" style="float: left">
+			        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
+			    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
+		    			</div>
 		    			<div style="clear: left;"><span></span></div>
 		    		</div>
     <%        
@@ -57,8 +59,10 @@
           for(Question question : uicomponent.getQuestions(stackCateid.pop())) {
             stringBuffer.append( question.getQuestion()) ;%>
             <div style="margin: 5px 0px 5px 0px ;">
-		    			<div class="Icon FAQQuestionView"><span></span></div>
-		    			<div id="FAQCate$i" style="float: left"><%= question.getQuestion();%></div>
+		        	<div id="FAQCate$i" style="float: left">
+			        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
+			    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
+		    			</div>
 		    			<div style="clear: left;"><span></span></div>
 		    		</div>
      <%
@@ -68,8 +72,10 @@
           for(int j = 0 ; j < (-1*sub); j ++) {
             for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
               <div style="margin: 5px 0px 5px 0px ;">
-			    			<div class="Icon FAQQuestionView"><span></span></div>
-			    			<div id="FAQCate$i" style="float: left"><%= question.getQuestion();%></div>
+			        	<div id="FAQCate$i" style="float: left">
+				        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
+				    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
+			    			</div>
 			    			<div style="clear: left;"><span></span></div>
 			    		</div>
      <%
@@ -92,8 +98,10 @@
    	<%
     for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
       <div style="margin: 5px 0px 5px 0px ;">
-				<div class="Icon FAQQuestionView"><span></span></div>
-				<div id="FAQCate$i" style="float: left"><%= question.getQuestion();%></div>
+	    	<div id="FAQCate$i" style="float: left">
+	        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
+	    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
+				</div>
 				<div style="clear: left;"><span></span></div>
 			</div>
     <%
@@ -103,8 +111,10 @@
     for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {
       for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
         <div style="margin: 5px 0px 5px 0px ;">
-    			<div class="Icon FAQQuestionView"><span></span></div>
-    			<div id="FAQCate$i" style="float: left"><%= question.getQuestion();%></div>
+        	<div id="FAQCate$i" style="float: left">
+	        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
+	    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
+    			</div>
     			<div style="clear: left;"><span></span></div>
     		</div>
 		<%

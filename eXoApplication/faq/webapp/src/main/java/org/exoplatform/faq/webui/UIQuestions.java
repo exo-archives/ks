@@ -180,6 +180,17 @@ public class UIQuestions extends UIContainer {
   public void setCategoryId(String categoryId) {
     this.categoryId = categoryId ;
   }
+  
+  public String getQuestionRelationById(String questionId) {
+    Question question = new Question();
+    try {
+      question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider());
+      return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "" ;
+    }
+  }
 	
 	public void moveDownUp(Event<UIQuestions> event, int i) {
   	String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -394,10 +405,33 @@ public class UIQuestions extends UIContainer {
 	static  public class ViewQuestionActionListener extends EventListener<UIQuestions> {
 	  public void execute(Event<UIQuestions> event) throws Exception {
 	    UIQuestions uiQuestions = event.getSource() ; 
-      String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      String strId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      String questionId = new String() ;
+      if(strId.indexOf("/") < 0) {
+        questionId = strId ;
+      } else {
+        String categoryId = strId.split("/")[0] ;
+        questionId = strId.split("/")[1] ;
+        
+        UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+        uiQuestions.setCategoryId(categoryId) ;
+        uiQuestions.setListQuestion() ;
+        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+        String oldPath = breadcumbs.getPaths() ;
+        if(oldPath != null && oldPath.trim().length() > 0) {
+          if(!oldPath.contains(categoryId)) {
+            newPath_ = oldPath + "/" +categoryId ;
+            breadcumbs.setUpdataPath(oldPath + "/" +categoryId);
+          }
+        } else breadcumbs.setUpdataPath(categoryId);
+        event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+        UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+      }
+      
       String questionViewed = uiQuestions.questionView_ ;
-	    if( questionViewed == null || questionViewed.trim().length() < 1 || !questionViewed.equals(questionId)){
-	      uiQuestions.questionView_ = questionId ; 
+      if( questionViewed == null || questionViewed.trim().length() < 1 || !questionViewed.equals(questionId)){
+        uiQuestions.questionView_ = questionId ; 
       } else {
         uiQuestions.questionView_ = "" ;
       }

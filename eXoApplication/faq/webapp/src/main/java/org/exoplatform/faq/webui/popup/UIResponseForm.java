@@ -75,7 +75,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private static final String ATTATCH_MENTS = "QuestionAttach" ;
   private static final String REMOVE_FILE_ATTACH = "RemoveFile" ;
   private static final String FILE_ATTACHMENTS = "FileAttach" ;
-  private static final String RELATIONS = "QuestionRelation" ;
+  public static final String RELATIONS = "QuestionRelation" ;
   private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
   private static Question question = null ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -90,6 +90,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private String questionId_ = new String() ;
   private List<SelectItemOption<String>> listLanguage =  new ArrayList<SelectItemOption<String>>() ;
   private List<SelectItemOption<String>> listRelation =  new ArrayList<SelectItemOption<String>>() ;
+  private List<String> listQuestIdRela = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
   // form variable:
   private List<String> listLanguageToReponse = new ArrayList<String>() ;  
@@ -200,14 +201,17 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     return listLanguage ;
   }
   
-  private void setListRelation() {
+  private void setListRelation() throws Exception {
     String[] relations = question.getRelations() ;
+    this.setListIdQuesRela(Arrays.asList(relations)) ;
+    Question question ;
     if(relations != null && relations.length > 0)
       for(String relation : relations) {
-        listRelation.add(new SelectItemOption<String>(relation, relation)) ;
+        question = faqService.getQuestionById(relation, FAQUtils.getSystemProvider()) ;
+        listRelation.add(new SelectItemOption<String>(question.getQuestion(), question.getQuestion())) ;
       }
   }
-  private List<SelectItemOption<String>> getListRelation() {
+  public List<SelectItemOption<String>> getListRelation() {
    return listRelation ; 
   }
   
@@ -222,6 +226,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     String[] defaultLanguage = this.listLanguageToReponse.toArray(new String[]{}) ;
     defaultLanguage[0] += " ( default )" ;
     return defaultLanguage ;
+  }
+  
+  public List<String> getListIdQuesRela() {
+    return this.listQuestIdRela ;
+  }
+  
+  public void setListIdQuesRela(List<String> listId) {
+    this.listQuestIdRela = listId ;
   }
   
   // action :
@@ -251,18 +263,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       question.setResponses(user + "/" + date + "/" + listString.get(0));
       
       // set relateion of question:
-      listString.clear() ;
-      UIFormSelectBox selectBox = response.getUIFormSelectBox(RELATIONS) ;
-      for(SelectItemOption<String> selectOption : selectBox.getOptions()){
-        listString.add(selectOption.getValue()) ;
-      }
-      List<String> listContent = Arrays.asList(question.getRelations()) ;
-      for(String relation : listString){
-        if(!listContent.contains(relation)) {
-          listContent.add(relation) ;
-        }
-      }
-      question.setRelations(listContent.toArray(new String[]{})) ;
+      question.setRelations(response.getListIdQuesRela().toArray(new String[]{})) ;
       
       // set show question:
       question.setActivated((Boolean) response.getUIFormCheckBoxInput(SHOW_ANSWER).getValue()) ;

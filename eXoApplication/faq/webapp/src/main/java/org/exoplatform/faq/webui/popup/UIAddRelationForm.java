@@ -18,20 +18,24 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.portal.webui.application.UIPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.UIFormSelectBox;
 
 /**
  * Created by The eXo Platform SAS
@@ -50,6 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 
 public class UIAddRelationForm extends UIForm implements UIPopupComponent {
+  private static List<Question> listQuestion = new ArrayList<Question>() ;
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
  
@@ -84,7 +89,14 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     setListCate() ;
+    listQuestion = faqService.getAllQuestions(FAQUtils.getSystemProvider()).getAll() ;
+    UIFormCheckBoxInput checkQuestion ;
+    for(Question question : listQuestion) {
+      checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false) ;
+      addChild(checkQuestion) ;
+    }
    /* System.out.println(renderBox()) ;*/
+    //this.getChildById(arg0)
   }
   
   private void setListCate() throws Exception {
@@ -182,8 +194,35 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   }
   
   static public class SaveActionListener extends EventListener<UIAddRelationForm> {
+    @SuppressWarnings("static-access")
     public void execute(Event<UIAddRelationForm> event) throws Exception {
-      //UIAddRelationForm addRelationForm = event.getSource() ;
+      UIAddRelationForm addRelationForm = event.getSource() ;
+      UIPopupContainer popupContainer = addRelationForm.getAncestorOfType(UIPopupContainer.class) ;
+      UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
+      
+      List<String> listQuestionId = new ArrayList<String>() ;
+      if(!responseForm.getListIdQuesRela().isEmpty()) 
+        listQuestionId.addAll(responseForm.getListIdQuesRela()) ;
+      for(Question question : addRelationForm.listQuestion) {
+        if(addRelationForm.getUIFormCheckBoxInput(question.getId()).isChecked()) {
+          if(!listQuestionId.contains(question.getId()))
+            listQuestionId.add(question.getId()) ;
+          System.out.println("ischecked: " + question.getQuestion() + "\t id: " + question.getId()) ;
+        }
+      }
+      responseForm.setListIdQuesRela(listQuestionId) ;
+      
+      List<SelectItemOption<String>> listOption = new ArrayList<SelectItemOption<String>>() ;
+      for(String id : listQuestionId) {
+        String contentQue = faqService.getQuestionById(id, FAQUtils.getSystemProvider()).getQuestion() ;
+        listOption.add(new SelectItemOption<String>(contentQue,contentQue)) ;
+      }
+      ((UIFormSelectBox)responseForm.getChildById(responseForm.RELATIONS)).setOptions(listOption) ;
+      
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
     }
   }
   static public class SelectedQuestionActionListener extends EventListener<UIAddRelationForm> {

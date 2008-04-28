@@ -257,8 +257,19 @@
 							</div>
 							<div class="AttachmentContent">attachment:<br></div>
 							<div class="RelatedQuestions"><b>Related question:</b><br>
-								<% for(String relation : question.getRelations()) { %>
-										$relation<br>
+								<%String questionRelationById = "" ;
+									String cateRelaId = "" ;
+									String quesRelaId = "" ;
+									String quesRelaCont = "" ;
+									String linkRelaQues = "" ;
+									for(String relationId : question.getRelations()) { 
+										questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
+										cateRelaId = questionRelationById.split("/")[0] ;
+										quesRelaId = questionRelationById.split("/")[1] ;
+										quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
+										linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId) ;
+								%>
+										<a href="$linkRelaQues"> $quesRelaCont<br></a>
 								<% } %>
 							</div>
 							<div class="UIAction ResponsActions" style="float: left">
