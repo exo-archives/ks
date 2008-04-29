@@ -20,5 +20,14 @@ UIFAQPortlet.prototype.viewDivById = function(id) {
 	}
 };
 
+UIFAQPortlet.prototype.treeView = function(id) {
+	var obj = document.getElementById(id) ;
+	if(obj.style.display === "none") {
+		obj.style.display = "block" ;
+	} else {
+		obj.style.display = "none" ;
+	}
+};
+
 
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;
