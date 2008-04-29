@@ -417,9 +417,11 @@ public class JCRDataStorage{
 			forumNode.setProperty("exo:path", newForumPath) ;
 			if(forumNode.hasProperty("exo:lastTopicPath")) {
 				String oldPath = forumNode.getProperty("exo:lastTopicPath").getString() ;
-				String topicId = oldPath.substring(oldPath.lastIndexOf("/")) ;
-				String newPath = newForumPath + topicId ;
-				forumNode.setProperty("exo:lastTopicPath", newPath) ;
+				if(oldPath != null && oldPath.length() > 0) {
+					String topicId = oldPath.substring(oldPath.lastIndexOf("/")) ;
+					String newPath = newForumPath + topicId ;
+					forumNode.setProperty("exo:lastTopicPath", newPath) ;
+				}
 			}
 		}
 		long forumCount = forums.size() ;
