@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
@@ -50,6 +51,7 @@ import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITagForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
+import org.exoplatform.forum.webui.popup.UIViewTopic;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.services.organization.User;
@@ -63,7 +65,9 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
@@ -110,7 +114,9 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class ), 
 			@EventConfig(listeners = UITopicDetail.ViewPostedByUserActionListener.class ), 
 			@EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
-			@EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ) 
+			@EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
+			@EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
+			@EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class)
 		}
 )
 public class UITopicDetail extends UIForm {
@@ -133,13 +139,16 @@ public class UITopicDetail extends UIForm {
 	private long maxPost = 10 ;
 	private UserProfile userProfile = null;
 	private String userName = " " ;
+	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
 		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
 		addUIFormInput( new UIFormStringInput("gopage2", null)) ;
 		addUIFormInput( new UIFormStringInput("search", null)) ;
+		addUIFormInput( new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA,null)) ;
 		addChild(UIForumPageIterator.class, null, "TopicPageIterator") ;
 		addChild(UIPostRules.class, null, null);
 		this.setSubmitAction("GoNumberPage") ;
+		this.setActions(new String[]{"PreviewReply","QuickReply"} );
 	}
 	
 	@SuppressWarnings("unused")
@@ -987,6 +996,68 @@ public class UITopicDetail extends UIForm {
 	    popupAction.activate(popupContainer, 760, 350) ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 	  }
+	}
+	
+	static public class QuickReplyActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
+			String message = textAreaInput.getValue() ;
+			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			String userName = topicDetail.userProfile.getUserId() ;
+			int t = checksms.trim().length() ;
+			if(t > 3 && !checksms.equals("null")) {
+				Topic topic = topicDetail.topic ;
+				Post post = new Post() ;
+				post.setName("Re: " + topic.getTopicName()) ;
+				post.setMessage(message) ;
+				post.setOwner(userName) ;
+				post.setRemoteAddr("") ;
+				post.setIcon(topic.getIcon());
+				post.setIsApproved(false) ;
+				topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
+        topicDetail.IdPostView = "true";
+        topicDetail.setUpdatePostPageList(true);
+        textAreaInput.setValue("") ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			}else {
+				String[] args = new String[] { "Message" } ;
+				throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
+			}
+		}
+	}
+	
+	static public class PreviewReplyActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;	
+			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
+			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			String userName = topicDetail.userProfile.getUserId() ;
+			int t = checksms.trim().length() ;
+			if(t > 3 && !checksms.equals("null")) {
+				Topic topic = topicDetail.topic ;
+				Post post = new Post() ;
+				post.setName("Re: " + topic.getTopicName()) ;
+				post.setMessage(message) ;
+				post.setOwner(userName) ;
+				post.setRemoteAddr("") ;
+				post.setIcon(topic.getIcon());
+				post.setIsApproved(false) ;
+				post.setCreatedDate(new Date()) ;
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true)	;
+				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 670) ;
+				viewTopic.setPostView(post) ;
+				viewTopic.setPopupComponent(false) ;
+				viewTopic.setViewUserInfo(false) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			}else {
+				String[] args = new String[] { "Message" } ;
+				throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
+			}
+		}
 	}
   
 }

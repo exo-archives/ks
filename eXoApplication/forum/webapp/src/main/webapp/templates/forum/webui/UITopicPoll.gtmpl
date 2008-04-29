@@ -94,10 +94,10 @@
 		if(timeOut > 0) {
 			Date dateOut = poll.getCreatedDate() ;
 			Date today = new Date() ;
-			dateOut.setDate(dateOut.getDate() + timeOut);
+			dateOut.setTime(dateOut.getTime() + timeOut*86400000);
 			UserProfile option = uicomponent.getOption();
 			String timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumFormatUtils.getFormatDate((option.getLongDateFormat() + ", " + option.getTimeFormat()),dateOut);
-			if(dateOut.getDate() < today.getDate()) {
+			if(dateOut.getTime() < today.getTime()) {
 				timeOutDate = " Poll is Closed !" ;
 				isAgain = false ;
 			}

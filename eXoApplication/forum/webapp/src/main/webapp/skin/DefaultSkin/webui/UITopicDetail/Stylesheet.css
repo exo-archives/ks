@@ -297,3 +297,34 @@
 	text-align: center;
 	font-weight: bold;
 }
+
+/*----------------------ForumQuickReply-----------------------*/
+.UITopicDetail .ActionContainer {
+	width: 100%;
+}
+
+.UITopicDetail .ForumQuickReply {
+	width: 100%;
+}
+
+.UITopicDetail .ForumQuickReply .ContentContainer {
+	border: solid 1px #b7b7b7;
+	border-top: none;
+}
+
+.UITopicDetail .ForumQuickReply .ForumList {
+	width: 400px;
+	margin: 0px auto;
+}
+
+.UITopicDetail .ForumQuickReply .ForumList textarea {
+	width: 380px;
+	height: 80px;
+}
+
+.UITopicDetail .ForumQuickReply .ActionContent {
+	width: 220px;
+	margin: 0px auto;
+	height: 25px;
+	padding: 10px 0px 0px 0px;
+}

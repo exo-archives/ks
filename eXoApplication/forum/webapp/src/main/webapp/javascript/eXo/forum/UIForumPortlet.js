@@ -261,11 +261,11 @@ UIForumPortlet.prototype.goLastPost = function(idLastPost) {
 	var isDesktop = document.getElementById('UIPageDesktop') ;
 	if(isDesktop === null){
 		if(idLastPost === "false") {
-				script:scroll(0,0);
-				var postForm = document.getElementById('banner') ;
-				if(postForm != null) {
-					postForm.scrollIntoView(true) ;
-				}
+			script:scroll(0,0);
+			var postForm = document.getElementById('banner') ;
+			if(postForm != null) {
+				postForm.scrollIntoView(true) ;
+			}
 		} else {
 			var obj = document.getElementById(idLastPost);
 			obj.scrollIntoView(true);
@@ -376,6 +376,14 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 	 	if(popupWindow.style.display == "block") {
 			masklayer.style.width = forumPortlet.offsetWidth - 20 + "px";
 			masklayer.style.height = forumPortlet.offsetHeight - 20 + "px";
+			var isDesktop = document.getElementById('UIPageDesktop') ;
+			if(isDesktop === null){
+				script:scroll(0,0);
+				var postForm = document.getElementById('banner') ;
+				if(postForm != null) {
+					postForm.scrollIntoView(true) ;
+				}
+			}
 		}
 	}
 };

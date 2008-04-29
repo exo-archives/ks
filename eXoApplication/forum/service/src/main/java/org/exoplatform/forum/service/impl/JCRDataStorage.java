@@ -1717,21 +1717,21 @@ public class JCRDataStorage{
 	    Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
-			ForumSeach seachEvent ;
+			ForumSeach forumSeach ;
 			while (iter.hasNext()) {
-				seachEvent = new ForumSeach() ;
+				forumSeach = new ForumSeach() ;
 				Node nodeObj = (Node) iter.nextNode();
-				seachEvent.setId(nodeObj.getName());
-				seachEvent.setName(nodeObj.getProperty("exo:name").getString());
-				seachEvent.setType(type);
+				forumSeach.setId(nodeObj.getName());
+				forumSeach.setName(nodeObj.getProperty("exo:name").getString());
+				forumSeach.setType(type);
 				if(!type.equals("forum")){
-					seachEvent.setIcon(nodeObj.getProperty("exo:icon").getString());
+					forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
 				}else{
-					seachEvent.setIcon("ForumNormalIcon");
+					forumSeach.setIcon("ForumNormalIcon");
 				}
-				seachEvent.setType(type);
-				seachEvent.setPath(nodeObj.getPath()) ;
-				listSeachEvent.add(seachEvent) ;
+				forumSeach.setType(type);
+				forumSeach.setPath(nodeObj.getPath()) ;
+				listSeachEvent.add(forumSeach) ;
 			}
 		}
 		return listSeachEvent ;

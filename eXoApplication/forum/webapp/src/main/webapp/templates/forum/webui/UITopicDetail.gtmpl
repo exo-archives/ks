@@ -25,6 +25,7 @@
 	boolean isClosed = false;
 	boolean isLock = false;
 	boolean isUserCreatedTopic = false;
+	boolean isNotReply = false;
 	List posts = null;
 	UserProfile userProfile = null;
 	Forum forum = uicomponent.getForum() ;
@@ -87,12 +88,14 @@
 		}
 		posts = uicomponent.getPostPageList() ;
 	}
+	isNotReply = isLock ;
+	if(!isNotReply) isNotReply = !isShowMenu ;
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
 	<% if(!isNull) {%>
 	<div class="ButtomAndPageListContainer">
-	<%if(isLock || !isShowMenu) { %>
+	<%if(isNotReply) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -102,7 +105,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu) { %>
+							<% if(isNotReply) { %>
 									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
@@ -652,7 +655,7 @@
 								</div>
 								<% } %>
 							</div>
-						<div class="PostContentContainer">rrr
+						<div class="PostContentContainer">
 						<% 
 						boolean hasAttachment = false ;
 						if(attachments != null && attachments.size() > 0) hasAttachment = true;
@@ -783,7 +786,7 @@
 	</div>	
 <!-- End PostsInThreadContainer -->
 	<div class="ButtomAndPageListContainer">
-		<% if(isLock || !isShowMenu) { %>
+		<% if(isNotReply) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -793,7 +796,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu) { %>
+							<% if(isNotReply) { %>
 									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
@@ -856,11 +859,55 @@
 		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 		<div style="clear: left;"><span></span></div>
 	</div>
+<% if(!isNotReply){ %>
+	<div class="UIAction"> 
+    <table class="ActionContainer" align="center">
+    	<tbody>
+    	<tr>
+	    	<div class="ForumCategory ForumQuickReply">
+				  <div class="ForumToolbar">
+					  <div class="LeftBar">
+					  	<div class="RightBar">
+					  		<div class="CenterBar">
+					  			<div class="Title">Forum Quick Reply</div>
+						  		<div class="CollapseButton" title="Expand category" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+									<div style="clear: both;"><span></span></div>
+					  		</div>
+					  	</div>
+					  </div>
+				  </div>
+				  <div class="ContentContainer">
+					  <div class="ForumList">
+					  	<div class="">Message:</div>
+					  	<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
+				  	</div>
+				    <div class="ActionContent">
+			  	<% for(action in uicomponent.getActions()) { 
+				    	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+				       String link = uicomponent.event(action) ;
+			    %>
+			    		<a href="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle"> $actionLabel </div>
+		            	</div>
+		          	</div>
+		        	</a>
+			    <%}%>
+			      </div>
+				  </div>
+			  </div>
+    	</tr>
+    	</tbody>
+ 	  </table> 
+	</div>
+<% } %>
 	<% } else { %>
 	<div class="EmptyContent">
 		This topic is deleted or removed !
+
 	</div>
-	<% } 
+	<% }
 	uicomponent.setPostRules(isNull) ;
 	%>
 <%uiform.end()%>
