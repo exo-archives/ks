@@ -696,31 +696,26 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
-			String sms = "";
-			int i = 0 ;
+			Topic topic_ ; 
+			boolean hasChecked = false ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-						if(!topics.get(i).getIsSticky()){ sms = topics.get(i).getTopicName() ; break ;} 
-						++i ;
+						topic_ = uiTopicContainer.getTopic(child.getName()) ;
+						if(topic_.getIsSticky()){ topics.add(topic_); } 
+						hasChecked = true ;
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			if(topics.size() > 0 && sms.length() == 0) {
+			if(topics.size() > 0) {
 				for(Topic topic : topics) {
 					topic.setIsSticky(false) ;
 					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
 				}
-			} 
-			if(topics.size() == 0 && sms.length() == 0){
+			} else if(!hasChecked){
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
-			}
-			if(sms.length() > 0){
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.UnStick", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -732,31 +727,26 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
-			String sms = "";
-			int i = 0 ;
+			Topic topic_ ;
+			boolean hasChecked = false ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-						if(topics.get(i).getIsSticky()){ sms = topics.get(i).getTopicName() ; break ;} 
-						++i ;
+						topic_ = uiTopicContainer.getTopic(child.getName()) ;
+						if(!topic_.getIsSticky()){ topics.add(topic_); } 
+						hasChecked = true ;
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			if(topics.size() > 0 && sms.length() == 0) {
+			if(topics.size() > 0) {
 				for(Topic topic : topics) {
 					topic.setIsSticky(true) ;
 					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
 				}
-			} 
-			if(topics.size() == 0 && sms.length() == 0){
+			}else if(!hasChecked){
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
-			}
-			if(sms.length() > 0){
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Stick", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

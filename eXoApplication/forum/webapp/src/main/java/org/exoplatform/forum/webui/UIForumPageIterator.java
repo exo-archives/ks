@@ -55,6 +55,7 @@ public class UIForumPageIterator extends UIContainer {
 	@SuppressWarnings("unused")
 	private List<String> getTotalpage() throws	Exception {
 		int max_Page = (int)pageList.getAvailablePage() ;
+		if(this.page > max_Page) this.page = max_Page ;
 		long page = this.page ;
 		if(page <= 3) {
 			beginTabPage = 1 ;

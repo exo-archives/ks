@@ -17,6 +17,8 @@
 	if(userProfile.getUserRole() == 0) isAdmin = true ;
 	if(isAdmin) isShowMenu = true ;
 	else isShowMenu = false ;
+	String description = category.getDescription() ;
+	if(description == null || description.length() <=0 ) description = "";
 %>
 <div class="UIForumCategory" style="padding: 2px 10px;">
 <%uiform.begin()%>
@@ -24,7 +26,7 @@
 		<div class="LeftBar">
 			<div class="RightBar">
 				<div class="CenterBar CategoryDetectPosition">
-					<div class="Title"><%=category.getCategoryName()%></div>
+					<div class="Title"><%=category.getCategoryName()%> : <span>$description</span></div>
 					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(isShowMenu){ %>
 					<div class="SeparatorLine"><span></span></div>

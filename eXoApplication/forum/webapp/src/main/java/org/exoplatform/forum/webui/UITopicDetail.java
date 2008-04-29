@@ -376,15 +376,25 @@ public class UITopicDetail extends UIForm {
 		}
 	}
 	
+	public void setUpdatePostPageList(boolean isUpdatePageList) {
+	  this.isUpdatePageList = isUpdatePageList;
+  }
 	@SuppressWarnings("unused")
   private long getPageSelect() {return this.pageSelect ;}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
+		if(this.pageList == null) return null ;
 		if(!this.isGopage) {
-			this.pageSelect = this.getChild(UIForumPageIterator.class).getPageSelected() ;
+			UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
+			this.pageSelect = forumPageIterator.getPageSelected() ;
+			long availablePage = this.pageList.getAvailablePage() ;
+			if(this.pageSelect > availablePage) {
+				this.pageSelect = availablePage ;
+				forumPageIterator.setSelectPage(availablePage);
+			}
 		}
-		if(this.pageList == null || this.pageSelect < 1) return null ;
+		if(this.pageSelect < 1) return null ;
 		this.posts = this.pageList.getPage(this.pageSelect) ;
 		if(this.posts.size() > 0 && this.posts != null) {
 			for (Post post : this.posts) {
@@ -586,6 +596,7 @@ public class UITopicDetail extends UIForm {
 			UITopicDetail topicDetail = event.getSource() ;
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			topicDetail.forumService.removePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, postId) ;
+			topicDetail.isUpdatePageList = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 		}
 	}

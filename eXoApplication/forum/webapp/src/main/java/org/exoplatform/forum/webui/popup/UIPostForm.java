@@ -291,6 +291,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					if(uiForm.isQuote) {
 						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
 						topicDetail.setIdPostView("true");
+						topicDetail.setUpdatePostPageList(true);
 					} else {
 						String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 						post.setId(uiForm.postId) ;
@@ -303,9 +304,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				} else {
 					uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
           topicDetail.setIdPostView("true");
+          topicDetail.setUpdatePostPageList(true);
 				}
 				forumPortlet.cancelAction() ;
-				topicDetail.setIsEditTopic(true) ;
+//				topicDetail.setIsEditTopic(true) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
 			}else {
 				String[] args = { ""} ;

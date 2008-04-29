@@ -89,7 +89,7 @@ public class UIForumLinks extends UIForm {
 			forumLink.setValue(path.trim()) ;
 			addUIFormInput(forumLink) ;
 		}
-		forumLink.setOnChange("Select") ;
+//		forumLink.setOnChange("Select") ;
 	}
 	
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {

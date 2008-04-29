@@ -7,12 +7,12 @@ UIForumPortlet.prototype.selectItem = function(obj) {
 	var checkbox = DOMUtil.findFirstDescendantByClass(table, "input", "checkbox") ;
 	var checkboxes = DOMUtil.findDescendantsByClass(tbody, "input", "checkbox") ;
 	var chklen = checkboxes.length ;
+	var j = 0 ;
 	if(obj.checked) {
 		if (!tr.getAttribute("tmpClass")) {			
 			tr.setAttribute("tmpClass", tr.className) ;
 			tr.className = "SelectedItem" ;
 		}
-		var j = 0 ;
 		for(var i = 0 ; i < chklen ; i++) {
 			if (checkboxes[i].checked) j++ ;
 			else break ;
@@ -24,6 +24,25 @@ UIForumPortlet.prototype.selectItem = function(obj) {
 			tr.removeAttribute("tmpClass") ;
 		}		
 		checkbox.checked = false ;
+	}
+	var modMenu = document.getElementById("ModerationMenu") ;
+	var firstItem = modMenu.getElementsByTagName("a")[0] ;
+	if(j >= 2) {
+		if(modMenu) {
+			if(!firstItem.getAttribute("oldClass")) {
+				firstItem.setAttribute("oldClass", firstItem.className) ;
+				firstItem.setAttribute("oldHref", firstItem.href) ;
+				firstItem.className = "DisableMenuItem" ;
+				firstItem.href = "javascript:void(0);" ;
+			}
+		}
+	} else {
+		if(modMenu) {
+			if(firstItem.getAttribute("oldClass")) {
+				firstItem.className = firstItem.getAttribute("oldClass") ;
+				firstItem.href = firstItem.getAttribute("oldHref") ;
+			}
+		}
 	}
 } ;
 UIForumPortlet.prototype.checkAll = function(obj) {

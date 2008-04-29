@@ -123,6 +123,10 @@
 	margin: 6px 0px 0px 8px;
 }
 
+.UIForumPortlet .ForumToolbar .Title span {
+	font-weight: normal;
+}
+
 .UIForumPortlet .ForumToolbar .SeparatorLine {
 	background: url(background/SeparatorLine2x19.gif) no-repeat;
 	width: 2px; height: 19px;
