@@ -1,6 +1,8 @@
 <% 
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.service.FileAttachment;
+	
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
@@ -14,6 +16,7 @@
 							<%
 							String cateId = uicomponent.getCategoryId() ;
 							String[] categoryAction = null ;
+							boolean isViewQuesNotYetAns = uicomponent.getIsViewQuesNotYetAnswer() ;
 							if(cateId != null && cateId.trim().length() > 0) {
 								categoryAction = uicomponent.getSecondActionCategory() ;
 								String[] actionTollbar = uicomponent.getActionTollbar() ;
@@ -39,11 +42,19 @@
 							} else {
 								categoryAction = uicomponent.getActionCategory() ;
 								String[] actionTollbar = uicomponent.getFirstTollbar() ;
+								String linkAction = "" ;
+								String opacity ;
 								for(String action in actionTollbar) {
-								String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+									linkAction = uicomponent.event(action) ;
+									String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+									opacity = "1" ;
+									if(isViewQuesNotYetAns && !action.equals("ShowQuestionNotYetAnswer")) {
+										opacity = "0.5" ;
+										linkAction = "javaScript:void(0)" ;
+									}
 							%>
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
-										<a href="<%=uicomponent.event(action)%>">
+									<div style="opacity:$opacity" onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+										<a href="$linkAction">
 											<div class="LeftOverButton">
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
@@ -117,10 +128,11 @@
 		<%  
 			String id = "";
 			int i = 0 ;
-			for(category in categories) {
-				String categoryName = category.getName() ;
-				categoryId = category.getId();
-				String link = uicomponent.event("OpenCategory", categoryId) ;
+			if(!isViewQuesNotYetAns) {
+				for(category in categories) {
+					String categoryName = category.getName() ;
+					categoryId = category.getId();
+					String link = uicomponent.event("OpenCategory", categoryId) ;
 		%>
 				<div class="FAQCategory">
 					<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
@@ -173,11 +185,12 @@
 						
 					</div>
 				</div>
-		<% i ++ ;
-			} 
+		<% 	i ++ ;
+				} 
+			}
 		%>
 		<%
-			if(cateId != null && cateId.trim().length() > 0) {
+			if(isViewQuesNotYetAns || ( cateId != null && cateId.trim().length() > 0) ){
 				List listQuestion = uicomponent.getListQuestion() ;
 				String questionContent = new String() ;
 				int questionId = 0 ;
@@ -185,7 +198,7 @@
 				String linkQuestion = "" ;
 				for(question in listQuestion) {
 					questionContent = question.getQuestion() ;
-					String qId = question.getId()
+					String qId = question.getId() ;
 					linkQuestion=uicomponent.event("ViewQuestion", qId) ;
 		%>
 					<div class="FAQCategory Question">
@@ -242,7 +255,7 @@
 							
 						</div>
 					</div>
-					<%if(uicomponent.getQuestionView().equals(qId) && question.getResponses().length() > 0) {
+					<%if(uicomponent.getQuestionView().equals(qId) && question.getResponses().trim().length() > 0) {
 						String[] arrayString = question.getResponses().split("/") ;
 						String responseBy = arrayString[0] ;
 						String date = arrayString[1] ;
@@ -256,7 +269,33 @@
 							<div class="Response">
 								$response<br>
 							</div>
-							<div class="AttachmentContent">attachment:<br></div>
+							<div class="AttachmentContent">
+								attachment:<br>
+								<%
+								System.out.println("size of list file: " + question.getAttachMent().size()) ;
+								for(FileAttachment fileAttachment : question.getAttachMent()){
+							    String fileName = fileAttachment.getName() ;
+							    String fileSize = fileAttachment.getSize() ;
+							    String dataPath = "" ;
+							    String fileStream = "" ;
+							    try{
+							      dataPath = fileAttachment.getDataPath() ;
+							      fileStream = fileAttachment.getInputStream() ;
+							    } catch(Exception e) {
+							    	dataPath = "null" ;
+							      fileStream = "null" ;
+							    }
+							    String fileType = fileAttachment.getMimeType() ;
+							    String fileWorkSpace = fileAttachment.getWorkspace() ;
+							    %>
+							    fileName: $fileName<br>
+							    fileSize: $fileSize<br>
+							    dataPath: $dataPath<br>
+							    fileStream: $fileStream<br>
+							    fileType: $fileType<br>
+							    fileWorkSpace: $fileWorkSpace<br>
+						  <%}%>
+							</div>
 							<div class="RelatedQuestions"><b>Related question:</b><br>
 								<%String questionRelationById = "" ;
 									String cateRelaId = "" ;

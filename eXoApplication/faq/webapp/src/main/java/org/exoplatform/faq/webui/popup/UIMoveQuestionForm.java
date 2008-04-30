@@ -98,7 +98,11 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
       UIFAQPortlet portlet = moveQuestionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      questions.setListQuestion() ;
+      if(!questions.getIsViewQuesNotYetAnswer()) {
+        questions.setListQuestion() ;
+      }  else {
+        questions.setListQuestion(faqService.getQuestionsNotYetAnswer(FAQUtils.getSystemProvider()).getAll()) ;
+      }
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

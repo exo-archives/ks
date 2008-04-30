@@ -19,7 +19,9 @@ package org.exoplatform.faq.webui.popup;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
@@ -29,6 +31,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -59,7 +62,8 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 		  @EventConfig(listeners = UIQuestionForm.AddLanguageActionListener.class),
 			@EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
 			@EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
-			@EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class)
+			@EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
+			@EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class)
 		}
 )
 public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
@@ -74,8 +78,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   private static FAQService fAQService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private static Question question = null ;
   
+  private Map<String, List<ActionData>> actionField_ ;
+  
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
-  private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
+  private static List<FileAttachment> listFileAttach_ = null ;
   private static UIFormInputWithActions listFormWYSIWYGInput ;
   private String categoryId = new String() ;
   private String questionId = null ;
@@ -84,6 +90,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   public void deActivate() throws Exception { }
 	
   public UIQuestionForm() throws Exception {
+    listFileAttach_ = new ArrayList<FileAttachment>() ;
+    actionField_ = new HashMap<String, List<ActionData>>() ;
     this.questionId = new String() ;
     if(LIST_LANGUAGE.isEmpty())
       LIST_LANGUAGE.add("English") ;
@@ -115,6 +123,15 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, null)) ;
     addChild(listFormWYSIWYGInput) ;
     addUIFormInput(inputWithActions) ;
+    if(question != null) {
+      this.setListFileAttach(question.getAttachMent()) ;
+      try {
+        refreshUploadFileList() ;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      System.out.println("number of file attachment: " + question.getAttachMent().size());
+    }
   }
   
   @SuppressWarnings("static-access")
@@ -140,6 +157,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     this.categoryId = categoryId ;
   }
   
+  protected UIForm getParentForm() {
+    UIForm form = (UIForm)this.getParent() ;
+    return form ;
+  }
+  
   public List<ActionData> getUploadFileList() { 
     List<ActionData> uploadedFiles = new ArrayList<ActionData>() ;
     for(FileAttachment attachdata : listFileAttach_) {
@@ -162,6 +184,24 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     return uploadedFiles ;
   }
   
+  public void setListFileAttach(List<FileAttachment> listFileAttachment){
+    listFileAttach_ = listFileAttachment ;
+  }
+  
+  public void setListFileAttach(FileAttachment fileAttachment){
+    listFileAttach_.add(fileAttachment) ;
+  }
+  
+  public void refreshUploadFileList() throws Exception {
+    ((UIFormInputWithActions)this.getChildById(ATTACHMENTS)).setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
+  }
+  
+  public void setActionField(String fieldName, List<ActionData> actions) throws Exception {
+    actionField_.put(fieldName, actions) ;
+  }
+  
+  public List<ActionData> getActionField(String fieldName) {return actionField_.get(fieldName) ;}
+  
   public String[] getListLanguage(){return LIST_LANGUAGE.toArray(new String[]{}) ; }
   
   public void setListLanguage(List<String> listLanguage) {
@@ -170,6 +210,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   }
 	
 	static public class SaveActionListener extends EventListener<UIQuestionForm> {
+    @SuppressWarnings("static-access")
     public void execute(Event<UIQuestionForm> event) throws Exception {
 			UIQuestionForm questionForm = event.getSource() ;			
       DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
@@ -195,12 +236,14 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         question = new Question() ;
         question.setCategoryId(questionForm.getCategoryId()) ;
         question.setRelations(new String[]{}) ;
-        question.setResponses(new String()) ;
+        question.setResponses(" ") ;
       }
       question.setAuthor(author) ;
       question.setEmail(emailAddress) ;
       question.setQuestion(listQuestionContent.get(0)) ;
       question.setCreatedDate(date) ;
+      question.setAttachMent(questionForm.listFileAttach_) ;
+      
       if(questionForm.questionId == null || questionForm.questionId.trim().length() < 1) {
         fAQService.saveQuestion(question, true, FAQUtils.getSystemProvider()) ;
       } else {
@@ -210,7 +253,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      questions.setListQuestion() ;
+      if(!questions.getIsViewQuesNotYetAnswer()) {
+        questions.setListQuestion() ;
+      }  else {
+        questions.setListQuestion(fAQService.getQuestionsNotYetAnswer(FAQUtils.getSystemProvider()).getAll()) ;
+      }
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -234,12 +281,26 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
 	    UIQuestionForm questionForm = event.getSource() ;			
       UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      //UIAttachFileForm attachFileForm = uiChildPopup.activate(UIAttachFileForm.class, 500) ;
-      UILanguageForm attachFileForm = uiChildPopup.activate(UILanguageForm.class, 500) ;
-      //attachFileForm.updateIsTopicForm(true) ;
+      UIAttachMentForm attachMentForm = uiChildPopup.activate(UIAttachMentForm.class, 500) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 	  }
 	}
+  
+  static public class RemoveAttachmentActionListener extends EventListener<UIQuestionForm> {
+    @SuppressWarnings("static-access")
+    public void execute(Event<UIQuestionForm> event) throws Exception {
+      UIQuestionForm questionForm = event.getSource() ;
+      String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
+      System.out.println("\n\n\n\nRemoveAttachmentActionListener ----> fileId: " + attFileId);
+      for (FileAttachment att : questionForm.listFileAttach_) {
+        if (att.getId().equals(attFileId)) {
+          questionForm.listFileAttach_.remove(att) ;
+          break;
+        }
+      }
+      questionForm.refreshUploadFileList() ;
+    }
+  }
   
 	static public class CancelActionListener extends EventListener<UIQuestionForm> {
     public void execute(Event<UIQuestionForm> event) throws Exception {

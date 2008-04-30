@@ -107,6 +107,14 @@ public interface FAQService {
   public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
+   * 1. Lookup all questions node have property response is null (have not yet answer)
+   * 2. Convert to list of question object and return
+   * @return List of question
+   * @throws Exception
+   */
+  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception ;
+  /**
+   * This method should:
    * 1. Lookup questions node via category identify
    * 2. Convert to list of question object
    * @param Category identify

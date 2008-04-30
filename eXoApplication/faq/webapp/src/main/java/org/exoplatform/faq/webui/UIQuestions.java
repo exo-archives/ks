@@ -21,6 +21,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
@@ -85,9 +86,11 @@ public class UIQuestions extends UIContainer {
   public static String newPath_ = "" ;
   private String[] firstTollbar = new String[]{"AddCategory","ShowQuestionNotYetAnswer", "Setting"} ;
   private String[] secondTollbar = new String[]{"SubCategory", "AddNewQuestion", "Setting"} ; 
+  private boolean isViewQuesNotYetAnswer = false ;
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIQuestions()throws Exception {
 	  this.categoryId = new String() ;
+    this.isViewQuesNotYetAnswer = false ;
 		setCategories() ;
 	}
   
@@ -117,6 +120,14 @@ public class UIQuestions extends UIContainer {
   @SuppressWarnings("unused")
   private String getParentId(){
     return this.parentId_ ;
+  }
+  
+  public boolean getIsViewQuesNotYetAnswer() {
+    return this.isViewQuesNotYetAnswer ;
+  }
+  
+  public void setIsViewQuesNotYetAnswer(boolean isView) {
+    this.isViewQuesNotYetAnswer = isView ;
   }
   
   public void setParentId(String parentId_) {
@@ -152,6 +163,10 @@ public class UIQuestions extends UIContainer {
     this.categories_.clear() ;
     this.categories_ = faqService.getSubCategories(categoryId, sessionProvider) ;
     this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId, sessionProvider).getAll() ;
+  }
+  
+  public void setListQuestion(List<Question> listQuestion) {
+    this.listQuestion_ = listQuestion ;
   }
   
   public void setList(String category) throws Exception {
@@ -232,8 +247,16 @@ public class UIQuestions extends UIContainer {
   
 	static  public class ShowQuestionNotYetAnswerActionListener extends EventListener<UIQuestions> {
 	  public void execute(Event<UIQuestions> event) throws Exception {
-	    System.out.println("\n\n ShowQuestionNotYetAnswerActionListener");
-	    UIQuestions question = event.getSource() ; 
+	    UIQuestions questions = event.getSource() ; 
+      if(!questions.getIsViewQuesNotYetAnswer()) {
+        questions.setIsViewQuesNotYetAnswer(true) ;
+        questions.setListQuestion(faqService.getQuestionsNotYetAnswer(FAQUtils.getSystemProvider()).getAll()) ;
+        questions.setCategoryId(null) ;
+      } else {
+        questions.setIsViewQuesNotYetAnswer(false) ;
+      }
+      UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 	  }
 	}
   
@@ -434,6 +457,9 @@ public class UIQuestions extends UIContainer {
       } else {
         uiQuestions.questionView_ = "" ;
       }
+      
+      UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 	  }
 	}
   

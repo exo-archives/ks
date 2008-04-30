@@ -48,6 +48,10 @@ public class FAQServiceImpl implements FAQService{
 	public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
 		return jcrData_.getAllQuestions(sProvider);
 	}
+  
+	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
+	  return jcrData_.getQuestionsNotYetAnswer(sProvider);
+	}
 
 	public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getCategoryById(categoryId, sProvider);

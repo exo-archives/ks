@@ -18,8 +18,10 @@
 package org.exoplatform.faq.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Iterator;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
@@ -32,9 +34,11 @@ import javax.jcr.query.QueryResult;
 
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.service.BufferAttachment;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
@@ -101,7 +105,33 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:isActivated", question.isActivated()) ;
   	questionNode.setProperty("exo:isApproved", question.isApproved()) ;
   	questionNode.setProperty("exo:responses", question.getResponses()) ;
-  	questionNode.setProperty("exo:relatives", question.getRelations()) ;  	
+  	questionNode.setProperty("exo:relatives", question.getRelations()) ;
+    long numberAttach = 0 ;
+    List<FileAttachment> listFileAtt = question.getAttachMent() ;
+    if(!listFileAtt.isEmpty()) { 
+      Iterator<FileAttachment> it = listFileAtt.iterator();
+      while (it.hasNext()) {
+        ++ numberAttach ;
+        BufferAttachment file = null;
+        try {
+          file = (BufferAttachment)it.next();
+          Node nodeFile = null;
+          if (!questionNode.hasNode(file.getName())) nodeFile = questionNode.addNode(file.getName(), "nt:file");
+          else nodeFile = questionNode.getNode(file.getName());
+          Node nodeContent = null;
+          if (!nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
+          else {
+            continue ;
+            //nodeContent = nodeFile.getNode("jcr:content");
+          }
+          nodeContent.setProperty("jcr:mimeType", file.getMimeType());
+          nodeContent.setProperty("jcr:data", file.getInputStream());
+          nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+        } catch (Exception e) {
+          //e.printStackTrace() ;
+        }
+      }
+    }
   	
   }
   
@@ -164,6 +194,17 @@ public class JCRDataStorage {
     StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
                                                 + "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
 //    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    return pageList ;
+  }
+  
+  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+        + "//element(*,exo:faqQuestion)[@exo:responses=' ']").append("order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;

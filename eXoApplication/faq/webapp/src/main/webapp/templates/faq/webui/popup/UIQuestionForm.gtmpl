@@ -39,7 +39,7 @@
 											<table class="ActionContainer" align="center" width="100%">
 												<tr>
 													<td align="left" width="70%" style="vertical-align: middle; padding-left: 5px;">
-														<% uiform.renderField(field) %>
+														<%uiform.renderField(field)%><br>
 													</td>
 													<td align="right" width="30%" class="UIAction" valign="top">
 														<a href="$link" class="ActionButton LightBlueStyle">

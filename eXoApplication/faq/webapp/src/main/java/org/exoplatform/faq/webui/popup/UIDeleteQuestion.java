@@ -83,7 +83,11 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
       UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      questions.setListQuestion() ;
+      if(!questions.getIsViewQuesNotYetAnswer()) {
+        questions.setListQuestion() ;
+      }  else {
+        questions.setListQuestion(deleteQuestion.faqService.getQuestionsNotYetAnswer(FAQUtils.getSystemProvider()).getAll()) ;
+      }
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

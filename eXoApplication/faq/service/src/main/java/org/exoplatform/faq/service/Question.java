@@ -16,7 +16,9 @@
  **/
 package org.exoplatform.faq.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
@@ -36,8 +38,9 @@ public class Question {
   private boolean isApproved = true ;
   private Date createdDate ;
   private String categoryId ;
-  private String responses ;
+  private String responses = null;
   private String[] relations ;
+  private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
   
   
   public Question() {
@@ -73,4 +76,7 @@ public class Question {
   
 	public void setCategoryId(String catId) { this.categoryId = catId ; }
 	public String getCategoryId() { return categoryId; }
+  
+  public void setAttachMent(List<FileAttachment> listFile) { this.listAttachments = listFile ; }
+  public List<FileAttachment> getAttachMent(){return this.listAttachments ; }
 }

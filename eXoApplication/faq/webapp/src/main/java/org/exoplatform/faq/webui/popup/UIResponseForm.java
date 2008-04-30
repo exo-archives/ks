@@ -91,7 +91,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private List<SelectItemOption<String>> listLanguage =  new ArrayList<SelectItemOption<String>>() ;
   private List<SelectItemOption<String>> listRelation =  new ArrayList<SelectItemOption<String>>() ;
   private List<String> listQuestIdRela = new ArrayList<String>() ;
-  private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
+  private static List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
   // form variable:
   private List<String> listLanguageToReponse = new ArrayList<String>() ;  
   
@@ -167,6 +167,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     addChild(inputAttachment_) ;
     addChild(questionRelation_) ;
     addChild(checkShowAnswer_) ;
+    
+    this.setListFileAttach(question.getAttachMent()) ;
   }
   
   public List<ActionData> getUploadFileList() { 
@@ -190,6 +192,20 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     }
     return uploadedFiles ;
   }
+  
+
+  public void setListFileAttach(List<FileAttachment> listFileAttachment){
+    listFileAttach_ = listFileAttachment ;
+  }
+  
+  public void setListFileAttach(FileAttachment fileAttachment){
+    listFileAttach_.add(fileAttachment) ;
+  }
+  
+  public void refreshUploadFileList() throws Exception {
+    ((UIFormInputWithActions)this.getChildById(ATTATCH_MENTS)).setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
+  }
+  
   // set and get quetsion info:
   private void setListLanguage() {
     listLanguage.add(new SelectItemOption<String>("English","English")) ;
@@ -267,16 +283,23 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       // set show question:
       question.setActivated((Boolean) response.getUIFormCheckBoxInput(SHOW_ANSWER).getValue()) ;
+      
+      question.setAttachMent(listFileAttach_) ;
+      
       faqService.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
       
       //cancel
       UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      questions.setListQuestion() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+      if(!questions.getIsViewQuesNotYetAnswer()) {
+        questions.setListQuestion() ;
+      }  else {
+        questions.setListQuestion(faqService.getQuestionsNotYetAnswer(FAQUtils.getSystemProvider()).getAll()) ;
+      }
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
     }
   }
   static public class AddLanguageActionListener extends EventListener<UIResponseForm> {
@@ -316,8 +339,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       //UIAttachFileForm attachFileForm = uiChildPopup.activate(UIAttachFileForm.class, 500) ;
-      @SuppressWarnings("unused")
-      UILanguageForm attachFileForm = uiChildPopup.activate(UILanguageForm.class, 500) ;
+      UIAttachMentForm attachMentForm = uiChildPopup.activate(UIAttachMentForm.class, 500) ;
+      attachMentForm.setResponse(true) ;
       //attachFileForm.updateIsTopicForm(true) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
