@@ -1004,7 +1004,7 @@ public class UITopicDetail extends UIForm {
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
 			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
-			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			message = message.replaceAll("<", "&lt;").replaceAll(">", "&gt;") ;
 			String userName = topicDetail.userProfile.getUserId() ;
 			int t = checksms.trim().length() ;
 			if(t > 3 && !checksms.equals("null")) {
@@ -1033,7 +1033,7 @@ public class UITopicDetail extends UIForm {
 			UITopicDetail topicDetail = event.getSource() ;	
 			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
-			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			message = message.replaceAll("<", "&lt;").replaceAll(">", "&gt;") ;
 			String userName = topicDetail.userProfile.getUserId() ;
 			int t = checksms.trim().length() ;
 			if(t > 3 && !checksms.equals("null")) {
