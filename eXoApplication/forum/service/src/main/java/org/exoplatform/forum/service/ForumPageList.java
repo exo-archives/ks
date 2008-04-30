@@ -27,9 +27,9 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+//import org.exoplatform.container.PortalContainer;
+//import org.exoplatform.services.jcr.RepositoryService;
+//import org.exoplatform.services.jcr.ext.common.SessionProvider;
 /**
  * @author Hung Nguyen (hung.nguyen@exoplatform.com)
  * @since July 25, 2007
@@ -39,14 +39,16 @@ public class ForumPageList extends JCRPageList {
 	private NodeIterator iter_ = null ;
 	private boolean isQuery_ = false ;
 	private String value_ ;
+	private Node rootNode_;
 	
-	public ForumPageList(NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
+	public ForumPageList(Node rootNode, NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
 		super(pageSize) ;
 		iter_ = iter ;
 		value_ = value ;
 		isQuery_ = isQuery ;
+		rootNode_ = rootNode ;
 		if(iter_ == null) {
-			iter_ = setQuery(isQuery_, value_) ;
+			iter_ = setQuery(rootNode, isQuery_, value_) ;
 		}
 		if(iter_ != null)setAvailablePage(iter_.getSize()) ;		
 	}
@@ -54,7 +56,7 @@ public class ForumPageList extends JCRPageList {
 	@SuppressWarnings("unchecked")
 	protected void populateCurrentPage(long page) throws Exception	{
 		if(iter_ == null) {
-			iter_ = setQuery(isQuery_, value_) ;
+			iter_ = setQuery(rootNode_, isQuery_, value_) ;
 		}
 		if(iter_ != null)setAvailablePage(iter_.getSize()) ;
 		Node currentNode ;
@@ -89,8 +91,8 @@ public class ForumPageList extends JCRPageList {
 		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
 	}
 	
-	private NodeIterator setQuery(boolean isQuery, String value) throws Exception {
-		Session session = this.getJCRSession() ;
+	private NodeIterator setQuery(Node rootNode, boolean isQuery, String value) throws Exception {
+		Session session = rootNode.getSession() ;
 		NodeIterator iter ;
 		if(isQuery) {
 			QueryManager qm = session.getWorkspace().getQueryManager() ;
@@ -242,12 +244,11 @@ public class ForumPageList extends JCRPageList {
 		return Str;
 	}
 	
-	private Session getJCRSession() throws Exception {
-    RepositoryService  repositoryService = (RepositoryService)PortalContainer.getComponent(RepositoryService.class) ;
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
-    String defaultWS = 
-      repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
-    return sessionProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
-  }
+//	private Session getJCRSession(SessionProvider sProvider) throws Exception {
+//    RepositoryService  repositoryService = (RepositoryService)PortalContainer.getComponent(RepositoryService.class) ;
+//    String defaultWS = 
+//      repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
+//    return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
+//  }
 
 }
