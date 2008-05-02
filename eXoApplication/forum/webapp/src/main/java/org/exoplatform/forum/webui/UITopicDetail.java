@@ -477,7 +477,7 @@ public class UITopicDetail extends UIForm {
 			postForm.updatePost("", false, null) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIAddPostContainer") ;
-			popupAction.activate(popupContainer, 670, 440) ;
+			popupAction.activate(popupContainer, 700, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -595,7 +595,7 @@ public class UITopicDetail extends UIForm {
 			postForm.updatePost(postId, false, topicDetail.getPost(postId)) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIEditPostContainer") ;
-			popupAction.activate(popupContainer, 670, 440) ;
+			popupAction.activate(popupContainer, 700, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -622,7 +622,7 @@ public class UITopicDetail extends UIForm {
 			postForm.updatePost(postId, true, topicDetail.getPost(postId)) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIQuoteContainer") ;
-			popupAction.activate(popupContainer, 670, 440) ;
+			popupAction.activate(popupContainer, 700, 460) ;
 			//topicDetail.getChild(UIForumPageIterator.class).setSelectPage(topicDetail.pageList.getAvailablePage()) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
@@ -638,7 +638,7 @@ public class UITopicDetail extends UIForm {
 			topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId) ;
 			topicForm.setUpdateTopic(topicDetail.topic, true) ;
 			popupContainer.setId("UIEditTopicContainer") ;
-			popupAction.activate(popupContainer, 662, 466) ;
+			popupAction.activate(popupContainer, 700, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			topicDetail.isEditTopic = true ;
 		}

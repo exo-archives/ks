@@ -37,6 +37,7 @@ public class UserProfile {
 	private String[] moderateForums ; //store Ids of forum this user is moderator
 	private String[] moderateTopics ; //store Ids of topic this user is moderator
 	private String[] readTopic ;
+	private String[] bookmark ;
 	
 	private Date lastLoginDate = new Date();
 	private Date lastPostDate;
@@ -68,6 +69,7 @@ public class UserProfile {
 		moderateForums = new String[] {} ;
 		moderateTopics = new String[] {} ;
 		readTopic = new String[] {} ;
+		bookmark = new String[] {} ;
 		banReasonSummary = new String[] {} ;
 		Date dateHost = new Date() ;
 		timeZone = (double)dateHost.getTimezoneOffset()/ 60 ;
@@ -156,5 +158,8 @@ public class UserProfile {
 
   public void setUser(User user) {this.user = user;}
   public User getUser() {return user; }
+
+	public String[] getBookmark() {return bookmark;}
+	public void setBookmark(String[] bookmark) {this.bookmark = bookmark;}
 
 }

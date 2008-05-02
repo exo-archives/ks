@@ -354,7 +354,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
 			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
 			popupContainer.setId("UIAddTopicContainer") ;
-			popupAction.activate(popupContainer, 670, 440) ;
+			popupAction.activate(popupContainer, 670, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -537,7 +537,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
 				topicForm.setUpdateTopic(topic, true) ;
 				popupContainer.setId("UIEditTopicContainer") ;
-				popupAction.activate(popupContainer, 670, 440) ;
+				popupAction.activate(popupContainer, 670, 460) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };

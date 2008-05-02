@@ -1,0 +1,95 @@
+.UIShowBookMarkForm {
+
+}
+.UIShowBookMarkForm .HorizontalLayout {
+	margin: 10px;
+	background: #F4F4F4;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .UIFormInput{
+	border: solid 1px #F4F4F4;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .TopContent{
+	background: #D1D2FE ;
+	height: 22px;
+	line-height: 22px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .LinkContent{
+	line-height: 22px;
+	text-align: left;
+	border-top: solid 1px #E4E4E4;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .IconContent {
+	width: 80px;
+	border-right: solid 1px #E4E4E4;
+	height: 22px;
+	float: left ;
+	background-position: center;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .LinkName {
+	width: 280px;
+	border-right: solid 1px #E4E4E4;
+	height: 22px;
+	float: left ;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .LinkName a{
+	padding-left: 5px;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .DeleteAction {
+	width: 80px;
+	height: 22px;
+	float: left ;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .TopContent .DeleteAction {
+	width: 100px;
+	text-align: right;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .IconDelete {
+	width: 24px; 
+	margin:2px auto 0px auto;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .IconDelete .DeleteIcon {
+	width: 24px;
+	height: 16px; 
+	background-position: right;
+}
+
+.UIShowBookMarkForm .HorizontalLayout .UIListContainer {
+	max-height: 235px;
+	width: 100%;
+	overflow: auto;
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

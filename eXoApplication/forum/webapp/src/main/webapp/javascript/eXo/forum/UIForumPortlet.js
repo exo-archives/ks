@@ -268,7 +268,7 @@ UIForumPortlet.prototype.goLastPost = function(idLastPost) {
 			}
 		} else {
 			var obj = document.getElementById(idLastPost);
-			obj.scrollIntoView(true);
+			if(obj)obj.scrollIntoView(true);
 		}
 	}
 };
@@ -385,6 +385,20 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 				}
 			}
 		}
+		var closeButton = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
+		if(closeButton) {
+			var newDiv = eXo.core.DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
+			if(!newDiv)newDiv = document.createElement("div");
+			closeButton.appendChild(newDiv);
+			newDiv.style.width = "16px";
+			newDiv.style.height = "16px";
+			newDiv.className = "ClosePopup";
+			newDiv.innerHTML = '<span></span>' ;
+			newDiv.onclick = function(){
+				masklayer.style.width = "auto";
+				masklayer.style.height = "auto";
+			}
+		}
 	}
 };
 
@@ -400,6 +414,21 @@ UIForumPortlet.prototype.resetFielForm = function(idElm) {
 	var inputs = elm.getElementsByTagName("input") ;
 	for(var i=0; i<inputs.length; i++) {
 		inputs[i].value = "" ;
+	}
+};
+
+UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
+	var ancestor= document.getElementById(elmId);
+	var DOMUtil = eXo.core.DOMUtil ;
+	var popupContents= DOMUtil.findDescendantsByClass(ancestor, "div","ClickPopupContent");
+	var popupContainer = document.getElementById('RightClickContainer') ;
+	var itemmenu = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "MenuItem") ;
+//	alert(test.getAttribute('action'));
+	for(var i = 0; i < popupContents.length; i++){
+		var action = popupContents[i].getAttribute('action');
+		itemmenu.href= action ;
+		//alert(popupContainer.innerHTML);
+		popupContents[i].innerHTML = popupContainer.innerHTML;
 	}
 };
 

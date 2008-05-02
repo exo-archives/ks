@@ -103,8 +103,9 @@ public class UISearchForm extends UIForm {
 		UIFormStringInput searchValue = new UIFormStringInput(FIELD_SEARCHVALUE_INPUT, FIELD_SEARCHVALUE_INPUT, null) ;
 		UIFormStringInput searchUser = new UIFormStringInput(FIELD_SEARCHUSER_INPUT, FIELD_SEARCHUSER_INPUT, null) ;
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>("Category", "forumCategory")) ;
 		list.add(new SelectItemOption<String>("Forum", "forum")) ;
-		list.add(new SelectItemOption<String>("Topic", "topic")) ;
+		list.add(new SelectItemOption<String>("Thread", "topic")) ;
 		list.add(new SelectItemOption<String>("Post", "post")) ;
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
@@ -174,11 +175,14 @@ public class UISearchForm extends UIForm {
 	  this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type) ;
   }
 	
-	public void setValueOnchange(boolean isLastDate, boolean islock, boolean isTopicCount, boolean isPostCount, boolean isViewCount, boolean isModerator){
+	public void setValueOnchange(boolean isLastDate, boolean islock, boolean isClose, boolean isTopicCount, boolean isPostCount, boolean isViewCount, boolean isModerator){
 		UIFormDateTimeInput fromDateCreatedLastPost = getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setRendered(isLastDate) ;
 		UIFormDateTimeInput toDateCreatedLastPost   = getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(isLastDate) ;
 		UIFormSelectBox isLock   = getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setRendered(islock);
-		UIFormSelectBox isClosed = getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(getIsAdmin());
+		if(isClose) {
+			isClose = getIsAdmin();
+		}
+		UIFormSelectBox isClosed = getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(isClose);
 		UIFormStringInput topicCountMin = getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).setRendered(isTopicCount);
 		UIFormStringInput topicCountMax = getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setRendered(isTopicCount);
 		UIFormStringInput postCountMax  = getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(isPostCount);
@@ -290,12 +294,11 @@ public class UISearchForm extends UIForm {
 			UISearchForm uiForm = event.getSource() ;
 			String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
 			if(type.equals("forum")) {
-				uiForm.setValueOnchange(false, true, true, true, false, true) ;
+				uiForm.setValueOnchange(false, true, true, true, true, false, true) ;
 			} else if(type.equals("topic")){
-				uiForm.setValueOnchange(true, true, false, true, true, false) ;
+				uiForm.setValueOnchange(true, true, true, false, true, true, false) ;
 			} else {
-				uiForm.setValueOnchange(false, false, false, false, false, false) ;
-				uiForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(false);
+				uiForm.setValueOnchange(false, false, false, false, false, false, false) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
@@ -304,8 +307,8 @@ public class UISearchForm extends UIForm {
 	static	public class ResetFieldActionListener extends EventListener<UISearchForm> {
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
-			uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue("forum");
-			uiForm.setValueOnchange(false, true, true, true, false, true) ;
+			uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue("forumCategory");
+			uiForm.setValueOnchange(false, false, false, false, false, false, false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}

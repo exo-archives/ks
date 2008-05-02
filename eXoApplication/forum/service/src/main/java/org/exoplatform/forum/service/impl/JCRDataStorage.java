@@ -1377,6 +1377,7 @@ public class JCRDataStorage{
 				if(newProfileNode.hasProperty("exo:moderateForums"))userProfile.setModerateForums(ValuesToStrings(newProfileNode.getProperty("exo:moderateForums").getValues()));
 				if(newProfileNode.hasProperty("exo:moderateTopics"))userProfile.setModerateTopics(ValuesToStrings(newProfileNode.getProperty("exo:moderateTopics").getValues()));
 				if(newProfileNode.hasProperty("exo:readTopic"))userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
+				if(newProfileNode.hasProperty("exo:bookmark"))userProfile.setBookmark(ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues()));
 				
 				if(newProfileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
@@ -1426,6 +1427,7 @@ public class JCRDataStorage{
 				if(newProfileNode.hasProperty("exo:totalPost"))userProfile.setTotalPost(newProfileNode.getProperty("exo:totalPost").getLong());
 				if(newProfileNode.hasProperty("exo:totalTopic"))userProfile.setTotalTopic(newProfileNode.getProperty("exo:totalTopic").getLong());
 				if(newProfileNode.hasProperty("exo:readTopic"))userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
+				if(newProfileNode.hasProperty("exo:bookmark"))userProfile.setBookmark(ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues()));
 				if(newProfileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:isDisplaySignature"))userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
@@ -1500,6 +1502,54 @@ public class JCRDataStorage{
 			userProfileNode.getSession().save() ;
 		}
   }
+	
+	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		Node newProfileNode ;
+		try {
+			newProfileNode = userProfileNode.getNode(userName) ;
+			if(newProfileNode.hasProperty("exo:bookmark")) {
+				String [] temp = ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues());
+				String [] bookMarks ;
+				if(isNew) bookMarks = new String[temp.length + 1];
+				else bookMarks = new String[temp.length - 1] ;
+				boolean isWrite = true ;
+				String pathNew =  bookMark.substring(bookMark.lastIndexOf("//")+1) ;
+				String pathOld = "";
+				int j = 0;
+				for (int i = 0; i < temp.length; i++) {
+					pathOld = temp[i].substring(temp[i].lastIndexOf("//")+1) ;
+					if(pathNew.equals(pathOld)) {
+						if(isNew) {temp[i] = bookMark ;isWrite = false ; break;}
+						else {isWrite = false ; continue ;}
+					}
+					if(!isNew && j == temp.length-1) {isWrite = false; break;}
+					bookMarks[j] = temp[i];
+					++j;
+	      }
+				if(isNew) {
+					if(isWrite) {
+						bookMarks[temp.length] = bookMark ;
+						newProfileNode.setProperty("exo:bookmark", bookMarks);
+					}else {
+						newProfileNode.setProperty("exo:bookmark", temp);
+					}
+				}else {
+					if(!isWrite)newProfileNode.setProperty("exo:bookmark", bookMarks);
+				}
+				userProfileNode.getSession().save() ;
+			} else {
+				newProfileNode.setProperty("exo:bookmark", new String[]{bookMark});
+				userProfileNode.getSession().save() ;
+			}
+		}catch (PathNotFoundException e) {
+			newProfileNode = userProfileNode.addNode(userName, "exo:userProfile") ;
+			newProfileNode.setProperty("exo:userId", userName);
+			newProfileNode.setProperty("exo:userTitle", "User");
+			newProfileNode.setProperty("exo:bookmark", new String[]{bookMark});
+			userProfileNode.getSession().save() ;
+		}	
+	}
 	
 	private void saveUserReadTopic(SessionProvider sProvider, String userName, String topicId) throws Exception {
 		Node userProfileNode = getUserProfileNode(sProvider) ;
@@ -1724,10 +1774,12 @@ public class JCRDataStorage{
 				forumSeach.setId(nodeObj.getName());
 				forumSeach.setName(nodeObj.getProperty("exo:name").getString());
 				forumSeach.setType(type);
-				if(!type.equals("forum")){
-					forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
-				}else{
+				if(type.equals("forum")){
 					forumSeach.setIcon("ForumNormalIcon");
+				}else if(!type.equals("forumCategory")){
+					forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
+				} else {
+					forumSeach.setIcon("icon");
 				}
 				forumSeach.setType(type);
 				forumSeach.setPath(nodeObj.getPath()) ;
@@ -1760,10 +1812,12 @@ public class JCRDataStorage{
 				forumSeach.setId(nodeObj.getName());
 				forumSeach.setName(nodeObj.getProperty("exo:name").getString());
 				forumSeach.setType(type);
-				if(!type.equals("forum")){
-					forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
-				}else{
+				if(type.equals("forum")){
 					forumSeach.setIcon("ForumNormalIcon");
+				}else if(!type.equals("forumCategory")){
+					forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
+				} else {
+					forumSeach.setIcon("icon");
 				}
 				forumSeach.setType(type);
 				forumSeach.setPath(nodeObj.getPath()) ;

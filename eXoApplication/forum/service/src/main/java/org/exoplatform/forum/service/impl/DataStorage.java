@@ -91,6 +91,7 @@ public interface DataStorage {
 	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception ;
 	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan) throws Exception ;
 	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception ;
+	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception ;
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception ;
 	
 	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception ;

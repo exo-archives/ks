@@ -26,7 +26,7 @@
 	  		if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
 		%>
 	    <div class="Node $iconClass">
-	     	<div class="Icon ForumIcon"><span></span></div>  
+	     	<div class="Icon CategoryNormalIcon"><span></span></div>  
 	     	<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
 	     		<div class="NodeSelected"><a>$categoryName</a></div> 
 	      </div> 		  

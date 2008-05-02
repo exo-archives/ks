@@ -114,8 +114,8 @@
 	background: url('icons/EditPollIcon.gif')  no-repeat left center;
 }
 
-.UIForumPortlet .ForumIcon {
-	background: url('icons/ForumIcon.gif') no-repeat left center;
+.UIForumPortlet .CategoryNormalIcon {
+	background: url('icons/CategoryNormalIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet .ThreadsIcon {
@@ -357,4 +357,8 @@
 
 .UIForumPortlet .ApproveIcons {
 	background: url('icons/ApproveTopicsIcon.gif') no-repeat left center;
+}
+
+.UIForumPortlet .DeleteIcon {
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/DustBin.gif') no-repeat left center;
 }

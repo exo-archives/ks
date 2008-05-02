@@ -215,6 +215,10 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getUserInfo(sProvider, userName);
 	}
 
+	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {
+		storage_.saveUserBookmark(sProvider, userName, bookMark, isNew);
+	}
+	
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider)throws Exception {
 	  return storage_.getPageListUserProfile(sProvider);
   }

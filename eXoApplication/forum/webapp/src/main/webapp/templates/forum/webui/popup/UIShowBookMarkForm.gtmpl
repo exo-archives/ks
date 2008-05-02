@@ -1,0 +1,55 @@
+<div class="UIShowBookMarkForm">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<div class="TopContent">
+					<div class="IconContent"><span></span></div>
+					<div class="LinkName">Link Name</div>
+					<div class="DeleteAction">Delete Action</div>
+					<div style="clear: left;"><span></span></div>
+				</div>
+				<div class="UIListContainer">
+				<% 
+					String linkName = ""; 
+					String linkPath = "";
+					String icon = ""; 
+					int index = 0;
+					for(links in uiform.getBookMark()){
+						index = links.indexOf("//") ;
+						icon = links.substring(0, index);
+						linkName = links.substring(index+2,links.lastIndexOf("//")-1);
+						linkPath = links.substring(links.lastIndexOf("//") + 1);
+				%>
+					<div class="LinkContent">
+						<div class="IconContent $icon"><span></span></div>
+						<div class="LinkName"><a href="<%=uiform.event("OpenLink",linkPath);%>">$linkName</a></div>
+						<div class="DeleteAction">
+							<div class="IconDelete">
+								<a href="<%=uiform.event("DeleteLink",links);%>">
+									<div class="DeleteIcon"><span></span></div>
+								</a>
+							</div>
+						</div>
+						<div style="clear: left;"><span></span></div>
+					</div>
+				<% } %>
+				</div>
+			</div>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+						<a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">Cancel</div>
+								</div>
+							</div>
+						</a>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
+</div>

@@ -46,6 +46,7 @@ import org.exoplatform.webui.event.EventListener;
 		events = {
 			@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
 			@EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
+			@EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
 			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class)
 		}
 )
@@ -57,6 +58,7 @@ public class UICategories extends UIContainer	{
 	private Map<String, Forum> AllForum = new HashMap<String, Forum>() ;
 	private boolean isGetForumList = false ;
   private boolean isRenderChild = false ;
+  private UserProfile userProfile ;
 	public UICategories() throws Exception {
 		addChild(UIForumListSeach.class, null, null).setRendered(isRenderChild) ;
 	}
@@ -70,7 +72,8 @@ public class UICategories extends UIContainer	{
 	
 	@SuppressWarnings({ "deprecation", "unused" })
   private UserProfile getUserProfile() {
-		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		return this.userProfile ;
 	}
 	
 	//Function Public getObject 
@@ -232,6 +235,20 @@ public class UICategories extends UIContainer	{
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
 			categories.maptopicLast.clear() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+	
+	static public class AddBookMarkActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String userName = uiContainer.userProfile.getUserId() ;
+			if(path != null && path.trim().length() > 0) {
+				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
+				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.setUserProfile() ;
+//				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			}
 		}
 	}
 }

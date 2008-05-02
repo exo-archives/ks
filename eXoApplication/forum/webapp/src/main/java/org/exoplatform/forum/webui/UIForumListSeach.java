@@ -67,7 +67,14 @@ public class UIForumListSeach extends UIContainer {
     	String path = objId[1];
     	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
     	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-    	if(type.equals("forum")) {
+    	if(type.equals("forumCategory")) {
+    		String categoryId = path.substring(path.lastIndexOf("/")+1) ;
+    		UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.getChild(UICategory.class).updateByBreadcumbs(categoryId) ;
+				categoryContainer.updateIsRender(false) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(categoryId);
+				forumPortlet.updateIsRendered(1);
+    	} else if(type.equals("forum")) {
     		String []id = path.split("/") ;
     		int length = id.length ;
     		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;

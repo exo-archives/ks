@@ -44,6 +44,19 @@
 							</div>
 						</a>
 					</div>
+					<div class="DefaultStyle ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+						<a href="<%=uicomponent.event("OpenBookMark")%>">
+							<div class="LeftOverButton">
+								<div class="RightOverButton">
+									<div class="CenterOverButton">
+										<div class="Icon ForumOption">
+											Book Mark
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+					</div>
 					<div style="float:right;"> 
 					<%  
 						uicomponent.renderChildren() ;

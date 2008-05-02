@@ -16,7 +16,7 @@
 		  	String link = uicomponent.event("Save", category.getPath());
 		%>
 	    <div class="Node">
-	     	<div class="Icon ForumIcon"><span></span></div>
+	     	<div class="Icon CategoryNormalIcon"><span></span></div>
 	     	<div class="NodeLabel">
 	     		<div class="NodeSelected"><a href="$link">$categoryName</a></div>
 	      </div>

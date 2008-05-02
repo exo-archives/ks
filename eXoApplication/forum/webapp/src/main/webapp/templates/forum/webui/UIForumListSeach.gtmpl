@@ -23,9 +23,14 @@
 						else classRow = "OddRow";
 						String classIcon = seachEvent.getIcon();
 						String objId = seachEvent.getType() + "," + seachEvent.getPath();
+						String type = seachEvent.getType() ;
+						if(type.equals("forum")) type = "Forum";
+						else if(type.equals("topic")) type = "Thread";
+						else if(type.equals("post")) type = "Post";
+						else type = "Category" ;
 			  %>
 			  	<tr class="$classRow">
-			  		<td class="Tdbox"><div class="" title=""><%=seachEvent.getType()%></div></td>
+			  		<td class="Tdbox"><div class="" title=""><%=type%></div></td>
 						<td class="Tdbox $classIcon">&nbsp;</td>
 						<td class="Tdbox"><a class="" href="<%=uicomponent.event("OpentContent",objId);%>"><%=seachEvent.getName()%></a></td>
 			  	</tr>
