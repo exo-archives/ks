@@ -70,10 +70,12 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UICategory.MoveForumActionListener.class),
 				@EventConfig(listeners = UICategory.RemoveForumActionListener.class),
 				@EventConfig(listeners = UICategory.OpenForumLinkActionListener.class),
-				@EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class)
+				@EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class),
+				@EventConfig(listeners = UICategory.AddBookMarkActionListener.class)
 		}
 )
 public class UICategory extends UIForm	{
+	private UserProfile userProfile ;
 	private String categoryId ;
 	private Category category ;
 	private boolean	isEditCategory = false ;
@@ -86,7 +88,8 @@ public class UICategory extends UIForm	{
 	}
 	
 	private UserProfile getUserProfile() {
-		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		return this.userProfile ;
 	}
 	
 	public void update(Category category, List<Forum> forums) throws Exception {
@@ -496,6 +499,19 @@ public class UICategory extends UIForm	{
 				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
 			}
 			
+		}
+	}
+	
+	static public class AddBookMarkActionListener extends EventListener<UICategory> {
+		public void execute(Event<UICategory> event) throws Exception {
+			UICategory uiContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String userName = uiContainer.userProfile.getUserId() ;
+			if(path != null && path.trim().length() > 0) {
+				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
+				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.setUserProfile() ;
+			}
 		}
 	}
 }

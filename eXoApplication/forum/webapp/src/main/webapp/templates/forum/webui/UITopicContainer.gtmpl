@@ -8,6 +8,11 @@
 	import org.exoplatform.forum.ForumSessionUtils; 
 	import org.exoplatform.forum.service.UserProfile ;
 	import java.util.GregorianCalendar;
+	import org.exoplatform.web.application.JavascriptManager;
+  def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicContainer') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
 %>
 <%	
 	Forum forum = uicomponent.getForum() ;
@@ -370,6 +375,7 @@
 						<tbody>
 							<% 
 							boolean isCanView = true ;
+							int rCNB = 0;
 							if(!canEdit)isCanView = uicomponent.getCanViewThread() ;
 							if(isCanView) {
 								List topics = uicomponent.getTopicPageLits() ;
@@ -424,6 +430,8 @@
 										if(canEdit && isApproveTopic){
 											if(!topic.getIsApproved()) approved = "(<span style='color:#f77617;'>This thread is pending for approval !</span>)" ;
 										}
+										
+										String actionBookmark = uicomponent.event("AddBookMark",iconClassTopic+"//"+topicTitle+"//"+topic.getPath());
 								%>
 									<tr class="$classRow">
 										<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
@@ -433,7 +441,15 @@
 											<% if(topic.getIsSticky()) {%>
 												<span class="Text StickyIcon">Sticky:</span>
 											<% } %>
-												<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
+												<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+													<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
+													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
+														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+															<div action="$actionBookmark" class="ClickPopupContent"></div>
+														</div>
+												  </div>
+												</div>
+												  <% ++rCNB; %>
 												<% if(max_page > 1) { %>
 												<span>(</span>	
 												<%	int t = 1;
@@ -601,5 +617,33 @@
 		<div style="clear: left;"><span></span></div>
 		
 	</div>
+	<% //Begin RightClick Bookmark  %>
+	<div id="RightClickContainer" style="display: none;">
+		<div class="UIContextMenuContainer">
+			<div class="TopLeftRightClickPopupMenu">
+				<div class="TopRightRightClickPopupMenu">
+					<div class="TopCenterRightClickPopupMenu"><span></span></div>
+					<div class="RightClickCustomItem" style="display: none;">Open</div>
+				</div>
+			</div>
+			<div class="MiddleLeftRightClickPopupMenu">
+				<div class="MiddleRightRightClickPopupMenu">
+					<div class="UIRightPopupMenuContainer">
+						<a href="" class="MenuItem">
+							<div class="ItemIcon " style="padding:3px 0px 5px 5px;">
+								<div style="padding: 0px 5px 0px 20px;">Add Bookmark this Link</div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="BottomLeftRightClickPopupMenu">
+				<div class="BottomRightRightClickPopupMenu">
+					<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% //End RightClick Bookmark  %>
 	<%uiform.end()%>
 </div>

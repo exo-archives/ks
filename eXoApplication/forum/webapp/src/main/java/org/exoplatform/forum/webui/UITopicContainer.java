@@ -85,7 +85,8 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class)
+			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
+			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
 		}
 )
 public class UITopicContainer extends UIForm implements UIPopupComponent {
@@ -836,5 +837,18 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}	
+	
+	static public class AddBookMarkActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String userName = uiContainer.userProfile.getUserId() ;
+			if(path != null && path.trim().length() > 0) {
+				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
+				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.setUserProfile() ;
+			}
+		}
+	}
 	
 }

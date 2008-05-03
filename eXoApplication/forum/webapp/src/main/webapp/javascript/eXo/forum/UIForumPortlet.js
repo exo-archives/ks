@@ -26,18 +26,16 @@ UIForumPortlet.prototype.selectItem = function(obj) {
 		checkbox.checked = false ;
 	}
 	var modMenu = document.getElementById("ModerationMenu") ;
-	var firstItem = modMenu.getElementsByTagName("a")[0] ;
-	if(j >= 2) {
-		if(modMenu) {
+	if(modMenu) {
+		var firstItem = modMenu.getElementsByTagName("a")[0] ;
+		if(j >= 2) {
 			if(!firstItem.getAttribute("oldClass")) {
 				firstItem.setAttribute("oldClass", firstItem.className) ;
 				firstItem.setAttribute("oldHref", firstItem.href) ;
 				firstItem.className = "DisableMenuItem" ;
 				firstItem.href = "javascript:void(0);" ;
 			}
-		}
-	} else {
-		if(modMenu) {
+		} else {
 			if(firstItem.getAttribute("oldClass")) {
 				firstItem.className = firstItem.getAttribute("oldClass") ;
 				firstItem.href = firstItem.getAttribute("oldHref") ;
@@ -45,6 +43,7 @@ UIForumPortlet.prototype.selectItem = function(obj) {
 		}
 	}
 } ;
+
 UIForumPortlet.prototype.checkAll = function(obj) {
 		var DOMUtil = eXo.core.DOMUtil ;
 		var thead = DOMUtil.findAncestorByTagName(obj, "thead") ;
@@ -203,7 +202,6 @@ UIForumPortlet.prototype.initVote = function(voteId, rate) {
 		options[i].onmouseover = this.overVote ;
 		if(i < rate) options[i].className = "RatedVote" ;
 	}
-
 	vote.onmouseover = function() {
 		var optsCon= DOMUtil.findFirstDescendantByClass(this, "div", "OptionsContainer") ;
 		var opts = DOMUtil.getChildrenByTagName(optsCon, "div") ;
@@ -257,13 +255,12 @@ UIForumPortlet.prototype.cancel = function(evt) {
 } ;
 
 UIForumPortlet.prototype.goLastPost = function(idLastPost) {
-//	alert(idLastPost);
 	var isDesktop = document.getElementById('UIPageDesktop') ;
 	if(isDesktop === null){
 		if(idLastPost === "false") {
 			script:scroll(0,0);
 			var postForm = document.getElementById('banner') ;
-			if(postForm != null) {
+			if(postForm) {
 				postForm.scrollIntoView(true) ;
 			}
 		} else {
@@ -322,7 +319,7 @@ UIForumPortlet.prototype.setMenuTextAreaMutil = function(ParendId) {
 
 UIForumPortlet.prototype.openPicture = function(obj,id) {
 	var img = document.getElementById(id) ;
-	if(img != null) {
+	if(img) {
 		if(img.offsetHeight <= 101) {
 			img.style.height = "300px" ;
 			img.className = "Icon MiniView" ;
@@ -423,11 +420,9 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	var popupContents= DOMUtil.findDescendantsByClass(ancestor, "div","ClickPopupContent");
 	var popupContainer = document.getElementById('RightClickContainer') ;
 	var itemmenu = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "MenuItem") ;
-//	alert(test.getAttribute('action'));
 	for(var i = 0; i < popupContents.length; i++){
 		var action = popupContents[i].getAttribute('action');
 		itemmenu.href= action ;
-		//alert(popupContainer.innerHTML);
 		popupContents[i].innerHTML = popupContainer.innerHTML;
 	}
 };
