@@ -30,6 +30,7 @@ public class Category {
   private String id ;
   private String name ;
   private String description ;
+  private boolean isModerateQuestions = true ;
   private String[] moderators ;
   private Date createdDate ;
   
@@ -52,5 +53,8 @@ public class Category {
   
   public Date getCreatedDate() { return createdDate ; }
   public void setCreatedDate(Date date) { this.createdDate = date ; }
+
+  public void setModerateQuestions(boolean isMod) { isModerateQuestions = isMod ; }
+  public boolean isModerateQuestions() { return isModerateQuestions ; }
   
 }

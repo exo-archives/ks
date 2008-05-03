@@ -172,7 +172,7 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
     if(questionNode.hasProperty("exo:activated")) question.setActivated(questionNode.getProperty("exo:activated").getBoolean()) ;
-    if(questionNode.hasProperty("exo:approvedn")) question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
+    if(questionNode.hasProperty("exo:approved")) question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
     if(questionNode.hasProperty("exo:responses")) question.setResponses(questionNode.getProperty("exo:responses").getString()) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
   	return question ;
@@ -215,9 +215,9 @@ public class JCRDataStorage {
   	Node questionHome = getQuestionHome(sProvider, null) ;
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-                                                + "//element(*,exo:faqQuestion)[@exo:categoryId='").
-                                                append(categoryId).
-                                                append("']").append("order by @exo:createdDate ascending");
+                                                + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+                                                append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
+                                                append("]").append("order by @exo:createdDate ascending");
 //    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();

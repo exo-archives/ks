@@ -17,7 +17,6 @@
 package org.exoplatform.faq.webui.popup;
 
 import org.exoplatform.faq.service.FileAttachment;
-import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -102,8 +101,8 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   static public class CancelActionListener extends EventListener<UIAttachMentForm> {
     public void execute(Event<UIAttachMentForm> event) throws Exception {
       UIAttachMentForm uiAttachMent = event.getSource() ;     
-      UIFAQPortlet portlet = uiAttachMent.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = uiAttachMent.getAncestorOfType(UIPopupContainer.class) ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }

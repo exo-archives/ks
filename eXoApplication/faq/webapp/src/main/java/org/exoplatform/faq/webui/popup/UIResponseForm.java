@@ -49,6 +49,8 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 
+import com.sun.mail.util.QEncoderStream;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Mai Van Ha
@@ -93,7 +95,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private List<String> listQuestIdRela = new ArrayList<String>() ;
   private static List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
   // form variable:
-  private List<String> listLanguageToReponse = new ArrayList<String>() ;  
+  private List<String> listLanguageToReponse = new ArrayList<String>() ;
+  private String questionChanged_ = new String() ;
+  private List<String> responseContent_ = new ArrayList<String>() ;
+  private boolean isChecked = true ;
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -105,6 +110,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void setQuestionId(String questionId){
     try{
       question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+      questionChanged_ = question.getQuestion() ;
       this.setListRelation();
       this.setListLanguage() ;
       // set info for form
@@ -123,7 +129,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void initPage(boolean isEdit) {
     if(!isEdit) {
       questionContent_ = new UIFormTextAreaInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
-      questionContent_.setValue(question.getQuestion()) ;
       questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguage()) ;
       reponseQuestion_ = new UIFormInputWithActions(RESPONSE_CONTENT) ;
       questionRelation_ = new UIFormSelectBox(RELATIONS, RELATIONS, getListRelation()) ;
@@ -149,7 +154,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     
     //for(int i = 0 ; i < listLanguage.size() ; i++) {
     for(int i = 0 ; i < this.getListLanguageToReponse().length ; i++) {
-      reponseQuestion_.addUIFormInput( new UIFormWYSIWYGInput(RESPONSE_CONTENT + i, null, null, true) );
+      if(i < responseContent_.size())
+        reponseQuestion_.addUIFormInput( new UIFormWYSIWYGInput(RESPONSE_CONTENT + i, null, responseContent_.get(i), true) );
+      else 
+        reponseQuestion_.addUIFormInput( new UIFormWYSIWYGInput(RESPONSE_CONTENT + i, null, null, true) );
     }
     
     if(question.getResponses() != null) {
@@ -161,12 +169,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       ((UIFormWYSIWYGInput)reponseQuestion_.getChildById(RESPONSE_CONTENT + "0")).setValue(responsed) ;
     }
     
+    questionContent_.setValue(questionChanged_) ;
+    
     addChild(questionContent_) ;
     addChild(questionLanguages_) ;
     addChild(reponseQuestion_) ;
     addChild(inputAttachment_) ;
     addChild(questionRelation_) ;
-    addChild(checkShowAnswer_) ;
+    addChild(checkShowAnswer_.setChecked(isChecked)) ;
     
     this.setListFileAttach(question.getAttachMent()) ;
   }
@@ -254,8 +264,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   
   // action :
   static public class SaveActionListener extends EventListener<UIResponseForm> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UIResponseForm> event) throws Exception {
       UIResponseForm response = event.getSource() ;
+      String questionContent = ((UIFormTextAreaInput)response.getChildById(QUESTION_CONTENT)).getValue() ;
+      
+      if(questionContent == null || questionContent.trim().length() < 1) {
+        UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.question-null", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return ; 
+      }
+      
       UIFormInputWithActions listFormFCK = response.getChildById(RESPONSE_CONTENT) ;
       List<String> listString = new ArrayList<String>() ;
       String value = new String() ;
@@ -275,6 +295,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       java.util.Date date = new java.util.Date();
       String dateStr = dateFormat.format(date) ;
       date = dateFormat.parse(dateStr) ;
+      
+      question.setQuestion(questionContent) ;
       //set response of question
       question.setResponses(user + "/" + date + "/" + listString.get(0));
       
@@ -282,7 +304,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       question.setRelations(response.getListIdQuesRela().toArray(new String[]{})) ;
       
       // set show question:
-      question.setActivated((Boolean) response.getUIFormCheckBoxInput(SHOW_ANSWER).getValue()) ;
+      question.setActivated(((UIFormCheckBoxInput<Boolean>)response.getChildById(SHOW_ANSWER)).isChecked()) ;
       
       question.setAttachMent(listFileAttach_) ;
       
@@ -303,15 +325,25 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     }
   }
   static public class AddLanguageActionListener extends EventListener<UIResponseForm> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UIResponseForm> event) throws Exception {
       UIResponseForm response = event.getSource() ;
+      
+      response.questionChanged_ = ((UIFormTextAreaInput)response.getChildById(QUESTION_CONTENT)).getValue() ;
+      response.isChecked = ((UIFormCheckBoxInput<Boolean>)response.getChildById(SHOW_ANSWER)).isChecked() ;
+      response.responseContent_.clear() ;
+      UIFormInputWithActions listFormWYSIWYGInput =  response.getChildById(RESPONSE_CONTENT) ;
+      for(int i = 0 ; i < listFormWYSIWYGInput.getChildren().size(); i ++) {
+        response.responseContent_.add(((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(i)).getValue()) ;
+      }
+      
       UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       UILanguageForm languageForm = popupAction.activate(UILanguageForm.class, 400) ;
       languageForm.setResponse(true) ;
       //languageForm.setListSelected(Arrays.asList(new String[]{"English"})) ;
       languageForm.setListSelected(response.listLanguageToReponse) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
   static public class CancelActionListener extends EventListener<UIResponseForm> {
@@ -330,7 +362,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       UIAddRelationForm addRelationForm = popupAction.activate(UIAddRelationForm.class, 500) ;
       addRelationForm.setRelationed(response.getListIdQuesRela()) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
   static public class AttachmentActionListener extends EventListener<UIResponseForm> {
@@ -338,11 +370,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIResponseForm response = event.getSource() ;
       UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      //UIAttachFileForm attachFileForm = uiChildPopup.activate(UIAttachFileForm.class, 500) ;
       UIAttachMentForm attachMentForm = uiChildPopup.activate(UIAttachMentForm.class, 500) ;
       attachMentForm.setResponse(true) ;
-      //attachFileForm.updateIsTopicForm(true) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
     }
   }
 }

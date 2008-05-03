@@ -142,7 +142,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	public void setCategoryValue(String categoryId, boolean isUpdate) throws Exception{
 		if(isUpdate) {
 		  FAQService faqService = FAQUtils.getFAQService();
-      SessionProvider sessionProvider = SessionProviderFactory.createSessionProvider() ;
+      SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider() ;
 		  Category cat = faqService.getCategoryById(categoryId, sessionProvider) ;
 		  categoryId_ = categoryId ; 
 			getUIStringInput(EVENT_CATEGORY_NAME).setValue(cat.getName()) ;
