@@ -144,16 +144,18 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, emailInput_)) ;
     addChild(listFormWYSIWYGInput) ;
     addUIFormInput(inputWithActions) ;
-    if(questionId_ != null && questionId_.trim().length() > 0) {
+    /*if(questionId_ != null && questionId_.trim().length() > 0) {
+      Question question = new Question() ;
       try {
-        this.setListFileAttach(faqService_.getQuestionById(questionId_, FAQUtils.getSystemProvider()).getAttachMent()) ;
+        question = faqService_.getQuestionById(questionId_, FAQUtils.getSystemProvider()) ;
+        this.setListFileAttach(question.getAttachMent()) ;
         refreshUploadFileList() ;
       } catch (Exception e) {
         e.printStackTrace();
       }
-    }
-    addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)).setChecked(isApproved)) ;
-    addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)).setChecked(isActivated)) ;
+    }*/
+    addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false))) ;
+    addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false))) ;
   }
   
   public List<ActionData> getUploadFileList() { 
@@ -261,13 +263,17 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
       String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      faqService_.removeQuestion(quesId, FAQUtils.getSystemProvider()) ;
       for(Question question : questionManagerForm.getListQuestion()) {
         if(question.getId().equals(quesId)) {
+          if(quesId.equals(questionManagerForm.questionId_)) {
+            questionManagerForm.isEdit = false ;
+          }
           questionManagerForm.listQuestion_.remove(question) ;
           break ;
         }
       }
+      faqService_.removeQuestion(quesId, FAQUtils.getSystemProvider()) ;
+      
       UIFAQPortlet portlet = questionManagerForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

@@ -65,7 +65,7 @@ import org.exoplatform.faq.webui.UIFAQPageIterator ;
 			
 			<%
 			if(uicomponent.getIsEdit()) {%>
-				<div class="HorizontalLayout" style="margin: 10px 10px 30px 10px;background-color:#F3F3F3;">
+				<div class="HorizontalLayout" style="margin: 10px 5px 20px 5px;background-color:#F3F3F3;">
 					<div class="UIFormInput">
 						<table class="UIFormGrid">
 							<tbody>						
