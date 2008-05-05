@@ -333,7 +333,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     public void execute(Event<UIQuestionForm> event) throws Exception {
       UIQuestionForm questionForm = event.getSource() ;
       String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
-      System.out.println("\n\n\n\nRemoveAttachmentActionListener ----> fileId: " + attFileId);
       for (FileAttachment att : questionForm.listFileAttach_) {
         if (att.getId().equals(attFileId)) {
           questionForm.listFileAttach_.remove(att) ;

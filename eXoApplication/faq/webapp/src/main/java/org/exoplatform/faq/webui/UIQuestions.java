@@ -89,6 +89,7 @@ public class UIQuestions extends UIContainer {
   private String parentId_ = null ;
   private String questionView_ = "" ;
   public static String newPath_ = "" ;
+  String currentUser_ = "";
   private String[] firstTollbar_ = new String[]{"AddCategory","ShowQuestionNotYetAnswer", "QuestionManagament", "Setting"} ;
   private String[] secondTollbar_ = new String[]{"SubCategory", "AddNewQuestion", "Setting"} ; 
   private boolean isViewQuesNotYetAnswer_ = false ;
@@ -96,6 +97,7 @@ public class UIQuestions extends UIContainer {
 	public UIQuestions()throws Exception {
 	  this.categoryId_ = new String() ;
     this.isViewQuesNotYetAnswer_ = false ;
+    currentUser_ = FAQUtils.getCurrentUser() ;
 		setCategories() ;
 		addChild(UIQuickSeach.class, null, null) ;
 	}
@@ -152,6 +154,10 @@ public class UIQuestions extends UIContainer {
   public void setCategories(String categoryId) throws Exception  {
   	this.categoryId_ = categoryId ;
     categories_ = faqService.getSubCategories(categoryId, FAQUtils.getSystemProvider()) ;
+  }
+  
+  private String[] getActionWithCategory() {
+    return null ;
   }
   
 	@SuppressWarnings("unused")
@@ -380,13 +386,15 @@ public class UIQuestions extends UIContainer {
   
 	static	public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
 	  public void execute(Event<UIQuestions> event) throws Exception {
-	    UIQuestions question = event.getSource() ; 
-	    UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
-	    UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-	    UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-	    UIQuestionManagerForm questionManagerForm = popupAction.activate(UIQuestionManagerForm.class, 800) ;
-	    popupContainer.setId("FAQUIQuestionManagerForm") ;
-	    event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      UIQuestions questions = event.getSource() ;
+      String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
+      popupContainer.setId("AddQuestion") ;
+      popupAction.activate(popupContainer, 800, 1000) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 	  }
 	}
   

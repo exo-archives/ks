@@ -1,10 +1,15 @@
 <%
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.webui.UIFAQPageIterator ; 
 %>
 
 <div class="UIQuestionManagerForm $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="margin: 10px 10px 30px 10px;background-color:#F3F3F3;">
+		<div style="overflow:auto;">
+			<% uicomponent.renderChild(UIFAQPageIterator.class) ; %>
+		</div>
+		
+		<div class="HorizontalLayout" style="margin: 0px 5px 0px 5px; padding: 5px 5px 5px 5px;background-color:#F3F3F3;">
 				<div class="UIFormInput">
 					<table class="UIGrid">
 						<tr>
@@ -51,7 +56,10 @@ import org.exoplatform.faq.service.Question;
 					</table>
 				</div>
 			</div>
-			
+		
+		<div style="overflow:auto;">
+			<% uicomponent.renderChild(UIFAQPageIterator.class) ; %>
+		</div>
 			
 			<!-- viewed when edit one question -->
 			
@@ -63,6 +71,7 @@ import org.exoplatform.faq.service.Question;
 							<tbody>						
 							<% 
 							for(field in uiform.getChildren()) { 
+								if(field.id.equals("FAQUserPageIterator")) continue;
 								if(field.isRendered()) {
 							%>
 								<tr>
@@ -128,7 +137,7 @@ import org.exoplatform.faq.service.Question;
 								<tr>
 									<td align="center">
 					        <% for(action in uicomponent.getQuestionActions()) { 
-					        		 if(action.indexOf("Attachment") >= 0 || action.indexOf("AddLanguage") >= 0) continue ; 
+					        		 if(action.indexOf("Attachment") >= 0) continue ; 
 					        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					           String link = uicomponent.event(action) ;
 					        %>

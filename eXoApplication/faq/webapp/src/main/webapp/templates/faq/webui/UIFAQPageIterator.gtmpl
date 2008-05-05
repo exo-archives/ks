@@ -1,0 +1,49 @@
+<%
+	import org.exoplatform.faq.webui.UIFAQPageIterator ;
+	import org.exoplatform.faq.service.JCRPageList ;
+	 
+	List totals = uicomponent.getInfoPage() ; 
+	long pageSelected = uicomponent.getPageSelected() ;
+	long max_page = totals.get(3) ;
+	String selected = "" + pageSelected ;
+%>
+<div class="UIFAQPageIterator" id="$uicomponent.id">
+	<div class="PageIteratorContainer">
+	  <div class="RightPageIteratorBlock">
+	  <% if(pageSelected == 1) {%>
+	    <div class="Icon DisableLastTopPageIcon"></div>        
+	    <div class="Icon DisableLastPageIcon"><span></span></div>
+	  <% } else { %>
+	    <a title="Back first page" class="Icon LastTopPageIcon" href="<%=uicomponent.event("GoPage","first")%>"></a>        
+	    <a title="Previous Page" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"><span></span></a>
+	  <% } %>
+	  <% 
+	  	for(number in uicomponent.getTotalpage()) {
+	  		if(number.equals(selected)) {
+	  %>
+			  <div class="Number">
+			    <a class="PageSelected" style="color: #0183f1;"><b>$number</b></a>
+			  </div>
+	  	<%} else {%>
+			  <div class="Number">
+			    <a class="PageNormal" href="<%=uicomponent.event("GoPage",number)%>">$number</a>
+			  </div>
+	  	<% } %>
+	  <%} %>
+	  <% if(pageSelected != max_page) {%>  
+	    <a title="Next Page" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"><span></span></a>
+	    <a title="Return the last page" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"><span></span></a>
+	  <% } else { %>  
+	    <div class="Icon DisableNextPageIcon"><span></span></div>
+	    <div class="Icon DisableNextTopPageIcon"><span></span></div>
+	  <% } %>
+	    <div style="clear: left;"><span></span></div>
+	  </div>
+	  <div class="LeftPageIteratorBlock">
+	  	<div class="TotalPages">Total pages:</div>
+	  	<div class="PagesTotalNumber"><%=max_page%></div>
+	  	<div style="clear: left;"><span></span></div>
+	  </div>
+  </div>
+  <div style="clear: right;"><span></span></div>
+</div>

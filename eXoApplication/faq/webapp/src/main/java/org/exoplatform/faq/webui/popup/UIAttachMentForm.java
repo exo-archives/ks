@@ -47,6 +47,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   private boolean response_ = false ;
+  private boolean isManagerment_ = false ;
   private static final String FILE_UPLOAD = "FileUpload" ;
 
   public void activate() throws Exception { }
@@ -60,6 +61,14 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   public void setResponse(boolean response){ this.response_ = response ;}
   
   private boolean getResponse(){ return this.response_ ; }
+  
+  public void setIsManagerment(boolean isManagerment) {
+    this.isManagerment_ = isManagerment ;
+  }
+  
+  private boolean getIsManagerment() {
+    return this.isManagerment_ ;
+  }
   
   static public class SaveActionListener extends EventListener<UIAttachMentForm> {
     public void execute(Event<UIAttachMentForm> event) throws Exception {
@@ -80,16 +89,21 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       fileAttachment.setSize((long)uploadResource.getUploadedSize()) ;
       
       UIPopupContainer popupContainer = attachMentForm.getAncestorOfType(UIPopupContainer.class) ;
-      if(!attachMentForm.getResponse()) {
-        UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
-        questionForm.setListFileAttach(fileAttachment) ;
-        questionForm.refreshUploadFileList() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
-      } else {
+      if(attachMentForm.getIsManagerment()) {
+        UIQuestionManagerForm questionManagerForm = popupContainer.getChild(UIQuestionManagerForm.class) ;
+        questionManagerForm.setListFileAttach(fileAttachment) ;
+        questionManagerForm.refreshUploadFileList() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm) ;
+      } else if(attachMentForm.getResponse()) {
         UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
         responseForm.setListFileAttach(fileAttachment) ;
         responseForm.refreshUploadFileList() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
+      } else {
+        UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
+        questionForm.setListFileAttach(fileAttachment) ;
+        questionForm.refreshUploadFileList() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
       }
       
       UIPopupAction uiPopupAction = popupContainer.getChild(UIPopupAction.class) ;

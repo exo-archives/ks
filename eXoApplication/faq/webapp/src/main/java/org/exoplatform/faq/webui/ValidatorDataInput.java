@@ -30,7 +30,7 @@ public class ValidatorDataInput {
   }
   
   public boolean isEmailAddress(String input) {
-    if(input != null && input.trim().length() > 0) {
+    if(input != null && input.trim().length() > 0 && input.indexOf(" ") < 0) {
       int aPosition =  input.indexOf("@");
       int dotPos = input.lastIndexOf(".") ;
       if(aPosition > 1 && (aPosition < dotPos - 1) && (dotPos < input.length() -1)) {

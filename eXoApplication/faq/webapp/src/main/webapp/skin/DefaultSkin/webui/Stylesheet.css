@@ -457,6 +457,94 @@
 	background: #f7f7f7;
 }
 
+/******************************	UIFAQPageIterator	***************************************/
+.UIFAQPageIterator {    
+	float:right;
+	margin: 0px ;
+	width: 420px;
+	padding: 3px 0px 0px 0px ;
+}
+
+.UIFAQPageIterator .PageIteratorContainer {    
+  float: right ;
+  overflow: hidden; 
+  padding: 3px;
+}
+
+.UIFAQPageIterator .PageIteratorContainer .LeftPageIteratorBlock{    
+  line-height: 18px ; 
+  float: right ;
+  margin-right: 15px;
+}
+
+.UIFAQPageIterator .PageIteratorContainer .RightPageIteratorBlock{    
+  float: right ;
+}
+
+.UIFAQPageIterator .Icon {
+  float: left ;
+  margin: 0px 2px 0px 0px ;
+  width: 18px ; height: 17px ;
+}
+
+.UIFAQPageIterator .TotalPages {
+  float: left ;
+  line-height: 16px ; 
+}
+
+.UIFAQPageIterator .PagesTotalNumber {
+  float: left ;
+  line-height: 17px ; 
+  color: #0183f1;
+  margin-left: 5px;
+}
+
+.UIFAQPageIterator .Number {
+  float: left ;
+  text-align: center;
+  margin: 0px 2px 0px 0px;
+  line-height: 17px;
+  width: 15px ;
+}
+
+.UIFAQPageIterator .LastTopPageIcon {
+  vertical-align: middle ;
+  background: url('background/ScrollDoubleBackArrows.gif') no-repeat ;
+  cursor: pointer ;
+}
+
+.UIFAQPageIterator .NextTopPageIcon {
+  background: url('background/ScrollDoubleNextArrows.gif') no-repeat ;
+  cursor: pointer ;
+}
+
+.UIFAQPageIterator .LastPageIcon {
+  background: url('background/ScrollSingleBackArrow.gif') no-repeat ;
+  cursor: pointer ; 
+}
+
+.UIFAQPageIterator .NextPageIcon {
+  background: url('background/ScrollSingleNextArrow.gif') no-repeat ;
+  cursor: pointer ;
+}
+
+.UIFAQPageIterator .DisableLastTopPageIcon {
+  vertical-align: middle ;
+  background: url('background/DoubleBackArrows.gif') no-repeat ;
+}
+
+.UIFAQPageIterator .DisableNextTopPageIcon {
+  background: url('background/DoubleNextArrows.gif') no-repeat ;
+}
+
+.UIFAQPageIterator .DisableLastPageIcon {
+  background: url('background/SingleBackArrow.gif') no-repeat ;
+}
+
+.UIFAQPageIterator .DisableNextPageIcon {
+  background: url('background/SingleNextArrow.gif') no-repeat ;
+}
+
 
 /******************************	Icon	***************************************/
 
