@@ -34,6 +34,7 @@ import javax.jcr.query.QueryResult;
 
 import org.exoplatform.faq.service.BufferAttachment;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
@@ -431,11 +432,10 @@ public class JCRDataStorage {
   	watchingNode.getSession().save();
   }
   public List<Category> getQuickSeach(SessionProvider sProvider,String text) throws Exception {
-  	 Node faqServiceHome = getFAQServiceHome(sProvider) ;
+  	Node faqServiceHome = getFAQServiceHome(sProvider) ;
   	String []valueQuery = text.split(",") ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer queryString = new StringBuffer("/jcr:root" + faqServiceHome.getPath() + "//element(*,exo:faqCategory)") ;
-//		System.out.println("\n\n\n query string1111 => " + queryString.toString()+ "\n\n\n") ;
 		boolean isOwner = false ;
 		queryString.append("[") ;
 		if(valueQuery[1] != null && valueQuery[1].length() > 0 && !valueQuery[1].equals("null")) {
@@ -447,7 +447,6 @@ public class JCRDataStorage {
     	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
     }
 		queryString.append("]") ;
-//		System.out.println("\n\n\n query string2222 => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
   	NodeIterator iter = result.getNodes() ;
@@ -461,4 +460,37 @@ public class JCRDataStorage {
   	}
   	return catList ;
   }
+  
+  public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  	Node faqServiceHome = getFAQServiceHome(sProvider) ;
+		List<Category> catList = new ArrayList<Category>() ;
+		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
+		String path = eventQuery.getPath() ;
+		if(path == null || path.length() <= 0) {
+			path = faqServiceHome.getPath() ;
+		}
+		eventQuery.setPath(path) ;
+		String type = eventQuery.getType() ;
+		String queryString = eventQuery.getPathQuery() ;
+		try {
+			Query query = qm.createQuery(queryString, Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes() ;
+			while (iter.hasNext()) {
+				if(!type.equals("faqQuestion")) {
+					Category category = new Category() ;
+					Node nodeObj = (Node) iter.nextNode();
+					category.setId(nodeObj.getName());
+					if(nodeObj.hasProperty("exo:name")) category.setName(nodeObj.getProperty("exo:name").getString()) ;
+					if(nodeObj.hasProperty("exo:description")) category.setDescription(nodeObj.getProperty("exo:description").getString()) ;
+		    	if(nodeObj.hasProperty("exo:createdDate")) category.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
+		    	catList.add(category) ;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+	  return catList;
+  }
+
 }

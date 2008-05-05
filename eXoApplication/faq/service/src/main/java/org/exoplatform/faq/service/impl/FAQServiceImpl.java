@@ -19,6 +19,7 @@ package org.exoplatform.faq.service.impl;
 import java.util.List;
 
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
@@ -106,5 +107,8 @@ public class FAQServiceImpl implements FAQService{
   }
   public List<Category> getQuickSeach(SessionProvider sProvider, String text) throws Exception {
   	return jcrData_.getQuickSeach(sProvider, text); 
+  }
+  public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  	return jcrData_.getAdvancedSeach(sProvider, eventQuery); 
   }
 }
