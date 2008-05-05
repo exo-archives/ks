@@ -189,7 +189,7 @@ public class ForumFormatUtils {
 			}else {
 				j = 0;
 				String temp = s.substring(i) ;
-				int []Int = {32,33,34,39,40,41,42,44,60,91,93,94,123,124,125,8221,8220};
+				int []Int = {10,32,33,34,39,40,41,42,44,60,91,93,94,123,124,125,8221,8220};
 				boolean isEnd = false ;
 				while(true) {
 					char c = temp.charAt(j);
@@ -215,16 +215,17 @@ public class ForumFormatUtils {
 		}
 		buffer.append(s);
 		s = buffer.toString() ;
+		j=0;
 		
 		buffer = new StringBuffer();
 		while (true) {
-			int t = s.indexOf('['+"QUOTE");
-			if(t < 0 ) break;
-			String first = s.substring(0, t) ;
+			j = s.indexOf('['+"QUOTE");
+			if(j < 0 ) break;
+			String first = s.substring(0, j) ;
 			int t1 = s.indexOf(']');
 			if(t1 < 0) break ;
 			String usernam = "";
-			if(t+7 < t1)usernam = s.substring((t+7), t1) ;
+			if(j+7 < t1)usernam = s.substring((j+7), t1) ;
 			int t2 = s.indexOf('['+"/QUOTE");
 			if(t2 < 0) break ;
 			String content = s.substring(t1+1, t2);

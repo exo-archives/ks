@@ -202,7 +202,7 @@ public class UICategory extends UIForm	{
 			forumForm.setCategoryValue(uiCategory.categoryId, false) ;
 			forumForm.setForumUpdate(false) ;
 			popupContainer.setId("AddNewForumForm") ;
-			popupAction.activate(popupContainer, 650, 450) ;
+			popupAction.activate(popupContainer, 650, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			uiCategory.isEditForum = true ; 
 		}
@@ -230,7 +230,7 @@ public class UICategory extends UIForm	{
 				forumForm.setForumValue(forum, true);
 				forumForm.setForumUpdate(false) ;
 				popupContainer.setId("EditForumForm") ;
-				popupAction.activate(popupContainer, 650, 450) ;
+				popupAction.activate(popupContainer, 650, 480) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				uiCategory.isEditForum = true ;
 			} else {

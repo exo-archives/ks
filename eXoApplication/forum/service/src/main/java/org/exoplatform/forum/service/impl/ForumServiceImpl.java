@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
@@ -245,6 +246,14 @@ public class ForumServiceImpl implements ForumService{
 
 	public List<ForumSeach> getAdvancedSeach(SessionProvider sProvider,ForumEventQuery eventQuery) throws Exception {
 	  return storage_.getAdvancedSeach(sProvider, eventQuery);
+  }
+
+	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception {
+	  return storage_.getForumAdministration(sProvider);
+  }
+
+	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
+	  storage_.saveForumAdministration(sProvider, forumAdministration) ;
   }
 }
 

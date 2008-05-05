@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui;
 
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UICategoryForm;
+import org.exoplatform.forum.webui.popup.UIForumAdministrationForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIForumUserSettingForm;
 import org.exoplatform.forum.webui.popup.UIModeratorManagementForm;
@@ -46,7 +47,8 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIForumActionBar.AddForumActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.EditProfileActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class)
+				@EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.OpenAdministrationActionListener.class)
 		}
 )
 public class UIForumActionBar extends UIContainer	{
@@ -86,7 +88,7 @@ public class UIForumActionBar extends UIContainer	{
 				forumForm.setCategoryValue("", true) ;
 				forumForm.setForumUpdate(false) ;
 				popupContainer.setId("AddNewForumForm") ;
-				popupAction.activate(popupContainer, 650, 450) ;
+				popupAction.activate(popupContainer, 650, 480) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				UIApplication uiApp = uiActionBar.getAncestorOfType(UIApplication.class) ;
@@ -129,6 +131,17 @@ public class UIForumActionBar extends UIContainer	{
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIShowBookMarkForm bookMarkForm = popupAction.createUIComponent(UIShowBookMarkForm.class, null, null) ;
 			popupAction.activate(bookMarkForm, 520, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}	
+	
+	static public class OpenAdministrationActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIForumAdministrationForm administrationForm = popupAction.createUIComponent(UIForumAdministrationForm.class, null, null) ;
+			popupAction.activate(administrationForm, 520, 360) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	

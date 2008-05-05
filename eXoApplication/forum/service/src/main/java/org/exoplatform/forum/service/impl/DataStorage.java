@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumStatistic;
@@ -99,4 +100,7 @@ public interface DataStorage {
 	
 	public List<ForumSeach> getQuickSeach(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception ;
 	public List<ForumSeach> getAdvancedSeach(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception ;
+	
+	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception ;
+	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception ;
 }

@@ -65,7 +65,6 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
-import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
@@ -1004,14 +1003,30 @@ public class UITopicDetail extends UIForm {
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
 			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
-			message = message.replaceAll("<", "&lt;").replaceAll(">", "&gt;") ;
+			StringBuffer buffer = new StringBuffer();
+			for (int j = 0; j < message.length(); j++) {
+				char c = message.charAt(j); 
+				if((int)c == 9){
+					buffer.append("&nbsp;&nbsp;&nbsp; ") ;
+				} else if((int)c == 10){
+					buffer.append("<br/>") ;
+				}	else if((int)c == 60){
+					buffer.append("&lt;") ;
+				} else if((int)c == 62){
+					buffer.append("&gt;") ;
+				} else if((int)c == 32){
+					buffer.append("&nbsp;") ;
+				} else {
+					buffer.append(c) ;
+				}
+      }
 			String userName = topicDetail.userProfile.getUserId() ;
 			int t = checksms.trim().length() ;
 			if(t > 3 && !checksms.equals("null")) {
 				Topic topic = topicDetail.topic ;
 				Post post = new Post() ;
 				post.setName("Re: " + topic.getTopicName()) ;
-				post.setMessage(message) ;
+				post.setMessage(buffer.toString()) ;
 				post.setOwner(userName) ;
 				post.setRemoteAddr("") ;
 				post.setIcon(topic.getIcon());
@@ -1033,14 +1048,30 @@ public class UITopicDetail extends UIForm {
 			UITopicDetail topicDetail = event.getSource() ;	
 			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
-			message = message.replaceAll("<", "&lt;").replaceAll(">", "&gt;") ;
+			StringBuffer buffer = new StringBuffer();
+			for (int j = 0; j < message.length(); j++) {
+				char c = message.charAt(j); 
+				if((int)c == 9){
+					buffer.append("&nbsp;&nbsp;&nbsp; ") ;
+				} else if((int)c == 10){
+					buffer.append("<br/>") ;
+				}	else if((int)c == 60){
+					buffer.append("&lt;") ;
+				} else if((int)c == 62){
+					buffer.append("&gt;") ;
+				} else if((int)c == 32){
+					buffer.append("&nbsp;") ;
+				} else {
+					buffer.append(c) ;
+				}
+      } 
 			String userName = topicDetail.userProfile.getUserId() ;
 			int t = checksms.trim().length() ;
 			if(t > 3 && !checksms.equals("null")) {
 				Topic topic = topicDetail.topic ;
 				Post post = new Post() ;
 				post.setName("Re: " + topic.getTopicName()) ;
-				post.setMessage(message) ;
+				post.setMessage(buffer.toString()) ;
 				post.setOwner(userName) ;
 				post.setRemoteAddr("") ;
 				post.setIcon(topic.getIcon());

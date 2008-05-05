@@ -412,7 +412,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			forumForm.setForumValue(forum, true);
 			forumForm.setForumUpdate(true) ;
 			popupContainer.setId("EditForumForm") ;
-			popupAction.activate(popupContainer, 650, 450) ;
+			popupAction.activate(popupContainer, 650, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			uiTopicContainer.isUpdate = true ;
 		}

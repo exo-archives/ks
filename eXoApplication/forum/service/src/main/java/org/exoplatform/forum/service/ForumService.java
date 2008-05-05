@@ -298,6 +298,9 @@ public interface ForumService {
 	
 	public List<ForumSeach> getQuickSeach(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception ;
 	public List<ForumSeach> getAdvancedSeach(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception ;
+	
+	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception ;
+	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception ;
 }
 
 

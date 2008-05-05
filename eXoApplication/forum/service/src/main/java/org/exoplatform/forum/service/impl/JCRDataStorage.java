@@ -35,6 +35,7 @@ import javax.jcr.query.QueryResult;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
@@ -95,6 +96,40 @@ public class JCRDataStorage{
     	return userAdministration.addNode(USER_PROFILE, NT_UNSTRUCTURED) ;
     }
 	}
+	
+	
+	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		Node forumAdminNode ;
+		try {
+	    forumAdminNode = forumHomeNode.getNode("forumAdministration") ;
+    } catch (PathNotFoundException e) {
+    	forumAdminNode = forumHomeNode.addNode("forumAdministration" ,"exo:administration") ;
+    }
+    forumAdminNode.setProperty("exo:forumSortBy", forumAdministration.getForumSortBy()) ;
+    forumAdminNode.setProperty("exo:forumSortByType", forumAdministration.getForumSortByType()) ;
+    forumAdminNode.setProperty("exo:topicSortBy", forumAdministration.getTopicSortBy()) ;
+    forumAdminNode.setProperty("exo:topicSortByType", forumAdministration.getTopicSortByType()) ;
+    forumAdminNode.setProperty("exo:censoredKeyword", forumAdministration.getCensoredKeyword()) ;
+	}
+	
+	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		Node forumAdminNode ;
+		ForumAdministration forumAdministration = new ForumAdministration();
+		try {
+	    forumAdminNode = forumHomeNode.getNode("forumAdministration") ;
+	    if(forumAdminNode.hasProperty("exo:forumSortBy"))forumAdministration.setForumSortBy(forumAdminNode.getProperty("exo:forumSortBy").getString()) ;
+	    if(forumAdminNode.hasProperty("exo:forumSortByType"))forumAdministration.setForumSortByType(forumAdminNode.getProperty("exo:forumSortByType").getString()) ;
+	    if(forumAdminNode.hasProperty("exo:topicSortBy"))forumAdministration.setTopicSortBy(forumAdminNode.getProperty("exo:topicSortBy").getString()) ;
+	    if(forumAdminNode.hasProperty("exo:topicSortByType"))forumAdministration.setTopicSortByType(forumAdminNode.getProperty("exo:topicSortByType").getString()) ;
+	    if(forumAdminNode.hasProperty("exo:censoredKeyword"))forumAdministration.setCensoredKeyword(forumAdminNode.getProperty("exo:censoredKeyword").getString()) ;
+	    return forumAdministration;
+    } catch (PathNotFoundException e) {
+    	return forumAdministration;
+    }
+	}
+	
 	
 	public List<Category> getCategories(SessionProvider sProvider) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
@@ -179,10 +214,24 @@ public class JCRDataStorage{
 	public List<Forum> getForums(SessionProvider sProvider, String categoryId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try {
+			ForumAdministration administration = getForumAdministration(sProvider) ;
+			String orderBy = administration.getForumSortBy() ;
+			String orderType = administration.getForumSortByType() ;
 			Node catNode = forumHomeNode.getNode(categoryId) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
-			String queryString = "/jcr:root" + catNode.getPath() + "//element(*,exo:forum) order by @exo:forumOrder ascending,@exo:createdDate ascending";
-			Query query = qm.createQuery(queryString , Query.XPATH) ;
+			StringBuffer queryBuffer = new StringBuffer() ;
+			queryBuffer.append("/jcr:root").append(catNode.getPath()).append("//element(*,exo:forum) order by @exo:").
+				append(orderBy).append(" ").append(orderType);
+			if(!orderBy.equals("forumOrder")){
+				queryBuffer.append(",@exo:forumOrder ascending") ;
+				if(!orderBy.equals("createdDate")) {
+					queryBuffer.append(",@exo:createdDate ascending") ;
+				}
+			} else {
+					queryBuffer.append(",@exo:createdDate ascending") ;
+			}
+//			System.out.println("\n " + queryBuffer.toString() + "\n\n");
+			Query query = qm.createQuery(queryBuffer.toString() , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
@@ -436,15 +485,27 @@ public class JCRDataStorage{
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try {
 			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
+			ForumAdministration administration = getForumAdministration(sProvider) ;
+			String orderBy = administration.getTopicSortBy() ;
+			String orderType = administration.getTopicSortByType() ;
 			Node forumNode = CategoryNode.getNode(forumId) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 			StringBuffer stringBuffer = new StringBuffer() ;
 			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)");
 			if(isApproved != null && isApproved.length() > 0){
-				stringBuffer.append("[@exo:isApproved='").append(isApproved).append("'] ");
+				stringBuffer.append("[@exo:isApproved='").append(isApproved).append("']");
 			} 
-			stringBuffer.append("order by @exo:isSticky descending,@exo:createdDate descending") ;
+			stringBuffer.append(" order by @exo:isSticky descending");
+			if(orderBy != null && orderBy.length() > 0) {
+				stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType) ;
+				if(!orderBy.equals("createdDate")) {
+					stringBuffer.append(",@exo:createdDate descending") ;
+				}
+			} else {
+				stringBuffer.append(",@exo:createdDate descending") ;
+			}
 			String pathQuery = stringBuffer.toString();
+//			System.out.println("\n\n" + pathQuery + "\n\n");
 			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes(); 

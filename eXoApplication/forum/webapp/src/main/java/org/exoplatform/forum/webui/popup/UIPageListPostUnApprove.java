@@ -106,7 +106,15 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
 	
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostUnApprove> {
     public void execute(Event<UIPageListPostUnApprove> event) throws Exception {
-			//UIPageListPostByUser uiForm = event.getSource() ;
+			UIPageListPostUnApprove uiForm = event.getSource() ;
+			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      Post post = uiForm.getPost(postId) ;
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+      UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
+      viewTopic.setPostView(post) ;
+      viewTopic.setViewUserInfo(false) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 
