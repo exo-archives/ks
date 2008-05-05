@@ -172,16 +172,12 @@
 }
 
 /******************************	OverButton	***************************************/
-*html .UIForumPortlet .UITopicContainer .DefaultStyle {
-	width: 112px;
+.UIForumPortlet .UITopicContainer .DefaultStyle {
+	border-top: 1px solid #d8d8d8;
 }
 
-*html .UIForumPortlet .UITopicDetail .DefaultStyle {
-	width: 115px;
-}
-
-*html .UIForumPortlet .UIForumActionBar .DefaultStyle {
-	width: 139px;
+.UIForumPortlet .UITopicDetail .DefaultStyle {
+	border-top: 1px solid #d8d8d8;
 }
 
 .UIForumPortlet .DefaultStyle .LeftOverButton {
@@ -198,7 +194,7 @@
 /*ForumAction*/
 .UIForumPortlet .Forum {
 	background: none;
-	height: 22px;
+	line-height: 22px;
 }
 
 .UIForumPortlet .ForumAction .LeftOverButton {
@@ -211,7 +207,7 @@
 
 .UIForumPortlet .ForumAction .CenterOverButton {
 	background: url('background/CenterOverButton1x22.gif') repeat-x top;
-	height: 22px;
+	line-height: 22px;
 }
 /*ForumBarAction*/
 .UIForumPortlet .ForumBar {
@@ -238,7 +234,7 @@
 
 .UIForumPortlet .ForumBarAction .CenterOverButton {
 	background: url('background/CenterOverButton1x23.gif') repeat-x top;
-	height: 23px;
+	line-height: 23px;
 }
 
 /******************************	End OverButton	***************************************/
@@ -317,11 +313,15 @@
 /*********************PopUp***************************/
 
 .UIForumPortlet .UIGroupMembershipSelector .UIBreadcumbs {
-	background: none;
+	background: white;
 	border: none;
 	height: auto;
 	margin: 0px;
 	padding: 0px;
+}
+
+.UIForumPortlet .UIGroupMembershipSelector .UIBreadcumbs .BreadcumbsInfoBar {
+	float: none;
 }
 
 .UIForumPortlet .ViewImg {

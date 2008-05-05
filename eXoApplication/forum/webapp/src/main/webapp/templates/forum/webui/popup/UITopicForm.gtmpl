@@ -6,7 +6,7 @@
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('CanView','CanPost');");
 %>
 <div class="UITopicForm">
-	<% uiform.begin() %>
+	
 	<div class="UIFormTabPane">
 	  <div class="UITabPane">
 			<div class="TabPaneContent">
@@ -48,6 +48,7 @@
 					    </div>
 					  </div>
 		      </div>
+		      <% uiform.begin() %>
 		    	<div class="HorizontalLayout">
 		        <div class="UITabContentContainer">
 	          <% 
@@ -71,6 +72,7 @@
 	        	<% ++j;} %>
 	          </div>
 			    </div>
+			    <%uiform.end()%>
 			  </div>
 			  
 			</div>  
@@ -96,5 +98,5 @@
 			</tr>
  	  </table> 
 	</div>
-  <%uiform.end()%>
+  
 </div>

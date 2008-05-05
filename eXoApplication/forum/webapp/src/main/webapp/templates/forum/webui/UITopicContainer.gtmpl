@@ -441,10 +441,10 @@
 											<% if(topic.getIsSticky()) {%>
 												<span class="Text StickyIcon">Sticky:</span>
 											<% } %>
-												<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+												<div style="" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 													<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
-														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+														<div class="UIRightClickPopupMenu" style="display: block;">
 															<div action="$actionBookmark" class="ClickPopupContent"></div>
 														</div>
 												  </div>

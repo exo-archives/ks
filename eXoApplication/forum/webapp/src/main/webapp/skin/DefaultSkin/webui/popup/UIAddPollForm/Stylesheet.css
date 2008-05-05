@@ -15,14 +15,9 @@
 }
 
 .UIForumPortlet .UIAddPollForm .PollOptionConntent {
-	min-height: 152px ;
 	padding: 5px 0px;
 }
 
-*html .UIForumPortlet .UIAddPollForm .PollOptionConntent {
-	height: 300px ;
-}
- 
 .UIForumPortlet .UIAddPollForm .HorizontalLayout .UIFormInputSet .Title {
 	color: black;
 	margin: 10px 0px 0px 3px;
