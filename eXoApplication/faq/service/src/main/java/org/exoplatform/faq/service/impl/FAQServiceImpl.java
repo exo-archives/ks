@@ -104,4 +104,7 @@ public class FAQServiceImpl implements FAQService{
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception {
   	
   }
+  public List<Category> getQuickSeach(SessionProvider sProvider, String text) throws Exception {
+  	return jcrData_.getQuickSeach(sProvider, text); 
+  }
 }

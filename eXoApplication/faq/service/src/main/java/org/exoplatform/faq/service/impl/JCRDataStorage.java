@@ -20,8 +20,8 @@ package org.exoplatform.faq.service.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
@@ -32,13 +32,13 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.faq.service.BufferAttachment;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.faq.service.BufferAttachment;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
@@ -245,6 +245,7 @@ public class JCRDataStorage {
   	cal.setTime(category.getCreatedDate()) ;
   	categoryNode.setProperty("exo:createdDate", cal.getInstance()) ;
   	categoryNode.setProperty("exo:moderators", category.getModerators()) ;
+  	categoryNode.setProperty("exo:isModerateQuestions", category.isModerateQuestions()) ;
   }
   
   public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
@@ -295,6 +296,7 @@ public class JCRDataStorage {
   	if(categoryNode.hasProperty("exo:description")) cat.setDescription(categoryNode.getProperty("exo:description").getString()) ;
   	if(categoryNode.hasProperty("exo:createdDate")) cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
   	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
+  	if(categoryNode.hasProperty("exo:isModerateQuestions")) cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
   	return cat;
   }
   private Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
@@ -427,5 +429,36 @@ public class JCRDataStorage {
 			watchingNode.save() ;
 		}
   	watchingNode.getSession().save();
+  }
+  public List<Category> getQuickSeach(SessionProvider sProvider,String text) throws Exception {
+  	 Node faqServiceHome = getFAQServiceHome(sProvider) ;
+  	String []valueQuery = text.split(",") ;
+		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root" + faqServiceHome.getPath() + "//element(*,exo:faqCategory)") ;
+//		System.out.println("\n\n\n query string1111 => " + queryString.toString()+ "\n\n\n") ;
+		boolean isOwner = false ;
+		queryString.append("[") ;
+		if(valueQuery[1] != null && valueQuery[1].length() > 0 && !valueQuery[1].equals("null")) {
+    	queryString.append("(@exo:owner='").append(valueQuery[1]).append("')") ;
+    	isOwner = true;
+    }
+    if(valueQuery[0] != null && valueQuery[0].length() > 0 && !valueQuery[0].equals("null")) {
+    	if(isOwner) queryString.append(" and ");
+    	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
+    }
+		queryString.append("]") ;
+//		System.out.println("\n\n\n query string2222 => " + queryString.toString()+ "\n\n\n") ;
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+  	NodeIterator iter = result.getNodes() ;
+  	List<Category> catList = new ArrayList<Category>() ;
+  	while(iter.hasNext()) {
+  		Category category = new Category() ;
+  		Node nodeObj = (Node) iter.nextNode();
+  		if(nodeObj.hasProperty("exo:name")) category.setName(nodeObj.getProperty("exo:name").getString()) ;
+    	if(nodeObj.hasProperty("exo:createdDate")) category.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
+    	catList.add(category) ;
+  	}
+  	return catList ;
   }
 }
