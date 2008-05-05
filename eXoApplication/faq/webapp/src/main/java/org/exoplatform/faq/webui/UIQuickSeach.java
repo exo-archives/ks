@@ -27,7 +27,6 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
-import org.exoplatform.faq.webui.popup.UIPopupComponent;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -56,7 +55,7 @@ public class UIQuickSeach  extends UIForm {
 	
 	public UIQuickSeach() throws Exception {
 		addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
-		this.setSubmitAction(this.event("Search")) ;
+		this.setSubmitAction("Search") ;
 	}
 	public List<Category> getListCategories(String text) {
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -100,7 +99,7 @@ public class UIQuickSeach  extends UIForm {
 			UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
-			UIAdvancedSearchForm uiAdvancedSearchForm = popupAction.activate(UIAdvancedSearchForm.class, 400) ;
+			UIAdvancedSearchForm uiAdvancedSearchForm = popupAction.activate(UIAdvancedSearchForm.class, 600) ;
 			popupContainer.setId("AdvanceSearchForm") ;
 			uiAdvancedSearchForm.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
