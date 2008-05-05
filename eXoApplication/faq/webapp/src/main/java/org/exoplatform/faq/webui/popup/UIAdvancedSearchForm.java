@@ -21,6 +21,7 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SARL
@@ -35,12 +36,20 @@ import org.exoplatform.webui.form.UIForm;
 		template =	"app:/templates/faq/webui/popup/UIAdvancedSearchForm.gtmpl",
 		events = {
 				@EventConfig(listeners = UIAdvancedSearchForm.SaveActionListener.class),
+				@EventConfig(listeners = UIAdvancedSearchForm.OnchangeActionListener.class, phase = Phase.DECODE),	
 				@EventConfig(listeners = UIAdvancedSearchForm.CancelActionListener.class)
 		}
 )
 public class UIAdvancedSearchForm extends UIForm	{
-	 
-	public UIAdvancedSearchForm() throws Exception {
+	final static	private String FIELD_SEARCHOBJECT_SELECTBOX = "SearchOject" ;
+	
+	final static	private String FIELD_CATEGORY_NAME = "CategoryName" ;
+	final static	private String FIELD_CATEGORY_DESCRIPTIONS = "CategoryDescriptions" ;
+	final static	private String FROM_DATE_CREATED = "FromDateCreated" ;
+	final static	private String TO_DATE_CREATED = "ToDateCreated" ;
+	public UIAdvancedSearchForm() throws Exception {}
+	public void init() throws Exception {
+		
 	}
 	
 	static public class SaveActionListener extends EventListener<UIAdvancedSearchForm> {
@@ -49,7 +58,14 @@ public class UIAdvancedSearchForm extends UIForm	{
 			System.out.println("========> Save") ;
 		}
 	}
-
+	
+	static public class OnchangeActionListener extends EventListener<UIAdvancedSearchForm> {
+    public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
+			UIAdvancedSearchForm uiCategory = event.getSource() ;			
+			System.out.println("========> Save") ;
+		}
+	}
+	
 	static public class CancelActionListener extends EventListener<UIAdvancedSearchForm> {
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
 			UIAdvancedSearchForm uiCategory = event.getSource() ;			

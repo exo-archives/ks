@@ -102,16 +102,10 @@
 							</div>
 							<div style="clear: left;"><span/></div>
 						</div>
-						
 						<div class="SearchForm">
-							<form method="post" action="/portal/private/classic/?portal:componentId=calendar&portal:type=action&portal:isSecure=false&uicomponent=UISearchForm" id="UISearchForm" name="UISearchForm" class="UIForm"><input type="hidden" value="" name="formOp"/>
-								<div class="UISearchForm">
-									<div title="Advanced Search" class="AdvancedSearch"><span/></div>
-									<div title="Search" class="SearchIcon"><span/></div>
-									<input type="text" id="value" name="value"/>
-									<div style="clear: right;"><span/></div>
-								</div>
-							</form>
+						<%  
+							uicomponent.renderChildren() ;
+						%>
 						</div>
 				
 						<div style="clear: both;"><span></span></div>

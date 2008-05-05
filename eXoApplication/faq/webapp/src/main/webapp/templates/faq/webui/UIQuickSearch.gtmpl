@@ -1,0 +1,14 @@
+<div class="UIQuickSeach">
+  <% uiform.begin() %>  
+  <div class="UISearchForm">
+		<a class="AdvancedSearch" title="Advance Search" href="<%=uicomponent.event("AdvancedSearch");%>"><span></span></a>
+		<a class="SearchIcon" title="Search" href="<%=uicomponent.event("Search");%>"><span></span></a>
+		<div class="Input">
+		<%  
+			uiform.renderChildren() ;
+		%>
+		</div>
+		<div style="clear: right;"><span/></div>
+	</div>
+  <%uiform.end()%>
+</div>

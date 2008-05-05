@@ -94,10 +94,10 @@ public class UIQuestions extends UIContainer {
   private boolean isViewQuesNotYetAnswer_ = false ;
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIQuestions()throws Exception {
-    addChild(new UIFormStringInput(SEARCH_INPUT, SEARCH_INPUT, null)) ;
 	  this.categoryId_ = new String() ;
     this.isViewQuesNotYetAnswer_ = false ;
 		setCategories() ;
+		addChild(UIQuickSeach.class, null, null) ;
 	}
   
   public String[] getActionTollbar() {

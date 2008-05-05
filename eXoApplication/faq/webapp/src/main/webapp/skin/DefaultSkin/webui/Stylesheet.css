@@ -614,3 +614,10 @@
 	width:16px;
 	margin-left: 5px;
 }
+
+
+.UIFAQPortlet .CheckIcon {
+	background: url('background/icon.png') no-repeat left;
+	height:24px;
+	width:24px;
+}

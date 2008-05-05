@@ -39,6 +39,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -67,6 +68,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	final private static String EVENT_CATEGORY_NAME = "eventCategoryName" ; 
   final private static String DESCRIPTION = "description" ;
   final private static String MODERATOR = "moderator" ;
+  final private static String MODERATEQUESTIONS = "moderatequestions" ;
   private Map<String, String> permissionUser_ = new LinkedHashMap<String, String>() ;
   private Map<String, String> permissionGroup_ = new LinkedHashMap<String, String>() ;
   
@@ -75,7 +77,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(EVENT_CATEGORY_NAME, EVENT_CATEGORY_NAME, null).addValidator(MandatoryValidator.class)) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(DESCRIPTION, DESCRIPTION, null)) ;
-    
+    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(MODERATEQUESTIONS, MODERATEQUESTIONS, false )) ;
     UIFormStringInput moderator = new UIFormStringInput(MODERATOR, MODERATOR, null) ;
     moderator.setEditable(false) ;
     inputset.addUIFormInput(moderator) ;
@@ -147,6 +149,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		  categoryId_ = categoryId ; 
 			getUIStringInput(EVENT_CATEGORY_NAME).setValue(cat.getName()) ;
 			getUIFormTextAreaInput(DESCRIPTION).setDefaultValue(cat.getDescription()) ;
+			getUIFormCheckBoxInput(MODERATEQUESTIONS).setChecked(cat.isModerateQuestions()) ;
 			String moderator = "";
 	    for(String str : cat.getModerators()) {
 	    	if( moderator!= null && moderator.trim().length() >0 ) moderator += ", " ;
@@ -171,7 +174,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
       String name = uiCategory.getUIStringInput(UICategoryForm.EVENT_CATEGORY_NAME).getValue() ;
       String description = uiCategory.getUIStringInput(UICategoryForm.DESCRIPTION).getValue() ;
-      String moderator = uiCategory.getUIStringInput(UICategoryForm.MODERATOR).getValue() ; 
+      String moderator = uiCategory.getUIStringInput(UICategoryForm.MODERATOR).getValue() ;
+      Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(UICategoryForm.MODERATEQUESTIONS).isChecked() ;
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
           ApplicationMessage.INFO)) ;
@@ -182,6 +186,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setName(name.trim()) ;
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
+			cat.setModerateQuestions(moderatequestion) ;
 			
 			String[] listUser = FAQUtils.splitForFAQ(moderator) ;
       cat.setModerators(listUser) ;

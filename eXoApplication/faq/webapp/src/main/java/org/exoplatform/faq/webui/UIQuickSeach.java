@@ -24,6 +24,11 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.webui.popup.ResultQuickSearch;
+import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
+import org.exoplatform.faq.webui.popup.UIPopupAction;
+import org.exoplatform.faq.webui.popup.UIPopupComponent;
+import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -39,13 +44,13 @@ import org.exoplatform.webui.form.UIFormStringInput;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/UIQuickSeach.gtmpl",
+		template = "app:/templates/faq/webui/UIQuickSearch.gtmpl",
 		events = {
 			@EventConfig(listeners = UIQuickSeach.SearchActionListener.class),			
 			@EventConfig(listeners = UIQuickSeach.AdvancedSearchActionListener.class)			
 		}
 )
-public class UIQuickSeach  extends UIForm{
+public class UIQuickSeach  extends UIForm {
 	final static	private String FIELD_SEARCHVALUE = "inputValue" ;
 	private List<Category> categoryList_ = new ArrayList<Category>() ;
 	
@@ -75,19 +80,30 @@ public class UIQuickSeach  extends UIForm{
 			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0) {
-				UIFAQPortlet faqPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class) ;
-				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-				List<Category> list = uiForm.getListCategories(text);
-				System.out.println("====>>>>" + list );
+				UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
+				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
+				ResultQuickSearch result = popupAction.activate(ResultQuickSearch.class, 600) ;
+				popupContainer.setId("ResultQuickSearch") ;
+				result.setText(text) ;
+				System.out.println("====>>>>UIQuickSeach.text:::" + text );
+				result.init() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
 		}
 	  
   }
 	static public class AdvancedSearchActionListener extends EventListener<UIQuickSeach> {
 		public void execute(Event<UIQuickSeach> event) throws Exception {
-			System.out.println("==== AdvancedSearch");
+			System.out.println("==== >>>>AdvancedSearch");
 			UIQuickSeach uiForm = event.getSource() ;
-			
+			UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
+			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
+			UIAdvancedSearchForm uiAdvancedSearchForm = popupAction.activate(UIAdvancedSearchForm.class, 400) ;
+			popupContainer.setId("AdvanceSearchForm") ;
+			uiAdvancedSearchForm.init() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
   }
 }
