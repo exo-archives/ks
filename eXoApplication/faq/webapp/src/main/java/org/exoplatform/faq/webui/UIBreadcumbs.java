@@ -43,7 +43,7 @@ import org.exoplatform.webui.event.EventListener;
 public class UIBreadcumbs extends UIContainer {
 	private FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
-	private List<String> paths_ = new ArrayList<String>();
+	public List<String> paths_ = new ArrayList<String>();
 	private String path_ = "FAQService" ;
 	public static final String FIELD_FAQHOME_BREADCUMBS = "faqHome" ;
 	public UIBreadcumbs()throws Exception {

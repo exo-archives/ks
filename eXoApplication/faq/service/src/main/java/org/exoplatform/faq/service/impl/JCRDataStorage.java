@@ -168,7 +168,7 @@ public class JCRDataStorage {
   	Question question = new Question() ;
   	question.setId(questionNode.getName()) ;
   	if(questionNode.hasProperty("exo:question")) question.setQuestion(questionNode.getProperty("exo:question").getString()) ;
-    if(questionNode.hasProperty("exo:Author")) question.setAuthor(questionNode.getProperty("exo:Author").getString()) ;
+    if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;

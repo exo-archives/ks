@@ -14,60 +14,70 @@
   				<div class="CenterBar">
   					<div class="ControlbarCotainer">
 							<%
+							uicomponent.setIsModerators() ;
+								
+							boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
 							String cateId = uicomponent.getCategoryId() ;
 							String[] categoryAction = null ;
-							boolean isViewQuesNotYetAns = uicomponent.getIsViewQuesNotYetAnswer() ;
-							if(cateId != null && cateId.trim().length() > 0) {
-								categoryAction = uicomponent.getSecondActionCategory() ;
-								String[] actionTollbar = uicomponent.getActionTollbar() ;
-								for(String action in actionTollbar) {
-								String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
-							%>
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
-										<a href="<%=uicomponent.event(action, cateId)%>">
-											<div class="LeftOverButton">
-												<div class="RightOverButton">
-													<div class="CenterOverButton">
-														<div class="Icon $action">
-															$itemLabelView
-														</div>
-													</div>
-												</div>
-											</div>
-										</a>
-									</div>
-									<div class="SeparatorLine"><span></span></div>
-							<%
-								}
+							String[] moderatorAction = null ;
+							if(cateId != null && cateId.trim().length() > 0){
+								moderatorAction = uicomponent.getSecondActionCategory() ;
 							} else {
-								categoryAction = uicomponent.getActionCategory() ;
-								String[] actionTollbar = uicomponent.getFirstTollbar() ;
-								String linkAction = "" ;
-								String opacity ;
-								for(String action in actionTollbar) {
-									linkAction = uicomponent.event(action) ;
+								moderatorAction = uicomponent.getActionCategory() ;
+							}
+							
+							boolean isViewQuesNotYetAns = uicomponent.getIsViewQuesNotYetAnswer() ;
+							if(canEditQuestion) {
+								if(cateId != null && cateId.trim().length() > 0) {
+									String[] actionTollbar = uicomponent.getActionTollbar() ;
+									for(String action in actionTollbar) {
 									String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
-									opacity = "1" ;
-									if(isViewQuesNotYetAns && !action.equals("ShowQuestionNotYetAnswer")) {
-										opacity = "0.5" ;
-										linkAction = "javaScript:void(0)" ;
-									}
 							%>
-									<div style="opacity:$opacity" onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
-										<a href="$linkAction">
-											<div class="LeftOverButton">
-												<div class="RightOverButton">
-													<div class="CenterOverButton">
-														<div class="Icon $action">
-															$itemLabelView
+										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+											<a href="<%=uicomponent.event(action, cateId)%>">
+												<div class="LeftOverButton">
+													<div class="RightOverButton">
+														<div class="CenterOverButton">
+															<div class="Icon $action">
+																$itemLabelView
+															</div>
 														</div>
 													</div>
 												</div>
-											</div>
-										</a>
-									</div>
-									<div class="SeparatorLine"><span></span></div>
+											</a>
+										</div>
+										<div class="SeparatorLine"><span></span></div>
 							<%
+									}
+								} else {
+									String[] actionTollbar = uicomponent.getFirstTollbar() ;
+									String linkAction = "" ;
+									String opacity ;
+									for(String action in actionTollbar) {
+										linkAction = uicomponent.event(action) ;
+										String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+										opacity = "1" ;
+										if(isViewQuesNotYetAns && !action.equals("ShowQuestionNotYetAnswer")) {
+											opacity = "0.5" ;
+											linkAction = "javaScript:void(0)" ;
+										}
+							%>
+										<div style="opacity:$opacity" onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+											<a href="$linkAction">
+												<div class="LeftOverButton">
+													<div class="RightOverButton">
+														<div class="CenterOverButton">
+															<div class="Icon $action">
+																$itemLabelView
+															</div>
+														</div>
+													</div>
+												</div>
+											</a>
+										</div>
+										<div class="SeparatorLine"><span></span></div>
+							<%
+									}
 								}
 							}
 							%>
@@ -123,8 +133,16 @@
 			String id = "";
 			int i = 0 ;
 			if(!isViewQuesNotYetAns) {
+				List listCateModerator = uicomponent.getIsModerator() ;
 				for(category in categories) {
 					String categoryName = category.getName() ;
+					
+					if(listCateModerator.get(i)) {
+						categoryAction = moderatorAction ;
+					} else {
+						categoryAction = uicomponent.getActionCategoryWithUser() ;
+					}
+					
 					categoryId = category.getId();
 					String link = uicomponent.event("OpenCategory", categoryId) ;
 		%>
@@ -188,7 +206,13 @@
 				List listQuestion = uicomponent.getListQuestion() ;
 				String questionContent = new String() ;
 				int questionId = 0 ;
-				String[] questionActions = uicomponent.getActionQuestion() ;
+				String[] questionActions = null ;
+				if(canEditQuestion) {
+					questionActions = uicomponent.getActionQuestion() ;
+				} else {
+					questionActions = uicomponent.getActionQuestionWithUser() ;
+				}
+				
 				String linkQuestion = "" ;
 				for(question in listQuestion) {
 					questionContent = question.getQuestion() ;

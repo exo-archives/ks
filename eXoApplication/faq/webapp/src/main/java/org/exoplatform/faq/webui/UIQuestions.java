@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -84,22 +86,25 @@ public class UIQuestions extends UIContainer {
   private static String SEARCH_INPUT = "SearchInput" ;
   
 	private List<Category> categories_ = null ;
+  private List<Boolean> categoryModerators = new ArrayList<Boolean>() ;
   private List<Question> listQuestion_ =  null ;
+  private List<String> listCateId_ = new ArrayList<String>() ;
+  private boolean canEditQuestion = false ;
   private String categoryId_ = null ;
   private String parentId_ = null ;
   private String questionView_ = "" ;
   public static String newPath_ = "" ;
   String currentUser_ = "";
   private String[] firstTollbar_ = new String[]{"AddCategory","ShowQuestionNotYetAnswer", "QuestionManagament", "Setting"} ;
-  private String[] secondTollbar_ = new String[]{"SubCategory", "AddNewQuestion", "Setting"} ; 
+  private String[] secondTollbar_ = new String[]{"SubCategory", "AddNewQuestion", "Setting"} ;
   private boolean isViewQuesNotYetAnswer_ = false ;
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIQuestions()throws Exception {
 	  this.categoryId_ = new String() ;
     this.isViewQuesNotYetAnswer_ = false ;
     currentUser_ = FAQUtils.getCurrentUser() ;
-		setCategories() ;
 		addChild(UIQuickSeach.class, null, null) ;
+    setCategories() ;
 	}
   
   public String[] getActionTollbar() {
@@ -116,15 +121,30 @@ public class UIQuestions extends UIContainer {
     String[] action = new String[]{"SubCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
     return action ;
   }
+  
   private String[] getSecondActionCategory() {
     String[] action = new String[]{"EditSubCategory", "DeleteCategory", "MoveCategory"} ;
     return action ;
   }
+  
+  private String[] getActionCategoryWithUser() {
+    String[] action = new String[]{"Watch"} ;
+    return action ;
+  }
+  
+  
   @SuppressWarnings("unused")
   private String[] getActionQuestion(){
     String[] action = new String[]{"ResponseQuestion","EditQuestion","DeleteQuestion","MoveQuestion","PrintQuestion","SendQuestion"} ;
     return action ;
   }
+  
+  @SuppressWarnings("unused")
+  private String[] getActionQuestionWithUser(){
+    String[] action = new String[]{"PrintQuestion","SendQuestion"} ;
+    return action ;
+  }
+  
   @SuppressWarnings("unused")
   private String getParentId(){
     return this.parentId_ ;
@@ -143,17 +163,74 @@ public class UIQuestions extends UIContainer {
   }
   
   public void setCategories() throws Exception  {
+    if(categories_ != null)
+      categories_.clear() ;
     if(this.categoryId_ == null || this.categoryId_.trim().length() < 1) {
       categories_ = faqService.getSubCategories(null, FAQUtils.getSystemProvider()) ;
     } else {
       categories_ = faqService.getSubCategories(this.categoryId_, FAQUtils.getSystemProvider()) ;
     }
-    System.out.println("number of category : " + categories_.size());
   }
 	
   public void setCategories(String categoryId) throws Exception  {
   	this.categoryId_ = categoryId ;
     categories_ = faqService.getSubCategories(categoryId, FAQUtils.getSystemProvider()) ;
+  }
+  
+  private void setIsModerators() {
+    categoryModerators.clear() ;
+    if(currentUser_.equals("root")) {
+      canEditQuestion = true ;
+      for(int i = 0 ; i < this.categories_.size(); i ++) {
+        this.categoryModerators.add(true);
+      }
+    } else {
+      if(categoryId_ == null || categoryId_.trim().length() < 1) {
+        listCateId_.clear() ;
+      } else {
+        if(!listCateId_.contains(categoryId_)) {
+          listCateId_.add(categoryId_) ;
+        } else {
+          int pos = listCateId_.indexOf(categoryId_) ;
+          for(int i = pos + 1; i < listCateId_.size() ; i ++) {
+            listCateId_.remove(i) ;
+          }
+        }
+      }
+      boolean isContinue = true ;
+      if(listCateId_.size() > 0){
+        for(String cateIdProcess : listCateId_) {
+          try {
+            if(Arrays.asList(faqService.getCategoryById(cateIdProcess, FAQUtils.getSystemProvider()).getModerators()).contains(currentUser_)){
+              for(int j = 0 ; j < categories_.size(); j ++) {
+                categoryModerators.add(true) ;
+              }
+              isContinue = false ;
+              canEditQuestion = true ;
+              break ;
+            }
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+      
+      if(isContinue) {
+        canEditQuestion = false ;
+        for(Category category : categories_) {
+          if(Arrays.asList(category.getModerators()).contains(currentUser_)) {
+            categoryModerators.add(true) ;
+          }else {
+            categoryModerators.add(false) ;
+          }
+        }
+      }
+      
+    }
+  }
+  
+  private List<Boolean> getIsModerator() {
+    return this.categoryModerators ;
   }
   
   private String[] getActionWithCategory() {
@@ -172,8 +249,7 @@ public class UIQuestions extends UIContainer {
 	
   public void setListQuestion() throws Exception {
     SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-    this.categories_.clear() ;
-    this.categories_ = faqService.getSubCategories(categoryId_, sessionProvider) ;
+    setCategories() ;
     this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
   }
   
@@ -189,6 +265,10 @@ public class UIQuestions extends UIContainer {
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() {
     return this.listQuestion_ ;
+  }
+  
+  private boolean getCanEditQuestion() {
+    return this.canEditQuestion ;
   }
   
   @SuppressWarnings("unused")
