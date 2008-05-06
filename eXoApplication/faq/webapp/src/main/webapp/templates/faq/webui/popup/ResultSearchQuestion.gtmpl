@@ -1,7 +1,7 @@
 <% 
-	import org.exoplatform.faq.service.Category;
+	import org.exoplatform.faq.service.Question;
 %>
-<div class="ResultSearchCategory $uicomponent.id" style="padding: 8px;">
+<div class="ResultSearchQuestion $uicomponent.id" style="padding: 8px;">
 		<% uiform.begin() %>
 		<div class="UIForm">
  					<div class="UIHorizontalLayout">
@@ -10,24 +10,27 @@
  									<table class="UIGrid" cellspacing="0" borderspacing="0">
  										<thead>
  											<tr>
- 												<th>Category</th>
- 												<th>Description</th>
+ 												<th>Author</th>
+ 												<th>Email</th>
+ 												<th>Question</th>
  												<th>Create Date</th>
  											</tr>
  										</thead>
  										<tbody>
  										<% 
- 										List categories = uicomponent.getListCategory() ; 
-										for(category in categories) {
-											String categoryId = category.getId();
-											String categoryName = category.getName() ;
-											String description = category.getDescription() ;
-											String date = category.getCreatedDate();
-											String link = uicomponent.event("Link", categoryId);
+ 										List questions = uicomponent.getListQuestion() ; 
+										for(question in questions) {
+											String questionId = question.getId();
+											String author = question.getAuthor() ;
+											String email = question.getEmail() ;
+											String questionContent = question.getQuestion() ;
+											String date = question.getCreatedDate();
+											String link = uicomponent.event("Link", questionId);
  										 %>
 	 											<tr class="EvenRow"> 
-	 												<td class="text"><a href="$link">$categoryName</a></td>
-	 												<td class="text"><%= (description != null) ? description: ""%></td>
+	 												<td class="text"><%= author%></td>
+	 												<td class="text"><%= (email != null) ? email: ""%></td>
+	 												<td class="text"><a href="$link">$questionContent</a></td>
 	 												<td class="text"><%=date%></td>
 	 											</tr>
  											<% 

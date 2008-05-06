@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -42,6 +43,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	public static final String USER_NAME = "userName" ; 
 	public static final String EMAIL_ADDRESS = "emailAddress" ;
 	private String categoryId_ = "";
+	static ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
 	public UIWatchForm() throws Exception {}
   public void init() {
   	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
@@ -63,11 +65,11 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 			UIApplication uiApp = uiWatchForm.getAncestorOfType(UIApplication.class) ;
       String name = uiWatchForm.getUIStringInput(UIWatchForm.USER_NAME).getValue() ;
       String email = uiWatchForm.getUIStringInput(UIWatchForm.EMAIL_ADDRESS).getValue() ;
-      if (email == null || email.trim().length() <= 0) {
-        uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.email-required", null,
-          ApplicationMessage.INFO)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        return ; 
+      if(!validatorDataInput.isEmailAddress(email)) {
+      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.email-required", null,
+            ApplicationMessage.INFO)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+          return ; 
       }
       String categoryId = uiWatchForm.getCategoryID() ;
       String watchId = categoryId.substring(0, 4) ;

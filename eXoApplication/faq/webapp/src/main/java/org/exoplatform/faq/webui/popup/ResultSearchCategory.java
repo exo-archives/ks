@@ -18,7 +18,10 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -45,11 +48,9 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultSearchCategory extends UIForm implements UIPopupComponent{
-	private String type_ = null ;
-	public static String newPath_ = "" ;
 	private List<Category> listCategory = null ;
 	public ResultSearchCategory() throws Exception {}
-	public void init() throws Exception {System.out.println("====>>>>:::" + type_ );}
+	public void init() throws Exception {}
 	
   @SuppressWarnings("unused")
   private List<Category> getListCategory(){
@@ -71,22 +72,21 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 	static	public class LinkActionListener extends EventListener<ResultSearchCategory> {
 		public void execute(Event<ResultSearchCategory> event) throws Exception {
 			ResultSearchCategory resultSearch = event.getSource() ;
-			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
+			UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIQuestions questions = resultSearch.getAncestorOfType(UIQuestions.class) ;
-			System.out.print("===>>>>:::" + categoryId) ;
-      questions.setCategories() ;
-      questions.setListQuestion() ;
+			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			uiQuestions.setCategories(categoryId) ;
+			uiQuestions.setList(categoryId) ;
       UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
       String oldPath = breadcumbs.getPaths() ;
-      if(oldPath != null && oldPath.trim().length() > 0) {
-      	if(!oldPath.contains(categoryId)) {
-      		newPath_ = oldPath + "/" +categoryId ;
-      		breadcumbs.setUpdataPath(oldPath + "/" +categoryId);
-      	}
-      } else breadcumbs.setUpdataPath(categoryId);
+      FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+      List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+      for(int i = listPath.size() -1 ; i >= 0; i --) {
+      	oldPath = oldPath + "/" + listPath.get(i);
+      }
+      breadcumbs.setUpdataPath(oldPath);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-      UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
+      UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
       faqPortlet.cancelAction() ;
 		}

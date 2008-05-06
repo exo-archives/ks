@@ -85,7 +85,6 @@ public class UIQuickSeach  extends UIForm {
 				ResultQuickSearch result = popupAction.activate(ResultQuickSearch.class, 600) ;
 				popupContainer.setId("ResultQuickSearch") ;
 				result.setText(text) ;
-				System.out.println("====>>>>UIQuickSeach.text:::" + text );
 				result.init() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
