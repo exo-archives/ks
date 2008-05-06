@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -34,6 +35,7 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -270,7 +272,14 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			
+			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
+			String []censoredKeyword = ForumFormatUtils.splitForForum(forumAdministration.getCensoredKeyword()) ;
+			boolean isOffend = false ; 
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			for (String string : censoredKeyword) {
+	      if(checksms.indexOf(string.trim()) >= 0) isOffend = true ;
+      }
 			t = checksms.trim().length() ;
 			if(postTitle.trim().length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
@@ -284,6 +293,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setIcon(uiIconSelector.getSelectedIcon());
 				post.setIsApproved(false) ;
 				post.setAttachments(uiForm.attachments_) ;
+				post.setIsHidden(isOffend) ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
@@ -308,6 +318,13 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				}
 				forumPortlet.cancelAction() ;
 //				topicDetail.setIsEditTopic(true) ;
+				if(isOffend) {
+          topicDetail.setIdPostView("false");
+					Object[] args = { "" };
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
 			}else {
 				String[] args = { ""} ;

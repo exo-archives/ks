@@ -135,12 +135,12 @@ public interface ForumService {
 	 * 2. Check the user access permission with the forum access permission
 	 * 3. Create the query and create the JCRPageList or DBPageList	object
 	 * @param forumId
+	 * @param strQuery TODO
 	 * @param iSApproved 
-	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved) throws Exception;
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String strQuery) throws Exception;
 	/**
 	 * This method should:
 	 * 
@@ -235,11 +235,12 @@ public interface ForumService {
 	 * @param topicId
 	 * @param isApproved TODO
 	 * @param isHidden TODO
+	 * @param strQuery TODO
 	 * @param username
 	 * @return
 	 * @throws Exception
 	 */
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden )throws Exception;
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery )throws Exception;
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception ;
 	/**
 	 * This method should:

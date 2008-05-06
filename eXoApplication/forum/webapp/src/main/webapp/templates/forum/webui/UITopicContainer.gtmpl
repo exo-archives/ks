@@ -364,9 +364,9 @@
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
 								<th style="width: 96px;">Rating</th>
 								<th style="width: 40px;">Tag</th>
-								<th style="width: 130px;"><div class="DownArrow1Icon">Last posts</div></th>
-								<th style="width: 50px;">Replies</th>
-								<th style="width: 50px;">Views</th>
+								<th style="width: 130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon">Last posts</div></a></th>
+								<th style="width: 50px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon">Replies</div></a></th>
+								<th style="width: 50px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon">Views</div></a></th>
 								<% if(canEdit) { %>
 								<th style="width: 30px;"><input type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 								<% } %>

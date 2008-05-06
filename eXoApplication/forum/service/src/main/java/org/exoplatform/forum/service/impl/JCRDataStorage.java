@@ -482,7 +482,7 @@ public class JCRDataStorage{
 	}
 	
 	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved) throws Exception {
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String strQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try {
 			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
@@ -497,13 +497,20 @@ public class JCRDataStorage{
 				stringBuffer.append("[@exo:isApproved='").append(isApproved).append("']");
 			} 
 			stringBuffer.append(" order by @exo:isSticky descending");
-			if(orderBy != null && orderBy.length() > 0) {
-				stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType) ;
-				if(!orderBy.equals("createdDate")) {
+			if(strQuery == null || strQuery.trim().length() <= 0) {
+				if(orderBy != null && orderBy.length() > 0) {
+					stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType) ;
+					if(!orderBy.equals("createdDate")) {
+						stringBuffer.append(",@exo:createdDate descending") ;
+					}
+				} else {
 					stringBuffer.append(",@exo:createdDate descending") ;
 				}
 			} else {
-				stringBuffer.append(",@exo:createdDate descending") ;
+				stringBuffer.append(",@exo:").append(strQuery) ;
+				if(strQuery.indexOf("createdDate") < 0) {
+					stringBuffer.append(",@exo:createdDate descending") ;
+				}
 			}
 			String pathQuery = stringBuffer.toString();
 //			System.out.println("\n\n" + pathQuery + "\n\n");
@@ -651,7 +658,7 @@ public class JCRDataStorage{
 	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
 		TopicView topicview = new TopicView() ;
 		topicview.setTopicView(getTopic(sProvider, categoryId, forumId, topicId, "")) ;
-		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId, "", "false")) ;
+		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId, "", "false", "")) ;
 		return topicview;
 	}
 
@@ -851,7 +858,7 @@ public class JCRDataStorage{
 	}
 	
 
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden) throws Exception {
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		Node categoryNode ;
 		try{
@@ -1826,6 +1833,9 @@ public class JCRDataStorage{
 	    	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
 	    }
 	    queryString.append("]") ;
+	    
+//	    System.out.println("\n\nQuyryString: " + queryString);
+	    
 	    Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;

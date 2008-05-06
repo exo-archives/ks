@@ -86,6 +86,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
+			@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
 		}
 )
@@ -106,7 +107,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private boolean canViewThreads = true ;
 	private UserProfile userProfile = null;
-  
+  private String strQuery = "" ;
 	public UITopicContainer() throws Exception {
 		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
 		addUIFormInput( new UIFormStringInput("gopage2", null)) ;
@@ -188,7 +189,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				}
 			}
 		}
-		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, isApprove);
+		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, isApprove, strQuery);
 		long maxTopic = userProfile.getMaxTopicInPage() ;
 		if(maxTopic > 0) this.maxTopic = maxTopic ;
 		this.pageList.setPageSize(this.maxTopic);
@@ -255,7 +256,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
 			if(isHidden.equals("false") && !(topic.getOwner().equals(this.userProfile.getUserId()))) isApprove = "true" ;
 		}
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden)	; 
+		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "")	; 
 		long maxPost = getUserProfile().getMaxTopicInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost ;
 		pageListPost.setPageSize(this.maxPost) ;
@@ -848,6 +849,27 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;
 			}
+		}
+	}
+	
+	static public class SetOrderByActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(uiContainer.strQuery != null && uiContainer.strQuery.length() > 0) {
+				if(uiContainer.strQuery.indexOf(path) >= 0) {
+					if(uiContainer.strQuery.indexOf("descending") > 0) {
+						uiContainer.strQuery = path + " ascending";
+					} else {
+						uiContainer.strQuery = path + " descending";
+					}
+				} else {
+					uiContainer.strQuery = path + " ascending";
+				}
+			} else {
+				uiContainer.strQuery = path + " ascending";
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}
 	}
 	

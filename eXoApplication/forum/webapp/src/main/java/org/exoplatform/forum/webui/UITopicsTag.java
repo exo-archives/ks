@@ -118,7 +118,7 @@ public class UITopicsTag extends UIForm {
 		if(forum.getIsModeratePost() || topic.getIsModeratePost()) {
 			if(isHidden.equals("false")) isApprove = "true" ;
 		}
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden)	; 
+		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden, "")	; 
 		long maxPost = this.userProfile.getMaxTopicInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost;
 		pageListPost.setPageSize(this.maxPost) ;

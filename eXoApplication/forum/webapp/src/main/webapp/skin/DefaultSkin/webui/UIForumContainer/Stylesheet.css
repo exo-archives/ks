@@ -100,15 +100,12 @@
 .UIForumPortlet .UIForumContainer .ContentContainer .RightArrowIcon {
 	margin: 3px 4px 0px 2px;
 	width: 16px; height: 16px;
-	float: Right;
+	float: right;
 	cursor: pointer;
 }
 
 .UIForumPortlet .UIForumContainer .ContentContainer .DownArrow1Icon {
-	background-position: right;
 	padding-right: 16px;
-	line-height: 18px;
-	width: 60px;
 	cursor: pointer;
 }
 

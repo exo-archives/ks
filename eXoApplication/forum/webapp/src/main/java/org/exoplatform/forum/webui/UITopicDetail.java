@@ -31,6 +31,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
@@ -58,6 +59,7 @@ import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -371,7 +373,7 @@ public class UITopicDetail extends UIForm {
 			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
 				if(isHidden.equals("false") && !(this.topic.getOwner().equals(this.userProfile.getUserId()))) isApprove = "true" ;
 			}
-			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden)	; 
+			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "")	; 
 			this.isUpdatePageList = false ;
 		}
 		long maxPost = this.userProfile.getMaxPostInPage() ;
@@ -1002,6 +1004,12 @@ public class UITopicDetail extends UIForm {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
+			ForumAdministration forumAdministration = topicDetail.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
+			String []censoredKeyword = ForumFormatUtils.splitForForum(forumAdministration.getCensoredKeyword()) ;
+			boolean isOffend = false ; 
+			for (String string : censoredKeyword) {
+	      if(message.indexOf(string.trim()) >= 0) isOffend = true ;
+      }
 			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
 			StringBuffer buffer = new StringBuffer();
 			for (int j = 0; j < message.length(); j++) {
@@ -1031,10 +1039,19 @@ public class UITopicDetail extends UIForm {
 				post.setRemoteAddr("") ;
 				post.setIcon(topic.getIcon());
 				post.setIsApproved(false) ;
+				post.setIsHidden(isOffend) ;
 				topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
-        topicDetail.IdPostView = "true";
         topicDetail.setUpdatePostPageList(true);
         textAreaInput.setValue("") ;
+				if(isOffend) {
+					Object[] args = { "" };
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					topicDetail.IdPostView = "false";
+				} else {
+					topicDetail.IdPostView = "true";
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			}else {
 				String[] args = new String[] { "Message" } ;

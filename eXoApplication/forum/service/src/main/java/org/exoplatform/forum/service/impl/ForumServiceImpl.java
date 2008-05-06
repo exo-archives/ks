@@ -105,8 +105,8 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getTopicView(sProvider, categoryId, forumId, topicId);
 	}
 	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved) throws Exception {
-		return storage_.getPageTopic(sProvider, categoryId, forumId, isApproved);
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String strQuery) throws Exception {
+		return storage_.getPageTopic(sProvider, categoryId, forumId, isApproved, strQuery);
 	}
 
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
@@ -129,8 +129,8 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getPost(sProvider, categoryId, forumId, topicId, postId);
 	}
 
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden) throws Exception {
-		return storage_.getPosts(sProvider, categoryId, forumId, topicId, isApproved, isHidden);
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery) throws Exception {
+		return storage_.getPosts(sProvider, categoryId, forumId, topicId, isApproved, isHidden, strQuery);
 	}
 	
 	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath) throws Exception {
