@@ -28,11 +28,12 @@ import org.exoplatform.commons.utils.ISO8601;
  */
 public class FAQEventQuery {
 	private String type ;
+	private String text ;
 	private String name ;
-	private String description ;
+	private String isModeQuestion ;
+	private String moderator ;
 	private String path;
 	private String author;
-	private String language;
 	private String email ;
 	private String question;
 	private Calendar fromDate ;
@@ -47,17 +48,29 @@ public class FAQEventQuery {
 	public void setType(String type) {
   	this.type = type;
   }
+	public String getText() {
+  	return text;
+  }
+	public void setText(String text) {
+  	this.text = text;
+  }
 	public String getName() {
   	return name;
+  }
+	public void setIsModeQuestion(String isModeQuestion) {
+  	this.isModeQuestion = isModeQuestion;
+  }
+	public String getIsModeQuestion() {
+  	return isModeQuestion;
   }
 	public void setName(String name) {
   	this.name = name;
   }
-	public String getDescription() {
-  	return description;
+	public String getModerator() {
+  	return moderator;
   }
-	public void setDescription(String description) {
-  	this.description = description;
+	public void setModerator(String moderator) {
+  	this.moderator = moderator;
   }
 	public String getPath() {
   	return path;
@@ -77,12 +90,6 @@ public class FAQEventQuery {
 	public void setEmail(String email) {
   	this.email = email;
   }
-	public String getLanguage() {
-		return language;
-	}
-	public void setLanguage(String language) {
-		this.language = language;
-	}
 	public String getQuestion() {
 		return question;
 	}
@@ -110,14 +117,28 @@ public class FAQEventQuery {
     else  queryString.append("//element(*,").append(type).append(")") ;
     StringBuffer stringBuffer = new StringBuffer() ;
     stringBuffer.append("[");
+    if(text != null && text.length() > 0 ) {
+    	stringBuffer.append("(jcr:contains(., '").append(text).append("'))") ;
+  		isAnd = true ;
+    }
     if(name != null && name.length() > 0 ) {
     	stringBuffer.append("(jcr:contains(@exo:name, '").append(name).append("'))") ;
     	isAnd = true ;
+		  if(isModeQuestion != null && isModeQuestion.length() > 0) {
+		  	if(isAnd) stringBuffer.append(" and ");
+				stringBuffer.append("(@exo:isModerateQuestions='").append(isModeQuestion).append("')") ;
+				isAnd = true ;
+			}
     }
-    if(description != null && description.length() > 0) {
+    if(moderator != null && moderator.length() > 0) {
     	if(isAnd) stringBuffer.append(" and ");
-			stringBuffer.append("(@exo:description='").append(description).append("')") ;
+			stringBuffer.append("(@exo:moderators='").append(moderator).append("')") ;
 			isAnd = true ;
+			if(isModeQuestion != null && isModeQuestion.length() > 0) {
+		  	if(isAnd) stringBuffer.append(" and ");
+				stringBuffer.append("(@exo:isModerateQuestions='").append(isModeQuestion).append("')") ;
+				isAnd = true ;
+			}
 		}
     if(author != null && author.length() > 0) {
     	if(isAnd) stringBuffer.append(" and ");
@@ -140,6 +161,7 @@ public class FAQEventQuery {
     }
     stringBuffer.append("]");
     if(isAnd) queryString.append(stringBuffer.toString()) ;
+//    System.out.println("\n\n--->>PathQR:  " + queryString.toString() + "\n\n");
 	  return queryString.toString();
   }
 	

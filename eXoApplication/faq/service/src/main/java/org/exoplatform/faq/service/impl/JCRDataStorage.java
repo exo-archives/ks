@@ -430,6 +430,7 @@ public class JCRDataStorage {
 			watchingNode.save() ;
 		}
   	watchingNode.getSession().save();
+  	System.out.println("=====:::::"+ watchingNode.getSession().getValueFactory());
   }
   public List<Category> getQuickSeach(SessionProvider sProvider,String text) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
@@ -454,6 +455,7 @@ public class JCRDataStorage {
   	while(iter.hasNext()) {
   		Category category = new Category() ;
   		Node nodeObj = (Node) iter.nextNode();
+  		category.setId(nodeObj.getName());
   		if(nodeObj.hasProperty("exo:name")) category.setName(nodeObj.getProperty("exo:name").getString()) ;
     	if(nodeObj.hasProperty("exo:createdDate")) category.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
     	catList.add(category) ;
@@ -492,5 +494,53 @@ public class JCRDataStorage {
 		}
 	  return catList;
   }
-
+  
+  public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  	Node faqServiceHome = getFAQServiceHome(sProvider) ;
+		List<Question> questionList = new ArrayList<Question>() ;
+		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
+		String path = eventQuery.getPath() ;
+		if(path == null || path.length() <= 0) {
+			path = faqServiceHome.getPath() ;
+		}
+		eventQuery.setPath(path) ;
+		String type = eventQuery.getType() ;
+		String queryString = eventQuery.getPathQuery() ;
+		try {
+			Query query = qm.createQuery(queryString, Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes() ;
+			while (iter.hasNext()) {
+				if(type.equals("faqQuestion")) {
+					Question question = new Question() ;
+					Node nodeObj = (Node) iter.nextNode();
+					question.setId(nodeObj.getName());
+		    	if(nodeObj.hasProperty("exo:question")) question.setQuestion(nodeObj.getProperty("exo:question").getString()) ;
+		      if(nodeObj.hasProperty("exo:author")) question.setAuthor(nodeObj.getProperty("exo:author").getString()) ;
+		      if(nodeObj.hasProperty("exo:email")) question.setEmail(nodeObj.getProperty("exo:email").getString()) ;
+		      if(nodeObj.hasProperty("exo:createdDate")) question.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
+		      if(nodeObj.hasProperty("exo:categoryId")) question.setCategoryId(nodeObj.getProperty("exo:categoryId").getString()) ;
+		    	questionList.add(question) ;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+	  return questionList;
+  }
+  
+  public List<String> getCategoryPath(SessionProvider sProvider,  String categoryId) throws Exception {
+  	Node nodeCate = getCategoryNodeById(categoryId, sProvider) ;
+    boolean isContinue = true ;
+    List<String> breadcums = new ArrayList<String>() ;
+    while(isContinue) {
+    	if(nodeCate.getName().equals(CATEGORY_HOME)){
+    		break ;
+    	} else {
+    		breadcums.add(nodeCate.getName()) ;
+    	}
+    	nodeCate = nodeCate.getParent() ;
+    }
+		return breadcums;
+  }
 }

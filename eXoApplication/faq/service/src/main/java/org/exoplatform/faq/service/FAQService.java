@@ -146,4 +146,7 @@ public interface FAQService {
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception ;
   public List<Category> getQuickSeach(SessionProvider sProvider, String text) throws Exception ;
   public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception ;
+  
 }

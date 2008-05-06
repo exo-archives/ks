@@ -103,12 +103,18 @@ public class FAQServiceImpl implements FAQService{
   }
   
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception {
-  	
+  	jcrData_.addWatch(type, watchType, id, value, sProvider) ;
   }
   public List<Category> getQuickSeach(SessionProvider sProvider, String text) throws Exception {
   	return jcrData_.getQuickSeach(sProvider, text); 
   }
   public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.getAdvancedSeach(sProvider, eventQuery); 
+  }
+  public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  	return jcrData_.getAdvancedSeachQuestion(sProvider, eventQuery) ;
+  }
+  public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception {
+  	return jcrData_.getCategoryPath(sProvider, categoryId) ;
   }
 }
