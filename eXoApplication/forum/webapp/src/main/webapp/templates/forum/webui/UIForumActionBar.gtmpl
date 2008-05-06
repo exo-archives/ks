@@ -9,9 +9,12 @@
 		<div class="RightForumActionBar">
 			<div class="CenterForumActionBar">
 				<div class="ControlbarCotainer">
-				<%
-				if(isAdmin) { 
-					String[] actions = ["AddCategory","AddForum","ManageModerator"];
+				<%String[] actions = [""];
+					if(isAdmin) { 
+						actions = ["AddCategory","AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
+					} else {
+						actions = ["EditProfile","OpenBookMark"];
+					}
 					for(action in actions){  
 				%>
 					<div class="DefaultStyle ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
@@ -28,26 +31,7 @@
 						</a>
 					</div>
 					<div class="SeparatorLine"><span></span></div>
-				<%  } 
-					}
-					String[] actionsUser = ["EditProfile","OpenBookMark","OpenAdministration"];
-					for(action in actionsUser){  
-				%>
-					<div class="DefaultStyle ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-						<a href="<%=uicomponent.event(action)%>">
-							<div class="LeftOverButton">
-								<div class="RightOverButton">
-									<div class="CenterOverButton">
-										<div class="Icon ForumOption">
-											<%_ctx.appRes("UIForumActionBar.label." + action); %>
-										</div>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="SeparatorLine"><span></span></div>
-				<% } %>
+				<% }%>
 					<div style="float:right;"> 
 					<%  
 						uicomponent.renderChildren() ;

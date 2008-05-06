@@ -70,3 +70,15 @@
 .UIForumPortlet .DeleteThreadsIcon {
 	background: url('icons/DeleteThreadsIcon.gif') no-repeat ;
 }
+
+.UIForumPortlet .OpenAdministration {
+	background: url('icons/ForumAdminitration.gif') no-repeat ;
+}
+
+.UIForumPortlet .EditProfile {
+	background: url('icons/ForumOption.gif') no-repeat ;
+}
+
+.UIForumPortlet .OpenBookMark {
+	background: url('icons/Bookmark.gif') no-repeat ;
+}
