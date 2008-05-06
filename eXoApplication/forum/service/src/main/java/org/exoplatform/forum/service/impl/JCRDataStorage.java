@@ -111,6 +111,7 @@ public class JCRDataStorage{
     forumAdminNode.setProperty("exo:topicSortBy", forumAdministration.getTopicSortBy()) ;
     forumAdminNode.setProperty("exo:topicSortByType", forumAdministration.getTopicSortByType()) ;
     forumAdminNode.setProperty("exo:censoredKeyword", forumAdministration.getCensoredKeyword()) ;
+    forumHomeNode.getSession().save() ;
 	}
 	
 	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception {
