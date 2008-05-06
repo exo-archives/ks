@@ -172,15 +172,23 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean getIsPrivate(UserProfile userProfile, Category category) {
-		String user = userProfile.getUserId() ;
+  private boolean getIsPrivate(UserProfile userProfile, Category category) throws Exception {
+		String userId = userProfile.getUserId() ;
 		if(userProfile.getUserRole() == 0) return true ;
-		if(category.getOwner().equals(user)) return true ;
+		if(category.getOwner().equals(userId)) return true ;
 		String userList = category.getUserPrivate() ;
 		if(userList != null && userList.length() > 0) {
 			String []uesrs = userList.split(";");
 			for (String string : uesrs) {
-		    if(string.indexOf(user) >= 0) return true ;
+				if(string.indexOf("/") < 0) {
+					if(string.indexOf(userId) >= 0) return true ;
+				} else {
+					if(string.indexOf(":") > 0) {//mbs
+						if(ForumSessionUtils.hasUserInMemberShip(string, userId)) return true ;
+					} else {//gr
+						if(ForumSessionUtils.hasUserInGroup(string, userId)) return true ;
+					}
+				}
 	    }
 			return false ;
 		} else return true ;

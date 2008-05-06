@@ -360,7 +360,7 @@
 							<tr>
 								<th style="width: 40px;">&nbsp;</th>
 								<th style="width: 40px;">&nbsp;</th>
-								<th>Thread/Thread starter</th>
+								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon">Thread/Thread starter</div></a></th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
 								<th style="width: 96px;">Rating</th>
 								<th style="width: 40px;">Tag</th>

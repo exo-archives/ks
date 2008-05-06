@@ -16,3 +16,12 @@
 .UIForumPortlet .UICategoryForm .UIFormInput {
 	padding: 0px 0px 0px 20px;
 }
+
+.UIForumPortlet .UICategoryForm .HorizontalLayout textarea {
+	height:65px;
+	width:232px;
+}
+
+.UIForumPortlet .UICategoryForm .HorizontalLayout input {
+	width:232px;
+}

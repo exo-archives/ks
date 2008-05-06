@@ -105,6 +105,33 @@ public class ForumSessionUtils {
   	return organizationService.getUserHandler().findUserByName(userId) ;
   }
 
+  @SuppressWarnings("unchecked")
+  public static List<User> getUserByGroupId(String groupId) throws Exception {
+  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	return organizationService.getUserHandler().findUsersByGroup(groupId).getAll() ;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
+  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	List<User> users = organizationService.getUserHandler().findUsersByGroup(groupId).getAll() ;
+  	for (User user : users) {
+	    if(user.getUserName().equals(userId)) return true ;
+    }
+  	return false ;
+  }
+
+  
+  public static boolean hasUserInMemberShip(String membership, String userId) throws Exception {
+  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	String []memberShipbyuser = (String[]) organizationService.getMembershipHandler().findMembershipsByUser(userId).toArray() ;
+  	for (String string : memberShipbyuser) {
+	    if(membership.equals(string)) return true ;
+    }
+  	return false; 
+  	
+  }
+
   public static Contact getPersonalContact(String userId) throws Exception {
   	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;
 	  return contactService.getPersonalContact(userId);

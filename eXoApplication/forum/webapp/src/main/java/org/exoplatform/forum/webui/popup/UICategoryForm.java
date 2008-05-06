@@ -16,8 +16,10 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
@@ -30,7 +32,6 @@ import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
-import org.exoplatform.forum.webui.UIFormTextAreaMultilInput;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -43,8 +44,11 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
@@ -55,7 +59,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UICategoryForm.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
 		events = {
 			@EventConfig(listeners = UICategoryForm.SaveActionListener.class), 
 			@EventConfig(listeners = UICategoryForm.AddValuesPrivateCategoryActionListener.class, phase=Phase.DECODE),
@@ -72,17 +76,35 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	private Map<String, String> permission_ = new HashMap<String, String>() ;
 	public UICategoryForm() throws Exception {
 		UIFormStringInput categoryTitle = new UIFormStringInput(FIELD_CATEGORYTITLE_INPUT, FIELD_CATEGORYTITLE_INPUT, null);
-		categoryTitle.addValidator(EmptyNameValidator.class);
+		categoryTitle.addValidator(MandatoryValidator.class);
 		UIFormStringInput categoryOrder = new UIFormStringInput(FIELD_CATEGORYORDER_INPUT, FIELD_CATEGORYORDER_INPUT, "0");
 		categoryOrder.addValidator(PositiveNumberFormatValidator.class);
 		UIFormStringInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null);
 
-		UIFormTextAreaMultilInput userPrivate = new UIFormTextAreaMultilInput(FIELD_USERPRIVATE_MULTIVALUE, FIELD_USERPRIVATE_MULTIVALUE, null);
+		UIFormTextAreaInput userPrivate = new UIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE, FIELD_USERPRIVATE_MULTIVALUE, null);
 		
-		addUIFormInput(categoryTitle);
-		addUIFormInput(categoryOrder);
-		addUIFormInput(userPrivate);
-		addUIFormInput(description);
+		UIFormInputWithActions uicategory = new UIFormInputWithActions("category");
+		uicategory.addUIFormInput(categoryTitle);
+		uicategory.addUIFormInput(categoryOrder);
+		uicategory.addUIFormInput(userPrivate);
+		uicategory.addUIFormInput(description);
+
+		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
+		List<ActionData>actions = new ArrayList<ActionData>() ;
+		ActionData ad ;
+		int i = 0;
+		for(String string : strings) {
+			ad = new ActionData() ;
+			ad.setActionListener("AddValuesPrivateCategory") ;
+			ad.setActionParameter(String.valueOf(i)) ;
+			ad.setCssIconClass(string + "Icon") ;
+			ad.setActionName(string);
+			actions.add(ad) ;
+			uicategory.setActionField(FIELD_USERPRIVATE_MULTIVALUE, actions);
+			++i;
+		}
+		addUIFormInput(uicategory) ;	
+		this.setActions(new String[]{"Save","Cancel"}) ;
 	}
 	
 	public void activate() throws Exception {}
@@ -131,6 +153,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       String userInvalid = "" ;
       String userValid = "" ;
       for(String user : listUser) {
+      	if(user.indexOf("/") >= 0) continue ;
         if(ForumSessionUtils.getUserByUserId(user.trim()) != null) {
           if(userValid.trim().length() > 0) userValid += "," ;
           userValid += user.trim() ;
@@ -168,10 +191,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	static	public class AddValuesPrivateCategoryActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
     	UICategoryForm categoryForm = event.getSource() ;
+    	String type = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
-      uiGroupSelector.setType("0") ;
+      uiGroupSelector.setType(type) ;
       uiGroupSelector.setSelectedGroups(null) ;
       uiGroupSelector.setComponent(categoryForm, new String[]{UICategoryForm.FIELD_USERPRIVATE_MULTIVALUE}) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;

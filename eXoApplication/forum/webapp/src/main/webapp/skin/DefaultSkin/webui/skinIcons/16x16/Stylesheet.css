@@ -333,10 +333,22 @@
 	background: url('icons/SmallGroupIcon.gif') no-repeat left center;
 }
 
+.UIForumPortlet .SelectGroupIcon {
+	width: 16px;
+	height: 16px;
+	background: url('icons/SmallGroupIcon.gif') no-repeat center;
+}
+
+.UIForumPortlet .SelectMemberShipIcon {
+	width: 16px;
+	height: 16px;
+	background: url('icons/SelectMemberShipIcon.gif') no-repeat center;
+}
+
 .UIForumPortlet .SelectUserIcon {
 	width: 16px;
 	height: 16px;
-	background: url('icons/UserIcon.png') no-repeat left center;
+	background: url('icons/UserIcon.png') no-repeat center;
 }
 
 .UIForumPortlet .SetUnStickIcon {
