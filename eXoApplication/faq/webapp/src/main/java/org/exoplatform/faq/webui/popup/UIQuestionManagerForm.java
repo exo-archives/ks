@@ -29,6 +29,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -91,7 +92,9 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   private String authorInput_ = "" ;
   private String emailInput_ = "" ;
   private List<String> questionInput_ = new ArrayList<String>() ;
+  @SuppressWarnings("unused")
   private boolean isApproved = true ;
+  @SuppressWarnings("unused")
   private boolean isActivated = true ;
   
   @SuppressWarnings("unused")
@@ -195,21 +198,31 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   private void setListQuestion() throws Exception {
     listQuestion_.clear() ;
     String user = FAQUtils.getCurrentUser() ;
-    List<Category> listCate = new ArrayList<Category>() ;
     pageIterator = this.getChild(UIFAQPageIterator.class) ;
+    SessionProvider sProvider = FAQUtils.getSystemProvider() ;
     if(!user.equals("root")) {
-      for(Category category : faqService_.getAllCategories(FAQUtils.getSystemProvider())) {
-        if(isHaveString(category.getModerators(), user)) {
-          listCate.add(category) ;
+      List<String> listCateId = new ArrayList<String>() ;
+      listCateId.addAll(faqService_.getListCateIdByModerator(user, sProvider)) ;
+      int i = 0 ;
+      while(i < listCateId.size()) {
+        for(Category category : faqService_.getSubCategories(listCateId.get(i), sProvider)) {
+          if(!listCateId.contains(category.getId())) {
+            listCateId.add(category.getId()) ;
+          }
         }
+        i ++ ;
       }
-      for(Category category : listCate) {
-        this.pageList = faqService_.getQuestionsByCatetory(category.getId(), FAQUtils.getSystemProvider()) ;
-        this.pageList.setPageSize(5) ;
+      if(!listCateId.isEmpty()) {
+        this.pageList = faqService_.getQuestionsByListCatetory(listCateId, false, sProvider) ;
+        this.pageList.setPageSize(5);
+        pageIterator.updatePageList(this.pageList) ;
+      } else {
+        this.pageList = null ;
+        this.pageList.setPageSize(5);
         pageIterator.updatePageList(this.pageList) ;
       }
     } else {
-      this.pageList = faqService_.getAllQuestions(FAQUtils.getSystemProvider()) ;
+      this.pageList = faqService_.getAllQuestions(sProvider) ;
       this.pageList.setPageSize(5);
       pageIterator.updatePageList(this.pageList) ;
     }

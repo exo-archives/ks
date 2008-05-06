@@ -226,6 +226,29 @@ public class JCRDataStorage {
     return pageList ;
   }
   
+  public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() + "//element(*,exo:faqQuestion)[(");
+    
+    int i = 0 ;
+    for(String categoryId : listCategoryId) {
+      queryString.append("(@exo:categoryId='").append(categoryId).append("')");
+      if(i < listCategoryId.size() - 1)
+        queryString.append(" or ") ;
+      i ++ ;
+    }
+    if(!isNotYetAnswer) {
+      queryString.append(")]order by @exo:createdDate ascending");
+    } else {
+      queryString.append(") and (@exo:responses=' ')]order by @exo:createdDate ascending");
+    }
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    return pageList ;
+  }
+  
   public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception {
   	Node questionHome = getQuestionHome(sProvider, null) ;
   	for(String id : questions) {
@@ -313,6 +336,21 @@ public class JCRDataStorage {
   
   public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
   	return getCategory(getCategoryNodeById(categoryId, sProvider)) ;
+  }
+  
+  public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception {
+    Node categoryHome = getCategoryHome(sProvider, null) ;
+    QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+    StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+        + "//element(*,exo:faqCategory)[@exo:moderators='").append(user).append("']") ;
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    NodeIterator iter = result.getNodes() ;
+    List<String> listCateId = new ArrayList<String>() ;
+    while(iter.hasNext()) {
+      listCateId.add(getCategory(iter.nextNode()).getId()) ;
+    }
+    return listCateId ;
   }
   
   public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {

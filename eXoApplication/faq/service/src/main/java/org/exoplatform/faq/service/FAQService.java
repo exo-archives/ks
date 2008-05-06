@@ -62,6 +62,14 @@ public interface FAQService {
   public List<Category> getAllCategories(SessionProvider sProvider) throws Exception ;  
   /**
    * This method should:
+   * 1. Lookup all the categories node, find category have user in moderators
+   * 2. Convert to category object and return list of category object
+   * @return Category list
+   * @throws Exception
+   */
+  public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception ;  
+  /**
+   * This method should:
    * 1. Lookup all sub-categories of a category
    * 2. Convert to category object and return list of category object
    * @param Category identify
@@ -122,6 +130,15 @@ public interface FAQService {
    * @throws Exception
    */
   public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
+  /**
+   * This method should:
+   * 1. Lookup questions node via category identify
+   * 2. Convert to list of question object
+   * @param Category identify
+   * @return Question list
+   * @throws Exception
+   */
+  public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions via question identify and from category identify

@@ -28,56 +28,38 @@
 							
 							boolean isViewQuesNotYetAns = uicomponent.getIsViewQuesNotYetAnswer() ;
 							if(canEditQuestion) {
+								String[] actionTollbar ;
 								if(cateId != null && cateId.trim().length() > 0) {
-									String[] actionTollbar = uicomponent.getActionTollbar() ;
-									for(String action in actionTollbar) {
-									String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
-							%>
-										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
-											<a href="<%=uicomponent.event(action, cateId)%>">
-												<div class="LeftOverButton">
-													<div class="RightOverButton">
-														<div class="CenterOverButton">
-															<div class="Icon $action">
-																$itemLabelView
-															</div>
-														</div>
-													</div>
-												</div>
-											</a>
-										</div>
-										<div class="SeparatorLine"><span></span></div>
-							<%
-									}
+									actionTollbar = uicomponent.getActionTollbar() ;
 								} else {
-									String[] actionTollbar = uicomponent.getFirstTollbar() ;
-									String linkAction = "" ;
-									String opacity ;
-									for(String action in actionTollbar) {
-										linkAction = uicomponent.event(action) ;
-										String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
-										opacity = "1" ;
-										if(isViewQuesNotYetAns && !action.equals("ShowQuestionNotYetAnswer")) {
-											opacity = "0.5" ;
-											linkAction = "javaScript:void(0)" ;
-										}
+									actionTollbar = uicomponent.getFirstTollbar() ;
+								}
+								String linkAction = "" ;
+								String opacity ;
+								for(String action in actionTollbar) {
+									linkAction = uicomponent.event(action) ;
+									String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+									opacity = "1" ;
+									if(isViewQuesNotYetAns && !action.equals("ShowQuestionNotYetAnswer")) {
+										opacity = "0.5" ;
+										linkAction = "javaScript:void(0)" ;
+									}
 							%>
-										<div style="opacity:$opacity" onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
-											<a href="$linkAction">
-												<div class="LeftOverButton">
-													<div class="RightOverButton">
-														<div class="CenterOverButton">
-															<div class="Icon $action">
-																$itemLabelView
-															</div>
+									<div style="opacity:$opacity" onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+										<a href="$linkAction">
+											<div class="LeftOverButton">
+												<div class="RightOverButton">
+													<div class="CenterOverButton">
+														<div class="Icon $action">
+															$itemLabelView
 														</div>
 													</div>
 												</div>
-											</a>
-										</div>
-										<div class="SeparatorLine"><span></span></div>
+											</div>
+										</a>
+									</div>
+									<div class="SeparatorLine"><span></span></div>
 							<%
-									}
 								}
 							}
 							%>
@@ -273,14 +255,21 @@
 							
 						</div>
 					</div>
-					<%if(uicomponent.getQuestionView().equals(qId) && question.getResponses().trim().length() > 0) {
-						String[] arrayString = question.getResponses().split("/") ;
-						String responseBy = arrayString[0] ;
-						String date = arrayString[1] ;
-						String response = "" ;
-						for(int t = 2 ; t < arrayString.length ; t ++) {
-							if(arrayString[t].trim().length() > 0)
-								response += arrayString[t];
+					<%if(uicomponent.getQuestionView().equals(qId)) {
+						String[] arrayString ;
+						String responseBy = "..." ;
+						String date = "..." ;
+						String response = "<center><b>This questin have not yet answer</center></b>" ;
+						
+						if( question.getResponses().trim().length() > 0) {
+							arrayString = question.getResponses().split("/") ;
+							responseBy = arrayString[0] ;
+							date = arrayString[1] ;
+							response = "" ;
+							for(int t = 2 ; t < arrayString.length ; t ++) {
+								if(arrayString[t].trim().length() > 0)
+									response += arrayString[t];
+							}
 						}
 					%>
 						<div class="ResponseContent">

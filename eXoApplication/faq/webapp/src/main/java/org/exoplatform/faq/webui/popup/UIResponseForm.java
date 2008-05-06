@@ -316,7 +316,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       if(!questions.getIsViewQuesNotYetAnswer()) {
         questions.setListQuestion() ;
       }  else {
-        questions.setListQuestion(faqService.getQuestionsNotYetAnswer(FAQUtils.getSystemProvider()).getAll()) ;
+        List<Question> listQuestion = questions.getListQuestion() ;
+        for(Question question : listQuestion) {
+          if(question.getId().equals(response.questionId_)) {
+            listQuestion.remove(question) ;
+            break ;
+          }
+        }
+        questions.setListQuestion(listQuestion) ;
       }
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;

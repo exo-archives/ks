@@ -65,6 +65,10 @@ public class FAQServiceImpl implements FAQService{
 	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getQuestionsByCatetory(categoryId, sProvider);
 	}
+  
+	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
+	  return jcrData_.getQuestionsByListCatetory(listCategoryId, isNotYetAnswer, sProvider);
+	}
 
 	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getSubCategories(categoryId, sProvider);
@@ -105,11 +109,18 @@ public class FAQServiceImpl implements FAQService{
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception {
   	jcrData_.addWatch(type, watchType, id, value, sProvider) ;
   }
+  
   public List<Category> getQuickSeach(SessionProvider sProvider, String text) throws Exception {
   	return jcrData_.getQuickSeach(sProvider, text); 
   }
+  
   public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.getAdvancedSeach(sProvider, eventQuery); 
+  }
+  
+  public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception {
+    // TODO Auto-generated method stub
+    return jcrData_.getListCateIdByModerator(user, sProvider); 
   }
   public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.getAdvancedSeachQuestion(sProvider, eventQuery) ;
