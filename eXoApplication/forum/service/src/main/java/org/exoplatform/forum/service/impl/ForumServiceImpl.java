@@ -16,7 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -44,6 +48,8 @@ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
  */
 public class ForumServiceImpl implements ForumService{
 	private JCRDataStorage storage_ ;
+	private final Map<String, Boolean> onlineUsers_ = new HashMap<String, Boolean>() ;
+	private String lastLogin_ = "";
 	
 	public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
 		storage_ = new JCRDataStorage(nodeHierarchyCreator) ;
@@ -255,6 +261,33 @@ public class ForumServiceImpl implements ForumService{
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
 	  storage_.saveForumAdministration(sProvider, forumAdministration) ;
   }
+
+	public synchronized void userLogin(String userId) throws Exception {
+		lastLogin_ = userId ;
+		onlineUsers_.put(userId, true) ;		
+	}
+
+	public void userLogout(String userId) throws Exception {
+		onlineUsers_.put(userId, false) ;	  
+	}
+	
+	public boolean isOnline(String userId) throws Exception {
+		boolean isOnline = onlineUsers_.get(userId) ;
+		return isOnline ;		
+	}
+	
+	public List<String> getOnlineUsers() throws Exception {
+		List<String> users = new ArrayList<String>() ;
+		Set<String> keys = onlineUsers_.keySet() ;
+	  for(String key : keys) {
+	  	if(onlineUsers_.get(key)) users.add(key) ;
+	  }
+		return users ;
+	}
+	
+	public String getLastLogin() throws Exception {
+		return lastLogin_ ;
+	}
 }
 
 

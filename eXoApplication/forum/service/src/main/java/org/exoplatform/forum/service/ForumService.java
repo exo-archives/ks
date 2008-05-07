@@ -302,6 +302,13 @@ public interface ForumService {
 	
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception ;
 	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception ;
+	
+	public void userLogin(String userId)throws Exception ;
+	public void userLogout(String userId)throws Exception ;
+	public boolean isOnline(String userId) throws Exception ;
+	public List<String> getOnlineUsers() throws Exception ;
+	public String getLastLogin() throws Exception ;
+	
 }
 
 
