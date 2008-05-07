@@ -1,0 +1,96 @@
+<% 
+	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.service.FileAttachment;
+ %>
+<div class="UIPopupViewQuestion $uicomponent.id" >
+	<% uiform.begin() %>
+	<div class= "ViewQuestion" >
+			<% 
+ 						Question question = uicomponent.getViewQuestion() ; 
+						String qId = question.getId();
+						String[] arrayString ;
+						String responseBy = "..." ;
+						String date = "..." ;
+						String response = "<center><b>This questin have not yet answer</center></b>" ;
+						
+						if( question.getResponses().trim().length() > 0) {
+							arrayString = question.getResponses().split("/") ;
+							responseBy = arrayString[0] ;
+							date = arrayString[1] ;
+							response = "" ;
+							for(int t = 2 ; t < arrayString.length ; t ++) {
+								if(arrayString[t].trim().length() > 0)
+									response += arrayString[t];
+							}
+						}
+					%>
+			<div class="ResponseContent">
+				<div class="Response">
+					$response<br>
+				</div>
+				<div class="AttachmentContent">
+					attachment:<br>
+					<%
+					for(FileAttachment fileAttachment : question.getAttachMent()){
+				    String fileName = fileAttachment.getName() ;
+				    String fileSize = fileAttachment.getSize() ;
+				    String dataPath = "" ;
+				    String fileStream = "" ;
+				    try{
+				      dataPath = fileAttachment.getDataPath() ;
+				      fileStream = fileAttachment.getInputStream() ;
+				    } catch(Exception e) {
+				    	dataPath = "null" ;
+				      fileStream = "null" ;
+				    }
+				    String fileType = fileAttachment.getMimeType() ;
+				    String fileWorkSpace = fileAttachment.getWorkspace() ;
+				    %>
+				    fileName: $fileName<br>
+				    fileSize: $fileSize<br>
+				    dataPath: $dataPath<br>
+				    fileStream: $fileStream<br>
+				    fileType: $fileType<br>
+				    fileWorkSpace: $fileWorkSpace<br>
+			  <%}%>
+				</div>
+				<div class="RelatedQuestions"><b>Related question:</b><br>
+					<%String questionRelationById = "" ;
+						String cateRelaId = "" ;
+						String quesRelaId = "" ;
+						String quesRelaCont = "" ;
+						String linkRelaQues = "" ;
+						for(String relationId : question.getRelations()) { 
+							questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
+							cateRelaId = questionRelationById.split("/")[0] ;
+							quesRelaId = questionRelationById.split("/")[1] ;
+							quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
+							linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId) ;
+					%>
+							<a href="$linkRelaQues"> $quesRelaCont<br></a>
+					<% } %>
+				</div>
+				<div class="UIAction ResponsActions" style="float: left">
+						<div style="float:left">Response by: $responseBy , $date</div>
+						<div style="float:right"></div>
+				 </div>
+				<div style="clear: left"><span></span></div>
+			</div>
+		</div>
+		<div class="UIAction">
+    	<table class="ActionContainer" align="center">
+			  <tr>
+				  <td align="center">
+		    		<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+			  	  	<div class="ButtonLeft">
+			    	  	<div class="ButtonRight">
+			      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></div>
+			        	</div>
+			      	</div>
+		    		</a>
+	      	</td>
+				</tr>
+ 	  </table>
+	</div>
+	<%uiform.end()%>
+</div>

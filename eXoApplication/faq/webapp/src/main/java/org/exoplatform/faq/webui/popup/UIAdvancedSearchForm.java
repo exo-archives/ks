@@ -28,6 +28,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -213,13 +214,15 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				result.setListCategory(list) ;
 				result.init() ;
 			} else {
-				ResultSearchQuestion result = popupAction.activate(ResultSearchQuestion.class, 600) ;
-				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-				List<Question> list = faqService.getAdvancedSeachQuestion(FAQUtils.getSystemProvider(),eventQuery);
-				System.out.println("====>>>>list:" + list);
-				popupContainer.setId("ResultSearchQuestion") ;
-				result.setListQuestion(list) ;
-				result.init() ;
+				
+				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 600) ;
+				
+ 			ResultSearchQuestion result = resultcontainer.getChild(ResultSearchQuestion.class) ;
+ 			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+ 				List<Question> list = faqService.getAdvancedSeachQuestion(FAQUtils.getSystemProvider(),eventQuery);
+ 				popupContainer.setId("ResultSearchQuestion") ;
+ 				result.setListQuestion(list) ;
+ 				result.init() ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

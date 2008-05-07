@@ -49,8 +49,6 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 
-import com.sun.mail.util.QEncoderStream;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Mai Van Ha

@@ -19,9 +19,8 @@ package org.exoplatform.faq.webui.popup;
 import java.util.List;
 
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -56,29 +55,30 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
   public void setListQuestion(List<Question> listQuestion) {
     this.listQuestion_ = listQuestion ;
   }
-  
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
   public String[] getActions() { return new String[] {"Close"} ; }
-  public void activate() throws Exception {
-	  // TODO Auto-generated method stub
-  }
-	public void deActivate() throws Exception {
-	  // TODO Auto-generated method stub
-  }
   
 	static	public class LinkActionListener extends EventListener<ResultSearchQuestion> {
 		public void execute(Event<ResultSearchQuestion> event) throws Exception {
 			ResultSearchQuestion resultSearch = event.getSource() ;
-			UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
-			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			System.out.println("====>>>>>>id" + id) ;
-      
+			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		  UIResultContainer uiResultContainer = resultSearch.getParent() ;
+			UIPopupAction popupAction = uiResultContainer.getChild(UIPopupAction.class) ;
+			UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 600) ;
+		  viewQuestion.setQuestion(questionId) ;
+			viewQuestion.setId("UIPopupViewQuestion") ;
+		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
 	static	public class CloseActionListener extends EventListener<ResultSearchQuestion> {
 		public void execute(Event<ResultSearchQuestion> event) throws Exception {
-			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
-			faqPortlet.cancelAction() ;
+			ResultSearchQuestion resultSearchQuestion = event.getSource() ;
+      UIFAQPortlet portlet = resultSearchQuestion.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 }

@@ -17,7 +17,6 @@
 package org.exoplatform.faq.webui.popup;
 
 import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.portal.webui.application.UIPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
