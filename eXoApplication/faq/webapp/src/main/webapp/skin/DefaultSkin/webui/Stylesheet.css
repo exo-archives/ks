@@ -1,468 +1,476 @@
 @import url('UIMoveCategoryForm/Stylesheet.css') ;
 
 .UIFAQPortlet {
-	padding: 5px; height: 400px;
+  padding: 5px; height: 400px;
 }
 
-.UIFAQPortlet .UIBreadcumbs .OpenIcon{
-	float: left;
-	background: url('background/FAQPortlet.gif') no-repeat left -243px;
-	width: 16px; height: 14px;
-	margin: 5px 8px 0px 8px;
+.UIFAQPortlet .UIBreadcumbs {
+  padding:0px ;
 }
 
-.UIFAQPortlet .UIBreadcumbs .Selected{
-	float: left;
-	font-weight: boldd;
+.UIFAQPortlet .UIBreadcumbs .OpenIcon {
+  float: left;
+  background: url('background/FAQPortlet.gif') no-repeat left -243px;
+  width: 16px; height: 14px;
+  margin: 5px 8px 0px 8px;
 }
 
-.UIFAQPortlet .UICategoriesSummary{
-	margin: 5px;
+.UIFAQPortlet .UIBreadcumbs .Selected {
+  float: left;
+  font-weight: boldd;
 }
 
-.UIFAQPortlet .FAQIcon{
-	background: url('background/FAQPortlet.gif') no-repeat left -465px;
-	padding-left: 28px;
-	height: 18px;
-	line-height: 18px;
-	margin: 8px 0px;
-	white-space: nowrap;
+.UIFAQPortlet .UICategoriesSummary {
+  margin: 5px;
+}
+
+.UIFAQPortlet .FAQIcon {
+  background: url('background/FAQPortlet.gif') no-repeat left -465px;
+  padding-left: 28px;
+  height: 18px;
+  line-height: 18px;
+  margin: 8px 0px;
+  white-space: nowrap;
 }
 /**************************** UIForumPortlet ForumToolBar *********************************/
+.UIFAQPortlet .UIQuestions {
+  margin-top: 5px;
+}
+
 .UIFAQPortlet .FAQToolbar {
-	height: 28px;
-	_width: 99.7%;
+  height: 28px;
+  _width: 99.7%;
 }
 
 .UIFAQPortlet a {
-	color: #000000;
+  color: #000000;
 }
 
 .UIFAQPortlet a:hover {
-	color: #058ee6;
+  color: #058ee6;
 }
 
 .UIFAQPortlet .FAQToolbar .Title {
-	float: left;
-	font-weight: bold;
-	margin: 6px 0px 0px 8px;
+  float: left;
+  font-weight: bold;
+  margin: 6px 0px 0px 8px;
 }
 
 .UIFAQPortlet .FAQToolbar .SeparatorLine {
-	float: left;
-	background: url(background/FAQPortlet.gif) no-repeat left -188px;
-	width: 2px; height: 22px;
-	margin: 3px;
+  float: left;
+  background: url(background/FAQPortlet.gif) no-repeat left -188px;
+  width: 2px; height: 22px;
+  margin: 3px;
 }
 
 .UIFAQPortlet .FAQToolbar .LeftBar {
-	background: url('background/FAQPortlet.gif') no-repeat left -29px;
-	padding-left: 3px;
+  background: url('background/FAQPortlet.gif') no-repeat left -29px;
+  padding-left: 3px;
 }
 
 .UIFAQPortlet .FAQToolbar .RightBar {
-	background: url('background/FAQPortlet.gif') no-repeat right -29px;
-	padding-right: 3px;
+  background: url('background/FAQPortlet.gif') no-repeat right -29px;
+  padding-right: 3px;
 }
 
 .UIFAQPortlet .FAQToolbar .CenterBar {
-	background: url('background/FAQPortlet.gif') repeat-x top;
-	height: 28px;
+  background: url('background/FAQPortlet.gif') repeat-x top;
+  height: 28px;
 }
 
 .UIFAQPortlet .FAQToolbar .UIPopupCategory {
-	left: 0px;
-	position: absolute;
-	top: 24px;
-	width: auto;
-	z-index: 100;
+  left: 0px;
+  position: absolute;
+  top: 24px;
+  width: auto;
+  z-index: 100;
 }
 
 .UIFAQPortlet .FAQToolbar .UIRightClickPopupMenu {
-	width:175px;
+  width:175px;
 }
 
 .UIFAQPortlet .FAQToolbar .UIRightClickPopupMenu .LineMenu {
-	width:150px;
-	margin: 4px auto;
-	border-top: solid 1px #7b7b7b;
+  width:150px;
+  margin: 4px auto;
+  border-top: solid 1px #7b7b7b;
 }
 
 .UIFAQPortlet .FAQToolbar .UIRightClickPopupMenu {
-	min-width:190px;
-	white-space: nowrap;
+  min-width:190px;
+  white-space: nowrap;
 }
 
 .UIFAQPortlet .FAQToolbar .ControlbarCotainer {
-	float: left;
+  float: left;
 }
 
 .UIFAQPortlet .FAQToolbar .SearchForm {
-	float: right;
-	width: 220px;
-	padding-right: 10px;
+  float: right;
+  width: 220px;
+  padding-right: 10px;
 }
 
 .UIFAQPortlet .FAQToolbar .SearchForm .SearchIcon {
-	background: url('background/FAQPortlet.gif') no-repeat left -210px;
-	float: right;
-	height:16px;
-	margin:6px 3px 0px 3px;
-	width:16px;
-	cursor: pointer;
+  background: url('background/FAQPortlet.gif') no-repeat left -210px;
+  float: right;
+  height:16px;
+  margin:6px 3px 0px 3px;
+  width:16px;
+  cursor: pointer;
 }
 
 .UIFAQPortlet .FAQToolbar .SearchForm .AdvancedSearch {
-	background: url('background/FAQPortlet.gif') no-repeat left -226px;
-	float:right;
-	height:16px;
-	margin:6px 3px 0px 3px;
-	width:16px;
-	cursor: pointer;
+  background: url('background/FAQPortlet.gif') no-repeat left -226px;
+  float:right;
+  height:16px;
+  margin:6px 3px 0px 3px;
+  width:16px;
+  cursor: pointer;
 }
 
 .UIFAQPortlet .UISearchForm input {
-	float:right;
-	margin:4px 5px 0px 5px;
-	width:150px;
-	height: 13px;
+  float:right;
+  margin:4px 5px 0px 5px;
+  width:150px;
+  height: 13px;
 }
 
-/******************************	OverButton	***************************************/
+/******************************  OverButton  ***************************************/
 .UIFAQPortlet .DefaultStyle {
-	background: none;
-	float: left;
-	margin: 3px 3px 0px 3px; 
+  background: none;
+  float: left;
+  margin: 3px 3px 0px 3px; 
 }
 
 .UIFAQPortlet .DefaultStyle .LeftOverButton {
-	padding-left: 5px;
+  padding-left: 5px;
 }
 
 .UIFAQPortlet .DefaultStyle .RightOverButton {
-	padding-right: 5px;
+  padding-right: 5px;
 }
 
 .UIFAQPortlet .DefaultStyle .CenterOverButton {
-	padding-left: 3px;
+  padding-left: 3px;
 }
 /*FAQAction*/
 .UIFAQPortlet .FAQBar {
-	background: none;
-	height: 22px;
+  background: none;
+  height: 22px;
 }
 
 .UIFAQPortlet .FAQBarAction .LeftOverButton {
-	background: url('background/FAQPortlet.gif') no-repeat left -440px;
+  background: url('background/FAQPortlet.gif') no-repeat left -440px;
 }
 
 .UIFAQPortlet .FAQBarAction .RightOverButton {
-	background: url('background/FAQPortlet.gif') no-repeat right -440px;
+  background: url('background/FAQPortlet.gif') no-repeat right -440px;
 }
 
 .UIFAQPortlet .FAQBarAction .CenterOverButton {
-	background: url('background/FAQPortlet.gif') repeat-x center -417px;
-	line-height: 22px;
+  background: url('background/FAQPortlet.gif') repeat-x center -417px;
+  line-height: 22px;
 }
 
-/******************************	FAQContent	***************************************/
+/******************************  FAQContent  ***************************************/
 
 .UIFAQPortlet .FAQContainer {
-	border: 1px solid #c7c7c7;
-	border-top: 0px;
-	overflow: auto;
-	height: 300px; 
-	_width: 99.5%;
+  border: 1px solid #c7c7c7;
+  border-top: 0px;
+  overflow: auto;
+  height: 300px; 
+  _width: 99.5%;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent {
-	padding: 8px;
-	height: 400px;
+  padding: 8px;
+  height: 400px;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .FAQCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -465px;
-	padding-left: 28px;
-	height: 18px;
-	line-height: 18px;
-	margin: 8px 0px;
-	white-space: nowrap;
+  background: url('background/FAQPortlet.gif') no-repeat left -465px;
+  padding-left: 28px;
+  height: 18px;
+  line-height: 18px;
+  margin: 8px 0px;
+  white-space: nowrap;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIFAQPopupCategory {
-	left: 40px;
-	position: absolute;
-	top: 15px;
-	width: auto;
-	z-index: 100;
+  left: 40px;
+  position: absolute;
+  top: 15px;
+  width: auto;
+  z-index: 100;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIContextMenuContainer {
-	width:140px;
+  width:140px;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIContextMenuContainer .LineMenu {
-	width:150px;
-	margin: 4px auto;
-	border-top: solid 1px #7b7b7b;
+  width:150px;
+  margin: 4px auto;
+  border-top: solid 1px #7b7b7b;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Sup-Title {
-	font-weight: bold;
+  font-weight: bold;
 }
 
-/******************************	UIFAQ Sup-Category	***************************************/
+/******************************  UIFAQ Sup-Category  ***************************************/
 
 .UIFAQPortlet .UIFAQSupCategory{
-	margin: 5px;
+  margin: 5px;
 }
 
 
 .UIFAQPortlet .FAQContainer .FAQContent .Sup-Icon {
-	background: url('background/FAQPortlet.gif') no-repeat left -166px;
-	padding-left: 28px;
-	height: 18px;
-	line-height: 18px;
-	margin: 8px 0px;
-	white-space: nowrap;
+  background: url('background/FAQPortlet.gif') no-repeat left -166px;
+  padding-left: 28px;
+  height: 18px;
+  line-height: 18px;
+  margin: 8px 0px;
+  white-space: nowrap;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Question {
-	background: url('background/FAQPortlet.gif') no-repeat left -818px;
-	padding-left: 28px;
-	height: 18px;
-	line-height: 18px;
-	margin: 8px 0px;
-	white-space: nowrap;
+  background: url('background/FAQPortlet.gif') no-repeat left -818px;
+  padding-left: 28px;
+  height: 18px;
+  line-height: 18px;
+  margin: 8px 0px;
+  white-space: nowrap;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Question-Title {
-	color: #1555b5;
+  color: #1555b5;
 }
 
-/******************************	Response	***************************************/
+/******************************  Response  ***************************************/
 
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseContent {
-	padding: 0px 8px 8px 26px;
+  padding: 0px 8px 8px 26px;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Response {
-	background: url('background/DotLine.gif') repeat-x bottom;
-	padding-bottom: 4px;
+  background: url('background/DotLine.gif') repeat-x bottom;
+  padding-bottom: 4px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent {
-	background: url('background/DotLine.gif') repeat-x bottom;
-	padding-bottom: 4px;
+  background: url('background/DotLine.gif') repeat-x bottom;
+  padding-bottom: 4px;
 }
 
 .UIFAQPortlet .ResponseContent .RelatedQuestions {
-	background: url('background/DotLine.gif') repeat-x bottom;
-	padding: 4px 0px;
+  background: url('background/DotLine.gif') repeat-x bottom;
+  padding: 4px 0px;
 }
 
 .UIFAQPortlet .ResponseContent .ResponsActions {
-	border-bottom: 1px solid #c7c7c7;
-	padding: 4px 0px;
+  border-bottom: 1px solid #c7c7c7;
+  padding: 4px 0px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .AttachmentBox {
-	float: left;
-	padding: 10px 10px 0px 10px;
+  float: left;
+  padding: 10px 10px 0px 10px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .LabelBox {
-	float: left;
+  float: left;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .Image {
-	float: left;
-	margin: 0px 10px 0px 0px;
-	width: 100px; height: 100px;
+  float: left;
+  margin: 0px 10px 0px 0px;
+  width: 100px; height: 100px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .AttachmentIcon {
-	float:left;
-	height:20px;
-	width:20px;
+  float:left;
+  height:20px;
+  width:20px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .AttachmentLabel {
-	color:#1555B5;
-	float:left;
-	font-weight:bold;
-	line-height:20px;
+  color:#1555B5;
+  float:left;
+  font-weight:bold;
+  line-height:20px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .Action {
-	padding-top:50px;
+  padding-top:50px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .Action .View {
-	background: url('background/FAQPortlet.gif') no-repeat left -729px;
+  background: url('background/FAQPortlet.gif') no-repeat left -729px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .Action .Icon {
-	cursor:pointer;
-	float:left;
-	line-height:20px;
-	margin-right:10px;
-	padding-left:20px;
+  cursor:pointer;
+  float:left;
+  line-height:20px;
+  margin-right:10px;
+  padding-left:20px;
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent .Download {
-	background: url('background/FAQPortlet.gif') no-repeat left -752px;
+  background: url('background/FAQPortlet.gif') no-repeat left -752px;
 }
 
 .UIFAQPortlet .ResponseContent .ResponsActions .UIAction {
-	float: right;
-	margin: 0px;
-	width: 500px;
+  float: right;
+  margin: 0px;
+  width: 500px;
 }
 
 .UIFAQPortlet .ResponseContent .ResponsActions .UserResponse {
-	float: left;
-	padding: 8px;
+  float: left;
+  padding: 8px;
 }
 
 .UIFAQPortlet .ResponseContent .ResponsActions .UIAction .ActionContainer {
-	margin: 0px;
+  margin: 0px;
 }
 
 .UIFAQPortlet .ResponseContent .ResponsActions .UIAction .IconButton {
-	line-height: 22px;
-	padding-left: 20px;
+  line-height: 22px;
+  padding-left: 20px;
 }
 
-/******************************	UI Add	***************************************/
+/******************************  UI Add  ***************************************/
 
 .UIFAQPortlet .UIAddCategory {
-	padding: 8px;
-	border: 1px solid #c7c7c7;
-	background: #f7f7f7;
+  padding: 8px;
+  border: 1px solid #c7c7c7;
+  background: #f7f7f7;
 }
 
 .UIFAQPortlet .UIAddquestion {
-	padding: 8px;
-	border: 1px solid #c7c7c7;
+  padding: 8px;
+  border: 1px solid #c7c7c7;
 }
 
 .UIFAQPortlet .UIResponse .HorizontalLayout {
-	padding: 8px;
-	background: #f7f7f7;
+  padding: 8px;
+  background: #f7f7f7;
 }
 
 .UIFAQPortlet .UIAddquestion .HorizontalLayout {
-	padding: 8px;
-	background: #f7f7f7;
+  padding: 8px;
+  background: #f7f7f7;
 }
 
 .UIFAQPortlet .UIFormUploadInput input{
-	width: auto;
+  width: auto;
 }
 
 .UIFAQPortlet .LanguageQuestion {
-	background: url('background/FAQPortlet.gif') repeat-x center 0px;
-	height: 28px;
-	border: 1px solid #c7c7c7;
-	line-height: 28px ;
-	float: left ;
-	margin: 0px 0px 5px 0px ;
+  background: url('background/FAQPortlet.gif') repeat-x center 0px;
+  height: 28px;
+  border: 1px solid #c7c7c7;
+  line-height: 28px ;
+  float: left ;
+  margin: 0px 0px 5px 0px ;
 }
 
 .UIFAQPortlet .AddLanguage {
-	background: url('background/FAQPortlet.gif') repeat-x center -838px;
-	height: 28px;
-	border: 1px solid #c7c7c7;
+  background: url('background/FAQPortlet.gif') repeat-x center -838px;
+  height: 28px;
+  border: 1px solid #c7c7c7;
 }
 
 .UIFAQPortlet .AddLanguage .LanguageTitle {
-	float: left;
-	padding:6px 0px 0px 12px;
+  float: left;
+  padding:6px 0px 0px 12px;
 }
 
 .UIFAQPortlet .AddLanguage .UIAction {
-	float: right;
-	width: 140px;
-	padding: 3px 0px 0px 0px;
+  float: right;
+  width: 140px;
+  padding: 3px 0px 0px 0px;
 }
 
 .UIFAQPortlet .SelectUserIcon {
-	background: url('background/Worker2.png') no-repeat left ;
-	width: 16px; height: 16px;
-	padding: 3px;
+  background: url('background/Worker2.png') no-repeat left ;
+  width: 16px; height: 16px;
+  padding: 3px;
 }
 
 .UIFAQPortlet .SelectMemberIcon {
-	background: url('background/group.png') no-repeat left ;
-	width: 16px; height: 16px;
-	padding: 3px;
+  background: url('background/group.png') no-repeat left ;
+  width: 16px; height: 16px;
+  padding: 3px;
 }
 
 .UIFAQPortlet .SelectMemberShipIcon {
-	background: url('background/membership.png') no-repeat left ;
-	width: 16px; height: 16px;
-	padding: 3px;
+  background: url('background/membership.png') no-repeat left ;
+  width: 16px; height: 16px;
+  padding: 3px;
 }
 
 .UIFAQPortlet .UISettingForm {
-	padding:8px;
+  padding:8px;
 }
 
 .UIFAQPortlet .UISettingForm .UIForm .HorizontalLayout {
-	padding: 8px;
-	background-color: #EFEFEF;
+  padding: 8px;
+  background-color: #EFEFEF;
 }
-/******************************	 Search	***************************************/
+/******************************   Search  ***************************************/
 
 .UIFAQPortlet .UIAdvanceSearch {
-	padding: 8px;
-	border: 1px solid #c7c7c7;
+  padding: 8px;
+  border: 1px solid #c7c7c7;
 }
 
 .UIFAQPortlet .UIAdvanceSearch .HorizontalLayout {
-	padding: 8px;
-	background: #f7f7f7;
+  padding: 8px;
+  background: #f7f7f7;
 }
 
 .UIFAQPortlet .UIAdvanceSearch .SearchContent .HorizontalLayout {
-	padding: 8px;
-	background: #ffffff;
-	border-top: 0px;
+  padding: 8px;
+  background: #ffffff;
+  border-top: 0px;
 }
 
-/******************************	UISenToFriend	***************************************/
+/******************************  UISenToFriend  ***************************************/
 
 .UIFAQPortlet .UISendMailForm {
-	padding: 8px;
-	background: #ffffff;
-	border-top: 0px;
+  padding: 8px;
+  background: #ffffff;
+  border-top: 0px;
 }
 
 .UIFAQPortlet .UISendMailForm input{
-	width: 500px ;
+  width: 500px ;
 }
 
 .UIFAQPortlet .UISendMailForm #Message___Frame{
-	width: 500px ;
-	height: 200px;
+  width: 500px ;
+  height: 200px;
 }
 
 .UIFAQPortlet .UISendMailForm #To{
-	width: 400px ;
+  width: 400px ;
 }
 
 .UIFAQPortlet .UISendMailForm .HorizontalLayout {
-	padding: 8px;
-	background: #f7f7f7;
+  padding: 8px;
+  background: #f7f7f7;
 }
 
-/******************************	UIFAQPageIterator	***************************************/
+/******************************  UIFAQPageIterator  ***************************************/
 .UIFAQPageIterator {    
-	float:right;
-	margin: 0px ;
-	width: 420px;
-	padding: 3px 0px 0px 0px ;
+  float:right;
+  margin: 0px ;
+  width: 420px;
+  padding: 3px 0px 0px 0px ;
 }
 
 .UIFAQPageIterator .PageIteratorContainer {    
@@ -546,166 +554,188 @@
 }
 
 
-/******************************	Icon	***************************************/
+/******************************  Icon  ***************************************/
 
 .UIFAQPortlet .FAQToolbar .Icon {
-	padding:0px 2px 0px 26px;
-	line-height: 22px;
+  padding:0px 2px 0px 26px;
+  line-height: 22px;
 }
 
 .UIFAQPortlet .FAQToolbar .AddCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -58px;
+  background: url('background/FAQPortlet.gif') no-repeat left -58px;
 }
 
 .UIFAQPortlet .FAQToolbar .ShowQuestions {
-	background: url('background/FAQPortlet.gif') no-repeat left -80px;
+  background: url('background/FAQPortlet.gif') no-repeat left -80px;
 }
 
 .UIFAQPortlet .FAQToolbar .Setting {
-	background: url('background/FAQPortlet.gif') no-repeat left -102px;
+  background: url('background/FAQPortlet.gif') no-repeat left -102px;
 }
 
 .UIFAQPortlet .FAQToolbar .Print {
-	background: url('background/FAQPortlet.gif') no-repeat left -122px;
+  background: url('background/FAQPortlet.gif') no-repeat left -122px;
 }
 
 .UIFAQPortlet .FAQToolbar .Rss {
-	background: url('background/FAQPortlet.gif') no-repeat left -143px;
+  background: url('background/FAQPortlet.gif') no-repeat left -143px;
 }
 
 .UIFAQPortlet .FAQToolbar .SubCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -58px;
+  background: url('background/FAQPortlet.gif') no-repeat left -58px;
 }
 
 .UIFAQPortlet .FAQToolbar .AddQuestion {
-	background: url('background/FAQPortlet.gif') no-repeat left -510px;
+  background: url('background/FAQPortlet.gif') no-repeat left -510px;
 }
 
 .UIFAQPortlet .Langguage {
-	background: url('background/FAQPortlet.gif') no-repeat left -800px;
-	height: 12px;
-	width: 12px;
+  background: url('background/FAQPortlet.gif') no-repeat left -800px;
+  height: 12px;
+  width: 12px;
 }
 
 .UIFAQPortlet .SubCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -58px;
+  background: url('background/FAQPortlet.gif') no-repeat left -58px;
 }
 
 .UIFAQPortlet .ActionsPrint {
-	background: url('background/FAQPortlet.gif') no-repeat left -685px;
+  background: url('background/FAQPortlet.gif') no-repeat left -685px;
 }
 
 .UIFAQPortlet .ActionsEdit {
-	background: url('background/FAQPortlet.gif') no-repeat left -619px;
+  background: url('background/FAQPortlet.gif') no-repeat left -619px;
 }
 
 .UIFAQPortlet .ActionsDelete {
-	background: url('background/FAQPortlet.gif') no-repeat left -642px;
+  background: url('background/FAQPortlet.gif') no-repeat left -642px;
 }
 
 .UIFAQPortlet .SendToFriend {
-	background: url('background/FAQPortlet.gif') no-repeat left -707px;
+  background: url('background/FAQPortlet.gif') no-repeat left -707px;
 }
 
 .UIFAQPortlet .EditCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -258px;
+  background: url('background/FAQPortlet.gif') no-repeat left -258px;
 }
 
 .UIFAQPortlet .DeleteCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -279px;
+  background: url('background/FAQPortlet.gif') no-repeat left -279px;
 }
 
 .UIFAQPortlet .MoveCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -302px;
+  background: url('background/FAQPortlet.gif') no-repeat left -302px;
 }
 
 .UIFAQPortlet .AddNewQuestion {
-	background: url('background/FAQPortlet.gif') no-repeat left -508px;
+  background: url('background/FAQPortlet.gif') no-repeat left -508px;
 }
 
 .UIFAQPortlet .MoveDown {
-	background: url('background/FAQPortlet.gif') no-repeat left -325px;
+  background: url('background/FAQPortlet.gif') no-repeat left -325px;
 }
 
 .UIFAQPortlet .MoveUp {
-	background: url('background/FAQPortlet.gif') no-repeat left -346px;
+  background: url('background/FAQPortlet.gif') no-repeat left -346px;
 }
 
 .UIFAQPortlet .Setting {
-	background: url('background/FAQPortlet.gif') no-repeat left -368px;
+  background: url('background/FAQPortlet.gif') no-repeat left -368px;
 }
 
 .UIFAQPortlet .Watch {
-	background: url('background/FAQPortlet.gif') no-repeat left -391px;
+  background: url('background/FAQPortlet.gif') no-repeat left -391px;
 }
 
 .UIFAQPortlet .EditSubCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -258px;
+  background: url('background/FAQPortlet.gif') no-repeat left -258px;
 }
 
 .UIFAQPortlet .DeleteSupCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -551px;
+  background: url('background/FAQPortlet.gif') no-repeat left -551px;
 }
 
 .UIFAQPortlet .MoveSupCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -572px;
+  background: url('background/FAQPortlet.gif') no-repeat left -572px;
 }
 
 .UIFAQPortlet .ResponseQuestion {
-	background: url('background/FAQPortlet.gif') no-repeat left -595px;
+  background: url('background/FAQPortlet.gif') no-repeat left -595px;
 }
 
 .UIFAQPortlet .MoveQuestion {
-	background: url('background/FAQPortlet.gif') no-repeat left -660px;
+  background: url('background/FAQPortlet.gif') no-repeat left -660px;
 }
 
 .UIFAQPortlet .Edit {
-	background: url('background/FAQPortlet.gif') no-repeat left -616px;
+  background: url('background/FAQPortlet.gif') no-repeat left -616px;
 }
 
 .UIFAQPortlet .Delete {
-	background: url('background/FAQPortlet.gif') no-repeat left -638px;
+  background: url('background/FAQPortlet.gif') no-repeat left -638px;
 }
 
 .UIFAQPortlet .Print {
-	background: url('background/FAQPortlet.gif') no-repeat left -682px;
+  background: url('background/FAQPortlet.gif') no-repeat left -682px;
 }
 
 .UIFAQPortlet .FAQToolbar .ShowQuestionNotYetAnswer {
-	background: url('background/FAQPortlet.gif') no-repeat left -80px;
+  background: url('background/FAQPortlet.gif') no-repeat left -80px;
+}
+
+.UIFAQPortlet .QuestionManagament {
+  background: url('background/FAQPortlet.gif') no-repeat left -872px;
 }
 
 .FAQCategoryView {
-	float: left;
-	background: url('background/FAQPortlet.gif') no-repeat left -465px;
-	height:18px;
-	width:18px;
-	margin-left: 5px;
-	margin-right: 5px ;
+  float: left;
+  background: url('background/FAQPortlet.gif') no-repeat left -465px;
+  height:18px;
+  width:18px;
+  margin-left: 5px;
+  margin-right: 5px ;
 }
 
 .FAQQuestionView {
-	float: left;
-	background: url('background/FAQPortlet.gif') no-repeat left -818px;
-	padding-left: 18px;
-	height: 18px;
-	margin: 8px 0px;
-	margin-right: 5px ;
+  float: left;
+  background: url('background/FAQPortlet.gif') no-repeat left -818px;
+  padding-left: 18px;
+  height: 18px;
+  margin: 8px 0px;
+  margin-right: 5px ;
 }
 
 .UIFAQPortlet .Send {
-	background: url('background/FAQPortlet.gif') no-repeat left -706px;
+  background: url('background/FAQPortlet.gif') no-repeat left -706px;
 }
 .AddRelation {
-	background: url('background/AddIcon.gif') no-repeat;
-	height:16px;
-	width:16px;
-	margin-left: 5px;
+  background: url('background/AddIcon.gif') no-repeat;
+  height:16px;
+  width:16px;
+  margin-left: 5px;
 }
 
+.UIFAQPortlet .UIQuestionManagerForm .ItemIcon {
+  height:24px;
+  width:24px;
+}
 
 .UIFAQPortlet .CheckIcon {
-	background: url('background/icon.png') no-repeat left;
-	height:24px;
-	width:24px;
+  background: url('background/icon.png') no-repeat left;
+  height:24px;
+  width:24px;
 }
+
+.UIFAQPortlet .TrueIcon {
+  background: url('background/FAQPortlet.gif') no-repeat left -797px;
+  line-height:16px;
+  padding-left:20px;
+}
+
+.UIFAQPortlet .FalseIcon {
+  background: url('background/FAQPortlet.gif') no-repeat left -893px;
+  line-height:16px;
+  padding-left:20px;
+}
+
+

@@ -1,6 +1,6 @@
 <div class="UIBreadcumbs" id="$uicomponent.id">
-	<div class="LeftBreadcumbs">
-		<div class="RightBreadcumbs"> 
+	<div class="LeftBreadcumbsBar">
+		<div class="RightBreadcumbsBar"> 
 			<div class="CenterBreadcumbs">
 				<div class="BreadcumbsInfoBar">
 					<div class="OpenIcon"><span></span></div>

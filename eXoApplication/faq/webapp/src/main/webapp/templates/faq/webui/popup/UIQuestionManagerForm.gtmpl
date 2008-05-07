@@ -14,8 +14,8 @@ import org.exoplatform.faq.webui.UIFAQPageIterator ;
 					<table class="UIGrid">
 						<tr>
 							<th><b>Question</b></th>
-							<th width="100px"><b>is Upproved</b></th>
-							<th width="100px"><b>is Activated</b></th>
+							<th width="80px"><b>is Upproved</b></th>
+							<th width="80px"><b>is Activated</b></th>
 							<th width="60px"><b>Action</b></th>
 						</tr>
 						<%
@@ -29,18 +29,18 @@ import org.exoplatform.faq.webui.UIFAQPageIterator ;
 							%>
 								<tr>
 									<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
-									<td class="text" align="center"><%=question.isApproved()%></td>
-									<td class="text" align="center"><%=question.isActivated()%></td>
-									<td align="center">
+									<td class="text" ><div class="TrueIcon"><%=question.isApproved()%></div></td>
+									<td class="text" ><div class="FalseIcon"><%=question.isActivated()%></div></td>
+									<td align="center" style="padding-top: 0px; ">
 										<div style="float: left">
 											<a href="$linkEdit" style="float: left" title="Edit Question" >
-												<div class="ItemIcon Edit" style="padding:16px 0px 5px 5px;">
+												<div class="ItemIcon Edit">
 														<div style="padding-left: 20px;"><span></span></div>
 												</div>
 											</a>
 											
 											<a href="$linkDelete" style="float: left" title="Delete Question">
-												<div class="ItemIcon Delete" style="padding:16px 0px 5px 5px;">
+												<div class="ItemIcon Delete">
 														<div style="padding-left: 20px;"><span></span></div>
 												</div>
 											</a>
