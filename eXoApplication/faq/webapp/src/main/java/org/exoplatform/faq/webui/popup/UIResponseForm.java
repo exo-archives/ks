@@ -311,18 +311,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       //cancel
       UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      if(!questions.getIsViewQuesNotYetAnswer()) {
-        questions.setListQuestion() ;
-      }  else {
-        List<Question> listQuestion = questions.getListQuestion() ;
-        for(Question question : listQuestion) {
-          if(question.getId().equals(response.questionId_)) {
-            listQuestion.remove(question) ;
-            break ;
-          }
-        }
-        questions.setListQuestion(listQuestion) ;
-      }
+      questions.setListQuestion() ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

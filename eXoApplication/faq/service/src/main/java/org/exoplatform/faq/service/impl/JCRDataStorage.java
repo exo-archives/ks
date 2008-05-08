@@ -261,6 +261,7 @@ public class JCRDataStorage {
   	questionHome.save() ;
   } 
   
+  @SuppressWarnings("static-access")
   private void saveCategory(Node categoryNode, Category category) throws Exception {
   	categoryNode.setProperty("exo:id", category.getId()) ;
   	categoryNode.setProperty("exo:name", category.getName()) ;

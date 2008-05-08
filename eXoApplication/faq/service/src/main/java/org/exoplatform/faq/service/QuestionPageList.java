@@ -136,6 +136,7 @@ public class QuestionPageList extends JCRPageList {
 
   public void setList(List<Question> contacts) { }
   
+  @SuppressWarnings("deprecation")
   private Session getJCRSession() throws Exception {
     RepositoryService  repositoryService = (RepositoryService)PortalContainer.getComponent(RepositoryService.class) ;
     SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;

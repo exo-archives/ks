@@ -76,6 +76,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   public static final String FILE_ATTACHMENTS = "FileAttach" ;
   public static final String REMOVE_FILE_ATTACH = "RemoveFile" ;
   public static final String IS_APPROVED = "IsApproved" ;
+  public static final String IS_ACTIVATED = "IsActivated" ;
   
   private static FAQService fAQService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private static Question question_ = null ;
@@ -85,7 +86,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private static List<FileAttachment> listFileAttach_ = null ;
   private static UIFormInputWithActions listFormWYSIWYGInput ;
-  private String categoryId = new String() ;
+  private String categoryId = null ;
   private String questionId = null ;
   
   private String author_ = "" ;
@@ -102,7 +103,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     this.questionId = new String() ;
     if(LIST_LANGUAGE.isEmpty())
       LIST_LANGUAGE.add("English") ;
-    initPage(false) ;
 	}
   
   public void initPage(boolean isEdit) {
@@ -144,23 +144,29 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       }
       System.out.println("number of file attachment: " + question_.getAttachMent().size());
     }
-    addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)).setChecked(isChecked_)) ;
+    if(questionId != null && questionId.trim().length() > 0) {
+      addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)).setChecked(isChecked_)) ;
+      addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)).setChecked(true)) ;
+    }
   }
   
   @SuppressWarnings("static-access")
   public void setQuestionId(String questionId){
     this.questionId = questionId ;
+    categoryId = null ;
     try {
       question_ = fAQService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+      isChecked_ = fAQService_.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()).isModerateQuestions() ;
+      initPage(false) ;
       UIFormStringInput authorQ = this.getChildById(AUTHOR) ;
       authorQ.setValue(question_.getAuthor()) ;
       UIFormStringInput emailQ = this.getChildById(EMAIL_ADDRESS);
       emailQ.setValue(question_.getEmail()) ;
       // set value for the first fcd input form:
       ((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(0)).setValue(question_.getQuestion()) ;
-      System.out.println(" ===========>" + question_.getAttachMent().size()) ;
     } catch (Exception e) {
       e.printStackTrace();
+      initPage(false) ;
     }
   }
   
@@ -169,6 +175,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   }
   public void setCategoryId(String categoryId) {
     this.categoryId = categoryId ;
+    System.out.println("\n\n\n\nsetCategoryId--> cateId: " + this.categoryId);
+    questionId = null ;
+    initPage(false) ;
   }
   
   protected UIForm getParentForm() {
@@ -272,7 +281,14 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       question_.setQuestion(listQuestionContent.get(0)) ;
       question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
-      question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
+      
+      if(questionForm.questionId != null && questionForm.categoryId.trim().length() > 0) {
+        question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
+        question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;
+      } else {
+        System.out.println("\n\n\n\n>>>> cateid: " + questionForm.categoryId + "\n\n\n\n");
+        question_.setApproved(fAQService_.getCategoryById(questionForm.categoryId, FAQUtils.getSystemProvider()).isModerateQuestions()) ;
+      }
       
       if(questionForm.questionId == null || questionForm.questionId.trim().length() < 1) {
         fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider()) ;
@@ -283,11 +299,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      if(!questions.getIsViewQuesNotYetAnswer()) {
-        questions.setListQuestion() ;
-      }  else {
-        questions.setListQuestion(fAQService_.getQuestionsNotYetAnswer(FAQUtils.getSystemProvider()).getAll()) ;
-      }
+      questions.setListQuestion() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

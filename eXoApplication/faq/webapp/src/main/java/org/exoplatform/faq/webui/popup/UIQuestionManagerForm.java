@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -35,13 +36,16 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 
@@ -64,11 +68,16 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
       
       @EventConfig(listeners = UIQuestionManagerForm.DeleteQuestionActionListener.class),
       @EventConfig(listeners = UIQuestionManagerForm.EditQuestionActionListener.class),
+      @EventConfig(listeners = UIQuestionManagerForm.ResponseQuestionActionListener.class),
+      @EventConfig(listeners = UIQuestionManagerForm.AddRelationActionListener.class),
       @EventConfig(listeners = UIQuestionManagerForm.CancelActionListener.class)
     }
 )
 
 public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
+  private static final String QUESTION_MANAGERMENT = "QuestionManagerment" ;
+  private static final String QUESTION_NOT_YET_ANSWERED = "QuestionNotYetAnswered" ;
+  
   private static final String AUTHOR = "Author" ;
   private static final String EMAIL_ADDRESS = "EmailAddress" ;
   private static final String WYSIWYG_INPUT = "Question" ;
@@ -78,17 +87,36 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   private static final String REMOVE_FILE_ATTACH = "RemoveFile" ;
   private static final String IS_APPROVED = "IsApproved" ;
   private static final String IS_ACTIVATED = "IsActivated" ;
+  private static final String LIST_QUESTION_INTERATOR = "FAQUserPageIteratorTab1" ;
+  
+  private static final String RESPONSE_QUESTION_CONTENT = "ResponseQuestionContent" ;
+  private static final String RESPONSE_QUESTION_LANGUAGE = "ResponseLanguage" ;
+  public static final String RESPONSE_RELATIONS = "QuestionRelation" ;
+  private static final String LIST_QUESTION_NOT_ANSWERED_INTERATOR = "FAQUserPageIteratorTab2" ;
+  
+  private static UIFormInputWithActions formQuestionManager = new UIFormInputWithActions(QUESTION_MANAGERMENT) ;
+  private static UIFormInputWithActions formQuestionNotYetAnswer = new UIFormInputWithActions(QUESTION_NOT_YET_ANSWERED) ;
+  
   private static List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private static FAQService faqService_ =(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ; 
   private static List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
+  private List<SelectItemOption<String>> listQuestionLanguage =  new ArrayList<SelectItemOption<String>>() ;
+  private List<SelectItemOption<String>> listRelation =  new ArrayList<SelectItemOption<String>>() ;
+  private List<String> listQuestIdRela = new ArrayList<String>() ;
   
   private JCRPageList pageList ;
+  private JCRPageList pageListNotAnswer ;
   private UIFAQPageIterator pageIterator ;
+  private UIFAQPageIterator pageQuesNotAnswerIterator ;
+  
   private List<Question> listQuestion_ = new ArrayList<Question>() ;
+  private List<Question> listQuestionNotYetAnswered_ = new ArrayList<Question>() ;
+  
   private String questionId_ = new String() ;
   private boolean isEdit = false ;
+  private boolean isResponse = false ;
   private long pageSelect = 0 ;
-  
+  private long pageSelectNotAnswer = 0 ;
   private String authorInput_ = "" ;
   private String emailInput_ = "" ;
   private List<String> questionInput_ = new ArrayList<String>() ;
@@ -101,12 +129,26 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   private String[] getQuestionActions(){
     return new String[]{"AddLanguage", "Save", "Attachment", "Close"} ;
   }
+  
+  @SuppressWarnings("unused")
+  private String[] getQuestionNotAnsweredActions() {
+    return new String[]{"QuestionRelation", "Save", "Attachment", "Close"} ;
+  }
+  
+  @SuppressWarnings("unused")
+  private String[] getTab() {
+    return new String[]{"Question managerment", "Question not yet answered"} ;
+  }
 
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
   public UIQuestionManagerForm() throws Exception {
-    addChild(UIFAQPageIterator.class, null, "FAQUserPageIterator") ;
+    setListQuestionLanguage() ;
+    
+    addChild(UIFAQPageIterator.class, null, LIST_QUESTION_INTERATOR) ;
+    addChild(UIFAQPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
+    
     isEdit = false ;
     initPage(false) ;
     setListQuestion() ;
@@ -115,50 +157,77 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   
   public void initPage(boolean isRefres) {
     if(isRefres) {
-      removeChildById(AUTHOR) ;
-      removeChildById(EMAIL_ADDRESS) ;
-      removeChildById(LIST_WYSIWYG_INPUT) ;
-      removeChildById(ATTACHMENTS) ;
-      removeChildById(IS_APPROVED) ;
-      removeChildById(IS_ACTIVATED) ;
+      UIFormInputWithActions listFormWYSIWYGInput = new UIFormInputWithActions(LIST_WYSIWYG_INPUT) ;
+      for(int i = 0 ; i < LIST_LANGUAGE.size() ; i++) {
+        if(i < questionInput_.size()) {
+          listFormWYSIWYGInput.addUIFormInput( new UIFormWYSIWYGInput(WYSIWYG_INPUT + i, null, questionInput_.get(i), true) );
+        } else {
+          listFormWYSIWYGInput.addUIFormInput( new UIFormWYSIWYGInput(WYSIWYG_INPUT + i, null, null, true) );
+        }
+      }
+      
+      UIFormInputWithActions inputWithActions = new UIFormInputWithActions(ATTACHMENTS) ;
+      inputWithActions.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
+      try{
+        inputWithActions.setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
+      } catch (Exception e) {
+        e.printStackTrace() ;
+      }
+      if(isEdit) {
+        removeChildById(QUESTION_NOT_YET_ANSWERED) ;
+        if(formQuestionManager.hasChildren()) {
+          formQuestionManager.removeChildById(AUTHOR) ;
+          formQuestionManager.removeChildById(EMAIL_ADDRESS) ;
+          formQuestionManager.removeChildById(LIST_WYSIWYG_INPUT) ;
+          formQuestionManager.removeChildById(ATTACHMENTS) ;
+          formQuestionManager.removeChildById(IS_APPROVED) ;
+          formQuestionManager.removeChildById(IS_ACTIVATED) ;
+        }
+        
+        formQuestionManager.addChild(new UIFormStringInput(AUTHOR, AUTHOR, authorInput_)) ;
+        formQuestionManager.addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, emailInput_)) ;
+        formQuestionManager.addChild(listFormWYSIWYGInput) ;
+        formQuestionManager.addUIFormInput(inputWithActions) ;
+        /*if(questionId_ != null && questionId_.trim().length() > 0) {
+          Question question = new Question() ;
+          try {
+            question = faqService_.getQuestionById(questionId_, FAQUtils.getSystemProvider()) ;
+            this.setListFileAttach(question.getAttachMent()) ;
+            refreshUploadFileList() ;
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }*/
+        formQuestionManager.addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false))) ;
+        formQuestionManager.addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false))) ;
+        
+        addUIFormInput(formQuestionManager) ;
+      } else if(isResponse) {
+        removeChildById(QUESTION_MANAGERMENT) ;
+        if(formQuestionNotYetAnswer.hasChildren()) {
+          formQuestionNotYetAnswer.removeChildById(RESPONSE_QUESTION_CONTENT) ; 
+          formQuestionNotYetAnswer.removeChildById(RESPONSE_QUESTION_LANGUAGE) ;
+          formQuestionNotYetAnswer.removeChildById(RESPONSE_RELATIONS) ; 
+          formQuestionNotYetAnswer.removeChildById(LIST_WYSIWYG_INPUT) ;
+          formQuestionNotYetAnswer.removeChildById(ATTACHMENTS) ;
+          formQuestionNotYetAnswer.removeChildById(IS_APPROVED) ;
+          formQuestionNotYetAnswer.removeChildById(IS_ACTIVATED) ;
+        }
+        
+        formQuestionNotYetAnswer.addChild(new UIFormTextAreaInput(RESPONSE_QUESTION_CONTENT, RESPONSE_QUESTION_CONTENT, null)) ;
+        formQuestionNotYetAnswer.addChild(new UIFormSelectBox(RESPONSE_QUESTION_LANGUAGE, RESPONSE_QUESTION_LANGUAGE, getListQuestionLanguage())) ;
+        formQuestionNotYetAnswer.addChild(listFormWYSIWYGInput) ;
+        formQuestionNotYetAnswer.addUIFormInput(inputWithActions) ;
+        formQuestionNotYetAnswer.addChild(new UIFormSelectBox(RESPONSE_RELATIONS, RESPONSE_RELATIONS, getListRelation())) ;
+        formQuestionNotYetAnswer.addChild(new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)) ;
+        formQuestionNotYetAnswer.addChild(new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)) ;
+        
+        addUIFormInput(formQuestionNotYetAnswer) ;
+      }
     } else {
       LIST_LANGUAGE.clear() ;
       LIST_LANGUAGE.add("English") ;
     }
-    
-    UIFormInputWithActions listFormWYSIWYGInput = new UIFormInputWithActions(LIST_WYSIWYG_INPUT) ;
-    for(int i = 0 ; i < LIST_LANGUAGE.size() ; i++) {
-      if(i < questionInput_.size()) {
-        listFormWYSIWYGInput.addUIFormInput( new UIFormWYSIWYGInput(WYSIWYG_INPUT + i, null, questionInput_.get(i), true) );
-      } else {
-        listFormWYSIWYGInput.addUIFormInput( new UIFormWYSIWYGInput(WYSIWYG_INPUT + i, null, null, true) );
-      }
-    }
-    
-    UIFormInputWithActions inputWithActions = new UIFormInputWithActions(ATTACHMENTS) ;
-    inputWithActions.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
-    try{
-      inputWithActions.setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
-    } catch (Exception e) {
-      e.printStackTrace() ;
-    }
-    
-    addChild(new UIFormStringInput(AUTHOR, AUTHOR, authorInput_)) ;
-    addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, emailInput_)) ;
-    addChild(listFormWYSIWYGInput) ;
-    addUIFormInput(inputWithActions) ;
-    /*if(questionId_ != null && questionId_.trim().length() > 0) {
-      Question question = new Question() ;
-      try {
-        question = faqService_.getQuestionById(questionId_, FAQUtils.getSystemProvider()) ;
-        this.setListFileAttach(question.getAttachMent()) ;
-        refreshUploadFileList() ;
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }*/
-    addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false))) ;
-    addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false))) ;
   }
   
   public List<ActionData> getUploadFileList() { 
@@ -192,13 +261,19 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   }
   
   public void refreshUploadFileList() throws Exception {
-    ((UIFormInputWithActions)this.getChildById(ATTACHMENTS)).setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
+    if(isEdit) {
+      ((UIFormInputWithActions)formQuestionManager.getChildById(ATTACHMENTS)).setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
+    } else {
+      ((UIFormInputWithActions)formQuestionNotYetAnswer.getChildById(ATTACHMENTS)).setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
+    }
   }
   
   private void setListQuestion() throws Exception {
     listQuestion_.clear() ;
+    listQuestionNotYetAnswered_.clear() ;
     String user = FAQUtils.getCurrentUser() ;
-    pageIterator = this.getChild(UIFAQPageIterator.class) ;
+    pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
+    pageQuesNotAnswerIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
     SessionProvider sProvider = FAQUtils.getSystemProvider() ;
     if(!user.equals("root")) {
       List<String> listCateId = new ArrayList<String>() ;
@@ -216,15 +291,27 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
         this.pageList = faqService_.getQuestionsByListCatetory(listCateId, false, sProvider) ;
         this.pageList.setPageSize(5);
         pageIterator.updatePageList(this.pageList) ;
+        
+        this.pageListNotAnswer = faqService_.getQuestionsByListCatetory(listCateId, true, sProvider) ;
+        this.pageListNotAnswer.setPageSize(5);
+        pageQuesNotAnswerIterator.updatePageList(this.pageListNotAnswer) ;
       } else {
         this.pageList = null ;
         this.pageList.setPageSize(5);
         pageIterator.updatePageList(this.pageList) ;
+        
+        this.pageListNotAnswer = null ;
+        this.pageListNotAnswer.setPageSize(5);
+        pageQuesNotAnswerIterator.updatePageList(this.pageListNotAnswer) ;
       }
     } else {
       this.pageList = faqService_.getAllQuestions(sProvider) ;
       this.pageList.setPageSize(5);
       pageIterator.updatePageList(this.pageList) ;
+      
+      pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(sProvider) ;
+      pageListNotAnswer.setPageSize(5);
+      pageQuesNotAnswerIterator.updatePageList(pageListNotAnswer) ;
     }
   }
   
@@ -241,27 +328,56 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   }
   
   @SuppressWarnings("unused")
+  private List<Question> getListQuestionNotAnswered() {
+    pageSelectNotAnswer = pageQuesNotAnswerIterator.getPageSelected() ;
+    listQuestionNotYetAnswered_.clear() ;
+    try {
+      listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(pageSelectNotAnswer, null)) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return listQuestionNotYetAnswered_ ;
+  }
+  
+  @SuppressWarnings("unused")
   private boolean getIsEdit() { return isEdit ; }
   
-  private boolean isHaveString(String[] arrayString, String str) {
-    for(String string : arrayString ){
-      if(string.equals(str)) return true ;
-    }
-    return false ;
-  }
+  @SuppressWarnings("unused")
+  private boolean getIsResponse() { return isResponse ; }
   
   @SuppressWarnings("unchecked")
   private void setQuestionInfo(Question question) {
-    ((UIFormStringInput)this.getChildById(AUTHOR)).setValue(question.getAuthor()) ;
-    ((UIFormStringInput)this.getChildById(EMAIL_ADDRESS)).setValue(question.getEmail()) ;
-    ((UIFormWYSIWYGInput)((UIFormInputWithActions)this.getChildById(LIST_WYSIWYG_INPUT)).getChild(0)).setValue(question.getQuestion()) ;
-    ((UIFormCheckBoxInput<Boolean>)this.getChildById(IS_ACTIVATED)).setChecked(question.isActivated()) ;
-    ((UIFormCheckBoxInput<Boolean>)this.getChildById(IS_APPROVED)).setChecked(question.isApproved()) ;
-    setListFileAttach(question.getAttachMent()) ;
-    try {
-      refreshUploadFileList() ;
-    } catch (Exception e) {
-      e.printStackTrace();
+    if(isEdit) {
+      ((UIFormStringInput)formQuestionManager.getChildById(AUTHOR)).setValue(question.getAuthor()) ;
+      ((UIFormStringInput)formQuestionManager.getChildById(EMAIL_ADDRESS)).setValue(question.getEmail()) ;
+      ((UIFormWYSIWYGInput)((UIFormInputWithActions)formQuestionManager.getChildById(LIST_WYSIWYG_INPUT)).getChild(0)).setValue(question.getQuestion()) ;
+      ((UIFormCheckBoxInput<Boolean>)formQuestionManager.getChildById(IS_ACTIVATED)).setChecked(question.isActivated()) ;
+      ((UIFormCheckBoxInput<Boolean>)formQuestionManager.getChildById(IS_APPROVED)).setChecked(question.isApproved()) ;
+      setListFileAttach(question.getAttachMent()) ;
+      try {
+        refreshUploadFileList() ;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else if(isResponse) {
+      try {
+        setListRelation(question) ;
+      } catch (Exception e1) {
+        e1.printStackTrace();
+      }
+      ((UIFormTextAreaInput)formQuestionNotYetAnswer.getChildById(RESPONSE_QUESTION_CONTENT)).setValue(question.getQuestion()) ;
+      ((UIFormSelectBox)formQuestionNotYetAnswer.getChildById(RESPONSE_QUESTION_LANGUAGE)).setOptions(getListQuestionLanguage()) ;
+      ((UIFormWYSIWYGInput)((UIFormInputWithActions)formQuestionNotYetAnswer.getChildById(LIST_WYSIWYG_INPUT)).getChild(0)).setValue(question.getResponses()) ;
+      ((UIFormSelectBox)formQuestionNotYetAnswer.getChildById(RESPONSE_RELATIONS)).setOptions(getListRelation()) ;
+      
+      ((UIFormCheckBoxInput<Boolean>)formQuestionNotYetAnswer.getChildById(IS_ACTIVATED)).setChecked(question.isActivated()) ;
+      ((UIFormCheckBoxInput<Boolean>)formQuestionNotYetAnswer.getChildById(IS_APPROVED)).setChecked(question.isApproved()) ;
+      setListFileAttach(question.getAttachMent()) ;
+      try {
+        refreshUploadFileList() ;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
   
@@ -270,7 +386,40 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     LIST_LANGUAGE.addAll(listLanguage) ;
   }
   
-  public String[] getListLanguage(){return LIST_LANGUAGE.toArray(new String[]{}) ; }
+  public String[] getListLanguage(){return new String[]{"English","France","Vietnamese"} ; }
+  
+  private void setListQuestionLanguage() {
+    listQuestionLanguage.add(new SelectItemOption<String>("English","English")) ;
+    listQuestionLanguage.add(new SelectItemOption<String>("France","France")) ;
+    listQuestionLanguage.add(new SelectItemOption<String>("Vietnamese","Vietnamese")) ;
+    listQuestionLanguage.add(new SelectItemOption<String>("Ukrainnian","Ukrainnian")) ;
+  }
+  
+  private List<SelectItemOption<String>> getListQuestionLanguage() {
+    return listQuestionLanguage ;
+  }
+  
+  public List<String> getListIdQuesRela() {
+    return this.listQuestIdRela ;
+  }
+  
+  public void setListIdQuesRela(List<String> listId) {
+    this.listQuestIdRela = listId ;
+  }
+  
+  private void setListRelation(Question question) throws Exception {
+    String[] relations = question.getRelations() ;
+    this.setListIdQuesRela(Arrays.asList(relations)) ;
+    if(relations != null && relations.length > 0)
+      for(@SuppressWarnings("unused")
+      String relation : relations) {
+        listRelation.add(new SelectItemOption<String>(question.getQuestion(), question.getQuestion())) ;
+      }
+  }
+  
+  public List<SelectItemOption<String>> getListRelation() {
+    return listRelation ; 
+   }
   
   static public class DeleteQuestionActionListener extends EventListener<UIQuestionManagerForm> {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
@@ -297,18 +446,50 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
       String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      if(!quesId.equals(questionManagerForm.questionId_)) {
+      if(!quesId.equals(questionManagerForm.questionId_) || !questionManagerForm.isEdit) {
+        questionManagerForm.isEdit = true ;
+        questionManagerForm.isResponse = false ;
         questionManagerForm.questionId_ = quesId ;
         LIST_LANGUAGE.clear() ;
         LIST_LANGUAGE.add("English") ;
         questionManagerForm.initPage(true) ;
         questionManagerForm.setQuestionInfo(faqService_.getQuestionById(quesId, FAQUtils.getSystemProvider())) ;
-        questionManagerForm.isEdit = true ;
         
         UIFAQPortlet portlet = questionManagerForm.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       }
+    }
+  }
+  
+  static public class ResponseQuestionActionListener extends EventListener<UIQuestionManagerForm> {
+    public void execute(Event<UIQuestionManagerForm> event) throws Exception {
+      UIQuestionManagerForm questionManagerForm = event.getSource() ;
+      String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      if(!quesId.equals(questionManagerForm.questionId_) || !questionManagerForm.isResponse) {
+        questionManagerForm.isResponse = true ;
+        questionManagerForm.isEdit = false ;
+        questionManagerForm.questionId_ = quesId ;
+        LIST_LANGUAGE.clear() ;
+        LIST_LANGUAGE.add("English") ;
+        questionManagerForm.initPage(true) ;
+        questionManagerForm.setQuestionInfo(faqService_.getQuestionById(quesId, FAQUtils.getSystemProvider())) ;
+        
+        UIFAQPortlet portlet = questionManagerForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      }
+    }
+  }
+  
+  static public class AddRelationActionListener extends EventListener<UIQuestionManagerForm> {
+    public void execute(Event<UIQuestionManagerForm> event) throws Exception {
+      UIQuestionManagerForm questionManagerForm = event.getSource() ;
+      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+      UIAddRelationForm addRelationForm = popupAction.activate(UIAddRelationForm.class, 500) ;
+      addRelationForm.setRelationed(questionManagerForm.getListIdQuesRela()) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
   
@@ -354,32 +535,47 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
-      UIFormInputWithActions formInputWithActions = questionManagerForm.getChildById(LIST_WYSIWYG_INPUT) ;
-      
-      String author = ((UIFormStringInput)questionManagerForm.getChildById(AUTHOR)).getValue() ;
-      if(!validatorDataInput.isNotEmptyInput(author)) {
-        UIApplication uiApplication = questionManagerForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestionManagerForm.msg.author-is-null", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ;
-      }
-      
-      String email = ((UIFormStringInput)questionManagerForm.getChildById(EMAIL_ADDRESS)).getValue() ;
-      if(!validatorDataInput.isEmailAddress(email)) {
-        UIApplication uiApplication = questionManagerForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestionManagerForm.msg.email-is-invalid", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ;
-      }
-      
-      String questionContent = ((UIFormWYSIWYGInput)formInputWithActions.getChildById(WYSIWYG_INPUT + "0")).getValue() ;
-      boolean isApproved = ((UIFormCheckBoxInput<Boolean>)questionManagerForm.getChildById(IS_APPROVED)).isChecked() ;
-      boolean isActivate = ((UIFormCheckBoxInput<Boolean>)questionManagerForm.getChildById(IS_ACTIVATED)).isChecked() ;
-      
       Question question = faqService_.getQuestionById(questionManagerForm.questionId_, FAQUtils.getSystemProvider()) ;
-      question.setAuthor(author) ;
-      question.setEmail(email) ;
-      question.setQuestion(questionContent) ;
+      
+      UIFormInputWithActions formParent = null ;
+      if(questionManagerForm.isEdit) {
+        formParent = questionManagerForm.getChildById(QUESTION_MANAGERMENT) ;
+      } else if(questionManagerForm.isResponse) {
+        formParent = questionManagerForm.getChildById(QUESTION_NOT_YET_ANSWERED) ;
+      }
+      
+      UIFormInputWithActions formInputWithActions = formParent.getChildById(LIST_WYSIWYG_INPUT) ;
+      String questionContent = ((UIFormWYSIWYGInput)formInputWithActions.getChildById(WYSIWYG_INPUT + "0")).getValue() ;
+      
+      if(questionManagerForm.isEdit) {
+        String author = ((UIFormStringInput)formParent.getChildById(AUTHOR)).getValue() ;
+        if(!validatorDataInput.isNotEmptyInput(author)) {
+          UIApplication uiApplication = questionManagerForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestionManagerForm.msg.author-is-null", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          return ;
+        }
+        
+        String email = ((UIFormStringInput)formParent.getChildById(EMAIL_ADDRESS)).getValue() ;
+        if(!validatorDataInput.isEmailAddress(email)) {
+          UIApplication uiApplication = questionManagerForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestionManagerForm.msg.email-is-invalid", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          return ;
+        }
+        
+        question.setAuthor(author) ;
+        question.setEmail(email) ;
+        question.setQuestion(questionContent) ;
+      } else {
+        question.setQuestion(((UIFormTextAreaInput)formParent.getChildById(RESPONSE_QUESTION_CONTENT)).getValue()) ;
+        question.setResponses(questionContent) ;
+        question.setRelations(questionManagerForm.getListIdQuesRela().toArray(new String[]{})) ;
+      }
+      
+      boolean isApproved = ((UIFormCheckBoxInput<Boolean>)formParent.getChildById(IS_APPROVED)).isChecked() ;
+      boolean isActivate = ((UIFormCheckBoxInput<Boolean>)formParent.getChildById(IS_ACTIVATED)).isChecked() ;
+      
       question.setActivated(isActivate) ;
       question.setApproved(isApproved) ;
       question.setAttachMent(questionManagerForm.listFileAttach_) ;

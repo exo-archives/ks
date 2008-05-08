@@ -1,76 +1,187 @@
 <%
-import org.exoplatform.faq.service.Question;
-import org.exoplatform.faq.webui.UIFAQPageIterator ; 
+	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.webui.UIFAQPageIterator ; 
+	import org.exoplatform.webui.form.UIFormInputWithActions;
 %>
 
 <div class="UIQuestionManagerForm $uicomponent.id">
 	<% uiform.begin() %>
-		<div style="overflow:auto;">
-			<% uicomponent.renderChild(UIFAQPageIterator.class) ; %>
-		</div>
-		
-		<div class="HorizontalLayout" style="margin: 0px 5px 0px 5px; padding: 5px 5px 5px 5px;background-color:#F3F3F3;">
-				<div class="UIFormInput">
-					<table class="UIGrid">
-						<tr>
-							<th><b>Question</b></th>
-							<th width="80px"><b>is Upproved</b></th>
-							<th width="80px"><b>is Activated</b></th>
-							<th width="60px"><b>Action</b></th>
-						</tr>
-						<%
-						List questionList = uicomponent.getListQuestion() ;
-						if(!questionList.isEmpty()) {
-							String linkDelete = "" ;
-							String linkEdit = "" ;
-							for(Question question in questionList) {
-								linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
-								linkEdit = uicomponent.event("EditQuestion", question.getId()) ;
-							%>
-								<tr>
-									<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
-									<td class="text" ><div class="TrueIcon"><%=question.isApproved()%></div></td>
-									<td class="text" ><div class="FalseIcon"><%=question.isActivated()%></div></td>
-									<td align="center" style="padding-top: 0px; ">
-										<div style="float: left">
-											<a href="$linkEdit" style="float: left" title="Edit Question" >
-												<div class="ItemIcon Edit">
-														<div style="padding-left: 20px;"><span></span></div>
-												</div>
-											</a>
-											
-											<a href="$linkDelete" style="float: left" title="Delete Question">
-												<div class="ItemIcon Delete">
-														<div style="padding-left: 20px;"><span></span></div>
-												</div>
-											</a>
+  <div class="UIFormTabPane">
+    <div class="UITabPane">
+      <div class="TabPaneContent">
+					<div class="WorkingArea">
+						
+	          <div class="UIHorizontalTabs">
+	     				<div class="LeftHorizontalTabs">
+	           		<div class="RightHorizontalTabs">
+	             		<div class="CenterHorizontalTabs">
+	              		<div class="TabsContainer">
+	                  	<%int i = 0 ; 
+	                  		String classCss = "SelectedTab";
+		                  	for(tabcontent in uiform.getTab()){ %>  
+			                    <div class="UITab NormalTabStyle">
+			                      <div class="$classCss">
+			                        <div class="LeftTab">
+			                          <div class="RightTab" onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)">
+		                          	<%if(i ++ == 0) {%>
+			                            <div class="MiddleTab">
+			                            	Question managerment
+			                            </div>
+		                            <%} else {%>
+		                            	<div class="MiddleTab">
+		                            		Question not yet answered
+			                            </div>
+		                            <%}%>
+			                          </div>
+			                        </div>
+			                      </div>
+			                    </div>
+		                		<%classCss = "NormalTab" ;  
+		                		} %>
+		                  </div>
+		                </div>
+	              	</div>
+	            	</div>
+	          	</div>
+						
+						<div class="UIForm">
+            	<div class="HorizontalLayout">
+            
+              	<div class="UITabContentContainer">
+	              
+				          <div style="display: block;" id="UITabContent" class="UITabContent">
+										<div style="overflow:auto;">
+											<% uicomponent.renderChild("FAQUserPageIteratorTab1") ; %>
 										</div>
-									</td>
-								</tr>
-						<%}
-						} else {%>
-							<tr>
-								<td colspan="4" align="center"><b>List of questions is empty</b></td>
-							</tr>
-					<%}%>
-					</table>
+										
+										<div class="HorizontalLayout" style="margin: 0px 5px 0px 5px; padding: 5px 5px 5px 5px;background-color:#F3F3F3;">
+												<div class="UIFormInput">
+													<table class="UIGrid">
+														<tr>
+															<th><b>Question</b></th>
+															<th width="100px"><b>is Upproved</b></th>
+															<th width="100px"><b>is Activated</b></th>
+															<th width="60px"><b>Action</b></th>
+														</tr>
+														<%
+														List questionList = uicomponent.getListQuestion() ;
+														if(!questionList.isEmpty()) {
+															String linkDelete = "" ;
+															String linkEdit = "" ;
+															for(Question question in questionList) {
+																linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
+																linkEdit = uicomponent.event("EditQuestion", question.getId()) ;
+															%>
+																<tr>
+																	<td class="text" align="left"><%=question.getQuestion()%></td>
+																	<td class="text" align="center"><%=question.isApproved()%></td>
+																	<td class="text" align="center"><%=question.isActivated()%></td>
+																	<td align="center">
+																		<div style="float: left">
+																			<a href="$linkEdit" style="float: left" title="Edit Question" >
+																				<div class="ItemIcon Edit">
+																						<div style="padding-left: 20px;"><span></span></div>
+																				</div>
+																			</a>
+																			
+																			<a href="$linkDelete" style="float: left" title="Delete Question">
+																				<div class="ItemIcon Delete">
+																						<div style="padding-left: 20px;"><span></span></div>
+																				</div>
+																			</a>
+																		</div>
+																	</td>
+																</tr>
+														<%}
+														} else {%>
+															<tr>
+																<td colspan="4" align="center"><b>List of questions is empty</b></td>
+															</tr>
+													<%}%>
+													</table>
+												</div>
+											</div>
+										
+										<div style="overflow:auto;">
+											<% uicomponent.renderChild("FAQUserPageIteratorTab1") ; %>
+										</div>
+									</div>
+	              
+				          <div style="display: none;" id="UITabContent" class="UITabContent">
+										<div style="overflow:auto;">
+											<% uicomponent.renderChild("FAQUserPageIteratorTab2") ; %>
+										</div>
+										
+										<div class="HorizontalLayout" style="margin: 0px 5px 0px 5px; padding: 5px 5px 5px 5px;background-color:#F3F3F3;">
+												<div class="UIFormInput">
+													<table class="UIGrid">
+														<tr>
+															<th><b>Question</b></th>
+															<th width="60px"><b>Action</b></th>
+														</tr>
+														<%
+														List questionNotAnswered = uicomponent.getListQuestionNotAnswered() ;
+														if(!questionNotAnswered.isEmpty()) {
+															String linkDelete = "" ;
+															String linkEdit = "" ;
+															for(Question question in questionNotAnswered) {
+																linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
+																linkResponse = uicomponent.event("ResponseQuestion", question.getId()) ;
+															%>
+																<tr>
+																	<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
+																	<td align="center">
+																		<div style="float: left">
+																			<a href="$linkResponse" style="float: left" title="Response Question" >
+																				<div class="ItemIcon ResponseQuestion">
+																						<div style="padding-left: 20px;"><span></span></div>
+																				</div>
+																			</a>
+																			
+																			<a href="$linkDelete" style="float: left" title="Delete Question">
+																				<div class="ItemIcon Delete">
+																						<div style="padding-left: 20px;"><span></span></div>
+																				</div>
+																			</a>
+																		</div>
+																	</td>
+																</tr>
+														<%}
+														} else {%>
+															<tr>
+																<td colspan="2" align="center"><b>List of questions is empty</b></td>
+															</tr>
+													<%}%>
+													</table>
+												</div>
+											</div>
+										
+										<div style="overflow:auto;">
+											<% uicomponent.renderChild("FAQUserPageIteratorTab2") ; %>
+										</div>
+									</div>
+									
+								</div>
+							
+							</div>
+						</div>
+						
 				</div>
-			</div>
-		
-		<div style="overflow:auto;">
-			<% uicomponent.renderChild(UIFAQPageIterator.class) ; %>
-		</div>
-			
-			<!-- viewed when edit one question -->
+			</div>  
+    </div>  
+  </div>
+  
+		<!-- viewed when edit one question -->
 			
 			<%
 			if(uicomponent.getIsEdit()) {%>
+			
 				<div class="HorizontalLayout" style="margin: 10px 5px 20px 5px;background-color:#F3F3F3;">
 					<div class="UIFormInput">
 						<table class="UIFormGrid">
 							<tbody>						
 							<% 
-							for(field in uiform.getChildren()) { 
+							for(field in ((UIFormInputWithActions)uiform.getChildById("QuestionManagerment")).getChildren()) { 
 								if(field.id.equals("FAQUserPageIterator")) continue;
 								if(field.isRendered()) {
 							%>
@@ -85,7 +196,7 @@ import org.exoplatform.faq.webui.UIFAQPageIterator ;
 													String action = uicomponent.getQuestionActions()[0] ;
 													String link = uicomponent.event(action) ;
 													String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-													int i = 0 ;
+													i = 0 ;
 													String[] listLanguage = uicomponent.getListLanguage() ;
 													for(fck in field.getChildren())  {
 														String language = listLanguage[i++] ;
@@ -156,9 +267,108 @@ import org.exoplatform.faq.webui.UIFAQPageIterator ;
 						
 					</div>
 				</div>
+		
+		<%} else if(uicomponent.getIsResponse()) {%>
+							
+				<div class="HorizontalLayout" style="margin: 10px 5px 20px 5px;background-color:#F3F3F3;">
+					<div class="UIFormInput">
+						<table class="UIFormGrid">
+							<tbody>
+							<% 
+							for(field in ((UIFormInputWithActions)uiform.getChildById("QuestionNotYetAnswered")).getChildren()) { 
+								if(field.isRendered()) {
+							%>
+								<tr>
+									<%fieldName = uicomponent.getLabel(field.getName());
+										if(!fieldName.equals(uicomponent.getId())) { %>												
+										<td class="FieldLabel">
+											<%=uicomponent.getLabel(field.getName()) %>
+										</td>
+										<td class="FieldComponent">
+											<%if(field.getName().equals("ListQuestion")){
+													i = 0 ;
+													String[] listLanguage = uicomponent.getListLanguage() ;
+													for(fck in field.getChildren())  {
+														String language = listLanguage[i] ;
+														if(i ++ == 0)
+															language += " " + "( default )"
+											%>
+														<% uiform.renderField(fck) %>
+														<div class="LanguageQuestion" style="width: 100%"> 
+															<div style="vertical-align: middle; padding-left: 5px;">
+																Language: $language 
+															</div>
+														</div>
+											<%	}
+												} else if(field.getName().equals("Attachment")){
+													String action = uicomponent.getQuestionActions()[2] ;
+													String link = uicomponent.event(action) ;
+													String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+											%>
+													<table class="ActionContainer" align="center" width="100%">
+														<tr>
+															<td align="left" width="70%" style="vertical-align: middle; padding-left: 5px;">
+																<%uiform.renderField(field)%><br>
+															</td>
+															<td align="right" width="30%" class="UIAction" valign="top">
+																<a href="$link" class="ActionButton LightBlueStyle">
+											      	  	<div class="ButtonLeft" style="float:right;">
+											        	  	<div class="ButtonRight">
+											          	  	<div class="ButtonMiddle"> $actionLabel </div>
+											            	</div>
+											          	</div>
+											        	</a>
+															</td>
+														</tr>
+													</table>
+											<%} else {%>
+													<% uiform.renderField(field) %><br>
+											<%}%>
+										</td>
+									<%}else if(field.getName().equals("QuestionRelation")){ 
+											String link = uicomponent.event("AddRelation") ;
+									%>
+											<div style="float: left">
+												<% uiform.renderField(field) %>
+											</div>
+											<a href="$link" style="float: left"><div class="Icon AddRelation"><span></span></div></a>
+									<%} else {%>
+										<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+									<%}%>
+								</tr>
+							<%}
+							}
+							%>						
+							</tbody>
+						</table>
+						
+						<div class="UIAction"> 
+							<table class="ActionContainer" align="center">
+								<tr>
+									<td align="center">
+					        <% for(action in uicomponent.getQuestionActions()) { 
+					        		 if(action.indexOf("Attachment") >= 0) continue ; 
+					        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					           String link = uicomponent.event(action) ;
+					        %>
+					        		<a href="$link" class="ActionButton LightBlueStyle">
+						      	  	<div class="ButtonLeft">
+						        	  	<div class="ButtonRight">
+						          	  	<div class="ButtonMiddle"> $actionLabel </div>
+						            	</div>
+						          	</div>
+						        	</a>
+					          <%}%>
+					      	</td>
+								</tr>
+						  </table> 
+						</div>
+						
+					</div>
+				</div>
+		
 		<%}%>
-			
-			<!-- end view question  -->
+		<!-- end view question  -->
 			
 			<div class="UIAction"> 
 				<table class="ActionContainer" align="center">
