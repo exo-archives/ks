@@ -310,7 +310,6 @@ public class UIQuestions extends UIContainer {
 	
 	static  public class AddCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-    	System.out.println("\n\n AddCategoryActionListener");
     	UIQuestions question = event.getSource() ; 
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction uiPopupAction = uiPortlet.getChild(UIPopupAction.class) ; 
@@ -362,7 +361,6 @@ public class UIQuestions extends UIContainer {
 	
 	static	public class EditCategoryActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
-			System.out.println("\n\n EditCategoryActionListener");
 			UIQuestions question = event.getSource() ; 
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
@@ -378,7 +376,6 @@ public class UIQuestions extends UIContainer {
 	
 	static	public class DeleteCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-			System.out.println("\n\n DeleteCategoryActionListener");
 			UIQuestions question = event.getSource() ; 			
 			String CategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
@@ -401,7 +398,6 @@ public class UIQuestions extends UIContainer {
 			popupContainer.setId("MoveCategoryForm") ;
 			uiMoveCategoryForm.setCategoryID(categoryId) ;
 			uiMoveCategoryForm.setListCate() ;
-			uiMoveCategoryForm.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
 	}
@@ -466,7 +462,6 @@ public class UIQuestions extends UIContainer {
 	}
 	static  public class SubCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-    	System.out.println("\n\n SubCategoryActionListener");
     	UIQuestions question = event.getSource() ; 
     	String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
@@ -475,7 +470,6 @@ public class UIQuestions extends UIContainer {
 		  uiPopupContainer.setId("SubCategoryForm") ;
 		  UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 		  category.setParentPath(categoryId) ;
-		  System.out.println("=====>>>>>>CategoryId: " + categoryId) ;
 		  category.init() ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
@@ -483,7 +477,6 @@ public class UIQuestions extends UIContainer {
 	
 	static  public class EditSubCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-    	System.out.println("\n\n EditSubCategoryActionListener");
     	UIQuestions question = event.getSource() ; 
     	String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
@@ -492,10 +485,7 @@ public class UIQuestions extends UIContainer {
       uiPopupContainer.setId("EditSubCategoryForm") ;
 		  UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 		  categoryForm.init() ;
-		  System.out.println("=====>>>>>>newPath_: " + newPath_) ;
 		  String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
-		  System.out.println("=====>>>>>>parentCategoryId: " + parentCategoryId) ;
-		  System.out.println("=====>>>>>>CategoryId: " + categoryId) ;
 		  categoryForm.setParentPath(parentCategoryId) ;
 		  categoryForm.setCategoryValue(categoryId, true) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;

@@ -50,7 +50,6 @@ import org.exoplatform.webui.form.UIForm;
 public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 	private List<Category> listCategory = null ;
 	public ResultSearchCategory() throws Exception {}
-	public void init() throws Exception {}
 	
   @SuppressWarnings("unused")
   private List<Category> getListCategory(){

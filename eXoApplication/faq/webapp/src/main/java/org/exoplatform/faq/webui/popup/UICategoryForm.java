@@ -170,7 +170,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;			
-			System.out.println("========> Save") ;
 			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
       String name = uiCategory.getUIStringInput(UICategoryForm.EVENT_CATEGORY_NAME).getValue() ;
       String description = uiCategory.getUIStringInput(UICategoryForm.DESCRIPTION).getValue() ;
@@ -194,15 +193,12 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentPath() ;
-			System.out.println("========>parentCate:::" + parentCate) ;
 			if(parentCate != null && parentCate.length() > 0) {
 				if(uiCategory.categoryId_.length() > 0) {
-					System.out.println("========> Save Sub category edit") ;
 					cat.setId(uiCategory.categoryId_) ;
 					faqService.saveCategory(parentCate, cat, false, FAQUtils.getSystemProvider());
 					faqPortlet.cancelAction() ;
 				} else {
-					System.out.println("========>New Save Sub category") ;
 					faqService.saveCategory(parentCate, cat, true, FAQUtils.getSystemProvider());
 					faqPortlet.cancelAction() ;
 				}
@@ -212,12 +208,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				return ;
 			} 
 			if(uiCategory.categoryId_.length() > 0) {
-				System.out.println("========> Save 1") ;
 				cat.setId(uiCategory.categoryId_) ;
 				faqService.saveCategory(null, cat, false, FAQUtils.getSystemProvider());
 				faqPortlet.cancelAction() ;
 			} else {
-				System.out.println("========> Save 2") ;
 				faqService.saveCategory(null, cat, true, FAQUtils.getSystemProvider());
 				faqPortlet.cancelAction() ;
 			}

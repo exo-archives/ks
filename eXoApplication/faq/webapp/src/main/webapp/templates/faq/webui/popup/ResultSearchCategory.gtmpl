@@ -1,4 +1,7 @@
 <% 
+	import java.text.Format;
+	import java.text.SimpleDateFormat;
+	import java.util.Date;
 	import org.exoplatform.faq.service.Category;
 %>
 <div class="ResultSearchCategory $uicomponent.id" style="padding: 8px;">
@@ -18,21 +21,28 @@
  										<tbody>
  										<% 
  										List categories = uicomponent.getListCategory() ; 
-										for(category in categories) {
-											String categoryId = category.getId();
-											String categoryName = category.getName() ;
-											String description = category.getDescription() ;
-											String date = category.getCreatedDate();
-											String link = uicomponent.event("Link", categoryId);
- 										 %>
+ 										if(categories.size() > 0) {
+											for(category in categories) {
+												String categoryId = category.getId();
+												String categoryName = category.getName() ;
+												String description = category.getDescription() ;
+												Format formatter = new SimpleDateFormat("dd/MM/yyyy ");
+						 						String date = formatter.format(category.getCreatedDate());
+												String link = uicomponent.event("Link", categoryId);
+ 										 	%>
 	 											<tr class="EvenRow"> 
-	 												<td class="text"><a href="$link">$categoryName</a></td>
-	 												<td class="text"><%= (description != null) ? description: ""%></td>
-	 												<td class="text"><%=date%></td>
+	 												<td class="text" align="center"><a href="$link">$categoryName</a></td>
+	 												<td class="text" align="center"><%= (description != null) ? description: ""%></td>
+	 												<td class="text" align="center"><%=date%></td>
 	 											</tr>
- 											<% 
- 											}
+ 												<% 
+ 												}
+ 											} else {
  										 %>
+ 										 <tr class="EvenRow">
+												<td class="Tdbox" colspan="10" align="center"><div class="" >Sorry - no matches. Please try some different terms.</div></td>
+			  							</tr>
+										<% } %> 
  									</tbody>
  								</table>
  						</div>

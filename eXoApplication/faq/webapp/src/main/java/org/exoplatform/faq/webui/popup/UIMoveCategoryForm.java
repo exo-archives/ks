@@ -51,9 +51,12 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
+	@SuppressWarnings("unused")
+  private static List<String> listCateSelected = new ArrayList<String>() ;
+  private List<Cate> listCate = new ArrayList<Cate>() ;
+  private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  private SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 	public UIMoveCategoryForm() throws Exception {}
-	
-	public void init() {}
 	
 	public String getCategoryID() { return categoryId_; }
   public void setCategoryID(String s) { categoryId_ = s ; }
@@ -77,12 +80,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
       this.deft = deft;
     }
   }
-  
-  private static List<String> listCateSelected = new ArrayList<String>() ;
-  private List<Cate> listCate = new ArrayList<Cate>() ;
-  private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  private SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-  
+
   @SuppressWarnings("unused")
   public List<Cate> getListCate(){
     return this.listCate ;
@@ -123,7 +121,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     try {
       return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       return null ;
     }

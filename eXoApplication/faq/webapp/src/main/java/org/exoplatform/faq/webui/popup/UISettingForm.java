@@ -87,7 +87,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	
 	static public class SaveActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
-			System.out.println("========> Save") ;
 			UISettingForm settingForm = event.getSource() ;			
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQService service = FAQUtils.getFAQService() ;

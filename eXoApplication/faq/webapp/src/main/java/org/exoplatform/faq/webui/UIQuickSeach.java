@@ -68,7 +68,6 @@ public class UIQuickSeach  extends UIForm {
 	    	}
 	    }
     } catch (Exception e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
     }
 		return list;
@@ -77,30 +76,31 @@ public class UIQuickSeach  extends UIForm {
 		public void execute(Event<UIQuickSeach> event) throws Exception {
 			UIQuickSeach uiForm = event.getSource() ;
 			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
+			UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
+			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0) {
-				UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
-				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
-				ResultQuickSearch result = popupAction.activate(ResultQuickSearch.class, 600) ;
+				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 800) ;
+				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
 				popupContainer.setId("ResultQuickSearch") ;
-				result.setText(text) ;
-				result.init() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		  	result.setFormSearchs(faqService.getQuickSeach(FAQUtils.getSystemProvider(), text+",,all"));
 			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	  
   }
 	static public class AdvancedSearchActionListener extends EventListener<UIQuickSeach> {
 		public void execute(Event<UIQuickSeach> event) throws Exception {
-			System.out.println("==== >>>>AdvancedSearch");
 			UIQuickSeach uiForm = event.getSource() ;
 			UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
-			UIAdvancedSearchForm uiAdvancedSearchForm = popupAction.activate(UIAdvancedSearchForm.class, 600) ;
+			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
+			resultContainer.setAdvancedSearchIsRendered(true) ;
+			resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			popupContainer.setId("AdvanceSearchForm") ;
-			uiAdvancedSearchForm.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
   }

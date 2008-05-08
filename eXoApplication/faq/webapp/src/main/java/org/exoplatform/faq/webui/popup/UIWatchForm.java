@@ -76,10 +76,8 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       if (categoryId != null) {
       	FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
       	if(watchId.equals("Cate")) {
-      		System.out.println("\n\n Save vao category");
       		faqService.addWatch(1, 1, categoryId , email, FAQUtils.getSystemProvider()) ;
       	} else {
-      		System.out.println("\n\n Save vao question");
       		faqService.addWatch(2, 1, categoryId , email, FAQUtils.getSystemProvider()) ;
       	}	
       	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,

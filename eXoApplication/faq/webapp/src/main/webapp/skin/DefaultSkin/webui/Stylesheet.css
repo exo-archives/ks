@@ -687,6 +687,18 @@
   background: url('background/FAQPortlet.gif') no-repeat left -872px;
 }
 
+.UIFAQPortlet .QuestionIcon {
+  background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -818px;
+  width: 16px; height: 16px;
+}
+
+.UIFAQPortlet .CategoryIcon {
+  background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -465px;
+  width: 17px; height: 17px;
+}
+
+
+
 .FAQCategoryView {
   float: left;
   background: url('background/FAQPortlet.gif') no-repeat left -465px;

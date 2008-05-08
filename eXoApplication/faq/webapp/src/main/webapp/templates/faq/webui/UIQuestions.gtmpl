@@ -36,7 +36,7 @@
 								String linkAction = "" ;
 								String opacity ;
 								for(String action in actionTollbar) {
-									linkAction = uicomponent.event(action) ;
+									linkAction = uicomponent.event(action, cateId) ;
 									String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
 							%>
 									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">

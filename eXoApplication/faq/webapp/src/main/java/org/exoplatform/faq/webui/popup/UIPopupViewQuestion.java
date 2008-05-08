@@ -45,9 +45,6 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   public String questionId_ = null ;
 
   public UIPopupViewQuestion() throws Exception {}
-	public void init() throws Exception {
-	
-	}
 	@SuppressWarnings("unused")
   public String getQuestion(){
     return this.questionId_ ;

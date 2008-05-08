@@ -44,8 +44,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	private List<Question> listQuestion_ = null ;
-	public ResultSearchQuestion() throws Exception {}
-	public void init() throws Exception {}
+	public ResultSearchQuestion() throws Exception {this.setActions(new String[]{"Close"}) ;}
 	
   @SuppressWarnings("unused")
   private List<Question> getListQuestion(){
@@ -57,7 +56,6 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
   }
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
-  public String[] getActions() { return new String[] {"Close"} ; }
   
 	static	public class LinkActionListener extends EventListener<ResultSearchQuestion> {
 		public void execute(Event<ResultSearchQuestion> event) throws Exception {
@@ -65,7 +63,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 		  UIResultContainer uiResultContainer = resultSearch.getParent() ;
 			UIPopupAction popupAction = uiResultContainer.getChild(UIPopupAction.class) ;
-			UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 600) ;
+			UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 800) ;
 		  viewQuestion.setQuestion(questionId) ;
 			viewQuestion.setId("UIPopupViewQuestion") ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

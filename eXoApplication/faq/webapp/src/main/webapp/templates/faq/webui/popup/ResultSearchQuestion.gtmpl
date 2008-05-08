@@ -1,4 +1,7 @@
 <% 
+	import java.text.Format;
+	import java.text.SimpleDateFormat;
+	import java.util.Date;
 	import org.exoplatform.faq.service.Question;
 %>
 <div class="ResultSearchQuestion $uicomponent.id" style="padding: 8px;">
@@ -19,23 +22,30 @@
  										<tbody>
  										<% 
  										List questions = uicomponent.getListQuestion() ; 
+ 										if(questions.size()>0) {
 										for(question in questions) {
 											String questionId = question.getId();
 											String author = question.getAuthor() ;
 											String email = question.getEmail() ;
 											String questionContent = question.getQuestion() ;
-											String date = question.getCreatedDate();
+											Format formatter = new SimpleDateFormat("dd/MM/yyyy ");
+						 					String date = formatter.format(question.getCreatedDate());
 											String link = uicomponent.event("Link", questionId);
  										 %>
 	 											<tr class="EvenRow"> 
-	 												<td class="text"><%= author%></td>
-	 												<td class="text"><%= (email != null) ? email: ""%></td>
+	 												<td class="text" align="center"><%= author%></td>
+	 												<td class="text" align="center"><%= (email != null) ? email: ""%></td>
 	 												<td class="text"><a href="$link">$questionContent</a></td>
-	 												<td class="text"><%=date%></td>
+	 												<td class="text" align="center"><%=date%></td>
 	 											</tr>
- 											<% 
- 											}
+ 												<% 
+ 												}
+ 											} else {
  										 %>
+ 										 <tr class="EvenRow">
+												<td class="Tdbox" colspan="10" align="center"><div class="" >Sorry - no matches. Please try some different terms.</div></td>
+			  							</tr>
+										<% } %> 
  									</tbody>
  								</table>
  						</div>

@@ -19,13 +19,14 @@ package org.exoplatform.faq.webui.popup;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -48,55 +49,47 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultQuickSearch extends UIForm implements UIPopupComponent{
-	private String text_ = null ;
-	 public static String newPath_ = "" ;
-	private List<Category> listQuickSearch_ = null ;
-	public ResultQuickSearch() throws Exception {}
-	public void init() throws Exception {}
+	private List<FAQFormSearch> formSearchs ;
+	public ResultQuickSearch() throws Exception {this.setActions(new String[]{"Close"}) ;}
 	
-	@SuppressWarnings("unused")
-  private String getText(){
-    return this.text_ ;
+	public List<FAQFormSearch> getFormSearchs() {
+  	return this.formSearchs;
   }
-  
-  public void setText(String text) {
-    this.text_ = text ;
+	public void setFormSearchs(List<FAQFormSearch> formSearchs) {
+		this.formSearchs = formSearchs;
   }
-  
-  @SuppressWarnings("unused")
-  private List<Category> getListCateQuickSearch() throws Exception {
-  	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  	listQuickSearch_ = faqService.getQuickSeach(FAQUtils.getSystemProvider(), text_+",,all") ;
-  	return listQuickSearch_ ;
-	}
-  public String[] getActions() { return new String[] {"Close"} ; }
-  public void activate() throws Exception {
-	  // TODO Auto-generated method stub
-  }
-	public void deActivate() throws Exception {
-	  // TODO Auto-generated method stub
-  }
+  public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
   
 	static	public class LinkActionListener extends EventListener<ResultQuickSearch> {
 		public void execute(Event<ResultQuickSearch> event) throws Exception {
 			ResultQuickSearch resultQuickSearch = event.getSource() ;
-			UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			uiQuestions.setCategories(categoryId) ;
-			uiQuestions.setList(categoryId) ;
-      UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-      String oldPath = breadcumbs.getPaths() ;
-      FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-      List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
-      for(int i = listPath.size() -1 ; i >= 0; i --) {
-      	oldPath = oldPath + "/" + listPath.get(i);
-      }
-      breadcumbs.setUpdataPath(oldPath);
-			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-      UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
-      faqPortlet.cancelAction() ;
+			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			if(id.indexOf("ategory")> 0){
+				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
+				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				uiQuestions.setCategories(id) ;
+				uiQuestions.setList(id) ;
+		    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+		    String oldPath = breadcumbs.getPaths() ;
+		    FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), id) ;
+		    for(int i = listPath.size() -1 ; i >= 0; i --) {
+		    	oldPath = oldPath + "/" + listPath.get(i);
+		    }
+		    breadcumbs.setUpdataPath(oldPath);
+				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+		    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+		    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+		    faqPortlet.cancelAction() ;
+			} else {
+				UIResultContainer uiResultContainer = resultQuickSearch.getParent() ;
+				UIPopupAction popupAction = uiResultContainer.getChild(UIPopupAction.class) ;
+				UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 600) ;
+			  viewQuestion.setQuestion(id) ;
+				viewQuestion.setId("UIPopupViewQuestion") ;
+			  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			}
 		}
 	}
 	
@@ -106,6 +99,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 			faqPortlet.cancelAction() ;
 		}
 	}
+
+
 }
 
 	

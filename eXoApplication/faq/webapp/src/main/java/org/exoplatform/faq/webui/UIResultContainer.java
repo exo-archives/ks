@@ -16,7 +16,10 @@
  */
 package org.exoplatform.faq.webui;
 
+import org.exoplatform.faq.webui.popup.ResultQuickSearch;
+import org.exoplatform.faq.webui.popup.ResultSearchCategory;
 import org.exoplatform.faq.webui.popup.ResultSearchQuestion;
+import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupComponent;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -35,15 +38,36 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 )
 public class UIResultContainer extends UIContainer implements UIPopupComponent {
 	public UIResultContainer() throws Exception {
-		addChild(ResultSearchQuestion.class, null, null) ;
+		addChild(UIAdvancedSearchForm.class, null, null).setRendered(false) ;
+		addChild(ResultQuickSearch.class, null, null).setRendered(true) ;
+		addChild(ResultSearchCategory.class, null, null).setRendered(false) ;
+		addChild(ResultSearchQuestion.class, null, null).setRendered(false) ;
 		UIPopupAction childPopup =	addChild(UIPopupAction.class, null, null) ;
 		childPopup.setId("FAQChildPoupupAction") ;
 		childPopup.getChild(UIPopupWindow.class).setId("FAQChildPopupWindow") ;
 	}
 
-	public void activate() throws Exception {	   }
-
-	public void deActivate() throws Exception { }
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 	
+	public void setAdvancedSearchIsRendered(boolean isRendered) {
+		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
+		getChild(ResultQuickSearch.class).setRendered(!isRendered) ;
+		getChild(ResultSearchCategory.class).setRendered(!isRendered) ;
+		getChild(ResultSearchQuestion.class).setRendered(!isRendered) ;
+	}
+	
+	public void setQuestionSearchIsRendered(boolean isRendered) {
+		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
+		getChild(ResultQuickSearch.class).setRendered(!isRendered) ;
+		getChild(ResultSearchCategory.class).setRendered(!isRendered) ;
+		getChild(ResultSearchQuestion.class).setRendered(isRendered) ;
+	}
+	public void setCategorySearchIsRendered(boolean isRendered) {
+		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
+		getChild(ResultQuickSearch.class).setRendered(!isRendered) ;
+		getChild(ResultSearchCategory.class).setRendered(isRendered) ;
+		getChild(ResultSearchQuestion.class).setRendered(!isRendered) ;
+	}
 }
 
