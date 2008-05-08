@@ -92,6 +92,11 @@ public class UICategory extends UIForm	{
 		return this.userProfile ;
 	}
 	
+	@SuppressWarnings("unused")
+  private boolean isOnline(String userId) throws Exception {
+		return this.forumService.isOnline(userId) ;
+	}
+	
 	public void update(Category category, List<Forum> forums) throws Exception {
 		this.category = category ;
 		this.forums = forums ;

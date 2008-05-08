@@ -90,7 +90,7 @@ public interface DataStorage {
 	public void removeTag(SessionProvider sProvider, String tagId) throws Exception ;
 
 	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception ;
-	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan) throws Exception ;
+	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception ;
 	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception ;
 	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception ;
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception ;

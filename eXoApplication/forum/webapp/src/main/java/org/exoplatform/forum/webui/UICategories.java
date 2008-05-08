@@ -77,6 +77,11 @@ public class UICategories extends UIContainer	{
 		return this.userProfile ;
 	}
 	
+	@SuppressWarnings("unused")
+  private boolean isOnline(String userId) throws Exception {
+		return this.forumService.isOnline(userId) ;
+	}
+	
 	//Function Public getObject 
 	public List<Category> getCategorys() { return this.categoryList ; }
 	public List<Category> getPrivateCategories() {

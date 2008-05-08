@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.exoplatform.services.organization.User;
@@ -33,13 +34,13 @@ public class UserProfile {
 	private String signature ;
 	private long totalPost = 0;
 	private long totalTopic = 0;
-	
+	private boolean isOnline = false ;
 	private String[] moderateForums ; //store Ids of forum this user is moderator
 	private String[] moderateTopics ; //store Ids of topic this user is moderator
 	private String[] readTopic ;
 	private String[] bookmark ;
 	
-	private Date lastLoginDate = new Date();
+	private Date lastLoginDate = null;
 	private Date lastPostDate;
 	private boolean isDisplaySignature = true ;
 	private boolean isDisplayAvatar = true ;
@@ -162,4 +163,11 @@ public class UserProfile {
 	public String[] getBookmark() {return bookmark;}
 	public void setBookmark(String[] bookmark) {this.bookmark = bookmark;}
 
+	public boolean getIsOnline() {
+  	return isOnline;
+  }
+
+	public void setIsOnline(boolean isOnline) {
+  	this.isOnline = isOnline;
+  }
 }

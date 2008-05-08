@@ -211,8 +211,8 @@ public class ForumServiceImpl implements ForumService{
 		storage_.removeTag(sProvider, tagId) ;
 	}
 
-	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan) throws Exception {
-	  return storage_.getUserProfile(sProvider, userName, isGetOption, isGetBan);
+	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
+	  return storage_.getUserProfile(sProvider, userName, isGetOption, isGetBan, isLogin);
   }
 
 	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
@@ -272,8 +272,12 @@ public class ForumServiceImpl implements ForumService{
 	}
 	
 	public boolean isOnline(String userId) throws Exception {
-		boolean isOnline = onlineUsers_.get(userId) ;
-		return isOnline ;		
+    try{
+    	if(onlineUsers_.get(userId) != null) return onlineUsers_.get(userId) ;  		
+    }	catch (Exception e) {
+    	e.printStackTrace() ;
+    }
+    return false; 
 	}
 	
 	public List<String> getOnlineUsers() throws Exception {

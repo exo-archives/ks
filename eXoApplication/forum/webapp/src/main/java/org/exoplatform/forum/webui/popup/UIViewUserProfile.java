@@ -20,8 +20,10 @@ import java.io.InputStream;
 
 import org.exoplatform.contact.service.Contact;
 import org.exoplatform.contact.service.ContactAttachment;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.organization.User;
@@ -52,6 +54,12 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	public UIViewUserProfile() {
 		
+	}
+
+	@SuppressWarnings("unused")
+  private boolean isOnline(String userId) throws Exception {
+		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		return forumService.isOnline(userId) ;
 	}
 	
 	public void setUserProfile(UserProfile userProfile) {

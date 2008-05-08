@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.Date;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
@@ -43,6 +45,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isTagRendered = false;
 	private boolean isSeachRendered = false;
 	private boolean isJumpRendered = false;
+	private boolean isLogin = true ;
 	private UserProfile userProfile = null;
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
@@ -114,7 +117,15 @@ public class UIForumPortlet extends UIPortletApplication {
     } catch (Exception e) {
     	e.printStackTrace() ;
     }
-  	this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userId, true, true) ;
+    Date date = null ;
+    if(this.userProfile != null) {
+    	date = this.userProfile.getLastLoginDate() ;
+    }
+  	this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userId, true, true, isLogin) ;
+  	this.isLogin = false;
+  	this.userProfile.setIsOnline(true) ;
+  	if(date != null)
+  		this.userProfile.setLastLoginDate(date) ;
   	this.isJumpRendered = this.userProfile.getIsShowForumJump() ;
   }
 }

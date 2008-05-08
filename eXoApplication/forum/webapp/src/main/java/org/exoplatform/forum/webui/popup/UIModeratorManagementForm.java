@@ -112,7 +112,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   public JCRPageList setPageListUserProfile() throws Exception {
     List<User> listUser = ForumSessionUtils.getAllUser() ;
     for (User user : listUser) {
-      UserProfile userProfile = this.forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), user.getUserName(), true, true) ;
+      UserProfile userProfile = this.forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), user.getUserName(), true, true, false) ;
     }
   	this.pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
   	this.pageList.setPageSize(10);

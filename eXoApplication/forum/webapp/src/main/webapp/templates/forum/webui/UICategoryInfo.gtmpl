@@ -1,10 +1,12 @@
 <%  
   import org.exoplatform.forum.service.ForumStatistic ;
+  List userOnlines = uicomponent.getUserOnline();
   ForumStatistic forumStatistic = uicomponent.getForumStatistic() ;
   String topics = String.valueOf(forumStatistic.getTopicCount());
   String posts = String.valueOf(forumStatistic.getPostCount());
   String members = String.valueOf(forumStatistic.getMembersCount());
   String newMember = forumStatistic.getNewMembers();
+  String mostUserOnline = forumStatistic.getMostUsersOnline();
 %>
 <div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
   <div class="ForumToolbar">
@@ -29,8 +31,12 @@
 					<tr class="OddRow">
 						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
 					 	<td >
-							<div class="text">Most Users ever online was : </div>
-							<div class="text" style="padding-bottom: 5px;">Online Users : </div>
+							<div class="text">Most Users ever online was : $mostUserOnline</div>
+							<div class="text" style="padding-bottom: 5px;">Online Users : 
+							<% for(user in userOnlines) {%>
+							<span>&nbsp;<a>${user}</a>,</span>
+							<% } %>
+							</div>
 						</td>
 	   			</tr>
 				  <tr>

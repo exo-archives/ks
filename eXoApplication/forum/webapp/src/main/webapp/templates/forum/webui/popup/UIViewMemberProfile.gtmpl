@@ -14,7 +14,8 @@
 	String avatarUrl = uiform.getAvatarUrl(contact) ;
 	String birthDay = "" ;
 	Date birthDayDate = contact.getBirthday() ;
-	if(birthDayDate != null) birthDay = ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat(),birthDayDate) ;
+	String shortDateFormat = userProfile.getShortDateFormat() ;
+	if(birthDayDate != null) birthDay = ForumFormatUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	String location = "" ;
 	boolean isCity = false;
 	if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
@@ -22,11 +23,18 @@
 		if(isCity)location = location + ", ";
 		location = location + contact.getHomeCountry() ;
 	}
-	String createdDate = ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat(),user.getCreatedDate()) ;
+	String createdDate = ForumFormatUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
 	long totalPost = userProfile.getTotalPost();
+	shortDateFormat = shortDateFormat +  ", " + userProfile.getTimeFormat();
+	String userSmile = "OfflineIcon";
+	String titleSmile = "Offline" ;
+	if(uicomponent.isOnline(userName)) {
+		 userSmile = "OnlineIcon";
+		 titleSmile = "Online";
+	}
 %>
 	<div class="ViewMemberProfileContainer">
-		<div class="TitleBar"><%=_ctx.appRes("UIViewUserProfile.label.ViewMemberProfileOf");%>: <span class="UserLabel"><%=user.getFullName();%></span></div>
+		<div class="TitleBar"><div class="TitleIcon"><%=_ctx.appRes("UIViewUserProfile.label.ViewMemberProfileOf");%>: <span class="UserLabel $userSmile" title="${userName}'s $titleSmile"><%=user.getFullName();%></span></div></div>
 		<div class="ViewContainer">
 			<table class="TablePost" cellspacing="0" borderspacing="0">
   			<tbody>
@@ -38,12 +46,17 @@
 					  		<div class="InfoMember">
 					  			<div>Join Date: $createdDate</div>
 									<% if(totalPost > 0) { 
-											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),userProfile.getLastPostDate()) ;
+											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate(shortDateFormat,userProfile.getLastPostDate()) ;
 									%>
 									<div>Posts: $totalPost</div>
 									<div>Last Post: $lastPostDateOfUser</div>
 									<% } else {%>
 									<div><strong>$userName</strong> has no post!</div>
+									<% } 
+										String lastLoginUser = ForumFormatUtils.getFormatDate(shortDateFormat, userProfile.getLastLoginDate()) ;
+										if(lastLoginUser != null && lastLoginUser.length() > 0) {
+									%>
+									<div>Last Login: $lastLoginUser</div>
 									<% } %>
 					  		</div>
 					  	</div>

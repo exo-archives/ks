@@ -508,6 +508,8 @@
 		if(isClosed && !canEdit)	isShowPost = false ;
 		if(posts != null && posts.size() > 0 && isShowPost) {
 			int checked = (int)(uiform.getPageSelect()) - 1;
+			String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
+			String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 			for(post in posts) {
 				String owner = post.getOwner() ;
 				Contact contact = uiform.getPersonalContact(owner) ;
@@ -526,7 +528,7 @@
 				String namePost = post.getName() ;
 				Date createdPostDate = post.getCreatedDate() ;
 				createdPostDate.setTime(createdPostDate.getTime() - setTime);
-				String createdDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
+				String createdDate = ForumFormatUtils.getFormatDate(longDateFormat,createdPostDate);
 				String message = ForumFormatUtils.convertCodeHTML(post.getMessage()) ;
 				//message = ForumFormatUtils.convetToCode(message) ;
 				String editBy = post.getModifiedBy() ;
@@ -534,7 +536,7 @@
 				if(editBy != null && editBy.length() > 0) {
 					Date modifileDate = post.getModifiedDate() ;// modifile
 					modifileDate.setTime(modifileDate.getTime() - setTime);
-					editDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),modifileDate);
+					editDate = ForumFormatUtils.getFormatDate(longDateFormat,modifileDate);
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + post.getId().substring(15);
@@ -558,9 +560,15 @@
 							
 								<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 									<div style="position: relative;">
-							
+										<%  String userSmile = "OfflineIcon";
+												String titleSmile = "Offline" ;
+												if(uicomponent.isOnline(owner)) {
+													 userSmile = "AvailableIcon";
+													 titleSmile = "Online";
+												}
+										%>
 										<div class="MemberName">
-											<div class="State AvailableIcon" title="Phuong's Available"><span></span></div>
+											<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
 											<div class="Name">$owner</div>
 											<div class="Action"><span></span></div>
 											<div style="clear: left;"><span></span></div>
@@ -620,14 +628,20 @@
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),lastPostOfUser) ;
+											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate(shortDateFormat,lastPostOfUser) ;
 									%>
 									<div>Posts: $totalPost</div>
 									<div>Last Post: $lastPostDateOfUser</div>
 									<% } else {%>
 									<div><strong>$owner</strong> has no post!</div>
-									<% } %>
-									<div>Location: $location</div>
+									<% } 
+									 if(location.length() > 0) {
+									%>
+									<div>Location: location</div>
+									<%} 
+										String lastLoginUser = ForumFormatUtils.getFormatDate(shortDateFormat, userInfo.getLastLoginDate()) ;
+									%>
+									<div>Last Login: $lastLoginUser</div>
 								</div>
 							</div>
 						</td>

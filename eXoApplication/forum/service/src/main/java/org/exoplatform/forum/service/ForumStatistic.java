@@ -28,6 +28,7 @@ public class ForumStatistic {
 	private long topicCount = 0;
 	private long membersCount = 0;
 	private String newMembers = "";
+	private String mostUsersOnline = "" ; 
 	
 	public ForumStatistic() {
   }
@@ -42,4 +43,10 @@ public class ForumStatistic {
 	
 	public String getNewMembers() {return newMembers;}
 	public void setNewMembers(String newMembers) {this.newMembers = newMembers;}
+	public String getMostUsersOnline() {
+  	return mostUsersOnline;
+  }
+	public void setMostUsersOnline(String mostUsersOnline) {
+  	this.mostUsersOnline = mostUsersOnline;
+  }
 }

@@ -9,15 +9,18 @@
 	padding: 1px;
 }
 
+.UIForumPortlet .UIViewMemberProfile .ViewMemberProfileContainer .UserLabel{
+	background-position: right;
+	padding: 1px 18px 2px 0px;
+	color: #135bbe;
+}
+
 .UIForumPortlet .UIViewMemberProfile .ViewMemberProfileContainer .TitleBar {
 	height: 24px;
 	background-color: #d1d2fe;
-	padding: 6px 0px 0px 12px;
+	padding: 6px 16px 0px 12px;
 	font-weight: bold;
-}
-
-.UIForumPortlet .UIViewMemberProfile .ViewMemberProfileContainer .UserLabel {
-	color: #135bbe;
+	line-height: 16px;
 }
 
 .UIForumPortlet .UIViewMemberProfile .MemberContent .InfoMember {
@@ -30,7 +33,7 @@
 }
 
 .UIForumPortlet .UIViewMemberProfile .MemberContent {
-	padding: 10px 15px;
+	padding: 10px 0px 0px 15px;
 }	
 
 .UIForumPortlet UIViewMemberProfile .MemberContent .Rank {

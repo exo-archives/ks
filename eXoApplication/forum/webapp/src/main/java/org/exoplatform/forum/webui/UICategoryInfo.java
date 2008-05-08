@@ -16,9 +16,13 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
@@ -38,13 +42,31 @@ import org.exoplatform.webui.core.UIContainer;
 )
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private long mostUserOnline_ ;
 	public UICategoryInfo() throws Exception { 
 	} 
+	
+	@SuppressWarnings("unused")
+  private List<String> getUserOnline() throws Exception {
+		List<String> list = this.forumService.getOnlineUsers() ;
+		this.mostUserOnline_ = list.size() ;
+		return  list;
+	}
+
+	@SuppressWarnings("deprecation")
+  public static Calendar getInstanceTempCalendar() { 
+    Calendar  calendar = GregorianCalendar.getInstance() ;
+    calendar.setLenient(false) ;
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() + gmtoffset) ; 
+    return  calendar;
+  }
 	
 	public ForumStatistic getForumStatistic() throws Exception {
 		ForumStatistic forumStatistic = forumService.getForumStatistic(ForumSessionUtils.getSystemProvider()) ;
 		List<User> userList = ForumSessionUtils.getAllUser();
 		long size = (long)userList.size() ;
+		boolean isSave = false ;
 		if(forumStatistic.getMembersCount() < size) {
 			long max = userList.get(0).getCreatedDate().getTime(), temp ;
 			int i = 0, j = 0;
@@ -57,6 +79,24 @@ public class UICategoryInfo extends UIContainer	{
 	    }
 			forumStatistic.setMembersCount(size) ;
 			forumStatistic.setNewMembers(userList.get(i).getUserName()) ;
+			isSave = true ;
+		}
+		long mumberUserOnline = 0;
+		String mostUserOnlines = forumStatistic.getMostUsersOnline();
+		Date date = getInstanceTempCalendar().getTime() ;
+		if(mostUserOnlines != null && mostUserOnlines.length() > 0) {
+			mumberUserOnline = Long.parseLong(mostUserOnlines.split(",")[0]) ;
+			if(this.mostUserOnline_ > mumberUserOnline) {
+				mostUserOnlines = this.mostUserOnline_ + ", at " + ForumFormatUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date);
+				forumStatistic.setMostUsersOnline(mostUserOnlines) ;
+				isSave = true ;
+			}
+		} else {
+			mostUserOnlines = this.mostUserOnline_ + ", at " + ForumFormatUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date);
+			forumStatistic.setMostUsersOnline(mostUserOnlines) ;
+			isSave = true ;
+		} 
+		if(isSave) {
 			this.forumService.saveForumStatistic(ForumSessionUtils.getSystemProvider(), forumStatistic) ;
 		}
 	  return forumStatistic ;

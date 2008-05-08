@@ -87,7 +87,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
     } catch (Exception e) {
     	String userName = ForumSessionUtils.getCurrentUser() ;
-    	this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userName, true, false) ;
+    	this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userName, true, false, false) ;
     }
     
 		List<SelectItemOption<String>> list ;

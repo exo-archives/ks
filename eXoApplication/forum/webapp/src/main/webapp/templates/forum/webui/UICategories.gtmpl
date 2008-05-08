@@ -195,9 +195,14 @@
 										 	<td class="Tdbox">$topicCount</td>
 											<td class="Tdbox">$postCount</td>
 											<td >
-											<% for(forumModerator in forumModerators) {%>
+											<% boolean isOnline = false; String userSmile; 
+											for(forumModerator in forumModerators) {
+												isOnline = uicomponent.isOnline(forumModerator) ;
+												if(isOnline) userSmile = "OnlineIcon";
+												else userSmile = "OfflineIcon";
+											%>
 												<div class="ModeratorContent">
-													<div class="EmoticonsIcon BigGrinIcon"><span></span></div>
+													<div class="EmoticonsIcon $userSmile"><span></span></div>
 													<a href="#" class="Moderator">$forumModerator</a>
 													<div style="clear: left;"><span></span></div>
 												</div>

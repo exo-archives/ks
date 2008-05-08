@@ -18,7 +18,6 @@ package org.exoplatform.forum.webui;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -156,6 +155,11 @@ public class UITopicDetail extends UIForm {
 	@SuppressWarnings("unused")
   private UserProfile getUserProfile() {
 		return userProfile ;
+	}
+	
+	@SuppressWarnings("unused")
+  private boolean isOnline(String userId) throws Exception {
+		return this.forumService.isOnline(userId) ;
 	}
 	
 	public void setUpdateTopic(String categoryId, String forumId, String topicId, boolean viewTopic) throws Exception {
@@ -1026,8 +1030,8 @@ public class UITopicDetail extends UIForm {
 					buffer.append("&lt;") ;
 				} else if((int)c == 62){
 					buffer.append("&gt;") ;
-				} else if((int)c == 32){
-					buffer.append("&nbsp;") ;
+//				} else if((int)c == 32){
+//					buffer.append("&nbsp;") ;
 				} else {
 					buffer.append(c) ;
 				}
@@ -1080,8 +1084,8 @@ public class UITopicDetail extends UIForm {
 					buffer.append("&lt;") ;
 				} else if((int)c == 62){
 					buffer.append("&gt;") ;
-				} else if((int)c == 32){
-					buffer.append("&nbsp;") ;
+				//} else if((int)c == 32){
+					//buffer.append("&nbsp;") ;
 				} else {
 					buffer.append(c) ;
 				}

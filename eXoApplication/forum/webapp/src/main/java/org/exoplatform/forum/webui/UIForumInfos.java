@@ -18,7 +18,6 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;

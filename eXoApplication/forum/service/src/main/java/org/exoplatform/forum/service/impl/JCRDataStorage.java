@@ -1442,7 +1442,7 @@ public class JCRDataStorage{
 		return pageList ;
 	}
 	
-	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan) throws Exception {
+	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if(userName == null || userName.length() <= 0) return userProfile ;
 		Node userProfileNode = getUserProfileNode(sProvider) ;
@@ -1459,7 +1459,6 @@ public class JCRDataStorage{
 				if(newProfileNode.hasProperty("exo:moderateTopics"))userProfile.setModerateTopics(ValuesToStrings(newProfileNode.getProperty("exo:moderateTopics").getValues()));
 				if(newProfileNode.hasProperty("exo:readTopic"))userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
 				if(newProfileNode.hasProperty("exo:bookmark"))userProfile.setBookmark(ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues()));
-				
 				if(newProfileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:isDisplaySignature"))userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
@@ -1480,6 +1479,10 @@ public class JCRDataStorage{
 				if(newProfileNode.hasProperty("exo:banCounter"))userProfile.setBanCounter(Integer.parseInt(newProfileNode.getProperty("exo:banCounter").getString()));
 				if(newProfileNode.hasProperty("exo:banReasonSummary"))userProfile.setBanReasonSummary(ValuesToStrings(newProfileNode.getProperty("exo:banReasonSummary").getValues()));
 				if(newProfileNode.hasProperty("exo:createdDateBan"))userProfile.setCreatedDateBan(newProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
+			}
+			if(isLogin) {
+				newProfileNode.setProperty("exo:lastLoginDate", getGreenwichMeanTime()) ;
+				userProfileNode.getSession().save() ;
 			}
 			return userProfile;
 		}catch(PathNotFoundException e) {
@@ -1691,12 +1694,14 @@ public class JCRDataStorage{
 	    forumStatisticNode.setProperty("exo:topicCount", forumStatistic.getTopicCount()) ;
 	    forumStatisticNode.setProperty("exo:membersCount", forumStatistic.getMembersCount()) ;
 	    forumStatisticNode.setProperty("exo:newMembers", forumStatistic.getNewMembers()) ;
+	    forumStatisticNode.setProperty("exo:mostUsersOnline", forumStatistic.getMostUsersOnline()) ;
     } catch (PathNotFoundException e) {
     	forumStatisticNode = forumHomeNode.addNode(FORUM_STATISTIC, "exo:forumStatistic") ;
     	forumStatisticNode.setProperty("exo:postCount", 0) ;
     	forumStatisticNode.setProperty("exo:topicCount", 0) ;
     	forumStatisticNode.setProperty("exo:membersCount", forumStatistic.getMembersCount()) ;
     	forumStatisticNode.setProperty("exo:newMembers", forumStatistic.getNewMembers()) ;
+    	forumStatisticNode.setProperty("exo:mostUsersOnline", forumStatistic.getMostUsersOnline()) ;
     }
 //    forumHomeNode.save() ;
     forumHomeNode.getSession().save() ;
