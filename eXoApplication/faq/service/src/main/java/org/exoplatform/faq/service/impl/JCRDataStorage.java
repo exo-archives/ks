@@ -35,6 +35,7 @@ import javax.jcr.query.QueryResult;
 import org.exoplatform.faq.service.BufferAttachment;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
+import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
@@ -96,7 +97,7 @@ public class JCRDataStorage {
   }
   
   private void saveQuestion(Node questionNode, Question question) throws Exception {
-  	questionNode.setProperty("exo:question", question.getQuestion()) ;
+  	questionNode.setProperty("exo:name", question.getQuestion()) ;
   	questionNode.setProperty("exo:author", question.getAuthor()) ;
   	questionNode.setProperty("exo:email", question.getEmail()) ;
   	GregorianCalendar cal = new GregorianCalendar() ;
@@ -167,7 +168,7 @@ public class JCRDataStorage {
   private Question getQuestion(Node questionNode) throws Exception {
   	Question question = new Question() ;
   	question.setId(questionNode.getName()) ;
-  	if(questionNode.hasProperty("exo:question")) question.setQuestion(questionNode.getProperty("exo:question").getString()) ;
+  	if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
@@ -469,37 +470,44 @@ public class JCRDataStorage {
 			watchingNode.save() ;
 		}
   	watchingNode.getSession().save();
-  	System.out.println("=====:::::"+ watchingNode.getSession().getValueFactory());
   }
-  public List<Category> getQuickSeach(SessionProvider sProvider,String text) throws Exception {
+  public List<FAQFormSearch> getQuickSeach(SessionProvider sProvider,String text) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
   	String []valueQuery = text.split(",") ;
+  	String types[] = new String[] {"faqCategory", "faqQuestion"} ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root" + faqServiceHome.getPath() + "//element(*,exo:faqCategory)") ;
-		boolean isOwner = false ;
-		queryString.append("[") ;
-		if(valueQuery[1] != null && valueQuery[1].length() > 0 && !valueQuery[1].equals("null")) {
-    	queryString.append("(@exo:owner='").append(valueQuery[1]).append("')") ;
-    	isOwner = true;
-    }
-    if(valueQuery[0] != null && valueQuery[0].length() > 0 && !valueQuery[0].equals("null")) {
-    	if(isOwner) queryString.append(" and ");
-    	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
-    }
-		queryString.append("]") ;
-    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-    QueryResult result = query.execute();
-  	NodeIterator iter = result.getNodes() ;
-  	List<Category> catList = new ArrayList<Category>() ;
-  	while(iter.hasNext()) {
-  		Category category = new Category() ;
-  		Node nodeObj = (Node) iter.nextNode();
-  		category.setId(nodeObj.getName());
-  		if(nodeObj.hasProperty("exo:name")) category.setName(nodeObj.getProperty("exo:name").getString()) ;
-    	if(nodeObj.hasProperty("exo:createdDate")) category.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
-    	catList.add(category) ;
-  	}
-  	return catList ;
+		List<FAQFormSearch>FormSearchs = new ArrayList<FAQFormSearch>() ;
+		for (String type : types) {
+			StringBuffer queryString = new StringBuffer("/jcr:root" + faqServiceHome.getPath() + "//element(*,exo:").append(type).append(")");
+			boolean isOwner = false ;
+			queryString.append("[") ;
+			if(valueQuery[1] != null && valueQuery[1].length() > 0 && !valueQuery[1].equals("null")) {
+		  	queryString.append("(@exo:owner='").append(valueQuery[1]).append("')") ;
+		  	isOwner = true;
+		  }
+		  if(valueQuery[0] != null && valueQuery[0].length() > 0 && !valueQuery[0].equals("null")) {
+		  	if(isOwner) queryString.append(" and ");
+		  	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
+		  }
+			queryString.append("]") ;
+		  Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		  QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes() ;
+		  Node node ;
+		  FAQFormSearch formSearch ;
+		  String id;
+			while(iter.hasNext()) {
+				formSearch = new FAQFormSearch() ;
+				node = (Node)iter.nextNode();
+				id = node.getName() ;
+				formSearch.setId(id) ;
+				formSearch.setName(node.getProperty("exo:name").getString()) ;
+				formSearch.setType(type) ;
+				formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
+				FormSearchs.add(formSearch) ;
+			}
+		}
+  	return FormSearchs ;
   }
   
   public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
@@ -554,7 +562,7 @@ public class JCRDataStorage {
 					Question question = new Question() ;
 					Node nodeObj = (Node) iter.nextNode();
 					question.setId(nodeObj.getName());
-		    	if(nodeObj.hasProperty("exo:question")) question.setQuestion(nodeObj.getProperty("exo:question").getString()) ;
+		    	if(nodeObj.hasProperty("exo:name")) question.setQuestion(nodeObj.getProperty("exo:name").getString()) ;
 		      if(nodeObj.hasProperty("exo:author")) question.setAuthor(nodeObj.getProperty("exo:author").getString()) ;
 		      if(nodeObj.hasProperty("exo:email")) question.setEmail(nodeObj.getProperty("exo:email").getString()) ;
 		      if(nodeObj.hasProperty("exo:createdDate")) question.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;

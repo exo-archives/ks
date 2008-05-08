@@ -36,6 +36,7 @@ public class FAQEventQuery {
 	private String author;
 	private String email ;
 	private String question;
+	private String response ;
 	private Calendar fromDate ;
 	private Calendar toDate ;
 	
@@ -96,7 +97,12 @@ public class FAQEventQuery {
 	public void setQuestion(String question) {
 		this.question = question;
 	}
-	
+	public String getResponse() {
+		return response;
+	}
+	public void setResponse(String response) {
+		this.response = response;
+	}
 	public Calendar getFromDate() {
   	return fromDate;
   }
@@ -121,39 +127,41 @@ public class FAQEventQuery {
     	stringBuffer.append("(jcr:contains(., '").append(text).append("'))") ;
   		isAnd = true ;
     }
-    if(name != null && name.length() > 0 ) {
-    	stringBuffer.append("(jcr:contains(@exo:name, '").append(name).append("'))") ;
-    	isAnd = true ;
+    if(type.equals("faqCategory")) {
+		  if(name != null && name.length() > 0 ) {
+		  	stringBuffer.append("(jcr:contains(@exo:name, '").append(name).append("'))") ;
+		  	isAnd = true ;
+		  }
 		  if(isModeQuestion != null && isModeQuestion.length() > 0) {
 		  	if(isAnd) stringBuffer.append(" and ");
 				stringBuffer.append("(@exo:isModerateQuestions='").append(isModeQuestion).append("')") ;
 				isAnd = true ;
 			}
-    }
-    if(moderator != null && moderator.length() > 0) {
-    	if(isAnd) stringBuffer.append(" and ");
-			stringBuffer.append("(@exo:moderators='").append(moderator).append("')") ;
-			isAnd = true ;
-			if(isModeQuestion != null && isModeQuestion.length() > 0) {
+		  if(moderator != null && moderator.length() > 0) {
 		  	if(isAnd) stringBuffer.append(" and ");
-				stringBuffer.append("(@exo:isModerateQuestions='").append(isModeQuestion).append("')") ;
-				isAnd = true ;
+				stringBuffer.append("(jcr:contains(@exo:moderators, '").append(moderator).append("'))") ;
+		  	isAnd = true ;
 			}
-		}
-    if(author != null && author.length() > 0) {
-    	if(isAnd) stringBuffer.append(" and ");
-    	stringBuffer.append("(@exo:Author='").append(author).append("')") ;
-    	isAnd = true ;
-    }
-    if(email != null && email.length() > 0) {
-    	if(isAnd) stringBuffer.append(" and ");
-    	stringBuffer.append("(@exo:email='").append(email).append("')") ;
-    	isAnd = true ;
-    }
-    if(question != null && question.length() > 0) {
-    	if(isAnd) stringBuffer.append(" and ");
-    	stringBuffer.append("(@exo:question='").append(question).append("')") ;
-    	isAnd = true ;
+    } else {
+	    if(author != null && author.length() > 0) {
+	    	stringBuffer.append("(jcr:contains(@exo:author, '").append(author).append("'))") ;
+	    	isAnd = true ;
+	    }
+	    if(email != null && email.length() > 0) {
+	    	if(isAnd) stringBuffer.append(" and ");
+	    	stringBuffer.append("(jcr:contains(@exo:email, '").append(email).append("'))") ;
+	    	isAnd = true ;
+	    }
+	    if(question != null && question.length() > 0) {
+	    	if(isAnd) stringBuffer.append(" and ");
+	    	stringBuffer.append("(jcr:contains(@exo:name, '").append(question).append("'))") ;
+	    	isAnd = true ;
+	    }
+	    if(response != null && response.length() > 0) {
+	    	if(isAnd) stringBuffer.append(" and ");
+	    	stringBuffer.append("(jcr:contains(@exo:responses, '").append(response).append("'))") ;
+	    	isAnd = true ;
+	    }
     }
     String temp = setDateFromTo(fromDate, toDate, "createdDate") ;
     if(temp != null && temp.length() > 0) { 
@@ -175,9 +183,11 @@ public class FAQEventQuery {
 			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ") ;
 			isAnd = true ;
 		} else if(fromDate != null){
+			if(isAnd) queryString.append(" and ") ;
 			queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
 			isAnd = true ;
 		} else if(toDate != null){
+			if(isAnd) queryString.append(" and ") ;
 			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
 			isAnd = true ;
 		}

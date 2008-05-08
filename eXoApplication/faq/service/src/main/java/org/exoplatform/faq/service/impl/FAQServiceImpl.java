@@ -24,6 +24,7 @@ import javax.jcr.Value;
 
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
+import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
@@ -117,7 +118,7 @@ public class FAQServiceImpl implements FAQService{
   	jcrData_.addWatch(type, watchType, id, value, sProvider) ;
   }
   
-  public List<Category> getQuickSeach(SessionProvider sProvider, String text) throws Exception {
+  public List<FAQFormSearch> getQuickSeach(SessionProvider sProvider, String text) throws Exception {
   	return jcrData_.getQuickSeach(sProvider, text); 
   }
   
