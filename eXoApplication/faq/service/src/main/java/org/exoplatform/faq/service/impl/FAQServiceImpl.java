@@ -17,6 +17,10 @@
 package org.exoplatform.faq.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.Value;
 
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
@@ -33,14 +37,17 @@ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
  *          hung.nguyen@exoplatform.com
  * Mar 04, 2008  
  */
-public class FAQServiceImpl implements FAQService{
+public class FAQServiceImpl implements FAQService{	
+  
 	public static final int CATEGORY = 1 ;
 	public static final int QUESTION = 2 ;
 	public static final int SEND_EMAIL = 1 ;
 	private JCRDataStorage jcrData_ ;
+	private MultiLanguages multiLanguages_ ;
 	
 	public FAQServiceImpl(NodeHierarchyCreator nodeHierarchy) throws Exception {
 		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
+		multiLanguages_ = new MultiLanguages() ;
 	}
 	public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {
 		return jcrData_.getAllCategories(sProvider);
@@ -119,13 +126,48 @@ public class FAQServiceImpl implements FAQService{
   }
   
   public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception {
-    // TODO Auto-generated method stub
     return jcrData_.getListCateIdByModerator(user, sProvider); 
   }
+
   public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.getAdvancedSeachQuestion(sProvider, eventQuery) ;
   }
+  
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception {
   	return jcrData_.getCategoryPath(sProvider, categoryId) ;
   }
+  
+  // Multi Languages
+  
+	public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception {
+		multiLanguages_.addFileLanguage(node, value, mimeType, language, isDefault) ;		
+	}
+	
+	public void addFileLanguage(Node node, String language, Map mappings, boolean isDefault) throws Exception {
+		multiLanguages_.addFileLanguage(node, language, mappings, isDefault) ;
+	}
+	
+	public void addLanguage(Node node, Map inputs, String language, boolean isDefault) throws Exception {
+		multiLanguages_.addLanguage(node, inputs, language, isDefault) ;
+	}
+	
+	public void addLanguage(Node node, Map inputs, String language, boolean isDefault, String nodeType) throws Exception {
+		multiLanguages_.addLanguage(node, inputs, language, isDefault, nodeType) ;
+	}
+	
+	public String getDefault(Node node) throws Exception {
+		return multiLanguages_.getDefault(node);
+	}
+	
+	public Node getLanguage(Node node, String language) throws Exception {
+		return multiLanguages_.getLanguage(node, language);
+	}
+	
+	public List<String> getSupportedLanguages(Node node) throws Exception {
+		return multiLanguages_.getSupportedLanguages(node);
+	}
+	
+	public void setDefault(Node node, String language) throws Exception {
+		multiLanguages_.setDefault(node, language) ;
+	}
 }

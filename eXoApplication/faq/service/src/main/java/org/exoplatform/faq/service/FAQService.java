@@ -17,6 +17,10 @@
 package org.exoplatform.faq.service;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.Value;
 
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
@@ -166,4 +170,15 @@ public interface FAQService {
   public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception ;
   
+  //Multi languages
+  
+  public List<String> getSupportedLanguages(Node node) throws Exception ;
+  public void setDefault(Node node, String language) throws Exception ;
+  public void addLanguage(Node node, Map inputs, String language, boolean isDefault) throws Exception ;
+  public void addLanguage(Node node, Map inputs, String language, boolean isDefault, String nodeType) throws Exception ;
+  public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception ;
+  public void addFileLanguage(Node node, String language, Map mappings, boolean isDefault) throws Exception ;
+  public String getDefault(Node node) throws Exception ;
+  public Node getLanguage(Node node, String language) throws Exception ;
+
 }
