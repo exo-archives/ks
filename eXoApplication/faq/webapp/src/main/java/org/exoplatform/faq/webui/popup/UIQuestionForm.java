@@ -312,7 +312,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       
       questionForm.author_ = ((UIFormStringInput)questionForm.getChildById(AUTHOR)).getValue() ;
       questionForm.email_ = ((UIFormStringInput)questionForm.getChildById(EMAIL_ADDRESS)).getValue() ;
-      questionForm.isChecked_ = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
+      if(questionForm.questionId != null && questionForm.questionId.trim().length() > 0) {
+        questionForm.isChecked_ = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
+      }
       questionForm.questionContents_.clear() ;
       UIFormInputWithActions listFormWYSIWYGInput =  questionForm.getChildById(LIST_WYSIWYG_INPUT) ;
       for(int i = 0 ; i < listFormWYSIWYGInput.getChildren().size(); i ++) {
