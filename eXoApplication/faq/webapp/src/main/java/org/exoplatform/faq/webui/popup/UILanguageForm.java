@@ -35,7 +35,6 @@ import org.exoplatform.webui.form.UIForm;
  * Aus 01, 2007 2:48:18 PM 
  */
 
-@SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/faq/webui/popup/UILanguageForm.gtmpl",

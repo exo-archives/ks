@@ -66,7 +66,6 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 
   private UIComponent uiComponent ;
   private String type_ = null ;
-  @SuppressWarnings("unchecked")
   private List selectedGroup_ ;
   private String returnFieldName = null ;
 

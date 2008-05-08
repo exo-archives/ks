@@ -413,8 +413,7 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     String[] relations = question.getRelations() ;
     this.setListIdQuesRela(Arrays.asList(relations)) ;
     if(relations != null && relations.length > 0)
-      for(@SuppressWarnings("unused")
-      String relation : relations) {
+      for(String relation : relations) {
         listRelation.add(new SelectItemOption<String>(question.getQuestion(), question.getQuestion())) ;
       }
   }

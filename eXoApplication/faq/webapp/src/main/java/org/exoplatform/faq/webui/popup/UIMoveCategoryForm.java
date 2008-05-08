@@ -78,7 +78,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     }
   }
   
-	@SuppressWarnings("unused")
   private static List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCate = new ArrayList<Cate>() ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
