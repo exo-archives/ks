@@ -54,7 +54,7 @@
 											<% uicomponent.renderChild("FAQUserPageIteratorTab1") ; %>
 										</div>
 										
-										<div class="HorizontalLayout" style="margin: 0px 5px 0px 5px; padding: 5px 5px 5px 5px;background-color:#F3F3F3;">
+										<div class="HorizontalLayout">
 												<div class="UIFormInput">
 													<table class="UIGrid">
 														<tr>
@@ -112,7 +112,7 @@
 											<% uicomponent.renderChild("FAQUserPageIteratorTab2") ; %>
 										</div>
 										
-										<div class="HorizontalLayout" style="margin: 0px 5px 0px 5px; padding: 5px 5px 5px 5px;background-color:#F3F3F3;">
+										<div class="HorizontalLayout">
 												<div class="UIFormInput">
 													<table class="UIGrid">
 														<tr>

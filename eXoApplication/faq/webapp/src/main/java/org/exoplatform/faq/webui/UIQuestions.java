@@ -229,6 +229,19 @@ public class UIQuestions extends UIContainer {
 		return categories_ ;
 	}
   
+	@SuppressWarnings("unused")
+	private int[] getCategoryInfo(String categoryId) {
+    int[] result = new int[]{0,0,0} ;
+	  try {
+      result[0] = faqService.getSubCategories(categoryId, FAQUtils.getSystemProvider()).size();
+      result[1] = faqService.getQuestionsByCatetory(categoryId, FAQUtils.getSystemProvider()).getAll().size() ;
+      result[2] = faqService.getQuestionsByListCatetory(Arrays.asList(new String[]{categoryId}), true, FAQUtils.getSystemProvider()).getAll().size() ;
+    } catch (Exception e) {
+      e.printStackTrace() ;
+    }
+    return result ;
+	}
+  
   public void update(Category category) throws Exception {
   	categoryId_ = category.getId() ;
 //		this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId)) ;
