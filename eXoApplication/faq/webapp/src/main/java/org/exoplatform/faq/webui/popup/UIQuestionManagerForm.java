@@ -16,6 +16,8 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -568,8 +570,14 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
         question.setEmail(email) ;
         question.setQuestion(questionContent) ;
       } else {
+        String user = FAQUtils.getCurrentUser() ;
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
+        java.util.Date date = new java.util.Date();
+        String dateStr = dateFormat.format(date) ;
+        date = dateFormat.parse(dateStr) ;
+        
         question.setQuestion(((UIFormTextAreaInput)formParent.getChildById(RESPONSE_QUESTION_CONTENT)).getValue()) ;
-        question.setResponses(questionContent) ;
+        question.setResponses(user + "/" + date + "/" + questionContent) ;
         question.setRelations(questionManagerForm.getListIdQuesRela().toArray(new String[]{})) ;
       }
       
