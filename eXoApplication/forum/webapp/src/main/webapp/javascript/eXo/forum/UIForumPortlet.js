@@ -335,26 +335,36 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 	var objElm = document.getElementById(elm) ;
 	if(objCmdElm === null) return ;
 	var parentElm = eXo.core.DOMUtil.findAncestorByClass(objElm, "FieldComponent") ;
-	var tagA = parentElm.getElementsByTagName('a')[0] ;
-	tagA.setAttribute("tmpHref",tagA.href) ;
+	var tagA = parentElm.getElementsByTagName('a') ;
+	for(var i=0; i < tagA.length; ++i) {
+		tagA[i].setAttribute("tmpHref",tagA[i].href) ;
+		tagA[i].href = "javascript:void(0);" ;
+	}
 	objElm.disabled = 'disabled' ;
-	tagA.href = "javascript:void(0);" ;
 	if(objCmdElm.value === '') {
 		objElm.disabled = 'disabled' ;
 		objElm.value = '' ;
-		tagA.href = "javascript:void(0);" ;
+		for(var i=0; i < tagA.length; ++i) {
+			tagA[i].href = "javascript:void(0);" ;
+		}
 	} else {
 		objElm.disabled = '' ;
-		tagA.href = tagA.getAttribute("tmpHref") ;
+		for(var i=0; i < tagA.length; ++i) {
+			tagA[i].href = tagA[i].getAttribute("tmpHref") ;
+		}
 	}
 	objCmdElm.onkeyup= function() {
 		if(this.value != '') {
 			objElm.disabled = '' ;
-			tagA.href = tagA.getAttribute("tmpHref") ;
+			for(var i=0; i < tagA.length; ++i) {
+				tagA[i].href = tagA[i].getAttribute("tmpHref") ;
+			}
 		} else {
 			objElm.disabled = 'disabled' ;
 			objElm.value = '' ;
-			tagA.href = "javascript:void(0);" ;
+			for(var i=0; i < tagA.length; ++i) {
+				tagA[i].href = "javascript:void(0);" ;
+			}
 			if(elm === 'Postable') {
 				eXo.forum.UIForumPortlet.setDisableInput('Viewer','Postable') ;
 			}
@@ -371,8 +381,8 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 	masklayer.style.height = "auto";
  	if(popupWindow != null) {
 	 	if(popupWindow.style.display == "block") {
-			masklayer.style.width = forumPortlet.offsetWidth - 20 + "px";
-			masklayer.style.height = forumPortlet.offsetHeight - 20 + "px";
+			masklayer.style.width = forumPortlet.offsetWidth - 15 + "px";
+			masklayer.style.height = forumPortlet.offsetHeight - 15 + "px";
 			var isDesktop = document.getElementById('UIPageDesktop') ;
 			if(isDesktop === null){
 				script:scroll(0,0);

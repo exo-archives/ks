@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -154,20 +155,25 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		threadPermission.addUIFormInput(canPost);
 		threadPermission.addUIFormInput(canView);
     
-    String[] childIds = new String[]{FIELD_CANVIEW_INPUT, FIELD_CANPOST_INPUT} ;
-    List<ActionData> actions ;
-    ActionData ad ;
-    for(String string : childIds) {
-      actions = new ArrayList<ActionData>() ;
-      ad = new ActionData() ;
-      ad.setActionListener("AddValuesUser") ;
-      ad.setActionParameter(string) ;
-      ad.setCssIconClass("SelectUserIcon") ;
-      ad.setActionName("SelectUser");
-      actions.add(ad) ;
-      threadPermission.setActionField(string, actions);
-    }
-		
+    String[]fieldPermissions = new String[]{FIELD_CANVIEW_INPUT, FIELD_CANPOST_INPUT} ; 
+		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
+		List<ActionData> actions ;
+		ActionData ad ;int i ;
+		for (String fieldPermission : fieldPermissions) {
+			actions = new ArrayList<ActionData>() ;
+			i = 0;
+			for(String string : strings) {
+				ad = new ActionData() ;
+				ad.setActionListener("AddValuesUser") ;
+				ad.setActionParameter(fieldPermission + "/" + String.valueOf(i)) ;
+				ad.setCssIconClass(string + "Icon") ;
+				ad.setActionName(string);
+				actions.add(ad) ;
+				++i;
+			}
+			threadPermission.setActionField(fieldPermission, actions);
+		}
+    
 		addUIFormInput(threadContent) ;
 		addUIFormInput(uiIconSelector) ;
 		addUIFormInput(threadOption) ;
@@ -346,6 +352,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     public void execute(Event<UITopicForm> event) throws Exception {
 			UITopicForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			int t = 0, k = 1 ;
 			UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
 			UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
@@ -355,6 +362,16 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			
+			ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
+			String []censoredKeyword = ForumFormatUtils.splitForForum(forumAdministration.getCensoredKeyword()) ;
+			boolean isOffend = false ; 
+			checksms = checksms.replaceAll("&nbsp;", " ") ;
+			for (String string : censoredKeyword) {
+	      if(checksms.indexOf(string.trim()) >= 0) isOffend = true ;
+      }
+			
+			
 			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
@@ -362,7 +379,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				// uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
 				String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
-				
 				Boolean moderatePost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
 				Boolean whenNewPost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
 				Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
@@ -386,6 +402,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setDescription(message);
 				topicNew.setIsNotifyWhenAddPost(whenNewPost);
 				topicNew.setIsModeratePost(moderatePost);
+				topicNew.setIsWaiting(isOffend) ;
 				topicNew.setAttachments(uiForm.attachments_) ;
 				if(topicState.equals("closed")) {
 					topicNew.setIsClosed(true);
@@ -423,7 +440,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setCanView(canView);
 				topicNew.setCanPost(canPost);
 				
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				
 				if(uiForm.topicId != null && uiForm.topicId.length() > 0) {
 					topicNew.setId(uiForm.topicId);
 					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
@@ -437,6 +454,12 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				}
 				uiForm.topic = new Topic();
 				forumPortlet.cancelAction() ;
+				if(isOffend) {
+					Object[] args = { "" };
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				}
 				WebuiRequestContext context = RequestContext.getCurrentInstance() ;
 				context.addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
@@ -534,13 +557,15 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
   static  public class AddValuesUserActionListener extends EventListener<UITopicForm> {
     public void execute(Event<UITopicForm> event) throws Exception {
       UITopicForm uiTopicForm = event.getSource() ;
-      String childId = event.getRequestContext().getRequestParameter(OBJECTID)  ;
+      String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+    	String[]array = objctId.split("/") ;
+    	String childId = array[0] ;
       if(childId != null && childId.length() > 0) {
         UIPopupContainer popupContainer = uiTopicForm.getAncestorOfType(UIPopupContainer.class) ;
         UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
         UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
-        uiGroupSelector.setType("0") ;
-        //uiGroupSelector.setSelectedGroups(null) ;
+        uiGroupSelector.setType(array[1]) ;
+        uiGroupSelector.setSelectedGroups(null) ;
         uiGroupSelector.setComponent(uiTopicForm, new String[]{childId}) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }

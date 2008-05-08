@@ -1,7 +1,8 @@
 <%  
 	import org.exoplatform.forum.webui.UIPostRules ;
-	String []moderators =  uicomponent.getModeratorsForum() ;
-	int total = moderators.length;
+	import org.exoplatform.forum.service.ForumServiceUtils;
+	List moderators =  uicomponent.getModeratorsForum() ;
+	int total = moderators.size();
 %>
 <div class="UIForumInfos">
 	<div class="ThreadsStartsList RightStartsList">

@@ -41,6 +41,7 @@
 }
 
 .UITopicForm .UITabContent {
+	min-height: 268px;
 	height: auto;
 }
 

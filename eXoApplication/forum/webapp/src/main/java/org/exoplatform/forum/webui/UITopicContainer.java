@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
@@ -86,6 +87,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
+			@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
 		}
@@ -173,23 +175,23 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		String userId = this.userProfile.getUserId() ;
     String[] strings = this.forum.getCreateTopicRole() ;
     if( strings != null && strings.length > 0)
-	    this.canAddNewThread = ForumFormatUtils.isStringInStrings(strings, userId) ;
+    	this.canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
 
     strings = this.forum.getViewForumRole() ;
     if(strings != null && strings.length > 0)
-      this.canViewThreads = ForumFormatUtils.isStringInStrings(strings, userId) ;
+      this.canViewThreads = ForumServiceUtils.hasPermission(strings, userId) ;
 
-     if(this.forum.getIsModerateTopic()) {
-			if(role >=2) isApprove = "true" ;
-			if(role == 1) {
-				boolean test = ForumFormatUtils.isStringInStrings(forum.getModerators(), userId) ; 
-				System.out.println(test + "  :  " + userId);
-				if(!test){
-					isApprove = "true" ;
-				}
-			}
+    boolean isModerator = false ;
+    if(role == 0) isModerator = true;
+		if(role == 1) {
+			isModerator = ForumServiceUtils.hasPermission(forum.getModerators(), userId) ;
 		}
-		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, isApprove, strQuery);
+    if(this.forum.getIsModerateTopic()) {
+			if(!isModerator) isApprove = "true" ;
+		}
+    String isWaiting = "false" ;
+    if(isModerator) isWaiting = "" ;
+		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, isApprove, isWaiting, strQuery);
 		long maxTopic = userProfile.getMaxTopicInPage() ;
 		if(maxTopic > 0) this.maxTopic = maxTopic ;
 		this.pageList.setPageSize(this.maxTopic);
@@ -211,7 +213,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private String[] getActionMenuTopic() throws Exception {
 		String []actions = {"EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic",
-        "SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "ApproveTopics"}; 
+        "SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "SetUnWaiting", "ApproveTopics"}; 
 		return actions;
 	}
 	
@@ -249,7 +251,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		long role = this.userProfile.getUserRole() ;
 		if(role >=2){ isHidden = "false" ;}
 		if(role == 1) {
-			if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+			if(!ForumServiceUtils.hasPermission(forum.getModerators(), this.userProfile.getUserId())){
 				isHidden = "false" ;
 			}
 		}
@@ -849,6 +851,33 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;
 			}
+		}
+	}
+
+	static public class SetUnWaitingActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiTopicContainer = event.getSource();
+			List<UIComponent> children = uiTopicContainer.getChildren() ;
+			List <Topic> topics = new ArrayList<Topic>();
+			for(UIComponent child : children) {
+				if(child instanceof UIFormCheckBoxInput) {
+					if(((UIFormCheckBoxInput)child).isChecked()) {
+						topics.add(uiTopicContainer.getTopic(child.getName()));
+					}
+				}
+			}
+			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			if(topics.size() > 0) {
+				for(Topic topic : topics) {
+					topic.setIsWaiting(false) ;
+					uiTopicContainer.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, false, false) ;
+				}
+			} 
+			if(topics.size() == 0){
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	

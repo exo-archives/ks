@@ -4,6 +4,7 @@
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.webui.UIForumPageIterator ;
 	import org.exoplatform.forum.service.JCRPageList ;
+	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.forum.ForumFormatUtils ;
 	import org.exoplatform.forum.ForumSessionUtils; 
 	import org.exoplatform.forum.service.UserProfile ;
@@ -40,15 +41,7 @@
 			}
 		}
 		if(!canEdit) {
-			String []moderatorsByForum = forum.getModerators() ;
-			if(moderatorsByForum != null || moderatorsByForum.length > 0) {
-				for(user in moderatorsByForum) {
-					if(user.indexOf(userProfile.getUserId()) >= 0) {
-						canEdit = true;
-						break ;
-					}
-				}
-			}
+			canEdit = ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()) ;
 		}
 	}
 	
@@ -427,8 +420,12 @@
 											title = "TitleBold";
 										}
 										String approved = "" ;
-										if(canEdit && isApproveTopic){
-											if(!topic.getIsApproved()) approved = "(<span style='color:#f77617;'>This thread is pending for approval !</span>)" ;
+										if(canEdit){
+											if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>This thread is pending for Censor ! </span>)" ;
+											if(isApproveTopic && !topic.getIsApproved()) { 
+												if(approved.length() > 0) approved = "&nbsp;(<span style='color:#f77617;'>This thread is pending for Approval and Censor ! </span>)" ;
+												else approved = "&nbsp;(<span style='color:#f77617;'>This thread is pending for Approval !</span>)" ;
+											}
 										}
 										
 										String actionBookmark = uicomponent.event("AddBookMark",iconClassTopic+"//"+topicTitle+"//"+topic.getPath());
@@ -439,9 +436,9 @@
 										<td >
 											<div >
 											<% if(topic.getIsSticky()) {%>
-												<span class="Text StickyIcon">Sticky:</span>
+												<span class="Text StickyIcon" style="float:left;">Sticky:</span>
 											<% } %>
-												<div style="" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+												<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 													<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 														<div class="UIRightClickPopupMenu" style="display: block;">
@@ -451,7 +448,7 @@
 												</div>
 												  <% ++rCNB; %>
 												<% if(max_page > 1) { %>
-												<span>(</span>	
+												<span>&nbsp;(</span>	
 												<%	int t = 1;
 													while(t <= max_page) {
 													if(t <= 5) { 
@@ -470,6 +467,7 @@
 												<%} 
 												} %>
 												$approved
+												<div style="clear: left;"><span></span></div>
 											</div>
 											<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 										</td>

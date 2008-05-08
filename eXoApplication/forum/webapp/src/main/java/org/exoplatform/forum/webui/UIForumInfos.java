@@ -16,8 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.List;
+
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -33,29 +36,28 @@ import org.exoplatform.webui.core.UIContainer;
 		template =	"app:/templates/forum/webui/UIForumInfos.gtmpl"
 )
 public class UIForumInfos extends UIContainer	{
-	private String [] moderators ;
+	private List<String> moderators ;
   private UserProfile userProfile ;
 	public UIForumInfos() throws Exception { 
 		addChild(UIPostRules.class, null, null);
 	}
 
 	@SuppressWarnings("unused")
-  private String[] getModeratorsForum() throws Exception {
+  private List<String> getModeratorsForum() throws Exception {
 		return moderators ;
 	}
 	
-	public void setForum(Forum forum) {
+	public void setForum(Forum forum)throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		this.moderators = forum.getModerators() ;
+		this.moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		boolean isLock = forum.getIsClosed() ;
 		if(!isLock) isLock = forum.getIsLock() ;
     if(!isLock && userProfile.getUserRole()!=0) {
-  		String[] listUser = forum.getModerators() ;
-      if(!ForumFormatUtils.isStringInStrings(listUser, userProfile.getUserId())) {
-        listUser = forum.getCreateTopicRole() ;
+      if(!this.moderators.contains(userProfile.getUserId())) {
+        String []listUser = forum.getCreateTopicRole() ;
         if(listUser != null && listUser.length > 0)
-          isLock = !ForumFormatUtils.isStringInStrings(listUser, userProfile.getUserId()) ;
+          isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
       }
     }
 		postRules.setLock(isLock) ;

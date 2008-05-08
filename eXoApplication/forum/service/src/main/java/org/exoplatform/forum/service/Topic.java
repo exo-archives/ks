@@ -49,6 +49,7 @@ public class Topic {
 	private boolean isApproved = false ;
 	private boolean isSticky = false ;
 	private boolean isPoll = false ;
+	private boolean isWaiting = false ;
 	
 	private String[] canView;
 	private String[] canPost;
@@ -150,5 +151,8 @@ public class Topic {
 	public List<ForumAttachment> getAttachments() { return this.attachments;}
 	
 	public String getForumId() { return null ; }
+
+	public boolean getIsWaiting() {return isWaiting;}
+	public void setIsWaiting(boolean isWaiting) {this.isWaiting = isWaiting;}
 
 }

@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -132,7 +133,7 @@ public class UITopicPoll extends UIForm	{
 			UserProfile userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 			String userId = userProfile.getUserId() ;
 			long userRole = userProfile.getUserRole() ;
-			if(userRole == 0 || ForumFormatUtils.isStringInStrings(this.forum.getModerators(), userId)) this.canViewEditMenu = true ;
+			if(userRole == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userId)) this.canViewEditMenu = true ;
 			else this.canViewEditMenu = false ;
 			if(this.topic.getIsPoll()) {
 				Poll poll = forumService.getPoll(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId) ; 

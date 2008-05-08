@@ -8,6 +8,7 @@
 	import org.exoplatform.forum.ForumSessionUtils; 
 	import org.exoplatform.forum.ForumFormatUtils;
 	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.contact.service.Contact ;
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.web.application.JavascriptManager;
@@ -61,10 +62,7 @@
 				}
 			}
 			if(!canEdit && forum != null) {
-				String []moderatorsByForum = forum.getModerators() ;
-				if(moderatorsByForum != null || moderatorsByForum.length > 0) {
-					canEdit = ForumFormatUtils.isStringInStrings(moderatorsByForum, userLogin) ;
-				}
+				canEdit = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin) ;
 			}
 		}
 		uicomponent.setIsEdit(canEdit) ;

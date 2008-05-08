@@ -35,6 +35,7 @@ import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -247,15 +248,15 @@ public class UITopicDetail extends UIForm {
 	}
   
   @SuppressWarnings("unused")
-  private boolean isCanPostReply(){
-    UserProfile userProfile = this.getUserProfile() ;
-    if(userProfile.getUserRole() > 0 && !ForumFormatUtils.isStringInStrings(this.forum.getModerators(), this.userName)) {
+  private boolean isCanPostReply() throws Exception {
+  	String userName = this.userProfile.getUserId() ;
+    boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
+    if(this.userProfile.getUserRole() > 0 && !isMod) {
       List<String> listUser = new ArrayList<String>() ;
-      listUser.addAll(Arrays.asList(this.topic.getCanPost())) ;
-      int size = listUser.size() ;
-      listUser.addAll(size, Arrays.asList(this.forum.getReplyTopicRole())) ;
+      listUser.addAll(ForumServiceUtils.getUserPermission(this.topic.getCanPost())) ;
+      listUser.addAll(ForumServiceUtils.getUserPermission(this.forum.getReplyTopicRole())) ;
       if(!listUser.isEmpty() && listUser.size() > 0) {
-        if(!listUser.contains(userProfile.getUserId())) {
+        if(!listUser.contains(userName)) {
           return false ;
         }
       }
@@ -311,12 +312,11 @@ public class UITopicDetail extends UIForm {
     try {
       List<String> listUser = new ArrayList<String>() ;
       Topic topic = this.getTopic() ;
-      listUser.addAll(Arrays.asList(topic.getCanView())) ;
+      listUser.addAll(ForumServiceUtils.getUserPermission(topic.getCanView())) ;
       Forum forum = this.getForum() ;
-      listUser.addAll(Arrays.asList(forum.getViewForumRole())) ;
+      listUser.addAll(ForumServiceUtils.getUserPermission(forum.getViewForumRole())) ;
       if(listUser.isEmpty()|| listUser.size() == 0 || listUser.contains(this.getUserProfile().getUserId())) return true;
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return false ;
@@ -366,7 +366,7 @@ public class UITopicDetail extends UIForm {
 			long role = this.userProfile.getUserRole() ;
 			if(role >=2){ isHidden = "false" ;}
 			if(role == 1) {
-				if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+				if(!ForumServiceUtils.hasPermission(forum.getModerators(), this.userProfile.getUserId())){
 					isHidden = "false" ;
 				}
 			}
@@ -435,7 +435,7 @@ public class UITopicDetail extends UIForm {
 		this.isEdit = isEdit ;
 	}
 	@SuppressWarnings("unused")
-  private void setPostRules(boolean isNull) {
+  private void setPostRules(boolean isNull) throws Exception {
 		boolean isLock = isNull ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		if(!isNull) {
@@ -448,14 +448,18 @@ public class UITopicDetail extends UIForm {
 					if(!isLock) isLock = this.topic.getIsLock() ;
 				}
 			}
-			if(!isLock && this.forum.getCreateTopicRole() != null && this.forum.getCreateTopicRole().length > 0) {
-				if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.forum.getCreateTopicRole(), this.userProfile.getUserId()) ;
+			String userLogin = this.userProfile.getUserId() ;
+			String[] strings = this.forum.getCreateTopicRole();
+			if(!isLock && strings != null && strings.length > 0) {
+				if(!this.isEdit)isLock = !ForumServiceUtils.hasPermission(strings, userLogin) ;
 			}
-			if(!isLock && this.forum.getReplyTopicRole() != null && this.forum.getReplyTopicRole().length > 0) {
-				if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.forum.getReplyTopicRole(), this.userProfile.getUserId()) ;
+			strings = this.forum.getReplyTopicRole() ;
+			if(!isLock && strings != null && strings.length > 0) {
+				if(!this.isEdit)isLock = !ForumServiceUtils.hasPermission(strings, userLogin) ;
 			}
-			if(!isLock && this.topic.getCanPost() != null && this.topic.getCanPost().length > 0) {
-				if(!this.isEdit)isLock = !ForumFormatUtils.isStringInStrings(this.topic.getCanPost(), this.userProfile.getUserId()) ;
+			strings = this.topic.getCanPost() ;
+			if(!isLock && strings != null && strings.length > 0) {
+				if(!this.isEdit)isLock = !ForumServiceUtils.hasPermission(strings, userLogin) ;
 			}
 		}
 		postRules.setLock(isLock) ;

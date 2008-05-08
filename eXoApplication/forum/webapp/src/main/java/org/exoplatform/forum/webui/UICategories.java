@@ -26,6 +26,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -107,20 +108,11 @@ public class UICategories extends UIContainer	{
   
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		List<Forum> forumList = null ;
-//		if(!mapListForum.isEmpty() && !isGetForumList) {
-//			forumList = mapListForum.get(categoryId) ;
-//			if(forumList == null || forumList.size() <= 0) {
-//				forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
-//				mapListForum.remove(categoryId) ;
-//				mapListForum.put(categoryId, forumList) ;
-//			}
-//		} else {
 			forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
 			if(mapListForum.containsKey(categoryId)) {
 				mapListForum.remove(categoryId) ;
 			}
 			mapListForum.put(categoryId, forumList) ;
-//		}
 		String forumId ;
 		for (Forum forum : forumList) {
 			forumId = forum.getId() ;
@@ -178,19 +170,8 @@ public class UICategories extends UIContainer	{
 		if(category.getOwner().equals(userId)) return true ;
 		String userList = category.getUserPrivate() ;
 		if(userList != null && userList.length() > 0) {
-			String []uesrs = userList.split(";");
-			for (String string : uesrs) {
-				if(string.indexOf("/") < 0) {
-					if(string.indexOf(userId) >= 0) return true ;
-				} else {
-					if(string.indexOf(":") > 0) {//mbs
-						if(ForumSessionUtils.hasUserInMemberShip(string, userId)) return true ;
-					} else {//gr
-						if(ForumSessionUtils.hasUserInGroup(string, userId)) return true ;
-					}
-				}
-	    }
-			return false ;
+			String []uesrs = userList.split(",");
+			return ForumServiceUtils.hasPermission(uesrs, userId) ;
 		} else return true ;
 	}
 

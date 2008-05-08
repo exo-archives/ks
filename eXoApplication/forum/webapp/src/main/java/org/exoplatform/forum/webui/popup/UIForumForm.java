@@ -152,22 +152,29 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		forumPermission.addUIFormInput(topicable) ;
 		forumPermission.addUIFormInput(postable) ;
 		forumPermission.addUIFormInput(viewer) ;
+		String[]fieldPermissions = getChildIds() ;//new String[] {"Moderator", "Topicable", "Postable", "Viewer"}; 
+		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
 		List<ActionData> actions ;
-		ActionData ad ;
-		for(String string : this.getChildIds()) {
+		ActionData ad ;int i ;
+		for (String fieldPermission : fieldPermissions) {
 			actions = new ArrayList<ActionData>() ;
-			ad = new ActionData() ;
-			ad.setActionListener("AddValuesUser") ;
-			ad.setActionParameter(string) ;
-			ad.setCssIconClass("SelectUserIcon") ;
-			ad.setActionName("SelectUser");
-			actions.add(ad) ;
-			forumPermission.setActionField(string, actions);
+			i = 0;
+			for(String string : strings) {
+				ad = new ActionData() ;
+				ad.setActionListener("AddValuesUser") ;
+				ad.setActionParameter(fieldPermission + "/" + String.valueOf(i)) ;
+				ad.setCssIconClass(string + "Icon") ;
+				ad.setActionName(string);
+				actions.add(ad) ;
+				++i;
+			}
+			forumPermission.setActionField(fieldPermission, actions);
 		}
 		
 		addUIFormInput(newForum);
 		addUIFormInput(moderationOptions);
 		addUIFormInput(forumPermission);
+		this.setActions(new String[]{"Save","Cancel"}) ;
 	}
 	
 	public void activate() throws Exception {}
@@ -224,7 +231,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	}
 	
 	@SuppressWarnings("unused")
-  private String [] getChildIds() {return new String[] {FIELD_MODERATOR_MULTIVALUE,FIELD_VIEWER_MULTIVALUE,FIELD_TOPICABLE_MULTIVALUE,FIELD_POSTABLE_MULTIVALUE} ;}
+  private String [] getChildIds() {return new String[] {FIELD_MODERATOR_MULTIVALUE,FIELD_TOPICABLE_MULTIVALUE,FIELD_POSTABLE_MULTIVALUE,FIELD_VIEWER_MULTIVALUE} ;}
 	
 	public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
@@ -251,6 +258,10 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     try{
       for(String user : users) {
         user = user.trim() ;
+        if(user.indexOf("/")>=0) {
+        	userValid.add(user) ;
+        	continue ;
+        }
         if(user != null && user.length() > 0 && ForumSessionUtils.getUserByUserId(user) != null)
           userValid.add(user) ;
         else {
@@ -390,13 +401,15 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	static	public class AddValuesUserActionListener extends EventListener<UIForumForm> {
     public void execute(Event<UIForumForm> event) throws Exception {
     	UIForumForm forumForm = event.getSource() ;
-    	String childId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+    	String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+    	String[]array = objctId.split("/") ;
+    	String childId = array[0] ;
     	if(childId != null && childId.length() > 0) {
 				UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
-	      uiGroupSelector.setType("0") ;
-	      //uiGroupSelector.setSelectedGroups(null) ;
+	      uiGroupSelector.setType(array[1]) ;
+	      uiGroupSelector.setSelectedGroups(null) ;
 	      uiGroupSelector.setComponent(forumForm, new String[]{childId}) ;
 	      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     	}

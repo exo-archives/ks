@@ -3,6 +3,7 @@
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.Post; 
+	import org.exoplatform.forum.service.ForumServiceUtils ;
 	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumFormatUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
@@ -99,7 +100,7 @@
 										String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
 										String forumTitle = forum.getForumName();
 										String forumDescription = forum.getDescription();
-										String [] forumModerators = forum.getModerators();
+										List  forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
 										String topicCount = (String)forum.getTopicCount();
 										String postCount = (String)forum.getPostCount();
 										String topicNewPostIcon = "";

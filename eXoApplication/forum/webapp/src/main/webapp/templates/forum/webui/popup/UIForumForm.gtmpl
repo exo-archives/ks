@@ -91,7 +91,6 @@
 			<tr>
 				<td align="center">
         <% for(action in uicomponent.getActions()) { 
-        		 if(action.indexOf("Values") > 0 || action.indexOf("Tab") > 0) continue ; 
         	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
            String link = uicomponent.event(action) ;
         %>

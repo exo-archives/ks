@@ -100,9 +100,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			ad.setCssIconClass(string + "Icon") ;
 			ad.setActionName(string);
 			actions.add(ad) ;
-			uicategory.setActionField(FIELD_USERPRIVATE_MULTIVALUE, actions);
 			++i;
 		}
+		uicategory.setActionField(FIELD_USERPRIVATE_MULTIVALUE, actions);
 		addUIFormInput(uicategory) ;	
 		this.setActions(new String[]{"Save","Cancel"}) ;
 	}
@@ -153,7 +153,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       String userInvalid = "" ;
       String userValid = "" ;
       for(String user : listUser) {
-      	if(user.indexOf("/") >= 0) continue ;
+      	if(user.indexOf("/") >= 0) { 
+      		if(userValid.trim().length() > 0) userValid += "," ;
+      		userValid += user.trim() ;
+      		continue ;
+      	}
         if(ForumSessionUtils.getUserByUserId(user.trim()) != null) {
           if(userValid.trim().length() > 0) userValid += "," ;
           userValid += user.trim() ;

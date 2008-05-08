@@ -213,14 +213,13 @@
 .UIForumPortlet .ForumBar {
 	background: none;
 	float: left;
-	height: 23px;
-	line-height: 22px;
+	line-height: 23px;
 	margin: 3px 3px 0px 3px; 
 }
 
 .UIForumPortlet .ForumBarAction {
 	float: left;
-	line-height: 22px;
+	line-height: 23px;
 	margin: 3px 3px 0px 3px; 
 }
 

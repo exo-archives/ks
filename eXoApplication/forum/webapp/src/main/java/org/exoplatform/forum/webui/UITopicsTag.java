@@ -24,6 +24,7 @@ import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
@@ -111,7 +112,7 @@ public class UITopicsTag extends UIForm {
 		long role = this.userProfile.getUserRole() ;
 		if(role >=2){ isHidden = "flase" ;}
 		if(role == 1) {
-			if(!ForumFormatUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId())){
+			if(!ForumServiceUtils.hasPermission(forum.getModerators(), this.userProfile.getUserId())){
 				isHidden = "flase" ;
 			}
 		}

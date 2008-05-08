@@ -40,6 +40,7 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPageList;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
@@ -304,8 +305,9 @@ public class JCRDataStorage{
 				Node userProfileHomeNode = getUserProfileNode(sProvider) ;
 				Node userProfileNode ;
 				List<String>list = new ArrayList<String>() ;
-				if(forum.getModerators().length > 0) {
-					for (String string : forum.getModerators()) {
+				List<String> moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
+				if(moderators.size() > 0) {
+					for (String string : moderators) {
 						list = new ArrayList<String>() ;
 						try {
 							userProfileNode = userProfileHomeNode.getNode(string) ; 
@@ -336,11 +338,10 @@ public class JCRDataStorage{
 				}
 				//remove 
 				if(!isNew) {
-					for (String string : oldModeratoForums) {
+					List<String> oldmoderators = ForumServiceUtils.getUserPermission(oldModeratoForums) ;
+					for(String string : oldmoderators) {
 						boolean isDelete = true ;
-	          for (String string2 : forum.getModerators()) {
-		          if(string.equals(string2)) {isDelete = false; break ;}
-	          }
+	          if(moderators.contains(string)){isDelete = false;}
 	          if(isDelete) {
 	          	try {
 	          		list = new ArrayList<String>() ;
@@ -482,7 +483,7 @@ public class JCRDataStorage{
 	}
 	
 	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String strQuery) throws Exception {
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try {
 			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
@@ -493,9 +494,18 @@ public class JCRDataStorage{
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 			StringBuffer stringBuffer = new StringBuffer() ;
 			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)");
-			if(isApproved != null && isApproved.length() > 0){
-				stringBuffer.append("[@exo:isApproved='").append(isApproved).append("']");
+			boolean isCont = false ;
+			if(isWaiting != null && isWaiting.length() > 0){
+				isCont = true ;
+				stringBuffer.append("[@exo:isWaiting='").append(isWaiting).append("'");
 			} 
+			if(isApproved != null && isApproved.length() > 0){
+				if(isCont) stringBuffer.append(" and ") ;
+				else stringBuffer.append("[") ;
+				stringBuffer.append("@exo:isApproved='").append(isApproved).append("'");
+				isCont = true ;
+			} 
+			if(isCont) stringBuffer.append("]") ;
 			stringBuffer.append(" order by @exo:isSticky descending");
 			if(strQuery == null || strQuery.trim().length() <= 0) {
 				if(orderBy != null && orderBy.length() > 0) {
@@ -619,6 +629,7 @@ public class JCRDataStorage{
 		}
 		if(topicNode.hasProperty("exo:isApproved")) topicNew.setIsApproved(topicNode.getProperty("exo:isApproved").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isSticky")) topicNew.setIsSticky(topicNode.getProperty("exo:isSticky").getBoolean()) ;
+		if(topicNode.hasProperty("exo:isWaiting")) topicNew.setIsWaiting(topicNode.getProperty("exo:isWaiting").getBoolean()) ;
 		if(topicNode.hasProperty("exo:canView")) topicNew.setCanView(ValuesToStrings(topicNode.getProperty("exo:canView").getValues())) ;
 		if(topicNode.hasProperty("exo:canPost")) topicNew.setCanPost(ValuesToStrings(topicNode.getProperty("exo:canPost").getValues())) ;
 		if(topicNode.hasProperty("exo:isPoll")) topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
@@ -745,6 +756,7 @@ public class JCRDataStorage{
 				topicNode.setProperty("exo:isLock", topic.getIsLock()) ;
 				topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
 				topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ;
+				topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ;
 				topicNode.setProperty("exo:canView", topic.getCanView()) ;
 				topicNode.setProperty("exo:canPost", topic.getCanPost()) ;
 				topicNode.setProperty("exo:userVoteRating", topic.getUserVoteRating()) ;

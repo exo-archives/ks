@@ -111,8 +111,8 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getTopicView(sProvider, categoryId, forumId, topicId);
 	}
 	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String strQuery) throws Exception {
-		return storage_.getPageTopic(sProvider, categoryId, forumId, isApproved, strQuery);
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery) throws Exception {
+		return storage_.getPageTopic(sProvider, categoryId, forumId, isApproved, isWaiting, strQuery);
 	}
 
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
