@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration>
+	<external-component-plugins>
+  	<target-component>org.exoplatform.faq.service.FAQService</target-component>  	
+	  <component-plugin>
+	    <name>email.configuration</name>
+	    <set-method>addPlugin</set-method>
+	    <type>org.exoplatform.faq.service.EmailNotifyPlugin</type>
+	    <description>description</description>
+	    <init-params>
+	      <properties-param>
+	        <name>email.configuration.info</name>
+	        <property name="account" value="exoservice@gmail.com"/>          
+          <property name="password" value="exoadmin"/>          
+          <property name="outgoing" value="smtp.gmail.com"/>          
+          <property name="port" value="465"/>
+	      </properties-param>
+	    </init-params>
+	  </component-plugin>	   
+  </external-component-plugins>   
+</configuration>

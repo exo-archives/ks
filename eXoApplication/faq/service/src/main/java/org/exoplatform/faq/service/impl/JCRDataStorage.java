@@ -20,8 +20,10 @@ package org.exoplatform.faq.service.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
@@ -32,8 +34,12 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.BufferAttachment;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.EmailNotifyPlugin;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQSetting;
@@ -41,8 +47,12 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.mail.service.MailService;
+import org.exoplatform.mail.service.Message;
+import org.exoplatform.mail.service.ServerConfiguration;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+
 
 /**
  * Created by The eXo Platform SARL
@@ -56,12 +66,21 @@ public class JCRDataStorage {
   final private static String CATEGORY_HOME = "catetories".intern() ;
   final private static String FAQ_APP = "faqApp".intern() ;
   final private static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
-  
+  private Map<String, String> serverConfig_ = new HashMap<String, String>();
   private NodeHierarchyCreator nodeHierarchyCreator_ ;
   
   public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
     nodeHierarchyCreator_ = nodeHierarchyCreator ;
   }  
+  
+  public void addPlugin(ComponentPlugin plugin) throws Exception {
+		try{
+			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}
+		
+	}
   
   private Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
     Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)  ;
@@ -96,7 +115,7 @@ public class JCRDataStorage {
     }
   }
   
-  private void saveQuestion(Node questionNode, Question question) throws Exception {
+  private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider) throws Exception {
     questionNode.setProperty("exo:language", question.getLanguage()) ;
   	questionNode.setProperty("exo:name", question.getQuestion()) ;
   	questionNode.setProperty("exo:author", question.getAuthor()) ;
@@ -135,25 +154,87 @@ public class JCRDataStorage {
         }
       }
     }
-  	
+    //Send notifycation when add new qustion in watching category
+    if(isNew) {
+    	Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+    	if(cate.isNodeType("exo:faqWatching")){
+    		Value[] emails = cate.getProperty("exo:emailWatching").getValues() ;
+    		if(emails != null && emails.length > 0) {    			
+    			Message message = new Message();
+          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+    			//message.setMessageTo(question.getEmail());
+    			message.setSubject("eXo FAQ Watching Category Notifycation!");
+    			message.setMessageBody("The category '" + cate.getProperty("exo:name").getString() 
+    					+"' have just  added question:</br>" + question.getQuestion());
+    			sendNotification(emails, message, null) ;    			
+    		}
+    	}
+    }
+    // Send notifycation when question responsed or edited or watching
+  	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
+  		Message message = new Message();
+      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+			//message.setMessageTo(question.getEmail());
+			message.setSubject("eXo FAQ Question Responsed Notifycation!");
+			message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
+			sendNotification(null, message, question.getEmail()) ;  		
+  	}
+  }
+  
+  private void sendNotification(Value[] emails, Message message, String authorEmail) throws Exception {
+  	List<Message> messages = new ArrayList<Message> () ;
+  	ServerConfiguration config = getServerConfig() ;
+  	if(authorEmail != null && authorEmail.length() > 0){
+  		message.setMessageTo(authorEmail) ;
+			message.setFrom(config.getUserName()) ;
+			messages.add(message) ;
+  	}
+  	if(emails != null && emails.length > 0) {
+  		for(Value vl : emails) {
+  			message.setMessageTo(vl.getString()) ;
+  			message.setFrom(config.getUserName()) ;
+  			messages.add(message) ;
+  		}
+  	}
+  	if(messages.size() > 0) {
+  		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+  		mService.sendMessages(messages, config) ;
+  	}
+  }
+  
+  private void sendNotification(Message message) throws Exception {
+  	MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+  	ServerConfiguration config = getServerConfig() ;
+  	message.setFrom(config.getUserName()) ;
+  	message.setServerConfiguration(config) ;
+  	mService.sendMessage(message) ;
+  }
+  
+  private ServerConfiguration getServerConfig() throws Exception {
+  	ServerConfiguration config = new ServerConfiguration();
+  	config.setUserName(serverConfig_.get("account"));
+		config.setPassword(serverConfig_.get("password"));
+		config.setSsl(true);
+		config.setOutgoingHost(serverConfig_.get("outgoing"));
+		config.setOutgoingPort(serverConfig_.get("port"));
+		return config ;
   }
   
   public void saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
+  	Node questionHome = getQuestionHome(sProvider, null) ;
+    Node questionNode ;
   	if(isAddNew) {
-  		Node questionHome = getQuestionHome(sProvider, null) ;
-      Node questionNode ;
       try {
         questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion") ;
       } catch (PathNotFoundException e) {
         questionNode = questionHome.getNode(question.getId());
       }
-  		saveQuestion(questionNode, question) ;
-  		questionHome.getSession().save() ;
   	}else {
-  		Node questionNode = getQuestionHome(sProvider, null).getNode(question.getId()) ;
-  		saveQuestion(questionNode, question) ;
-      questionNode.getSession().save() ;
-  	}  	
+  		questionNode = questionHome.getNode(question.getId()) ;  		
+  	} 
+  	saveQuestion(questionNode, question, isAddNew, sProvider) ;
+  	if(questionHome.isNew()) questionHome.getSession().save() ;
+  	else questionHome.save() ;
   }
   
   public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception {

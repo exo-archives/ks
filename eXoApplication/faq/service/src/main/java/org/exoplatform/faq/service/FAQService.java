@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.jcr.Node;
 import javax.jcr.Value;
 
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
@@ -32,6 +33,8 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  */
 public interface FAQService {
   
+	public void addPlugin(ComponentPlugin plugin) throws Exception ;
+	
 	/**
    * This method should:
    * 1. Check exists category or NOT to create new or update exists category

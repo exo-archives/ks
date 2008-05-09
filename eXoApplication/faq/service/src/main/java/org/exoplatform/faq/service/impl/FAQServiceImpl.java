@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.jcr.Node;
 import javax.jcr.Value;
 
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
@@ -45,11 +46,17 @@ public class FAQServiceImpl implements FAQService{
 	public static final int SEND_EMAIL = 1 ;
 	private JCRDataStorage jcrData_ ;
 	private MultiLanguages multiLanguages_ ;
+	//private EmailNotifyPlugin emailPlugin_ ;
 	
 	public FAQServiceImpl(NodeHierarchyCreator nodeHierarchy) throws Exception {
 		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
-		multiLanguages_ = new MultiLanguages() ;
+		multiLanguages_ = new MultiLanguages() ;		
 	}
+	
+	public void addPlugin(ComponentPlugin plugin) throws Exception {
+		jcrData_.addPlugin(plugin) ;
+	}
+	
 	public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {
 		return jcrData_.getAllCategories(sProvider);
 	}
