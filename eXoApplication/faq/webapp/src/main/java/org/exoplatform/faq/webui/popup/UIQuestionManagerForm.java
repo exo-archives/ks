@@ -63,8 +63,8 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
     template =  "app:/templates/faq/webui/popup/UIQuestionManagerForm.gtmpl",
     events = {
       @EventConfig(listeners = UIQuestionManagerForm.AddLanguageActionListener.class),
-      @EventConfig(listeners = UIQuestionManagerForm.SaveActionListener.class),
       @EventConfig(listeners = UIQuestionManagerForm.AttachmentActionListener.class),
+      @EventConfig(listeners = UIQuestionManagerForm.SaveActionListener.class),
       @EventConfig(listeners = UIQuestionManagerForm.RemoveAttachmentActionListener.class),
       @EventConfig(listeners = UIQuestionManagerForm.CloseActionListener.class),
       
@@ -122,19 +122,17 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   private String authorInput_ = "" ;
   private String emailInput_ = "" ;
   private List<String> questionInput_ = new ArrayList<String>() ;
-  @SuppressWarnings("unused")
   private boolean isApproved = true ;
-  @SuppressWarnings("unused")
   private boolean isActivated = true ;
   
   @SuppressWarnings("unused")
   private String[] getQuestionActions(){
-    return new String[]{"AddLanguage", "Save", "Attachment", "Close"} ;
+    return new String[]{"AddLanguage", "Attachment", "Save", "Close"} ;
   }
   
   @SuppressWarnings("unused")
   private String[] getQuestionNotAnsweredActions() {
-    return new String[]{"QuestionRelation", "Save", "Attachment", "Close"} ;
+    return new String[]{"QuestionRelation", "Attachment", "Save", "Close"} ;
   }
   
   @SuppressWarnings("unused")
@@ -176,7 +174,6 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
         e.printStackTrace() ;
       }
       if(isEdit) {
-        removeChildById(QUESTION_NOT_YET_ANSWERED) ;
         if(formQuestionManager.hasChildren()) {
           formQuestionManager.removeChildById(AUTHOR) ;
           formQuestionManager.removeChildById(EMAIL_ADDRESS) ;
@@ -189,6 +186,8 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
         formQuestionManager.addChild(new UIFormStringInput(AUTHOR, AUTHOR, authorInput_)) ;
         formQuestionManager.addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, emailInput_)) ;
         formQuestionManager.addChild(listFormWYSIWYGInput) ;
+        formQuestionManager.addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, isApproved))) ;
+        formQuestionManager.addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, isActivated))) ;
         formQuestionManager.addUIFormInput(inputWithActions) ;
         /*if(questionId_ != null && questionId_.trim().length() > 0) {
           Question question = new Question() ;
@@ -200,12 +199,8 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
             e.printStackTrace();
           }
         }*/
-        formQuestionManager.addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false))) ;
-        formQuestionManager.addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false))) ;
-        
-        addUIFormInput(formQuestionManager) ;
-      } else if(isResponse) {
-        removeChildById(QUESTION_MANAGERMENT) ;
+      }
+      if(isResponse) {
         if(formQuestionNotYetAnswer.hasChildren()) {
           formQuestionNotYetAnswer.removeChildById(RESPONSE_QUESTION_CONTENT) ; 
           formQuestionNotYetAnswer.removeChildById(RESPONSE_QUESTION_LANGUAGE) ;
@@ -219,13 +214,13 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
         formQuestionNotYetAnswer.addChild(new UIFormTextAreaInput(RESPONSE_QUESTION_CONTENT, RESPONSE_QUESTION_CONTENT, null)) ;
         formQuestionNotYetAnswer.addChild(new UIFormSelectBox(RESPONSE_QUESTION_LANGUAGE, RESPONSE_QUESTION_LANGUAGE, getListQuestionLanguage())) ;
         formQuestionNotYetAnswer.addChild(listFormWYSIWYGInput) ;
-        formQuestionNotYetAnswer.addUIFormInput(inputWithActions) ;
-        formQuestionNotYetAnswer.addChild(new UIFormSelectBox(RESPONSE_RELATIONS, RESPONSE_RELATIONS, getListRelation())) ;
         formQuestionNotYetAnswer.addChild(new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)) ;
         formQuestionNotYetAnswer.addChild(new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)) ;
-        
-        addUIFormInput(formQuestionNotYetAnswer) ;
+        formQuestionNotYetAnswer.addChild(new UIFormSelectBox(RESPONSE_RELATIONS, RESPONSE_RELATIONS, getListRelation())) ;
+        formQuestionNotYetAnswer.addUIFormInput(inputWithActions) ;
       }
+      addUIFormInput(formQuestionManager) ;
+      addUIFormInput(formQuestionNotYetAnswer) ;
     } else {
       LIST_LANGUAGE.clear() ;
       LIST_LANGUAGE.add("English") ;
@@ -511,13 +506,13 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     @SuppressWarnings({ "unchecked", "static-access" })
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
-      
-      questionManagerForm.authorInput_ = ((UIFormStringInput)questionManagerForm.getChildById(AUTHOR)).getValue() ;
-      questionManagerForm.emailInput_ = ((UIFormStringInput)questionManagerForm.getChildById(EMAIL_ADDRESS)).getValue() ;
-      questionManagerForm.isActivated = ((UIFormCheckBoxInput<Boolean>)questionManagerForm.getChildById(IS_ACTIVATED)).isChecked() ;
-      questionManagerForm.isApproved = ((UIFormCheckBoxInput<Boolean>)questionManagerForm.getChildById(IS_APPROVED)).isChecked() ;
+      UIFormInputWithActions formInputWithActions = questionManagerForm.getChildById(QUESTION_MANAGERMENT) ;
+      questionManagerForm.authorInput_ = ((UIFormStringInput)formInputWithActions.getChildById(AUTHOR)).getValue() ;
+      questionManagerForm.emailInput_ = ((UIFormStringInput)formInputWithActions.getChildById(EMAIL_ADDRESS)).getValue() ;
+      questionManagerForm.isActivated = ((UIFormCheckBoxInput<Boolean>)formInputWithActions.getChildById(IS_ACTIVATED)).isChecked() ;
+      questionManagerForm.isApproved = ((UIFormCheckBoxInput<Boolean>)formInputWithActions.getChildById(IS_APPROVED)).isChecked() ;
       questionManagerForm.questionInput_.clear() ;
-      UIFormInputWithActions listFormWYSIWYGInput =  questionManagerForm.getChildById(LIST_WYSIWYG_INPUT) ;
+      UIFormInputWithActions listFormWYSIWYGInput =  formInputWithActions.getChildById(LIST_WYSIWYG_INPUT) ;
       for(int i = 0 ; i < listFormWYSIWYGInput.getChildren().size(); i ++) {
         questionManagerForm.questionInput_.add(((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(i)).getValue()) ;
       }
@@ -625,6 +620,7 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
       questionManagerForm.isEdit = false ;
+      questionManagerForm.isResponse = false ;
       questionManagerForm.questionId_ = "" ;
       UIFAQPortlet portlet = questionManagerForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
