@@ -132,7 +132,7 @@ public class FAQEventQuery {
 		  	stringBuffer.append("(jcr:contains(@exo:name, '").append(name).append("'))") ;
 		  	isAnd = true ;
 		  }
-		  if(isModeQuestion != null && isModeQuestion.length() > 0) {
+		  if(isModeQuestion != null && isModeQuestion.length() > 0 && !isModeQuestion.equals("emptry")) {
 		  	if(isAnd) stringBuffer.append(" and ");
 				stringBuffer.append("(@exo:isModerateQuestions='").append(isModeQuestion).append("')") ;
 				isAnd = true ;
