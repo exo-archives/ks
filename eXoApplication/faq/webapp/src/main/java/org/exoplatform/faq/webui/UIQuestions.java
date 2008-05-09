@@ -339,7 +339,8 @@ public class UIQuestions extends UIContainer {
   static public class AddNewQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions questions = event.getSource() ;
-      String categoryId = questions.categoryId_ ;
+      
+      String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
