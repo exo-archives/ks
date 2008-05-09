@@ -77,6 +77,7 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
       Locale locale = localeConfig.getLocale() ;
       String displayName = locale.getDisplayLanguage() ;
       String lang = locale.getLanguage() ;
+      locale.getDefault() ;
       String localedName = locale.getDisplayName(locale) ;   
       listLanguage.add(displayName) ;
       listLocaldName.add(localedName) ;
