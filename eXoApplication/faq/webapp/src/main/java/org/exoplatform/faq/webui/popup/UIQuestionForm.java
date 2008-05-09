@@ -21,8 +21,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import org.apache.poi.hwpf.model.ListLevel;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
@@ -32,6 +34,8 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.services.resources.LocaleConfig;
+import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -61,9 +65,9 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 		template =	"app:/templates/faq/webui/popup/UIQuestionForm.gtmpl",
 		events = {
 		  @EventConfig(listeners = UIQuestionForm.AddLanguageActionListener.class),
+		  @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
 			@EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
 			@EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
-			@EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
 			@EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class)
 		}
 )
@@ -86,8 +90,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private static List<FileAttachment> listFileAttach_ = null ;
   private static UIFormInputWithActions listFormWYSIWYGInput ;
-  private String categoryId = null ;
-  private String questionId = null ;
+  private String categoryId_ = null ;
+  private String questionId_ = null ;
+  private String defaultLanguage_ = "" ;
   
   private String author_ = "" ;
   private String email_ = "" ;
@@ -97,12 +102,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
 	
+  @SuppressWarnings("static-access")
   public UIQuestionForm() throws Exception {
     listFileAttach_ = new ArrayList<FileAttachment>() ;
     actionField_ = new HashMap<String, List<ActionData>>() ;
-    this.questionId = new String() ;
-    if(LIST_LANGUAGE.isEmpty())
-      LIST_LANGUAGE.add("English") ;
+    this.questionId_ = new String() ;
 	}
   
   public void initPage(boolean isEdit) {
@@ -144,7 +148,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       }
       System.out.println("number of file attachment: " + question_.getAttachMent().size());
     }
-    if(questionId != null && questionId.trim().length() > 0) {
+    if(questionId_ != null && questionId_.trim().length() > 0) {
       addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)).setChecked(isChecked_)) ;
       addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)).setChecked(true)) ;
     }
@@ -152,11 +156,14 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   
   @SuppressWarnings("static-access")
   public void setQuestionId(String questionId){
-    this.questionId = questionId ;
-    categoryId = null ;
+    this.questionId_ = questionId ;
+    categoryId_ = null ;
     try {
       question_ = fAQService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-      isChecked_ = fAQService_.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()).isModerateQuestions() ;
+      defaultLanguage_ = question_.getLanguage() ;
+      LIST_LANGUAGE.clear() ;
+      LIST_LANGUAGE.add(defaultLanguage_) ;
+      isChecked_ = !(fAQService_.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()).isModerateQuestions()) ;
       initPage(false) ;
       UIFormStringInput authorQ = this.getChildById(AUTHOR) ;
       authorQ.setValue(question_.getAuthor()) ;
@@ -170,13 +177,32 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     }
   }
   
+  public void setDefaultLanguage(String defaultLanguage) {
+    this.defaultLanguage_ = defaultLanguage ;
+  }
+  
+  public String getDefaultLanguage() {
+    return this.defaultLanguage_;
+  }
+  
   private String getCategoryId(){
-    return this.categoryId ; 
+    return this.categoryId_ ; 
   }
   public void setCategoryId(String categoryId) {
-    this.categoryId = categoryId ;
-    System.out.println("\n\n\n\nsetCategoryId--> cateId: " + this.categoryId);
-    questionId = null ;
+    this.categoryId_ = categoryId ;
+    questionId_ = null ;
+    LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
+    for(Object object:configService.getLocalConfigs()) {      
+      LocaleConfig localeConfig = (LocaleConfig)object ;
+      Locale locale = localeConfig.getLocale() ;
+      String displayName = locale.getDisplayLanguage() ;
+      String lang = locale.getLanguage() ;
+      defaultLanguage_ = locale.getDefault().getDisplayLanguage() ;
+      String localedName = locale.getDisplayName(locale) ;   
+    }
+    if(!LIST_LANGUAGE.isEmpty())
+      LIST_LANGUAGE.clear() ;
+    LIST_LANGUAGE.add(defaultLanguage_) ;
     initPage(false) ;
   }
   
@@ -270,27 +296,27 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ;
       }
-      if(questionForm.questionId == null || questionForm.questionId.trim().length() < 1) {
+      if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
         question_ = new Question() ;
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
         question_.setResponses(" ") ;
       }
+      question_.setLanguage(questionForm.getDefaultLanguage()) ;
       question_.setAuthor(author) ;
       question_.setEmail(emailAddress) ;
       question_.setQuestion(listQuestionContent.get(0)) ;
       question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
       
-      if(questionForm.questionId != null && questionForm.categoryId.trim().length() > 0) {
+      if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
         question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
         question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;
       } else {
-        System.out.println("\n\n\n\n>>>> cateid: " + questionForm.categoryId + "\n\n\n\n");
-        question_.setApproved(fAQService_.getCategoryById(questionForm.categoryId, FAQUtils.getSystemProvider()).isModerateQuestions()) ;
+        question_.setApproved(!(fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions())) ;
       }
       
-      if(questionForm.questionId == null || questionForm.questionId.trim().length() < 1) {
+      if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
         fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider()) ;
       } else {
         fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
@@ -312,7 +338,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       
       questionForm.author_ = ((UIFormStringInput)questionForm.getChildById(AUTHOR)).getValue() ;
       questionForm.email_ = ((UIFormStringInput)questionForm.getChildById(EMAIL_ADDRESS)).getValue() ;
-      if(questionForm.questionId != null && questionForm.questionId.trim().length() > 0) {
+      if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
         questionForm.isChecked_ = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
       }
       questionForm.questionContents_.clear() ;

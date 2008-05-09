@@ -118,12 +118,12 @@ public class UIQuestions extends UIContainer {
   }
   
   private String[] getSecondActionCategory() {
-    String[] action = new String[]{"EditSubCategory", "DeleteCategory", "MoveCategory"} ;
+    String[] action = new String[]{"SubCategory", "EditSubCategory", "DeleteCategory", "MoveCategory"} ;
     return action ;
   }
   
   private String[] getActionCategoryWithUser() {
-    String[] action = new String[]{"Watch"} ;
+    String[] action = new String[]{"AddNewQuestion", "Watch"} ;
     return action ;
   }
   

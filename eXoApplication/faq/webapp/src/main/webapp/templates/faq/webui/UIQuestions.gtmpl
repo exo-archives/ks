@@ -134,8 +134,12 @@
 				}
 				
 				categoryId = category.getId();
+				System.out.println("CateId to set cateInfo : " + categoryId) ;
 				String link = uicomponent.event("OpenCategory", categoryId) ;
 				int[] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
+				int numSubCate = cateInfo[0] ;
+				int numQuestion = cateInfo[1] ;
+				int numNotYetAnswer = cateInfo[2] ;
 	%>
 			<div class="FAQCategory">
 				<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
@@ -143,7 +147,7 @@
 						<a href="$link">
 							$categoryName
 						</a>
-						&nbsp;( <%=cateInfo[0]%> sub-category, <%=cateInfo[0]%> Questions, <%=cateInfo[0]%> Not yet answer )
+						&nbsp;( $numSubCate sub-category, $numQuestion Questions, $numNotYetAnswer Not yet answer )
 						<!-- action of this category -->
 					  
 						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
