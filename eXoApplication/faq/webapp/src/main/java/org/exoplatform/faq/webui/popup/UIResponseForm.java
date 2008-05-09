@@ -102,7 +102,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void deActivate() throws Exception { }
   
   public UIResponseForm() throws Exception {
-    
+    this.setActions(new String[]{"AddLanguage", "Attachment", "Save", "Cancel"}) ;
   }
   
   public void setQuestionId(String questionId){

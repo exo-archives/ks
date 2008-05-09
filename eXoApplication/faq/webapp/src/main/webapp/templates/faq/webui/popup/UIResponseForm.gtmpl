@@ -21,8 +21,12 @@
 											String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 											int i = 0 ;
 											String[] listLanguage = uicomponent.getListLanguageToReponse() ;
+											String language = "" ;
 											for(fck in field.getChildren())  {
-												String language = listLanguage[i++] ;
+												if(i == 0)
+													language = listLanguage[i++] + " ( default )" ;
+												else
+													language = listLanguage[i++] ;
 									%>
 												<% uiform.renderField(fck) %>
 												<div class="LanguageQuestion" style="width: 100%;"> 
@@ -31,25 +35,8 @@
 													</div>
 												</div>
 									<%	}
-										} else if(field.getName().equals("QuestionAttach")){
-											String action = uicomponent.getActions()[4] ;
-											String link = uicomponent.event(action) ;
-											String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-									%>
-										<div style="float: left"> 
-											<% uiform.renderField(field) %>
-											<div class="UIAction">
-												<a href="$link" class="ActionButton LightBlueStyle">
-							      	  	<div class="ButtonLeft" style="float:right;">
-							        	  	<div class="ButtonRight">
-							          	  	<div class="ButtonMiddle"> $actionLabel </div>
-							            	</div>
-							          	</div>
-							        	</a>
-											</div>
-										</div>
-									<%}else if(field.getName().equals("QuestionRelation")){ 
-											String link = uicomponent.event(uicomponent.getActions()[3]) ;
+										} else if(field.getName().equals("QuestionRelation")){ 
+											String link = uicomponent.event("AddRelation") ;
 									%>
 											<div style="float: left">
 												<% uiform.renderField(field) %>
@@ -75,7 +62,7 @@
 					<tr>
 						<td align="center">
 		        <% for(action in uicomponent.getActions()) { 
-		        		 if(action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
+		        		 if(action.indexOf("AddRelation") >= 0) continue ; 
 		        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		           String link = uicomponent.event(action) ;
 		        %>
