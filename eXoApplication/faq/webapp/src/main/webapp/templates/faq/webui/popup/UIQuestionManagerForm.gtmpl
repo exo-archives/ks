@@ -59,8 +59,8 @@
 													<table class="UIGrid">
 														<tr>
 															<th><b>Question</b></th>
-															<th width="100px"><b>is Upproved</b></th>
-															<th width="100px"><b>is Activated</b></th>
+															<th width="80px"><b>is Upproved</b></th>
+															<th width="80px"><b>is Activated</b></th>
 															<th width="60px"><b>Action</b></th>
 														</tr>
 														<%
@@ -74,8 +74,8 @@
 															%>
 																<tr>
 																	<td class="text" align="left"><%=question.getQuestion()%></td>
-																	<td class="text" align="center"><%=question.isApproved()%></td>
-																	<td class="text" align="center"><%=question.isActivated()%></td>
+																	<td class="text" ><div class="TrueIcon"><%=question.isApproved()%></div></td>
+																	<td class="text" ><div class="FalseIcon"><%=question.isActivated()%></div></td>
 																	<td align="center">
 																		<div style="float: left">
 																			<a href="$linkEdit" style="float: left" title="Edit Question" >
