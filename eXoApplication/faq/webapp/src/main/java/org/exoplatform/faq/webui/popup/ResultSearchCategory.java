@@ -60,13 +60,8 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
     this.listCategory = listCategory ;
   }
   
-  public String[] getActions() { return new String[] {"Close"} ; }
-  public void activate() throws Exception {
-	  // TODO Auto-generated method stub
-  }
-	public void deActivate() throws Exception {
-	  // TODO Auto-generated method stub
-  }
+  public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
   
 	static	public class LinkActionListener extends EventListener<ResultSearchCategory> {
 		public void execute(Event<ResultSearchCategory> event) throws Exception {

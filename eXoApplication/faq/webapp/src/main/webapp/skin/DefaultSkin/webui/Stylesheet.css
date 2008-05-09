@@ -421,6 +421,34 @@
   padding: 8px;
   background-color: #EFEFEF;
 }
+
+.UIFAQPortlet .UIPopupViewQuestion {
+	padding: 8px;
+}
+
+.UIFAQPortlet .UIPopupViewQuestion .ViewQuestion {
+	padding-left: 20px;
+	background-color: #EFEFEF;
+}
+UIFAQPortlet .ResultSearchCategory {
+	padding: 2px;
+}
+
+.UIFAQPortlet .ResultSearchCategory .TitleMoveThreads {
+	line-height: 30px;
+	padding-left: 1px;
+	font-weight:bold;
+}
+
+UIFAQPortlet .ResultSearchQuestion {
+	padding: 2px;
+}
+
+.UIFAQPortlet .ResultSearchQuestion .TitleMoveThreads {
+	line-height: 30px;
+	padding-left: 1px;
+	font-weight:bold;
+}
 /******************************   Search  ***************************************/
 
 .UIFAQPortlet .UIAdvanceSearch {

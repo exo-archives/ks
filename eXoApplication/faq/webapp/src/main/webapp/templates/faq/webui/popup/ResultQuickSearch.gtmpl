@@ -7,7 +7,6 @@
 %>
 <div class="ResultQuickSearch $uicomponent.id" style="padding: 8px;">
 		<% uiform.begin() %>
-		
 		<div class="UIForm">
  					<div class="UIHorizontalLayout">
  							<div class="UIPermissionManager">
@@ -17,7 +16,7 @@
  											<tr>
  												<th>Icon</th>
  												<th>Name</th>
- 												<th>Date</th>
+ 												<th>Created Date</th>
  												<th>Action</th>
  											</tr>
  										</thead>
@@ -39,7 +38,7 @@
  										 %>
  											<tr class="EvenRow">
  												<td class="text" align="center"><div class="$icon"><span></span></div></td>
- 												<td class="text" align="center"><a href="$link">$name</a></td>
+ 												<td class="text" align="left"><a href="$link">$name</a></td>
  												<td class="text" align="center">$date</td>
  												<td style="width: 30px;" align="center">
  													<a href="$link">

@@ -7,6 +7,7 @@
 <div class="ResultSearchCategory $uicomponent.id" style="padding: 8px;">
 		<% uiform.begin() %>
 		<div class="UIForm">
+					<div class="TitleMoveThreads"><%= _ctx.appRes("ResultSearchCategory.title.resultCategory"); %></div>
  					<div class="UIHorizontalLayout">
  							<div class="UIPermissionManager">
  								<div class="UIPermissionInfo">
@@ -15,7 +16,7 @@
  											<tr>
  												<th>Category</th>
  												<th>Description</th>
- 												<th>Create Date</th>
+ 												<th>Created Date</th>
  											</tr>
  										</thead>
  										<tbody>
@@ -31,8 +32,8 @@
 												String link = uicomponent.event("Link", categoryId);
  										 	%>
 	 											<tr class="EvenRow"> 
-	 												<td class="text" align="center"><a href="$link">$categoryName</a></td>
-	 												<td class="text" align="center"><%= (description != null) ? description: ""%></td>
+	 												<td class="text" align="left"><a href="$link">$categoryName</a></td>
+	 												<td class="text" align="left"><%= (description != null) ? description: ""%></td>
 	 												<td class="text" align="center"><%=date%></td>
 	 											</tr>
  												<% 
@@ -49,20 +50,5 @@
  					</div>
  				</div>
  		</div>
-		<div class="UIAction">
-    	<table class="ActionContainer" align="center">
-			  <tr>
-				  <td align="center">
-		    		<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
-			  	  	<div class="ButtonLeft">
-			    	  	<div class="ButtonRight">
-			      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></div>
-			        	</div>
-			      	</div>
-		    		</a>
-	      	</td>
-				</tr>
- 	  </table>
-	</div>
 		<%uiform.end()%>
 </div>

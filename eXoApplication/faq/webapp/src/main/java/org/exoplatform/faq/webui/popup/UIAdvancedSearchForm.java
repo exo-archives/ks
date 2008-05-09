@@ -43,6 +43,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -76,7 +77,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	final static private String RESPONSE = "Response" ;
 	
 	public UIAdvancedSearchForm() throws Exception {
-//	public void init() throws Exception {
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>("Category", "faqCategory")) ;
 		list.add(new SelectItemOption<String>("Question", "faqQuestion")) ;
@@ -84,7 +84,11 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		searchType.setOnChange("Onchange") ;
 		UIFormStringInput text = new UIFormStringInput(TEXT, TEXT, null) ;
 		UIFormStringInput categoryName = new UIFormStringInput(FIELD_CATEGORY_NAME, FIELD_CATEGORY_NAME, null) ;
-		UIFormCheckBoxInput<Boolean> isModerQuestion = new UIFormCheckBoxInput<Boolean>(FIELD_ISMODERATEQUESTION, FIELD_ISMODERATEQUESTION, null) ;
+		list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>("Emptry", "emptry"));
+		list.add(new SelectItemOption<String>("True", "true"));
+		list.add(new SelectItemOption<String>("False", "false"));
+		UIFormSelectBox modeQuestion = new UIFormSelectBox(FIELD_ISMODERATEQUESTION, FIELD_ISMODERATEQUESTION, list) ;
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_CATEGORY_MODERATOR, FIELD_CATEGORY_MODERATOR, null) ;
 		
 		UIFormDateTimeInput fromDate = new UIFormDateTimeInput(FROM_DATE, FROM_DATE, null, false) ;
@@ -101,15 +105,15 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 //		list.add(new SelectItemOption<String>("German", "german")) ;
 //		UIFormSelectBox language = new UIFormSelectBox(LANGUAGE, LANGUAGE, list) ;
 //		language.setRendered(false) ;
-		UIFormStringInput question = new UIFormStringInput(QUESTION, QUESTION, null) ;
+		UIFormTextAreaInput question = new UIFormTextAreaInput(QUESTION, QUESTION, null) ;
 		question.setRendered(false) ;
-		UIFormStringInput response = new UIFormStringInput(RESPONSE, RESPONSE, null) ;
+		UIFormTextAreaInput response = new UIFormTextAreaInput(RESPONSE, RESPONSE, null) ;
 		response.setRendered(false) ;
 		
 		addUIFormInput(searchType) ;
 		addUIFormInput(text) ;
 		addUIFormInput(categoryName) ;
-		addUIFormInput(isModerQuestion) ;
+		addUIFormInput(modeQuestion) ;
 		addUIFormInput(moderator) ;
 		
 		addUIFormInput(author) ;
@@ -138,17 +142,17 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			boolean isAuthor, boolean isEmailAddress, boolean isLanguage, boolean isQuestion, boolean isResponse) {
 		UIFormStringInput text = getUIStringInput(TEXT).setRendered(isText) ;
 		UIFormStringInput categoryName = getUIStringInput(FIELD_CATEGORY_NAME).setRendered(isCategoryName) ;
-		UIFormCheckBoxInput<Boolean> modeQuestion = getUIFormCheckBoxInput(FIELD_ISMODERATEQUESTION).setRendered(isModeQuestion) ;
+		UIFormSelectBox modeQuestion = getUIFormSelectBox(FIELD_ISMODERATEQUESTION).setRendered(isModeQuestion) ;
 		UIFormStringInput moderator = getUIStringInput(FIELD_CATEGORY_MODERATOR).setRendered(isModerator) ;
 	
 		UIFormStringInput author = getUIStringInput(AUTHOR).setRendered(isAuthor) ;
 		UIFormStringInput emailAddress = getUIStringInput(EMAIL_ADDRESS).setRendered(isEmailAddress) ;
 //		UIFormSelectBox language = getUIFormSelectBox(LANGUAGE).setRendered(isLanguage) ;
-		UIFormStringInput question = getUIStringInput(QUESTION).setRendered(isQuestion) ;
-		UIFormStringInput response = getUIStringInput(RESPONSE).setRendered(isResponse) ;
+		UIFormTextAreaInput question = getUIFormTextAreaInput(QUESTION).setRendered(isQuestion) ;
+		UIFormStringInput response = getUIFormTextAreaInput(RESPONSE).setRendered(isResponse) ;
 		text.setValue("") ;
 		categoryName.setValue("") ;
-		modeQuestion.setChecked(false) ;
+		modeQuestion.setValue("Emptry") ;
 		moderator.setValue("") ;
 	
 		author.setValue("") ;
@@ -193,7 +197,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String type = uiAdvancedSearch.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue() ;
 			String text = uiAdvancedSearch.getUIStringInput(TEXT).getValue() ;
 			String categoryName = uiAdvancedSearch.getUIStringInput(FIELD_CATEGORY_NAME).getValue() ;
-			Boolean isModeQuestion = uiAdvancedSearch.getUIFormCheckBoxInput(FIELD_ISMODERATEQUESTION).isChecked() ;
+			String modeQuestion = uiAdvancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue() ;
 			String moderator = uiAdvancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).getValue() ;
 			Calendar fromDate = uiAdvancedSearch.getUIFormDateTimeInput(FROM_DATE).getCalendar() ;
 			Calendar toDate= uiAdvancedSearch.getUIFormDateTimeInput(TO_DATE).getCalendar() ;
@@ -207,13 +211,13 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String author = uiAdvancedSearch.getUIStringInput(AUTHOR).getValue() ;
 			String emailAddress = uiAdvancedSearch.getUIStringInput(EMAIL_ADDRESS).getValue() ;
 //			String language = uiAdvancedSearch.getUIFormSelectBox(LANGUAGE).getValue() ;
-			String question = uiAdvancedSearch.getUIStringInput(QUESTION).getValue() ;
-			String response = uiAdvancedSearch.getUIStringInput(RESPONSE).getValue() ;
+			String question = uiAdvancedSearch.getUIFormTextAreaInput(QUESTION).getValue() ;
+			String response = uiAdvancedSearch.getUIFormTextAreaInput(RESPONSE).getValue() ;
 			FAQEventQuery eventQuery = new FAQEventQuery() ;
 			eventQuery.setType(type) ;
 			eventQuery.setText(text) ;
 			eventQuery.setName(categoryName) ;
-			eventQuery.setIsModeQuestion(isModeQuestion.toString()) ;
+			eventQuery.setIsModeQuestion(modeQuestion) ;
 			eventQuery.setModerator(moderator) ;
 			eventQuery.setFromDate(fromDate) ;
 			eventQuery.setToDate(toDate) ;

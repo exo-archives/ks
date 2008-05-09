@@ -7,6 +7,7 @@
 <div class="ResultSearchQuestion $uicomponent.id" style="padding: 8px;">
 		<% uiform.begin() %>
 		<div class="UIForm">
+					<div class="TitleMoveThreads"><%= _ctx.appRes("ResultSearchQuestion.title.resultQuestion"); %></div>
  					<div class="UIHorizontalLayout">
  							<div class="UIPermissionManager">
  								<div class="UIPermissionInfo">
@@ -33,8 +34,8 @@
 											String link = uicomponent.event("Link", questionId);
  										 %>
 	 											<tr class="EvenRow"> 
-	 												<td class="text" align="center"><%= author%></td>
-	 												<td class="text" align="center"><%= (email != null) ? email: ""%></td>
+	 												<td class="text" align="left"><%= author%></td>
+	 												<td class="text" align="left"><%= (email != null) ? email: ""%></td>
 	 												<td class="text"><a href="$link">$questionContent</a></td>
 	 												<td class="text" align="center"><%=date%></td>
 	 											</tr>
@@ -52,20 +53,5 @@
  					</div>
  				</div>
  		</div>
-		<div class="UIAction">
-    	<table class="ActionContainer" align="center">
-			  <tr>
-				  <td align="center">
-		    		<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
-			  	  	<div class="ButtonLeft">
-			    	  	<div class="ButtonRight">
-			      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></div>
-			        	</div>
-			      	</div>
-		    		</a>
-	      	</td>
-				</tr>
- 	  </table>
-	</div>
 		<%uiform.end()%>
 </div>

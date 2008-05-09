@@ -28,7 +28,7 @@
 				<div class="Response">
 					$response<br>
 				</div>
-				<div class="AttachmentContent">
+				<div class="AttachmentContent" >
 					attachment:<br>
 					<%
 					for(FileAttachment fileAttachment : question.getAttachMent()){
@@ -71,7 +71,7 @@
 					<% } %>
 				</div>
 				<div class="UIAction ResponsActions" style="float: left">
-						<div style="float:left">Response by: $responseBy , $date</div>
+						<div style="float:left" >  Response by: $responseBy , $date</div>
 						<div style="float:right"></div>
 				 </div>
 				<div style="clear: left"><span></span></div>
