@@ -172,9 +172,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     addChild(questionContent_) ;
     addChild(questionLanguages_) ;
     addChild(reponseQuestion_) ;
-    addChild(inputAttachment_) ;
-    addChild(questionRelation_) ;
     addChild(checkShowAnswer_.setChecked(isChecked)) ;
+    addChild(questionRelation_) ;
+    addChild(inputAttachment_) ;
     
     this.setListFileAttach(question.getAttachMent()) ;
   }

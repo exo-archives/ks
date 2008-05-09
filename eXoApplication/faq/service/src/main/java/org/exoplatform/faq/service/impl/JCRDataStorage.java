@@ -97,6 +97,7 @@ public class JCRDataStorage {
   }
   
   private void saveQuestion(Node questionNode, Question question) throws Exception {
+    questionNode.setProperty("exo:language", question.getLanguage()) ;
   	questionNode.setProperty("exo:name", question.getQuestion()) ;
   	questionNode.setProperty("exo:author", question.getAuthor()) ;
   	questionNode.setProperty("exo:email", question.getEmail()) ;
@@ -168,6 +169,7 @@ public class JCRDataStorage {
   private Question getQuestion(Node questionNode) throws Exception {
   	Question question = new Question() ;
   	question.setId(questionNode.getName()) ;
+  	if(questionNode.hasProperty("exo:language")) question.setQuestion(questionNode.getProperty("exo:language").getString()) ;
   	if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;

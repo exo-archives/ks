@@ -31,6 +31,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
 
 public class Question {
   private String id ;
+  private String language ;
   private String question ;
   private String author ;
   private String email ;
@@ -53,6 +54,9 @@ public class Question {
   public String getQuestion() { return question ; }
   public void setQuestion(String name) { this.question = name ; }
 
+  public void setLanguage(String language) { this.language = language; }
+  public String getLanguage() { return language; }
+  
 	public void setAuthor(String author) { this.author = author; }
 	public String getAuthor() { return author; }
 
