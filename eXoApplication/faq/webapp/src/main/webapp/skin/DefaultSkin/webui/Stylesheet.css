@@ -401,7 +401,7 @@
   padding: 3px;
 }
 
-.UIFAQPortlet .SelectMemberIcon {
+.UIFAQPortlet .SelectGroupIcon {
   background: url('background/group.png') no-repeat left ;
   width: 16px; height: 16px;
   padding: 3px;
@@ -445,6 +445,15 @@ UIFAQPortlet .ResultSearchQuestion {
 }
 
 .UIFAQPortlet .ResultSearchQuestion .TitleMoveThreads {
+	line-height: 30px;
+	padding-left: 1px;
+	font-weight:bold;
+}
+UIFAQPortlet .ResultQuickSearch {
+	padding: 2px;
+}
+
+.UIFAQPortlet .ResultQuickSearch .TitleMoveThreads {
 	line-height: 30px;
 	padding-left: 1px;
 	font-weight:bold;
@@ -624,7 +633,7 @@ UIFAQPortlet .ResultSearchQuestion {
 }
 
 .UIFAQPortlet .SubCategory {
-  background: url('background/FAQPortlet.gif') no-repeat left -58px;
+  background: url('background/FAQPortlet.gif') no-repeat left -57px;
 }
 
 .UIFAQPortlet .ActionsPrint {

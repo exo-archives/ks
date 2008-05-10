@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
+import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -39,7 +40,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -62,8 +62,8 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		}
 )
 public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
-	final static	private String FIELD_SEARCHOBJECT_SELECTBOX = "SearchOject" ;
 	final static private String TEXT = "Text" ;
+	final static	private String FIELD_SEARCHOBJECT_SELECTBOX = "SearchOject" ;
 	final static private String FIELD_CATEGORY_NAME = "CategoryName" ;
 	final static private String FIELD_ISMODERATEQUESTION = "IsModerateQuestion" ;
 	final static private String FIELD_CATEGORY_MODERATOR = "CategoryModerator" ;
@@ -75,22 +75,24 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 //	final static private String LANGUAGE = "Language" ;
 	final static private String QUESTION = "Question" ;
 	final static private String RESPONSE = "Response" ;
-	
 	public UIAdvancedSearchForm() throws Exception {
+		UIFormStringInput text = new UIFormStringInput(TEXT, TEXT, null) ;
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+		list.add(new SelectItemOption<String>("", "emptry")) ;
 		list.add(new SelectItemOption<String>("Category", "faqCategory")) ;
 		list.add(new SelectItemOption<String>("Question", "faqQuestion")) ;
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX, FIELD_SEARCHOBJECT_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
-		UIFormStringInput text = new UIFormStringInput(TEXT, TEXT, null) ;
 		UIFormStringInput categoryName = new UIFormStringInput(FIELD_CATEGORY_NAME, FIELD_CATEGORY_NAME, null) ;
+		categoryName.setRendered(false) ;
 		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>("Emptry", "emptry"));
+		list.add(new SelectItemOption<String>("", "emptry"));
 		list.add(new SelectItemOption<String>("True", "true"));
 		list.add(new SelectItemOption<String>("False", "false"));
 		UIFormSelectBox modeQuestion = new UIFormSelectBox(FIELD_ISMODERATEQUESTION, FIELD_ISMODERATEQUESTION, list) ;
+		modeQuestion.setRendered(false) ;
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_CATEGORY_MODERATOR, FIELD_CATEGORY_MODERATOR, null) ;
-		
+		moderator.setRendered(false) ;
 		UIFormDateTimeInput fromDate = new UIFormDateTimeInput(FROM_DATE, FROM_DATE, null, false) ;
 		UIFormDateTimeInput toDate = new UIFormDateTimeInput(TO_DATE, TO_DATE, null, false) ;
 		// search question
@@ -110,8 +112,8 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormTextAreaInput response = new UIFormTextAreaInput(RESPONSE, RESPONSE, null) ;
 		response.setRendered(false) ;
 		
-		addUIFormInput(searchType) ;
 		addUIFormInput(text) ;
+		addUIFormInput(searchType) ;
 		addUIFormInput(categoryName) ;
 		addUIFormInput(modeQuestion) ;
 		addUIFormInput(moderator) ;
@@ -131,13 +133,15 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+	
 	public Calendar getFromDate() {
     return getUIFormDateTimeInput(FROM_DATE).getCalendar();
   } 
-  
+	
   public Calendar getToDate() {
     return getUIFormDateTimeInput(TO_DATE).getCalendar();
   } 
+  
 	public void setValue(boolean isText, boolean isCategoryName,boolean isModeQuestion, boolean isModerator,
 			boolean isAuthor, boolean isEmailAddress, boolean isLanguage, boolean isQuestion, boolean isResponse) {
 		UIFormStringInput text = getUIStringInput(TEXT).setRendered(isText) ;
@@ -152,7 +156,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormStringInput response = getUIFormTextAreaInput(RESPONSE).setRendered(isResponse) ;
 		text.setValue("") ;
 		categoryName.setValue("") ;
-		modeQuestion.setValue("Emptry") ;
+		modeQuestion.setValue("") ;
 		moderator.setValue("") ;
 	
 		author.setValue("") ;
@@ -180,39 +184,62 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String type = uiAdvancedSearchForm.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue() ;
 			if(type.equals("faqCategory")) {
 				uiAdvancedSearchForm.setValue(true, true, true, true, false, false, false, false, false) ;
-			} else {
+			} else if(type.equals("faqQuestion")) {
 				uiAdvancedSearchForm.setValue(true, false, false, false, true, true, true, true, true) ;
+			} else {
+				uiAdvancedSearchForm.setValue(true, false, false, false, false, false, false, false, false) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiAdvancedSearchForm) ;
 		}
 	}
 	
+//	public void fillData() throws Exception { 
+//		Event<UIAdvancedSearchForm> event;
+//		UIAdvancedSearchForm a = event.getSource() ;	
+//		FAQService faqService = getApplicationComponent(FAQService.class);
+////    FAQEventQuery setting = faqService.getFAQEventQuery(FAQUtils.getSystemProvider());
+//		FAQEventQuery eventQuery = new FAQEventQuery() ;
+//		String type = 
+//		getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue();
+//		getUIStringInput(TEXT).getValue() ;
+//		getUIFormDateTimeInput(FROM_DATE).getCalendar() ;
+//		getUIFormDateTimeInput(TO_DATE).getCalendar() ;
+//		if(type.equals("faqCategory")) {	
+//			getUIStringInput(FIELD_CATEGORY_NAME).getValue() ;
+//			getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue() ;
+//		} else if(type.equals("faqQuestion")){ 
+//			getUIStringInput(AUTHOR).getValue() ;
+//			getUIStringInput(EMAIL_ADDRESS).getValue() ;
+//			getUIFormTextAreaInput(QUESTION).getValue() ;
+//			getUIFormTextAreaInput(RESPONSE).getValue() ;
+//		}
+//	}
 	static public class SearchActionListener extends EventListener<UIAdvancedSearchForm> {
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
-			UIAdvancedSearchForm uiAdvancedSearch = event.getSource() ;		
-			UIFAQPortlet uiPortlet = uiAdvancedSearch.getAncestorOfType(UIFAQPortlet.class);
+			UIAdvancedSearchForm advancedSearch = event.getSource() ;		
+			UIFAQPortlet uiPortlet = advancedSearch.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-			UIApplication uiApp = uiAdvancedSearch.getAncestorOfType(UIApplication.class) ;
+			UIApplication uiApp = advancedSearch.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
-			String type = uiAdvancedSearch.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue() ;
-			String text = uiAdvancedSearch.getUIStringInput(TEXT).getValue() ;
-			String categoryName = uiAdvancedSearch.getUIStringInput(FIELD_CATEGORY_NAME).getValue() ;
-			String modeQuestion = uiAdvancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue() ;
-			String moderator = uiAdvancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).getValue() ;
-			Calendar fromDate = uiAdvancedSearch.getUIFormDateTimeInput(FROM_DATE).getCalendar() ;
-			Calendar toDate= uiAdvancedSearch.getUIFormDateTimeInput(TO_DATE).getCalendar() ;
-			if(uiAdvancedSearch.getFromDate() != null && uiAdvancedSearch.getToDate() != null) {
-        if(uiAdvancedSearch.getFromDate().after(uiAdvancedSearch.getToDate())){
+			String type = advancedSearch.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue() ;
+			String text = advancedSearch.getUIStringInput(TEXT).getValue() ;
+			String categoryName = advancedSearch.getUIStringInput(FIELD_CATEGORY_NAME).getValue() ;
+			String modeQuestion = advancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue() ;
+			String moderator = advancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).getValue() ;
+			Calendar fromDate = advancedSearch.getUIFormDateTimeInput(FROM_DATE).getCalendar() ;
+			Calendar toDate= advancedSearch.getUIFormDateTimeInput(TO_DATE).getCalendar() ;
+			if(advancedSearch.getFromDate() != null && advancedSearch.getToDate() != null) {
+        if(advancedSearch.getFromDate().after(advancedSearch.getToDate())){
           uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.date-time-invalid", null)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
           return ;
         }
       }
-			String author = uiAdvancedSearch.getUIStringInput(AUTHOR).getValue() ;
-			String emailAddress = uiAdvancedSearch.getUIStringInput(EMAIL_ADDRESS).getValue() ;
-//			String language = uiAdvancedSearch.getUIFormSelectBox(LANGUAGE).getValue() ;
-			String question = uiAdvancedSearch.getUIFormTextAreaInput(QUESTION).getValue() ;
-			String response = uiAdvancedSearch.getUIFormTextAreaInput(RESPONSE).getValue() ;
+			String author = advancedSearch.getUIStringInput(AUTHOR).getValue() ;
+			String emailAddress = advancedSearch.getUIStringInput(EMAIL_ADDRESS).getValue() ;
+//			String language = advancedSearch.getUIFormSelectBox(LANGUAGE).getValue() ;
+			String question = advancedSearch.getUIFormTextAreaInput(QUESTION).getValue() ;
+			String response = advancedSearch.getUIFormTextAreaInput(RESPONSE).getValue() ;
 			FAQEventQuery eventQuery = new FAQEventQuery() ;
 			eventQuery.setType(type) ;
 			eventQuery.setText(text) ;
@@ -226,26 +253,51 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			eventQuery.setEmail(emailAddress) ;
 			eventQuery.setQuestion(question) ;
 			eventQuery.setResponse(response) ;
+			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
+			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			if(type.equals("faqCategory")) {	
-//				ResultSearchCategory result = popupAction.activate(ResultSearchCategory.class, 600) ;
-				UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
 				resultContainer.setCategorySearchIsRendered(true) ;
+				UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
+				advanced.setValue(true, true, true, true, false, false, false, false, false) ;
+				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
+				advanced.getUIStringInput(TEXT).setValue(text) ;
+				advanced.getUIStringInput(FIELD_CATEGORY_NAME).setValue(categoryName) ;
+				advanced.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).setValue(modeQuestion) ;
+				advanced.getUIStringInput(FIELD_CATEGORY_MODERATOR).setValue(moderator) ;
+				if(fromDate != null) advanced.getUIFormDateTimeInput(FROM_DATE).setCalendar(fromDate) ;
+				if(toDate != null) advanced.getUIFormDateTimeInput(TO_DATE).setCalendar(toDate) ;
 				ResultSearchCategory result = resultContainer.getChild(ResultSearchCategory.class) ;
-				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 				List<Category> list = faqService.getAdvancedSeach(FAQUtils.getSystemProvider(),eventQuery);
 				popupContainer.setId("ResultSearchCategory") ;
 				result.setListCategory(list) ;
-			} else {
-				UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
+			} else if(type.equals("faqQuestion")){
 				resultContainer.setQuestionSearchIsRendered(true) ;
+				UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
+				advanced.setValue(true, false, false, false, true, true, true, true, true) ;
+				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
+				advanced.getUIStringInput(TEXT).setValue(text) ;
+				advanced.getUIStringInput(AUTHOR).setValue(author) ;
+				advanced.getUIStringInput(EMAIL_ADDRESS).setValue(emailAddress) ;
+				advanced.getUIFormTextAreaInput(QUESTION).setValue(question) ;
+				advanced.getUIFormTextAreaInput(RESPONSE).setValue(response) ;
+				if(fromDate != null) advanced.getUIFormDateTimeInput(FROM_DATE).setCalendar(fromDate) ;
+				if(toDate != null) advanced.getUIFormDateTimeInput(TO_DATE).setCalendar(toDate) ;
 				ResultSearchQuestion result = resultContainer.getChild(ResultSearchQuestion.class) ;
-				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
  				List<Question> list = faqService.getAdvancedSeachQuestion(FAQUtils.getSystemProvider(),eventQuery);
  				popupContainer.setId("ResultSearchQuestion") ;
  				result.setListQuestion(list) ;
- 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			} else {
+				resultContainer.setCategoryQuestionSearchIsRendered(true) ;
+				UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
+				advanced.setValue(true, false, false, false, false, false, false, false, false) ;
+				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
+				advanced.getUIStringInput(TEXT).setValue(text) ;
+				if(fromDate != null) advanced.getUIFormDateTimeInput(FROM_DATE).setCalendar(fromDate) ;
+				if(toDate != null) advanced.getUIFormDateTimeInput(TO_DATE).setCalendar(toDate) ;
+				ResultQuickSearch result = resultContainer.getChild(ResultQuickSearch.class) ;
+				List<FAQFormSearch> list = faqService.getAdvancedEmptry(FAQUtils.getSystemProvider(), text, fromDate, toDate) ;
+				result.setFormSearchs(list) ;
 			}
-			
 		}
 	}
 	

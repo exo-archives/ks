@@ -50,7 +50,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	private List<FAQFormSearch> formSearchs ;
-	public ResultQuickSearch() throws Exception {this.setActions(new String[]{"Close"}) ;}
+	public ResultQuickSearch() throws Exception { this.setActions(new String[]{"Close"}) ;}
 	
 	public List<FAQFormSearch> getFormSearchs() {
   	return this.formSearchs;
@@ -95,8 +95,11 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	
 	static	public class CloseActionListener extends EventListener<ResultQuickSearch> {
 		public void execute(Event<ResultQuickSearch> event) throws Exception {
-			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
-			faqPortlet.cancelAction() ;
+			ResultQuickSearch resultSearch = event.getSource() ;
+      UIFAQPortlet portlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 

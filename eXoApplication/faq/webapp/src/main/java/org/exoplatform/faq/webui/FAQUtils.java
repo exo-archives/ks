@@ -16,6 +16,9 @@
  */
 package org.exoplatform.faq.webui;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
@@ -51,10 +54,29 @@ public class FAQUtils {
 	 public static SessionProvider getSystemProvider() {
 	    return SessionProviderFactory.createSystemProvider();
 	  }
-	  
+	
   static public String getCurrentUser() throws Exception {
     return Util.getPortalRequestContext().getRemoteUser();
   }
   
+  public static boolean isFieldEmpty(String s) {
+    if (s == null || s.length() == 0) return true ;
+    return false ;    
+  }
+  
+  public static boolean isValidEmailAddresses(String addressList) throws Exception {
+    if (isFieldEmpty(addressList))  return true ;
+    boolean isInvalid = true ;
+    try {
+      InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
+      String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
+      for (int i = 0 ; i < iAdds.length; i ++) {
+        if(!iAdds[i].getAddress().toString().matches(emailRegex)) isInvalid = false;
+      }
+    } catch(AddressException e) {
+      return false ;
+    }
+    return isInvalid ;
+  }
   
 }

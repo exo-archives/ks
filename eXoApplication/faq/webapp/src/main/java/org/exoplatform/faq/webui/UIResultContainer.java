@@ -57,6 +57,13 @@ public class UIResultContainer extends UIContainer implements UIPopupComponent {
 		getChild(ResultSearchQuestion.class).setRendered(!isRendered) ;
 	}
 	
+	public void setCategoryQuestionSearchIsRendered(boolean isRendered) {
+		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
+		getChild(ResultQuickSearch.class).setRendered(isRendered) ;
+		getChild(ResultSearchCategory.class).setRendered(!isRendered) ;
+		getChild(ResultSearchQuestion.class).setRendered(!isRendered) ;
+	}
+	
 	public void setQuestionSearchIsRendered(boolean isRendered) {
 		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
 		getChild(ResultQuickSearch.class).setRendered(!isRendered) ;

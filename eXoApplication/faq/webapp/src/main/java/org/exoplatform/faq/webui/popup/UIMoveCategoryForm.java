@@ -157,7 +157,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 
 	static public class CancelActionListener extends EventListener<UIMoveCategoryForm> {
     public void execute(Event<UIMoveCategoryForm> event) throws Exception {
-			UIMoveCategoryForm uiCategory = event.getSource() ;			
 			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
 			faqPortlet.cancelAction() ;
 		}

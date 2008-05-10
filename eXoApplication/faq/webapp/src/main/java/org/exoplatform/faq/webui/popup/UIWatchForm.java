@@ -19,7 +19,6 @@ package org.exoplatform.faq.webui.popup;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -29,6 +28,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 
 @SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
@@ -43,13 +43,12 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	public static final String USER_NAME = "userName" ; 
 	public static final String EMAIL_ADDRESS = "emailAddress" ;
 	private String categoryId_ = "";
-	static ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
 	public UIWatchForm() throws Exception {}
-  public void init() {
+  public void init() throws Exception {
   	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
-		UIFormStringInput emailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, null);
-		addUIFormInput(userName);
-		addUIFormInput(emailAddress);
+  	UIFormTextAreaInput listEmail = new UIFormTextAreaInput(EMAIL_ADDRESS, null, null );
+  	addUIFormInput(userName);
+		addUIFormInput(listEmail);
   }
 	
 	public String[] getActions() { return new String[] {"Save","Cancel"} ; }
@@ -64,21 +63,24 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 			UIWatchForm uiWatchForm = event.getSource() ;
 			UIApplication uiApp = uiWatchForm.getAncestorOfType(UIApplication.class) ;
       String name = uiWatchForm.getUIStringInput(UIWatchForm.USER_NAME).getValue() ;
-      String email = uiWatchForm.getUIStringInput(UIWatchForm.EMAIL_ADDRESS).getValue() ;
-      if(!validatorDataInput.isEmailAddress(email)) {
-      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.email-required", null,
-            ApplicationMessage.INFO)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-          return ; 
+      String listEmail = uiWatchForm.getUIFormTextAreaInput(UIWatchForm.EMAIL_ADDRESS).getValue() ;
+      if (FAQUtils.isFieldEmpty(listEmail)) {
+        uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.to-field-empty", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
+      } else if (!FAQUtils.isValidEmailAddresses(listEmail)) {
+        uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.invalid-to-field", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
       }
       String categoryId = uiWatchForm.getCategoryID() ;
       String watchId = categoryId.substring(0, 4) ;
       if (categoryId != null) {
       	FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
       	if(watchId.equals("Cate")) {
-      		faqService.addWatch(1, 1, categoryId , email, FAQUtils.getSystemProvider()) ;
+      		faqService.addWatch(1, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
       	} else {
-      		faqService.addWatch(2, 1, categoryId , email, FAQUtils.getSystemProvider()) ;
+      		faqService.addWatch(2, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
       	}	
       	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
       			ApplicationMessage.INFO)) ;

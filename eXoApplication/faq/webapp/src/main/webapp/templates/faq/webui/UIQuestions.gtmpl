@@ -134,7 +134,6 @@
 				}
 				
 				categoryId = category.getId();
-				System.out.println("CateId to set cateInfo : " + categoryId) ;
 				String link = uicomponent.event("OpenCategory", categoryId) ;
 				int[] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
 				int numSubCate = cateInfo[0] ;

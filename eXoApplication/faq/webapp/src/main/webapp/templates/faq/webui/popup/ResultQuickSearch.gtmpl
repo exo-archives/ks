@@ -8,6 +8,7 @@
 <div class="ResultQuickSearch $uicomponent.id" style="padding: 8px;">
 		<% uiform.begin() %>
 		<div class="UIForm">
+					<div class="TitleMoveThreads"><%= _ctx.appRes("ResultQuickSearch.title.result"); %></div>
  					<div class="UIHorizontalLayout">
  							<div class="UIPermissionManager">
  								<div class="UIPermissionInfo">

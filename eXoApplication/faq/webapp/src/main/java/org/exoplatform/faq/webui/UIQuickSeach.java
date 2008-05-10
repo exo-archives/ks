@@ -96,11 +96,10 @@ public class UIQuickSeach  extends UIForm {
 			UIQuickSeach uiForm = event.getSource() ;
 			UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
 			resultContainer.setAdvancedSearchIsRendered(true) ;
 			resultContainer.getChild(UIAdvancedSearchForm.class) ;
-			popupContainer.setId("AdvanceSearchForm") ;
+			resultContainer.setId("AdvanceSearchForm") ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
   }
