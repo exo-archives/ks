@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.service.impl;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -127,6 +128,10 @@ public class FAQServiceImpl implements FAQService{
   
   public List<FAQFormSearch> getQuickSeach(SessionProvider sProvider, String text) throws Exception {
   	return jcrData_.getQuickSeach(sProvider, text); 
+  }
+  
+  public List<FAQFormSearch> getAdvancedEmptry(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception {
+  	return jcrData_.getAdvancedEmptry(sProvider, text, fromDate, toDate); 
   }
   
   public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {

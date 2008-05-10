@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -169,6 +170,7 @@ public interface FAQService {
   
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception ;
   public List<FAQFormSearch> getQuickSeach(SessionProvider sProvider, String text) throws Exception ;
+  public List<FAQFormSearch> getAdvancedEmptry(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;
   public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception ;

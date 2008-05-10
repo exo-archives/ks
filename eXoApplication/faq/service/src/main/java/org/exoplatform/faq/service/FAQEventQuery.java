@@ -129,6 +129,7 @@ public class FAQEventQuery {
     }
     if(type.equals("faqCategory")) {
 		  if(name != null && name.length() > 0 ) {
+		  	if(isAnd) stringBuffer.append(" and ");
 		  	stringBuffer.append("(jcr:contains(@exo:name, '").append(name).append("'))") ;
 		  	isAnd = true ;
 		  }
@@ -142,8 +143,9 @@ public class FAQEventQuery {
 				stringBuffer.append("(jcr:contains(@exo:moderators, '").append(moderator).append("'))") ;
 		  	isAnd = true ;
 			}
-    } else {
+    } else if(type.equals("faqQuestion")){
 	    if(author != null && author.length() > 0) {
+	    	if(isAnd) stringBuffer.append(" and ");
 	    	stringBuffer.append("(jcr:contains(@exo:author, '").append(author).append("'))") ;
 	    	isAnd = true ;
 	    }

@@ -34,6 +34,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -68,7 +69,7 @@ public class JCRDataStorage {
   final private static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
   private Map<String, String> serverConfig_ = new HashMap<String, String>();
   private NodeHierarchyCreator nodeHierarchyCreator_ ;
-  
+  private boolean isOwner = false ;
   public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
     nodeHierarchyCreator_ = nodeHierarchyCreator ;
   }  
@@ -593,7 +594,66 @@ public class JCRDataStorage {
   	return FormSearchs ;
   }
   
-  public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
+		StringBuffer queryString = new StringBuffer() ;
+		if(fromDate != null && toDate != null) {
+			if(isOwner) queryString.append(" and ") ;
+			queryString.append("((@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) and ") ;
+			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ") ;
+			isOwner = true ;
+		} else if(fromDate != null){
+			if(isOwner) queryString.append(" and ") ;
+			queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
+			isOwner = true ;
+		} else if(toDate != null){
+			if(isOwner) queryString.append(" and ") ;
+			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
+			isOwner = true ;
+		}
+		return queryString.toString() ;
+	}
+  
+  public List<FAQFormSearch> getAdvancedEmptry(SessionProvider sProvider,String text,Calendar fromDate, Calendar toDate) throws Exception {
+  	Node faqServiceHome = getFAQServiceHome(sProvider) ;
+  	String types[] = new String[] {"faqCategory", "faqQuestion"} ;
+		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
+		List<FAQFormSearch>FormSearchs = new ArrayList<FAQFormSearch>() ;
+		for (String type : types) {
+			StringBuffer queryString = new StringBuffer("/jcr:root" + faqServiceHome.getPath() + "//element(*,exo:").append(type).append(")");
+			StringBuffer stringBuffer = new StringBuffer() ;
+			isOwner = false ;
+	    stringBuffer.append("[");
+	    if(text !=null && text.length() > 0) {
+	    	stringBuffer.append("(jcr:contains(., '").append(text).append("'))") ;
+	    	isOwner = true ;
+	    }
+	    String temp = setDateFromTo(fromDate, toDate, "createdDate") ;
+	    if(temp != null && temp.length() > 0) { 
+	    	stringBuffer.append(temp) ;
+	    }
+	    stringBuffer.append("]") ;
+	    if(isOwner) queryString.append(stringBuffer.toString()) ;
+		  Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		  QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes() ;
+		  Node node ;
+		  FAQFormSearch formSearch ;
+		  String id;
+			while(iter.hasNext()) {
+				formSearch = new FAQFormSearch() ;
+				node = (Node)iter.nextNode();
+				id = node.getName() ;
+				formSearch.setId(id) ;
+				formSearch.setName(node.getProperty("exo:name").getString()) ;
+				formSearch.setType(type) ;
+				formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
+				FormSearchs.add(formSearch) ;
+			}
+		}
+  	return FormSearchs ;
+  }
+
+	public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		List<Category> catList = new ArrayList<Category>() ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
