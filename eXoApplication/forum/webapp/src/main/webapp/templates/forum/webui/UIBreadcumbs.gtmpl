@@ -18,11 +18,26 @@
 			  	<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">
+					<%if(t == 2){
+						String newMesenge = "ddd";
+						if(uicomponent.getNewMessenge() > 0) {
+						  newMesenge = "(<b>" + uicomponent.getNewMessenge() + "</b>)";
+						}
+					%>
+					<a style="float:left; line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
+						Private Messenges $newMesenge
+					</a>
+					<a style="float:left" href="<%=uicomponent.event("Rss");%>" >
+					<%} else {%>
 					<a href="<%=uicomponent.event("Rss");%>" >
-					<div class="SeparatorLine">
-						<div class="RSSIcon" >RSS</div>	
-					</div>	
-					</a>						
+					<%}%>
+						<div class="SeparatorLine">
+							<div class="RSSIcon" >RSS</div>	
+						</div>	
+					</a>
+					<%if(t == 2){%>
+					<div style="clear: left"><span></span></div>
+					<%}%>				
 				</div>
 				<div style="clear: both"><span></span></div>
 			</div>

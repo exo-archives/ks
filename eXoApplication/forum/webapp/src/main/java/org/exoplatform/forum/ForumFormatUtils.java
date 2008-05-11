@@ -147,8 +147,13 @@ public class ForumFormatUtils {
 	
 	public static String[] splitForForum (String str) throws Exception {
 		if(str != null && str.length() > 0) {
-			if(str.contains(",")) return str.trim().split(",") ;
-			else return str.trim().split(";") ;
+			if(str.contains(",")){ 
+				str.replaceAll(";", ",") ;
+				return str.trim().split(",") ;
+			} else { 
+				str.replaceAll(",", ";") ;
+				return str.trim().split(";") ;
+			}
 		} else return new String[] {} ;
 	}
 	

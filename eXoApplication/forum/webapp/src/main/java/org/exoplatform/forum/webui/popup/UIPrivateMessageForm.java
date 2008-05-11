@@ -1,0 +1,232 @@
+/***************************************************************************
+ * Copyright (C) 2003-2008 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ ***************************************************************************/
+package org.exoplatform.forum.webui.popup;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumFormatUtils;
+import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.ForumPrivateMessage;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.EmptyNameValidator;
+import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormWYSIWYGInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
+
+/**
+ * Created by The eXo Platform SAS
+ * Author : Vu Duy Tu
+ *          tu.duy@exoplatform.com
+ * May 9, 2008 - 8:19:24 AM  
+ */
+@ComponentConfig(
+		lifecycle = UIFormLifecycle.class,
+		template = "app:/templates/forum/webui/popup/UIPrivateMessegeForm.gtmpl",
+		events = {
+			@EventConfig(listeners = UIPrivateMessageForm.CloseActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIPrivateMessageForm.SendPrivateMessageActionListener.class),
+			@EventConfig(listeners = UIPrivateMessageForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIPrivateMessageForm.ViewMessageActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE)
+		}
+)
+public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UISelector {
+	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private UserProfile userProfile ;
+	private String userName ;
+	private List<ForumPrivateMessage> listInbox = null; 
+	private List<ForumPrivateMessage> listSend = null; 
+	private int id = 0;
+	public static final String FIELD_SENDTO_TEXTAREA = "SendTo" ;
+	public static final String FIELD_MAILTITLE_INPUT = "MailTitle" ;
+	public static final String FIELD_MAILMESSAGE_INPUT = "MailMessage" ;
+	public static final String FIELD_SENDMESSAGE_TAB = "MessageTab" ;
+	public UIPrivateMessageForm() throws Exception {
+		UIFormTextAreaInput SendTo = new UIFormTextAreaInput(FIELD_SENDTO_TEXTAREA, FIELD_SENDTO_TEXTAREA, null);
+		SendTo.addValidator(MandatoryValidator.class);
+		UIFormStringInput MailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
+		MailTitle.addValidator(MandatoryValidator.class);
+		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MAILMESSAGE_INPUT, null, null, true);
+		formWYSIWYGInput.addValidator(EmptyNameValidator.class) ;
+		UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
+		sendMessageTab.addUIFormInput(SendTo);
+		sendMessageTab.addUIFormInput(MailTitle);
+		sendMessageTab.addUIFormInput(formWYSIWYGInput);
+		
+		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
+		ActionData ad ;int i = 0;
+		List<ActionData> actions = new ArrayList<ActionData>() ;
+		for(String string : strings) {
+			ad = new ActionData() ;
+			ad.setActionListener("AddValuesUser") ;
+			ad.setActionParameter(String.valueOf(i)) ;
+			ad.setCssIconClass(string + "Icon") ;
+			ad.setActionName(string);
+			actions.add(ad) ;
+			++i;
+		}
+		sendMessageTab.setActionField(FIELD_SENDTO_TEXTAREA, actions);
+		addUIFormInput(sendMessageTab) ;
+  }
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
+	
+	public void setUserProfile(UserProfile userProfile){
+	  this.userProfile = userProfile ;
+	  this.userName = userProfile.getUserId() ;
+  }
+	@SuppressWarnings("unused")
+  private UserProfile getUserProfile() throws Exception {
+		return this.userProfile;
+	}
+	@SuppressWarnings("unused")
+  private List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
+		this.listInbox = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName) ;
+		return this.listInbox ;
+	}
+
+	@SuppressWarnings("unused")
+  private List<ForumPrivateMessage> getListSendPrivateMessage() throws Exception {
+		this.listSend = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName) ;
+		return this.listSend ;
+	}
+	
+	private ForumPrivateMessage getPrivateMessage(String id)throws Exception {
+		List<ForumPrivateMessage> list = this.listInbox ;
+		list.addAll(this.listSend) ;
+		for (ForumPrivateMessage forumPrivateMessage : list) {
+	    if(forumPrivateMessage.getId().equals(id)) return forumPrivateMessage ;
+    }
+		return null;
+	}
+	
+  public void updateSelect(String selectField, String value) throws Exception {
+    UIFormTextAreaInput stringInput = getUIFormTextAreaInput(selectField) ;
+    String values = stringInput.getValue() ;
+    boolean canAdd = true ;
+    if(values != null && values.trim().length() > 0) {
+    	values.replaceAll(";", ",");
+      if(!ForumFormatUtils.isStringInStrings(values.split(","), value)){
+        if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
+        else values = values.trim() + ",";
+      } else {
+        canAdd = false ;
+      }
+    } else {
+      values = "" ;
+    }
+    if(canAdd) {
+      values = values.trim() + value ;
+      stringInput.setValue(values) ;
+    }
+  }
+  
+  @SuppressWarnings("unused")
+  private int getIsSelected() {
+  	return this.id ;
+  }
+	static	public class SelectTabActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIPrivateMessageForm messageForm = event.getSource() ; 
+			messageForm.id = Integer.parseInt(id) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(messageForm) ;
+		}
+	}
+	
+	static	public class SendPrivateMessageActionListener extends EventListener<UIPrivateMessageForm> {
+    public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+    	UIPrivateMessageForm messageForm = event.getSource() ; 
+    	UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
+    	UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
+    	String sendTo = areaInput.getValue() ;
+    	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
+    	String mailTitle = stringInput.getValue() ;
+    	String message = MessageTab.getChild(UIFormWYSIWYGInput.class).getValue();
+    	ForumPrivateMessage privateMessage = new ForumPrivateMessage() ;
+    	privateMessage.setFrom(messageForm.userName) ;
+    	privateMessage.setSendTo(sendTo) ;
+    	privateMessage.setName(mailTitle) ;
+    	privateMessage.setMessage(message) ;
+    	messageForm.forumService.savePrivateMessage(ForumSessionUtils.getSystemProvider(), privateMessage) ;
+    	areaInput.setValue("") ;
+    	stringInput.setValue("") ;
+    	messageForm.id = 0;
+    	Object[] args = { "" };
+    	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
+			uiApp.addMessage(new ApplicationMessage("SendPrivateMessage.msg.sendOK", args, ApplicationMessage.WARNING)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    	event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent()) ;
+		}
+	}
+	
+	static  public class AddValuesUserActionListener extends EventListener<UIPrivateMessageForm> {
+    public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+    	UIPrivateMessageForm messageForm = event.getSource() ;
+      String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+      if(objctId != null && objctId.length() > 0) {
+        UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+        UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
+        uiGroupSelector.setType(objctId) ;
+        uiGroupSelector.setSelectedGroups(null) ;
+        uiGroupSelector.setComponent(messageForm, new String[]{FIELD_SENDTO_TEXTAREA}) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      }
+    }
+  }
+	
+	static	public class ViewMessageActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIPrivateMessageForm messageForm = event.getSource() ;
+			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(objctId != null && objctId.length() > 0) {
+				messageForm.forumService.saveReadMessage(ForumSessionUtils.getSystemProvider(), objctId, messageForm.userName);
+				ForumPrivateMessage privateMessage = messageForm.getPrivateMessage(objctId) ;
+				UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
+	      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+	      UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 500) ;
+	      privateMessageForm.setPrivateMessage(privateMessage);
+	      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			}
+		}
+	}
+
+	static	public class CloseActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.cancelAction() ;
+		}
+	}
+	
+}

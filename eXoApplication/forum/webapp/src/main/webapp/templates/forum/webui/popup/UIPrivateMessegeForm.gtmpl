@@ -1,0 +1,227 @@
+<%  
+	import org.exoplatform.forum.ForumFormatUtils ;
+	import org.exoplatform.forum.service.ForumPrivateMessage;
+	import org.exoplatform.forum.service.UserProfile;
+	
+	UserProfile userProfile = uiform.getUserProfile();
+	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+	int index = uiform.getIsSelected() ;
+	String isDisplay = "block";
+%>
+<div class="UIFormForum UIPrivateMessageForm">
+	<% uiform.begin() %>
+	<div class="UIFormTabPane">
+		<div class="UITabPane">
+			<div class="TabPaneContent">
+				
+				<div class="WorkingArea">
+					<div class="UIHorizontalTabs">
+						<div class="LeftHorizontalTabs">
+							<div class="RightHorizontalTabs">
+								<div class="CenterHorizontalTabs">
+									<div class="TabsContainer">
+										 <%String classCss = "SelectedTab" ; 
+                    int i = 0;
+                    String[] tabcontens = ["inbox","send","sendMessage"];
+                  	for(tabconten in tabcontens){ 
+                  		String link = "javascript:void(0);";
+                  		if(index == i) classCss = "SelectedTab" ;
+                  		else {
+                  			classCss = "NormalTab" ;
+                  			link = uicomponent.event("SelectTab",String.valueOf(i)) ;
+                  		}
+                  		//_ctx.appRes(uiform.id + ".label." + tabconten);
+                  	%>  
+                    <div class="UITab NormalTabStyle">
+                      <div class="$classCss">
+                        <div class="LeftTab">
+                          <div class="RightTab">
+                          <a href="$link">
+                            <div class="MiddleTab"><%=tabconten;%></div>
+                          </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                	<%   ++i;
+                		} %>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="UIForm">
+						<div class="HorizontalLayout">
+							<div class="UITabContentContainer">
+								<% if(index == 0){
+										 isDisplay = "block";
+									 } else {
+									 	 isDisplay = "none";
+									 }
+								%>
+								<div class="UITabContent" id="UITabContent" style="display: $isDisplay;">
+									<div class="UIFormInputSet ForumUserProfile" id="ForumUserProfile">
+										<div class="ForumMail UIInBox">
+											<table cellspacing="0" class="UIGrid" id="PermissionInfo" borderspacing="0">
+												<thead>
+													<tr>
+														<th >List Mail</th>
+														<th width="80px">nguoi gui</th>
+														<th width="60px">gui ngay</th>
+														<th width="80px">Action</th>
+													</tr>
+												</thead>
+												<tbody>
+												<%  //EvenRow  OddRow
+													List InBoxmails = uiform.getListInBoxPrivateMessage() ;
+													for(mail in InBoxmails) {
+														String mailId = mail.getId();
+														String nameMail = mail.getName() ;
+														String fromUser = mail.getFrom() ;
+														Date fromDate = mail.getReceivedDate() ;
+														String strFromDate = ForumFormatUtils.getFormatDate(formatDate,fromDate);
+												%>
+													<tr class="EvenRow">
+														<td class="text"><a href="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>
+														<td class="text">$fromUser</td>
+														<td class="text">$strFromDate</td>
+														<td>				 
+															<div class="ActionContainer" style="margin: 0px auto;">
+																<div class="IconContent">
+																	<a href="" style="float: left;">
+																		 <div class="Icon16x16 EditIcon" title="Delete Mail"><span></span></div>							
+																	</a>
+																	<a href="" style="float: left;">
+																		 <div class="Icon16x16 ViewProfileIcon" title="View Mail"><span></span></div>							
+																	</a>
+																	<a href="" style="float: left;">
+																		 <div class="Icon16x16 ViewProfileIcon" title="View Mail"><span></span></div>							
+																	</a>
+																</div>
+															</div>
+														</td>
+													</tr>
+												 <% } %>
+												</tbody>
+											</table> <!--End UIGrid-->												
+										</div>
+									</div>
+								</div>
+								<% if(index == 1){
+										 isDisplay = "block";
+									 } else {
+									 	 isDisplay = "none";
+									 }
+								%>
+								<div class="UITabContent" id="UITabContent" style="display: $isDisplay;">
+									<div class="UIFormInputSet ForumUserProfile" id="ForumUserProfile">
+										<div class="ForumMail Send">
+											<table cellspacing="0" class="UIGrid" id="PermissionInfo" borderspacing="0">
+												<thead>
+													<tr>
+														<th >List Mail</th>
+														<th width="80px">gui cho</th>
+														<th width="120px">ngay gui</th>
+														<th width="80px">Action</th>
+													</tr>
+												</thead>
+												<tbody>
+												<%  //EvenRow  OddRow
+													List sendmails = uiform.getListSendPrivateMessage() ;
+													for(mail in sendmails) {
+														String nameMail = mail.getName() ;
+														String fromUser = mail.getSendTo() ;
+														Date fromDate = mail.getReceivedDate() ;
+														String strFromDate = ForumFormatUtils.getFormatDate(formatDate,fromDate);
+												%>
+													<tr class="EvenRow">
+														<td class="text"><a>$nameMail</a></td>
+														<td class="text">$fromUser</td>
+														<td class="text">$strFromDate</td>
+														<td>				 
+															<div class="ActionContainer" style="margin: 0px auto;">
+																<div class="IconContent">
+																	<a href="" style="float: left;">
+																		 <div class="Icon16x16 EditIcon" title="Delete Mail"><span></span></div>							
+																	</a>
+																	<a href="" style="float: left;">
+																		 <div class="Icon16x16 ViewProfileIcon" title="View Mail"><span></span></div>							
+																	</a>
+																	<a href="" style="float: left;">
+																		 <div class="Icon16x16 ViewProfileIcon" title="View Mail"><span></span></div>							
+																	</a>
+																</div>
+															</div>
+														</td>
+													</tr>
+												 <% } %>
+												</tbody>
+											</table> <!--End UIGrid-->												
+										</div>
+									</div>
+								</div>
+								<% if(index == 2){
+										 isDisplay = "block";
+									 } else {
+									 	 isDisplay = "none";
+									 }
+								%>
+								<div class="SendMessageTab UITabContent" id="UITabContent" style="display: $isDisplay;">
+									<div class="UIFormInputSet ForumUserProfile">
+										<div class="ForumMail Forwark">
+											<div class="HorizontalLayout">
+												<div class="UIFormInput">
+													<% 
+														uiform.renderChildren();//(uiform.FIELD_SENDMESSAGE_TAB);
+													%>
+												</div>
+											</div>
+											<div class="UIAction"> 
+												<table align="center" class="ActionContainer">
+													<tbody>
+														<tr>
+															<td align="center">
+																<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("SendPrivateMessage")%>">
+																	<div class="ButtonLeft">
+																		<div class="ButtonRight">
+																			<div class="ButtonMiddle"> Send </div>
+																		</div>
+																	</div>
+																</a>
+															</td>
+														</tr>
+											 		</tbody>
+											 	</table> 
+											</div>		
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>	
+		</div>	
+	</div>
+	
+	<div class="UIAction"> 
+		<table align="center" class="ActionContainer">
+			<tbody>
+				<tr>
+					<td align="center">
+						<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("Close")%>">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIModeratorManagementForm.action.Close");%></div>
+								</div>
+							</div>
+						</a>
+					</td>
+				</tr>
+	 		</tbody>
+	 	</table> 
+	</div>
+	<%uiform.end()%>
+</div>

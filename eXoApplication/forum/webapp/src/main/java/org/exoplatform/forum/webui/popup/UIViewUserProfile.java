@@ -50,7 +50,6 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	
-	
 	private UserProfile userProfile ;
 	public UIViewUserProfile() {
 		
@@ -103,13 +102,9 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		User user = this.userProfile.getUser() ;
 		return user;
 	}
-	public void activate() throws Exception {
-	  // TODO Auto-generated method stub
-  }
-
-	public void deActivate() throws Exception {
-	  // TODO Auto-generated method stub
-  }
+	
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 	
 	static  public class CloseActionListener extends EventListener<UIViewUserProfile> {
     public void execute(Event<UIViewUserProfile> event) throws Exception {

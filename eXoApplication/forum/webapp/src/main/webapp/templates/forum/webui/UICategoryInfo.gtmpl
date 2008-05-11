@@ -1,6 +1,7 @@
 <%  
   import org.exoplatform.forum.service.ForumStatistic ;
   List userOnlines = uicomponent.getUserOnline();
+  int size = userOnlines.size();
   ForumStatistic forumStatistic = uicomponent.getForumStatistic() ;
   String topics = String.valueOf(forumStatistic.getTopicCount());
   String posts = String.valueOf(forumStatistic.getPostCount());
@@ -33,9 +34,16 @@
 					 	<td >
 							<div class="text">Most Users ever online was : $mostUserOnline</div>
 							<div class="text" style="padding-bottom: 5px;">Online Users : 
-							<% for(user in userOnlines) {%>
+							<% int t = 0 ;
+							for(user in userOnlines) {
+							 ++t;
+							%>
+							<% if(t != size){ %>
 							<span>&nbsp;<a>${user}</a>,</span>
-							<% } %>
+							<% } else {%>
+							<span>&nbsp;<a>${user}</a></span>
+							<% }
+							} %>
 							</div>
 						</td>
 	   			</tr>

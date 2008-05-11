@@ -172,7 +172,7 @@
 			<table cellspacing="0" borderspacing="0" class="UIGrid">
 				<thead>
 					<tr>
-						<th style="width: 40px;"></th>
+						<th style="width: 40px;">&nbsp;</th>
 						<th>Forums</th>
 						<th style="width: 30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
 						<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>

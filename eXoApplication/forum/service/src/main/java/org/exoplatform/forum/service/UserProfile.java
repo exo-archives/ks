@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.exoplatform.services.organization.User;
@@ -59,7 +58,8 @@ public class UserProfile {
 	private int banCounter = 0 ;
 	private String[] banReasonSummary ; // value: Ban reason + fromDate - toDate
 	private Date createdDateBan ;
-	
+	private long newMessage = 0;
+	private long totalMessage = 0;
 	private User user ;
 	
 	@SuppressWarnings("deprecation")
@@ -169,5 +169,21 @@ public class UserProfile {
 
 	public void setIsOnline(boolean isOnline) {
   	this.isOnline = isOnline;
+  }
+
+	public long getNewMessage() {
+  	return newMessage;
+  }
+
+	public void setNewMessage(long isNewMessage) {
+  	this.newMessage = isNewMessage;
+  }
+
+	public long getTotalMessage() {
+  	return totalMessage;
+  }
+
+	public void setTotalMessage(long totalMessage) {
+  	this.totalMessage = totalMessage;
   }
 }

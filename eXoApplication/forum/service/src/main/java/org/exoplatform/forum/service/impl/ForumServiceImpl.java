@@ -27,12 +27,13 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
+import org.exoplatform.forum.service.ForumPrivateMessage;
+import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
@@ -230,6 +231,22 @@ public class ForumServiceImpl implements ForumService{
 	  return storage_.getPageListUserProfile(sProvider);
   }
 
+	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName) throws Exception {
+	  return storage_.getPrivateMessage(sProvider, userName);
+  }
+	
+	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName) throws Exception {
+		storage_.removePrivateMessage(sProvider, messageId, userName) ;
+  }
+
+	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName) throws Exception {
+		storage_.saveReadMessage(sProvider, messageId, userName) ;
+  }
+	
+	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
+		storage_.savePrivateMessage(sProvider, privateMessage) ;
+  }
+	
 	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception {
 	  return storage_.getPageTopicByUser(sProvider, userName);
   }
@@ -292,6 +309,7 @@ public class ForumServiceImpl implements ForumService{
 	public String getLastLogin() throws Exception {
 		return lastLogin_ ;
 	}
+
 }
 
 

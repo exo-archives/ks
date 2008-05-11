@@ -152,7 +152,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		forumPermission.addUIFormInput(topicable) ;
 		forumPermission.addUIFormInput(postable) ;
 		forumPermission.addUIFormInput(viewer) ;
-		String[]fieldPermissions = getChildIds() ;//new String[] {"Moderator", "Topicable", "Postable", "Viewer"}; 
+		String[]fieldPermissions = getChildIds() ; 
 		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
 		List<ActionData> actions ;
 		ActionData ad ;int i ;

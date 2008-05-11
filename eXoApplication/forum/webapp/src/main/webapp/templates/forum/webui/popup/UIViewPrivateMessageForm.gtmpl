@@ -1,0 +1,41 @@
+<%  
+	import org.exoplatform.forum.service.ForumPrivateMessage ;
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumFormatUtils ;
+%>
+<div class="UIViewPrivateMessageForm UIViewMemberProfile">
+	<div class="ViewMemberProfileContainer">
+<% uiform.begin() %>
+<%  
+	ForumPrivateMessage privateMessage = uicomponent.getPrivateMessage() ;
+	String title =  privateMessage.getName() ;
+	String message = privateMessage.getMessage() ;
+%>
+		<div class="MessageContent">
+			<div class="PlainTextMessage">
+				<div class="TitleBar">Title: <span class="UserLabel">$title</span></div></div>
+				<div class="MessageContent">
+					<div class="Content" style="padding-left: 50px;">$message</div>
+					<div class="line"><span></span></div>
+					<div class="MessageInfo"></div>
+				</div>
+			</div>
+		</div>
+ </div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle"><%=_ctx.appRes("UIModeratorManagementForm.action.Close");%></div>
+							</div>
+						</div>
+					</a>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
+<%uiform.end()%>
+</div>

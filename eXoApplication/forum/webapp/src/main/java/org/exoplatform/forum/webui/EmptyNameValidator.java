@@ -40,6 +40,7 @@ public class EmptyNameValidator implements Validator {
     label = label.trim();
     if(label.charAt(label.length() - 1) == ':') label = label.substring(0, label.length() - 1);
     String s = (String)uiInput.getValue();
+    s.replaceAll("&nbsp;", " ");
     if(s == null || s.trim().length() == 0) {
     	Object[] args = { label, uiInput.getBindingField() };
 			throw new MessageException(new ApplicationMessage("NameValidator.msg.empty-input", args, ApplicationMessage.WARNING)) ;

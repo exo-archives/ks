@@ -40,19 +40,21 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPageList;
+import org.exoplatform.forum.service.ForumPrivateMessage;
+import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
  * Created by The eXo Platform SARL
@@ -1463,6 +1465,8 @@ public class JCRDataStorage{
 				if(newProfileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 				if(newProfileNode.hasProperty("exo:isDisplaySignature"))userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
 				if(newProfileNode.hasProperty("exo:isDisplayAvatar"))userProfile.setIsDisplayAvatar(newProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
+				if(newProfileNode.hasProperty("exo:newMessage"))userProfile.setNewMessage(newProfileNode.getProperty("exo:newMessage").getLong());
+				if(newProfileNode.hasProperty("exo:totalMessage"))userProfile.setTotalMessage(newProfileNode.getProperty("exo:totalMessage").getLong());
 			if(isGetOption) {
 				if(newProfileNode.hasProperty("exo:timeZone"))userProfile.setTimeZone(newProfileNode.getProperty("exo:timeZone").getDouble());
 				if(newProfileNode.hasProperty("exo:shortDateformat"))userProfile.setShortDateFormat(newProfileNode.getProperty("exo:shortDateformat").getString());
@@ -1630,6 +1634,7 @@ public class JCRDataStorage{
 			newProfileNode = userProfileNode.addNode(userName, "exo:userProfile") ;
 			newProfileNode.setProperty("exo:userId", userName);
 			newProfileNode.setProperty("exo:userTitle", "User");
+			newProfileNode.setProperty("exo:userRole", 2);
 			newProfileNode.setProperty("exo:bookmark", new String[]{bookMark});
 			userProfileNode.getSession().save() ;
 		}	
@@ -1664,9 +1669,167 @@ public class JCRDataStorage{
 			newProfileNode = userProfileNode.addNode(userName, "exo:userProfile") ;
 			newProfileNode.setProperty("exo:userId", userName);
 			newProfileNode.setProperty("exo:userTitle", "User");
+			newProfileNode.setProperty("exo:userRole", 2);
 			newProfileNode.setProperty("exo:readTopic", new String[]{topicId});
 			userProfileNode.getSession().save() ;
 		}	
+	}
+	
+	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName) throws Exception {
+		List<ForumPrivateMessage> listMessage = new ArrayList<ForumPrivateMessage>();
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		Node newProfileNode ;
+		try {
+			newProfileNode = userProfileNode.getNode(userName) ;
+			NodeIterator iter = newProfileNode.getNodes() ;
+			ForumPrivateMessage message;
+			while (iter.hasNext()) {
+				message = new ForumPrivateMessage() ;
+				Node messageNode = iter.nextNode() ;
+				message.setId(messageNode.getName()) ;
+				message.setFrom(messageNode.getProperty("exo:from").getString()) ;
+				message.setSendTo(messageNode.getProperty("exo:sendTo").getString()) ;
+				message.setName(messageNode.getProperty("exo:name").getString()) ;
+				message.setMessage(messageNode.getProperty("exo:message").getString()) ;
+				message.setReceivedDate(messageNode.getProperty("exo:receivedDate").getDate().getTime()) ;
+				message.setIsUnread(messageNode.getProperty("exo:isUnread").getBoolean()) ;
+				listMessage.add(message) ;
+			}
+		}catch (PathNotFoundException e) {
+		}	
+	  return listMessage;
+  }
+	
+	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName) throws Exception {
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		Node profileNode = userProfileNode.getNode(userName) ;
+		long totalMessage = 0 ;
+		boolean isNew = false;
+		try {
+			Node messageNode = profileNode.getNode(messageId) ;
+			if(messageNode.hasProperty("exo:isUnread")){
+				isNew = messageNode.getProperty("exo:isUnread").getBoolean() ;
+			}
+			if(isNew) {// doc lan dau
+				messageNode.setProperty("exo:isUnread", false) ;
+			}
+		} catch (PathNotFoundException e) {
+			e.printStackTrace() ;
+		}
+		if(isNew) {
+			if(profileNode.hasProperty("exo:newMessage")){
+				totalMessage = profileNode.getProperty("exo:newMessage").getLong();
+				if(totalMessage > 0){
+					profileNode.setProperty("exo:newMessage", (totalMessage-1)) ;
+				}
+			}
+			userProfileNode.getSession().save() ;
+		}
+	}
+
+	//TODO: dang lam
+	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		Node profileNode = null ;
+		Node profileNodeFirst = null;
+		Node messageNode = null;
+		String sendTo = privateMessage.getSendTo() ;
+		sendTo = sendTo.replaceAll(";", ",");
+		String []strUserNames = sendTo.split(",") ;
+		List<String> userNames = ForumServiceUtils.getUserPermission(strUserNames) ;
+		String id;
+		String userNameFirst = userNames.get(0) ;
+		try {
+			profileNodeFirst = userProfileNode.getNode(userNameFirst) ;
+    } catch (PathNotFoundException e) {
+    	profileNodeFirst = userProfileNode.addNode(userNameFirst,"exo:userProfile") ;
+    	profileNodeFirst.setProperty("exo:userId", userNameFirst);
+    	profileNodeFirst.setProperty("exo:userTitle", "User");
+    	profileNodeFirst.setProperty("exo:userRole", 2);
+    }
+    long totalMessage = 1;
+    if(profileNodeFirst != null) {
+    	id = userNameFirst + IdGenerator.generate();
+			messageNode = profileNodeFirst.addNode(id, "exo:privateMessage") ;
+			messageNode.setProperty("exo:from", privateMessage.getFrom()) ;
+			messageNode.setProperty("exo:sendTo", privateMessage.getSendTo()) ;
+			messageNode.setProperty("exo:name", privateMessage.getName()) ;
+			messageNode.setProperty("exo:message", privateMessage.getMessage()) ;
+			messageNode.setProperty("exo:receivedDate", getGreenwichMeanTime()) ;
+			messageNode.setProperty("exo:isUnread", true) ;
+			if(profileNodeFirst.hasProperty("exo:newMessage")){
+				totalMessage = profileNodeFirst.getProperty("exo:newMessage").getLong() + 1;
+			}
+			profileNodeFirst.setProperty("exo:newMessage", totalMessage) ;
+			totalMessage = 1;
+			if(profileNodeFirst.hasProperty("exo:totalMessage")){
+				totalMessage = profileNodeFirst.getProperty("exo:totalMessage").getLong() + 1;
+			}
+			profileNodeFirst.setProperty("exo:totalMessage", totalMessage) ;
+    }
+		for (String userName : userNames) {
+			if(userName.equals(userNameFirst)) continue ;
+			try {
+				profileNode = userProfileNode.getNode(userName) ;
+				id = profileNode.getPath() + "/" + userName + IdGenerator.generate();
+				userProfileNode.getSession().getWorkspace().copy(messageNode.getPath(), id);
+				totalMessage = 1;
+				if(profileNode.hasProperty("exo:newMessage")){
+					totalMessage = profileNode.getProperty("exo:newMessage").getLong() + 1;
+				}
+				profileNode.setProperty("exo:newMessage", totalMessage) ;
+				totalMessage = 1;
+				if(profileNode.hasProperty("exo:totalMessage")){
+					totalMessage = profileNode.getProperty("exo:totalMessage").getLong() + 1;
+				}
+				profileNode.setProperty("exo:totalMessage", totalMessage) ;
+			}catch (PathNotFoundException e) {
+				profileNode = userProfileNode.addNode(userName) ;
+				profileNode.setProperty("exo:userId", userNameFirst);
+				profileNode.setProperty("exo:userTitle", "User");
+				profileNode.setProperty("exo:userRole", 2);
+				id = profileNode.getPath() + "/" + userName + IdGenerator.generate();
+				userProfileNode.getSession().getWorkspace().copy(messageNode.getPath(), id);
+				totalMessage = 1;
+				if(profileNode.hasProperty("exo:newMessage")){
+					totalMessage = profileNode.getProperty("exo:newMessage").getLong() + 1;
+				}
+				profileNode.setProperty("exo:newMessage", totalMessage) ;
+				totalMessage = 1;
+				if(profileNode.hasProperty("exo:totalMessage")){
+					totalMessage = profileNode.getProperty("exo:totalMessage").getLong() + 1;
+				}
+				profileNode.setProperty("exo:totalMessage", totalMessage) ;
+			}	
+		}
+		userProfileNode.getSession().save() ;
+  }
+	
+	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName) throws Exception {
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		Node profileNode = userProfileNode.getNode(userName) ;
+		long totalMessage = 0 ;
+		if(profileNode.hasProperty("exo:totalMessage")){
+			totalMessage = profileNode.getProperty("exo:totalMessage").getLong() - 1;
+		}
+		profileNode.setProperty("exo:totalMessage", totalMessage) ;
+		try {
+			Node messageNode = profileNode.getNode(messageId) ;
+			if(messageNode.hasProperty("exo:isUnread")){
+				if(messageNode.getProperty("exo:isUnread").getBoolean()){
+					if(profileNode.hasProperty("exo:newMessage")){
+						totalMessage = profileNode.getProperty("exo:newMessage").getLong();
+						if(totalMessage > 0){
+							profileNode.setProperty("exo:newMessage", (totalMessage-1)) ;
+						}
+					}
+				} 
+			}
+			messageNode.remove() ;
+		} catch (PathNotFoundException e) {
+			e.printStackTrace() ;
+		}
+		userProfileNode.getSession().save() ;
 	}
 	
 	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {
@@ -1679,6 +1842,7 @@ public class JCRDataStorage{
 	  	forumStatistic.setTopicCount(forumStatisticNode.getProperty("exo:topicCount").getLong()) ;
 	  	forumStatistic.setMembersCount(forumStatisticNode.getProperty("exo:membersCount").getLong()) ;
 	  	forumStatistic.setNewMembers(forumStatisticNode.getProperty("exo:newMembers").getString()) ;
+	  	forumStatistic.setMostUsersOnline(forumStatisticNode.getProperty("exo:mostUsersOnline").getString()) ;
     } catch (Exception e) {
     	saveForumStatistic(sProvider,forumStatistic) ;
     }
@@ -1917,6 +2081,8 @@ public class JCRDataStorage{
 		}
 	  return listSeachEvent;
   }
+
+	
 
 
 	

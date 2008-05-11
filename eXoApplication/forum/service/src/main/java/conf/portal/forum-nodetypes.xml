@@ -370,6 +370,12 @@
 			<propertyDefinition name="exo:from" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
 				<valueConstraints/>
 			</propertyDefinition>
+			<propertyDefinition name="exo:sendTo" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>		
 			<propertyDefinition name="exo:message" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>		
@@ -429,6 +435,12 @@
 				<valueConstraints/>
 			</propertyDefinition>
 			<propertyDefinition name="exo:isDisplayAvatar" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:newMessage" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:totalMessage" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
 			
