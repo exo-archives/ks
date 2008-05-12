@@ -19,13 +19,13 @@
 				</div>
 				<div class="RSSBar">
 					<%if(t == 2){
-						String newMesenge = "ddd";
+						String newMesenge = "Private Messenges&nbsp;";
 						if(uicomponent.getNewMessenge() > 0) {
-						  newMesenge = "(<b>" + uicomponent.getNewMessenge() + "</b>)";
+						  newMesenge = "<b>Private Messenges(" + uicomponent.getNewMessenge() + ") </b>";
 						}
 					%>
 					<a style="float:left; line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
-						Private Messenges $newMesenge
+						 $newMesenge
 					</a>
 					<a style="float:left" href="<%=uicomponent.event("Rss");%>" >
 					<%} else {%>

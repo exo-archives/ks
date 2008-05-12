@@ -1761,35 +1761,11 @@ public class JCRDataStorage{
 		}	
 	}
 	
-	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName) throws Exception {
-		List<ForumPrivateMessage> listMessage = new ArrayList<ForumPrivateMessage>();
-		Node userProfileNode = getUserProfileNode(sProvider) ;
-		Node newProfileNode ;
-		try {
-			newProfileNode = userProfileNode.getNode(userName) ;
-			NodeIterator iter = newProfileNode.getNodes() ;
-			ForumPrivateMessage message;
-			while (iter.hasNext()) {
-				message = new ForumPrivateMessage() ;
-				Node messageNode = iter.nextNode() ;
-				message.setId(messageNode.getName()) ;
-				message.setFrom(messageNode.getProperty("exo:from").getString()) ;
-				message.setSendTo(messageNode.getProperty("exo:sendTo").getString()) ;
-				message.setName(messageNode.getProperty("exo:name").getString()) ;
-				message.setMessage(messageNode.getProperty("exo:message").getString()) ;
-				message.setReceivedDate(messageNode.getProperty("exo:receivedDate").getDate().getTime()) ;
-				message.setIsUnread(messageNode.getProperty("exo:isUnread").getBoolean()) ;
-				listMessage.add(message) ;
-			}
-		}catch (PathNotFoundException e) {
-		}	
-	  return listMessage;
-  }
-	
-	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName) throws Exception {
+
+	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
 		Node userProfileNode = getUserProfileNode(sProvider) ;
 		Node profileNode = userProfileNode.getNode(userName) ;
-		long totalMessage = 0 ;
+		long totalNewMessage = 0 ;
 		boolean isNew = false;
 		try {
 			Node messageNode = profileNode.getNode(messageId) ;
@@ -1802,18 +1778,46 @@ public class JCRDataStorage{
 		} catch (PathNotFoundException e) {
 			e.printStackTrace() ;
 		}
-		if(isNew) {
+		if(type.equals("agree") && isNew) {
 			if(profileNode.hasProperty("exo:newMessage")){
-				totalMessage = profileNode.getProperty("exo:newMessage").getLong();
-				if(totalMessage > 0){
-					profileNode.setProperty("exo:newMessage", (totalMessage-1)) ;
+				totalNewMessage = profileNode.getProperty("exo:newMessage").getLong();
+				if(totalNewMessage > 0){
+					profileNode.setProperty("exo:newMessage", (totalNewMessage-1)) ;
 				}
 			}
-			userProfileNode.getSession().save() ;
 		}
+		if(isNew) userProfileNode.getSession().save() ;
 	}
 
-	//TODO: dang lam
+	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		List<ForumPrivateMessage>messages = new ArrayList<ForumPrivateMessage>() ;
+		try {
+			Node profileNode = userProfileNode.getNode(userName) ;
+			QueryManager qm = userProfileNode.getSession().getWorkspace().getQueryManager() ;
+			String pathQuery = "/jcr:root" + profileNode.getPath() + "//element(*,exo:privateMessage)[@exo:type='"+type+"']";
+			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes(); 
+			ForumPrivateMessage message;
+			while (iter.hasNext()) {
+				Node messageNode = iter.nextNode() ;
+				message = new ForumPrivateMessage() ;
+				message.setId(messageNode.getName()) ;
+				message.setFrom(messageNode.getProperty("exo:from").getString()) ;
+				message.setSendTo(messageNode.getProperty("exo:sendTo").getString()) ;
+				message.setName(messageNode.getProperty("exo:name").getString()) ;
+				message.setMessage(messageNode.getProperty("exo:message").getString()) ;
+				message.setReceivedDate(messageNode.getProperty("exo:receivedDate").getDate().getTime()) ;
+				message.setIsUnread(messageNode.getProperty("exo:isUnread").getBoolean()) ;
+				message.setType(messageNode.getProperty("exo:type").getString()) ;
+				messages.add(message) ;
+			}
+		}catch (PathNotFoundException e) {
+		}
+		return messages ;
+	}
+
 	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
 		Node userProfileNode = getUserProfileNode(sProvider) ;
 		Node profileNode = null ;
@@ -1824,14 +1828,11 @@ public class JCRDataStorage{
 		String []strUserNames = sendTo.split(",") ;
 		List<String> userNames = ForumServiceUtils.getUserPermission(strUserNames) ;
 		String id;
-		String userNameFirst = userNames.get(0) ;
+		String userNameFirst = privateMessage.getFrom();
 		try {
 			profileNodeFirst = userProfileNode.getNode(userNameFirst) ;
     } catch (PathNotFoundException e) {
-    	profileNodeFirst = userProfileNode.addNode(userNameFirst,"exo:userProfile") ;
-    	profileNodeFirst.setProperty("exo:userId", userNameFirst);
-    	profileNodeFirst.setProperty("exo:userTitle", "User");
-    	profileNodeFirst.setProperty("exo:userRole", 2);
+    	profileNodeFirst = addNodeUserProfile(sProvider, userNameFirst) ;
     }
     long totalMessage = 1;
     if(profileNodeFirst != null) {
@@ -1843,18 +1844,9 @@ public class JCRDataStorage{
 			messageNode.setProperty("exo:message", privateMessage.getMessage()) ;
 			messageNode.setProperty("exo:receivedDate", getGreenwichMeanTime()) ;
 			messageNode.setProperty("exo:isUnread", true) ;
-			if(profileNodeFirst.hasProperty("exo:newMessage")){
-				totalMessage = profileNodeFirst.getProperty("exo:newMessage").getLong() + 1;
-			}
-			profileNodeFirst.setProperty("exo:newMessage", totalMessage) ;
-			totalMessage = 1;
-			if(profileNodeFirst.hasProperty("exo:totalMessage")){
-				totalMessage = profileNodeFirst.getProperty("exo:totalMessage").getLong() + 1;
-			}
-			profileNodeFirst.setProperty("exo:totalMessage", totalMessage) ;
+			messageNode.setProperty("exo:type", "agree") ;
     }
 		for (String userName : userNames) {
-			if(userName.equals(userNameFirst)) continue ;
 			try {
 				profileNode = userProfileNode.getNode(userName) ;
 				id = profileNode.getPath() + "/" + userName + IdGenerator.generate();
@@ -1870,10 +1862,7 @@ public class JCRDataStorage{
 				}
 				profileNode.setProperty("exo:totalMessage", totalMessage) ;
 			}catch (PathNotFoundException e) {
-				profileNode = userProfileNode.addNode(userName) ;
-				profileNode.setProperty("exo:userId", userNameFirst);
-				profileNode.setProperty("exo:userTitle", "User");
-				profileNode.setProperty("exo:userRole", 2);
+				profileNode = addNodeUserProfile(sProvider,userName) ;
 				id = profileNode.getPath() + "/" + userName + IdGenerator.generate();
 				userProfileNode.getSession().getWorkspace().copy(messageNode.getPath(), id);
 				totalMessage = 1;
@@ -1888,34 +1877,52 @@ public class JCRDataStorage{
 				profileNode.setProperty("exo:totalMessage", totalMessage) ;
 			}	
 		}
+		if(messageNode != null) {
+			messageNode.setProperty("exo:type", "send") ;
+		}
 		userProfileNode.getSession().save() ;
   }
 	
-	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName) throws Exception {
+	private Node addNodeUserProfile(SessionProvider sProvider, String userName) throws Exception {
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		Node profileNode = userProfileNode.addNode(userName, "exo:userProfile") ;
+		profileNode.setProperty("exo:userId", userName);
+		profileNode.setProperty("exo:userTitle", "User");
+		profileNode.setProperty("exo:userRole", 2);
+		userProfileNode.save() ;
+		userProfileNode.getSession().save() ;
+		return profileNode;
+	}
+	
+	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
 		Node userProfileNode = getUserProfileNode(sProvider) ;
 		Node profileNode = userProfileNode.getNode(userName) ;
 		long totalMessage = 0 ;
-		if(profileNode.hasProperty("exo:totalMessage")){
-			totalMessage = profileNode.getProperty("exo:totalMessage").getLong() - 1;
-		}
-		profileNode.setProperty("exo:totalMessage", totalMessage) ;
 		try {
 			Node messageNode = profileNode.getNode(messageId) ;
-			if(messageNode.hasProperty("exo:isUnread")){
-				if(messageNode.getProperty("exo:isUnread").getBoolean()){
-					if(profileNode.hasProperty("exo:newMessage")){
-						totalMessage = profileNode.getProperty("exo:newMessage").getLong();
-						if(totalMessage > 0){
-							profileNode.setProperty("exo:newMessage", (totalMessage-1)) ;
+			if(type.equals("agree")) {
+				if(messageNode.hasProperty("exo:isUnread")){
+					if(messageNode.getProperty("exo:isUnread").getBoolean()){
+						if(profileNode.hasProperty("exo:newMessage")){
+							totalMessage = profileNode.getProperty("exo:newMessage").getLong();
+							if(totalMessage > 0){
+								profileNode.setProperty("exo:newMessage", (totalMessage-1)) ;
+							}
 						}
-					}
-				} 
+					} 
+				}
+			}
+			if(type.equals("agree")) {
+				if(profileNode.hasProperty("exo:totalMessage")){
+					totalMessage = profileNode.getProperty("exo:totalMessage").getLong() - 1;
+					profileNode.setProperty("exo:totalMessage", totalMessage) ;
+				}
 			}
 			messageNode.remove() ;
+			userProfileNode.getSession().save() ;
 		} catch (PathNotFoundException e) {
 			e.printStackTrace() ;
 		}
-		userProfileNode.getSession().save() ;
 	}
 	
 	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {

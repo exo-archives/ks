@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -66,8 +67,9 @@ public class UIViewPrivateMessageForm extends UIForm implements UIPopupComponent
         UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
         forumPortlet.cancelAction() ;
       } else {
-        popupContainer.getChild(UIPopupAction.class).deActivate() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer.getParent()) ;
+      	UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      	popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       }
     }
   }

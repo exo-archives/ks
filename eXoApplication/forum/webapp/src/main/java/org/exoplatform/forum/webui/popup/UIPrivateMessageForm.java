@@ -57,7 +57,10 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 			@EventConfig(listeners = UIPrivateMessageForm.SendPrivateMessageActionListener.class),
 			@EventConfig(listeners = UIPrivateMessageForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIPrivateMessageForm.ViewMessageActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE)
+			@EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIPrivateMessageForm.DeleteMessageActionListener.class,confirm="SendPrivateMessage.msg.sendOK", phase=Phase.DECODE),
+			@EventConfig(listeners = UIPrivateMessageForm.ReplyMessageActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIPrivateMessageForm.ForwardMessageActionListener.class, phase=Phase.DECODE)
 		}
 )
 public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UISelector {
@@ -111,13 +114,13 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	}
 	@SuppressWarnings("unused")
   private List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
-		this.listInbox = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName) ;
+		this.listInbox = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, "agree") ;
 		return this.listInbox ;
 	}
 
 	@SuppressWarnings("unused")
-  private List<ForumPrivateMessage> getListSendPrivateMessage() throws Exception {
-		this.listSend = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName) ;
+  private List<ForumPrivateMessage> getPrivateMessageSendByUser() throws Exception {
+		this.listSend = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, "send") ;
 		return this.listSend ;
 	}
 	
@@ -181,7 +184,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	messageForm.forumService.savePrivateMessage(ForumSessionUtils.getSystemProvider(), privateMessage) ;
     	areaInput.setValue("") ;
     	stringInput.setValue("") ;
-    	messageForm.id = 0;
+    	messageForm.id = 1;
     	Object[] args = { "" };
     	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
 			uiApp.addMessage(new ApplicationMessage("SendPrivateMessage.msg.sendOK", args, ApplicationMessage.WARNING)) ;
@@ -209,19 +212,78 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	static	public class ViewMessageActionListener extends EventListener<UIPrivateMessageForm> {
 		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
 			UIPrivateMessageForm messageForm = event.getSource() ;
-			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
 			if(objctId != null && objctId.length() > 0) {
-				messageForm.forumService.saveReadMessage(ForumSessionUtils.getSystemProvider(), objctId, messageForm.userName);
-				ForumPrivateMessage privateMessage = messageForm.getPrivateMessage(objctId) ;
+				String[] temp = objctId.split("/") ;
+				messageForm.forumService.saveReadMessage(ForumSessionUtils.getSystemProvider(), temp[1], messageForm.userName, temp[0]);
+				ForumPrivateMessage privateMessage = messageForm.getPrivateMessage(temp[1]) ;
 				UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
 	      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
 	      UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 500) ;
 	      privateMessageForm.setPrivateMessage(privateMessage);
 	      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+	      if(temp[0].equals("agree")) {
+					UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.getUserProfile() ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+				}
 			}
 		}
 	}
 
+	static	public class DeleteMessageActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIPrivateMessageForm messageForm = event.getSource() ;
+			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(objctId != null && objctId.length() > 0) {
+				String[] temp = objctId.split("/") ;
+				messageForm.forumService.removePrivateMessage(ForumSessionUtils.getSystemProvider(), temp[1], messageForm.userName, temp[0]);
+				if(temp[0].equals("agree")) {
+					UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.getUserProfile() ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+				} else {
+					event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent());
+				}
+			}
+		}
+	}
+	
+	static	public class ReplyMessageActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIPrivateMessageForm messageForm = event.getSource() ;
+			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			ForumPrivateMessage privateMessage = messageForm.getPrivateMessage(objctId) ;
+			UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
+    	UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
+    	areaInput.setValue(privateMessage.getFrom()) ;
+    	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
+    	stringInput.setValue(("Reply: " + privateMessage.getName())) ;
+    	UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
+    	String content = privateMessage.getMessage() ;
+    	content = "<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">" + content + "</div>" ;
+    	message.setValue(content) ;
+    	messageForm.id = 2;
+    	event.getRequestContext().addUIComponentToUpdateByAjax(messageForm) ;
+		}
+	}
+	
+	static	public class ForwardMessageActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIPrivateMessageForm messageForm = event.getSource() ;
+			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			ForumPrivateMessage privateMessage = messageForm.getPrivateMessage(objctId) ;
+			UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
+			UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
+    	stringInput.setValue(("Forward: " + privateMessage.getName())) ;
+    	UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
+    	String content = privateMessage.getMessage() ;
+    	message.setValue(content) ;
+    	messageForm.id = 2;
+    	event.getRequestContext().addUIComponentToUpdateByAjax(messageForm) ;
+		}
+	}
+	
 	static	public class CloseActionListener extends EventListener<UIPrivateMessageForm> {
 		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;

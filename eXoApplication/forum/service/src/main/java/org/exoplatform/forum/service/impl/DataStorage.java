@@ -105,8 +105,8 @@ public interface DataStorage {
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception ;
 	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception ;
 	
-	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName ) throws Exception ;
+	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName, String type ) throws Exception ;
 	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage ) throws Exception ;
-	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName) throws Exception ;
-	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName) throws Exception ;
+	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception ;
+	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception ;
 }

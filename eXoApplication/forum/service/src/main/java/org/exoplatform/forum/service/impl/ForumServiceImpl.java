@@ -236,16 +236,16 @@ public class ForumServiceImpl implements ForumService{
 	  return storage_.getPageListUserProfile(sProvider);
   }
 
-	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName) throws Exception {
-	  return storage_.getPrivateMessage(sProvider, userName);
+	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
+	  return storage_.getPrivateMessage(sProvider, userName, type);
   }
 	
-	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName) throws Exception {
-		storage_.removePrivateMessage(sProvider, messageId, userName) ;
+	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
+		storage_.removePrivateMessage(sProvider, messageId, userName, type) ;
   }
 
-	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName) throws Exception {
-		storage_.saveReadMessage(sProvider, messageId, userName) ;
+	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
+		storage_.saveReadMessage(sProvider, messageId, userName, type) ;
   }
 	
 	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {

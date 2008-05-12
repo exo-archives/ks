@@ -127,7 +127,7 @@ public class UIBreadcumbs extends UIContainer {
 	@SuppressWarnings("unused")
   private long getNewMessenge() {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-		return this.userProfile.getTotalMessage() ;
+		return this.userProfile.getNewMessage() ;
 	}
 	
 	

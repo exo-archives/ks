@@ -83,7 +83,6 @@ public class UICategoryInfo extends UIContainer	{
 		}
 		long mumberUserOnline = 0;
 		String mostUserOnlines = forumStatistic.getMostUsersOnline();
-		System.out.println(mostUserOnlines + " : " + this.mostUserOnline_);
 		Date date = getInstanceTempCalendar().getTime() ;
 		if(mostUserOnlines != null && mostUserOnlines.length() > 0) {
 			mumberUserOnline = Long.parseLong(mostUserOnlines.split(",")[0]) ;
@@ -97,7 +96,6 @@ public class UICategoryInfo extends UIContainer	{
 			forumStatistic.setMostUsersOnline(mostUserOnlines) ;
 			isSave = true ;
 		} 
-		System.out.println(isSave + " : " + forumStatistic.getMembersCount());
 		if(isSave) {
 			this.forumService.saveForumStatistic(ForumSessionUtils.getSystemProvider(), forumStatistic) ;
 		}

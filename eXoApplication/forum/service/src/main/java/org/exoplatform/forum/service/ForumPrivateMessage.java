@@ -28,6 +28,7 @@ public class ForumPrivateMessage {
 	private String sendTo;
 	private String name;
 	private String message;
+	private String type ;
 	private Date receivedDate;
 	private boolean isUnread;
 	
@@ -75,6 +76,12 @@ public class ForumPrivateMessage {
   }
 	public void setId(String id) {
   	this.id = id;
+  }
+	public String getType() {
+  	return type;
+  }
+	public void setType(String type) {
+  	this.type = type;
   }
 	
 }
