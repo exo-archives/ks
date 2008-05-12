@@ -15,6 +15,11 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.faq.service;
+
+import java.util.Comparator;
+import java.util.Date;
+
+
 /**
  * Created by The eXo Platform SARL
  * Author : Truong Nguyen
@@ -27,4 +32,20 @@ public class Utils {
 	public static final String EXO_FAQ_SETTING = "exo:faqSetting".intern();
 	public static final String EXO_PROCESSING_MODE = "exo:processingMode".intern() ;
 	public static final String EXO_DISPLAY_TYPE = "exo:displayType".intern() ;
+	
+	static public class DatetimeComparator implements Comparator {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	Date date1 = ((Category) o1).getCreatedDate() ;
+      Date date2  = ((Category) o2).getCreatedDate() ;
+      return date1.compareTo(date2) ;
+    }
+  }
+	
+	static public class NameComparator implements Comparator {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	String name1 = ((Category) o1).getName() ;
+      String name2  = ((Category) o2).getName() ;
+      return name1.compareToIgnoreCase(name2) ;
+    }
+  }
 }

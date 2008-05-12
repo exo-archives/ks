@@ -19,6 +19,7 @@ package org.exoplatform.faq.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -457,7 +458,8 @@ public class JCRDataStorage {
   	NodeIterator iter = parentCategory.getNodes() ;
     while(iter.hasNext()) {
     	catList.add(getCategory(iter.nextNode())) ;
-    }    
+    } 
+    //Collections.sort(catList, new Utils.DatetimeComparator()) ;
   	return catList ;
   }
   
