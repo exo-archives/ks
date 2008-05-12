@@ -173,14 +173,14 @@ public class JCRDataStorage {
     	}
     }
     // Send notifycation when question responsed or edited or watching
-  	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
-  		Message message = new Message();
-      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-			//message.setMessageTo(question.getEmail());
-			message.setSubject("eXo FAQ Question Responsed Notifycation!");
-			message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
-			sendNotification(null, message, question.getEmail()) ;  		
-  	}
+//  	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
+//  		Message message = new Message();
+//      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+//			//message.setMessageTo(question.getEmail());
+//			message.setSubject("eXo FAQ Question Responsed Notifycation!");
+//			message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
+//			sendNotification(null, message, question.getEmail()) ;  		
+//  	}
   }
   
   private void sendNotification(Value[] emails, Message message, String authorEmail) throws Exception {
@@ -402,12 +402,12 @@ public class JCRDataStorage {
   	if(categoryNode.hasProperty("exo:isModerateQuestions")) cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
   	return cat;
   }
+  
   private Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
-  	Node categoryHome = getCategoryHome(sProvider, null) ;		
+  	Node categoryHome = getCategoryHome(sProvider, null) ;	
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
                                                 + "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
   	return result.getNodes().nextNode() ;
@@ -455,11 +455,18 @@ public class JCRDataStorage {
   	}else {
   		parentCategory = getCategoryHome(sProvider, null) ;
   	}
+  	FAQSetting faqSetting = getFAQSetting(sProvider) ;
+  	String sortBy = faqSetting.getDisplayMode() ;
   	NodeIterator iter = parentCategory.getNodes() ;
     while(iter.hasNext()) {
     	catList.add(getCategory(iter.nextNode())) ;
     } 
-    //Collections.sort(catList, new Utils.DatetimeComparator()) ;
+    if(sortBy.equals("postdate")) {
+    	Collections.sort(catList, new Utils.DatetimeComparator()) ;
+    }
+		if(sortBy.equals("alphabet")) {
+			Collections.sort(catList, new Utils.NameComparator()) ;
+		}
   	return catList ;
   }
   

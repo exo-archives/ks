@@ -236,7 +236,7 @@ public class UIQuestions extends UIContainer {
       result[0] = faqService.getSubCategories(categoryId, FAQUtils.getSystemProvider()).size();
       result[1] = faqService.getQuestionsByCatetory(categoryId, FAQUtils.getSystemProvider()).getAll().size() ;
       result[2] = faqService.getQuestionsByListCatetory(Arrays.asList(new String[]{categoryId}), true, FAQUtils.getSystemProvider()).getAll().size() ;
-    } catch (Exception e) {
+	  } catch (Exception e) {
       e.printStackTrace() ;
     }
     return result ;

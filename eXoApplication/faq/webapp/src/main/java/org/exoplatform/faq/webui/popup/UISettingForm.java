@@ -23,6 +23,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -62,7 +63,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		addUIFormInput(new UIFormSelectBox(SHOW_MODE, SHOW_MODE, showMode));
 		
 		List<SelectItemOption<String>> displayType = new ArrayList<SelectItemOption<String>>();
-		displayType.add(new SelectItemOption<String>("Relevence",FAQSetting.DISPLAY_TYPE_RELEVANCE));
+//		displayType.add(new SelectItemOption<String>("Relevance",FAQSetting.DISPLAY_TYPE_RELEVANCE));
 		displayType.add(new SelectItemOption<String>("Post date",FAQSetting.DISPLAY_TYPE_POSTDATE ));
 		displayType.add(new SelectItemOption<String>("Alphabet",FAQSetting.DISPLAY_TYPE_ALPHABET ));
 		addUIFormInput(new UIFormSelectBox(DISPLAY_TYPE, DISPLAY_TYPE, displayType));
@@ -94,7 +95,9 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			faqSetting.setProcessingMode(Boolean.valueOf(settingForm.getUIFormSelectBox(SHOW_MODE).getValue()));
 			faqSetting.setDisplayMode(String.valueOf(settingForm.getUIFormSelectBox(DISPLAY_TYPE).getValue())) ;
 			service.saveFAQSetting(faqSetting, SessionProviderFactory.createSystemProvider()) ;
-			
+			UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			questions.setCategories() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;

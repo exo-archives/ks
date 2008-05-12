@@ -33,7 +33,7 @@ public class Utils {
 	public static final String EXO_PROCESSING_MODE = "exo:processingMode".intern() ;
 	public static final String EXO_DISPLAY_TYPE = "exo:displayType".intern() ;
 	
-	static public class DatetimeComparator implements Comparator {
+	static public class DatetimeComparator implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {
     	Date date1 = ((Category) o1).getCreatedDate() ;
       Date date2  = ((Category) o2).getCreatedDate() ;
@@ -41,7 +41,7 @@ public class Utils {
     }
   }
 	
-	static public class NameComparator implements Comparator {
+	static public class NameComparator implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {
     	String name1 = ((Category) o1).getName() ;
       String name2  = ((Category) o2).getName() ;
