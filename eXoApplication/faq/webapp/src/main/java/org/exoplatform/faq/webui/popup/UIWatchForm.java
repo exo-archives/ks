@@ -27,6 +27,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 
@@ -40,6 +41,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		}
 )
 public class UIWatchForm extends UIForm	implements UIPopupComponent{
+	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(FIELD_OPTIONS,FIELD_OPTIONS) ;
 	public static final String USER_NAME = "userName" ; 
 	public static final String EMAIL_ADDRESS = "emailAddress" ;
 	private String categoryId_ = "";

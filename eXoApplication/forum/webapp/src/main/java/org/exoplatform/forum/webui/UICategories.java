@@ -29,6 +29,8 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.popup.UIForumUserSettingForm;
+import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -48,6 +50,7 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
 			@EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
 			@EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
+			@EventConfig(listeners = UICategories.AddWatchingActionListener.class),
 			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class)
 		}
 )
@@ -241,8 +244,40 @@ public class UICategories extends UIContainer	{
 				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;
-//				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			}
 		}
 	}
+
+	static public class AddWatchingActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiContainer = event.getSource();
+			UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
+			popupAction.activate(addWatchingForm, 580, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

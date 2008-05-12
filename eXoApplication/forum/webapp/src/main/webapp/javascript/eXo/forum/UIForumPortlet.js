@@ -429,10 +429,19 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var popupContents= DOMUtil.findDescendantsByClass(ancestor, "div","ClickPopupContent");
 	var popupContainer = document.getElementById('RightClickContainer') ;
-	var itemmenu = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "MenuItem") ;
+	var itemmenuBookMark = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddBookmark") ;
+	var itemmenuWatching = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddWatching") ;
 	for(var i = 0; i < popupContents.length; i++){
 		var action = popupContents[i].getAttribute('action');
-		itemmenu.href= action ;
+		if(action.indexOf(";") < 0){
+			itemmenuWatching.style.display ="none";
+			itemmenuBookMark.href= action ;
+		} else {
+			var actions = action.split(";");
+			itemmenuBookMark.href= actions[0] ;
+			itemmenuWatching.href= actions[1] ;
+			itemmenuWatching.style.display ="block";
+		}
 		popupContents[i].innerHTML = popupContainer.innerHTML;
 	}
 };
