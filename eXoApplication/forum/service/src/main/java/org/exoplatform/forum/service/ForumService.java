@@ -18,11 +18,15 @@ package org.exoplatform.forum.service;
 
 import java.util.List;
 
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 /**
  * Created by The eXo Platform SARL	
  */
 public interface ForumService {
+	
+	public void addPlugin(ComponentPlugin plugin) throws Exception ;
+	
 	/**
 	 * This method should: 
 	 * 1. Load all the forum categories from the database

@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.jcr.Node;
@@ -32,8 +34,11 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -52,6 +57,9 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.mail.service.MailService;
+import org.exoplatform.mail.service.Message;
+import org.exoplatform.mail.service.ServerConfiguration;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -72,8 +80,18 @@ public class JCRDataStorage{
 	private final static String USER_PROFILE = "UserProfile" ;
 	private final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	private NodeHierarchyCreator nodeHierarchyCreator_ ;
+	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator ;
+	}
+	
+	public void addPlugin(ComponentPlugin plugin) throws Exception {
+		try{
+			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}
+		
 	}
 	
 	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
@@ -742,6 +760,19 @@ public class JCRDataStorage{
 						newProfileNode.setProperty("exo:totalTopic", 1);
 					}
 					userProfileNode.getSession().save() ;
+					
+					//send watching notification
+					if(forumNode.isNodeType("exo:forumWatching")){
+						Value[] emails = forumNode.getProperty("exo:emailWatching").getValues() ;
+		    		if(emails != null && emails.length > 0) {    			
+		    			Message message = new Message();
+		          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+		    			message.setSubject("eXo Forum Watching Notification!");
+		    			message.setMessageBody("The Forum '" + forumNode.getProperty("exo:name").getString() 
+		    					+"' have just  added thread:</br>" + topic.getTopicName());
+		    			sendNotification(emails, message) ;    			
+		    		}
+					}
 				} else {
 					topicNode = forumNode.getNode(topic.getId()) ;
 				}
@@ -1094,6 +1125,32 @@ public class JCRDataStorage{
 					long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1 ;
 					forumNode.setProperty("exo:postCount", forumPostCount ) ;
 					forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
+					
+					//Send notify for watching users
+					if(topicNode.isNodeType("exo:forumWatching")) {
+						Value[] emails = topicNode.getProperty("exo:emailWatching").getValues() ;
+		    		if(emails != null && emails.length > 0) {    			
+		    			Message message = new Message();
+		          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+		    			//message.setMessageTo(question.getEmail());
+		    			message.setSubject("eXo Thread Watching Notification!");
+		    			message.setMessageBody("The Thread '" + topicNode.getProperty("exo:name").getString() 
+		    					+"' have just  added post:</br>" + post.getMessage());
+		    			sendNotification(emails, message) ;    			
+		    		}
+					}
+					if(forumNode.isNodeType("exo:forumWatching")) {
+						Value[] emails = forumNode.getProperty("exo:emailWatching").getValues() ;
+		    		if(emails != null && emails.length > 0) {    			
+		    			Message message = new Message();
+		          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+		    			//message.setMessageTo(question.getEmail());
+		    			message.setSubject("eXo Forum Watching Notification!");
+		    			message.setMessageBody("The Forum '" + forumNode.getProperty("exo:name").getString() 
+		    					+"' have just  added post:</br>" + post.getMessage());
+		    			sendNotification(emails, message) ;    			
+		    		}
+					}
 				} else {
 					long temp = topicNode.getProperty("exo:numberAttachments").getLong() -	postNode.getProperty("exo:numberAttach").getLong() ;
 					topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
@@ -1102,11 +1159,40 @@ public class JCRDataStorage{
 				//forumHomeNode.save() ;
 				forumHomeNode.getSession().save() ;
 			}catch (PathNotFoundException e) {
+				e.printStackTrace() ;
 			}
 		}catch (PathNotFoundException e) {
+			e.printStackTrace() ;
 		}
 	}
 	
+	
+	private void sendNotification(Value[] emails, Message message) throws Exception {
+  	List<Message> messages = new ArrayList<Message> () ;
+  	ServerConfiguration config = getServerConfig() ;
+  	if(emails != null && emails.length > 0) {
+  		for(Value vl : emails) {
+  			message.setMessageTo(vl.getString()) ;
+  			message.setFrom(config.getUserName()) ;
+  			messages.add(message) ;
+  		}
+  	}
+  	if(messages.size() > 0) {
+  		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+  		mService.sendMessages(messages, config) ;
+  	}
+  }
+  
+  private ServerConfiguration getServerConfig() throws Exception {
+  	ServerConfiguration config = new ServerConfiguration();
+  	config.setUserName(serverConfig_.get("account"));
+		config.setPassword(serverConfig_.get("password"));
+		config.setSsl(true);
+		config.setOutgoingHost(serverConfig_.get("outgoing"));
+		config.setOutgoingPort(serverConfig_.get("port"));
+		return config ;
+  }
+  
 	public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		Post post = new Post() ;

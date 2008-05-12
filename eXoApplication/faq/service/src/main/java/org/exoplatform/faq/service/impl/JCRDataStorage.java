@@ -203,14 +203,6 @@ public class JCRDataStorage {
   	}
   }
   
-  private void sendNotification(Message message) throws Exception {
-  	MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
-  	ServerConfiguration config = getServerConfig() ;
-  	message.setFrom(config.getUserName()) ;
-  	message.setServerConfiguration(config) ;
-  	mService.sendMessage(message) ;
-  }
-  
   private ServerConfiguration getServerConfig() throws Exception {
   	ServerConfiguration config = new ServerConfiguration();
   	config.setUserName(serverConfig_.get("account"));

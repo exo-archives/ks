@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -54,6 +55,10 @@ public class ForumServiceImpl implements ForumService{
 	
 	public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
 		storage_ = new JCRDataStorage(nodeHierarchyCreator) ;
+	}
+	
+	public void addPlugin(ComponentPlugin plugin) throws Exception {
+		storage_.addPlugin(plugin) ;
 	}
 	
 	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {

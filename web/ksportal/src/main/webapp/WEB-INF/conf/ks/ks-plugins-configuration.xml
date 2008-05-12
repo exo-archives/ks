@@ -18,4 +18,23 @@
 	    </init-params>
 	  </component-plugin>	   
   </external-component-plugins>   
+  
+  <external-component-plugins>
+  	<target-component>org.exoplatform.forum.service.ForumService</target-component>  	
+	  <component-plugin>
+	    <name>email.configuration</name>
+	    <set-method>addPlugin</set-method>
+	    <type>org.exoplatform.forum.service.EmailNotifyPlugin</type>
+	    <description>description</description>
+	    <init-params>
+	      <properties-param>
+	        <name>email.configuration.info</name>
+	        <property name="account" value="exoservice@gmail.com"/>          
+          <property name="password" value="exoadmin"/>          
+          <property name="outgoing" value="smtp.gmail.com"/>          
+          <property name="port" value="465"/>
+	      </properties-param>
+	    </init-params>
+	  </component-plugin>	   
+  </external-component-plugins>   
 </configuration>
