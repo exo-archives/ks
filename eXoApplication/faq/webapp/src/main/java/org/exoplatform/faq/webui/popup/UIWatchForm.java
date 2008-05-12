@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -29,7 +31,6 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormTextAreaInput;
 
 @SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
@@ -41,16 +42,17 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		}
 )
 public class UIWatchForm extends UIForm	implements UIPopupComponent{
-	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(FIELD_OPTIONS,FIELD_OPTIONS) ;
 	public static final String USER_NAME = "userName" ; 
 	public static final String EMAIL_ADDRESS = "emailAddress" ;
 	private String categoryId_ = "";
+	private UIFormMultiValueInputSet emailAddress;
 	public UIWatchForm() throws Exception {}
   public void init() throws Exception {
   	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
-  	UIFormTextAreaInput listEmail = new UIFormTextAreaInput(EMAIL_ADDRESS, null, null );
+  	emailAddress = new UIFormMultiValueInputSet(EMAIL_ADDRESS, EMAIL_ADDRESS );
+		emailAddress.setType(UIFormStringInput.class) ;
   	addUIFormInput(userName);
-		addUIFormInput(listEmail);
+		addUIFormInput(emailAddress);
   }
 	
 	public String[] getActions() { return new String[] {"Save","Cancel"} ; }
@@ -65,7 +67,11 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 			UIWatchForm uiWatchForm = event.getSource() ;
 			UIApplication uiApp = uiWatchForm.getAncestorOfType(UIApplication.class) ;
       String name = uiWatchForm.getUIStringInput(UIWatchForm.USER_NAME).getValue() ;
-      String listEmail = uiWatchForm.getUIFormTextAreaInput(UIWatchForm.EMAIL_ADDRESS).getValue() ;
+      String listEmail = "";
+      List<String> values = (List<String>) uiWatchForm.emailAddress.getValue();
+			for (String string : values) {
+				listEmail += string + "," ;
+      }
       if (FAQUtils.isFieldEmpty(listEmail)) {
         uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.to-field-empty", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
