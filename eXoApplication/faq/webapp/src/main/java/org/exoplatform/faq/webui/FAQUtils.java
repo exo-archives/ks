@@ -16,16 +16,28 @@
  */
 package org.exoplatform.faq.webui;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.webui.form.UIFormDateTimeInput;
+import org.exoplatform.webui.form.UIFormInputBase;
+import org.exoplatform.webui.form.UIFormMultiValueInputSet;
+import org.exoplatform.webui.form.UIFormUploadInput;
 
 /**
  * Created by The eXo Platform SARL
@@ -77,6 +89,50 @@ public class FAQUtils {
       return false ;
     }
     return isInvalid ;
+  }
+  
+  public static String[] getQuestionLanguages() {
+    
+    return null ;
+  }
+  
+  public static Map prepareMap(List inputs, Map properties) throws Exception {
+    Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
+    HashMap<String, JcrInputProperty> hasMap = new HashMap<String, JcrInputProperty>() ;
+    for (int i = 0; i < inputs.size(); i++) {
+      JcrInputProperty property = null;
+      if(inputs.get(i) instanceof UIFormMultiValueInputSet) {        
+        String inputName = ((UIFormMultiValueInputSet)inputs.get(i)).getName() ;        
+        if(!hasMap.containsKey(inputName)) {
+          List<String> values = (List<String>) ((UIFormMultiValueInputSet)inputs.get(i)).getValue() ;
+          property = (JcrInputProperty) properties.get(inputName);        
+          if(property != null){          
+            property.setValue(values.toArray(new String[values.size()])) ;
+          }
+        }
+        hasMap.put(inputName, property) ;
+      } else {
+        UIFormInputBase input = (UIFormInputBase) inputs.get(i);
+        property = (JcrInputProperty) properties.get(input.getName());
+        if(property != null) {
+          if (input instanceof UIFormUploadInput) {
+            byte[] content = ((UIFormUploadInput) input).getUploadData() ; 
+            property.setValue(content);
+          } else if(input instanceof UIFormDateTimeInput) {
+            property.setValue(((UIFormDateTimeInput)input).getCalendar()) ;
+          } else {
+            property.setValue(input.getValue()) ;
+          }
+        }
+      }
+    }
+    Iterator iter = properties.values().iterator() ;
+    JcrInputProperty property ;
+    while (iter.hasNext()) {
+      property = (JcrInputProperty) iter.next() ;
+      rawinputs.put(property.getJcrPath(), property) ;
+    }
+    return rawinputs;
   }
   
 }

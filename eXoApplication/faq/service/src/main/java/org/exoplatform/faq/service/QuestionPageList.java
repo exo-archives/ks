@@ -84,18 +84,37 @@ public class QuestionPageList extends JCRPageList {
   }
   
   private Question getQuestion(Node questionNode) throws Exception {
-  	Question question = new Question() ;
-  	question.setId(questionNode.getName()) ;
-  	if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
+    Question question = new Question() ;
+    question.setId(questionNode.getName()) ;
+    if(questionNode.hasProperty("exo:language")) question.setQuestion(questionNode.getProperty("exo:language").getString()) ;
+    if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
-    if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
-    if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
+    if(questionNode.hasProperty("exo:activated")) question.setActivated(questionNode.getProperty("exo:activated").getBoolean()) ;
+    if(questionNode.hasProperty("exo:approved")) question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
     if(questionNode.hasProperty("exo:responses")) question.setResponses(questionNode.getProperty("exo:responses").getString()) ;
-    if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
-  	return question ;
+    if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;   
+    NodeIterator nodeIterator = questionNode.getNodes() ;
+    List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
+    Node nodeFile ;
+    Node node ;
+    while(nodeIterator.hasNext()){
+      node = nodeIterator.nextNode() ;
+      if(node.isNodeType("nt:file")) {
+        JCRFAQAttachment attachment = new JCRFAQAttachment() ;
+        nodeFile = node.getNode("jcr:content") ;
+        attachment.setId(node.getPath()) ;
+        attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+        attachment.setName(node.getName());
+        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+        attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+        listFile.add(attachment);
+      }
+    }
+    question.setAttachMent(listFile) ;
+    return question ;
   }
   
   private String [] ValuesToStrings(Value[] Val) throws Exception {

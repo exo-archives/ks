@@ -95,7 +95,7 @@ public interface FAQService {
    * @param is new question
    * @throws Exception
    */
-  public void saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception ;
+  public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Check exists question and remove it
@@ -147,6 +147,16 @@ public interface FAQService {
    * @throws Exception
    */
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception ;
+  /**
+   * This method should:
+   * 1. Lookup question
+   * 2. Lookup languageNode of question
+   * 2. find all childern node of language node
+   * @param Question 
+   * @return language list
+   * @throws Exception
+   */
+  public List<Node>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions via question identify and from category identify

@@ -16,6 +16,9 @@
  */
 package org.exoplatform.faq.webui;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Mai Van Ha
@@ -23,6 +26,8 @@ package org.exoplatform.faq.webui;
  * May 3, 2008 ,1:48:11 AM 
  */
 public class ValidatorDataInput {
+  private List<String> typeImage = Arrays.asList(new String[]{"gif", "jpg", "tif", "png"}) ;
+  
   public boolean isNotEmptyInput(String inputString) {
     if(inputString == null || inputString.trim().length() < 1)
       return false ;
@@ -41,5 +46,12 @@ public class ValidatorDataInput {
     } else {
       return false ;
     }
+  }
+  
+  public boolean isImage(String fileName) {
+    String fileType = fileName.substring(fileName.lastIndexOf(".") + 1) ;
+    if(typeImage.contains(fileType.toLowerCase()))
+      return true ;
+    return false ;
   }
 }

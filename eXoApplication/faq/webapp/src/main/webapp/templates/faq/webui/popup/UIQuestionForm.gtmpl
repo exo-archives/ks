@@ -35,6 +35,17 @@
 													</div>
 												</div>
 									<%	}
+										} else if(field.getName().equals("Attachment")){
+											if(!uicomponent.getListFile().isEmpty()) {
+												String name = "" ;
+												String link = "" ;
+												for(attachment in uicomponent.getListFile()) {
+										      name = attachment.getName() ;
+										      link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+										     %>
+										     	$name &nbsp;&nbsp; <a href="$link"> Remove </a><br>
+									    <%}
+											}
 										} else {%>
 											<% uiform.renderField(field) %><br>
 									<%}%>

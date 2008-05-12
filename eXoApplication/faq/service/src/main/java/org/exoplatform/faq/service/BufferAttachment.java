@@ -45,18 +45,10 @@ import java.io.InputStream;
 public class BufferAttachment extends FileAttachment {
   
   private byte[] bytes ;
-  
-//  public InputStream getInputStream()throws Exception{
-//    /*DownloadService downloadService = (DownloadService)PortalContainer.getComponent(DownloadService.class) ;
-//    DownloadResource downloadResource = downloadService.getDownloadResource(getId()) ;
-//    downloadResource.getInputStream() ;*/
-//    return inputStream ; 
-//  }
   public InputStream getInputStream() throws Exception { 
     if(bytes != null) return new ByteArrayInputStream(bytes) ;
     return null ;
   }
-//  public void setInputStream(InputStream is){ inputStream = is ; }
   public void setInputStream(InputStream input) throws Exception {
     if (input != null) {
       bytes = new byte[input.available()] ; 

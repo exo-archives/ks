@@ -184,6 +184,7 @@ public class MultiLanguages {
     Node newLanguageNode = null ;
     Node languagesNode = null ;
     String defaultLanguage = getDefault(node) ;
+    if(!node.isNodeType("mix:faqi18n")) node.addMixin("mix:faqi18n") ;
     if(node.hasNode(LANGUAGES)) languagesNode = node.getNode(LANGUAGES) ;
     else languagesNode = node.addNode(LANGUAGES, NTUNSTRUCTURED) ;
     if(!defaultLanguage.equals(language)){
@@ -228,9 +229,12 @@ public class MultiLanguages {
     }   
     PropertyDefinition[] properties = node.getPrimaryNodeType().getPropertyDefinitions() ;
     for(PropertyDefinition pro : properties){
+      
       if(!pro.isProtected()) {
         String propertyName = pro.getName() ;
         JcrInputProperty property = (JcrInputProperty)inputs.get(NODE + propertyName) ;
+        System.out.println("propertyName ====>"+ propertyName + "===>"+ property);
+        
         if(defaultLanguage.equals(language) && property != null) {
           setPropertyValue(propertyName, node, pro.getRequiredType(), property.getValue(), pro.isMultiple()) ;
         } else {          
@@ -263,7 +267,9 @@ public class MultiLanguages {
     if(isDefault) node.setProperty(EXO_LANGUAGE, language) ;
     if(isDefault && languagesNode.hasNode(language)) languagesNode.getNode(language).remove() ;
     node.save() ;
-    node.getSession().save() ;    
+    node.getSession().save() ;
+    
+    System.out.println("\n\n\n\n>>>>addLanguage() --> size of questionNodeChildren: " + node.getNodes().getSize());
   }
   
   public void addLanguage(Node node, Map inputs, String language, boolean isDefault, String nodeType) throws Exception {

@@ -34,8 +34,6 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-
-
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -46,6 +44,7 @@ import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.JCRFAQAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
@@ -130,12 +129,19 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:isApproved", question.isApproved()) ;
   	questionNode.setProperty("exo:responses", question.getResponses()) ;
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
-    long numberAttach = 0 ;
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
-    if(!listFileAtt.isEmpty()) { 
+    
+    NodeIterator nodeIterator = questionNode.getNodes() ;
+    while(nodeIterator.hasNext()){
+      Node node = nodeIterator.nextNode() ;
+      if(node.isNodeType("nt:file")) {
+        node.remove() ;
+      }
+    }
+    
+    if(!listFileAtt.isEmpty()) {
       Iterator<FileAttachment> it = listFileAtt.iterator();
       while (it.hasNext()) {
-        ++ numberAttach ;
         BufferAttachment file = null;
         try {
           file = (BufferAttachment)it.next();
@@ -152,7 +158,7 @@ public class JCRDataStorage {
           nodeContent.setProperty("jcr:data", file.getInputStream());
           nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
         } catch (Exception e) {
-          //e.printStackTrace() ;
+          e.printStackTrace() ;
         }
       }
     }
@@ -173,14 +179,14 @@ public class JCRDataStorage {
     	}
     }
     // Send notifycation when question responsed or edited or watching
-//  	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
-//  		Message message = new Message();
-//      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-//			//message.setMessageTo(question.getEmail());
-//			message.setSubject("eXo FAQ Question Responsed Notifycation!");
-//			message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
-//			sendNotification(null, message, question.getEmail()) ;  		
-//  	}
+  	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
+  		Message message = new Message();
+      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+			//message.setMessageTo(question.getEmail());
+			message.setSubject("eXo FAQ Question Responsed Notifycation!");
+			message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
+			sendNotification(null, message, question.getEmail()) ;  		
+  	}
   }
   
   private void sendNotification(Value[] emails, Message message, String authorEmail) throws Exception {
@@ -214,7 +220,24 @@ public class JCRDataStorage {
 		return config ;
   }
   
-  public void saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
+  public List<Node> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
+    String languages = "languages" ;
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    Node questionNode = questionHome.getNode(questionId) ;
+    List<Node> listLanguageNode =  new ArrayList<Node>() ;
+    if(questionNode.hasNode(languages)) {
+      Node languageNode = questionNode.getNode(languages) ;
+      NodeIterator nodeIterator = languageNode.getNodes() ;
+      while(nodeIterator.hasNext()) {
+        Node node = (Node)nodeIterator.next() ;
+        if(node.hasProperty("exo:name")) System.out.println("\t" + node.getProperty("exo:name").getValue());
+        listLanguageNode.add(node) ;
+      }
+    }
+    return listLanguageNode ;
+  }
+  
+  public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
   	Node questionHome = getQuestionHome(sProvider, null) ;
     Node questionNode ;
   	if(isAddNew) {
@@ -229,6 +252,7 @@ public class JCRDataStorage {
   	saveQuestion(questionNode, question, isAddNew, sProvider) ;
   	if(questionHome.isNew()) questionHome.getSession().save() ;
   	else questionHome.save() ;
+    return questionNode ;
   }
   
   public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception {
@@ -244,7 +268,7 @@ public class JCRDataStorage {
   private Question getQuestion(Node questionNode) throws Exception {
   	Question question = new Question() ;
   	question.setId(questionNode.getName()) ;
-  	if(questionNode.hasProperty("exo:language")) question.setQuestion(questionNode.getProperty("exo:language").getString()) ;
+  	if(questionNode.hasProperty("exo:language")) question.setLanguage(questionNode.getProperty("exo:language").getString()) ;
   	if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
@@ -254,7 +278,25 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:approved")) question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
     if(questionNode.hasProperty("exo:responses")) question.setResponses(questionNode.getProperty("exo:responses").getString()) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
-  	return question ;
+  	NodeIterator nodeIterator = questionNode.getNodes() ;
+    List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
+    Node nodeFile ;
+    Node node ;
+    while(nodeIterator.hasNext()){
+      node = nodeIterator.nextNode() ;
+      if(node.isNodeType("nt:file")) {
+        JCRFAQAttachment attachment = new JCRFAQAttachment() ;
+        nodeFile = node.getNode("jcr:content") ;
+        attachment.setId(node.getPath()) ;
+        attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+        attachment.setName(node.getName());
+        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+        attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+        listFile.add(attachment);
+      }
+    }
+    question.setAttachMent(listFile) ;
+    return question ;
   }
   
   public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {

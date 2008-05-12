@@ -85,6 +85,10 @@ public class FAQServiceImpl implements FAQService{
 	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getQuestionsByListCatetory(listCategoryId, isNotYetAnswer, sProvider);
 	}
+  
+  public List<Node>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
+    return jcrData_.getQuestionLanguages(questionId, sProvider) ;
+  }
 
 	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getSubCategories(categoryId, sProvider);
@@ -106,8 +110,8 @@ public class FAQServiceImpl implements FAQService{
 		jcrData_.saveCategory(parentId, cat, isAddNew, sProvider) ;
 	}
 
-	public void saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
-		jcrData_.saveQuestion(question, isAddNew, sProvider) ;
+	public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
+		return jcrData_.saveQuestion(question, isAddNew, sProvider) ;
 	}
 	
   public FAQSetting getFAQSetting(SessionProvider sProvider) throws Exception {

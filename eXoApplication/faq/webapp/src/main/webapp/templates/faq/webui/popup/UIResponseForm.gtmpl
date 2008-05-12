@@ -42,7 +42,18 @@
 												<% uiform.renderField(field) %>
 											</div>
 											<a href="$link" style="float: left"><div class="Icon AddRelation"><span></span></div></a>
-									<%} else {%>
+									<%} else if(field.getName().equals("QuestionAttach")){
+											if(!uicomponent.getListFile().isEmpty()) {
+												String name = "" ;
+												String link = "" ;
+												for(attachment in uicomponent.getListFile()) {
+										      name = attachment.getName() ;
+										      link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+										     %>
+										     	$name &nbsp;&nbsp;<a href="$link"> Remove </a><br>
+									    <%}
+											}
+										} else {%>
 											<% uiform.renderField(field) %><br>
 									<%}%>
 								</td>

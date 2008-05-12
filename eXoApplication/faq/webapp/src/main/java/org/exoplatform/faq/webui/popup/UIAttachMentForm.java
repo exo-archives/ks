@@ -16,7 +16,7 @@
  */
 package org.exoplatform.faq.webui.popup;
 
-import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.BufferAttachment;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -72,7 +72,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   static public class SaveActionListener extends EventListener<UIAttachMentForm> {
     public void execute(Event<UIAttachMentForm> event) throws Exception {
       UIAttachMentForm attachMentForm = event.getSource() ;
-      FileAttachment fileAttachment = new FileAttachment() ;
+      BufferAttachment fileAttachment = new BufferAttachment() ;
       UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD) ;
       UploadResource uploadResource = uploadInput.getUploadResource() ;
       if(uploadResource == null) {
@@ -86,6 +86,8 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       fileAttachment.setInputStream(uploadInput.getUploadDataAsStream()) ;
       fileAttachment.setMimeType(uploadResource.getMimeType()) ;
       fileAttachment.setSize((long)uploadResource.getUploadedSize()) ;
+      java.util.Date date = new java.util.Date();
+      fileAttachment.setId("file" + date.getTime()) ;
       
       UIPopupContainer popupContainer = attachMentForm.getAncestorOfType(UIPopupContainer.class) ;
       if(attachMentForm.getIsManagerment()) {

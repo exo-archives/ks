@@ -39,7 +39,7 @@
 			                          <div class="RightTab" onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)">
 		                          	<%if(i ++ == 0) {%>
 			                            <div class="MiddleTab">
-			                            	Question managerment
+			                            	Question management
 			                            </div>
 		                            <%} else {%>
 		                            	<div class="MiddleTab">

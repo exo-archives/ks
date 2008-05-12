@@ -16,13 +16,20 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
+import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
@@ -118,7 +125,7 @@ public class UIQuestions extends UIContainer {
   }
   
   private String[] getSecondActionCategory() {
-    String[] action = new String[]{"SubCategory", "EditSubCategory", "DeleteCategory", "MoveCategory"} ;
+    String[] action = new String[]{"SubCategory", "EditSubCategory", "MoveDown", "MoveUp", "DeleteCategory", "MoveCategory"} ;
     return action ;
   }
   
@@ -130,7 +137,12 @@ public class UIQuestions extends UIContainer {
   
   @SuppressWarnings("unused")
   private String[] getActionQuestion(){
-    String[] action = new String[]{"ResponseQuestion","EditQuestion","DeleteQuestion","MoveQuestion","PrintQuestion","SendQuestion"} ;
+    String[] action ;
+    if(canEditQuestion) {
+      action = new String[]{"ResponseQuestion","EditQuestion","DeleteQuestion","MoveQuestion","PrintQuestion","SendQuestion"} ;
+    } else {
+      action = new String[]{"PrintQuestion","SendQuestion"} ;
+    }
     return action ;
   }
   
@@ -274,6 +286,28 @@ public class UIQuestions extends UIContainer {
   @SuppressWarnings("unused")
   private String getQuestionView(){
     return this.questionView_ ;
+  }
+  
+  @SuppressWarnings("unused")
+  private String getFileSource(FileAttachment attachment) throws Exception {
+    DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+    try {
+      InputStream input = attachment.getInputStream() ;
+      String fileName = attachment.getName() ;
+      byte[] imageBytes = null;
+      if (input != null) {
+        imageBytes = new byte[input.available()];
+        input.read(imageBytes);
+        ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+        InputStreamDownloadResource dresource = new InputStreamDownloadResource(
+            byteImage, "image");
+        dresource.setDownloadName(fileName);
+        return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+      }
+      return null;
+    } catch (PathNotFoundException e) {
+      return null;
+    }
   }
   
   public void setQuestionView(String questionid){

@@ -29,5 +29,17 @@ UIFAQPortlet.prototype.treeView = function(id) {
 	}
 };
 
+UIFAQPortlet.prototype.openPicture = function(obj,id) {
+	var img = document.getElementById(id) ;
+	if(img) {
+		if(img.offsetHeight <= 101) {
+			img.style.width = "100%" ;
+			img.className = "Icon MiniView" ;
+		} else {
+			img.style.height = "100px" ;
+			img.className = "Icon MaxView" ;
+		}
+	}
+};
 
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;
