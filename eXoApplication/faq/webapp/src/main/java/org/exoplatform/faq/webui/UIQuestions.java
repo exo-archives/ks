@@ -240,7 +240,7 @@ public class UIQuestions extends UIContainer {
   private List<Category> getCategories() throws Exception {
 		return categories_ ;
 	}
-  
+  //Need to make API to check this info, Do NOT do as now 
 	@SuppressWarnings("unused")
 	private int[] getCategoryInfo(String categoryId) {
     int[] result = new int[]{0,0,0} ;
@@ -380,6 +380,7 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
       questionForm.setCategoryId(categoryId) ;
+      questionForm.refresh() ;
       popupContainer.setId("AddQuestion") ;
       popupAction.activate(popupContainer, 650, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

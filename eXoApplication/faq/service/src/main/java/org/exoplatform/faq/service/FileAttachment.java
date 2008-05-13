@@ -18,20 +18,38 @@ package org.exoplatform.faq.service;
 
 import java.io.InputStream;
 
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Session;
+
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.RepositoryService;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
  *          tu.duy@exoplatform.com
  * Nov 10, 2007 
  */
-abstract public class FileAttachment {
-  private String id ;
+public class FileAttachment {
+	private String id ;
+	private String path ;
+  private String workspace ;
   private String name ;
   private String mimeType ;
   private long size ;
-   
+  private InputStream input ;
+  
+  
   public String getId() { return id ; }
-  public void setId(String id) { this.id = id ; }
+  public void setId(String s) { this.id = s ; }
+  
+  public String getPath() { return path ; }
+  public void setPath(String p) { this.path = p ; }
+  
+  public String getWorkspace() { return workspace ; }
+  public void setWorkspace(String ws) { workspace = ws ; }
   
   public String getMimeType() { return mimeType ; }
   public void setMimeType(String mimeType_) { this.mimeType = mimeType_ ; }
@@ -42,5 +60,26 @@ abstract public class FileAttachment {
   public String getName() { return name ; }
   public void setName(String name_) { this.name = name_ ; }
   
-  public abstract InputStream getInputStream() throws Exception ;
+  public InputStream getInputStream() throws Exception { 
+  	if(input != null)return input ;
+  	else {
+  		Node attachment ;
+      try{
+        attachment = (Node)getSesison().getItem(getPath()) ;      
+      }catch (ItemNotFoundException e) {  
+        return null ;
+      } catch (PathNotFoundException ex) {
+        return  null;
+      }
+      return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
+  	}
+  }
+  
+  public void setInputStream(InputStream in) throws Exception {input = in ; }
+  
+  private Session getSesison()throws Exception {
+    RepositoryService repoService = (RepositoryService)PortalContainer
+      .getInstance().getComponentInstanceOfType(RepositoryService.class) ;
+    return repoService.getDefaultRepository().getSystemSession(workspace) ;
+  }
 }

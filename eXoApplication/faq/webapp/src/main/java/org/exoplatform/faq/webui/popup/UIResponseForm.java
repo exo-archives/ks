@@ -186,7 +186,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     for(FileAttachment attachdata : listFileAttach_) {
       ActionData fileUpload = new ActionData() ;
       fileUpload.setActionListener("Download") ;
-      fileUpload.setActionParameter(attachdata.getId());
+      fileUpload.setActionParameter(attachdata.getPath());
       fileUpload.setActionType(ActionData.TYPE_ICON) ;
       fileUpload.setCssIconClass("AttachmentIcon") ; // "AttachmentIcon ZipFileIcon"
       fileUpload.setActionName(attachdata.getName() + " ("+attachdata.getSize()+" B)" ) ;
@@ -195,7 +195,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       ActionData removeAction = new ActionData() ;
       removeAction.setActionListener("RemoveAttachment") ;
       removeAction.setActionName(REMOVE_FILE_ATTACH);
-      removeAction.setActionParameter(attachdata.getId());
+      removeAction.setActionParameter(attachdata.getPath());
       removeAction.setCssIconClass("LabelLink");
       removeAction.setActionType(ActionData.TYPE_LINK) ;
       uploadedFiles.add(removeAction) ;
@@ -382,7 +382,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIResponseForm questionForm = event.getSource() ;
       String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
       for (FileAttachment att : questionForm.listFileAttach_) {
-        if (att.getId().equals(attFileId)) {
+        if (att.getPath().equals(attFileId)) {
           questionForm.listFileAttach_.remove(att) ;
           break;
         }

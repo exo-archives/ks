@@ -22,7 +22,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,17 +33,16 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.faq.service.BufferAttachment;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.EmailNotifyPlugin;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
-import org.exoplatform.faq.service.JCRFAQAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
@@ -131,37 +129,36 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
-    NodeIterator nodeIterator = questionNode.getNodes() ;
+    /*NodeIterator nodeIterator = questionNode.getNodes() ;
     while(nodeIterator.hasNext()){
       Node node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
         node.remove() ;
       }
-    }
+    }*/
     
     if(!listFileAtt.isEmpty()) {
-      Iterator<FileAttachment> it = listFileAtt.iterator();
-      while (it.hasNext()) {
-        BufferAttachment file = null;
+      for(FileAttachment att : listFileAtt) {
         try {
-          file = (BufferAttachment)it.next();
           Node nodeFile = null;
-          if (!questionNode.hasNode(file.getName())) nodeFile = questionNode.addNode(file.getName(), "nt:file");
-          else nodeFile = questionNode.getNode(file.getName());
+          if (questionNode.hasNode(att.getName())) nodeFile = questionNode.getNode(att.getName());
+          else nodeFile = questionNode.addNode(att.getName(), "nt:file");
           Node nodeContent = null;
-          if (!nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
-          else {
-            continue ;
-            //nodeContent = nodeFile.getNode("jcr:content");
-          }
-          nodeContent.setProperty("jcr:mimeType", file.getMimeType());
-          nodeContent.setProperty("jcr:data", file.getInputStream());
+          if (nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.getNode("jcr:content");
+          else  nodeContent = nodeFile.addNode("jcr:content", "nt:resource") ;
+          
+          nodeContent.setProperty("jcr:mimeType", att.getMimeType());
+          nodeContent.setProperty("jcr:data", att.getInputStream());
           nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+          System.out.println("\n\n Name ========> " + att.getName() +"\n\n");
         } catch (Exception e) {
           e.printStackTrace() ;
         }
       }
     }
+    questionNode.getSession().save() ;
+    //if(questionNode.isNew()) questionNode.getSession().save() ;
+    //else questionNode.save() ;
     //Send notifycation when add new qustion in watching category
     if(isNew) {
     	Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
@@ -285,9 +282,9 @@ public class JCRDataStorage {
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
-        JCRFAQAttachment attachment = new JCRFAQAttachment() ;
+        FileAttachment attachment = new FileAttachment() ;
         nodeFile = node.getNode("jcr:content") ;
-        attachment.setId(node.getPath()) ;
+        attachment.setPath(node.getPath()) ;
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
         attachment.setName(node.getName());
         attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;

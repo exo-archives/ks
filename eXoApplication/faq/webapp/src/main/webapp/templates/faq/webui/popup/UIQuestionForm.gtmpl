@@ -41,7 +41,7 @@
 												String link = "" ;
 												for(attachment in uicomponent.getListFile()) {
 										      name = attachment.getName() ;
-										      link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+										      link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
 										     %>
 										     	$name &nbsp;&nbsp; <a href="$link"> Remove </a><br>
 									    <%}

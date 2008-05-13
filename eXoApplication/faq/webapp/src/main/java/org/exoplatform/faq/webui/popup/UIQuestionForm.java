@@ -115,6 +115,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     this.questionId_ = new String() ;
 	}
   
+  public void refresh() throws Exception {
+  	listFileAttach_.clear() ;
+  }
   public void initPage(boolean isEdit) {
     if(isEdit) {
       this.removeChildById(AUTHOR);
@@ -136,7 +139,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     UIFormInputWithActions inputWithActions = new UIFormInputWithActions(ATTACHMENTS) ;
     inputWithActions.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
     try{
-      inputWithActions.setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
+      inputWithActions.setActionField(FILE_ATTACHMENTS, getActionList()) ;
     } catch (Exception e) {
       e.printStackTrace() ;
     }
@@ -227,21 +230,21 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     return form ;
   }
   
-  public List<ActionData> getUploadFileList() { 
+  public List<ActionData> getActionList() { 
     List<ActionData> uploadedFiles = new ArrayList<ActionData>() ;
     for(FileAttachment attachdata : listFileAttach_) {
-      ActionData fileUpload = new ActionData() ;
-      fileUpload.setActionListener("Download") ;
-      fileUpload.setActionParameter(attachdata.getId());
-      fileUpload.setActionType(ActionData.TYPE_ICON) ;
-      fileUpload.setCssIconClass("AttachmentIcon") ; // "AttachmentIcon ZipFileIcon"
-      fileUpload.setActionName(attachdata.getName() + " ("+attachdata.getSize()+" B)" ) ;
-      fileUpload.setShowLabel(true) ;
-      uploadedFiles.add(fileUpload) ;
+      ActionData uploadAction = new ActionData() ;
+      uploadAction.setActionListener("Download") ;
+      uploadAction.setActionParameter(attachdata.getPath());
+      uploadAction.setActionType(ActionData.TYPE_ICON) ;
+      uploadAction.setCssIconClass("AttachmentIcon") ; // "AttachmentIcon ZipFileIcon"
+      uploadAction.setActionName(attachdata.getName() + " ("+attachdata.getSize()+" B)" ) ;
+      uploadAction.setShowLabel(true) ;
+      uploadedFiles.add(uploadAction) ;
       ActionData removeAction = new ActionData() ;
       removeAction.setActionListener("RemoveAttachment") ;
       removeAction.setActionName(REMOVE_FILE_ATTACH);
-      removeAction.setActionParameter(attachdata.getId());
+      removeAction.setActionParameter(attachdata.getPath());
       removeAction.setCssIconClass("LabelLink");
       removeAction.setActionType(ActionData.TYPE_LINK) ;
       uploadedFiles.add(removeAction) ;
@@ -262,7 +265,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   }
   
   public void refreshUploadFileList() throws Exception {
-    ((UIFormInputWithActions)this.getChildById(ATTACHMENTS)).setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
+    ((UIFormInputWithActions)this.getChildById(ATTACHMENTS)).setActionField(FILE_ATTACHMENTS, getActionList()) ;
   }
   
   public void setActionField(String fieldName, List<ActionData> actions) throws Exception {
@@ -415,7 +418,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       UIQuestionForm questionForm = event.getSource() ;
       String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
       for (FileAttachment att : questionForm.listFileAttach_) {
-        if (att.getId().equals(attFileId)) {
+        if (att.getPath().equals(attFileId)) {
           questionForm.listFileAttach_.remove(att) ;
           break;
         }

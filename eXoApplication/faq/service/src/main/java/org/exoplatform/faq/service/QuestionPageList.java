@@ -97,23 +97,26 @@ public class QuestionPageList extends JCRPageList {
     if(questionNode.hasProperty("exo:responses")) question.setResponses(questionNode.getProperty("exo:responses").getString()) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;   
     NodeIterator nodeIterator = questionNode.getNodes() ;
-    List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
+    List<FileAttachment> attList = new ArrayList<FileAttachment>() ;
     Node nodeFile ;
     Node node ;
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
-        JCRFAQAttachment attachment = new JCRFAQAttachment() ;
+        FileAttachment attachment = new FileAttachment() ;
+        System.out.println("\n\n\n name============> " + node.getName());
         nodeFile = node.getNode("jcr:content") ;
-        attachment.setId(node.getPath()) ;
+        attachment.setPath(node.getPath()) ;
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
         attachment.setName(node.getName());
         attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
-        attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-        listFile.add(attachment);
+        //if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").);
+        //else attachment.setSize(0);
+        attachment.setSize(0);
+        attList.add(attachment);
       }
     }
-    question.setAttachMent(listFile) ;
+    question.setAttachMent(attList) ;
     return question ;
   }
   
