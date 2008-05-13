@@ -16,9 +16,15 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.mail.service.Message;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -50,7 +56,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private static final String ADD_BCC = "AddBcc" ;
   private static final String SUBJECT = "Subject" ;
   private static final String MESSAGE = "Message" ;
-  private static final String ATTACH_MENT = "AttachMent" ;
+  final static public String FIELD_FROM_INPUT = "fromInput" ;
   
   public void activate() throws Exception {}
   public void deActivate() throws Exception {}
@@ -63,21 +69,58 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     addChild(new UIFormStringInput(ADD_BCC, ADD_BCC, null)) ;
     addChild(new UIFormStringInput(SUBJECT, SUBJECT, null)) ;
     addChild(new UIFormWYSIWYGInput(MESSAGE, null, null, true)) ;
-    
 	}
 	
 	static public class SendActionListener extends EventListener<UISendMailForm> {
     public void execute(Event<UISendMailForm> event) throws Exception {
-			UISendMailForm sendMailForm = event.getSource() ;			
+			UISendMailForm sendMailForm = event.getSource() ;		
+			UIApplication uiApp = sendMailForm.getAncestorOfType(UIApplication.class) ;
       String formName = ((UIFormStringInput)sendMailForm.getChildById(FROM_NAME)).getValue() ;
       String from = ((UIFormStringInput)sendMailForm.getChildById(FROM)).getValue() ;
+      String fullFrom = formName + "<" + from + ">" ;
       String to = ((UIFormStringInput)sendMailForm.getChildById(TO)).getValue() ;
       String subject = ((UIFormStringInput)sendMailForm.getChildById(SUBJECT)).getValue() ;
-      String addCc = ((UIFormStringInput)sendMailForm.getChildById(ADD_CC)).getValue() ;
-      String addBcc = ((UIFormStringInput)sendMailForm.getChildById(ADD_BCC)).getValue() ;
-      String massage = ((UIFormWYSIWYGInput)sendMailForm.getChildById(MESSAGE)).getValue() ;
-      
-      
+      String cc = ((UIFormStringInput)sendMailForm.getChildById(ADD_CC)).getValue() ;
+      String bcc = ((UIFormStringInput)sendMailForm.getChildById(ADD_BCC)).getValue() ;
+      String body = ((UIFormWYSIWYGInput)sendMailForm.getChildById(MESSAGE)).getValue() ;
+      if (to != null && to.indexOf(";") > -1) to = to.replace(';', ',') ;
+      if (cc != null && cc.indexOf(";") > -1) cc = cc.replace(';', ',') ;
+      if (bcc != null && bcc.indexOf(";") > -1) bcc = bcc.replace(';', ',') ;
+      if (FAQUtils.isFieldEmpty(to)) {
+        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.to-field-empty", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
+      } else if (!FAQUtils.isValidEmailAddresses(to)) {
+        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-to-field", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
+      } else if(!FAQUtils.isValidEmailAddresses(cc)) {
+      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-cc-field",null)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      } else if(!FAQUtils.isValidEmailAddresses(bcc)) {
+      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-bcc-field",null)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      } 
+      Message  message = new Message(); 
+      message.setFrom(fullFrom) ;
+      message.setMessageTo(to) ;
+      message.setMessageCc(cc) ;
+      message.setMessageCc(bcc) ;
+      message.setSubject(subject) ;
+      message.setMessageBody(body) ;
+      FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+      try {
+      	faqService.sendMessage(message) ;
+      } catch(Exception e) {
+        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-error", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        e.printStackTrace() ;
+        return ;
+      }
+      UIFAQPortlet portlet = sendMailForm.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 

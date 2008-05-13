@@ -32,6 +32,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
+import org.exoplatform.mail.service.Message;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
@@ -155,6 +156,9 @@ public class FAQServiceImpl implements FAQService{
   	return jcrData_.getCategoryPath(sProvider, categoryId) ;
   }
   
+  public void sendMessage(Message message) throws Exception {
+  	jcrData_.sendMessage(message) ;
+  }
   // Multi Languages
   
 	public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception {

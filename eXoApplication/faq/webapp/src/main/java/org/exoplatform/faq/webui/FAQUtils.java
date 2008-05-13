@@ -21,8 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 

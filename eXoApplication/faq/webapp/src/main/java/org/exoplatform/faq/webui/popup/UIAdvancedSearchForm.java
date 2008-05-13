@@ -63,7 +63,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 )
 public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	final static private String TEXT = "Text" ;
-	final static	private String FIELD_SEARCHOBJECT_SELECTBOX = "SearchOject" ;
+	final static	private String FIELD_SEARCHOBJECT_SELECTBOX = "SearchObject" ;
 	final static private String FIELD_CATEGORY_NAME = "CategoryName" ;
 	final static private String FIELD_ISMODERATEQUESTION = "IsModerateQuestion" ;
 	final static private String FIELD_CATEGORY_MODERATOR = "CategoryModerator" ;

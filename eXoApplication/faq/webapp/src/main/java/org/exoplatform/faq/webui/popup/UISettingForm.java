@@ -58,8 +58,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public void init() throws Exception {
 		
 		List<SelectItemOption<String>> showMode = new ArrayList<SelectItemOption<String>>();
-		showMode.add(new SelectItemOption<String>("Do not process question befor showing", "true"));
-		showMode.add(new SelectItemOption<String>("Process question befor showing","false" ));
+		showMode.add(new SelectItemOption<String>("Do not process question before showing", "true"));
+		showMode.add(new SelectItemOption<String>("Process question before showing","false" ));
 		addUIFormInput(new UIFormSelectBox(SHOW_MODE, SHOW_MODE, showMode));
 		
 		List<SelectItemOption<String>> displayType = new ArrayList<SelectItemOption<String>>();

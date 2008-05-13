@@ -175,7 +175,7 @@ public class JCRDataStorage {
     		}
     	}
     }
-    // Send notifycation when question responsed or edited or watching
+//    // Send notifycation when question responsed or edited or watching
   	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
   		Message message = new Message();
       message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
@@ -207,6 +207,20 @@ public class JCRDataStorage {
   	}
   }
   
+  public void sendMessage(Message message) throws Exception {
+  	List<Message> messages = new ArrayList<Message> () ;
+  	ServerConfiguration config = getServerConfig() ;
+  	String from = message.getFrom() ;
+  	if (from != null && from.length() > 0) {
+  		message.setFrom(from) ;
+  		messages.add(message) ;
+  	}
+  	if(messages.size() > 0) {
+  		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+  		mService.sendMessages(messages, config) ;
+  	}
+  }
+
   private ServerConfiguration getServerConfig() throws Exception {
   	ServerConfiguration config = new ServerConfiguration();
   	config.setUserName(serverConfig_.get("account"));
@@ -773,4 +787,5 @@ public class JCRDataStorage {
     }
 		return breadcums;
   }
+
 }

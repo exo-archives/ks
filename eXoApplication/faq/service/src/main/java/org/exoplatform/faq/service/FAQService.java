@@ -24,6 +24,7 @@ import javax.jcr.Node;
 import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.mail.service.Message;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
@@ -184,7 +185,7 @@ public interface FAQService {
   public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception ;
-  
+  public void sendMessage(Message message) throws Exception ;
   //Multi languages
   
   public List<String> getSupportedLanguages(Node node) throws Exception ;
