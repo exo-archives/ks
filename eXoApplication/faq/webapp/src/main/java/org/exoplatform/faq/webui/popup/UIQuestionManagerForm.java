@@ -189,16 +189,6 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
         formQuestionManager.addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, isApproved))) ;
         formQuestionManager.addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, isActivated))) ;
         formQuestionManager.addUIFormInput(inputWithActions) ;
-        /*if(questionId_ != null && questionId_.trim().length() > 0) {
-          Question question = new Question() ;
-          try {
-            question = faqService_.getQuestionById(questionId_, FAQUtils.getSystemProvider()) ;
-            this.setListFileAttach(question.getAttachMent()) ;
-            refreshUploadFileList() ;
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        }*/
       }
       if(isResponse) {
         if(formQuestionNotYetAnswer.hasChildren()) {
@@ -224,6 +214,17 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     } else {
       LIST_LANGUAGE.clear() ;
       LIST_LANGUAGE.add("English") ;
+    }
+    
+    if(questionId_ != null && questionId_.trim().length() > 0) {
+      Question question = new Question() ;
+      try {
+        question = faqService_.getQuestionById(questionId_, FAQUtils.getSystemProvider()) ;
+        this.setListFileAttach(question.getAttachMent()) ;
+        refreshUploadFileList() ;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
   
@@ -255,6 +256,11 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   
   public void setListFileAttach(FileAttachment fileAttachment){
     listFileAttach_.add(fileAttachment) ;
+  }
+  
+  @SuppressWarnings("unused")
+  private List<FileAttachment> getListFile() {
+    return listFileAttach_ ;
   }
   
   public void refreshUploadFileList() throws Exception {
@@ -350,12 +356,12 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
       ((UIFormWYSIWYGInput)((UIFormInputWithActions)formQuestionManager.getChildById(LIST_WYSIWYG_INPUT)).getChild(0)).setValue(question.getQuestion()) ;
       ((UIFormCheckBoxInput<Boolean>)formQuestionManager.getChildById(IS_ACTIVATED)).setChecked(question.isActivated()) ;
       ((UIFormCheckBoxInput<Boolean>)formQuestionManager.getChildById(IS_APPROVED)).setChecked(question.isApproved()) ;
-      setListFileAttach(question.getAttachMent()) ;
+      /*setListFileAttach(question.getAttachMent()) ;
       try {
         refreshUploadFileList() ;
       } catch (Exception e) {
         e.printStackTrace();
-      }
+      }*/
     } else if(isResponse) {
       try {
         setListRelation(question) ;
@@ -369,12 +375,12 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
       
       ((UIFormCheckBoxInput<Boolean>)formQuestionNotYetAnswer.getChildById(IS_ACTIVATED)).setChecked(question.isActivated()) ;
       ((UIFormCheckBoxInput<Boolean>)formQuestionNotYetAnswer.getChildById(IS_APPROVED)).setChecked(question.isApproved()) ;
-      setListFileAttach(question.getAttachMent()) ;
+      /*setListFileAttach(question.getAttachMent()) ;
       try {
         refreshUploadFileList() ;
       } catch (Exception e) {
         e.printStackTrace();
-      }
+      }*/
     }
   }
   

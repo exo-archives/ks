@@ -175,6 +175,17 @@
 																							</div>
 																						</div>
 																			<%	}
+																				} else if(field.getName().equals("Attachment")){
+																					if(!uicomponent.getListFile().isEmpty()) {
+																						String name = "" ;
+																						String link = "" ;
+																						for(attachment in uicomponent.getListFile()) {
+																				      name = attachment.getName() ;
+																				      link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+																				     %>
+																				     	$name &nbsp;&nbsp; <a href="$link"> Remove </a><br>
+																			    <%}
+																					}
 																				} else {%>
 																					<% uiform.renderField(field) %><br>
 																			<%}%>
@@ -280,46 +291,55 @@
 																if(field.isRendered()) {
 															%>
 																<tr>
-																	<%fieldName = uicomponent.getLabel(field.getName());
-																		if(!fieldName.equals(uicomponent.getId())) { %>												
+																	<%fieldName = uicomponent.getLabel(field.getName());%>
 																		<td class="FieldLabel">
+																		<%if(!fieldName.equals(uicomponent.getId())) { %>												
 																			<%if(field.getName().equals("ListQuestion")){%>
-																				Response  
+																					Response  
 																			<%} else {%>
 																				<%=uicomponent.getLabel(field.getName()) %>
 																			<%}%>
+																		<%}%>
 																		</td>
 																		<td class="FieldComponent">
-																			<%if(field.getName().equals("ListQuestion")){
-																					i = 0 ;
-																					String[] listLanguage = uicomponent.getListLanguage() ;
-																					for(fck in field.getChildren())  {
-																						String language = listLanguage[i] ;
-																						if(i ++ == 0)
-																							language += " " + "( default )"
-																			%>
-																						<% uiform.renderField(fck) %>
-																						<div class="LanguageQuestion" style="width: 100%"> 
-																							<div style="vertical-align: middle; padding-left: 5px;">
-																								Language: $language 
-																							</div>
+																		<%if(field.getName().equals("ListQuestion")){
+																				i = 0 ;
+																				String[] listLanguage = uicomponent.getListLanguage() ;
+																				for(fck in field.getChildren())  {
+																					String language = listLanguage[i] ;
+																					if(i ++ == 0)
+																						language += " " + "( default )"
+																		%>
+																					<% uiform.renderField(fck) %>
+																					<div class="LanguageQuestion" style="width: 100%"> 
+																						<div style="vertical-align: middle; padding-left: 5px;">
+																							Language: $language 
 																						</div>
-																			<%	}
-																				} else {%>
-																					<% uiform.renderField(field) %><br>
-																			<%}%>
-																		</td>
-																	<%}else if(field.getName().equals("QuestionRelation")){ 
-																			String link = uicomponent.event("AddRelation") ;
-																	%>
-																			<div style="float: left">
-																				<% uiform.renderField(field) %>
-																			</div>
-																			<a href="$link" style="float: left"><div class="Icon AddRelation"><span></span></div></a>
-																	<%} else {%>
-																		<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
-																	<%}%>
-																</tr>
+																					</div>
+																		<%	}
+																			} else if(field.getName().equals("QuestionRelation")){ 
+																				String link = uicomponent.event("AddRelation") ;
+																			%>
+																					<div style="float: left">
+																						<% uiform.renderField(field) %>
+																					</div>
+																					<a href="$link" style="float: left"><div class="Icon AddRelation"><span></span></div></a>
+																		<%} else if(field.getName().equals("Attachment")){
+																				if(!uicomponent.getListFile().isEmpty()) {
+																					String name = "" ;
+																					String link = "" ;
+																					for(attachment in uicomponent.getListFile()) {
+																			      name = attachment.getName() ;
+																			      link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+																			     %>
+																			     	$name &nbsp;&nbsp;<a href="$link"> Remove </a><br>
+																		    <%}
+																				}
+																			} else {%>
+																				<% uiform.renderField(field) %><br>
+																		<%}%>
+																	</td>
+																</tr>															
 															<%}
 															}
 															%>						
@@ -341,7 +361,7 @@
 														            	</div>
 														          	</div>
 														        	</a>
-													          <%}%>
+												          <%}%>
 													      	</td>
 																</tr>
 														  </table> 
