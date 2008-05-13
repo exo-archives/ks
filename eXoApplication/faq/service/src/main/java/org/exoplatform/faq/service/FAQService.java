@@ -195,5 +195,7 @@ public interface FAQService {
   public void addFileLanguage(Node node, String language, Map mappings, boolean isDefault) throws Exception ;
   public String getDefault(Node node) throws Exception ;
   public Node getLanguage(Node node, String language) throws Exception ;
+  
+  public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception ;
 
 }

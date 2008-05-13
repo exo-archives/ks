@@ -29,6 +29,7 @@ import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -186,5 +187,9 @@ public class FAQServiceImpl implements FAQService{
 	
 	public void setDefault(Node node, String language) throws Exception {
 		multiLanguages_.setDefault(node, language) ;
+	}
+	
+	public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception {
+		multiLanguages_.addLanguage(questionNode, language) ;
 	}
 }

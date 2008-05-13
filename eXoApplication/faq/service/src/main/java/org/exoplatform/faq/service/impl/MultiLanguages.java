@@ -37,6 +37,7 @@ import javax.jcr.nodetype.PropertyDefinition;
 
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.faq.service.JcrInputProperty;
+import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.services.jcr.impl.core.value.DateValue;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
 
@@ -155,6 +156,28 @@ public class MultiLanguages {
         }       
       break ;
     }
+  }
+  
+  public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception {
+  	if(!questionNode.isNodeType("mix:faqi18n")) {
+  		questionNode.addMixin("mix:faqi18n") ;
+  	}
+  	Node languagesNode = null ;
+    try{
+    	languagesNode = questionNode.getNode(LANGUAGES) ;
+    }catch(Exception e) {
+    	languagesNode = questionNode.addNode(LANGUAGES, NTUNSTRUCTURED) ;
+    }
+    Node langNode = null ;
+    try{
+    	langNode = languagesNode.getNode(language.getLanguage()) ;
+    }catch(Exception e) {
+    	langNode = languagesNode.addNode(language.getLanguage(), NTUNSTRUCTURED) ;
+    }
+    
+    langNode.setProperty("exo:name", language.getQuestion()) ;
+    langNode.setProperty("exo:responses", language.getResponse()) ;   
+    questionNode.save() ;
   }
   
   private void setMixin(Node node, Node newLang) throws Exception {
