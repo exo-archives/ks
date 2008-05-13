@@ -200,7 +200,7 @@ public class UIQuestions extends UIContainer {
       if(listCateId_.size() > 0){
         for(String cateIdProcess : listCateId_) {
           try {
-            if(Arrays.asList(faqService.getCategoryById(cateIdProcess, FAQUtils.getSystemProvider()).getModerators()).contains(currentUser_)){
+            if(Arrays.asList(faqService.getCategoryById(cateIdProcess, FAQUtils.getSystemProvider()).getModeratorsCategory()).contains(currentUser_)){
               for(int j = 0 ; j < categories_.size(); j ++) {
                 categoryModerators.add(true) ;
               }
@@ -260,23 +260,31 @@ public class UIQuestions extends UIContainer {
 	}
 	
   public void setListQuestion() throws Exception {
-    SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
     setCategories() ;
-    this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
   }
   
   public void setListQuestion(List<Question> listQuestion) {
     this.listQuestion_ = listQuestion ;
   }
   
+  @SuppressWarnings("unused")
+  public List<Question> getListQuestion() {
+    try{
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+      if(!canEditQuestion) {
+        this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
+      } else {
+        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
+      }
+    } catch(Exception e) {
+      e.printStackTrace() ;
+    }
+    return this.listQuestion_ ;
+  }
+  
   public void setList(String category) throws Exception {
     SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
     listQuestion_ = faqService.getQuestionsByCatetory(category, sessionProvider).getAll() ;
-  }
-  
-  @SuppressWarnings("unused")
-  public List<Question> getListQuestion() {
-    return this.listQuestion_ ;
   }
   
   private boolean getCanEditQuestion() {
@@ -481,20 +489,6 @@ public class UIQuestions extends UIContainer {
 		}
 	}
   
-	static	public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
-	  public void execute(Event<UIQuestions> event) throws Exception {
-      UIQuestions questions = event.getSource() ;
-      String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-      UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
-      popupContainer.setId("FAQQuestionManagerment") ;
-      popupAction.activate(popupContainer, 800, 1000) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	  }
-	}
-  
 	static	public class WatchActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
     	UIQuestions question = event.getSource() ;
@@ -542,6 +536,21 @@ public class UIQuestions extends UIContainer {
 	}
   
   // action for question :
+  
+  static  public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
+    public void execute(Event<UIQuestions> event) throws Exception {
+      UIQuestions questions = event.getSource() ;
+      String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
+      popupContainer.setId("FAQQuestionManagerment") ;
+      popupAction.activate(popupContainer, 800, 1000) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
+  }
+  
 	static  public class ViewQuestionActionListener extends EventListener<UIQuestions> {
 	  public void execute(Event<UIQuestions> event) throws Exception {
 	    UIQuestions uiQuestions = event.getSource() ; 
@@ -604,7 +613,7 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
       questionForm.setQuestionId(questionId) ;
-      popupContainer.setId("AddQuestion") ;
+      popupContainer.setId("EditQuestion") ;
       popupAction.activate(popupContainer, 650, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }

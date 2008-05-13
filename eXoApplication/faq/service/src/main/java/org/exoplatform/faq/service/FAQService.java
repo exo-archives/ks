@@ -132,13 +132,22 @@ public interface FAQService {
   public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
-   * 1. Lookup questions node via category identify
+   * 1. Lookup questions, only question node is activated and approved  via category identify
    * 2. Convert to list of question object
    * @param Category identify
    * @return Question list
    * @throws Exception
    */
   public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
+  /**
+   * This method should:
+   * 1. Lookup all questions node via category identify
+   * 2. Convert to list of question object
+   * @param Category identify
+   * @return Question list
+   * @throws Exception
+   */
+  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions node via category identify
@@ -157,7 +166,7 @@ public interface FAQService {
    * @return language list
    * @throws Exception
    */
-  public List<Node>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
+  public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions via question identify and from category identify

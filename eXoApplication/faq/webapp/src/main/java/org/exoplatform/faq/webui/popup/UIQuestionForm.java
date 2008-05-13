@@ -32,6 +32,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -94,7 +95,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = null ;
-  private List<Node> listLanguageNode = null ;
+  private List<QuestionLanguage> listLanguageNode = null ;
   private static UIFormInputWithActions listFormWYSIWYGInput ;
   private String categoryId_ = null ;
   private String questionId_ = null ;
@@ -172,8 +173,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       LIST_LANGUAGE.clear() ;
       LIST_LANGUAGE.add(defaultLanguage_) ;
       listLanguageNode = fAQService_.getQuestionLanguages(this.questionId_, FAQUtils.getSystemProvider()) ;
-      for(Node node : listLanguageNode) {
-        LIST_LANGUAGE.add(node.getName()) ;
+      for(QuestionLanguage questionLanguage : listLanguageNode) {
+        LIST_LANGUAGE.add(questionLanguage.getLanguage()) ;
       }
       isChecked_ = !(fAQService_.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()).isModerateQuestions()) ;
       initPage(false) ;
@@ -184,8 +185,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       
       ((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(0)).setValue(question_.getQuestion()) ;
       int i = 1 ;
-      for(Node node : listLanguageNode) {
-        ((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(i++)).setValue(node.getProperty("exo:name").getValue().getString()) ;
+      for(QuestionLanguage questionLanguage : listLanguageNode) {
+        ((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(i++)).setValue(questionLanguage.getQuestion()) ;
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -345,26 +346,17 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       }
       
       if(questionForm.LIST_LANGUAGE.size() > 1) {
-        
-        System.out.println("\t~~~~~>language size : " + questionForm.LIST_LANGUAGE.size());
-        
-        Map<String, String> map = new HashMap<String, String>() ;
         try{
+          QuestionLanguage questionLanguage = new QuestionLanguage() ;
           for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
-            question_.setQuestion(listQuestionContent.get(i)) ;
-            questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
-            System.out.println("property exo:name = " + questionNode.getProperty("exo:name").getValue().getString());
-            multiLanguages.addLanguage(questionNode, map, questionForm.LIST_LANGUAGE.get(i), false) ;
+            questionLanguage.setLanguage(questionForm.LIST_LANGUAGE.get(i)) ;
+            questionLanguage.setQuestion(listQuestionContent.get(i)) ;
+            questionLanguage.setResponse(" ") ;
+            multiLanguages.addLanguage(questionNode, questionLanguage) ;
           }
         } catch(Exception e) {
           e.printStackTrace() ;
         }
-        
-        question_.setQuestion(listQuestionContent.get(0)) ;
-        questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
-        /*if(!questionForm.getDefaultLanguage().equals(question_.getLanguage())) {
-          multiLanguages.setDefault(questionNode, questionForm.getDefaultLanguage()) ;
-        }*/
       }
       
       
@@ -396,7 +388,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
 	    UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       UILanguageForm languageForm = popupAction.activate(UILanguageForm.class, 400) ;
-      languageForm.setResponse(false) ; 
       languageForm.setListSelected(questionForm.LIST_LANGUAGE) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 	  }

@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -49,6 +50,7 @@ import org.exoplatform.webui.form.UIForm;
 				@EventConfig(listeners = UIMoveCategoryForm.CancelActionListener.class)
 		}
 )
+
 public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
 	@SuppressWarnings("unused")
@@ -126,6 +128,31 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     }
   }
   
+  public List<CateClass> getListObjCategory (String newParentId) {
+    FAQService faqService  = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+    try {
+      List<CateClass> listCate = new ArrayList<CateClass>() ;
+      CateClass cateClass = new CateClass() ;
+      cateClass.setCategory(faqService.getCategoryById(this.categoryId_, FAQUtils.getSystemProvider())) ;
+      cateClass.setCateParentId(newParentId) ;
+      listCate.add(cateClass) ;
+      int i = 0 ;
+      while(i < listCate.size()) {
+        for(Category category : faqService.getSubCategories(listCate.get(i).getCategory().getId(), FAQUtils.getSystemProvider())) {
+          cateClass = new CateClass() ;
+          cateClass.setCategory(category) ;
+          cateClass.setCateParentId(listCate.get(i).getCategory().getId()) ;
+          listCate.add(cateClass) ;
+        }
+        i ++ ;
+      }
+      return listCate ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null ;
+  }
+  
 	@SuppressWarnings("unused")
   private List<Category> getCategories() throws Exception {
 		FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -145,13 +172,25 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     	String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
     	FAQService faqService  = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
     	if (destCategoryId != null && moveCategory.getCategoryID() != null) {
+    	  List<String> usersOfNewCateParent = Arrays.asList(faqService.getCategoryById(destCategoryId, FAQUtils.getSystemProvider()).getModerators()) ;
     		faqService.moveCategory(moveCategory.getCategoryID(), destCategoryId, FAQUtils.getSystemProvider()) ;
+        for(CateClass cateClass : moveCategory.getListObjCategory(destCategoryId)) {
+          List<String> newUserList = new ArrayList<String>() ;
+          newUserList.addAll(usersOfNewCateParent) ;
+          for(String user : cateClass.getCategory().getModerators()) {
+            if(!newUserList.contains(user)) {
+              newUserList.add(user) ;
+            }
+          }
+          cateClass.getCategory().setModerators(newUserList.toArray(new String[]{})) ;
+          faqService.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, FAQUtils.getSystemProvider()) ;
+        }
     	}
     	UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			questions.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			faqPortlet.cancelAction() ;
-		return ;
+			return ;
 		}
 	}
 
@@ -162,6 +201,25 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 		}
 	}
 	
-	
+  private class CateClass {
+    Category category_ ;
+    String cateParentId_ ;
+    
+    public CateClass() {} ;
+    
+    public void setCategory(Category category) {
+      category_ = category ;
+    }
+    public void setCateParentId (String cateId) {
+      this.cateParentId_ = cateId ;
+    }
+    
+    public Category getCategory(){
+      return this.category_ ;
+    }
+    public String getParentId() {
+      return this.cateParentId_ ;
+    }
+  }
 	
 }

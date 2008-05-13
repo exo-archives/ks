@@ -84,11 +84,15 @@ public class FAQServiceImpl implements FAQService{
 		return jcrData_.getQuestionsByCatetory(categoryId, sProvider);
 	}
   
+	public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
+	  return jcrData_.getAllQuestionsByCatetory(categoryId, sProvider);
+	}
+  
 	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getQuestionsByListCatetory(listCategoryId, isNotYetAnswer, sProvider);
 	}
   
-  public List<Node>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
+  public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
     return jcrData_.getQuestionLanguages(questionId, sProvider) ;
   }
 

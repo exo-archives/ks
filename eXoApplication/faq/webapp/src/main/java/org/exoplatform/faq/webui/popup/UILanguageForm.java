@@ -49,7 +49,6 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
   private List<String> listLocaldName = new ArrayList<String>() ;
   private List<String> LANGAUGE_SELECT = new ArrayList<String>() ;
   
-  private boolean isReponse_ = false ;
   private boolean isManagerment_ = false ;
   
   public void activate() throws Exception { }
@@ -61,14 +60,9 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
   private boolean getIsManagerment() {
     return isManagerment_ ;
   }
-  
-  public void setResponse(boolean isResponse) {
-    this.isReponse_ = isResponse ;
-  }
 	 
 	public UILanguageForm() throws Exception {
     List<String> listLanguage = new ArrayList<String>() ;
-    isReponse_ = false ;
     isManagerment_ = false ;
     
     LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
@@ -77,7 +71,6 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
       Locale locale = localeConfig.getLocale() ;
       String displayName = locale.getDisplayLanguage() ;
       String lang = locale.getLanguage() ;
-      locale.getDefault() ;
       String localedName = locale.getDisplayName(locale) ;   
       listLanguage.add(displayName) ;
       listLocaldName.add(localedName) ;
@@ -124,10 +117,6 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
   			UIQuestionManagerForm questionManagerForm = popupContainer.getChild(UIQuestionManagerForm.class) ;
         questionManagerForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;
         questionManagerForm.initPage(true) ;
-      } else if(languageForm.isReponse_){
-        UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
-        responseForm.setListLanguageToReponse(languageForm.LANGAUGE_SELECT) ;
-        responseForm.initPage(true) ;
       } else {
         UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
         questionForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;

@@ -729,6 +729,11 @@ UIFAQPortlet .ResultQuickSearch {
   width: 16px; height: 16px;
 }
 
+.UIFAQPortlet .NotResponse {
+  background:transparent url(background/NotResponse.gif) no-repeat left;
+  width: 16px; height: 16px;
+}
+
 .UIFAQPortlet .CategoryIcon {
   background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -465px;
   width: 17px; height: 17px;

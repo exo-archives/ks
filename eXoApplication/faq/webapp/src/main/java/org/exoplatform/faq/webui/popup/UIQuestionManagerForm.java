@@ -426,20 +426,13 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   static public class DeleteQuestionActionListener extends EventListener<UIQuestionManagerForm> {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
-      String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      for(Question question : questionManagerForm.getListQuestion()) {
-        if(question.getId().equals(quesId)) {
-          if(quesId.equals(questionManagerForm.questionId_)) {
-            questionManagerForm.isEdit = false ;
-          }
-          questionManagerForm.listQuestion_.remove(question) ;
-          break ;
-        }
-      }
-      faqService_.removeQuestion(quesId, FAQUtils.getSystemProvider()) ;
+      String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       
-      UIFAQPortlet portlet = questionManagerForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+      UIDeleteQuestion deleteQuestion = popupAction.activate(UIDeleteQuestion.class, 500) ;
+      deleteQuestion.setIsManagement(true) ;
+      deleteQuestion.setQuestionId(questionId) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }

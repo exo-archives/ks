@@ -105,9 +105,7 @@
 							<div style="clear: left;"><span/></div>
 						</div>
 						<div class="SearchForm">
-						<%  
-							uicomponent.renderChildren() ;
-						%>
+								<%uicomponent.renderChildren() ;%>
 						</div>
 				
 						<div style="clear: both;"><span></span></div>
@@ -252,6 +250,7 @@
 														<%
 															}
 														%>
+														
 													</div>
 												</div>
 											</div>

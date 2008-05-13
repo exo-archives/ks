@@ -59,7 +59,7 @@ public class Category {
   public void setModerateQuestions(boolean isMod) { isModerateQuestions = isMod ; }
   public boolean isModerateQuestions() { return isModerateQuestions ; }
   
-  public String[] getUser() throws Exception {
+  public String[] getModeratorsCategory() throws Exception {
   	List<String> listUser = new ArrayList<String>();
   	List<String> modera = FAQServiceUtils.getUserPermission(moderators) ;
 		for (String string : modera) {

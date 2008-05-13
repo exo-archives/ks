@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -176,12 +177,25 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
-			String[] listUser = FAQUtils.splitForFAQ(moderator) ;
-      cat.setModerators(listUser) ;
+			List<String>listUser = new ArrayList<String>() ; 
+      listUser.addAll(Arrays.asList(FAQUtils.splitForFAQ(moderator))) ;
 			FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentPath() ;
+      
+      /*----modified by Mai Van Ha----*/
+      if(parentCate != null && parentCate.trim().length() > 0) {
+        Category category = faqService.getCategoryById(parentCate, FAQUtils.getSystemProvider()) ;
+        for(String user : Arrays.asList(category.getModerators())) {
+          if(!listUser.contains(user)) {
+            listUser.add(user) ;
+          }
+        }
+      }
+      /*-----End---------------------*/
+      
+      cat.setModerators(listUser.toArray(new String[]{})) ;
 			if(parentCate != null && parentCate.length() > 0) {
 				if(uiCategory.categoryId_.length() > 0) {
 					cat.setId(uiCategory.categoryId_) ;

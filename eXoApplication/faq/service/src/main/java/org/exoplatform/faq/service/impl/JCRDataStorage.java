@@ -44,6 +44,7 @@ import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.mail.service.MailService;
@@ -156,6 +157,7 @@ public class JCRDataStorage {
         }
       }
     }
+    //Send notifycation when add new qustion in watching category
     questionNode.getSession().save() ;
     //if(questionNode.isNew()) questionNode.getSession().save() ;
     //else questionNode.save() ;
@@ -231,21 +233,29 @@ public class JCRDataStorage {
 		return config ;
   }
   
-  public List<Node> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
+  public List<QuestionLanguage> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
+    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
     String languages = "languages" ;
     Node questionHome = getQuestionHome(sProvider, null) ;
     Node questionNode = questionHome.getNode(questionId) ;
-    List<Node> listLanguageNode =  new ArrayList<Node>() ;
     if(questionNode.hasNode(languages)) {
+      System.out.println("have language node");
       Node languageNode = questionNode.getNode(languages) ;
       NodeIterator nodeIterator = languageNode.getNodes() ;
       while(nodeIterator.hasNext()) {
         Node node = (Node)nodeIterator.next() ;
-        if(node.hasProperty("exo:name")) System.out.println("\t" + node.getProperty("exo:name").getValue());
-        listLanguageNode.add(node) ;
+        QuestionLanguage questionLanguage = new QuestionLanguage() ;
+        
+        questionLanguage.setLanguage(node.getName()) ;
+        if(node.hasProperty("exo:name")) questionLanguage.setQuestion(node.getProperty("exo:name").getValue().getString());
+        if(node.hasProperty("exo:responses")) questionLanguage.setResponse(node.getProperty("exo:responses").getValue().getString());
+        
+        listQuestionLanguage.add(questionLanguage) ;
       }
+    } else {
+      System.out.println("not have children node of questionNode");
     }
-    return listLanguageNode ;
+    return listQuestionLanguage ;
   }
   
   public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
@@ -350,6 +360,19 @@ public class JCRDataStorage {
                                                 + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
                                                 append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
                                                 append("]").append("order by @exo:createdDate ascending");
+//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    return pageList ;
+  }
+  
+  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+        + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
+        append("]").append("order by @exo:createdDate ascending");
 //    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();

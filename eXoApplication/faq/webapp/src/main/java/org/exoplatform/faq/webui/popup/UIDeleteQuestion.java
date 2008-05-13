@@ -46,8 +46,14 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
   @SuppressWarnings("unused")
+  private boolean isManagement_ = false ;
+  
   private Question question = null ;
   private FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  
+  public UIDeleteQuestion() {
+    isManagement_ = false ;
+  }
 
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -67,6 +73,10 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
     return this.question.getQuestion() ;
   }
   
+  public void setIsManagement(boolean isManagement) {
+    this.isManagement_ = isManagement ;
+  }
+  
   public void setQuestionId(String questionId) {
     try {
       question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
@@ -79,14 +89,20 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
     public void execute(Event<UIDeleteQuestion> event) throws Exception {
       UIDeleteQuestion deleteQuestion = event.getSource() ;
       deleteQuestion.faqService.removeQuestion(deleteQuestion.question.getId(), FAQUtils.getSystemProvider()) ;
-      
-      UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      questions.setListQuestion() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      if(!deleteQuestion.isManagement_) {
+        UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+        UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+        questions.setListQuestion() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      } else {
+        UIPopupContainer popupContainer = deleteQuestion.getAncestorOfType(UIPopupContainer.class) ;
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      }
     }
   }
   
