@@ -30,6 +30,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIMergeTopicForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
@@ -89,6 +90,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
+			@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
 			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
 		}
 )
@@ -855,7 +857,8 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	}
 
 	static public class SetUnWaitingActionListener extends EventListener<UITopicContainer> {
-		public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+    public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -902,4 +905,16 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 		}
 	}
 	
+	static public class AddWatchingActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer topicContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
+			addWatchingForm.setPathNode(path);
+			popupAction.activate(addWatchingForm, 425, 250) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
 }

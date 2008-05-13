@@ -14,12 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum.webui;
+package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.forum.webui.popup.UIPopupComponent;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -29,7 +32,6 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.validator.MandatoryValidator;
 
 /**
  * Created by The eXo Platform SAS
@@ -49,6 +51,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 	final static public String EMAIL_ADDRESS = "emails" ;
 	public static final String USER_NAME = "userName" ; 
+	private String path = "";
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(EMAIL_ADDRESS,EMAIL_ADDRESS) ;
 	public UIAddWatchingForm() throws Exception {
   	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
@@ -61,6 +64,9 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 	}
 	public void deActivate() throws Exception {}
 	
+	public void setPathNode(String path) {
+	  this.path = path ;
+  }
 	private void initMultiValuesField(List<String> list) throws Exception {
 		if( uiFormMultiValue != null ) removeChildById(EMAIL_ADDRESS);
 		uiFormMultiValue = createUIComponent(UIFormMultiValueInputSet.class, null, null) ;
@@ -76,10 +82,15 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 		@SuppressWarnings("unchecked")
     public void execute(Event<UIAddWatchingForm> event) throws Exception {
 			UIAddWatchingForm uiForm = event.getSource() ;
+			String path = uiForm.path;
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
-			for (String string : values) {
-	      System.out.println("\n\n Gia tri: " + string);
-      }
+			if(values.size() > 0 && path != null && path.length() > 0) {
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				forumService.addWatch(ForumSessionUtils.getSystemProvider(), 1, path, values) ;
+			}
+			uiForm.path = "";
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.cancelAction() ;
 		}
 	}
 	

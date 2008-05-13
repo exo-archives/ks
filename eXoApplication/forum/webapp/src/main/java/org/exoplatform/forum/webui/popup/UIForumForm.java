@@ -63,6 +63,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		events = {
 			@EventConfig(listeners = UIForumForm.SaveActionListener.class), 
 			@EventConfig(listeners = UIForumForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIForumForm.AddValuesMailActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumForm.SelectTabActionListener.class, phase=Phase.DECODE)
 		}
@@ -124,6 +125,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		description.addValidator(EmptyNameValidator.class) ;
 		UIFormTextAreaInput notifyWhenAddPost = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE, null);
 		UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
+		notifyWhenAddPost.setEditable(false);
+		notifyWhenAddTopic.setEditable(false) ;
 		
 		UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE, FIELD_MODERATOR_MULTIVALUE, null);
 		UIFormTextAreaInput viewer = new UIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE, FIELD_VIEWER_MULTIVALUE, null) ;
@@ -169,6 +172,17 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				++i;
 			}
 			forumPermission.setActionField(fieldPermission, actions);
+		}
+		strings = new String[]{FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE} ;
+		for(String string : strings) {
+			actions = new ArrayList<ActionData>() ;
+			ad = new ActionData() ;
+			ad.setActionListener("AddValuesMail") ;
+			ad.setActionParameter(string) ;
+			ad.setCssIconClass("AddIcon16x16") ;
+			ad.setActionName(string);
+			actions.add(ad) ;
+			moderationOptions.setActionField(string, actions);
 		}
 		
 		addUIFormInput(newForum);
@@ -235,21 +249,25 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	
 	public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
-    String values = fieldInput.getValue() ;
-    boolean canAdd = true ;
-    if(values != null && values.trim().length() > 0) {
-      if(!ForumFormatUtils.isStringInStrings(values.split(","), value)){
-        if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
-        else values = values.trim() + ",";
-      } else {
-        canAdd = false ;
-      }
+    if(selectField.indexOf("Notify") >= 0) {
+    	fieldInput.setValue(value) ;
     } else {
-      values = "" ;
-    }
-    if(canAdd) {
-      values = values.trim() + value ;
-      fieldInput.setValue(values) ;
+	    String values = fieldInput.getValue() ;
+	    boolean canAdd = true ;
+	    if(values != null && values.trim().length() > 0) {
+	      if(!ForumFormatUtils.isStringInStrings(values.split(","), value)){
+	        if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
+	        else values = values.trim() + ",";
+	      } else {
+	        canAdd = false ;
+	      }
+	    } else {
+	      values = "" ;
+	    }
+	    if(canAdd) {
+	      values = values.trim() + value ;
+	      fieldInput.setValue(values) ;
+	    }
     }
   }
   
@@ -416,8 +434,22 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		}
 	}
 	
-	static	public class CancelActionListener extends EventListener<UIForumForm> {
+	static	public class AddValuesMailActionListener extends EventListener<UIForumForm> {
     public void execute(Event<UIForumForm> event) throws Exception {
+    	UIForumForm forumForm = event.getSource() ;
+    	String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+    	if(objctId != null && objctId.length() > 0) {
+    		UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class) ;
+    		UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+    		UIAddMultiValueForm multiValueForm = popupAction.activate(UIAddMultiValueForm.class, 500) ;
+    		multiValueForm.setComponent(forumForm, new String[]{objctId}) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+    	}
+		}
+	}
+
+	static	public class CancelActionListener extends EventListener<UIForumForm> {
+		public void execute(Event<UIForumForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}

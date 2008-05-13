@@ -26,7 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -86,6 +87,20 @@ public class ForumFormatUtils {
     int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
     calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
     return  calendar;
+  }
+  
+  public static boolean isValidEmailAddresses(String addressList) throws Exception {
+    if (addressList == null || addressList.length() <= 0)  return true ;
+    try {
+      InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
+      String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
+      for (int i = 0 ; i < iAdds.length; i ++) {
+        if(!iAdds[i].getAddress().toString().matches(emailRegex)) return false;
+      }
+    } catch(AddressException e) {
+      return false ;
+    }
+    return true ;
   }
   
   public static String getSizeFile(double size) {

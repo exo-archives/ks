@@ -761,16 +761,17 @@ public class JCRDataStorage{
 					}
 					userProfileNode.getSession().save() ;
 					
-					//send watching notification
+					List<String> emailList = new ArrayList<String>() ;
+					//send watching notification and send notify
 					if(forumNode.isNodeType("exo:forumWatching")){
-						Value[] emails = forumNode.getProperty("exo:emailWatching").getValues() ;
-		    		if(emails != null && emails.length > 0) {    			
+						emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues())) ;
+		    		if(emailList.size() > 0) {    			
 		    			Message message = new Message();
 		          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
 		    			message.setSubject("eXo Forum Watching Notification!");
-		    			message.setMessageBody("The Forum '" + forumNode.getProperty("exo:name").getString() 
-		    					+"' have just  added thread:</br>" + topic.getTopicName());
-		    			sendNotification(emails, message) ;    			
+		    			message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString() 
+		    					+"</b>' have just  added thread:</br>" + topic.getTopicName());
+		    			sendNotification(emailList, message) ;    			
 		    		}
 					}
 				} else {
@@ -1125,31 +1126,37 @@ public class JCRDataStorage{
 					long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1 ;
 					forumNode.setProperty("exo:postCount", forumPostCount ) ;
 					forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
-					
+					List<String> emailList = new ArrayList<String>() ;
 					//Send notify for watching users
-					if(topicNode.isNodeType("exo:forumWatching")) {
-						Value[] emails = topicNode.getProperty("exo:emailWatching").getValues() ;
-		    		if(emails != null && emails.length > 0) {    			
-		    			Message message = new Message();
-		          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-		    			//message.setMessageTo(question.getEmail());
-		    			message.setSubject("eXo Thread Watching Notification!");
-		    			message.setMessageBody("The Thread '" + topicNode.getProperty("exo:name").getString() 
-		    					+"' have just  added post:</br>" + post.getMessage());
-		    			sendNotification(emails, message) ;    			
-		    		}
-					}
-					if(forumNode.isNodeType("exo:forumWatching")) {
-						Value[] emails = forumNode.getProperty("exo:emailWatching").getValues() ;
-		    		if(emails != null && emails.length > 0) {    			
+					if(!topicId.replaceFirst("topic", "post").equals(post.getId())) {
+						if(topicNode.isNodeType("exo:forumWatching")) {
+			    		emailList = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues()) ;
+							if(emailList.size() > 0) {    			
+			    			Message message = new Message();
+			          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+			    			//message.setMessageTo(question.getEmail());
+			    			message.setSubject("eXo Thread Watching Notification!");
+			    			message.setMessageBody("The Thread '<b>" + topicNode.getProperty("exo:name").getString() 
+			    					+"</b>' have just  added post:<div>" + post.getMessage() + "</div>");
+			    			sendNotification(emailList, message) ;    			
+			    		}
+						}
+						emailList = new ArrayList<String>() ;
+						if(forumNode.hasProperty("exo:notifyWhenAddPost")) {
+							emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues())) ;
+						}
+						if(forumNode.isNodeType("exo:forumWatching")) {
+							emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues())) ;
+						}
+						if(emailList.size() > 0) {    			
 		    			Message message = new Message();
 		          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
 		    			//message.setMessageTo(question.getEmail());
 		    			message.setSubject("eXo Forum Watching Notification!");
-		    			message.setMessageBody("The Forum '" + forumNode.getProperty("exo:name").getString() 
-		    					+"' have just  added post:</br>" + post.getMessage());
-		    			sendNotification(emails, message) ;    			
-		    		}
+		    			message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString() 
+		    					+"</b>' have just  added post:<div>" + post.getMessage() + "</div>");
+		    			sendNotification(emailList, message) ;    			
+						}
 					}
 				} else {
 					long temp = topicNode.getProperty("exo:numberAttachments").getLong() -	postNode.getProperty("exo:numberAttach").getLong() ;
@@ -1166,21 +1173,26 @@ public class JCRDataStorage{
 		}
 	}
 	
-	
-	private void sendNotification(Value[] emails, Message message) throws Exception {
+	private void sendNotification(List<String> emails, Message message) throws Exception {
   	List<Message> messages = new ArrayList<Message> () ;
+  	List<String> emails_ = new ArrayList<String>();
   	ServerConfiguration config = getServerConfig() ;
-  	if(emails != null && emails.length > 0) {
-  		for(Value vl : emails) {
-  			message.setMessageTo(vl.getString()) ;
-  			message.setFrom(config.getUserName()) ;
-  			messages.add(message) ;
-  		}
+		for(String string : emails) {
+			if(emails_.contains(string)) continue ;
+			emails_.add(string) ;
+			message.setMessageTo(string) ;
+			message.setFrom(config.getUserName()) ;
+			messages.add(message) ;
+		}
+  	try{
+  		if(messages.size() > 0) {
+    		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+    		mService.sendMessages(messages, config) ;
+    	}
+  	}catch(Exception e) {
+  		e.printStackTrace() ;
   	}
-  	if(messages.size() > 0) {
-  		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
-  		mService.sendMessages(messages, config) ;
-  	}
+  	
   }
   
   private ServerConfiguration getServerConfig() throws Exception {
@@ -1772,7 +1784,7 @@ public class JCRDataStorage{
 			if(messageNode.hasProperty("exo:isUnread")){
 				isNew = messageNode.getProperty("exo:isUnread").getBoolean() ;
 			}
-			if(isNew) {// doc lan dau
+			if(isNew) {// First read message.
 				messageNode.setProperty("exo:isUnread", false) ;
 			}
 		} catch (PathNotFoundException e) {
@@ -1960,7 +1972,6 @@ public class JCRDataStorage{
     	forumStatisticNode.setProperty("exo:newMembers", forumStatistic.getNewMembers()) ;
     	forumStatisticNode.setProperty("exo:mostUsersOnline", forumStatistic.getMostUsersOnline()) ;
     }
-//    forumHomeNode.save() ;
     forumHomeNode.getSession().save() ;
   }
 	
@@ -1973,6 +1984,19 @@ public class JCRDataStorage{
 			Str[i] = Val[i].getString() ;
 		}
 		return Str;
+	}
+
+	private List<String> ValuesToList(Value[] values) throws Exception {
+		List<String> list = new ArrayList<String>() ;
+		if(values.length < 1) return list ;
+		if(values.length == 1) {
+			list.add(values[0].getString()) ;
+			return list ;
+		}
+		for(int i = 0; i < values.length; ++i) {
+			list.add(values[i].getString() );
+		}
+		return list;
 	}
 	
 	private static String[] getStrings(List<String> list) throws Exception {
@@ -2068,7 +2092,9 @@ public class JCRDataStorage{
 							linkData = new ForumLinkData() ;
 							Node topicNode = (Node) iterTopic.nextNode();
 							linkData.setId(topicNode.getName());
-							linkData.setName(topicNode.getProperty("exo:name").getString());
+							if(topicNode.hasProperty("exo:name"))
+								linkData.setName(topicNode.getProperty("exo:name").getString());
+							else linkData.setName("null");
 							linkData.setType("topic");
 							linkData.setPath(cateNode.getName() + "/" + forumNode.getName() + "/" + topicNode.getName());
 							forumLinks.add(linkData) ;
@@ -2080,7 +2106,6 @@ public class JCRDataStorage{
 		return forumLinks ;
 	}
 
-// TODO: coding
 	public List<ForumSeach> getQuickSeach(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		List<ForumSeach> listSeachEvent = new ArrayList<ForumSeach>() ;
@@ -2107,9 +2132,6 @@ public class JCRDataStorage{
 	    	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
 	    }
 	    queryString.append("]") ;
-	    
-//	    System.out.println("\n\nQuyryString: " + queryString);
-	    
 	    Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
@@ -2146,7 +2168,6 @@ public class JCRDataStorage{
 		eventQuery.setPath(path) ;
 		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
-//		System.out.println("\n\n=====> queryPath: " +  queryString + "\n======> Path: " + eventQuery.getPath());
 		try {
 			Query query = qm.createQuery(queryString, Query.XPATH) ;
 			QueryResult result = query.execute() ;
@@ -2175,7 +2196,33 @@ public class JCRDataStorage{
 	  return listSeachEvent;
   }
 
-	
+	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception {
+  	Node watchingNode = null;
+  	try{
+			watchingNode = (Node)getForumHomeNode(sProvider).getSession().getItem(path) ;
+			//add watching for node
+			if(watchingNode.isNodeType("exo:forumWatching")) {
+				if(watchType == 1) {//send email when had changed on category
+					String[] strings = ValuesToStrings(watchingNode.getProperty("exo:emailWatching").getValues()) ;
+					for(String str : strings) {
+						if(values.contains(str)) continue ;
+						values.add(str) ;
+					}
+					watchingNode.setProperty("exo:emailWatching", getStrings(values)) ;
+				}
+				watchingNode.save() ;
+			} else {
+				watchingNode.addMixin("exo:forumWatching") ;
+				if(watchType == 1) { //send email when had changed on category 
+					watchingNode.setProperty("exo:emailWatching", getStrings(values)) ;
+				}
+				watchingNode.save() ;
+			}
+			watchingNode.getSession().save();
+		} catch (PathNotFoundException e) {
+			e.printStackTrace();
+		}
+  }
 
 
 	

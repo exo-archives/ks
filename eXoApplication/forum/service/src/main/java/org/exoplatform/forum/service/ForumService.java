@@ -318,6 +318,8 @@ public interface ForumService {
 	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage ) throws Exception ;
 	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception ;
 	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception ;
+	
+	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception;
 }
 
 

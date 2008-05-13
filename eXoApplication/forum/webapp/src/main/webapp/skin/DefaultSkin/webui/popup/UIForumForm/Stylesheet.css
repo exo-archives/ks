@@ -27,8 +27,9 @@
 }
 
 .UIForumForm .HorizontalLayout .moderationOptions textarea {
-	width: 340px;
+	width: 280px;
 	height: 40px;
+	float: left;
 }
 
 .UIForumForm .ForumPermission {

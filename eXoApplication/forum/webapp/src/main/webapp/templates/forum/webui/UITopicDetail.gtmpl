@@ -523,7 +523,7 @@
 				}
 				UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 				String classIconPost = post.getIcon() ;
-				if(classIconPost.length() <= 0) 
+				if(classIconPost == null || classIconPost.length() <= 0) 
 					classIconPost = "NormalTopicIcon" ;
 				String namePost = post.getName() ;
 				Date createdPostDate = post.getCreatedDate() ;
@@ -635,7 +635,7 @@
 									<% } else {%>
 									<div><strong>$owner</strong> has no post!</div>
 									<% } 
-									 if(location.length() > 0) {
+									 if(location != null && location.length() > 0) {
 									%>
 									<div>Location: location</div>
 									<%} 

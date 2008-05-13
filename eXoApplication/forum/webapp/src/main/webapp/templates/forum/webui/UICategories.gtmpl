@@ -156,7 +156,7 @@
 										}
 										String id = category.getId() + "," + forum.getId();
 										actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+forum.getPath());
-										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching");
+										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",forum.getPath());
 								%>
 										<tr class="$classRow">
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
@@ -174,7 +174,7 @@
 											</td>
 											<%if(topicNewPost != null) {
 												actionBookmark = uicomponent.event("AddBookMark",topicNewPostIcon+"//"+topicNewPostTitle+"//"+forum.getLastTopicPath());
-												actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching");
+												actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",forum.getLastTopicPath());
 											%>
 										 	<td >
 										 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
