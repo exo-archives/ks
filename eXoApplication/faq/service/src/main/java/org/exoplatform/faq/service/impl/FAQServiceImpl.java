@@ -72,8 +72,12 @@ public class FAQServiceImpl implements FAQService{
 	  return jcrData_.getQuestionsNotYetAnswer(sProvider);
 	}
 
+	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getCategoryInfo(categoryId, sProvider);
+	}
+  
 	public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
-		return jcrData_.getCategoryById(categoryId, sProvider);
+	  return jcrData_.getCategoryById(categoryId, sProvider);
 	}
 
 	public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {

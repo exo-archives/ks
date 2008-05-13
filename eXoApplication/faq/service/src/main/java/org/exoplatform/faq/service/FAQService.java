@@ -148,6 +148,10 @@ public interface FAQService {
    * @throws Exception
    */
   public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
+  /*
+   * 
+   * */
+  public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions node via category identify

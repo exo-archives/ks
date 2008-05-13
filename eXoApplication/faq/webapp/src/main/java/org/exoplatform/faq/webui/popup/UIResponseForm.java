@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.faces.component.UISelectItems;
 import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
@@ -228,6 +227,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     return listFileAttach_ ;
   }
   
+  @SuppressWarnings("unused")
   private String getLanguageIsResponse() {
     return this.languageIsResponsed ;
   }

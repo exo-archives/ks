@@ -134,10 +134,10 @@
 				
 				categoryId = category.getId();
 				String link = uicomponent.event("OpenCategory", categoryId) ;
-				int[] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
-				int numSubCate = cateInfo[0] ;
-				int numQuestion = cateInfo[1] ;
-				int numNotYetAnswer = cateInfo[2] ;
+				long [] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
+				long numSubCate = cateInfo[0] ;
+				long numQuestion = cateInfo[1] ;
+				long numNotYetAnswer = cateInfo[2] ;
 	%>
 			<div class="FAQCategory">
 				<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">

@@ -242,12 +242,10 @@ public class UIQuestions extends UIContainer {
 	}
   //Need to make API to check this info, Do NOT do as now 
 	@SuppressWarnings("unused")
-	private int[] getCategoryInfo(String categoryId) {
-    int[] result = new int[]{0,0,0} ;
+	private long[] getCategoryInfo(String categoryId) {
+    long[] result = new long[]{0,0,0} ;
 	  try {
-      result[0] = faqService.getSubCategories(categoryId, FAQUtils.getSystemProvider()).size();
-      result[1] = faqService.getQuestionsByCatetory(categoryId, FAQUtils.getSystemProvider()).getAll().size() ;
-      result[2] = faqService.getQuestionsByListCatetory(Arrays.asList(new String[]{categoryId}), true, FAQUtils.getSystemProvider()).getAll().size() ;
+      result = faqService.getCategoryInfo(categoryId, FAQUtils.getSystemProvider()) ;
 	  } catch (Exception e) {
       e.printStackTrace() ;
     }

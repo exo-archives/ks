@@ -546,6 +546,32 @@ public class JCRDataStorage {
   	return catList ;
   }
   
+  public long[] getCategoryInfo( String categoryId, SessionProvider sProvider) throws Exception  {
+    long[] cateInfo = new long[]{0, 0, 0};
+    Node parentCategory = getCategoryHome(sProvider, null) ;
+    NodeIterator iter = parentCategory.getNodes() ;
+    while(iter.hasNext()) {
+      cateInfo[0] ++ ;
+    }
+    
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+        + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
+        append("]").append("order by @exo:createdDate ascending");
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    cateInfo[1] = result.getNodes().getSize() ;
+    
+    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+        + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+        append(" and (@exo:responses=' ')]").append("order by @exo:createdDate ascending");
+    query = qm.createQuery(queryString.toString(), Query.XPATH);
+    result = query.execute();
+    cateInfo[2] = result.getNodes().getSize() ;
+    return cateInfo ;
+  }
+  
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
   	Node catNode = getCategoryNodeById(categoryId, sProvider) ;
   	Node destCatNode = getCategoryNodeById(destCategoryId, sProvider) ;	
