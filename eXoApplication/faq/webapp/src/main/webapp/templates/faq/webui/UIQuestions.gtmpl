@@ -15,8 +15,10 @@
   				<div class="CenterBar">
   					<div class="ControlbarCotainer">
 							<%
+							System.out.println("\n\n\n\n -----> go to uiFAQQuestion.gtmpl" ) ;
 							uicomponent.setIsModerators() ;
 								
+							System.out.println("\n\n\n\n -----> go to uiFAQQuestion.gtmpl" ) ;
 							boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
 							String cateId = uicomponent.getCategoryId() ;
 							String[] categoryAction = null ;
@@ -134,10 +136,6 @@
 				
 				categoryId = category.getId();
 				String link = uicomponent.event("OpenCategory", categoryId) ;
-				long [] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
-				long numSubCate = cateInfo[0] ;
-				long numQuestion = cateInfo[1] ;
-				long numNotYetAnswer = cateInfo[2] ;
 	%>
 			<div class="FAQCategory">
 				<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
@@ -145,7 +143,6 @@
 						<a href="$link">
 							$categoryName
 						</a>
-						&nbsp;( $numSubCate sub-category, $numQuestion Questions, $numNotYetAnswer Not yet answer )
 						<!-- action of this category -->
 					  
 						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
