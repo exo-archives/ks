@@ -203,10 +203,16 @@ public class ForumFormatUtils {
 		while (true) {
 			i = s.indexOf("http://");
 			if(i < 0)break ;
-			if(i > 6 && s.substring(i-6,i-2).equalsIgnoreCase("href")) {
-				i = s.indexOf("</a>");
-				buffer.append(s.substring(0, i+4));
-				s = s.substring(i+4);
+			if(i > 6 && s.substring(i-2,i).equalsIgnoreCase("=\"")) {
+				i = s.indexOf("/>");
+				if(i < 0) {
+					i = s.indexOf("</");//</a>
+					buffer.append(s.substring(0, i+4));
+					s = s.substring(i+4);
+				} else {
+					buffer.append(s.substring(0, i+2));
+					s = s.substring(i+2);
+				}
 			}else {
 				j = 0;
 				String temp = s.substring(i) ;
