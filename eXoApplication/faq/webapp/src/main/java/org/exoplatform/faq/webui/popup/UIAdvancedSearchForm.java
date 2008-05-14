@@ -193,27 +193,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		}
 	}
 	
-//	public void fillData() throws Exception { 
-//		Event<UIAdvancedSearchForm> event;
-//		UIAdvancedSearchForm a = event.getSource() ;	
-//		FAQService faqService = getApplicationComponent(FAQService.class);
-////    FAQEventQuery setting = faqService.getFAQEventQuery(FAQUtils.getSystemProvider());
-//		FAQEventQuery eventQuery = new FAQEventQuery() ;
-//		String type = 
-//		getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue();
-//		getUIStringInput(TEXT).getValue() ;
-//		getUIFormDateTimeInput(FROM_DATE).getCalendar() ;
-//		getUIFormDateTimeInput(TO_DATE).getCalendar() ;
-//		if(type.equals("faqCategory")) {	
-//			getUIStringInput(FIELD_CATEGORY_NAME).getValue() ;
-//			getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue() ;
-//		} else if(type.equals("faqQuestion")){ 
-//			getUIStringInput(AUTHOR).getValue() ;
-//			getUIStringInput(EMAIL_ADDRESS).getValue() ;
-//			getUIFormTextAreaInput(QUESTION).getValue() ;
-//			getUIFormTextAreaInput(RESPONSE).getValue() ;
-//		}
-//	}
 	static public class SearchActionListener extends EventListener<UIAdvancedSearchForm> {
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
 			UIAdvancedSearchForm advancedSearch = event.getSource() ;		

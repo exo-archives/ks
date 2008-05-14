@@ -115,7 +115,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       message.setFrom(fullFrom) ;
       message.setMessageTo(to) ;
       message.setMessageCc(cc) ;
-      message.setMessageCc(bcc) ;
+      message.setMessageBcc(bcc) ;
       message.setSubject(subject) ;
       message.setMessageBody(body) ;
       FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
