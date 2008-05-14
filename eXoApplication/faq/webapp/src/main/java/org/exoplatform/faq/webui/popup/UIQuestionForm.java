@@ -117,7 +117,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
 	}
   
   public void refresh() throws Exception {
+  	
   	listFileAttach_.clear() ;
+  	System.out.println("listFileAttach_ =======>"+ listFileAttach_.size());
   }
   public void initPage(boolean isEdit) {
     if(isEdit) {
