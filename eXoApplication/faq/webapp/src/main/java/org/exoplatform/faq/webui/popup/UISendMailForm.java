@@ -77,7 +77,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			UIApplication uiApp = sendMailForm.getAncestorOfType(UIApplication.class) ;
       String formName = ((UIFormStringInput)sendMailForm.getChildById(FROM_NAME)).getValue() ;
       String from = ((UIFormStringInput)sendMailForm.getChildById(FROM)).getValue() ;
-      String fullFrom = formName + "<" + from + ">" ;
+      String fullFrom = formName + "(" + from + ")" ;
       String to = ((UIFormStringInput)sendMailForm.getChildById(TO)).getValue() ;
       String subject = ((UIFormStringInput)sendMailForm.getChildById(SUBJECT)).getValue() ;
       String cc = ((UIFormStringInput)sendMailForm.getChildById(ADD_CC)).getValue() ;
@@ -90,6 +90,10 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
         uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.to-field-empty", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
+      } else if (FAQUtils.isFieldEmpty(from)) {
+      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.from-field-empty", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
       } else if (!FAQUtils.isValidEmailAddresses(to)) {
         uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-to-field", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -97,9 +101,15 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       } else if(!FAQUtils.isValidEmailAddresses(cc)) {
       	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-cc-field",null)) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	return ;
       } else if(!FAQUtils.isValidEmailAddresses(bcc)) {
       	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-bcc-field",null)) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	return ;
+      }  else if(!FAQUtils.isValidEmailAddresses(from)) {
+      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-from-field",null)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	return ;
       } 
       Message  message = new Message(); 
       message.setFrom(fullFrom) ;

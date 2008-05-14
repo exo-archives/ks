@@ -97,7 +97,7 @@ public class UIQuickSeach  extends UIForm {
 			UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
-			resultContainer.setAdvancedSearchIsRendered(true) ;
+			resultContainer.setIsRenderedContainer(1) ;
 			resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			resultContainer.setId("AdvanceSearchForm") ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

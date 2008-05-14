@@ -46,8 +46,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	public static final String EMAIL_ADDRESS = "emailAddress" ;
 	private String categoryId_ = "";
 	private UIFormMultiValueInputSet emailAddress;
-	public UIWatchForm() throws Exception {}
-  public void init() throws Exception {
+	public UIWatchForm() throws Exception {
   	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
   	emailAddress = new UIFormMultiValueInputSet(EMAIL_ADDRESS, EMAIL_ADDRESS );
 		emailAddress.setType(UIFormStringInput.class) ;

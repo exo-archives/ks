@@ -65,7 +65,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 )
 public class UICategoryForm extends UIForm implements UIPopupComponent, UISelector 	{
 	private String categoryId_ = "";
-	private String parentPath_ ;
+	private String parentId_ ;
 	final private static String EVENT_CATEGORY_NAME = "eventCategoryName" ; 
   final private static String DESCRIPTION = "description" ;
   final private static String MODERATOR = "moderator" ;
@@ -111,8 +111,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   public void activate() throws Exception {}
   public void deActivate() throws Exception {}
   
-  public String getParentPath() { return parentPath_; }
-  public void setParentPath(String s) { parentPath_ = s ; }
+  public String getParentId() { return parentId_; }
+  public void setParentId(String s) { parentId_ = s ; }
   
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
@@ -182,7 +182,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
-			String parentCate = uiCategory.getParentPath() ;
+			String parentCate = uiCategory.getParentId() ;
       
       /*----modified by Mai Van Ha----*/
       if(parentCate != null && parentCate.trim().length() > 0) {

@@ -50,31 +50,24 @@ public class UIResultContainer extends UIContainer implements UIPopupComponent {
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	public void setAdvancedSearchIsRendered(boolean isRendered) {
-		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
-		getChild(ResultQuickSearch.class).setRendered(!isRendered) ;
-		getChild(ResultSearchCategory.class).setRendered(!isRendered) ;
-		getChild(ResultSearchQuestion.class).setRendered(!isRendered) ;
-	}
-	
-	public void setCategoryQuestionSearchIsRendered(boolean isRendered) {
-		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
-		getChild(ResultQuickSearch.class).setRendered(isRendered) ;
-		getChild(ResultSearchCategory.class).setRendered(!isRendered) ;
-		getChild(ResultSearchQuestion.class).setRendered(!isRendered) ;
-	}
-	
-	public void setQuestionSearchIsRendered(boolean isRendered) {
-		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
-		getChild(ResultQuickSearch.class).setRendered(!isRendered) ;
-		getChild(ResultSearchCategory.class).setRendered(!isRendered) ;
-		getChild(ResultSearchQuestion.class).setRendered(isRendered) ;
-	}
-	public void setCategorySearchIsRendered(boolean isRendered) {
-		getChild(UIAdvancedSearchForm.class).setRendered(isRendered) ;
-		getChild(ResultQuickSearch.class).setRendered(!isRendered) ;
-		getChild(ResultSearchCategory.class).setRendered(isRendered) ;
-		getChild(ResultSearchQuestion.class).setRendered(!isRendered) ;
+	public void setIsRenderedContainer(int index) {
+		boolean isAdvanSearch = false, isQuickSearch = false, isSearchCate = false, isSearchQuesion = false ;
+		if(index == 1){	
+			isAdvanSearch = true ;
+		} else if(index == 2){
+			isAdvanSearch = true ;
+			isQuickSearch = true ;
+		} else if(index == 3){
+			isAdvanSearch = true ;
+			isSearchQuesion = true;
+		} else {
+			isAdvanSearch = true ;
+			 isSearchCate = true ;
+		}
+		getChild(UIAdvancedSearchForm.class).setRendered(isAdvanSearch) ;
+		getChild(ResultQuickSearch.class).setRendered(isQuickSearch) ;
+		getChild(ResultSearchCategory.class).setRendered(isSearchCate) ;
+		getChild(ResultSearchQuestion.class).setRendered(isSearchQuesion) ;
 	}
 }
 
