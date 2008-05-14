@@ -192,7 +192,11 @@ public class UICategories extends UIContainer	{
 			UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
 			uiCategory.update(uiContainer.getCategory(categoryId), uiContainer.getForumList(categoryId)) ;
 			((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
-		}
+			
+			
+//			System.out.println("\n\nIP: " + ((HttpServletRequest)(Util.getPortalRequestContext())).getRemoteAddr());
+//			System.out.println("\n\nIP: " + ((HttpServletRequest)event.getRequestContext()).getRemoteAddr());
+    }
 	}
 	
 	static public class OpenForumLinkActionListener extends EventListener<UICategories> {

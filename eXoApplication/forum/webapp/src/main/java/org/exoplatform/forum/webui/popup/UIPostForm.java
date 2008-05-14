@@ -32,6 +32,9 @@ import org.exoplatform.forum.webui.EmptyNameValidator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.ActionRequestImp;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.ActionResponseImp;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -272,7 +275,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
-			
+			PortletRequestImp request = event.getRequestContext().getRequest();
+			String remoteAddr = request.getRemoteAddr();
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			String []censoredKeyword = ForumFormatUtils.splitForForum(forumAdministration.getCensoredKeyword()) ;
 			boolean isOffend = false ; 
@@ -288,12 +292,13 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
 				post.setCreatedDate(new Date()) ;
-				post.setRemoteAddr("") ;
+				post.setRemoteAddr(remoteAddr) ;
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				post.setIcon(uiIconSelector.getSelectedIcon());
 				post.setIsApproved(false) ;
 				post.setAttachments(uiForm.attachments_) ;
 				post.setIsHidden(isOffend) ;
+				
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;

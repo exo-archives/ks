@@ -657,7 +657,11 @@
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<div class="CheckPost" style="float: right;">
-									<% uiform.renderChild(post.getId()) %>
+									<div class="IPIcon" title="IP: <%=post.getRemoteAddr();%>"><span></span></div>
+									<div style="float:left">
+										<% uiform.renderChild(post.getId()) %>
+									</div>
+									<div style="clear: left;"><span></span></div>
 								</div>
 								<div style="clear: both;"><span></span></div>
 								<% } else { %>

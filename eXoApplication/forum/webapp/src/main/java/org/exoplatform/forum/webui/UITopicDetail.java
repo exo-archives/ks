@@ -56,6 +56,7 @@ import org.exoplatform.forum.webui.popup.UIViewTopic;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -1039,12 +1040,14 @@ public class UITopicDetail extends UIForm {
 			String userName = topicDetail.userProfile.getUserId() ;
 			int t = checksms.trim().length() ;
 			if(t > 3 && !checksms.equals("null")) {
+				PortletRequestImp request = event.getRequestContext().getRequest();
+				String remoteAddr = request.getRemoteAddr();
 				Topic topic = topicDetail.topic ;
 				Post post = new Post() ;
 				post.setName("Re: " + topic.getTopicName()) ;
 				post.setMessage(buffer.toString()) ;
 				post.setOwner(userName) ;
-				post.setRemoteAddr("") ;
+				post.setRemoteAddr(remoteAddr) ;
 				post.setIcon(topic.getIcon());
 				post.setIsApproved(false) ;
 				post.setIsHidden(isOffend) ;

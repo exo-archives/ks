@@ -20,7 +20,6 @@ package org.exoplatform.forum.webui.popup;
 import java.util.List;
 
 import org.exoplatform.forum.ForumFormatUtils;
-import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

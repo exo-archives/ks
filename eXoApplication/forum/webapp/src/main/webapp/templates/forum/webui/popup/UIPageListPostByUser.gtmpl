@@ -5,6 +5,8 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	List posts = uicomponent.getPostsByUser() ;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
+	boolean isAdmin = false;
+	if(userProfile.getUserRole() == 0)isAdmin = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 %>
@@ -22,6 +24,9 @@
 								<th style="width: 40px;"></th>
 								<th>Post name</th>
 								<th style="width: 120px;">Created Date</th>
+								<%if(isAdmin){ %>
+								<th style="width: 120px;">IP Logging</th>
+								<%} %>
 							</tr>
 						</thead>
 						<tbody>
@@ -52,6 +57,9 @@
 									<td class="Tdbox">
 										<div class="RatingInfoContainer">$createdDate</div>
 									</td>
+									<%if(isAdmin){ %>
+									<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
+									<%} %>
 					 			</tr>
 						 	<% i = i + 1;}
 						 		} else {
