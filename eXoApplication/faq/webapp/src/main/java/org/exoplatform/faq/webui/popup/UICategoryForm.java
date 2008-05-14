@@ -23,6 +23,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -72,9 +74,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   final private static String MODERATEQUESTIONS = "moderatequestions" ;
   private Map<String, String> permissionUser_ = new LinkedHashMap<String, String>() ;
   private Map<String, String> permissionGroup_ = new LinkedHashMap<String, String>() ;
+  private boolean isAddNew_ = true ;
   
 	public UICategoryForm() throws Exception {}
-	public void init() throws Exception {
+	public void init(boolean isAddNew) throws Exception {
+		isAddNew_ = isAddNew ;
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(EVENT_CATEGORY_NAME, EVENT_CATEGORY_NAME, null).addValidator(MandatoryValidator.class)) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(DESCRIPTION, DESCRIPTION, null)) ;
@@ -160,7 +164,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
-			UICategoryForm uiCategory = event.getSource() ;			
+			UICategoryForm uiCategory = event.getSource() ;
+			System.out.println(" Start ===========> ");
 			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
       String name = uiCategory.getUIStringInput(EVENT_CATEGORY_NAME).getValue() ;
       String description = uiCategory.getUIStringInput(DESCRIPTION).getValue() ;
@@ -177,7 +182,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
-			List<String>listUser = new ArrayList<String>() ; 
+			List<String> listUser = new ArrayList<String>() ; 
       listUser.addAll(Arrays.asList(FAQUtils.splitForFAQ(moderator))) ;
 			FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			
@@ -185,12 +190,13 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String parentCate = uiCategory.getParentId() ;
       
       /*----modified by Mai Van Ha----*/
-      if(parentCate != null && parentCate.trim().length() > 0) {
+      if(uiCategory.isAddNew_ && parentCate != null && parentCate.length() > 0) {
         Category category = faqService.getCategoryById(parentCate, FAQUtils.getSystemProvider()) ;
-        for(String user : Arrays.asList(category.getModerators())) {
+        for(String user : category.getModerators()) {
           if(!listUser.contains(user)) {
             listUser.add(user) ;
           }
+          System.out.println(" loop ===========> " + user);
         }
       }
       /*-----End---------------------*/
@@ -221,6 +227,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			questions.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+			System.out.println(" ===========> Finished");
+			return ;
+			
 		}
 	}
 

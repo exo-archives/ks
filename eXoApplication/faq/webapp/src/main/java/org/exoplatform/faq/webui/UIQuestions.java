@@ -124,6 +124,7 @@ public class UIQuestions extends UIContainer {
   }
   
   private String[] getSecondActionCategory() {
+
     String[] action = new String[]{"AddCategory", "EditSubCategory", "MoveDown", "MoveUp", "DeleteCategory", "MoveCategory"} ;
     return action ;
   }
@@ -367,6 +368,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction uiPopupAction = uiPortlet.getChild(UIPopupAction.class) ; 
       UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,520) ;  
+
       UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
       if(!FAQUtils.isFieldEmpty(categoryId)) {
       	uiPopupContainer.setId("SubCategoryForm") ;
@@ -374,7 +376,7 @@ public class UIQuestions extends UIContainer {
       } else {
       	uiPopupContainer.setId("AddCategoryForm") ;
       }
-      category.init() ;
+      category.init(true) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
       UIFAQContainer fAQContainer = question.getAncestorOfType(UIFAQContainer.class) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
@@ -428,7 +430,7 @@ public class UIQuestions extends UIContainer {
 			UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,520) ;
 			uiPopupContainer.setId("EditCategoryForm") ;
       UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
-			uiCategoryForm.init();
+			uiCategoryForm.init(false);
 			uiCategoryForm.setCategoryValue(categoryId, true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
@@ -505,6 +507,7 @@ public class UIQuestions extends UIContainer {
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
+	
 
 	static  public class EditSubCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
@@ -515,7 +518,7 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,520) ;  
       uiPopupContainer.setId("EditSubCategoryForm") ;
 		  UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
-		  categoryForm.init() ;
+		  categoryForm.init(false) ;
 		  String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
 		  categoryForm.setParentId(parentCategoryId) ;
 		  categoryForm.setCategoryValue(categoryId, true) ;

@@ -46,7 +46,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -116,11 +115,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     this.questionId_ = new String() ;
 	}
   
-  public void refresh() throws Exception {
-  	
+  public void refresh() throws Exception {  	
   	listFileAttach_.clear() ;
-  	System.out.println("listFileAttach_ =======>"+ listFileAttach_.size());
   }
+
   public void initPage(boolean isEdit) {
     if(isEdit) {
       this.removeChildById(AUTHOR);

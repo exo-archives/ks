@@ -221,12 +221,6 @@
 	    <set-method>addListener</set-method>
 	    <type>org.exoplatform.forum.service.AuthenticationLoginListener</type>
 	    <description>description</description>	    
-	  </component-plugin>	  
-	  <!--component-plugin>
-	    <name>exo.service.authentication.logout</name>
-	    <set-method>addListener</set-method>
-	    <type>org.exoplatform.forum.service.AuthenticationLogoutListener</type>
-	    <description>description</description>	    
-	  </component-plugin-->	  
+	  </component-plugin>	  	  
   </external-component-plugins>   
 </configuration>
