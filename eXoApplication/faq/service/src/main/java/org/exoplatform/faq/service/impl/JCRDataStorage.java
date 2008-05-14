@@ -177,7 +177,7 @@ public class JCRDataStorage {
     		}
     	}
     }
-//    // Send notifycation when question responsed or edited or watching
+    // Send notifycation when question responsed or edited or watching
   	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
   		Message message = new Message();
       message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
@@ -548,11 +548,10 @@ public class JCRDataStorage {
   
   public long[] getCategoryInfo( String categoryId, SessionProvider sProvider) throws Exception  {
     long[] cateInfo = new long[]{0, 0, 0};
-    Node parentCategory = getCategoryHome(sProvider, null) ;
+    Node parentCategory ;
+    parentCategory = getCategoryNodeById(categoryId, sProvider) ;
     NodeIterator iter = parentCategory.getNodes() ;
-    while(iter.hasNext()) {
-      cateInfo[0] ++ ;
-    }
+    cateInfo[0] = iter.getSize() ;
     
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
