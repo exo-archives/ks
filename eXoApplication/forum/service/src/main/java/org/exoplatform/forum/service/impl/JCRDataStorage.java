@@ -157,6 +157,7 @@ public class JCRDataStorage{
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 		StringBuffer queryString = new StringBuffer("/jcr:root" + forumHomeNode.getPath() +"//element(*,exo:forumCategory) order by @exo:categoryOrder ascending") ;
+		queryString.append(", @exo:createdDate ascending") ;
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes() ;
