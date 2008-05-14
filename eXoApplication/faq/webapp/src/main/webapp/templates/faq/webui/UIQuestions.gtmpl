@@ -133,7 +133,10 @@
 				
 				categoryId = category.getId();
 				String link = uicomponent.event("OpenCategory", categoryId) ;
-				
+				long[] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
+				long numberOfSubCate = cateInfo[0] ;
+				long numberOfQuestion = cateInfo[1] ;
+				long questionNotAnswer = cateInfo[2] ;
 	%>
 			<div class="FAQCategory">
 				<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
@@ -141,7 +144,7 @@
 						<a href="$link">
 							$categoryName
 						</a>
-						
+						($numberOfSubCate Category, $numberOfQuestion Questions, $questionNotAnswer Not yet answered)
 						<!-- action of this category -->
 					  
 						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
@@ -207,8 +210,14 @@
 					questionContent = question.getQuestion() ;
 					String qId = question.getId() ;
 					linkQuestion=uicomponent.event("ViewQuestion", qId) ;
+					String questionIcon = "" ;
+					if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+						questionIcon = "Question" ;
+					} else {
+						questionIcon = "NotResponse" ;
+					}
 		%>
-					<div class="FAQCategory Question">
+					<div class="FAQCategory $questionIcon">
 						<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 								<!-- question content -->
 								<a href="$linkQuestion"> $questionContent</a>
@@ -285,7 +294,7 @@
 								$response<br>
 							</div>
 							<div class="AttachmentContent">
-								<div style="margin-top: 5px; margin-left: 5px;">
+								<div style="margin-top: 5px; margin-bottom: 5px;">
 									<%
 									for(FileAttachment fileAttachment : question.getAttachMent()){
 								    String fileName = fileAttachment.getName() ;
@@ -305,16 +314,18 @@
 							    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
 								    if(validate.isImage(fileName)) {
 								    %>
-								    	<div class="Image"><img id="imgView${fileName}" src="$linkImage"height="100"></div>
-					 						<div class="LabelBox">
-						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-						 						<a href="$linkImage" class="AttachmentLabel" >$fileName</a>
-						 						<div style="clear: left;"><span></span></div>
-						 						<div class="Size">Size: $fileSize</div>
-						 						<div class="Action">
-						 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.openPicture(this,'$fileName')">View</div>
-						 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
-						 						</div>
+								    	<div style="float: left; margin-left: 5px;">
+									    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100"></div>
+									    	<div style="clear: left;"><span></span></div>
+						 						<div class="LabelBox">
+							 						<div class="AttachmentIcon JPGIcon"><span></span></div>
+							 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
+							 						<div style="clear: left;"><span></span></div>
+							 						<div class="Action" style="padding-top: 0px;">
+							 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.openPicture(this,'$fileName')">View</div>
+							 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
+							 						</div>
+							 					</div>
 						 					</div>
 							    <%} else {
 							    		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
@@ -349,13 +360,62 @@
 							<div class="UIAction ResponsActions" style="float: left">
 									<div style="float:left">Response by: $responseBy , $date</div>
 									<div style="float:right">
-										<a href="" class="ActionButton LightBlueStyle">
-					      	  	<div class="ButtonLeft">
-					        	  	<div class="ButtonRight">
-					          	  	<div class="ButtonMiddle"> Language </div>
-					            	</div>
-					          	</div>
-					        	</a>
+									
+										<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+											<div style="position: relative;">
+											
+												<a class="ActionButton LightBlueStyle">
+							      	  	<div class="ButtonLeft">
+							        	  	<div class="ButtonRight">
+							          	  	<div class="ButtonMiddle"> Language </div>
+							            	</div>
+							          	</div>
+							        	</a>
+					        			
+					        			<div class="UIPopupCategory" style="display: none; maring-left: -65px; margin-top: -100px; ">
+													<div class="UIRightClickPopupMenu" style="display: block;">
+														<div class="UIContextMenuContainer">
+																							
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																		<%
+																			List listQuestLanguage = uicomponent.getQuestionLangauges(question) ;
+																			for(String quesLanguage in listQuestLanguage) {
+																				String linkView = uicomponent.event("ChangeQuestion", questionId + "/" + quesLanguage) ;
+																				String classIcon = "" ;
+																				if(quesLanguage.equals(question.getLanguage())) classIcon = "LanguageSelectIcon" ;
+																				else classIcon = "" ;
+																		%>
+																				<a class="MenuItem" href="$linkView">
+																					<div class="ItemIcon $classIcon" style="padding-left: 20px;">$quesLanguage</div>
+																				</a>
+																		<%
+																			}
+																		%>
+																	</div>
+																</div>
+															</div>
+															
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															
+														</div>
+													</div>
+												</div>
+											
+											</div>
+										</div>
+					        	
 										<a href="" class="ActionButton LightBlueStyle">
 					      	  	<div class="ButtonLeft">
 					        	  	<div class="ButtonRight">

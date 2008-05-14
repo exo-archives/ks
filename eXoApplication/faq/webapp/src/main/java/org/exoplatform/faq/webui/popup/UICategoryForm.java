@@ -182,27 +182,23 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
-			List<String> listUser = new ArrayList<String>() ; 
-      listUser.addAll(Arrays.asList(FAQUtils.splitForFAQ(moderator))) ;
+			String[] users = FAQUtils.splitForFAQ(moderator) ;
 			FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentId() ;
-      
-      /*----modified by Mai Van Ha----*/
-      if(uiCategory.isAddNew_ && parentCate != null && parentCate.length() > 0) {
-        Category category = faqService.getCategoryById(parentCate, FAQUtils.getSystemProvider()) ;
-        for(String user : category.getModerators()) {
-          if(!listUser.contains(user)) {
-            listUser.add(user) ;
-          }
-          System.out.println(" loop ===========> " + user);
-        }
-      }
-      /*-----End---------------------*/
-      
-      cat.setModerators(listUser.toArray(new String[]{})) ;
 			if(parentCate != null && parentCate.length() > 0) {
+        /*----modified by Mai Van Ha----*/
+          List<String> listUser = new ArrayList<String>() ;
+          listUser.addAll(Arrays.asList(users)) ;
+          Category category = faqService.getCategoryById(parentCate, FAQUtils.getSystemProvider()) ;
+          for(String user : category.getModerators()) {
+            if(!listUser.contains(user)) {
+              listUser.add(user) ;
+            }
+          }
+          cat.setModerators(listUser.toArray(new String[]{})) ;
+        /*-----End---------------------*/
 				if(uiCategory.categoryId_.length() > 0) {
 					cat.setId(uiCategory.categoryId_) ;
 					faqService.saveCategory(parentCate, cat, false, FAQUtils.getSystemProvider());
@@ -211,11 +207,13 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 					faqService.saveCategory(parentCate, cat, true, FAQUtils.getSystemProvider());
 					faqPortlet.cancelAction() ;
 				}
-					UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-					questions.setCategories() ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				questions.setCategories() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 				return ;
 			} 
+      
+      cat.setModerators(users) ;
 			if(uiCategory.categoryId_.length() > 0) {
 				cat.setId(uiCategory.categoryId_) ;
 				faqService.saveCategory(null, cat, false, FAQUtils.getSystemProvider());

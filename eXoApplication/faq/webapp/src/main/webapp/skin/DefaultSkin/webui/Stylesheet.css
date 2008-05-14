@@ -244,6 +244,15 @@
   white-space: nowrap;
 }
 
+.UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
+  background: url('background/NotResponse.gif') no-repeat left ;
+  padding-left: 28px;
+  height: 18px;
+  line-height: 18px;
+  margin: 8px 0px;
+  white-space: nowrap;
+}
+
 .UIFAQPortlet .FAQContainer .FAQContent .Question-Title {
   color: #1555b5;
 }
@@ -782,6 +791,12 @@ UIFAQPortlet .ResultQuickSearch {
 
 .UIFAQPortlet .TrueIcon {
   background: url('background/FAQPortlet.gif') no-repeat left -797px;
+  line-height:16px;
+  padding-left:20px;
+}
+
+.UIFAQPortlet .LanguageSelectIcon {
+  background: url('background/FAQPortlet.gif') no-repeat left -792px;
   line-height:16px;
   padding-left:20px;
 }

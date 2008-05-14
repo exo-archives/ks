@@ -199,7 +199,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   }
   
   public String getDefaultLanguage() {
-    System.out.println("\n\n\n\ngetDefaultLanguage()--> defaultLanguage_ : " + defaultLanguage_);
     return this.defaultLanguage_;
   }
   
@@ -328,8 +327,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
         question_.setResponses(" ") ;
-        question_.setLanguage(questionForm.getDefaultLanguage()) ;
       }
+      question_.setLanguage(questionForm.getDefaultLanguage()) ;
       question_.setAuthor(author) ;
       question_.setEmail(emailAddress) ;
       question_.setQuestion(listQuestionContent.get(0)) ;

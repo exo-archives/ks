@@ -239,7 +239,6 @@ public class JCRDataStorage {
     Node questionHome = getQuestionHome(sProvider, null) ;
     Node questionNode = questionHome.getNode(questionId) ;
     if(questionNode.hasNode(languages)) {
-      System.out.println("have language node");
       Node languageNode = questionNode.getNode(languages) ;
       NodeIterator nodeIterator = languageNode.getNodes() ;
       while(nodeIterator.hasNext()) {
@@ -252,8 +251,6 @@ public class JCRDataStorage {
         
         listQuestionLanguage.add(questionLanguage) ;
       }
-    } else {
-      System.out.println("not have children node of questionNode");
     }
     return listQuestionLanguage ;
   }

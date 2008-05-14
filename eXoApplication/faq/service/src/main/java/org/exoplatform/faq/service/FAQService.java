@@ -199,7 +199,6 @@ public interface FAQService {
   public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception ;
   public void sendMessage(Message message) throws Exception ;
-  //Multi languages
   
   public List<String> getSupportedLanguages(Node node) throws Exception ;
   public void setDefault(Node node, String language) throws Exception ;
