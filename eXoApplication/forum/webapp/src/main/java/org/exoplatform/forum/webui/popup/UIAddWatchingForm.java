@@ -19,9 +19,11 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.contact.service.Contact;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -78,18 +80,34 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 		addUIFormInput(uiFormMultiValue) ;
 	}
 	
+	private Contact getPersonalContact(String userId) throws Exception {
+		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+		if(contact == null) {
+			contact = new Contact() ;
+			contact.setId(userId) ;
+		}
+		return contact ;
+	}
+	
 	static	public class SaveActionListener extends EventListener<UIAddWatchingForm> {
 		@SuppressWarnings("unchecked")
     public void execute(Event<UIAddWatchingForm> event) throws Exception {
 			UIAddWatchingForm uiForm = event.getSource() ;
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String path = uiForm.path;
+			UserProfile userProfile = forumPortlet.getUserProfile();
+			String userId = userProfile.getUserId() ;
+			Contact contact = uiForm.getPersonalContact(userId) ;
+			String email = contact.getEmailAddress() ;
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
+			if(email != null && email.length() > 0){
+				values.add(email) ;
+			}
 			if(values.size() > 0 && path != null && path.length() > 0) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				forumService.addWatch(ForumSessionUtils.getSystemProvider(), 1, path, values) ;
 			}
 			uiForm.path = "";
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
 	}
