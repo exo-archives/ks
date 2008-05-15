@@ -45,20 +45,17 @@ import org.exoplatform.webui.core.UIContainer;
 )
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-	private long mostUserOnline_ ;
+	private long mostUserOnline_ = 0;
 	private long numberActive = 0;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
 	
 	public UICategoryInfo() throws Exception { 
+		setPageListUserProfile();
 	} 
 	
-	@SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")
   public List<UserProfile> setPageListUserProfile() throws Exception {
-		if(userProfiles == null) {
-	    List<User> listUser = ForumSessionUtils.getAllUser() ;
-	    for (User user : listUser) {
-	      this.forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), user.getUserName(), false, false, false) ;
-	    }
+		if(userProfiles == null || userProfiles.size() == 0) {
 	    JCRPageList pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
 	    userProfiles = pageList.getPage(0) ;
 		}
@@ -67,23 +64,23 @@ public class UICategoryInfo extends UIContainer	{
 	
 	@SuppressWarnings("unused")
   private long getUserActive() throws Exception {
-		if(numberActive <= 0) {
-			Date date = null;
-			long newTime = getInstanceTempCalendar().getTimeInMillis(), oldTime;
-			for (UserProfile userProfile : userProfiles) {
-				date = userProfile.getLastLoginDate();
-				if(date != null){
-					oldTime = date.getTime();
-					if((newTime - oldTime) < 3*86400000) {// User have login at least 3 day
-						date = userProfile.getLastPostDate() ;
+		Date date = null;
+		long newTime = getInstanceTempCalendar().getTimeInMillis(), oldTime;
+		for (UserProfile userProfile : userProfiles) {
+			date = userProfile.getLastLoginDate();
+			if(date != null){
+				oldTime = date.getTime();
+				if((newTime - oldTime) < 3*86400000) {// User have login at least 3 day
+					date = userProfile.getLastPostDate() ;
+					if(date != null) {
 						oldTime = date.getTime();
 						if((newTime - oldTime) < 5*86400000) {// User have a post at least in five day
 							++numberActive ;
 						}
 					}
 				}
-	    }
-		}
+			}
+    }
 		if(numberActive <= 0) numberActive = 1;
 		return numberActive;
 	}
