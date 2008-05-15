@@ -23,8 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -41,6 +39,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
@@ -84,7 +83,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     inputset.addUIFormInput(new UIFormTextAreaInput(DESCRIPTION, DESCRIPTION, null)) ;
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(MODERATEQUESTIONS, MODERATEQUESTIONS, false )) ;
     UIFormStringInput moderator = new UIFormStringInput(MODERATOR, MODERATOR, null) ;
-    moderator.setEditable(false) ;
     inputset.addUIFormInput(moderator) ;
     List<ActionData> actionData = new ArrayList<ActionData>() ;
     String[]strings = new String[] {"SelectUser", "SelectGroup", "SelectMemberShip"}; 
@@ -177,12 +175,30 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ; 
       }
+      String[] users = FAQUtils.splitForFAQ(moderator) ;
+      String userInvalid = "" ;
+      String userValid = "" ;
+      for(String user : users) {
+      	if(user.indexOf("/") >= 0) { 
+      		if(userValid.trim().length() > 0) userValid += "," ;
+      		userValid += user.trim() ;
+      		continue ;
+      	}
+        if(FAQUtils.getUserByUserId(user.trim()) != null) {
+          if(userValid.trim().length() > 0) userValid += "," ;
+          userValid += user.trim() ;
+        } else {
+          if(userInvalid.trim().length() > 0) userInvalid += ", " ;
+          userInvalid += user.trim() ;
+        }
+      }
+      if(userInvalid.length() > 0) 
+        throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-not-found", new String[]{userInvalid}, ApplicationMessage.WARNING)) ;
 			Category cat = new Category();
 			cat.setName(name.trim()) ;
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
-			String[] users = FAQUtils.splitForFAQ(moderator) ;
 			FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;

@@ -64,7 +64,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		
 		List<SelectItemOption<String>> displayType = new ArrayList<SelectItemOption<String>>();
 //		displayType.add(new SelectItemOption<String>("Relevance",FAQSetting.DISPLAY_TYPE_RELEVANCE));
-		displayType.add(new SelectItemOption<String>("Post date",FAQSetting.DISPLAY_TYPE_POSTDATE ));
+		displayType.add(new SelectItemOption<String>("Created date",FAQSetting.DISPLAY_TYPE_POSTDATE ));
 		displayType.add(new SelectItemOption<String>("Alphabet",FAQSetting.DISPLAY_TYPE_ALPHABET ));
 		addUIFormInput(new UIFormSelectBox(DISPLAY_TYPE, DISPLAY_TYPE, displayType));
 		fillData() ;
