@@ -36,10 +36,12 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 
 /**
  * Created by The eXo Platform SARL
@@ -53,7 +55,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
 		events = {
 			@EventConfig(listeners = UIAddTagForm.SaveActionListener.class),
-			@EventConfig(listeners = UIAddTagForm.CancelActionListener.class)
+			@EventConfig(listeners = UIAddTagForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
 public class UIAddTagForm extends UIForm implements UIPopupComponent {
@@ -66,7 +68,9 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	private boolean isTopicTag  = false ;
 	public UIAddTagForm() throws Exception {
 		UIFormStringInput tagName = new UIFormStringInput(FIELD_TAGNAME_INPUT, FIELD_TAGNAME_INPUT, null);
+		tagName.addValidator(MandatoryValidator.class);
 		UIFormStringInput description = new UIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA, FIELD_TAGDESCRIPTION_TEXTAREA, null);
+		description.addValidator(MandatoryValidator.class);
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		Map <String, String> newMap = getColorName() ;
 		for(String string : this.colors) {

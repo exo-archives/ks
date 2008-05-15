@@ -53,6 +53,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 
 /**
  * Created by The eXo Platform SARL
@@ -110,7 +111,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	@SuppressWarnings("unchecked")
 	public UITopicForm() throws Exception {
 		UIFormStringInput topicTitle = new UIFormStringInput(FIELD_TOPICTITLE_INPUT, FIELD_TOPICTITLE_INPUT, null);
-		topicTitle.addValidator(EmptyNameValidator.class) ;
+		topicTitle.addValidator(MandatoryValidator.class);
 //		UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
 //		editReason.setRendered(false) ;
 //		UIFormTextAreaInput message = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);

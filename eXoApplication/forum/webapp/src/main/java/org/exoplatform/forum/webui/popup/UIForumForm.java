@@ -123,7 +123,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		forumStatus.setDefaultValue("unlock");
 		
 		UIFormStringInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA, FIELD_DESCRIPTION_TEXTAREA, null);
-		description.addValidator(EmptyNameValidator.class) ;
+		description.addValidator(MandatoryValidator.class);
 		UIFormTextAreaInput notifyWhenAddPost = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE, null);
 		UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
 		notifyWhenAddPost.setEditable(false);

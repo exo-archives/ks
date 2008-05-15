@@ -51,6 +51,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 
 /**
  * Created by The eXo Platform SARL
@@ -99,7 +100,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private boolean isMP = false ;
 	public UIPostForm() throws Exception {
     UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
-    postTitle.addValidator(EmptyNameValidator.class) ;
+    postTitle.addValidator(MandatoryValidator.class);
 //    UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
 //    editReason.setRendered(false) ;
     UIFormInputWithActions threadContent = new UIFormInputWithActions(FIELD_THREADCONTEN_TAB) ;
