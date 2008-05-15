@@ -607,13 +607,14 @@ public class UIQuestions extends UIContainer {
         uiQuestions.setCategoryId(categoryId) ;
         uiQuestions.setListQuestion() ;
         UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-        String oldPath = breadcumbs.getPaths() ;
-        if(oldPath != null && oldPath.trim().length() > 0) {
-          if(!oldPath.contains(categoryId)) {
-            newPath_ = oldPath + "/" +categoryId ;
-            breadcumbs.setUpdataPath(oldPath + "/" +categoryId);
-          }
-        } else breadcumbs.setUpdataPath(categoryId);
+		    breadcumbs.setUpdataPath(null) ;
+        String oldPath = "" ;
+		    FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+		    for(int i = listPath.size() -1 ; i >= 0; i --) {
+		    	oldPath = oldPath + "/" + listPath.get(i);
+		    } 
+		    breadcumbs.setUpdataPath("FAQService"+oldPath);
         event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
         UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
       }
