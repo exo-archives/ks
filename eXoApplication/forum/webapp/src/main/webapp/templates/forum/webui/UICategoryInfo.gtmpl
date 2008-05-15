@@ -54,7 +54,7 @@
 				  <tr class="OddRow">
 						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
 					 	<td class="text">
-					 		<div class="text">Total Threads: $topics, Total Posts: $posts, Total Members: $members, Active Members:</div>
+					 		<div class="text">Total Threads: $topics, Total Posts: $posts, Total Members: $members, Active Members:<%=uicomponent.getUserActive();%></div>
 							<div class="text" style="padding-bottom: 5px;">Welcome to our newest member: <a>$newMember</a></div>
 					 	</td>
 	   			</tr>
