@@ -163,7 +163,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;
-			System.out.println(" Start ===========> ");
 			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
       String name = uiCategory.getUIStringInput(EVENT_CATEGORY_NAME).getValue() ;
       String description = uiCategory.getUIStringInput(DESCRIPTION).getValue() ;
@@ -241,7 +240,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			questions.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-			System.out.println(" ===========> Finished");
 			return ;
 			
 		}

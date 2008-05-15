@@ -706,6 +706,7 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UISendMailForm sendMailForm = popupContainer.addChild(UISendMailForm.class, null, null) ;
+      sendMailForm.setUpdateQuestion(questionId) ;
       popupContainer.setId("FAQSendMailForm") ;
       popupAction.activate(popupContainer, 700, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

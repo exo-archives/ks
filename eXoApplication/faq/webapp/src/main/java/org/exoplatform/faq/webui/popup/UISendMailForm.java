@@ -18,9 +18,13 @@ package org.exoplatform.faq.webui.popup;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.mail.service.Message;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -56,20 +60,28 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private static final String SUBJECT = "Subject" ;
   private static final String MESSAGE = "Message" ;
   final static public String FIELD_FROM_INPUT = "fromInput" ;
-  
-  public void activate() throws Exception {}
+	
+	public UISendMailForm() throws Exception {}
+	
+	public void activate() throws Exception {}
   public void deActivate() throws Exception {}
-	 
-	public UISendMailForm() throws Exception {
+	
+	public void setUpdateQuestion(String questionId) throws Exception {
+		SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider() ;
+    Question question = FAQUtils.getFAQService().getQuestionById(questionId, sessionProvider) ;
+    String content = "" ;
+    if(question.getResponses() == "") { content = "Question: " + question.getQuestion() ; }
+    else 
+    	content ="Question: " + question.getQuestion() + "Response: "+question.getResponses() ;
     addChild(new UIFormStringInput(FROM_NAME,FROM_NAME, null)) ;
     addChild(new UIFormStringInput(FROM, FROM, null)) ;
     addChild(new UIFormStringInput(TO, TO, null)) ;
     addChild(new UIFormStringInput(ADD_CC, ADD_CC, null)) ;
     addChild(new UIFormStringInput(ADD_BCC, ADD_BCC, null)) ;
-    addChild(new UIFormStringInput(SUBJECT, SUBJECT, null)) ;
-    addChild(new UIFormWYSIWYGInput(MESSAGE, null, null, true)) ;
+    addChild(new UIFormStringInput(SUBJECT, SUBJECT, "From " + FAQUtils.getCurrentUser() + " send to you")) ;
+    addChild(new UIFormWYSIWYGInput(MESSAGE, null, content, true)) ;
 	}
-	
+
 	static public class SendActionListener extends EventListener<UISendMailForm> {
     public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;		
