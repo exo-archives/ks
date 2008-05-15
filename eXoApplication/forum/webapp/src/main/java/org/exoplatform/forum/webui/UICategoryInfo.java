@@ -46,6 +46,7 @@ import org.exoplatform.webui.core.UIContainer;
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private long mostUserOnline_ ;
+	private long numberActive ;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
 	
 	public UICategoryInfo() throws Exception { 
@@ -64,9 +65,27 @@ public class UICategoryInfo extends UIContainer	{
     return userProfiles;
   }
 	
-	private long getUserActive() throws Exception {
-		
-		return 1;
+	@SuppressWarnings("unused")
+  private long getUserActive() throws Exception {
+		if(numberActive <= 0) {
+			Date date = null;
+			long newTime = getInstanceTempCalendar().getTimeInMillis(), oldTime;
+			for (UserProfile userProfile : userProfiles) {
+				date = userProfile.getLastLoginDate();
+				if(date != null){
+					oldTime = date.getTime();
+					if((newTime - oldTime) < 3*86400000) {// User have login at least 3 day
+						date = userProfile.getLastPostDate() ;
+						oldTime = date.getTime();
+						if((newTime - oldTime) < 5*86400000) {// User have a post at least in five day
+							++numberActive ;
+						}
+					}
+				}
+	    }
+		}
+		if(numberActive == 0) numberActive = 1;
+		return numberActive;
 	}
 	@SuppressWarnings("unused")
   private List<String> getUserOnline() throws Exception {
@@ -75,8 +94,7 @@ public class UICategoryInfo extends UIContainer	{
 		return  list;
 	}
 
-	@SuppressWarnings("deprecation")
-  public static Calendar getInstanceTempCalendar() { 
+  public Calendar getInstanceTempCalendar() { 
     Calendar  calendar = GregorianCalendar.getInstance() ;
     calendar.setLenient(false) ;
     int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
