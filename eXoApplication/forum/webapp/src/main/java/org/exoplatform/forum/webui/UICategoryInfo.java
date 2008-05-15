@@ -46,7 +46,7 @@ import org.exoplatform.webui.core.UIContainer;
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private long mostUserOnline_ ;
-	private long numberActive ;
+	private long numberActive = 0;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
 	
 	public UICategoryInfo() throws Exception { 
@@ -84,7 +84,7 @@ public class UICategoryInfo extends UIContainer	{
 				}
 	    }
 		}
-		if(numberActive == 0) numberActive = 1;
+		if(numberActive <= 0) numberActive = 1;
 		return numberActive;
 	}
 	@SuppressWarnings("unused")
