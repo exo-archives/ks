@@ -40,7 +40,6 @@ import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
-import org.exoplatform.faq.webui.popup.UIQuestionsInfo;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
@@ -577,10 +576,10 @@ public class UIQuestions extends UIContainer {
       UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-      //UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
-      UIQuestionsInfo questionsInfo = popupContainer.addChild(UIQuestionsInfo.class, null, null) ;
-      //popupContainer.setId("FAQQuestionManagerment") ;
-      popupContainer.setId("FAQQuestionInfo") ;
+      UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
+      //UIQuestionsInfo questionsInfo = popupContainer.addChild(UIQuestionsInfo.class, null, null) ;
+      popupContainer.setId("FAQQuestionManagerment") ;
+      //popupContainer.setId("FAQQuestionInfo") ;
       popupAction.activate(popupContainer, 800, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
