@@ -241,11 +241,13 @@ public interface ForumService {
 	 * @param isApproved TODO
 	 * @param isHidden TODO
 	 * @param strQuery TODO
+	 * @param userLogin TODO
 	 * @param username
 	 * @return
 	 * @throws Exception
 	 */
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery )throws Exception;
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, 
+			String isApproved, String isHidden, String strQuery, String userLogin )throws Exception;
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception ;
 	/**
 	 * This method should:

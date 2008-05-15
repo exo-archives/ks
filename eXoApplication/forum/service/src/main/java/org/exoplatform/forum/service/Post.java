@@ -41,6 +41,7 @@ public class Post {
 	private String message;
 	private String remoteAddr;
 	private String icon; 
+	private String []userPrivate ;
 	private boolean isApproved = false ;
 	private boolean isHidden = false ;
 	private List<ForumAttachment> attachments = null ;
@@ -48,6 +49,7 @@ public class Post {
 	
 	public Post() {
 		id = "post" + IdGenerator.generate() ;
+		userPrivate = new String[]{"exoUserPri"};
 	}
 	
 	public String getId() { return id; }
@@ -101,4 +103,12 @@ public class Post {
 
 	public String getEditReason() {return editReason;}
 	public void setEditReason(String editReason) { this.editReason = editReason;}
+
+	public String[] getUserPrivate() {
+  	return userPrivate;
+  }
+
+	public void setUserPrivate(String[] userPrivate) {
+  	this.userPrivate = userPrivate;
+  }
 }

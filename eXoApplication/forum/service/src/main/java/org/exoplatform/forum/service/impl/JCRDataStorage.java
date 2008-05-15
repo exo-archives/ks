@@ -690,7 +690,7 @@ public class JCRDataStorage{
 	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
 		TopicView topicview = new TopicView() ;
 		topicview.setTopicView(getTopic(sProvider, categoryId, forumId, topicId, "")) ;
-		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId, "", "false", "")) ;
+		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId, "", "false", "", "")) ;
 		return topicview;
 	}
 
@@ -813,7 +813,7 @@ public class JCRDataStorage{
 						post.setIcon(topic.getIcon()) ;
 						post.setIsApproved(true) ;
 						post.setAttachments(topic.getAttachments()) ;
-						
+						post.setUserPrivate( new String[]{"exoUserPri"});
 						savePost(sProvider, categoryId, forumId, topic.getId(), post, true) ;
 					} else {
 						String id = topic.getId().replaceFirst("topic", "post") ;
@@ -905,7 +905,8 @@ public class JCRDataStorage{
 	}
 	
 
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery) throws Exception {
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, 
+			String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		Node categoryNode ;
 		try{
@@ -919,27 +920,42 @@ public class JCRDataStorage{
 					JCRPageList pagelist ;
 					StringBuffer stringBuffer = new StringBuffer() ;
 					stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
+					boolean isAnd = false;
+					if(userLogin != null && userLogin.length() > 0){
+						isAnd = true;
+						stringBuffer.append("[((@exo:userPrivate='").append(userLogin).append("') or (@exo:userPrivate='exoUserPri'))");
+					}
 					if(isApproved != null && isApproved.length() > 0){
-						stringBuffer.append("[(@exo:isApproved='").append(isApproved).append("') ");
+						if(isAnd){
+							stringBuffer.append(" and (@exo:isApproved='").append(isApproved).append("')");
+						} else {
+							stringBuffer.append("[(@exo:isApproved='").append(isApproved).append("')");
+						}
 						if(isHidden.equals("false")){
-							stringBuffer.append("and (@exo:isHidden='false')") ;
+							stringBuffer.append(" and (@exo:isHidden='false')") ;
 						} 
-						stringBuffer.append("] order by @exo:createdDate ascending") ;
-						pagelist = new ForumPageList(forumHomeNode, null, 10, stringBuffer.toString(), true) ;
+						stringBuffer.append("]") ;
 					} else {
 						if(isHidden.equals("true")){
-							stringBuffer.append("[@exo:isHidden='true']") ;
-							stringBuffer.append("order by @exo:createdDate ascending") ;
-							pagelist = new ForumPageList(forumHomeNode, null, 10, stringBuffer.toString(), true) ;
+							if(isAnd) {
+								stringBuffer.append(" and (@exo:isHidden='true')]") ;
+							} else {
+								stringBuffer.append("[@exo:isHidden='true']") ;
+							}
 						} else if(isHidden.equals("false")){
-							stringBuffer.append("[@exo:isHidden='false']") ;
-							stringBuffer.append("order by @exo:createdDate ascending") ;
-							pagelist = new ForumPageList(forumHomeNode,null, 10, stringBuffer.toString(), true) ;
+							if(isAnd) {
+								stringBuffer.append(" and (@exo:isHidden='false')]") ;
+							} else {
+								stringBuffer.append("[@exo:isHidden='false']") ;
+							}
 						} else {
-							NodeIterator iter = topicNode.getNodes() ; 
-							pagelist = new ForumPageList(forumHomeNode, iter, 10, topicNode.getPath(), false) ;
+							if(isAnd) {
+								stringBuffer.append("]") ;
+							}
 						}
 					}
+					stringBuffer.append(" order by @exo:createdDate ascending") ;
+					pagelist = new ForumPageList(forumHomeNode, null, 10, stringBuffer.toString(), true) ;
 					return pagelist ;
 				}catch (PathNotFoundException e) {
 					return null ;
@@ -1017,6 +1033,7 @@ public class JCRDataStorage{
 		if(postNode.hasProperty("exo:icon")) postNew.setIcon(postNode.getProperty("exo:icon").getString()) ;
 		if(postNode.hasProperty("exo:isApproved")) postNew.setIsApproved(postNode.getProperty("exo:isApproved").getBoolean()) ;
 		if(postNode.hasProperty("exo:isHidden")) postNew.setIsHidden(postNode.getProperty("exo:isHidden").getBoolean()) ;
+		if(postNode.hasProperty("exo:userPrivate")) postNew.setUserPrivate(ValuesToStrings(postNode.getProperty("exo:userPrivate").getValues())) ;
 		if(postNode.hasProperty("exo:numberAttach")) {
 			if(postNode.getProperty("exo:numberAttach").getLong() > 0) {
 				NodeIterator postAttachments = postNode.getNodes();
@@ -1055,6 +1072,7 @@ public class JCRDataStorage{
 					postNode.setProperty("exo:owner", post.getOwner()) ;
 					postNode.setProperty("exo:path", postNode.getPath()) ;
 					postNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
+					postNode.setProperty("exo:userPrivate", post.getUserPrivate()) ;
 					Node userProfileNode = getUserProfileNode(sProvider) ;
 					Node forumStatistic = forumHomeNode.getNode(FORUM_STATISTIC) ;
 					long postCount = forumStatistic.getProperty("exo:postCount").getLong() ;

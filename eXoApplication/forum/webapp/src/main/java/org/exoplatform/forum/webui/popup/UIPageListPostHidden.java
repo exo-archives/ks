@@ -79,7 +79,7 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Post> getPosts() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		JCRPageList pageList  = forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "");
+		JCRPageList pageList  = forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "", "");
 		forumPageIterator.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
@@ -106,7 +106,15 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
 	
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostHidden> {
     public void execute(Event<UIPageListPostHidden> event) throws Exception {
-			//UIPageListPostByUser uiForm = event.getSource() ;
+			UIPageListPostHidden uiForm = event.getSource() ;
+			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      Post post = uiForm.getPost(postId) ;
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+      UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
+      viewTopic.setPostView(post) ;
+      viewTopic.setViewUserInfo(false) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 

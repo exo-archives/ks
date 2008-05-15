@@ -547,8 +547,11 @@
 				if(post.getIsHidden()) {
 					isHedden = "(<span style='color:#f77617;'>This post is hidden!</span>)" ;
 				}
+				String privatePost = "";
+				if(post.getUserPrivate().length > 1){
+					privatePost = "(<span style='color:blue;font-weight:normal;'>This post is Private !</span>)" ;
+				}
 		%>
-
 		<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
 			<table class="TablePost" cellspacing="0" borderspacing="0">
 				<tbody>
@@ -653,7 +656,7 @@
 							<div class="PostViewHeader">
 							<% if(checked > 0 && canEdit) {%>
 								<div class="PostViewTitle" style="float: left;">
-									<div class="PostViewIcon $classIconPost">$namePost $isHedden</div>
+									<div class="PostViewIcon $classIconPost">$namePost $isHedden $privatePost</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<div class="CheckPost" style="float: right;">
@@ -666,7 +669,7 @@
 								<div style="clear: both;"><span></span></div>
 								<% } else { %>
 								<div class="PostViewTitle">
-									<div class="PostViewIcon $classIconPost">$namePost $isHedden</div>
+									<div class="PostViewIcon $classIconPost">$namePost $isHedden $privatePost</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<% } %>
@@ -748,7 +751,7 @@
 									<div class="UIActionForum">
 									<%
 									if(isShowMenu) {
-										String[] actions = ["Edit", "Delete", "Quote"] ; 
+										String[] actions = ["Edit", "Delete", "PrivatePost", "Quote"] ; 
 										for(action in actions) {
 											String title = _ctx.appRes(uicomponent.getName() + ".title." + action);
 											String label = _ctx.appRes(uicomponent.getName() + ".action." + action);

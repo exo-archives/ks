@@ -91,11 +91,12 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private List<ForumAttachment> attachments_ = new ArrayList<ForumAttachment>() ;
 	private String categoryId; 
 	private String forumId ;
-  
 	private String topicId ;
 	private String postId ;
 	private Topic topic ;
+	private Post post_ = new Post();
 	private boolean isQuote = false ;
+	private boolean isMP = false ;
 	public UIPostForm() throws Exception {
     UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
     postTitle.addValidator(EmptyNameValidator.class) ;
@@ -175,9 +176,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		return attachments_ ;
 	}
 	 
-	public void updatePost(String postId, boolean isQuote, Post post) throws Exception {
+	public void updatePost(String postId, boolean isQuote, boolean isMP, Post post) throws Exception {
+		this.post_ = post;
 		this.postId = postId ;
 		this.isQuote = isQuote ;
+		this.isMP = isMP ;
 		UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
 		try {
 			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
@@ -195,7 +198,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
-			} else {//edit
+			} else if(isMP){
+				String title = this.topic.getTopicName() ;
+				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
+				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
+			} else{//edit
 //				threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
 				UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
 				threadContent.addChild(editReason) ;
@@ -233,7 +240,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			t = checksms.trim().length() ;
 			if(postTitle.length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
-				Post post = new Post() ;
+				Post post = uiForm.post_ ;
 				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
@@ -287,7 +294,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			t = checksms.trim().length() ;
 			if(postTitle.trim().length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
-        Post post = new Post() ;
+        Post post = new Post();
 				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
@@ -298,16 +305,20 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setIsApproved(false) ;
 				post.setAttachments(uiForm.attachments_) ;
 				post.setIsHidden(isOffend) ;
-				
+				String[]userPrivate = new String[]{"exoUserPri"};
+				if(uiForm.isMP){
+					userPrivate = new String[]{userName, uiForm.post_.getOwner()};
+				}
+				post.setUserPrivate(userPrivate);
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
 				if(uiForm.postId != null && uiForm.postId.length() > 0) {
-					if(uiForm.isQuote) {
+					if(uiForm.isQuote || uiForm.isMP) {
 						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
 						topicDetail.setIdPostView("true");
 						topicDetail.setUpdatePostPageList(true);
-					} else {
+					} else{
 						String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 						post.setId(uiForm.postId) ;
 						post.setModifiedBy(userName) ;
@@ -321,8 +332,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
           topicDetail.setIdPostView("true");
           topicDetail.setUpdatePostPageList(true);
 				}
+				uiForm.isMP = uiForm.isQuote = false;
 				forumPortlet.cancelAction() ;
-//				topicDetail.setIsEditTopic(true) ;
 				if(isOffend) {
           topicDetail.setIdPostView("false");
 					Object[] args = { "" };

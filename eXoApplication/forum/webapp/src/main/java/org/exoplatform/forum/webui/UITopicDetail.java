@@ -92,6 +92,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UITopicDetail.PrintActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.EditActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.DeleteActionListener.class ),	
+			@EventConfig(listeners = UITopicDetail.PrivatePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.QuoteActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.EditTopicActionListener.class ),	//Topic Menu
 			@EventConfig(listeners = UITopicDetail.PrintPageActionListener.class ),
@@ -367,18 +368,19 @@ public class UITopicDetail extends UIForm {
 		if(this.isUpdatePageList) {
 			String isApprove = "" ;
 			String isHidden = "" ;
+			String userLogin = this.userProfile.getUserId();
 			Topic topic = this.topic ;
 			long role = this.userProfile.getUserRole() ;
 			if(role >=2){ isHidden = "false" ;}
 			if(role == 1) {
-				if(!ForumServiceUtils.hasPermission(forum.getModerators(), this.userProfile.getUserId())){
+				if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
 					isHidden = "false" ;
 				}
 			}
 			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-				if(isHidden.equals("false") && !(this.topic.getOwner().equals(this.userProfile.getUserId()))) isApprove = "true" ;
+				if(isHidden.equals("false") && !(this.topic.getOwner().equals(userLogin))) isApprove = "true" ;
 			}
-			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "")	; 
+			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin)	; 
 			this.isUpdatePageList = false ;
 		}
 		long maxPost = this.userProfile.getMaxPostInPage() ;
@@ -484,7 +486,7 @@ public class UITopicDetail extends UIForm {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
 			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
-			postForm.updatePost("", false, null) ;
+			postForm.updatePost("", false, false, null) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIAddPostContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
@@ -602,7 +604,7 @@ public class UITopicDetail extends UIForm {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
 			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
-			postForm.updatePost(postId, false, topicDetail.getPost(postId)) ;
+			postForm.updatePost(postId, false, false, topicDetail.getPost(postId)) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIEditPostContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
@@ -629,11 +631,27 @@ public class UITopicDetail extends UIForm {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
 			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
-			postForm.updatePost(postId, true, topicDetail.getPost(postId)) ;
+			postForm.updatePost(postId, true, false, topicDetail.getPost(postId)) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIQuoteContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
-			//topicDetail.getChild(UIForumPageIterator.class).setSelectPage(topicDetail.pageList.getAvailablePage()) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+
+	static public class PrivatePostActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+			postForm.updatePost(postId, false, true, topicDetail.getPost(postId)) ;
+			topicDetail.viewTopic = false ;
+			popupContainer.setId("UIPrivatePostContainer") ;
+			popupAction.activate(popupContainer, 700, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -887,9 +905,11 @@ public class UITopicDetail extends UIForm {
       UITopicDetail topicDetail = event.getSource() ;
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIPageListPostUnApprove postUnApprove = popupAction.createUIComponent(UIPageListPostUnApprove.class, null, null) ;
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      UIPageListPostUnApprove postUnApprove = popupContainer.addChild(UIPageListPostUnApprove.class, null, null) ;
       postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-      popupAction.activate(postUnApprove, 500, 360) ;
+      popupContainer.setId("PageListPostUnApprove") ;
+      popupAction.activate(popupContainer, 500, 360) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -922,12 +942,14 @@ public class UITopicDetail extends UIForm {
 	static public class SetUnHiddenPostActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
     	UITopicDetail topicDetail = event.getSource() ;
-    	UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-    	UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-    	UIPageListPostHidden listPostHidden = popupAction.createUIComponent(UIPageListPostHidden.class, null, null) ;
-    	listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-    	popupAction.activate(listPostHidden, 500, 360) ;
-    	event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      UIPageListPostHidden listPostHidden = popupContainer.addChild(UIPageListPostHidden.class, null, null) ;
+      listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
+      popupContainer.setId("PageListPostHidden") ;
+      popupAction.activate(popupContainer, 500, 360) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	

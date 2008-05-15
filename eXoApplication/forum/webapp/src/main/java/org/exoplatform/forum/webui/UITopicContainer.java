@@ -249,18 +249,19 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	private JCRPageList getPageListPost(String topicId) throws Exception {
 		String isApprove = "" ;
 		String isHidden = "" ;
+		String userLogin = this.userProfile.getUserId();
 		Topic topic = getTopic(topicId) ;
 		long role = this.userProfile.getUserRole() ;
 		if(role >=2){ isHidden = "false" ;}
 		if(role == 1) {
-			if(!ForumServiceUtils.hasPermission(forum.getModerators(), this.userProfile.getUserId())){
+			if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
 				isHidden = "false" ;
 			}
 		}
 		if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-			if(isHidden.equals("false") && !(topic.getOwner().equals(this.userProfile.getUserId()))) isApprove = "true" ;
+			if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 		}
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "")	; 
+		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin)	; 
 		long maxPost = getUserProfile().getMaxTopicInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost ;
 		pageListPost.setPageSize(this.maxPost) ;

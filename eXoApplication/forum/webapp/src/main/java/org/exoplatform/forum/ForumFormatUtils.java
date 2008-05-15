@@ -204,7 +204,7 @@ public class ForumFormatUtils {
 			i = s.indexOf("http://");
 			if(i < 0)break ;
 			if(i > 6 && s.substring(i-2,i).equalsIgnoreCase("=\"")) {
-				i = s.indexOf("/>");
+				i = s.indexOf("/>");//<img />
 				if(i < 0) {
 					i = s.indexOf("</");//</a>
 					buffer.append(s.substring(0, i+4));
