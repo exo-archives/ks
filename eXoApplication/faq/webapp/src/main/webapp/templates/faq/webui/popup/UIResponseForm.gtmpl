@@ -58,7 +58,7 @@
 					}
 					%>
 						<tr>
-							<td align="right"> Relation :</td>
+							<td align="right"> Relation :&nbsp;</td>
 							<td>
 							<%
 							int i = 0 ;

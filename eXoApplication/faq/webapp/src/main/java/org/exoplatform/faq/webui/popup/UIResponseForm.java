@@ -145,8 +145,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     if(!isEdit) {
       questionContent_ = new UIFormTextAreaInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
       String input = question.getQuestion() ;
-      input = input.replace("<p>", "") ;
-      input = input.substring(0, input.lastIndexOf("</p>") - 1) ;
+      if(input.indexOf("<p>") >= 0 && input.indexOf("</p>") >= 0 ) {
+        input = input.replace("<p>", "") ;
+        input = input.substring(0, input.lastIndexOf("</p>") - 1) ;
+      }
       questionContent_.setValue(input) ;
       questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
       reponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, null, null , true) ;
