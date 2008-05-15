@@ -68,6 +68,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
       @EventConfig(listeners = UIResponseForm.AddRelationActionListener.class),
       @EventConfig(listeners = UIResponseForm.AttachmentActionListener.class),
       @EventConfig(listeners = UIResponseForm.RemoveAttachmentActionListener.class),
+      @EventConfig(listeners = UIResponseForm.RemoveRelationActionListener.class),
       @EventConfig(listeners = UIResponseForm.ChangeQuestionActionListener.class)
     }
 )
@@ -79,7 +80,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private static final String ATTATCH_MENTS = "QuestionAttach" ;
   private static final String REMOVE_FILE_ATTACH = "RemoveFile" ;
   private static final String FILE_ATTACHMENTS = "FileAttach" ;
-  public static final String RELATIONS = "QuestionRelation" ;
   private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
   private static Question question = null ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -89,12 +89,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private UIFormSelectBox questionLanguages_ ;
   private UIFormWYSIWYGInput reponseQuestion_ ; 
   private UIFormInputWithActions inputAttachment_ ; 
-  private UIFormSelectBox questionRelation_ ;
   private UIFormCheckBoxInput checkShowAnswer_ ;
   
   // question infor :
   private String questionId_ = new String() ;
-  private List<SelectItemOption<String>> listRelation =  new ArrayList<SelectItemOption<String>>() ;
+  private List<String> listRelationQuestion =  new ArrayList<String>() ;
   private List<String> listQuestIdRela = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
   
@@ -110,7 +109,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void deActivate() throws Exception { }
   
   public UIResponseForm() throws Exception {
-    this.setActions(new String[]{"Attachment", "Save", "Cancel"}) ;
+    this.setActions(new String[]{"Attachment", "AddRelation", "Save", "Cancel"}) ;
   }
   
   public void setQuestionId(String questionId){
@@ -145,10 +144,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void initPage(boolean isEdit) {
     if(!isEdit) {
       questionContent_ = new UIFormTextAreaInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
-      questionContent_.setValue(question.getQuestion()) ;
+      String input = question.getQuestion() ;
+      input = input.replace("<p>", "") ;
+      input = input.substring(0, input.lastIndexOf("</p>") - 1) ;
+      questionContent_.setValue(input) ;
       questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
       reponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, null, null , true) ;
-      questionRelation_ = new UIFormSelectBox(RELATIONS, RELATIONS, getListRelation()) ;
       checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, false) ;
       inputAttachment_ = new UIFormInputWithActions(ATTATCH_MENTS) ;
       inputAttachment_.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
@@ -171,10 +172,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       this.removeChildById(QUESTION_LANGUAGE) ;
       this.removeChildById(RESPONSE_CONTENT) ; 
       this.removeChildById(ATTATCH_MENTS) ; 
-      this.removeChildById(RELATIONS) ; 
       this.removeChildById(SHOW_ANSWER) ; 
       questionLanguages_.setOptions(getListLanguageToReponse()) ;
-      questionRelation_.setOptions(getListRelation()) ;
       reponseQuestion_.setValue(responseContent_);
       questionContent_.setValue(questionChanged_) ;
     }
@@ -184,7 +183,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     addChild(questionLanguages_) ;
     addChild(reponseQuestion_) ;
     addChild(checkShowAnswer_.setChecked(isChecked)) ;
-    addChild(questionRelation_) ;
     addChild(inputAttachment_) ;
     
     //this.setListFileAttach(question.getAttachMent()) ;
@@ -252,11 +250,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     if(relations != null && relations.length > 0)
       for(String relation : relations) {
         question = faqService.getQuestionById(relation, FAQUtils.getSystemProvider()) ;
-        listRelation.add(new SelectItemOption<String>(question.getQuestion(), question.getQuestion())) ;
+        listRelationQuestion.add(question.getQuestion()) ;
       }
   }
-  public List<SelectItemOption<String>> getListRelation() {
-   return listRelation ; 
+  public List<String> getListRelation() {
+   return listRelationQuestion ; 
   }
   
   /*// get and set form info:
@@ -275,7 +273,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   }
   
   public void setListIdQuesRela(List<String> listId) {
+    listQuestIdRela.clear() ;
     this.listQuestIdRela = listId ;
+  }
+  
+  public void setListRelationQuestion(List<String> listQuestionContent) {
+    this.listRelationQuestion.clear() ;
+    this.listRelationQuestion.addAll(listQuestionContent) ;
+  }
+  
+  @SuppressWarnings("unused")
+  private List<String> getListRelationQuestion() {
+    return this.listRelationQuestion ;
   }
   
   // action :
@@ -397,6 +406,20 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         }
       }
       questionForm.refreshUploadFileList() ;
+    }
+  }
+  
+  static public class RemoveRelationActionListener extends EventListener<UIResponseForm> {
+    public void execute(Event<UIResponseForm> event) throws Exception {
+      UIResponseForm questionForm = event.getSource() ;
+      String quesId = event.getRequestContext().getRequestParameter(OBJECTID);
+      for(int i = 0 ; i < questionForm.listQuestIdRela.size(); i ++) {
+        if(questionForm.listQuestIdRela.get(i).equals(quesId)) {
+          questionForm.listQuestIdRela.remove(i) ;
+          questionForm.listRelationQuestion.remove(i) ;
+          break ;
+        }
+      }
     }
   }
   

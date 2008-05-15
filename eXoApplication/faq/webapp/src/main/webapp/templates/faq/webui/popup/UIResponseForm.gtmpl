@@ -56,7 +56,25 @@
 						</tr>
 					<%}
 					}
-					%>						
+					%>
+						<tr>
+							<td align="right"> Relation :</td>
+							<td>
+							<%
+							int i = 0 ;
+							String viewString = "" ;
+							for(String questionContent in uicomponent.getListRelationQuestion()) {
+								String action = uicomponent.event("RemoveRelation",uicomponent.getListIdQuesRela().get(i ++)) ;
+								if(questionContent.indexOf("<p>") >= 0 && questionContent.indexOf("</p>") >= 0) {
+									viewString = questionContent.substring(3, questionContent.length() - 4) ;
+								} else {
+									viewString = questionContent ;
+								}
+							%>
+								&nbsp; - $viewString ( <a href="$action"> Remove </a> ) <br>
+						<%}%>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -66,7 +84,6 @@
 					<tr>
 						<td align="center">
 		        <% for(action in uicomponent.getActions()) { 
-		        		 if(action.indexOf("AddRelation") >= 0) continue ; 
 		        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		           String link = uicomponent.event(action) ;
 		        %>

@@ -200,7 +200,6 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     try {
       return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       return null ;
     }
@@ -224,12 +223,13 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       }
       responseForm.setListIdQuesRela(listQuestionId) ;
       
-      List<SelectItemOption<String>> listOption = new ArrayList<SelectItemOption<String>>() ;
+      List<String> listOption = new ArrayList<String>() ;
       for(String id : listQuestionId) {
         String contentQue = faqService.getQuestionById(id, FAQUtils.getSystemProvider()).getQuestion() ;
-        listOption.add(new SelectItemOption<String>(contentQue,contentQue)) ;
+        listOption.add(contentQue) ;
       }
-      ((UIFormSelectBox)responseForm.getChildById(responseForm.RELATIONS)).setOptions(listOption) ;
+      responseForm.setListRelationQuestion(listOption) ;
+      //((UIFormSelectBox)responseForm.getChildById(responseForm.RELATIONS)).setOptions(listOption) ;
       
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;

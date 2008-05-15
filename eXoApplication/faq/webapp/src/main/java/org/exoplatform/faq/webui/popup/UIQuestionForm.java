@@ -136,7 +136,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       if(i < questionContents_.size()) {
         String input = questionContents_.get(i) ;
         input = input.replace("<p>", "") ;
-        input = input.substring(0, input.lastIndexOf("</p>")) ;
+        input = input.substring(0, input.lastIndexOf("</p>") - 1) ;
         textAreaInput.setValue(input) ;
       }
       listFormWYSIWYGInput.addUIFormInput(textAreaInput );
