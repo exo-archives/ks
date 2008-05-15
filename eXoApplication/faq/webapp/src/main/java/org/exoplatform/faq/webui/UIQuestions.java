@@ -40,6 +40,7 @@ import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
+import org.exoplatform.faq.webui.popup.UIQuestionsInfo;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
@@ -104,8 +105,10 @@ public class UIQuestions extends UIContainer {
   private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
   boolean isChangeLanguage = false ;
   List<String> listLanguage = new ArrayList<String>() ;
+  public String backPath_ = "" ;
   
 	public UIQuestions()throws Exception {
+    backPath_ = null ;
 	  this.categoryId_ = new String() ;
     currentUser_ = FAQUtils.getCurrentUser() ;
 		addChild(UIQuickSeach.class, null, null) ;
@@ -264,16 +267,7 @@ public class UIQuestions extends UIContainer {
 	}
 	
   public void setListQuestion() throws Exception {
-    setCategories() ;
-  }
-  
-  public void setListQuestion(List<Question> listQuestion) {
-    this.listQuestion_ = listQuestion ;
-  }
-  
-  @SuppressWarnings("unused")
-  public List<Question> getListQuestion() {
-    if(!this.isChangeLanguage) {
+    //if(!this.isChangeLanguage) {
       try{
         SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
         if(!canEditQuestion) {
@@ -284,7 +278,16 @@ public class UIQuestions extends UIContainer {
       } catch(Exception e) {
         e.printStackTrace() ;
       }
-    }
+    //}
+    setCategories() ;
+  }
+  
+  public void setListQuestion(List<Question> listQuestion) {
+    this.listQuestion_ = listQuestion ;
+  }
+  
+  @SuppressWarnings("unused")
+  public List<Question> getListQuestion() {
     return this.listQuestion_ ;
   }
   
@@ -393,6 +396,10 @@ public class UIQuestions extends UIContainer {
   	categories_.add(index+i, category) ;
   	
   }	
+  
+  private String getBackPath() {
+    return this.backPath_ ;
+  }
 	
 	static  public class AddCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
@@ -428,7 +435,7 @@ public class UIQuestions extends UIContainer {
       questionForm.setCategoryId(categoryId) ;
       questionForm.refresh() ;
       popupContainer.setId("AddQuestion") ;
-      popupAction.activate(popupContainer, 650, 1000) ;
+      popupAction.activate(popupContainer, 700, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
@@ -436,6 +443,7 @@ public class UIQuestions extends UIContainer {
   static public class OpenCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions questions = event.getSource() ;
+      questions.backPath_ = "" ;
       UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       questions.setCategoryId(categoryId) ;
@@ -563,13 +571,16 @@ public class UIQuestions extends UIContainer {
   
   static  public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
+      System.out.println(">>>>>>>>>QuestionManagamentActionListener()");
       UIQuestions questions = event.getSource() ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-      UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
-      popupContainer.setId("FAQQuestionManagerment") ;
+      //UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
+      UIQuestionsInfo questionsInfo = popupContainer.addChild(UIQuestionsInfo.class, null, null) ;
+      //popupContainer.setId("FAQQuestionManagerment") ;
+      popupContainer.setId("FAQQuestionInfo") ;
       popupAction.activate(popupContainer, 800, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
@@ -583,7 +594,13 @@ public class UIQuestions extends UIContainer {
       String questionId = new String() ;
       if(strId.indexOf("/") < 0) {
         questionId = strId ;
+        uiQuestions.backPath_ = "" ;
       } else {
+        if(uiQuestions.backPath_ != null && uiQuestions.backPath_.trim().length() > 0) {
+          uiQuestions.backPath_ = "" ;
+        } else {
+          uiQuestions.backPath_ = uiQuestions.categoryId_ + "/" + uiQuestions.questionView_ ;
+        }
         String categoryId = strId.split("/")[0] ;
         questionId = strId.split("/")[1] ;
         
@@ -600,13 +617,13 @@ public class UIQuestions extends UIContainer {
         } else breadcumbs.setUpdataPath(categoryId);
         event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
         UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
       }
       
       String questionViewed = uiQuestions.questionView_ ;
       if( questionViewed == null || questionViewed.trim().length() < 1 || !questionViewed.equals(questionId)){
         uiQuestions.questionView_ = questionId ; 
       } else {
+        uiQuestions.isChangeLanguage = true ;
         uiQuestions.questionView_ = "" ;
       }
       
@@ -640,7 +657,7 @@ public class UIQuestions extends UIContainer {
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
       questionForm.setQuestionId(questionId) ;
       popupContainer.setId("EditQuestion") ;
-      popupAction.activate(popupContainer, 650, 1000) ;
+      popupAction.activate(popupContainer, 700, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }

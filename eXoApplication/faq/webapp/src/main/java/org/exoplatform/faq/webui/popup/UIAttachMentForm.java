@@ -89,10 +89,10 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       
       UIPopupContainer popupContainer = attachMentForm.getAncestorOfType(UIPopupContainer.class) ;
       if(attachMentForm.getIsManagerment()) {
-        UIQuestionManagerForm questionManagerForm = popupContainer.getChild(UIQuestionManagerForm.class) ;
+        /*UIQuestionManagerForm questionManagerForm = popupContainer.getChild(UIQuestionManagerForm.class) ;
         questionManagerForm.setListFileAttach(fileAttachment) ;
         questionManagerForm.refreshUploadFileList() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm) ;*/
       } else if(attachMentForm.getResponse()) {
         UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
         responseForm.setListFileAttach(fileAttachment) ;

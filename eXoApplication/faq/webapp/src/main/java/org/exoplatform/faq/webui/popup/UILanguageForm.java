@@ -114,9 +114,9 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
 			UILanguageForm languageForm = event.getSource() ;
 			UIPopupContainer popupContainer = languageForm.getAncestorOfType(UIPopupContainer.class) ;
       if(languageForm.getIsManagerment()) {
-  			UIQuestionManagerForm questionManagerForm = popupContainer.getChild(UIQuestionManagerForm.class) ;
+  			/*UIQuestionManagerForm questionManagerForm = popupContainer.getChild(UIQuestionManagerForm.class) ;
         questionManagerForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;
-        questionManagerForm.initPage(true) ;
+        questionManagerForm.initPage(true) ;*/
       } else {
         UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
         questionForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;

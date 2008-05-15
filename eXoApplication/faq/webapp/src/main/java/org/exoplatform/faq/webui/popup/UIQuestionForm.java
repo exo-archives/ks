@@ -54,6 +54,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 
@@ -130,11 +131,15 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     
     listFormWYSIWYGInput = new UIFormInputWithActions(LIST_WYSIWYG_INPUT) ;
     for(int i = 0 ; i < LIST_LANGUAGE.size() ; i++) {
+      UIFormTextAreaInput textAreaInput = new UIFormTextAreaInput(WYSIWYG_INPUT + i, WYSIWYG_INPUT + i, null) ;
+      textAreaInput.setColumns(80) ;
       if(i < questionContents_.size()) {
-        listFormWYSIWYGInput.addUIFormInput( new UIFormWYSIWYGInput(WYSIWYG_INPUT + i, null, questionContents_.get(i), true) );
-      } else {
-        listFormWYSIWYGInput.addUIFormInput( new UIFormWYSIWYGInput(WYSIWYG_INPUT + i, null, null, true) );
+        String input = questionContents_.get(i) ;
+        input = input.replace("<p>", "") ;
+        input = input.substring(0, input.lastIndexOf("</p>")) ;
+        textAreaInput.setValue(input) ;
       }
+      listFormWYSIWYGInput.addUIFormInput(textAreaInput );
     }
     
     UIFormInputWithActions inputWithActions = new UIFormInputWithActions(ATTACHMENTS) ;
@@ -183,10 +188,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       UIFormStringInput emailQ = this.getChildById(EMAIL_ADDRESS);
       emailQ.setValue(question_.getEmail()) ;
       
-      ((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(0)).setValue(question_.getQuestion()) ;
+      ((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(0)).setValue(question_.getQuestion()) ;
       int i = 1 ;
       for(QuestionLanguage questionLanguage : listLanguageNode) {
-        ((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(i++)).setValue(questionLanguage.getQuestion()) ;
+        ((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(i++)).setValue(questionLanguage.getQuestion()) ;
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -313,7 +318,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       List<String> listQuestionContent = new ArrayList<String>() ;
       UIFormInputWithActions listFormWYSIWYGInput =  questionForm.getChildById(LIST_WYSIWYG_INPUT) ;
       for(int i = 0 ; i < listFormWYSIWYGInput.getChildren().size(); i ++) {
-        listQuestionContent.add(((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(i)).getValue()) ;
+        listQuestionContent.add(((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(i)).getValue()) ;
       }
             
       if(listQuestionContent.isEmpty()) {
@@ -381,7 +386,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       questionForm.questionContents_.clear() ;
       UIFormInputWithActions listFormWYSIWYGInput =  questionForm.getChildById(LIST_WYSIWYG_INPUT) ;
       for(int i = 0 ; i < listFormWYSIWYGInput.getChildren().size(); i ++) {
-        questionForm.questionContents_.add(((UIFormWYSIWYGInput)listFormWYSIWYGInput.getChild(i)).getValue()) ;
+        questionForm.questionContents_.add(((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(i)).getValue()) ;
       }
       
 	    UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class);

@@ -599,6 +599,13 @@ UIFAQPortlet .ResultQuickSearch {
   background: url('background/SingleNextArrow.gif') no-repeat ;
 }
 
+/******************************  UI AddNew/Edit Question  ***************************************/
+
+.UIFAQPortlet .UIQuestionForm textarea {
+	font-size:11px;
+	height:150px;
+	width:500px;
+}
 
 /******************************  Icon  ***************************************/
 

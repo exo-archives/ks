@@ -296,48 +296,52 @@
 							<div class="AttachmentContent">
 								<div style="margin-top: 5px; margin-bottom: 5px;">
 									<%
-									for(FileAttachment fileAttachment : question.getAttachMent()){
-								    String fileName = fileAttachment.getName() ;
-								    String fileSize = fileAttachment.getSize() ;
-								    String dataPath = "" ;
-								    String fileStream = "" ;
-								    try{
-								      dataPath = fileAttachment.getDataPath() ;
-								      fileStream = fileAttachment.getInputStream() ;
-								    } catch(Exception e) {
-								    	dataPath = "null" ;
-								      fileStream = "null" ;
-								    }
-								    String fileType = fileAttachment.getMimeType() ;
-								    String fileWorkSpace = fileAttachment.getWorkspace() ;
-								    ValidatorDataInput validate = new ValidatorDataInput() ;
-							    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
-								    if(validate.isImage(fileName)) {
-								    %>
-								    	<div style="float: left; margin-left: 5px;">
-									    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100"></div>
-									    	<div style="clear: left;"><span></span></div>
-						 						<div class="LabelBox">
-							 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-							 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
-							 						<div style="clear: left;"><span></span></div>
-							 						<div class="Action" style="padding-top: 0px;">
-							 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.openPicture(this,'$fileName')">View</div>
-							 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
-							 						</div>
+									if(!question.getAttachMent().isEmpty()) {
+										for(FileAttachment fileAttachment : question.getAttachMent()){
+									    String fileName = fileAttachment.getName() ;
+									    String fileSize = fileAttachment.getSize() ;
+									    String dataPath = "" ;
+									    String fileStream = "" ;
+									    try{
+									      dataPath = fileAttachment.getDataPath() ;
+									      fileStream = fileAttachment.getInputStream() ;
+									    } catch(Exception e) {
+									    	dataPath = "null" ;
+									      fileStream = "null" ;
+									    }
+									    String fileType = fileAttachment.getMimeType() ;
+									    String fileWorkSpace = fileAttachment.getWorkspace() ;
+									    ValidatorDataInput validate = new ValidatorDataInput() ;
+								    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
+									    if(validate.isImage(fileName)) {
+									    %>
+									    	<div style="float: left; margin-left: 5px;">
+										    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100"></div>
+										    	<div style="clear: left;"><span></span></div>
+							 						<div class="LabelBox">
+								 						<div class="AttachmentIcon JPGIcon"><span></span></div>
+								 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
+								 						<div style="clear: left;"><span></span></div>
+								 						<div class="Action" style="padding-top: 0px;">
+								 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.openPicture(this,'$fileName')">View</div>
+								 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
+								 						</div>
+								 					</div>
 							 					</div>
-						 					</div>
-							    <%} else {
-							    		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
-							    %>
-							    		<div class="LabelBox">
-												<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
-												<a class="AttachmentLabel" href="$linkImage">$fileName</a>
-												<div style="clear: left;"><span/></div>
-												<div class="Size">Size: $fileSize</div>
-											</div>
-							    <%}
-							  	}%>
+								    <%} else {
+								    		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
+								    %>
+								    		<div class="LabelBox">
+													<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
+													<a class="AttachmentLabel" href="$linkImage">$fileName</a>
+													<div style="clear: left;"><span/></div>
+													<div class="Size">Size: $fileSize</div>
+												</div>
+								    <%}
+								  	}
+							  	} else {%>
+							  		<b>File Attatched: </b>
+						  	<%}%>
 						  	</div>
 						    <div style="clear: left;"><span></span></div>
 							</div>
@@ -354,25 +358,32 @@
 										quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
 										linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId) ;
 								%>
-										<a href="$linkRelaQues"> $quesRelaCont<br></a>
+										&nbsp; - <a href="$linkRelaQues"> $quesRelaCont<br></a>
 								<% } %>
 							</div>
 							<div class="UIAction ResponsActions" style="float: left">
-									<div style="float:left">Response by: $responseBy , $date</div>
+									<div style="float:left"><b>Responsed by :</b> $responseBy , $date</div>
 									<div style="float:right">
+									<%
+									if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
+										String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath()) ;
+									%>
+										<a href="$link" class="ActionButton LightBlueStyle">
+					      	  	<div class="ButtonLeft">
+					        	  	<div class="ButtonRight">
+					          	  	<div class="ButtonMiddle"> Back </div>
+					            	</div>
+					          	</div>
+				        		</a>
+				        	<%}%>
 									
 										<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 											<div style="position: relative;">
-											
-												<a class="ActionButton LightBlueStyle">
-							      	  	<div class="ButtonLeft">
-							        	  	<div class="ButtonRight">
-							          	  	<div class="ButtonMiddle"> Language </div>
-							            	</div>
-							          	</div>
-							        	</a>
-					        			
-					        			<div class="UIPopupCategory" style="display: none; maring-left: -65px; margin-top: -100px; ">
+					        			<%
+					        			List listQuestLanguage = uicomponent.getQuestionLangauges(question) ;
+					        			String margin_top = listQuestLanguage.size() * (-35) + "px" ;
+					        			%>
+					        			<div class="UIPopupCategory" style="display: none; left: -5px; margin-top: $margin_top; margin-bottom: 10px; ">
 													<div class="UIRightClickPopupMenu" style="display: block;">
 														<div class="UIContextMenuContainer">
 																							
@@ -386,7 +397,6 @@
 																<div class="MiddleRightRightClickPopupMenu">
 																	<div class="UIRightPopupMenuContainer">
 																		<%
-																			List listQuestLanguage = uicomponent.getQuestionLangauges(question) ;
 																			for(String quesLanguage in listQuestLanguage) {
 																				String linkView = uicomponent.event("ChangeQuestion", questionId + "/" + quesLanguage) ;
 																				String classIcon = "" ;
@@ -412,7 +422,15 @@
 														</div>
 													</div>
 												</div>
-											
+												
+												<a javaScript: void(0) class="ActionButton LightBlueStyle">
+							      	  	<div class="ButtonLeft">
+							        	  	<div class="ButtonRight">
+							          	  	<div class="ButtonMiddle"> Language </div>
+							            	</div>
+							          	</div>
+							        	</a>
+												
 											</div>
 										</div>
 					        	
