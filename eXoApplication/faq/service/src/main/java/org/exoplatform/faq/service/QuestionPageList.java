@@ -104,7 +104,6 @@ public class QuestionPageList extends JCRPageList {
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
         FileAttachment attachment = new FileAttachment() ;
-        System.out.println("\n\n\n name============> " + node.getName());
         nodeFile = node.getNode("jcr:content") ;
         attachment.setPath(node.getPath()) ;
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());

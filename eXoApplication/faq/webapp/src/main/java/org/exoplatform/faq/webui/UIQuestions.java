@@ -576,10 +576,9 @@ public class UIQuestions extends UIContainer {
       UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+
       UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
-      //UIQuestionsInfo questionsInfo = popupContainer.addChild(UIQuestionsInfo.class, null, null) ;
       popupContainer.setId("FAQQuestionManagerment") ;
-      //popupContainer.setId("FAQQuestionInfo") ;
       popupAction.activate(popupContainer, 800, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }

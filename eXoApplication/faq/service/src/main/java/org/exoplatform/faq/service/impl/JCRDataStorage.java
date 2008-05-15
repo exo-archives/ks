@@ -151,7 +151,6 @@ public class JCRDataStorage {
           nodeContent.setProperty("jcr:mimeType", att.getMimeType());
           nodeContent.setProperty("jcr:data", att.getInputStream());
           nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
-          System.out.println("\n\n Name ========> " + att.getName() +"\n\n");
         } catch (Exception e) {
           e.printStackTrace() ;
         }
@@ -159,32 +158,37 @@ public class JCRDataStorage {
     }
     //Send notifycation when add new qustion in watching category
     questionNode.getSession().save() ;
-    //if(questionNode.isNew()) questionNode.getSession().save() ;
-    //else questionNode.save() ;
-    //Send notifycation when add new qustion in watching category
     if(isNew) {
-    	Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
-    	if(cate.isNodeType("exo:faqWatching")){
-    		Value[] emails = cate.getProperty("exo:emailWatching").getValues() ;
-    		if(emails != null && emails.length > 0) {    			
-    			Message message = new Message();
-          message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-    			//message.setMessageTo(question.getEmail());
-    			message.setSubject("eXo FAQ Watching Category Notifycation!");
-    			message.setMessageBody("The category '" + cate.getProperty("exo:name").getString() 
-    					+"' have just  added question:</br>" + question.getQuestion());
-    			sendNotification(emails, message, null) ;    			
-    		}
-    	}
+    	try {
+    		Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+      	if(cate.isNodeType("exo:faqWatching")){
+      		Value[] emails = cate.getProperty("exo:emailWatching").getValues() ;
+      		if(emails != null && emails.length > 0) {    			
+      			Message message = new Message();
+            message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+      			//message.setMessageTo(question.getEmail());
+      			message.setSubject("eXo FAQ Watching Category Notifycation!");
+      			message.setMessageBody("The category '" + cate.getProperty("exo:name").getString() 
+      					+"' have just  added question:</br>" + question.getQuestion());
+      			sendNotification(emails, message, null) ;    			
+      		}
+      	}
+    	}catch(Exception e) {
+    		e.printStackTrace() ;
+    	}    	
     }
     // Send notifycation when question responsed or edited or watching
   	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
-  		Message message = new Message();
-      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-			//message.setMessageTo(question.getEmail());
-			message.setSubject("eXo FAQ Question Responsed Notifycation!");
-			message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
-			sendNotification(null, message, question.getEmail()) ;  		
+  		try {
+  			Message message = new Message();
+        message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+  			//message.setMessageTo(question.getEmail());
+  			message.setSubject("eXo FAQ Question Responsed Notifycation!");
+  			message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
+  			sendNotification(null, message, question.getEmail()) ;
+  		}catch(Exception e) {
+  			e.printStackTrace() ;
+  		}  		  		
   	}
   }
   
