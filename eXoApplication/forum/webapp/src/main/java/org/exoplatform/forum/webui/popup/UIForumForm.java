@@ -49,6 +49,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
@@ -107,7 +108,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		categoryId.setDefaultValue(categorys.get(0).getId());
 		
 		UIFormStringInput forumTitle = new UIFormStringInput(FIELD_FORUMTITLE_INPUT, FIELD_FORUMTITLE_INPUT, null);
-		forumTitle.addValidator(EmptyNameValidator.class) ;
+		forumTitle.addValidator(MandatoryValidator.class);
 		UIFormStringInput forumOrder = new UIFormStringInput(FIELD_FORUMORDER_INPUT, FIELD_FORUMORDER_INPUT, "0");
 		forumOrder.addValidator(PositiveNumberFormatValidator.class) ;
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;

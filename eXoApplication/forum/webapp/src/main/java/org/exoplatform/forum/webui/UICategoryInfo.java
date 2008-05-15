@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -26,6 +27,8 @@ import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
+import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -43,9 +46,28 @@ import org.exoplatform.webui.core.UIContainer;
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private long mostUserOnline_ ;
+	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
+	
 	public UICategoryInfo() throws Exception { 
 	} 
 	
+	@SuppressWarnings("unchecked")
+  public List<UserProfile> setPageListUserProfile() throws Exception {
+		if(userProfiles == null) {
+	    List<User> listUser = ForumSessionUtils.getAllUser() ;
+	    for (User user : listUser) {
+	      this.forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), user.getUserName(), false, false, false) ;
+	    }
+	    JCRPageList pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
+	    userProfiles = pageList.getPage(0) ;
+		}
+    return userProfiles;
+  }
+	
+	private long getUserActive() throws Exception {
+		
+		return 1;
+	}
 	@SuppressWarnings("unused")
   private List<String> getUserOnline() throws Exception {
 		List<String> list = this.forumService.getOnlineUsers() ;
@@ -64,6 +86,7 @@ public class UICategoryInfo extends UIContainer	{
 	
 	public ForumStatistic getForumStatistic() throws Exception {
 		ForumStatistic forumStatistic = forumService.getForumStatistic(ForumSessionUtils.getSystemProvider()) ;
+		
 		List<User> userList = ForumSessionUtils.getAllUser();
 		long size = (long)userList.size() ;
 		boolean isSave = false ;
