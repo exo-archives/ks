@@ -367,6 +367,15 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-null", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ;
+      } else {
+        for(String input : listQuestionContent) {
+          if(input == null || input.trim().length() < 1) {
+            UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+            uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-null", null, ApplicationMessage.WARNING)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+            return ;
+          }
+        }
       }
       if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
         question_ = new Question() ;
