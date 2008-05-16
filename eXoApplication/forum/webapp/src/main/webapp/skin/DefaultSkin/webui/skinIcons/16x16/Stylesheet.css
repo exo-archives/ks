@@ -374,3 +374,11 @@
 .UIForumPortlet .DeleteIcon {
 	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/DustBin.gif') no-repeat left center;
 }
+
+.UIForumPortlet .TopicActiveIcon {
+	background: url('icons/TopicUnActiveIcon.gif') no-repeat left center;
+}
+
+.UIForumPortlet .TopicUnActiveIcon {
+	background: url('icons/TopicActiveIcon.gif') no-repeat left center;
+}

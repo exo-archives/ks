@@ -1,0 +1,97 @@
+<% 
+	import org.exoplatform.forum.service.Topic; 
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.ForumFormatUtils ; 
+  UserProfile userProfile = uicomponent.getUserProfile() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() + " " + userProfile.getTimeFormat() ;
+  List topics = uicomponent.getTopicsOld() ;
+%>
+<div class="$uicomponent.id" id="$uicomponent.id">
+	<div class="UITopicContainer">
+   	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th>Thread/Thread starter</th>
+								<th style="width: 50px;">Is Active</th>
+								<th style="width: 66px;">Last Post</th>
+								<th style="width: 40px;">Replies</th>
+								<th style="width: 80px;">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+							if(!topics.isEmpty()) {
+								String classRow = "whileRow";
+								int i = 0;
+								 for(topic in topics){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String topicId = topic.getId();
+									String topicPath = topic.getPath() ;
+									String topicTitle = topic.getTopicName();
+									String topicBy = topic.getOwner();
+									String isActive = "" + topic.getIsActive();
+									String lastPostDate = ForumFormatUtils.getFormatDate(formatDate, topic.getCreatedDate());
+									String titlePost = ForumFormatUtils.getStringCleanHtmlCode(topic.getDescription());
+									if(titlePost.length() > 100) {
+										titlePost = titlePost.substring(0, 99) + "...";
+									}
+									String postCount = String.valueOf(topic.getPostCount());
+									String titleTp = "Active";
+									if(topic.getIsActive())titleTp = "UnActive";
+							%>
+								<tr class="$classRow">
+									<td >
+										<div >
+										<% if(topic.getIsSticky()) {%>
+											<span class="Text StickyIcon">Sticky:</span>
+										<% } %>
+											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="TitleNorman">$topicTitle</a>
+										</div>
+										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
+									</td>
+								 	<td class="Tdbox" align="center"><div>$isActive</div></td>
+								 	<td class="Tdbox" align="center"><div>$lastPostDate</div></td>
+								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
+									<td class="Tdbox" align="center">
+										<div class="ActionContainer" style="margin: 0px auto;">
+											<div class="IconContent">
+												<a href="<%=uicomponent.event("ActiveTopic",topicId)%>" style="float: left;">
+													 <div class="Icon16x16 Topic${titleTp}Icon" title="$titleTp this Thread"><span></span></div>							
+												</a>
+												<a href="<%=uicomponent.event("DeleteTopic",topicId)%>" style="float: left;">
+													 <div class="Icon16x16 DeleteIcon" title="Delete this Thread"><span></span></div>							
+												</a>
+											</div>
+										</div>
+									</td>
+					 			</tr>
+						 	<% i = i + 1;}
+						 	} else {
+						 		%>
+						 		<tr>
+					 				<td colspan="7" align="center">
+					 					<div style="margin: 5px 0px 10px 0px"><b>Have not any topics</b></div>
+					 				</td>
+						 		</tr>
+					 		<%
+						 	}
+					 	 %>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

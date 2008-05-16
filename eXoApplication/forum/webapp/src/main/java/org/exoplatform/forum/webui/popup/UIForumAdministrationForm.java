@@ -33,8 +33,11 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
+import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
  * Created by The eXo Platform SAS
@@ -44,28 +47,37 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIFormInputWithActions.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIForumAdministrationForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UIForumAdministrationForm.SaveActionListener.class), 
-			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE)
+			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIForumAdministrationForm.RunActionListener.class)
 		}
 )
 public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
 	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private ForumAdministration administration ;
-	public static final String FIELD_FORUMSORT_TAB = "forumSort" ;
-	public static final String FIELD_CENSOREDKEYWORD_TAB = "forumCensor" ;
+	private boolean isRenderListTopic = false ;
+	public static final String FIELD_FORUMSORT_TAB = "forumSortTab" ;
+	public static final String FIELD_CENSOREDKEYWORD_TAB = "forumCensorTab" ;
+	public static final String FIELD_ACTIVETOPIC_TAB = "activeTopicTab" ;
 	
 	public static final String FIELD_FORUMSORTBY_INPUT = "forumSortBy" ;
 	public static final String FIELD_FORUMSORTBYTYPE_INPUT = "forumSortByType" ;
 	public static final String FIELD_TOPICSORTBY_INPUT = "topicSortBy" ;
 	public static final String FIELD_TOPICSORTBYTYPE_INPUT = "topicSortByType" ;
+	
 	public static final String FIELD_CENSOREDKEYWORD_TEXTAREA = "censorKeyword" ;
 	
+	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
+	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
+	
 	public UIForumAdministrationForm() throws Exception {
+		addChild(UIListTopicOld.class, null, null) ;
 		this.administration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider());
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
-		UIFormInputWithActions forumCensor = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
+		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
+		UIFormInputWithActions activeTopicTab = new UIFormInputWithActions(FIELD_ACTIVETOPIC_TAB);
 		
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
 		ls.add(new SelectItemOption<String>("Forum Name", "name")) ;
@@ -105,18 +117,37 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		UIFormTextAreaInput censorKeyword = new UIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA, FIELD_CENSOREDKEYWORD_TEXTAREA, null);
 		censorKeyword.setValue(administration.getCensoredKeyword()) ;
 		
+		UIFormStringInput activeAbout = new UIFormStringInput(FIELD_ACTIVEABOUT_INPUT, FIELD_ACTIVEABOUT_INPUT, null);
+		activeAbout.setValue("0");
+		activeAbout.addValidator(PositiveNumberFormatValidator.class);
+		List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>() ;
+		options.add( new SelectItemOption<String>("true", "true") ) ;
+		options.add( new SelectItemOption<String>("false", "false") ) ;
+		UIFormRadioBoxInput setActive = new UIFormRadioBoxInput(FIELD_SETACTIVE_INPUT, FIELD_SETACTIVE_INPUT, options);
+		setActive.setValue("false") ;
+		
 		forumSortTab.addUIFormInput(forumSortBy) ;
 		forumSortTab.addUIFormInput(forumSortByType) ;
 		forumSortTab.addUIFormInput(topicSortBy) ;
 		forumSortTab.addUIFormInput(topicSortByType) ;
 		
-		forumCensor.addUIFormInput(censorKeyword) ;
+		forumCensorTab.addUIFormInput(censorKeyword) ;
+		
+		addUIFormInput(activeAbout);
+		addUIFormInput(setActive);
 		
 		addUIFormInput(forumSortTab) ;
-		addUIFormInput(forumCensor) ;
-		
+		addUIFormInput(forumCensorTab) ;
+		addUIFormInput(activeTopicTab) ;
+		this.setActions(new String[]{"Save", "Cancel"}) ;
+  }
+	public boolean isRenderListTopic() {
+  	return isRenderListTopic;
   }
 
+	public void setRenderListTopic(boolean isRenderListTopic) {
+  	this.isRenderListTopic = isRenderListTopic;
+  }
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
@@ -143,10 +174,31 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		}
 	}
 	
+	static	public class RunActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm administrationForm = event.getSource() ;
+			String activeAbout = administrationForm.getUIStringInput(FIELD_ACTIVEABOUT_INPUT).getValue() ;
+			if(activeAbout != null && activeAbout.length() > 0) {
+				try {
+	        long date = Long.parseLong(activeAbout) ;
+	        if(date > 0) {
+		        administrationForm.setRenderListTopic(true) ;
+		        administrationForm.getChild(UIListTopicOld.class).setDate(date) ;
+		        event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
+	        }
+        } catch (Exception e) {
+	        e.printStackTrace();
+        }
+			}
+		}
+	}
+	
 	static	public class CancelActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
 	}
+
+	
 }

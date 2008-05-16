@@ -56,6 +56,7 @@ public interface DataStorage {
 	
 	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery) throws Exception;
 	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception ;
+	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception ;
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;		
 	public Topic getTopicByPath(SessionProvider sProvider, String topicPath) throws Exception;

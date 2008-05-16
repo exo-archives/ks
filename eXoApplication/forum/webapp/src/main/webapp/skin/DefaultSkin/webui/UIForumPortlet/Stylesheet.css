@@ -312,4 +312,10 @@
 
 .UIForumPortlet .ButtomAndPageListContainer {
 	height: 24px;
-}s
+}
+
+.UIListTopicOld .UITopicList .IconContent {
+  margin:auto;
+  overflow:auto;
+  width:55px;
+}

@@ -5,10 +5,10 @@
       <div class="TabPaneContent">
         
         <div class="WorkingArea">
-           <div class="UIHorizontalTabs">
-             <div class="LeftHorizontalTabs">
-               <div class="RightHorizontalTabs">
-                 <div class="CenterHorizontalTabs">
+          <div class="UIHorizontalTabs">
+            <div class="LeftHorizontalTabs">
+              <div class="RightHorizontalTabs">
+                <div class="CenterHorizontalTabs">
                   <div class="TabsContainer">
                   <%String classCss = "SelectedTab" ; 
                   	for(tabconten in uiform.getChildren()){ %>  

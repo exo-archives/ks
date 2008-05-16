@@ -528,14 +528,6 @@
 				Date createdPostDate = post.getCreatedDate() ;
 				createdPostDate.setTime(createdPostDate.getTime() - setTime);
 				String createdDate = ForumFormatUtils.getFormatDate(longDateFormat,createdPostDate);
-				//message = ForumFormatUtils.convetToCode(message) ;
-				//String temps="";int i = 4000;
-				//while(true) {
-				// 	temps = temps + "http://media.chacha.vn/media/artist/438/" +i+".mp3<br/>" ;
-				//	if(i >= 5000) break;
-				//	++i; 
-				//}
-				//String message = ForumFormatUtils.convertCodeHTML(temps) ;
 				String message = ForumFormatUtils.convertCodeHTML(post.getMessage()) ;
 				String editBy = post.getModifiedBy() ;
 				String editDate ;

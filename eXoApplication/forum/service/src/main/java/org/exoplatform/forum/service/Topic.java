@@ -50,6 +50,7 @@ public class Topic {
 	private boolean isSticky = false ;
 	private boolean isPoll = false ;
 	private boolean isWaiting = false ;
+	private boolean isActive = true;
 	
 	private String[] canView;
 	private String[] canPost;
@@ -154,5 +155,13 @@ public class Topic {
 
 	public boolean getIsWaiting() {return isWaiting;}
 	public void setIsWaiting(boolean isWaiting) {this.isWaiting = isWaiting;}
+
+	public boolean getIsActive() {
+  	return isActive;
+  }
+
+	public void setIsActive(boolean isActive) {
+  	this.isActive = isActive;
+  }
 
 }

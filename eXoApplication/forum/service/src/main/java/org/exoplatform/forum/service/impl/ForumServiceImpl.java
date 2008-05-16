@@ -253,6 +253,10 @@ public class ForumServiceImpl implements ForumService{
 		storage_.savePrivateMessage(sProvider, privateMessage) ;
   }
 	
+	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception {
+		return storage_.getPageTopicOld(sProvider, date) ;
+	}
+	
 	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception {
 	  return storage_.getPageTopicByUser(sProvider, userName);
   }
