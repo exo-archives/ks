@@ -97,6 +97,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			service.saveFAQSetting(faqSetting, SessionProviderFactory.createSystemProvider()) ;
 			UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			questions.setCategories() ;
+			questions.setListQuestion() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;

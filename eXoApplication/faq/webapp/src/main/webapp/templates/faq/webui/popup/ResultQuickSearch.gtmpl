@@ -28,6 +28,10 @@
  											for(formSearch in formSearchs) {
 												String Id = formSearch.getId();
 												String name = formSearch.getName() ;
+												String title = name ;
+												if(name.length()>100) {
+													name = name.substring(0,99)+ "..."
+												}
 												Format formatter = new SimpleDateFormat("dd/MM/yyyy ");
 						 						String date = formatter.format(formSearch.getCreatedDate());
 						 						String icon = "QuestionIcon" ;
@@ -39,7 +43,7 @@
  										 %>
  											<tr class="EvenRow">
  												<td class="text" align="center"><div class="$icon"><span></span></div></td>
- 												<td class="text" align="left"><a href="$link">$name</a></td>
+ 												<td class="text" align="left"><a href="$link" title="$title">$name</a></td>
  												<td class="text" align="center">$date</td>
  												<td style="width: 30px;" align="center">
  													<a href="$link">

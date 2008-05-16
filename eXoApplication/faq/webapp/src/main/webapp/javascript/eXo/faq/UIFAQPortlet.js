@@ -53,6 +53,7 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var uiPortalApplication = document.getElementById("UIPortalApplication") ;
 	var printArea = DOMUtil.findAncestorByClass(obj, "ResponseContent") ;
+	var previousElement = DOMUtil.findPreviousElementByTagName(printArea, 'div') ;
 	printArea = printArea.cloneNode(true) ;
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
@@ -67,6 +68,7 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	printArea.style.overflow = "visible" ;
 	defaultAction.style.display = "none" ;
 	printAction.style.display = "block" ;
+	FAQContent.appendChild(previousElement) ;
 	FAQContent.appendChild(printArea) ;
 	FAQContainer.appendChild(FAQContent) ;
 	dummyPortlet.appendChild(FAQContainer) ;

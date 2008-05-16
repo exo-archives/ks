@@ -57,6 +57,7 @@ public class UIQuickSeach  extends UIForm {
 		addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
 		this.setSubmitAction("Search") ;
 	}
+	
 	public List<Category> getListCategories(String text) {
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		List<Category> list = new ArrayList<Category>() ;
@@ -72,6 +73,7 @@ public class UIQuickSeach  extends UIForm {
     }
 		return list;
 	}
+	
 	static public class SearchActionListener extends EventListener<UIQuickSeach> {
 		public void execute(Event<UIQuickSeach> event) throws Exception {
 			UIQuickSeach uiForm = event.getSource() ;
@@ -89,8 +91,8 @@ public class UIQuickSeach  extends UIForm {
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	  
   }
+	
 	static public class AdvancedSearchActionListener extends EventListener<UIQuickSeach> {
 		public void execute(Event<UIQuickSeach> event) throws Exception {
 			UIQuickSeach uiForm = event.getSource() ;

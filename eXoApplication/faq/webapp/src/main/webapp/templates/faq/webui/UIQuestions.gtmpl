@@ -124,7 +124,7 @@
 			List listCateModerator = uicomponent.getIsModerator() ;
 			for(category in categories) {
 				String categoryName = category.getName() ;
-				
+				String titleCategory = categoryName ;
 				if(listCateModerator.get(i)) {
 					categoryAction = moderatorAction ;
 				} else {
@@ -141,7 +141,11 @@
 			<div class="FAQCategory">
 				<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
 						<!-- category name -->
-						<a href="$link">
+						<% if(categoryName.length() > 100) {
+							categoryName = categoryName.substring(0, 99) + "...";
+							}
+						 %>
+						<a href="$link" title="$titleCategory">
 							$categoryName
 						</a>
 						($numberOfSubCate Category, $numberOfQuestion Questions, $questionNotAnswer Not yet answered)

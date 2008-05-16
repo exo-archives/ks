@@ -1,5 +1,6 @@
 <% 
 	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.service.FileAttachment;
  %>
 <div class="UIPopupViewQuestion $uicomponent.id" >
@@ -11,7 +12,7 @@
 						String[] arrayString ;
 						String responseBy = "..." ;
 						String date = "..." ;
-						String response = "<center><b>This questin have not yet answer</center></b>" ;
+						String response = "<center><b>This question have not yet answer</center></b>" ;
 						
 						if( question.getResponses().trim().length() > 0) {
 							arrayString = question.getResponses().split("/") ;
@@ -28,31 +29,57 @@
 				<div class="Response">
 					$response<br>
 				</div>
-				<div class="AttachmentContent" >
-					attachment:<br>
-					<%
-					for(FileAttachment fileAttachment : question.getAttachMent()){
-				    String fileName = fileAttachment.getName() ;
-				    String fileSize = fileAttachment.getSize() ;
-				    String dataPath = "" ;
-				    String fileStream = "" ;
-				    try{
-				      dataPath = fileAttachment.getDataPath() ;
-				      fileStream = fileAttachment.getInputStream() ;
-				    } catch(Exception e) {
-				    	dataPath = "null" ;
-				      fileStream = "null" ;
-				    }
-				    String fileType = fileAttachment.getMimeType() ;
-				    String fileWorkSpace = fileAttachment.getWorkspace() ;
-				    %>
-				    fileName: $fileName<br>
-				    fileSize: $fileSize<br>
-				    dataPath: $dataPath<br>
-				    fileStream: $fileStream<br>
-				    fileType: $fileType<br>
-				    fileWorkSpace: $fileWorkSpace<br>
-			  <%}%>
+				<div class="AttachmentContent">
+					<div style="margin-top: 5px; margin-bottom: 5px;">
+						<%
+						if(!question.getAttachMent().isEmpty()) {
+							for(FileAttachment fileAttachment : question.getAttachMent()){
+						    String fileName = fileAttachment.getName() ;
+						    String fileSize = fileAttachment.getSize() ;
+						    String dataPath = "" ;
+						    String fileStream = "" ;
+						    try{
+						      dataPath = fileAttachment.getDataPath() ;
+						      fileStream = fileAttachment.getInputStream() ;
+						    } catch(Exception e) {
+						    	dataPath = "null" ;
+						      fileStream = "null" ;
+						    }
+						    String fileType = fileAttachment.getMimeType() ;
+						    String fileWorkSpace = fileAttachment.getWorkspace() ;
+						    ValidatorDataInput validate = new ValidatorDataInput() ;
+					    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
+						    if(validate.isImage(fileName)) {
+						    %>
+						    	<div style="float: left; margin-left: 5px;">
+							    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile"></div>
+							    	<div style="clear: left;"><span></span></div>
+				 						<div class="LabelBox">
+					 						<div class="AttachmentIcon JPGIcon"><span></span></div>
+					 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
+					 						<div style="clear: left;"><span></span></div>
+					 						<div class="Action" style="padding-top: 0px;">
+					 							<div class="Icon MaxView" onclick="eXo.cs.MaskLayerControl.showPicture(this); ">View</div>
+					 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
+					 						</div>
+					 					</div>
+				 					</div>
+					    <%} else {
+					    		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
+					    %>
+					    		<div class="LabelBox">
+										<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
+										<a class="AttachmentLabel" href="$linkImage">$fileName</a>
+										<div style="clear: left;"><span/></div>
+										<div class="Size">Size: $fileSize</div>
+									</div>
+					    <%}
+					  	}
+				  	} else {%>
+				  		<b>File Attatched: </b>
+			  	<%}%>
+			  	</div>
+			    <div style="clear: left;"><span></span></div>
 				</div>
 				<div class="RelatedQuestions"><b>Related question:</b><br>
 					<%String questionRelationById = "" ;
@@ -61,14 +88,21 @@
 						String quesRelaCont = "" ;
 						String linkRelaQues = "" ;
 						for(String relationId : question.getRelations()) { 
+							quesRelaCont = "" ;
 							questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
-							cateRelaId = questionRelationById.split("/")[0] ;
-							quesRelaId = questionRelationById.split("/")[1] ;
-							quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
-							linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId) ;
+							if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
+								cateRelaId = questionRelationById.split("/")[0] ;
+								quesRelaId = questionRelationById.split("/")[1] ;
+								quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
+								//linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId) ;
+							} else {
+								//linkRelaQues = uicomponent.event("ViewQuestion", "") ;
+							}
+							if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
 					%>
-							<a href="$linkRelaQues"> $quesRelaCont<br></a>
-					<% } %>
+								&nbsp; - <a href="$linkRelaQues"> $quesRelaCont<br></a>
+					<% 	}
+						}%>
 				</div>
 				<div class="UIAction ResponsActions" style="float: left">
 						<div style="float:left" >  Response by: $responseBy , $date</div>

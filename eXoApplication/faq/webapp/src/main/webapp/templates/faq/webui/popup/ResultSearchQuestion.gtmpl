@@ -27,8 +27,15 @@
 										for(question in questions) {
 											String questionId = question.getId();
 											String author = question.getAuthor() ;
+											if(author.length()>50) {
+												author =author.substring(0,49) ;
+											}
 											String email = question.getEmail() ;
 											String questionContent = question.getQuestion() ;
+											String title = questionContent ;
+											if(questionContent.length()> 50) {
+												questionContent = questionContent.substring(0,49)+"..." ; 
+											}
 											Format formatter = new SimpleDateFormat("dd/MM/yyyy ");
 						 					String date = formatter.format(question.getCreatedDate());
 											String link = uicomponent.event("Link", questionId);
@@ -36,7 +43,7 @@
 	 											<tr class="EvenRow"> 
 	 												<td class="text" align="left"><%= author%></td>
 	 												<td class="text" align="left"><%= (email != null) ? email: ""%></td>
-	 												<td class="text"><a href="$link">$questionContent</a></td>
+	 												<td class="text"><a href="$link" title="$title">$questionContent</a></td>
 	 												<td class="text" align="center"><%=date%></td>
 	 											</tr>
  												<% 

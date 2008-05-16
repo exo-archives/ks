@@ -58,6 +58,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	public void setFormSearchs(List<FAQFormSearch> formSearchs) {
 		this.formSearchs = formSearchs;
   }
+	
   public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
   

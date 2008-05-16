@@ -26,7 +26,14 @@
 											for(category in categories) {
 												String categoryId = category.getId();
 												String categoryName = category.getName() ;
+												String title = categoryName ;
+												if(categoryName.length()>50) {
+													categoryName = categoryName.substring(0,49)+"..." ;
+												}
 												String description = category.getDescription() ;
+												if(description.length()>50) {
+												  description =description.substring(0,49)+"..." ;
+												}
 												Format formatter = new SimpleDateFormat("dd/MM/yyyy ");
 						 						String date = formatter.format(category.getCreatedDate());
 												String link = uicomponent.event("Link", categoryId);

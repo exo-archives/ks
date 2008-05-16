@@ -66,11 +66,6 @@ public class FAQServiceUtils {
 				users.add(str) ;
 			}
 		}
-  	int i = 0;
-  	for (String string : users) {
-	    System.out.println("\n=======>user: "+i+" : " + string);
-	    ++i;
-    }
   	return users ;
   }
 }

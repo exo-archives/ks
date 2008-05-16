@@ -407,19 +407,16 @@
 .UIFAQPortlet .SelectUserIcon {
   background: url('background/Worker2.png') no-repeat left ;
   width: 16px; height: 16px;
-  padding: 3px;
 }
 
 .UIFAQPortlet .SelectGroupIcon {
   background: url('background/group.png') no-repeat left ;
   width: 16px; height: 16px;
-  padding: 3px;
 }
 
 .UIFAQPortlet .SelectMemberShipIcon {
   background: url('background/membership.png') no-repeat left ;
   width: 16px; height: 16px;
-  padding: 3px;
 }
 
 .UIFAQPortlet .UISettingForm {
@@ -751,7 +748,7 @@ UIFAQPortlet .ResultQuickSearch {
 }
 
 .UIFAQPortlet .CategoryIcon {
-  background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -465px;
+  background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -466px;
   width: 17px; height: 17px;
 }
 
@@ -792,8 +789,8 @@ UIFAQPortlet .ResultQuickSearch {
 
 .UIFAQPortlet .CheckIcon {
   background: url('background/icon.png') no-repeat left;
-  height:24px;
-  width:24px;
+  height:16px;
+  width:16px;
 }
 
 .UIFAQPortlet .TrueIcon {
