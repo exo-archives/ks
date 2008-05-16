@@ -66,6 +66,7 @@ public class UICategoryInfo extends UIContainer	{
   private long getUserActive() throws Exception {
 		Date date = null;
 		long newTime = getInstanceTempCalendar().getTimeInMillis(), oldTime;
+		numberActive = 0;
 		for (UserProfile userProfile : userProfiles) {
 			date = userProfile.getLastLoginDate();
 			if(date != null){
