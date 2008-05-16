@@ -12,8 +12,12 @@
 	background: url('icons/16x16/PostReplyIcon.gif') no-repeat left 2px ;
 }
 
+.UITopicDetail .PrivatePostPostIcon {
+	background: url('icons/16x16/PrivatePostIcon.gif') no-repeat left 2px ;
+}
+
 .UITopicDetail .PrintPostIcon {
-	background: url('icons/16x16/PrintPostIcon.gif') no-repeat left 2px ;
+	background: url('icons/16x16/PrintPostIcon.gif') no-repeat left ;
 }
 
 .UITopicDetail .IPIcon {
