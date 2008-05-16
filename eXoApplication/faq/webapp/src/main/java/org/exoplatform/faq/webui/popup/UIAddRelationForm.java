@@ -24,6 +24,7 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -54,6 +55,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   private static List<Question> listQuestion = new ArrayList<Question>() ;
   private static List<String> quesIdsSelect = new ArrayList<String>() ;
+  
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
  
@@ -198,7 +200,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {
     try {
-      return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
+      return faqService.getAllQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
     } catch (Exception e) {
       e.printStackTrace();
       return null ;
@@ -211,13 +213,15 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       UIAddRelationForm addRelationForm = event.getSource() ;
       UIPopupContainer popupContainer = addRelationForm.getAncestorOfType(UIPopupContainer.class) ;
       UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
+      if(responseForm == null) {
+        UIFAQPortlet portlet = addRelationForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+        responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
+      }
       
       List<String> listQuestionId = new ArrayList<String>() ;
-   /*   if(!responseForm.getListIdQuesRela().isEmpty()) 
-        listQuestionId.addAll(responseForm.getListIdQuesRela()) ;*/
       for(Question question : addRelationForm.listQuestion) {
         if(addRelationForm.getUIFormCheckBoxInput(question.getId()).isChecked()) {
-          //if(!listQuestionId.contains(question.getId()))
           listQuestionId.add(question.getId()) ;
         }
       }

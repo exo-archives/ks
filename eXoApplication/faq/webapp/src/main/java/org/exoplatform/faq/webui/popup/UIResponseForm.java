@@ -16,8 +16,6 @@
  */
 package org.exoplatform.faq.webui.popup;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,15 +103,22 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private boolean isChecked = true ;
   private String languageIsResponsed = "" ;
   
+  private boolean isChildren_ = false ;
+  
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
   public UIResponseForm() throws Exception {
+    isChildren_ = false ;
     this.setActions(new String[]{"Attachment", "AddRelation", "Save", "Cancel"}) ;
   }
   
   public void setQuestionId(String questionId){
     try{
+      if(listQuestIdRela!= null && !listQuestIdRela.isEmpty()) {
+        listRelationQuestion.clear() ;
+        listQuestIdRela.clear() ;
+      }
       question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
       languageIsResponsed = question.getLanguage() ;
       QuestionLanguage questionLanguage = new QuestionLanguage() ;
@@ -152,7 +157,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       questionContent_.setValue(input) ;
       questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
       reponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, null, null , true) ;
-      checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, false) ;
+      checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, question.isActivated()) ;
       inputAttachment_ = new UIFormInputWithActions(ATTATCH_MENTS) ;
       inputAttachment_.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
       try{
@@ -275,7 +280,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   }
   
   public void setListIdQuesRela(List<String> listId) {
-    listQuestIdRela.clear() ;
+    if(!listQuestIdRela.isEmpty()) {
+      listQuestIdRela.clear() ;
+    }
     this.listQuestIdRela = listId ;
   }
   
@@ -287,6 +294,15 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<String> getListRelationQuestion() {
     return this.listRelationQuestion ;
+  }
+  
+  public void setIsChildren(boolean isChildren) {
+    this.isChildren_ = isChildren ;
+    this.removeChildById(QUESTION_CONTENT) ; 
+    this.removeChildById(QUESTION_LANGUAGE) ;
+    this.removeChildById(RESPONSE_CONTENT) ; 
+    this.removeChildById(ATTATCH_MENTS) ; 
+    this.removeChildById(SHOW_ANSWER) ; 
   }
   
   // action :
@@ -313,10 +329,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       
       String user = FAQUtils.getCurrentUser() ;
-      DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
+      //DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
       java.util.Date date = new java.util.Date();
-      String dateStr = dateFormat.format(date) ;
-      date = dateFormat.parse(dateStr) ;
+      //String dateStr = dateFormat.format(date) ;
+      //date = dateFormat.parse(dateStr) ;
       
       if(question.getLanguage().equals(response.languageIsResponsed)) {
         question.setQuestion(questionContent) ;
@@ -357,12 +373,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       //cancel
       UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
-      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      questions.setListQuestion() ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+      if(!response.isChildren_) {
+        UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+        questions.setListQuestion() ;
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
+      } else {
+        UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+        UIQuestionsInfo questionsInfo = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_INFO) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ; 
+      }
     }
   }
 
@@ -370,9 +392,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIResponseForm> event) throws Exception {
       UIResponseForm response = event.getSource() ;
       UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      if(!response.isChildren_) {
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      } else {
+        UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+        questionManagerForm.isResponseQuestion = false ;
+      }
     }
   }
   static public class AddRelationActionListener extends EventListener<UIResponseForm> {
@@ -402,7 +429,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIResponseForm questionForm = event.getSource() ;
       String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
       for (FileAttachment att : questionForm.listFileAttach_) {
-        if (att.getPath().equals(attFileId)) {
+        if (att.getPath()!= null && att.getPath().equals(attFileId)) {
+          questionForm.listFileAttach_.remove(att) ;
+          break;
+        } else if(att.getId() != null && att.getId().equals(attFileId)) {
           questionForm.listFileAttach_.remove(att) ;
           break;
         }
@@ -417,11 +447,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       String quesId = event.getRequestContext().getRequestParameter(OBJECTID);
       for(int i = 0 ; i < questionForm.listQuestIdRela.size(); i ++) {
         if(questionForm.listQuestIdRela.get(i).equals(quesId)) {
-          questionForm.listQuestIdRela.remove(i) ;
           questionForm.listRelationQuestion.remove(i) ;
           break ;
         }
       }
+      questionForm.listQuestIdRela.remove(quesId) ;
     }
   }
   

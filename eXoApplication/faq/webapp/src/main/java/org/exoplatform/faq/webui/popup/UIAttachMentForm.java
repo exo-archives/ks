@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui.popup;
 
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -85,7 +86,9 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       fileAttachment.setName(uploadResource.getFileName()) ;
       fileAttachment.setInputStream(uploadInput.getUploadDataAsStream()) ;
       fileAttachment.setMimeType(uploadResource.getMimeType()) ;
-      fileAttachment.setSize((long)uploadResource.getUploadedSize()) ;      
+      fileAttachment.setSize((long)uploadResource.getUploadedSize()) ;
+      java.util.Date date = new java.util.Date();
+      fileAttachment.setId("file" + date.getTime()) ;
       
       UIPopupContainer popupContainer = attachMentForm.getAncestorOfType(UIPopupContainer.class) ;
       if(attachMentForm.getIsManagerment()) {
@@ -95,11 +98,21 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm) ;*/
       } else if(attachMentForm.getResponse()) {
         UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
+        if(responseForm == null) {
+          UIFAQPortlet portlet = attachMentForm.getAncestorOfType(UIFAQPortlet.class) ;
+          UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+          responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
+        }
         responseForm.setListFileAttach(fileAttachment) ;
         responseForm.refreshUploadFileList() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
       } else {
         UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
+        if(questionForm == null) {
+          UIFAQPortlet portlet = attachMentForm.getAncestorOfType(UIFAQPortlet.class) ;
+          UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+          questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
+        }
         questionForm.setListFileAttach(fileAttachment) ;
         questionForm.refreshUploadFileList() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;

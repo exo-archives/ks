@@ -130,6 +130,10 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
+    System.out.println("aftersave in jcrdataStore: question isApproved: " + 
+                        questionNode.getProperty("exo:isApproved").getBoolean() + 
+                        ";\tisActivated: " + questionNode.getProperty("exo:isActivated").getBoolean());
+    
     /*NodeIterator nodeIterator = questionNode.getNodes() ;
     while(nodeIterator.hasNext()){
       Node node = nodeIterator.nextNode() ;
@@ -296,8 +300,8 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
-    if(questionNode.hasProperty("exo:activated")) question.setActivated(questionNode.getProperty("exo:activated").getBoolean()) ;
-    if(questionNode.hasProperty("exo:approved")) question.setApproved(questionNode.getProperty("exo:approved").getBoolean()) ;
+    if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
+    if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
     if(questionNode.hasProperty("exo:responses")) question.setResponses(questionNode.getProperty("exo:responses").getString()) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
   	NodeIterator nodeIterator = questionNode.getNodes() ;

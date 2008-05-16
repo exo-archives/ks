@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -119,6 +120,11 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
         questionManagerForm.initPage(true) ;*/
       } else {
         UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
+        if(questionForm == null ) {
+          UIFAQPortlet portlet = languageForm.getAncestorOfType(UIFAQPortlet.class) ;
+          UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+          questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
+        }
         questionForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;
         questionForm.initPage(true) ;
       }

@@ -1,0 +1,215 @@
+<%
+	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.webui.UIFAQPageIterator ; 
+	import org.exoplatform.webui.form.UIFormInputWithActions;
+%>
+
+<div class="FAQUIQuestionInfo $uicomponent.id" >
+	<% uiform.begin() %>
+  <div class="UIFormTabPane">
+    <div class="UITabPane">
+      <div class="TabPaneContent">
+					<div class="WorkingArea">
+						
+	          <div class="UIHorizontalTabs">
+	     				<div class="LeftHorizontalTabs">
+	           		<div class="RightHorizontalTabs">
+	             		<div class="CenterHorizontalTabs">
+	              		<div class="TabsContainer">
+	                  	<%int i = 0 ; 
+	                  		String classCss = "SelectedTab";
+	                  		String classLastCss = "NormalTab" ;
+	                  		String displayEdit = "block" ;
+	                  		String displayResponse = "none" ;
+	                  		if(uicomponent.getIsEdit()) {
+	                  			classCss = "SelectedTab";
+	                  			classLastCss = "NormalTab" ;
+	                  			displayEdit = "block" ;
+	                  			displayResponse = "none" ;
+	                  		} else if(uicomponent.getIsResponse()) {
+	                  			classCss = "NormalTab";
+	                  			classLastCss = "SelectedTab" ;
+	                  			displayEdit = "none" ;
+	                  			displayResponse = "block" ;
+	                  		}
+		                  	for(tabcontent in uicomponent.getTab()){ 
+	                  			String link = "" ;
+		                  	%>  
+			                    <div class="UITab NormalTabStyle">
+			                      <div class="$classCss">
+			                        <div class="LeftTab">
+			                          <div class="RightTab" onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)">
+		                          	<%if(i ++ == 0) {
+		                          			link = uicomponent.event("ChangeTab", "0") ;
+		                          	%>
+			                            <div class="MiddleTab">
+			                            	<a href="$link"> Question management </a>
+			                            </div>
+		                            <%} else {
+		                            		link = uicomponent.event("ChangeTab", "1") ;
+		                            %>
+		                            	<div class="MiddleTab">
+		                            		<a href="$link"> Question not yet answered </a>
+			                            </div>
+		                            <%}%>
+			                          </div>
+			                        </div>
+			                      </div>
+			                    </div>
+		                		<%classCss = classLastCss ;  
+		                		} %>
+		                  </div>
+		                </div>
+	              	</div>
+	            	</div>
+	          	</div>
+						
+						<div class="UIForm">
+            	<div class="HorizontalLayout">
+            
+              	<div class="UITabContentContainer">
+	              
+	              	<div  style="display: $displayEdit;"  class="UITabContent" id="UITabContent"> 
+					          <div style="display: block;">
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild("FAQUserPageIteratorTab1") ; %>
+											</div>
+											
+											<div class="HorizontalLayout">
+													<div class="UIFormInput">
+														<table class="UIGrid">
+															<tr>
+																<th><b>Question</b></th>
+																<th width="100px"><b>is Approved</b></th>
+																<th width="100px"><b>is Activated</b></th>
+																<th width="60px"><b>Action</b></th>
+															</tr>
+															<%
+															List questionList = uicomponent.getListQuestion() ;
+															if(!questionList.isEmpty()) {
+																String linkDelete = "" ;
+																String linkEdit = "" ;
+																for(Question question in questionList) {
+																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
+																	linkEdit = uicomponent.event("EditQuestion", question.getId()) ;
+																%>
+																	<tr>
+																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "") ;%></td>
+																		<td class="text" align="center">
+																		<%if(question.isApproved()) {%>
+																				<div class="TrueIcon">
+																		<%} else {%>
+																				<div class="FalseIcon">
+																		<%}%>
+																				<%=question.isApproved()%>
+																			</div>
+																		</td>
+																		<td class="text" align="center">
+																		<%if(question.isActivated()) {%>
+																				<div class="TrueIcon">
+																		<%} else {%>
+																				<div class="FalseIcon">
+																		<%}%>
+																				<%=question.isActivated()%>
+																			</div>
+																		</td>
+																		<td align="center">
+																				<a href="$linkEdit" style="float: left" title="Edit Question" >
+																					<div class="ItemIcon Edit">
+																							<div style="padding-left: 20px;"><span></span></div>
+																					</div>
+																				</a>
+																				
+																				<a href="$linkDelete" style="float: left" title="Delete Question">
+																					<div class="ItemIcon Delete">
+																							<div style="padding-left: 20px;"><span></span></div>
+																					</div>
+																				</a>
+																		</td>
+																	</tr>
+															<%}
+															} else {%>
+																<tr>
+																	<td colspan="4" align="center"><b>List of questions is empty</b></td>
+																</tr>
+														<%}%>
+														</table>
+													</div>
+												</div>
+											
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild("FAQUserPageIteratorTab1") ; %>
+											</div>
+										</div>
+
+	              	</div>
+	              	
+	              	<div style="display: $displayResponse;" class="UITabContent" id="UITabContent">
+					          <div style="display: block;"  >
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild("FAQUserPageIteratorTab2") ; %>
+											</div>
+											
+											<div class="HorizontalLayout">
+													<div class="UIFormInput">
+														<table class="UIGrid">
+															<tr>
+																<th><b>Question</b></th>
+																<th width="60px"><b>Action</b></th>
+															</tr>
+															<%
+															List questionNotAnswered = uicomponent.getListQuestionNotAnswered() ;
+															if(!questionNotAnswered.isEmpty()) {
+																String linkDelete = "" ;
+																String linkEdit = "" ;
+																for(Question question in questionNotAnswered) {
+																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
+																	linkResponse = uicomponent.event("ResponseQuestion", question.getId()) ;
+																%>
+																	<tr>
+																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
+																		<td align="center">
+																			<div style="float: left">
+																				<a href="$linkResponse" style="float: left" title="Response Question" >
+																					<div class="ItemIcon ResponseQuestion">
+																							<div style="padding-left: 20px;"><span></span></div>
+																					</div>
+																				</a>
+																				
+																				<a href="$linkDelete" style="float: left" title="Delete Question">
+																					<div class="ItemIcon Delete">
+																							<div style="padding-left: 20px;"><span></span></div>
+																					</div>
+																				</a>
+																			</div>
+																		</td>
+																	</tr>
+															<%}
+															} else {%>
+																<tr>
+																	<td colspan="2" align="center"><b>List of questions is empty</b></td>
+																</tr>
+														<%}%>
+														</table>
+													</div>
+												</div>
+											
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild("FAQUserPageIteratorTab2") ; %>
+											</div>
+										</div>
+
+									</div>
+								
+								</div>
+							
+							</div>
+						</div>
+						
+				</div>
+			</div>  
+    </div>  
+  </div>
+	
+	<%uiform.end()%>
+</div>

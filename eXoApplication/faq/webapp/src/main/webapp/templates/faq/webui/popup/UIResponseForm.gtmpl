@@ -11,10 +11,10 @@
 						<tr>
 							<%fieldName = uicomponent.getLabel(field.getName());
 								if(!fieldName.equals(uicomponent.getId())) { %>												
-								<td class="FieldLabel" style="width: auto;">
-									<%=uicomponent.getLabel(field.getName()) %> :
+								<td class="FieldLabel">
+									<%=uicomponent.getLabel(field.getName()) %> : 
 								</td>
-								<td class="FieldComponent" style="width: auto;">
+								<td class="FieldComponent">
 									<%if(field.getName().equals("QuestionRespone")){
 											String action = uicomponent.getActions()[1] ;
 											String link = uicomponent.event(action) ;
@@ -41,7 +41,11 @@
 												String link = "" ;
 												for(attachment in uicomponent.getListFile()) {
 										      name = attachment.getName() ;
-										      link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+										      if(attachment.getId() != null) {
+										      	link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+										      } else {
+										      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
+										      }
 										     %>
 										     	$name &nbsp;&nbsp;<a href="$link"> Remove </a><br>
 									    <%}

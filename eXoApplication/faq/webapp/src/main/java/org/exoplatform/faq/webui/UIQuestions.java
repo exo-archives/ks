@@ -40,13 +40,16 @@ import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
+import org.exoplatform.faq.webui.popup.UIQuestionsInfo;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -368,7 +371,11 @@ public class UIQuestions extends UIContainer {
     Question question = new Question();
     try {
       question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider());
-      return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+      if(question != null) {
+        return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+      } else {
+        return "" ;
+      }
     } catch (Exception e) {
       e.printStackTrace();
       return "" ;
@@ -570,7 +577,6 @@ public class UIQuestions extends UIContainer {
   
   static  public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-      System.out.println(">>>>>>>>>QuestionManagamentActionListener()");
       UIQuestions questions = event.getSource() ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
@@ -579,7 +585,7 @@ public class UIQuestions extends UIContainer {
 
       UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
       popupContainer.setId("FAQQuestionManagerment") ;
-      popupAction.activate(popupContainer, 800, 1000) ;
+      popupAction.activate(popupContainer, 900, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
@@ -589,6 +595,12 @@ public class UIQuestions extends UIContainer {
 	    UIQuestions uiQuestions = event.getSource() ; 
       uiQuestions.isChangeLanguage = false ;
       String strId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      if(strId == null || strId.trim().length() < 1) {
+        UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return ;
+      }
       String questionId = new String() ;
       if(strId.indexOf("/") < 0) {
         questionId = strId ;

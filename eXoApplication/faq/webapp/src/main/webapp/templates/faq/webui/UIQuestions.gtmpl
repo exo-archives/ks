@@ -352,14 +352,21 @@
 									String quesRelaCont = "" ;
 									String linkRelaQues = "" ;
 									for(String relationId : question.getRelations()) { 
+										quesRelaCont = "" ;
 										questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
-										cateRelaId = questionRelationById.split("/")[0] ;
-										quesRelaId = questionRelationById.split("/")[1] ;
-										quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
-										linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId) ;
+										if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
+											cateRelaId = questionRelationById.split("/")[0] ;
+											quesRelaId = questionRelationById.split("/")[1] ;
+											quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
+											linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId) ;
+										} else {
+											linkRelaQues = uicomponent.event("ViewQuestion", "") ;
+										}
+										if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
 								%>
-										&nbsp; - <a href="$linkRelaQues"> $quesRelaCont<br></a>
-								<% } %>
+											&nbsp; - <a href="$linkRelaQues"> $quesRelaCont<br></a>
+								<% 	}
+									}%>
 							</div>
 							<div class="UIAction ResponsActions" >
 									<div style="float:left"><b>Responsed by :</b> $responseBy , $date</div>

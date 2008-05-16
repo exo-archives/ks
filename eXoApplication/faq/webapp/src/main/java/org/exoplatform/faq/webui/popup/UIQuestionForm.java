@@ -94,8 +94,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   private Map<String, List<ActionData>> actionField_ ;
   
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
-  private List<FileAttachment> listFileAttach_ = null ;
-  private List<QuestionLanguage> listLanguageNode = null ;
+  private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
+  private List<QuestionLanguage> listLanguageNode = new ArrayList<QuestionLanguage>() ;
   private static UIFormInputWithActions listFormWYSIWYGInput ;
   private String categoryId_ = null ;
   private String questionId_ = null ;
@@ -113,6 +113,12 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
 	
   @SuppressWarnings("static-access")
   public UIQuestionForm() throws Exception {
+    isChildOfManager = false ;
+    LIST_LANGUAGE.clear() ;
+    listFileAttach_.clear() ;
+    listLanguageNode.clear() ;
+    questionContents_.clear() ;
+    
     listFileAttach_ = new ArrayList<FileAttachment>() ;
     actionField_ = new HashMap<String, List<ActionData>>() ;
     questionId_ = new String() ;
@@ -175,12 +181,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   
   public void setIsChildOfManager(boolean isChild) {
     isChildOfManager = isChild ;
+    this.removeChildById(AUTHOR);
+    this.removeChildById(EMAIL_ADDRESS);
+    this.removeChildById(LIST_WYSIWYG_INPUT);
+    this.removeChildById(ATTACHMENTS);
+    this.removeChildById(IS_APPROVED) ;
+    this.removeChildById(IS_ACTIVATED) ;
   }
-  
-  /*public String[] getActions() {
-    return
-    return null ;
-  }*/
   
   @SuppressWarnings("static-access")
   public void setQuestionId(String questionId){
@@ -387,14 +394,20 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       }
       
       System.out.println("quesiton after save have: isAproved: " + question_.isApproved() + ";\tisActivated: " + question_.isActivated());
-      
-      UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      questions.setListQuestion() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      if(!questionForm.isChildOfManager) {
+        UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+        UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+        questions.setListQuestion() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      } else {
+        UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+        UIQuestionsInfo questionsInfo = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_INFO) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ;
+      }
 		}
 	}
 
@@ -437,9 +450,16 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       UIQuestionForm questionForm = event.getSource() ;
       String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
       for (FileAttachment att : questionForm.listFileAttach_) {
-        if (att.getPath().equals(attFileId)) {
-          questionForm.listFileAttach_.remove(att) ;
-          break;
+        if ( att.getId()!= null){
+          if(att.getId().equals(attFileId)) {
+            questionForm.listFileAttach_.remove(att) ;
+            break;
+          }
+        } else {
+          if(att.getPath().equals(attFileId)) {
+            questionForm.listFileAttach_.remove(att) ;
+            break;
+          }
         }
       }
       questionForm.refreshUploadFileList() ;
@@ -448,11 +468,16 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   
 	static public class CancelActionListener extends EventListener<UIQuestionForm> {
     public void execute(Event<UIQuestionForm> event) throws Exception {
-			UIQuestionForm questionForm = event.getSource() ;			
-      UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			UIQuestionForm questionForm = event.getSource() ;
+      if(!questionForm.isChildOfManager) {
+        UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      } else {
+        UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
+        questionManagerForm.isViewEditQuestion = false ;
+      }
 		}
 	}
 }
