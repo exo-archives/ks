@@ -16,8 +16,16 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import javax.jcr.PathNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
+import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -77,6 +85,28 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
     } catch (Exception e) {
       e.printStackTrace();
       return "" ;
+    }
+  }
+  
+  @SuppressWarnings("unused")
+  private String getFileSource(FileAttachment attachment) throws Exception {
+    DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+    try {
+      InputStream input = attachment.getInputStream() ;
+      String fileName = attachment.getName() ;
+      byte[] imageBytes = null;
+      if (input != null) {
+        imageBytes = new byte[input.available()];
+        input.read(imageBytes);
+        ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+        InputStreamDownloadResource dresource = new InputStreamDownloadResource(
+            byteImage, "image");
+        dresource.setDownloadName(fileName);
+        return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+      }
+      return null;
+    } catch (PathNotFoundException e) {
+      return null;
     }
   }
   

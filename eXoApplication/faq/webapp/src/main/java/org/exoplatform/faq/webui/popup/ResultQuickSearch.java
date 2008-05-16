@@ -72,13 +72,14 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				uiQuestions.setCategories(id) ;
 				uiQuestions.setList(id) ;
 		    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-		    String oldPath = breadcumbs.getPaths() ;
+		    breadcumbs.setUpdataPath(null) ;
+        String oldPath = "" ;
 		    FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), id) ;
 		    for(int i = listPath.size() -1 ; i >= 0; i --) {
 		    	oldPath = oldPath + "/" + listPath.get(i);
 		    }
-		    breadcumbs.setUpdataPath(oldPath);
+		    breadcumbs.setUpdataPath("FAQService"+oldPath);
 				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 		    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 		    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
