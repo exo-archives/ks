@@ -316,14 +316,14 @@
 									    if(validate.isImage(fileName)) {
 									    %>
 									    	<div style="float: left; margin-left: 5px;">
-										    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100"></div>
+										    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile"></div>
 										    	<div style="clear: left;"><span></span></div>
 							 						<div class="LabelBox">
 								 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 								 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
 								 						<div style="clear: left;"><span></span></div>
 								 						<div class="Action" style="padding-top: 0px;">
-								 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.openPicture(this,'$fileName')">View</div>
+								 							<div class="Icon MaxView" onclick="eXo.cs.MaskLayerControl.showPicture(this); ">View</div>
 								 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
 								 						</div>
 								 					</div>
@@ -361,9 +361,31 @@
 										&nbsp; - <a href="$linkRelaQues"> $quesRelaCont<br></a>
 								<% } %>
 							</div>
-							<div class="UIAction ResponsActions" style="float: left">
+							<div class="UIAction ResponsActions" >
 									<div style="float:left"><b>Responsed by :</b> $responseBy , $date</div>
 									<div style="float:right">
+									<style type="text/css" media="print">
+										.PrintAction {
+											display:none ;
+										}
+									</style>
+									<div class="PrintAction" style="display:none ;">
+										<a href="javascript:window.print() ;" class="ActionButton LightBlueStyle">
+					      	  	<div class="ButtonLeft">
+					        	  	<div class="ButtonRight">
+					          	  	<div class="ButtonMiddle"> Print </div>
+					            	</div>
+					          	</div>
+				        		</a>
+				        		<a href="javascript:eXo.faq.UIFAQPortlet.closePrint() ;" class="ActionButton LightBlueStyle">
+					      	  	<div class="ButtonLeft">
+					        	  	<div class="ButtonRight">
+					          	  	<div class="ButtonMiddle"> Close </div>
+					            	</div>
+					          	</div>
+				        		</a>
+									</div>
+									<div class="DefaultAction">
 									<%
 									if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
 										String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath()) ;
@@ -377,13 +399,13 @@
 				        		</a>
 				        	<%}%>
 									
-										<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+										<div class="ContentAction" onclick="eXo.faq.UIFAQPortlet.showMenu(this, event);">
 											<div style="position: relative;">
 					        			<%
 					        			List listQuestLanguage = uicomponent.getQuestionLangauges(question) ;
 					        			String margin_top = listQuestLanguage.size() * (-35) + "px" ;
 					        			%>
-					        			<div class="UIPopupCategory" style="display: none; left: -5px; margin-top: $margin_top; margin-bottom: 10px; ">
+					        			<div class="UIPopupCategory UILanguageMenu" style="display:none ;">
 													<div class="UIRightClickPopupMenu" style="display: block;">
 														<div class="UIContextMenuContainer">
 																							
@@ -422,19 +444,17 @@
 														</div>
 													</div>
 												</div>
-												
-												<a javaScript: void(0) class="ActionButton LightBlueStyle">
-							      	  	<div class="ButtonLeft">
-							        	  	<div class="ButtonRight">
-							          	  	<div class="ButtonMiddle"> Language </div>
-							            	</div>
-							          	</div>
-							        	</a>
-												
-											</div>
+											</div>												
+											<a href="javaScript: void(0);" class="ActionButton LightBlueStyle">
+						      	  	<div class="ButtonLeft">
+						        	  	<div class="ButtonRight">
+						          	  	<div class="ButtonMiddle"> Language </div>
+						            	</div>
+						          	</div>
+						        	</a>
 										</div>
 					        	
-										<a href="" class="ActionButton LightBlueStyle">
+										<a href="javascript:void(0);" onclick="eXo.faq.UIFAQPortlet.printPreview(this) ;" class="ActionButton LightBlueStyle">
 					      	  	<div class="ButtonLeft">
 					        	  	<div class="ButtonRight">
 					          	  	<div class="ButtonMiddle"> Print </div>
@@ -456,7 +476,8 @@
 					          <%}%>
 									</div>
 							</div>
-							<div style="clear: left"><span></span></div>
+							<div style="clear: both;"><span></span></div>
+							</div>
 						</div>
 					<%}%>
 		<%		questionId ++ ;
