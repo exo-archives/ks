@@ -23,8 +23,10 @@ import java.util.Locale;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -101,9 +103,16 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
 	  public void execute(Event<UILanguageForm> event) throws Exception {
       UILanguageForm languageForm = event.getSource() ;
       String languageIsSelect = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      if(languageForm.LANGAUGE_SELECT.contains(languageIsSelect) && languageForm.LANGAUGE_SELECT.size() > 1){
-        languageForm.LANGAUGE_SELECT.remove(languageIsSelect) ;
-      } else {
+      if(languageForm.LANGAUGE_SELECT.contains(languageIsSelect)){
+        if(languageForm.LANGAUGE_SELECT.indexOf(languageIsSelect) > 0) {
+          languageForm.LANGAUGE_SELECT.remove(languageIsSelect) ;
+        } else {
+          UIApplication uiApplication = languageForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UILanguageForm.msg.language-is-default", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          return ;
+        }
+      } else if(!languageForm.LANGAUGE_SELECT.contains(languageIsSelect)){
         languageForm.LANGAUGE_SELECT.add(languageIsSelect) ;
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(languageForm) ;

@@ -306,8 +306,25 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   public String[] getListLanguage(){return LIST_LANGUAGE.toArray(new String[]{}) ; }
   
   public void setListLanguage(List<String> listLanguage) {
-    LIST_LANGUAGE.clear() ;
-    LIST_LANGUAGE.addAll(listLanguage) ;
+    if(questionContents_.size() == 1) {
+      LIST_LANGUAGE.clear() ;
+      LIST_LANGUAGE.addAll(listLanguage) ;
+      return ;
+    } else {
+      int i = 0 ;
+      while ( i < questionContents_.size()) {
+        if(!listLanguage.contains(LIST_LANGUAGE.get(i))) {
+          LIST_LANGUAGE.remove(i) ;
+          questionContents_.remove(i) ;
+        }
+        i ++ ;
+      }
+      for(String language : listLanguage) {
+        if(!LIST_LANGUAGE.contains(language)) {
+          LIST_LANGUAGE.add(language) ;
+        }
+      }
+    }
   }
 	
 	static public class SaveActionListener extends EventListener<UIQuestionForm> {
@@ -375,6 +392,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       
       if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
         questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
+        multiLanguages.removeLanguage(questionNode, questionForm.LIST_LANGUAGE) ;
       } else if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1){
         questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider()) ;
       }

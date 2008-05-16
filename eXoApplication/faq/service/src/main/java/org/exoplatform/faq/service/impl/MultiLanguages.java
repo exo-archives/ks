@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
@@ -39,6 +40,7 @@ import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.faq.service.CategoryLanguage;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.services.jcr.impl.core.query.lucene.NodeIndexer;
 import org.exoplatform.services.jcr.impl.core.value.DateValue;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
 
@@ -179,6 +181,27 @@ public class MultiLanguages {
     langNode.setProperty("exo:name", language.getQuestion()) ;
     langNode.setProperty("exo:responses", language.getResponse()) ;   
     questionNode.save() ;
+  }
+  
+  public void removeLanguage(Node questionNode, List<String> listLanguage) {
+    try {
+      Node languageNode = questionNode.getNode(LANGUAGES) ;
+      NodeIterator nodeIterator = languageNode.getNodes();
+      Node node = null ;
+      while(nodeIterator.hasNext()) {
+        node = nodeIterator.nextNode() ;
+        if(!listLanguage.contains(node.getName())) {
+          node.remove() ;
+        }
+      }
+      questionNode.getSession().save() ;
+    } catch (PathNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (RepositoryException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
   
   public void addLanguage(Node categoryNode, CategoryLanguage language) throws Exception {
