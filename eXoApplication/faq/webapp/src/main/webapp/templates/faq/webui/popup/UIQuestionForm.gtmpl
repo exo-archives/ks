@@ -11,8 +11,8 @@
 						<tr>
 							<%fieldName = uicomponent.getLabel(field.getName());
 								if(!fieldName.equals(uicomponent.getId())) { %>												
-								<td class="FieldLabel">
-									<%=uicomponent.getLabel(field.getName()) %>
+								<td class="FieldLabel" width="100px;">
+									<%=uicomponent.getLabel(field.getName()) %> : 
 								</td>
 								<td class="FieldComponent">
 									<%if(field.getName().equals("ListQuestion")){

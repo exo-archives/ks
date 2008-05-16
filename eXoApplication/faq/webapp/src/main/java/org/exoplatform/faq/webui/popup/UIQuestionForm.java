@@ -106,6 +106,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   private List<String> questionContents_ = new ArrayList<String>() ;
   private boolean isChecked_ = true ;
   
+  private boolean isChildOfManager = false ;
+  
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
 	
@@ -113,7 +115,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   public UIQuestionForm() throws Exception {
     listFileAttach_ = new ArrayList<FileAttachment>() ;
     actionField_ = new HashMap<String, List<ActionData>>() ;
-    this.questionId_ = new String() ;
+    questionId_ = new String() ;
+    question_ = null ;
 	}
   
   public void refresh() throws Exception {  	
@@ -135,8 +138,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       textAreaInput.setColumns(80) ;
       if(i < questionContents_.size()) {
         String input = questionContents_.get(i) ;
-        input = input.replace("<p>", "") ;
-        input = input.substring(0, input.lastIndexOf("</p>") - 1) ;
+        if(input!= null && input.indexOf("<p>") >=0 && input.indexOf("</p>") >= 0) {
+          input = input.replace("<p>", "") ;
+          input = input.substring(0, input.lastIndexOf("</p>") - 1) ;
+        }
         textAreaInput.setValue(input) ;
       }
       listFormWYSIWYGInput.addUIFormInput(textAreaInput );
@@ -154,8 +159,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_)) ;
     addChild(listFormWYSIWYGInput) ;
     if(questionId_ != null && questionId_.trim().length() > 0) {
-      addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)).setChecked(isChecked_)) ;
-      addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)).setChecked(true)) ;
+      addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)).setChecked(question_.isApproved())) ;
+      addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)).setChecked(question_.isActivated())) ;
     }
     addUIFormInput(inputWithActions) ;
     if(question_ != null) {
@@ -168,20 +173,32 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     }
   }
   
+  public void setIsChildOfManager(boolean isChild) {
+    isChildOfManager = isChild ;
+  }
+  
+  /*public String[] getActions() {
+    return
+    return null ;
+  }*/
+  
   @SuppressWarnings("static-access")
   public void setQuestionId(String questionId){
-    this.questionId_ = questionId ;
+    questionId_ = questionId ;
     categoryId_ = null ;
     try {
       question_ = fAQService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
       defaultLanguage_ = question_.getLanguage() ;
       LIST_LANGUAGE.clear() ;
       LIST_LANGUAGE.add(defaultLanguage_) ;
-      listLanguageNode = fAQService_.getQuestionLanguages(this.questionId_, FAQUtils.getSystemProvider()) ;
+      listLanguageNode = fAQService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider()) ;
       for(QuestionLanguage questionLanguage : listLanguageNode) {
         LIST_LANGUAGE.add(questionLanguage.getLanguage()) ;
       }
-      isChecked_ = !(fAQService_.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()).isModerateQuestions()) ;
+      isChecked_ = question_.isApproved() ;
+      
+      System.out.println("setQuestionId~~~> question : isApproved: " + question_.isApproved() + ";\tisActivated: " + question_.isActivated());
+      
       initPage(false) ;
       UIFormStringInput authorQ = this.getChildById(AUTHOR) ;
       authorQ.setValue(question_.getAuthor()) ;
@@ -332,6 +349,15 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
         question_.setResponses(" ") ;
+        question_.setApproved(!(fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions())) ;
+      } else {
+        boolean isApproved = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
+        boolean isActivated = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked() ;
+        
+        System.out.println("isApproved: " + isApproved + ";\tisActivated : " + isActivated );
+        
+        question_.setApproved(isApproved) ;
+        question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;
       }
       question_.setLanguage(questionForm.getDefaultLanguage()) ;
       question_.setAuthor(author) ;
@@ -341,11 +367,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       question_.setAttachMent(questionForm.listFileAttach_) ;
       
       if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
-        question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
-        question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;
         questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
       } else if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1){
-        question_.setApproved(!(fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions())) ;
         questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider()) ;
       }
       
@@ -363,6 +386,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         }
       }
       
+      System.out.println("quesiton after save have: isAproved: " + question_.isApproved() + ";\tisActivated: " + question_.isActivated());
       
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
