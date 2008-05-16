@@ -824,3 +824,7 @@ UIFAQPortlet .ResultQuickSearch {
   left: 4px ;
   top: 0px ;
 }
+
+.UIFAQPortlet .MaxView {
+	background: url('background/ViewIcon.gif') no-repeat left center;
+}
