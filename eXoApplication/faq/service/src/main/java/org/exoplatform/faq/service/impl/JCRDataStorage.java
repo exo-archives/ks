@@ -365,23 +365,30 @@ public class JCRDataStorage {
                                                 + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
                                                 append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
                                                 append("]").append("order by @exo:createdDate ascending");
-//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    
+		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
     return pageList ;
   }
   
   public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+    FAQSetting faqSetting = getFAQSetting(sProvider) ;
+  	String sortBy = faqSetting.getDisplayMode() ;
     StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
         + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
-        append("]").append("order by @exo:createdDate ascending");
-//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
+        append("]");
+    if(sortBy.equals("postdate")) { 
+    	queryString.append("order by @exo:createdDate ascending") ; 
+    } else { 
+    	queryString.append("order by @exo:name ascending") ;
+    }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    
     return pageList ;
   }
   

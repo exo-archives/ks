@@ -43,8 +43,8 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   public String questionId_ = null ;
-
-  public UIPopupViewQuestion() throws Exception {}
+  private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  public UIPopupViewQuestion() throws Exception {this.setActions(new String[]{"Close"}) ;}
 	@SuppressWarnings("unused")
   public String getQuestion(){
     return this.questionId_ ;
@@ -65,8 +65,21 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   	return question; 
   }
   
-  public String[] getActions() { return new String[] {"Close"} ; }
-	
+  public String getQuestionRelationById(String questionId) {
+    Question question = new Question();
+    try {
+      question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider());
+      if(question != null) {
+        return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+      } else {
+        return "" ;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "" ;
+    }
+  }
+  
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
