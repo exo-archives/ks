@@ -14,21 +14,29 @@
                 <div class="CenterHorizontalTabs">
                   <div class="TabsContainer">
                   <%String classCss = "SelectedTab" ; 
+                    int i = 0;
                   	for(tabconten in uiform.getChildren()){ 
                   		if(tabconten.id.indexOf("Tab") > 0) {	
+	                  		String link = "javascript:void(0);";
+	                  		if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
+	                  		else {
+	                  			classCss = "NormalTab" ;
+	                  			link = uicomponent.event("SelectTab",""+i) ;
+	                  		}
                   %>  
                     <div class="UITab NormalTabStyle">
                       <div class="$classCss">
                         <div class="LeftTab">
                           <div class="RightTab">
-                            <div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+	                          <a href="$link">
+	                            <div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+	                          </a>
                           </div>
                         </div>
                       </div>
                     </div>
-                	<% classCss = "NormalTab" ;
-                		}  
-                	} %>
+                	<%++i;}
+                		} %>
                   </div>
                 </div>
               </div>
@@ -39,11 +47,14 @@
               <div class="UITabContentContainer">
                 <% 
                 	String display =  "block";
+                	int j = 0;
                 	for(tabconten in uiform.getChildren()){
                 	  if(tabconten.id.indexOf("Tab") > 0) {
+	                		if(uiform.getIsSelected(j))display =  "block";
+	                  	else display = "none";
                 %>
                 <div style="display: $display;" id="UITabContent" class="UITabContent">
-                  <% uiform.renderChild(tabconten.id) ; 
+                  <%  uiform.renderChild(tabconten.id) ; 
                   	  if(tabconten.id.equals("activeTopicTab")){
                   %>	
                   		<table class="UIFormGrid">
@@ -92,7 +103,7 @@
 											%>
                    <%} %>
                 </div>
-                <%    display = "none";
+                <%   ++j;
                 	  }
                   }%>
               </div>

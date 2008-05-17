@@ -412,7 +412,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					topicNew.setIsLock(true) ;
 				}
 				topicNew.setIsSticky(sticky);
-				//topicNew.setIsApproved(approved);	
 				
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				topicNew.setIcon(uiIconSelector.getSelectedIcon());

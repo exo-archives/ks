@@ -652,6 +652,7 @@ public class JCRDataStorage{
 		if(topicNode.hasProperty("exo:isApproved")) topicNew.setIsApproved(topicNode.getProperty("exo:isApproved").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isSticky")) topicNew.setIsSticky(topicNode.getProperty("exo:isSticky").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isWaiting")) topicNew.setIsWaiting(topicNode.getProperty("exo:isWaiting").getBoolean()) ;
+		if(topicNode.hasProperty("exo:isActive")) topicNew.setIsActive(topicNode.getProperty("exo:isActive").getBoolean()) ;
 		if(topicNode.hasProperty("exo:canView")) topicNew.setCanView(ValuesToStrings(topicNode.getProperty("exo:canView").getValues())) ;
 		if(topicNode.hasProperty("exo:canPost")) topicNew.setCanPost(ValuesToStrings(topicNode.getProperty("exo:canPost").getValues())) ;
 		if(topicNode.hasProperty("exo:isPoll")) topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
@@ -696,7 +697,6 @@ public class JCRDataStorage{
 	}
 
 	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception {
-		if(date <= 0) return null;
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider) ;
 			Calendar newDate = getGreenwichMeanTime();
@@ -814,6 +814,7 @@ public class JCRDataStorage{
 				topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
 				topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ;
 				topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ;
+				topicNode.setProperty("exo:isActive", topic.getIsActive()) ;
 				topicNode.setProperty("exo:canView", topic.getCanView()) ;
 				topicNode.setProperty("exo:canPost", topic.getCanPost()) ;
 				topicNode.setProperty("exo:userVoteRating", topic.getUserVoteRating()) ;

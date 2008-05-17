@@ -921,8 +921,7 @@
 <% } %>
 	<% } else { %>
 	<div class="EmptyContent">
-		This topic is deleted or removed !
-
+		<span><%=_ctx.appRes("UIForumPortlet.msg.topicEmpty");%></span>
 	</div>
 	<% }
 	uicomponent.setPostRules(isNull) ;

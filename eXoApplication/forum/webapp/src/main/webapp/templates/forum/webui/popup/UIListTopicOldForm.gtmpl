@@ -67,7 +67,7 @@
 												<a href="<%=uicomponent.event("ActiveTopic",topicId)%>" style="float: left;">
 													 <div class="Icon16x16 Topic${titleTp}Icon" title="$titleTp this Thread"><span></span></div>							
 												</a>
-												<a href="<%=uicomponent.event("DeleteTopic",topicId)%>" style="float: left;">
+												<a href="<%=uicomponent.event("DeleteTopic",topic.getPath())%>" style="float: left;">
 													 <div class="Icon16x16 DeleteIcon" title="Delete this Thread"><span></span></div>							
 												</a>
 											</div>

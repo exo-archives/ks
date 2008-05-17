@@ -31,8 +31,10 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -161,7 +163,7 @@ public class UICategories extends UIContainer	{
     	String forumHomePath = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
     	topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), forumHomePath + "/" + path) ;
     }
-	return topic ;
+		return topic ;
 	}
 	
 	private Category getCategory(String categoryId) throws Exception {
@@ -192,10 +194,6 @@ public class UICategories extends UIContainer	{
 			UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
 			uiCategory.update(uiContainer.getCategory(categoryId), uiContainer.getForumList(categoryId)) ;
 			((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
-			
-			
-//			System.out.println("\n\nIP: " + ((HttpServletRequest)(Util.getPortalRequestContext())).getRemoteAddr());
-//			System.out.println("\n\nIP: " + ((HttpServletRequest)event.getRequestContext()).getRemoteAddr());
     }
 	}
 	
@@ -222,19 +220,26 @@ public class UICategories extends UIContainer	{
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
 			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.updateIsRendered(2);
-			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-			uiForumContainer.setIsRenderChild(false) ;
-			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
 			Topic topic = categories.getTopic(id[2], path) ;
-			uiTopicDetail.setTopicFromCate(id[0], id[1], topic, true) ;
-			uiTopicDetail.setUpdateForum(categories.getForumById(id[0], id[1])) ;
-			uiTopicDetail.setIdPostView("true") ;
-			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1], topic) ;
-			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
-			categories.maptopicLast.clear() ;
+			if(topic == null) {
+				Object[] args = { "" };
+				UIApplication uiApp = categories.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			} else {
+				forumPortlet.updateIsRendered(2);
+				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+				uiForumContainer.setIsRenderChild(false) ;
+				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+				uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
+				uiTopicDetail.setTopicFromCate(id[0], id[1], topic, true) ;
+				uiTopicDetail.setUpdateForum(categories.getForumById(id[0], id[1])) ;
+				uiTopicDetail.setIdPostView("true") ;
+				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1], topic) ;
+				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
+				categories.maptopicLast.clear() ;
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

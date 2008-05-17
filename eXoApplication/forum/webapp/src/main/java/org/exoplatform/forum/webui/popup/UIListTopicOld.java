@@ -52,6 +52,7 @@ public class UIListTopicOld extends UIContainer {
 	private UserProfile userProfile = null;
 	private List<Topic> topics = new ArrayList<Topic>() ;
 	private long date = 0 ;
+	private boolean isUpdate = false ;
 	public UIListTopicOld() throws Exception {
 		addChild(UIForumPageIterator.class, null, "PageListTopicTopicOld") ;
 	}
@@ -69,14 +70,18 @@ public class UIListTopicOld extends UIContainer {
 	
 	@SuppressWarnings({ "unused", "unchecked" })
   private List<Topic> getTopicsOld() throws Exception {
-		JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date);
-		UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;
-		pageIterator.updatePageList(pageList) ;
-		long page = pageIterator.getPageSelected() ;
-		List<Topic> topics = new ArrayList<Topic>();
-		if(pageList != null)topics = pageList.getPage(page) ;
-		this.topics = topics ;
-		return topics ;
+		if(topics == null || topics.size() == 0 || isUpdate) {
+			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date);
+			pageList.setPageSize(10) ;
+			UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;
+			pageIterator.updatePageList(pageList) ;
+			long page = pageIterator.getPageSelected() ;
+			List<Topic> topics = new ArrayList<Topic>();
+			if(pageList != null)topics = pageList.getPage(page) ;
+			this.topics = topics ;
+			isUpdate = false ;
+		}
+		return this.topics ;
 	}
 	
 	public Topic getTopicById(String topicId) {
@@ -86,18 +91,39 @@ public class UIListTopicOld extends UIContainer {
     return null ;
   }
 	
-	static	public class ActiveTopicActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+	static	public class ActiveTopicActionListener extends EventListener<UIListTopicOld> {
+		public void execute(Event<UIListTopicOld> event) throws Exception {
+			UIListTopicOld administration = event.getSource() ;
+			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			Topic topic = administration.getTopicById(topicId) ;
+			boolean isActive = topic.getIsActive() ;
+			String []id = topic.getPath().split("/") ;
+			int l = id.length ;
+			topic.setIsActive(!isActive) ;
+			administration.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2], topic, false, false) ;
+			administration.isUpdate = true ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(administration);
 		}
 	}
 	
-	static	public class DeleteTopicActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+	static	public class DeleteTopicActionListener extends EventListener<UIListTopicOld> {
+		public void execute(Event<UIListTopicOld> event) throws Exception {
+			UIListTopicOld administration = event.getSource() ;
+			String ids = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String []id = ids.split("/") ;
+			int l = id.length ;
+			administration.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2],id[l-1]) ;
+			administration.isUpdate = true ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(administration.getAncestorOfType(UIForumPortlet.class));
 		}
 	}
 
-	static	public class OpenTopicActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+	static	public class OpenTopicActionListener extends EventListener<UIListTopicOld> {
+		public void execute(Event<UIListTopicOld> event) throws Exception {
+			UIListTopicOld administration = event.getSource() ;
+			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			Topic topic = administration.getTopicById(topicId) ;
+			
 		}
 	}
 	

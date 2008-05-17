@@ -51,12 +51,14 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		events = {
 			@EventConfig(listeners = UIForumAdministrationForm.SaveActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.RunActionListener.class)
 		}
 )
 public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
 	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private ForumAdministration administration ;
+	private int id = 0 ;
 	private boolean isRenderListTopic = false ;
 	public static final String FIELD_FORUMSORT_TAB = "forumSortTab" ;
 	public static final String FIELD_CENSOREDKEYWORD_TAB = "forumCensorTab" ;
@@ -151,6 +153,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
+	private boolean getIsSelected(int id) {
+		if(this.id == id) return true ;
+		return false ;
+	}
+	
 	static	public class SaveActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm administrationForm = event.getSource() ;
@@ -190,6 +197,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	        e.printStackTrace();
         }
 			}
+		}
+	}
+	
+	static	public class SelectTabActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIForumAdministrationForm uiForm = event.getSource();
+			uiForm.id = Integer.parseInt(id);
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	

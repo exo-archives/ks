@@ -129,7 +129,7 @@ public class UITopicDetail extends UIForm {
 	private String topicId = "";
 	private boolean viewTopic = true ;
 	private Forum forum;
-	private Topic topic;
+	private Topic topic = new Topic();
 	private JCRPageList pageList ;
 	private long pageSelect	= 1 ;
 	private boolean isGopage = false ;
