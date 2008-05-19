@@ -441,8 +441,8 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
       ContactService contactService = questions.getApplicationComponent(ContactService.class) ;
-      String email = null ;
-      String name = null ;
+      String email = "" ;
+      String name = "" ;
       Contact contact = contactService.getContact(SessionProviderFactory.createSessionProvider()
       		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
       try {

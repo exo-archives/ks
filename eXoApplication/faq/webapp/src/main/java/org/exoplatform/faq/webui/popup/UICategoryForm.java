@@ -26,6 +26,7 @@ import java.util.Map;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
@@ -73,15 +74,18 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   final private static String MODERATEQUESTIONS = "moderatequestions" ;
   private Map<String, String> permissionUser_ = new LinkedHashMap<String, String>() ;
   private Map<String, String> permissionGroup_ = new LinkedHashMap<String, String>() ;
+  private static FAQService faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private boolean isAddNew_ = true ;
   
 	public UICategoryForm() throws Exception {}
 	public void init(boolean isAddNew) throws Exception {
 		isAddNew_ = isAddNew ;
+		FAQSetting faSetting = faqService_.getFAQSetting(FAQUtils.getSystemProvider()) ;
+		Boolean processingMode = faSetting.getProcessingMode() ;
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(EVENT_CATEGORY_NAME, EVENT_CATEGORY_NAME, null).addValidator(MandatoryValidator.class)) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(DESCRIPTION, DESCRIPTION, null)) ;
-    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(MODERATEQUESTIONS, MODERATEQUESTIONS, false )) ;
+    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(MODERATEQUESTIONS, MODERATEQUESTIONS, false ).setChecked(!processingMode)) ;
     UIFormStringInput moderator = new UIFormStringInput(MODERATOR, MODERATOR, null) ;
     inputset.addUIFormInput(moderator) ;
     List<ActionData> actionData = new ArrayList<ActionData>() ;
@@ -198,7 +202,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
-			FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentId() ;
@@ -206,7 +209,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         /*----modified by Mai Van Ha----*/
           List<String> listUser = new ArrayList<String>() ;
           listUser.addAll(Arrays.asList(users)) ;
-          Category category = faqService.getCategoryById(parentCate, FAQUtils.getSystemProvider()) ;
+          Category category = faqService_.getCategoryById(parentCate, FAQUtils.getSystemProvider()) ;
           for(String user : category.getModerators()) {
             if(!listUser.contains(user)) {
               listUser.add(user) ;
@@ -216,10 +219,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         /*-----End---------------------*/
 				if(uiCategory.categoryId_.length() > 0) {
 					cat.setId(uiCategory.categoryId_) ;
-					faqService.saveCategory(parentCate, cat, false, FAQUtils.getSystemProvider());
+					faqService_.saveCategory(parentCate, cat, false, FAQUtils.getSystemProvider());
 					faqPortlet.cancelAction() ;
 				} else {
-					faqService.saveCategory(parentCate, cat, true, FAQUtils.getSystemProvider());
+					faqService_.saveCategory(parentCate, cat, true, FAQUtils.getSystemProvider());
 					faqPortlet.cancelAction() ;
 				}
 				UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
@@ -231,10 +234,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       cat.setModerators(users) ;
 			if(uiCategory.categoryId_.length() > 0) {
 				cat.setId(uiCategory.categoryId_) ;
-				faqService.saveCategory(null, cat, false, FAQUtils.getSystemProvider());
+				faqService_.saveCategory(null, cat, false, FAQUtils.getSystemProvider());
 				faqPortlet.cancelAction() ;
 			} else {
-				faqService.saveCategory(null, cat, true, FAQUtils.getSystemProvider());
+				faqService_.saveCategory(null, cat, true, FAQUtils.getSystemProvider());
 				faqPortlet.cancelAction() ;
 			}
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
