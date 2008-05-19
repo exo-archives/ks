@@ -327,7 +327,7 @@
 								 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
 								 						<div style="clear: left;"><span></span></div>
 								 						<div class="Action" style="padding-top: 0px;">
-								 							<div class="Icon MaxView" onclick="eXo.cs.MaskLayerControl.showPicture(this); ">View</div>
+								 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">View</div>
 								 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
 								 						</div>
 								 					</div>

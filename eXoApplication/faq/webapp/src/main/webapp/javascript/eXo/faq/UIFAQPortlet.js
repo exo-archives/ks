@@ -42,6 +42,22 @@ UIFAQPortlet.prototype.openPicture = function(obj,id) {
 	}
 };*/
 
+UIFAQPortlet.prototype.showPicture = function(src) {
+  var containerNode = document.createElement('div') ;
+  var imageNode = document.createElement('img') ;
+  imageNode.src = src ;
+  imageNode.setAttribute('alt', src) ;
+  containerNode.appendChild(imageNode) ;
+  containerNode.setAttribute('title', 'Click to close') ;
+  containerNode.onclick = eXo.cs.MaskLayerControl.hidePicture ;
+  maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 100, 'CENTER') ;
+  eXo.core.Browser.addOnScrollCallback('MaskLayerControl', this.scrollHandler) ;
+};
+
+UIFAQPortlet.prototype.scrollHandler = function(){
+  eXo.core.UIMaskLayer.object.style.top = document.body.scrollTop + 'px' ;
+} ;
+
 UIFAQPortlet.prototype.showMenu = function(obj, evt){
   var menu = eXo.core.DOMUtil.findFirstDescendantByClass(obj, "div", "UIRightClickPopupMenu") ;
   eXo.webui.UIPopupSelectCategory.show(obj, evt) ;
