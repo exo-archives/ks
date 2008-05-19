@@ -299,7 +299,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     this.removeChildById(QUESTION_LANGUAGE) ;
     this.removeChildById(RESPONSE_CONTENT) ; 
     this.removeChildById(ATTATCH_MENTS) ; 
-    this.removeChildById(SHOW_ANSWER) ; 
+    this.removeChildById(SHOW_ANSWER) ;
+    listFileAttach_.clear() ;
+    listLanguageToReponse.clear() ;
+    listQuestIdRela.clear() ;
+    listQuestionLanguage.clear() ;
+    listRelationQuestion.clear() ;
   }
   
   // action :
@@ -350,7 +355,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           if(questionLanguage.getLanguage().equals(response.languageIsResponsed)) {
             questionLanguage.setQuestion(questionContent) ;
             questionLanguage.setResponse(user + "/" + date + "/" + responseQuestionContent) ;
-            break ;
+          } else {
+            if(questionLanguage.getResponse() != null && questionLanguage.getResponse().trim().length() > 0) {
+              questionLanguage.setResponse(user + "/" + date + "/" + questionLanguage.getResponse()) ;
+            }
           }
         }
       }

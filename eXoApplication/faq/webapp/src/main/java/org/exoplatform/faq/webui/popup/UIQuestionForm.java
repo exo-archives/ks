@@ -187,6 +187,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     this.removeChildById(ATTACHMENTS);
     this.removeChildById(IS_APPROVED) ;
     this.removeChildById(IS_ACTIVATED) ;
+    listFileAttach_.clear() ;
+    listLanguageNode.clear() ;
   }
   
   @SuppressWarnings("static-access")

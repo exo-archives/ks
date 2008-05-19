@@ -280,7 +280,7 @@
 						String[] arrayString ;
 						String responseBy = "..." ;
 						String date = "..." ;
-						String response = "<center><b>This question not yet answer</center></b>" ;
+						String response = "<center><b>This question not yet answered</center></b>" ;
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							arrayString = question.getResponses().split("/") ;

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.service;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,8 +110,12 @@ public class QuestionPageList extends JCRPageList {
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
         attachment.setName(node.getName());
         attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
-        if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-        else attachment.setSize(0);
+        try{
+          if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+          else attachment.setSize(0);
+        } catch (Exception e) {
+          attachment.setSize(0);
+        }
         attList.add(attachment);
       }
     }
