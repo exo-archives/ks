@@ -130,20 +130,10 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
-    System.out.println("aftersave in jcrdataStore: question isApproved: " + 
-                        questionNode.getProperty("exo:isApproved").getBoolean() + 
-                        ";\tisActivated: " + questionNode.getProperty("exo:isActivated").getBoolean());
-    
-    /*NodeIterator nodeIterator = questionNode.getNodes() ;
-    while(nodeIterator.hasNext()){
-      Node node = nodeIterator.nextNode() ;
-      if(node.isNodeType("nt:file")) {
-        node.remove() ;
-      }
-    }*/
-    
+    List<String> listFileName = new ArrayList<String>() ;
     if(!listFileAtt.isEmpty()) {
       for(FileAttachment att : listFileAtt) {
+        listFileName.add(att.getName()) ;
         try {
           Node nodeFile = null;
           if (questionNode.hasNode(att.getName())) nodeFile = questionNode.getNode(att.getName());
@@ -160,6 +150,18 @@ public class JCRDataStorage {
         }
       }
     }
+    
+    NodeIterator nodeIterator = questionNode.getNodes() ;
+    Node node = null ;
+    while(nodeIterator.hasNext()){
+      node = nodeIterator.nextNode() ;
+      if(node.isNodeType("nt:file")) {
+        if(!listFileName.contains(node.getName())) {
+          node.remove() ;
+        }
+      }
+    }
+    
     //Send notifycation when add new qustion in watching category
     questionNode.getSession().save() ;
     if(isNew) {
