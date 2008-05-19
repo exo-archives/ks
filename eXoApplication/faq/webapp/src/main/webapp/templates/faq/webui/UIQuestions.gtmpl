@@ -282,7 +282,7 @@
 						String date = "..." ;
 						String response = "<center><b>This question not yet answer</center></b>" ;
 						
-						if( question.getResponses().trim().length() > 0) {
+						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							arrayString = question.getResponses().split("/") ;
 							responseBy = arrayString[0] ;
 							date = arrayString[1] ;
@@ -335,7 +335,7 @@
 								    <%} else {
 								    		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 								    %>
-								    		<div class="LabelBox">
+								    		<div class="LabelBox" style="margin-left: 5px;">
 													<div class="AttachmentIcon FileAttachmentIcon"><span/></div>
 													<a class="AttachmentLabel" href="$linkImage">$fileName</a>
 													<div style="clear: left;"><span/></div>

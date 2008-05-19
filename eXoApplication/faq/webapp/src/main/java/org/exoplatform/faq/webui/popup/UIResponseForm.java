@@ -280,9 +280,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   }
   
   public void setListIdQuesRela(List<String> listId) {
-    if(!listQuestIdRela.isEmpty()) {
-      listQuestIdRela.clear() ;
-    }
     this.listQuestIdRela = listId ;
   }
   

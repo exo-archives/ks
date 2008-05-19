@@ -75,7 +75,7 @@
 									viewString = questionContent ;
 								}
 							%>
-								&nbsp; - $viewString ( <a href="$action"> Remove </a> ) <br>
+								&nbsp; - $viewString  <a href="$action"> Remove </a>  <br>
 						<%}%>
 							</td>
 						</tr>

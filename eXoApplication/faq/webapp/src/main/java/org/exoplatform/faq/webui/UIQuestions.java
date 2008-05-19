@@ -106,7 +106,7 @@ public class UIQuestions extends UIContainer {
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
   boolean isChangeLanguage = false ;
-  List<String> listLanguage = new ArrayList<String>() ;
+  private List<String> listLanguage = new ArrayList<String>() ;
   public String backPath_ = "" ;
   
 	public UIQuestions()throws Exception {
@@ -595,16 +595,19 @@ public class UIQuestions extends UIContainer {
 	    UIQuestions uiQuestions = event.getSource() ; 
       uiQuestions.isChangeLanguage = false ;
       String strId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      if(strId == null || strId.trim().length() < 1) {
-        UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ;
-      }
       String questionId = new String() ;
       if(strId.indexOf("/") < 0) {
         questionId = strId ;
         uiQuestions.backPath_ = "" ;
+        for(int i = 0; i < uiQuestions.listQuestion_.size(); i ++) {
+          if(uiQuestions.listQuestion_.get(i).getId().equals(uiQuestions.questionView_)) {
+            Question question = faqService.getQuestionById(uiQuestions.questionView_, FAQUtils.getSystemProvider()) ;
+            uiQuestions.listQuestion_.get(i).setQuestion(question.getQuestion()) ;
+            uiQuestions.listQuestion_.get(i).setLanguage(question.getLanguage()) ;
+            uiQuestions.listQuestion_.get(i).setResponses(question.getResponses()) ;
+            break ;
+          }
+        }
       } else {
         if(uiQuestions.backPath_ != null && uiQuestions.backPath_.trim().length() > 0) {
           uiQuestions.backPath_ = "" ;
@@ -630,8 +633,7 @@ public class UIQuestions extends UIContainer {
         UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
       }
       
-      String questionViewed = uiQuestions.questionView_ ;
-      if( questionViewed == null || questionViewed.trim().length() < 1 || !questionViewed.equals(questionId)){
+      if( uiQuestions.questionView_ == null || uiQuestions.questionView_.trim().length() < 1 || !uiQuestions.questionView_.equals(questionId)){
         uiQuestions.questionView_ = questionId ; 
       } else {
         uiQuestions.isChangeLanguage = true ;
