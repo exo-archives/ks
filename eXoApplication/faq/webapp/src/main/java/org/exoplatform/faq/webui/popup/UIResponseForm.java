@@ -328,6 +328,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ; 
+      } else {
+        if(responseQuestionContent.indexOf("<p>") >= 0) {
+          responseQuestionContent = responseQuestionContent.replace("<p>", "") ;
+          responseQuestionContent = responseQuestionContent.substring(0, responseQuestionContent.lastIndexOf("</p>")) ;
+        }
       }
       
       String user = FAQUtils.getCurrentUser() ;
@@ -487,10 +492,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           questionContent.setValue(questionLanguage.getQuestion()) ;
           String response = questionLanguage.getResponse() ;
           if(response != null && response.trim().length() > 0) {
-            if(response.indexOf("/") >= 0 && response.indexOf("/") < response.indexOf("<p>")) 
+            for(int i = 0 ; i < 2; i ++) {
               response = response.substring(response.indexOf("/") + 1) ;
-            if(response.indexOf("/") >= 0 && response.indexOf("/") < response.indexOf("<p>")) 
-              response = response.substring(response.indexOf("/") + 1) ;
+            }
           }
           responseContent.setValue(response) ;
         }

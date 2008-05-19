@@ -108,6 +108,16 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     return isResponseTab_ ;
   }
   
+  private long getTotalpages(String pageInteratorId) {
+    UIFAQPageIterator pageIterator = this.getChildById(pageInteratorId) ;
+    try {
+      return pageIterator.getInfoPage().get(3) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return 1 ;
+    }
+  }
+  
   private void setListQuestion() throws Exception {
     listQuestion_.clear() ;
     listQuestionNotYetAnswered_.clear() ;

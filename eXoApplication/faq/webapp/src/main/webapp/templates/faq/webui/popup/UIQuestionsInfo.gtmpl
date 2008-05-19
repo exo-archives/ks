@@ -71,10 +71,15 @@
 	              
 	              	<div  style="display: $displayEdit;"  class="UITabContent" id="UITabContent"> 
 					          <div style="display: block;">
+					          <%
+					          long totalPages1 = uicomponent.getTotalpages("FAQUserPageIteratorTab1") ;
+					          if(totalPages1 > 1) {
+					          %>
 											<div style="overflow:auto;">
 												<% uicomponent.renderChild("FAQUserPageIteratorTab1") ; %>
 											</div>
-											
+									<%}%>	
+									
 											<div class="HorizontalLayout">
 													<div class="UIFormInput">
 														<table class="UIGrid">
@@ -137,19 +142,29 @@
 													</div>
 												</div>
 											
+										<%
+					          long totalPages = uicomponent.getTotalpages("FAQUserPageIteratorTab1") ;
+					          if(totalPages1 > 1) {
+					          %>
 											<div style="overflow:auto;">
 												<% uicomponent.renderChild("FAQUserPageIteratorTab1") ; %>
 											</div>
+									<%}%>	
 										</div>
 
 	              	</div>
 	              	
 	              	<div style="display: $displayResponse;" class="UITabContent" id="UITabContent">
 					          <div style="display: block;"  >
+					          <%
+					          long totalPages2 = uicomponent.getTotalpages("FAQUserPageIteratorTab2") ;
+					          if(totalPages2 > 1) {
+					          %>
 											<div style="overflow:auto;">
 												<% uicomponent.renderChild("FAQUserPageIteratorTab2") ; %>
 											</div>
-											
+									<%}%>
+									
 											<div class="HorizontalLayout">
 													<div class="UIFormInput">
 														<table class="UIGrid">
@@ -194,9 +209,14 @@
 													</div>
 												</div>
 											
+										<%
+					          totalPages = uicomponent.getTotalpages("FAQUserPageIteratorTab2") ;
+					          if(totalPages2 > 1) {
+					          %>
 											<div style="overflow:auto;">
 												<% uicomponent.renderChild("FAQUserPageIteratorTab2") ; %>
 											</div>
+									<%}%>
 										</div>
 
 									</div>

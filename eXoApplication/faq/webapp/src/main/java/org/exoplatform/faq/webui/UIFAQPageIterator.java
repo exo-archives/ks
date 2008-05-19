@@ -79,8 +79,7 @@ public class UIFAQPageIterator extends UIContainer {
     return temp ;
   }
 
-  @SuppressWarnings("unused")
-  private List<Long> getInfoPage() throws Exception {
+  public List<Long> getInfoPage() throws Exception {
     List<Long> temp = new ArrayList<Long>() ;
     temp.add(pageList.getPageSize()) ;//so item/trang
     temp.add(pageList.getCurrentPage()) ;//so trang hien tai
