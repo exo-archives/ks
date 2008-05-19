@@ -74,7 +74,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private UserProfile userProfile = new UserProfile();
 	private List<ForumLinkData> forumLinks = null;
   private List<String> listModerate = new ArrayList<String>();
-	
+	private List<User> listUser = null;
 	public static final String FIELD_USERPROFILE_FORM = "ForumUserProfile" ;
 	public static final String FIELD_USEROPTION_FORM = "ForumUserOption" ;
 	public static final String FIELD_USERBAN_FORM = "ForumUserBan" ;
@@ -110,39 +110,51 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	
   @SuppressWarnings("unused")
   public JCRPageList setPageListUserProfile() throws Exception {
-    List<User> listUser = ForumSessionUtils.getAllUser() ;
+  	if(listUser == null) {
+  		listUser = ForumSessionUtils.getAllUser() ;
+  	}
     for (User user : listUser) {
       UserProfile userProfile = this.forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), user.getUserName(), true, true, false) ;
     }
   	this.pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
   	this.pageList.setPageSize(10);
   	this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
-  	this.setListProFileUser() ;
   	return this.pageList;
   }
   
   @SuppressWarnings("unused")
   private List<UserProfile> getListProFileUser() throws Exception {
+  	setListProFileUser() ;
   	return this.userProfiles ;
   }
   
   @SuppressWarnings("unchecked")
   private void setListProFileUser() throws Exception {
-  	List<User> listUser = ForumSessionUtils.getAllUser() ;
-  	List<UserProfile> listUserProfile = new ArrayList<UserProfile>() ;
-  	this.userProfiles = new ArrayList<UserProfile>();
   	long page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
-  	listUserProfile = this.pageList.getPage(page) ;
-  	for (User user : listUser) {
-  		for (UserProfile userProfile : listUserProfile) {
-	      if(user.getUserName().equals(userProfile.getUserId())) {
-		  		userProfile.setUser(user);
-		  		userProfile.setLastLoginDate(user.getLastLoginTime());
-		  		this.userProfiles.add(userProfile);
-		  		break ;
+  	long maxPage = this.pageList.getAvailablePage() ;
+  	if(page <= 0) page = 1;
+  	if(page > maxPage) page = maxPage ;
+  	List<UserProfile> listUserProfile = this.pageList.getPage(page) ;
+  	this.userProfiles = new ArrayList<UserProfile>();
+  	int i =0, j = 0;
+  	for (UserProfile userProfile : listUserProfile) {
+  		if(userProfile.getUser() == null) {
+	  		for (User user : listUser) {
+		      if(user.getUserName().equals(userProfile.getUserId())) {
+			  		userProfile.setUser(user);
+			  		userProfile.setLastLoginDate(user.getLastLoginTime());
+			  		this.userProfiles.add(userProfile);
+			  		++j;
+			  		break ;
+		      }
 	      }
-      }
+  		} else {
+  			++j;
+  			this.userProfiles.add(userProfile);
+  		}
+  		++ i;
     }
+  	System.out.println("\n\n I: " + i + "  J: " + j + " page: " + page);
   }
   
   private UserProfile getUserProfile(String userId) throws Exception {

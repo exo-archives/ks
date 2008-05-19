@@ -27,9 +27,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-//import org.exoplatform.container.PortalContainer;
-//import org.exoplatform.services.jcr.RepositoryService;
-//import org.exoplatform.services.jcr.ext.common.SessionProvider;
 /**
  * @author Hung Nguyen (hung.nguyen@exoplatform.com)
  * @since July 25, 2007
@@ -92,6 +89,7 @@ public class ForumPageList extends JCRPageList {
 	}
 	
 	private NodeIterator setQuery(Node rootNode, boolean isQuery, String value) throws Exception {
+//		System.out.println("\n\n Value: " +  value);
 		Session session = rootNode.getSession() ;
 		NodeIterator iter ;
 		if(isQuery) {

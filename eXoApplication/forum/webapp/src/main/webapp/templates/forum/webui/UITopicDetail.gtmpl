@@ -757,7 +757,7 @@
 											if(checked == 0){ 
 												if(action.equals("Edit")||action.equals("Delete"))continue ;
 											}
-											if(isLock&&(action.equals("Edit")||action.equals("Quote"))) continue ;
+											if(isLock&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
 											String actionLink = uicomponent.event(action, post.getId());
 											if(action.equals("Delete")) actionLink = "javascript:if(confirm('Are you sure you want to Delete this Post?')){"+uicomponent.event(action, post.getId())+"}"
 									%>
