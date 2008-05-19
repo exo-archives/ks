@@ -26,13 +26,15 @@
 		<table class="ActionContainer" align="center">
 			<tr>
 				<td align="center">
-					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
-						<div class="ButtonLeft">
-							<div class="ButtonRight">
-								<div class="ButtonMiddle"><%=_ctx.appRes("UIModeratorManagementForm.action.Close");%></div>
+					<div style="width: 100px; margin: auto;">
+						<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIViewUserProfile.action.Close");%></div>
+								</div>
 							</div>
-						</div>
-					</a>
+						</a>
+					</div>
 				</td>
 			</tr>
  		</table> 

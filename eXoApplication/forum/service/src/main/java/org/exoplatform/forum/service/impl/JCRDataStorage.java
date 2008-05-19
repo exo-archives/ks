@@ -516,19 +516,14 @@ public class JCRDataStorage{
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 			StringBuffer stringBuffer = new StringBuffer() ;
 			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)");
-			boolean isCont = false ;
+			stringBuffer.append("[@exo:isActive='true'") ;
 			if(isWaiting != null && isWaiting.length() > 0){
-				isCont = true ;
-				stringBuffer.append("[@exo:isWaiting='").append(isWaiting).append("'");
+				stringBuffer.append(" and @exo:isWaiting='").append(isWaiting).append("'");
 			} 
 			if(isApproved != null && isApproved.length() > 0){
-				if(isCont) stringBuffer.append(" and ") ;
-				else stringBuffer.append("[") ;
-				stringBuffer.append("@exo:isApproved='").append(isApproved).append("'");
-				isCont = true ;
+				stringBuffer.append(" and @exo:isApproved='").append(isApproved).append("'");
 			} 
-			if(isCont) stringBuffer.append("]") ;
-			stringBuffer.append(" order by @exo:isSticky descending");
+			stringBuffer.append("] order by @exo:isSticky descending");
 			if(strQuery == null || strQuery.trim().length() <= 0) {
 				if(orderBy != null && orderBy.length() > 0) {
 					stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType) ;

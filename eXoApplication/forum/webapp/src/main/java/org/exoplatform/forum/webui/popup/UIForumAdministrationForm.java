@@ -153,7 +153,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	private boolean getIsSelected(int id) {
+	@SuppressWarnings("unused")
+  private boolean getIsSelected(int id) {
 		if(this.id == id) return true ;
 		return false ;
 	}

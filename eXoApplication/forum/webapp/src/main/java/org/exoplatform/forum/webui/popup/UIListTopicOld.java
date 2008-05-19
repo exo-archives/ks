@@ -108,22 +108,27 @@ public class UIListTopicOld extends UIContainer {
 	
 	static	public class DeleteTopicActionListener extends EventListener<UIListTopicOld> {
 		public void execute(Event<UIListTopicOld> event) throws Exception {
-			UIListTopicOld administration = event.getSource() ;
+			UIListTopicOld listTopicOld = event.getSource() ;
 			String ids = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = ids.split("/") ;
 			int l = id.length ;
-			administration.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2],id[l-1]) ;
-			administration.isUpdate = true ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(administration.getAncestorOfType(UIForumPortlet.class));
+			listTopicOld.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2],id[l-1]) ;
+			listTopicOld.isUpdate = true ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(listTopicOld.getAncestorOfType(UIForumPortlet.class));
 		}
 	}
 
 	static	public class OpenTopicActionListener extends EventListener<UIListTopicOld> {
 		public void execute(Event<UIListTopicOld> event) throws Exception {
-			UIListTopicOld administration = event.getSource() ;
+			UIListTopicOld listTopicOld = event.getSource() ;
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			Topic topic = administration.getTopicById(topicId) ;
-			
+			Topic topic = listTopicOld.getTopicById(topicId) ;
+			UIForumAdministrationForm administrationForm = listTopicOld.getParent();
+			UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+			UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
+			viewTopic.setTopic(topic) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 	

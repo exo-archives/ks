@@ -104,3 +104,7 @@
 .UIViewPost .AttachmentContainer .Size {
 	padding-left: 25px;
 }
+
+.UIViewTopic {
+	min-height: 450px;
+}

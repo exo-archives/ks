@@ -51,8 +51,8 @@ import org.exoplatform.forum.webui.popup.UIRatingForm;
 import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITagForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
-import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewPost;
+import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.services.organization.User;
@@ -1131,7 +1131,6 @@ public class UITopicDetail extends UIForm {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true)	;
 				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
 				viewPost.setPostView(post) ;
-				viewPost.setPopupComponent(false) ;
 				viewPost.setViewUserInfo(false) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}else {

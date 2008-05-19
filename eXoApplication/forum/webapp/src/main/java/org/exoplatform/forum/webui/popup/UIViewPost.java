@@ -50,7 +50,6 @@ import org.exoplatform.webui.form.UIForm;
 public class UIViewPost extends UIForm implements UIPopupComponent {
 	private Post post;
   private boolean isViewUserInfo = true ;
-	private boolean isPopupComponent = true ;
 	public UIViewPost() {
 	}
 	
@@ -83,23 +82,19 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	public boolean getIsPopupComponent() { return isPopupComponent;}
-	public void setPopupComponent(boolean isPopupComponent) { this.isPopupComponent = isPopupComponent;}
-  
   public void setViewUserInfo(boolean isView){ this.isViewUserInfo = isView ;}
   public boolean getIsViewUserInfo(){ return this.isViewUserInfo ;}
 	
 	static	public class CloseActionListener extends EventListener<UIViewPost> {
     public void execute(Event<UIViewPost> event) throws Exception {
 			UIViewPost uiForm = event.getSource() ;
-			if(uiForm.getIsPopupComponent()) {
-				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			if(popupContainer != null) {
 				popupContainer.getChild(UIPopupAction.class).deActivate() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			} else {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
-				uiForm.isPopupComponent = true ;
 			}
 		}
 	}

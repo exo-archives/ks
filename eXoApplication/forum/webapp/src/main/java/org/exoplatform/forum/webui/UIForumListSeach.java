@@ -110,7 +110,6 @@ public class UIForumListSeach extends UIContainer {
     		int length = id.length ;
     		Post post = forumService.getPost(ForumSessionUtils.getSystemProvider(), id[length-4] , id[length-3],id[length-2] , id[length-1]) ;
 				viewPost.setPostView(post) ;
-				viewPost.setPopupComponent(false) ;
 				viewPost.setViewUserInfo(false) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     	}

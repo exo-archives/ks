@@ -555,68 +555,65 @@
 				<tbody>
 					<tr>
 <!-- Start MemberContainer -->
-					<div class="UIPopupCategory" style="display: none; ">
 						<td class="MemberContainer">
 							<div class="MemberContent">
 							
-								<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-									<div style="position: relative;">
-										<%  String userSmile = "OfflineIcon";
-												String titleSmile = "Offline" ;
-												if(uicomponent.isOnline(owner)) {
-													 userSmile = "AvailableIcon";
-													 titleSmile = "Online";
-												}
-										%>
-										<div class="MemberName">
-											<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
-											<div class="Name">$owner</div>
-											<div class="Action"><span></span></div>
-											<div style="clear: left;"><span></span></div>
-										</div>
-										
-										<div class="UIPopupCategory" style="display: none; left: 65px; ">
-											<div class="UIRightClickPopupMenu" style="display: block;">
-												<div class="UIContextMenuContainer">											
-													<div class="TopLeftRightClickPopupMenu">
-														<div class="TopRightRightClickPopupMenu">
-															<div class="TopCenterRightClickPopupMenu"><span></span></div>
-														</div>
-													</div>
-													<div class="MiddleLeftRightClickPopupMenu">
-														<div class="MiddleRightRightClickPopupMenu">
-															<div class="UIRightPopupMenuContainer">
-																<%
-																	String[] menuViewInfos = ["ViewPublicUserInfo","ViewPostedByUser", "ViewThreadByUser"] ;
-																	for(viewAction in menuViewInfos) {
-																		String linkView = uicomponent.event(viewAction, owner) ;
-																		String classIcon = "" ;
-																		String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-																		if(!viewAction.equals("ViewPublicUserInfo")) itemLabelView = itemLabelView + " " + owner ;
-																		if(viewAction.equals("ViewPublicUserInfo")) classIcon = "ViewProfileIcon" ;
-																		else classIcon = "IconsView" ;
-																%>
-																		<a class="MenuItem" href="$linkView">
-																			<div class="ItemIcon $classIcon" style="padding-left: 20px;">$itemLabelView</div>
-																		</a>
-																<%
-																	}
-																%>
+						<%  String userSmile = "OfflineIcon";
+								String titleSmile = "Offline" ;
+								if(uicomponent.isOnline(owner)) {
+									 userSmile = "AvailableIcon";
+									 titleSmile = "Online";
+								}
+						%>
+								<div class="MemberName">
+									<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
+									<div class="Name">$owner</div>
+									<div class="ContentAction" style="float: left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+										<div style="position: relative;">
+											<div class="Action" style="float: none;"><span></span></div>
+											<div class="UIPopupCategory" style="display: none; left: 10px; ">
+												<div class="UIRightClickPopupMenu" style="display: block;">
+													<div class="UIContextMenuContainer">											
+														<div class="TopLeftRightClickPopupMenu">
+															<div class="TopRightRightClickPopupMenu">
+																<div class="TopCenterRightClickPopupMenu"><span></span></div>
 															</div>
 														</div>
-													</div>
-													<div class="BottomLeftRightClickPopupMenu">
-														<div class="BottomRightRightClickPopupMenu">
-															<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+														<div class="MiddleLeftRightClickPopupMenu">
+															<div class="MiddleRightRightClickPopupMenu">
+																<div class="UIRightPopupMenuContainer">
+																	<%
+																		String[] menuViewInfos = ["ViewPublicUserInfo","ViewPostedByUser", "ViewThreadByUser"] ;
+																		for(viewAction in menuViewInfos) {
+																			String linkView = uicomponent.event(viewAction, owner) ;
+																			String classIcon = "" ;
+																			String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																			if(!viewAction.equals("ViewPublicUserInfo")) itemLabelView = itemLabelView + " " + owner ;
+																			if(viewAction.equals("ViewPublicUserInfo")) classIcon = "ViewProfileIcon" ;
+																			else classIcon = "IconsView" ;
+																	%>
+																			<a class="MenuItem" href="$linkView">
+																				<div class="ItemIcon $classIcon" style="padding-left: 20px;">$itemLabelView</div>
+																			</a>
+																	<%
+																		}
+																	%>
+																</div>
+															</div>
+														</div>
+														<div class="BottomLeftRightClickPopupMenu">
+															<div class="BottomRightRightClickPopupMenu">
+																<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-										
 									</div>
+									<div style="clear: left;"><span></span></div>
 								</div>
-								
+										
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();  
 									if(isDisplayAvatar) {
@@ -646,7 +643,6 @@
 								</div>
 							</div>
 						</td>
-					</div>
 	<!-- End MemberContainer -->
 	<!-- Start PostViewContainer -->
 						<td class="PostViewContainer">

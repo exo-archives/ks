@@ -37,6 +37,7 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -117,30 +118,38 @@ public class UIPageListTopicByUser extends UIContainer{
 			UIPageListTopicByUser uiForm = event.getSource() ;
       String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       Topic topic = uiForm.getTopicById(topicId) ;
-      
-      String []id = topic.getPath().split("/") ;
-      int i = id.length ;
-      String categoryId = id[i-3];
-      String forumId = id[i-2] ;
-      //id[i-1] ; 
-      Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2]) ;
-      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-      forumPortlet.updateIsRendered(2);
-      UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-      UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-      uiForumContainer.setIsRenderChild(false) ;
-      uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-      UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-      
-      uiTopicDetail.setUpdateContainer(categoryId, forumId, topic, 1) ;
-      
-      uiTopicDetail.setUpdatePageList(uiForm.getPageListPost(topic.getPath())) ;
-      uiTopicDetail.setUpdateForum(forum) ;
-      uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
-      forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));
-      uiTopicDetail.setIdPostView("false") ;
-      forumPortlet.cancelAction() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+      if(((UIComponent)uiForm.getParent()).getId().equals("UIModeratorManagementForm")) {
+      	UIModeratorManagementForm parentComponent = uiForm.getParent();
+				UIPopupContainer popupContainer = parentComponent.getAncestorOfType(UIPopupContainer.class) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
+				viewTopic.setTopic(topic) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      } else {
+	      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+	      String []id = topic.getPath().split("/") ;
+	      int i = id.length ;
+	      String categoryId = id[i-3];
+	      String forumId = id[i-2] ;
+	      //id[i-1] ; 
+	      Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2]) ;
+	      forumPortlet.updateIsRendered(2);
+	      UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+	      UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+	      uiForumContainer.setIsRenderChild(false) ;
+	      uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+	      UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+	      
+	      uiTopicDetail.setUpdateContainer(categoryId, forumId, topic, 1) ;
+	      
+	      uiTopicDetail.setUpdatePageList(uiForm.getPageListPost(topic.getPath())) ;
+	      uiTopicDetail.setUpdateForum(forum) ;
+	      uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
+	      forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));
+	      uiTopicDetail.setIdPostView("false") ;
+	      forumPortlet.cancelAction() ;
+	      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+      }
 		}
 	}
 	static	public class OpenTopicsTagActionListener extends EventListener<UIPageListTopicByUser> {
