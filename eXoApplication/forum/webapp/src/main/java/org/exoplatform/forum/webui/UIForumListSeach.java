@@ -26,7 +26,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
-import org.exoplatform.forum.webui.popup.UIViewTopic;
+import org.exoplatform.forum.webui.popup.UIViewPost;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -105,13 +105,13 @@ public class UIForumListSeach extends UIContainer {
   			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
     	} else {
     		UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true)	;
-				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 670) ;
+				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
 				String []id = path.split("/") ;
     		int length = id.length ;
     		Post post = forumService.getPost(ForumSessionUtils.getSystemProvider(), id[length-4] , id[length-3],id[length-2] , id[length-1]) ;
-				viewTopic.setPostView(post) ;
-				viewTopic.setPopupComponent(false) ;
-				viewTopic.setViewUserInfo(false) ;
+				viewPost.setPostView(post) ;
+				viewPost.setPopupComponent(false) ;
+				viewPost.setViewUserInfo(false) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     	}
 		}

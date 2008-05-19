@@ -42,16 +42,16 @@ import org.exoplatform.webui.form.UIForm;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIViewTopic.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIViewPost.gtmpl",
 		events = {
-			@EventConfig(listeners = UIViewTopic.CloseActionListener.class, phase = Phase.DECODE)
+			@EventConfig(listeners = UIViewPost.CloseActionListener.class, phase = Phase.DECODE)
 		}
 )
-public class UIViewTopic extends UIForm implements UIPopupComponent {
+public class UIViewPost extends UIForm implements UIPopupComponent {
 	private Post post;
   private boolean isViewUserInfo = true ;
 	private boolean isPopupComponent = true ;
-	public UIViewTopic() {
+	public UIViewPost() {
 	}
 	
 	@SuppressWarnings("unused")
@@ -89,9 +89,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
   public void setViewUserInfo(boolean isView){ this.isViewUserInfo = isView ;}
   public boolean getIsViewUserInfo(){ return this.isViewUserInfo ;}
 	
-	static	public class CloseActionListener extends EventListener<UIViewTopic> {
-    public void execute(Event<UIViewTopic> event) throws Exception {
-			UIViewTopic uiForm = event.getSource() ;
+	static	public class CloseActionListener extends EventListener<UIViewPost> {
+    public void execute(Event<UIViewPost> event) throws Exception {
+			UIViewPost uiForm = event.getSource() ;
 			if(uiForm.getIsPopupComponent()) {
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				popupContainer.getChild(UIPopupAction.class).deActivate() ;

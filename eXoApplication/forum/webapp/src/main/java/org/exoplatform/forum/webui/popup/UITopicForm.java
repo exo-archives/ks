@@ -330,8 +330,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 //				postNew.setEditReason(editReason) ;
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 670) ;
-				viewTopic.setPostView(postNew) ;
+				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
+				viewPost.setPostView(postNew) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}else {
 				String sms = "" ;

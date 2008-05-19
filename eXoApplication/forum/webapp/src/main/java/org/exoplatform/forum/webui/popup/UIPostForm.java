@@ -256,8 +256,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 //				post.setEditReason(editReason) ;
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true)	;
-				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 670) ;
-				viewTopic.setPostView(post) ;
+				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
+				viewPost.setPostView(post) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}else {
 				String[] args = { ""} ;

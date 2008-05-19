@@ -3,7 +3,7 @@
 	import org.exoplatform.forum.ForumFormatUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 %>
-<div class="UIViewTopic">
+<div class="UIViewPost">
   <% uiform.begin() %>  
 	<% Post post = uicomponent.getPostView(); 
 		 String title = post.getName();	

@@ -111,9 +111,9 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
       Post post = uiForm.getPost(postId) ;
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
-      viewTopic.setPostView(post) ;
-      viewTopic.setViewUserInfo(false) ;
+      UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
+      viewPost.setPostView(post) ;
+      viewPost.setViewUserInfo(false) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
