@@ -94,13 +94,13 @@
 								cateRelaId = questionRelationById.split("/")[0] ;
 								quesRelaId = questionRelationById.split("/")[1] ;
 								quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
-								//linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId) ;
-							} else {
-								//linkRelaQues = uicomponent.event("ViewQuestion", "") ;
 							}
 							if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
+								if (quesRelaCont.length() > 50) {
+									quesRelaCont = quesRelaCont.substring(0, 49)+ "..." ;
+								}
 					%>
-								&nbsp; - <a href="$linkRelaQues"> $quesRelaCont<br></a>
+								&nbsp; - <a > $quesRelaCont<br></a>
 					<% 	}
 						}%>
 				</div>

@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.exoplatform.contact.service.Contact;
+import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -40,11 +42,11 @@ import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
-import org.exoplatform.faq.webui.popup.UIQuestionsInfo;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -438,6 +440,23 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
+      ContactService contactService = questions.getApplicationComponent(ContactService.class) ;
+      String email = null ;
+      String name = null ;
+      Contact contact = contactService.getContact(SessionProviderFactory.createSessionProvider()
+      		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
+      try {
+      	name = contact.getFullName();
+      } catch (NullPointerException e) {
+      	name = "" ;
+      }
+      try {
+      	email = contact.getEmailAddress() ;
+      } catch (NullPointerException e) {
+      	email = "" ;
+      }
+      questionForm.setAuthor(name) ;
+      questionForm.setEmail(email) ;
       questionForm.setCategoryId(categoryId) ;
       questionForm.refresh() ;
       popupContainer.setId("AddQuestion") ;

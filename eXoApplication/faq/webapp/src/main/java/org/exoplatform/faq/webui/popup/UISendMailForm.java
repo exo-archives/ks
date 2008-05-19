@@ -73,7 +73,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     String response = question.getResponses() ;
     if(response.equals(" ")) content = "Question: " + question.getQuestion() ;
     else 
-    	content ="Question: " + question.getQuestion() + " Response: "+question.getResponses() ;
+    	content ="<p> Question: " + question.getQuestion() + "</p>" +
+    			" Response: "+question.getResponses() ;
     addChild(new UIFormStringInput(FROM_NAME,FROM_NAME, null)) ;
     addChild(new UIFormStringInput(FROM, FROM, null)) ;
     addChild(new UIFormStringInput(TO, TO, null)) ;

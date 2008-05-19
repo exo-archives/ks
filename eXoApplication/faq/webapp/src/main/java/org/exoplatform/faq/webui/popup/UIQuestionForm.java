@@ -25,8 +25,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.Node;
-import javax.jcr.Property;
-import javax.jcr.PropertyIterator;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
@@ -39,7 +37,6 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
-import org.exoplatform.services.jcr.impl.xml.importing.dataflow.PropertyInfo;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -55,9 +52,7 @@ import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -160,7 +155,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     } catch (Exception e) {
       e.printStackTrace() ;
     }
-    
     addChild(new UIFormStringInput(AUTHOR, AUTHOR, author_)) ;
     addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_)) ;
     addChild(listFormWYSIWYGInput) ;
@@ -229,6 +223,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   public String getDefaultLanguage() {
     return this.defaultLanguage_;
   }
+  
+  private String getAuthor() {return this.author_ ; }
+  public void setAuthor(String author) {this.author_ = author ;}
+  
+  
+  private String getEmail() {return this.email_ ; }
+  public void setEmail(String email) {this.email_ = email ;}
   
   private String getCategoryId(){
     return this.categoryId_ ; 
@@ -337,13 +338,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       date = dateFormat.parse(dateStr) ;
       
       String author = questionForm.getUIStringInput(AUTHOR).getValue() ;
-      if(!validatorDataInput.isNotEmptyInput(author)){
-        UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.author-is-null", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ;
-      }
-      
       String emailAddress = questionForm.getUIStringInput(EMAIL_ADDRESS).getValue() ;
       if(!validatorDataInput.isEmailAddress(emailAddress)) {
         UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;

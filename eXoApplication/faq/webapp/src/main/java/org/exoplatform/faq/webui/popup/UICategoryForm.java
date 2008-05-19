@@ -252,6 +252,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
        UIPopupAction childPopup = categoryForm.getAncestorOfType(UIPopupContainer.class).getChild(UIPopupAction.class) ;
        UIGroupSelector uiGroupSelector = childPopup.activate(UIGroupSelector.class, 500) ;
        uiGroupSelector.setType(permType) ;
+       if(permType.equals("0") ) uiGroupSelector.setId("UIUserSelector") ;
+       if(permType.equals("1") ) uiGroupSelector.setId("UIMebershipSelector") ;
+       if(permType.equals("2") ) uiGroupSelector.setId("UIGroupSelector") ;
        uiGroupSelector.setSelectedGroups(null) ;
        uiGroupSelector.setComponent(categoryForm, new String[]{MODERATOR}) ;
        event.getRequestContext().addUIComponentToUpdateByAjax(childPopup) ;  
