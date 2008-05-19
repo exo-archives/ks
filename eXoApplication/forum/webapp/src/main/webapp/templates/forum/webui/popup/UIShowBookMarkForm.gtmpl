@@ -5,7 +5,7 @@
 				<div class="TopContent">
 					<div class="IconContent"><span></span></div>
 					<div class="LinkName">Link Name</div>
-					<div class="DeleteAction">Delete Action</div>
+					<div class="DeleteAction">Action</div>
 					<div style="clear: left;"><span></span></div>
 				</div>
 				<div class="UIListContainer">

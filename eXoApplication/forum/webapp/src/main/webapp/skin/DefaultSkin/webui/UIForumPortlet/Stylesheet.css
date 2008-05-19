@@ -183,7 +183,8 @@
 /******************************************** ForumContains ****************************************/
 .UIForumPortlet .ForumContains {
 	border: 1px solid #cdcdcd;
-	line-height: 42px; 
+	line-height: 42px;
+	max-height: 42px; 
 	margin: 10px 0px;
 	padding: 0px 0px 0px 15px;
 }
