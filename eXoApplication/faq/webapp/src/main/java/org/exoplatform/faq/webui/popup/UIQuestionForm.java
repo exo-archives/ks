@@ -203,9 +203,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         LIST_LANGUAGE.add(questionLanguage.getLanguage()) ;
       }
       isChecked_ = question_.isApproved() ;
-      
-      System.out.println("setQuestionId~~~> question : isApproved: " + question_.isApproved() + ";\tisActivated: " + question_.isActivated());
-      
       initPage(false) ;
       UIFormStringInput authorQ = this.getChildById(AUTHOR) ;
       authorQ.setValue(question_.getAuthor()) ;
@@ -237,7 +234,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   @SuppressWarnings("static-access")
   public void setCategoryId(String categoryId) {
     this.categoryId_ = categoryId ;
-    System.out.println("cateId : " + categoryId_);
     questionId_ = null ;
     LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
     for(Object object:configService.getLocalConfigs()) {      
@@ -386,9 +382,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       } else {
         boolean isApproved = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
         boolean isActivated = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked() ;
-        
-        System.out.println("isApproved: " + isApproved + ";\tisActivated : " + isActivated );
-        
         question_.setApproved(isApproved) ;
         question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;
       }
@@ -419,8 +412,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
           e.printStackTrace() ;
         }
       }
-      
-      System.out.println("quesiton after save have: isAproved: " + question_.isApproved() + ";\tisActivated: " + question_.isActivated());
       if(!questionForm.isChildOfManager) {
         UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

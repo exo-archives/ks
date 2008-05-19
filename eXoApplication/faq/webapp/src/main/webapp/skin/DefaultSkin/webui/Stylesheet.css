@@ -828,3 +828,11 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .MaxView {
 	background: url('background/ViewIcon.gif') no-repeat left center;
 }
+
+.UIFAQPortlet .JPGIcon {
+	background: url('background/JPGIcon.gif') no-repeat left center;
+}
+
+.UIFAQPortlet .FileAttachmentIcon {
+	background: url('background/AttachmentIcon.gif') no-repeat left;
+}
