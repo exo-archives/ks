@@ -70,6 +70,7 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	var uiPortalApplication = document.getElementById("UIPortalApplication") ;
 	var printArea = DOMUtil.findAncestorByClass(obj, "ResponseContent") ;
 	var previousElement = DOMUtil.findPreviousElementByTagName(printArea, 'div') ;
+  previousElement = previousElement.cloneNode(true) ;
 	printArea = printArea.cloneNode(true) ;
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
