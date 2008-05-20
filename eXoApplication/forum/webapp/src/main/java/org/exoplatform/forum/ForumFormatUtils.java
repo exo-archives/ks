@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -283,13 +284,18 @@ public class ForumFormatUtils {
 		buffer.append(s);
 		return buffer.toString() ;
   }
-	//isReadTopic
+
 	public static boolean isStringInStrings(String []strings, String string) {
 	  for (String string1 : strings) {
 	    if(string.equals(string1)) return true ;
     }
 	  return false;
   }
+
+	public static boolean isStringInList(List<String>list, String string) {
+		if(list.contains(string)) return true;
+		return false;
+	}
 
 	public static String getLabel(String label, String key) {
 	  return label.replaceFirst("<keyWord>", key) ;

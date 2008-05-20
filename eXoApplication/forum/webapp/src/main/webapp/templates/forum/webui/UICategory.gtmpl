@@ -241,7 +241,7 @@
 								}
 								titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle) ;
 								if(topicNewPost.getIsClosed()) {
-									if(ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin) {
+									if(ForumFormatUtils.isStringInList(forumModerators, userLogin) || isAdmin) {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
 									} else {
 										openLinkLastPost = "javascript:void(0)";
@@ -249,7 +249,7 @@
 									}
 								} else {
 									if(forum.getIsModerateTopic()) {
-										if(topicNewPost.getIsApproved() || ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin){
+										if(topicNewPost.getIsApproved() || ForumFormatUtils.isStringInList(forumModerators, userLogin) || isAdmin){
 											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
 										} else {
 											openLinkLastPost = "javascript:void(0)";

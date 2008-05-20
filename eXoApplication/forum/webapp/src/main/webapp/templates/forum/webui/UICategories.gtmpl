@@ -19,10 +19,6 @@
 	if(userProfile.userRole == 0) isAdmin = true ;
 	int rCNB = 0;
 	String actionBookmark = "";
-	
-//	import javax.servlet.http.HttpServletRequest;
-//	import org.exoplatform.portal.webui.util.Util;
-//	System.out.println("\n\nIP: " + ( (  HttpServletRequest  )(  Util.getPortalRequestContext()  ) ).getRemoteAddr()   );
 %>
 <div class="UICategories" id="$uicomponent.id">
 	<div class="UIForumWorkingWorkspace">
@@ -39,7 +35,6 @@
 			 for(category in categories) {
 			   if(uicomponent.getIsPrivate(userProfile,category)) {
 					 String title = category.getCategoryName();
-					 String description = category.getDescription()
 					 actionBookmark = uicomponent.event("AddBookMark","CategoryNormalIcon//"+title+"//"+category.getPath());
 		 %>
 			<div class="UIForumCategory">
@@ -47,7 +42,7 @@
 					<div class="LeftBar">
 						<div class="RightBar">
 							<div class="CenterBar">
-								<div class="Title" title="$description">
+								<div class="Title" title="$title">
 									<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 										<a href="<%=uicomponent.event("OpenCategory", category.getId())%>">$title</a>
 										<div style="position: relative;">
@@ -133,14 +128,14 @@
 											}
 											titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle);
 											if(topicNewPost.getIsClosed()) {
-												if(ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin) {
+												if(ForumFormatUtils.isStringInList(forumModerators, userLogin) || isAdmin) {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
 												} else {
 													titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
 												}
 											} else {
 												if(forum.getIsModerateTopic()) {
-													if(topicNewPost.getIsApproved() || ForumFormatUtils.isStringInStrings(forumModerators, userLogin) || isAdmin){
+													if(topicNewPost.getIsApproved() || ForumFormatUtils.isStringInList(forumModerators, userLogin) || isAdmin){
 														openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
 													} else {
 														titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
