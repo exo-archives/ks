@@ -628,13 +628,13 @@
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
 					<a href="" class="MenuItem AddBookmark">
-						<div class="ItemIcon " style="padding:3px 0px 5px 5px;">
-							<div style="padding: 0px 5px 0px 20px;">Add Bookmark this Link</div>
+						<div class="ItemIcon AddLinkToBookIcon">
+							<span>Add Bookmark this Link</span>
 						</div>
 					</a>
 					<a href="" class="MenuItem AddWatching">
-						<div class="ItemIcon " style="padding:3px 0px 5px 5px;">
-							<div style="padding: 0px 5px 0px 20px;">Add Watching</div>
+						<div class="ItemIcon AddWatchingIcon">
+							<span>Add Watching</span>
 						</div>
 					</a>
 				</div>

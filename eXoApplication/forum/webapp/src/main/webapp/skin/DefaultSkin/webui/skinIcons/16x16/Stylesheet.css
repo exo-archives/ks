@@ -367,6 +367,18 @@
 	background: url('icons/MergeTopicIcon.gif') no-repeat left center;
 }
 
+.UIForumPortlet .SetUnWaitingIcon {
+	background: url('icons/SetUnWaiting.gif') no-repeat left center;
+}
+
+.UIForumPortlet .AddWatchingIcon {
+	background: url('icons/AddWatching.gif') no-repeat left center;
+}
+
+.UIForumPortlet .AddLinkToBookIcon {
+	background: url('icons/AddLink.gif') no-repeat left center;
+}
+
 .UIForumPortlet .ApproveIcons {
 	background: url('icons/ApproveTopicsIcon.gif') no-repeat left center;
 }
