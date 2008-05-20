@@ -204,6 +204,7 @@ public interface ForumService {
 	 * @return
 	 * @throws Exception
 	 */
+	public void modifyTopic(SessionProvider sProvider, Topic topic, int type) throws Exception ;
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception;
 	/**
 	 * This method should:

@@ -101,6 +101,10 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.removeForum(sProvider, categoryId, forumId);
 	}
 	
+	public void modifyTopic(SessionProvider sProvider, Topic topic, int type) throws Exception {
+		storage_.modifyTopic(sProvider, topic, type) ;
+	}
+	
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception {
 		storage_.saveTopic(sProvider, categoryId, forumId, topic, isNew, isMove);
 	}

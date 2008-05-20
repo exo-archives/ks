@@ -97,10 +97,8 @@ public class UIListTopicOld extends UIContainer {
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			Topic topic = administration.getTopicById(topicId) ;
 			boolean isActive = topic.getIsActive() ;
-			String []id = topic.getPath().split("/") ;
-			int l = id.length ;
 			topic.setIsActive(!isActive) ;
-			administration.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2], topic, false, false) ;
+			administration.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 6) ;
 			administration.isUpdate = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(administration);
 		}

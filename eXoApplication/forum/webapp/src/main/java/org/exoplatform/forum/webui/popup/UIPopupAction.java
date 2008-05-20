@@ -32,7 +32,7 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 @ComponentConfig( lifecycle = Lifecycle.class )
 public class UIPopupAction extends UIContainer {
 	public UIPopupAction() throws Exception {
-		addChild(createUIComponent(UIPopupWindow.class, null, null).setRendered(false));
+		addChild(createUIComponent(UIPopupWindow.class, null, "UIForumPopupWindow").setRendered(false));
 	}
 
 	@Override

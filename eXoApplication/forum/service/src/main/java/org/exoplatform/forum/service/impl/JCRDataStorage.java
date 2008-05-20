@@ -740,6 +740,26 @@ public class JCRDataStorage{
 		}
 	}
 	
+	public void modifyTopic(SessionProvider sProvider, Topic topic, int type) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		try {
+			Node topicNode = (Node)forumHomeNode.getSession().getItem(topic.getPath()) ;
+			switch (type) {
+      case 1: { topicNode.setProperty("exo:isClosed", topic.getIsClosed()) ; break;}
+      case 2: { topicNode.setProperty("exo:isLock", topic.getIsLock()) ; break;}
+      case 3: { topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ; break;}
+      case 4: { topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ; break;}
+      case 5: { topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ; break;}
+      case 6: { topicNode.setProperty("exo:isActive", topic.getIsActive()) ; break;}
+      default:
+	      break;
+      }
+			forumHomeNode.getSession().save() ;
+    } catch (PathNotFoundException e) {
+	    e.printStackTrace() ;
+    }
+	}
+	
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try{

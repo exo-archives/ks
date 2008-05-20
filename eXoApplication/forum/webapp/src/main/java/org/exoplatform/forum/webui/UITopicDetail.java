@@ -697,7 +697,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsClosed()) {
 				topic.setIsClosed(false) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 1) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -714,7 +714,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsClosed()) {
 				topic.setIsClosed(true) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 1) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -731,7 +731,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsLock()) {
 				topic.setIsLock(true) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 2) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -748,7 +748,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsLock()) {
 				topic.setIsLock(false) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 2) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -780,7 +780,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsSticky()) {
 				topic.setIsSticky(true) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 4) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -797,7 +797,7 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsSticky()) {
 				topic.setIsSticky(false) ;
-				topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic, false, false) ;
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 4) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -833,7 +833,7 @@ public class UITopicDetail extends UIForm {
 			UITopicDetail topicDetail = event.getSource() ;
       Topic topic = topicDetail.topic;
       topic.setIsApproved(true) ;
-      topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
+      topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 3) ;
       topicDetail.viewTopic = false ;
       topicDetail.isEditTopic = true ;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -845,7 +845,7 @@ public class UITopicDetail extends UIForm {
       UITopicDetail topicDetail = event.getSource() ;
       Topic topic = topicDetail.topic;
       topic.setIsApproved(false) ;
-      topicDetail.forumService.saveTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topic, false, false) ;
+      topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 3) ;
       topicDetail.viewTopic = false ;
       topicDetail.isEditTopic = true ;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;

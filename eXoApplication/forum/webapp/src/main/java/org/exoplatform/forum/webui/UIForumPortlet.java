@@ -54,7 +54,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
 		addChild(UISearchForm.class, null, null).setRendered(isSeachRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(false) ;
-		addChild(UIPopupAction.class, null, null) ;
+		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 	}
 
 	public void updateIsRendered(int selected) throws Exception {
