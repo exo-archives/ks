@@ -47,7 +47,10 @@
 										      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
 										      }
 										     %>
-										     	$name &nbsp;&nbsp;<a href="$link"> Remove </a><br>
+										     	<div style="margin: 0px 0px 3px 2px;">
+										     		$name &nbsp;&nbsp;&nbsp;&nbsp;
+														[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">Remove</font></a>&nbsp;]
+													</div>
 									    <%}
 											}
 										} else {%>
@@ -69,13 +72,15 @@
 							String viewString = "" ;
 							for(String questionContent in uicomponent.getListRelationQuestion()) {
 								String action = uicomponent.event("RemoveRelation",uicomponent.getListIdQuesRela().get(i ++)) ;
-								if(questionContent.indexOf("<p>") >= 0 && questionContent.indexOf("</p>") >= 0) {
-									viewString = questionContent.substring(3, questionContent.length() - 4) ;
-								} else {
-									viewString = questionContent ;
-								}
+								viewString = questionContent.replaceAll("<p>","").replaceAll("</p>","").replaceAll("<br>","") ;
+								if(viewString.length() > 100) {
+				          viewString = viewString.substring(0, 99) + "..." ;
+				        }
 							%>
-								&nbsp; - $viewString  <a href="$action"> Remove </a>  <br>
+								<div style="margin: 0px 0px 3px 2px;">
+									&nbsp; - $viewString  &nbsp;&nbsp;&nbsp;&nbsp;
+									[&nbsp;<a href="$action"><font color="#058EE6" font-size="12px">Remove</font></a>&nbsp;]
+								</div>
 						<%}%>
 							</td>
 						</tr>

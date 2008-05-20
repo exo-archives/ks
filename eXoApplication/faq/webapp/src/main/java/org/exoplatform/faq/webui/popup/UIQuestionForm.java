@@ -384,7 +384,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       question_.setLanguage(questionForm.getDefaultLanguage()) ;
       question_.setAuthor(author) ;
       question_.setEmail(emailAddress) ;
-      question_.setQuestion(listQuestionContent.get(0)) ;
+      question_.setQuestion(listQuestionContent.get(0).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
       question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
       
@@ -400,7 +400,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
           QuestionLanguage questionLanguage = new QuestionLanguage() ;
           for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
             questionLanguage.setLanguage(questionForm.LIST_LANGUAGE.get(i)) ;
-            questionLanguage.setQuestion(listQuestionContent.get(i)) ;
+            questionLanguage.setQuestion(listQuestionContent.get(i).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
             questionLanguage.setResponse(" ") ;
             multiLanguages.addLanguage(questionNode, questionLanguage) ;
           }

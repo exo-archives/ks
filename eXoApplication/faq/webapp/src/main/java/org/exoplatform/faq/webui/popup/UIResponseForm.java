@@ -32,6 +32,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -240,16 +241,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     ((UIFormInputWithActions)this.getChildById(ATTATCH_MENTS)).setActionField(FILE_ATTACHMENTS, getUploadFileList()) ;
   }
   
-  /*// set and get quetsion info:
-  private void setListLanguage() {
-    for(String language : listLanguageToReponse) {
-      listLanguage.add(new SelectItemOption<String>(language, language)) ;
-    }
-  }
-  private List<SelectItemOption<String>> getListLanguage() {
-    return listLanguage ;
-  }*/
-  
   private void setListRelation() throws Exception {
     String[] relations = question.getRelations() ;
     this.setListIdQuesRela(Arrays.asList(relations)) ;
@@ -311,6 +302,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   static public class SaveActionListener extends EventListener<UIResponseForm> {
     @SuppressWarnings("unchecked")
     public void execute(Event<UIResponseForm> event) throws Exception {
+      ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
       UIResponseForm response = event.getSource() ;
       String questionContent = ((UIFormTextAreaInput)response.getChildById(QUESTION_CONTENT)).getValue() ;
       
@@ -323,7 +315,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       UIFormWYSIWYGInput formWYSIWYGInput = response.getChildById(RESPONSE_CONTENT) ;
       String responseQuestionContent = formWYSIWYGInput.getValue() ;
-      if(responseQuestionContent == null || responseQuestionContent.trim().length() < 1) {
+      if(responseQuestionContent == null || responseQuestionContent.trim().length() < 1 || !validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
         UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -342,14 +334,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       //date = dateFormat.parse(dateStr) ;
       
       if(question.getLanguage().equals(response.languageIsResponsed)) {
-        question.setQuestion(questionContent) ;
+        question.setQuestion(questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
         //set response of question
-        question.setResponses(user + "/" + date + "/" + responseQuestionContent);
+        question.setResponses(user + "/" + date + "/" + validatorDataInput.fckConvertHtmlTab(responseQuestionContent));
       } else {
-        question.setQuestion(response.listQuestionLanguage.get(0).getQuestion()) ;
+        question.setQuestion(response.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
         String responseContent = response.listQuestionLanguage.get(0).getResponse() ;
-        if(responseContent != null && responseContent.trim().length() > 1) {
-          question.setResponses(user + "/" + date + "/" + responseContent) ;
+        if(responseContent != null && responseContent.trim().length() > 1 && validatorDataInput.fckContentIsNotEmpty(responseContent)) {
+          question.setResponses(user + "/" + date + "/" + validatorDataInput.fckConvertHtmlTab(responseContent)) ;
         } else {
           UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
           uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-invalid", new String[]{question.getLanguage()}, ApplicationMessage.WARNING)) ;
@@ -359,10 +351,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         for(QuestionLanguage questionLanguage : response.listQuestionLanguage) {
           if(questionLanguage.getLanguage().equals(response.languageIsResponsed)) {
             questionLanguage.setQuestion(questionContent) ;
-            questionLanguage.setResponse(user + "/" + date + "/" + responseQuestionContent) ;
+            questionLanguage.setResponse(user + "/" + date + "/" + validatorDataInput.fckConvertHtmlTab(responseQuestionContent)) ;
           } else {
-            if(questionLanguage.getResponse() != null && questionLanguage.getResponse().trim().length() > 0) {
-              questionLanguage.setResponse(user + "/" + date + "/" + questionLanguage.getResponse()) ;
+            if(questionLanguage.getResponse() != null && questionLanguage.getResponse().trim().length() > 0 && 
+                validatorDataInput.fckContentIsNotEmpty(questionLanguage.getResponse())) {
+              questionLanguage.setResponse(user + "/" + date + "/" + validatorDataInput.fckConvertHtmlTab(questionLanguage.getResponse())) ;
             }
           }
         }

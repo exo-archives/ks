@@ -47,7 +47,10 @@
 										      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
 										      }
 										     %>
-										     	$name &nbsp;&nbsp; <a href="$link"> Remove </a><br>
+										     	<div style="margin: 0px 0px 3px 2px;">
+														&nbsp;$name  &nbsp;&nbsp;&nbsp;&nbsp;
+														[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">Remove</font></a>&nbsp;]
+													</div>
 									    <%}
 											}
 										} else {%>

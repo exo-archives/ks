@@ -799,7 +799,6 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .LanguageSelectIcon {
   background: url('background/FAQPortlet.gif') no-repeat left -792px;
   line-height:16px;
-  margin-left:15px;
 	padding-right:15px;;
 }
 

@@ -44,7 +44,6 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
     lifecycle = UIFormLifecycle.class ,
     template =  "app:/templates/faq/webui/popup/UIAddRelationForm.gtmpl",
     events = {
-      @EventConfig(listeners = UIAddRelationForm.SelectedQuestionActionListener.class),
       @EventConfig(listeners = UIAddRelationForm.SaveActionListener.class),
       @EventConfig(listeners = UIAddRelationForm.CancelActionListener.class)
     }
@@ -239,11 +238,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
     }
   }
-  static public class SelectedQuestionActionListener extends EventListener<UIAddRelationForm> {
-    public void execute(Event<UIAddRelationForm> event) throws Exception {
-      //UIAddRelationForm addRelationForm = event.getSource() ;
-    }
-  }
+
   static public class CancelActionListener extends EventListener<UIAddRelationForm> {
     public void execute(Event<UIAddRelationForm> event) throws Exception {
       UIAddRelationForm addRelationForm = event.getSource() ;     

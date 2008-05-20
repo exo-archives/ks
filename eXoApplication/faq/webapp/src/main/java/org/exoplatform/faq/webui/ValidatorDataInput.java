@@ -54,4 +54,23 @@ public class ValidatorDataInput {
       return true ;
     return false ;
   }
+  
+  public boolean fckContentIsNotEmpty(String input) {
+    input = input.replaceAll("<p>", "") ;
+    input = input.replaceAll("</p>", "") ;
+    input = input.replaceAll("&nbsp;", " ") ;
+    if(input.trim().length() > 0) {
+      return true ;
+    } else {
+      return false ;
+    }
+  }
+  
+  public String fckConvertHtmlTab(String input) {
+    input = input.replaceAll("<p>&nbsp;</p>", "") ;
+    input = input.replaceAll("<p>", "") ;
+    input = input.replaceAll("</p>", "<br>") ;
+    input = input.replaceAll("&nbsp;", " ") ;
+    return input ;
+  }
 }
