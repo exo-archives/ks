@@ -32,6 +32,7 @@ import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.OrganizationConfig.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -68,13 +69,12 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 public class UICategoryForm extends UIForm implements UIPopupComponent, UISelector 	{
 	private String categoryId_ = "";
 	private String parentId_ ;
-	final private static String EVENT_CATEGORY_NAME = "eventCategoryName" ; 
-  final private static String DESCRIPTION = "description" ;
-  final private static String MODERATOR = "moderator" ;
-  final private static String MODERATEQUESTIONS = "moderatequestions" ;
-  private Map<String, String> permissionUser_ = new LinkedHashMap<String, String>() ;
-  private Map<String, String> permissionGroup_ = new LinkedHashMap<String, String>() ;
+	final private static String FIELD_NAME_INPUT = "eventCategoryName" ; 
+  final private static String FIELD_DESCRIPTION_INPUT = "description" ;
+  final private static String FIELD_MODERATOR_INPUT = "moderator" ;
+  final private static String FIELD_MODERATEQUESTIONS_CHECKBOX = "moderatequestions" ;
   private static FAQService faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  @SuppressWarnings("unused")
   private boolean isAddNew_ = true ;
   
 	public UICategoryForm() throws Exception {}
@@ -83,10 +83,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		FAQSetting faSetting = faqService_.getFAQSetting(FAQUtils.getSystemProvider()) ;
 		Boolean processingMode = faSetting.getProcessingMode() ;
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
-    inputset.addUIFormInput(new UIFormStringInput(EVENT_CATEGORY_NAME, EVENT_CATEGORY_NAME, null).addValidator(MandatoryValidator.class)) ;
-    inputset.addUIFormInput(new UIFormTextAreaInput(DESCRIPTION, DESCRIPTION, null)) ;
-    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(MODERATEQUESTIONS, MODERATEQUESTIONS, false ).setChecked(!processingMode)) ;
-    UIFormStringInput moderator = new UIFormStringInput(MODERATOR, MODERATOR, null) ;
+    inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
+    inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
+    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false ).setChecked(!processingMode)) ;
+    UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
     inputset.addUIFormInput(moderator) ;
     List<ActionData> actionData = new ArrayList<ActionData>() ;
     String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
@@ -102,7 +102,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			actionData.add(ad) ;
 			++i;
 		}
-    inputset.setActionField(MODERATOR, actionData) ; 
+    inputset.setActionField(FIELD_MODERATOR_INPUT, actionData) ; 
     addChild(inputset) ;
   }
   public String getLabel(String id) {
@@ -122,20 +122,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
-    Map<String, String> permission ;
-    if (selectField.equals(MODERATOR)) {
-      permissionUser_.put(value, value) ;
-      permission = permissionUser_ ;
-    } else {
-      permissionGroup_.put(value, value) ;
-      permission = permissionGroup_ ;
-    }  
-    StringBuilder sb = new StringBuilder() ;
-    for(String s : permission.values()) {      
-      if(sb != null && sb.length() > 0) sb.append(",") ;
-      sb.append(s) ;
-    }    
-    fieldInput.setValue(sb.toString()) ;
+    String oldValue = fieldInput.getValue() ;
+    oldValue =  oldValue + "," +  value ;
+    fieldInput.setValue(filterItemInString(oldValue)) ;
   } 
 
 	public void setCategoryValue(String categoryId, boolean isUpdate) throws Exception{
@@ -144,34 +133,63 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider() ;
 		  Category cat = faqService.getCategoryById(categoryId, sessionProvider) ;
 		  categoryId_ = categoryId ; 
-			getUIStringInput(EVENT_CATEGORY_NAME).setValue(cat.getName()) ;
-			getUIFormTextAreaInput(DESCRIPTION).setDefaultValue(cat.getDescription()) ;
-			getUIFormCheckBoxInput(MODERATEQUESTIONS).setChecked(cat.isModerateQuestions()) ;
+			getUIStringInput(FIELD_NAME_INPUT).setValue(cat.getName()) ;
+			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription()) ;
+			getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions()) ;
 			String moderator = "";
 	    for(String str : cat.getModerators()) {
 	    	if( moderator!= null && moderator.trim().length() >0 ) moderator += "," ;
 	      moderator += str ;
 	    }    
-			getUIStringInput(MODERATOR).setValue(moderator) ;
+			getUIStringInput(FIELD_MODERATOR_INPUT).setValue(moderator) ;
 		}
 	}
-  protected String getCategoryName() {return getUIStringInput(EVENT_CATEGORY_NAME).getValue() ;}
-  protected void setCategoryName(String value) {getUIStringInput(EVENT_CATEGORY_NAME).setValue(value) ;}
-
-  protected String getCategoryDescription() {return getUIStringInput(DESCRIPTION).getValue() ;}
-  protected void setCategoryDescription(String value) {getUIFormTextAreaInput(DESCRIPTION).setValue(value) ;}
 	
-  protected String getModerator() {return getUIStringInput(MODERATOR).getValue() ;}
-  protected void setModerator(String value) {getUIStringInput(MODERATOR).setValue(value) ;}
-
+  private String filterItemInString(String string) throws Exception {
+  	if (string != null && string.trim().length() > 0) {
+	    String[] strings = FAQUtils.splitForFAQ(string) ;
+	    List<String>list = new ArrayList<String>() ;
+	    string = strings[0] ;
+	    list.add(string);
+    	for(String string_ : strings ) {
+    		if(list.contains(string_)) continue ;
+    		list.add(string_) ;
+    		string = string + "," + string_ ;
+    	}
+  	}
+  	return string ;
+  }
+  
+  public void checkValue(String[] strings) throws Exception {
+  	String userInvalid = "" ;
+    String userValid = "" ;
+    for(String string : strings) {
+    	if(string.indexOf("/") >= 0) { 
+    		if(userValid.trim().length() > 0) userValid += "," ;
+    		userValid += string.trim() ;
+    		continue ;
+    	}
+      if(FAQUtils.getUserByUserId(string.trim()) != null) {
+        if(userValid.trim().length() > 0) userValid += "," ;
+        userValid += string.trim() ;
+      } else {
+        if(userInvalid.trim().length() > 0) userInvalid += ", " ;
+        userInvalid += string.trim() ;
+      }
+    }
+    if(userInvalid.length() > 0) 
+      throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-not-found", new String[]{userInvalid}, ApplicationMessage.WARNING)) ;
+  }
+  
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;
 			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
-      String name = uiCategory.getUIStringInput(EVENT_CATEGORY_NAME).getValue() ;
-      String description = uiCategory.getUIStringInput(DESCRIPTION).getValue() ;
-      String moderator = uiCategory.getUIStringInput(MODERATOR).getValue() ;
-      Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(MODERATEQUESTIONS).isChecked() ;
+      String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue() ;
+      String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
+      String moder = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
+      String moderator = uiCategory.filterItemInString(moder) ;
+      Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
           ApplicationMessage.INFO)) ;
@@ -179,24 +197,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         return ; 
       }
       String[] users = FAQUtils.splitForFAQ(moderator) ;
-      String userInvalid = "" ;
-      String userValid = "" ;
-      for(String user : users) {
-      	if(user.indexOf("/") >= 0) { 
-      		if(userValid.trim().length() > 0) userValid += "," ;
-      		userValid += user.trim() ;
-      		continue ;
-      	}
-        if(FAQUtils.getUserByUserId(user.trim()) != null) {
-          if(userValid.trim().length() > 0) userValid += "," ;
-          userValid += user.trim() ;
-        } else {
-          if(userInvalid.trim().length() > 0) userInvalid += ", " ;
-          userInvalid += user.trim() ;
-        }
-      }
-      if(userInvalid.length() > 0) 
-        throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-not-found", new String[]{userInvalid}, ApplicationMessage.WARNING)) ;
+      uiCategory.checkValue(users) ;
+      
 			Category cat = new Category();
 			cat.setName(name.trim()) ;
 			cat.setDescription(description) ;
@@ -259,7 +261,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
        if(permType.equals("1") ) uiGroupSelector.setId("UIMebershipSelector") ;
        if(permType.equals("2") ) uiGroupSelector.setId("UIGroupSelector") ;
        uiGroupSelector.setSelectedGroups(null) ;
-       uiGroupSelector.setComponent(categoryForm, new String[]{MODERATOR}) ;
+       uiGroupSelector.setComponent(categoryForm, new String[]{FIELD_MODERATOR_INPUT}) ;
        event.getRequestContext().addUIComponentToUpdateByAjax(childPopup) ;  
 		}
 	}
