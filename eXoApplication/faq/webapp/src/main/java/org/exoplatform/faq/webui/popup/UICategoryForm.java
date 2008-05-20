@@ -123,7 +123,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
     String oldValue = fieldInput.getValue() ;
-    oldValue =  oldValue + "," +  value ;
+    if(oldValue != null && oldValue.trim().length() > 0) {
+    	oldValue =  oldValue + "," +  value ;
+    } else oldValue = value ;
     fieldInput.setValue(filterItemInString(oldValue)) ;
   } 
 
