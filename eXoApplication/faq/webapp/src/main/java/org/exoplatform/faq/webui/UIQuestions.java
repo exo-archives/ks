@@ -367,6 +367,9 @@ public class UIQuestions extends UIContainer {
   public void setCategoryId(String categoryId) {
     this.categoryId_ = categoryId ;
     this.isChangeLanguage = false ;
+    if(categoryId != null && categoryId.trim().length() > 0) {
+      setIsModerators() ;
+    }
   }
   
   public String getQuestionRelationById(String questionId) {

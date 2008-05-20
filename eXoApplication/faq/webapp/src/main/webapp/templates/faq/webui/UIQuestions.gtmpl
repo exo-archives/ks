@@ -15,9 +15,11 @@
   				<div class="CenterBar">
   					<div class="ControlbarCotainer">
 							<%
-							uicomponent.setIsModerators() ;
-							boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
 							String cateId = uicomponent.getCategoryId() ;
+							if(cateId == null || cateId.trim().length() < 1) {
+								uicomponent.setIsModerators() ;
+							}
+							boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
 							String[] categoryAction = null ;
 							String[] moderatorAction = null ;
 							if(cateId != null && cateId.trim().length() > 0){
@@ -199,15 +201,15 @@
 		%>
 		<%
 			if(cateId != null && cateId.trim().length() > 0 ){
-				List listQuestion = uicomponent.getListQuestion() ;
-				String questionContent = new String() ;
-				int questionId = 0 ;
 				String[] questionActions = null ;
 				if(canEditQuestion) {
 					questionActions = uicomponent.getActionQuestion() ;
 				} else {
 					questionActions = uicomponent.getActionQuestionWithUser() ;
 				}
+				List listQuestion = uicomponent.getListQuestion() ;
+				String questionContent = new String() ;
+				int questionId = 0 ;
 				
 				String linkQuestion = "" ;
 				for(question in listQuestion) {
