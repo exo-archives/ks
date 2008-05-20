@@ -139,7 +139,7 @@
 				long questionNotAnswer = cateInfo[2] ;
 	%>
 			<div class="FAQCategory">
-				<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
+				<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
 						<!-- category name -->
 						<% if(categoryName.length() > 100) {
 							categoryName = categoryName.substring(0, 99) + "...";
@@ -150,7 +150,7 @@
 						</a>
 						($numberOfSubCate Category, $numberOfQuestion Questions, $questionNotAnswer Not yet answered)
 						<!-- action of this category -->
-					  
+					<div style="position: relative;">
 						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
 							<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 								<div class="UIContextMenuContainer">
@@ -191,7 +191,7 @@
 								</div>
 							</div>
 						</div>
-					
+					</div>
 				</div>
 			</div>
 	<% 	i ++ ;
@@ -222,11 +222,11 @@
 					}
 		%>
 					<div class="FAQCategory $questionIcon">
-						<div style="position: relative;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+						<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 								<!-- question content -->
 								<a href="$linkQuestion"> $questionContent</a>
 								<!-- action of this question -->
-							  
+							<div style="position: relative;">
 								<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
 									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 										<div class="UIContextMenuContainer">
@@ -273,7 +273,7 @@
 										</div>
 									</div>
 								</div>
-							
+							</div>
 						</div>
 					</div>
 					<%if(uicomponent.getQuestionView().equals(qId)) {

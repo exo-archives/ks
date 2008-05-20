@@ -109,10 +109,17 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
   static public class CancelActionListener extends EventListener<UIDeleteQuestion> {
     public void execute(Event<UIDeleteQuestion> event) throws Exception {
       UIDeleteQuestion deleteQuestion = event.getSource() ;
-      UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      if(!deleteQuestion.isManagement_) {
+        UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
+        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      } else {
+        UIPopupContainer popupContainer = deleteQuestion.getAncestorOfType(UIPopupContainer.class) ;
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      }
     }
   }
 

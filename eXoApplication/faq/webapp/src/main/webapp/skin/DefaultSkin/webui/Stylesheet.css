@@ -205,10 +205,6 @@
   z-index: 100;
 }
 
-.UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIContextMenuContainer {
-  width:140px;
-}
-
 .UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIContextMenuContainer .LineMenu {
   width:150px;
   margin: 4px auto;
@@ -794,15 +790,17 @@ UIFAQPortlet .ResultQuickSearch {
 }
 
 .UIFAQPortlet .TrueIcon {
-  background: url('background/FAQPortlet.gif') no-repeat left -797px;
-  line-height:16px;
-  padding-left:20px;
+	background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -797px;
+	line-height:16px;
+	margin-left:15px;
+	padding-right:15px;
 }
 
 .UIFAQPortlet .LanguageSelectIcon {
   background: url('background/FAQPortlet.gif') no-repeat left -792px;
   line-height:16px;
-  padding-left:20px;
+  margin-left:15px;
+	padding-right:15px;;
 }
 
 .UIFAQPortlet .FalseIcon {

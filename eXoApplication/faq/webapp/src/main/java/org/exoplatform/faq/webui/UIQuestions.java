@@ -620,10 +620,9 @@ public class UIQuestions extends UIContainer {
         uiQuestions.backPath_ = "" ;
         for(int i = 0; i < uiQuestions.listQuestion_.size(); i ++) {
           if(uiQuestions.listQuestion_.get(i).getId().equals(uiQuestions.questionView_)) {
-            Question question = faqService.getQuestionById(uiQuestions.questionView_, FAQUtils.getSystemProvider()) ;
-            uiQuestions.listQuestion_.get(i).setQuestion(question.getQuestion()) ;
-            uiQuestions.listQuestion_.get(i).setLanguage(question.getLanguage()) ;
-            uiQuestions.listQuestion_.get(i).setResponses(question.getResponses()) ;
+            uiQuestions.listQuestion_.get(i).setQuestion(uiQuestions.listQuestionLanguage.get(0).getQuestion()) ;
+            uiQuestions.listQuestion_.get(i).setLanguage(uiQuestions.listQuestionLanguage.get(0).getLanguage()) ;
+            uiQuestions.listQuestion_.get(i).setResponses(uiQuestions.listQuestionLanguage.get(0).getResponse()) ;
             break ;
           }
         }
