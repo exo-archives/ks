@@ -377,9 +377,9 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 	var masklayer = document.getElementById('MaskLayerForum') ;
 	var popupAction = document.getElementById('UIPopupAction') ;
 	var popupWindow = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "UIPopupWindow") ;
-	masklayer.style.width = "auto";
-	masklayer.style.height = "auto";
  	if(popupWindow != null) {
+  	masklayer.style.width = "auto";
+  	masklayer.style.height = "auto";
 	 	if(popupWindow.style.display == "block") {
 			masklayer.style.width = forumPortlet.offsetWidth - 15 + "px";
 			masklayer.style.height = forumPortlet.offsetHeight - 15 + "px";
@@ -395,7 +395,7 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 		var closeButton = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
 		if(closeButton) {
 			var newDiv = eXo.core.DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
-			if(!newDiv)newDiv = document.createElement("div");
+			if(!newDiv) newDiv = document.createElement("div");
 			closeButton.appendChild(newDiv);
 			newDiv.style.width = "16px";
 			newDiv.style.height = "16px";
@@ -408,6 +408,7 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 		}
 	}
 };
+
 
 
 UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
@@ -445,21 +446,5 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 		popupContents[i].innerHTML = popupContainer.innerHTML;
 	}
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
