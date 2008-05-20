@@ -345,3 +345,13 @@
 	z-index:1;
 	position: absolute ;
 }
+
+.UIForumPortlet .ContentAction .UIPopupCategory {
+ top: 0px ;
+ left: 0px ; 
+}
+
+.UIForumPortlet .ToolbarActionsTag .UIPopupCategory {
+ top: 0px ;
+ left: 0px ; 
+}

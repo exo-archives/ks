@@ -185,8 +185,8 @@
 										</div>
 									</div>
 								</div>
-								<div style="position: relative; width:1px;">
 								<% /*Begin Popup Menu*/ %>
+								<div style="position: relative;">
 									<div class="UIPopupCategory" style="display: none; top: 2px;">
 										<div class="UIRightClickPopupMenu" style="display: block; left: -70px;">
 											<div class="UIContextMenuContainer">
@@ -285,8 +285,7 @@
 							</div>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
-								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
-									<div style="position: relative;">
+								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">									
 										<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 											<div class="LeftOverButton" title="Search in this thread">
 												<div class="RightOverButton">
@@ -299,6 +298,7 @@
 											</div>
 										</div>
 									<% /*Begin Popup Menu*/ %>
+									<div style="position: relative;">
 										<div class="UIPopupCategory" style="display: none; ">
 											<div class="UIRightClickPopupMenu" style="display: block;">
 												<div class="UIContextMenuContainer">
@@ -336,14 +336,13 @@
 												</div>
 											</div>
 										</div>
-									<% /*End Popup Menu*/ %>
 									</div>
+									<% /*End Popup Menu*/ %>
 								</div>
 							</div>
 						<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %>	
 							<div class="SeparatorLine"><span></span></div>
-							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-								<div style="position: relative;">
+							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">								
 									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
@@ -356,6 +355,7 @@
 										</div>
 									</div>
 								<% /*Begin Popup Menu*/ %>
+								<div style="position: relative;">
 									<div class="UIPopupCategory" style="display: none; ">
 										<div class="UIRightClickPopupMenu" style="display: block;">
 											<div class="UIContextMenuContainer">
@@ -490,8 +490,8 @@
 											</div>
 										</div>
 									</div>
-								<% /*End Popup Menu*/ %>
 								</div>
+								<% /*End Popup Menu*/ %>
 							</div>
 						<% } %>	
 							<div style="clear: right;"><span></span></div>
@@ -569,9 +569,9 @@
 									<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
 									<div class="Name">$owner</div>
 									<div class="ContentAction" style="float: left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-										<div style="position: relative;">
 											<div class="Action" style="float: none;"><span></span></div>
-											<div class="UIPopupCategory" style="display: none; left: 10px; ">
+										<div style="position: relative;">
+											<div class="UIPopupCategory" style="display: none; left: 2px; top:-2px; ">
 												<div class="UIRightClickPopupMenu" style="display: block;">
 													<div class="UIContextMenuContainer">											
 														<div class="TopLeftRightClickPopupMenu">

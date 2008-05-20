@@ -195,14 +195,13 @@
 											</div>
 										</div>
 									</div>
-								<% /*End Popup Menu*/ %>
 								</div>
+								<% /*End Popup Menu*/ %>
 							</div>
 							<div class="SeparatorLine"><span></span></div>
 						<% } %>
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
-								<div style="position: relative;">
 									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 										<div class="LeftOverButton" title="Search in this forum">
 											<div class="RightOverButton">
@@ -215,6 +214,7 @@
 										</div>
 									</div>
 								<% /*Begin Popup Menu*/ %>
+								<div style="position: relative;">
 									<div class="UIPopupCategory" style="display: none; ">
 										<div class="UIRightClickPopupMenu" style="display: block;">
 											<div class="UIContextMenuContainer">
@@ -259,7 +259,6 @@
 						<% if(isShowMenu && canEdit) { %>	
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-								<div style="position: relative;">
 									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
@@ -272,6 +271,7 @@
 										</div>
 									</div>
 								<% /*Begin Popup Menu*/ %>
+								<div style="position: relative;">
 									<div class="UIPopupCategory" style="display: none; ">
 										<div class="UIRightClickPopupMenu" style="display: block;">
 											<div class="UIContextMenuContainer">
@@ -336,8 +336,8 @@
 											</div>
 										</div>
 									</div>
-								<% /*End Popup Menu*/ %>
 								</div>
+								<% /*End Popup Menu*/ %>
 							</div>
 						<% } %>	
 							<div style="clear: both;"><span></span></div>
