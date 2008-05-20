@@ -108,11 +108,6 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
       for(Object child : userPageList.getAll()){
       	String userName = ((User)child).getUserName() ;
         children.add(userName) ;
-//        if(getUIFormCheckBoxInput(userName) != null) {
-//  				getUIFormCheckBoxInput(userName).setChecked(false) ;
-//  			}else {
-//  				this.addUIFormInput(new UIFormCheckBoxInput(userName, userName, false) );
-//  			}
       }
     } else if(TYPE_MEMBERSHIP.equals(type_)) {
       for(String child :  getListMemberhip()){
