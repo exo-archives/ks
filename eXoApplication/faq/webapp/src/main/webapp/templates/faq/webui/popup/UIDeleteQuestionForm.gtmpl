@@ -2,7 +2,7 @@
 	<% uiform.begin() %>
 		<div style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; border: 1px solid #E6F3F3">
 			<div style="margin: 5px 2px 10px 2px;">
-				<center><font size="2px"><b>Do you really want to delete this question and its anwers ?????</b></font></center>
+				<center><font size="2px"><b>Do you really want to delete this question and its answers ?</b></font></center>
 			</div>
 			<%
 			String author = uicomponent.getAuthor() ;
