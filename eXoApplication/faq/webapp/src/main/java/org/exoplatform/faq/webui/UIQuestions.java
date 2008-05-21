@@ -256,7 +256,7 @@ public class UIQuestions extends UIContainer {
   //Need to make API to check this info, Do NOT do as now 
 	@SuppressWarnings("unused")
 	private long[] getCategoryInfo(String categoryId) {
-    long[] result = new long[]{0,0,0} ;
+    long[] result = new long[]{0, 0, 0, 0} ;
 	  try {
       result = faqService.getCategoryInfo(categoryId, FAQUtils.getSystemProvider()) ;
 	  } catch (Exception e) {
@@ -271,18 +271,16 @@ public class UIQuestions extends UIContainer {
 	}
 	
   public void setListQuestion() throws Exception {
-    //if(!this.isChangeLanguage) {
-      try{
-        SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-        if(!canEditQuestion) {
-          this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
-        } else {
-          this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
-        }
-      } catch(Exception e) {
-        e.printStackTrace() ;
+    try{
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+      if(!canEditQuestion) {
+        this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
+      } else {
+        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
       }
-    //}
+    } catch(Exception e) {
+      e.printStackTrace() ;
+    }
     setCategories() ;
   }
   
@@ -722,7 +720,7 @@ public class UIQuestions extends UIContainer {
       UIMoveQuestionForm moveQuestionForm = popupContainer.addChild(UIMoveQuestionForm.class, null, null) ;
       moveQuestionForm.setQuestionId(questionId) ;
       popupContainer.setId("FAQMoveQuestion") ;
-      popupAction.activate(popupContainer, 400, 200) ;
+      popupAction.activate(popupContainer, 500, 200) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
