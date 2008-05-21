@@ -1641,6 +1641,11 @@ public class JCRDataStorage{
 			}
 			if(isLogin) {
 				newProfileNode.setProperty("exo:lastLoginDate", getGreenwichMeanTime()) ;
+				if(userProfile.getIsBanned()) {
+					if(userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+						newProfileNode.setProperty("exo:isBanned", false) ;
+					}
+				}
 				userProfileNode.getSession().save() ;
 			}
 			return userProfile;
