@@ -561,7 +561,7 @@ public class JCRDataStorage {
   }
   
   public long[] getCategoryInfo( String categoryId, SessionProvider sProvider) throws Exception  {
-    long[] cateInfo = new long[]{0, 0, 0};
+    long[] cateInfo = new long[]{0, 0, 0, 0};
     Node parentCategory ;
     parentCategory = getCategoryNodeById(categoryId, sProvider) ;
     NodeIterator iter = parentCategory.getNodes() ;
@@ -574,7 +574,8 @@ public class JCRDataStorage {
         append("]").append("order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    cateInfo[1] = result.getNodes().getSize() ;
+    NodeIterator nodeIterator = result.getNodes() ;
+    cateInfo[1] = nodeIterator.getSize() ;
     
     queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
         + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
@@ -582,6 +583,15 @@ public class JCRDataStorage {
     query = qm.createQuery(queryString.toString(), Query.XPATH);
     result = query.execute();
     cateInfo[2] = result.getNodes().getSize() ;
+    
+    Node questionNode = null;
+    while(nodeIterator.hasNext()) {
+      questionNode = nodeIterator.nextNode() ;
+      if(questionNode.hasProperty("exo:isApproved") && !questionNode.getProperty("exo:isApproved").getBoolean()) {
+        cateInfo[3] ++ ;
+      }
+    }
+    
     return cateInfo ;
   }
   

@@ -330,6 +330,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     @SuppressWarnings("static-access")
     public void execute(Event<UIQuestionForm> event) throws Exception {
       Node questionNode = null ;
+      boolean questionIsApproved = true ;
       ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
 			UIQuestionForm questionForm = event.getSource() ;			
       DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
@@ -374,7 +375,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
         question_.setResponses(" ") ;
-        question_.setApproved(!(fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions())) ;
+        questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions() ;
+        question_.setApproved(questionIsApproved) ;
       } else {
         boolean isApproved = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
         boolean isActivated = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked() ;
@@ -408,6 +410,18 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
           e.printStackTrace() ;
         }
       }
+      if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
+        if(questionIsApproved) {
+          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.add-new-question-successful", null, ApplicationMessage.INFO)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        } else {
+          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-not-is-approved", null, ApplicationMessage.INFO)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        }
+      }
+      
       if(!questionForm.isChildOfManager) {
         UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
