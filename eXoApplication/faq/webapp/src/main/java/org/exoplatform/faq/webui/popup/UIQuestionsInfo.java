@@ -108,6 +108,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     return isResponseTab_ ;
   }
   
+  @SuppressWarnings("unused")
   private long getTotalpages(String pageInteratorId) {
     UIFAQPageIterator pageIterator = this.getChildById(pageInteratorId) ;
     try {

@@ -498,6 +498,10 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .UISendMailForm #To{
   width: 400px ;
 }
+.UIFAQPortlet .UISendMailForm #FAQSelectCateList{
+  width: 150px ;
+}
+
 
 .UIFAQPortlet .UISendMailForm .HorizontalLayout {
   padding: 8px;
@@ -738,11 +742,6 @@ UIFAQPortlet .ResultQuickSearch {
   width: 16px; height: 16px;
 }
 
-.UIFAQPortlet .NotResponse {
-  background:transparent url(background/NotResponse.gif) no-repeat left;
-  width: 16px; height: 16px;
-}
-
 .UIFAQPortlet .CategoryIcon {
   background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -466px;
   width: 17px; height: 17px;
@@ -805,7 +804,8 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .FalseIcon {
   background: url('background/FAQPortlet.gif') no-repeat left -893px;
   line-height:16px;
-  padding-left:20px;
+	margin-left:15px;
+	padding-right:15px;
 }
 
 .UIPrintPreview {

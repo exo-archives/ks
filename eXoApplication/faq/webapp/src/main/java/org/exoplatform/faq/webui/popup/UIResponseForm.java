@@ -80,6 +80,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private static final String REMOVE_FILE_ATTACH = "RemoveFile" ;
   private static final String FILE_ATTACHMENTS = "FileAttach" ;
   private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
+  private static final String IS_APPROVED = "IsApproved" ;
   private static Question question = null ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   
@@ -89,6 +90,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private UIFormWYSIWYGInput reponseQuestion_ ; 
   private UIFormInputWithActions inputAttachment_ ; 
   private UIFormCheckBoxInput checkShowAnswer_ ;
+  private UIFormCheckBoxInput isApproved_ ;
   
   // question infor :
   private String questionId_ = new String() ;
@@ -159,6 +161,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
       reponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, null, null , true) ;
       checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, question.isActivated()) ;
+      isApproved_ = new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false) ;
+      isApproved_.setChecked(question.isApproved()) ;
       inputAttachment_ = new UIFormInputWithActions(ATTATCH_MENTS) ;
       inputAttachment_.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
       try{
@@ -181,6 +185,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       this.removeChildById(RESPONSE_CONTENT) ; 
       this.removeChildById(ATTATCH_MENTS) ; 
       this.removeChildById(SHOW_ANSWER) ; 
+      this.removeChildById(IS_APPROVED) ; 
       questionLanguages_.setOptions(getListLanguageToReponse()) ;
       reponseQuestion_.setValue(responseContent_);
       questionContent_.setValue(questionChanged_) ;
@@ -190,6 +195,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     addChild(questionContent_) ;
     addChild(questionLanguages_) ;
     addChild(reponseQuestion_) ;
+    addChild(isApproved_) ;
     addChild(checkShowAnswer_.setChecked(isChecked)) ;
     addChild(inputAttachment_) ;
     
@@ -290,6 +296,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     this.removeChildById(QUESTION_LANGUAGE) ;
     this.removeChildById(RESPONSE_CONTENT) ; 
     this.removeChildById(ATTATCH_MENTS) ; 
+    this.removeChildById(IS_APPROVED) ;
     this.removeChildById(SHOW_ANSWER) ;
     listFileAttach_.clear() ;
     listLanguageToReponse.clear() ;
@@ -364,6 +371,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       question.setRelations(response.getListIdQuesRela().toArray(new String[]{})) ;
       
       // set show question:
+      question.setApproved(((UIFormCheckBoxInput<Boolean>)response.getChildById(IS_APPROVED)).isChecked()) ;
       question.setActivated(((UIFormCheckBoxInput<Boolean>)response.getChildById(SHOW_ANSWER)).isChecked()) ;
       
       question.setAttachMent(response.listFileAttach_) ;
