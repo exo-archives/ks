@@ -3,7 +3,7 @@
 		<div style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; border: 1px solid #E6F3F3">
 			<table>
 				<tr>
-					<td align="right" width="50%"> <div style="margin: 5px 10px 5px 2px;"> Do you want move this question to: </div></td>
+					<td align="right" width="200px"> <div style="margin: 5px 10px 5px 2px;"> Do you want move this question to: </div></td>
 					<td align="left"> <div style="margin: 5px 10px 5px 2px;">
 						<%for(field in uiform.getChildren()) { 
 								if(field.isRendered() && field != null) {

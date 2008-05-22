@@ -152,9 +152,9 @@ public class UIQuestions extends UIContainer {
   private String[] getActionQuestion(){
     String[] action ;
     if(canEditQuestion) {
-      action = new String[]{"ResponseQuestion","EditQuestion","DeleteQuestion","MoveQuestion","PrintQuestion","SendQuestion"} ;
+      action = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
     } else {
-      action = new String[]{"PrintQuestion","SendQuestion"} ;
+      action = new String[]{"SendQuestion"} ;
     }
     return action ;
   }

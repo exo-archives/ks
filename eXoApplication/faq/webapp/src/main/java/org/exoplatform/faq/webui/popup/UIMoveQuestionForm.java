@@ -76,9 +76,14 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
     faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
     List<SelectItemOption<String>> listOption = new ArrayList<SelectItemOption<String>>() ;
     for(Category category : faqService.getAllCategories(FAQUtils.getSystemProvider()) ){
-      listOption.add(new SelectItemOption<String>(category.getName(), category.getId())) ;
+      if(category.getName().length() > 40) {
+        listOption.add(new SelectItemOption<String>(category.getName().substring(0, 39) + "...", category.getId())) ;
+      } else {
+        listOption.add(new SelectItemOption<String>(category.getName(), category.getId())) ;
+      }
     }
-    addChild(new UIFormSelectBox(LIST_CATEGORY, LIST_CATEGORY,listOption)) ;
+    UIFormSelectBox formSelectBox = new UIFormSelectBox(LIST_CATEGORY, LIST_CATEGORY,listOption) ;
+    addChild(formSelectBox) ;
   }
   
   static public class OkActionListener extends EventListener<UIMoveQuestionForm> {

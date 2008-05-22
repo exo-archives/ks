@@ -604,6 +604,11 @@ UIFAQPortlet .ResultQuickSearch {
 	width:500px;
 }
 
+/******************************  UIQuestionsInfo  ***************************************/
+.UITabPane .UITabContentContainer .UIIETabContent {
+	_padding: 15px 7px 30px;
+}
+
 /******************************  Icon  ***************************************/
 
 .UIFAQPortlet .FAQToolbar .Icon {

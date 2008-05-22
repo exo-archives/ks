@@ -1,13 +1,20 @@
 <div class="FAQUIQuestionManagerForm $uicomponent.id" >
-	<% uicomponent.renderChild("QuestionInfo") ; %>
-	<%
-	if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
-		 uicomponent.renderChild("QuestionForm") ;
-	}
-	if(uicomponent.isViewResponseQuestion && uicomponent.isResponseQuestion){
-		 uicomponent.renderChild("ResponseForm") ;
-	}
-	%>
+	<div>
+		<div id="FAQViewTabContent" style="float: left">
+			<% uicomponent.renderChild("QuestionInfo") ; %>
+		</div>
+		<div id="FAQViewFormContent" style="float: left; padding-top: 10px">
+			<%
+			if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
+				 uicomponent.renderChild("QuestionForm") ;
+			}
+			if(uicomponent.isViewResponseQuestion && uicomponent.isResponseQuestion){
+				 uicomponent.renderChild("ResponseForm") ;
+			}
+			%>
+		</div>
+		<div style="clear:left"><span></span></div>
+	</div>
 	<% uiform.begin() %>
 	<div class="UIAction"> 
 		<table class="ActionContainer" align="center">
