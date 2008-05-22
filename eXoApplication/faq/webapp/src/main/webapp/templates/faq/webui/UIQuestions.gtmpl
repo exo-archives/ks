@@ -285,20 +285,17 @@
 						</div>
 					</div>
 					<%if(uicomponent.getQuestionView().equals(qId)) {
-						String[] arrayString ;
 						String responseBy = "..." ;
 						String date = "..." ;
 						String response = "<center><b>This question not yet answered</center></b>" ;
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+							String[] arrayString ;
 							arrayString = question.getResponses().split("/") ;
 							responseBy = arrayString[0] ;
 							date = arrayString[1] ;
 							response = "" ;
-							for(int t = 2 ; t < arrayString.length ; t ++) {
-								if(arrayString[t].trim().length() > 0)
-									response += arrayString[t];
-							}
+							response = question.getResponses().replaceAll(responseBy + "/", "").replaceAll(date + "/", "") ;
 						}
 					%>
 						<div class="ResponseContent">

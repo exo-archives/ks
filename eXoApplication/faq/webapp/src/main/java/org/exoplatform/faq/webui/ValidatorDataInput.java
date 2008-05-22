@@ -65,12 +65,4 @@ public class ValidatorDataInput {
       return false ;
     }
   }
-  
-  public String fckConvertHtmlTab(String input) {
-    input = input.replaceAll("<p>&nbsp;</p>", "") ;
-    input = input.replaceAll("<p>", "") ;
-    input = input.replaceAll("</p>", "<br>") ;
-    input = input.replaceAll("&nbsp;", " ") ;
-    return input ;
-  }
 }

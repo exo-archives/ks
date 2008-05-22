@@ -343,12 +343,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       if(question.getLanguage().equals(response.languageIsResponsed)) {
         question.setQuestion(questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
         //set response of question
-        question.setResponses(user + "/" + date + "/" + validatorDataInput.fckConvertHtmlTab(responseQuestionContent));
+        question.setResponses(user + "/" + date + "/" + responseQuestionContent);
       } else {
         question.setQuestion(response.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
         String responseContent = response.listQuestionLanguage.get(0).getResponse() ;
         if(responseContent != null && responseContent.trim().length() > 1 && validatorDataInput.fckContentIsNotEmpty(responseContent)) {
-          question.setResponses(user + "/" + date + "/" + validatorDataInput.fckConvertHtmlTab(responseContent)) ;
+          question.setResponses(user + "/" + date + "/" + responseContent) ;
         } else {
           UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
           uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-invalid", new String[]{question.getLanguage()}, ApplicationMessage.WARNING)) ;
@@ -358,11 +358,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         for(QuestionLanguage questionLanguage : response.listQuestionLanguage) {
           if(questionLanguage.getLanguage().equals(response.languageIsResponsed)) {
             questionLanguage.setQuestion(questionContent) ;
-            questionLanguage.setResponse(user + "/" + date + "/" + validatorDataInput.fckConvertHtmlTab(responseQuestionContent)) ;
+            questionLanguage.setResponse(user + "/" + date + "/" + responseQuestionContent) ;
           } else {
             if(questionLanguage.getResponse() != null && questionLanguage.getResponse().trim().length() > 0 && 
                 validatorDataInput.fckContentIsNotEmpty(questionLanguage.getResponse())) {
-              questionLanguage.setResponse(user + "/" + date + "/" + validatorDataInput.fckConvertHtmlTab(questionLanguage.getResponse())) ;
+              questionLanguage.setResponse(user + "/" + date + "/" + questionLanguage.getResponse()) ;
             }
           }
         }
