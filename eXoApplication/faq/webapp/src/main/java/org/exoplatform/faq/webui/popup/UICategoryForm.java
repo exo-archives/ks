@@ -19,9 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
@@ -32,7 +30,6 @@ import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.organization.OrganizationConfig.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -56,6 +53,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
  * Aus 01, 2007 2:48:18 PM 
  */
 
+@SuppressWarnings({ "unused", "unused" })
 //@SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
@@ -74,10 +72,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   final private static String FIELD_MODERATOR_INPUT = "moderator" ;
   final private static String FIELD_MODERATEQUESTIONS_CHECKBOX = "moderatequestions" ;
   private static FAQService faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  @SuppressWarnings("unused")
-  private boolean isAddNew_ = true ;
+  private static boolean isAddNew_ = true ;
   
 	public UICategoryForm() throws Exception {}
+	
 	public void init(boolean isAddNew) throws Exception {
 		isAddNew_ = isAddNew ;
 		FAQSetting faSetting = faqService_.getFAQSetting(FAQUtils.getSystemProvider()) ;
@@ -191,6 +189,14 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
       String moder = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       String moderator = uiCategory.filterItemInString(moder) ;
+      StringBuffer string = new StringBuffer();
+      char c;
+      for (int i = 0; i < moderator.length(); i++) {
+       c = moderator.charAt(i) ;
+       if(c == 32) continue ;
+       string.append(c) ;
+        }
+      moderator = string.toString();
       Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
@@ -206,7 +212,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
-			
+			Boolean isNew = true ;
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentId() ;
 			if(parentCate != null && parentCate.length() > 0) {
@@ -221,13 +227,17 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
           }
           cat.setModerators(listUser.toArray(new String[]{})) ;
         /*-----End---------------------*/
-				if(uiCategory.categoryId_.length() > 0) {
-					cat.setId(uiCategory.categoryId_) ;
-					faqService_.saveCategory(parentCate, cat, false, FAQUtils.getSystemProvider());
+        try {
+					if(uiCategory.categoryId_.length() > 0) {
+						cat.setId(uiCategory.categoryId_) ;
+					}
+					faqService_.saveCategory(parentCate, cat, isAddNew_, FAQUtils.getSystemProvider());
 					faqPortlet.cancelAction() ;
-				} else {
-					faqService_.saveCategory(parentCate, cat, true, FAQUtils.getSystemProvider());
-					faqPortlet.cancelAction() ;
+        } catch (Exception e) {
+        		uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
+              ApplicationMessage.INFO)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+            return ; 
 				}
 				UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				questions.setCategories() ;
@@ -236,13 +246,18 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			} 
       
       cat.setModerators(users) ;
-			if(uiCategory.categoryId_.length() > 0) {
-				cat.setId(uiCategory.categoryId_) ;
-				faqService_.saveCategory(null, cat, false, FAQUtils.getSystemProvider());
+      try {
+				if(uiCategory.categoryId_.length() > 0) {
+					cat.setId(uiCategory.categoryId_) ;
+				} 
+				faqService_.saveCategory(null, cat, isAddNew_, FAQUtils.getSystemProvider());
 				faqPortlet.cancelAction() ;
-			} else {
-				faqService_.saveCategory(null, cat, true, FAQUtils.getSystemProvider());
-				faqPortlet.cancelAction() ;
+				
+      } catch (Exception e) {
+      		uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
+            ApplicationMessage.INFO)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+          return ; 
 			}
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			questions.setCategories() ;
