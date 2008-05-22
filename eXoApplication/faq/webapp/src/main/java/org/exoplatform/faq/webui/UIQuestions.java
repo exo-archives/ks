@@ -230,10 +230,14 @@ public class UIQuestions extends UIContainer {
       if(isContinue) {
         canEditQuestion = false ;
         for(Category category : categories_) {
-          if(Arrays.asList(category.getModerators()).contains(currentUser_)) {
-            categoryModerators.add(true) ;
-          }else {
-            categoryModerators.add(false) ;
+          try {
+            if(Arrays.asList(category.getModeratorsCategory()).contains(currentUser_)) {
+              categoryModerators.add(true) ;
+            }else {
+              categoryModerators.add(false) ;
+            }
+          } catch (Exception e) {
+            e.printStackTrace();
           }
         }
       }
@@ -365,9 +369,9 @@ public class UIQuestions extends UIContainer {
   public void setCategoryId(String categoryId) {
     this.categoryId_ = categoryId ;
     this.isChangeLanguage = false ;
-    if(categoryId != null && categoryId.trim().length() > 0) {
+    /*if(categoryId != null && categoryId.trim().length() > 0) {
       setIsModerators() ;
-    }
+    }*/
   }
   
   public String getQuestionRelationById(String questionId) {
