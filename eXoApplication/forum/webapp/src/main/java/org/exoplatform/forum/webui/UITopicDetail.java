@@ -29,6 +29,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -1036,12 +1037,17 @@ public class UITopicDetail extends UIForm {
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
 			ForumAdministration forumAdministration = topicDetail.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
-			String []censoredKeyword = ForumFormatUtils.splitForForum(forumAdministration.getCensoredKeyword()) ;
-			boolean isOffend = false ; 
-			for (String string : censoredKeyword) {
-	      if(message.indexOf(string.trim()) >= 0) isOffend = true ;
-      }
-			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			boolean isOffend = false ;
+			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
+			String stringKey = forumAdministration.getCensoredKeyword();
+			if(stringKey != null && stringKey.length() > 0) {
+				stringKey = stringKey.toLowerCase() ;
+				String []censoredKeyword = ForumFormatUtils.splitForForum(stringKey) ;
+				checksms = checksms.toLowerCase().trim();
+				for (String string : censoredKeyword) {
+		      if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
+	      }
+			}
 			StringBuffer buffer = new StringBuffer();
 			for (int j = 0; j < message.length(); j++) {
 				char c = message.charAt(j); 
@@ -1097,7 +1103,7 @@ public class UITopicDetail extends UIForm {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;	
 			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
-			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
 			StringBuffer buffer = new StringBuffer();
 			for (int j = 0; j < message.length(); j++) {
 				char c = message.charAt(j); 

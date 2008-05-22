@@ -1,13 +1,14 @@
 <%  
 	import org.exoplatform.forum.service.Post ;
 	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 %>
 <div class="UIViewPost">
   <% uiform.begin() %>  
 	<% Post post = uicomponent.getPostView(); 
 		 String title = post.getName();	
-		 String messager = ForumFormatUtils.convertCodeHTML(post.getMessage());
+		 String messager = ForumTransformHTML.convertCodeHTML(post.getMessage());
 		 String classIcon = post.getIcon() ;
 		 UserProfile userProfile = uicomponent.getUserProfile();
 		 String postCreatedDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),post.getCreatedDate());	

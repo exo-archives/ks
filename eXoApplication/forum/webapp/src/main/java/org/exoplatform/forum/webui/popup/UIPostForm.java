@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
@@ -192,7 +193,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				if(post.getName().indexOf(": ") > 0) title = post.getName() ;
 				else title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getName() ;
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
-				String value = "[QUOTE=" + post.getOwner() + "]" + ForumFormatUtils.clearQuote(message) + "[/QUOTE]<br/>";
+				String value = "[QUOTE=" + post.getOwner() + "]" + ForumTransformHTML.clearQuote(message) + "[/QUOTE]<br/>";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
@@ -233,7 +234,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 //			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(postTitle.length() <= 3) {k = 0;}
@@ -254,6 +255,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true)	;
 				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
+				viewPost.setId("viewPost") ;
 				viewPost.setPostView(post) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}else {
@@ -279,17 +281,23 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				//uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
 			PortletRequestImp request = event.getRequestContext().getRequest();
 			String remoteAddr = request.getRemoteAddr();
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
-			String []censoredKeyword = ForumFormatUtils.splitForForum(forumAdministration.getCensoredKeyword()) ;
 			boolean isOffend = false ; 
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
-			for (String string : censoredKeyword) {
-	      if(checksms.indexOf(string.trim()) >= 0) isOffend = true ;
-      }
-			t = checksms.trim().length() ;
+			String stringKey = forumAdministration.getCensoredKeyword();
+			if(stringKey != null && stringKey.length() > 0) {
+				stringKey = stringKey.toLowerCase() ;
+				String []censoredKeyword = ForumFormatUtils.splitForForum(stringKey) ;
+				checksms = checksms.toLowerCase().trim();
+				for (String string : censoredKeyword) {
+		      if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
+		      if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
+	      }
+			}
+			t = checksms.length() ;
 			if(postTitle.trim().length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
         Post post = new Post();

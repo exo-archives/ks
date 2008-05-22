@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
@@ -310,7 +311,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String topicTitle = "  " + stringInputTitle.getValue();
 			topicTitle = topicTitle.trim() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
@@ -330,6 +331,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
+				viewPost.setId("UIViewTopic") ;
 				viewPost.setPostView(postNew) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}else {
@@ -360,18 +362,20 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			topicTitle = topicTitle.trim() ;
 //			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumFormatUtils.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
-			
 			ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
-			String []censoredKeyword = ForumFormatUtils.splitForForum(forumAdministration.getCensoredKeyword()) ;
 			boolean isOffend = false ; 
-			checksms = checksms.replaceAll("&nbsp;", " ") ;
-			for (String string : censoredKeyword) {
-	      if(checksms.indexOf(string.trim()) >= 0) isOffend = true ;
-      }
-			
-			
+			String stringKey = forumAdministration.getCensoredKeyword() ;
+			if(stringKey != null && stringKey.length() > 0) {
+				stringKey = stringKey.toLowerCase() ;
+				String []censoredKeyword = ForumFormatUtils.splitForForum(stringKey) ;
+				checksms = checksms.toLowerCase();
+				for (String string : censoredKeyword) {
+		      if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
+		      if(topicTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
+	      }
+			}
 			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	

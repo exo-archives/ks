@@ -22,6 +22,7 @@ import java.util.TreeMap;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
@@ -165,7 +166,7 @@ public class UITopicsTag extends UIForm {
 	
 	@SuppressWarnings("unused")
 	private String getStringCleanHtmlCode(String sms) {
-		return ForumFormatUtils.getStringCleanHtmlCode(sms);
+		return ForumTransformHTML.getStringCleanHtmlCode(sms);
 	}
 	
 	@SuppressWarnings("unused")

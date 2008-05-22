@@ -7,6 +7,7 @@
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.ForumSessionUtils; 
 	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.contact.service.Contact ;
@@ -528,7 +529,7 @@
 				Date createdPostDate = post.getCreatedDate() ;
 				createdPostDate.setTime(createdPostDate.getTime() - setTime);
 				String createdDate = ForumFormatUtils.getFormatDate(longDateFormat,createdPostDate);
-				String message = ForumFormatUtils.convertCodeHTML(post.getMessage()) ;
+				String message = ForumTransformHTML.convertCodeHTML(post.getMessage()) ;
 				String editBy = post.getModifiedBy() ;
 				String editDate ;
 				if(editBy != null && editBy.length() > 0) {

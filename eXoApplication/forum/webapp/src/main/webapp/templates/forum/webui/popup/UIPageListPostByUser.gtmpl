@@ -2,6 +2,7 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator ;
 	import org.exoplatform.forum.service.Post ; 
 	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	List posts = uicomponent.getPostsByUser() ;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
@@ -38,7 +39,7 @@
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String postTitle = post.getName() ;
-									String message = ForumFormatUtils.getStringCleanHtmlCode(post.getMessage()) ;
+									String message = ForumTransformHTML.getStringCleanHtmlCode(post.getMessage()) ;
 									String titlePost ;
 									if(message.length() > 100) titlePost = message.substring(0, 100) + "..." ;
 									else titlePost = message ;
