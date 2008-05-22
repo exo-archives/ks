@@ -16,9 +16,9 @@
   					<div class="ControlbarCotainer">
 							<%
 							String cateId = uicomponent.getCategoryId() ;
-							//if(cateId == null || cateId.trim().length() < 1) {
+							if(cateId == null || cateId.trim().length() < 1) {
 								uicomponent.setIsModerators() ;
-							//}
+							}
 							boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
 							String[] categoryAction = null ;
 							String[] moderatorAction = null ;

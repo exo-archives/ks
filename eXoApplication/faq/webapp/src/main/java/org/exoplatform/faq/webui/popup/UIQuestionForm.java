@@ -223,10 +223,12 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     return this.defaultLanguage_;
   }
   
+  @SuppressWarnings("unused")
   private String getAuthor() {return this.author_ ; }
   public void setAuthor(String author) {this.author_ = author ;}
   
   
+  @SuppressWarnings("unused")
   private String getEmail() {return this.email_ ; }
   public void setEmail(String email) {this.email_ = email ;}
   
@@ -287,6 +289,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     listFileAttach_.add(fileAttachment) ;
   }
   
+  @SuppressWarnings("unused")
   private List<FileAttachment> getListFile() {
     return listFileAttach_ ;
   }
@@ -326,7 +329,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   }
 	
 	static public class SaveActionListener extends EventListener<UIQuestionForm> {
-    @SuppressWarnings("static-access")
+    @SuppressWarnings({ "static-access", "unchecked" })
     public void execute(Event<UIQuestionForm> event) throws Exception {
       Node questionNode = null ;
       boolean questionIsApproved = true ;
@@ -377,9 +380,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions() ;
         question_.setApproved(questionIsApproved) ;
       } else {
-        boolean isApproved = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
-        boolean isActivated = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked() ;
-        question_.setApproved(isApproved) ;
+        question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
         question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;
       }
       question_.setLanguage(questionForm.getDefaultLanguage()) ;

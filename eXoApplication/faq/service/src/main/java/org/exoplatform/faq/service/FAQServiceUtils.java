@@ -32,6 +32,18 @@ import org.exoplatform.services.organization.User;
  * May 10, 2008, 4:26:37 PM
  */
 public class FAQServiceUtils {
+  String admin = "/platform/administrators" ;
+  OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  @SuppressWarnings("unchecked")
+  public boolean isAdmin(String user) {
+    try {
+      List<User> userList = organizationService.getUserHandler().findUsersByGroup(admin).getAll() ;
+      if(userList.contains(user)) return true ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return false ;
+  }
 
   @SuppressWarnings("unchecked")
   public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {

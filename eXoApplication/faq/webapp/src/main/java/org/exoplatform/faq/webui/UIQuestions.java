@@ -31,6 +31,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -185,13 +186,13 @@ public class UIQuestions extends UIContainer {
   }
 	
   public void setCategories(String categoryId) throws Exception  {
-  	this.categoryId_ = categoryId ;
-    categories_ = faqService.getSubCategories(categoryId, FAQUtils.getSystemProvider()) ;
+  	setCategoryId(categoryId) ;
   }
   
   private void setIsModerators() {
     categoryModerators.clear() ;
-    if(currentUser_.equals("root")) {
+    FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+    if(serviceUtils.isAdmin(currentUser_)) {
       canEditQuestion = true ;
       for(int i = 0 ; i < this.categories_.size(); i ++) {
         this.categoryModerators.add(true);
@@ -274,7 +275,7 @@ public class UIQuestions extends UIContainer {
 //		this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId)) ;
 	}
 	
-  public void setListQuestion() throws Exception {
+  public void setListQuestion() {
     try{
       SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
       if(!canEditQuestion) {
@@ -285,7 +286,6 @@ public class UIQuestions extends UIContainer {
     } catch(Exception e) {
       e.printStackTrace() ;
     }
-    setCategories() ;
   }
   
   public void setListQuestion(List<Question> listQuestion) {
@@ -366,12 +366,13 @@ public class UIQuestions extends UIContainer {
     return this.categoryId_ ;
   }
   
-  public void setCategoryId(String categoryId) {
+  public void setCategoryId(String categoryId)  throws Exception {
     this.categoryId_ = categoryId ;
     this.isChangeLanguage = false ;
-    /*if(categoryId != null && categoryId.trim().length() > 0) {
+    setCategories() ;
+    if(categoryId != null && categoryId.trim().length() > 0) {
       setIsModerators() ;
-    }*/
+    }
   }
   
   public String getQuestionRelationById(String questionId) {
