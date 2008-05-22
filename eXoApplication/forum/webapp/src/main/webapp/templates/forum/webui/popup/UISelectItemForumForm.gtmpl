@@ -9,19 +9,12 @@
 	  <div class="TreeContainer ParentNode">
 		<% 
 			List categories = uicomponent.getForumLinks(); 
-			boolean IsTopic = uicomponent.getIsTopic() ;
 			for(category in categories) {
 			 if(category.getType().equals("category")) {
 				String display = "display:none;" ;
 				String iconClass = "SmallGrayMinus" ;
 				String isShow = "true";
-				//boolean selectForum = false ;
 		  	String categoryName = category.getName() ;
-		  	//selectForum = uicomponent.getSelectForum(category.getId()) ;
-		  	//if(selectForum){ 
-	  		//	display = "display:block;" ;
-	  		//	iconClass = "SmallGrayPlus" ;
-	  		//}
 		  	List forums =  uicomponent.getForums(category.getId());
 	  		if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
 		%>

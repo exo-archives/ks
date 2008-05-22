@@ -126,7 +126,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		}
 	
 		UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list) ;
-		longDateFormat.setValue(userProfile.getLongDateFormat());
+		longDateFormat.setValue(userProfile.getLongDateFormat().replaceFirst(" ", "="));
 		list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>("12-hour","hh:mm=a")) ;
 		list.add(new SelectItemOption<String>("24-hour","HH:mm")) ;

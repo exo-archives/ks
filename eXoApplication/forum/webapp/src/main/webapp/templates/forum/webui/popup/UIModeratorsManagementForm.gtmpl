@@ -78,9 +78,7 @@
 	<div style="overflow:auto;">
 		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 	</div>
-<% if(uiform.getIsEdit()) { 
-  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setMenuTextAreaMutil('ForumUserProfile');");
-%>
+<% if(uiform.getIsEdit()) { %>
 	<div class="UIFormTabPane">
     <div class="UITabPane">
       <div class="TabPaneContent">
@@ -152,10 +150,6 @@
       </div>  
     </div>  
   </div>
-	<div id="ActionsTextAreaMulil" style="display: none;">
-		<a class="ChildAction" id="AddModForums" href="<%=uicomponent.event("AddValuesArea","ModForums");%>"><%=uicomponent.event("AddValuesArea","ModForums");%></a>
-		<a class="ChildAction" id="AddMosTopics" href="<%=uicomponent.event("AddValuesArea","ModTopics");%>"><%=uicomponent.event("AddValuesArea","MosTopics");%></a>
-	</div>
 <% } %>
   <div class="UIAction"> 
 		<table class="ActionContainer" align="center">

@@ -53,9 +53,6 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 )
 public class UISelectItemForum extends UIForm implements UIPopupComponent {
 	List<ForumLinkData> forumLinks = null;
-	private boolean isTopic = false ;
-	@SuppressWarnings("unused")
-  private String IdChild = "" ;
 	private Map<String, List<ForumLinkData>> mapListForum = new HashMap<String, List<ForumLinkData>>() ;
 	private Map<String, List<ForumLinkData>> mapListTopic = new HashMap<String, List<ForumLinkData>>() ;
 	public UISelectItemForum() {
@@ -72,15 +69,6 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 		}
 	}
 	
-	public void setIsTopic(boolean isTopic, String IdChild) {
-		this.isTopic = isTopic ;
-		this.IdChild = IdChild ;
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean getIsTopic() {
-		return this.isTopic ;
-	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<ForumLinkData> getForumLinks() throws Exception {

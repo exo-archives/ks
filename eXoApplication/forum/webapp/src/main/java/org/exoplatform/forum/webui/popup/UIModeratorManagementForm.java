@@ -29,7 +29,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UICategories;
-import org.exoplatform.forum.webui.UIFormTextAreaMultilInput;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -47,6 +46,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 
 /**
  * Created by The eXo Platform SARL
@@ -226,10 +226,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		signature.setValue(this.userProfile.getSignature());
 		UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
-		UIFormTextAreaMultilInput moderateForums = new UIFormTextAreaMultilInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
+		UIFormTextAreaInput moderateForums = new UIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
     moderateForums.setValue(stringProcess(Arrays.asList(userProfile.getModerateForums()))) ;
     moderateForums.setEditable(false);
-//		UIFormTextAreaMultilInput moderateTopics = new UIFormTextAreaMultilInput(FIELD_MODERATETOPICS_MULTIVALUE, FIELD_MODERATETOPICS_MULTIVALUE, null);
 		UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
 		isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar()) ;
 		//Option
@@ -267,7 +266,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			list.add(new SelectItemOption<String>((idFrm.toLowerCase() +" (" + ForumFormatUtils.getFormatDate(idFrm, date)+")"), idFrm.replaceFirst(" ", "="))) ;
 		}
 		UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list) ;
-		longDateFormat.setValue(userProfile.getLongDateFormat());
+		longDateFormat.setValue(userProfile.getLongDateFormat().replaceFirst(" ", "="));
 		list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>("12-hour","hh:mm=a")) ;
 		list.add(new SelectItemOption<String>("24-hour","HH:mm")) ;
@@ -343,8 +342,16 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		inputSetProfile.addUIFormInput(signature);
 		inputSetProfile.addUIFormInput(isDisplaySignature);
 		inputSetProfile.addUIFormInput(moderateForums);
-//		inputSetProfile.addUIFormInput(moderateTopics);
 		inputSetProfile.addUIFormInput(isDisplayAvatar);
+		String string = FIELD_MODERATEFORUMS_MULTIVALUE ;
+		List<ActionData> actions = new ArrayList<ActionData>() ;
+		ActionData ad = new ActionData() ;
+		ad.setActionListener("AddValuesArea") ;
+		ad.setActionParameter(string) ;
+		ad.setCssIconClass("AddIcon16x16") ;
+		ad.setActionName(string);
+		actions.add(ad) ;
+		inputSetProfile.setActionField(string, actions);
 		addUIFormInput(inputSetProfile);
 		
 		UIFormInputWithActions inputSetOption = new UIFormInputWithActions(FIELD_USEROPTION_FORM); 
@@ -445,13 +452,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	if(moderateForum != null && moderateForum.length() > 0) {
         moderateForums = uiForm.listModerate ;
     	} 
-//    	String moderateTopic = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATETOPICS_MULTIVALUE).getValue() ;
-//    	String []moderateTopics ;
-//    	if(moderateTopic != null && moderateTopic.length() > 0) {
-//    		moderateTopics = ForumFormatUtils.splitForForum(moderateTopic) ;
-//    	} else {
-//    		moderateTopics = userProfile.getModerateTopics() ;
-//    	}
     	List<String> NewModerates = new ArrayList<String> ();
     	NewModerates = uiForm.getModerateList(moderateForums);
     	List<String> OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums())) ;
@@ -578,14 +578,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   static  public class AddValuesAreaActionListener extends EventListener<UIModeratorManagementForm> {
   	public void execute(Event<UIModeratorManagementForm> event) throws Exception {
   		UIModeratorManagementForm uiForm = event.getSource() ;
-  		String idChild = event.getRequestContext().getRequestParameter(OBJECTID);
-  		boolean isTopic = false ;
-  		if(idChild.equals("MosTopics")) isTopic = true ;
   		UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UISelectItemForum selectItemForum = popupAction.activate(UISelectItemForum.class, 400) ;
 			selectItemForum.setForumLinks() ;
-			selectItemForum.setIsTopic(isTopic, idChild) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
   	}
   }

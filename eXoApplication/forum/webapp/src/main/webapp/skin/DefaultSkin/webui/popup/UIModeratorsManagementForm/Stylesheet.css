@@ -76,3 +76,7 @@
 .UIModeratorsManagementForm .ModeratorsGroup .AddAnyIcon {
 	background: url('../skinIcons/16x16/icons/SmallMemberIcon.gif') no-repeat;
 }
+
+.UIModeratorsManagementForm #ModForums {
+	float: left;
+}

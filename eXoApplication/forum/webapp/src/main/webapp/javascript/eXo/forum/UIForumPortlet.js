@@ -298,25 +298,6 @@ UIForumPortlet.prototype.setEnableInput = function() {
 	}
 } ;
 
-UIForumPortlet.prototype.setMenuTextAreaMutil = function(ParendId) {
-	var ancestor = document.getElementById(ParendId) ;
-	if(ancestor) {
-		var DOMUtil = eXo.core.DOMUtil ;
-		var childrens = DOMUtil.findDescendantsByClass(ancestor, "a", "TextAreaMultil") ;
-		var parendOldAction = document.getElementById("ActionsTextAreaMulil") ;
-		var oldActions = DOMUtil.findDescendantsByClass(parendOldAction, "a", "ChildAction") ;
-		for(var i=0; i < childrens.length; ++i) {
-			if(oldActions.length > i) {
-				if(childrens[i].getAttribute('id') === oldActions[i].getAttribute('id')) {
-					var href = oldActions[i].href ;
-					childrens[i].href =  href;
-					oldActions[i].innerHTML = "<span></span>";
-				}
-			}
-		}
-	}
-};
-
 UIForumPortlet.prototype.openPicture = function(obj,id) {
 	var img = document.getElementById(id) ;
 	if(img) {
@@ -375,7 +356,7 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 UIForumPortlet.prototype.setMaskLayer = function() {
 	var forumPortlet = document.getElementById('UIForumPortlet') ;
 	var masklayer = document.getElementById('MaskLayerForum') ;
-	var popupAction = document.getElementById('UIPopupAction') ;
+	var popupAction = document.getElementById('UIForumPopupAction') ;
 	var popupWindow = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "UIPopupWindow") ;
  	if(masklayer) {
   	masklayer.style.width = "auto";
