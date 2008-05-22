@@ -189,22 +189,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
       if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
-      StringBuffer buffer = new StringBuffer();
-			for (int j = 0; j < description.length(); j++) {
-				char c = description.charAt(j); 
-				if((int)c == 9){
-					buffer.append("&nbsp;&nbsp;&nbsp; ") ;
-				} else if((int)c == 10){
-					buffer.append("<br/>") ;
-				}	else if((int)c == 60){
-					buffer.append("&lt;") ;
-				} else if((int)c == 62){
-					buffer.append("&gt;") ;
-				} else {
-					buffer.append(c) ;
-				}
-      }
-			description = buffer.toString() ;
       String moder = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       String moderator = uiCategory.filterItemInString(moder) ;
       StringBuffer string = new StringBuffer();
