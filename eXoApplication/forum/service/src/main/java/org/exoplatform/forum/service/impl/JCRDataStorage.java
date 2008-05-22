@@ -892,15 +892,21 @@ public class JCRDataStorage{
 			}catch (PathNotFoundException e) {
 			}
 			// setTopicCount for Forum
-			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() - 1 ;
+			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong();
+			if(newTopicCount > 0) newTopicCount = newTopicCount - 1;
+			else newTopicCount = 0;
 			forumNode.setProperty("exo:topicCount", newTopicCount ) ;
 			// setPostCount for Forum
-			long newPostCount = forumNode.getProperty("exo:postCount").getLong() - topic.getPostCount() - 1;
-			forumNode.setProperty("exo:postCount", newPostCount ) ;
+			long newPostCount = forumNode.getProperty("exo:postCount").getLong();
+			if(newPostCount > (topic.getPostCount()+1)) newPostCount = newPostCount - topic.getPostCount() - 1;
+			else newPostCount = 0;
+			forumNode.setProperty("exo:postCount", newPostCount) ;
 			
 			Node forumStatistic = forumHomeNode.getNode(FORUM_STATISTIC) ;
 			long topicCount = forumStatistic.getProperty("exo:topicCount").getLong() ;
-			forumStatistic.setProperty("exo:topicCount", topicCount - 1) ;
+			if(topicCount > 0) topicCount = topicCount - 1 ;
+			else topicCount = 0;
+			forumStatistic.setProperty("exo:topicCount", topicCount) ;
 			
 			forumNode.getNode(topicId).remove() ;
 			//forumHomeNode.save() ;
@@ -913,6 +919,7 @@ public class JCRDataStorage{
 	
 	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		long tmp = 0;
 		for (Topic topic : topics) {
 			String topicPath = topic.getPath();
 			String newTopicPath = destForumPath + "/" + topic.getId();
@@ -921,7 +928,10 @@ public class JCRDataStorage{
 			//Move Topic
 			forumHomeNode.getSession().getWorkspace().move(topicPath, newTopicPath) ;
 			//Set TopicCount srcForum
-			srcForumNode.setProperty("exo:topicCount", srcForumNode.getProperty("exo:topicCount").getLong() - 1) ;
+			tmp = srcForumNode.getProperty("exo:topicCount").getLong();
+			if(tmp > 0) tmp = tmp - 1 ;
+			else tmp = 0 ;
+			srcForumNode.setProperty("exo:topicCount", tmp) ;
 			//Set NewPath for srcForum
 			Node lastTopicSrcForum = queryLastTopic(sProvider, srcForumNode.getPath()) ;
 			if(lastTopicSrcForum != null) srcForumNode.setProperty("exo:lastTopicPath", lastTopicSrcForum.getPath()) ;
@@ -935,7 +945,10 @@ public class JCRDataStorage{
 			Node lastTopicNewForum = queryLastTopic(sProvider, destForumNode.getPath()) ;
 			if(lastTopicNewForum != null) destForumNode.setProperty("exo:lastTopicPath", lastTopicNewForum.getPath()) ;
 			//Set PostCount
-			srcForumNode.setProperty("exo:postCount", srcForumNode.getProperty("exo:postCount").getLong() - topicPostCount) ;
+			tmp = srcForumNode.getProperty("exo:postCount").getLong() ;
+			if(tmp > topicPostCount) tmp = tmp - topicPostCount;
+			else tmp = 0;
+			srcForumNode.setProperty("exo:postCount", tmp) ;
 			destForumNode.setProperty("exo:postCount", destForumNode.getProperty("exo:postCount").getLong() + topicPostCount) ;
 		}
 		//forumHomeNode.save() ;
@@ -1284,17 +1297,25 @@ public class JCRDataStorage{
 				}
 				postNode.remove() ;
 				// setPostCount for Topic
-				long topicPostCount = topicNode.getProperty("exo:postCount").getLong() - 1 ;
+				long topicPostCount = topicNode.getProperty("exo:postCount").getLong();
+				if(topicPostCount > 0) topicPostCount = topicPostCount - 1;
+				else topicPostCount = 0;
 				topicNode.setProperty("exo:postCount", topicPostCount ) ;
-				long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong() - numberAttachs ;
+				long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong() ;
+				if(newNumberAttachs > numberAttachs) newNumberAttachs = newNumberAttachs - numberAttachs ;
+				else newNumberAttachs = 0 ;
 				topicNode.setProperty("exo:numberAttachments", newNumberAttachs) ;
 				// setPostCount for Forum
-				long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1 ;
+				long forumPostCount = forumNode.getProperty("exo:postCount").getLong();
+				if(forumPostCount > 0) forumPostCount = forumPostCount - 1;
+				else forumPostCount = 0;
 				forumNode.setProperty("exo:postCount", forumPostCount ) ;
 				
 				Node forumStatistic = forumHomeNode.getNode(FORUM_STATISTIC) ;
 				long postCount = forumStatistic.getProperty("exo:postCount").getLong() ;
-				forumStatistic.setProperty("exo:postCount", postCount - 1) ;
+				if(postCount > 0) postCount = postCount - 1;
+				else postCount = 0;
+				forumStatistic.setProperty("exo:postCount", postCount) ;
 
 				//forumHomeNode.save() ;
 				forumHomeNode.getSession().save() ;
@@ -1314,13 +1335,22 @@ public class JCRDataStorage{
 			//Node Topic move Post
 			Node srcTopicNode = (Node)forumHomeNode.getSession().getItem(post.getPath()).getParent() ;
 			Node srcForumNode = (Node)srcTopicNode.getParent() ;
-			srcForumNode.setProperty("exo:postCount", srcForumNode.getProperty("exo:postCount").getLong() - 1 ) ;
-			srcTopicNode.setProperty("exo:postCount", srcTopicNode.getProperty("exo:postCount").getLong() - 1 ) ;
+			long tmp = srcForumNode.getProperty("exo:postCount").getLong() ;
+			if(tmp > 0) tmp = tmp - 1;
+			else tmp = 0;
+			srcForumNode.setProperty("exo:postCount", tmp) ;
+			tmp = srcTopicNode.getProperty("exo:postCount").getLong() ;
+			if(tmp > 0) tmp = tmp - 1;
+			else tmp = 0;
+			srcTopicNode.setProperty("exo:postCount", tmp) ;
 			forumHomeNode.getSession().getWorkspace().move(post.getPath(), newPostPath) ;
 			//Node Post move
 			Node postNode = (Node)forumHomeNode.getSession().getItem(newPostPath) ;
 			long numberAttach = postNode.getProperty("exo:numberAttach").getLong() ;
-			srcTopicNode.setProperty("exo:numberAttachments", srcTopicNode.getProperty("exo:numberAttachments").getLong() - numberAttach);
+			tmp = srcTopicNode.getProperty("exo:numberAttachments").getLong() ;
+			if(tmp > numberAttach) tmp = tmp - numberAttach ;
+			else tmp = 0;
+			srcTopicNode.setProperty("exo:numberAttachments", tmp );
 			postNode.setProperty("exo:path", newPostPath) ;
 			//Node Topic add Post
 			Node destTopicNode = (Node)forumHomeNode.getSession().getItem(destTopicPath) ;
