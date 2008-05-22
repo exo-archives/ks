@@ -35,10 +35,12 @@ public class FAQServiceUtils {
   String admin = "/platform/administrators" ;
   OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   @SuppressWarnings("unchecked")
-  public boolean isAdmin(String user) {
+  public boolean isAdmin(String userName) {
     try {
       List<User> userList = organizationService.getUserHandler().findUsersByGroup(admin).getAll() ;
-      if(userList.contains(user)) return true ;
+      for(User user : userList) {
+        if(user.getUserName().equals(userName)) return true ;
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
