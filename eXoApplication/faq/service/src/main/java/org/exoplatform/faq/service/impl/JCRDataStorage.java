@@ -661,7 +661,7 @@ public class JCRDataStorage {
   	}
   	
   	//add watching for node
-  	if(watchingNode.isNodeType("exo:faqWatching")) {
+  	if(watchingNode.isNodeType("exo:faqWatching")) {//get
 			if(watchType == 1) {//send email when had changed on category
 				Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
   			List<String> vls = new ArrayList<String>() ;
@@ -672,7 +672,7 @@ public class JCRDataStorage {
   			watchingNode.setProperty("exo:emailWatching", vls.toArray(new String[]{})) ;
 			}
 			watchingNode.save() ;
-		}else {
+		}else {//add
 			watchingNode.addMixin("exo:faqWatching") ;
 			if(watchType == 1) { //send email when had changed on category 
 				watchingNode.setProperty("exo:emailWatching", new String[]{value}) ;
@@ -681,6 +681,36 @@ public class JCRDataStorage {
 		}
   	watchingNode.getSession().save();
   }
+  
+  public List<String> getListMailInWacth(String categoryId, SessionProvider sProvider) throws Exception {
+  	Node cate = getCategoryNodeById(categoryId, sProvider) ;
+    List<String> listEmails = new ArrayList<String>() ;
+    if(cate.isNodeType("exo:faqWatching")){
+  		Value[] emails = cate.getProperty("exo:emailWatching").getValues() ;
+  		if(emails != null && emails.length > 0) {
+  			for(Value value: emails) {
+  				listEmails.add(value.getString()) ;
+  			}
+  		}
+  	}
+    return listEmails;
+  }
+  
+  public void deleteMailInWacth(String categoryId, SessionProvider sProvider, int order) throws Exception {
+  	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
+  	Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
+		List<String> vls = new ArrayList<String>() ;
+		if(watchingNode.isNodeType("exo:faqWatching")) {
+			for(Value vl : values) {
+				vls.add(vl.getString()) ;
+			}
+		vls.remove(order);
+		watchingNode.setProperty("exo:emailWatching", vls.toArray(new String[]{})) ;
+		}
+		watchingNode.save() ;
+		watchingNode.getSession().save();
+  }
+  
   public List<FAQFormSearch> getQuickSeach(SessionProvider sProvider,String text) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
   	String []valueQuery = text.split(",") ;

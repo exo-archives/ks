@@ -135,6 +135,7 @@
 				
 				categoryId = category.getId();
 				String link = uicomponent.event("OpenCategory", categoryId) ;
+				String linkWacth = uicomponent.event("WatchManager", categoryId)
 				long[] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
 				long numberOfSubCate = cateInfo[0] ;
 				long numberOfQuestion = cateInfo[1] ;
@@ -152,6 +153,10 @@
 							$categoryName
 						</a>
 						($numberOfSubCate Category, $numberOfQuestion Questions, $questionNotAnswer Not yet answered, $questionNotApproved is not approved)
+						<% if(listCateModerator.get(i)) {
+						%>
+						<a href="$linkWacth" title="Watch Manager" class="WatchManager">&nbsp;</a>
+						<% } %>
 						<!-- action of this category -->
 					<div style="position: relative;">
 						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">

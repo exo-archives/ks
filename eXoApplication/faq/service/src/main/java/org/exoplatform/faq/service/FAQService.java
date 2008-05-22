@@ -193,6 +193,8 @@ public interface FAQService {
   public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception;  
   
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception ;
+  public List<String> getListMailInWacth(String categoryId,  SessionProvider sProvider) throws Exception ;
+  public void deleteMailInWacth(String categoryId, SessionProvider sProvider, int order) throws Exception ;
   public List<FAQFormSearch> getQuickSeach(SessionProvider sProvider, String text) throws Exception ;
   public List<FAQFormSearch> getAdvancedEmptry(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;
   public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;

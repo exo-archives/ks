@@ -16,11 +16,13 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -46,8 +48,11 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	public static final String EMAIL_ADDRESS = "emailAddress" ;
 	private String categoryId_ = "";
 	private UIFormMultiValueInputSet emailAddress;
+	private UIFormStringInput userName ;
+	private boolean isUpdate = false ;
+	private static int order ;
 	public UIWatchForm() throws Exception {
-  	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
+  	userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
   	emailAddress = new UIFormMultiValueInputSet(EMAIL_ADDRESS, EMAIL_ADDRESS );
 		emailAddress.setType(UIFormStringInput.class) ;
   	addUIFormInput(userName);
@@ -60,6 +65,23 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   
   public String getCategoryID() { return categoryId_; }
   public void setCategoryID(String s) { categoryId_ = s ; }
+  
+  @SuppressWarnings("static-access")
+  public void setUpdateWatch(int order, String categoryId, String listEmail, boolean isUpdate) throws Exception {
+		if(isUpdate) {
+			List<String> list = Arrays.asList(listEmail.split(",")) ;
+			if(emailAddress != null) removeChildById(EMAIL_ADDRESS);
+			emailAddress = createUIComponent(UIFormMultiValueInputSet.class, null, null) ;
+			emailAddress.setId(EMAIL_ADDRESS) ;
+			emailAddress.setName(EMAIL_ADDRESS) ;
+			emailAddress.setType(UIFormStringInput.class) ;
+			emailAddress.setValue(list) ;
+			addUIFormInput(emailAddress) ;
+			this.order = order ;
+			this.isUpdate = isUpdate ;
+			this.categoryId_ = categoryId ;
+		}
+	}
   
 	static public class SaveActionListener extends EventListener<UIWatchForm> {
     public void execute(Event<UIWatchForm> event) throws Exception {
@@ -84,14 +106,21 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       String watchId = categoryId.substring(0, 4) ;
       if (categoryId != null) {
       	FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-      	if(watchId.equals("Cate")) {
+      	if(uiWatchForm.isUpdate) {
+      		faqService.deleteMailInWacth(categoryId, FAQUtils.getSystemProvider(), order) ;
       		faqService.addWatch(1, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
+      		UIWatchContainer watchContainer = uiWatchForm.getAncestorOfType(UIWatchContainer.class) ;
+      		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 
       	} else {
-      		faqService.addWatch(2, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
-      	}	
-      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
-      			ApplicationMessage.INFO)) ;
-       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	      	if(watchId.equals("Cate")) {
+	      		faqService.addWatch(1, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
+	      	} else {
+	      		faqService.addWatch(2, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
+	      	}	
+	      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
+	      			ApplicationMessage.INFO)) ;
+	       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	}
       }
       UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;

@@ -34,6 +34,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
 import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
@@ -46,12 +47,11 @@ import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
+import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -78,7 +78,7 @@ import org.exoplatform.webui.event.EventListener;
 	    @EventConfig(listeners = UIQuestions.MoveUpActionListener.class),
 	    @EventConfig(listeners = UIQuestions.SettingActionListener.class),
 	    @EventConfig(listeners = UIQuestions.WatchActionListener.class),
-      
+	    @EventConfig(listeners = UIQuestions.WatchManagerActionListener.class),
       // action of question:
 	    @EventConfig(listeners = UIQuestions.QuestionManagamentActionListener.class),
 	    @EventConfig(listeners = UIQuestions.ViewQuestionActionListener.class),
@@ -138,7 +138,7 @@ public class UIQuestions extends UIContainer {
   
   private String[] getSecondActionCategory() {
 
-    String[] action = new String[]{"AddCategory", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp"} ;
+    String[] action = new String[]{"AddCategory", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
     return action ;
   }
   
@@ -575,6 +575,20 @@ public class UIQuestions extends UIContainer {
 		}
 	}
 	
+	static	public class WatchManagerActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+    	UIQuestions question = event.getSource() ;
+    	String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
+			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
+			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 800) ;
+			UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
+			popupContainer.setId("WatchManager") ;
+			watchManager.setCategoryID(cateId) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
 
 	static  public class EditSubCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {

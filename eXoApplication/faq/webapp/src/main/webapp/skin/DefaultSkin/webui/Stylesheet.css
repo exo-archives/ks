@@ -833,3 +833,22 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .FileAttachmentIcon {
 	background: url('background/AttachmentIcon.gif') no-repeat left;
 }
+
+.UIFAQPortlet .WatchManager {
+	background: url('background/FAQYey.gif') no-repeat right bottom;
+	padding: 10px 14px 0px 4px;
+}
+
+.UIFAQPortlet .EditWatchIcon {
+	background: url('background/EditWatch.gif') no-repeat left center;
+	width: 16px ;
+	height: 16px;
+	margin: 0px 3px;
+}
+
+.UIFAQPortlet .DeleteWatchIcon {
+	background: url('background/DeleteWatch.gif') no-repeat left center;
+	width: 16px;
+	height: 16px;
+	margin: 0px 3px;
+}

@@ -1,0 +1,74 @@
+<div class="UIWatchManager $uicomponent.id" style="padding: 8px;">
+		<% uiform.begin() %>
+		<div class="UIForm">
+ 			<div class="UIHorizontalLayout">
+ 				<div class="UIPermissionManager">
+ 					<div class="UIPermissionInfo">
+ 						<table class="UIGrid" cellspacing="0" borderspacing="0">
+ 							<thead>
+ 								<tr>
+ 								<th>Email</th>
+ 								<th>Action</th>
+ 								</tr>
+ 							</thead>
+ 							<tbody>
+ 							<% 
+ 							String categoryId = uicomponent.getCategoryID() ;
+ 							List emails = uicomponent.getListEmail() ;
+ 							int i = 0;
+ 							if(emails.size() > 0){
+ 								for(String email : emails ) {
+ 									email = email.substring(0,email.length()-1)
+ 									String linkEdit = uicomponent.event("EditEmail", email+"/"+i );
+ 									String linkDelete = uicomponent.event("DeleteEmail", email+"/"+i );
+ 									i++;
+ 							 %>
+ 								<tr>
+ 									<% if(email.length() > 120) {
+ 											email1 = email.substring(0,119)+ "..." ;
+ 									 %>
+ 										<td class="text" align="left"><a title="$email">$email1</a></td>
+ 									<% } else { %>
+ 										<td class="text" align="left"><a>$email</a></td>
+ 									<% } %>
+ 									<td style="width: 60px;" align="center">
+ 										<a href="$linkEdit" title="Edit Watch" style="float:left;">
+ 											<div class="EditWatchIcon" ></div>
+ 										</a>
+ 										<a href="$linkDelete" title="Delete Watch" style="float:left;">
+ 											<div class="DeleteWatchIcon" ></div>
+ 										</a>
+ 									</td>
+ 								</tr>
+ 								<% 
+ 									}
+ 								} else {
+ 									   %>
+ 										 <tr class="EvenRow">
+												<td class="Tdbox" colspan="10" align="center"><div class="" >Sorry - no matches. </div></td>
+			  						</tr>
+								<% } %>
+ 							</tbody>
+ 						</table>
+ 						
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+		<div class="UIAction">
+    	<table class="ActionContainer" align="center">
+			  <tr>
+				  <td align="center">
+		    		<a href="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+			  	  	<div class="ButtonLeft">
+			    	  	<div class="ButtonRight">
+			      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></div>
+			        	</div>
+			      	</div>
+		    		</a>
+	      	</td>
+				</tr>
+ 	  </table>
+	</div>
+		<%uiform.end()%>
+</div>

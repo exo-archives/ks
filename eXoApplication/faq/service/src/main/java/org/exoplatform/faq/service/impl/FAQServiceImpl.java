@@ -29,8 +29,8 @@ import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.mail.service.Message;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -138,6 +138,14 @@ public class FAQServiceImpl implements FAQService{
   
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception {
   	jcrData_.addWatch(type, watchType, id, value, sProvider) ;
+  }
+  
+  public List<String> getListMailInWacth(String categoryId, SessionProvider sProvider) throws Exception {
+    return jcrData_.getListMailInWacth(categoryId, sProvider); 
+  }
+  
+  public void deleteMailInWacth(String categoryId, SessionProvider sProvider, int order) throws Exception {
+  	jcrData_.deleteMailInWacth(categoryId, sProvider, order);
   }
   
   public List<FAQFormSearch> getQuickSeach(SessionProvider sProvider, String text) throws Exception {
