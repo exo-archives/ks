@@ -142,6 +142,9 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
     return getUIFormDateTimeInput(TO_DATE).getCalendar();
   } 
   
+  public void setText(String value) {getUIStringInput(TEXT).setValue(value) ;}
+  public String getFieldToValue() { return getUIStringInput(TEXT).getValue() ;}
+  
 	public void setValue(boolean isText, boolean isCategoryName,boolean isModeQuestion, boolean isModerator,
 			boolean isAuthor, boolean isEmailAddress, boolean isLanguage, boolean isQuestion, boolean isResponse) {
 		UIFormStringInput text = getUIStringInput(TEXT).setRendered(isText) ;
@@ -180,7 +183,8 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	
 	static public class OnchangeActionListener extends EventListener<UIAdvancedSearchForm> {
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
-			UIAdvancedSearchForm uiAdvancedSearchForm = event.getSource() ;			
+			UIAdvancedSearchForm uiAdvancedSearchForm = event.getSource() ;	
+			String text = uiAdvancedSearchForm.getUIStringInput(TEXT).getValue() ;
 			String type = uiAdvancedSearchForm.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).getValue() ;
 			if(type.equals("faqCategory")) {
 				uiAdvancedSearchForm.setValue(true, true, true, true, false, false, false, false, false) ;
@@ -190,6 +194,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				uiAdvancedSearchForm.setValue(true, false, false, false, false, false, false, false, false) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiAdvancedSearchForm) ;
+			uiAdvancedSearchForm.setText(text) ;
 		}
 	}
 	
