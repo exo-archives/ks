@@ -194,7 +194,9 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				uiAdvancedSearchForm.setValue(true, false, false, false, false, false, false, false, false) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiAdvancedSearchForm) ;
-			uiAdvancedSearchForm.setText(text) ;
+			if(text != null && text.trim().length() > 0) {
+				uiAdvancedSearchForm.setText(text) ;
+			}
 		}
 	}
 	
