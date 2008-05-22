@@ -820,6 +820,11 @@ UIFAQPortlet .ResultQuickSearch {
 
 .UIPrintPreview .FAQContainer {
 	border: 1px solid #c7c7c7;
+	height: auto;
+}
+
+.UIPrintPreview .FAQContainer .FAQContent{
+	height: auto;
 }
 
 .UIFAQPortlet .UILanguageMenu {

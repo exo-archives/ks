@@ -93,6 +93,23 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	uiPortalApplication.style.display = "none" ;	
 };
 
+UIFAQPortlet.prototype.printAll = function(obj) {
+  var DOMUtil = eXo.core.DOMUtil ;
+  var uiPortalApplication = document.getElementById("UIPortalApplication") ;
+  var uiQuestion = DOMUtil.findAncestorByClass(obj, "UIQuestions") ;
+  var faqContainer = DOMUtil.findFirstDescendantByClass(uiQuestion, "div", "FAQContainer") ;
+ 	var dummyPortlet = document.createElement("div") ;
+  faqContainer = faqContainer.cloneNode(true) ;
+  var uiAction = DOMUtil.findFirstDescendantByClass(faqContainer, "div", "UIAction") ;
+  dummyPortlet.className = "UIFAQPortlet UIPrintPreview" ;
+  uiAction.style.display = "block" ;
+  faqContainer.style.overflow = "visible" ;
+  dummyPortlet.appendChild(faqContainer) ;
+  document.body.appendChild(dummyPortlet) ;
+  uiPortalApplication.style.display = "none" ;
+};
+
+
 UIFAQPortlet.prototype.closePrint = function() {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var uiPortalApplication = document.getElementById("UIPortalApplication");
