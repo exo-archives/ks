@@ -183,6 +183,9 @@ public class UIQuestions extends UIContainer {
     } else {
       categories_ = faqService.getSubCategories(this.categoryId_, FAQUtils.getSystemProvider()) ;
     }
+    if(categoryId_ != null && categoryId_.trim().length() > 0) {
+      setIsModerators() ;
+    }
   }
 	
   public void setCategories(String categoryId) throws Exception  {
@@ -370,9 +373,6 @@ public class UIQuestions extends UIContainer {
     this.categoryId_ = categoryId ;
     this.isChangeLanguage = false ;
     setCategories() ;
-    if(categoryId != null && categoryId.trim().length() > 0) {
-      setIsModerators() ;
-    }
   }
   
   public String getQuestionRelationById(String questionId) {

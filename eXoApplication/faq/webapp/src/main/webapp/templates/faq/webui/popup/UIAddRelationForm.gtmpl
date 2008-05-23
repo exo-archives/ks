@@ -21,7 +21,7 @@
       if(i == 0) {%>
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryView"><span></span></div>
-		    			<div id="FAQCate$i" style="float: left">
+		    			<div id="FAQCate$i" style=" overflow-x: auto;">
 		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 		    			</div>
 	    			<div style="clear: left;"><span></span></div>
@@ -45,7 +45,7 @@
           </div>
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryView"><span></span></div>
-		    			<div id="FAQCate$i" style="float: left">
+		    			<div id="FAQCate$i" style=" overflow-x: auto;">
 		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 		    			</div>
 	    			<div style="clear: left;"><span></span></div>
@@ -55,7 +55,7 @@
           <div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryView"><span></span></div>
-		    			<div id="FAQCate$i" style="float: left">
+		    			<div id="FAQCate$i" style=" overflow-x: auto;">
 		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 		    			</div>
 	    			<div style="clear: left;"><span></span></div>
@@ -93,7 +93,7 @@
           }%>
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryView"><span></span></div>
-		    			<div id="FAQCate$i" style="float: left">
+		    			<div id="FAQCate$i" style=" overflow-x: auto;">
 		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 		    			</div>
 	    			<div style="clear: left;"><span></span></div>
