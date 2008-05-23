@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -170,10 +171,25 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     	UIMoveCategoryForm moveCategory = event.getSource() ;	
     	UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
     	String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+    	String categoryId = moveCategory.getCategoryID() ;
     	FAQService faqService  = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-    	if (destCategoryId != null && moveCategory.getCategoryID() != null) {
+    	if(destCategoryId.equals("null")) {
+    		Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+    		String name = cate.getName() ;
+    		String description = cate.getDescription() ;
+    		Boolean isModeQuestion = cate.isModerateQuestions();
+    		String[] moderator = cate.getModerators();
+    		faqService.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
+    		cate.setName(name.trim()) ;
+  			cate.setDescription(description) ;
+  			cate.setCreatedDate(new Date()) ;
+  			cate.setModerateQuestions(isModeQuestion) ;
+  			cate.setModerators(moderator) ;
+    		faqService.saveCategory(null, cate, true, FAQUtils.getSystemProvider()) ;
+    	}
+    	if (!destCategoryId.equals("null") && categoryId != null) {
     	  List<String> usersOfNewCateParent = Arrays.asList(faqService.getCategoryById(destCategoryId, FAQUtils.getSystemProvider()).getModerators()) ;
-    		faqService.moveCategory(moveCategory.getCategoryID(), destCategoryId, FAQUtils.getSystemProvider()) ;
+    		faqService.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
         for(CateClass cateClass : moveCategory.getListObjCategory(destCategoryId)) {
           List<String> newUserList = new ArrayList<String>() ;
           newUserList.addAll(usersOfNewCateParent) ;
