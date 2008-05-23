@@ -232,7 +232,13 @@
 					<div class="$questionIcon">
 						<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 								<!-- question content -->
-								<a href="$linkQuestion"> $questionContent</a>
+								<a href="$linkQuestion">
+								<%if(!question.isApproved()) {%>
+										<div class="NotApproved">$questionContent</div>
+								<%} else {%>
+										$questionContent
+								<%}%>
+								</a>
 								<!-- action of this question -->
 							<div style="position: relative;">
 								<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
