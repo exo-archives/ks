@@ -28,12 +28,16 @@
 												else 
 													language = listLanguage[i++] ;
 									%>
-												<% uiform.renderField(fck) %>
+												<div>
+													<% uiform.renderField(fck) %>
+													<div>&nbsp;*</div>
+												</div>
 												<div class="LanguageQuestion" style="width: 100%"> 
 													<div style="vertical-align: middle; padding-left: 5px;">
 														Language: $language 
 													</div>
 												</div>
+												<div style="clear: left"><span></span></div>
 									<%	}
 										} else if(field.getName().equals("Attachment")){
 											if(!uicomponent.getListFile().isEmpty()) {
@@ -54,7 +58,8 @@
 									    <%}
 											}
 										} else {%>
-											<% uiform.renderField(field) %><br>
+											<% uiform.renderField(field) %>
+											<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress")) {%> * <%}%><br>
 									<%}%>
 								</td>
 							<%} else {%>

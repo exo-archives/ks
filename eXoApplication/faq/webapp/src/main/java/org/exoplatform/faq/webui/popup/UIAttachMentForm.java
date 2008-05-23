@@ -76,6 +76,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       FileAttachment fileAttachment = new FileAttachment() ;
       UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD) ;
       UploadResource uploadResource = uploadInput.getUploadResource() ;
+      long fileSize = 0 ;
       if(uploadResource == null) {
         UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
         uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
@@ -86,7 +87,15 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       fileAttachment.setName(uploadResource.getFileName()) ;
       fileAttachment.setInputStream(uploadInput.getUploadDataAsStream()) ;
       fileAttachment.setMimeType(uploadResource.getMimeType()) ;
-      fileAttachment.setSize((long)uploadResource.getUploadedSize()) ;
+      fileSize = (long)uploadResource.getUploadedSize() ;
+      if(fileSize > 0) {
+        fileAttachment.setSize(fileSize) ;
+      } else {
+        UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
+        uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
+      }
       java.util.Date date = new java.util.Date();
       fileAttachment.setId("file" + date.getTime()) ;
       
