@@ -33,11 +33,13 @@ import org.exoplatform.services.organization.User;
  */
 public class FAQServiceUtils {
   String admin = "/platform/administrators" ;
+  String orgManager = "/organization/management/executive-board" ;
   OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   @SuppressWarnings("unchecked")
   public boolean isAdmin(String userName) {
     try {
       List<User> userList = organizationService.getUserHandler().findUsersByGroup(admin).getAll() ;
+      userList.addAll(organizationService.getUserHandler().findUsersByGroup(orgManager).getAll()) ;
       for(User user : userList) {
         if(user.getUserName().equals(userName)) return true ;
       }

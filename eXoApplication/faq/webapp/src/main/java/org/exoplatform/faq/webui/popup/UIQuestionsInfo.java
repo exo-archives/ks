@@ -22,6 +22,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -120,13 +121,14 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   }
   
   private void setListQuestion() throws Exception {
+    FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
     listQuestion_.clear() ;
     listQuestionNotYetAnswered_.clear() ;
     String user = FAQUtils.getCurrentUser() ;
     pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
     pageQuesNotAnswerIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
     SessionProvider sProvider = FAQUtils.getSystemProvider() ;
-    if(!user.equals("root")) {
+    if(!serviceUtils.isAdmin(user)) {
       List<String> listCateId = new ArrayList<String>() ;
       listCateId.addAll(faqService_.getListCateIdByModerator(user, sProvider)) ;
       int i = 0 ;

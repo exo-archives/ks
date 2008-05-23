@@ -498,10 +498,10 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .UISendMailForm #To{
   width: 400px ;
 }
+
 .UIFAQPortlet .UISendMailForm #FAQSelectCateList{
   width: 150px ;
 }
-
 
 .UIFAQPortlet .UISendMailForm .HorizontalLayout {
   padding: 8px;
@@ -602,6 +602,20 @@ UIFAQPortlet .ResultQuickSearch {
 	font-size:11px;
 	height:150px;
 	width:500px;
+}
+
+/******************************  UIResponseQuestion  ***************************************/
+.UIFAQPortlet .UIResponseForm textarea {
+	font-size:11px;
+	height:150px;
+	width:530px;
+}
+
+/******************************  UIQuestinoManager  ***************************************/
+.UIFAQPortlet .ResponseForm textarea {
+	font-size:11px;
+	height:150px;
+	width:530px;
 }
 
 /******************************  UIQuestionsInfo  ***************************************/
