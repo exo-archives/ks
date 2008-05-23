@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -364,8 +366,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
-			ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
-			boolean isOffend = false ; 
+      ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
+      boolean isOffend = false ; 
 			String stringKey = forumAdministration.getCensoredKeyword() ;
 			if(stringKey != null && stringKey.length() > 0) {
 				stringKey = stringKey.toLowerCase() ;
@@ -378,7 +380,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			}
 			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
-			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
+			if(t >= 3 && k != 0 && !checksms.equals("null")) {
 				UIFormInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
 				// uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
@@ -442,19 +444,34 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
         
 				topicNew.setCanView(canView);
 				topicNew.setCanPost(canPost);
-				
-				
 				if(uiForm.topicId != null && uiForm.topicId.length() > 0) {
 					topicNew.setId(uiForm.topicId);
 					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 					topicNew.setEditReason(editReason) ;
-					forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, false, false);
-					forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
+          try {
+            forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, false, false);
+            forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
+          } catch (PathNotFoundException e) {
+            
+            // hung.hoang add
+            UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+            uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+            return ;            
+          }					
 				} else {
 					topicNew.setVoteRating(0.0) ;
 					topicNew.setUserVoteRating(new String[] {}) ;
-					forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, true, false);
-				}
+          
+          try {
+            forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, true, false);
+          } catch (PathNotFoundException e) {
+            UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+            uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+            return ;           
+          }          
+        }
 				uiForm.topic = new Topic();
 				forumPortlet.cancelAction() ;
 				if(isOffend) {

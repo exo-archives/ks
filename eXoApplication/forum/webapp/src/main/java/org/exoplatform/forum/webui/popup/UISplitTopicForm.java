@@ -19,6 +19,8 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
@@ -30,6 +32,7 @@ import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -126,7 +129,16 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 					String categoryId = string[string.length - 3] ;
 					String forumId = string[string.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-					forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic, true, true) ;
+					try {
+            forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic, true, true) ;
+          } catch (PathNotFoundException e) {
+            
+            // hung.hoang add
+            UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+            uiApp.addMessage(new ApplicationMessage("UISplitTopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+            return ;            
+          }          
 					String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
 					forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath);
 				}else {

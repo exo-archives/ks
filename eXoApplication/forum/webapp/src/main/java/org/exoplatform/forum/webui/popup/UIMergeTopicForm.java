@@ -19,6 +19,8 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
@@ -29,6 +31,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -110,8 +113,17 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId()) ;
 				}
 				topicMerge.setTopicName(topicMergeTitle) ;
-				forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicMerge, false, false) ;
-				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+        try {
+          forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicMerge, false, false) ;
+        } catch (PathNotFoundException e) {
+          
+          // hung.hoang add
+          UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+          uiApp.addMessage(new ApplicationMessage("UIMergeTopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+          return ;
+        }
+        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
 				forumPortlet.cancelAction() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 			} else {

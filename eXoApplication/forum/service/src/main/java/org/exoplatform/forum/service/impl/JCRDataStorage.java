@@ -762,9 +762,11 @@ public class JCRDataStorage{
 	
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
-		try{
+		//try{
 			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
-			try{
+      
+      // hung.hoang comment to fix bug 405
+			//try{
 				Node forumNode = CategoryNode.getNode(forumId) ;
 				Node topicNode;
 				if(isNew) {
@@ -869,10 +871,9 @@ public class JCRDataStorage{
 						}
 					}
 				}
-			}catch (PathNotFoundException e) {
-			}
-		}catch (PathNotFoundException e) {
-		}
+			//}catch (PathNotFoundException e) { }
+//		}catch (PathNotFoundException e) {
+//		}
 	}
 	
 	public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
