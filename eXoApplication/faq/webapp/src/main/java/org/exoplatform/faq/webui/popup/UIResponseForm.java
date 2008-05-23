@@ -127,10 +127,24 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       QuestionLanguage questionLanguage = new QuestionLanguage() ;
       questionLanguage.setLanguage(question.getLanguage()) ;
       questionLanguage.setQuestion(question.getQuestion()) ;
-      questionLanguage.setResponse(question.getResponses()) ;
-      
+      if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+        String responseContent = question.getResponses() ;
+        responseContent = responseContent.substring(responseContent.indexOf("/") + 1) ;
+        responseContent = responseContent.substring(responseContent.indexOf("/") + 1) ;
+        questionLanguage.setResponse(responseContent) ;
+      } else {
+        questionLanguage.setResponse("") ;
+      }
       listQuestionLanguage.add(questionLanguage) ;
-      listQuestionLanguage.addAll(faqService.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) ;
+      
+      for(QuestionLanguage quesLang : faqService.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) {
+        if(quesLang.getResponse() != null && quesLang.getResponse().trim().length() > 0) {
+          String responseContent = quesLang.getResponse().substring(quesLang.getResponse().indexOf("/") + 1) ;
+          responseContent = responseContent.substring(responseContent.indexOf("/") + 1) ;
+          quesLang.setResponse(responseContent) ;
+        }
+        listQuestionLanguage.add(quesLang) ;
+      }
       questionChanged_ = question.getQuestion() ;
       this.setListRelation();
       // set info for form
@@ -335,10 +349,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       
       String user = FAQUtils.getCurrentUser() ;
-      //DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
       java.util.Date date = new java.util.Date();
-      //String dateStr = dateFormat.format(date) ;
-      //date = dateFormat.parse(dateStr) ;
       
       if(question.getLanguage().equals(response.languageIsResponsed)) {
         question.setQuestion(questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
@@ -355,15 +366,15 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
           return ;
         }
-        for(QuestionLanguage questionLanguage : response.listQuestionLanguage) {
-          if(questionLanguage.getLanguage().equals(response.languageIsResponsed)) {
-            questionLanguage.setQuestion(questionContent) ;
-            questionLanguage.setResponse(user + "/" + date + "/" + responseQuestionContent) ;
-          } else {
-            if(questionLanguage.getResponse() != null && questionLanguage.getResponse().trim().length() > 0 && 
-                validatorDataInput.fckContentIsNotEmpty(questionLanguage.getResponse())) {
-              questionLanguage.setResponse(user + "/" + date + "/" + questionLanguage.getResponse()) ;
-            }
+      }
+      for(QuestionLanguage questionLanguage : response.listQuestionLanguage) {
+        if(questionLanguage.getLanguage().equals(response.languageIsResponsed)) {
+          questionLanguage.setQuestion(questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          questionLanguage.setResponse(user + "/" + date + "/" + responseQuestionContent) ;
+        } else {
+          if(questionLanguage.getResponse() != null && questionLanguage.getResponse().trim().length() > 0 && 
+              validatorDataInput.fckContentIsNotEmpty(questionLanguage.getResponse())) {
+            questionLanguage.setResponse(user + "/" + date + "/" + questionLanguage.getResponse()) ;
           }
         }
       }
@@ -483,21 +494,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       for(QuestionLanguage questionLanguage : questionForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(questionForm.languageIsResponsed)) {
-          questionLanguage.setResponse(responseContent.getValue()) ;
-          questionLanguage.setQuestion(questionContent.getValue()) ;
+          String content = responseContent.getValue().replace("<p>", "") ;
+          questionLanguage.setResponse(content.substring(0, content.lastIndexOf("</p>"))) ;
+          questionLanguage.setQuestion(questionContent.getValue().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          break ;
         }
       }
       for(QuestionLanguage questionLanguage : questionForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(language)) {
           questionForm.languageIsResponsed = language ;
           questionContent.setValue(questionLanguage.getQuestion()) ;
-          String response = questionLanguage.getResponse() ;
-          if(response != null && response.trim().length() > 0) {
-            for(int i = 0 ; i < 2; i ++) {
-              response = response.substring(response.indexOf("/") + 1) ;
-            }
-          }
-          responseContent.setValue(response) ;
+          responseContent.setValue(questionLanguage.getResponse()) ;
+          break ;
         }
       }
     }
