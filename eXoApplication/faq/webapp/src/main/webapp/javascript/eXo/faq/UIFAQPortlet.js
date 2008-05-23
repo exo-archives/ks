@@ -75,7 +75,7 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
 	var FAQContent = document.createElement("div") ;
-	var defaultAction = DOMUtil.findFirstDescendantByClass(printArea, "div", "DefaultAction") ;
+	//var defaultAction = DOMUtil.findFirstDescendantByClass(printArea, "div", "DefaultAction") ;
 	var printAction = DOMUtil.findFirstDescendantByClass(printArea, "div", "PrintAction") ;
 	dummyPortlet.style.height = eXo.core.Browser.getBrowserHeight() + "px";
 	FAQContainer.style.overflow = "visible";
@@ -83,7 +83,7 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	FAQContainer.className = "FAQContainer" ;
 	FAQContent.className = "FAQContent" ;
 	printArea.style.overflow = "visible" ;
-	defaultAction.style.display = "none" ;
+	//defaultAction.style.display = "none" ;
 	printAction.style.display = "block" ;
 	FAQContent.appendChild(previousElement) ;
 	FAQContent.appendChild(printArea) ;
@@ -100,7 +100,8 @@ UIFAQPortlet.prototype.printAll = function(obj) {
   var faqContainer = DOMUtil.findFirstDescendantByClass(uiQuestion, "div", "FAQContainer") ;
  	var dummyPortlet = document.createElement("div") ;
   faqContainer = faqContainer.cloneNode(true) ;
-  var uiAction = DOMUtil.findFirstDescendantByClass(faqContainer, "div", "UIAction") ;
+  var faqContent = DOMUtil.findFirstDescendantByClass(faqContainer, "div", "FAQContent") ;
+  var uiAction = DOMUtil.findFirstChildByClass(faqContent, "div", "UIAction") ;
   dummyPortlet.className = "UIFAQPortlet UIPrintPreview" ;
   uiAction.style.display = "block" ;
   faqContainer.style.overflow = "visible" ;

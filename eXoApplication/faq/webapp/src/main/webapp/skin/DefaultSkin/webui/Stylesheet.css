@@ -849,6 +849,10 @@ UIFAQPortlet .ResultQuickSearch {
 	height: auto;
 }
 
+.UIPrintPreview .FAQContainer .DefaultAction {
+	display:none ;
+}
+
 .UIFAQPortlet .UILanguageMenu {
   left: 4px ;
   top: 0px ;

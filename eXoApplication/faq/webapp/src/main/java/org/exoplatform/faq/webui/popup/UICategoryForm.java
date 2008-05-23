@@ -227,9 +227,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
       uiCategory.checkSameName(name) ;
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
-      String moder = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
-      String moderator = uiCategory.filterItemInString(moder) ;
+      String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       moderator = uiCategory.cutWhiteSpace(moderator) ;
+      moderator = uiCategory.filterItemInString(moderator) ;
       Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,

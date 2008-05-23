@@ -76,7 +76,7 @@
 									<div class="SeparatorLine"><span></span></div>
 						<%}%>
 							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"   class="DefaultStyle FAQBar">
-								<a href="">
+								<a href="javascript:void(0);" onclick="eXo.faq.UIFAQPortlet.printAll(this)">
 									<div class="LeftOverButton">
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
@@ -145,8 +145,8 @@
 			<div class="FAQCategory">
 				<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
 						<!-- category name -->
-						<% if(categoryName.length() > 100) {
-							categoryName = categoryName.substring(0, 99) + "...";
+						<% if(categoryName.length() > 80) {
+							categoryName = categoryName.substring(0, 79) + "...";
 							}
 						 %>
 						<a href="$link" title="$titleCategory">
@@ -383,14 +383,17 @@
 								<% 	}
 									}%>
 							</div>
+							<style type="text/css">
+							@media print {
+								.UIFAQPortlet .UIAction {
+									display:none ;
+								}
+							}
+								
+							</style>
 							<div class="UIAction ResponsActions" >
 									<div style="float:left"><b>Responsed by :</b> $responseBy , $date</div>
 									<div style="float:right">
-									<style type="text/css" media="print">
-										.PrintAction {
-											display:none ;
-										}
-									</style>
 									<div class="PrintAction" style="display:none ;">
 										<a href="javascript:window.print() ;" class="ActionButton LightBlueStyle">
 					      	  	<div class="ButtonLeft">
@@ -506,6 +509,35 @@
 				}
 			}
 		%>
+		<style type="text/css">
+			@media print {
+				.UIAction .PrintAction {
+					display:none ;
+				}
+			}
+				
+			</style>
+			<div class="UIAction" style="display:none ;">			
+				<div style="float:right">			
+					<div class="PrintAction">
+						<a href="javascript:window.print() ;" class="ActionButton LightBlueStyle">
+			  	  	<div class="ButtonLeft">
+			    	  	<div class="ButtonRight">
+			      	  	<div class="ButtonMiddle"> Print </div>
+			        	</div>
+			      	</div>
+						</a>
+						<a href="javascript:eXo.faq.UIFAQPortlet.closePrint() ;" class="ActionButton LightBlueStyle">
+			  	  	<div class="ButtonLeft">
+			    	  	<div class="ButtonRight">
+			      	  	<div class="ButtonMiddle"> Close </div>
+			        	</div>
+			      	</div>
+						</a>
+					</div>
+			</div>	
+			<div style="clear:right;"><span></span></div>
+			</div>
 		</div>
 	</div>
 <% /* End View category*/ %>
