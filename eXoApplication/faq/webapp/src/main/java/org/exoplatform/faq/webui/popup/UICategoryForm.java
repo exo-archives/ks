@@ -73,6 +73,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   final private static String FIELD_MODERATEQUESTIONS_CHECKBOX = "moderatequestions" ;
   private static FAQService faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private static boolean isAddNew_ = true ;
+  private String oldName_ = "";
   
 	public UICategoryForm() throws Exception {}
 	
@@ -133,7 +134,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider() ;
 		  Category cat = faqService.getCategoryById(categoryId, sessionProvider) ;
 		  categoryId_ = categoryId ; 
-			getUIStringInput(FIELD_NAME_INPUT).setValue(cat.getName()) ;
+		  oldName_ = cat.getName() ;
+			getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription()) ;
 			getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions()) ;
 			String moderator = "";
@@ -181,6 +183,41 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-not-found", new String[]{userInvalid}, ApplicationMessage.WARNING)) ;
   }
   
+  public String cutWhiteSpace(String name) {
+  	StringBuffer string = new StringBuffer();
+    char c;
+    for (int i = 0; i < name.length(); i++) {
+     c = name.charAt(i) ;
+     if(c == 32) continue ;
+     string.append(c) ;
+      }
+    return string.toString();
+  }
+  
+  public void checkSameName (String name) throws Exception {
+  	Category category = new Category() ;
+  	String nameUpperCase = cutWhiteSpace(name).toUpperCase() ;
+  	Boolean check = false ;
+  	List<Category> listAllCategory = faqService_.getAllCategories(FAQUtils.getSystemProvider()) ;
+  	for(Category cate: listAllCategory) {
+  		String nameCate = cutWhiteSpace(cate.getName()).toUpperCase() ;
+  		if(!oldName_.equals("")) {
+  			if(nameUpperCase.equals(cutWhiteSpace(oldName_).toUpperCase())) continue ;
+  			else {
+  				check = true ;
+  			}
+  		} else {
+  			check = true ;
+	  	}
+  		if(check == true) {
+    		if(nameCate.equals(nameUpperCase)) {
+    			throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
+    		}
+    		else continue;
+    	}
+  	}
+  }  
+  
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;
@@ -188,17 +225,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue() ;
       if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
       if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
+      uiCategory.checkSameName(name) ;
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
       String moder = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       String moderator = uiCategory.filterItemInString(moder) ;
-      StringBuffer string = new StringBuffer();
-      char c;
-      for (int i = 0; i < moderator.length(); i++) {
-       c = moderator.charAt(i) ;
-       if(c == 32) continue ;
-       string.append(c) ;
-        }
-      moderator = string.toString();
+      moderator = uiCategory.cutWhiteSpace(moderator) ;
       Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
@@ -214,7 +245,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
-			Boolean isNew = true ;
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentId() ;
 			if(parentCate != null && parentCate.length() > 0) {

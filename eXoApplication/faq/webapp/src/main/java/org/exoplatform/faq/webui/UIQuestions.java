@@ -421,9 +421,9 @@ public class UIQuestions extends UIContainer {
     	String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction uiPopupAction = uiPortlet.getChild(UIPopupAction.class) ; 
-      UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,520) ;  
-
+      UIPopupContainer uiPopupContainer = uiPopupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
+      uiPopupAction.activate(uiPopupContainer, 530, 280) ;
       if(!FAQUtils.isFieldEmpty(categoryId)) {
       	uiPopupContainer.setId("SubCategoryForm") ;
       	category.setParentId(categoryId) ;
@@ -528,7 +528,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 400) ;
+			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 500) ;
 			popupContainer.setId("MoveCategoryForm") ;
 			uiMoveCategoryForm.setCategoryID(categoryId) ;
 			uiMoveCategoryForm.setListCate() ;
