@@ -249,6 +249,13 @@
   white-space: nowrap;
 }
 
+.UIFAQPortlet .FAQContainer .FAQContent .NotApproved {
+  background: url('background/question_not_approved.gif') no-repeat left ;
+  padding-left: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
 .UIFAQPortlet .FAQContainer .FAQContent .Question-Title {
   color: #1555b5;
 }
@@ -602,6 +609,7 @@ UIFAQPortlet .ResultQuickSearch {
 	font-size:11px;
 	height:150px;
 	width:500px;
+	float: left ;
 }
 
 /******************************  UIResponseQuestion  ***************************************/
