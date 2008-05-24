@@ -1,4 +1,4 @@
-<div class="UIQuickSeachForm" style="width: 300px;">
+<div class="UIQuickSeachForm" style="width: 280px;">
   <% uiform.begin() %>  
 	<div class="SearchForm">
 		<div class="SeparatorLine" style="float:right;"><span></span></div>

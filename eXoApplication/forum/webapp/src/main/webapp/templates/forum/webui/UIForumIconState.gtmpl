@@ -17,6 +17,7 @@
 		<div class="IconForum HotThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumHotNewPost")%></div>
 		<div class="IconForum ThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNewPost")%></div>
 		<div class="IconForum ThreadNoNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNoNewPost")%></div>
+		<div class="IconForum ThreadIsLock"><%=_ctx.appRes("UIForumIconState.label.ForumCloseLock")%></div>
 		<div class="IconForum ThreadIsClose"><%=_ctx.appRes("UIForumIconState.label.ForumClosePost")%></div>
 		<div style="clear: left;"><span></span></div>
 	<% } %>

@@ -174,10 +174,11 @@ public interface ForumService {
 	 * This method should:
 	 * 1. Load the topic from the database
 	 * @param topicPath
+	 * @param isLastPost TODO
 	 * @return
 	 * @throws Exception
 	 */
-	public Topic getTopicByPath(SessionProvider sProvider, String topicPath) throws Exception;
+	public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception;
 	/**
 	 * This method should: 
 	 * 1. Load the topic and the list of the post belong to the topic. Create the TopicView object and 

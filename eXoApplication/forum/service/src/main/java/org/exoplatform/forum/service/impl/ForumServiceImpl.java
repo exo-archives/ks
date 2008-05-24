@@ -113,8 +113,8 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getTopic(sProvider, categoryId, forumId, topicId, userRead);
 	}
 	
-	public Topic getTopicByPath(SessionProvider sProvider, String topicPath) throws Exception{
-		return storage_.getTopicByPath(sProvider, topicPath) ;
+	public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception{
+		return storage_.getTopicByPath(sProvider, topicPath, isLastPost) ;
 	}
 	
 	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {

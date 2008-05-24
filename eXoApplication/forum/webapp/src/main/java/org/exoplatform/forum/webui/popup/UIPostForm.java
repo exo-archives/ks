@@ -210,6 +210,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					this.attachments_ = post.getAttachments();
 					this.refreshUploadFileList();
 				}
+				System.out.println("\n\nmessage: " + message);
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(message);
         getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
 			}
@@ -230,16 +231,17 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			UIPostForm uiForm = event.getSource() ;
       UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
-			String postTitle = " " +threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
+			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
 //			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
-			if(postTitle.length() <= 3) {k = 0;}
+			if(postTitle != null && postTitle.length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				Post post = uiForm.post_ ;
+				System.out.println("\n\npostTitle: " + postTitle);
 				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;

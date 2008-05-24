@@ -28,6 +28,14 @@
 	background: url('icons/HotThreadNoNewPost.gif') no-repeat ;
 }
 
+.UIForumPortlet .HotThreadNewClosePost {
+	background: url('icons/HotThreadNewClosePost.gif') no-repeat ;
+}
+
+.UIForumPortlet .ThreadIsLock {
+	background: url('icons/ThreadIsLock.gif') no-repeat ;
+}
+
 .UIForumPortlet .ThreadIsClose {
 	background: url('icons/ThreadIsClose.gif') no-repeat ;
 }

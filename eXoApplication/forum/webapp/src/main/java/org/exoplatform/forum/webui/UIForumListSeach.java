@@ -96,7 +96,7 @@ public class UIForumListSeach extends UIContainer {
   			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
   			Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-3] , id[length-2] ) ;
   			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-  			Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path) ;
+  			Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
   			uiTopicDetail.setTopicFromCate(id[length-3], id[length-2] , topic, true) ;
   			uiTopicDetail.setUpdateForum(forum) ;
   			uiTopicDetail.setIdPostView("true") ;

@@ -59,7 +59,7 @@ public interface DataStorage {
 	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception ;
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;		
-	public Topic getTopicByPath(SessionProvider sProvider, String topicPath) throws Exception;
+	public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception;
 	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
 	public void modifyTopic(SessionProvider sProvider, Topic topic, int type) throws Exception ;
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception;

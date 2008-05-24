@@ -151,7 +151,7 @@ public class UICategory extends UIForm	{
 	
 	@SuppressWarnings("unused")
 	private Topic getLastTopic(String topicPath) throws Exception {
-		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath) ;
+		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
 		if(topic != null) {
 			String topicId = topic.getId() ;
 			if(this.MaptopicLast.containsKey(topicId)) {

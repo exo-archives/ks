@@ -407,9 +407,13 @@
 										String postView = String.valueOf(topic.getViewCount());
 										String titleTopicStatus = "Hot thread with new post" ;
 										String iconTopicStatus = "HotThreadNewPost" ;
-										if(isLockTopic || isLock) {
+										if(topic.getIsLock() || isLock) {
 											iconTopicStatus = "HotThreadNewLockPost" ;
 											titleTopicStatus = "Hot thread with new post lock" ;
+										}
+										if(topic.getIsClosed()) {
+											iconTopicStatus = "HotThreadNewClosePost" ;
+											titleTopicStatus = "Hot thread with new post close" ;
 										}
 										String number = "1";
 										boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);

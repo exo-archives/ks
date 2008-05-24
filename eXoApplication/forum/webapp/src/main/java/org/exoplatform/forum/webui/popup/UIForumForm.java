@@ -122,7 +122,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		forumStatus.setDefaultValue("unlock");
 		
 		UIFormStringInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA, FIELD_DESCRIPTION_TEXTAREA, null);
-		description.addValidator(MandatoryValidator.class);
 		UIFormTextAreaInput notifyWhenAddPost = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE, null);
 		UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
 		notifyWhenAddPost.setEditable(false);
@@ -332,8 +331,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String forumOrder = newForumForm.getUIStringInput(FIELD_FORUMORDER_INPUT).getValue();
 			String forumState = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATE_SELECTBOX).getValue();
 			String forumStatus = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).getValue();
-			String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue().trim();
-			
+			String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
+			if(description == null || description.trim().length() <= 0) description = " " ;
 			UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
 			String[] notifyWhenAddTopic = uiForm.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).getValue()) ;
 			String[] notifyWhenAddPost = uiForm.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue()) ;

@@ -150,7 +150,7 @@ public class UICategories extends UIContainer	{
 		Topic topicLast = new Topic() ;
 		topicLast = maptopicLast.get(topicLast.getId()) ;
     if(topicLast == null) {
-    	topicLast = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath) ;
+    	topicLast = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
     	if(topicLast != null)maptopicLast.put(topicLast.getId(), topicLast) ;
     }
 		return topicLast ;
@@ -161,7 +161,7 @@ public class UICategories extends UIContainer	{
 		topic = this.maptopicLast.get(topicId) ;
 		if(topic == null) {
     	String forumHomePath = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
-    	topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), forumHomePath + "/" + path) ;
+    	topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), forumHomePath + "/" + path, false) ;
     }
 		return topic ;
 	}

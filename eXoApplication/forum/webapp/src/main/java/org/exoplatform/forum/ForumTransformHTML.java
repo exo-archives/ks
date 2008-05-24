@@ -30,16 +30,37 @@ public class ForumTransformHTML {
 	public static String transform(String bbcode) {
     String b = bbcode.substring(0, bbcode.length());
     //Simple find and replaces
+    b = StringUtils.replace(b, "[B]", "[b]" );
+    b = StringUtils.replace(b, "[/B]", "[/b]");
+    b = StringUtils.replace(b, "[I]", "[i]");
+    b = StringUtils.replace(b, "[/I]", "[/i]");
+    b = StringUtils.replace(b, "[U]", "[u]");
+    b = StringUtils.replace(b, "[/U]", "[/u]");
+    b = StringUtils.replace(b, "[/IMG]", "[img]");
+    b = StringUtils.replace(b, "[/IMG]", "[/img]");
+    b = StringUtils.replace(b, "[CSS:", "[css:");
+    b = StringUtils.replace(b, "[/CSS]", "[/css]");
+    b = StringUtils.replace(b, "[URL=\"", "[url=\"");
+    b = StringUtils.replace(b, "[/URL]", "[/url]");
+    b = StringUtils.replace(b, "[LINK=\"", "[url=\"");
+    b = StringUtils.replace(b, "[/LINK]", "[/url]");
+    b = StringUtils.replace(b, "[link=", "[url=");
+    b = StringUtils.replace(b, "[/link]", "[/url]");
+    b = StringUtils.replace(b, "[GOTO=", "[goto=");
+    b = StringUtils.replace(b, "[/GOTO]", "[/goto]");
+    b = StringUtils.replace(b, "[/quote]", "[/QUOTE]");
+    b = StringUtils.replace(b, "[quote", "[QUOTE");
+    
     b = StringUtils.replace(b, "[b]", "<b>" );
     b = StringUtils.replace(b, "[/b]", "</b>");
     b = StringUtils.replace(b, "[i]", "<i>");
     b = StringUtils.replace(b, "[/i]", "</i>");
     b = StringUtils.replace(b, "[u]", "<u>");
     b = StringUtils.replace(b, "[/u]", "</u>");
-    b = StringUtils.replace(b, "[ code]", "<code>");
-    b = StringUtils.replace(b, "[ /code]", "</code>");
-    b = StringUtils.replace(b, "[/quote]", "[/QUOTE]");
-    b = StringUtils.replace(b, "[quote", "[QUOTE");
+    b = StringUtils.replace(b, "[code]", "<code>");
+    b = StringUtils.replace(b, "[/code]", "</code>");
+    b = StringUtils.replace(b, "[CODE]", "<code>");
+    b = StringUtils.replace(b, "[/CODE]", "</code>");
     StringBuffer buffer ;
     //Need to get the text inbetween img's
     int lastIndex=-0;;
@@ -186,7 +207,7 @@ public class ForumTransformHTML {
         String text = urlStr.substring(clsUrl + 1, urlStr.length());
         b = StringUtils.replace(b,
                     "[goto=\"" + href + "\"]" + text + "[/goto]",
-                    "<a href=\"#" + href +
+                    "<a href=\"" + href +
                     "\">" + text + "</a>");
       } catch (Exception e) {
         System.out.println("Error in bbcode near char: " + tagIndex );
@@ -214,6 +235,7 @@ public class ForumTransformHTML {
 		String link = "";
 		if(s == null || s.length() <= 0) return link ;
 		int i = 0, j = 0 ;
+		s = transform(s);
 		StringBuffer buffer = new StringBuffer();
 		while (true) {
 			i = s.indexOf("http://");
@@ -256,8 +278,7 @@ public class ForumTransformHTML {
 			}
 		}
 		buffer.append(s);
-		s = transform(buffer.toString()) ;
-		return s ;
+		return buffer.toString() ;
   }
 	
 	
