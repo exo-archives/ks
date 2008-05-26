@@ -4,40 +4,45 @@
 	boolean isAdmin = false ;
 	if(userProfile.getUserRole() == 0) isAdmin = true ;
 %>
-<div class="UIForumActionBar">
+<div class="UIForumActionBar" style="height: auto">
 	<div class="LeftForumActionBar">
 		<div class="RightForumActionBar">
 			<div class="CenterForumActionBar">
-				<div class="ControlbarCotainer">
-				<%String[] actions = [""];
-					if(isAdmin) { 
-						actions = ["AddCategory","AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
-					} else {
-						actions = ["EditProfile","OpenBookMark"];
-					}
-					for(action in actions){  
-				%>
-					<div class="DefaultStyle ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-						<a href="<%=uicomponent.event(action)%>">
-							<div class="LeftOverButton">
-								<div class="RightOverButton">
-									<div class="CenterOverButton">
-										<div class="Icon $action">
-											<%= _ctx.appRes("UIForumActionBar.label." + action); %>
-										</div>
+				<div class="ControlbarCotainer" style="height: auto">
+					<table>
+						<tr>
+							<td>
+								<%String[] actions = [""];
+									if(isAdmin) { 
+										actions = ["AddCategory","AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
+									} else {
+										actions = ["EditProfile","OpenBookMark"];
+									}
+									for(action in actions){  
+								%>
+									<div class="DefaultStyle ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+										<a href="<%=uicomponent.event(action)%>">
+											<div class="LeftOverButton">
+												<div class="RightOverButton">
+													<div class="CenterOverButton">
+														<div class="Icon $action">
+															<%= _ctx.appRes("UIForumActionBar.label." + action); %>
+														</div>
+													</div>
+												</div>
+											</div>
+										</a>
 									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="SeparatorLine"><span></span></div>
-				<% }%>
-					<div style="float:right;"> 
-					<%  
-						uicomponent.renderChildren() ;
-					%>
-					</div>
-					<div style="clear: both;"><span></span></div>
+									<div class="SeparatorLine"><span></span></div>
+								<% }%>
+							</td>
+							<td>
+								<%  
+									uicomponent.renderChildren() ;
+								%>
+							</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>
