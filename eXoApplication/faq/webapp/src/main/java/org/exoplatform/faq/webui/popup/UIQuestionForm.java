@@ -379,6 +379,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         question_.setResponses(" ") ;
         questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions() ;
         question_.setApproved(questionIsApproved) ;
+        question_.setDateResponse(date) ;
       } else {
         question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
         question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;

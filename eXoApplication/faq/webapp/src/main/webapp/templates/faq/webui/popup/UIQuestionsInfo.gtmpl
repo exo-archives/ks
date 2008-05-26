@@ -42,15 +42,19 @@
 		                          	<%if(i ++ == 0) {
 		                          			link = uicomponent.event("ChangeTab", "0") ;
 		                          	%>
-			                            <div class="MiddleTab">
-			                            	<a href="$link"> Question management </a>
-			                            </div>
+		                          		<a href="$link">
+				                            <div class="MiddleTab">
+				                            	 Question management 
+				                            </div>
+			                            </a>
 		                            <%} else {
 		                            		link = uicomponent.event("ChangeTab", "1") ;
 		                            %>
-		                            	<div class="MiddleTab">
-		                            		<a href="$link"> Question not yet answered </a>
-			                            </div>
+		                            	<a href="$link">
+			                            	<div class="MiddleTab">
+			                            		Question not yet answered 
+				                            </div>
+			                            </a>
 		                            <%}%>
 			                          </div>
 			                        </div>

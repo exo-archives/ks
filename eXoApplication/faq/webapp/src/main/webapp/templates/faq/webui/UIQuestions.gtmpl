@@ -301,12 +301,9 @@
 						String response = "<center><b>This question not yet answered</center></b>" ;
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
-							String[] arrayString ;
-							arrayString = question.getResponses().split("/") ;
-							responseBy = arrayString[0] ;
-							date = arrayString[1] ;
-							response = "" ;
-							response = question.getResponses().replaceAll(responseBy + "/", "").replaceAll(date + "/", "") ;
+							responseBy = question.getResponseBy() ;
+							date = question.getDateResponse() ;
+							response = question.getResponses();
 						}
 					%>
 						<div class="ResponseContent">
@@ -360,7 +357,7 @@
 								    <%}
 								  	}
 							  	} else {%>
-							  		<b>File Attatched: </b>
+							  		<b>File Attached: </b>
 						  	<%}%>
 						  	</div>
 						    <div style="clear: left;"><span></span></div>

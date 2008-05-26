@@ -279,6 +279,7 @@ public class UIQuestions extends UIContainer {
 	}
 	
   public void setListQuestion() {
+    isChangeLanguage = false;
     try{
       SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
       if(!canEditQuestion) {

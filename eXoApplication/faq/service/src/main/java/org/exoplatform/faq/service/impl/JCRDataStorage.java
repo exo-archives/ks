@@ -128,6 +128,9 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:isApproved", question.isApproved()) ;
   	questionNode.setProperty("exo:responses", question.getResponses()) ;
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
+    questionNode.setProperty("exo:responseBy", question.getResponseBy()) ;
+    cal.setTime(question.getDateResponse()) ;
+    questionNode.setProperty("exo:dateResponse", cal.getInstance()) ;
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
     List<String> listFileName = new ArrayList<String>() ;
@@ -306,6 +309,8 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
     if(questionNode.hasProperty("exo:responses")) question.setResponses(questionNode.getProperty("exo:responses").getString()) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
+    if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(questionNode.getProperty("exo:responseBy").getString()) ;  	
+    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ;  	
   	NodeIterator nodeIterator = questionNode.getNodes() ;
     List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
     Node nodeFile ;

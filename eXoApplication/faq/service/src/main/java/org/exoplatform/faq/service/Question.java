@@ -41,6 +41,8 @@ public class Question {
   private String categoryId ;
   private String responses = null;
   private String[] relations ;
+  private String responseBy = null ;
+  private Date dateResponse ;
   private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
   
   
@@ -83,4 +85,11 @@ public class Question {
   
   public void setAttachMent(List<FileAttachment> listFile) { this.listAttachments = listFile ; }
   public List<FileAttachment> getAttachMent(){return this.listAttachments ; }
+
+  public Date getDateResponse() { return dateResponse; }
+  public void setDateResponse(Date dateResponse) { this.dateResponse = dateResponse; }
+
+  public String getResponseBy() { return responseBy; }
+  public void setResponseBy(String responseBy) { this.responseBy = responseBy; }
+  
 }

@@ -185,6 +185,7 @@ public class MultiLanguages {
   
   public void removeLanguage(Node questionNode, List<String> listLanguage) {
     try {
+      if(!questionNode.hasNode(LANGUAGES)) return ;
       Node languageNode = questionNode.getNode(LANGUAGES) ;
       NodeIterator nodeIterator = languageNode.getNodes();
       Node node = null ;
