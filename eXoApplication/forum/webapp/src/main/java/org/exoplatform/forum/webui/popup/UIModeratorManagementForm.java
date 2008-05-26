@@ -81,7 +81,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	
 	public static final String FIELD_USERID_INPUT = "ForumUserName" ;
 	public static final String FIELD_USERTITLE_INPUT = "ForumUserTitle" ;
-	public static final String FIELD_USERROLE_SELECTBOX = "UserRole" ;
+	public static final String FIELD_USERROLE_CHECKBOX = "isAdmin" ;
 	public static final String FIELD_SIGNATURE_TEXTAREA = "Signature" ;
 	public static final String FIELD_ISDISPLAYSIGNATURE_CHECKBOX = "IsDisplaySignature" ;
 	public static final String FIELD_MODERATEFORUMS_MULTIVALUE = "ModForums" ;
@@ -216,18 +216,21 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		userId.setEditable(false) ;
 		UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
 		userTitle.setValue(this.userProfile.getUserTitle());
-		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>("Admin", "id0")) ;
-		list.add(new SelectItemOption<String>("Moderator", "id1")) ;
-		list.add(new SelectItemOption<String>("User", "id2")) ;
-		UIFormSelectBox userRole = new UIFormSelectBox(FIELD_USERROLE_SELECTBOX, FIELD_USERROLE_SELECTBOX, list) ;
-		userRole.setValue("id" + this.userProfile.getUserRole());
+		
+		boolean isAdmin = false ;
+		if(this.userProfile.getUserRole() == 0) isAdmin = true;
+		UIFormCheckBoxInput userRole = new UIFormCheckBoxInput<Boolean>(FIELD_USERROLE_CHECKBOX, FIELD_USERROLE_CHECKBOX, false) ;
+		userRole.setValue(isAdmin);
+		
 		UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
 		signature.setValue(this.userProfile.getSignature());
 		UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
 		UIFormTextAreaInput moderateForums = new UIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);
-    moderateForums.setValue(stringProcess(Arrays.asList(userProfile.getModerateForums()))) ;
+		List<String> values = Arrays.asList(userProfile.getModerateForums()) ;
+		this.listModerate = values ;
+		moderateForums.setValue(stringProcess(values)) ;
+    
     moderateForums.setEditable(false);
 		UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
 		isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar()) ;
@@ -339,9 +342,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		inputSetProfile.addUIFormInput(userId);
 		inputSetProfile.addUIFormInput(userTitle);
 		inputSetProfile.addUIFormInput(userRole);
+		inputSetProfile.addUIFormInput(moderateForums);
 		inputSetProfile.addUIFormInput(signature);
 		inputSetProfile.addUIFormInput(isDisplaySignature);
-		inputSetProfile.addUIFormInput(moderateForums);
 		inputSetProfile.addUIFormInput(isDisplayAvatar);
 		String string = FIELD_MODERATEFORUMS_MULTIVALUE ;
 		List<ActionData> actions = new ArrayList<ActionData>() ;
@@ -446,7 +449,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
     	UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
     	String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
-    	long userRole = Long.parseLong(inputSetProfile.getUIFormSelectBox(FIELD_USERROLE_SELECTBOX).getValue().substring(2));
+    	long userRole = 3;
+    	boolean isAdmin = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_USERROLE_CHECKBOX).getValue() ;
+    	if(isAdmin) userRole = 0;
     	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
       List<String> moderateForums = new ArrayList<String>() ;
     	if(moderateForum != null && moderateForum.length() > 0) {
@@ -486,9 +491,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 				userTitle = userTt ;
 			}
     	if(userTitle.equals("Administrator") || userTitle.equals("Moderator") || userTitle.equals("User") || userTitle.equals("Guest")) {
-	    		if(userRole == 0) userTitle = "Administrator" ;
-	    		if(userRole == 1) userTitle = "Moderator" ;
-	    		if(userRole == 2) userTitle = "User" ;
+    		if(userRole == 0) userTitle = "Administrator" ;
+    		if(userRole == 1) userTitle = "Moderator" ;
+    		if(userRole == 2) userTitle = "User" ;
     	}
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
@@ -539,7 +544,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
             banReasonSummaries = new String[] {stringBuffer.toString()} ;
       			banCounter = 1;
       	}
-      	userTitle = "User Banned";
       }
     	userProfile.setUserTitle(userTitle);
     	userProfile.setUserRole(userRole) ;

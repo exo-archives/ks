@@ -418,7 +418,14 @@ public class JCRDataStorage{
 								}
 								userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
 								if(list.size() <= 0) {
-									userProfileNode.setProperty("exo:userRole", 2);
+									if(userProfileNode.hasProperty("exo:userRole")) {
+										long role = userProfileNode.getProperty("exo:userRole").getLong() ;
+										if(role == 1) {
+											userProfileNode.setProperty("exo:userRole", 2);
+										}
+									} else {
+										userProfileNode.setProperty("exo:userRole", 2);
+									}
 								}
 							} catch (PathNotFoundException e) {
 							}

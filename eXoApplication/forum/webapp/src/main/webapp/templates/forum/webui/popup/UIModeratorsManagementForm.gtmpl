@@ -22,8 +22,9 @@
 				  <thead>
 				  	<tr>
 				      <th width="30%">User Name</th>
-				      <th width="30%">User Title</th>
-				      <th width="20%">User Group</th>
+				      <th width="25%">User Title</th>
+				      <th width="15%">User Role</th>
+				      <th width="12%">Is Banned</th>
 				      <th>Action</th>
 				    </tr>
 				  </thead>
@@ -48,9 +49,10 @@
 					    }
 				  %>
 			      <tr class="$classRowTable">
-						  <td class="text"><%=user.getUserId()%></td>
-							<td class="text"><%=user.getUserTitle()%></td>
-							<td class="text"><%=userRole%></td>
+						  <td class="text"><%=user.getUserId();%></td>
+							<td class="text"><%=user.getUserTitle();%></td>
+							<td class="text"><%=userRole;%></td>
+							<td class="text"><%=user.getIsBanned();%></td>
 						  <td>         
 				        <div style="margin: 0px auto;" class="ActionContainer">
 				        <div class="IconContent">

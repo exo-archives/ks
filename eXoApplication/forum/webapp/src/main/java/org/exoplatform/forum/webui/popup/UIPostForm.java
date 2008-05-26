@@ -306,7 +306,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
 				post.setCreatedDate(new Date()) ;
-				post.setRemoteAddr(remoteAddr) ;
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				post.setIcon(uiIconSelector.getSelectedIcon());
 				post.setIsApproved(false) ;
@@ -322,6 +321,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
 				if(uiForm.postId != null && uiForm.postId.length() > 0) {
 					if(uiForm.isQuote || uiForm.isMP) {
+						post.setRemoteAddr(remoteAddr) ;
 						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
 						topicDetail.setIdPostView("true");
 						topicDetail.setUpdatePostPageList(true);
@@ -335,6 +335,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						topicDetail.setIdPostView(uiForm.postId);
 					}
 				} else {
+					post.setRemoteAddr(remoteAddr) ;
 					uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
           topicDetail.setIdPostView("true");
           topicDetail.setUpdatePostPageList(true);
