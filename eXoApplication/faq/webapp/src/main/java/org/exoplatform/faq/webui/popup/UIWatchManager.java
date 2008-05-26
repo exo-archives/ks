@@ -21,7 +21,10 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -41,8 +44,9 @@ import org.exoplatform.webui.form.UIForm;
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/faq/webui/popup/UIWatchManager.gtmpl",
 		events = {
+				@EventConfig(listeners = UIWatchManager.LinkActionListener.class),
 				@EventConfig(listeners = UIWatchManager.EditEmailActionListener.class),
-				@EventConfig(listeners = UIWatchManager.DeleteEmailActionListener.class),
+				@EventConfig(listeners = UIWatchManager.DeleteEmailActionListener.class, confirm= "UIWatchManager.msg.confirm-delete-watch"),
 				@EventConfig(listeners = UIWatchManager.CancelActionListener.class)
 		}
 )
@@ -62,8 +66,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
     List<String> emailList = faqService.getListMailInWacth(categoryId_, FAQUtils.getSystemProvider()) ;
     return emailList ;
   }
-  
-	static	public class EditEmailActionListener extends EventListener<UIWatchManager> {
+  static	public class EditEmailActionListener extends EventListener<UIWatchManager> {
 		public void execute(Event<UIWatchManager> event) throws Exception {
 			UIWatchManager watchManager = event.getSource() ;
 			String list = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -74,6 +77,30 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 600) ;
 			watchForm.setUpdateWatch(order,categoryId_,emailList, true) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+  
+	static	public class LinkActionListener extends EventListener<UIWatchManager> {
+		public void execute(Event<UIWatchManager> event) throws Exception {
+			UIWatchManager watchManager = event.getSource() ;
+			String CategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+			UIFAQPortlet faqPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
+			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			uiQuestions.setCategories(CategoryId) ;
+			uiQuestions.setList(CategoryId) ;
+	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+	    breadcumbs.setUpdataPath(null) ;
+      String oldPath = "" ;
+	    FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), CategoryId) ;
+	    for(int i = listPath.size() -1 ; i >= 0; i --) {
+	    	oldPath = oldPath + "/" + listPath.get(i);
+	    }
+	    breadcumbs.setUpdataPath("FAQService"+oldPath);
+			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+	    faqPortlet.cancelAction() ;
 		}
 	}
 	

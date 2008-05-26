@@ -154,9 +154,14 @@
 						</a>
 						($numberOfSubCate Category, $numberOfQuestion Questions, $questionNotAnswer Not yet answered, $questionNotApproved is not approved)
 						<% if(listCateModerator.get(i)) {
+									List emailWatch = uicomponent.getListEmail(categoryId) ;
+									if(emailWatch.size() > 0) {
 						%>
 						<a href="$linkWacth" title="Watch Manager" class="WatchManager">&nbsp;</a>
-						<% } %>
+						<%
+							} 
+						}
+						 %>
 						<!-- action of this category -->
 					<div style="position: relative;">
 						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">

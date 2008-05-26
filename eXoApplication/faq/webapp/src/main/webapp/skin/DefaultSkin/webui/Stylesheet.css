@@ -889,3 +889,10 @@ UIFAQPortlet .ResultQuickSearch {
 	height: 16px;
 	margin: 0px 3px;
 }
+
+.UIFAQPortlet .LinkWatchIcon {
+	background: url(background/FAQPortlet.gif) no-repeat scroll left -466px;
+	height:17px;
+	width:17px;
+	margin: 0px 3px;
+}

@@ -22,6 +22,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -122,8 +123,10 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       	}
       }
+      UIFAQPortlet uiPortlet = uiWatchForm.getAncestorOfType(UIFAQPortlet.class);
       UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ; 
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; 
       return ;
 		}

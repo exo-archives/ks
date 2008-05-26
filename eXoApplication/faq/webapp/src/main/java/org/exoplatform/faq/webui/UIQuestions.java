@@ -415,6 +415,12 @@ public class UIQuestions extends UIContainer {
     return this.backPath_ ;
   }
 	
+  public List<String> getListEmail(String categoryId) throws Exception {
+  	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+    List<String> emailList = faqService.getListMailInWacth(categoryId, FAQUtils.getSystemProvider()) ;
+    return emailList ;
+  }
+  
 	static  public class AddCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
     	UIQuestions question = event.getSource() ; 
