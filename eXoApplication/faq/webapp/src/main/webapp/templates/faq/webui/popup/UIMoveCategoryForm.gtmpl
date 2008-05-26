@@ -8,14 +8,13 @@
 <div class="UIMoveCategoryForm $uicomponent.id">
 	<% uiform.begin() %>
 	<div class="TitleMoveThreads"><%= _ctx.appRes("UIMoveFAQForm.title.chooseCategory"); %>
-	  <% String linkRoot = uicomponent.event("Save", null); %>
+	  <% String linkRoot = uicomponent.event("Save", null); %>	
+	</div>
 	  <div style="margin: 5px 0px 5px 0px ;">
 			<div class="Icon FAQCategoryView"><span></span></div>
 			<div id="" style="float: left" ><a href="$linkRoot">Root</a></div>
 			<div style="clear: left;"><span></span></div>
-	   </div>
-	</div>
-	<div class="HorizontalLayout" style="margin: 10px 10px 10px 10px;background-color:#F3F3F3;">
+			<div class="HorizontalLayout" style="margin: 0px 10px 10px 30px;">
 		<%
 		List listCate = uicomponent.getListCate() ;
 		Stack<String> stackCateid = new Stack<String>() ;
@@ -112,6 +111,9 @@
     }
 		%>
 		</div>
+	   </div>
+
+	
 
   <div class="UIAction">
     <table class="ActionContainer" align="center">

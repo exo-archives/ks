@@ -125,7 +125,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     if(oldValue != null && oldValue.trim().length() > 0) {
     	oldValue =  oldValue + "," +  value ;
     } else oldValue = value ;
-    fieldInput.setValue(filterItemInString(oldValue)) ;
+    fieldInput.setValue(oldValue) ;
   } 
 
 	public void setCategoryValue(String categoryId, boolean isUpdate) throws Exception{
@@ -147,28 +147,71 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		}
 	}
 	
+	public String cutColonCaret(String name) {
+  	StringBuffer string = new StringBuffer();
+    char c;
+    for (int i = 0; i < name.length(); i++) {
+     c = name.charAt(i) ;
+     if(c == 58 || c == 47) continue ;
+     string.append(c) ;
+      }
+    return string.toString();
+  }
+	
   private String filterItemInString(String string) throws Exception {
   	if (string != null && string.trim().length() > 0) {
 	    String[] strings = FAQUtils.splitForFAQ(string) ;
 	    List<String>list = new ArrayList<String>() ;
 	    string = strings[0] ;
-	    list.add(string);
+	    String string1 = cutColonCaret(string) ;
+	    list.add(string1);
     	for(String string_ : strings ) {
-    		if(list.contains(string_)) continue ;
-    		list.add(string_) ;
+    		string1 = cutColonCaret(string_) ;
+    		if(list.contains(string1)) continue ;
+    		list.add(string1) ;
     		string = string + "," + string_ ;
     	}
   	}
   	return string ;
   }
   
+  private boolean filterMember(String mem){
+		String[] memberList = {"manager","member","validator","*"} ;
+		Boolean check = false ;
+		for(String member : memberList) {
+				if(member.equals(mem)){ 
+					check = true;
+					break;
+				} else {
+					check = false ;
+					continue ;
+				}
+    	}
+  	return check ;
+  }
+  
   public void checkValue(String[] strings) throws Exception {
   	String userInvalid = "" ;
     String userValid = "" ;
     for(String string : strings) {
-    	if(string.indexOf("/") >= 0) { 
-    		if(userValid.trim().length() > 0) userValid += "," ;
-    		userValid += string.trim() ;
+    	if(string.indexOf("/") >= 0) {
+    		boolean checking = false ;
+    		if(FAQUtils.getGroup(string.trim()) != null) checking = true ;
+    		else if(string.indexOf(":") >= 0) {
+        	String member = string.substring(0, string.indexOf(":")) ;
+        	String groupMember = string.substring(string.indexOf("/"), string.length()) ;
+        	if(FAQUtils.getGroup(groupMember.trim()) != null && filterMember(member) != false) checking = true ;
+        	else
+        		checking = false ;
+        } else
+        	checking = false ;
+    		if(checking != false) {
+		      if(userValid.trim().length() > 0) userValid += "," ;
+	      	userValid += string ;
+    		} else {
+	        if(userInvalid.trim().length() > 0) userInvalid += ", " ;
+	        userInvalid += string.trim() ;
+    		}
     		continue ;
     	}
       if(FAQUtils.getUserByUserId(string.trim()) != null) {
@@ -203,9 +246,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   		String nameCate = cutWhiteSpace(cate.getName()).toUpperCase() ;
   		if(!oldName_.equals("")) {
   			if(nameUpperCase.equals(cutWhiteSpace(oldName_).toUpperCase())) continue ;
-  			else {
+  			else
   				check = true ;
-  			}
   		} else {
   			check = true ;
 	  	}
@@ -228,8 +270,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       uiCategory.checkSameName(name) ;
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
-      moderator = uiCategory.cutWhiteSpace(moderator) ;
-      moderator = uiCategory.filterItemInString(moderator) ;
       Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
@@ -237,6 +277,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ; 
       }
+      moderator = uiCategory.cutWhiteSpace(moderator) ;
+      moderator = uiCategory.filterItemInString(moderator) ;
       String[] users = FAQUtils.splitForFAQ(moderator) ;
       uiCategory.checkValue(users) ;
       
