@@ -106,7 +106,7 @@
 						</div>
 					</div>
 					<% } %>
-					<div class="ContentAction" style="float:right; padding: 2px 0px 0px 0px;">
+					<div class="ContentAction" style="float:right; margin: 2px 0px 0px 0px;">
 						<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
 							<div style="position: relative;">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
