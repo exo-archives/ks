@@ -136,6 +136,7 @@ public class UITopicDetail extends UIForm {
 	private boolean isGopage = false ;
 	private boolean isEditTopic = false ;
 	private boolean isUpdatePageList = false ;
+	private boolean isGetTopic = false ;
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
 	private List<Post>  posts ;
@@ -240,9 +241,10 @@ public class UITopicDetail extends UIForm {
 			} 
 			this.userName = userName ;
 		}
-		if(isGetService) {
+		if(isGetService || this.isGetTopic) {
 			this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 			forumPortlet.setUserProfile() ;
+			this.isGetTopic = false ;
 		} else {
 			this.topic = topic ;
 		}
@@ -290,6 +292,10 @@ public class UITopicDetail extends UIForm {
 	public void setIdPostView(String IdPostView) {
 	  this.IdPostView = IdPostView ;
   }
+	
+	public void setGetTopic(boolean isGetTopic) {
+		this.isGetTopic = isGetTopic ;
+	}
 	
 	public void setIsEditTopic( boolean isEditTopic) {
 		this.isEditTopic = isEditTopic ;

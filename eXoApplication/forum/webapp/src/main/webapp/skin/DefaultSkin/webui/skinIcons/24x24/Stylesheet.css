@@ -32,11 +32,15 @@
 	background: url('icons/HotThreadNewClosePost.gif') no-repeat ;
 }
 
-.UIForumPortlet .ThreadIsLock {
+.UIForumPortlet .ThreadNewLockPost {
+	background: url('icons/ThreadNewLockPost.gif') no-repeat ;
+}
+
+.UIForumPortlet .ThreadNoNewLockPost {
 	background: url('icons/ThreadIsLock.gif') no-repeat ;
 }
 
-.UIForumPortlet .ThreadIsClose {
+.UIForumPortlet .ThreadNoNewClosePost {
 	background: url('icons/ThreadIsClose.gif') no-repeat ;
 }
 

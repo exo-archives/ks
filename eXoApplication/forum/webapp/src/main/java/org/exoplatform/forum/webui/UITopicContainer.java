@@ -386,6 +386,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			String idAndNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String []temp = idAndNumber.split(",") ;
 			Topic topic = uiTopicContainer.getTopic(temp[0]) ;
+			boolean isReadTopic = ForumFormatUtils.isStringInStrings(uiTopicContainer.userProfile.getReadTopic(), topic.getId());
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
@@ -396,6 +397,9 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			uiTopicDetail.setUpdateForum(uiTopicContainer.forum) ;
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic ) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId+"/"+ uiTopicContainer.forumId + " "));
+			if(isReadTopic){
+				uiTopicDetail.setGetTopic(true) ;
+			}
 			if(temp[2].equals("true")) {
 				uiTopicDetail.setIdPostView("true") ;
 			} else {

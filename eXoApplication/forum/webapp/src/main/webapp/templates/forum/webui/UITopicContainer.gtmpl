@@ -405,23 +405,29 @@
 										String attachment = String.valueOf(att);
 										String postCount = String.valueOf(topic.getPostCount());
 										String postView = String.valueOf(topic.getViewCount());
-										String titleTopicStatus = "Hot thread with new post" ;
-										String iconTopicStatus = "HotThreadNewPost" ;
-										if(topic.getIsLock() || isLock) {
-											iconTopicStatus = "HotThreadNewLockPost" ;
-											titleTopicStatus = "Hot thread with new post lock" ;
-										}
-										if(topic.getIsClosed()) {
-											iconTopicStatus = "HotThreadNewClosePost" ;
-											titleTopicStatus = "Hot thread with new post close" ;
-										}
 										String number = "1";
 										boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
-										String title = "";
+										String title = "TitleBold";
+										String newPost = "New";
+										String hot = ""; 
 										if(isReadTopic) {
 											title = "TitleNorman";
-										} else {
-											title = "TitleBold";
+											newPost = "NoNew"; 
+										} 
+										if(topic.getPostCount() > 10) hot = "Hot"; 
+										//HotThreadNewPost ,HotThreadNoNewPost
+										//ThreadNewPost ,ThreadNoNewPost , 
+										//ThreadNewIsClose ,ThreadNoNewIsClose
+										//ThreadNewIsLock , ThreadNoNewIsLock
+										String titleTopicStatus = hot+" Thread with "+newPost+" post" ;
+										String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
+										if(topic.getIsLock() || isLock) {
+											iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
+											titleTopicStatus = hot+" Thread with "+newPost+" post lock" ;
+										}
+										if(topic.getIsClosed()) {
+											iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
+											titleTopicStatus = hot+" Thread with "+newPost+" post close" ;
 										}
 										String approved = "" ;
 										if(canEdit){

@@ -210,7 +210,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					this.attachments_ = post.getAttachments();
 					this.refreshUploadFileList();
 				}
-				System.out.println("\n\nmessage: " + message);
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(message);
         getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
 			}

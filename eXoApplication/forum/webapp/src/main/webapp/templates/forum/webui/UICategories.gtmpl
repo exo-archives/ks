@@ -98,7 +98,7 @@
 										else classRow = "OddRow";
 										++i;
 										String classIconForum = "ForumNormalIcon";
-										String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
+										String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 										String forumTitle = forum.getForumName();
 										String forumDescription = forum.getDescription();
 										List  forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
@@ -124,7 +124,7 @@
 											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 											if((toDay-createdDate)/86400000 < 4){
 												classIconForum = "ForumNewPostIcon";
-												titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
+												titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
 											}
 											titleTopic = ForumFormatUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle);
 											if(topicNewPost.getIsClosed()) {
