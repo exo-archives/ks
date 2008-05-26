@@ -360,7 +360,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
-			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
+			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum) ;
 			popupContainer.setId("UIAddTopicContainer") ;
 			popupAction.activate(popupContainer, 670, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -546,7 +546,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
-				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
+				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum) ;
 				topicForm.setUpdateTopic(topic, true) ;
 				popupContainer.setId("UIEditTopicContainer") ;
 				popupAction.activate(popupContainer, 670, 460) ;

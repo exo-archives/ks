@@ -1308,8 +1308,16 @@ public class JCRDataStorage{
 							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
 						}
 					} else {
-						if(!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
+						if(forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+							if(topicNode.getProperty("exo:isApproved").getBoolean()) {
+								if(!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+									forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
+								}
+							}
+						}else {
+							if(!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+								forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
+							}
 						}
 						saveUserReadTopic(sProvider, post.getOwner(), topicId, false) ;
 					}

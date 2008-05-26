@@ -26,6 +26,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
@@ -107,6 +108,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private String categoryId; 
 	private String forumId ;
 	private String topicId ;
+	private Forum forum ;
 	private int id = 0;
   private String userInvalid = "" ;
   private Topic topic = new Topic() ;
@@ -184,10 +186,11 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		this.setActions(new String[]{"PreviewThread","SubmitThread","Attachment","Cancel"}) ;
 	}
 	
-	public void setTopicIds(String categoryId, String forumId) {
+	public void setTopicIds(String categoryId, String forumId, Forum forum) {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topic = new Topic();
+		this.forum = forum ;
 		UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
 		try {
 			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT) ;
@@ -474,10 +477,16 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
         }
 				uiForm.topic = new Topic();
 				forumPortlet.cancelAction() ;
-				if(isOffend) {
+				boolean hasForumMod = false ;
+				if(uiForm.forum != null) hasForumMod = uiForm.forum.getIsModerateTopic() ;
+				if(isOffend || hasForumMod) {
 					Object[] args = { "" };
 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					else {
+						args = new Object[]{ "forum", "thread" };
+						uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING)) ;
+					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 				WebuiRequestContext context = RequestContext.getCurrentInstance() ;

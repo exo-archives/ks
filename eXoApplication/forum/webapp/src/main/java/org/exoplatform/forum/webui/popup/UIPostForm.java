@@ -342,11 +342,17 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				}
 				uiForm.isMP = uiForm.isQuote = false;
 				forumPortlet.cancelAction() ;
-				if(isOffend) {
+				boolean hasTopicMod = false ;
+				if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
+				if(isOffend || hasTopicMod) {
           topicDetail.setIdPostView("false");
 					Object[] args = { "" };
 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					else {
+						args = new Object[]{ "thread", "post" };
+						uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING)) ;
+					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);

@@ -674,7 +674,7 @@ public class UITopicDetail extends UIForm {
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
-			topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId) ;
+			topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum) ;
 			topicForm.setUpdateTopic(topicDetail.topic, true) ;
 			popupContainer.setId("UIEditTopicContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
@@ -1092,10 +1092,16 @@ public class UITopicDetail extends UIForm {
 				topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
         topicDetail.setUpdatePostPageList(true);
         textAreaInput.setValue("") ;
-				if(isOffend) {
+        boolean hasTopicMod = false ;
+				if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
+				if(isOffend || hasTopicMod) {
 					Object[] args = { "" };
 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+					else {
+						args = new Object[]{ "thread", "post" };
+						uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING)) ;
+					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					topicDetail.IdPostView = "false";
 				} else {
