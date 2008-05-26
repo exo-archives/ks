@@ -17,9 +17,6 @@
 
 package org.exoplatform.forum;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 /**
  * Created by The eXo Platform SAS
@@ -256,7 +253,7 @@ public class ForumTransformHTML {
 			}else {
 				j = 0;
 				String temp = s.substring(i) ;
-				int []Int = {10,32,33,34,39,40,41,42,44,60,91,93,94,123,124,125,8221,8220};
+				int []Int = {9,10,32,33,34,39,40,41,42,44,60,91,93,94,123,124,125,8221,8220};
 				boolean isEnd = false ;
 				while(true) {
 					char c = temp.charAt(j);

@@ -144,6 +144,7 @@ public class UITopicDetail extends UIForm {
 	private long maxPost = 10 ;
 	private UserProfile userProfile = null;
 	private String userName = " " ;
+	private boolean isModeratePost = false ;
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
 		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
@@ -398,8 +399,11 @@ public class UITopicDetail extends UIForm {
 		if(IdPostView.equals("true")){
 			forumPageIterator.setSelectPage(pageList.getAvailablePage()) ;
 		}
+		this.isModeratePost = this.topic.getIsModeratePost() ;
 	}
 	
+	@SuppressWarnings("unused")
+  private boolean getIsModeratePost(){return this.isModeratePost; }
 	public void setUpdatePostPageList(boolean isUpdatePageList) {
 	  this.isUpdatePageList = isUpdatePageList;
   }

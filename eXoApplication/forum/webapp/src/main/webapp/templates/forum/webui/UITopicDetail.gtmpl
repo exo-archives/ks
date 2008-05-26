@@ -89,6 +89,7 @@
 	}
 	isNotReply = isLock ;
 	if(!isNotReply) isNotReply = !isShowMenu ;
+	boolean isModeratePost = uicomponent.getIsModeratePost() ;
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
@@ -543,14 +544,26 @@
 				User user = ForumSessionUtils.getUserByUserId(owner) ; 
 				Date userCreated = user.getCreatedDate() ;
 				String joinDate = ForumFormatUtils.getFormatDate("DDD yyyy", userCreated) ;
-				String isHedden = "" ;
+				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
+				boolean isAnd = false ;
 				if(post.getIsHidden()) {
-					isHedden = "(<span style='color:#f77617;'>This post is hidden!</span>)" ;
+					alert = alert + "This post is hidden" ;
+					isAnd = true;
 				}
-				String privatePost = "";
 				if(post.getUserPrivate().length > 1){
-					privatePost = "(<span style='color:blue;font-weight:normal;'>This post is Private !</span>)" ;
+					if(isAnd) alert = alert + " and private"
+					else alert = alert + "This post is private" ;
+					isAnd = true;
 				}
+				if(isModeratePost) {
+					if(!post.getIsApproved()) {
+						if(isAnd) alert = alert + " and pending for approval"
+						else alert = alert + "This post is pending for approval" ;
+						isAnd = true;
+					}
+				}
+				if(isAnd) alert = alert + "!</span>) "
+				else alert = " " ;
 		%>
 		<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
 			<table class="TablePost" cellspacing="0" borderspacing="0">
@@ -652,7 +665,7 @@
 							<div class="PostViewHeader">
 							<% if(checked > 0 && canEdit) {%>
 								<div class="PostViewTitle" style="float: left;">
-									<div class="PostViewIcon $classIconPost">$namePost $isHedden $privatePost</div>
+									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<div class="CheckPost" style="float: right;">
@@ -665,7 +678,7 @@
 								<div style="clear: both;"><span></span></div>
 								<% } else { %>
 								<div class="PostViewTitle">
-									<div class="PostViewIcon $classIconPost">$namePost $isHedden $privatePost</div>
+									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 								<% } %>
