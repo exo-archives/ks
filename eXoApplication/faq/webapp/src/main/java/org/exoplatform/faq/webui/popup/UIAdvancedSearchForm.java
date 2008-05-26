@@ -291,11 +291,8 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
 			UIAdvancedSearchForm advancedSearch = event.getSource() ;			
 			UIPopupAction uiPopupAction = advancedSearch.getAncestorOfType(UIPopupAction.class) ;
-			UIApplication uiApp = advancedSearch.getAncestorOfType(UIApplication.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       uiPopupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
-      return ;
 		}
 	}
 
