@@ -241,16 +241,17 @@
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
-  background: url('background/NotResponse.gif') no-repeat left ;
+  background: url('background/NotResponse.gif') no-repeat left top;
   padding-left: 28px;
   height: 18px;
   line-height: 18px;
   margin: 8px 0px;
-  white-space: nowrap;
+  overflow: hidden;
+  width: 95%;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotApproved {
-  background: url('background/question_not_approved.gif') no-repeat left ;
+  background: url('background/question_not_approved.gif') no-repeat left top;
   padding-left: 18px;
   height: 18px;
   line-height: 18px;
