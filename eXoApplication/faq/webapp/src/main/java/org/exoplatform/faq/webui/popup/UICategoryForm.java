@@ -175,21 +175,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   	return string ;
   }
   
-  private boolean filterMember(String mem){
-		String[] memberList = {"manager","member","validator","*"} ;
-		Boolean check = false ;
-		for(String member : memberList) {
-				if(member.equals(mem)){ 
-					check = true;
-					break;
-				} else {
-					check = false ;
-					continue ;
-				}
-    	}
-  	return check ;
-  }
-  
   public void checkValue(String[] strings) throws Exception {
   	String userInvalid = "" ;
     String userValid = "" ;
@@ -200,7 +185,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     		else if(string.indexOf(":") >= 0) {
         	String member = string.substring(0, string.indexOf(":")) ;
         	String groupMember = string.substring(string.indexOf("/"), string.length()) ;
-        	if(FAQUtils.getGroup(groupMember.trim()) != null && filterMember(member) != false) checking = true ;
+        	if(FAQUtils.getGroup(groupMember.trim()) != null && FAQUtils.getMember(member.trim()) != null || FAQUtils.getGroup(groupMember.trim()) != null && member.equals("*")) checking = true ;
         	else
         		checking = false ;
         } else

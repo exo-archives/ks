@@ -40,7 +40,7 @@
           for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
             <div style="margin: 5px 0px 5px 0px ;">
 		    			<div class="Icon FAQQuestionView"><span></span></div>
-		    			<div id="FAQCate$i" style="float: left"><%= question.getQuestion();%></div>
+		    			<div id="FAQCate$i" style="float: left"></div>
 		    			<div style="clear: left;"><span></span></div>
 		    		</div>
     <%        

@@ -33,6 +33,7 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.Membership;
+import org.exoplatform.services.organization.MembershipType;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
@@ -61,6 +62,11 @@ public class FAQUtils {
   	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   	return organizationService.getGroupHandler().findGroupById(group) ;
   }
+	
+  public static MembershipType getMember(String member) throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		return organizationService.getMembershipTypeHandler().findMembershipType(member) ;
+	}
 	
 	public static String[] splitForFAQ (String str) throws Exception {
 		if(str != null && str.length() > 0) {
