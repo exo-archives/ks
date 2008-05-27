@@ -60,7 +60,7 @@ UIFAQPortlet.prototype.showPicture = function(src) {
   containerNode.appendChild(imageNode) ;
   containerNode.setAttribute('title', 'Click to close') ;
   containerNode.onclick = eXo.cs.MaskLayerControl.hidePicture ;
-  maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 100, 'CENTER') ;
+  maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
   eXo.core.Browser.addOnScrollCallback('MaskLayerControl', this.scrollHandler) ;
 };
 
