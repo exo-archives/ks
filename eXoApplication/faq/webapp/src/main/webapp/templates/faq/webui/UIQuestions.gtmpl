@@ -223,9 +223,6 @@
 				String linkQuestion = "" ;
 				for(question in listQuestion) {
 					questionContent = question.getQuestion() ;
-					if(questionContent.length() > 190) {
-						questionContent = questionContent.substring(0, 189) + " ..." ;
-					}
 					String qId = question.getId() ;
 					linkQuestion=uicomponent.event("ViewQuestion", qId) ;
 					String questionIcon = "" ;
@@ -238,14 +235,35 @@
 					<div class="$questionIcon">
 						<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 								<!-- question content -->
-								<a href="$linkQuestion">
-								<%if(!question.isApproved()) {%>
-										<div class="NotApproved">$questionContent</div>
-								<%} else {%>
-										$questionContent
-								<%}%>
-								</a>
-								<!-- action of this question -->
+								<%
+								String titleQuestion = "" ;
+								if(questionContent.length() > 160) {
+									titleQuestion = questionContent ;
+									questionContent = questionContent.substring(0, 159) + " ..." ;
+									if(!uicomponent.getQuestionView().equals(qId)) {
+								%>
+										<a href="$linkQuestion" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
+							<%	} else {%>
+										<a href="$linkQuestion">
+								<%}
+								} else {
+									titleQuestion = "" ;
+								%>
+									<a href="$linkQuestion">
+							<%}
+								if(!question.isApproved()) {%>
+									<div class="NotApproved">$questionContent</div>
+							<%} else {%>
+									$questionContent
+							<%}%>
+							</a>
+							<%if(titleQuestion.trim().length() > 0) {%>
+								<div style="clear: left;"><span></span></div>
+								<div id="titleQuestion$questionId" class="questionTitle">
+									$titleQuestion
+								</div>
+							<%}%>
+							<!-- action of this question -->
 								<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;">
 									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 										<div class="UIContextMenuContainer">
@@ -306,6 +324,15 @@
 						}
 					%>
 						<div class="ResponseContent">
+							<%
+							if(titleQuestion.trim().length() > 0) {
+							%>
+								<b>Question : </b><br/>
+								<div class="Response">
+									<p>$titleQuestion</p>
+								</div>
+						<%}%>
+							<b>Response : </b><br/>
 							<div class="Response">
 								$response
 							</div>
@@ -361,7 +388,8 @@
 						  	</div>
 						    <div style="clear: left;"><span></span></div>
 							</div>
-							<div class="RelatedQuestions"><b>Related question:</b><br>
+							<b>Related question:</b><br>
+							<div class="RelatedQuestions">
 								<%String questionRelationById = "" ;
 									String cateRelaId = "" ;
 									String quesRelaId = "" ;

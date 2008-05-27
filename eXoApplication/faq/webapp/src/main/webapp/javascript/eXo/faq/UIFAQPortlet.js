@@ -28,6 +28,16 @@ UIFAQPortlet.prototype.treeView = function(id) {
 		obj.style.display = "none" ;
 	}
 };
+
+UIFAQPortlet.prototype.viewTitle = function(id) {
+	var obj = document.getElementById(id) ;
+	obj.style.display = "block" ;
+};
+UIFAQPortlet.prototype.hiddenTitle = function(id) {
+	var obj = document.getElementById(id) ;
+	obj.style.display = "none" ;
+};
+
 /*
 UIFAQPortlet.prototype.openPicture = function(obj,id) {
 	var img = document.getElementById(id) ;
