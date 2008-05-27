@@ -432,7 +432,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsLock(true);
 			uiTopicContainer.isUpdate = true ;
-			uiTopicContainer.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, forum, false) ;
+			uiTopicContainer.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 2) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -444,7 +444,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsLock(false);
 			uiTopicContainer.isUpdate = true ;
-			uiTopicContainer.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, forum, false) ;
+			uiTopicContainer.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 2) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -456,7 +456,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsClosed(false);
 			uiTopicContainer.isUpdate = true ;
-			uiTopicContainer.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, forum, false) ;
+			uiTopicContainer.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 1) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -468,7 +468,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsClosed(true);
 			uiTopicContainer.isUpdate = true ;
-			uiTopicContainer.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, forum, false) ;
+			uiTopicContainer.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 1) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

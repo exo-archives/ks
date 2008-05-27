@@ -310,7 +310,7 @@ public class JCRDataStorage{
 			switch (type) {
 			case 1: { 
 				forumNode.setProperty("exo:isClosed", forum.getIsClosed()) ; 
-				queryLastTopic(sProvider, forumPath);
+//				queryLastTopic(sProvider, forumPath);
 				break;
 			}
 			case 2: { forumNode.setProperty("exo:isLock", forum.getIsLock()) ; break;}
@@ -677,7 +677,6 @@ public class JCRDataStorage{
 		Query query = qm.createQuery(queryString , Query.XPATH) ;
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes() ;
-		if(iter.getSize() < 1) return null ;
 		Node topicNode = null;
 		boolean isSavePath = false ;
 		try {
@@ -838,32 +837,30 @@ public class JCRDataStorage{
 			String topicPath = topic.getPath();
 			Node topicNode = (Node)forumHomeNode.getSession().getItem(topicPath) ;
 			switch (type) {
-			case 1: { 
-				queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
-				topicNode.setProperty("exo:isClosed", topic.getIsClosed()) ; 
-				break;
-			}
-			case 2: { topicNode.setProperty("exo:isLock", topic.getIsLock()) ; break;}
-			case 3: { 
-				topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
-				queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
-				break;
-			}
-			case 4: { topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ; break;}
-			case 5: { 
-				topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ; 
-				queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
-				break;
-			}
-			case 6: { 
-				topicNode.setProperty("exo:isActive", topic.getIsActive()) ; 
-				queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
-				break;
-			}
-			default:
-				break;
+				case 1: { 
+					topicNode.setProperty("exo:isClosed", topic.getIsClosed()) ; 
+					break;
+				}
+				case 2: { topicNode.setProperty("exo:isLock", topic.getIsLock()) ; break;}
+				case 3: { 
+					topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
+					break;
+				}
+				case 4: { topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ; break;}
+				case 5: { 
+					topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ; 
+					break;
+				}
+				case 6: { 
+					topicNode.setProperty("exo:isActive", topic.getIsActive()) ; 
+					break;
+				}
+				default: break;
 			}
 			forumHomeNode.getSession().save() ;
+			if(type != 2 && type != 4 && type < 7) {
+				queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
+			}
 		} catch (RepositoryException e) {
 			e.printStackTrace() ;
 		}

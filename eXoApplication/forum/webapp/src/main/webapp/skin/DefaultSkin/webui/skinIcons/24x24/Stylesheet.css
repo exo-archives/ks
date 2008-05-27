@@ -19,29 +19,44 @@
 	background: url('icons/ForumNormalIcon.gif') no-repeat ;
 }
 
+.UIForumPortlet .HotThreadNewClosePost {
+	background: url('icons/HotThreadNewClosePost.gif') no-repeat ;
+}
+
+.UIForumPortlet .HotThreadNewLockPost {
+	background: url('icons/HotThreadNewLockPost.gif') no-repeat ;
+}
 
 .UIForumPortlet .HotThreadNewPost {
-	background: url('icons/HotThreadNewPost.gif') no-repeat ;
+	background: url('icons/HotThreadNoNewPost.gif') no-repeat ;
+}
+
+.UIForumPortlet .HotThreadNoNewClosePost {
+	background: url('icons/HotThreadNoNewClosePost.gif') no-repeat ;
+}
+
+.UIForumPortlet .HotThreadNoNewLockPost {
+	background: url('icons/HotThreadNoNewLockPost.gif') no-repeat ;
 }
 
 .UIForumPortlet .HotThreadNoNewPost {
 	background: url('icons/HotThreadNoNewPost.gif') no-repeat ;
 }
 
-.UIForumPortlet .HotThreadNewClosePost {
-	background: url('icons/HotThreadNewClosePost.gif') no-repeat ;
-}
-
-.UIForumPortlet .ThreadNewLockPost {
-	background: url('icons/ThreadNewLockPost.gif') no-repeat ;
+.UIForumPortlet .ThreadNoNewClosePost {
+	background: url('icons/ThreadIsClose.gif') no-repeat ;
 }
 
 .UIForumPortlet .ThreadNoNewLockPost {
 	background: url('icons/ThreadIsLock.gif') no-repeat ;
 }
 
-.UIForumPortlet .ThreadNoNewClosePost {
-	background: url('icons/ThreadIsClose.gif') no-repeat ;
+.UIForumPortlet .ThreadNewClosePost {
+	background: url('icons/ThreadNewClosePost.gif') no-repeat ;
+}
+
+.UIForumPortlet .ThreadNewLockPost {
+	background: url('icons/ThreadNewLockPost.gif') no-repeat ;
 }
 
 .UIForumPortlet .ThreadNewPost {
@@ -50,10 +65,6 @@
 
 .UIForumPortlet .ThreadNoNewPost {
 	background: url('icons/ThreadNoNewPost.gif') no-repeat ;
-}
-
-.UIForumPortlet .HotThreadNewLockPost {
-	background: url('icons/HotThreadNewLockPost.gif') no-repeat ;
 }
 /*******************************  MenuCategoryIcon    **************************************/
 
