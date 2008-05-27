@@ -579,30 +579,38 @@ public class UITopicDetail extends UIForm {
 	static public class GoNumberPageActionListener extends EventListener<UITopicDetail> {
     public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
+			int idbt = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
 			UIFormStringInput stringInput1 = topicDetail.getUIStringInput("gopage1") ;
 			UIFormStringInput stringInput2 = topicDetail.getUIStringInput("gopage2") ;
-			stringInput1.addValidator(PositiveNumberFormatValidator.class) ;
-			stringInput2.addValidator(PositiveNumberFormatValidator.class) ;
-			String numberPage1 = stringInput1.getValue() ;
-			String numberPage2 = stringInput2.getValue() ;
 			String numberPage = "" ;
-			if(numberPage1 != null && numberPage1.length() > 0) {
-				numberPage = numberPage1 ;
-			} else numberPage = numberPage2 ;
-			if(numberPage != null && numberPage.length() > 0) {
-				Long page = Long.parseLong(numberPage);
-				if(page == 0) {
-					page = (long)1;
-				} else if(page > topicDetail.pageList.getAvailablePage()){
-					page = topicDetail.pageList.getAvailablePage() ;
-				}
-				topicDetail.isGopage = true ;
-				topicDetail.pageSelect = page ;
-				topicDetail.getChild(UIForumPageIterator.class).setSelectPage(page) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			if(idbt == 1) {
+				numberPage = stringInput1.getValue() ;
+			} else {
+				numberPage = stringInput2.getValue() ;
 			}
-			stringInput1.setValue("") ;
-			stringInput2.setValue("") ;
+			stringInput1.setValue("") ; stringInput2.setValue("") ;
+			if(numberPage != null && numberPage.trim().length() > 0) {
+				try {
+					long page = Long.parseLong(numberPage.trim()) ;
+					if(page < 0) {
+						Object[] args = { "go page" };
+						throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
+					} else {
+						if(page == 0) {
+							page = (long)1;
+						} else if(page > topicDetail.pageList.getAvailablePage()){
+							page = topicDetail.pageList.getAvailablePage() ;
+						}
+						topicDetail.isGopage = true ;
+						topicDetail.pageSelect = page ;
+						topicDetail.getChild(UIForumPageIterator.class).setSelectPage(page) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+					}
+	      } catch (NumberFormatException e) {
+		      Object[] args = { "go page" };
+					throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
+	      }
+			}
 		}
 	}
 

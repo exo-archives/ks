@@ -53,7 +53,6 @@ import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
  * Created by The eXo Platform SARL
@@ -316,40 +315,38 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 	static public class GoNumberPageActionListener extends EventListener<UITopicContainer> {
     public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer topicContainer = event.getSource() ;
+			int idbt = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
 			UIFormStringInput stringInput1 = topicContainer.getUIStringInput("gopage1") ;
 			UIFormStringInput stringInput2 = topicContainer.getUIStringInput("gopage2") ;
-			stringInput1.addValidator(PositiveNumberFormatValidator.class) ;
-			stringInput2.addValidator(PositiveNumberFormatValidator.class) ;
-			String numberPage1 = stringInput1.getValue() ;
-			String numberPage2 = stringInput2.getValue() ;
 			String numberPage = "" ;
-			if(numberPage1 != null && numberPage1.length() > 0) {
-				numberPage = numberPage1 ;
-			} else numberPage = numberPage2 ;
-			if(numberPage != null && numberPage.length() > 0) {
-				boolean isNumber = true ;
-				for (int i = 0; i < numberPage.length(); i++) {
-	        char c = numberPage.charAt(i) ;
-	        if(!Character.isDigit(c)) {
-	        	isNumber = false ;
-	        	break ;
-	        }
-        }
-				if(isNumber) {
-					Long page = Long.parseLong(numberPage);
-					if(page == 0) {
-						page = (long)1;
-					} else if(page > topicContainer.pageList.getAvailablePage()){
-						page = topicContainer.pageList.getAvailablePage() ;
-					}
-					topicContainer.page = page ;
-					topicContainer.isGoPage = true ;
-					topicContainer.getChild(UIForumPageIterator.class).setSelectPage(page) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
-				}
+			if(idbt == 1) {
+				numberPage = stringInput1.getValue() ;
+			} else {
+				numberPage = stringInput2.getValue() ;
 			}
-			stringInput1.setValue("") ;
-			stringInput2.setValue("") ;
+			stringInput1.setValue("") ; stringInput2.setValue("") ;
+			if(numberPage != null && numberPage.trim().length() > 0) {
+				try {
+					long page = Long.parseLong(numberPage.trim()) ;
+					if(page < 0) {
+						Object[] args = { "go page" };
+						throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
+					} else {
+						if(page == 0) {
+							page = (long)1;
+						} else if(page > topicContainer.pageList.getAvailablePage()){
+							page = topicContainer.pageList.getAvailablePage() ;
+						}
+						topicContainer.page = page ;
+						topicContainer.isGoPage = true ;
+						topicContainer.getChild(UIForumPageIterator.class).setSelectPage(page) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+					}
+	      } catch (NumberFormatException e) {
+		      Object[] args = { "go page" };
+					throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
+	      }
+			}
 		}
 	}
 	
