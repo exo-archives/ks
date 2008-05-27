@@ -141,6 +141,10 @@ public class UICategory extends UIForm	{
 		this.isEditCategory = isEdit ;
 	}
 	
+	public void setIsEditForum(boolean isEdit) {
+		this.isEditForum = isEdit ;
+	}
+	
 	@SuppressWarnings("unused")
 	private Forum getForum(String forumId) throws Exception {
 		for(Forum forum : this.forums) {

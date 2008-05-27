@@ -405,6 +405,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 					context.addUIComponentToUpdateByAjax(uiCategories) ;
 				}else {
 					UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class) ;
+					uiCategory.setIsEditForum(true) ;
 					context.addUIComponentToUpdateByAjax(uiCategory) ;
 				}
 			} else {
