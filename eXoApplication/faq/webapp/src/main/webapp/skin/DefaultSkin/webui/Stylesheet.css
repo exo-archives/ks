@@ -197,7 +197,7 @@
   white-space: nowrap;
 }
 
-.UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIFAQPopupCategory {
+.UIFAQPortlet .UIQuestions .FAQContainer .UIFAQPopupCategory {
   left: 40px;
   position: absolute;
   top: 15px;

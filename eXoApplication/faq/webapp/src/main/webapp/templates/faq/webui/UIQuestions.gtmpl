@@ -163,8 +163,7 @@
 						}
 						 %>
 						<!-- action of this category -->
-					<div style="position: relative;">
-						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
+						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;">
 							<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 								<div class="UIContextMenuContainer">
 																
@@ -183,7 +182,7 @@
 														String linkView = uicomponent.event(viewAction, categoryId) ;
 														String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
 												%>
-														<a href="$linkView" class="MenuItem">
+														<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem">
 															<div class="ItemIcon $viewAction" style="padding:3px 0px 5px 5px;">
 																	<div style="padding-left: 20px;">$itemLabelView</div>
 															</div>
@@ -205,7 +204,6 @@
 							</div>
 						</div>
 					</div>
-				</div>
 			</div>
 	<% 	i ++ ;
 			}
@@ -248,8 +246,7 @@
 								<%}%>
 								</a>
 								<!-- action of this question -->
-							<div style="position: relative;">
-								<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;" onmousedown="event.cancelBubble=true;">
+								<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;">
 									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 										<div class="UIContextMenuContainer">
 																		
@@ -273,7 +270,7 @@
 																String linkView = uicomponent.event(viewAction, qId) ;
 																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
 														%>
-																<a href="$linkView" class="MenuItem">
+																<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem">
 																	<div class="ItemIcon $iconView" style="padding:3px 0px 5px 5px;">
 																			<div style="padding-left: 20px;">$itemLabelView</div>
 																	</div>
@@ -296,7 +293,6 @@
 									</div>
 								</div>
 							</div>
-						</div>
 					</div>
 					<%if(uicomponent.getQuestionView().equals(qId)) {
 						String responseBy = "..." ;
