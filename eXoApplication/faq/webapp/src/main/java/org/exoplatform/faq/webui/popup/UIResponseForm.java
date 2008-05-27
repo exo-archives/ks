@@ -161,12 +161,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void initPage(boolean isEdit) {
     if(!isEdit) {
       questionContent_ = new UIFormTextAreaInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
-      String input = question.getQuestion() ;
-      if(input.indexOf("<p>") >= 0 && input.indexOf("</p>") >= 0 ) {
-        input = input.replace("<p>", "") ;
-        input = input.substring(0, input.lastIndexOf("</p>") - 1) ;
-      }
-      questionContent_.setValue(input) ;
+      questionContent_.setValue(question.getQuestion()) ;
       questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
       reponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, null, null , true) ;
       checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, question.isActivated()) ;
@@ -265,12 +260,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
    return listRelationQuestion ; 
   }
   
-  /*// get and set form info:
-  public void setListLanguageToReponse(List<String> listLanguageToResponse) {
-    this.listLanguageToReponse.clear() ;
-    this.listLanguageToReponse.addAll(listLanguageToResponse) ;
-  }*/
-  
   @SuppressWarnings("unused")
   private List<SelectItemOption<String>> getListLanguageToReponse() {
     return listLanguageToReponse ;
@@ -323,6 +312,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ; 
       }
+      questionContent = questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;") ;
       
       UIFormWYSIWYGInput formWYSIWYGInput = response.getChildById(RESPONSE_CONTENT) ;
       String responseQuestionContent = formWYSIWYGInput.getValue() ;
@@ -331,18 +321,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ; 
-      } else {
-        if(responseQuestionContent.indexOf("<p>") >= 0) {
-          responseQuestionContent = responseQuestionContent.replace("<p>", "") ;
-          responseQuestionContent = responseQuestionContent.substring(0, responseQuestionContent.lastIndexOf("</p>")) ;
-        }
       }
       
       String user = FAQUtils.getCurrentUser() ;
       java.util.Date date = new java.util.Date();
       
       if(question.getLanguage().equals(response.languageIsResponsed)) {
-        question.setQuestion(questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+        question.setQuestion(questionContent) ;
         //set response of question
         question.setResponseBy(user) ;
         question.setDateResponse(date) ;
@@ -363,7 +348,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       for(QuestionLanguage questionLanguage : response.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(response.languageIsResponsed)) {
-          questionLanguage.setQuestion(questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          questionLanguage.setQuestion(questionContent) ;
           questionLanguage.setResponse(responseQuestionContent) ;
         } else {
           if(questionLanguage.getResponse() != null && questionLanguage.getResponse().trim().length() > 0 && 
@@ -488,9 +473,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       for(QuestionLanguage questionLanguage : questionForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(questionForm.languageIsResponsed)) {
-          if(responseContent.getValue()!= null && responseContent.getValue().trim().length() > 0) {
-            String content = responseContent.getValue().replace("<p>", "") ;
-            questionLanguage.setResponse(content.substring(0, content.lastIndexOf("</p>"))) ;
+          String content = responseContent.getValue();
+          if(content!= null && content.trim().length() > 0) {
+            questionLanguage.setResponse(content) ;
           } else {
             questionLanguage.setResponse(" ") ;
           }

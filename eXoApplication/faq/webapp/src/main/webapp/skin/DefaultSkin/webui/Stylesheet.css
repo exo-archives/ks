@@ -246,8 +246,7 @@
   height: 18px;
   line-height: 18px;
   margin: 8px 0px;
-  overflow: hidden;
-  width: 95%;
+  white-space: nowrap;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotApproved {

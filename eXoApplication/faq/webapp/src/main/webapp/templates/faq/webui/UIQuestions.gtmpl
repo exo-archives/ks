@@ -225,6 +225,9 @@
 				String linkQuestion = "" ;
 				for(question in listQuestion) {
 					questionContent = question.getQuestion() ;
+					if(questionContent.length() > 190) {
+						questionContent = questionContent.substring(0, 189) + " ..." ;
+					}
 					String qId = question.getId() ;
 					linkQuestion=uicomponent.event("ViewQuestion", qId) ;
 					String questionIcon = "" ;
@@ -308,7 +311,7 @@
 					%>
 						<div class="ResponseContent">
 							<div class="Response">
-								$response<br>
+								$response
 							</div>
 							<div class="AttachmentContent">
 								<div style="margin-top: 5px; margin-bottom: 5px;">
