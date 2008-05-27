@@ -1,4 +1,7 @@
 <% 
+	import java.text.Format;
+	import java.text.SimpleDateFormat;
+	import java.util.Date;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.service.FileAttachment;
@@ -9,20 +12,15 @@
 			<% 
  						Question question = uicomponent.getViewQuestion() ; 
 						String qId = question.getId();
-						String[] arrayString ;
 						String responseBy = "..." ;
 						String date = "..." ;
 						String response = "<center><b>This question have not yet answer</center></b>" ;
 						
-						if( question.getResponses().trim().length() > 0) {
-							arrayString = question.getResponses().split("/") ;
-							responseBy = arrayString[0] ;
-							date = arrayString[1] ;
-							response = "" ;
-							for(int t = 2 ; t < arrayString.length ; t ++) {
-								if(arrayString[t].trim().length() > 0)
-									response += arrayString[t];
-							}
+						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+							responseBy = question.getResponseBy() ;
+							Format formatter = new SimpleDateFormat("dd/MM/yyyy ");
+						 	date = formatter.format(question.getDateResponse());
+							response = question.getResponses();
 						}
 					%>
 			<div class="ResponseContent">

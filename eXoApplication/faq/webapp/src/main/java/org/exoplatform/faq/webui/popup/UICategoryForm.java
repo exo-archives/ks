@@ -301,6 +301,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				questions.setCategories() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 				return ;
 			} 
       

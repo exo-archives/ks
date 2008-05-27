@@ -88,7 +88,7 @@
 									</div>
 								</a>
 							</div>
-							<div class="SeparatorLine"><span/></div>
+							<div class="SeparatorLine"><span></span></div>
 						
 							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
 								<a href="">
@@ -103,7 +103,7 @@
 									</div>
 								</a>
 							</div>
-							<div style="clear: left;"><span/></div>
+							<div style="clear: left;"><span></span></div>
 						</div>
 						<div class="SearchForm">
 								<%uicomponent.renderChildren() ;%>
@@ -352,9 +352,9 @@
 								    		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 								    %>
 								    		<div class="LabelBox" style="margin-left: 5px;">
-													<div class="AttachmentIcon FileAttachmentIcon"><span/></div>
+													<div class="AttachmentIcon FileAttachmentIcon"><span></span></div>
 													<a class="AttachmentLabel" href="$linkImage">$fileName</a>
-													<div style="clear: left;"><span/></div>
+													<div style="clear: left;"><span></span></div>
 													<div class="Size">Size: $fileSize B</div>
 												</div>
 								    <%}

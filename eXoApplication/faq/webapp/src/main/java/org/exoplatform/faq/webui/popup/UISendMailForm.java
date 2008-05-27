@@ -87,11 +87,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     Question question = FAQUtils.getFAQService().getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
     String content = "" ;
     String response = question.getResponses() ;
-    if(response != null && response.trim().length() > 0) {
-      for(int i = 0 ; i < 2; i ++) {
-        response = response.substring(response.indexOf("/") + 1) ;
-      }
-    }
     if(response.equals(" ")) content = "Question: " + question.getQuestion() ;
     else 
     	content ="<p> Question: " + question.getQuestion() + "</p>" +
@@ -205,11 +200,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
          if(questionLanguage.getLanguage().equals(language)) {
         	 sendMailForm.languageIsResponsed = language ;
         	 String response = questionLanguage.getResponse() ;
-           if(response != null && response.trim().length() > 0) {
-             for(int i = 0 ; i < 2; i ++) {
-               response = response.substring(response.indexOf("/") + 1) ;
-             }
-           }
            @SuppressWarnings("unused")
           String content = "" ;
            if(response.equals(" ")) content = "Question: " + questionLanguage.getQuestion() ;
