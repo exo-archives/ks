@@ -624,8 +624,8 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .UIQuestionForm textarea {
 	font-size:11px;
 	height:150px;
-	width:500px;
-	float: left ;
+	width:95%;
+	float:left ;
 }
 
 /******************************  UIResponseQuestion  ***************************************/
