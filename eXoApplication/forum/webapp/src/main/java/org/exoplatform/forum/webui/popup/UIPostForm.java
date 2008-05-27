@@ -241,7 +241,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				Post post = new Post();
 				System.out.println("\n\npostTitle: " + postTitle);
-				post.setName("khogn biet") ;
+				post.setName(postTitle) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
 				post.setCreatedDate(new Date()) ;
