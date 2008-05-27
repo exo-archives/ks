@@ -34,9 +34,8 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.web.application.RequestContext;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -454,8 +453,9 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
           try {
             forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, false, false);
             forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
+            UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+    				topicDetail.setIsEditTopic(true) ;
           } catch (PathNotFoundException e) {
-            
             // hung.hoang add
             UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
             uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
@@ -465,7 +465,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				} else {
 					topicNew.setVoteRating(0.0) ;
 					topicNew.setUserVoteRating(new String[] {}) ;
-          
           try {
             forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, true, false);
           } catch (PathNotFoundException e) {
@@ -489,8 +488,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
-				WebuiRequestContext context = RequestContext.getCurrentInstance() ;
-				context.addUIComponentToUpdateByAjax(forumPortlet) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
 				String sms = "" ;
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
