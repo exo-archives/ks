@@ -11,7 +11,7 @@
 				<div class="ControlbarCotainer" style="height: auto">
 					<table>
 						<tr>
-							<td>
+							<td width="85%">
 								<%String[] actions = [""];
 									if(isAdmin) { 
 										actions = ["AddCategory","AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];

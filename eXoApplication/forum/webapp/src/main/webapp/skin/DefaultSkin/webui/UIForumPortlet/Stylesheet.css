@@ -123,7 +123,6 @@
 .UIForumPortlet .UIForumActionBar {
 	border: 1px solid #9499d8;
 	margin: 7px 10px;
-	height: 30px;
 }
 
 .UIForumPortlet .UIForumActionBar .ControlbarCotainer {
@@ -131,12 +130,12 @@
 	border-bottom: none;
 	background: #F9F9FD url('background/BgToolbar1x28.gif') repeat-x top;
 	padding-left: 5px;
-	height: 28px;
 }
 
 .UIForumPortlet .UIForumActionBar .Icon {
 	padding: 0px 2px 0px 26px;
 	background-position: left center ;
+	white-space: nowrap;
 }
 
 .UIForumPortlet .UIForumActionBar .SeparatorLine {
