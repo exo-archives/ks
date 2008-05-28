@@ -85,7 +85,7 @@ public class UIQuickSeach  extends UIForm {
 //			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			String text = formStringInput.getValue() ;
-			text = FAQUtils.filterString(text, true) ;
+			if(!FAQUtils.isFieldEmpty(text)) text = FAQUtils.filterString(text, true) ;
 			if(text != null && text.trim().length() > 0) {
 				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 800) ;
 				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
