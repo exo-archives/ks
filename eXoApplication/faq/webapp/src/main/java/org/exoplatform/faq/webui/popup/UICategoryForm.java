@@ -273,6 +273,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setModerateQuestions(moderatequestion) ;
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentId() ;
+			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			if(parentCate != null && parentCate.length() > 0) {
         /*----modified by Mai Van Ha----*/
           List<String> listUser = new ArrayList<String>() ;
@@ -295,12 +296,12 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         		uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
               ApplicationMessage.INFO)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      			questions.setCategories() ;
+      			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
             return ; 
 				}
-				UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				questions.setCategories() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 				return ;
 			} 
       
@@ -316,10 +317,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       		uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
             ApplicationMessage.INFO)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+          questions.setCategories() ;
+    			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
           return ; 
 			}
-			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			questions.setCategories() ;
+      questions.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			return ;
 			

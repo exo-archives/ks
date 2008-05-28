@@ -228,20 +228,20 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String response = advancedSearch.getUIFormTextAreaInput(RESPONSE).getValue() ;
 			FAQEventQuery eventQuery = new FAQEventQuery() ;
 			eventQuery.setType(type) ;
-			eventQuery.setText(text) ;
-			eventQuery.setName(categoryName) ;
+			if(!FAQUtils.isFieldEmpty(text)) eventQuery.setText(FAQUtils.filterString(text, true)) ;
+			if(!FAQUtils.isFieldEmpty(categoryName)) eventQuery.setName(FAQUtils.filterString(categoryName, false)) ;
 			eventQuery.setIsModeQuestion(modeQuestion) ;
-			eventQuery.setModerator(moderator) ;
+			if(!FAQUtils.isFieldEmpty(moderator)) eventQuery.setModerator(FAQUtils.filterString(moderator, false)) ;
 			eventQuery.setFromDate(fromDate) ;
 			eventQuery.setToDate(toDate) ;
-			eventQuery.setAuthor(author) ;
+			if(!FAQUtils.isFieldEmpty(author)) eventQuery.setAuthor(FAQUtils.filterString(author, false)) ;
 //			eventQuery.setLanguage(language) ;
-			eventQuery.setEmail(emailAddress) ;
-			eventQuery.setQuestion(question) ;
-			eventQuery.setResponse(response) ;
+			if(!FAQUtils.isFieldEmpty(emailAddress)) eventQuery.setEmail(FAQUtils.filterString(emailAddress, true)) ;
+			if(!FAQUtils.isFieldEmpty(question)) eventQuery.setQuestion(FAQUtils.filterString(question, false)) ;
+			if(!FAQUtils.isFieldEmpty(response)) eventQuery.setResponse(FAQUtils.filterString(response, false)) ;
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
 			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			if(type.equals("faqCategory")) {	
+			if(type.equals("faqCategory")) {
 				resultContainer.setIsRenderedContainer(4) ;
 				UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 				advanced.setValue(true, true, true, true, false, false, false, false, false) ;
@@ -281,6 +281,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(fromDate != null) advanced.getUIFormDateTimeInput(FROM_DATE).setCalendar(fromDate) ;
 				if(toDate != null) advanced.getUIFormDateTimeInput(TO_DATE).setCalendar(toDate) ;
 				ResultQuickSearch result = resultContainer.getChild(ResultQuickSearch.class) ;
+				if(!FAQUtils.isFieldEmpty(text)) text = FAQUtils.filterString(text, true) ;
 				List<FAQFormSearch> list = faqService.getAdvancedEmptry(FAQUtils.getSystemProvider(), text, fromDate, toDate) ;
 				result.setFormSearchs(list) ;
 			}

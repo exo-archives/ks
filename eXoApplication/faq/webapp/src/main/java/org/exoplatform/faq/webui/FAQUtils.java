@@ -16,7 +16,6 @@
  */
 package org.exoplatform.faq.webui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +31,6 @@ import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.Group;
-import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.MembershipType;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -48,9 +46,32 @@ import org.exoplatform.webui.form.UIFormUploadInput;
  * Apr 14, 2008, 2:56:30 PM
  */
 public class FAQUtils {
-	
+	private static String AKONG = "@" ;
+  public static String[] specialString = {"!", "#", "$", "%", "^", "&"
+                                            , ":", ">", "<", "~", "`", "]", "'", "/"} ;
+  
 	static public FAQService getFAQService() throws Exception {
     return (FAQService)PortalContainer.getComponent(FAQService.class) ;
+  }
+	
+	public static String filterString(String text, boolean isEmail) {
+
+    for (String str : specialString) {
+      text = text.replaceAll(str, "") ;
+    }
+    if (!isEmail) text = text.replaceAll(AKONG, "") ;
+    int i = 0 ;
+    while (i < text.length()) {
+      if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|'
+        || text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\' || text.charAt(i) == '+'
+        || text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$'
+        || text.charAt(i) == '"'  ) {
+        text = text.replace((text.charAt(i)) + "", "") ;
+      } else {
+        i ++ ;
+      }
+    }
+    return text ;
   }
 	
 	public static User getUserByUserId(String userId) throws Exception {

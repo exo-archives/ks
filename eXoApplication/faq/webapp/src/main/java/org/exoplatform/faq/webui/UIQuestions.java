@@ -430,7 +430,7 @@ public class UIQuestions extends UIContainer {
 			UIPopupAction uiPopupAction = uiPortlet.getChild(UIPopupAction.class) ; 
       UIPopupContainer uiPopupContainer = uiPopupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
-      uiPopupAction.activate(uiPopupContainer, 530, 300) ;
+      uiPopupAction.activate(uiPopupContainer, 530, 320) ;
       if(!FAQUtils.isFieldEmpty(categoryId)) {
       	uiPopupContainer.setId("SubCategoryForm") ;
       	category.setParentId(categoryId) ;
