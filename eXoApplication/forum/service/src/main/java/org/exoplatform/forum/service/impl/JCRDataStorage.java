@@ -868,113 +868,110 @@ public class JCRDataStorage{
 	
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
-		try{
-			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
-			Node forumNode = CategoryNode.getNode(forumId) ;
-			Node topicNode;
-			if(isNew) {
-				topicNode = forumNode.addNode(topic.getId(), "exo:topic") ;
-				topicNode.setProperty("exo:id", topic.getId()) ;
-				topicNode.setProperty("exo:path", topicNode.getPath()) ;
-				topicNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
-				topicNode.setProperty("exo:lastPostBy", topic.getLastPostBy()) ;
-				topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime()) ;
-				topicNode.setProperty("exo:postCount", -1) ;
-				topicNode.setProperty("exo:viewCount", 0) ;
-				topicNode.setProperty("exo:tagId", topic.getTagId());
-				// setTopicCount for Forum
-				long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1 ;
-				forumNode.setProperty("exo:topicCount", newTopicCount ) ;
-				
-				Node forumStatistic = forumHomeNode.getNode(FORUM_STATISTIC) ;
-				long topicCount = forumStatistic.getProperty("exo:topicCount").getLong() ;
-				forumStatistic.setProperty("exo:topicCount", topicCount + 1) ;
-				Node userProfileNode = getUserProfileNode(sProvider) ;
-				Node newProfileNode ;
-				try {
-					newProfileNode = userProfileNode.getNode(topic.getOwner()) ;
-					long totalTopicByUser = 0;
-					if(newProfileNode.hasProperty("exo:totalTopic"))totalTopicByUser = newProfileNode.getProperty("exo:totalTopic").getLong() ;
-					newProfileNode.setProperty("exo:totalTopic", totalTopicByUser + 1);
-				}catch (PathNotFoundException e) {
-					newProfileNode = userProfileNode.addNode(topic.getOwner(), "exo:userProfile") ;
-					newProfileNode.setProperty("exo:userId", topic.getOwner());
-					newProfileNode.setProperty("exo:userTitle", "User");
-					newProfileNode.setProperty("exo:totalTopic", 1);
-				}
-				userProfileNode.getSession().save() ;
-				
-				List<String> emailList = new ArrayList<String>() ;
-				//send watching notification and send notify
-				if(forumNode.isNodeType("exo:forumWatching")){
-					emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues())) ;
-					if(emailList.size() > 0) {					
-						Message message = new Message();
-						message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-						message.setSubject("eXo Forum Watching Notification!");
-						message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString() 
-								+"</b>' have just	added thread:</br>" + topic.getTopicName());
-						sendNotification(emailList, message) ;					
-					}
-				}
-			} else {
-				topicNode = forumNode.getNode(topic.getId()) ;
-			}
-			topicNode.setProperty("exo:owner", topic.getOwner()) ;
-			topicNode.setProperty("exo:name", topic.getTopicName()) ;
-			topicNode.setProperty("exo:modifiedBy", topic.getModifiedBy()) ;
-			topicNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
-			topicNode.setProperty("exo:description", topic.getDescription()) ;
-			topicNode.setProperty("exo:icon", topic.getIcon()) ;
+		Node CategoryNode = forumHomeNode.getNode(categoryId) ;
+		Node forumNode = CategoryNode.getNode(forumId) ;
+		Node topicNode;
+		if(isNew) {
+			topicNode = forumNode.addNode(topic.getId(), "exo:topic") ;
+			topicNode.setProperty("exo:id", topic.getId()) ;
+			topicNode.setProperty("exo:path", topicNode.getPath()) ;
+			topicNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
+			topicNode.setProperty("exo:lastPostBy", topic.getLastPostBy()) ;
+			topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime()) ;
+			topicNode.setProperty("exo:postCount", -1) ;
+			topicNode.setProperty("exo:viewCount", 0) ;
+			topicNode.setProperty("exo:tagId", topic.getTagId());
+			// setTopicCount for Forum
+			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1 ;
+			forumNode.setProperty("exo:topicCount", newTopicCount ) ;
 			
-			topicNode.setProperty("exo:isModeratePost", topic.getIsModeratePost()) ;
-			topicNode.setProperty("exo:isNotifyWhenAddPost", topic.getIsNotifyWhenAddPost()) ;
-			topicNode.setProperty("exo:isClosed", topic.getIsClosed()) ;
-			topicNode.setProperty("exo:isLock", topic.getIsLock()) ;
-			topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
-			topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ;
-			topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ;
-			topicNode.setProperty("exo:isActive", topic.getIsActive()) ;
-			topicNode.setProperty("exo:canView", topic.getCanView()) ;
-			topicNode.setProperty("exo:canPost", topic.getCanPost()) ;
-			topicNode.setProperty("exo:userVoteRating", topic.getUserVoteRating()) ;
-			topicNode.setProperty("exo:voteRating", topic.getVoteRating()) ;
-			topicNode.setProperty("exo:numberAttachments", 0) ;
-			//forumHomeNode.save() ;
-			forumHomeNode.getSession().save() ;
-			if(!isMove) {
-				if(isNew) {
-					// createPost first
-					String id = topic.getId().replaceFirst("topic", "post") ;
-					Post post = new Post() ;
-					post.setId(id) ;
-					post.setOwner(topic.getOwner()) ;
-					post.setCreatedDate(new Date()) ;
+			Node forumStatistic = forumHomeNode.getNode(FORUM_STATISTIC) ;
+			long topicCount = forumStatistic.getProperty("exo:topicCount").getLong() ;
+			forumStatistic.setProperty("exo:topicCount", topicCount + 1) ;
+			Node userProfileNode = getUserProfileNode(sProvider) ;
+			Node newProfileNode ;
+			try {
+				newProfileNode = userProfileNode.getNode(topic.getOwner()) ;
+				long totalTopicByUser = 0;
+				if(newProfileNode.hasProperty("exo:totalTopic"))totalTopicByUser = newProfileNode.getProperty("exo:totalTopic").getLong() ;
+				newProfileNode.setProperty("exo:totalTopic", totalTopicByUser + 1);
+			}catch (PathNotFoundException e) {
+				newProfileNode = userProfileNode.addNode(topic.getOwner(), "exo:userProfile") ;
+				newProfileNode.setProperty("exo:userId", topic.getOwner());
+				newProfileNode.setProperty("exo:userTitle", "User");
+				newProfileNode.setProperty("exo:totalTopic", 1);
+			}
+			userProfileNode.getSession().save() ;
+			
+			List<String> emailList = new ArrayList<String>() ;
+			//send watching notification and send notify
+			if(forumNode.isNodeType("exo:forumWatching")){
+				emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues())) ;
+				if(emailList.size() > 0) {					
+					Message message = new Message();
+					message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+					message.setSubject("eXo Forum Watching Notification!");
+					message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString() 
+							+"</b>' have just	added thread:</br>" + topic.getTopicName());
+					sendNotification(emailList, message) ;					
+				}
+			}
+		} else {
+			topicNode = forumNode.getNode(topic.getId()) ;
+		}
+		topicNode.setProperty("exo:owner", topic.getOwner()) ;
+		topicNode.setProperty("exo:name", topic.getTopicName()) ;
+		topicNode.setProperty("exo:modifiedBy", topic.getModifiedBy()) ;
+		topicNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
+		topicNode.setProperty("exo:description", topic.getDescription()) ;
+		topicNode.setProperty("exo:icon", topic.getIcon()) ;
+		
+		topicNode.setProperty("exo:isModeratePost", topic.getIsModeratePost()) ;
+		topicNode.setProperty("exo:isNotifyWhenAddPost", topic.getIsNotifyWhenAddPost()) ;
+		topicNode.setProperty("exo:isClosed", topic.getIsClosed()) ;
+		topicNode.setProperty("exo:isLock", topic.getIsLock()) ;
+		topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
+		topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ;
+		topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ;
+		topicNode.setProperty("exo:isActive", topic.getIsActive()) ;
+		topicNode.setProperty("exo:canView", topic.getCanView()) ;
+		topicNode.setProperty("exo:canPost", topic.getCanPost()) ;
+		topicNode.setProperty("exo:userVoteRating", topic.getUserVoteRating()) ;
+		topicNode.setProperty("exo:voteRating", topic.getVoteRating()) ;
+		topicNode.setProperty("exo:numberAttachments", 0) ;
+		//forumHomeNode.save() ;
+		forumHomeNode.getSession().save() ;
+		if(!isMove) {
+			if(isNew) {
+				// createPost first
+				String id = topic.getId().replaceFirst("topic", "post") ;
+				Post post = new Post() ;
+				post.setId(id) ;
+				post.setOwner(topic.getOwner()) ;
+				post.setCreatedDate(new Date()) ;
+				post.setName(topic.getTopicName()) ;
+				post.setMessage(topic.getDescription()) ;
+				post.setRemoteAddr("") ;
+				post.setIcon(topic.getIcon()) ;
+				post.setIsApproved(true) ;
+				post.setAttachments(topic.getAttachments()) ;
+				post.setUserPrivate( new String[]{"exoUserPri"});
+				savePost(sProvider, categoryId, forumId, topic.getId(), post, true) ;
+			} else {
+				String id = topic.getId().replaceFirst("topic", "post") ;
+				if(topicNode.hasNode(id)) {
+					Node fistPostNode = topicNode.getNode(id) ;
+					Post post = getPost(fistPostNode) ;
+					post.setModifiedBy(topic.getModifiedBy()) ;
+					post.setModifiedDate(new Date()) ;
+					post.setEditReason(topic.getEditReason()) ;
 					post.setName(topic.getTopicName()) ;
 					post.setMessage(topic.getDescription()) ;
-					post.setRemoteAddr("") ;
 					post.setIcon(topic.getIcon()) ;
-					post.setIsApproved(true) ;
 					post.setAttachments(topic.getAttachments()) ;
-					post.setUserPrivate( new String[]{"exoUserPri"});
-					savePost(sProvider, categoryId, forumId, topic.getId(), post, true) ;
-				} else {
-					String id = topic.getId().replaceFirst("topic", "post") ;
-					if(topicNode.hasNode(id)) {
-						Node fistPostNode = topicNode.getNode(id) ;
-						Post post = getPost(fistPostNode) ;
-						post.setModifiedBy(topic.getModifiedBy()) ;
-						post.setModifiedDate(new Date()) ;
-						post.setEditReason(topic.getEditReason()) ;
-						post.setName(topic.getTopicName()) ;
-						post.setMessage(topic.getDescription()) ;
-						post.setIcon(topic.getIcon()) ;
-						post.setAttachments(topic.getAttachments()) ;
-						savePost(sProvider, categoryId, forumId, topic.getId(), post, false) ;
-					}
+					savePost(sProvider, categoryId, forumId, topic.getId(), post, false) ;
 				}
 			}
-		}catch (PathNotFoundException e) {
 		}
 	}
 	

@@ -33,6 +33,8 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIBreadcumbs;
+import org.exoplatform.forum.webui.UICategories;
+import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -468,10 +470,17 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
           try {
             forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, true, false);
           } catch (PathNotFoundException e) {
-            UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-            uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
-            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-            return ;           
+    				forumPortlet.updateIsRendered(1);
+    				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+    				categoryContainer.updateIsRender(true) ;
+    				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ; 
+    				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumService");
+    				forumPortlet.cancelAction() ;
+    				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+    				uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+    				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+    				return;
           }          
         }
 				uiForm.topic = new Topic();

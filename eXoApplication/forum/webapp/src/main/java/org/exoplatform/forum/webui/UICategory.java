@@ -258,35 +258,26 @@ public class UICategory extends UIForm	{
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
-			int i = 0 ;
-			String sms = "";
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
 						forums.add(uiCategory.getForum(((UIFormCheckBoxInput)child).getName()));
-						if(forums.get(i).getIsLock()){sms = forums.get(i).getForumName(); break;}
-						i++;
 					}
 				}
 			}
-			if((forums.size() > 0) && (sms.length() == 0)) {
+			if(forums.size() > 0) {
 				for (Forum forum : forums) {
+					if(forum.getIsLock()) continue ;
 					forum.setIsLock(true) ;
 					uiCategory.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum, false);
 				}
 				uiCategory.isEditForum = true ;
-			}	
-			UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
-			if((forums.size() == 0) && (sms.length() == 0)) {
+			} else {
+				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UICategory.msg.notCheck", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}	
-			if(sms.length() > 0) {
-				Object[] args = { sms };
-				uiApp.addMessage(new ApplicationMessage("UICategory.msg.locked", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			}
 		}
 	}
 	
@@ -295,31 +286,25 @@ public class UICategory extends UIForm	{
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
-			int i = 0 ;
-			String sms = "";
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
 						forums.add(uiCategory.getForum(((UIFormCheckBoxInput)child).getName()));
-						if(!forums.get(i).getIsLock()){sms = forums.get(i).getForumName(); break;}
-						i++;
 					}
 				}
 			}
-			if((forums.size() > 0) && (sms.length() == 0)) {
+			if(forums.size() > 0) {
 				for (Forum forum : forums) {
+					if(!forum.getIsLock()) continue ;
 					forum.setIsLock(false) ;
 					uiCategory.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum, false);
 				}
 				uiCategory.isEditForum = true ;
-			} 
-			if((forums.size() == 0) && (sms.length() == 0)) {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UICategory.msg.notCheck", args, ApplicationMessage.WARNING)) ;
-			}	
-			if(sms.length() > 0) {
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UICategory.msg.unlock", args, ApplicationMessage.WARNING)) ;
+			} else {
+				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UICategory.msg.notCheck", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
 			}
 		}
 	}

@@ -45,6 +45,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -382,29 +383,42 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
 			UITopicContainer uiTopicContainer = event.getSource();
 			String idAndNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String []temp = idAndNumber.split(",") ;
-			Topic topic = uiTopicContainer.getTopic(temp[0]) ;
-			boolean isReadTopic = ForumFormatUtils.isStringInStrings(uiTopicContainer.userProfile.getReadTopic(), topic.getId());
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-			uiForumContainer.setIsRenderChild(false) ;
-			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-			uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, Long.parseLong(temp[1])) ;
-			uiTopicDetail.setUpdatePageList(uiTopicContainer.getPageListPost(temp[0])) ;
-			uiTopicDetail.setUpdateForum(uiTopicContainer.forum) ;
-			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic ) ;
-			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId+"/"+ uiTopicContainer.forumId + " "));
-			if(isReadTopic){
-				uiTopicDetail.setGetTopic(true) ;
+			try {
+				Topic topic = uiTopicContainer.getTopic(temp[0]) ;
+				boolean isReadTopic = ForumFormatUtils.isStringInStrings(uiTopicContainer.userProfile.getReadTopic(), topic.getId());
+				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+				uiForumContainer.setIsRenderChild(false) ;
+				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, Long.parseLong(temp[1])) ;
+				uiTopicDetail.setUpdatePageList(uiTopicContainer.getPageListPost(temp[0])) ;
+				uiTopicDetail.setUpdateForum(uiTopicContainer.forum) ;
+				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic ) ;
+				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId+"/"+ uiTopicContainer.forumId + " "));
+				if(isReadTopic){
+					uiTopicDetail.setGetTopic(true) ;
+				}
+				if(temp[2].equals("true")) {
+					uiTopicDetail.setIdPostView("true") ;
+				} else {
+					uiTopicDetail.setIdPostView("false") ;
+				}
+				WebuiRequestContext context = event.getRequestContext() ;
+				context.addUIComponentToUpdateByAjax(uiForumContainer) ;
+				context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class)) ;
+			} catch (NullPointerException e) {
+				forumPortlet.updateIsRendered(1);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumService");
+				UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+        uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+				return;
 			}
-			if(temp[2].equals("true")) {
-				uiTopicDetail.setIdPostView("true") ;
-			} else {
-				uiTopicDetail.setIdPostView("false") ;
-			}
-			WebuiRequestContext context = event.getRequestContext() ;
-			context.addUIComponentToUpdateByAjax(uiForumContainer) ;
-			context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class)) ;
 		}
 	}
 

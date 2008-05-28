@@ -194,7 +194,10 @@
 												  <% ++rCNB; %>
 												<div style="clear: left;"><span></span></div>
 												<div class="LastPostInfos">by&nbsp;<a style="color: #058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
-											<%} else { %>	
+											<%} else { 
+												topicCount="0";
+												postCount="0";
+											%>	
 											<td class="Tdbox" style="height: 40px;">
 													<%=_ctx.appRes("UICategory.label.notTheard"); %>
 											<%} %>
