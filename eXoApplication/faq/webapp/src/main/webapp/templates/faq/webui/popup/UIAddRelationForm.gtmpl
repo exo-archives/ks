@@ -19,7 +19,7 @@
     for(cate in uicomponent.getListCate()) {
     	id ++ ;
       if(i == 0) {%>
-				<div class="FAQCategoryView" id="FAQCate$i">
+				<div class="FAQCategoryTreeView" id="FAQCate$i">
 					<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 				</div>
   	<%
@@ -36,13 +36,13 @@
     <%        
           }%>
           </div>
-					<div class="FAQCategoryView">
+					<div class="FAQCategoryTreeView">
 							<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 					</div>
     <%
         } else if(sub > 0) {%>
 				  <div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
-						<div class="FAQCategoryView">
+						<div class="FAQCategoryTreeView">
 				    	<div id="FAQCate$i" style=" overflow-x: auto;">
 				    		<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 				    	</div>
@@ -72,7 +72,7 @@
     				</div>
      <%
           }%>
-				 <div class="Icon FAQCategoryView">
+				 <div class="Icon FAQCategoryTreeView">
 					 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 				 </div>
      <%

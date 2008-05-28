@@ -73,8 +73,8 @@
 							for(String questionContent in uicomponent.getListRelationQuestion()) {
 								String action = uicomponent.event("RemoveRelation",uicomponent.getListIdQuesRela().get(i ++)) ;
 								viewString = questionContent.replaceAll("<p>","").replaceAll("</p>","").replaceAll("<br>","") ;
-								if(viewString.length() > 100) {
-				          viewString = viewString.substring(0, 99) + "..." ;
+								if(viewString.length() > 85) {
+				          viewString = viewString.substring(0, 84) + "..." ;
 				        }
 							%>
 								<div style="margin: 0px 0px 3px 2px;">

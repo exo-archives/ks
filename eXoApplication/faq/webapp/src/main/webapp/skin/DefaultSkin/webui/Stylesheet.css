@@ -811,6 +811,13 @@ UIFAQPortlet .ResultQuickSearch {
   padding-left: 25px;
 }
 
+.FAQCategoryTreeView {
+  background: url('background/categoryIcon.PNG') no-repeat left 0px;
+  line-height:18px;
+  margin: 5px 0px 5px 8px;
+  padding-left: 25px;
+}
+
 .FAQQuestionView {
   float: left;
   background: url('background/FAQPortlet.gif') no-repeat left -818px;
