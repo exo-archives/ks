@@ -145,13 +145,22 @@
 			<div class="FAQCategory">
 				<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory$i', '', null, null)">
 						<!-- category name -->
-						<% if(categoryName.length() > 80) {
+						<%
+						 String titleCategorys = "" ;
+						 if(categoryName.length() > 80) {
+						 	titleCategorys = categoryName ;
 							categoryName = categoryName.substring(0, 79) + "...";
-							}
+							%>
+							<a href="$link" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleCategory$categoryId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleCategory$categoryId')">
+								$categoryName
+							</a>
+						<% } else {
+								titleCategorys = "" ;
 						 %>
-						<a href="$link" title="$titleCategory">
-							$categoryName
-						</a>
+							<a href="$link">
+								$categoryName
+							</a>
+						<% } %>
 						($numberOfSubCate Category, $numberOfQuestion Questions, $questionNotAnswer Not yet answered, $questionNotApproved is not approved)
 						<% if(listCateModerator.get(i)) {
 									List emailWatch = uicomponent.getListEmail(categoryId) ;
@@ -162,6 +171,12 @@
 							} 
 						}
 						 %>
+						 <%if(titleCategorys.trim().length() > 0) {%>
+								<div style="clear: left"><span></span></div>
+								<div id="titleCategory$categoryId" class="categoryTitle">
+									$titleCategorys
+								</div>
+							<%}%>
 						<!-- action of this category -->
 						<div class="UIFAQPopupCategory" id="UIPopupCategory$i" style="display: none; left: 50px;">
 							<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">

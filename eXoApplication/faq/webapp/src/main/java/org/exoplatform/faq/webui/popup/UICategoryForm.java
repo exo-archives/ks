@@ -54,7 +54,6 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
  */
 
 @SuppressWarnings({ "unused", "unused" })
-//@SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
 		template =	"system:/groovy/webui/form/UIForm.gtmpl",
