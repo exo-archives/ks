@@ -8,7 +8,7 @@
 <div class="FAQUIAddRelationQuestion $uicomponent.id">
 	<% uiform.begin() %>
 	<!-- View interface -->
-		<div class="HorizontalLayout" style="margin: 10px 10px 10px 10px;background-color:#F3F3F3;">
+	<div class="HorizontalLayout" style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; padding-bottom: 5px;">
 		<%
 		List listCate = uicomponent.getListCate() ;
 		Stack<String> stackCateid = new Stack<String>() ;
@@ -19,85 +19,62 @@
     for(cate in uicomponent.getListCate()) {
     	id ++ ;
       if(i == 0) {%>
-          <div style="margin: 5px 0px 5px 0px ;">
-	    			<div class="Icon FAQCategoryView"><span></span></div>
-		    			<div id="FAQCate$i" style=" overflow-x: auto;">
-		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
-		    			</div>
-	    			<div style="clear: left;"><span></span></div>
-	    		</div>
+				<div class="FAQCategoryView" id="FAQCate$i">
+					<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+				</div>
   	<%
       } else if(i > 0) {
         int sub = cate.getDeft() - listCate.get(i - 1).getDeft() ;
         if(sub == 0) {%>
-          <div style="padding-left: 30px ; margin-top: 10px; display: none;" id="FAQViewChild$i">
+   				<div style="padding-left: 30px ; margin-top: 10px; display: none;" id="FAQViewChild$i">
     <%
           for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
-            <div style="margin: 5px 0px 5px 5px ;">
-		        	<div id="FAQCate$i" style="float: left">
+			    	<div id="FAQCate$i" style="margin: 5px;">
 			        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 			    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
-		    			</div>
-		    			<div style="clear: left;"><span></span></div>
-		    		</div>
+						</div>
     <%        
           }%>
           </div>
-          <div style="margin: 5px 0px 5px 0px ;">
-	    			<div class="Icon FAQCategoryView"><span></span></div>
-		    			<div id="FAQCate$i" style=" overflow-x: auto;">
-		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
-		    			</div>
-	    			<div style="clear: left;"><span></span></div>
-	    		</div>
+					<div class="FAQCategoryView">
+							<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+					</div>
     <%
         } else if(sub > 0) {%>
-          <div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
-          <div style="margin: 5px 0px 5px 0px ;">
-	    			<div class="Icon FAQCategoryView"><span></span></div>
-		    			<div id="FAQCate$i" style=" overflow-x: auto;">
-		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
-		    			</div>
-	    			<div style="clear: left;"><span></span></div>
-	    		</div>
+				  <div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
+						<div class="FAQCategoryView">
+				    	<div id="FAQCate$i" style=" overflow-x: auto;">
+				    		<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+				    	</div>
+				    </div>
     <%
         } else {%>
-          <div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
+    			<div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
      <%
           for(Question question : uicomponent.getQuestions(stackCateid.pop())) {
             stringBuffer.append( question.getQuestion()) ;%>
-            <div style="margin: 5px 0px 5px 5px ;">
-		        	<div id="FAQCate$i" style="float: left">
-			        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
-			    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
-		    			</div>
-		    			<div style="clear: left;"><span></span></div>
-		    		</div>
+						<div id="FAQCate$i" style="margin: 5px;">
+					    	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
+								<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
+						</div>
      <%
           }%>
           </div>
      <%
           for(int j = 0 ; j < (-1*sub); j ++) {
             for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
-              <div style="margin: 5px 0px 5px 5px ;">
-			        	<div id="FAQCate$i" style="float: left">
-				        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
-				    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
-			    			</div>
-			    			<div style="clear: left;"><span></span></div>
-			    		</div>
+							<div id="FAQCate$i" style="margin: 5px;">
+						    	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
+									<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
+							</div>
      <%
             }%>
-            </div>
+    				</div>
      <%
           }%>
-          <div style="margin: 5px 0px 5px 0px ;">
-	    			<div class="Icon FAQCategoryView"><span></span></div>
-		    			<div id="FAQCate$i" style=" overflow-x: auto;">
-		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
-		    			</div>
-	    			<div style="clear: left;"><span></span></div>
-	    		</div>
+				 <div class="Icon FAQCategoryView">
+					 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+				 </div>
      <%
         }
       }
@@ -107,33 +84,27 @@
     <div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
    	<%
     for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
-      <div style="margin: 5px 0px 5px 5px ;">
-	    	<div id="FAQCate$i" style="float: left">
+	    	<div id="FAQCate$i" style="margin: 5px;">
 	        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 	    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
 				</div>
-				<div style="clear: left;"><span></span></div>
-			</div>
     <%
     }%>
     </div>
     <%
     for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {
       for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
-        <div style="margin: 5px 0px 5px 5px ;">
-        	<div id="FAQCate$i" style="float: left">
+        	<div id="FAQCate$i" style="margin: 5px 0px 0px 5px;">
 	        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 	    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
     			</div>
-    			<div style="clear: left;"><span></span></div>
-    		</div>
 		<%
       }%>
-      </div>
+    </div>
   	<%
     }
 		%>
-		</div>
+	</div>
 	
 	<!-- Action of this form -->
 		<div class="UIAction"> 

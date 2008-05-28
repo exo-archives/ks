@@ -654,7 +654,7 @@ public class UIQuestions extends UIContainer {
           }
         }
       } else {
-        if(uiQuestions.backPath_ != null && uiQuestions.backPath_.trim().length() > 0) {
+        if(uiQuestions.backPath_ != null && uiQuestions.backPath_.trim().length() > 0 && uiQuestions.backPath_.equals(strId)) {
           uiQuestions.backPath_ = "" ;
         } else {
           uiQuestions.backPath_ = uiQuestions.categoryId_ + "/" + uiQuestions.questionView_ ;
@@ -699,7 +699,7 @@ public class UIQuestions extends UIContainer {
       UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
       responseForm.setQuestionId(event.getRequestContext().getRequestParameter(OBJECTID)) ;
       popupContainer.setId("FAQResponseQuestion") ;
-      popupAction.activate(popupContainer, 700, 1000) ;
+      popupAction.activate(popupContainer, 720, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
