@@ -249,11 +249,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private void setListRelation() throws Exception {
     String[] relations = question.getRelations() ;
     this.setListIdQuesRela(Arrays.asList(relations)) ;
-    Question question ;
     if(relations != null && relations.length > 0)
       for(String relation : relations) {
-        question = faqService.getQuestionById(relation, FAQUtils.getSystemProvider()) ;
-        listRelationQuestion.add(question.getQuestion()) ;
+        listRelationQuestion.add(faqService.getQuestionById(relation, FAQUtils.getSystemProvider()).getQuestion()) ;
       }
   }
   public List<String> getListRelation() {
@@ -270,7 +268,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   }
   
   public void setListIdQuesRela(List<String> listId) {
-    this.listQuestIdRela = listId ;
+    if(!listQuestIdRela.isEmpty()) {
+      listQuestIdRela.clear() ;
+    }
+    listQuestIdRela.addAll(listId) ;
   }
   
   public void setListRelationQuestion(List<String> listQuestionContent) {
@@ -373,8 +374,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       
       //cancel
-      UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
       if(!response.isChildren_) {
+        UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
         UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
         questions.setListQuestion() ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
@@ -382,9 +383,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
       } else {
-        UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
-        UIQuestionsInfo questionsInfo = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_INFO) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ; 
+        UIQuestionManagerForm questionManagerForm = response.getParent() ;
+        questionManagerForm.isResponseQuestion = false ;
       }
     }
   }

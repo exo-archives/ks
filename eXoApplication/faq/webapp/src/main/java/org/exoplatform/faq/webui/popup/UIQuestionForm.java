@@ -432,10 +432,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } else {
-        UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
-        UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
-        UIQuestionsInfo questionsInfo = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_INFO) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ;
+        UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
+        questionManagerForm.isEditQuestion = false ;
       }
 		}
 	}
