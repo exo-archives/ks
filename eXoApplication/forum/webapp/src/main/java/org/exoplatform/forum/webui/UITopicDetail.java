@@ -1080,6 +1080,11 @@ public class UITopicDetail extends UIForm {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
+			UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+			if(message == null || message.length() < 1) {
+				uiApp.addMessage(new ApplicationMessage("MessagePost.msg.message-empty", null, ApplicationMessage.WARNING)) ;
+				return ;
+			}
 			ForumAdministration forumAdministration = topicDetail.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			boolean isOffend = false ;
 			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
@@ -1130,7 +1135,6 @@ public class UITopicDetail extends UIForm {
 				if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
 				if(isOffend || hasTopicMod) {
 					Object[] args = { "" };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
 					else {
 						args = new Object[]{ "thread", "post" };
