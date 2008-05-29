@@ -61,7 +61,7 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
   private List<Post> listPost = new ArrayList<Post>() ;
   
 	public UIPageListPostUnApprove() throws Exception {
-		addChild(UIForumPageIterator.class, null, "PageListPostUnApprove") ;
+		addChild(UIForumPageIterator.class, null, "PageIteratorPostUnApprove") ;
 	}
 
   public void activate() throws Exception {}

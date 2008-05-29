@@ -38,7 +38,6 @@ import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
-import org.exoplatform.forum.webui.popup.UIPopupComponent;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -95,7 +94,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
 		}
 )
-public class UITopicContainer extends UIForm implements UIPopupComponent {
+public class UITopicContainer extends UIForm {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String forumId = "";
 	private String categoryId = "";
@@ -124,10 +123,7 @@ public class UITopicContainer extends UIForm implements UIPopupComponent {
   private UserProfile getUserProfile() {
 		return userProfile ;
 	}
-	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
-  
+
 	public void setUpdateForum(String categoryId, Forum forum) throws Exception {
 		this.forum = forum ;
 		this.forumId = forum.getId() ;

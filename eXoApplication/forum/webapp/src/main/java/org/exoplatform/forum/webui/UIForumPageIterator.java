@@ -131,6 +131,7 @@ public class UIForumPageIterator extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPageIterator.getParent()) ;
 				}
 			}
+			System.out.println("\n\n PageSm: "+ stateClick + " : " + forumPageIterator.page);
 		}
 	}
 }

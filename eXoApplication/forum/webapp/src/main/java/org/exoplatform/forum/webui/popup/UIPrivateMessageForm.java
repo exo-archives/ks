@@ -25,7 +25,6 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.webui.EmptyNameValidator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -80,7 +79,6 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 		UIFormStringInput MailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
 		MailTitle.addValidator(MandatoryValidator.class);
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MAILMESSAGE_INPUT, null, null, true);
-		formWYSIWYGInput.addValidator(EmptyNameValidator.class) ;
 		UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
 		sendMessageTab.addUIFormInput(SendTo);
 		sendMessageTab.addUIFormInput(MailTitle);
@@ -176,20 +174,26 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
     	String mailTitle = stringInput.getValue() ;
     	String message = MessageTab.getChild(UIFormWYSIWYGInput.class).getValue();
-    	ForumPrivateMessage privateMessage = new ForumPrivateMessage() ;
-    	privateMessage.setFrom(messageForm.userName) ;
-    	privateMessage.setSendTo(sendTo) ;
-    	privateMessage.setName(mailTitle) ;
-    	privateMessage.setMessage(message) ;
-    	messageForm.forumService.savePrivateMessage(ForumSessionUtils.getSystemProvider(), privateMessage) ;
-    	areaInput.setValue("") ;
-    	stringInput.setValue("") ;
-    	messageForm.id = 1;
-    	Object[] args = { "" };
     	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
-			uiApp.addMessage(new ApplicationMessage("SendPrivateMessage.msg.sendOK", args, ApplicationMessage.WARNING)) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-    	event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent()) ;
+    	if(message != null && message.trim().length() > 0) {
+	    	ForumPrivateMessage privateMessage = new ForumPrivateMessage() ;
+	    	privateMessage.setFrom(messageForm.userName) ;
+	    	privateMessage.setSendTo(sendTo) ;
+	    	privateMessage.setName(mailTitle) ;
+	    	privateMessage.setMessage(message) ;
+	    	messageForm.forumService.savePrivateMessage(ForumSessionUtils.getSystemProvider(), privateMessage) ;
+	    	areaInput.setValue("") ;
+	    	stringInput.setValue("") ;
+	    	messageForm.id = 1;
+	    	Object[] args = { "" };
+				uiApp.addMessage(new ApplicationMessage("SendPrivateMessage.msg.sendOK", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	    	event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent()) ;
+    	} else {
+    		Object[] args = { messageForm.getLabel(FIELD_MAILMESSAGE_INPUT) };
+  			uiApp.addMessage(new ApplicationMessage("NameValidator.msg.empty-input", args, ApplicationMessage.WARNING)) ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    	}
 		}
 	}
 	

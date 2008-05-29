@@ -25,7 +25,6 @@ import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.webui.EmptyNameValidator;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -208,9 +207,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
-			UIFormStringInput stringInput = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT) ;
-			stringInput.addValidator(EmptyNameValidator.class) ;
-			String userTitle = stringInput.getValue() ;
+			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
 			UserProfile userProfile = uiForm.userProfile ;
 			if(userTitle == null || userTitle.trim().length() == 0) {
 				userTitle = userProfile.getUserTitle() ;

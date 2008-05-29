@@ -61,7 +61,7 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
   private List<Post> listPost = new ArrayList<Post>() ;
   
 	public UIPageListPostHidden() throws Exception {
-		addChild(UIForumPageIterator.class, null, "PageListPostHidden") ;
+		addChild(UIForumPageIterator.class, null, "PageIteratorPostHidden") ;
 	}
 
   public void activate() throws Exception {}
