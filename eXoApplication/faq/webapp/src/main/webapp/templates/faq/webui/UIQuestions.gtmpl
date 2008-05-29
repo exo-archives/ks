@@ -454,7 +454,7 @@
 					          	</div>
 				        		</a>
 									</div>
-									<div class="DefaultAction" style="width: 380px;">
+									<div class="DefaultAction" style="width: 450px;">
 										<%
 										if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
 											String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath()) ;
