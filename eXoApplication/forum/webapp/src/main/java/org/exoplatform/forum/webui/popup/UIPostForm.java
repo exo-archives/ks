@@ -251,7 +251,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				post.setIcon(uiIconSelector.getSelectedIcon());
 				post.setIsApproved(false) ;
-				post.setAttachments(uiForm.attachments_) ;
+				post.setAttachments(uiForm.getAttachFileList()) ;
 //				post.setEditReason(editReason) ;
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true)	;
@@ -309,7 +309,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				post.setIcon(uiIconSelector.getSelectedIcon());
 				post.setIsApproved(false) ;
-				post.setAttachments(uiForm.attachments_) ;
+				post.setAttachments(uiForm.getAttachFileList()) ;
 				post.setIsHidden(isOffend) ;
 				String[]userPrivate = new String[]{"exoUserPri"};
 				if(uiForm.isMP){

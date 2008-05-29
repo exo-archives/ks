@@ -28,7 +28,7 @@
 }
 
 .UIForumPortlet .HotThreadNewPost {
-	background: url('icons/HotThreadNoNewPost.gif') no-repeat ;
+	background: url('icons/HotThreadNewPost.gif') no-repeat ;
 }
 
 .UIForumPortlet .HotThreadNoNewClosePost {

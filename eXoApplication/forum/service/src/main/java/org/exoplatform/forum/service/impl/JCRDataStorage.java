@@ -1258,31 +1258,37 @@ public class JCRDataStorage{
 				postNode.setProperty("exo:isApproved", post.getIsApproved()) ;
 				postNode.setProperty("exo:isHidden", post.getIsHidden()) ;
 				long numberAttach = 0 ;
+				List<String> listFileName = new ArrayList<String>();
 				List<ForumAttachment> attachments = post.getAttachments();
 				if(attachments != null) { 
 					Iterator<ForumAttachment> it = attachments.iterator();
-					while (it.hasNext()) {
+					for (ForumAttachment attachment : attachments) {
 						++ numberAttach ;
 						BufferAttachment file = null;
+						listFileName.add(attachment.getName()) ;
 						try {
 							file = (BufferAttachment)it.next();
 							Node nodeFile = null;
 							if (!postNode.hasNode(file.getName())) nodeFile = postNode.addNode(file.getName(), "nt:file");
 							else nodeFile = postNode.getNode(file.getName());
 							Node nodeContent = null;
-							if (!nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
-							else {
-								continue ;
-								//nodeContent = nodeFile.getNode("jcr:content");
+							if (!nodeFile.hasNode("jcr:content")) { 
+								nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
+								nodeContent.setProperty("jcr:mimeType", file.getMimeType());
+								nodeContent.setProperty("jcr:data", file.getInputStream());
+								nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
 							}
-							nodeContent.setProperty("jcr:mimeType", file.getMimeType());
-							nodeContent.setProperty("jcr:data", file.getInputStream());
-							nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
 						} catch (Exception e) {
-							//e.printStackTrace() ;
 						}
 					}
 				}				
+				NodeIterator postAttachments = postNode.getNodes();
+				Node postAttachmentNode = null;
+				while (postAttachments.hasNext()) {
+					postAttachmentNode = postAttachments.nextNode() ;
+					if(listFileName.contains(postAttachmentNode.getName())) continue ;
+					postAttachmentNode.remove() ;
+				}
 				if(isNew) {
 					// set InfoPost for Topic
 					long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1 ;
