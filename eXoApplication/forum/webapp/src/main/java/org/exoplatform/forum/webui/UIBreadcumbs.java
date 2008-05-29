@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumPathNotFoundException;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -30,6 +31,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -83,6 +85,7 @@ public class UIBreadcumbs extends UIContainer {
 						tempPath = string;
 						if(string.indexOf("ategory")> 0) {
 							Category category = (Category)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
+							if(category == null) throw new ForumPathNotFoundException() ;
 							breadcumbs_.add(category.getCategoryName()) ;
 						} else {
 							Tag tag = (Tag)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
@@ -90,6 +93,10 @@ public class UIBreadcumbs extends UIContainer {
 						}
 					}else if(t == 1) {
 						tempPath = tempPath + "/" + string ;
+						//TODO : Change the if - else as below
+						//Object obj = forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode) ;
+						//if(obj instanceof Forum) {Forum forum = (Forum)obj ;}
+						
 						Forum forum = (Forum)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
 						breadcumbs_.add(forum.getForumName()) ;
 					}else if(t == 2) {
