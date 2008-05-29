@@ -928,3 +928,7 @@ UIFAQPortlet .ResultQuickSearch {
 	width:17px;
 	margin: 0px 3px;
 }
+
+.UIPrintPreview .ResponseContent .AttachmentContent .LabelBox {
+  display:none;
+}
