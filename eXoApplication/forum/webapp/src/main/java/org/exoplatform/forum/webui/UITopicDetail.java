@@ -1078,45 +1078,37 @@ public class UITopicDetail extends UIForm {
 	static public class QuickReplyActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
+			ForumAdministration forumAdministration = topicDetail.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
-			UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-			if(message == null || message.length() < 1) {
-				uiApp.addMessage(new ApplicationMessage("MessagePost.msg.message-empty", null, ApplicationMessage.WARNING)) ;
-				return ;
-			}
-			ForumAdministration forumAdministration = topicDetail.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			boolean isOffend = false ;
-			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
-			String stringKey = forumAdministration.getCensoredKeyword();
-			if(stringKey != null && stringKey.length() > 0) {
-				stringKey = stringKey.toLowerCase() ;
-				String []censoredKeyword = ForumFormatUtils.splitForForum(stringKey) ;
-				checksms = checksms.toLowerCase().trim();
-				for (String string : censoredKeyword) {
-		      if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
-	      }
-			}
-			StringBuffer buffer = new StringBuffer();
-			for (int j = 0; j < message.length(); j++) {
-				char c = message.charAt(j); 
-				if((int)c == 9){
-					buffer.append("&nbsp;&nbsp;&nbsp; ") ;
-				} else if((int)c == 10){
-					buffer.append("<br/>") ;
-				}	else if((int)c == 60){
-					buffer.append("&lt;") ;
-				} else if((int)c == 62){
-					buffer.append("&gt;") ;
-//				} else if((int)c == 32){
-//					buffer.append("&nbsp;") ;
-				} else {
-					buffer.append(c) ;
+			String checksms = message ;
+			if(checksms != null && checksms.trim().length() > 3) {
+				String stringKey = forumAdministration.getCensoredKeyword();
+				if(stringKey != null && stringKey.length() > 0) {
+					stringKey = stringKey.toLowerCase() ;
+					String []censoredKeyword = ForumFormatUtils.splitForForum(stringKey) ;
+					checksms = checksms.toLowerCase().trim();
+					for (String string : censoredKeyword) {
+			      if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
+		      }
 				}
-      }
-			String userName = topicDetail.userProfile.getUserId() ;
-			int t = checksms.trim().length() ;
-			if(t > 3 && !checksms.equals("null")) {
+				StringBuffer buffer = new StringBuffer();
+				for (int j = 0; j < message.length(); j++) {
+					char c = message.charAt(j); 
+					if((int)c == 9){
+						buffer.append("&nbsp;&nbsp;&nbsp; ") ;
+					} else if((int)c == 10){
+						buffer.append("<br/>") ;
+					}	else if((int)c == 60){
+						buffer.append("&lt;") ;
+					} else if((int)c == 62){
+						buffer.append("&gt;") ;
+					} else {
+						buffer.append(c) ;
+					}
+	      }
+				String userName = topicDetail.userProfile.getUserId() ;
 				PortletRequestImp request = event.getRequestContext().getRequest();
 				String remoteAddr = request.getRemoteAddr();
 				Topic topic = topicDetail.topic ;
@@ -1135,6 +1127,7 @@ public class UITopicDetail extends UIForm {
 				if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
 				if(isOffend || hasTopicMod) {
 					Object[] args = { "" };
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
 					else {
 						args = new Object[]{ "thread", "post" };
@@ -1147,8 +1140,8 @@ public class UITopicDetail extends UIForm {
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			}else {
-				String[] args = new String[] { "Message" } ;
-				throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
+				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
+				throw new MessageException(new ApplicationMessage("MessagePost.msg.message-empty", args)) ;
 			}
 		}
 	}
@@ -1157,27 +1150,24 @@ public class UITopicDetail extends UIForm {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;	
 			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
-			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
-			StringBuffer buffer = new StringBuffer();
-			for (int j = 0; j < message.length(); j++) {
-				char c = message.charAt(j); 
-				if((int)c == 9){
-					buffer.append("&nbsp;&nbsp;&nbsp; ") ;
-				} else if((int)c == 10){
-					buffer.append("<br/>") ;
-				}	else if((int)c == 60){
-					buffer.append("&lt;") ;
-				} else if((int)c == 62){
-					buffer.append("&gt;") ;
-				//} else if((int)c == 32){
-					//buffer.append("&nbsp;") ;
-				} else {
-					buffer.append(c) ;
-				}
-      } 
-			String userName = topicDetail.userProfile.getUserId() ;
-			int t = checksms.trim().length() ;
-			if(t > 3 && !checksms.equals("null")) {
+			String checksms = (message) ;
+			if(checksms != null && checksms.trim().length() > 3) {
+				StringBuffer buffer = new StringBuffer();
+				for (int j = 0; j < message.length(); j++) {
+					char c = message.charAt(j); 
+					if((int)c == 9){
+						buffer.append("&nbsp;&nbsp;&nbsp; ") ;
+					} else if((int)c == 10){
+						buffer.append("<br/>") ;
+					}	else if((int)c == 60){
+						buffer.append("&lt;") ;
+					} else if((int)c == 62){
+						buffer.append("&gt;") ;
+					} else {
+						buffer.append(c) ;
+					}
+	      } 
+				String userName = topicDetail.userProfile.getUserId() ;
 				Topic topic = topicDetail.topic ;
 				Post post = new Post() ;
 				post.setName("Re: " + topic.getTopicName()) ;
@@ -1194,8 +1184,8 @@ public class UITopicDetail extends UIForm {
 				viewPost.setViewUserInfo(false) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}else {
-				String[] args = new String[] { "Message" } ;
-				throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
+				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
+				throw new MessageException(new ApplicationMessage("MessagePost.msg.message-empty", args)) ;
 			}
 		}
 	}
