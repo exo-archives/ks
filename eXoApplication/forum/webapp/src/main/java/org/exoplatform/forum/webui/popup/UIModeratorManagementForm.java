@@ -414,6 +414,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIViewUserProfile viewUserProfile = popupAction.activate(UIViewUserProfile.class, 670) ;
 			viewUserProfile.setUserProfile(uiForm.getUserProfile(userId)) ;
+			String userLogin = ForumSessionUtils.getCurrentUser() ;
+			viewUserProfile.setUserProfileLogin(uiForm.getUserProfile(userLogin));
+			viewUserProfile.setContact(null) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
   }

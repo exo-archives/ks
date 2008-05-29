@@ -511,7 +511,8 @@
 		if(posts != null && posts.size() > 0 && isShowPost) {
 			int checked = (int)(uiform.getPageSelect()) - 1;
 			String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
-			String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+			String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+			String shortDateFormat = userProfile.getShortDateFormat() ;
 			for(post in posts) {
 				String owner = post.getOwner() ;
 				Contact contact = uiform.getPersonalContact(owner) ;
@@ -541,9 +542,9 @@
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + post.getId().substring(15);
-				User user = ForumSessionUtils.getUserByUserId(owner) ; 
+				User user = userInfo.getUser() ; 
 				Date userCreated = user.getCreatedDate() ;
-				String joinDate = ForumFormatUtils.getFormatDate("DDD yyyy", userCreated) ;
+				String joinDate = ForumFormatUtils.getFormatDate(shortDateFormat, userCreated) ;
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
@@ -641,7 +642,7 @@
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate(shortDateFormat,lastPostOfUser) ;
+											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate(shortDateTimeFormat,lastPostOfUser) ;
 									%>
 									<div>Posts: $totalPost</div>
 									<div>Last Post: $lastPostDateOfUser</div>
@@ -652,7 +653,7 @@
 									%>
 									<div>Location: location</div>
 									<%} 
-										String lastLoginUser = ForumFormatUtils.getFormatDate(shortDateFormat, userInfo.getLastLoginDate()) ;
+										String lastLoginUser = ForumFormatUtils.getFormatDate(shortDateTimeFormat, userInfo.getLastLoginDate()) ;
 									%>
 									<div>Last Login: $lastLoginUser</div>
 								</div>

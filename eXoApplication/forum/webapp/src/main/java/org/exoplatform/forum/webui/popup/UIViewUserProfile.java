@@ -51,6 +51,21 @@ import org.exoplatform.webui.form.UIForm;
 public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	
 	private UserProfile userProfile ;
+	private UserProfile userProfileLogin ;
+	private Contact contact = null;
+	
+	
+	public Contact getContact(String userId) throws Exception {
+		if(contact == null) {
+			contact = getPersonalContact(userId) ;
+		}
+  	return contact;
+  }
+
+	public void setContact(Contact contact) {
+  	this.contact = contact;
+  }
+
 	public UIViewUserProfile() {
 		
 	}
@@ -68,8 +83,15 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	public UserProfile getUserProfile() {
 		return this.userProfile ;
 	}
+
+	public void setUserProfileLogin(UserProfile userProfile) {
+		this.userProfileLogin = userProfile ;
+	}
 	
-	@SuppressWarnings("unused")
+	public UserProfile getUserProfileLogin() {
+		return this.userProfileLogin ;
+	}
+	
   private Contact getPersonalContact(String userId) throws Exception {
 		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {

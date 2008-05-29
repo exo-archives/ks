@@ -8,13 +8,14 @@
 <% uiform.begin() %>
 <%  
 	UserProfile userProfile = uiform.getUserProfile() ;
+	UserProfile userProfileLogin = uiform.getUserProfileLogin() ;
 	String userName = userProfile.getUserId() ;
 	User user = uiform.getUser() ;
-	Contact contact = uiform.getPersonalContact(userName) ;
+	Contact contact = uiform.getContact(userName) ;
 	String avatarUrl = uiform.getAvatarUrl(contact) ;
 	String birthDay = "" ;
 	Date birthDayDate = contact.getBirthday() ;
-	String shortDateFormat = userProfile.getShortDateFormat() ;
+	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
 	if(birthDayDate != null) birthDay = ForumFormatUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	String location = "" ;
 	boolean isCity = false;
@@ -25,7 +26,7 @@
 	}
 	String createdDate = ForumFormatUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
 	long totalPost = userProfile.getTotalPost();
-	shortDateFormat = shortDateFormat +  ", " + userProfile.getTimeFormat();
+	shortDateFormat = shortDateFormat +  ", " + userProfileLogin.getTimeFormat();
 	String userSmile = "OfflineIcon";
 	String titleSmile = "Offline" ;
 	if(uicomponent.isOnline(userName)) {

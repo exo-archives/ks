@@ -19,7 +19,9 @@ package org.exoplatform.forum.webui;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 
@@ -144,6 +146,8 @@ public class UITopicDetail extends UIForm {
 	private UserProfile userProfile = null;
 	private String userName = " " ;
 	private boolean isModeratePost = false ;
+	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
+	private Map<String, Contact> mapContact = new HashMap<String, Contact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
 		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
@@ -349,7 +353,13 @@ public class UITopicDetail extends UIForm {
 
 		@SuppressWarnings("unused")
 	private Contact getPersonalContact(String userId) throws Exception {
-		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+			Contact contact ;
+		if(mapContact.containsKey(userId)){
+			contact = mapContact.get(userId) ;
+		} else {
+			contact = ForumSessionUtils.getPersonalContact(userId) ;
+			mapContact.put(userId, contact) ;
+		}
 		if(contact == null) {
 			contact = new Contact() ;
 			contact.setId(userId) ;
@@ -485,7 +495,13 @@ public class UITopicDetail extends UIForm {
 	
 	@SuppressWarnings("unused")
   private UserProfile getUserInfo(String userName) throws Exception {
-		return this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
+		UserProfile userProfile = this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
+		if (userProfile.getUser() == null) {
+    	User user = ForumSessionUtils.getUserByUserId(userName) ; 
+			userProfile.setUser(user) ;
+			mapUserProfile.put(userName, userProfile) ;
+    }
+		return userProfile ;
 	}
 	
 	static public class AddPostActionListener extends EventListener<UITopicDetail> {
@@ -1008,10 +1024,21 @@ public class UITopicDetail extends UIForm {
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
       UIViewUserProfile viewUserProfile = popupAction.createUIComponent(UIViewUserProfile.class, null, null) ;
-      UserProfile userProfile = topicDetail.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userId) ;
-      User user = ForumSessionUtils.getUserByUserId(userId) ; 
-      userProfile.setUser(user) ;
+      UserProfile userProfile ;
+      if(topicDetail.mapUserProfile.containsKey(userId)){
+      	userProfile = topicDetail.mapUserProfile.get(userId) ;
+  		} else {
+      	userProfile = topicDetail.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userId) ;
+      	User user = ForumSessionUtils.getUserByUserId(userId) ; 
+      	userProfile.setUser(user) ;
+  		}
       viewUserProfile.setUserProfile(userProfile) ;
+      viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
+      Contact contact = null ;
+      if(topicDetail.mapContact.containsKey(userId)) {
+      	contact = topicDetail.mapContact.get(userId) ;
+      }
+      viewUserProfile.setContact(contact) ;
       popupAction.activate(viewUserProfile, 670, 400, true) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 	  }
