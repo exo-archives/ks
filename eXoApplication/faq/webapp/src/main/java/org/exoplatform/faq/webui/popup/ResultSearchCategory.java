@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -68,13 +69,21 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			ResultSearchCategory resultSearch = event.getSource() ;
 			UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			uiQuestions.setCategories(categoryId) ;
-			uiQuestions.setList(categoryId) ;
+			Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+			String[] moderator = cate.getModeratorsCategory() ;
+			String currentUser = FAQUtils.getCurrentUser() ;
+			if(Arrays.asList(moderator).contains(currentUser)) {
+				uiQuestions.setCategories(categoryId) ;
+				uiQuestions.setListQuestion() ;
+			} else {
+				uiQuestions.setCategories(categoryId) ;
+				uiQuestions.setList(categoryId) ;
+			}
       UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
       breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;
-      FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
       List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
       for(int i = listPath.size() -1 ; i >= 0; i --) {
       	oldPath = oldPath + "/" + listPath.get(i);

@@ -16,9 +16,11 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -66,15 +68,23 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		public void execute(Event<ResultQuickSearch> event) throws Exception {
 			ResultQuickSearch resultQuickSearch = event.getSource() ;
 			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			if(id.indexOf("ategory")> 0){
 				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-				uiQuestions.setCategories(id) ;
-				uiQuestions.setList(id) ;
+				Category cate = faqService.getCategoryById(id, FAQUtils.getSystemProvider()) ;
+				String[] moderator = cate.getModeratorsCategory() ;
+				String currentUser = FAQUtils.getCurrentUser() ;
+				if(Arrays.asList(moderator).contains(currentUser)) {
+					uiQuestions.setCategories(id) ;
+					uiQuestions.setListQuestion() ;
+				} else {
+					uiQuestions.setCategories(id) ;
+					uiQuestions.setList(id) ;
+				}
 		    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 		    breadcumbs.setUpdataPath(null) ;
         String oldPath = "" ;
-		    FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), id) ;
 		    for(int i = listPath.size() -1 ; i >= 0; i --) {
 		    	oldPath = oldPath + "/" + listPath.get(i);

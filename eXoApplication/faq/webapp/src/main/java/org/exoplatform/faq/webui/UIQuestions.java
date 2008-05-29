@@ -58,6 +58,8 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
+import com.sun.mail.util.QEncoderStream;
+
 
 /**
  * Created by The eXo Platform SARL
@@ -561,7 +563,12 @@ public class UIQuestions extends UIContainer {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         return ;
       }
-			faqService.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
+      List<Question> listQuestion = faqService.getQuestionsByCatetory(categoryId, FAQUtils.getSystemProvider()).getAll() ;
+      for(Question ques: listQuestion) {
+      	String questionId = ques.getId() ;
+      	faqService.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;
+      }
+      faqService.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
 			question.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
