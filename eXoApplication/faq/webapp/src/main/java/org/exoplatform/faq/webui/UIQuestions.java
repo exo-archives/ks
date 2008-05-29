@@ -462,6 +462,49 @@ public class UIQuestions extends UIContainer {
       questions.isChangeLanguage = false ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+      try{
+        faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider());
+      } catch (Exception e) {
+        UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        try {
+          questions.setCategories() ;
+        } catch (Exception pathEx){
+          UIFAQContainer container = questions.getParent() ;
+          UIBreadcumbs breadcumbs = container.findFirstComponentOfType(UIBreadcumbs.class) ;
+          String pathCate = "" ;
+          for(String path : breadcumbs.paths_.get(breadcumbs.paths_.size() - 1).split("/")) {
+            if(path.equals("FAQService")){
+              pathCate = path ;
+              continue ;
+            }
+            try{
+              faqService.getCategoryById(path, FAQUtils.getSystemProvider());
+              if(pathCate.trim().length() > 0) pathCate += "/" ;
+              pathCate += path ;
+            }catch (Exception pathExc) {
+              try {
+                breadcumbs.setUpdataPath(pathCate) ;
+              } catch (Exception exc) {
+                e.printStackTrace();
+              }
+              if(pathCate.indexOf("/") > 0) {
+                questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1)) ;
+                questions.setListQuestion() ;
+              } else {
+                questions.categoryId_ = null ;
+                questions.setCategories() ;
+                questions.setListQuestion() ;
+              }
+              break ;
+            }
+          }
+        }
+        UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+        return ;
+      }
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;

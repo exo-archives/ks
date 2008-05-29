@@ -454,19 +454,19 @@
 					          	</div>
 				        		</a>
 									</div>
-									<div class="DefaultAction">
-									<%
-									if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
-										String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath()) ;
-									%>
-										<a href="$link" class="ActionButton LightBlueStyle">
-					      	  	<div class="ButtonLeft">
-					        	  	<div class="ButtonRight">
-					          	  	<div class="ButtonMiddle"> Back </div>
-					            	</div>
-					          	</div>
-				        		</a>
-				        	<%}%>
+									<div class="DefaultAction" style="width: 380px;">
+										<%
+										if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
+											String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath()) ;
+										%>
+											<a href="$link" class="ActionButton LightBlueStyle">
+						      	  	<div class="ButtonLeft">
+						        	  	<div class="ButtonRight">
+						          	  	<div class="ButtonMiddle"> Back </div>
+						            	</div>
+						          	</div>
+					        		</a>
+					        	<%}%>
 									
 										<div class="ContentAction" onclick="eXo.faq.UIFAQPortlet.showMenu(this, event);">
 											<div style="position: relative;">
