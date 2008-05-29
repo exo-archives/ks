@@ -2397,31 +2397,28 @@ public class JCRDataStorage{
 		eventQuery.setPath(path) ;
 		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
-		try {
-			Query query = qm.createQuery(queryString, Query.XPATH) ;
-			QueryResult result = query.execute() ;
-			NodeIterator iter = result.getNodes() ;
-			ForumSeach forumSeach ;
-			while (iter.hasNext()) {
-				forumSeach = new ForumSeach() ;
-				Node nodeObj = (Node) iter.nextNode();
-				forumSeach.setId(nodeObj.getName());
-				forumSeach.setName(nodeObj.getProperty("exo:name").getString());
-				forumSeach.setType(type);
-				if(type.equals("forum")){
-					forumSeach.setIcon("ForumNormalIcon");
-				}else if(!type.equals("forumCategory")){
-					forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
-				} else {
-					forumSeach.setIcon("icon");
-				}
-				forumSeach.setType(type);
-				forumSeach.setPath(nodeObj.getPath()) ;
-				listSeachEvent.add(forumSeach) ;
+		Query query = qm.createQuery(queryString, Query.XPATH) ;
+		QueryResult result = query.execute() ;
+		NodeIterator iter = result.getNodes() ;
+		ForumSeach forumSeach ;
+		while (iter.hasNext()) {
+			forumSeach = new ForumSeach() ;
+			Node nodeObj = (Node) iter.nextNode();
+			forumSeach.setId(nodeObj.getName());
+			forumSeach.setName(nodeObj.getProperty("exo:name").getString());
+			forumSeach.setType(type);
+			if(type.equals("forum")){
+				forumSeach.setIcon("ForumNormalIcon");
+			}else if(!type.equals("forumCategory")){
+				forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
+			} else {
+				forumSeach.setIcon("icon");
 			}
-		} catch (Exception e) {
-			e.printStackTrace() ;
+			forumSeach.setType(type);
+			forumSeach.setPath(nodeObj.getPath()) ;
+			listSeachEvent.add(forumSeach) ;
 		}
+		
 		return listSeachEvent;
 	}
 

@@ -27,8 +27,10 @@ import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -271,13 +273,21 @@ public class UISearchForm extends UIForm {
 				eventQuery.setToDateCreated(toDateCreated) ;
 				eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost) ;
 				eventQuery.setToDateCreatedLastPost(toDateCreatedLastPost) ;
-			
+				
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				List<ForumSeach> list = null ;
+				try {
+					list = forumService.getAdvancedSeach(ForumSessionUtils.getSystemProvider(),eventQuery);
+				}catch (Exception e) {
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIQuickSeachForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+					return ;
+				}
+				
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(1) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
-				categories.setIsRenderChild(true) ;
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = forumService.getAdvancedSeach(ForumSessionUtils.getSystemProvider(),eventQuery);
+				categories.setIsRenderChild(true) ;				
 				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 				listSeachEvent.setListSeachEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;

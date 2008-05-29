@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -61,11 +62,18 @@ public class UIQuickSeachForm extends UIForm {
 			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0) {
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				List<ForumSeach> list = null;
+				try {
+					list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,all", "");
+				}catch (Exception e) {
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIQuickSeachForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+					return ;
+				}
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
-				categories.setIsRenderChild(true) ;
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,all", "");
+				categories.setIsRenderChild(true) ;				
 				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 				listSeachEvent.setListSeachEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
