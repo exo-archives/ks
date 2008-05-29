@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
@@ -37,11 +36,11 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -148,27 +147,15 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setModifiedBy(userName) ;
 			cat.setModifiedDate(new Date()) ;
       
-      String[] listUser = ForumFormatUtils.splitForForum(userPrivate) ;
-      String userInvalid = "" ;
-      String userValid = "" ;
-      for(String user : listUser) {
-      	if(user.indexOf("/") >= 0) { 
-      		if(userValid.trim().length() > 0) userValid += "," ;
-      		userValid += user.trim() ;
-      		continue ;
-      	}
-        if(ForumSessionUtils.getUserByUserId(user.trim()) != null) {
-          if(userValid.trim().length() > 0) userValid += "," ;
-          userValid += user.trim() ;
-        } else {
-          if(userInvalid.trim().length() > 0) userInvalid += ", " ;
-          userInvalid += user.trim() ;
-        }
-      }
-      if(userInvalid.length() > 0) 
-        throw new MessageException(new ApplicationMessage("UICateforyForm.sms.userhavenotfound", new String[]{userInvalid}, ApplicationMessage.WARNING)) ;
-			
-      cat.setUserPrivate(userValid) ;
+      String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
+    	if(erroUser != null && erroUser.length() > 0) {
+    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+    		Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
+    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    		return ;
+    	}
+      cat.setUserPrivate(userPrivate) ;
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;

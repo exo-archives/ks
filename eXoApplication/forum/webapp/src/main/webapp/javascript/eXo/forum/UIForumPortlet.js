@@ -398,6 +398,9 @@ UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
 	if(imgElm.width > 130){  
 		imgElm.style.width = "130px" ;
 	}
+	if(imgElm.height > 150){  
+		imgElm.style.width = "150px" ;
+	}
 };
 
 UIForumPortlet.prototype.reSizeImages = function() {

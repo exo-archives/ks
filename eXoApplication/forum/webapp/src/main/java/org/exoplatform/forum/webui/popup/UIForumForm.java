@@ -35,12 +35,12 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
@@ -74,7 +74,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	private boolean isForumUpdate = false;
 	private String forumId = "";
 	private int id = 0 ;
-  private String userInvalid = "" ;
 	public static final String FIELD_NEWFORUM_FORM = "newForum" ;
 	public static final String FIELD_MODERATOROPTION_FORM = "moderationOptions" ;
 	public static final String FIELD_FORUMPERMISSION_FORM = "forumPermission" ;
@@ -270,26 +269,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     }
   }
   
-  private String[] pilterUser(String[] users) {
-    List<String> userValid = new ArrayList<String>() ;
-    try{
-      for(String user : users) {
-        user = user.trim() ;
-        if(user.indexOf("/")>=0) {
-        	userValid.add(user) ;
-        	continue ;
-        }
-        if(user != null && user.length() > 0 && ForumSessionUtils.getUserByUserId(user) != null)
-          userValid.add(user) ;
-        else {
-          if(this.userInvalid != null && this.userInvalid.length() > 0) this.userInvalid += ", " ;
-          this.userInvalid += user ;
-        }
-      }
-    } catch(Exception e) {}
-    return userValid.toArray(new String[]{}) ;
-  }
-  
   private String[] addStringToString(String[] input, String[] output) {
     if(output != null && output.length > 0) {
       if(input!= null && input.length > 0) {
@@ -340,10 +319,10 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		//	Boolean	ModeratePost = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
 			
 			UIFormInputWithActions forumPermission = uiForm.getChildById(FIELD_FORUMPERMISSION_FORM);
-			String[] setModerator = uiForm.splitForForum(forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue()) ;
-			String[] setViewer = uiForm.splitForForum(forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).getValue()) ; 
-			String[] setTopicable = uiForm.splitForForum(forumPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).getValue()) ; 
-			String[] setPostable = uiForm.splitForForum(forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).getValue()) ; 
+			String moderators = forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue() ;
+			String topicable = forumPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).getValue() ; 
+			String postable = forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).getValue() ; 
+			String viewer = forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).getValue() ; 
 			
 			if(forumOrder == null || forumOrder.length() <= 0) forumOrder = "0";
 			String userName = ForumSessionUtils.getCurrentUser() ;
@@ -370,19 +349,42 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			if(forumStatus.equals("locked")) {
 				newForum.setIsLock(true) ;
 			}
-      
-      uiForm.userInvalid = "" ;
-      setModerator = uiForm.pilterUser(setModerator) ;
-      setPostable = uiForm.pilterUser(setPostable) ;
-      setViewer = uiForm.pilterUser(setViewer) ;
-      setTopicable = uiForm.pilterUser(setTopicable) ;
-      if(uiForm.userInvalid != null && uiForm.userInvalid.trim().length() > 0) {
-        throw new MessageException(new ApplicationMessage("UIForumForm.sms.userhavenotfound", new String[]{uiForm.userInvalid}, ApplicationMessage.WARNING)) ;
-      }
+      String erroUser = ForumSessionUtils.checkValueUser(moderators) ;
+      UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+    	if(erroUser != null && erroUser.length() > 0) {
+    		Object[] args = { uiForm.getLabel(FIELD_MODERATOR_MULTIVALUE), erroUser };
+    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    		return ;
+    	}
+    	erroUser = ForumSessionUtils.checkValueUser(topicable) ;
+    	if(erroUser != null && erroUser.length() > 0) {
+    		Object[] args = { uiForm.getLabel(FIELD_TOPICABLE_MULTIVALUE), erroUser };
+    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    		return ;
+    	}
+    	erroUser = ForumSessionUtils.checkValueUser(postable) ;
+    	if(erroUser != null && erroUser.length() > 0) {
+    		Object[] args = { uiForm.getLabel(FIELD_POSTABLE_MULTIVALUE), erroUser };
+    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    		return ;
+    	}
+    	erroUser = ForumSessionUtils.checkValueUser(viewer) ;
+    	if(erroUser != null && erroUser.length() > 0) {
+    		Object[] args = { uiForm.getLabel(FIELD_VIEWER_MULTIVALUE), erroUser };
+    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    		return ;
+    	}
+    	String []setTopicable = uiForm.splitForForum(topicable) ;
+    	String []setPostable = uiForm.splitForForum(postable) ;
+    	String []setViewer = uiForm.splitForForum(viewer) ;
       setPostable = uiForm.addStringToString(setTopicable, setPostable);
       setViewer = uiForm.addStringToString(setPostable, setViewer) ;
       
-			newForum.setModerators(setModerator);
+			newForum.setModerators(uiForm.splitForForum(moderators));
 			newForum.setCreateTopicRole(setTopicable);
 			newForum.setReplyTopicRole(setPostable);
 			newForum.setViewForumRole(setViewer);

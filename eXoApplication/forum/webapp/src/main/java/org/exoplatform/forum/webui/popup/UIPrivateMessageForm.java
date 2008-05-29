@@ -171,10 +171,17 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
     	UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
     	String sendTo = areaInput.getValue() ;
+    	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
+    	String erroUser = ForumSessionUtils.checkValueUser(sendTo) ;
+    	if(erroUser != null && erroUser.length() > 0) {
+    		Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser };
+    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    		return ;
+    	}
     	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
     	String mailTitle = stringInput.getValue() ;
     	String message = MessageTab.getChild(UIFormWYSIWYGInput.class).getValue();
-    	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
     	if(message != null && message.trim().length() > 0) {
 	    	ForumPrivateMessage privateMessage = new ForumPrivateMessage() ;
 	    	privateMessage.setFrom(messageForm.userName) ;

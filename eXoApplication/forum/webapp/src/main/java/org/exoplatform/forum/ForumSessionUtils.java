@@ -111,6 +111,61 @@ public class ForumSessionUtils {
   	return false ;
   }
 
+  @SuppressWarnings("unchecked")
+  public static boolean hasGroupIdAndMembershipId(String str, OrganizationService organizationService) throws Exception {
+  	if(str.indexOf(":") >= 0) { //membership
+  		String[] array = str.split(":") ;
+  		try {
+  			organizationService.getGroupHandler().findGroupById(array[1]).getId() ;
+  		} catch (Exception e) {
+  			return false ;
+  		}
+  		if(array[0].charAt(0) == '*' && array.length == 1) {
+  			return true ;
+  		} else {
+  			if(organizationService.getMembershipTypeHandler().findMembershipType(array[0])== null) return false ;
+  		} 
+		} else { //group
+			try {
+				organizationService.getGroupHandler().findGroupById(str).getId() ;
+			} catch (Exception e) {
+				return false ;
+			}
+		}
+    return true ;
+  }
+  
+  public static String checkValueUser(String values) throws Exception {
+  	String erroUser = null;
+  	if(values != null && values.trim().length() > 0) {
+  		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  		String[] userIds = values.split(",");
+  		boolean isUser = false ;
+  		List<User> users = ForumSessionUtils.getAllUser() ;
+  		for (String str : userIds) {
+  			str = str.trim() ;
+  			if(str.indexOf("/") >= 0) {
+					if(!hasGroupIdAndMembershipId(str, organizationService)){
+						if(erroUser == null) erroUser = str ;
+						else erroUser = erroUser + ", " + str;
+  				}
+  			} else {//user
+  				isUser = false ;
+  				for (User user : users) {
+	          if(user.getUserName().equals(str)) {
+	          	isUser = true ;
+	          	break;
+	          }
+          }
+  				if(!isUser) {
+  					if(erroUser == null) erroUser = str ;
+  					else erroUser = erroUser + ", " + str;
+  				}
+  			}
+      }
+  	}
+  	return erroUser;
+  }
   
   public static Contact getPersonalContact(String userId) throws Exception {
   	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;

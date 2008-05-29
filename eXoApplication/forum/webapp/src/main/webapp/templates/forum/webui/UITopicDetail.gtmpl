@@ -516,7 +516,7 @@
 			for(post in posts) {
 				String owner = post.getOwner() ;
 				Contact contact = uiform.getPersonalContact(owner) ;
-				String avatarUrl = uiform.getAvatarUrl(contact) ;
+				String avatarUrl = "" ;
 				String location = "" ;
 				boolean isCity = false;
 				if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
@@ -633,8 +633,9 @@
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();  
 									if(isDisplayAvatar) {
+									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
-								<img src="$avatarUrl" class="Img" onload ="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+								<img src="$avatarUrl" class="Img" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
 								<% } %>
 								<div class="InfoMember">
 									<div>Join Date: $joinDate</div>

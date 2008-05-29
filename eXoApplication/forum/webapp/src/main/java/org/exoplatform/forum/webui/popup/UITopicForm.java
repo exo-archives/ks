@@ -46,7 +46,6 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
@@ -292,21 +291,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		}
 	}
   
-  private String[] filterUser(String[] users) {
-    List<String> validUsers = new ArrayList<String>() ;
-    try{
-      for(String user : users) {
-        if(ForumSessionUtils.getUserByUserId(user.trim()) != null) {
-          validUsers.add(user.trim()) ;
-        } else {
-          if(this.userInvalid.length() > 0) this.userInvalid += ", " ;
-          this.userInvalid += user.trim() ;
-        }
-      }
-    } catch(Exception e){}
-    return validUsers.toArray(new String[]{}) ;
-  }
-	
 	static	public class PreviewThreadActionListener extends EventListener<UITopicForm> {
     public void execute(Event<UITopicForm> event) throws Exception {
 			UITopicForm uiForm = event.getSource() ;
@@ -394,12 +378,26 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
 				UIFormInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
         uiForm.userInvalid = "" ;
-				String[] canView = uiForm.filterUser(uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue())) ;
-				String[] canPost = uiForm.filterUser(uiForm.splitForForum(threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue())) ;
-        if(uiForm.userInvalid.length() > 0) {
-          throw new MessageException(new ApplicationMessage("UITopicForm.sms.userhavenotfound", new String[]{uiForm.userInvalid}, ApplicationMessage.WARNING)) ;
-        }
-				
+        String canPost = threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue() ;
+				String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
+				String erroUser = ForumSessionUtils.checkValueUser(canPost) ;
+	    	if(erroUser != null && erroUser.length() > 0) {
+	    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+	    		Object[] args = { uiForm.getLabel(FIELD_CANPOST_INPUT), erroUser };
+	    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+	    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	    		return ;
+	    	}
+	    	erroUser = ForumSessionUtils.checkValueUser(canView) ;
+	    	if(erroUser != null && erroUser.length() > 0) {
+	    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+	    		Object[] args = { uiForm.getLabel(FIELD_CANVIEW_INPUT), erroUser };
+	    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+	    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	    		return ;
+	    	}
+				String[]canPosts = uiForm.splitForForum(canPost);
+				String[]canViews = uiForm.splitForForum(canView);
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Topic topicNew = uiForm.topic;
 				topicNew.setOwner(userName);
@@ -425,29 +423,29 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				topicNew.setIcon(uiIconSelector.getSelectedIcon());
 				//topicNew.setAttachmentFirstPost(0) ;
-        if(canView.length > 0) {
+        if(canViews.length > 0) {
           String output = new String() ;
-          for(String str : canView) {
+          for(String str : canViews) {
             if(str.trim().length() > 0) {
               if(output != null && output.trim().length() > 0) output += "," ;
               output += str.trim() ;
             }
           }
-          if(canPost.length > 0) {
-            for(String string : canPost) {
-              if(string != null && string.trim().length() > 0 && !ForumFormatUtils.isStringInStrings(canView, string)) {
+          if(canPosts.length > 0) {
+            for(String string : canPosts) {
+              if(string != null && string.trim().length() > 0 && !ForumFormatUtils.isStringInStrings(canViews, string)) {
                 if(output.trim().length() > 0) output += "," ;
                 output += string ;
               }
             }
-            canView = ForumFormatUtils.splitForForum(output) ;
+            canViews = ForumFormatUtils.splitForForum(output) ;
           } else {
-            canView = canPost ;
+          	canViews = canPosts ;
           }
         }
         
-				topicNew.setCanView(canView);
-				topicNew.setCanPost(canPost);
+				topicNew.setCanView(canViews);
+				topicNew.setCanPost(canPosts);
 				if(uiForm.topicId != null && uiForm.topicId.length() > 0) {
 					topicNew.setId(uiForm.topicId);
 					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;

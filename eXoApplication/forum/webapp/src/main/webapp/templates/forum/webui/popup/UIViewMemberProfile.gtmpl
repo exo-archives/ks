@@ -12,7 +12,7 @@
 	String userName = userProfile.getUserId() ;
 	User user = uiform.getUser() ;
 	Contact contact = uiform.getContact(userName) ;
-	String avatarUrl = uiform.getAvatarUrl(contact) ;
+	String avatarUrl = "";
 	String birthDay = "" ;
 	Date birthDayDate = contact.getBirthday() ;
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
@@ -42,7 +42,13 @@
   				<tr>
 						<td class="MemberContainer">
 				  		<div class="MemberContent">
-					  		<img id="ImgAvatar" src="$avatarUrl" class="Img" onload ="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+				  		<%  
+				  			boolean isDisplayAvatar = userProfile.getIsDisplayAvatar(); 
+				  		  if(isDisplayAvatar) {
+									avatarUrl = uiform.getAvatarUrl(contact) ;
+								%>
+								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+								<% } %>
 					  		<div class="Rank"><%=userProfile.getUserTitle();%></div>
 					  		<div class="InfoMember">
 					  			<div>Join Date: $createdDate</div>
