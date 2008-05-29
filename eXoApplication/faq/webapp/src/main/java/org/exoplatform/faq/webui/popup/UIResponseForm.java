@@ -81,7 +81,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private static final String FILE_ATTACHMENTS = "FileAttach" ;
   private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
   private static final String IS_APPROVED = "IsApproved" ;
-  private static Question question = null ;
+  private static Question question_ = null ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   
   // form input :
@@ -103,7 +103,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
   private String questionChanged_ = new String() ;
   private String responseContent_ = new String () ;
-  private boolean isChecked = true ;
   private String languageIsResponsed = "" ;
   
   private boolean isChildren_ = false ;
@@ -116,13 +115,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     this.setActions(new String[]{"Attachment", "AddRelation", "Save", "Cancel"}) ;
   }
   
-  public void setQuestionId(String questionId){
+  public void setQuestionId(Question question){
     try{
       if(listQuestIdRela!= null && !listQuestIdRela.isEmpty()) {
         listRelationQuestion.clear() ;
         listQuestIdRela.clear() ;
       }
-      question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+      question_ = question ;
       languageIsResponsed = question.getLanguage() ;
       QuestionLanguage questionLanguage = new QuestionLanguage() ;
       questionLanguage.setLanguage(question.getLanguage()) ;
@@ -133,7 +132,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         questionLanguage.setResponse("") ;
       }
       listQuestionLanguage.add(questionLanguage) ;
-      listQuestionLanguage.addAll(faqService.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) ;
+      listQuestionLanguage.addAll(faqService.getQuestionLanguages(question_.getId(), FAQUtils.getSystemProvider())) ;
       /*for(QuestionLanguage quesLang : faqService.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) {
         if(quesLang.getResponse() != null && quesLang.getResponse().trim().length() > 0) {
           quesLang.setResponse(quesLang.getResponse()) ;
@@ -150,7 +149,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     } catch (Exception e) {
       e.printStackTrace() ;
     }
-    this.questionId_ = questionId ;
+    this.questionId_ = question.getId() ;
     initPage(false) ;
   }
   @SuppressWarnings("unused")
@@ -161,12 +160,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void initPage(boolean isEdit) {
     if(!isEdit) {
       questionContent_ = new UIFormTextAreaInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
-      questionContent_.setValue(question.getQuestion()) ;
+      questionContent_.setValue(question_.getQuestion()) ;
       questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
       reponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, null, null , true) ;
-      checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, question.isActivated()) ;
+      checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, question_.isActivated()) ;
       isApproved_ = new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false) ;
-      isApproved_.setChecked(question.isApproved()) ;
+      isApproved_.setChecked(question_.isApproved()) ;
       inputAttachment_ = new UIFormInputWithActions(ATTATCH_MENTS) ;
       inputAttachment_.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
       try{
@@ -175,8 +174,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         e.printStackTrace() ;
       }
       
-      if(question.getResponses() != null) {
-        reponseQuestion_.setValue(question.getResponses()) ;
+      if(question_.getResponses() != null) {
+        reponseQuestion_.setValue(question_.getResponses()) ;
       }
     } else {
       this.removeChildById(QUESTION_CONTENT) ; 
@@ -195,7 +194,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     addChild(questionLanguages_) ;
     addChild(reponseQuestion_) ;
     addChild(isApproved_) ;
-    addChild(checkShowAnswer_.setChecked(question.isActivated())) ;
+    addChild(checkShowAnswer_.setChecked(question_.isActivated())) ;
     addChild(inputAttachment_) ;
     
     //this.setListFileAttach(question.getAttachMent()) ;
@@ -247,7 +246,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   }
   
   private void setListRelation() throws Exception {
-    String[] relations = question.getRelations() ;
+    String[] relations = question_.getRelations() ;
     this.setListIdQuesRela(Arrays.asList(relations)) ;
     if(relations != null && relations.length > 0)
       for(String relation : relations) {
@@ -327,22 +326,22 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       String user = FAQUtils.getCurrentUser() ;
       java.util.Date date = new java.util.Date();
       
-      if(question.getLanguage().equals(response.languageIsResponsed)) {
-        question.setQuestion(questionContent) ;
+      if(question_.getLanguage().equals(response.languageIsResponsed)) {
+        question_.setQuestion(questionContent) ;
         //set response of question
-        question.setResponseBy(user) ;
-        question.setDateResponse(date) ;
-        question.setResponses(responseQuestionContent);
+        question_.setResponseBy(user) ;
+        question_.setDateResponse(date) ;
+        question_.setResponses(responseQuestionContent);
       } else {
-        question.setQuestion(response.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+        question_.setQuestion(response.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
         String responseContent = response.listQuestionLanguage.get(0).getResponse() ;
         if(responseContent != null && responseContent.trim().length() > 1 && validatorDataInput.fckContentIsNotEmpty(responseContent)) {
-          question.setResponseBy(user) ;
-          question.setDateResponse(date) ;
-          question.setResponses(responseContent) ;
+          question_.setResponseBy(user) ;
+          question_.setDateResponse(date) ;
+          question_.setResponses(responseContent) ;
         } else {
           UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
-          uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-invalid", new String[]{question.getLanguage()}, ApplicationMessage.WARNING)) ;
+          uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-invalid", new String[]{question_.getLanguage()}, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
           return ;
         }
@@ -359,18 +358,25 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         }
       }
       // set relateion of question:
-      question.setRelations(response.getListIdQuesRela().toArray(new String[]{})) ;
+      question_.setRelations(response.getListIdQuesRela().toArray(new String[]{})) ;
       
       // set show question:
-      question.setApproved(((UIFormCheckBoxInput<Boolean>)response.getChildById(IS_APPROVED)).isChecked()) ;
-      question.setActivated(((UIFormCheckBoxInput<Boolean>)response.getChildById(SHOW_ANSWER)).isChecked()) ;
+      question_.setApproved(((UIFormCheckBoxInput<Boolean>)response.getChildById(IS_APPROVED)).isChecked()) ;
+      question_.setActivated(((UIFormCheckBoxInput<Boolean>)response.getChildById(SHOW_ANSWER)).isChecked()) ;
       
-      question.setAttachMent(response.listFileAttach_) ;
+      question_.setAttachMent(response.listFileAttach_) ;
       
-      Node quesitonNode = faqService.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
-      MultiLanguages multiLanguages = new MultiLanguages() ;
-      for(int i = 1; i < response.listQuestionLanguage.size(); i ++) {
-        multiLanguages.addLanguage(quesitonNode, response.listQuestionLanguage.get(i)) ;
+      Node quesitonNode = null ;
+      try{
+        quesitonNode = faqService.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
+        MultiLanguages multiLanguages = new MultiLanguages() ;
+        for(int i = 1; i < response.listQuestionLanguage.size(); i ++) {
+          multiLanguages.addLanguage(quesitonNode, response.listQuestionLanguage.get(i)) ;
+        }
+      } catch (Exception e) {
+        UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
       }
       
       //cancel
@@ -385,6 +391,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       } else {
         UIQuestionManagerForm questionManagerForm = response.getParent() ;
         questionManagerForm.isResponseQuestion = false ;
+        UIPopupContainer popupContainer = questionManagerForm.getParent() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
     }
   }

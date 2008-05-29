@@ -89,16 +89,22 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
   static public class OkActionListener extends EventListener<UIMoveQuestionForm> {
     public void execute(Event<UIMoveQuestionForm> event) throws Exception {
       UIMoveQuestionForm moveQuestionForm = event.getSource() ;
-      Question question = faqService.getQuestionById(moveQuestionForm.questionId_, FAQUtils.getSystemProvider()) ;
       String cateId = ((UIFormSelectBox)moveQuestionForm.getChildById(LIST_CATEGORY)).getValue() ;
-      if(cateId.equals(question.getCategoryId())) {
+      try{
+        Question question = faqService.getQuestionById(moveQuestionForm.questionId_, FAQUtils.getSystemProvider()) ;
+        if(cateId.equals(question.getCategoryId())) {
+          UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIMoveQuestionForm.msg.choice-orther", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          return ;
+        }
+        question.setCategoryId(cateId) ;
+        faqService.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
+      }catch (Exception e) {
         UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIMoveQuestionForm.msg.choice-orther", null, ApplicationMessage.WARNING)) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ;
       }
-      question.setCategoryId(cateId) ;
-      faqService.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
       
       UIFAQPortlet portlet = moveQuestionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

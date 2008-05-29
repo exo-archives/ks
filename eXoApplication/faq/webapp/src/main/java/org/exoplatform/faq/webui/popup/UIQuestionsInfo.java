@@ -29,8 +29,10 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -120,7 +122,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     }
   }
   
-  private void setListQuestion() throws Exception {
+  public void setListQuestion() throws Exception {
     FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
     listQuestion_.clear() ;
     listQuestionNotYetAnswered_.clear() ;
@@ -198,12 +200,27 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
-      questionManagerForm.isViewEditQuestion = true ;
-      questionManagerForm.isViewResponseQuestion = false ;
-      questionManagerForm.isEditQuestion = true ;
-      UIQuestionForm questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
-      questionForm.setIsChildOfManager(true) ;
-      questionForm.setQuestionId(quesId) ;
+      try{
+        Question question = faqService_.getQuestionById(quesId, FAQUtils.getSystemProvider()) ;
+        UIQuestionForm questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
+        questionForm.setIsChildOfManager(true) ;
+        questionForm.setQuestionId(question) ;
+        questionManagerForm.isViewEditQuestion = true ;
+        questionManagerForm.isViewResponseQuestion = false ;
+        questionManagerForm.isEditQuestion = true ;
+      } catch(Exception e) {
+        UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        for(int i = 0; i < questionsInfo.listQuestion_.size() ; i ++) {
+          if(questionsInfo.listQuestion_.get(i).getId().equals(quesId)) {
+            questionsInfo.listQuestion_.remove(i) ;
+            break ;
+          }
+        }
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ;
+        return ;
+      }
     }
   }
   
@@ -213,25 +230,55 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
-      questionManagerForm.isViewEditQuestion = false ;
-      questionManagerForm.isViewResponseQuestion = true ;
-      questionManagerForm.isResponseQuestion = true ;
-      UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
-      responseForm.setIsChildren(true) ;
-      responseForm.setQuestionId(quesId) ;
+      try{
+        Question question = faqService_.getQuestionById(quesId, FAQUtils.getSystemProvider()) ;
+        UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
+        responseForm.setIsChildren(true) ;
+        responseForm.setQuestionId(question) ;
+        questionManagerForm.isViewEditQuestion = false ;
+        questionManagerForm.isViewResponseQuestion = true ;
+        questionManagerForm.isResponseQuestion = true ;
+      } catch(Exception e) {
+        UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        for(int i = 0; i < questionsInfo.listQuestion_.size() ; i ++) {
+          if(questionsInfo.listQuestion_.get(i).getId().equals(quesId)) {
+            questionsInfo.listQuestion_.remove(i) ;
+            break ;
+          }
+        }
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ;
+        return ;
+      }
     }
   }
   
   static public class DeleteQuestionActionListener extends EventListener<UIQuestionsInfo> {
     public void execute(Event<UIQuestionsInfo> event) throws Exception {
-      UIQuestionsInfo questionManagerForm = event.getSource() ;
+      UIQuestionsInfo questionsInfo = event.getSource() ;
       String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
+      UIPopupContainer popupContainer = questionsInfo.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      UIDeleteQuestion deleteQuestion = popupAction.activate(UIDeleteQuestion.class, 500) ;
-      deleteQuestion.setIsManagement(true) ;
-      deleteQuestion.setQuestionId(questionId) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      try {
+        Question question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+        UIDeleteQuestion deleteQuestion = popupAction.activate(UIDeleteQuestion.class, 500) ;
+        deleteQuestion.setQuestionId(question) ;
+        deleteQuestion.setIsManagement(true) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      } catch(Exception e) {
+        UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        for(int i = 0; i < questionsInfo.listQuestion_.size() ; i ++) {
+          if(questionsInfo.listQuestion_.get(i).getId().equals(questionId)) {
+            questionsInfo.listQuestion_.remove(i) ;
+            break ;
+          }
+        }
+        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ;
+        return ;
+      }
     }
   }
   

@@ -1,9 +1,9 @@
 <div class="FAQUIQuestionManagerForm $uicomponent.id" >
 	<div>
-		<div id="FAQViewTabContent" style="float: left">
+		<div id="FAQViewTabContent" style="float: left; width: 870px;">
 			<% uicomponent.renderChild("QuestionInfo") ; %>
 		</div>
-		<div id="FAQViewFormContent" style="float: left; padding-top: 10px">
+		<div id="FAQViewFormContent" style="float: left; padding-top: 10px; width: 870px;">
 			<%
 			if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
 				 uicomponent.renderChild("QuestionForm") ;

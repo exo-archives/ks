@@ -16,6 +16,8 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import javax.jcr.PathNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
@@ -48,7 +50,7 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
   @SuppressWarnings("unused")
   private boolean isManagement_ = false ;
   
-  private Question question = null ;
+  private Question question_ = null ;
   private FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   
   public UIDeleteQuestion() {
@@ -60,35 +62,33 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
   
   @SuppressWarnings("unused")
   private String getAuthor(){
-    return this.question.getAuthor() ;
+    return this.question_.getAuthor() ;
   }
   
   @SuppressWarnings("unused")
   private String getEmail(){
-    return this.question.getEmail() ;
+    return this.question_.getEmail() ;
   }
   
   @SuppressWarnings("unused")
   private String getQuestion(){
-    return this.question.getQuestion() ;
+    return this.question_.getQuestion() ;
   }
   
   public void setIsManagement(boolean isManagement) {
     this.isManagement_ = isManagement ;
   }
   
-  public void setQuestionId(String questionId) {
-    try {
-      question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  public void setQuestionId(Question question) {
+    question_ = question ;
   }
   
   static public class OkActionListener extends EventListener<UIDeleteQuestion> {
     public void execute(Event<UIDeleteQuestion> event) throws Exception {
       UIDeleteQuestion deleteQuestion = event.getSource() ;
-      deleteQuestion.faqService.removeQuestion(deleteQuestion.question.getId(), FAQUtils.getSystemProvider()) ;
+      try{
+        deleteQuestion.faqService.removeQuestion(deleteQuestion.question_.getId(), FAQUtils.getSystemProvider()) ;
+      } catch (PathNotFoundException e) { }
       if(!deleteQuestion.isManagement_) {
         UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

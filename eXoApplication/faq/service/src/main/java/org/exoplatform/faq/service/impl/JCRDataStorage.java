@@ -288,12 +288,8 @@ public class JCRDataStorage {
   
   public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception {
   	Node questionHome = getQuestionHome(sProvider, null) ;
-  	try{
-  		questionHome.getNode(questionId).remove() ;
-  		questionHome.save() ;
-  	}catch(Exception e) {
-  		e.printStackTrace() ;
-  	}
+		questionHome.getNode(questionId).remove() ;
+		questionHome.save() ;
   }
   
   private Question getQuestion(Node questionNode) throws Exception {
@@ -334,12 +330,7 @@ public class JCRDataStorage {
   
   public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
-    try{
-      return getQuestion(questionHome.getNode(questionId)) ;
-    }catch(Exception e) {
-      e.printStackTrace() ;
-    }
-    return null ;
+    return getQuestion(questionHome.getNode(questionId)) ;
   }
   
   public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {

@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
@@ -185,11 +186,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   }
   
   @SuppressWarnings("static-access")
-  public void setQuestionId(String questionId){
-    questionId_ = questionId ;
+  public void setQuestionId(Question question){
+    questionId_ = question.getId() ;
     categoryId_ = null ;
     try {
-      question_ = fAQService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+      question_ = question ;
       defaultLanguage_ = question_.getLanguage() ;
       LIST_LANGUAGE.clear() ;
       LIST_LANGUAGE.add(defaultLanguage_) ;
@@ -391,36 +392,41 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
       
-      if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
-        questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
-        multiLanguages.removeLanguage(questionNode, questionForm.LIST_LANGUAGE) ;
-      } else if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1){
-        questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider()) ;
-      }
-      
-      if(questionForm.LIST_LANGUAGE.size() > 1) {
-        try{
-          QuestionLanguage questionLanguage = new QuestionLanguage() ;
-          for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
-            questionLanguage.setLanguage(questionForm.LIST_LANGUAGE.get(i)) ;
-            questionLanguage.setQuestion(listQuestionContent.get(i).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
-            questionLanguage.setResponse(" ") ;
-            multiLanguages.addLanguage(questionNode, questionLanguage) ;
+      try{
+        if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
+            questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
+          multiLanguages.removeLanguage(questionNode, questionForm.LIST_LANGUAGE) ;
+        } else if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1){
+          questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider()) ;
+        }
+        if(questionForm.LIST_LANGUAGE.size() > 1) {
+          try{
+            QuestionLanguage questionLanguage = new QuestionLanguage() ;
+            for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
+              questionLanguage.setLanguage(questionForm.LIST_LANGUAGE.get(i)) ;
+              questionLanguage.setQuestion(listQuestionContent.get(i).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+              questionLanguage.setResponse(" ") ;
+              multiLanguages.addLanguage(questionNode, questionLanguage) ;
+            }
+          } catch(Exception e) {
+            e.printStackTrace() ;
           }
-        } catch(Exception e) {
-          e.printStackTrace() ;
         }
-      }
-      if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
-        if(questionIsApproved) {
-          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-          uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.add-new-question-successful", null, ApplicationMessage.INFO)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        } else {
-          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-          uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-not-is-approved", null, ApplicationMessage.INFO)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
+          if(questionIsApproved) {
+            UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+            uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.add-new-question-successful", null, ApplicationMessage.INFO)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          } else {
+            UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+            uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-not-is-approved", null, ApplicationMessage.INFO)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          }
         }
+      } catch (PathNotFoundException notFoundException) {
+        UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
       }
       
       if(!questionForm.isChildOfManager) {
@@ -434,6 +440,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       } else {
         UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
         questionManagerForm.isEditQuestion = false ;
+        UIPopupContainer popupContainer = questionManagerForm.getParent() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
 		}
 	}
