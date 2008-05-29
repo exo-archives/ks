@@ -7,7 +7,8 @@
 	import org.exoplatform.faq.service.FileAttachment;
  %>
 <div class="UIPopupViewQuestion $uicomponent.id" >
-	<% uiform.begin() %>
+	<div><% uiform.begin() %></div>
+	<%uicomponent.renderChildren() ;%>
 	<div class= "ViewQuestion" >
 			<% 
  						Question question = uicomponent.getViewQuestion() ; 
@@ -24,9 +25,7 @@
 						}
 					%>
 			<div class="ResponseContent">
-				<div class="Response">
-					$response<br>
-				</div>
+				<div class="Response" style="width: 97%;">$response</div>
 				<div class="AttachmentContent">
 					<div style="margin-top: 5px; margin-bottom: 5px;">
 						<%
@@ -66,9 +65,9 @@
 					    		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 					    %>
 					    		<div class="LabelBox">
-										<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
+										<div class="AttachmentIcon ${typeFileIcon}Icon"><span></span></div>
 										<a class="AttachmentLabel" href="$linkImage">$fileName</a>
-										<div style="clear: left;"><span/></div>
+										<div style="clear: left;"><span></span></div>
 										<div class="Size">Size: $fileSize</div>
 									</div>
 					    <%}
@@ -102,11 +101,9 @@
 					<% 	}
 						}%>
 				</div>
-				<div class="UIAction ResponsActions" style="float: left">
-						<div style="float:left" >  Response by: $responseBy , $date</div>
-						<div style="float:right"></div>
+				<div class=" ResponsActions">
+						<div >  Response by: $responseBy , $date</div>
 				 </div>
-				<div style="clear: left"><span></span></div>
 			</div>
 		</div>
 		<div class="UIAction">
@@ -124,5 +121,5 @@
 				</tr>
  	  </table>
 	</div>
-	<%uiform.end()%>
+	<div><%uiform.end()%></div>
 </div>

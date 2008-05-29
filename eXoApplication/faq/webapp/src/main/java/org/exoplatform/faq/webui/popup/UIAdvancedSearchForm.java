@@ -239,7 +239,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			if(!FAQUtils.isFieldEmpty(emailAddress)) eventQuery.setEmail(FAQUtils.filterString(emailAddress, true)) ;
 			if(!FAQUtils.isFieldEmpty(question)) eventQuery.setQuestion(FAQUtils.filterString(question, false)) ;
 			if(!FAQUtils.isFieldEmpty(response)) eventQuery.setResponse(FAQUtils.filterString(response, false)) ;
-			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
+			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 700) ;
 			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			if(type.equals("faqCategory")) {
 				resultContainer.setIsRenderedContainer(4) ;

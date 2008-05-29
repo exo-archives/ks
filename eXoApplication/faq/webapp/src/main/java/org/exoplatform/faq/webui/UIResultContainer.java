@@ -22,6 +22,7 @@ import org.exoplatform.faq.webui.popup.ResultSearchQuestion;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupComponent;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.UIPopupWindow;
@@ -49,6 +50,13 @@ public class UIResultContainer extends UIContainer implements UIPopupComponent {
 
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+	
+	public void processRender(WebuiRequestContext context) throws Exception {
+		context.getWriter().append("<span class=\"").append(getId()).append("\" id=\"").append(getId()).append("\">");
+		//renderChild(UIPopupAction.class) ;
+		renderChildren(context) ;
+		context.getWriter().append("</span>");
+	}
 	
 	public void setIsRenderedContainer(int index) {
 		boolean isAdvanSearch = false, isQuickSearch = false, isSearchCate = false, isSearchQuesion = false ;

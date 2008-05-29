@@ -297,6 +297,12 @@
   padding-left: 10px ;
 }
 
+.UIFAQPortlet .ResponseContent .Response {
+  background: url('background/DotLine.gif') repeat-x bottom;
+  padding-bottom: 4px;
+  padding-left: 10px ;
+}
+
 .UIFAQPortlet .ResponseContent .AttachmentContent {
   background: url('background/DotLine.gif') repeat-x bottom;
   padding-bottom: 4px;
