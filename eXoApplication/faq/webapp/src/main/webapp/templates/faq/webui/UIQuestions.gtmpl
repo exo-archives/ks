@@ -66,7 +66,7 @@
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
 														<div class="Icon AddNewQuestion">
-															Add Question
+															<%=_ctx.appRes(uicomponent.getName() + ".action." + "AddQuestion")%>
 														</div>
 													</div>
 												</div>
@@ -81,7 +81,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="Icon Print">
-													Print
+													<%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%>
 												</div>
 											</div>
 										</div>
@@ -96,7 +96,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="Icon Rss">
-													RSS
+													<%=_ctx.appRes(uicomponent.getName() + ".action." + "RSS")%>
 												</div>
 											</div>
 										</div>
@@ -330,7 +330,7 @@
 					<%if(uicomponent.getQuestionView().equals(qId)) {
 						String responseBy = "..." ;
 						String date = "..." ;
-						String response = "<center><b>This question not yet answered</center></b>" ;
+						String response = "<center><b>" + _ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered") + "</center></b>" ;
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							responseBy = question.getResponseBy() ;
@@ -342,15 +342,17 @@
 							<%
 							if(titleQuestion.trim().length() > 0) {
 							%>
-								<b>Question : </b><br/>
+								<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b><br/>
 								<div class="Response">
 									<p>$titleQuestion</p>
 								</div>
 						<%}%>
-							<b>Response : </b><br/>
+							<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b><br/>
 							<div class="Response">
 								$response
 							</div>
+							
+							<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "FileAttached")%>: </b>
 							<div class="AttachmentContent">
 								<div style="margin-top: 5px; margin-bottom: 5px;">
 									<%
@@ -381,8 +383,12 @@
 								 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
 								 						<div style="clear: left;"><span></span></div>
 								 						<div class="Action" style="padding-top: 0px;">
-								 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">View</div>
-								 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
+								 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">
+								 								<%=_ctx.appRes(uicomponent.getName() + ".action." + "ViewImage")%>
+								 							</div>
+								 							<div class="Icon Download">
+								 								<a href="$linkImage"><%=_ctx.appRes(uicomponent.getName() + ".action." + "DownloadFile")%></a>
+							 								</div>
 								 						</div>
 								 					</div>
 							 					</div>
@@ -393,17 +399,17 @@
 													<div class="AttachmentIcon FileAttachmentIcon"><span></span></div>
 													<a class="AttachmentLabel" href="$linkImage">$fileName</a>
 													<div style="clear: left;"><span></span></div>
-													<div class="Size">Size: $fileSize B</div>
+													<div class="Size">
+														<%=_ctx.appRes(uicomponent.getName() + ".label." + "SizeFile")%>: $fileSize B
+													</div>
 												</div>
 								    <%}
 								  	}
-							  	} else {%>
-							  		<b>File Attached: </b>
-						  	<%}%>
+							  	}%>
 						  	</div>
 						    <div style="clear: left;"><span></span></div>
 							</div>
-							<b>Related question:</b><br>
+							<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</b><br>
 							<div class="RelatedQuestions">
 								<%String questionRelationById = "" ;
 									String cateRelaId = "" ;
@@ -436,20 +442,22 @@
 								
 							</style>
 							<div class="UIAction ResponsActions" >
-									<div style="float:left"><b>Responsed by :</b> $responseBy , $date</div>
+									<div style="float:left">
+										<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :</b> $responseBy , $date
+									</div>
 									<div style="float:right">
 									<div class="PrintAction" style="display:none ;">
 										<a href="javascript:window.print() ;" class="ActionButton LightBlueStyle">
 					      	  	<div class="ButtonLeft">
 					        	  	<div class="ButtonRight">
-					          	  	<div class="ButtonMiddle"> Print </div>
+					          	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></div>
 					            	</div>
 					          	</div>
 				        		</a>
 				        		<a href="javascript:eXo.faq.UIFAQPortlet.closePrint() ;" class="ActionButton LightBlueStyle">
 					      	  	<div class="ButtonLeft">
 					        	  	<div class="ButtonRight">
-					          	  	<div class="ButtonMiddle"> Close </div>
+					          	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + "ClosePrintQuestion")%></div>
 					            	</div>
 					          	</div>
 				        		</a>
@@ -462,7 +470,7 @@
 											<a href="$link" class="ActionButton LightBlueStyle">
 						      	  	<div class="ButtonLeft">
 						        	  	<div class="ButtonRight">
-						          	  	<div class="ButtonMiddle"> Back </div>
+						          	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Back")%>  </div>
 						            	</div>
 						          	</div>
 					        		</a>
@@ -517,7 +525,7 @@
 											<a href="javaScript: void(0);" class="ActionButton LightBlueStyle">
 						      	  	<div class="ButtonLeft">
 						        	  	<div class="ButtonRight">
-						          	  	<div class="ButtonMiddle"> Language </div>
+						          	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + "SelectLanguage")%></div>
 						            	</div>
 						          	</div>
 						        	</a>
@@ -526,7 +534,7 @@
 										<a href="javascript:void(0);" onclick="eXo.faq.UIFAQPortlet.printPreview(this) ;" class="ActionButton LightBlueStyle">
 					      	  	<div class="ButtonLeft">
 					        	  	<div class="ButtonRight">
-					          	  	<div class="ButtonMiddle"> Print </div>
+					          	  	<div class="ButtonMiddle"> <%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%> </div>
 					            	</div>
 					          	</div>
 					        	</a>
@@ -567,14 +575,14 @@
 						<a href="javascript:window.print() ;" class="ActionButton LightBlueStyle">
 			  	  	<div class="ButtonLeft">
 			    	  	<div class="ButtonRight">
-			      	  	<div class="ButtonMiddle"> Print </div>
+			      	  	<div class="ButtonMiddle"> <%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%> </div>
 			        	</div>
 			      	</div>
 						</a>
 						<a href="javascript:eXo.faq.UIFAQPortlet.closePrint() ;" class="ActionButton LightBlueStyle">
 			  	  	<div class="ButtonLeft">
 			    	  	<div class="ButtonRight">
-			      	  	<div class="ButtonMiddle"> Close </div>
+			      	  	<div class="ButtonMiddle"> <%=_ctx.appRes(uicomponent.getName() + ".action." + "ClosePrintQuestion")%> </div>
 			        	</div>
 			      	</div>
 						</a>

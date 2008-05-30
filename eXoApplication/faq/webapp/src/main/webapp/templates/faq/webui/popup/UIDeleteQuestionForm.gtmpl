@@ -2,7 +2,9 @@
 	<% uiform.begin() %>
 		<div style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; border: 1px solid #E6F3F3">
 			<div style="margin: 5px 2px 10px 2px;">
-				<center><font size="2px"><b>Do you really want to delete this question and its answers ?</b></font></center>
+				<center><font size="2px">
+					<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "reallyDeleteQuestion")%></b>
+				</font></center>
 			</div>
 			<%
 			String author = uicomponent.getAuthor() ;
@@ -11,15 +13,17 @@
 			%>
 			<table>
 				<tr>
-					<td align="right" width="15%"> <div style="margin: 5px 10px 5px 2px;">Author: </div></td>
+					<td align="right" width="15%"> 
+						<div style="margin: 5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Author")%>: </div>
+					</td>
 					<td><div style="margin: 5px 10px 5px 2px;"> $author </div></td>
 				</tr>
 				<tr>
-					<td align="right" width="15%"> <div style="margin: 5px 10px 5px 2px;">Email: </div></td>
+					<td align="right" width="15%"> <div style="margin: 5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Email")%>: </div></td>
 					<td> <div style="margin: 5px 10px 5px 2px;">$email </div></td>
 				</tr>
 				<tr>
-					<td align="right" width="15%"> <div style="margin: 5px 10px 5px 2px;">Question: </div></td>
+					<td align="right" width="15%"> <div style="margin: 5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%>: </div></td>
 					<td> <div style="margin: 5px 10px 5px 2px;">$content </div></td>
 				</tr>
 			</table>

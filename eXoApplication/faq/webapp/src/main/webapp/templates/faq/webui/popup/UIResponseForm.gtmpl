@@ -25,7 +25,7 @@
 											<% uiform.renderField(field) %>
 											<div class="LanguageQuestion" style="width: 100%;"> 
 												<div style="vertical-align: middle; padding-left: 5px;">
-													Language: $language 
+													<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
 												</div>
 											</div>
 									<%} else if(field.getName().equals("QuestionRelation")){ 
@@ -49,7 +49,9 @@
 										     %>
 										     	<div style="margin: 0px 0px 3px 2px;">
 										     		$name &nbsp;&nbsp;&nbsp;&nbsp;
-														[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">Remove</font></a>&nbsp;]
+														[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">
+															<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
+														</font></a>&nbsp;]
 													</div>
 									    <%}
 											}
@@ -65,7 +67,7 @@
 					}
 					%>
 						<tr>
-							<td align="right"> Relation :&nbsp;</td>
+							<td align="right"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Relation")%>  :&nbsp;</td>
 							<td>
 							<%
 							int i = 0 ;
@@ -79,7 +81,9 @@
 							%>
 								<div style="margin: 0px 0px 3px 2px;">
 									&nbsp; - $viewString  &nbsp;&nbsp;&nbsp;&nbsp;
-									[&nbsp;<a href="$action"><font color="#058EE6" font-size="12px">Remove</font></a>&nbsp;]
+									[&nbsp;<a href="$action"><font color="#058EE6" font-size="12px">
+										<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
+									</font></a>&nbsp;]
 								</div>
 						<%}%>
 							</td>

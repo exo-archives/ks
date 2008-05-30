@@ -44,7 +44,7 @@
 		                          	%>
 		                          		<a href="$link">
 				                            <div class="MiddleTab">
-				                            	 Question management 
+				                            	 <%=_ctx.appRes(uicomponent.getName() + ".label." + "TabQuestionManagement")%> 
 				                            </div>
 			                            </a>
 		                            <%} else {
@@ -52,7 +52,7 @@
 		                            %>
 		                            	<a href="$link">
 			                            	<div class="MiddleTab">
-			                            		Question not yet answered 
+			                            		<%=_ctx.appRes(uicomponent.getName() + ".label." + "TabQuestionNotYetAnswered")%>
 				                            </div>
 			                            </a>
 		                            <%}%>
@@ -80,10 +80,10 @@
 													<div class="UIFormInput">
 														<table class="UIGrid">
 															<tr>
-																<th><b>Question</b></th>
-																<th width="100px"><b>is Approved</b></th>
-																<th width="100px"><b>is Activated</b></th>
-																<th width="60px"><b>Action</b></th>
+																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th width="100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsApproved")%></b></th>
+																<th width="100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsActivated")%></b></th>
+																<th width="60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
 															</tr>
 															<%
 															List questionList = uicomponent.getListQuestion() ;
@@ -98,30 +98,26 @@
 																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "") ;%></td>
 																		<td class="text" align="center">
 																		<%if(question.isApproved()) {%>
-																				<div class="TrueIcon">
+																				<div class="TrueIcon"><%=_ctx.appRes(uicomponent.getName() + ".label." + "IsApproved")%></div>
 																		<%} else {%>
-																				<div class="FalseIcon">
+																				<div class="FalseIcon"><%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotApproved")%></div>
 																		<%}%>
-																				<%=question.isApproved()%>
-																			</div>
 																		</td>
 																		<td class="text" align="center">
 																		<%if(question.isActivated()) {%>
-																				<div class="TrueIcon">
+																				<div class="TrueIcon"><%=_ctx.appRes(uicomponent.getName() + ".label." + "IsActivated")%></div>
 																		<%} else {%>
-																				<div class="FalseIcon">
+																				<div class="FalseIcon"><%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotActivated")%></div>
 																		<%}%>
-																				<%=question.isActivated()%>
-																			</div>
 																		</td>
 																		<td align="center">
-																				<a href="$linkEdit" style="float: left" title="Edit Question" >
+																				<a href="$linkEdit" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "EditQuestion")%>" >
 																					<div class="ItemIcon Edit">
 																							<div style="padding-left: 20px;"><span></span></div>
 																					</div>
 																				</a>
 																				
-																				<a href="$linkDelete" style="float: left" title="Delete Question">
+																				<a href="$linkDelete" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "DeleteQuestion")%>">
 																					<div class="ItemIcon Delete">
 																							<div style="padding-left: 20px;"><span></span></div>
 																					</div>
@@ -131,7 +127,9 @@
 															<%}
 															} else {%>
 																<tr>
-																	<td colspan="4" align="center"><b>List of questions is empty</b></td>
+																	<td colspan="4" align="center">
+																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "ListQuestionIsEmpty")%></b>
+																	</td>
 																</tr>
 														<%}%>
 														</table>
@@ -157,8 +155,8 @@
 													<div class="UIFormInput">
 														<table class="UIGrid">
 															<tr>
-																<th><b>Question</b></th>
-																<th width="60px"><b>Action</b></th>
+																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th width="60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
 															</tr>
 															<%
 															List questionNotAnswered = uicomponent.getListQuestionNotAnswered() ;
@@ -173,13 +171,13 @@
 																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
 																		<td align="center">
 																			<div style="float: left">
-																				<a href="$linkResponse" style="float: left" title="Response Question" >
+																				<a href="$linkResponse" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>" >
 																					<div class="ItemIcon ResponseQuestion">
 																							<div style="padding-left: 20px;"><span></span></div>
 																					</div>
 																				</a>
 																				
-																				<a href="$linkDelete" style="float: left" title="Delete Question">
+																				<a href="$linkDelete" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "DeleteQuestion")%>">
 																					<div class="ItemIcon Delete">
 																							<div style="padding-left: 20px;"><span></span></div>
 																					</div>
@@ -190,7 +188,9 @@
 															<%}
 															} else {%>
 																<tr>
-																	<td colspan="2" align="center"><b>List of questions is empty</b></td>
+																	<td colspan="2" align="center">
+																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "ListQuestionIsEmpty")%></b>
+																	</td>
 																</tr>
 														<%}%>
 														</table>

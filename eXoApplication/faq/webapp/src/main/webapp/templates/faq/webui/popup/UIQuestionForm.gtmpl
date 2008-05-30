@@ -34,7 +34,7 @@
 												</div>
 												<div class="LanguageQuestion" style="width: 100%"> 
 													<div style="vertical-align: middle; padding-left: 5px;">
-														Language: $language 
+														<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
 													</div>
 												</div>
 												<div style="clear: left"><span></span></div>
@@ -53,7 +53,9 @@
 										     %>
 										     	<div style="margin: 0px 0px 3px 2px;">
 														&nbsp;$name  &nbsp;&nbsp;&nbsp;&nbsp;
-														[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">Remove</font></a>&nbsp;]
+														[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">
+															<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
+														</font></a>&nbsp;]
 													</div>
 									    <%}
 											}
