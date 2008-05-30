@@ -19,6 +19,8 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.contact.service.Contact;
+import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
@@ -26,6 +28,7 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.mail.service.Message;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -83,15 +86,18 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     return listLanguageToReponse ;
   }
   
-	public void setUpdateQuestion(String questionId) throws Exception {
+	public void setUpdateQuestion(String questionId, String language) throws Exception {
     Question question = FAQUtils.getFAQService().getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-    String content = "" ;
-    String response = question.getResponses() ;
-    if(response.equals(" ")) content = "Question: " + question.getQuestion() ;
-    else 
-    	content ="<p> Question: " + question.getQuestion() + "</p>" +
-    			"<p> Response: "+ "</p>" + response ;
-    
+    @SuppressWarnings("unused")
+    String email = "" ;
+    ContactService contactService = getApplicationComponent(ContactService.class) ;
+    Contact contact = contactService.getContact(SessionProviderFactory.createSessionProvider()
+    		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
+    try {
+    	email = contact.getEmailAddress() ;
+    } catch (NullPointerException e) {
+    	email = "" ;
+    }
     languageIsResponsed = question.getLanguage() ;
     QuestionLanguage questionLanguage = new QuestionLanguage() ;
     questionLanguage.setLanguage(question.getLanguage()) ;
@@ -107,14 +113,25 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     }
     
     addChild(new UIFormStringInput(FROM_NAME,FROM_NAME, null)) ;
-    addChild(new UIFormStringInput(FROM, FROM, null)) ;
+    addChild(new UIFormStringInput(FROM, FROM, email)) ;
     addChild(new UIFormStringInput(TO, TO, null)) ;
     addChild(new UIFormStringInput(ADD_CC, ADD_CC, null)) ;
     addChild(new UIFormStringInput(ADD_BCC, ADD_BCC, null)) ;
     addChild(new UIFormStringInput(SUBJECT, SUBJECT, "From " + FAQUtils.getCurrentUser() + " send to you")) ;
     UIFormSelectBox questionLanguages = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToSendFriend()) ;
+    questionLanguages.setSelectedValues(new String[]{language}) ;
     questionLanguages.setOnChange("ChangeLanguage") ;
     addChild(questionLanguages) ;
+    String content = "" ;
+    for(QuestionLanguage questionLangua : listQuestionLanguage) {
+      if(questionLangua.getLanguage().equals(language)) {
+     	 String response = questionLangua.getResponse() ;
+        if(response.equals(" ")) content = "Question: " + questionLangua.getQuestion() ;
+        else 
+        	content ="<p> Question: " + questionLangua.getQuestion() + "</p>" +
+        			"<p> Response: "+ "</p>" + response ;
+      }
+    }
     addChild(new UIFormWYSIWYGInput(MESSAGE, null, content, true)) ;
 	}
 

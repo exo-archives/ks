@@ -114,6 +114,7 @@ public class UIQuestions extends UIContainer {
   boolean isChangeLanguage = false ;
   private List<String> listLanguage = new ArrayList<String>() ;
   public String backPath_ = "" ;
+  private static String language_ = "" ;
   
 	public UIQuestions()throws Exception {
     backPath_ = null ;
@@ -999,7 +1000,8 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UISendMailForm sendMailForm = popupContainer.addChild(UISendMailForm.class, null, null) ;
-      sendMailForm.setUpdateQuestion(questionId) ;
+      if(FAQUtils.isFieldEmpty(language_)) language_ = "English" ;
+      sendMailForm.setUpdateQuestion(questionId , language_) ;
       popupContainer.setId("FAQSendMailForm") ;
       popupAction.activate(popupContainer, 700, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -1011,9 +1013,9 @@ public class UIQuestions extends UIContainer {
       UIQuestions uiQuestions = event.getSource() ; 
       String[] stringInput = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
       int pos = Integer.parseInt(stringInput[0]) ;
-      String language = stringInput[1] ;
+      language_ = stringInput[1] ;
       for(QuestionLanguage questionLanguage : uiQuestions.listQuestionLanguage) {
-        if(questionLanguage.getLanguage().equals(language)) {
+        if(questionLanguage.getLanguage().equals(language_)) {
           uiQuestions.listQuestion_.get(pos).setQuestion(questionLanguage.getQuestion()) ;
           uiQuestions.listQuestion_.get(pos).setLanguage(questionLanguage.getLanguage()) ;
           uiQuestions.listQuestion_.get(pos).setResponses(questionLanguage.getResponse()) ;
