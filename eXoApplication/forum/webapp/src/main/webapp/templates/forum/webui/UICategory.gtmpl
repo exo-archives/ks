@@ -93,10 +93,10 @@
 												</div>
 											</div>
 											<div class="BottomLeftRightClickPopupMenu">
-											<div class="BottomRightRightClickPopupMenu">
-												<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+												<div class="BottomRightRightClickPopupMenu">
+													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+												</div>
 											</div>
-										</div>
 										</div>
 									</div>
 								</div>
@@ -113,7 +113,7 @@
 									<div class="LeftOverButton" title="Search in this Category">
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
-												<div class="StatusIcon SeachIcon">
+												<div class="StatusIcon SeachIcon" style="width: 120px;">
 													<div class="DownArrow1Icon">Search this Category</div>
 												</div>
 											</div>
@@ -121,7 +121,7 @@
 									</div>
 								</div>
 							<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory" style="display: none; ">
+								<div class="UIPopupCategory" style="display: none; top: auto">
 									<div class="UIRightClickPopupMenu" style="display: block;">
 										<div class="UIContextMenuContainer">
 											<div class="TopLeftRightClickPopupMenu">
