@@ -412,9 +412,13 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setAttachments(uiForm.attachments_) ;
 				if(topicState.equals("closed")) {
 					topicNew.setIsClosed(true);
+				}else{
+					topicNew.setIsClosed(false);
 				}
 				if(topicStatus.equals("locked")) {
 					topicNew.setIsLock(true) ;
+				}else {
+					topicNew.setIsLock(false) ;
 				}
 				topicNew.setIsSticky(sticky);
 				

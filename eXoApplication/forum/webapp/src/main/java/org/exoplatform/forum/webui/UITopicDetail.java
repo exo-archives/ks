@@ -421,8 +421,8 @@ public class UITopicDetail extends UIForm {
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
 		if(this.pageList == null) return null ;
+		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		if(!this.isGopage) {
-			UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 			this.pageSelect = forumPageIterator.getPageSelected() ;
 			long availablePage = this.pageList.getAvailablePage() ;
 			if(this.pageSelect > availablePage) {
@@ -431,7 +431,14 @@ public class UITopicDetail extends UIForm {
 			}
 		}
 		if(this.pageSelect < 1) return null ;
-		this.posts = this.pageList.getPage(this.pageSelect) ;
+		try {
+			this.posts = this.pageList.getPage(this.pageSelect) ;
+    } catch (Exception e) {
+    	long availablePage = this.pageList.getAvailablePage() ;
+  		this.pageSelect = availablePage ;
+  		forumPageIterator.setSelectPage(availablePage);
+  		this.posts = this.pageList.getPage(this.pageSelect) ;
+    }
 		if(this.posts.size() > 0 && this.posts != null) {
 			for (Post post : this.posts) {
 				if(getUIFormCheckBoxInput(post.getId()) != null) {

@@ -41,6 +41,7 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -131,7 +132,9 @@ public class UITopicContainer extends UIForm {
 		this.page = 1;
 		this.isGoPage = true ;
 		getChild(UIForumPageIterator.class).setSelectPage(this.page) ;
-		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+		this.userProfile = forumPortlet.getUserProfile() ;
+		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
 	}
 	
 	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs) throws Exception {
@@ -141,8 +144,10 @@ public class UITopicContainer extends UIForm {
 		this.page = 1;
 		this.isGoPage = true ;
 		getChild(UIForumPageIterator.class).setSelectPage(this.page) ;
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+		this.userProfile = forumPortlet.getUserProfile() ;
 		if(!isBreadcumbs) {
-			this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
 		}
 	}
 
@@ -159,8 +164,8 @@ public class UITopicContainer extends UIForm {
 			this.forum = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
 			this.isUpdate = false ;
 		}
-		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
-		forumPortlet.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
+		UIForumContainer forumContainer = this.getParent() ;
+		forumContainer.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
 		return this.forum ;
 	}
 	
@@ -168,7 +173,6 @@ public class UITopicContainer extends UIForm {
 	private void initPage() throws Exception {
     this.canViewThreads = true ;
     this.canAddNewThread = true ;
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		String isApprove = "" ;
 		long role = this.userProfile.getUserRole() ;
 		String userId = this.userProfile.getUserId() ;
@@ -259,7 +263,7 @@ public class UITopicContainer extends UIForm {
 			if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 		}
 		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin)	; 
-		long maxPost = getUserProfile().getMaxTopicInPage() ;
+		long maxPost = getUserProfile().getMaxPostInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost ;
 		pageListPost.setPageSize(this.maxPost) ;
 		return pageListPost;
@@ -387,8 +391,6 @@ public class UITopicContainer extends UIForm {
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 				uiForumContainer.setIsRenderChild(false) ;
 				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, Long.parseLong(temp[1])) ;
-				uiTopicDetail.setUpdatePageList(uiTopicContainer.getPageListPost(temp[0])) ;
 				uiTopicDetail.setUpdateForum(uiTopicContainer.forum) ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic ) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId+"/"+ uiTopicContainer.forumId + " "));
@@ -400,6 +402,22 @@ public class UITopicContainer extends UIForm {
 				} else {
 					uiTopicDetail.setIdPostView("false") ;
 				}
+				JCRPageList pageList = uiTopicContainer.getPageListPost(temp[0]) ;
+				long page = Long.parseLong(temp[1]) ;
+				forumPortlet.setUserProfile() ;
+				UserProfile userProfile = forumPortlet.getUserProfile() ;
+				if(pageList != null) {
+					pageList.setPageSize(userProfile.getMaxPostInPage()) ;
+					if(page > pageList.getAvailablePage()) {
+						page = pageList.getAvailablePage();
+						Object[] args = { };
+						UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UITopicDetail.msg.erro-change-posts-per-page", args, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					}
+				}
+				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, page) ;
+				uiTopicDetail.setUpdatePageList(pageList) ;
 				WebuiRequestContext context = event.getRequestContext() ;
 				context.addUIComponentToUpdateByAjax(uiForumContainer) ;
 				context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class)) ;
