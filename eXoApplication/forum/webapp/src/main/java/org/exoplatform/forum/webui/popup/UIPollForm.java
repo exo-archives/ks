@@ -53,7 +53,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		template = "app:/templates/forum/webui/popup/UIPollForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UIPollForm.SaveActionListener.class), 
-			@EventConfig(listeners = UIPollForm.RefreshActionListener.class),
+			@EventConfig(listeners = UIPollForm.RefreshActionListener.class, phase = Phase.DECODE),
 			@EventConfig(listeners = UIPollForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
@@ -72,9 +72,9 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	public UIPollForm() throws Exception {
 		UIFormStringInput question = new UIFormStringInput(FIELD_QUESTION_INPUT, FIELD_QUESTION_INPUT, null);
 		UIFormStringInput timeOut = new UIFormStringInput(FIELD_TIMEOUT_INPUT, FIELD_TIMEOUT_INPUT, null);
+		timeOut.addValidator(PositiveNumberFormatValidator.class) ;
 		UIFormCheckBoxInput VoteAgain = new UIFormCheckBoxInput<Boolean>(FIELD_AGAINVOTE_CHECKBOX, FIELD_AGAINVOTE_CHECKBOX, false) ; 
 		UIFormCheckBoxInput MultiVote = new UIFormCheckBoxInput<Boolean>(FIELD_MULTIVOTE_CHECKBOX, FIELD_MULTIVOTE_CHECKBOX, false) ; 
-		timeOut.addValidator(PositiveNumberFormatValidator.class) ;
 		addUIFormInput(question) ;
 		addUIFormInput(timeOut) ;
 		addUIFormInput(VoteAgain);
@@ -134,7 +134,13 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			String question = questionInput.getValue() ;
 			String timeOutStr = uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).getValue() ;
 			long timeOut = 0;
-			if(timeOutStr != null && timeOutStr.length() > 0) timeOut = Long.parseLong(timeOutStr) ; 
+			if(timeOutStr != null && timeOutStr.length() > 0){
+				if(timeOutStr.length() > 4){
+					Object[] args = {uiForm.getLabel(FIELD_TIMEOUT_INPUT) };
+					throw new MessageException(new ApplicationMessage("UIPollForm.msg.longTimeOut", args, ApplicationMessage.WARNING)) ;
+				}
+				timeOut = Long.parseLong(timeOutStr) ; 
+			}
 			boolean isAgainVote = uiForm.getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).isChecked() ;
       boolean isMultiVote = uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).isChecked() ;
 			String sms = "";

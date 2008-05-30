@@ -11,7 +11,7 @@
 		Poll poll = uicomponent.getPoll() ;
 		if(poll != null) {
 		String question = poll.getQuestion() ;
-		int timeOut = (int)poll.getTimeOut() ;
+		long timeOut = poll.getTimeOut() ;
 		boolean displayVoted = uicomponent.getIsVoted();
 		boolean isAnonim = ForumSessionUtils.isAnonim();
 		String confirmDelete =  _ctx.appRes("UITopicPoll.msg.confirmClose"); 
@@ -94,7 +94,8 @@
 		if(timeOut > 0) {
 			Date dateOut = poll.getCreatedDate() ;
 			Date today = new Date() ;
-			dateOut.setTime(dateOut.getTime() + timeOut*86400000);
+			timeOut = timeOut*86400000 ;
+			dateOut.setTime(dateOut.getTime() + timeOut);
 			UserProfile option = uicomponent.getOption();
 			String timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumFormatUtils.getFormatDate((option.getLongDateFormat() + ", " + option.getTimeFormat()),dateOut);
 			if(dateOut.getTime() < today.getTime()) {
