@@ -264,6 +264,7 @@ public class UICategories extends UIContainer	{
 			UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
+			addWatchingForm.initForm() ;
 			addWatchingForm.setPathNode(path);
 			popupAction.activate(addWatchingForm, 425, 250) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

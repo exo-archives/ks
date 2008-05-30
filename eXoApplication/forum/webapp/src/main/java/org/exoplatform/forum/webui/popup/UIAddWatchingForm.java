@@ -21,16 +21,20 @@ import java.util.List;
 
 import org.exoplatform.contact.service.Contact;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -59,11 +63,24 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
   	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
   	addUIFormInput(userName);
   }
-	public void activate() throws Exception {
+	
+	public void initForm() throws Exception  {
 		List<String> list = new ArrayList<String>() ;
+		String userId = ForumSessionUtils.getCurrentUser() ;
+		if(userId != null && userId.length() > 0) {
+			UIFormStringInput userName = getUIStringInput(USER_NAME) ;
+			userName.setEditable(false) ;
+			userName.setValue(userId) ;
+			Contact contact = this.getPersonalContact(userId) ;
+			String email = contact.getEmailAddress() ;
+			if(email != null && email.trim().length() > 0)
+				list.add(email);
+		}
 		list.add("");
 		this.initMultiValuesField(list);
 	}
+
+	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
 	public void setPathNode(String path) {
@@ -76,7 +93,6 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 		uiFormMultiValue.setName(EMAIL_ADDRESS) ;
 		uiFormMultiValue.setType(UIFormStringInput.class) ;
 		uiFormMultiValue.setValue(list) ;
-//		uiFormMultiValue.addValidator(MandatoryValidator.class);
 		addUIFormInput(uiFormMultiValue) ;
 	}
 	
@@ -95,30 +111,42 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 			UIAddWatchingForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String path = uiForm.path;
-			UserProfile userProfile = forumPortlet.getUserProfile();
-			String userId = userProfile.getUserId() ;
-			Contact contact = uiForm.getPersonalContact(userId) ;
-			String email = contact.getEmailAddress() ;
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
-			if(email != null && email.length() > 0){
-				values.add(email) ;
-			}
-			if(values.size() > 0 && path != null && path.length() > 0) {
+			boolean isEmail = true;
+			List<String> values_ = new ArrayList<String>();
+			if(values.size() > 0) {
+				String value = values.get(0);
+				values_.add(value) ;
+				for (String string : values) {
+					if(values_.contains(string)) continue ;
+          values_.add(string) ;
+          value = value + "," +string;
+        }
+				isEmail = ForumFormatUtils.isValidEmailAddresses(value) ;
+				if(isEmail) {
+				} else {
+					String[] args = new String[] { "" } ;
+					throw new MessageException(new ApplicationMessage("UIAddMultiValueForm.msg.invalid-field", args, ApplicationMessage.WARNING)) ;
+				}
+			} 
+			if(values_.size() > 0 && path != null && path.length() > 0) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				forumService.addWatch(ForumSessionUtils.getSystemProvider(), 1, path, values) ;
+				forumService.addWatch(ForumSessionUtils.getSystemProvider(), 1, path, values_) ;
 			}
 			uiForm.path = "";
+			uiForm.initForm() ;
 			forumPortlet.cancelAction() ;
+			Object[] args = { };
+			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+			uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 		}
 	}
 	
 	static	public class RefreshActionListener extends EventListener<UIAddWatchingForm> {
     public void execute(Event<UIAddWatchingForm> event) throws Exception {
     	UIAddWatchingForm uiForm = event.getSource() ;
-			List<String> list = new ArrayList<String>() ;
-			list.add("");
-			uiForm.initMultiValuesField(list);
-			uiForm.getUIStringInput(USER_NAME).setValue("") ;
+			uiForm.initForm() ;
 		}
 	}
 	
