@@ -115,7 +115,7 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
         uploadService.removeUpload(input.getUploadId()) ;
       }
       if(files.isEmpty()){
-      	uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-error", null, ApplicationMessage.WARNING));
+      	uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-not-save", null, ApplicationMessage.WARNING));
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       	return ;
       }

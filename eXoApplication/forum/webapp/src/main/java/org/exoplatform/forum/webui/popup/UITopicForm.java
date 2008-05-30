@@ -68,10 +68,10 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/forum/webui/popup/UITopicForm.gtmpl",
 		events = {
-			@EventConfig(listeners = UITopicForm.PreviewThreadActionListener.class, phase = Phase.DECODE), 
+			@EventConfig(listeners = UITopicForm.PreviewThreadActionListener.class), 
 			@EventConfig(listeners = UITopicForm.SubmitThreadActionListener.class), 
-			@EventConfig(listeners = UITopicForm.AttachmentActionListener.class), 
-			@EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class), 
+			@EventConfig(listeners = UITopicForm.AttachmentActionListener.class,phase = Phase.DECODE), 
+			@EventConfig(listeners = UITopicForm.RemoveAttachmentActionListener.class,phase = Phase.DECODE), 
 			@EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
 			@EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UITopicForm.SelectIconActionListener.class, phase=Phase.DECODE),
@@ -110,7 +110,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private String topicId ;
 	private Forum forum ;
 	private int id = 0;
-  private String userInvalid = "" ;
   private Topic topic = new Topic() ;
 	@SuppressWarnings("unchecked")
 	public UITopicForm() throws Exception {
@@ -377,7 +376,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				Boolean whenNewPost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
 				Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
 				UIFormInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
-        uiForm.userInvalid = "" ;
         String canPost = threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue() ;
 				String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
 				String erroUser = ForumSessionUtils.checkValueUser(canPost) ;
