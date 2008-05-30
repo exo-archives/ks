@@ -355,3 +355,7 @@
  top: 0px ;
  left: 0px ; 
 }
+
+.UIForumPortlet .UIForm .HorizontalLayout {
+	padding: 0px;
+}
