@@ -67,6 +67,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private static final String QUESTION_LANGUAGE = "Language" ;
   private static final String MESSAGE = "Message" ;
   final static public String FIELD_FROM_INPUT = "fromInput" ;
+  private static final String QUESTION = "Question" ;
+  private static final String RESPONSE = "Response" ;
 	
   private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
   private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
@@ -126,10 +128,10 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     for(QuestionLanguage questionLangua : listQuestionLanguage) {
       if(questionLangua.getLanguage().equals(language)) {
      	 String response = questionLangua.getResponse() ;
-        if(response.equals(" ")) content = "Question: " + questionLangua.getQuestion() ;
+        if(response.equals(" ")) content = QUESTION + ":" + questionLangua.getQuestion() ;
         else 
-        	content ="<p> Question: " + questionLangua.getQuestion() + "</p>" +
-        			"<p> Response: "+ "</p>" + response ;
+        	content ="<p> " + QUESTION + ": " + questionLangua.getQuestion() + "</p>" +
+        			"<p> " + RESPONSE + ": " + "</p>" + response ;
       }
     }
     addChild(new UIFormWYSIWYGInput(MESSAGE, null, content, true)) ;
@@ -219,10 +221,10 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
         	 String response = questionLanguage.getResponse() ;
            @SuppressWarnings("unused")
           String content = "" ;
-           if(response.equals(" ")) content = "Question: " + questionLanguage.getQuestion() ;
+           if(response.equals(" ")) content = QUESTION + ": " + questionLanguage.getQuestion() ;
            else 
-           	content ="<p> Question: " + questionLanguage.getQuestion() + "</p>" +
-           			"<p> Response: "+ "</p>" + response ;
+           	content ="<p>" + QUESTION + ": " + questionLanguage.getQuestion() + "</p>" +
+           			"<p> " + RESPONSE + ": " + "</p>" + response ;
            body.setValue(content) ;
          }
        }

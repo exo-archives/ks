@@ -15,7 +15,7 @@
 						String qId = question.getId();
 						String responseBy = "..." ;
 						String date = "..." ;
-						String response = "<center><b>This question have not yet answer</center></b>" ;
+						String response = _ctx.appRes("UIPopupViewQuestion.title.not-answer");
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							responseBy = question.getResponseBy() ;
@@ -73,12 +73,12 @@
 					    <%}
 					  	}
 				  	} else {%>
-				  		<b>File Attatched: </b>
+				  		<b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b>
 			  	<%}%>
 			  	</div>
 			    <div style="clear: left;"><span></span></div>
 				</div>
-				<div class="RelatedQuestions"><b>Related question:</b><br>
+				<div class="RelatedQuestions"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br>
 					<%String questionRelationById = "" ;
 						String cateRelaId = "" ;
 						String quesRelaId = "" ;
@@ -102,7 +102,7 @@
 						}%>
 				</div>
 				<div class=" ResponsActions">
-						<div >  Response by: $responseBy , $date</div>
+						<div ><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %> $responseBy , $date</div>
 				 </div>
 			</div>
 		</div>

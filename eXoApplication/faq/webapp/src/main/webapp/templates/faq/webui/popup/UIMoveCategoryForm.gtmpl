@@ -11,8 +11,8 @@
 	  <% String linkRoot = uicomponent.event("Save", null); %>	
 	</div>
 	  <div style="margin: 5px 0px 5px 0px ;">
-			<div class="Icon FAQCategoryView"><span></span></div>
-			<div id="" style="float: left" ><a href="$linkRoot">Root</a></div>
+			<div class="Icon FAQCategoryViewMove"><span></span></div>
+			<div id="" style="float: left" ><a href="$linkRoot"><%= _ctx.appRes("UIMoveFAQForm.title.root"); %></a></div>
 			<div style="clear: left;"><span></span></div>
 			<div class="HorizontalLayout" style="margin: 0px 10px 10px 30px;">
 		<%
@@ -27,7 +27,7 @@
 		 	  String link = uicomponent.event("Save",cate.getCategory().getId());
       if(i == 0) {%>
           <div style="margin: 5px 0px 5px 0px ;">
-	    			<div class="Icon FAQCategoryView"><span></span></div>
+	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
 	    			<div id="FAQCate$i" style="float: left" style=" overflow-x: auto;"><a href="$link">$categoryName</a></div>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
@@ -44,7 +44,7 @@
           }%>
           </div>
           <div style="margin: 5px 0px 5px 0px ;">
-	    			<div class="Icon FAQCategoryView"><span></span></div>
+	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
@@ -52,7 +52,7 @@
         } else if(sub > 0) {%>
           <div style="padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
           <div style="margin: 5px 0px 5px 0px ;">
-	    			<div class="Icon FAQCategoryView"><span></span></div>
+	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
@@ -78,7 +78,7 @@
      <%
           }%>
           <div style="margin: 5px 0px 5px 0px ;">
-	    			<div class="Icon FAQCategoryView"><span></span></div>
+	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>

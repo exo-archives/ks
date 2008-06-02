@@ -14,10 +14,10 @@
  									<table class="UIGrid" cellspacing="0" borderspacing="0">
  										<thead>
  											<tr>
- 												<th>Author</th>
- 												<th>Email</th>
- 												<th>Question</th>
- 												<th>Create Date</th>
+ 												<th><%= _ctx.appRes("ResultSearchQuestion.title.author"); %></th>
+ 												<th><%= _ctx.appRes("ResultSearchQuestion.title.email"); %></th>
+ 												<th><%= _ctx.appRes("ResultSearchQuestion.title.question"); %></th>
+ 												<th><%= _ctx.appRes("ResultSearchQuestion.title.create-date"); %></th>
  											</tr>
  										</thead>
  										<tbody>

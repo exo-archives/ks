@@ -14,9 +14,9 @@
  									<table class="UIGrid" cellspacing="0" borderspacing="0">
  										<thead>
  											<tr>
- 												<th>Category</th>
- 												<th>Description</th>
- 												<th>Created Date</th>
+ 												<th><%= _ctx.appRes("ResultSearchCategory.title.category"); %></th>
+ 												<th><%= _ctx.appRes("ResultSearchCategory.title.description"); %></th>
+ 												<th><%= _ctx.appRes("ResultSearchCategory.title.created-date"); %>Created Date</th>
  											</tr>
  										</thead>
  										<tbody>
@@ -45,7 +45,7 @@
  											} else {
  										 %>
  										 <tr class="EvenRow">
-												<td class="Tdbox" colspan="10" align="center"><div class="" >Sorry - no matches. Please try some different terms.</div></td>
+												<td class="Tdbox" colspan="10" align="center"><div class="" ><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div></td>
 			  							</tr>
 										<% } %> 
  									</tbody>

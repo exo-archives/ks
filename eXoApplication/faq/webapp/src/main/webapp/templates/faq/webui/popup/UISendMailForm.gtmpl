@@ -26,8 +26,8 @@
 											<div style="float: left">
 												<% uiform.renderField(input) %>
 												<%if(input.getName().equals("To")){%>
-													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddCc')"> Add CC</a>
-													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddBcc')"> Add BCC</a> |
+													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddCc')"> <%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
+													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddBcc')"> <%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
 												<%}%>
 											</div>
 										</div>

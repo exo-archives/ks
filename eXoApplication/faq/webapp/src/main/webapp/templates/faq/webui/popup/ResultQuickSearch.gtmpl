@@ -15,10 +15,10 @@
  									<table class="UIGrid" cellspacing="0" borderspacing="0">
  										<thead>
  											<tr>
- 												<th>Icon</th>
- 												<th>Name</th>
- 												<th>Created Date</th>
- 												<th>Action</th>
+ 												<th><%= _ctx.appRes("ResultQuickSearch.title.icon"); %></th>
+ 												<th><%= _ctx.appRes("ResultQuickSearch.title.name"); %></th>
+ 												<th><%= _ctx.appRes("ResultQuickSearch.title.createdate"); %></th>
+ 												<th><%= _ctx.appRes("ResultQuickSearch.title.action"); %></th>
  											</tr>
  										</thead>
  										<tbody>
@@ -56,7 +56,7 @@
  											} else {
  										 %>
  										 <tr class="EvenRow">
-												<td class="Tdbox" colspan="10" align="center"><div class="" >Sorry - no matches. Please try some different terms.</div></td>
+												<td class="Tdbox" colspan="10" align="center"><div class="" ><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div></td>
 			  							</tr>
 										<% } %> 
  									</tbody>

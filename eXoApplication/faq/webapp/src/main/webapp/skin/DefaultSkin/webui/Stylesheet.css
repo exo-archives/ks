@@ -808,7 +808,14 @@ UIFAQPortlet .ResultQuickSearch {
   width: 17px; height: 17px;
 }
 
-
+.FAQCategoryViewMove {
+  float: left;
+  background: url('background/FAQPortlet.gif') no-repeat left -465px;
+  height:18px;
+  width:18px;
+  margin-left: 5px;
+  margin-right: 5px ;
+}
 
 .FAQCategoryView {
   background: url('background/FAQPortlet.gif') no-repeat left -465px;

@@ -52,20 +52,24 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String SHOW_MODE = "show-mode".intern(); 
 	public static final String DISPLAY_TYPE = "display-type".intern(); 
+	public static final String ITEM_NOT_PROCESS = "true".intern() ;
+	public static final String ITEM_PROCESS= "false".intern() ;
+	public static final String ITEM_CREATE_DATE= "postdate".intern() ;
+	public static final String ITEM_ALPHABET= "alphabet".intern() ;
 	
 	public UISettingForm() throws Exception {}
 	
 	public void init() throws Exception {
 		
 		List<SelectItemOption<String>> showMode = new ArrayList<SelectItemOption<String>>();
-		showMode.add(new SelectItemOption<String>("Do not process question before showing", "true"));
-		showMode.add(new SelectItemOption<String>("Process question before showing","false" ));
+		showMode.add(new SelectItemOption<String>(ITEM_NOT_PROCESS, "true"));
+		showMode.add(new SelectItemOption<String>(ITEM_PROCESS,"false" ));
 		addUIFormInput(new UIFormSelectBox(SHOW_MODE, SHOW_MODE, showMode));
 		
 		List<SelectItemOption<String>> displayType = new ArrayList<SelectItemOption<String>>();
 //		displayType.add(new SelectItemOption<String>("Relevance",FAQSetting.DISPLAY_TYPE_RELEVANCE));
-		displayType.add(new SelectItemOption<String>("Created date",FAQSetting.DISPLAY_TYPE_POSTDATE ));
-		displayType.add(new SelectItemOption<String>("Alphabet",FAQSetting.DISPLAY_TYPE_ALPHABET ));
+		displayType.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
+		displayType.add(new SelectItemOption<String>(ITEM_ALPHABET, FAQSetting.DISPLAY_TYPE_ALPHABET ));
 		addUIFormInput(new UIFormSelectBox(DISPLAY_TYPE, DISPLAY_TYPE, displayType));
 		fillData() ;
 	}

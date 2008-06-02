@@ -5,13 +5,13 @@
 			 					<table class="UIFormGrid">									
 									<tbody>
 										<tr>
-											<td class="FieldLabel">Show mode:</td>
+											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.show-mode"); %></td>
 											<td class="FieldComponent">
 												<%uicomponent.renderField(uicomponent.SHOW_MODE)%>
 											</td>
 										</tr>
 										<tr>
-											<td class="FieldLabel">Display type:</td>
+											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.display-type"); %></td>
 											<td class="FieldComponent">
 												<%uicomponent.renderField(uicomponent.DISPLAY_TYPE)%>
 											</td>

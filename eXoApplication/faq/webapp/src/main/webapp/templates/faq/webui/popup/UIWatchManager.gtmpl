@@ -7,9 +7,9 @@
  						<table class="UIGrid" cellspacing="0" borderspacing="0">
  							<thead>
  								<tr>
- 								<th>Email</th>
- 								<th>Link</th>
- 								<th>Action</th>
+ 								<th><%= _ctx.appRes("UIWatchManager.label.email"); %></th>
+ 								<th><%= _ctx.appRes("UIWatchManager.label.link"); %></th>
+ 								<th><%= _ctx.appRes("UIWatchManager.label.action"); %></th>
  								</tr>
  							</thead>
  							<tbody>
@@ -52,7 +52,7 @@
  								} else {
  									   %>
  										 <tr class="EvenRow">
-												<td class="Tdbox" colspan="10" align="center"><div class="" >Sorry - no matches. </div></td>
+												<td class="Tdbox" colspan="10" align="center"><div class="" ><%= _ctx.appRes("UIWatchManager.title.no-matches"); %> </div></td>
 			  						</tr>
 								<% } %>
  							</tbody>
