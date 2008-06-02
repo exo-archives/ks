@@ -232,21 +232,21 @@
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Question {
-  background: url('background/FAQPortlet.gif') no-repeat left -818px;
+  background: url('background/questionIcon.PNG') no-repeat left 0px;
   padding-left: 28px;
-  height: 18px;
   line-height: 18px;
   margin: 8px 0px;
-  white-space: nowrap;
+  white-space:normal;
+  width : 97% ;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
-  background: url('background/NotResponse.gif') no-repeat left top;
+  background: url('background/NotResponse.gif') no-repeat left 0px;
   padding-left: 28px;
-  height: 18px;
   line-height: 18px;
   margin: 8px 0px;
-  white-space: nowrap;
+  white-space:normal;
+  width : 97% ;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotApproved {

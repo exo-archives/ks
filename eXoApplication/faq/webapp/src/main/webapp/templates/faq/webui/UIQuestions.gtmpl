@@ -254,8 +254,8 @@
 								String titleQuestion = "" ;
 								if(questionContent.length() > 160) {
 									titleQuestion = questionContent ;
-									questionContent = questionContent.substring(0, 159) + " ..." ;
 									if(!uicomponent.getQuestionView().equals(qId)) {
+										questionContent = questionContent.substring(0, 159) + " ..." ;
 								%>
 										<a href="$linkQuestion" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
 							<%	} else {%>
@@ -339,14 +339,6 @@
 						}
 					%>
 						<div class="ResponseContent">
-							<%
-							if(titleQuestion.trim().length() > 0) {
-							%>
-								<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b><br/>
-								<div class="Response">
-									<p>$titleQuestion</p>
-								</div>
-						<%}%>
 							<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b><br/>
 							<div class="Response">
 								$response

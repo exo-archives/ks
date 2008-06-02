@@ -27,10 +27,10 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Mai Van Ha
- *          ha_mai_van@exoplatform.com
- * May 5, 2008 ,11:16:28 AM 
+ * Created by The eXo Platform SARL
+ * Author : Vu Duy Tu
+ *          tu.duy@exoplatform.com
+ * Nov 19, 2007 9:18:18 AM 
  */
 
 @ComponentConfig(
