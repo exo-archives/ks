@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,7 +52,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultQuickSearch extends UIForm implements UIPopupComponent{
-	private List<FAQFormSearch> formSearchs ;
+	private List<FAQFormSearch> formSearchs = new ArrayList<FAQFormSearch>() ;;
 	public ResultQuickSearch() throws Exception { this.setActions(new String[]{"Close"}) ;}
 	
 	public List<FAQFormSearch> getFormSearchs() {

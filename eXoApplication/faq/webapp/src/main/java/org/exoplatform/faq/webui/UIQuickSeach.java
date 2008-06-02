@@ -28,8 +28,10 @@ import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -80,16 +82,22 @@ public class UIQuickSeach  extends UIForm {
 			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
 			UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-//			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			String text = formStringInput.getValue() ;
-			if(!FAQUtils.isFieldEmpty(text)) text = FAQUtils.filterString(text, true) ;
-			if(text != null && text.trim().length() > 0) {
-				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 800) ;
-				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
-				popupContainer.setId("ResultQuickSearch") ;
+			if(FAQUtils.isFieldEmpty(text)) {
+        uiApp.addMessage(new ApplicationMessage("UIQuickSeach.msg.no-text-to-search", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
+      }
+			UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 800) ;
+			ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
+			popupContainer.setId("ResultQuickSearch") ;
+			String textFiltered = FAQUtils.filterString(text, true) ;
+			if(textFiltered != null && textFiltered.trim().length() > 0) {
+				
 				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		  	result.setFormSearchs(faqService.getQuickSeach(FAQUtils.getSystemProvider(), text+",,all"));
+		  	result.setFormSearchs(faqService.getQuickSeach(FAQUtils.getSystemProvider(), textFiltered+",,all"));
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
