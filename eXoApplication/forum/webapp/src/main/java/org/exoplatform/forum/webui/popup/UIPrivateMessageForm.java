@@ -172,6 +172,8 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
     	UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
     	String sendTo = areaInput.getValue() ;
+    	if(sendTo != null && sendTo.trim().length() > 0)
+    		sendTo = sendTo.replaceAll(" ", "") ;
     	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
     	String erroUser = ForumSessionUtils.checkValueUser(sendTo) ;
     	if(erroUser != null && erroUser.length() > 0) {
@@ -182,7 +184,8 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	}
     	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
     	String mailTitle = stringInput.getValue() ;
-    	String message = MessageTab.getChild(UIFormWYSIWYGInput.class).getValue();
+    	UIFormWYSIWYGInput formWYSIWYGInput = MessageTab.getChild(UIFormWYSIWYGInput.class) ;
+    	String message = formWYSIWYGInput.getValue();
     	if(message != null && message.trim().length() > 0) {
 	    	ForumPrivateMessage privateMessage = new ForumPrivateMessage() ;
 	    	privateMessage.setFrom(messageForm.userName) ;
@@ -193,6 +196,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	    	areaInput.setValue("") ;
 	    	stringInput.setValue("") ;
 	    	messageForm.id = 1;
+	    	formWYSIWYGInput.setValue("") ;
 	    	Object[] args = { "" };
 				uiApp.addMessage(new ApplicationMessage("SendPrivateMessage.msg.sendOK", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
