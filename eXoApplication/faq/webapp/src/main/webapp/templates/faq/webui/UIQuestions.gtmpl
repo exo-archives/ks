@@ -267,7 +267,11 @@
 									<a href="$linkQuestion">
 							<%}
 								if(!question.isApproved()) {%>
-									<div class="NotApproved">$questionContent</div>
+								<div class="NotApproved">
+									<div class="ViewQuestionNotApproved"> 
+										$questionContent
+									</div>
+								</div>
 							<%} else {%>
 									$questionContent
 							<%}%>
@@ -327,6 +331,7 @@
 								</div>
 							</div>
 					</div>
+					
 					<%if(uicomponent.getQuestionView().equals(qId)) {
 						String responseBy = "..." ;
 						String date = "..." ;
