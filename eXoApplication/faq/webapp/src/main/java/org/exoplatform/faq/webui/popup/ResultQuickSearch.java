@@ -24,6 +24,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -76,7 +77,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				Category cate = faqService.getCategoryById(id, FAQUtils.getSystemProvider()) ;
 				String[] moderator = cate.getModeratorsCategory() ;
 				String currentUser = FAQUtils.getCurrentUser() ;
-				if(Arrays.asList(moderator).contains(currentUser)) {
+				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+				if(Arrays.asList(moderator).contains(currentUser) || serviceUtils.isAdmin(currentUser)) {
 					uiQuestions.setCategories(id) ;
 					uiQuestions.setListQuestion() ;
 				} else {

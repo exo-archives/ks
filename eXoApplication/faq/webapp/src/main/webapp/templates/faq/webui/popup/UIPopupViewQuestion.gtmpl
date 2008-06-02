@@ -15,7 +15,7 @@
 						String qId = question.getId();
 						String responseBy = "..." ;
 						String date = "..." ;
-						String response = _ctx.appRes("UIPopupViewQuestion.title.not-answer");
+						String response = "<center><b>" + _ctx.appRes("UIPopupViewQuestion.title.not-answer")+ "</center></b>" ;
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							responseBy = question.getResponseBy() ;
@@ -25,6 +25,7 @@
 						}
 					%>
 			<div class="ResponseContent">
+			<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
 				<div class="Response" style="width: 97%;">$response</div>
 				<div class="AttachmentContent">
 					<div style="margin-top: 5px; margin-bottom: 5px;">
@@ -48,9 +49,8 @@
 					    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
 						    if(validate.isImage(fileName)) {
 						    %>
-						    	<div style="float: left; margin-left: 5px;">
+						    	<div  style="float: left; margin-left: 5px;">
 							    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile"></div>
-							    	<div style="clear: left;"><span></span></div>
 				 						<div class="LabelBox">
 					 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 					 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
@@ -58,6 +58,7 @@
 					 						<div class="Action" style="padding-top: 0px;">
 					 							<div class="Icon MaxView" onclick="eXo.cs.MaskLayerControl.showPicture(this); ">View</div>
 					 							<div class="Icon Download"><a href="$linkImage">Download</a></div>
+					 							<div style="clear: left;"><span></span></div>
 					 						</div>
 					 					</div>
 				 					</div>
@@ -73,10 +74,10 @@
 					    <%}
 					  	}
 				  	} else {%>
-				  		<b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b>
+				  		<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
 			  	<%}%>
 			  	</div>
-			    <div style="clear: left;"><span></span></div>
+			  	<div style="clear: left;"><span></span></div>
 				</div>
 				<div class="RelatedQuestions"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br>
 					<%String questionRelationById = "" ;
@@ -102,7 +103,7 @@
 						}%>
 				</div>
 				<div class=" ResponsActions">
-						<div ><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %> $responseBy , $date</div>
+						<div ><b><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %></b> $responseBy , $date</div>
 				 </div>
 			</div>
 		</div>

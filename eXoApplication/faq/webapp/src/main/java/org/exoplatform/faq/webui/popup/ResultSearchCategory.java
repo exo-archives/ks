@@ -22,6 +22,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -74,7 +75,8 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
 			String[] moderator = cate.getModeratorsCategory() ;
 			String currentUser = FAQUtils.getCurrentUser() ;
-			if(Arrays.asList(moderator).contains(currentUser)) {
+			FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+			if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
 				uiQuestions.setCategories(categoryId) ;
 				uiQuestions.setListQuestion() ;
 			} else {
