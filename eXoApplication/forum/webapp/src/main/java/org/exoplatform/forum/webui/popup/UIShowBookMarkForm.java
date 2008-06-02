@@ -23,6 +23,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
@@ -84,7 +85,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
     	String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
     	UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class) ;
     	UIApplication uiApp = bookMark.getAncestorOfType(UIApplication.class) ;
-    		if(path.indexOf("topic") > 0) {
+    		if(path.indexOf(Utils.TOPIC) > 0) {
       		String []id = path.split("/") ;
       		int length = id.length ;
       		forumPortlet.updateIsRendered(2);
@@ -104,7 +105,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
     			uiTopicDetail.setIdPostView("true") ;
     			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
     			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
-      	} else if(path.indexOf("forum") > 0){
+      	} else if(path.indexOf(Utils.FORUM) > 0){
       		String []id = path.split("/") ;
       		int length = id.length ;
       		Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;
@@ -119,7 +120,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
     			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
     			uiTopicContainer.setUpdateForum(id[length-2], forum) ;
     			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-2]+"/"+id[length-1]));
-  			} else if(path.indexOf("category") > 0){
+  			} else if(path.indexOf(Utils.CATEGORY) > 0){
   				String categoryId = path.substring(path.lastIndexOf("/")+1) ;
   				try {
   					forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(categoryId);

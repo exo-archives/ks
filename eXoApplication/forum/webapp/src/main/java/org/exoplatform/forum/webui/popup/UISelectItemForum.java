@@ -25,6 +25,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -78,10 +79,10 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 		List<ForumLinkData> linkTopic = new ArrayList<ForumLinkData>() ;
 		String cateId = "" ;
 		for (ForumLinkData forumLink : this.forumLinks) {
-			if(forumLink.getType().equals("category")){
+			if(forumLink.getType().equals(Utils.CATEGORY)){
 				cateId = forumLink.getId() ;
 				for (ForumLinkData forumlist : this.forumLinks) {
-					if(forumlist.getType().equals("forum") && forumlist.getPath().indexOf(cateId) >= 0) {
+					if(forumlist.getType().equals(Utils.FORUM) && forumlist.getPath().indexOf(cateId) >= 0) {
 						linkForum.add(forumlist) ;
 						if(getUIFormCheckBoxInput(forumlist.getPath()) != null) {
 							getUIFormCheckBoxInput(forumlist.getPath()).setChecked(false) ;

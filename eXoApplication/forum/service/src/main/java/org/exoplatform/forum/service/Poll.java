@@ -42,7 +42,7 @@ public class Poll {
 	
 	
 	public Poll() {
-		id = "poll" + IdGenerator.generate() ;
+		id = Utils.POLL + IdGenerator.generate() ;
 		createdDate = new Date() ;
 		option = new String[] {};
 		vote = new String[] {};

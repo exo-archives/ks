@@ -29,6 +29,7 @@ import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UICategoryForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
@@ -196,7 +197,7 @@ public class UICategory extends UIForm	{
 			categoryContainer.updateIsRender(true) ;
 			forumPortlet.updateIsRendered(1);
 			uiCategory.forumService.removeCategory(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId) ;
-			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumService") ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

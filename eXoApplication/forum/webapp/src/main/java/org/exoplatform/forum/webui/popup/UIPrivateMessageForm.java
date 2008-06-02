@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -112,13 +113,13 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	}
 	@SuppressWarnings("unused")
   private List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
-		this.listInbox = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, "agree") ;
+		this.listInbox = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.AGREEMESSAGE) ;
 		return this.listInbox ;
 	}
 
 	@SuppressWarnings("unused")
   private List<ForumPrivateMessage> getPrivateMessageSendByUser() throws Exception {
-		this.listSend = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, "send") ;
+		this.listSend = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.SENDMESSAGE) ;
 		return this.listSend ;
 	}
 	
@@ -233,7 +234,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	      UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 500) ;
 	      privateMessageForm.setPrivateMessage(privateMessage);
 	      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-	      if(temp[0].equals("agree")) {
+	      if(temp[0].equals(Utils.AGREEMESSAGE)) {
 					UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.getUserProfile() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -249,7 +250,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 			if(objctId != null && objctId.length() > 0) {
 				String[] temp = objctId.split("/") ;
 				messageForm.forumService.removePrivateMessage(ForumSessionUtils.getSystemProvider(), temp[1], messageForm.userName, temp[0]);
-				if(temp[0].equals("agree")) {
+				if(temp[0].equals(Utils.AGREEMESSAGE)) {
 					UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.getUserProfile() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

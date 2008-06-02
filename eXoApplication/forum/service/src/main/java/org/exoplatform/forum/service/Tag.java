@@ -33,7 +33,7 @@ public class Tag {
 	private String description ;
 	private String color ;
 	public Tag() {
-		id = "tag" + IdGenerator.generate() ;
+		id = Utils.TAG + IdGenerator.generate() ;
 	}
 	
 	public String getId()	{ return id ; }

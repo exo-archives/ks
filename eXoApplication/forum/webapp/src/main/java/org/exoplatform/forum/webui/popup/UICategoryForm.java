@@ -60,12 +60,14 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
 		events = {
 			@EventConfig(listeners = UICategoryForm.SaveActionListener.class), 
-			@EventConfig(listeners = UICategoryForm.AddValuesPrivateCategoryActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UICategoryForm.AddPrivateActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UICategoryForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
 public class UICategoryForm extends UIForm implements UIPopupComponent, UISelector{
 	private String categoryId = "";
+	public static final String CATEGORY_FORM = "category" ;
+
 	public static final String FIELD_CATEGORYTITLE_INPUT = "CategoryTitle" ;
 	public static final String FIELD_CATEGORYORDER_INPUT = "CategoryOrder" ;
 	public static final String FIELD_DESCRIPTION_INPUT = "Description" ;
@@ -81,7 +83,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 
 		UIFormTextAreaInput userPrivate = new UIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE, FIELD_USERPRIVATE_MULTIVALUE, null);
 		
-		UIFormInputWithActions uicategory = new UIFormInputWithActions("category");
+		UIFormInputWithActions uicategory = new UIFormInputWithActions(CATEGORY_FORM);
 		uicategory.addUIFormInput(categoryTitle);
 		uicategory.addUIFormInput(categoryOrder);
 		uicategory.addUIFormInput(userPrivate);
@@ -93,7 +95,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		int i = 0;
 		for(String string : strings) {
 			ad = new ActionData() ;
-			ad.setActionListener("AddValuesPrivateCategory") ;
+			ad.setActionListener("AddPrivate") ;
 			ad.setActionParameter(String.valueOf(i)) ;
 			ad.setCssIconClass(string + "Icon") ;
 			ad.setActionName(string);
@@ -178,7 +180,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		}
 	}
 	
-	static	public class AddValuesPrivateCategoryActionListener extends EventListener<UICategoryForm> {
+	static	public class AddPrivateActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
     	UICategoryForm categoryForm = event.getSource() ;
     	String type = event.getRequestContext().getRequestParameter(OBJECTID)	;

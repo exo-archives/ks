@@ -64,7 +64,7 @@ public class UserProfile {
 	
 	@SuppressWarnings("deprecation")
   public UserProfile() {
-		userId = "Guest";
+		userId = Utils.GUEST;
 		userTitle = "Guest";
 		userRole = GUEST ;
 		moderateForums = new String[] {} ;

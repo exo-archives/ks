@@ -60,7 +60,7 @@ public class Topic {
 	private List<ForumAttachment> attachments ;
 	
 	public Topic(){ 
-		id = "topic" + IdGenerator.generate();
+		id = Utils.TOPIC + IdGenerator.generate();
 		canView = new String [] {} ;
 		canPost = new String [] {} ;
 		userVoteRating = new String [] {} ;

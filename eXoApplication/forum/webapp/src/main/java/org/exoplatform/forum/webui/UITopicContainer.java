@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIMergeTopicForm;
@@ -371,7 +372,7 @@ public class UITopicContainer extends UIForm {
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(3) ;
-			forumPortlet.getChild(UIForumLinks.class).setValueOption("ForumService") ;
+			forumPortlet.getChild(UIForumLinks.class).setValueOption(Utils.FORUM_SERVICE) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId) ;
 			forumPortlet.getChild(UITopicsTag.class).setIdTag(tagId) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
@@ -426,7 +427,7 @@ public class UITopicContainer extends UIForm {
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumService");
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
 				UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
         uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;

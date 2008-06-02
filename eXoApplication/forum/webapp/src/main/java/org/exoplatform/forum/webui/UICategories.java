@@ -29,6 +29,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -105,7 +106,7 @@ public class UICategories extends UIContainer	{
 	  
 	
 	private List<Category> getCategoryList() throws Exception {
-		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath("ForumService") ;
+		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 		this.categoryList = forumService.getCategories(ForumSessionUtils.getSystemProvider());
 		if(this.categoryList.size() > 0)
 			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(true) ;

@@ -37,6 +37,8 @@ import javax.mail.internet.InternetAddress;
  */
 
 public class ForumFormatUtils {
+	public static final String FIELD_EXOFORUM_LABEL = "eXoForum".intern() ;
+	public static final String FIELD_SEARCHFORUM_LABEL = "SearchForum".intern() ;
 	@SuppressWarnings("deprecation")
   public static String getFormatDate(String format, Date myDate) {
 		/*h,hh,H, m, mm, D, DD, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy

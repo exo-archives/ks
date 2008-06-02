@@ -32,6 +32,7 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
@@ -280,7 +281,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).setValue(unSplitForForum(topic.getCanView()));
 			threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).setValue(unSplitForForum(topic.getCanPost()));
       ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-      String postId = topicId.replaceFirst("topic", "post") ;
+      String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST) ;
       Post post = forumService.getPost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, postId);
       if(post.getAttachments() != null && post.getAttachments().size() > 0) {
         this.attachments_ = post.getAttachments();
@@ -474,7 +475,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
     				categoryContainer.updateIsRender(true) ;
     				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ; 
-    				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumService");
+    				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
     				forumPortlet.cancelAction() ;
     				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
     				uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;

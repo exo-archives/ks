@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -77,7 +78,7 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 	}
 	@SuppressWarnings({ "unused", "unchecked" })
   private List<Post> getListPost() throws Exception {
-		String postId = this.topic.getId().replaceFirst("topic", "post") ;
+		String postId = this.topic.getId().replaceFirst(Utils.TOPIC, Utils.POST) ;
 		this.posts.remove(this.getPostById(postId));
 		for (Post post : this.posts) {
 			if(getUIFormCheckBoxInput(post.getId()) != null) {
@@ -115,7 +116,7 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 					Topic topic = new Topic() ;
 					Post post = posts.get(0) ;
 					String owner = ForumSessionUtils.getCurrentUser() ;
-					String topicId = post.getId().replaceFirst("post", "topic");
+					String topicId = post.getId().replaceFirst(Utils.POST, Utils.TOPIC);
 					topic.setId(topicId) ;
 					topic.setTopicName(newTopicTitle) ;
 					topic.setOwner(owner) ;

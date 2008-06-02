@@ -1,5 +1,6 @@
 <%  
 	import org.exoplatform.forum.service.ForumLinkData ;
+	import org.exoplatform.forum.service.Utils ;
 %>
 
 <div class="UIMovePostForm UIMoveTopicForm">
@@ -10,7 +11,7 @@
 		<% 
 			List categories = uicomponent.getForumLinks(); 
 			for(category in categories) {
-			 if(category.getType().equals("category")) {
+			 if(category.getType().equals(Utils.CATEGORY)) {
 				String display = "display:none;" ;
 				String iconClass = "SmallGrayMinus" ;
 				String isShow = "true";

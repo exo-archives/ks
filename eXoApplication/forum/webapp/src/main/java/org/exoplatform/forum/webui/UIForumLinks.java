@@ -28,6 +28,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -52,7 +53,7 @@ import org.exoplatform.webui.form.UIForm;
 public class UIForumLinks extends UIForm {
 	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	public static final String FIELD_FORUMLINK_SELECTBOX = "forumLink" ;
-	private String path	= "ForumService";
+	private String path	= Utils.FORUM_SERVICE;
 	private List<ForumLinkData> forumLinks = null;
 	private List<Category> categoryPrivateList = new ArrayList<Category>() ;
 	private Map<String, Forum> AllForum = new HashMap<String, Forum>() ;
@@ -62,22 +63,22 @@ public class UIForumLinks extends UIForm {
   public void setUpdateForumLinks() throws Exception {
 		this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider());
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>("Forum Home Page/hompage", "ForumService")) ;
+		list.add(new SelectItemOption<String>("Forum Home Page/hompage", Utils.FORUM_SERVICE)) ;
 		String space = "&nbsp; &nbsp; ",  type = "/categoryLink"; 
 		boolean isRenderForum = true ;
 		for(ForumLinkData linkData : forumLinks) {
-			if(linkData.getType().equals("forum")) {
+			if(linkData.getType().equals(Utils.FORUM)) {
 				if(IsForumClose(linkData.getId()) || !isRenderForum) continue ;
 				type = "/forumLink"; 
 				space = "&nbsp; &nbsp; &nbsp; &nbsp; " ;
 			}
-			if(linkData.getType().equals("category")) {
+			if(linkData.getType().equals(Utils.CATEGORY)) {
 				isRenderForum = true ;
 				if(IsCategoryPrivate(linkData.getId())) {isRenderForum = false ;continue ;}
 				type = "/categoryLink"; 
 				space = "&nbsp; &nbsp; " ;
 			}
-			if(linkData.getType().equals("topic")) continue ;
+			if(linkData.getType().equals(Utils.TOPIC)) continue ;
 			list.add(new SelectItemOption<String>(space + linkData.getName() + type, linkData.getPath())) ;
 		}
 		UIFormSelectBoxForum forumLink ;
@@ -148,12 +149,12 @@ public class UIForumLinks extends UIForm {
 			if(!path.equals(uiForm.path)) {
 				uiForm.path = path ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				if(path.indexOf("orumServic") > 0) {
+				if(path.indexOf(Utils.FORUM_SERVICE) >= 0) {
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 					forumPortlet.updateIsRendered(1);
-				}else if(path.indexOf("forum") > 0) {
+				}else if(path.indexOf(Utils.FORUM) > 0) {
 					String id[] = path.trim().split("/");
 					forumPortlet.updateIsRendered(2);
 					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);

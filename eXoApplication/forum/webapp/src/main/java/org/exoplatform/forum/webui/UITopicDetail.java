@@ -1100,20 +1100,26 @@ public class UITopicDetail extends UIForm {
 		      }
 				}
 				StringBuffer buffer = new StringBuffer();
+				int t = 0;
 				for (int j = 0; j < message.length(); j++) {
 					char c = message.charAt(j); 
 					if((int)c == 9){
 						buffer.append("&nbsp;&nbsp;&nbsp; ") ;
 					} else if((int)c == 10){
-						buffer.append("<br/>") ;
+						if(t%2 == 0)buffer.append("<p>") ;
+						else buffer.append("</p>") ;
+						++t;
 					}	else if((int)c == 60){
 						buffer.append("&lt;") ;
 					} else if((int)c == 62){
 						buffer.append("&gt;") ;
+					} else if(c == '\''){
+						buffer.append("&#39") ;
 					} else {
 						buffer.append(c) ;
 					}
 	      }
+				if(t%2 == 1)buffer.append("</p>") ;
 				String userName = topicDetail.userProfile.getUserId() ;
 				PortletRequestImp request = event.getRequestContext().getRequest();
 				String remoteAddr = request.getRemoteAddr();

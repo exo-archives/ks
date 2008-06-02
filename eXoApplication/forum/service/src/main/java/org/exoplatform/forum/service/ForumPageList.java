@@ -89,7 +89,6 @@ public class ForumPageList extends JCRPageList {
 	}
 	
 	private NodeIterator setQuery(Node rootNode, boolean isQuery, String value) throws Exception {
-//		System.out.println("\n\n Value: " +  value);
 		Session session = rootNode.getSession() ;
 		NodeIterator iter ;
 		if(isQuery) {

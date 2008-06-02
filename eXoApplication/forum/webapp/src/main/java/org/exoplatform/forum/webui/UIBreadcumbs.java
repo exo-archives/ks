@@ -22,12 +22,14 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumPathNotFoundException;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
@@ -56,25 +58,25 @@ public class UIBreadcumbs extends UIContainer {
 	private List<String> breadcumbs_ = new ArrayList<String>();
 	private List<String> path_ = new ArrayList<String>();
 	private String forumHomePath_ ;
-	public static final String FIELD_FORUMHOME_BREADCUMBS = "forumHome" ;
+	public static final String FORUM_SERVICE = Utils.FORUM_SERVICE ;
 	private UserProfile userProfile ;
 	public UIBreadcumbs()throws Exception {
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
-		breadcumbs_.add("eXo Forum") ;
-		path_.add("ForumService") ;
+		breadcumbs_.add(ForumFormatUtils.FIELD_EXOFORUM_LABEL) ;
+		path_.add(FORUM_SERVICE) ;
 	}
 
 	public void setUpdataPath(String path) throws Exception {
-		if(path != null && path.length() > 0 && !path.equals("ForumService")) {
+		if(path != null && path.length() > 0 && !path.equals(FORUM_SERVICE)) {
 			String temp[] = path.split("/") ;
 			int t = 0;
 			String pathNode = forumHomePath_;
 			path_.clear() ;
 			breadcumbs_.clear() ;
-			path_.add("ForumService") ;
-			breadcumbs_.add("eXo Forum") ;
+			path_.add(FORUM_SERVICE) ;
+			breadcumbs_.add(ForumFormatUtils.FIELD_EXOFORUM_LABEL) ;
 			if(path.equals("ForumSeach")) {
-				breadcumbs_.add("Search Forums") ;
+				breadcumbs_.add(ForumFormatUtils.FIELD_SEARCHFORUM_LABEL) ;
 				path_.add("/ForumSeach") ;
 			} else {
 			String tempPath = "";
@@ -82,7 +84,7 @@ public class UIBreadcumbs extends UIContainer {
 					pathNode = pathNode + "/" + string;
 					if(t == 0) {
 						tempPath = string;
-						if(string.indexOf("ategory")> 0) {
+						if(string.indexOf(Utils.CATEGORY)>= 0) {
 							Category category = (Category)forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode);
 							if(category == null) throw new ForumPathNotFoundException() ;
 							breadcumbs_.add(category.getCategoryName()) ;
@@ -110,8 +112,8 @@ public class UIBreadcumbs extends UIContainer {
 		} else {
 			path_.clear() ;
 			breadcumbs_.clear() ;
-			path_.add("ForumService") ;
-			breadcumbs_.add("eXo Forum") ;
+			path_.add(FORUM_SERVICE) ;
+			breadcumbs_.add(ForumFormatUtils.FIELD_EXOFORUM_LABEL) ;
 		}
 	}
 	
@@ -131,7 +133,7 @@ public class UIBreadcumbs extends UIContainer {
 	}
 	
 	@SuppressWarnings("unused")
-  private long getNewMessenge() {
+  private long getNewMessage() {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
 		return this.userProfile.getNewMessage() ;
 	}
@@ -149,12 +151,12 @@ public class UIBreadcumbs extends UIContainer {
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-			}else if(path.equals("ForumService")){
+			}else if(path.equals(FORUM_SERVICE)){
 				forumPortlet.updateIsRendered(1);
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-			}else	if(path.indexOf("forum") > 0) {
+			}else	if(path.indexOf(Utils.FORUM) > 0) {
 				String id[] = path.split("/");
 				forumPortlet.updateIsRendered(2);
 				UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
@@ -193,7 +195,7 @@ public class UIBreadcumbs extends UIContainer {
 			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 			categoryContainer.updateIsRender(true) ;
 			forumPortlet.updateIsRendered(1);
-			event.getSource().setUpdataPath("ForumService");
+			event.getSource().setUpdataPath(FORUM_SERVICE);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}	

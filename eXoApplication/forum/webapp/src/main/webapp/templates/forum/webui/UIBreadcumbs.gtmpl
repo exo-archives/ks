@@ -1,3 +1,6 @@
+<%  
+	import org.exoplatform.forum.ForumFormatUtils;
+%>
 <div class="UIBreadcumbs" id="$uicomponent.id">
 	<div class="LeftBreadcumbs">
 		<div class="RightBreadcumbs"> 
@@ -7,6 +10,12 @@
 				<% int t = 1 ;
 					for(namePath in uicomponent.getBreadcumbs()) {
 						String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
+						if(namePath.equals(ForumFormatUtils.FIELD_EXOFORUM_LABEL)) {
+							namePath = _ctx.appRes("UIBreadcumbs.label.eXoForum");
+						}
+						if(namePath.equals(ForumFormatUtils.FIELD_SEARCHFORUM_LABEL)) {
+							namePath = _ctx.appRes("UIBreadcumbs.label.SearchForums");
+						}
 						if(t < uicomponent.getMaxPath()) {
 				%>
 					<a href="$link" class="Selected">$namePath</a>
@@ -19,20 +28,22 @@
 				</div>
 				<div class="RSSBar">
 					<%if(t == 2){
-						String newMesenge = "Private Messenges&nbsp;";
-						if(uicomponent.getNewMessenge() > 0) {
-						  newMesenge = "<b>Private Messenges(" + uicomponent.getNewMessenge() + ") </b>";
+						String newMessage = _ctx.appRes("UIBreadcumbs.label.PrivateMessages") ; 
+						if(uicomponent.getNewMessage() > 0) {
+						  newMessage = "<b>"+newMessage+"(" + uicomponent.getNewMessage() + ") </b>";
+						} else {
+							newMessage = newMessage + "&nbsp;" ;
 						}
 					%>
 					<a style="float:left; line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
-						 $newMesenge
+						 $newMessage
 					</a>
 					<a style="float:left" href="<%=uicomponent.event("Rss");%>" >
 					<%} else {%>
 					<a href="<%=uicomponent.event("Rss");%>" >
 					<%}%>
 						<div class="SeparatorLine">
-							<div class="RSSIcon" >RSS</div>	
+							<div class="RSSIcon" ><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></div>	
 						</div>	
 					</a>
 					<%if(t == 2){%>

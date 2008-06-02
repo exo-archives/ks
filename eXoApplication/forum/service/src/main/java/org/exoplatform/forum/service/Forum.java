@@ -57,7 +57,7 @@ public class Forum {
 		createTopicRole = new String[] {};
 		moderators = new String[] {};
 		replyTopicRole = new String[] {};
-		id = "forum" + IdGenerator.generate() ;
+		id = Utils.FORUM + IdGenerator.generate() ;
 	}
 	
 	public String getId(){return id;}

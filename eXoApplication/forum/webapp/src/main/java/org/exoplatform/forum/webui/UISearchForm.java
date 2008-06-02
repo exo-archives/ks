@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -330,7 +331,7 @@ public class UISearchForm extends UIForm {
 			forumPortlet.updateIsRendered(1) ;
 			UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 			categories.setIsRenderChild(false) ;
-			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumService") ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

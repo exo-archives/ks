@@ -48,7 +48,7 @@ public class Post {
 	
 	
 	public Post() {
-		id = "post" + IdGenerator.generate() ;
+		id = Utils.POST + IdGenerator.generate() ;
 		userPrivate = new String[]{"exoUserPri"};
 	}
 	

@@ -30,6 +30,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddTagForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -282,7 +283,7 @@ public class UITopicsTag extends UIForm {
 			forumPortlet.updateIsRendered(1) ;
 			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 			categoryContainer.updateIsRender(true) ;
-			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumService") ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
