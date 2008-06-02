@@ -908,7 +908,7 @@
 				  </div>
 				  <div class="ContentContainer">
 					  <div class="ForumList">
-					  	<div class="">Message:</div>
+					  	<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
 					  	<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
 				  	</div>
 				    <div class="ActionContent">

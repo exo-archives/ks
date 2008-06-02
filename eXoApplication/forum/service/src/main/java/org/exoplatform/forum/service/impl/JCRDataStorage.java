@@ -518,11 +518,10 @@ public class JCRDataStorage{
 			long count = forumStatistic.getProperty("exo:topicCount").getLong() ;
 			count = count - forum.getTopicCount() ; 
 			if(count < 0) count = 0;
-			forumStatistic.setProperty("exo:topicCount", count) ;
 			count = forumStatistic.getProperty("exo:postCount").getLong() ;
 			count = count - forum.getPostCount() ; 
 			if(count < 0) count = 0;
-			forumStatistic.setProperty("exo:topicCount", count) ;
+			forumStatistic.setProperty("exo:postCount", count) ;
 			forumHomeNode.getSession().save() ;
 			return forum;
 		} catch (PathNotFoundException e) {
