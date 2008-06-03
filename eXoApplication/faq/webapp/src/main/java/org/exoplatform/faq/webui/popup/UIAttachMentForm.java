@@ -16,6 +16,9 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.upload.UploadResource;
@@ -38,8 +41,10 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
-    template =  "system:/groovy/webui/form/UIForm.gtmpl",
+    template =  "app:/templates/faq/webui/popup/UIAttachMentForm.gtmpl",
     events = {
+      @EventConfig(listeners = UIAttachMentForm.AddActionListener.class), 
+      @EventConfig(listeners = UIAttachMentForm.RemoveActionListener.class), 
       @EventConfig(listeners = UIAttachMentForm.SaveActionListener.class), 
       @EventConfig(listeners = UIAttachMentForm.CancelActionListener.class)
     }
@@ -48,14 +53,29 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   private boolean response_ = false ;
   private boolean isManagerment_ = false ;
+  private static int numberUpload = 0 ;
   private static final String FILE_UPLOAD = "FileUpload" ;
 
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
   public UIAttachMentForm() {
-    addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD)) ;
+    numberUpload = 0 ;
+    addChild(new UIFormUploadInput(FILE_UPLOAD + numberUpload, FILE_UPLOAD + numberUpload)) ;
+    numberUpload++ ;
     this.setRendered(false) ;
+  }
+  
+  private void addFormAttach() {
+    addChild(new UIFormUploadInput(FILE_UPLOAD + numberUpload, FILE_UPLOAD + numberUpload)) ;
+    numberUpload ++ ;
+  }
+  
+  private void removeLastAttach() {
+    if(numberUpload > 1) {
+      numberUpload -- ;
+      removeChildById(FILE_UPLOAD + numberUpload) ;
+    }
   }
   
   public void setResponse(boolean response){ this.response_ = response ;}
@@ -66,53 +86,71 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
     this.isManagerment_ = isManagerment ;
   }
   
-  private boolean getIsManagerment() {
-    return this.isManagerment_ ;
+  static public class AddActionListener extends EventListener<UIAttachMentForm> {
+    public void execute(Event<UIAttachMentForm> event) throws Exception {
+      UIAttachMentForm uiAttachMent = event.getSource() ;     
+      uiAttachMent.addFormAttach() ;
+      UIPopupContainer popupContainer = uiAttachMent.getAncestorOfType(UIPopupContainer.class) ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
+  }
+  
+  static public class RemoveActionListener extends EventListener<UIAttachMentForm> {
+    public void execute(Event<UIAttachMentForm> event) throws Exception {
+      UIAttachMentForm uiAttachMent = event.getSource() ;     
+      uiAttachMent.removeLastAttach() ;
+      UIPopupContainer popupContainer = uiAttachMent.getAncestorOfType(UIPopupContainer.class) ;
+      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
   }
   
   static public class SaveActionListener extends EventListener<UIAttachMentForm> {
+    @SuppressWarnings("static-access")
     public void execute(Event<UIAttachMentForm> event) throws Exception {
       UIAttachMentForm attachMentForm = event.getSource() ;
-      FileAttachment fileAttachment = new FileAttachment() ;
-      UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD) ;
-      UploadResource uploadResource = uploadInput.getUploadResource() ;
-      long fileSize = 0 ;
-      if(uploadResource == null) {
+      List<FileAttachment> listFileAttachment = new ArrayList<FileAttachment>() ;
+      for(int i = 0 ; i < attachMentForm.numberUpload; i ++) {
+        UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i) ;
+        UploadResource uploadResource = uploadInput.getUploadResource() ;
+        long fileSize = 0 ;
+        if(uploadResource != null) {
+          if(uploadResource.getUploadedSize() > 0) {
+            FileAttachment fileAttachment = new FileAttachment() ;
+            fileAttachment.setName(uploadResource.getFileName()) ;
+            fileAttachment.setInputStream(uploadInput.getUploadDataAsStream()) ;
+            fileAttachment.setMimeType(uploadResource.getMimeType()) ;
+            fileSize = (long)uploadResource.getUploadedSize() ;
+            fileAttachment.setSize(fileSize) ;
+            java.util.Date date = new java.util.Date();
+            fileAttachment.setId("file" + date.getTime()) ;
+            listFileAttachment.add(fileAttachment) ;
+          } else {
+            UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
+            uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", null, ApplicationMessage.WARNING)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+            return ;
+          }
+        }
+      }
+      
+      if(listFileAttachment.isEmpty()) {
         UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
         uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
       }
       
-      fileAttachment.setName(uploadResource.getFileName()) ;
-      fileAttachment.setInputStream(uploadInput.getUploadDataAsStream()) ;
-      fileAttachment.setMimeType(uploadResource.getMimeType()) ;
-      fileSize = (long)uploadResource.getUploadedSize() ;
-      if(fileSize > 0) {
-        fileAttachment.setSize(fileSize) ;
-      } else {
-        UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-        uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        return ;
-      }
-      java.util.Date date = new java.util.Date();
-      fileAttachment.setId("file" + date.getTime()) ;
-      
       UIPopupContainer popupContainer = attachMentForm.getAncestorOfType(UIPopupContainer.class) ;
-      if(attachMentForm.getIsManagerment()) {
-        /*UIQuestionManagerForm questionManagerForm = popupContainer.getChild(UIQuestionManagerForm.class) ;
-        questionManagerForm.setListFileAttach(fileAttachment) ;
-        questionManagerForm.refreshUploadFileList() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(questionManagerForm) ;*/
-      } else if(attachMentForm.getResponse()) {
+      if(attachMentForm.getResponse()) {
         UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
         if(responseForm == null) {
           UIFAQPortlet portlet = attachMentForm.getAncestorOfType(UIFAQPortlet.class) ;
           UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
           responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
         }
-        responseForm.setListFileAttach(fileAttachment) ;
+        responseForm.setListFileAttach(listFileAttachment) ;
         responseForm.refreshUploadFileList() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
       } else {
@@ -122,7 +160,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
           UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
           questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
         }
-        questionForm.setListFileAttach(fileAttachment) ;
+        questionForm.setListFileAttach(listFileAttachment) ;
         questionForm.refreshUploadFileList() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
       }

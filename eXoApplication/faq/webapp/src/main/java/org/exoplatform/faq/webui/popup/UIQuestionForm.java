@@ -283,7 +283,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   }
   
   public void setListFileAttach(List<FileAttachment> listFileAttachment){
-    listFileAttach_ = listFileAttachment ;
+    listFileAttach_.addAll(listFileAttachment) ;
   }
   
   public void setListFileAttach(FileAttachment fileAttachment){

@@ -844,10 +844,10 @@ UIFAQPortlet .ResultQuickSearch {
   background: url('background/FAQPortlet.gif') no-repeat left -706px;
 }
 .AddRelation {
-  background: url('background/AddIcon.gif') no-repeat;
+  background: url('background/AddIcon.gif') no-repeat left top;
   height:16px;
   width:16px;
-  margin-left: 5px;
+  float: left;
 }
 
 .UIFAQPortlet .UIQuestionManagerForm .ItemIcon {
