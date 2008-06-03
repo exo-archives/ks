@@ -949,3 +949,8 @@ UIFAQPortlet .ResultQuickSearch {
 .UIPrintPreview .ResponseContent .AttachmentContent .LabelBox {
   display:none;
 }
+
+.UIFAQPortlet .ResponseContent .RelatedQuestionsView {
+  background: url('background/DotLine.gif') repeat-x bottom;
+  padding: 4px 0px;
+}
