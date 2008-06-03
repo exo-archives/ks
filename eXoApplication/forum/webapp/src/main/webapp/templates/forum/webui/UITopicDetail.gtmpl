@@ -6,7 +6,7 @@
 	import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.ForumSessionUtils; 
-	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
@@ -17,6 +17,10 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.reSizeImages();");
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');
+	if(uicomponent.isRefreshed()) {
+		uicomponent.setRefreshed(false);
+		jsmanager.addJavascript("if(eXo.core.Browser.isIE6()) {top.location.reload(); alert('test'); };") ;
+	}
 	boolean isNull = false ;
 	boolean isShowMenu;
 	long setTime = 0;
@@ -531,20 +535,20 @@
 				String namePost = post.getName() ;
 				Date createdPostDate = post.getCreatedDate() ;
 				createdPostDate.setTime(createdPostDate.getTime() - setTime);
-				String createdDate = ForumFormatUtils.getFormatDate(longDateFormat,createdPostDate);
+				String createdDate = ForumUtils.getFormatDate(longDateFormat,createdPostDate);
 				String message = ForumTransformHTML.convertCodeHTML(post.getMessage()) ;
 				String editBy = post.getModifiedBy() ;
 				String editDate ;
 				if(editBy != null && editBy.length() > 0) {
 					Date modifileDate = post.getModifiedDate() ;// modifile
 					modifileDate.setTime(modifileDate.getTime() - setTime);
-					editDate = ForumFormatUtils.getFormatDate(longDateFormat,modifileDate);
+					editDate = ForumUtils.getFormatDate(longDateFormat,modifileDate);
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + post.getId().substring(15);
 				User user = userInfo.getUser() ; 
 				Date userCreated = user.getCreatedDate() ;
-				String joinDate = ForumFormatUtils.getFormatDate(shortDateFormat, userCreated) ;
+				String joinDate = ForumUtils.getFormatDate(shortDateFormat, userCreated) ;
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
@@ -643,7 +647,7 @@
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate(shortDateTimeFormat,lastPostOfUser) ;
+											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateTimeFormat,lastPostOfUser) ;
 									%>
 									<div>Posts: $totalPost</div>
 									<div>Last Post: $lastPostDateOfUser</div>
@@ -654,7 +658,7 @@
 									%>
 									<div>Location: location</div>
 									<%} 
-										String lastLoginUser = ForumFormatUtils.getFormatDate(shortDateTimeFormat, userInfo.getLastLoginDate()) ;
+										String lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, userInfo.getLastLoginDate()) ;
 									%>
 									<div>Last Login: $lastLoginUser</div>
 								</div>
@@ -709,7 +713,7 @@
 										 String urlFile = uicomponent.getFileSource(attachment) ;
 								 		 String fileName = attachment.getName() ;
 								 		 double sizeNumber = attachment.getSize() ;
-								 		 String size = ForumFormatUtils.getSizeFile(sizeNumber) ;
+								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
 								%>
 										<div class="AttachmentBox">

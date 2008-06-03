@@ -20,6 +20,7 @@ import java.util.Date;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
@@ -57,18 +58,18 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 	}
 
-	public void updateIsRendered(int selected) throws Exception {
-		if(selected == 1) {
+	public void updateIsRendered(String selected) throws Exception {
+		if(selected == ForumUtils.CATEGORIES) {
 			isCategoryRendered = true ;
 			isForumRendered = false ;
 			isTagRendered = false ;
 			isSeachRendered = false ;
-		} else if(selected == 2) {
+		} else if(selected == ForumUtils.FORUM) {
 			isForumRendered = true ;
 			isCategoryRendered = false ;
 			isTagRendered = false ;
 			isSeachRendered = false ;
-		} else if(selected == 3) {
+		} else if(selected == ForumUtils.TAG) {
 			isTagRendered = true ;
 			isForumRendered = false ;
 			isCategoryRendered = false ;

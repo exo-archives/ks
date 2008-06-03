@@ -1,7 +1,9 @@
 <%  
-	import org.exoplatform.forum.ForumFormatUtils ;
+	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.service.ForumPrivateMessage;
 	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.webui.popup.UIListInBoxPrivateMessage;
+	import org.exoplatform.forum.webui.popup.UIListSentPrivateMessage;
 	
 	UserProfile userProfile = uiform.getUserProfile();
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
@@ -9,7 +11,7 @@
 	String isDisplay = "block";
 %>
 <div class="UIFormForum UIPrivateMessageForm">
-	<% uiform.begin() %>
+	<% uiform.begin() %> 
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
 			<div class="TabPaneContent">
@@ -30,7 +32,7 @@
                   			classCss = "NormalTab" ;
                   			link = uicomponent.event("SelectTab",String.valueOf(i)) ;
                   		}
-                  		//_ctx.appRes(uiform.id + ".label." + tabconten);
+                  		tabconten = _ctx.appRes(uiform.id + ".label." + tabconten);
                   	%>  
                     <div class="UITab NormalTabStyle">
                       <div class="$classCss">
@@ -61,54 +63,8 @@
 									 }
 								%>
 								<div class="UITabContent" id="UITabContent" style="display: $isDisplay;">
-									<div class="UIFormInputSet ForumUserProfile" id="ForumUserProfile">
-										<div class="ForumMail UIInBox">
-											<table cellspacing="0" class="UIGrid" id="PermissionInfo" borderspacing="0">
-												<thead>
-													<tr>
-														<th >List Mail</th>
-														<th width="80px">From</th>
-														<th width="120px">From date</th>
-														<th width="80px">Action</th>
-													</tr>
-												</thead>
-												<tbody>
-												<% 
-													String classCssInbox = "EvenRow";
-													i = 0;
-													List InBoxmails = uiform.getListInBoxPrivateMessage() ;
-													for(mail in InBoxmails) {
-														if(i%2 == 0) classCssInbox = "EvenRow";
-														else classCssInbox = "OddRow";
-														++i;
-														String mailId ="agree/" + mail.getId();
-														String nameMail = mail.getName() ;
-														if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
-														String fromUser = mail.getFrom() ;
-														Date fromDate = mail.getReceivedDate() ;
-														String strFromDate = ForumFormatUtils.getFormatDate(formatDate,fromDate);
-												%>
-													<tr class="$classCssInbox">
-														<td class="text"><a href="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>
-														<td class="text">$fromUser</td>
-														<td class="text">$strFromDate</td>
-														<td>				 
-															<div class="ActionContainer" style="margin: 0px auto;">
-																<div class="IconContent">
-																	<a href="<%=uicomponent.event("ReplyMessage",mail.getId())%>" style="float: left;">
-																		 <div class="Icon16x16 ViewProfileIcon" title="Reply Message"><span></span></div>							
-																	</a>
-																	<a href="<%=uicomponent.event("DeleteMessage",mailId)%>" style="float: left;">
-																		 <div class="Icon16x16 DeleteIcon" title="Delete Message"><span></span></div>							
-																	</a>
-																</div>
-															</div>
-														</td>
-													</tr>
-												 <% } %>
-												</tbody>
-											</table> <!--End UIGrid-->												
-										</div>
+									<div class="UIFormInputSet ForumUserProfile">
+										<% uicomponent.renderChild(UIListInBoxPrivateMessage.class) ; %>
 									</div>
 								</div>
 								<% if(index == 1){
@@ -118,53 +74,8 @@
 									 }
 								%>
 								<div class="UITabContent" id="UITabContent" style="display: $isDisplay;">
-									<div class="UIFormInputSet ForumUserProfile" id="ForumUserProfile">
-										<div class="ForumMail Send">
-											<table cellspacing="0" class="UIGrid" id="PermissionInfo" borderspacing="0">
-												<thead>
-													<tr>
-														<th >List Mail</th>
-														<th width="120px">To</th>
-														<th width="120px">From Date</th>
-														<th width="80px">Action</th>
-													</tr>
-												</thead>
-												<tbody>
-												<%String classCssSend = "EvenRow";
-													i = 0;
-													List sendmails = uiform.getPrivateMessageSendByUser() ;
-													for(mail in sendmails) {
-														if(i%2 == 0) classCssSend = "EvenRow";
-														else classCssSend = "OddRow";
-														++i;
-														String mailId = "send/" + mail.getId();
-														String nameMail = mail.getName() ;
-														if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
-														String fromUser = mail.getSendTo() ;
-														Date fromDate = mail.getReceivedDate() ;
-														String strFromDate = ForumFormatUtils.getFormatDate(formatDate,fromDate);
-												%>
-													<tr class="$classCssSend">
-														<td class="text"><a href="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>
-														<td class="text">$fromUser</td>
-														<td class="text">$strFromDate</td>
-														<td>				 
-															<div class="ActionContainer" style="margin: 0px auto;">
-																<div class="IconContent">
-																	<a href="<%=uicomponent.event("ForwardMessage",mail.getId())%>" style="float: left;">
-																		 <div class="Icon16x16 ViewProfileIcon" title="Forward Message"><span></span></div>							
-																	</a>
-																	<a href="<%=uicomponent.event("DeleteMessage",mailId)%>" style="float: left;">
-																		 <div class="Icon16x16 DeleteIcon" title="Delete Message"><span></span></div>							
-																	</a>
-																</div>
-															</div>
-														</td>
-													</tr>
-												 <% } %>
-												</tbody>
-											</table> <!--End UIGrid-->												
-										</div>
+									<div class="UIFormInputSet ForumUserProfile">
+										<% uicomponent.renderChild(UIListSentPrivateMessage.class) ; %>
 									</div>
 								</div>
 								<% if(index == 2){
@@ -179,7 +90,7 @@
 											<div class="HorizontalLayout">
 												<div class="UIFormInput">
 													<% 
-														uiform.renderChildren();//(uiform.FIELD_SENDMESSAGE_TAB);
+														uiform.renderChild(uiform.FIELD_SENDMESSAGE_TAB);
 													%>
 												</div>
 											</div>

@@ -1,7 +1,7 @@
 <%  
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.services.organization.User ;
-	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.contact.service.Contact;
 %>
 <div class="UIViewMemberProfile">
@@ -16,7 +16,7 @@
 	String birthDay = "" ;
 	Date birthDayDate = contact.getBirthday() ;
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
-	if(birthDayDate != null) birthDay = ForumFormatUtils.getFormatDate(shortDateFormat, birthDayDate) ;
+	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	String location = "" ;
 	boolean isCity = false;
 	if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
@@ -24,7 +24,7 @@
 		if(isCity)location = location + ", ";
 		location = location + contact.getHomeCountry() ;
 	}
-	String createdDate = ForumFormatUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
+	String createdDate = ForumUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
 	long totalPost = userProfile.getTotalPost();
 	shortDateFormat = shortDateFormat +  ", " + userProfileLogin.getTimeFormat();
 	String userSmile = "OfflineIcon";
@@ -53,14 +53,14 @@
 					  		<div class="InfoMember">
 					  			<div>Join Date: $createdDate</div>
 									<% if(totalPost > 0) { 
-											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate(shortDateFormat,userProfile.getLastPostDate()) ;
+											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat,userProfile.getLastPostDate()) ;
 									%>
 									<div>Posts: $totalPost</div>
 									<div>Last Post: $lastPostDateOfUser</div>
 									<% } else {%>
 									<div><strong>$userName</strong> has no post!</div>
 									<% } 
-										String lastLoginUser = ForumFormatUtils.getFormatDate(shortDateFormat, userProfile.getLastLoginDate()) ;
+										String lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, userProfile.getLastLoginDate()) ;
 										if(lastLoginUser != null && lastLoginUser.length() > 0) {
 									%>
 									<div>Last Login: $lastLoginUser</div>

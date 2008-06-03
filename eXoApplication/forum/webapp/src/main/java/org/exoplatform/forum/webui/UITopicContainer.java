@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
@@ -42,7 +42,6 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -274,7 +273,7 @@ public class UITopicContainer extends UIForm {
 	@SuppressWarnings("unused")
 	private String[] getStarNumber(Topic topic) throws Exception {
 		double voteRating = topic.getVoteRating() ;
-		return ForumFormatUtils.getStarNumber(voteRating) ;
+		return ForumUtils.getStarNumber(voteRating) ;
 	}
 	
 	@SuppressWarnings("unused")
@@ -296,14 +295,14 @@ public class UITopicContainer extends UIForm {
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0 && path != null) {
 				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateIsRendered(1) ;
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,topic/post", path);
 				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 				listSeachEvent.setListSeachEvent(list) ;
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 				formStringInput.setValue("") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
@@ -371,7 +370,7 @@ public class UITopicContainer extends UIForm {
 			UITopicContainer uiTopicContainer = event.getSource() ;
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.updateIsRendered(3) ;
+			forumPortlet.updateIsRendered(ForumUtils.TAG) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(Utils.FORUM_SERVICE) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId) ;
 			forumPortlet.getChild(UITopicsTag.class).setIdTag(tagId) ;
@@ -387,7 +386,7 @@ public class UITopicContainer extends UIForm {
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			try {
 				Topic topic = uiTopicContainer.getTopic(temp[0]) ;
-				boolean isReadTopic = ForumFormatUtils.isStringInStrings(uiTopicContainer.userProfile.getReadTopic(), topic.getId());
+				boolean isReadTopic = ForumUtils.isStringInStrings(uiTopicContainer.userProfile.getReadTopic(), topic.getId());
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 				uiForumContainer.setIsRenderChild(false) ;
@@ -423,7 +422,7 @@ public class UITopicContainer extends UIForm {
 				context.addUIComponentToUpdateByAjax(uiForumContainer) ;
 				context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class)) ;
 			} catch (NullPointerException e) {
-				forumPortlet.updateIsRendered(1);
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
@@ -539,7 +538,7 @@ public class UITopicContainer extends UIForm {
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			uiTopicContainer.forumService.removeForum(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, forum.getId()) ;
 			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-			forumPortlet.updateIsRendered(1) ;
+			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 			categoryContainer.updateIsRender(false) ;
 			categoryContainer.getChild(UICategory.class).updateByBreadcumbs(uiTopicContainer.categoryId) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(uiTopicContainer.categoryId) ;

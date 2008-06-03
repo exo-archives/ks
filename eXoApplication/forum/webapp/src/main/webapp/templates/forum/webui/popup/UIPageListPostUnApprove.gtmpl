@@ -3,7 +3,7 @@
 	import org.exoplatform.forum.service.Post; 
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
-	import org.exoplatform.forum.ForumFormatUtils ;
+	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumTransformHTML;
 	
 	UserProfile userProfile = uicomponent.getUserProfile() ;
@@ -45,7 +45,7 @@
 									String iconPost = post.getIcon() ;
 									Date postDate = post.getCreatedDate() ;
 									postDate.setTime(postDate.getTime() - setTime) ;
-									String createdDate = ForumFormatUtils.getFormatDate(formatDate,postDate) ;
+									String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>

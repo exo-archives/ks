@@ -244,7 +244,7 @@ public class ForumServiceImpl implements ForumService{
 	  return storage_.getPageListUserProfile(sProvider);
   }
 
-	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
+	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
 	  return storage_.getPrivateMessage(sProvider, userName, type);
   }
 	

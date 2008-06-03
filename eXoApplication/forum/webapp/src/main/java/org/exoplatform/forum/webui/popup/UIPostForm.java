@@ -21,9 +21,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
@@ -63,8 +63,8 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 		events = {
 			@EventConfig(listeners = UIPostForm.PreviewPostActionListener.class), 
 			@EventConfig(listeners = UIPostForm.SubmitPostActionListener.class), 
-			@EventConfig(listeners = UIPostForm.AttachmentActionListener.class), 
-			@EventConfig(listeners = UIPostForm.RemoveAttachmentActionListener.class), 
+			@EventConfig(listeners = UIPostForm.AttachmentActionListener.class, phase = Phase.DECODE), 
+			@EventConfig(listeners = UIPostForm.RemoveAttachmentActionListener.class, phase = Phase.DECODE), 
 			@EventConfig(listeners = UIPostForm.SelectTabActionListener.class, phase = Phase.DECODE), 
 			@EventConfig(listeners = UIPostForm.SelectIconActionListener.class, phase = Phase.DECODE), 
 			@EventConfig(listeners = UIPostForm.CancelActionListener.class, phase = Phase.DECODE)
@@ -99,11 +99,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	public UIPostForm() throws Exception {
     UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
     postTitle.addValidator(MandatoryValidator.class);
-//    UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
-//    editReason.setRendered(false) ;
     UIFormInputWithActions threadContent = new UIFormInputWithActions(FIELD_THREADCONTEN_TAB) ;
     threadContent.addChild(postTitle) ;
-//    threadContent.addChild(editReason) ;
     threadContent.addChild(new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true)) ;
     threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
     threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
@@ -133,8 +130,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		this.forumId = forumId ;
 		this.topicId = topicId ;
 		this.topic = topic ;
-//		UIFormInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
-//		threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(false) ;
 	}
 	
 	public List<ActionData> getUploadFileList() { 
@@ -144,7 +139,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			fileUpload.setActionListener("") ;
 			fileUpload.setActionType(ActionData.TYPE_ICON) ;
 			fileUpload.setCssIconClass("AttachmentIcon") ;
-			String size = ForumFormatUtils.getSizeFile((double)attachdata.getSize()) ;
+			String size = ForumUtils.getSizeFile((double)attachdata.getSize()) ;
 			fileUpload.setActionName(attachdata.getName() + "("+size+")") ;
 			fileUpload.setShowLabel(true) ;
 			uploadedFiles.add(fileUpload) ;
@@ -202,7 +197,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			} else{//edit
-//				threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
 				UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
 				threadContent.addChild(editReason) ;
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName()) ;
@@ -231,7 +225,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
       UIFormInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
 			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
-//			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
@@ -240,7 +233,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			if(postTitle != null && postTitle.length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				Post post = new Post();
-				System.out.println("\n\npostTitle: " + postTitle);
 				post.setName(postTitle) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
@@ -252,7 +244,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setIcon(uiIconSelector.getSelectedIcon());
 				post.setIsApproved(false) ;
 				post.setAttachments(uiForm.getAttachFileList()) ;
-//				post.setEditReason(editReason) ;
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true)	;
 				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
@@ -262,11 +253,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			}else {
 				String[] args = { ""} ;
 				if(k == 0) {
-					args = new String[] { "Thread Title" } ;
-					if(t < 4) args = new String[] { "Thread Title and Message" } ;
+					args = new String[] {uiForm.getLabel(FIELD_POSTTITLE_INPUT)} ;
+					if(t < 4) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
 				} else if(t < 4) {
-					args = new String[] { "Message" } ;
+					args = new String[] {uiForm.getLabel(FIELD_MESSAGECONTENT) } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 				}
 			}
@@ -291,7 +282,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String stringKey = forumAdministration.getCensoredKeyword();
 			if(stringKey != null && stringKey.length() > 0) {
 				stringKey = stringKey.toLowerCase() ;
-				String []censoredKeyword = ForumFormatUtils.splitForForum(stringKey) ;
+				String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
 				checksms = checksms.toLowerCase().trim();
 				for (String string : censoredKeyword) {
 		      if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
@@ -359,11 +350,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			}else {
 				String[] args = { ""} ;
 				if(k == 0) {
-					args = new String[] { "Thread Title" } ;
-					if(t < 4) args = new String[] { "Thread Title and Message" } ;
+					args = new String[] {uiForm.getLabel(FIELD_POSTTITLE_INPUT)} ;
+					if(t < 4) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
 				} else if(t < 4) {
-					args = new String[] { "Message" } ;
+					args = new String[] {uiForm.getLabel(FIELD_MESSAGECONTENT) } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 				}
 			}
@@ -393,10 +384,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiPostForm = event.getSource() ;
 			String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
-			//BufferAttachment attachfile = new BufferAttachment();
 			for (ForumAttachment att : uiPostForm.attachments_) {
 				if (att.getId().equals(attFileId)) {
-					//attachfile = (BufferAttachment) att;
 					uiPostForm.removeFromUploadFileList(att);
           uiPostForm.attachments_.remove(att) ;
 					break;

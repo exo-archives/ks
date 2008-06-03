@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
@@ -153,10 +154,10 @@ public class UIForumLinks extends UIForm {
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-					forumPortlet.updateIsRendered(1);
+					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 				}else if(path.indexOf(Utils.FORUM) > 0) {
 					String id[] = path.trim().split("/");
-					forumPortlet.updateIsRendered(2);
+					forumPortlet.updateIsRendered(ForumUtils.FORUM);
 					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
 					forumContainer.setIsRenderChild(true) ;
 					forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
@@ -165,7 +166,7 @@ public class UIForumLinks extends UIForm {
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.getChild(UICategory.class).updateByBreadcumbs(path.trim()) ;
 					categoryContainer.updateIsRender(false) ;
-					forumPortlet.updateIsRendered(1);
+					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 				}
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path.trim());
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;

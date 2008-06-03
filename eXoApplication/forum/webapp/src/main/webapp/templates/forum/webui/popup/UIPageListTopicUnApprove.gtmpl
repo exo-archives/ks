@@ -3,7 +3,7 @@
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
-	import org.exoplatform.forum.ForumFormatUtils ; 
+	import org.exoplatform.forum.ForumUtils ; 
   UserProfile userProfile = uicomponent.getUserProfile() ;
   List topics = uicomponent.getTopicsUnApprove() ;
 %>
@@ -50,7 +50,7 @@
 										iconTopicStatus = "HotThreadNewLockPost" ;
 										titleTopicStatus = "Hot thread with new post lock" ;
 									}
-									boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
+									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
 									String title = "";
 									if(isReadTopic) {
 										title = "TitleNorman";

@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
@@ -286,12 +287,12 @@ public class UISearchForm extends UIForm {
 				}
 				
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateIsRendered(1) ;
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;				
 				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 				listSeachEvent.setListSeachEvent(list) ;
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 //			} else {
 //				Object[] args = { };
@@ -328,7 +329,7 @@ public class UISearchForm extends UIForm {
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = (UIForumPortlet)uiForm.getParent() ;
-			forumPortlet.updateIsRendered(1) ;
+			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 			UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 			categories.setIsRenderChild(false) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;

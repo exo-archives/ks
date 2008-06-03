@@ -1,5 +1,5 @@
 <%  
-	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumUtils;
 %>
 <div class="UIBreadcumbs" id="$uicomponent.id">
 	<div class="LeftBreadcumbs">
@@ -10,10 +10,10 @@
 				<% int t = 1 ;
 					for(namePath in uicomponent.getBreadcumbs()) {
 						String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
-						if(namePath.equals(ForumFormatUtils.FIELD_EXOFORUM_LABEL)) {
+						if(namePath.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.eXoForum");
 						}
-						if(namePath.equals(ForumFormatUtils.FIELD_SEARCHFORUM_LABEL)) {
+						if(namePath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.SearchForums");
 						}
 						if(t < uicomponent.getMaxPath()) {

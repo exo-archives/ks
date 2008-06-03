@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSeach;
 import org.exoplatform.forum.service.ForumService;
@@ -73,12 +74,12 @@ public class UIForumListSeach extends UIContainer {
 				categoryContainer.getChild(UICategory.class).updateByBreadcumbs(categoryId) ;
 				categoryContainer.updateIsRender(false) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(categoryId);
-				forumPortlet.updateIsRendered(1);
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
     	} else if(type.equals("forum")) {
     		String []id = path.split("/") ;
     		int length = id.length ;
     		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;
-  			forumPortlet.updateIsRendered(2);
+  			forumPortlet.updateIsRendered(ForumUtils.FORUM);
   			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
   			uiForumContainer.setIsRenderChild(true) ;
   			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
@@ -89,7 +90,7 @@ public class UIForumListSeach extends UIContainer {
     	} else if(type.equals("topic")){
     		String []id = path.split("/") ;
     		int length = id.length ;
-    		forumPortlet.updateIsRendered(2);
+    		forumPortlet.updateIsRendered(ForumUtils.FORUM);
   			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
   			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
   			uiForumContainer.setIsRenderChild(false) ;

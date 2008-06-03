@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator;  
 	import org.exoplatform.forum.service.Post;
 	import org.exoplatform.contact.service.Contact;
-	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.service.UserProfile;
@@ -46,20 +46,20 @@
 			String namePost = post.getName() ;
 			Date createdPostDate = post.getCreatedDate() ;
 			createdPostDate.setTime(createdPostDate.getTime() - setTime);
-			String createdDate = ForumFormatUtils.getFormatDate(longDateFormat,createdPostDate);
+			String createdDate = ForumUtils.getFormatDate(longDateFormat,createdPostDate);
 			String message = ForumTransformHTML.convertCodeHTML(post.getMessage()) ;
 			String editBy = post.getModifiedBy() ;
 			String editDate ;
 			if(editBy != null && editBy.length() > 0) {
 				Date modifileDate = post.getModifiedDate() ;// modifile
 				modifileDate.setTime(modifileDate.getTime() - setTime);
-				editDate = ForumFormatUtils.getFormatDate(longDateFormat,modifileDate);
+				editDate = ForumUtils.getFormatDate(longDateFormat,modifileDate);
 			}
 			
 			String idMessage = "Id" + post.getId().substring(15);
 			User user = ForumSessionUtils.getUserByUserId(owner) ; 
 			Date userCreated = user.getCreatedDate() ;
-			String joinDate = ForumFormatUtils.getFormatDate("DDD yyyy", userCreated) ;
+			String joinDate = ForumUtils.getFormatDate("DDD yyyy", userCreated) ;
 			String isHedden = "" ;
 			if(post.getIsHidden()) {
 				isHedden = "(<span style='color:#f77617;'>This post is hidden!</span>)" ;
@@ -101,7 +101,7 @@
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = ForumFormatUtils.getFormatDate(shortDateFormat,lastPostOfUser) ;
+											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat,lastPostOfUser) ;
 									%>
 									<div>Posts: $totalPost</div>
 									<div>Last Post: $lastPostDateOfUser</div>
@@ -112,7 +112,7 @@
 									%>
 									<div>Location: location</div>
 									<%} 
-										String lastLoginUser = ForumFormatUtils.getFormatDate(shortDateFormat, userInfo.getLastLoginDate()) ;
+										String lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, userInfo.getLastLoginDate()) ;
 									%>
 									<div>Last Login: $lastLoginUser</div>
 								</div>

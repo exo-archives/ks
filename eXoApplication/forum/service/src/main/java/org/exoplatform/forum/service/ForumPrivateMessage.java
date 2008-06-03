@@ -33,7 +33,7 @@ public class ForumPrivateMessage {
 	private boolean isUnread;
 	
 	public ForumPrivateMessage() {
-	  isUnread = false; // mac dinh da doc roi
+	  isUnread = false; 
   }
 	public String getFrom() {
   	return from;

@@ -1,7 +1,7 @@
 <%  
 	import org.exoplatform.forum.service.ForumPrivateMessage ;
 	import org.exoplatform.forum.service.UserProfile ;
-	import org.exoplatform.forum.ForumFormatUtils ;
+	import org.exoplatform.forum.ForumUtils ;
 %>
 <div class="UIViewPrivateMessageForm UIViewMemberProfile">
 <% uiform.begin() %>

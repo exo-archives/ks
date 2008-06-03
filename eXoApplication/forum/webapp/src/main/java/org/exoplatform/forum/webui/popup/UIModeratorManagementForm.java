@@ -22,8 +22,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -238,7 +238,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		String []timeZone1 = getLabel(FIELD_TIMEZONE).split("/") ;
 		list = new ArrayList<SelectItemOption<String>>() ;
 		for(String string : timeZone1) {
-			list.add(new SelectItemOption<String>(string, ForumFormatUtils.getTimeZoneNumberInString(string))) ;
+			list.add(new SelectItemOption<String>(string, ForumUtils.getTimeZoneNumberInString(string))) ;
 		}
 		UIFormSelectBox timeZone = new UIFormSelectBox(FIELD_TIMEZONE_SELECTBOX, FIELD_TIMEZONE_SELECTBOX, list) ;
 		double timeZoneOld = -userProfile.getTimeZone() ;
@@ -258,7 +258,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		String []format = new String[] {"M-d-yyyy", "M-d-yy", "MM-dd-yy", "MM-dd-yyyy","yyyy-MM-dd", "yy-MM-dd", "dd-MM-yyyy", "dd-MM-yy",
 				"M/d/yyyy", "M/d/yy", "MM/dd/yy", "MM/dd/yyyy","yyyy/MM/dd", "yy/MM/dd", "dd/MM/yyyy", "dd/MM/yy"} ;
 		for (String frm : format) {
-			list.add(new SelectItemOption<String>((frm.toLowerCase() +" ("  + ForumFormatUtils.getFormatDate(frm, date)+")"), frm)) ;
+			list.add(new SelectItemOption<String>((frm.toLowerCase() +" ("  + ForumUtils.getFormatDate(frm, date)+")"), frm)) ;
     }
 		UIFormSelectBox shortdateFormat = new UIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX, FIELD_SHORTDATEFORMAT_SELECTBOX, list) ;
 		shortdateFormat.setValue(userProfile.getShortDateFormat());
@@ -266,7 +266,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		format = new String[] {"DDD,MMMM dd,yyyy", "DDDD,MMMM dd,yyyy", "DDDD,dd MMMM,yyyy", "DDD,MMM dd,yyyy", "DDDD,MMM dd,yyyy", "DDDD,dd MMM,yyyy",
 				 								"MMMM dd,yyyy", "dd MMMM,yyyy","MMM dd,yyyy", "dd MMM,yyyy"} ;
 		for (String idFrm : format) {
-			list.add(new SelectItemOption<String>((idFrm.toLowerCase() +" (" + ForumFormatUtils.getFormatDate(idFrm, date)+")"), idFrm.replaceFirst(" ", "="))) ;
+			list.add(new SelectItemOption<String>((idFrm.toLowerCase() +" (" + ForumUtils.getFormatDate(idFrm, date)+")"), idFrm.replaceFirst(" ", "="))) ;
 		}
 		UIFormSelectBox longDateFormat = new UIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX, FIELD_LONGDATEFORMAT_SELECTBOX, list) ;
 		longDateFormat.setValue(userProfile.getLongDateFormat().replaceFirst(" ", "="));
@@ -301,12 +301,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		if(isBan){
 			until = userProfile.getBanUntil() ;
 			date.setTime(until) ;
-			list.add(new SelectItemOption<String>("Banned until: " + ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date) + " GMT+0", ("Until_" + until))) ;
+			list.add(new SelectItemOption<String>("Banned until: " + ForumUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date) + " GMT+0", ("Until_" + until))) ;
 		}
 		date = getInstanceTempCalendar();
 		until = date.getTime() + oneDate;
 		date.setTime(until);
-		list.add(new SelectItemOption<String>("1 Day ("+ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date)+" GMT+0)", "Until_" + until)) ;
+		list.add(new SelectItemOption<String>("1 Day ("+ForumUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date)+" GMT+0)", "Until_" + until)) ;
     while(true) {
 			if(i == 8 && dv.equals("Days")) i = 10;
 			if(i == 11) {i = 2; dv = "Weeks";}
@@ -319,7 +319,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			if(dv.equals("Weeks")){ date = getInstanceTempCalendar();until = date.getTime() + i*oneDate*7; date.setTime(until);}
 			if(dv.equals("Month")||dv.equals("Months")){ date = getInstanceTempCalendar(); date.setMonth(date.getMonth() + i) ; until = date.getTime();}
 			if(dv.equals("Years")||dv.equals("Year")){ date = getInstanceTempCalendar(); date.setYear(date.getYear() + i) ; until = date.getTime();}
-			list.add(new SelectItemOption<String>(i+" "+dv+" ("+ForumFormatUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date)+" GMT+0)", ("Until_" + until))) ;
+			list.add(new SelectItemOption<String>(i+" "+dv+" ("+ForumUtils.getFormatDate(userProfile.getShortDateFormat()+ " hh:mm a", date)+" GMT+0)", ("Until_" + until))) ;
       ++i;
 		}
 		UIFormSelectBox banUntil = new UIFormSelectBox(FIELD_BANUNTIL_SELECTBOX,FIELD_BANUNTIL_SELECTBOX, list) ;
@@ -330,11 +330,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		UIFormStringInput banCounter = new UIFormStringInput(FIELD_BANCOUNTER_INPUT, FIELD_BANCOUNTER_INPUT, null) ;
 		banCounter.setValue(userProfile.getBanCounter() + "");
 		UIFormTextAreaInput banReasonSummary = new UIFormTextAreaInput(FIELD_BANREASONSUMMARY_MULTIVALUE, FIELD_BANREASONSUMMARY_MULTIVALUE, null);
-		banReasonSummary.setValue(ForumFormatUtils.unSplitForForum(userProfile.getBanReasonSummary()));
+		banReasonSummary.setValue(ForumUtils.unSplitForForum(userProfile.getBanReasonSummary()));
 		UIFormStringInput createdDateBan = new UIFormStringInput(FIELD_CREATEDDATEBAN_INPUT, FIELD_CREATEDDATEBAN_INPUT, null) ;
 		if(isBan) {
 			banReason.setValue(userProfile.getBanReason());
-			createdDateBan.setValue(ForumFormatUtils.getFormatDate("MM/dd/yyyy, hh:mm a",userProfile.getCreatedDateBan()));
+			createdDateBan.setValue(ForumUtils.getFormatDate("MM/dd/yyyy, hh:mm a",userProfile.getCreatedDateBan()));
 		} else {
 			banReason.setEnable(true);
 		}
@@ -391,7 +391,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	}
 	
 	private Date getInstanceTempCalendar() {
-		return ForumFormatUtils.getInstanceTempCalendar().getTime() ;
+		return ForumUtils.getInstanceTempCalendar().getTime() ;
 	}
 	
 	private void setForumLinks() throws Exception {
@@ -527,8 +527,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	date.setTime(banUntil) ;
       StringBuffer stringBuffer = new StringBuffer();
       stringBuffer.append("Ban Reason: ").append(banReason).append(" From Date: ") 
-          .append(ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getInstanceTempCalendar())) 
-          .append(" GMT+0 To Date: ").append(ForumFormatUtils.getFormatDate("MM-dd-yyyy hh:mm a", date)).append(" GMT+0") ;
+          .append(ForumUtils.getFormatDate("MM-dd-yyyy hh:mm a", uiForm.getInstanceTempCalendar())) 
+          .append(" GMT+0 To Date: ").append(ForumUtils.getFormatDate("MM-dd-yyyy hh:mm a", date)).append(" GMT+0") ;
       if(isBanned) {
       	if(banReasonSummaries != null && banReasonSummaries.length > 0){
           if(wasBanned){

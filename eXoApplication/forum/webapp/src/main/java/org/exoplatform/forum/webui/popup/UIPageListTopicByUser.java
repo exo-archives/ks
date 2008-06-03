@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -97,7 +97,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	@SuppressWarnings("unused")
 	private String[] getStarNumber(Topic topic) throws Exception {
 		double voteRating = topic.getVoteRating() ;
-		return ForumFormatUtils.getStarNumber(voteRating) ;
+		return ForumUtils.getStarNumber(voteRating) ;
 	}
 	
 	@SuppressWarnings("unused")
@@ -134,7 +134,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	      String forumId = id[i-2] ;
 	      //id[i-1] ; 
 	      Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2]) ;
-	      forumPortlet.updateIsRendered(2);
+	      forumPortlet.updateIsRendered(ForumUtils.FORUM);
 	      UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 	      UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 	      uiForumContainer.setIsRenderChild(false) ;

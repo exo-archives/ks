@@ -21,10 +21,9 @@ import java.util.List;
 
 import org.exoplatform.contact.service.Contact;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -122,7 +121,7 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
           values_.add(string) ;
           value = value + "," +string;
         }
-				isEmail = ForumFormatUtils.isValidEmailAddresses(value) ;
+				isEmail = ForumUtils.isValidEmailAddresses(value) ;
 				if(isEmail) {
 				} else {
 					String[] args = new String[] { "" } ;

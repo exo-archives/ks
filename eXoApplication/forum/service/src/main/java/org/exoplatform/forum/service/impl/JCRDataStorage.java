@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -90,7 +89,6 @@ public class JCRDataStorage{
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}
-		
 	}
 	
 	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
@@ -116,7 +114,6 @@ public class JCRDataStorage{
 			return userAdministration.addNode(Utils.USER_PROFILE, Utils.NT_UNSTRUCTURED) ;
 		}
 	}
-	
 	
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
@@ -214,8 +211,6 @@ public class JCRDataStorage{
 		catNode.setProperty("exo:modifiedBy", category.getModifiedBy()) ;
 		catNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
 		catNode.setProperty("exo:userPrivate", category.getUserPrivate()) ;
-		
-		//forumHomeNode.save() ;
 		forumHomeNode.getSession().save() ;		
 	}
 	
@@ -817,7 +812,6 @@ public class JCRDataStorage{
 					userProfileNode.getSession().save() ;
 				}
 			} catch (PathNotFoundException e) {
-				// TODO: handle exception
 			}
 			return pagelist ;
 		}catch (Exception e) {
@@ -1060,7 +1054,6 @@ public class JCRDataStorage{
 			try {
 				forumNode = categoryNode.getNode(forumId) ;
 				try {
-					// TODO: comment
 					Node topicNode = forumNode.getNode(topicId) ;
 					JCRPageList pagelist ;
 					StringBuffer stringBuffer = new StringBuffer() ;
@@ -1116,24 +1109,23 @@ public class JCRDataStorage{
 	
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception {
 		try {
-		Node forumHomeNode = getForumHomeNode(sProvider) ;
-		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
-		String pathQuery = "/jcr:root" + forumHomeNode.getPath() + "//element(*,exo:post)[@exo:owner='"+userName+"']";
-		Query query = qm.createQuery(pathQuery , Query.XPATH) ;
-		QueryResult result = query.execute() ;
-		NodeIterator iter = result.getNodes(); 
-		JCRPageList pagelist = new ForumPageList(forumHomeNode,iter, 10, pathQuery, true) ;
-		Node userProfileNode = getUserProfileNode(sProvider) ;
-		try {
-			Node userNode = userProfileNode.getNode(userName) ;
-			if(userNode.hasProperty("exo:totalPost")) {
-				userNode.setProperty("exo:totalPost", pagelist.getAvailable());
-				userProfileNode.getSession().save() ;
+			Node forumHomeNode = getForumHomeNode(sProvider) ;
+			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+			String pathQuery = "/jcr:root" + forumHomeNode.getPath() + "//element(*,exo:post)[@exo:owner='"+userName+"']";
+			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes(); 
+			JCRPageList pagelist = new ForumPageList(forumHomeNode,iter, 10, pathQuery, true) ;
+			Node userProfileNode = getUserProfileNode(sProvider) ;
+			try {
+				Node userNode = userProfileNode.getNode(userName) ;
+				if(userNode.hasProperty("exo:totalPost")) {
+					userNode.setProperty("exo:totalPost", pagelist.getAvailable());
+					userProfileNode.getSession().save() ;
+				}
+			} catch (PathNotFoundException e) {
 			}
-		} catch (PathNotFoundException e) {
-			// TODO: handle exception
-		}
-		return pagelist ;
+			return pagelist ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
 			return null ;
@@ -1434,8 +1426,6 @@ public class JCRDataStorage{
 				if(postCount > 0) postCount = postCount - 1;
 				else postCount = 0;
 				forumStatistic.setProperty("exo:postCount", postCount) ;
-
-				//forumHomeNode.save() ;
 				forumHomeNode.getSession().save() ;
 				return post;
 			}catch (PathNotFoundException e) {
@@ -1575,7 +1565,6 @@ public class JCRDataStorage{
 					pollNode.setProperty("exo:isClosed", poll.getIsClosed()) ;
 					pollNode.setProperty("exo:isAgainVote", poll.getIsAgainVote()) ;
 				}
-				//forumHomeNode.save() ;
 				forumHomeNode.getSession().save() ;
 			}catch (PathNotFoundException e) {
 			}
@@ -2024,10 +2013,9 @@ public class JCRDataStorage{
 		}
 		if(isNew) userProfileNode.getSession().save() ;
 	}
-
-	public List<ForumPrivateMessage> getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
+	
+	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
 		Node userProfileNode = getUserProfileNode(sProvider) ;
-		List<ForumPrivateMessage>messages = new ArrayList<ForumPrivateMessage>() ;
 		try {
 			Node profileNode = userProfileNode.getNode(userName) ;
 			QueryManager qm = userProfileNode.getSession().getWorkspace().getQueryManager() ;
@@ -2035,23 +2023,11 @@ public class JCRDataStorage{
 			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes(); 
-			ForumPrivateMessage message;
-			while (iter.hasNext()) {
-				Node messageNode = iter.nextNode() ;
-				message = new ForumPrivateMessage() ;
-				message.setId(messageNode.getName()) ;
-				message.setFrom(messageNode.getProperty("exo:from").getString()) ;
-				message.setSendTo(messageNode.getProperty("exo:sendTo").getString()) ;
-				message.setName(messageNode.getProperty("exo:name").getString()) ;
-				message.setMessage(messageNode.getProperty("exo:message").getString()) ;
-				message.setReceivedDate(messageNode.getProperty("exo:receivedDate").getDate().getTime()) ;
-				message.setIsUnread(messageNode.getProperty("exo:isUnread").getBoolean()) ;
-				message.setType(messageNode.getProperty("exo:type").getString()) ;
-				messages.add(message) ;
-			}
+			JCRPageList pagelist = new ForumPageList(profileNode, iter, 10, pathQuery, true) ;
+			return pagelist ;
 		}catch (PathNotFoundException e) {
 		}
-		return messages ;
+		return null ;
 	}
 
 	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
@@ -2229,14 +2205,11 @@ public class JCRDataStorage{
 	
 	@SuppressWarnings("deprecation")
 	private Calendar getGreenwichMeanTime() {
-		Date date = new Date() ;
-		double hostZone = date.getTimezoneOffset() ;
-		date.setTime(date.getTime() + (int)(hostZone*60000));
-		TimeZone timeZone2 = TimeZone.getTimeZone("GMT+00:00") ;
-		Calendar calendar	= GregorianCalendar.getInstance(timeZone2) ;
-		calendar.setTime(date);
-		calendar.setTimeZone(timeZone2);
-		return calendar ;
+		Calendar  calendar = GregorianCalendar.getInstance() ;
+    calendar.setLenient(false) ;
+    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
+    return  calendar;
 	}
 	
 	public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception {
@@ -2248,30 +2221,30 @@ public class JCRDataStorage{
 				post.setId(myNode.getName()) ;
 				post.setPath(path);
 				post.setName(myNode.getProperty("exo:name").getString()) ;
-				object = (Object)post ;
+				object = post ;
 			}else if(path.indexOf(Utils.TOPIC) > 0) {
 				Topic topic = new Topic() ;
 				topic.setId(myNode.getName()) ;
 				topic.setPath(path);
 				topic.setTopicName(myNode.getProperty("exo:name").getString()) ;
-				object = (Object)topic;
+				object = topic;
 			}else if(path.indexOf(Utils.FORUM) > 0) {
 				Forum forum = new Forum() ;
 				forum.setId(myNode.getName()) ;
 				forum.setPath(path);
 				forum.setForumName(myNode.getProperty("exo:name").getString());
-				object = (Object)forum ;
+				object = forum ;
 			}else if(path.indexOf(Utils.CATEGORY) > 0) {
 				Category category = new Category() ;
 				category.setId(myNode.getName()) ;
 				category.setPath(path);
 				category.setCategoryName(myNode.getProperty("exo:name").getString()) ;
-				object = (Object)category ;
+				object = category ;
 			} else if(path.indexOf(Utils.TAG) > 0){
 				Tag tag = new Tag() ;
 				tag.setId(myNode.getName()) ;
 				tag.setName(myNode.getProperty("exo:name").getString()) ;
-				object = (Object)tag ;
+				object = tag ;
 			} else return null ;
 			return object;
 		} catch (RepositoryException e) {

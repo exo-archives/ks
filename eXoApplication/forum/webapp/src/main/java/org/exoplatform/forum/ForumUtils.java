@@ -36,9 +36,19 @@ import javax.mail.internet.InternetAddress;
  * Dec 21, 2007 5:35:54 PM 
  */
 
-public class ForumFormatUtils {
+public class ForumUtils {
 	public static final String FIELD_EXOFORUM_LABEL = "eXoForum".intern() ;
 	public static final String FIELD_SEARCHFORUM_LABEL = "SearchForum".intern() ;
+	
+	public static final String CATEGORIES = "Category".intern() ;
+	public static final String CATEGORY = "Category".intern() ;
+	public static final String FORUM = "Forum".intern() ;
+	public static final String THREAD = "Thread".intern() ;
+	public static final String TAG = "Tag".intern() ;
+	public static final String POST = "Post".intern() ;
+	public static final String POLL = "Poll".intern() ;
+	
+	
 	@SuppressWarnings("deprecation")
   public static String getFormatDate(String format, Date myDate) {
 		/*h,hh,H, m, mm, D, DD, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy

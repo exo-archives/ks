@@ -23,8 +23,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
@@ -126,12 +126,12 @@ public class UICategoryInfo extends UIContainer	{
 		if(mostUserOnlines != null && mostUserOnlines.length() > 0) {
 			mumberUserOnline = Long.parseLong(mostUserOnlines.split(",")[0]) ;
 			if(this.mostUserOnline_ > mumberUserOnline) {
-				mostUserOnlines = this.mostUserOnline_ + ", at " + ForumFormatUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date);
+				mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date);
 				forumStatistic.setMostUsersOnline(mostUserOnlines) ;
 				isSave = true ;
 			}
 		} else {
-			mostUserOnlines = this.mostUserOnline_ + ", at " + ForumFormatUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date);
+			mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date);
 			forumStatistic.setMostUsersOnline(mostUserOnlines) ;
 			isSave = true ;
 		} 

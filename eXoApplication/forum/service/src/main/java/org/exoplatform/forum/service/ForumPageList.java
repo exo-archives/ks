@@ -79,6 +79,8 @@ public class ForumPageList extends JCRPageList {
 					currentListPage_.add(getTopic(currentNode)) ;
 				}else if(currentNode.isNodeType("exo:userProfile")) {
 					currentListPage_.add(getUserProfile(currentNode)) ;
+				}else if(currentNode.isNodeType("exo:privateMessage")) {
+					currentListPage_.add(getPrivateMessage(currentNode)) ;
 				}
 			}else {
 				break ;
@@ -235,6 +237,19 @@ public class ForumPageList extends JCRPageList {
 		if(userProfileNode.hasProperty("exo:banReasonSummary"))userProfile.setBanReasonSummary(ValuesToStrings(userProfileNode.getProperty("exo:banReasonSummary").getValues()));
 		if(userProfileNode.hasProperty("exo:createdDateBan"))userProfile.setCreatedDateBan(userProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
 		return userProfile;
+	}
+	
+	private ForumPrivateMessage getPrivateMessage(Node messageNode) throws Exception {
+		ForumPrivateMessage message = new ForumPrivateMessage() ;
+		message.setId(messageNode.getName()) ;
+		message.setFrom(messageNode.getProperty("exo:from").getString()) ;
+		message.setSendTo(messageNode.getProperty("exo:sendTo").getString()) ;
+		message.setName(messageNode.getProperty("exo:name").getString()) ;
+		message.setMessage(messageNode.getProperty("exo:message").getString()) ;
+		message.setReceivedDate(messageNode.getProperty("exo:receivedDate").getDate().getTime()) ;
+		message.setIsUnread(messageNode.getProperty("exo:isUnread").getBoolean()) ;
+		message.setType(messageNode.getProperty("exo:type").getString()) ;
+		return message;
 	}
 	
 	private String [] ValuesToStrings(Value[] Val) throws Exception {

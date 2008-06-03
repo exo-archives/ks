@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumPathNotFoundException;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
@@ -88,7 +89,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
     		if(path.indexOf(Utils.TOPIC) > 0) {
       		String []id = path.split("/") ;
       		int length = id.length ;
-      		forumPortlet.updateIsRendered(2);
+      		forumPortlet.updateIsRendered(ForumUtils.FORUM);
     			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
     			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
     			uiForumContainer.setIsRenderChild(false) ;
@@ -113,7 +114,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
     				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
     				return ;
     			}
-    			forumPortlet.updateIsRendered(2);
+    			forumPortlet.updateIsRendered(ForumUtils.FORUM);
     			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
     			uiForumContainer.setIsRenderChild(true) ;
     			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
@@ -131,8 +132,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
       		UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
   				categoryContainer.getChild(UICategory.class).updateByBreadcumbs(categoryId) ;
   				categoryContainer.updateIsRender(false) ;
-  				forumPortlet.updateIsRendered(1);
-  				
+  				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
   			} else {
   				return;
   			}

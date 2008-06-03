@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
-	import org.exoplatform.forum.ForumFormatUtils ;
+	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumTransformHTML;
   UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
@@ -40,7 +40,7 @@
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
 									String isActive = "" + topic.getIsActive();
-									String lastPostDate = ForumFormatUtils.getFormatDate(formatDate, topic.getCreatedDate());
+									String lastPostDate = ForumUtils.getFormatDate(formatDate, topic.getCreatedDate());
 									String titlePost = ForumTransformHTML.getStringCleanHtmlCode(topic.getDescription());
 									if(titlePost.length() > 100) {
 										titlePost = titlePost.substring(0, 99) + "...";

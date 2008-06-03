@@ -29,8 +29,8 @@ import org.exoplatform.contact.service.Contact;
 import org.exoplatform.contact.service.ContactAttachment;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -147,6 +147,10 @@ public class UITopicDetail extends UIForm {
 	private boolean isModeratePost = false ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, Contact> mapContact = new HashMap<String, Contact>();
+//replace when portal fix bug show image
+  private boolean isRefreshed = true ;
+  public void setRefreshed(boolean b) { isRefreshed = b ; }
+  public boolean isRefreshed() { return isRefreshed ; }
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
 		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
@@ -202,7 +206,7 @@ public class UITopicDetail extends UIForm {
 				if(this.userProfile != null) {
 					String []topicsRead = this.userProfile.getReadTopic() ;
 					if(topicsRead != null && topicsRead.length > 0) {
-						if(!ForumFormatUtils.isStringInStrings(topicsRead, this.topicId)) {
+						if(!ForumUtils.isStringInStrings(topicsRead, this.topicId)) {
 							isGetService = true ;
 						} 
 					} else isGetService = true ;
@@ -236,7 +240,7 @@ public class UITopicDetail extends UIForm {
 				if(this.userProfile != null) {
 					String []topicsRead = this.userProfile.getReadTopic() ;
 					if(topicsRead != null && topicsRead.length > 0) {
-						if(!ForumFormatUtils.isStringInStrings(topicsRead, this.topicId)) {
+						if(!ForumUtils.isStringInStrings(topicsRead, this.topicId)) {
 							isGetService = true ;
 						} 
 					} else isGetService = true ;
@@ -572,7 +576,7 @@ public class UITopicDetail extends UIForm {
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0 && path != null) {
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateIsRendered(1) ;
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				UICategories categories = categoryContainer.getChild(UICategories.class);
@@ -581,7 +585,7 @@ public class UITopicDetail extends UIForm {
 				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,post", path);
 				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
 				listSeachEvent.setListSeachEvent(list) ;
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath("ForumSeach") ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 				formStringInput.setValue("") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
@@ -1093,22 +1097,19 @@ public class UITopicDetail extends UIForm {
 				String stringKey = forumAdministration.getCensoredKeyword();
 				if(stringKey != null && stringKey.length() > 0) {
 					stringKey = stringKey.toLowerCase() ;
-					String []censoredKeyword = ForumFormatUtils.splitForForum(stringKey) ;
+					String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
 					checksms = checksms.toLowerCase().trim();
 					for (String string : censoredKeyword) {
 			      if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
 		      }
 				}
 				StringBuffer buffer = new StringBuffer();
-				int t = 0;
 				for (int j = 0; j < message.length(); j++) {
 					char c = message.charAt(j); 
 					if((int)c == 9){
-						buffer.append("&nbsp;&nbsp;&nbsp; ") ;
+						buffer.append("&nbsp; &nbsp; ") ;
 					} else if((int)c == 10){
-						if(t%2 == 0)buffer.append("<p>") ;
-						else buffer.append("</p>") ;
-						++t;
+						buffer.append("<br/>") ;
 					}	else if((int)c == 60){
 						buffer.append("&lt;") ;
 					} else if((int)c == 62){
@@ -1119,7 +1120,6 @@ public class UITopicDetail extends UIForm {
 						buffer.append(c) ;
 					}
 	      }
-				if(t%2 == 1)buffer.append("</p>") ;
 				String userName = topicDetail.userProfile.getUserId() ;
 				PortletRequestImp request = event.getRequestContext().getRequest();
 				String remoteAddr = request.getRemoteAddr();
@@ -1168,7 +1168,7 @@ public class UITopicDetail extends UIForm {
 				for (int j = 0; j < message.length(); j++) {
 					char c = message.charAt(j); 
 					if((int)c == 9){
-						buffer.append("&nbsp;&nbsp;&nbsp; ") ;
+						buffer.append("&nbsp; &nbsp; ") ;
 					} else if((int)c == 10){
 						buffer.append("<br/>") ;
 					}	else if((int)c == 60){

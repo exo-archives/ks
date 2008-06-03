@@ -1,6 +1,6 @@
 <%  
 	import org.exoplatform.forum.service.Post ;
-	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 %>
@@ -11,7 +11,7 @@
 		 String messager = ForumTransformHTML.convertCodeHTML(post.getMessage());
 		 String classIcon = post.getIcon() ;
 		 UserProfile userProfile = uicomponent.getUserProfile();
-		 String postCreatedDate = ForumFormatUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),post.getCreatedDate());	
+		 String postCreatedDate = ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),post.getCreatedDate());	
 		 List attachments = post.getAttachments() ;
 	%>
 	<div class="ViewContainer">
@@ -34,7 +34,7 @@
 							<% for(attachment in attachments) {
 							 		 String fileName = attachment.getName() ;
 							 		 long sizeNumber = attachment.getSize() ;
-							 		 String size =ForumFormatUtils.getSizeFile(sizeNumber) ;
+							 		 String size =ForumUtils.getSizeFile(sizeNumber) ;
 							%>
 								<div class="AttachmentBox">
 									<div class="AttachmentIcon WordIcon"><span/></div>
@@ -59,7 +59,7 @@
 								 		 String fileName = attachment.getName() ;
 								 		 String unit = "Bytes" ;
 								 		 double sizeNumber = attachment.getSize() ;
-								 		 String size = ForumFormatUtils.getSizeFile(sizeNumber);
+								 		 String size = ForumUtils.getSizeFile(sizeNumber);
 								 		 String typeFile = attachment.mimeType ;
 								%>
 										<div class="AttachmentBox">

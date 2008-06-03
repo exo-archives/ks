@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.TreeMap;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
@@ -162,7 +162,7 @@ public class UITopicsTag extends UIForm {
 	@SuppressWarnings("unused")
 	private String[] getStarNumber(Topic topic) throws Exception {
 		double voteRating = topic.getVoteRating() ;
-		return ForumFormatUtils.getStarNumber(voteRating) ;
+		return ForumUtils.getStarNumber(voteRating) ;
 	}
 	
 	@SuppressWarnings("unused")
@@ -203,7 +203,7 @@ public class UITopicsTag extends UIForm {
 			Topic topic = uiTopicsTag.getTopic(id[0]);
 			String []temp = topic.getPath().split("/") ;
 			UIForumPortlet forumPortlet = uiTopicsTag.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.updateIsRendered(2);
+			forumPortlet.updateIsRendered(ForumUtils.FORUM);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 			uiForumContainer.setIsRenderChild(false) ;
@@ -280,7 +280,7 @@ public class UITopicsTag extends UIForm {
 			UITopicsTag topicsTag = event.getSource() ;
 			UIForumPortlet forumPortlet = topicsTag.getParent() ;
 			topicsTag.forumService.removeTag(ForumSessionUtils.getSystemProvider(), topicsTag.tagId) ;
-			forumPortlet.updateIsRendered(1) ;
+			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 			categoryContainer.updateIsRender(true) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;

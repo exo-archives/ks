@@ -3,7 +3,7 @@
 	import org.exoplatform.forum.webui.UITopicsTag ;
 	import org.exoplatform.forum.service.Tag ;
 	import org.exoplatform.forum.webui.UIForumPageIterator ;
-	import org.exoplatform.forum.ForumFormatUtils ;
+	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.service.UserProfile ;
 %>
 <% uiform.begin() %>
@@ -138,7 +138,7 @@
 									String postNewBy = topic.getLastPostBy() ;
 									Date postDate = topic.getLastPostDate();
 									postDate.setTime(postDate.getTime() - setTime);
-									String lastPostDate = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);	
+									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);	
 									String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
 									if(titlePost.length() > 100) {
 										titlePost = titlePost.substring(0, 99) + "...";

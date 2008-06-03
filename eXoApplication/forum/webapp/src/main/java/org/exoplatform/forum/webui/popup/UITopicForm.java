@@ -23,9 +23,9 @@ import java.util.List;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -216,7 +216,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			fileUpload.setActionListener("") ;
 			fileUpload.setActionType(ActionData.TYPE_ICON) ;
 			fileUpload.setCssIconClass("AttachmentIcon ZipFileIcon") ;
-			String size = ForumFormatUtils.getSizeFile((double)attachdata.getSize()) ;
+			String size = ForumUtils.getSizeFile((double)attachdata.getSize()) ;
 			fileUpload.setActionName(attachdata.getName() + "("+size+")") ;
 			fileUpload.setShowLabel(true) ;
 			uploadedFiles.add(fileUpload) ;
@@ -248,11 +248,11 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	}
 
 	private String[] splitForForum (String str) throws Exception {
-		return ForumFormatUtils.splitForForum(str);
+		return ForumUtils.splitForForum(str);
 	}
 	
 	private String unSplitForForum (String[] str) throws Exception {
-		return ForumFormatUtils.unSplitForForum(str) ;
+		return ForumUtils.unSplitForForum(str) ;
 	}
 	
 	public void setUpdateTopic(Topic topic, boolean isUpdate) throws Exception {
@@ -359,7 +359,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String stringKey = forumAdministration.getCensoredKeyword() ;
 			if(stringKey != null && stringKey.length() > 0) {
 				stringKey = stringKey.toLowerCase() ;
-				String []censoredKeyword = ForumFormatUtils.splitForForum(stringKey) ;
+				String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
 				checksms = checksms.toLowerCase();
 				for (String string : censoredKeyword) {
 		      if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
@@ -436,12 +436,12 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
           }
           if(canPosts.length > 0) {
             for(String string : canPosts) {
-              if(string != null && string.trim().length() > 0 && !ForumFormatUtils.isStringInStrings(canViews, string)) {
+              if(string != null && string.trim().length() > 0 && !ForumUtils.isStringInStrings(canViews, string)) {
                 if(output.trim().length() > 0) output += "," ;
                 output += string ;
               }
             }
-            canViews = ForumFormatUtils.splitForForum(output) ;
+            canViews = ForumUtils.splitForForum(output) ;
           } else {
           	canViews = canPosts ;
           }
@@ -471,7 +471,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
           try {
             forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, true, false);
           } catch (PathNotFoundException e) {
-    				forumPortlet.updateIsRendered(1);
+    				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
     				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
     				categoryContainer.updateIsRender(true) ;
     				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ; 
@@ -576,7 +576,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     String values = stringInput.getValue() ;
     boolean canAdd = true ;
     if(values != null && values.trim().length() > 0) {
-      if(!ForumFormatUtils.isStringInStrings(values.split(","), value)){
+      if(!ForumUtils.isStringInStrings(values.split(","), value)){
         if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
         else values = values.trim() + ",";
       } else {

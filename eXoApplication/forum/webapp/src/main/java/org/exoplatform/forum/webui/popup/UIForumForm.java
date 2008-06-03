@@ -21,8 +21,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumFormatUtils;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -197,11 +197,11 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		return false ;
 	}
 	private String[] splitForForum (String str) throws Exception {
-		return ForumFormatUtils.splitForForum(str);
+		return ForumUtils.splitForForum(str);
 	}
 	
 	private String unSplitForForum (String[] str) throws Exception {
-		return ForumFormatUtils.unSplitForForum(str) ;
+		return ForumUtils.unSplitForForum(str) ;
 	}
 	
 	public void setForumValue(Forum forum, boolean isUpdate) throws Exception {
@@ -253,7 +253,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	    String values = fieldInput.getValue() ;
 	    boolean canAdd = true ;
 	    if(values != null && values.trim().length() > 0) {
-	      if(!ForumFormatUtils.isStringInStrings(values.split(","), value)){
+	      if(!ForumUtils.isStringInStrings(values.split(","), value)){
 	        if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
 	        else values = values.trim() + ",";
 	      } else {
@@ -281,12 +281,12 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
             }
           }
           for(String string : input) {
-            if(string != null && string.trim().length() > 0 && !ForumFormatUtils.isStringInStrings(output, string)) {
+            if(string != null && string.trim().length() > 0 && !ForumUtils.isStringInStrings(output, string)) {
               if(result.trim().length() > 0) result += "," ;
               result += string ;
             }
           }
-          output = ForumFormatUtils.splitForForum(result) ;
+          output = ForumUtils.splitForForum(result) ;
         } catch (Exception e) {
           e.printStackTrace() ;
         }

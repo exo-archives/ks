@@ -5,7 +5,7 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator ;
 	import org.exoplatform.forum.service.JCRPageList ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
-	import org.exoplatform.forum.ForumFormatUtils ;
+	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumSessionUtils; 
 	import org.exoplatform.forum.service.UserProfile ;
 	import java.util.GregorianCalendar;
@@ -395,7 +395,7 @@
 										String postNewBy = topic.getLastPostBy() ;
 										Date postDate = topic.getLastPostDate() ;
 										postDate.setTime(postDate.getTime() - setTime);
-										String lastPostDate = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
+										String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
 										String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
 										if(titlePost.length() > 100) {
 											titlePost = titlePost.substring(0, 99) + "...";
@@ -406,7 +406,7 @@
 										String postCount = String.valueOf(topic.getPostCount());
 										String postView = String.valueOf(topic.getViewCount());
 										String number = "1";
-										boolean isReadTopic = ForumFormatUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
+										boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
 										String title = "TitleBold";
 										String newPost = "New";
 										String hot = ""; 

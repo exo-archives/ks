@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.service.Post ;
 	import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.service.UserProfile ;
-	import org.exoplatform.forum.ForumFormatUtils;
+	import org.exoplatform.forum.ForumUtils;
 %>
 <%  
 	Topic topic = uicomponent.getTopic() ;
@@ -46,7 +46,7 @@
 		  	for(post in posts) {
 			  	Date createdPostDate = post.getCreatedDate() ;
 			  	createdPostDate.setTime(createdPostDate.getTime() - setTime);
-					String createdDate = ForumFormatUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
+					String createdDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
 			  	String classIconPost = post.getIcon() ;
 					if(classIconPost.length() <= 0) 
 						classIconPost = "NormalTopicIcon" ;
