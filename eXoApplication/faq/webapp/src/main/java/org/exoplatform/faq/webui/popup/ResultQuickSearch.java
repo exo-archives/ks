@@ -74,17 +74,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 			if(id.indexOf("ategory")> 0){
 				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-				Category cate = faqService.getCategoryById(id, FAQUtils.getSystemProvider()) ;
-				String[] moderator = cate.getModeratorsCategory() ;
-				String currentUser = FAQUtils.getCurrentUser() ;
-				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-				if(Arrays.asList(moderator).contains(currentUser) || serviceUtils.isAdmin(currentUser)) {
-					uiQuestions.setCategories(id) ;
-					uiQuestions.setListQuestion() ;
-				} else {
-					uiQuestions.setCategories(id) ;
-					uiQuestions.setList(id) ;
-				}
+				uiQuestions.setCategories(id) ;
+				uiQuestions.setListQuestion() ;
 		    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 		    breadcumbs.setUpdataPath(null) ;
         String oldPath = "" ;

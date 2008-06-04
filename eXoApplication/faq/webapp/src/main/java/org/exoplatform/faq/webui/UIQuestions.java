@@ -305,11 +305,6 @@ public class UIQuestions extends UIContainer {
     return this.listQuestion_ ;
   }
   
-  public void setList(String category) throws Exception {
-    SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-    listQuestion_ = faqService.getQuestionsByCatetory(category, sessionProvider).getAll() ;
-  }
-  
   private boolean getCanEditQuestion() {
     return this.canEditQuestion ;
   }

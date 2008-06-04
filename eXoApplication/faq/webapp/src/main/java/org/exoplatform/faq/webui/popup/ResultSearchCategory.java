@@ -72,17 +72,8 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
-			String[] moderator = cate.getModeratorsCategory() ;
-			String currentUser = FAQUtils.getCurrentUser() ;
-			FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-			if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
-				uiQuestions.setCategories(categoryId) ;
-				uiQuestions.setListQuestion() ;
-			} else {
-				uiQuestions.setCategories(categoryId) ;
-				uiQuestions.setList(categoryId) ;
-			}
+			uiQuestions.setCategories(categoryId) ;
+			uiQuestions.setListQuestion() ;
       UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
       breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;
