@@ -153,7 +153,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     initPage(false) ;
   }
   @SuppressWarnings("unused")
-  private String getQuestionId(){ 
+  public String getQuestionId(){ 
     return questionId_ ; 
   }
   

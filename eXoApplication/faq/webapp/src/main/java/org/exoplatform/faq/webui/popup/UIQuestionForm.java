@@ -216,6 +216,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     }
   }
   
+  public String getQuestionId() {
+    return questionId_ ;
+  }
+  
   public void setDefaultLanguage(String defaultLanguage) {
     this.defaultLanguage_ = defaultLanguage ;
   }

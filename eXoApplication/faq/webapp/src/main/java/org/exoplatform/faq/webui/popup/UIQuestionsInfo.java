@@ -195,6 +195,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   }
   
   static public class EditQuestionActionListener extends EventListener<UIQuestionsInfo> {
+    @SuppressWarnings("static-access")
     public void execute(Event<UIQuestionsInfo> event) throws Exception {
       UIQuestionsInfo questionsInfo = event.getSource() ;
       String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
@@ -225,6 +226,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   }
   
   static public class ResponseQuestionActionListener extends EventListener<UIQuestionsInfo> {
+    @SuppressWarnings("static-access")
     public void execute(Event<UIQuestionsInfo> event) throws Exception {
       UIQuestionsInfo questionsInfo = event.getSource() ;
       String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
@@ -265,6 +267,19 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         UIDeleteQuestion deleteQuestion = popupAction.activate(UIDeleteQuestion.class, 500) ;
         deleteQuestion.setQuestionId(question) ;
         deleteQuestion.setIsManagement(true) ;
+        UIQuestionManagerForm questionManagerForm = questionsInfo.getParent() ;
+        if(questionManagerForm.isEditQuestion) {
+          UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;
+          if(questionForm.getQuestionId().equals(questionId)) {
+            questionManagerForm.isEditQuestion = false ;
+          }
+        }
+        if(questionManagerForm.isResponseQuestion) {
+          UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
+          if(responseForm.getQuestionId().equals(questionId)) {
+            questionManagerForm.isResponseQuestion = false ;
+          }
+        }
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch(Exception e) {
         UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
