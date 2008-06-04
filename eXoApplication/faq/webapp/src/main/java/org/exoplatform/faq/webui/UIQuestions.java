@@ -186,8 +186,6 @@ public class UIQuestions extends UIContainer {
       categories_ = faqService.getSubCategories(null, FAQUtils.getSystemProvider()) ;
     } else {
       categories_ = faqService.getSubCategories(this.categoryId_, FAQUtils.getSystemProvider()) ;
-    }
-    if(categoryId_ != null && categoryId_.trim().length() > 0) {
       setIsModerators() ;
     }
   }

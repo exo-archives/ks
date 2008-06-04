@@ -52,7 +52,6 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   private boolean response_ = false ;
-  private boolean isManagerment_ = false ;
   private static int numberUpload = 0 ;
   private static final String FILE_UPLOAD = "FileUpload" ;
 
@@ -81,10 +80,6 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   public void setResponse(boolean response){ this.response_ = response ;}
   
   private boolean getResponse(){ return this.response_ ; }
-  
-  public void setIsManagerment(boolean isManagerment) {
-    this.isManagerment_ = isManagerment ;
-  }
   
   static public class AddActionListener extends EventListener<UIAttachMentForm> {
     public void execute(Event<UIAttachMentForm> event) throws Exception {

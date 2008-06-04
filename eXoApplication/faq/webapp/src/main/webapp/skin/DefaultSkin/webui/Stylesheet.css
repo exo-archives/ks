@@ -901,10 +901,6 @@ UIFAQPortlet .ResultQuickSearch {
 	display:none ;
 }
 
-.UIPrintPreview .FAQContainer .Question {
-	display:none ;
-}
-
 .UIFAQPortlet .UILanguageMenu {
   left: 4px ;
   top: 0px ;
