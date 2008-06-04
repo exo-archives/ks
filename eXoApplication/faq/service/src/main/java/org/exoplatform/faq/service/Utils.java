@@ -48,4 +48,20 @@ public class Utils {
       return name1.compareToIgnoreCase(name2) ;
     }
   }
+	
+	static public class DatetimeComparatorQuestion implements Comparator<Object> {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	Date date1 = ((Question) o1).getCreatedDate() ;
+      Date date2  = ((Question) o2).getCreatedDate() ;
+      return date1.compareTo(date2) ;
+    }
+  }
+	
+	static public class NameComparatorQuestion implements Comparator<Object> {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	String name1 = ((Question) o1).getQuestion() ;
+      String name2  = ((Question) o2).getQuestion() ;
+      return name1.compareToIgnoreCase(name2) ;
+    }
+  }
 }

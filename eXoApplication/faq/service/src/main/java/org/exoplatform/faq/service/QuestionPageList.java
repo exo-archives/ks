@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -39,11 +40,13 @@ public class QuestionPageList extends JCRPageList {
   private NodeIterator iter_ = null ;
   private boolean isQuery_ = false ;
   private String value_ ;
-  public QuestionPageList(NodeIterator iter, long pageSize, String value, boolean isQuery) throws Exception{
+  private String sortBy_= "postdate";
+  public QuestionPageList(NodeIterator iter, long pageSize, String value, boolean isQuery, String sort) throws Exception{
     super(pageSize) ;
     iter_ = iter ;
     value_ = value ;
     isQuery_ = isQuery ;
+    sortBy_= sort ;
     setAvailablePage(iter.getSize()) ;    
   }
   
@@ -159,7 +162,35 @@ public class QuestionPageList extends JCRPageList {
     }
     return questions; 
   }
-
+	
+	public List<Question> getAllSort() throws Exception { 
+    if(iter_ == null) {
+      Session session = getJCRSession() ;
+      if(isQuery_) {
+        QueryManager qm = session.getWorkspace().getQueryManager() ;
+        Query query = qm.createQuery(value_, Query.XPATH);
+        QueryResult result = query.execute();
+        iter_ = result.getNodes();
+      } else {
+        Node node = (Node)session.getItem(value_) ;
+        iter_ = node.getNodes() ;
+      }
+      session.logout() ;
+    }
+    List<Question> questions = new ArrayList<Question>();
+    while (iter_.hasNext()) {
+      Node questionNode = iter_.nextNode();
+      questions.add(getQuestion(questionNode));
+    }
+    if(sortBy_.equals("postdate")) {
+    	Collections.sort(questions, new Utils.DatetimeComparatorQuestion()) ;
+    }
+		if(sortBy_.equals("alphabet")) {
+			Collections.sort(questions, new Utils.NameComparatorQuestion()) ;
+		}
+    return questions; 
+  }
+	
   public void setList(List<Question> contacts) { }
   
   @SuppressWarnings("deprecation")

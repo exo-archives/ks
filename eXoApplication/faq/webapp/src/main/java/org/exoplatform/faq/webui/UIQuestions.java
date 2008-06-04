@@ -274,11 +274,6 @@ public class UIQuestions extends UIContainer {
     }
     return result ;
 	}
-  
-  public void update(Category category) throws Exception {
-  	categoryId_ = category.getId() ;
-//		this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId)) ;
-	}
 	
   public void setListQuestion() {
     isChangeLanguage = false;
@@ -287,7 +282,7 @@ public class UIQuestions extends UIContainer {
       if(!canEditQuestion) {
         this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
       } else {
-        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
+        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider).getAllSort() ;
       }
     } catch(Exception e) {
       e.printStackTrace() ;

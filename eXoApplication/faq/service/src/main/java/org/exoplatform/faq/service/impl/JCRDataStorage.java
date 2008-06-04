@@ -341,7 +341,7 @@ public class JCRDataStorage {
 //    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
     return pageList ;
   }
   
@@ -352,7 +352,7 @@ public class JCRDataStorage {
         + "//element(*,exo:faqQuestion)[@exo:responses=' ']").append("order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
     return pageList ;
   }
   
@@ -366,7 +366,7 @@ public class JCRDataStorage {
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
     return pageList ;
   }
   
@@ -378,14 +378,9 @@ public class JCRDataStorage {
     StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
         + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
         append("]");
-    if(sortBy.equals("postdate")) { 
-    	queryString.append("order by @exo:createdDate ascending") ; 
-    } else { 
-    	queryString.append("order by @exo:name ascending") ;
-    }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, sortBy) ;
     
     return pageList ;
   }
@@ -409,7 +404,7 @@ public class JCRDataStorage {
     }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
     return pageList ;
   }
   
