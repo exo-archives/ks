@@ -150,12 +150,16 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       if (to != null && to.indexOf(";") > -1) to = to.replace(';', ',') ;
       if (cc != null && cc.indexOf(";") > -1) cc = cc.replace(';', ',') ;
       if (bcc != null && bcc.indexOf(";") > -1) bcc = bcc.replace(';', ',') ;
-      if (FAQUtils.isFieldEmpty(to)) {
-        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.to-field-empty", null)) ;
+      if (FAQUtils.isFieldEmpty(from)) {
+        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.from-field-empty", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
-      } else if (FAQUtils.isFieldEmpty(from)) {
-      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.from-field-empty", null)) ;
+      } else if(!FAQUtils.isValidEmailAddresses(from)) {
+      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-from-field",null)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	return ;
+      } else if (FAQUtils.isFieldEmpty(to)) {
+      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.to-field-empty", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
       } else if (!FAQUtils.isValidEmailAddresses(to)) {
@@ -170,11 +174,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-bcc-field",null)) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       	return ;
-      }  else if(!FAQUtils.isValidEmailAddresses(from)) {
-      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-from-field",null)) ;
-      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      	return ;
-      } 
+      }  
       Message  message = new Message(); 
       message.setFrom(fullFrom) ;
       message.setMessageTo(to) ;
