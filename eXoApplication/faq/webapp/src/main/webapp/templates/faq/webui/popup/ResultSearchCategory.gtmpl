@@ -16,7 +16,7 @@
  											<tr>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.category"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.description"); %></th>
- 												<th><%= _ctx.appRes("ResultSearchCategory.title.created-date"); %>Created Date</th>
+ 												<th><%= _ctx.appRes("ResultSearchCategory.title.created-date"); %></th>
  											</tr>
  										</thead>
  										<tbody>

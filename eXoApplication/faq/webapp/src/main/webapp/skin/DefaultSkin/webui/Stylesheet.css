@@ -942,6 +942,7 @@ UIFAQPortlet .ResultQuickSearch {
 	height:17px;
 	width:17px;
 	margin: 0px 3px;
+	padding-top: 3px;
 }
 
 .UIPrintPreview .ResponseContent .AttachmentContent .LabelBox {
