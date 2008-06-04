@@ -7,7 +7,7 @@
 }
 
 .UIShowBookMarkForm .HorizontalLayout .UIFormInput{
-	border: solid 1px #F4F4F4;
+	border: solid 1px #b7b7b7;
 }
 
 .UIShowBookMarkForm .HorizontalLayout .TopContent{
@@ -50,7 +50,6 @@
 }
 
 .UIShowBookMarkForm .HorizontalLayout .TopContent .DeleteAction {
-	width: 100px;
 	text-align: right;
 }
 

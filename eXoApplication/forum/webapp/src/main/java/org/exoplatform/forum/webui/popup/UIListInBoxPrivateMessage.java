@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -42,7 +43,7 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/popup/UIListInBoxPrivateMessage.gtmpl",
 		events = {
 			@EventConfig(listeners = UIListInBoxPrivateMessage.ViewMessageActionListener.class),
-			@EventConfig(listeners = UIListInBoxPrivateMessage.DeleteMessageActionListener.class,confirm="SendPrivateMessage.msg.sendOK"),
+			@EventConfig(listeners = UIListInBoxPrivateMessage.DeleteMessageActionListener.class,confirm="UIPrivateMessageForm.confirm.Delete-message"),
 			@EventConfig(listeners = UIListInBoxPrivateMessage.ReplyMessageActionListener.class)
 		}
 )
@@ -51,8 +52,9 @@ public class UIListInBoxPrivateMessage extends UIContainer{
   private UserProfile userProfile = null  ;
   private List<ForumPrivateMessage> listInbox = null; 
   private String userName = "";
-  public UIListInBoxPrivateMessage() {
-	  // TODO Auto-generated constructor stub
+  private boolean isRenderIterator = false ;
+  public UIListInBoxPrivateMessage() throws Exception {
+  	addChild(UIForumPageIterator.class, null, "PageListInBoxMessage") ;
   }
   @SuppressWarnings("unused")
   private UserProfile getUserProfile(){
@@ -63,10 +65,22 @@ public class UIListInBoxPrivateMessage extends UIContainer{
   	return userProfile ;
   }
   
+  @SuppressWarnings("unused")
+  private boolean isRenderIterator(){
+  	return isRenderIterator ;
+  }
+  
   @SuppressWarnings({ "unused", "unchecked" })
   private List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
-		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.AGREEMESSAGE) ;
-		this.listInbox = pageList.getPage(0) ;
+  	JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.AGREEMESSAGE) ;
+  	UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
+  	forumPageIterator.updatePageList(pageList) ;
+  	pageList.setPageSize(10) ;
+  	long page = forumPageIterator.getPageSelected() ;
+  	this.listInbox = pageList.getPage(page) ;
+  	if(pageList.getAvailable() > 10){
+  		isRenderIterator = true;
+  	}
 		return this.listInbox ;
 	}
   

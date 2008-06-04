@@ -63,10 +63,13 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	private UserProfile userProfile ;
 	private String userName ;
 	private int id = 0;
+	private boolean fullMessage = true;
 	public static final String FIELD_SENDTO_TEXTAREA = "SendTo" ;
 	public static final String FIELD_MAILTITLE_INPUT = "MailTitle" ;
 	public static final String FIELD_MAILMESSAGE_INPUT = "MailMessage" ;
 	public static final String FIELD_SENDMESSAGE_TAB = "MessageTab" ;
+	public static final String FIELD_REPLY_LABEL = "Reply" ;
+	public static final String FIELD_FORWARD_LABEL = "Forward" ;
 	public UIPrivateMessageForm() throws Exception {
 		UIFormTextAreaInput SendTo = new UIFormTextAreaInput(FIELD_SENDTO_TEXTAREA, FIELD_SENDTO_TEXTAREA, null);
 		SendTo.addValidator(MandatoryValidator.class);
@@ -107,6 +110,9 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 		return this.userProfile;
 	}
 
+	public void setSendtoField(String str) {
+		this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA).setValue(str) ;
+  }
 	
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormTextAreaInput stringInput = getUIFormTextAreaInput(selectField) ;
@@ -171,12 +177,17 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	    	messageForm.forumService.savePrivateMessage(ForumSessionUtils.getSystemProvider(), privateMessage) ;
 	    	areaInput.setValue("") ;
 	    	stringInput.setValue("") ;
-	    	messageForm.id = 1;
 	    	formWYSIWYGInput.setValue("") ;
 	    	Object[] args = { "" };
 				uiApp.addMessage(new ApplicationMessage("SendPrivateMessage.msg.sendOK", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-	    	event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent()) ;
+	    	if(messageForm.fullMessage){
+	    		messageForm.id = 1;
+	    		event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent()) ;
+	    	} else {
+	    		UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+	    		forumPortlet.cancelAction() ;
+	    	}
     	} else {
     		Object[] args = { messageForm.getLabel(FIELD_MAILMESSAGE_INPUT) };
   			uiApp.addMessage(new ApplicationMessage("NameValidator.msg.empty-input", args, ApplicationMessage.WARNING)) ;
@@ -201,19 +212,28 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     }
   }
 	
-	public void setUpdate(ForumPrivateMessage privateMessage, boolean isReply) {
+	public void setUpdate(ForumPrivateMessage privateMessage, boolean isReply) throws Exception {
 		UIFormInputWithActions MessageTab = this.getChildById(FIELD_SENDMESSAGE_TAB);
   	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
   	UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
   	String content = privateMessage.getMessage() ;
+  	String label = this.getLabel(FIELD_REPLY_LABEL) ;
+  	String title = privateMessage.getName() ;
   	if(isReply) {
   		UIFormTextAreaInput areaInput = this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
 	  	areaInput.setValue(privateMessage.getFrom()) ;
-	  	stringInput.setValue(("Reply: " + privateMessage.getName())) ;
+	  	if(title.indexOf(label) < 0) {
+	  		title = label + ": " + title ;
+	  	} 
+	  	stringInput.setValue(title) ;
 	  	content = "<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">" + content + "</div>" ;
 	  	message.setValue(content) ;
   	} else {
-  		stringInput.setValue(("Forward: " + privateMessage.getName())) ;
+  		label = this.getLabel(FIELD_FORWARD_LABEL) ;
+  		if(title.indexOf(label) < 0) {
+  			title = label + ": " + title ;
+	  	} 
+	  	stringInput.setValue(title) ;
   	}
   	message.setValue(content) ;
   	this.id = 2;
@@ -225,5 +245,12 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 			forumPortlet.cancelAction() ;
 		}
 	}
+
+	public boolean isFullMessage() {
+  	return fullMessage;
+  }
+	public void setFullMessage(boolean fullMessage) {
+  	this.fullMessage = fullMessage;
+  }
 	
 }

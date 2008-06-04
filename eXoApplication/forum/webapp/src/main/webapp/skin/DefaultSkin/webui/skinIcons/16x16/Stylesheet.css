@@ -34,7 +34,7 @@
 }
 
 .UIForumPortlet .ViewProfileIcon {
-	background: url('icons/ViewProfileIcon.gif') no-repeat ;
+	background: url('icons/ViewProfileIcon.gif') no-repeat left center ;
 }
 
 .UIForumPortlet .SmallGrayPlus {

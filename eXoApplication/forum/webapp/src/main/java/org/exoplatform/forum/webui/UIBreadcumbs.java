@@ -176,6 +176,7 @@ public class UIBreadcumbs extends UIContainer {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;
 			messageForm.setUserProfile(breadcumbs.userProfile);
+			messageForm.setFullMessage(true) ;
 			popupContainer.setId("PrivateMessageForm") ;
 			popupAction.activate(popupContainer, 650, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

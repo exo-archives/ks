@@ -55,7 +55,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 		events = {
 			@EventConfig(listeners = UITopicPoll.VoteActionListener.class),	
 			@EventConfig(listeners = UITopicPoll.EditPollActionListener.class) ,
-			@EventConfig(listeners = UITopicPoll.RemovePollActionListener.class),
+			@EventConfig(listeners = UITopicPoll.RemovePollActionListener.class, confirm="UITopicPoll.msg.confirm-RemovePoll"),
 			@EventConfig(listeners = UITopicPoll.ClosedPollActionListener.class),
 			@EventConfig(listeners = UITopicPoll.VoteAgainPollActionListener.class)
 		}

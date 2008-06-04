@@ -169,12 +169,13 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			String topicSortBy = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBY_INPUT).getValue() ;
 			String topicSortByType = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT).getValue() ;
 			String censoredKeyword = forumCensor.getUIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA).getValue() ;
+			censoredKeyword = censoredKeyword.replaceAll(" ", "");
 			ForumAdministration forumAdministration = administrationForm.administration ;
 			forumAdministration.setForumSortBy(forumSortBy) ;
 			forumAdministration.setForumSortByType(forumSortByType) ;
 			forumAdministration.setTopicSortBy(topicSortBy) ;
 			forumAdministration.setTopicSortByType(topicSortByType) ;
-			forumAdministration.setCensoredKeyword(censoredKeyword) ;
+			forumAdministration.setCensoredKeyword(censoredKeyword.toLowerCase()) ;
 			administrationForm.forumService.saveForumAdministration(ForumSessionUtils.getSystemProvider(), forumAdministration) ;
 			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;

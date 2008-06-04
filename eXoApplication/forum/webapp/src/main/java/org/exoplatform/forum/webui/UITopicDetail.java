@@ -49,6 +49,7 @@ import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
+import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIRatingForm;
 import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITagForm;
@@ -92,7 +93,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			
 			@EventConfig(listeners = UITopicDetail.PrintActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.EditActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.DeleteActionListener.class ),	
+			@EventConfig(listeners = UITopicDetail.DeleteActionListener.class,confirm="UITopicDetail.confirm.DeletePost" ),	
 			@EventConfig(listeners = UITopicDetail.PrivatePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.QuoteActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.EditTopicActionListener.class ),	//Topic Menu
@@ -108,19 +109,22 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.SplitTopicActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetApproveTopicActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetUnApproveTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetDeleteTopicActionListener.class ),	
+			@EventConfig(listeners = UITopicDetail.SetDeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteTopic" ),	
 			@EventConfig(listeners = UITopicDetail.MergePostActionListener.class ), //Post Menu 
 			@EventConfig(listeners = UITopicDetail.MovePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetApprovePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetUnHiddenPostActionListener.class ),	
 //			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class ), 
+			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class,confirm="UITopicDetail.confirm.DeletePosts" ),
+			
+			@EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
+			@EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class),
+			
 			@EventConfig(listeners = UITopicDetail.ViewPostedByUserActionListener.class ), 
 			@EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
 			@EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
-			@EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class)
+			@EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class )
 		}
 )
 public class UITopicDetail extends UIForm {
@@ -179,6 +183,7 @@ public class UITopicDetail extends UIForm {
 		this.topicId = topicId ;
 		this.viewTopic = viewTopic ;
 		this.isUpdatePageList = true ;
+		isRefreshed = true ;
 		String userName = ForumSessionUtils.getCurrentUser() ;
 		if(userName ==null || userName.length() <= 0 || !this.viewTopic) {
 			userName = "guest" ;
@@ -195,6 +200,7 @@ public class UITopicDetail extends UIForm {
 		this.topicId = topic.getId() ;
 		this.viewTopic = viewTopic ;
 		this.isUpdatePageList = true ;
+		isRefreshed = true ;
 		String userName = ForumSessionUtils.getCurrentUser() ;
 		if(userName ==null || userName.length() <= 0 || !this.viewTopic) {
 			userName = "guest" ;
@@ -232,6 +238,7 @@ public class UITopicDetail extends UIForm {
 		this.pageSelect = numberPage ;
 		this.isGopage = true ;
 		this.isEditTopic = false ;
+		isRefreshed = true ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		String userName = ForumSessionUtils.getCurrentUser() ;
 		boolean isGetService = false ;
@@ -904,8 +911,9 @@ public class UITopicDetail extends UIForm {
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			uiForumContainer.setIsRenderChild(true) ;
+			UITopicContainer topicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
+			topicContainer.setUpdateForum(topicDetail.categoryId, topicDetail.forum) ;
 			UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class) ;
-			breadcumbs.setUpdataPath((topicDetail.categoryId + "/" + topicDetail.forumId)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 		}
@@ -1053,20 +1061,37 @@ public class UITopicDetail extends UIForm {
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 	  }
 	}
-	static public class ViewPostedByUserActionListener extends EventListener<UITopicDetail> {
+	
+	
+	static public class PrivateMessageActionListener extends EventListener<UITopicDetail> {
 	  public void execute(Event<UITopicDetail> event) throws Exception {
       UITopicDetail topicDetail = event.getSource() ;
       String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-      @SuppressWarnings("unused")
-      UIViewPostedByUser viewPostedByUser = popupContainer.addChild(UIViewPostedByUser.class, null, null) ;
-      viewPostedByUser.setUserProfile(userId) ;
-      popupContainer.setId("ViewPostedByUser") ;
-      popupAction.activate(popupContainer, 760, 350) ;
+      UIPrivateMessageForm messageForm = popupAction.createUIComponent(UIPrivateMessageForm.class, null, null);
+      messageForm.setFullMessage(false);
+      messageForm.setUserProfile(topicDetail.userProfile);
+      messageForm.setSendtoField(userId) ;
+      popupAction.activate(messageForm, 650, 480, true);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 	  }
+	}
+	
+	static public class ViewPostedByUserActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			@SuppressWarnings("unused")
+			UIViewPostedByUser viewPostedByUser = popupContainer.addChild(UIViewPostedByUser.class, null, null) ;
+			viewPostedByUser.setUserProfile(userId) ;
+			popupContainer.setId("ViewPostedByUser") ;
+			popupAction.activate(popupContainer, 760, 350) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
 	}
   
 	static public class ViewThreadByUserActionListener extends EventListener<UITopicDetail> {
@@ -1150,6 +1175,7 @@ public class UITopicDetail extends UIForm {
 				} else {
 					topicDetail.IdPostView = "true";
 				}
+				topicDetail.isRefreshed = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			}else {
 				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;

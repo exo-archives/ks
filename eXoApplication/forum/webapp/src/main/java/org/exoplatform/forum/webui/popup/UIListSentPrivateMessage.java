@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -42,7 +43,7 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/popup/UIListSentPrivateMessage.gtmpl",
 		events = {
 			@EventConfig(listeners = UIListSentPrivateMessage.ViewMessageActionListener.class),
-			@EventConfig(listeners = UIListSentPrivateMessage.DeleteMessageActionListener.class,confirm="SendPrivateMessage.msg.sendOK"),
+			@EventConfig(listeners = UIListSentPrivateMessage.DeleteMessageActionListener.class,confirm="UIPrivateMessageForm.confirm.Delete-message"),
 			@EventConfig(listeners = UIListSentPrivateMessage.ForwardMessageActionListener.class)
 		}
 )
@@ -51,7 +52,9 @@ public class UIListSentPrivateMessage extends UIContainer {
 	private UserProfile userProfile = null  ;
   private List<ForumPrivateMessage> listSend = null; 
   private String userName = "";
-  public UIListSentPrivateMessage() {
+  private boolean isRenderIterator = false ;
+  public UIListSentPrivateMessage() throws Exception {
+  	addChild(UIForumPageIterator.class, null, "PageListSentMessage") ;
   }
   @SuppressWarnings("unused")
   private UserProfile getUserProfile(){
@@ -61,10 +64,23 @@ public class UIListSentPrivateMessage extends UIContainer {
   	this.userName = userProfile.getUserId() ;
   	return userProfile ;
   }
+  
+  @SuppressWarnings("unused")
+  private boolean isRenderIterator(){
+  	return isRenderIterator ;
+  }
+  
   @SuppressWarnings({ "unused", "unchecked" })
   private List<ForumPrivateMessage> getPrivateMessageSendByUser() throws Exception {
 		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.SENDMESSAGE) ;
-		this.listSend = pageList.getPage(0) ;
+		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
+		forumPageIterator.updatePageList(pageList) ;
+		pageList.setPageSize(10) ;
+		long page = forumPageIterator.getPageSelected() ;
+		this.listSend = pageList.getPage(page) ;
+		if(pageList.getAvailable() > 10){
+  		isRenderIterator = true;
+  	}
 		return this.listSend ;
 	}
   

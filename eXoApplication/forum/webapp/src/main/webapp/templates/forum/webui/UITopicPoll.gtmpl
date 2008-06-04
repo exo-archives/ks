@@ -14,7 +14,6 @@
 		long timeOut = poll.getTimeOut() ;
 		boolean displayVoted = uicomponent.getIsVoted();
 		boolean isAnonim = ForumSessionUtils.isAnonim();
-		String confirmDelete =  _ctx.appRes("UITopicPoll.msg.confirmClose"); 
 	%>
 <div class="UITopicPoll">
 	<div class="ForumToolbar">
@@ -30,7 +29,7 @@
 	  			<div class="SeparatorLine"><span></span></div>
 	  			<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<a href="javascript:if(confirm('$confirmDelete')){<%=uicomponent.event("RemovePoll");}%>">
+							<a href="<%=uicomponent.event("RemovePoll","UITopicPoll","poll");%>">
 								<div class="LeftOverButton">
 									<div class="RightOverButton">
 										<div class="CenterOverButton">

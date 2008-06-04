@@ -4,14 +4,16 @@
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.popup.UIListInBoxPrivateMessage;
 	import org.exoplatform.forum.webui.popup.UIListSentPrivateMessage;
-	
-	UserProfile userProfile = uiform.getUserProfile();
-	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
-	int index = uiform.getIsSelected() ;
-	String isDisplay = "block";
 %>
 <div class="UIFormForum UIPrivateMessageForm">
 	<% uiform.begin() %> 
+	<%  
+		if(uiform.isFullMessage()) {
+			UserProfile userProfile = uiform.getUserProfile();
+			String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+			int index = uiform.getIsSelected() ;
+			String isDisplay = "block";
+	%>
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
 			<div class="TabPaneContent">
@@ -102,7 +104,7 @@
 																<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("SendPrivateMessage")%>">
 																	<div class="ButtonLeft">
 																		<div class="ButtonRight">
-																			<div class="ButtonMiddle"> Send </div>
+																			<div class="ButtonMiddle"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></div>
 																		</div>
 																	</div>
 																</a>
@@ -122,7 +124,33 @@
 			</div>	
 		</div>	
 	</div>
-	
+	<% } else { %>
+	<div class="UIFormTabPane">
+		<div class="UITabPane">
+			<div class="TabPaneContent">
+				<div class="UIForm">
+					<div class="HorizontalLayout">
+						<div class="UITabContentContainer MessageContainer">
+							<div class="SendMessageTab UITabContent">
+								<div class="UIFormInputSet ForumUserProfile">
+									<div class="ForumMail Forwark">
+										<div class="HorizontalLayout">
+											<div class="UIFormInput">
+												<% 
+													uiform.renderChild(uiform.FIELD_SENDMESSAGE_TAB);
+												%>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% } %>
 	<div class="UIAction"> 
 		<table align="center" class="ActionContainer">
 			<tbody>
@@ -135,6 +163,17 @@
 								</div>
 							</div>
 						</a>
+						<%  
+							if(!uiform.isFullMessage()) {
+						%>
+						<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("SendPrivateMessage")%>">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></div>
+								</div>
+							</div>
+						</a>
+					<% } %>
 					</td>
 				</tr>
 	 		</tbody>

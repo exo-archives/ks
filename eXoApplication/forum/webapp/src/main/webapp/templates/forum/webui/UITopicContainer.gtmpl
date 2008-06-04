@@ -164,11 +164,7 @@
 														<div class="UIRightPopupMenuContainer" id="ModerationMenu">
 														 <% 
 														 	for(action in uicomponent.getActionMenuTopic()) {
-														 		String link = uicomponent.event(action) ;
-														 		if(action.indexOf("Delete") > 0) {
-															 		String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
-														 			link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
-														 		}
+														 		String link = uicomponent.event(action,uicomponent.getName(),"forum") ;
 														 		String itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 														 		String classIcon = null;
 														 		if(action.length() < 11) classIcon = action + "Icon";
@@ -291,14 +287,10 @@
 															</a>
 														 <% } 
 													 		boolean isView = false ;
-													 		String link , confirm, itemLabel, classIcon, classDisable="";
+													 		String link , itemLabel, classIcon, classDisable="";
 													 		String[] actionMenuForum = uicomponent.getActionMenuForum() ;
 													 		for(action in actionMenuForum) {
-														 		link = uicomponent.event(action) ;
-														 		if(action.indexOf("emove") > 0) {
-															 		confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
-														 			link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
-														 		}
+														 		link = uicomponent.event(action,uicomponent.getName(),"topic") ;
 														 		itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 														 		if(action.length() < 12) classIcon = action + "Icon" ;
 														 		else classIcon = action.replaceFirst("Forum", "") + "Icon" ;

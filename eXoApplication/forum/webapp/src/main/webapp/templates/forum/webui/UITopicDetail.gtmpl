@@ -19,8 +19,9 @@
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');
 	if(uicomponent.isRefreshed()) {
 		uicomponent.setRefreshed(false);
-		jsmanager.addJavascript("if(eXo.core.Browser.isIE6()) {top.location.reload(); alert('test'); };") ;
+		jsmanager.addJavascript("if(eXo.core.Browser.isIE6()) {top.location.reload();};") ;
 	}
+	String uiformId = uicomponent.getName() ;
 	boolean isNull = false ;
 	boolean isShowMenu;
 	long setTime = 0;
@@ -114,7 +115,7 @@
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
 									<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
-										<%=_ctx.appRes(uicomponent.getName() + ".action.AddPost");%>
+										<%=_ctx.appRes(uiformId + ".action.AddPost");%>
 									</div>
 								</a>
 							<% } %>
@@ -211,15 +212,10 @@
 															String link = new String() ;
 															String classIcon = new String() ;
 															String itemLabel = new String() ;
-															String confirm = new String() ;
 															for(action in actionMenuPost) {
-																link = uicomponent.event(action) ;
+																link = uicomponent.event(action,uiformId,uiformId) ;
 																classIcon = action + "Icon";
-														 		itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-														 		if(action.indexOf("eleteP") > 0) {
-																	confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
-																	link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
-																}
+														 		itemLabel = _ctx.appRes(uiformId + ".action." + action);
 																boolean isView = true ;
 																if(action.equals("SetApprovePost")){
 																	if(!topic.getIsModeratePost()) {
@@ -388,15 +384,11 @@
 														 			if(topic.getIsPoll()){
 														 				if(action.equals("AddPoll")) continue ;
 														 			}
-														 			link = uicomponent.event(action) ;
-															 		itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+														 			link = uicomponent.event(action,uiformId,uiformId) ;
+															 		itemLabel = _ctx.appRes(uiformId + ".action." + action);
 															 		classIcon = null;
 															 		if(action.length() < 11) classIcon = action + "Icon";
 															 		else classIcon = action.replaceFirst("Topic", "Icon");
-															 		if(action.indexOf("Delete") > 0) {
-															 			String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
-															 			link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}";
-															 		}
 															 		boolean isModerateTopic = forum.getIsModerateTopic() ;
 															 		if(action.equals(menuTopicActions[3])){
 															 			isView = topic.getIsClosed() ;
@@ -455,12 +447,8 @@
 															 		   if(!topic.getIsModeratePost()) continue ;
 															 		   else classIcon = "SetApprovePostIcon" ;
 																	 }
-															 		 if(action.indexOf("Delete") > 0) {
-															 			 String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
-															 			 link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}";
-															 		 }
-														 			 link = uicomponent.event(action) ;
-															 		 itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+														 			 link = uicomponent.event(action,uiformId,uiformId) ;
+															 		 itemLabel = _ctx.appRes(uiformId + ".action." + action);
 															 		 if(action.equals(menuTopicActions[2])){
 															 			 isView = !topic.getIsLock() ;
 															 		 } else if(action.equals(menuTopicActions[3])){
@@ -603,12 +591,12 @@
 															<div class="MiddleRightRightClickPopupMenu">
 																<div class="UIRightPopupMenuContainer">
 																	<%
-																		String[] menuViewInfos = ["ViewPublicUserInfo","ViewPostedByUser", "ViewThreadByUser"] ;
+																		String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 																		for(viewAction in menuViewInfos) {
 																			String linkView = uicomponent.event(viewAction, owner) ;
 																			String classIcon = "" ;
 																			String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-																			if(!viewAction.equals("ViewPublicUserInfo")) itemLabelView = itemLabelView + " " + owner ;
+																			if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + owner ;
 																			if(viewAction.equals("ViewPublicUserInfo")) classIcon = "ViewProfileIcon" ;
 																			else classIcon = "IconsView" ;
 																	%>
@@ -656,7 +644,7 @@
 									<% } 
 									 if(location != null && location.length() > 0) {
 									%>
-									<div>Location: location</div>
+									<div>Location: $location</div>
 									<%} 
 										String lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, userInfo.getLastLoginDate()) ;
 									%>
@@ -779,8 +767,7 @@
 												if(action.equals("Edit")||action.equals("Delete"))continue ;
 											}
 											if(isLock&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
-											String actionLink = uicomponent.event(action, post.getId());
-											if(action.equals("Delete")) actionLink = "javascript:if(confirm('Are you sure you want to Delete this Post?')){"+uicomponent.event(action, post.getId())+"}"
+											String actionLink = uicomponent.event(action,uiformId,post.getId());
 									%>
 										<div class="ActionButton">
 											<div class="NormalStyle">
@@ -814,7 +801,7 @@
 			jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('"+idLastPost+"');");
 		 } else {
 		%>
-		<div class="ContentNotPost">Post(s) in thread is UnApprove or Hidden or Closed!</div>
+		<div class="ContentNotPost">You have no permission to view this thread !</div>
 	<% } %>
 <!-- End ContentContainer -->
 	</div>	

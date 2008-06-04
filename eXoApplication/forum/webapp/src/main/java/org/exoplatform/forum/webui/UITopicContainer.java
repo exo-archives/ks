@@ -78,7 +78,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UITopicContainer.SetOpenForumActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetCloseForumActionListener.class),
 			@EventConfig(listeners = UITopicContainer.MoveForumActionListener.class),
-			@EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class),//Menu Topic
+			@EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class,confirm="UITopicContainer.confirm.RemoveForum"),//Menu Topic
 			@EventConfig(listeners = UITopicContainer.EditTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetOpenTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetCloseTopicActionListener.class),
@@ -88,7 +88,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
+			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class,confirm="UITopicContainer.confirm.SetDeleteTopic"),
 			@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 			@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
@@ -197,9 +197,12 @@ public class UITopicContainer extends UIForm {
 		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, isApprove, isWaiting, strQuery);
 		long maxTopic = userProfile.getMaxTopicInPage() ;
 		if(maxTopic > 0) this.maxTopic = maxTopic ;
-		this.pageList.setPageSize(this.maxTopic);
+		try{
+			this.pageList.setPageSize(this.maxTopic);
+		}catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 		this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
-    
 	}
 	
 	@SuppressWarnings("unused")

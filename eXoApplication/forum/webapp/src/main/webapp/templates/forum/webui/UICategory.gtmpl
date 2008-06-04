@@ -71,11 +71,7 @@
 																if(action.indexOf("Link") > 0 || action.indexOf("Search") >= 0 || action.indexOf("AddBook") >= 0) continue ;
 																String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
 																String classIconItem = action + "Icon";
-																String link = uicomponent.event(action) ;
-																if(action.indexOf("eleteCate") > 0 || action.indexOf("emoveFor") > 0) {
-																	String confirm = _ctx.appRes(uicomponent.getName() + ".confirm." + action);
-																	link = "javascript:if(confirm('" + confirm + "?')){"+uicomponent.event(action)+"}" ;
-																}
+																String link = uicomponent.event(action,uicomponent.id,"category") ;
 														%>
 																 <a class="MenuItem" href="$link">	 
 																	<div class="ItemIcon $classIconItem">

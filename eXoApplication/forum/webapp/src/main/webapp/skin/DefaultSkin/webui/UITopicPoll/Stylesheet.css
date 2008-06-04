@@ -2,6 +2,14 @@
 	margin: 10px 0px;
 }
 
+.UIForumPortlet .UITopicPoll .UITabPane {
+	height: auto;
+}
+
+.UIForumPortlet .UITopicPoll .UITabContentContainer {
+	border-top: solid 1px #b7b7b7;
+}
+
 .UIForumPortlet .UITopicPoll .ForumToolbar .Lable {
 	float: left;
 	font-weight: bold;

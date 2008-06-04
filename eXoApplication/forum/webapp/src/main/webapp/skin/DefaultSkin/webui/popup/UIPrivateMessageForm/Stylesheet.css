@@ -29,3 +29,7 @@
 .UIPrivateMessageForm .SendMessageTab #MailMessage___Frame {
   height: 200px;
 }
+
+.UIForumPortlet .UIPrivateMessageForm .MessageContainer {
+	border-top: solid 1px #aeaeae;
+}

@@ -63,7 +63,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		events = {
 				@EventConfig(listeners = UICategory.SearchFormActionListener.class),
 				@EventConfig(listeners = UICategory.EditCategoryActionListener.class),
-				@EventConfig(listeners = UICategory.DeleteCategoryActionListener.class),
+				@EventConfig(listeners = UICategory.DeleteCategoryActionListener.class,confirm="UICategory.confirm.DeleteCategory"),
 				@EventConfig(listeners = UICategory.AddForumActionListener.class),
 				@EventConfig(listeners = UICategory.EditForumActionListener.class),
 				@EventConfig(listeners = UICategory.SetLockedActionListener.class),
@@ -71,7 +71,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UICategory.SetOpenActionListener.class),
 				@EventConfig(listeners = UICategory.SetCloseActionListener.class),
 				@EventConfig(listeners = UICategory.MoveForumActionListener.class),
-				@EventConfig(listeners = UICategory.RemoveForumActionListener.class),
+				@EventConfig(listeners = UICategory.RemoveForumActionListener.class,confirm="UICategory.confirm.RemoveForum"),
 				@EventConfig(listeners = UICategory.OpenForumLinkActionListener.class),
 				@EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class),
 				@EventConfig(listeners = UICategory.AddBookMarkActionListener.class),

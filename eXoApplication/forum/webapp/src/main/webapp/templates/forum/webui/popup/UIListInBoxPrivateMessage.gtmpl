@@ -1,9 +1,18 @@
 <%  
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.service.ForumPrivateMessage;
+	import org.exoplatform.forum.webui.UIForumPageIterator;
 	import org.exoplatform.forum.service.UserProfile;
+	UserProfile userProfile = uicomponent.getUserProfile();
+	List InBoxmails = uicomponent.getListInBoxPrivateMessage() ;
 %>
 <div class="ForumMail UIInBox" id="$uicomponent.id">
+	<div style="overflow:auto; margin: 2px 0px;">
+		<%
+			if(uicomponent.isRenderIterator()) 
+				uicomponent.renderChild(UIForumPageIterator.class) ; 
+		%>
+	</div>
 	<table cellspacing="0" class="UIGrid" id="PermissionInfo" borderspacing="0">
 		<thead>
 			<tr>
@@ -15,11 +24,9 @@
 		</thead>
 		<tbody>
 		<% 
-			UserProfile userProfile = uicomponent.getUserProfile();
 			String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String classCssInbox = "EvenRow";
 			i = 0;
-			List InBoxmails = uicomponent.getListInBoxPrivateMessage() ;
 			for(mail in InBoxmails) {
 				if(i%2 == 0) classCssInbox = "EvenRow";
 				else classCssInbox = "OddRow";
@@ -50,5 +57,11 @@
 			</tr>
 		 <% } %>
 		</tbody>
-	</table> <!--End UIGrid-->												
+	</table>
+	<div style="overflow:auto; margin: 2px 0px;">
+		<%
+			if(uicomponent.isRenderIterator()) 
+				uicomponent.renderChild(UIForumPageIterator.class) ; 
+		%>
+	</div>										
 </div>

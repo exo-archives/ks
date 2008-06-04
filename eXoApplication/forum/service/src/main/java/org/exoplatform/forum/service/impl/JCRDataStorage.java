@@ -104,9 +104,9 @@ public class JCRDataStorage{
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		Node userAdministration ;
 		try {
-			userAdministration = forumHomeNode.getNode(Utils.NT_UNSTRUCTURED) ;
+			userAdministration = forumHomeNode.getNode(Utils.USER_ADMINISTRATION) ;
 		} catch (PathNotFoundException e) {
-			userAdministration = forumHomeNode.addNode(Utils.NT_UNSTRUCTURED, Utils.NT_UNSTRUCTURED) ;
+			userAdministration = forumHomeNode.addNode(Utils.USER_ADMINISTRATION, Utils.NT_UNSTRUCTURED) ;
 		}
 		try {
 			return userAdministration.getNode(Utils.USER_PROFILE) ;
@@ -2018,7 +2018,7 @@ public class JCRDataStorage{
 		Node userProfileNode = getUserProfileNode(sProvider) ;
 		try {
 			Node profileNode = userProfileNode.getNode(userName) ;
-			QueryManager qm = userProfileNode.getSession().getWorkspace().getQueryManager() ;
+			QueryManager qm = profileNode.getSession().getWorkspace().getQueryManager() ;
 			String pathQuery = "/jcr:root" + profileNode.getPath() + "//element(*,exo:privateMessage)[@exo:type='"+type+"'] order by @exo:receivedDate descending";
 			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 			QueryResult result = query.execute() ;
@@ -2026,6 +2026,7 @@ public class JCRDataStorage{
 			JCRPageList pagelist = new ForumPageList(profileNode, iter, 10, pathQuery, true) ;
 			return pagelist ;
 		}catch (PathNotFoundException e) {
+			e.fillInStackTrace() ;
 		}
 		return null ;
 	}
