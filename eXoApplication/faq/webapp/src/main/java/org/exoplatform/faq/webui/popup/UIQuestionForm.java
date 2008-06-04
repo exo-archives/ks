@@ -443,6 +443,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } else {
         UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
+        UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
+        if(questionManagerForm.isResponseQuestion && questionForm.getQuestionId().equals(responseForm.getQuestionId())) {
+          responseForm.setIsChildren(true) ;
+          responseForm.setQuestionId(question_) ;
+        }
         questionManagerForm.isEditQuestion = false ;
         UIPopupContainer popupContainer = questionManagerForm.getParent() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
