@@ -27,6 +27,7 @@
 			<div class="ResponseContent">
 			<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
 				<div class="Response" style="width: 97%;">$response</div>
+				<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
 				<div class="AttachmentContent">
 					<div style="margin-top: 5px; margin-bottom: 5px;">
 						<%
@@ -56,7 +57,7 @@
 					 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
 					 						<div style="clear: left;"><span></span></div>
 					 						<div class="Action" style="padding-top: 0px;">
-					 							<div class="Icon MaxView" onclick="eXo.cs.MaskLayerControl.showPicture(this); "><%= _ctx.appRes("UIPopupViewQuestion.label.view"); %></div>
+					 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); "><%= _ctx.appRes("UIPopupViewQuestion.label.view"); %></div>
 					 							<div class="Icon Download"><a href="$linkImage"><%= _ctx.appRes("UIPopupViewQuestion.label.download"); %></a></div>
 					 							<div style="clear: left;"><span></span></div>
 					 						</div>
@@ -74,7 +75,7 @@
 					    <%}
 					  	}
 				  	} else {%>
-				  		<div style="width: 97%; margin-left: -10px;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
+				  		&nbsp;
 			  	<%}%>
 			  	</div>
 			  	<div style="clear: left;"><span></span></div>
