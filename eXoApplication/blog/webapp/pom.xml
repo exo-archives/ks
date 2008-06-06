@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>config</artifactId>
-    <version>trunk</version>
+    <version>1.0</version>
   </parent> 
 
   <modelVersion>4.0.0</modelVersion>
@@ -21,14 +21,14 @@
       <scope>provided</scope>
     </dependency>
     
-    <dependency>
+    <!--dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
       <version>${org.exoplatform.jcr.version}</version>      
       <scope>provided</scope>
     </dependency>
     
-    <!--dependency>
+    <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.blog.service</artifactId>
       <version>${org.exoplatform.ks.version}</version>
