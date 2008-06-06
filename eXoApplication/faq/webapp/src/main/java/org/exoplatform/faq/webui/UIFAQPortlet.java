@@ -20,6 +20,7 @@ import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
@@ -31,14 +32,22 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
  */
 
 @ComponentConfig(
-   lifecycle = UIApplicationLifecycle.class
+   lifecycle = UIApplicationLifecycle.class,
+   template = "app:/templates/faq/webui/UIFAQPortlet.gtmpl"
 )
 public class UIFAQPortlet extends UIPortletApplication {
   public UIFAQPortlet() throws Exception {
   	addChild(UIFAQContainer.class, null, null) ;
   	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
     uiPopup.setId("UIFAQPopupAction") ;
-    uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow") ;
+    uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
+  }
+  
+  public void renderPopupMessages() throws Exception {
+    UIPopupMessages popupMess = getUIPopupMessages();
+    if(popupMess == null)  return ;
+    WebuiRequestContext  context =  WebuiRequestContext.getCurrentInstance() ;
+    popupMess.processRender(context);
   }
   
   public void cancelAction() throws Exception {

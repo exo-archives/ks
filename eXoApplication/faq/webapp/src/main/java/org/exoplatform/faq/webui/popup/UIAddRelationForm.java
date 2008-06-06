@@ -52,7 +52,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   private static List<Question> listQuestion = new ArrayList<Question>() ;
   private static List<String> quesIdsSelect = new ArrayList<String>() ;
-  
+  private String questionId_ ;
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
  
@@ -98,6 +98,10 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     }
   }
   
+  public void setQuestionId(String questionId) {
+    this.questionId_ = questionId ;
+  }
+  
   private void initPage() throws Exception {
     listQuestion = faqService.getAllQuestions(FAQUtils.getSystemProvider()).getAll() ;
     UIFormCheckBoxInput checkQuestion ;
@@ -107,6 +111,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       } else {
         checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false) ;
       }
+      if(question.getId().equals(questionId_)) checkQuestion.setEnable(false) ;
       addChild(checkQuestion) ;
     }
   }

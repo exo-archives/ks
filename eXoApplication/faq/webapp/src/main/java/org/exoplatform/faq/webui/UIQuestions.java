@@ -349,6 +349,7 @@ public class UIQuestions extends UIContainer {
       }
       return null;
     } catch (PathNotFoundException e) {
+      e.printStackTrace() ;
       return null;
     }
   }
@@ -357,8 +358,7 @@ public class UIQuestions extends UIContainer {
     this.questionView_ = questionid ;
   }
   
-  @SuppressWarnings("unused")
-  private String getCategoryId(){
+  public String getCategoryId(){
     return this.categoryId_ ;
   }
   
@@ -773,7 +773,7 @@ public class UIQuestions extends UIContainer {
 
       UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
       popupContainer.setId("FAQQuestionManagerment") ;
-      popupAction.activate(popupContainer, 900, 1000) ;
+      popupAction.activate(popupContainer, 900, 850) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
@@ -807,6 +807,8 @@ public class UIQuestions extends UIContainer {
         UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
         uiQuestions.setCategoryId(categoryId) ;
         uiQuestions.setListQuestion() ;
+        uiQuestions.listCateId_.clear() ;
+        uiQuestions.setIsModerators() ;
         UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 		    breadcumbs.setUpdataPath(null) ;
         String oldPath = "" ;
