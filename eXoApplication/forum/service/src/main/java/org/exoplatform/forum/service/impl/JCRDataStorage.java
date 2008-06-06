@@ -47,7 +47,7 @@ import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumSeach;
+import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRForumAttachment;
@@ -320,6 +320,8 @@ public class JCRDataStorage{
 		try {
 			Node catNode = forumHomeNode.getNode(categoryId) ;
 			Node forumNode;
+			boolean isNewModerateTopic  = forum.getIsModerateTopic();
+			boolean isModerateTopic  = isNewModerateTopic;
 			if(isNew) {
 				forumNode = catNode.addNode(forum.getId(), "exo:forum") ;
 				forumNode.setProperty("exo:id", forum.getId()) ;
@@ -334,7 +336,7 @@ public class JCRDataStorage{
 				catNode.setProperty("exo:forumCount", forumCount) ;
 			} else {
 				forumNode = catNode.getNode(forum.getId()) ;
-				queryLastTopic(sProvider, forumNode.getPath());
+				if(forumNode.hasProperty("exo:isModerateTopic"))isModerateTopic = forumNode.getProperty("exo:isModerateTopic").getBoolean() ;
 			}
 			forumNode.setProperty("exo:name", forum.getForumName()) ;
 			forumNode.setProperty("exo:forumOrder", forum.getForumOrder()) ;
@@ -344,7 +346,7 @@ public class JCRDataStorage{
 			
 			forumNode.setProperty("exo:notifyWhenAddPost", forum.getNotifyWhenAddPost()) ;
 			forumNode.setProperty("exo:notifyWhenAddTopic", forum.getNotifyWhenAddTopic()) ;
-			forumNode.setProperty("exo:isModerateTopic", forum.getIsModerateTopic()) ;
+			forumNode.setProperty("exo:isModerateTopic", isNewModerateTopic) ;
 			forumNode.setProperty("exo:isModeratePost", forum.getIsModeratePost()) ;
 			forumNode.setProperty("exo:isClosed", forum.getIsClosed()) ;
 			forumNode.setProperty("exo:isLock", forum.getIsLock()) ;
@@ -357,6 +359,9 @@ public class JCRDataStorage{
 			if(!isNew)oldModeratoForums = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()); 
 			forumNode.setProperty("exo:moderators", forum.getModerators()) ;
 			forumHomeNode.getSession().save() ;
+			if(isModerateTopic != isNewModerateTopic) {
+				queryLastTopic(sProvider, forumNode.getPath());
+			}
 			{//seveProfile
 				Node userProfileHomeNode = getUserProfileNode(sProvider) ;
 				Node userProfileNode ;
@@ -1359,7 +1364,6 @@ public class JCRDataStorage{
 		for(String string : emails) {
 			if(emails_.contains(string)) continue ;
 			emails_.add(string) ;
-			System.out.println("\n\nEmail: " + string);
 			message.setMessageTo(string) ;
 			message.setFrom(config.getUserName()) ;
 			messages.add(message) ;
@@ -2304,9 +2308,9 @@ public class JCRDataStorage{
 		return forumLinks ;
 	}
 
-	public List<ForumSeach> getQuickSeach(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
-		List<ForumSeach> listSeachEvent = new ArrayList<ForumSeach>() ;
+		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>() ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 		if(pathQuery == null || pathQuery.length() <= 0) {
 			pathQuery = forumHomeNode.getPath() ;
@@ -2333,31 +2337,31 @@ public class JCRDataStorage{
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
-			ForumSeach forumSeach ;
+			ForumSearch forumSearch ;
 			while (iter.hasNext()) {
-				forumSeach = new ForumSeach() ;
+				forumSearch = new ForumSearch() ;
 				Node nodeObj = (Node) iter.nextNode();
-				forumSeach.setId(nodeObj.getName());
-				forumSeach.setName(nodeObj.getProperty("exo:name").getString());
-				forumSeach.setType(type);
+				forumSearch.setId(nodeObj.getName());
+				forumSearch.setName(nodeObj.getProperty("exo:name").getString());
+				forumSearch.setType(type);
 				if(type.equals(Utils.FORUM)){
-					forumSeach.setIcon("ForumNormalIcon");
-				}else if(!type.equals("forumCategory")){
-					forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
+					forumSearch.setIcon("ForumNormalIcon");
+				}else if(!type.equals(Utils.CATEGORY)){
+					forumSearch.setIcon(nodeObj.getProperty("exo:icon").getString());
 				} else {
-					forumSeach.setIcon("icon");
+					forumSearch.setIcon("icon");
 				}
-				forumSeach.setType(type);
-				forumSeach.setPath(nodeObj.getPath()) ;
-				listSeachEvent.add(forumSeach) ;
+				forumSearch.setType(type);
+				forumSearch.setPath(nodeObj.getPath()) ;
+				listSearchEvent.add(forumSearch) ;
 			}
 		}
-		return listSeachEvent ;
+		return listSearchEvent ;
 	}
 
-	public List<ForumSeach> getAdvancedSeach(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception {
+	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
-		List<ForumSeach> listSeachEvent = new ArrayList<ForumSeach>() ;
+		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>() ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 		String path = eventQuery.getPath() ;
 		if(path == null || path.length() <= 0) {
@@ -2369,32 +2373,34 @@ public class JCRDataStorage{
 		Query query = qm.createQuery(queryString, Query.XPATH) ;
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes() ;
-		ForumSeach forumSeach ;
+		ForumSearch forumSearch ;
 		while (iter.hasNext()) {
-			forumSeach = new ForumSeach() ;
+			forumSearch = new ForumSearch() ;
 			Node nodeObj = (Node) iter.nextNode();
-			forumSeach.setId(nodeObj.getName());
-			forumSeach.setName(nodeObj.getProperty("exo:name").getString());
-			forumSeach.setType(type);
+			forumSearch.setId(nodeObj.getName());
+			forumSearch.setName(nodeObj.getProperty("exo:name").getString());
+			forumSearch.setType(type);
 			if(type.equals(Utils.FORUM)){
-				forumSeach.setIcon("ForumNormalIcon");
-			}else if(!type.equals("forumCategory")){
-				forumSeach.setIcon(nodeObj.getProperty("exo:icon").getString());
+				forumSearch.setIcon("ForumNormalIcon");
+			}else if(!type.equals(Utils.CATEGORY)){
+				forumSearch.setIcon(nodeObj.getProperty("exo:icon").getString());
 			} else {
-				forumSeach.setIcon("icon");
+				forumSearch.setIcon("icon");
 			}
-			forumSeach.setType(type);
-			forumSeach.setPath(nodeObj.getPath()) ;
-			listSeachEvent.add(forumSeach) ;
+			forumSearch.setPath(nodeObj.getPath()) ;
+			listSearchEvent.add(forumSearch) ;
 		}
 		
-		return listSeachEvent;
+		return listSearchEvent;
 	}
 
 	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception {
 		Node watchingNode = null;
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		String string = forumHomeNode.getPath() ;
+		path = string + "/" + path ;
 		try{
-			watchingNode = (Node)getForumHomeNode(sProvider).getSession().getItem(path) ;
+			watchingNode = (Node)forumHomeNode.getSession().getItem(path) ;
 			//add watching for node
 			if(watchingNode.isNodeType("exo:forumWatching")) {
 				if(watchType == 1) {//send email when had changed on category

@@ -20,10 +20,18 @@
 				%>
 					<a href="$link" class="Selected">$namePath</a>
 					<div class="RightArrowIcon"><span></span></div>
-				 <% } else {%>
+				 <% } else {
+				 		 	if(uicomponent.isLink()) {
+				 %>
+					<a href="$link" class="Selected">$namePath</a>
+					<% 	} else{ %>				 
 					<div class="Selected">$namePath</div>
-				 <% } %>
-			  <% t = t + 1 ;} %>
+				 <%		
+				 			}
+				 		} 
+				  t = t + 1 ;
+				  } 
+				 %>
 			  	<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">

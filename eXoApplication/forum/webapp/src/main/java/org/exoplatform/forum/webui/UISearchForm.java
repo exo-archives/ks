@@ -25,7 +25,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumEventQuery;
-import org.exoplatform.forum.service.ForumSeach;
+import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
@@ -86,7 +86,6 @@ public class UISearchForm extends UIForm {
 //	final static	private String FIELD_LASTPOSTFROMTO_INPUT = "LastPostFromTo" ;
 //  final static  private String FROM = "From" ;
 //  final static  private String TO = "To" ;
-//	final static	private String FIELD_SEARCHIN_SELECTBOX = "seachIn" ;
 	
 	private UserProfile userProfile = null;
 	
@@ -107,10 +106,10 @@ public class UISearchForm extends UIForm {
 		UIFormStringInput searchValue = new UIFormStringInput(FIELD_SEARCHVALUE_INPUT, FIELD_SEARCHVALUE_INPUT, null) ;
 		UIFormStringInput searchUser = new UIFormStringInput(FIELD_SEARCHUSER_INPUT, FIELD_SEARCHUSER_INPUT, null) ;
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>("Category", "forumCategory")) ;
-		list.add(new SelectItemOption<String>("Forum", "forum")) ;
-		list.add(new SelectItemOption<String>("Thread", "topic")) ;
-		list.add(new SelectItemOption<String>("Post", "post")) ;
+		list.add(new SelectItemOption<String>(ForumUtils.CATEGORY, Utils.CATEGORY)) ;
+		list.add(new SelectItemOption<String>(ForumUtils.FORUM, Utils.FORUM)) ;
+		list.add(new SelectItemOption<String>(ForumUtils.THREAD, Utils.TOPIC)) ;
+		list.add(new SelectItemOption<String>(ForumUtils.POST, Utils.POST)) ;
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
 		list = new ArrayList<SelectItemOption<String>>() ;
@@ -231,9 +230,11 @@ public class UISearchForm extends UIForm {
 	    }
 		} else return null;
 	}
+	
   public String[] getActions() {
     return new String[]{"Search","Onchange", "Cancel"} ;
   }
+  
 	static	public class SearchActionListener extends EventListener<UISearchForm> {
     public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
@@ -255,49 +256,44 @@ public class UISearchForm extends UIForm {
 			Calendar toDateCreated= uiForm.getUIFormDateTimeInput(TODATECREATED).getCalendar() ;
 			Calendar fromDateCreatedLastPost = uiForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).getCalendar() ;
 			Calendar toDateCreatedLastPost = uiForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST).getCalendar() ;
-//			if(){
-				ForumEventQuery eventQuery = new ForumEventQuery() ;
-				eventQuery.setType(type) ;
-				eventQuery.setKeyValue(keyValue) ;
-				eventQuery.setValueIn(valueIn) ;
-				eventQuery.setPath(path) ;
-				eventQuery.setByUser(byUser);
-				eventQuery.setIsLock(isLock) ;
-				eventQuery.setIsClose(isClosed) ;
-				eventQuery.setTopicCountMin(uiForm.checkValue(topicCountMin)) ;
-				eventQuery.setTopicCountMax(uiForm.checkValue(topicCountMax)) ;
-				eventQuery.setPostCountMin(uiForm.checkValue(postCountMin)) ;
-				eventQuery.setPostCountMax(uiForm.checkValue(postCountMax)) ;
-				eventQuery.setViewCountMin(uiForm.checkValue(viewCountMin)) ;
-				eventQuery.setViewCountMax(uiForm.checkValue(viewCountMax)) ;
-				eventQuery.setModerator(moderator) ;
-				eventQuery.setFromDateCreated(fromDateCreated) ;
-				eventQuery.setToDateCreated(toDateCreated) ;
-				eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost) ;
-				eventQuery.setToDateCreatedLastPost(toDateCreatedLastPost) ;
-				
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = null ;
-				try {
-					list = forumService.getAdvancedSeach(ForumSessionUtils.getSystemProvider(),eventQuery);
-				}catch (Exception e) {
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIQuickSeachForm.msg.failure", null, ApplicationMessage.WARNING)) ;
-					return ;
-				}
-				
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
-				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
-				categories.setIsRenderChild(true) ;				
-				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
-				listSeachEvent.setListSeachEvent(list) ;
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-//			} else {
-//				Object[] args = { };
-//				throw new MessageException(new ApplicationMessage("UISearchForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
-//			}
+			ForumEventQuery eventQuery = new ForumEventQuery() ;
+			eventQuery.setType(type) ;
+			eventQuery.setKeyValue(keyValue) ;
+			eventQuery.setValueIn(valueIn) ;
+			eventQuery.setPath(path) ;
+			eventQuery.setByUser(byUser);
+			eventQuery.setIsLock(isLock) ;
+			eventQuery.setIsClose(isClosed) ;
+			eventQuery.setTopicCountMin(uiForm.checkValue(topicCountMin)) ;
+			eventQuery.setTopicCountMax(uiForm.checkValue(topicCountMax)) ;
+			eventQuery.setPostCountMin(uiForm.checkValue(postCountMin)) ;
+			eventQuery.setPostCountMax(uiForm.checkValue(postCountMax)) ;
+			eventQuery.setViewCountMin(uiForm.checkValue(viewCountMin)) ;
+			eventQuery.setViewCountMax(uiForm.checkValue(viewCountMax)) ;
+			eventQuery.setModerator(moderator) ;
+			eventQuery.setFromDateCreated(fromDateCreated) ;
+			eventQuery.setToDateCreated(toDateCreated) ;
+			eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost) ;
+			eventQuery.setToDateCreatedLastPost(toDateCreatedLastPost) ;
+			
+			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			List<ForumSearch> list = null ;
+			try {
+				list = forumService.getAdvancedSearch(ForumSessionUtils.getSystemProvider(),eventQuery);
+			}catch (Exception e) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+				return ;
+			}
+			
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
+			UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
+			categories.setIsRenderChild(true) ;				
+			UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
+			listSearchEvent.setListSearchEvent(list) ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 
@@ -305,9 +301,9 @@ public class UISearchForm extends UIForm {
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
 			String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
-			if(type.equals("forum")) {
+			if(type.equals(Utils.FORUM)) {
 				uiForm.setValueOnchange(false, true, true, true, true, false, true) ;
-			} else if(type.equals("topic")){
+			} else if(type.equals(Utils.TOPIC)){
 				uiForm.setValueOnchange(true, true, true, false, true, true, false) ;
 			} else {
 				uiForm.setValueOnchange(false, false, false, false, false, false, false) ;
@@ -319,7 +315,7 @@ public class UISearchForm extends UIForm {
 	static	public class ResetFieldActionListener extends EventListener<UISearchForm> {
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
-			uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue("forumCategory");
+			uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(Utils.CATEGORY);
 			uiForm.setValueOnchange(false, false, false, false, false, false, false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}

@@ -142,7 +142,7 @@
 								<div class="MiddleRightRightClickPopupMenu">
 									<div class="UIRightPopupMenuContainer" style="padding: 10px 15px;">
 										<div class="InputPage" style="float:left;">
-											<% uicomponent.renderChild("gopage1") ; %>
+											<% uicomponent.renderChild(ForumUtils.GOPAGE_ID_T) ; %>
 										</div>
 										<div class="UIActionForum" style="float:left;">
 											<div class="NormalButtom">
@@ -293,7 +293,7 @@
 											<div class="LeftOverButton" title="Search in this thread">
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
-														<div class="StatusIcon SeachIcon">
+														<div class="StatusIcon SearchIcon">
 															<div class="DownArrow1Icon">Search this Thread</div>
 														</div>
 													</div>
@@ -314,7 +314,7 @@
 														<div class="MiddleRightRightClickPopupMenu">
 															<div class="UIRightPopupMenuContainer">
 																<div class="InputPage" style="float:left;">
-																	<% uicomponent.renderChild("search") ; %>
+																	<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 																</div>
 																<div class="UIActionForum" style="float:left;">
 																	<div class="NormalButtom">
@@ -849,7 +849,7 @@
 								<div class="MiddleRightRightClickPopupMenu">
 									<div class="UIRightPopupMenuContainer" style="padding: 10px 15px;">
 										<div class="InputPage" style="float:left;">
-											<% uicomponent.renderChild("gopage2") ; %>
+											<% uicomponent.renderChild(ForumUtils.GOPAGE_ID_B) ; %>
 										</div>
 										<div class="UIActionForum" style="float:left;">
 											<div class="NormalButtom">

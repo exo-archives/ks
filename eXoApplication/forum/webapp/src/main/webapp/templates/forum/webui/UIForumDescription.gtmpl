@@ -1,13 +1,10 @@
 <%  
 	import org.exoplatform.forum.webui.UIForumDescription ;
 	import org.exoplatform.forum.service.Forum ;
+  Forum forum = uicomponent.getForum();
 %>
-<% Forum forum = uicomponent.getForum();
-	 if(forum == null) { 
-%>
-		This Forum moved or deleted !
-<% } else { %>
-<div class="UIForumDescription">
+<% if(forum != null) {  %>
+<div class="UIForumDescription" id="UIForumDescription">
 	<div class="LeftDescription">
 		<div class="RightDescription">
 			<div class="CenterDescription">
@@ -18,4 +15,6 @@
 		</div>
 	</div>
 </div>
+<% }else{ %>
+<div class="ForumDescription"><span></span></div>
 <% } %>

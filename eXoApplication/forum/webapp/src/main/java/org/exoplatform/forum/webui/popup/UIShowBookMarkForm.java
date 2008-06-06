@@ -16,15 +16,16 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumPathNotFoundException;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
@@ -64,8 +65,8 @@ import org.exoplatform.webui.form.UIForm;
 public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private UserProfile userProfile ;
+	private String []bookMark = new String[]{}; 
 	public UIShowBookMarkForm() {
-	  // TODO Auto-generated constructor stub
   }
 	
   public void activate() throws Exception {  }
@@ -73,69 +74,88 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
   
   @SuppressWarnings("unused")
   private String[] getBookMark() throws Exception {
-  	String []bookMark = new String[]{}; 
   	this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
   	bookMark = this.userProfile.getBookmark() ;
   	return bookMark ;
   } 
   
-  //TODO: Need to remove and make new code for below action !!!
+  private String getBookMarkId(String id) throws Exception {
+  	for (String str : this.bookMark) {
+	    if(str.indexOf(id) > 0) return str ;
+    }
+  	return "";
+  }
   static  public class OpenLinkActionListener extends EventListener<UIShowBookMarkForm> {
     public void execute(Event<UIShowBookMarkForm> event) throws Exception {
     	UIShowBookMarkForm bookMark = event.getSource() ;
     	String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
     	UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class) ;
     	UIApplication uiApp = bookMark.getAncestorOfType(UIApplication.class) ;
-    		if(path.indexOf(Utils.TOPIC) > 0) {
-      		String []id = path.split("/") ;
-      		int length = id.length ;
-      		forumPortlet.updateIsRendered(ForumUtils.FORUM);
-    			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-    			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-    			uiForumContainer.setIsRenderChild(false) ;
-    			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-    			Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-3] , id[length-2] ) ;
-    			Topic topic = bookMark.forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
-    			if(forum == null || topic == null) {
-    				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-    				return ;
+    	String []id = path.split("/") ;
+    	int length = id.length ;
+    	if(length == 3) {
+    		String path_ = "" ;
+    		Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+    		if(forum != null)path_ = forum.getPath()+"/"+id[2] ;
+    		Topic topic = bookMark.forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path_, false) ;
+    		if(forum == null || topic == null) {
+    			uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+    			path = bookMark.getBookMarkId(path) ;
+    			if(path != null && path.length() > 0) {
+    				bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
+    				forumPortlet.setUserProfile() ;
     			}
-    			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-    			uiTopicDetail.setTopicFromCate(id[length-3], id[length-2] , topic, true) ;
-    			uiTopicDetail.setUpdateForum(forum) ;
-    			uiTopicDetail.setIdPostView("true") ;
-    			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
-    			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
-      	} else if(path.indexOf(Utils.FORUM) > 0){
-      		String []id = path.split("/") ;
-      		int length = id.length ;
-      		Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;
-      		if(forum == null) {
-    				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-    				return ;
+    			return ;
+    		}
+    		forumPortlet.updateIsRendered(ForumUtils.FORUM);
+  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+  			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+  			uiForumContainer.setIsRenderChild(false) ;
+  			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+  			uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
+  			uiTopicDetail.setUpdateForum(forum) ;
+  			uiTopicDetail.setIdPostView("true") ;
+  			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
+  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+    	} else if(length == 2){
+    		Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+    		if(forum == null) {
+    			uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+    			path = bookMark.getBookMarkId(path) ;
+    			if(path != null && path.length() > 0) {
+    				bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
+    				forumPortlet.setUserProfile() ;
     			}
-    			forumPortlet.updateIsRendered(ForumUtils.FORUM);
-    			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-    			uiForumContainer.setIsRenderChild(true) ;
-    			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-    			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-    			uiTopicContainer.setUpdateForum(id[length-2], forum) ;
-    			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-2]+"/"+id[length-1]));
-  			} else if(path.indexOf(Utils.CATEGORY) > 0){
-  				String categoryId = path.substring(path.lastIndexOf("/")+1) ;
-  				try {
-  					forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(categoryId);
-  				}catch(ForumPathNotFoundException e) {
-  					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-    				return ;
-  				}
-      		UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-  				categoryContainer.getChild(UICategory.class).updateByBreadcumbs(categoryId) ;
-  				categoryContainer.updateIsRender(false) ;
-  				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-  			} else {
-  				return;
+  				return ;
   			}
+  			forumPortlet.updateIsRendered(ForumUtils.FORUM);
+  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+  			uiForumContainer.setIsRenderChild(true) ;
+  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+  			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
+  			uiTopicContainer.setUpdateForum(id[0], forum) ;
+  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
+			} else if(length == 1){
+				Category category = bookMark.forumService.getCategory(ForumSessionUtils.getSystemProvider(), path);
+				if(category == null) {
+					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+					path = bookMark.getBookMarkId(path) ;
+					if(path != null && path.length() > 0) {
+    				bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
+    				forumPortlet.setUserProfile() ;
+    			}
+  				return ;
+				}
+				List<Forum> list = bookMark.forumService.getForums(ForumSessionUtils.getSystemProvider(), path);
+    		UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.getChild(UICategory.class).update(category, list);
+				categoryContainer.updateIsRender(false) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path);
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+			} else {
+				return;
+			}
       forumPortlet.cancelAction() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
     }

@@ -1,150 +1,150 @@
-.UIForumPortlet .UIForumContainer {
+.UIForumContainer {
 	padding: 10px;
 }
 
-.UIForumPortlet .UIForumContainer .AddTheradIcon {
+.UIForumContainer .AddTheradIcon {
 	background: url('../skinIcons/16x16/icons/AddNewThreadIcon.gif') left center;
 }
 
-.UIForumPortlet .UIForumContainer .LockActionForum {
+.UIForumContainer .LockActionForum {
 	filter:alpha(opacity=50);-moz-opacity:.50;opacity:.50;
 }
 
-.UIForumPortlet .UIForumContainer .ButtomAndPageListContainer .UIPageIterator {
+.UIForumContainer .ButtomAndPageListContainer .UIPageIterator {
 	width: 60%;
 	float: right;
 	margin: 2px auto 0px 0px;
 }
 
-.UIForumPortlet .UIForumContainer .ForumToolbar .StatusIcon {
+.UIForumContainer .ForumToolbar .StatusIcon {
 	background-position: left center;
 	line-height: 22px;
 	padding-left: 22px;
 	margin: 0px;
 }
 
-.UIForumPortlet .UIForumContainer .ForumToolbar .ContentAction {
+.UIForumContainer .ForumToolbar .ContentAction {
 	padding: 2px 0px 0px 0px; 
 	margin: 0px;
 	float: right;
 	cursor:pointer;
 }
 
-.UIForumPortlet .UIForumContainer .ForumToolbar .DownArrow1Icon {
+.UIForumContainer .ForumToolbar .DownArrow1Icon {
 	background-position: right center;
 	padding-right: 16px;
 }
 
-.UIForumPortlet .UIForumContainer .SeparatorLine {
+.UIForumContainer .SeparatorLine {
 	float: right;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .UITopicList .TitleBold {
+.UIForumContainer .ContentContainer .UITopicList .TitleBold {
 	color: #204aa0;
 	font-size: 12px; font-weight: bold;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .UITopicList .TitleNorman {
+.UIForumContainer .ContentContainer .UITopicList .TitleNorman {
 	color: #204aa0;
 	font-size: 12px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .TitleNewpost {
+.UIForumContainer .ContentContainer .TitleNewpost {
 	font-weight: bold;
 	color: #204aa0;
 	float: left;
 	line-height: 18px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .Text {
+.UIForumContainer .ContentContainer .Text {
 	padding-left: 18px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .PostInfos {
+.UIForumContainer .ContentContainer .PostInfos {
 	float: right;
 	line-height: 22px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .StatusIcon {
+.UIForumContainer .ContentContainer .StatusIcon {
 	margin: auto;
 	width: 16px; height: 16px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .AvgRatingImages {
+.UIForumContainer .ContentContainer .AvgRatingImages {
 	margin: auto;
 	width: 82px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .VoteIcon {
+.UIForumContainer .ContentContainer .VoteIcon {
 	width: 16px; height: 16px;
 	float: left;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .ThreadStatusIcon {
+.UIForumContainer .ContentContainer .ThreadStatusIcon {
 	margin: auto;
 	width: 24px; height: 24px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .AttachmentIcon {
+.UIForumContainer .ContentContainer .AttachmentIcon {
 	margin: 2px 0px 0px 12px;
 	width: 16px; height: 16px;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .LeftArrowIcon {
+.UIForumContainer .ContentContainer .LeftArrowIcon {
 	margin: 0px 2px 0px 0px;
 	width: 16px; height: 16px;
 	float: left;
 	cursor: pointer;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .RightArrowIcon {
+.UIForumContainer .ContentContainer .RightArrowIcon {
 	margin: 3px 4px 0px 2px;
 	width: 16px; height: 16px;
 	float: right;
 	cursor: pointer;
 }
 
-.UIForumPortlet .UIForumContainer .ContentContainer .DownArrow1Icon {
+.UIForumContainer .ContentContainer .DownArrow1Icon {
 	padding-right: 16px;
 	cursor: pointer;
 }
 
-.UIForumPortlet .UIForumContainer .UIForumInfos {
+.UIForumContainer .UIForumInfos {
 	width: 100%;
 	padding-top: 5px;
 }
 
-.UIForumPortlet .UIForumContainer .LeftStartsList {
+.UIForumContainer .LeftStartsList {
 	margin: 0px 310px 0px 0px;
 }
 
-.UIForumPortlet .UIForumContainer .RightStartsList {
+.UIForumContainer .RightStartsList {
 	float: right;
 	width: 300px;
 	margin: 0px 0px 0px 0px;
 }
 
-.UIForumPortlet .UIForumContainer .RightStartsList .BoldTitle {
+.UIForumContainer .RightStartsList .BoldTitle {
 	font-weight: bold;
 	line-height: 18px;
 }
 
-.UIForumPortlet .UIForumContainer .UIForumInfos .ContentContainer {
+.UIForumContainer .UIForumInfos .ContentContainer {
 	border: 1px solid #b7b7b7;
 	border-top: none;
 	padding: 5px;
 	height: 75px;
 }
 
-.UIForumPortlet .UIForumContainer .UIPostRules {
+.UIForumContainer .UIPostRules {
 	margin: 0px;
 }
 
-.UIForumPortlet .UITopicDetail .UIPostRules {
+.UITopicDetail .UIPostRules {
 	margin: 3px 0px 0px 0px;
 }
 
-.UIForumPortlet .UIPostRules .ForumCategory .ContentContainer {
+.UIPostRules .ForumCategory .ContentContainer {
 	border: 1px solid #b7b7b7;
 	border-top: none;
 	padding: 5px;
@@ -152,7 +152,13 @@
 	line-height: 18px;
 }
 
-.UIForumPortlet .UIPostRules .ForumCategory .ContentContainer .BoldTitle {
+.UIPostRules .ForumCategory .ContentContainer .BoldTitle {
 	font-weight: bold ;
 	line-height: 18px;
+}
+
+.UIForumContainer .UITopicContainer .TopicDeleted {
+	border: 1px outset ;
+	color: black;
+	padding: 10px;
 }

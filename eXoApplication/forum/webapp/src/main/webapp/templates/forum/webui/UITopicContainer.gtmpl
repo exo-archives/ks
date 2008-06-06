@@ -14,9 +14,20 @@
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
-%>
-<%	
 	Forum forum = uicomponent.getForum() ;
+  
+	if(forum == null) {
+%>
+<div class="UITopicContainer">
+	 <%uiform.begin();%>
+	 <div class="TopicDeleted">
+		This Forum moved or deleted !
+	 </div>
+	 <%uiform.end() ;%>
+</div>
+<%  
+	return;
+ }
 	uicomponent.initPage() ;
 	String forumName = forum.getForumName();
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
@@ -97,7 +108,7 @@
 								<div class="MiddleRightRightClickPopupMenu">
 									<div class="UIRightPopupMenuContainer" style="padding: 10px 15px;">
 										<div class="InputPage" style="float:left;">
-											<% uicomponent.renderChild("gopage1") ; %>
+											<% uicomponent.renderChild(ForumUtils.GOPAGE_ID_T) ; %>
 										</div>
 										<div class="UIActionForum" style="float:left;">
 											<div class="NormalButtom">
@@ -202,7 +213,7 @@
 										<div class="LeftOverButton" title="Search in this forum">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
-													<div class="StatusIcon SeachIcon">
+													<div class="StatusIcon SearchIcon">
 														<div class="DownArrow1Icon">Search this Forum</div>
 													</div>
 												</div>
@@ -223,7 +234,7 @@
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
 															<div class="InputPage" style="float:left;">
-																<% uicomponent.renderChild("search") ; %>
+																<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 															</div>
 															<div class="UIActionForum" style="float:left;">
 																<div class="NormalButtom">
@@ -430,8 +441,8 @@
 											}
 										}
 										
-										String actionBookmark = uicomponent.event("AddBookMark",iconClassTopic+"//"+topicTitle+"//"+topic.getPath());
-										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",topic.getPath());
+										String actionBookmark = uicomponent.event("AddBookMark",iconClassTopic+"//"+topicTitle+"//"+topicId);
+										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",topicId);
 								%>
 									<tr class="$classRow">
 										<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
@@ -512,7 +523,7 @@
 									 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 										<td class="Tdbox" align="center">$postView</td>
 										<% if(canEdit) { %>
-										<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><%uicomponent.renderChild(topic.getId())%></td>
+										<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><%uicomponent.renderChild(topicId)%></td>
 						 				<% } %>
 						 			</tr>
 						 	<% 
@@ -586,7 +597,7 @@
 								<div class="MiddleRightRightClickPopupMenu">
 									<div class="UIRightPopupMenuContainer" style="padding: 10px 15px;">
 										<div class="InputPage" style="float:left;">
-											<% uicomponent.renderChild("gopage2") ; %>
+											<% uicomponent.renderChild(ForumUtils.GOPAGE_ID_B) ; %>
 										</div>
 										<div class="UIActionForum" style="float:left;">
 											<div class="NormalButtom">

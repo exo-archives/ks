@@ -11,11 +11,13 @@
 	import org.exoplatform.web.application.JavascriptManager;
   def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UICategory') ;") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UICategory') ;") ;
+	Category category = uicomponent.getCategory();
+	if(category == null) return ; 
 %>
 <% 
-	Category category = uicomponent.getCategory(); 
+	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UICategory') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UICategory') ;") ;
+	String categoryId = category.getId();
 	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
 	String userLogin = userProfile.getUserId() ;
@@ -109,7 +111,7 @@
 									<div class="LeftOverButton" title="Search in this Category">
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
-												<div class="StatusIcon SeachIcon" style="width: 120px;">
+												<div class="StatusIcon SearchIcon" style="width: 120px;">
 													<div class="DownArrow1Icon">Search this Category</div>
 												</div>
 											</div>
@@ -129,7 +131,7 @@
 												<div class="MiddleRightRightClickPopupMenu">
 													<div class="UIRightPopupMenuContainer">
 														<div class="InputPage" style="float:left;">
-															<% uicomponent.renderChild("search") ; %>
+															<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 														</div>
 														<div class="UIActionForum" style="float:left;">
 															<div class="NormalButtom">
@@ -195,16 +197,24 @@
 						<td></td>
 						<% } %>
 					</tr>
-				<% }else {%>
-					<%
+				<%}else {
 						GregorianCalendar calendar = new GregorianCalendar() ;
 						long toDay = calendar.getTimeInMillis();
 						String classRow = "whileRow";
 						int i = 0;
+						String topicNewPostIcon = "";
+						String topicNewPostTitle = "";
+						String lastPostBy = "";
+						String dateTime = "";
+						String openLinkLastPost = "#";
+						String titleTopic = "" ;
+					 	String topicId = "";
+					 	String path = "";
 						 for(forum in forums) {
 							if(i%2 == 0) classRow = "whileRow";
 							else classRow = "OddRow";
 							++i;
+							String forumId = forum.getId();
 							String classIconForum = "ForumNormalIcon";
 							String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
 							String forumTitle = forum.getForumName();
@@ -212,16 +222,11 @@
 							String topicCount = (String)forum.getTopicCount();
 							String postCount = (String)forum.getPostCount();
 							List forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
-							String topicNewPostIcon = "";
-							String topicNewPostTitle = "";
-							String lastPostBy = "";
-							String dateTime = "";
-							String openLinkLastPost = "#";
-							String titleTopic = "" ;
 							long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-							
+							path = categoryId+"/"+forumId ;
 						 	Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
 						 	if(topicNewPost != null) {
+						 		topicId = topicNewPost.getId();
 								topicNewPostIcon = topicNewPost.getIcon();
 								if(topicNewPostIcon.length() <= 0)
 												topicNewPostIcon = "NormalTopicIcon" ;
@@ -238,7 +243,7 @@
 								titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle) ;
 								if(topicNewPost.getIsClosed()) {
 									if(ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin) {
-										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
+										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
 									} else {
 										openLinkLastPost = "javascript:void(0)";
 										titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
@@ -246,13 +251,13 @@
 								} else {
 									if(forum.getIsModerateTopic()) {
 										if(topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin){
-											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
+											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
 										} else {
 											openLinkLastPost = "javascript:void(0)";
 											titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 										}
 									} else {
-										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forum.getId()+'/'+topicNewPost.getId())) ;
+										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
 									}
 								}
 								titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
@@ -270,8 +275,8 @@
 								classIconForum = "ForumCloseIcon";
 								titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 							}
-							actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+forum.getPath());
-							actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",forum.getPath());
+							actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+path);
+							actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",path);
 							String lineHeight = "line-height: 12px;";
 							if(forumDescription == null || forumDescription.trim().length() <= 0) {
 								lineHeight = "line-height: 28px;";
@@ -281,7 +286,7 @@
 									<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 									<td >
 										<div style="float:left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-											<a style="$lineHeight" href="<%=uicomponent.event("OpenForumLink", forum.getId())%>" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+											<a style="$lineHeight" href="<%=uicomponent.event("OpenForumLink", forumId)%>" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 													<div action="$actionBookmark" class="ClickPopupContent"></div>
@@ -293,8 +298,8 @@
 										<div class="ForumDescription">$forumDescription</div>
 									</td>
 						 <% if(topicNewPost != null) { 
-						 			actionBookmark = uicomponent.event("AddBookMark",topicNewPostIcon+"//"+topicNewPostTitle+"//"+forum.getLastTopicPath());
-						 			actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",forum.getLastTopicPath());
+						 			actionBookmark = uicomponent.event("AddBookMark",topicNewPostIcon+"//"+topicNewPostTitle+"//"+path+"/"+topicId);
+						 			actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",path+"/"+topicId);
 						 %>
 									<td >
 								 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
@@ -335,7 +340,7 @@
 										<div style="clear: left;"><span></span></div>
 									</td>
 								<% if(isShowMenu){ %>
-									<td isLock="$isLock" isClose="$isClose" class="Tdbox" onclick="eXo.forum.UIForumPortlet.selectItem(this.firstChild)"><% uicomponent.renderChild(forum.getId())%></td>
+									<td isLock="$isLock" isClose="$isClose" class="Tdbox" onclick="eXo.forum.UIForumPortlet.selectItem(this.firstChild)"><% uicomponent.renderChild(forumId)%></td>
 								<% } %>
 								 </tr>
 					 <%	} 

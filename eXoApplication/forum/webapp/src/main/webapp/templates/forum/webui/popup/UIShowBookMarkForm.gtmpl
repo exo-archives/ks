@@ -13,12 +13,13 @@
 					String linkName = ""; 
 					String linkPath = "";
 					String icon = ""; 
-					int index = 0;
+					int index = 0, lastIndex = 0;
 					for(links in uiform.getBookMark()){
 						index = links.indexOf("//") ;
 						icon = links.substring(0, index);
-						linkName = links.substring(index+2,links.lastIndexOf("//")-1);
-						linkPath = links.substring(links.lastIndexOf("//") + 1);
+						lastIndex = links.lastIndexOf("//") ;
+						linkName = links.substring(index+2,lastIndex);
+						linkPath = links.substring(lastIndex + 2);
 				%>
 					<div class="LinkContent">
 						<div class="IconContent $icon"><span></span></div>
