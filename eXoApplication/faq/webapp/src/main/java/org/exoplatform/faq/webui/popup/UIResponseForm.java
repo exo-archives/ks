@@ -23,6 +23,7 @@ import java.util.List;
 import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
@@ -152,7 +153,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     this.questionId_ = question.getId() ;
     initPage(false) ;
   }
-  @SuppressWarnings("unused")
+  
   public String getQuestionId(){ 
     return questionId_ ; 
   }
@@ -366,12 +367,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       question_.setAttachMent(response.listFileAttach_) ;
       
-      Node quesitonNode = null ;
+      Node questionNode = null ;
       try{
-        quesitonNode = faqService.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
+        questionNode = faqService.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
         MultiLanguages multiLanguages = new MultiLanguages() ;
         for(int i = 1; i < response.listQuestionLanguage.size(); i ++) {
-          multiLanguages.addLanguage(quesitonNode, response.listQuestionLanguage.get(i)) ;
+          multiLanguages.addLanguage(questionNode, response.listQuestionLanguage.get(i)) ;
         }
       } catch (Exception e) {
         UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
@@ -388,6 +389,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
+        if(questionNode!= null && !questions.getCategoryId().equals(question_.getCategoryId())) {
+          UIApplication uiApplication = response.getAncestorOfType(UIApplication.class) ;
+          Category category = faqService.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        }
       } else {
         UIQuestionManagerForm questionManagerForm = response.getParent() ;
         UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;
@@ -422,6 +429,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       UIAddRelationForm addRelationForm = popupAction.activate(UIAddRelationForm.class, 500) ;
+      addRelationForm.setQuestionId(response.questionId_) ;
       addRelationForm.setRelationed(response.getListIdQuesRela()) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }

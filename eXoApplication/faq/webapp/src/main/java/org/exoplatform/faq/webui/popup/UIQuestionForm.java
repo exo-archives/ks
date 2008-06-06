@@ -28,6 +28,7 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
@@ -83,6 +84,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   public static final String IS_APPROVED = "IsApproved" ;
   public static final String IS_ACTIVATED = "IsActivated" ;
   
+  private UIFormStringInput inputAuthor = null ;
+  private UIFormStringInput inputEmailAddress = null ;
+  private static UIFormInputWithActions listFormWYSIWYGInput = null ;
+  private UIFormCheckBoxInput inputIsApproved = null ;
+  private UIFormCheckBoxInput inputIsActivated = null ;
+  private UIFormInputWithActions inputAttachcment = null ;
+  
   private static FAQService fAQService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private static Question question_ = null ;
   
@@ -91,7 +99,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
   private List<QuestionLanguage> listLanguageNode = new ArrayList<QuestionLanguage>() ;
-  private static UIFormInputWithActions listFormWYSIWYGInput ;
   private String categoryId_ = null ;
   private String questionId_ = null ;
   private String defaultLanguage_ = "" ;
@@ -131,6 +138,18 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       this.removeChildById(LIST_WYSIWYG_INPUT);
       this.removeChildById(ATTACHMENTS);
       this.removeChildById(IS_APPROVED) ;
+    } else {
+      inputAuthor = new UIFormStringInput(AUTHOR, AUTHOR, author_) ;
+      inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_) ;
+      inputIsApproved = (new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)) ;
+      inputIsActivated = (new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)) ;
+      inputAttachcment = new UIFormInputWithActions(ATTACHMENTS) ;
+      inputAttachcment.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
+      try{
+        inputAttachcment.setActionField(FILE_ATTACHMENTS, getActionList()) ;
+      } catch (Exception e) {
+        e.printStackTrace() ;
+      }
     }
     
     listFormWYSIWYGInput = new UIFormInputWithActions(LIST_WYSIWYG_INPUT) ;
@@ -147,23 +166,15 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       }
       listFormWYSIWYGInput.addUIFormInput(textAreaInput );
     }
-    
-    UIFormInputWithActions inputWithActions = new UIFormInputWithActions(ATTACHMENTS) ;
-    inputWithActions.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
-    try{
-      inputWithActions.setActionField(FILE_ATTACHMENTS, getActionList()) ;
-    } catch (Exception e) {
-      e.printStackTrace() ;
-    }
-    addChild(new UIFormStringInput(AUTHOR, AUTHOR, author_)) ;
-    addChild(new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_)) ;
+    addChild(inputAuthor) ;
+    addChild(inputEmailAddress) ;
     addChild(listFormWYSIWYGInput) ;
     if(questionId_ != null && questionId_.trim().length() > 0) {
-      addChild((new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)).setChecked(question_.isApproved())) ;
-      addChild((new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)).setChecked(question_.isActivated())) ;
+      addChild(inputIsApproved.setChecked(question_.isApproved())) ;
+      addChild(inputIsActivated.setChecked(question_.isActivated())) ;
     }
-    addUIFormInput(inputWithActions) ;
-    if(question_ != null) {
+    addUIFormInput(inputAttachcment) ;
+    if(question_ != null && !isEdit) {
       this.setListFileAttach(question_.getAttachMent()) ;
       try {
         refreshUploadFileList() ;
@@ -441,6 +452,12 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+        if(questionNode!= null && !questions.getCategoryId().equals(question_.getCategoryId())) {
+          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+          Category category = fAQService_.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        }
       } else {
         UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
         UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
