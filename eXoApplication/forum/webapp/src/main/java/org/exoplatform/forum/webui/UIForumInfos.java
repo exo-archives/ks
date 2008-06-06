@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.service.Forum;
@@ -35,7 +36,7 @@ import org.exoplatform.webui.core.UIContainer;
 		template =	"app:/templates/forum/webui/UIForumInfos.gtmpl"
 )
 public class UIForumInfos extends UIContainer	{
-	private List<String> moderators ;
+	private List<String> moderators = new ArrayList<String>();
   private UserProfile userProfile ;
 	public UIForumInfos() throws Exception { 
 		addChild(UIPostRules.class, null, null);

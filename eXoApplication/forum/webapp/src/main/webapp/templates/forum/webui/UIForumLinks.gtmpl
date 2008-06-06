@@ -12,10 +12,10 @@
 		  	<table class="UIFormGrid">
 		  		<tbody>
 		  			<tr>
-		  				<td class="FieldLabel"><%=uicomponent.getLabel("forumLink")%>:</td>
+		  				<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</td>
 		  				<td>
 			  				<div style="float:left;">
-			  				<% uicomponent.renderChild("forumLink"); %>
+			  				<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
 			  				</div>
 		  					<div class="UIActionForum" onclick="script:scroll(0,0)">
 							  	<div class="NormalButtom">

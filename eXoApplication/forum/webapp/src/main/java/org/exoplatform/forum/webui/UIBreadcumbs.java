@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumPathNotFoundException;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -60,6 +59,7 @@ public class UIBreadcumbs extends UIContainer {
 	private String forumHomePath_ ;
 	public static final String FORUM_SERVICE = Utils.FORUM_SERVICE ;
 	private UserProfile userProfile ;
+	private boolean isLink = false ;
 	public UIBreadcumbs()throws Exception {
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
@@ -67,6 +67,7 @@ public class UIBreadcumbs extends UIContainer {
 	}
 
 	public void setUpdataPath(String path) throws Exception {
+		isLink = false ;
 		if(path != null && path.length() > 0 && !path.equals(FORUM_SERVICE)) {
 			String temp[] = path.split("/") ;
 			String pathNode = forumHomePath_;
@@ -78,11 +79,16 @@ public class UIBreadcumbs extends UIContainer {
 				breadcumbs_.add(ForumUtils.FIELD_SEARCHFORUM_LABEL) ;
 				path_.add("/"+ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			} else {
-				String tempPath = "";
+				String tempPath = ""; int i = 0;
 				for (String string : temp) {
 					pathNode = pathNode + "/" + string;
 					Object obj = forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode) ;
-					if(obj == null) throw new ForumPathNotFoundException() ;
+					if(obj == null) {
+						if(i == 0) {
+							isLink = true;
+						}
+						break;
+					}
 					if(obj instanceof Category) {
 						Category category = (Category)obj ;
 						tempPath = string;
@@ -100,6 +106,7 @@ public class UIBreadcumbs extends UIContainer {
 						breadcumbs_.add(tag.getName()) ;
 					}
 					path_.add(tempPath) ;
+					++i;
 				}
 			}
 		} else {
@@ -110,6 +117,8 @@ public class UIBreadcumbs extends UIContainer {
 		}
 	}
 	
+	@SuppressWarnings("unused")
+  private boolean isLink() {return this.isLink;}
 	@SuppressWarnings("unused")
 	private String getPath(int index) {
 		return this.path_.get(index) ;

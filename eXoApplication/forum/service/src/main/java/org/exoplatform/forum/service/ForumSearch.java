@@ -22,7 +22,7 @@ package org.exoplatform.forum.service;
  *	  tu.duy@exoplatform.com
  * 14 Apr 2008, 07:09:02	
  */
-public class ForumSeach {
+public class ForumSearch {
 	private String id;
 	private String path ;
 	private String type ;
@@ -30,7 +30,7 @@ public class ForumSeach {
 	private String content ;
 	private String icon ;
 	
-	public ForumSeach() {}
+	public ForumSearch() {}
 	
 	public String getId() {
   	return id;

@@ -34,7 +34,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.ForumSeach;
+import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
@@ -157,9 +157,9 @@ public class UITopicDetail extends UIForm {
   public boolean isRefreshed() { return isRefreshed ; }
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
-		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
-		addUIFormInput( new UIFormStringInput("gopage2", null)) ;
-		addUIFormInput( new UIFormStringInput("search", null)) ;
+		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
+		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
+		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 		addUIFormInput( new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA,null)) ;
 		addChild(UIForumPageIterator.class, null, "TopicPageIterator") ;
 		addChild(UIPostRules.class, null, null);
@@ -579,7 +579,7 @@ public class UITopicDetail extends UIForm {
     public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String path = topicDetail.topic.getPath() ;
-			UIFormStringInput formStringInput = topicDetail.getUIStringInput("search") ;
+			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0 && path != null) {
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
@@ -589,15 +589,15 @@ public class UITopicDetail extends UIForm {
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,post", path);
-				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
-				listSeachEvent.setListSeachEvent(list) ;
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,post", path);
+				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
+				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 				formStringInput.setValue("") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UIQuickSearchForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
 			}
 		}
 	}
@@ -612,8 +612,8 @@ public class UITopicDetail extends UIForm {
     public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			int idbt = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
-			UIFormStringInput stringInput1 = topicDetail.getUIStringInput("gopage1") ;
-			UIFormStringInput stringInput2 = topicDetail.getUIStringInput("gopage2") ;
+			UIFormStringInput stringInput1 = topicDetail.getUIStringInput(ForumUtils.GOPAGE_ID_T) ;
+			UIFormStringInput stringInput2 = topicDetail.getUIStringInput(ForumUtils.GOPAGE_ID_B) ;
 			String numberPage = "" ;
 			if(idbt == 1) {
 				numberPage = stringInput1.getValue() ;

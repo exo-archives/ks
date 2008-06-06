@@ -7,29 +7,29 @@
 	height: 470px;
 }
 
-/**************************** UIQuickSeachForm **************************/
-.UIForumPortlet .UIQuickSeachForm .SearchForm {
+/**************************** UIQuickSearchForm **************************/
+.UIForumPortlet .UIQuickSearchForm .SearchForm {
 	padding:3px 13px 0px 0px;
 }
 
-.UIForumPortlet .UIQuickSeachForm .Label {
+.UIForumPortlet .UIQuickSearchForm .Label {
 	float: right;
 	line-height: 20px;
 	margin: 2px 0px;
 	color: #595b6a; 
 }
 
-.UIForumPortlet .UIQuickSeachForm .Input {
+.UIForumPortlet .UIQuickSearchForm .Input {
 	margin: 0px 8px 0px 10px;
 	float: right ;
 }
 
-.UIForumPortlet .UIQuickSeachForm .Input input {
+.UIForumPortlet .UIQuickSearchForm .Input input {
 	width: 130px;
 	height: 15px;
 }
 
-.UIForumPortlet .UIQuickSeachForm .Search {
+.UIForumPortlet .UIQuickSearchForm .Search {
 	background: url('icons/16x16/SearchIcon.gif') no-repeat ;	
 	height: 16px;
 	width: 16px;
@@ -38,14 +38,14 @@
 	cursor: pointer;
 }
 
-.UIForumPortlet .UIQuickSeachForm .AdvancedSearch {
+.UIForumPortlet .UIQuickSearchForm .AdvancedSearch {
 	background: url('icons/16x16/FindIcon.gif') no-repeat ;	
 	height: 16px; width: 16px;
 	float: right; cursor: pointer;
 	margin: 3px 0px 0px 2px;
 }
 
-.UIForumPortlet .UIQuickSeachForm .SeparatorLine {
+.UIForumPortlet .UIQuickSearchForm .SeparatorLine {
 	float: right;
 	margin: -3px 7px;
 }

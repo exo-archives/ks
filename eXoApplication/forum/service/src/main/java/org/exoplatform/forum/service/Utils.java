@@ -30,7 +30,7 @@ public class Utils {
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	
 	public final static String FORUMADMINISTRATION = "forumAdministration".intern() ;
-	public final static String CATEGORY = "category".intern() ;
+	public final static String CATEGORY = "forumCategory".intern() ;
 	public final static String FORUM = "forum".intern() ;
 	public final static String TOPIC = "topic".intern() ;
 	public final static String POST = "post".intern() ;

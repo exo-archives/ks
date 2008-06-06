@@ -39,8 +39,11 @@ import javax.mail.internet.InternetAddress;
 public class ForumUtils {
 	public static final String FIELD_EXOFORUM_LABEL = "eXoForum".intern() ;
 	public static final String FIELD_SEARCHFORUM_LABEL = "SearchForum".intern() ;
+	public static final String SEARCHFORM_ID = "SearchForm".intern() ;
+	public static final String GOPAGE_ID_T = "goPageTop".intern() ;
+	public static final String GOPAGE_ID_B = "goPageBottom".intern() ;
 	
-	public static final String CATEGORIES = "Category".intern() ;
+	public static final String CATEGORIES = "Categories".intern() ;
 	public static final String CATEGORY = "Category".intern() ;
 	public static final String FORUM = "Forum".intern() ;
 	public static final String THREAD = "Thread".intern() ;

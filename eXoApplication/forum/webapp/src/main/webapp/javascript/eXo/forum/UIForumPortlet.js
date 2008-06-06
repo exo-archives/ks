@@ -232,7 +232,7 @@ UIForumPortlet.prototype.overVote = function(event) {
 
 
 UIForumPortlet.prototype.showPopup = function(elevent,e) {
-	var strs = ["gopage1","gopage2","search"];
+	var strs = ["goPageTop","goPageBottom","SearchForm"];
 	for(var t = 0 ; t < strs.length; t ++) {
 		var elm = document.getElementById(strs[t]);
 		if(elm)elm.onclick = eXo.forum.UIForumPortlet.cancel ;

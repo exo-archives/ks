@@ -44,7 +44,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isCategoryRendered = true;
 	private boolean isForumRendered = false;
 	private boolean isTagRendered = false;
-	private boolean isSeachRendered = false;
+	private boolean isSearchRendered = false;
 	private boolean isJumpRendered = false;
 	private boolean isLogin = true ;
 	private UserProfile userProfile = null;
@@ -53,7 +53,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
 		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
-		addChild(UISearchForm.class, null, null).setRendered(isSeachRendered) ;
+		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(false) ;
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 	}
@@ -63,29 +63,29 @@ public class UIForumPortlet extends UIPortletApplication {
 			isCategoryRendered = true ;
 			isForumRendered = false ;
 			isTagRendered = false ;
-			isSeachRendered = false ;
+			isSearchRendered = false ;
 		} else if(selected == ForumUtils.FORUM) {
 			isForumRendered = true ;
 			isCategoryRendered = false ;
 			isTagRendered = false ;
-			isSeachRendered = false ;
+			isSearchRendered = false ;
 		} else if(selected == ForumUtils.TAG) {
 			isTagRendered = true ;
 			isForumRendered = false ;
 			isCategoryRendered = false ;
-			isSeachRendered = false ;
+			isSearchRendered = false ;
 		} else {
 			isTagRendered = false ;
 			isForumRendered = false ;
 			isCategoryRendered = false ;
-			isSeachRendered = true ;
+			isSearchRendered = true ;
 		}
 		UICategoryContainer categoryContainer = getChild(UICategoryContainer.class).setRendered(isCategoryRendered) ;
 		categoryContainer.setIsRenderJump(isJumpRendered) ;
 		UIForumContainer forumContainer = getChild(UIForumContainer.class).setRendered(isForumRendered) ;
 		forumContainer.setIsRenderJump(isJumpRendered) ;
 		getChild(UITopicsTag.class).setRendered(isTagRendered) ;
-		getChild(UISearchForm.class).setRendered(isSeachRendered) ;
+		getChild(UISearchForm.class).setRendered(isSearchRendered) ;
 	}
 	
 	@SuppressWarnings("unused")

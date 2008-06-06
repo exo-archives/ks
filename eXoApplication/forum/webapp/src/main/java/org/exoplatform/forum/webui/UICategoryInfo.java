@@ -126,12 +126,12 @@ public class UICategoryInfo extends UIContainer	{
 		if(mostUserOnlines != null && mostUserOnlines.length() > 0) {
 			mumberUserOnline = Long.parseLong(mostUserOnlines.split(",")[0]) ;
 			if(this.mostUserOnline_ > mumberUserOnline) {
-				mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date);
+				mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date) + " GMT+0";
 				forumStatistic.setMostUsersOnline(mostUserOnlines) ;
 				isSave = true ;
 			}
 		} else {
-			mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date);
+			mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date) + " GMT+0";
 			forumStatistic.setMostUsersOnline(mostUserOnlines) ;
 			isSave = true ;
 		} 

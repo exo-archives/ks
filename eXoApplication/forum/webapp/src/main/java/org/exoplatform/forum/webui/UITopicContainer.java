@@ -24,7 +24,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumSeach;
+import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
@@ -114,9 +114,9 @@ public class UITopicContainer extends UIForm {
 	private UserProfile userProfile = null;
   private String strQuery = "" ;
 	public UITopicContainer() throws Exception {
-		addUIFormInput( new UIFormStringInput("gopage1", null)) ;
-		addUIFormInput( new UIFormStringInput("gopage2", null)) ;
-		addUIFormInput( new UIFormStringInput("search", null)) ;
+		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
+		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
+		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 		addChild(UIForumPageIterator.class, null, "ForumPageIterator") ;
 	}
 	
@@ -165,7 +165,8 @@ public class UITopicContainer extends UIForm {
 			this.isUpdate = false ;
 		}
 		UIForumContainer forumContainer = this.getParent() ;
-		forumContainer.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
+		if(this.forum != null)
+			forumContainer.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
 		return this.forum ;
 	}
 	
@@ -292,9 +293,8 @@ public class UITopicContainer extends UIForm {
 	static public class SearchFormActionListener extends EventListener<UITopicContainer> {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource() ;
-			//String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String path = uiTopicContainer.forum.getPath() ;
-			UIFormStringInput formStringInput = uiTopicContainer.getUIStringInput("search") ;
+			UIFormStringInput formStringInput = uiTopicContainer.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0 && path != null) {
 				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -302,15 +302,15 @@ public class UITopicContainer extends UIForm {
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,topic/post", path);
-				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
-				listSeachEvent.setListSeachEvent(list) ;
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,topic/post", path);
+				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
+				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 				formStringInput.setValue("") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UIQuickSearchForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
 			}
 			
 		}
@@ -320,8 +320,8 @@ public class UITopicContainer extends UIForm {
     public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer topicContainer = event.getSource() ;
 			int idbt = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
-			UIFormStringInput stringInput1 = topicContainer.getUIStringInput("gopage1") ;
-			UIFormStringInput stringInput2 = topicContainer.getUIStringInput("gopage2") ;
+			UIFormStringInput stringInput1 = topicContainer.getUIStringInput(ForumUtils.GOPAGE_ID_T) ;
+			UIFormStringInput stringInput2 = topicContainer.getUIStringInput(ForumUtils.GOPAGE_ID_B) ;
 			String numberPage = "" ;
 			if(idbt == 1) {
 				numberPage = stringInput1.getValue() ;
@@ -877,19 +877,6 @@ public class UITopicContainer extends UIForm {
 		}
 	}	
 	
-	static public class AddBookMarkActionListener extends EventListener<UITopicContainer> {
-		public void execute(Event<UITopicContainer> event) throws Exception {
-			UITopicContainer uiContainer = event.getSource();
-			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String userName = uiContainer.userProfile.getUserId() ;
-			if(path != null && path.trim().length() > 0) {
-				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
-				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.setUserProfile() ;
-			}
-		}
-	}
-
 	static public class SetUnWaitingActionListener extends EventListener<UITopicContainer> {
 		@SuppressWarnings("unchecked")
     public void execute(Event<UITopicContainer> event) throws Exception {
@@ -939,10 +926,27 @@ public class UITopicContainer extends UIForm {
 		}
 	}
 	
+	static public class AddBookMarkActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer topicContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String string = path.substring(path.lastIndexOf("//")+2) ;
+			String path_ = topicContainer.categoryId+"/"+topicContainer.forumId+"/"+string ;
+			path = path.replaceFirst(string, path_);
+			String userName = topicContainer.userProfile.getUserId() ;
+			if(path != null && path.trim().length() > 0) {
+				topicContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
+				UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.setUserProfile() ;
+			}
+		}
+	}
+	
 	static public class AddWatchingActionListener extends EventListener<UITopicContainer> {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer topicContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			path = topicContainer.categoryId+"/"+topicContainer.forumId+"/"+path ;
 			UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;

@@ -35,7 +35,8 @@
 			 for(category in categories) {
 			   if(uicomponent.getIsPrivate(userProfile,category)) {
 					 String title = category.getCategoryName();
-					 actionBookmark = uicomponent.event("AddBookMark","CategoryNormalIcon//"+title+"//"+category.getPath());
+					 String categoryId = category.getId();
+					 actionBookmark = uicomponent.event("AddBookMark","CategoryNormalIcon//"+title+"//"+categoryId);
 		 %>
 			<div class="UIForumCategory">
 				<div class="ForumToolbar">
@@ -92,11 +93,18 @@
 									GregorianCalendar calendar = new GregorianCalendar() ;
 									long toDay = calendar.getTimeInMillis();
 									String classRow = "whileRow";
+									String topicNewPostIcon = "";
+									String topicNewPostTitle = "";
+									String lastPostBy = "";
+									String dateTime = "";
+									String titleTopic = "" ;
+			 						String topicPath = "";
 									int i = 0;
 				 					for(forum in forums) {
 										if(i%2 == 0) classRow = "whileRow";
 										else classRow = "OddRow";
 										++i;
+										String forumId = forum.getId();
 										String classIconForum = "ForumNormalIcon";
 										String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 										String forumTitle = forum.getForumName();
@@ -104,15 +112,11 @@
 										List  forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
 										String topicCount = (String)forum.getTopicCount();
 										String postCount = (String)forum.getPostCount();
-										String topicNewPostIcon = "";
-										String topicNewPostTitle = "";
-										String lastPostBy = "";
-										String dateTime = "";
 										String openLinkLastPost = "javascript:void(0)";
-										String titleTopic = "" ;
 										long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
 				 						if(topicNewPost != null) {
+				 							topicPath = categoryId+'/'+forumId+'/'+topicNewPost.getId() ;
 											topicNewPostIcon = topicNewPost.getIcon();
 											if(topicNewPostIcon.length() <= 0)
 												topicNewPostIcon = "NormalTopicIcon" ;
@@ -129,19 +133,19 @@
 											titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle);
 											if(topicNewPost.getIsClosed()) {
 												if(ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin) {
-													openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
+													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 												} else {
 													titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
 												}
 											} else {
 												if(forum.getIsModerateTopic()) {
 													if(topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin){
-														openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
+														openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 													} else {
 														titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 													}
 												} else {
-													openLinkLastPost = uicomponent.event("OpenLastTopicLink", (category.getId()+'/'+forum.getId()+'/'+topicNewPost.getId())) ;
+													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 												}
 											}
 											titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
@@ -156,8 +160,8 @@
 											titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 										}
 										String id = category.getId() + "," + forum.getId();
-										actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+forum.getPath());
-										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",forum.getPath());
+										actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+categoryId+'/'+forumId);
+										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",categoryId+'/'+forumId);
 										String lineHeight = "line-height: 12px;";
 										if(forumDescription == null || forumDescription.trim().length() <= 0) {
 											lineHeight = "line-height: 28px;";
@@ -165,7 +169,7 @@
 								%>
 										<tr class="$classRow">
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
-											<td >
+											<td>
 												<div style="float: left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 													<a href="<%=uicomponent.event("OpenForumLink", id)%>" style="$lineHeight" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
@@ -179,8 +183,8 @@
 												<div class="ForumDescription">$forumDescription</div>
 											</td>
 											<%if(topicNewPost != null) {
-												actionBookmark = uicomponent.event("AddBookMark",topicNewPostIcon+"//"+topicNewPostTitle+"//"+forum.getLastTopicPath());
-												actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",forum.getLastTopicPath());
+												actionBookmark = uicomponent.event("AddBookMark",topicNewPostIcon+"//"+topicNewPostTitle+"//"+topicPath);
+												actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",topicPath);
 											%>
 										 	<td >
 										 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>

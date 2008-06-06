@@ -26,7 +26,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumSeach;
+import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -88,7 +88,7 @@ public class UICategory extends UIForm	{
 	private List<Forum> forums = new ArrayList<Forum>() ;
 	private Map<String, Topic> MaptopicLast =new HashMap<String, Topic>(); 
 	public UICategory() throws Exception {
-		addUIFormInput( new UIFormStringInput("search", null)) ;
+		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 	}
 	
 	private UserProfile getUserProfile() {
@@ -103,7 +103,11 @@ public class UICategory extends UIForm	{
 	
 	public void update(Category category, List<Forum> forums) throws Exception {
 		this.category = category ;
-		this.forums = forums ;
+		if(forums == null) {
+			this.isEditForum = true;
+		} else {
+			this.forums = forums ;
+		}
 		categoryId = category.getId() ;
 		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath((categoryId)) ;
 	}
@@ -115,7 +119,7 @@ public class UICategory extends UIForm	{
 	}
 	
 	private Category getCategory() throws Exception{
-		if(this.isEditCategory) {
+		if(this.isEditCategory || this.category == null) {
 			this.category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), this.categoryId);
 			this.isEditCategory = true ;
 		}
@@ -316,32 +320,24 @@ public class UICategory extends UIForm	{
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
-			int i = 0 ;
-			String sms = "";
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
 						forums.add(uiCategory.getForum(((UIFormCheckBoxInput)child).getName()));
-						if(!forums.get(i).getIsClosed()){sms = forums.get(i).getForumName(); break;}
-						i++;
 					}
 				}
 			}
-			if((forums.size() > 0) && (sms.length() == 0)) {
+			if(forums.size() > 0) {
 				for (Forum forum : forums) {
 					forum.setIsClosed(false) ;
 					uiCategory.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum, false);
 				}
 				uiCategory.isEditForum = true ;
 			} 
-			if((forums.size() == 0) && (sms.length() == 0)) {
+			if(forums.size() == 0) {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UICategory.msg.notCheck", args, ApplicationMessage.WARNING)) ;
 			}	
-			if(sms.length() > 0) {
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UICategory.msg.open", args, ApplicationMessage.WARNING)) ;
-			}
 		}
 	}
 
@@ -350,32 +346,24 @@ public class UICategory extends UIForm	{
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
-			int i = 0 ;
-			String sms = "";
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
 						forums.add(uiCategory.getForum(((UIFormCheckBoxInput)child).getName()));
-						if(forums.get(i).getIsClosed()){sms = forums.get(i).getForumName(); break;}
-						i++;
 					}
 				}
 			}
-			if((forums.size() > 0) && (sms.length() == 0)) {
+			if(forums.size() > 0) {
 				for (Forum forum : forums) {
 					forum.setIsClosed(true) ;
 					uiCategory.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum, false);
 				}
 				uiCategory.isEditForum = true ;
 			} 
-			if((forums.size() == 0) && (sms.length() == 0)) {
+			if(forums.size() <= 0) {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UICategory.msg.notCheck", args, ApplicationMessage.WARNING)) ;
 			}	
-			if(sms.length() > 0) {
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UICategory.msg.close", args, ApplicationMessage.WARNING)) ;
-			}
 		}
 	}
 
@@ -476,7 +464,7 @@ public class UICategory extends UIForm	{
 		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;
 			String path = uiCategory.category.getPath() ;
-			UIFormStringInput formStringInput = uiCategory.getUIStringInput("search") ;
+			UIFormStringInput formStringInput = uiCategory.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0 && path != null) {
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
@@ -486,15 +474,15 @@ public class UICategory extends UIForm	{
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSeach> list = forumService.getQuickSeach(ForumSessionUtils.getSystemProvider(), text+",,forum/topic/post", path);
-				UIForumListSeach listSeachEvent = categories.getChild(UIForumListSeach.class) ;
-				listSeachEvent.setListSeachEvent(list) ;
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,forum/topic/post", path);
+				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
+				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 				formStringInput.setValue("") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIQuickSeachForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UIQuickSearchForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
 			}
 			
 		}

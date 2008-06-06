@@ -68,13 +68,13 @@ public class UICategories extends UIContainer	{
   private boolean isRenderChild = false ;
   private UserProfile userProfile ;
 	public UICategories() throws Exception {
-		addChild(UIForumListSeach.class, null, null).setRendered(isRenderChild) ;
+		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
 	}
 	
 	public void setIsRenderChild(boolean isRenderChild) {this.isRenderChild = isRenderChild ;}
 	@SuppressWarnings("unused")
   private boolean getIsRendered() throws Exception {
-		this.getChild(UIForumListSeach.class).setRendered(isRenderChild) ;
+		this.getChild(UIForumListSearch.class).setRendered(isRenderChild) ;
 		return isRenderChild ;
 	}
 	

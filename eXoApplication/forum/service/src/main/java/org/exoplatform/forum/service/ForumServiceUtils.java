@@ -77,11 +77,6 @@ public class ForumServiceUtils {
 				users.add(str) ;
 			}
 		}
-//  	int i = 0;
-//  	for (String string : users) {
-//	    System.out.println("\n=======> "+i+" : " + string);
-//	    ++i;
-//    }
   	return users ;
   }
 

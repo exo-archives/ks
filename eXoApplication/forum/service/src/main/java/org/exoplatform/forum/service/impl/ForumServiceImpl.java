@@ -29,7 +29,7 @@ import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumSeach;
+import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
@@ -280,12 +280,12 @@ public class ForumServiceImpl implements ForumService{
 		storage_.saveForumStatistic(sProvider, forumStatistic) ;
   }
 
-	public List<ForumSeach> getQuickSeach(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
-	  return storage_.getQuickSeach(sProvider, textQuery, pathQuery);
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
+	  return storage_.getQuickSearch(sProvider, textQuery, pathQuery);
   }
 
-	public List<ForumSeach> getAdvancedSeach(SessionProvider sProvider,ForumEventQuery eventQuery) throws Exception {
-	  return storage_.getAdvancedSeach(sProvider, eventQuery);
+	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider,ForumEventQuery eventQuery) throws Exception {
+	  return storage_.getAdvancedSearch(sProvider, eventQuery);
   }
 
 	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception {
