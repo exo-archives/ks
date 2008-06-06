@@ -136,8 +136,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       this.removeChildById(AUTHOR);
       this.removeChildById(EMAIL_ADDRESS);
       this.removeChildById(LIST_WYSIWYG_INPUT);
-      this.removeChildById(ATTACHMENTS);
       this.removeChildById(IS_APPROVED) ;
+      this.removeChildById(IS_ACTIVATED) ;
+      this.removeChildById(ATTACHMENTS);
     } else {
       inputAuthor = new UIFormStringInput(AUTHOR, AUTHOR, author_) ;
       inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_) ;
