@@ -2,6 +2,7 @@
 
 .UIFAQPortlet {
   padding: 5px; height: 400px;
+  min-width: 940px;
 }
 
 .UIFAQPortlet .UIBreadcumbs {
