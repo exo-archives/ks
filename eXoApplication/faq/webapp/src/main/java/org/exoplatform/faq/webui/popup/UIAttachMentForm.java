@@ -43,8 +43,6 @@ import org.exoplatform.webui.form.UIFormUploadInput;
     lifecycle = UIFormLifecycle.class,
     template =  "app:/templates/faq/webui/popup/UIAttachMentForm.gtmpl",
     events = {
-      @EventConfig(listeners = UIAttachMentForm.AddActionListener.class), 
-      @EventConfig(listeners = UIAttachMentForm.RemoveActionListener.class), 
       @EventConfig(listeners = UIAttachMentForm.SaveActionListener.class), 
       @EventConfig(listeners = UIAttachMentForm.CancelActionListener.class)
     }
@@ -52,54 +50,22 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   private boolean response_ = false ;
-  private static int numberUpload = 0 ;
+  private static int numberUpload = 5 ;
   private static final String FILE_UPLOAD = "FileUpload" ;
 
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
   public UIAttachMentForm() {
-    numberUpload = 0 ;
-    addChild(new UIFormUploadInput(FILE_UPLOAD + numberUpload, FILE_UPLOAD + numberUpload)) ;
-    numberUpload++ ;
-    this.setRendered(false) ;
-  }
-  
-  private void addFormAttach() {
-    addChild(new UIFormUploadInput(FILE_UPLOAD + numberUpload, FILE_UPLOAD + numberUpload)) ;
-    numberUpload ++ ;
-  }
-  
-  private void removeLastAttach() {
-    if(numberUpload > 1) {
-      numberUpload -- ;
-      removeChildById(FILE_UPLOAD + numberUpload) ;
+    for(int i = 0 ; i < numberUpload; i ++) {
+      addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i)) ;
     }
+    this.setRendered(false) ;
   }
   
   public void setResponse(boolean response){ this.response_ = response ;}
   
   private boolean getResponse(){ return this.response_ ; }
-  
-  static public class AddActionListener extends EventListener<UIAttachMentForm> {
-    public void execute(Event<UIAttachMentForm> event) throws Exception {
-      UIAttachMentForm uiAttachMent = event.getSource() ;     
-      uiAttachMent.addFormAttach() ;
-      UIPopupContainer popupContainer = uiAttachMent.getAncestorOfType(UIPopupContainer.class) ;
-      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    }
-  }
-  
-  static public class RemoveActionListener extends EventListener<UIAttachMentForm> {
-    public void execute(Event<UIAttachMentForm> event) throws Exception {
-      UIAttachMentForm uiAttachMent = event.getSource() ;     
-      uiAttachMent.removeLastAttach() ;
-      UIPopupContainer popupContainer = uiAttachMent.getAncestorOfType(UIPopupContainer.class) ;
-      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    }
-  }
   
   static public class SaveActionListener extends EventListener<UIAttachMentForm> {
     @SuppressWarnings("static-access")
