@@ -5,8 +5,10 @@
     <div class="FormContainer">
       <table class="UIFormGrid">
       	<tr>
-      		<td class="FieldLabel" width="80px;">
-          	<%=uicomponent.getLabel("FileUpload") %> :
+      		<td class="FieldLabel">
+      			<div style="width: 60px;">
+          		<%=uicomponent.getLabel("FileUpload") %> :
+          	</div>
           </td>
           <td class="FieldComponent">
 			      <%
