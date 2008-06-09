@@ -37,6 +37,7 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.objectweb.transaction.jta.TMService;
 
 /**
  * Created by The eXo Platform SARL
@@ -94,11 +95,15 @@ public class UIBreadcumbs extends UIContainer {
 						tempPath = string;
 							breadcumbs_.add(category.getCategoryName()) ;
 					}else if(obj instanceof Forum) {
-						tempPath = tempPath + "/" + string ;
+						if(tempPath != null && tempPath.length() > 0)
+							tempPath = tempPath + "/" + string ;
+						else tempPath = string;
 						Forum forum = (Forum)obj ;
 						breadcumbs_.add(forum.getForumName()) ;
 					}else if(obj instanceof Topic) {
-						tempPath = tempPath + "/" + string ;
+						if(tempPath != null && tempPath.length() > 0)
+							tempPath = tempPath + "/" + string ;
+						else tempPath = string;
 						Topic topic = (Topic)obj;
 						breadcumbs_.add(topic.getTopicName()) ;
 					} else if(obj instanceof Tag){

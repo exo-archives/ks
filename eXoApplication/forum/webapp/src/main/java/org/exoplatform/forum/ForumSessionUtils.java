@@ -113,14 +113,14 @@ public class ForumSessionUtils {
 
   @SuppressWarnings("unchecked")
   public static boolean hasGroupIdAndMembershipId(String str, OrganizationService organizationService) throws Exception {
-  	if(str.indexOf(":") >= 0) { //membership
+	  if(str.indexOf(":") >= 0) { //membership
   		String[] array = str.split(":") ;
   		try {
   			organizationService.getGroupHandler().findGroupById(array[1]).getId() ;
   		} catch (Exception e) {
   			return false ;
   		}
-  		if(array[0].charAt(0) == '*' && array.length == 1) {
+  		if(array[0].charAt(0) == '*' && array[0].length() == 1) {
   			return true ;
   		} else {
   			if(organizationService.getMembershipTypeHandler().findMembershipType(array[0])== null) return false ;
