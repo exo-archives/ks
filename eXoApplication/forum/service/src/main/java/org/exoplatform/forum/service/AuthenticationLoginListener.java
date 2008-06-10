@@ -16,25 +16,25 @@
  */
 package org.exoplatform.forum.service;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
-import org.exoplatform.services.organization.auth.impl.AuthenticationServiceImpl;
+import org.exoplatform.services.organization.auth.AuthenticationService;
 import org.exoplatform.services.security.Identity;
 
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
  * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
  */
-public class AuthenticationLoginListener extends Listener<AuthenticationServiceImpl, Identity> {
+public class AuthenticationLoginListener extends Listener<AuthenticationService, Identity> {
 
 	public AuthenticationLoginListener() throws Exception {
 	
 	}
 
 	@Override
-	public void onEvent(Event<AuthenticationServiceImpl, Identity> event) throws Exception {
-  	ForumService fservice = (ForumService)PortalContainer.getComponent(ForumService.class) ;
+	public void onEvent(Event<AuthenticationService, Identity> event) throws Exception {
+  	ForumService fservice = (ForumService) RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(ForumService.class) ;
   	fservice.userLogin(event.getData().getUserId()) ;		
 	}
 }
