@@ -75,7 +75,6 @@
 					    <%}
 					  	}
 				  	} else {%>
-				  		&nbsp;
 			  	<%}%>
 			  	</div>
 			  	<div style="clear: left;"><span></span></div>

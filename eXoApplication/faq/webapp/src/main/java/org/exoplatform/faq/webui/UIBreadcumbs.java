@@ -111,6 +111,7 @@ public class UIBreadcumbs extends UIContainer {
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			} else {
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				uiQuestions.setPath(paths) ;
 				String cate = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
 				uiQuestions.setCategories(cate) ;
 				uiQuestions.setListQuestion() ;
