@@ -14,7 +14,7 @@
 			<div class="Icon FAQCategoryViewMove"><span></span></div>
 			<div id="" style="float: left" ><a href="$linkRoot"><%= _ctx.appRes("UIMoveFAQForm.title.root"); %></a></div>
 			<div style="clear: left;"><span></span></div>
-			<div class="HorizontalLayout" style="margin: 0px 10px 10px 30px;">
+			<div class="HorizontalLayout" style="margin: 0px 10px 10px 30px; background-color:#F3F3F3;">
 		<%
 		List listCate = uicomponent.getListCate() ;
 		Stack<String> stackCateid = new Stack<String>() ;
