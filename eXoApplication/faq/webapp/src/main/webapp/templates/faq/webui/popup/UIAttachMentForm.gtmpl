@@ -15,7 +15,7 @@
 			        for(field in uiform.getChildren()) { 
 			          if(field.isRendered()) {
 			      %>
-  	              	<div style="float: left; width: 100%; height: 25px;">
+  	              	<div style="float: left; width: 100%; padding-bottom:5px;">
   	              		<% uiform.renderField(field) %>
   	              	</div>
 			      <%	}
