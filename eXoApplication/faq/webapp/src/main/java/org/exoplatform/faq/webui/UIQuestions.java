@@ -447,7 +447,7 @@ public class UIQuestions extends UIContainer {
 			UIPopupContainer uiPopupContainer = uiPopupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
       if(!FAQUtils.isFieldEmpty(categoryId)) {
-      	try{
+      	try {
       		Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
           String moderator[] = cate.getModeratorsCategory() ;
           String currentUser = FAQUtils.getCurrentUser() ;
@@ -487,7 +487,7 @@ public class UIQuestions extends UIContainer {
       questions.isChangeLanguage = false ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
-      try{
+      try {
         faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider());
       } catch (Exception e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -504,11 +504,11 @@ public class UIQuestions extends UIContainer {
               pathCate = path ;
               continue ;
             }
-            try{
+            try {
               faqService.getCategoryById(path, FAQUtils.getSystemProvider());
               if(pathCate.trim().length() > 0) pathCate += "/" ;
               pathCate += path ;
-            }catch (Exception pathExc) {
+            } catch (Exception pathExc) {
               try {
                 breadcumbs.setUpdataPath(pathCate) ;
               } catch (Exception exc) {
@@ -564,7 +564,7 @@ public class UIQuestions extends UIContainer {
       questions.backPath_ = "" ;
       UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      try{
+      try {
         faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
       } catch (Exception e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -598,7 +598,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-			try{
+			try {
         Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
@@ -634,7 +634,7 @@ public class UIQuestions extends UIContainer {
 			UIApplication uiApp = question.getAncestorOfType(UIApplication.class) ;
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-			try{
+			try {
 				Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
@@ -672,7 +672,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-			try{
+			try {
 				Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
@@ -707,7 +707,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class) ;
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      try{
+      try {
       	Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
@@ -738,7 +738,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class) ;
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      try{
+      try {
       	Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
@@ -783,7 +783,7 @@ public class UIQuestions extends UIContainer {
     	String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-      try{
+      try {
         faqService.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
       } catch (Exception e) {
         UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
@@ -808,7 +808,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-			try{
+			try {
 				Category cate = faqService.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
@@ -844,7 +844,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction uiPopupAction = faqPortlet.getChild(UIPopupAction.class) ; 
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-			try{
+			try {
 				String newPath = question.cutCaret(newPath_) ;
 				String pathService = question.cutCaret(question.getPathService(categoryId)) ;
 				Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
