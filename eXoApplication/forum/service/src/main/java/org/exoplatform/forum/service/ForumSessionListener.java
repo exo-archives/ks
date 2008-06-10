@@ -62,7 +62,7 @@ public class ForumSessionListener implements HttpSessionListener {
       String portalContainerName = event.getSession().getServletContext().getServletContextName() ;
     	RootContainer rootContainer = RootContainer.getInstance() ;
     	PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
-    	AuthenticationService authenService = (AuthenticationService)portalContainer.getComponentInstanceOfType(AuthenticationService.class) ;
+    	AuthenticationService authenService = (AuthenticationService)RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(AuthenticationService.class) ;
       Identity identity = authenService.getCurrentIdentity() ;
       if(identity != null) {
       	ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
