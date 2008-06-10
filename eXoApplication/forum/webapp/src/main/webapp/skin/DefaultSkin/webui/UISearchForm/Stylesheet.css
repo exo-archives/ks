@@ -17,3 +17,7 @@
 .UIForumPortlet .UISearchForm .textIn select {
 	width: 150px;
 }
+
+.UIForumPortlet .UISearchForm .InputSearchForm .selectbox {
+	width: 204px;
+}

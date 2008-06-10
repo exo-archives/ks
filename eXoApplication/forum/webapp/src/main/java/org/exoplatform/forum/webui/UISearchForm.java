@@ -29,6 +29,11 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.popup.UIForumInputWithActions;
+import org.exoplatform.forum.webui.popup.UIGroupSelector;
+import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.forum.webui.popup.UISelectComponent;
+import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -57,10 +62,13 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UISearchForm.SearchActionListener.class),	
 			@EventConfig(listeners = UISearchForm.OnchangeActionListener.class, phase = Phase.DECODE),	
 			@EventConfig(listeners = UISearchForm.ResetFieldActionListener.class, phase = Phase.DECODE),	
+			@EventConfig(listeners = UISearchForm.AddValuesUserActionListener.class, phase = Phase.DECODE),	
 			@EventConfig(listeners = UISearchForm.CancelActionListener.class, phase = Phase.DECODE)			
 		}
 )
 public class UISearchForm extends UIForm {
+	final static	private String FIELD_INPUTSEARCH_FORM = "InputSearchForm" ;
+	
 	final static	private String FIELD_SEARCHVALUE_INPUT = "SearchValue" ;
 	final static	private String FIELD_SEARCHVALUEIN_SELECTBOX = "SearchValueIn" ;
 	final static	private String FIELD_SEARCHUSER_INPUT = "SearchUser" ;
@@ -153,25 +161,35 @@ public class UISearchForm extends UIForm {
 		
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
 		
-		addUIFormInput(searchType) ;
-		addUIFormInput(searchValue) ;
-		addUIFormInput(textIn) ;
-		addUIFormInput(searchUser) ;
-		addUIFormInput(isLock) ;
-		addUIFormInput(isClosed) ;
-		addUIFormInput(FromDateCreated) ;
-		addUIFormInput(ToDateCreated) ;
+		UIForumInputWithActions inputSearchForm = new UIForumInputWithActions(FIELD_INPUTSEARCH_FORM);
+		inputSearchForm.addUIFormInput(searchType) ;
+		inputSearchForm.addUIFormInput(searchValue) ;
+		inputSearchForm.addUIFormInput(textIn) ;
+		inputSearchForm.addUIFormInput(searchUser) ;
+		inputSearchForm.addUIFormInput(isLock) ;
+		inputSearchForm.addUIFormInput(isClosed) ;
+		inputSearchForm.addUIFormInput(FromDateCreated) ;
+		inputSearchForm.addUIFormInput(ToDateCreated) ;
 		
-		addUIFormInput(topicCountMin) ;
-		addUIFormInput(topicCountMax) ;
-		addUIFormInput(postCountMin) ;
-		addUIFormInput(postCountMax) ;
-		addUIFormInput(FromDateCreatedLastPost) ;
-		addUIFormInput(ToDateCreatedLastPost) ;
-		addUIFormInput(viewCountMin) ;
-		addUIFormInput(viewCountMax) ;
-		addUIFormInput(moderator) ;
-//		addUIFormInput(new UIFormStringInput(FIELD_SEARCHIN_SELECTBOX, FIELD_SEARCHIN_SELECTBOX, null)) ;
+		inputSearchForm.addUIFormInput(topicCountMin) ;
+		inputSearchForm.addUIFormInput(topicCountMax) ;
+		inputSearchForm.addUIFormInput(postCountMin) ;
+		inputSearchForm.addUIFormInput(postCountMax) ;
+		inputSearchForm.addUIFormInput(FromDateCreatedLastPost) ;
+		inputSearchForm.addUIFormInput(ToDateCreatedLastPost) ;
+		inputSearchForm.addUIFormInput(viewCountMin) ;
+		inputSearchForm.addUIFormInput(viewCountMax) ;
+		inputSearchForm.addUIFormInput(moderator) ;
+		
+		addUIFormInput(inputSearchForm) ;
+		List<ActionData> actions = new ArrayList<ActionData>() ;;
+		ActionData ad = new ActionData() ;
+		ad.setActionListener("AddValuesUser") ;
+		ad.setActionParameter("SelectUser") ;
+		ad.setCssIconClass("SelectUserIcon") ;
+		ad.setActionName(FIELD_SEARCHUSER_INPUT);
+		actions.add(ad) ;
+		inputSearchForm.setActionField(FIELD_SEARCHUSER_INPUT, actions);
 	}
 	
 	public void setSelectType(String type) {
@@ -179,25 +197,26 @@ public class UISearchForm extends UIForm {
   }
 	
 	public void setValueOnchange(boolean isLastDate, boolean islock, boolean isClose, boolean isTopicCount, boolean isPostCount, boolean isViewCount, boolean isModerator){
-		UIFormDateTimeInput fromDateCreatedLastPost = getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setRendered(isLastDate) ;
-		UIFormDateTimeInput toDateCreatedLastPost   = getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(isLastDate) ;
-		UIFormSelectBox isLock   = getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setRendered(islock);
+		UIForumInputWithActions inputSearchForm = this.getChildById(FIELD_INPUTSEARCH_FORM);
+		UIFormDateTimeInput fromDateCreatedLastPost = inputSearchForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setRendered(isLastDate) ;
+		UIFormDateTimeInput toDateCreatedLastPost   = inputSearchForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(isLastDate) ;
+		UIFormSelectBox isLock   = inputSearchForm.getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setRendered(islock);
 		if(isClose) {
 			isClose = getIsAdmin();
 		}
-		UIFormSelectBox isClosed = getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(isClose);
-		UIFormStringInput topicCountMin = getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).setRendered(isTopicCount);
-		UIFormStringInput topicCountMax = getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setRendered(isTopicCount);
-		UIFormStringInput postCountMax  = getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(isPostCount);
-		UIFormStringInput postCountMin  = getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).setRendered(isPostCount);
-		UIFormStringInput viewCountMax  = getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).setRendered(isViewCount);
-		UIFormStringInput viewCountMin  = getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).setRendered(isViewCount);
-		UIFormStringInput moderator     = getUIStringInput(FIELD_MODERATOR_INPUT).setRendered(isModerator);
-		getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue("") ;
-		getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).setValue("entire");
-		getUIFormDateTimeInput(FROMDATECREATED).setValue("") ;
-		getUIFormDateTimeInput(TODATECREATED).setValue("") ;
-		getUIStringInput(FIELD_SEARCHUSER_INPUT).setValue("") ;
+		UIFormSelectBox isClosed = inputSearchForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(isClose);
+		UIFormStringInput topicCountMin = inputSearchForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).setRendered(isTopicCount);
+		UIFormStringInput topicCountMax = inputSearchForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setRendered(isTopicCount);
+		UIFormStringInput postCountMax  = inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(isPostCount);
+		UIFormStringInput postCountMin  = inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).setRendered(isPostCount);
+		UIFormStringInput viewCountMax  = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).setRendered(isViewCount);
+		UIFormStringInput viewCountMin  = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).setRendered(isViewCount);
+		UIFormStringInput moderator     = inputSearchForm.getUIStringInput(FIELD_MODERATOR_INPUT).setRendered(isModerator);
+		inputSearchForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue("") ;
+		inputSearchForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).setValue("entire");
+		inputSearchForm.getUIFormDateTimeInput(FROMDATECREATED).setValue("") ;
+		inputSearchForm.getUIFormDateTimeInput(TODATECREATED).setValue("") ;
+		inputSearchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).setValue("") ;
 		fromDateCreatedLastPost.setValue("") ;
 		toDateCreatedLastPost.setValue("") ;
 		isLock.setValue("all") ;
@@ -235,27 +254,40 @@ public class UISearchForm extends UIForm {
     return new String[]{"Search","Onchange", "Cancel"} ;
   }
   
+  public void updateSelect(String selectField, String value) throws Exception {
+    UIFormStringInput fieldInput = getUIStringInput(selectField) ;
+    String values = fieldInput.getValue() ;
+    if(values != null && values.trim().length() > 0) {
+      if(!ForumUtils.isStringInStrings(values.split(","), value)){
+        if(values.trim().lastIndexOf(",") != (values.length() - 1)) values = values.trim() + ",";
+      }
+      values = values + value ;
+    } else values = value ;
+    fieldInput.setValue(values) ;
+  }
+  
 	static	public class SearchActionListener extends EventListener<UISearchForm> {
     public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
-			String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
-			String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
-			String valueIn = uiForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).getValue() ;
+			UIForumInputWithActions inputSearchForm = uiForm.getChildById(FIELD_INPUTSEARCH_FORM);
+			String type = inputSearchForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
+			String keyValue = inputSearchForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
+			String valueIn = inputSearchForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).getValue() ;
 			String path = "" ;
-			String byUser = uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).getValue() ;
-			String isLock = uiForm.getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).getValue();
-			String isClosed = uiForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).getValue();
-			String topicCountMin = uiForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).getValue();
-			String topicCountMax = uiForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
-			String postCountMin = uiForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).getValue();
-			String postCountMax = uiForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
-			String viewCountMin = uiForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).getValue();
-			String viewCountMax = uiForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
-			String moderator = uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).getValue();
-			Calendar fromDateCreated = uiForm.getUIFormDateTimeInput(FROMDATECREATED).getCalendar() ;
-			Calendar toDateCreated= uiForm.getUIFormDateTimeInput(TODATECREATED).getCalendar() ;
-			Calendar fromDateCreatedLastPost = uiForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).getCalendar() ;
-			Calendar toDateCreatedLastPost = uiForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST).getCalendar() ;
+			String byUser = inputSearchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).getValue() ;
+			String isLock = inputSearchForm.getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).getValue();
+			String isClosed = inputSearchForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).getValue();
+			String topicCountMin = inputSearchForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).getValue();
+			String topicCountMax = inputSearchForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
+			String postCountMin = inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).getValue();
+			String postCountMax = inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
+			String viewCountMin = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).getValue();
+			String viewCountMax = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
+			String moderator = inputSearchForm.getUIStringInput(FIELD_MODERATOR_INPUT).getValue();
+			Calendar fromDateCreated = inputSearchForm.getUIFormDateTimeInput(FROMDATECREATED).getCalendar() ;
+			Calendar toDateCreated= inputSearchForm.getUIFormDateTimeInput(TODATECREATED).getCalendar() ;
+			Calendar fromDateCreatedLastPost = inputSearchForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).getCalendar() ;
+			Calendar toDateCreatedLastPost = inputSearchForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST).getCalendar() ;
 			ForumEventQuery eventQuery = new ForumEventQuery() ;
 			eventQuery.setType(type) ;
 			eventQuery.setKeyValue(keyValue) ;
@@ -333,7 +365,18 @@ public class UISearchForm extends UIForm {
 		}
 	}
 
-
+	static	public class AddValuesUserActionListener extends EventListener<UISearchForm> {
+    public void execute(Event<UISearchForm> event) throws Exception {
+    	UISearchForm searchForm = event.getSource() ;
+				UIForumPortlet forumPortlet = searchForm.getAncestorOfType(UIForumPortlet.class) ;
+				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true) ;
+				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
+	      uiGroupSelector.setType(UISelectComponent.TYPE_USER) ;
+	      uiGroupSelector.setSelectedGroups(null) ;
+	      uiGroupSelector.setComponent(searchForm, new String[]{FIELD_SEARCHUSER_INPUT}) ;
+	      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
 
 
 

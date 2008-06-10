@@ -27,7 +27,7 @@
 						String objId = searchEvent.getId();
 						String type = searchEvent.getType() ;
 						if(type.equals(Utils.FORUM)) type = ForumUtils.FORUM;
-						else if(type.equals(Utils.THREAD)) type = ForumUtils.THREAD;
+						else if(type.equals(Utils.TOPIC)) type = ForumUtils.THREAD;
 						else if(type.equals(Utils.POST)) type = ForumUtils.POST;
 						else type = ForumUtils.CATEGORY ;
 			  %>

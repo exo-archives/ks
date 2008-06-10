@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -251,50 +252,40 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     	fieldInput.setValue(value) ;
     } else {
 	    String values = fieldInput.getValue() ;
-	    boolean canAdd = true ;
 	    if(values != null && values.trim().length() > 0) {
+	    	values = removeSpaceInString(values);
 	      if(!ForumUtils.isStringInStrings(values.split(","), value)){
-	        if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
-	        else values = values.trim() + ",";
-	      } else {
-	        canAdd = false ;
-	      }
-	    } else {
-	      values = "" ;
-	    }
-	    if(canAdd) {
-	      values = values.trim() + value ;
-	      fieldInput.setValue(values) ;
-	    }
+	        if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
+	      } 
+      values = values + value ;
+	    } else values = value ;
+	    fieldInput.setValue(values) ;
     }
   }
+	
+	private String removeSpaceInString(String str) throws Exception {
+		if(str != null && str.length() > 0) {
+			str = str.replaceAll(" ", "");
+			str = str.replaceAll(";", ",");
+			str = str.replaceAll(",,", ",");
+		}
+		return str;
+	}
   
-  private String[] addStringToString(String[] input, String[] output) {
-    if(output != null && output.length > 0) {
-      if(input!= null && input.length > 0) {
-        try{
-          String result = new String() ;
-          for(String str : output) {
-            if(str.trim().length() > 0) {
-              if(result != null && result.trim().length() > 0) result += "," ;
-              result += str.trim() ;
-            }
-          }
-          for(String string : input) {
-            if(string != null && string.trim().length() > 0 && !ForumUtils.isStringInStrings(output, string)) {
-              if(result.trim().length() > 0) result += "," ;
-              result += string ;
-            }
-          }
-          output = ForumUtils.splitForForum(result) ;
-        } catch (Exception e) {
-          e.printStackTrace() ;
+  private String[] addStringToString(String input, String output) throws Exception {
+  	List<String> list = new ArrayList<String>();
+    if(output != null && output.trim().length() > 0) {
+      if(input!= null && input.trim().length() > 0) {
+      	if(input.lastIndexOf(",") != (input.length() - 1)) input = input + ",";
+        output = input + output ;
+        String temp[] = ForumUtils.splitForForum(output) ;
+        for (String string : temp) {
+        	if(list.contains(string) || string.length() == 0) continue ;
+	        list.add(string) ;
         }
-      } else {
-        output = input ;
       }
     }
-    return output ;
+    return list.toArray(new String[] {}) ;
   }
 	
 	static	public class SaveActionListener extends EventListener<UIForumForm> {
@@ -323,6 +314,11 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String topicable = forumPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).getValue() ; 
 			String postable = forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).getValue() ; 
 			String viewer = forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).getValue() ; 
+			
+			moderators = uiForm.removeSpaceInString(moderators) ;
+			topicable = uiForm.removeSpaceInString(topicable) ;
+			postable = uiForm.removeSpaceInString(postable) ;
+			viewer = uiForm.removeSpaceInString(viewer) ;
 			
 			if(forumOrder == null || forumOrder.length() <= 0) forumOrder = "0";
 			String userName = ForumSessionUtils.getCurrentUser() ;
@@ -378,13 +374,13 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
     	}
-    	String []setTopicable = uiForm.splitForForum(topicable) ;
-    	String []setPostable = uiForm.splitForForum(postable) ;
-    	String []setViewer = uiForm.splitForForum(viewer) ;
-      setPostable = uiForm.addStringToString(setTopicable, setPostable);
-      setViewer = uiForm.addStringToString(setPostable, setViewer) ;
+    	
+    	String []setModerators = uiForm.addStringToString(moderators, moderators) ;
+    	String []setTopicable = uiForm.addStringToString(topicable, topicable) ;
+    	String []setPostable = uiForm.addStringToString(topicable, postable);
+    	String []setViewer = uiForm.addStringToString(postable, viewer) ;
       
-			newForum.setModerators(uiForm.splitForForum(moderators));
+			newForum.setModerators(setModerators);
 			newForum.setCreateTopicRole(setTopicable);
 			newForum.setReplyTopicRole(setPostable);
 			newForum.setViewForumRole(setViewer);
