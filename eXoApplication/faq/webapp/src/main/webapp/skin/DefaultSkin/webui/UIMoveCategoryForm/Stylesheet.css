@@ -53,5 +53,6 @@
 }
 
 .UIMoveCategoryForm .UIForm .HorizontalLayout {
-	padding-top: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
