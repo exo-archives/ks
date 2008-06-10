@@ -286,47 +286,47 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
           }
           cat.setModerators(listUser.toArray(new String[]{})) ;
         /*-----End---------------------*/
+          try {
+  					if(uiCategory.categoryId_.length() > 0) {
+  						cat.setId(uiCategory.categoryId_) ;
+  					}
+  					faqService_.saveCategory(parentCate, cat, isAddNew_, FAQUtils.getSystemProvider());
+  					faqPortlet.cancelAction() ;
+          } catch (Exception e) {
+          		uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
+                ApplicationMessage.INFO)) ;
+              event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        			questions.setCategories() ;
+        			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+              return ; 
+  				}
+  				questions.setCategories() ;
+  				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+  				return ;
+  			} 
+        
+        cat.setModerators(users) ;
         try {
-					if(uiCategory.categoryId_.length() > 0) {
-						cat.setId(uiCategory.categoryId_) ;
-					}
-					faqService_.saveCategory(parentCate, cat, isAddNew_, FAQUtils.getSystemProvider());
-					faqPortlet.cancelAction() ;
+  				if(uiCategory.categoryId_.length() > 0) {
+  					cat.setId(uiCategory.categoryId_) ;
+  				} 
+  				faqService_.saveCategory(null, cat, isAddNew_, FAQUtils.getSystemProvider());
+  				faqPortlet.cancelAction() ;
+  				
         } catch (Exception e) {
         		uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
               ApplicationMessage.INFO)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      			questions.setCategories() ;
+            questions.setCategories() ;
       			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
             return ; 
-				}
-				questions.setCategories() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-				return ;
-			} 
-      
-      cat.setModerators(users) ;
-      try {
-				if(uiCategory.categoryId_.length() > 0) {
-					cat.setId(uiCategory.categoryId_) ;
-				} 
-				faqService_.saveCategory(null, cat, isAddNew_, FAQUtils.getSystemProvider());
-				faqPortlet.cancelAction() ;
-				
-      } catch (Exception e) {
-      		uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
-            ApplicationMessage.INFO)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-          questions.setCategories() ;
-    			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-          return ; 
-			}
-      questions.setCategories() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-			return ;
-			
-		}
-	}
+  			}
+        questions.setCategories() ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+  			return ;
+  			
+  		}
+  	}
 
 	static	public class SelectPermissionActionListener extends EventListener<UICategoryForm> {
     public void execute(Event<UICategoryForm> event) throws Exception {
