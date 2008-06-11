@@ -190,16 +190,21 @@ public class ForumUtils {
 	
 	public static String unSplitForForum (String[] str) throws Exception {
 		StringBuilder rtn = new StringBuilder();
-		if(str.length > 0) {
+		int t = str.length, i=0 ;
+		if(t > 0) {
 			for (String temp : str) {
-				rtn.append(temp).append(",") ; 
+				if(i == (t-1))rtn.append(temp) ;
+				else rtn.append(temp).append(",") ;
+				++i;
 			}
 		}
 		return rtn.toString() ;
 	}
 	
 	public static boolean isStringInStrings(String []strings, String string) {
+		string = string.trim();
 	  for (String string1 : strings) {
+	  	string1 = string1.trim();
 	    if(string.equals(string1)) return true ;
     }
 	  return false;

@@ -157,7 +157,17 @@ public class ForumEventQuery {
     }
     if(byUser != null && byUser.length() > 0) {
     	if(isAnd) stringBuffer.append(" and ");
-			stringBuffer.append("(@exo:owner='").append(byUser).append("')") ;
+    	stringBuffer.append("(");
+    	byUser = byUser.replaceAll(";", ",") ;
+    	String[] users = byUser.split(",") ;
+    	int i = 0;
+    	for (String string : users) {
+    		string = string.trim();
+    		if(i > 0) stringBuffer.append(" or ") ;
+    		stringBuffer.append("(@exo:owner='").append(string).append("')") ;
+    		++i;
+      }
+    	stringBuffer.append(")");
 			isAnd = true ;
 		}
     if(isClosed != null && isClosed.length() > 0 && !isClosed.equals("all")) {
