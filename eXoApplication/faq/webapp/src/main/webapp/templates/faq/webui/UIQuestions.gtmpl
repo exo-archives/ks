@@ -250,32 +250,35 @@
 					<div class="$questionIcon">
 						<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 								<!-- question content -->
-								<%
-								String titleQuestion = "" ;
-								if(questionContent.length() > 160) {
-									titleQuestion = questionContent ;
-									if(!uicomponent.getQuestionView().equals(qId)) {
-										questionContent = questionContent.substring(0, 159) + " ..." ;
-								%>
-										<a href="$linkQuestion" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
-							<%	} else {%>
+									<%
+									String titleQuestion = "" ;
+									if(questionContent.length() > 140) {
+										titleQuestion = questionContent ;
+										if(!uicomponent.getQuestionView().equals(qId)) {
+											questionContent = questionContent.substring(0, 139) + " ..." ;
+									%>
+											<a href="$linkQuestion" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
+								<%	} else {%>
+											<a href="$linkQuestion">
+									<%}
+									} else {
+										titleQuestion = "" ;
+									%>
 										<a href="$linkQuestion">
 								<%}
-								} else {
-									titleQuestion = "" ;
-								%>
-									<a href="$linkQuestion">
-							<%}
-								if(!question.isApproved()) {%>
-								<div class="NotApproved">
-									<div class="ViewQuestionNotApproved"> 
+									if(!question.isApproved()) {%>
+										<div style="float: left; width: 100%">
+											<div class="ViewQuestionNotApproved"> 
+												$questionContent
+											</div>
+											<div class="NotApproved"><span></span></div>
+										</div>
+										<div style="clear: left;"><span></span></div>
+								<%} else {%>
 										$questionContent
-									</div>
-								</div>
-							<%} else {%>
-									$questionContent
-							<%}%>
-							</a>
+								<%}%>
+								</a>
+							
 							<%if(titleQuestion.trim().length() > 0) {%>
 								<div style="clear: left;"><span></span></div>
 								<div id="titleQuestion$questionId" class="questionTitle">
@@ -378,7 +381,7 @@
 											    	<div style="clear: left;"><span></span></div>
 								 						<div class="LabelBox">
 									 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-									 						<div class="Size AttachmentLabel"><a class="AttachmentLabel" href="$linkImage">$fileName ( $fileSize B )</a></div>
+									 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
 									 						<div style="clear: left;"><span></span></div>
 									 						<div class="Action" style="padding-top: 0px;">
 									 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">

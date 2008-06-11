@@ -331,23 +331,27 @@ public class UIQuestions extends UIContainer {
     return null ;
   }
   
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused")  
+  private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+    byte[] imageBytes = null;
+    if (input != null) {
+      imageBytes = new byte[input.available()];
+      input.read(imageBytes);
+      ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+      InputStreamDownloadResource dresource = new InputStreamDownloadResource(
+          byteImage, "image");
+      dresource.setDownloadName(fileName);
+      return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+    }
+    return null;
+  }
+  
   private String getFileSource(FileAttachment attachment) throws Exception {
     DownloadService dservice = getApplicationComponent(DownloadService.class) ;
     try {
       InputStream input = attachment.getInputStream() ;
       String fileName = attachment.getName() ;
-      byte[] imageBytes = null;
-      if (input != null) {
-        imageBytes = new byte[input.available()];
-        input.read(imageBytes);
-        ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-        InputStreamDownloadResource dresource = new InputStreamDownloadResource(
-            byteImage, "image");
-        dresource.setDownloadName(fileName);
-        return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-      }
-      return null;
+      return getFileSource(input, fileName, dservice);
     } catch (PathNotFoundException e) {
       e.printStackTrace() ;
       return null;
