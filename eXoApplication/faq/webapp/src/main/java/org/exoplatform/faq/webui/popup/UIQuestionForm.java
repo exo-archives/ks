@@ -475,7 +475,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
 	}
 
 	static public class AddLanguageActionListener extends EventListener<UIQuestionForm> {
-	  public void execute(Event<UIQuestionForm> event) throws Exception {
+	  @SuppressWarnings("unchecked")
+    public void execute(Event<UIQuestionForm> event) throws Exception {
 	    UIQuestionForm questionForm = event.getSource() ;
       
       questionForm.author_ = ((UIFormStringInput)questionForm.getChildById(AUTHOR)).getValue() ;
@@ -502,7 +503,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
 	    UIQuestionForm questionForm = event.getSource() ;			
       UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      UIAttachMentForm attachMentForm = uiChildPopup.activate(UIAttachMentForm.class, 500) ;
+      uiChildPopup.activate(UIAttachMentForm.class, 500) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
 	  }
 	}
@@ -540,6 +541,20 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       } else {
         UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
         questionManagerForm.isEditQuestion = false ;
+        UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
+        UIAttachMentForm attachMentForm = popupContainer.findFirstComponentOfType(UIAttachMentForm.class) ;
+        if(attachMentForm != null) {
+          UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+          popupAction.deActivate() ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+        } else {
+          UILanguageForm languageForm = popupContainer.findFirstComponentOfType(UILanguageForm.class) ;
+          if(languageForm != null) {
+            UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+            popupAction.deActivate() ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+          }
+        }
       }
 		}
 	}
