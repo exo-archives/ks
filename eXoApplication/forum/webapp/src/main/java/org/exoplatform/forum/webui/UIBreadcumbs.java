@@ -37,7 +37,6 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.objectweb.transaction.jta.TMService;
 
 /**
  * Created by The eXo Platform SARL
@@ -163,7 +162,7 @@ public class UIBreadcumbs extends UIContainer {
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-			}else	if(path.indexOf(Utils.FORUM) > 0) {
+			}else	if(path.lastIndexOf(Utils.FORUM) > 0) {
 				String id[] = path.split("/");
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);
 				UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);

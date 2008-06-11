@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIBreadcumbs;
@@ -138,17 +139,15 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String categoryOrder = uiForm.getUIStringInput(FIELD_CATEGORYORDER_INPUT).getValue();
 			String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
 			String userPrivate = uiForm.getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).getValue();
-			String userName = ForumSessionUtils.getCurrentUser();
 			if(categoryOrder == null || categoryOrder.length() <= 0) categoryOrder = "0";
-			Category cat = new Category();
-			cat.setOwner(userName) ;
-			cat.setCategoryName(categoryTitle.trim()) ;
-			cat.setCategoryOrder(Long.parseLong(categoryOrder)) ;
-			cat.setCreatedDate(new Date()) ;
-			cat.setDescription(description) ;
-			cat.setModifiedBy(userName) ;
-			cat.setModifiedDate(new Date()) ;
-      
+			else if(categoryOrder.length() > 3) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				Object[] args = { uiForm.getLabel(FIELD_CATEGORYORDER_INPUT) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-large-number", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+      userPrivate = ForumUtils.removeSpaceInString(userPrivate) ;
       String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
     	if(erroUser != null && erroUser.length() > 0) {
     		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
@@ -157,6 +156,16 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
     	}
+    	
+    	String userName = ForumSessionUtils.getCurrentUser();
+    	Category cat = new Category();
+    	cat.setOwner(userName) ;
+    	cat.setCategoryName(categoryTitle.trim()) ;
+    	cat.setCategoryOrder(Long.parseLong(categoryOrder)) ;
+    	cat.setCreatedDate(new Date()) ;
+    	cat.setDescription(description) ;
+    	cat.setModifiedBy(userName) ;
+    	cat.setModifiedDate(new Date()) ;
       cat.setUserPrivate(userPrivate) ;
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

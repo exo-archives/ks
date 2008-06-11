@@ -23,10 +23,10 @@ package org.exoplatform.forum.service;
  */
 public class Utils {
 
-	public final static String FORUM_SERVICE = "ForumService" ;
-	public final static String FORUM_STATISTIC = "forumStatisticId" ;
-	public final static String USER_ADMINISTRATION = "UserAdministration" ;
-	public final static String USER_PROFILE = "UserProfile" ;
+	public final static String FORUM_SERVICE = "ForumService".intern() ;
+	public final static String FORUM_STATISTIC = "forumStatisticId".intern() ;
+	public final static String USER_ADMINISTRATION = "UserAdministration".intern() ;
+	public final static String USER_PROFILE = "UserProfile".intern() ;
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	
 	public final static String FORUMADMINISTRATION = "forumAdministration".intern() ;

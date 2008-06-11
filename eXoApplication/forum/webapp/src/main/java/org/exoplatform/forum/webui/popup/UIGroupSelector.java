@@ -158,13 +158,20 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     public void execute(Event<UIGroupSelector> event) throws Exception {
       String user = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIGroupSelector uiGroupSelector = event.getSource();
-      UIPopupContainer uiPopupContainer = uiGroupSelector.getAncestorOfType(UIPopupContainer.class) ;
-      UIPopupAction uiPopup = uiPopupContainer.getChild(UIPopupAction.class) ;
       String returnField = uiGroupSelector.getReturnField() ;
       ((UISelector)uiGroupSelector.getReturnComponent()).updateSelect(returnField, user) ;
-      uiPopup.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer.getAncestorOfType(UIPopupAction.class)) ;
+      try {
+	      UIPopupContainer uiPopupContainer = uiGroupSelector.getAncestorOfType(UIPopupContainer.class) ;
+	      UIPopupAction uiPopup = uiPopupContainer.getChild(UIPopupAction.class) ;
+	      uiPopup.deActivate() ;
+	      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
+	      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer.getAncestorOfType(UIPopupAction.class)) ;
+      }catch (NullPointerException e) {
+      	UIPopupAction uiPopup = uiGroupSelector.getAncestorOfType(UIPopupAction.class) ;
+      	uiPopup.deActivate() ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiGroupSelector.getReturnComponent()) ;
+			}
     }
   }
 

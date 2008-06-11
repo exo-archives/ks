@@ -22,6 +22,7 @@ package org.exoplatform.forum;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -29,6 +30,8 @@ import java.util.List;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
+import org.apache.commons.lang.StringUtils;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -201,6 +204,37 @@ public class ForumUtils {
 		return rtn.toString() ;
 	}
 	
+	public static String removeSpaceInString(String str) throws Exception {
+		if(str != null && str.length() > 0) {
+			str = str.replaceAll(" ", "");
+			str = str.replaceAll(";", ",");
+			while (true) {
+	      if(str.indexOf(",,") < 0) break ;
+	      str = StringUtils.replace(str, ",,", ",");
+      }
+			if(str.lastIndexOf(",") == str.length() - 1) {
+				str = str.substring(0, str.length() - 1) ;
+			}
+		}
+		return str;
+	}
+  
+	public static String[] addStringToString(String input, String output) throws Exception {
+  	List<String> list = new ArrayList<String>();
+    if(output != null && output.trim().length() > 0) {
+      if(input!= null && input.trim().length() > 0) {
+      	if(input.lastIndexOf(",") != (input.length() - 1)) input = input + ",";
+        output = input + output ;
+        String temp[] = ForumUtils.splitForForum(output) ;
+        for (String string : temp) {
+        	if(list.contains(string) || string.length() == 0) continue ;
+	        list.add(string) ;
+        }
+      }
+    }
+    return list.toArray(new String[] {}) ;
+  }
+  
 	public static boolean isStringInStrings(String []strings, String string) {
 		string = string.trim();
 	  for (String string1 : strings) {
