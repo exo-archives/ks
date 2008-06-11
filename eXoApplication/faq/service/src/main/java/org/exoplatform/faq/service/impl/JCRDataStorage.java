@@ -800,7 +800,7 @@ public class JCRDataStorage {
   	return FormSearchs ;
   }
 
-	public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+	public List<Category> getAdvancedSeachCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		List<Category> catList = new ArrayList<Category>() ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;

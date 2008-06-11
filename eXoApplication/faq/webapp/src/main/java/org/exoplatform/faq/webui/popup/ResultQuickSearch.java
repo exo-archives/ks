@@ -17,14 +17,11 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
