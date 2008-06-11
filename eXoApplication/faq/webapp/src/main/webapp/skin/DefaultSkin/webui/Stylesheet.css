@@ -238,24 +238,31 @@
   line-height: 18px;
   margin: 8px 0px;
   white-space:normal;
+  min-height: 18px ;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
   background: url('background/NotResponse.gif') no-repeat left top;
   padding-left: 28px;
   line-height: 18px;
-  margin: 8px 0px;
   white-space:normal;
+  min-height: 18px ;
 }
 
 .UIFAQPortlet .NotApproved {
-  background:transparent url(background/question_not_approved.gif) no-repeat right top;
+  background:transparent url(background/question_not_approved.gif) no-repeat left top;
+  width: 16px;
+  height: 18px;
+  float: left;
+  line-height:18px;
 }
 
 .UIFAQPortlet .ViewQuestionNotApproved {
   display:table-cell;
+  float: left;
   line-height:18px;
-  padding-right: 20px ;
+  max-width: 97%;
+  padding-right: 5px ;
   white-space:normal;
 }
 
