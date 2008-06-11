@@ -156,8 +156,8 @@ public class FAQServiceImpl implements FAQService{
   	return jcrData_.getAdvancedEmptry(sProvider, text, fromDate, toDate); 
   }
   
-  public List<Category> getAdvancedSeach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
-  	return jcrData_.getAdvancedSeach(sProvider, eventQuery); 
+  public List<Category> getAdvancedSeachCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  	return jcrData_.getAdvancedSeachCategory(sProvider, eventQuery); 
   }
   
   public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception {

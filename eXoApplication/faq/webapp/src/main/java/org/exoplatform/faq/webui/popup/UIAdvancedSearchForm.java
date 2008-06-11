@@ -260,7 +260,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(fromDate != null) advanced.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
 				ResultSearchCategory result = resultContainer.getChild(ResultSearchCategory.class) ;
-				List<Category> list = faqService.getAdvancedSeach(FAQUtils.getSystemProvider(),eventQuery);
+				List<Category> list = faqService.getAdvancedSeachCategory(FAQUtils.getSystemProvider(),eventQuery);
 				popupContainer.setId("ResultSearchCategory") ;
 				result.setListCategory(list) ;
 			} else if(type.equals("faqQuestion")){
