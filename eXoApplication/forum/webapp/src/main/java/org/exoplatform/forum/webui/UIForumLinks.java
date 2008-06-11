@@ -153,7 +153,7 @@ public class UIForumLinks extends UIForm {
 			if(!path.equals(uiForm.path)) {
 				uiForm.path = path ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				if(path.indexOf(Utils.FORUM) > 0) {
+				if(path.lastIndexOf(Utils.FORUM) > 0) {
 					String id[] = path.trim().split("/");
 					Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[0], id[1]);;
 					if(forum != null){

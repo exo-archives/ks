@@ -184,14 +184,14 @@ public class UITopicDetail extends UIForm {
 		this.viewTopic = viewTopic ;
 		this.isUpdatePageList = true ;
 		isRefreshed = true ;
-		String userName = ForumSessionUtils.getCurrentUser() ;
-		if(userName ==null || userName.length() <= 0 || !this.viewTopic) {
-			userName = "guest" ;
-		}
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+		this.userProfile = forumPortlet.getUserProfile() ;
+		String userName = this.userProfile.getUserId() ;
+		if(!this.viewTopic) userName = "guest" ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, userName) ;
 		if(!userName.equals("guest"))	forumPortlet.setUserProfile() ;
+		this.userName = userName ;
 	}
 	
 	public void setTopicFromCate(String categoryId, String forumId, Topic topic, boolean viewTopic) throws Exception {
@@ -201,25 +201,20 @@ public class UITopicDetail extends UIForm {
 		this.viewTopic = viewTopic ;
 		this.isUpdatePageList = true ;
 		isRefreshed = true ;
-		String userName = ForumSessionUtils.getCurrentUser() ;
-		if(userName ==null || userName.length() <= 0 || !this.viewTopic) {
-			userName = "guest" ;
-		}
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+		this.userProfile = forumPortlet.getUserProfile() ;
+		String userName = this.userProfile.getUserId() ;
+		if(!this.viewTopic) userName = "guest" ;
 		boolean isGetService = false ;
-		if(userName !=null && userName.length() > 0) {
-			if(!userName.equals(this.userName)) {
-				if(this.userProfile != null) {
-					String []topicsRead = this.userProfile.getReadTopic() ;
-					if(topicsRead != null && topicsRead.length > 0) {
-						if(!ForumUtils.isStringInStrings(topicsRead, this.topicId)) {
-							isGetService = true ;
-						} 
-					} else isGetService = true ;
-				} else isGetService = true ;
-			} 
-			this.userName = userName ;
-		}
+		if(!userName.equals(this.userName)) {
+			String []topicsRead = this.userProfile.getReadTopic() ;
+			if(topicsRead != null && topicsRead.length > 0) {
+				if(!ForumUtils.isStringInStrings(topicsRead, this.topicId)) {
+					isGetService = true ;
+				} 
+			} else isGetService = true ;
+		} 
+		this.userName = userName ;
 		if(isGetService) {
 			this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 			forumPortlet.setUserProfile() ;
@@ -240,21 +235,18 @@ public class UITopicDetail extends UIForm {
 		this.isEditTopic = false ;
 		isRefreshed = true ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
-		String userName = ForumSessionUtils.getCurrentUser() ;
+		this.userProfile = forumPortlet.getUserProfile() ;
+		String userName = this.userProfile.getUserId() ;
 		boolean isGetService = false ;
-		if(userName !=null && userName.length() > 0) {
-			if(!userName.equals(this.userName)) {
-				if(this.userProfile != null) {
-					String []topicsRead = this.userProfile.getReadTopic() ;
-					if(topicsRead != null && topicsRead.length > 0) {
-						if(!ForumUtils.isStringInStrings(topicsRead, this.topicId)) {
-							isGetService = true ;
-						} 
-					} else isGetService = true ;
-				} else isGetService = true ;
-			} 
-			this.userName = userName ;
-		}
+		if(!userName.equals(this.userName)) {
+			String []topicsRead = this.userProfile.getReadTopic() ;
+			if(topicsRead != null && topicsRead.length > 0) {
+				if(!ForumUtils.isStringInStrings(topicsRead, this.topicId)) {
+					isGetService = true ;
+				} 
+			} else isGetService = true ;
+		} 
+		this.userName = userName ;
 		if(isGetService || this.isGetTopic) {
 			this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 			forumPortlet.setUserProfile() ;
@@ -323,7 +315,7 @@ public class UITopicDetail extends UIForm {
 	@SuppressWarnings("unused")
 	private Topic getTopic() throws Exception {
 		try {
-			if(this.isEditTopic) {
+			if(this.isEditTopic || this.topic == null) {
 				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "guest") ;
 				this.isEditTopic = false ;
 			}
@@ -391,7 +383,7 @@ public class UITopicDetail extends UIForm {
 	}
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+//		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		if(this.isUpdatePageList) {
 			String isApprove = "" ;
 			String isHidden = "" ;
@@ -464,8 +456,8 @@ public class UITopicDetail extends UIForm {
 		return this.posts ;
 	}
 	
-	@SuppressWarnings({ "unused", "unchecked" })
-  private List<Post> getAllPost() throws Exception {return this.pageList.getPage(0) ;}
+  @SuppressWarnings("unchecked")
+  public List<Post> getAllPost() throws Exception {return this.pageList.getPage(0) ;}
 	
 	private Post getPost(String postId) throws Exception {
 		for(Post post : this.posts) {

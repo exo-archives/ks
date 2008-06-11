@@ -33,6 +33,7 @@ import org.exoplatform.forum.webui.popup.UIForumInputWithActions;
 import org.exoplatform.forum.webui.popup.UIGroupSelector;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UISelectComponent;
+import org.exoplatform.forum.webui.popup.UISelector;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -66,7 +67,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UISearchForm.CancelActionListener.class, phase = Phase.DECODE)			
 		}
 )
-public class UISearchForm extends UIForm {
+public class UISearchForm extends UIForm implements UISelector {
 	final static	private String FIELD_INPUTSEARCH_FORM = "InputSearchForm" ;
 	
 	final static	private String FIELD_SEARCHVALUE_INPUT = "SearchValue" ;
@@ -185,7 +186,6 @@ public class UISearchForm extends UIForm {
 		List<ActionData> actions = new ArrayList<ActionData>() ;;
 		ActionData ad = new ActionData() ;
 		ad.setActionListener("AddValuesUser") ;
-		ad.setActionParameter("SelectUser") ;
 		ad.setCssIconClass("SelectUserIcon") ;
 		ad.setActionName(FIELD_SEARCHUSER_INPUT);
 		actions.add(ad) ;
@@ -260,8 +260,8 @@ public class UISearchForm extends UIForm {
     if(values != null && values.trim().length() > 0) {
       if(!ForumUtils.isStringInStrings(values.split(","), value)){
         if(values.trim().lastIndexOf(",") != (values.length() - 1)) values = values.trim() + ",";
+        values = values + value ;
       }
-      values = values + value ;
     } else values = value ;
     fieldInput.setValue(values) ;
   }

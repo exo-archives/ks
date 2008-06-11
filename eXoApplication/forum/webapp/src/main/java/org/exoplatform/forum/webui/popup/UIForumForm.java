@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -133,7 +132,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormTextAreaInput topicable = new UIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, null);
 		
 		UIFormCheckBoxInput checkWhenAddTopic = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
-		//UIFormCheckBoxInput checkWhenAddPost = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEPOST_CHECKBOX, FIELD_MODERATEPOST_CHECKBOX, false);
 		
 		addUIFormInput(categoryId) ;
 		UIFormInputWithActions newForum = new UIFormInputWithActions(FIELD_NEWFORUM_FORM);
@@ -147,7 +145,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		moderationOptions.addUIFormInput(notifyWhenAddPost);
 		moderationOptions.addUIFormInput(notifyWhenAddTopic);
 		moderationOptions.addUIFormInput(checkWhenAddTopic);
-	//	moderationOptions.addUIFormInput(checkWhenAddPost);
 
 		UIFormInputWithActions forumPermission = new UIFormInputWithActions(FIELD_FORUMPERMISSION_FORM);
 		forumPermission.addUIFormInput(moderator) ;
@@ -197,13 +194,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		if(this.id == id) return true ;
 		return false ;
 	}
-	private String[] splitForForum (String str) throws Exception {
-		return ForumUtils.splitForForum(str);
-	}
-	
-	private String unSplitForForum (String[] str) throws Exception {
-		return ForumUtils.unSplitForForum(str) ;
-	}
 	
 	public void setForumValue(Forum forum, boolean isUpdate) throws Exception {
 		if(isUpdate) {
@@ -220,16 +210,15 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).setDefaultValue(forum.getDescription());
 			
 			UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
-			moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).setDefaultValue(this.unSplitForForum(forum.getNotifyWhenAddPost()));
-			moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).setDefaultValue(this.unSplitForForum(forum.getNotifyWhenAddTopic()));
+			moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).setDefaultValue(ForumUtils.unSplitForForum(forum.getNotifyWhenAddPost()));
+			moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).setDefaultValue(ForumUtils.unSplitForForum(forum.getNotifyWhenAddTopic()));
 			moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).setChecked(forum.getIsModerateTopic());
-		//	moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(forum.getIsModeratePost());
 			
 			UIFormInputWithActions forumPermission = this.getChildById(FIELD_FORUMPERMISSION_FORM);
-			forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).setValue(unSplitForForum(forum.getModerators()));
-			forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).setValue(unSplitForForum(forum.getViewForumRole()));
-			forumPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).setValue(unSplitForForum(forum.getCreateTopicRole()));
-			forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).setValue(unSplitForForum(forum.getReplyTopicRole()));
+			forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getModerators()));
+			forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getViewForumRole()));
+			forumPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getCreateTopicRole()));
+			forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getReplyTopicRole()));
 		}
 	}
 	
@@ -253,39 +242,14 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     } else {
 	    String values = fieldInput.getValue() ;
 	    if(values != null && values.trim().length() > 0) {
-	    	values = removeSpaceInString(values);
+	    	values = ForumUtils.removeSpaceInString(values);
 	      if(!ForumUtils.isStringInStrings(values.split(","), value)){
 	        if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
+	        values = values + value ;
 	      } 
-      values = values + value ;
 	    } else values = value ;
 	    fieldInput.setValue(values) ;
     }
-  }
-	
-	private String removeSpaceInString(String str) throws Exception {
-		if(str != null && str.length() > 0) {
-			str = str.replaceAll(" ", "");
-			str = str.replaceAll(";", ",");
-			str = str.replaceAll(",,", ",");
-		}
-		return str;
-	}
-  
-  private String[] addStringToString(String input, String output) throws Exception {
-  	List<String> list = new ArrayList<String>();
-    if(output != null && output.trim().length() > 0) {
-      if(input!= null && input.trim().length() > 0) {
-      	if(input.lastIndexOf(",") != (input.length() - 1)) input = input + ",";
-        output = input + output ;
-        String temp[] = ForumUtils.splitForForum(output) ;
-        for (String string : temp) {
-        	if(list.contains(string) || string.length() == 0) continue ;
-	        list.add(string) ;
-        }
-      }
-    }
-    return list.toArray(new String[] {}) ;
   }
 	
 	static	public class SaveActionListener extends EventListener<UIForumForm> {
@@ -304,10 +268,9 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
 			if(description == null || description.trim().length() <= 0) description = " " ;
 			UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
-			String[] notifyWhenAddTopic = uiForm.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).getValue()) ;
-			String[] notifyWhenAddPost = uiForm.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue()) ;
+			String[] notifyWhenAddTopic = ForumUtils.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).getValue()) ;
+			String[] notifyWhenAddPost = ForumUtils.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue()) ;
 			Boolean	ModerateTopic = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).getValue();
-		//	Boolean	ModeratePost = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
 			
 			UIFormInputWithActions forumPermission = uiForm.getChildById(FIELD_FORUMPERMISSION_FORM);
 			String moderators = forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue() ;
@@ -315,10 +278,10 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String postable = forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).getValue() ; 
 			String viewer = forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).getValue() ; 
 			
-			moderators = uiForm.removeSpaceInString(moderators) ;
-			topicable = uiForm.removeSpaceInString(topicable) ;
-			postable = uiForm.removeSpaceInString(postable) ;
-			viewer = uiForm.removeSpaceInString(viewer) ;
+			moderators = ForumUtils.removeSpaceInString(moderators) ;
+			topicable = ForumUtils.removeSpaceInString(topicable) ;
+			postable = ForumUtils.removeSpaceInString(postable) ;
+			viewer = ForumUtils.removeSpaceInString(viewer) ;
 			
 			if(forumOrder == null || forumOrder.length() <= 0) forumOrder = "0";
 			String userName = ForumSessionUtils.getCurrentUser() ;
@@ -336,7 +299,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			newForum.setTopicCount(0);
 			newForum.setNotifyWhenAddPost(notifyWhenAddPost);
 			newForum.setNotifyWhenAddTopic(notifyWhenAddTopic);
-		//	newForum.setIsModeratePost(ModeratePost);
 			newForum.setIsModeratePost(false);
 			newForum.setIsModerateTopic(ModerateTopic);
 			if(forumState.equals("closed")) {
@@ -375,10 +337,10 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     		return ;
     	}
     	
-    	String []setModerators = uiForm.addStringToString(moderators, moderators) ;
-    	String []setTopicable = uiForm.addStringToString(topicable, topicable) ;
-    	String []setPostable = uiForm.addStringToString(topicable, postable);
-    	String []setViewer = uiForm.addStringToString(postable, viewer) ;
+    	String []setModerators = ForumUtils.addStringToString(moderators, moderators) ;
+    	String []setTopicable = ForumUtils.addStringToString(topicable, topicable) ;
+    	String []setPostable = ForumUtils.addStringToString(topicable, postable);
+    	String []setViewer = ForumUtils.addStringToString(postable, viewer) ;
       
 			newForum.setModerators(setModerators);
 			newForum.setCreateTopicRole(setTopicable);
