@@ -21,6 +21,11 @@
   font-weight: boldd;
 }
 
+.UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar {
+	line-height: 25px;
+	overflow: auto;
+}
+
 .UIFAQPortlet .UICategoriesSummary {
   margin: 5px;
 }
