@@ -51,8 +51,8 @@
 										      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
 										      }
 										     %>
-										     	<div style="margin: 0px 0px 3px 2px;">
-														&nbsp;$name  &nbsp;&nbsp;&nbsp;&nbsp;
+									     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+									     			$name &nbsp;&nbsp;&nbsp;
 														[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">
 															<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
 														</font></a>&nbsp;]
