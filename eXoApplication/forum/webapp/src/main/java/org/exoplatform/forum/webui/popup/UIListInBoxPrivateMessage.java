@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -97,7 +98,7 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 		public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
 			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
-			if(objctId != null && objctId.length() > 0) {
+			if(!ForumUtils.isEmpty(objctId)) {
 				uicontainer.forumService.saveReadMessage(ForumSessionUtils.getSystemProvider(), objctId, uicontainer.userName, Utils.AGREEMESSAGE);
 				ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
 				UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
@@ -116,7 +117,7 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 		public void execute(Event<UIListInBoxPrivateMessage> event) throws Exception {
 			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			if(objctId != null && objctId.length() > 0) {
+			if(!ForumUtils.isEmpty(objctId)) {
 				uicontainer.forumService.removePrivateMessage(ForumSessionUtils.getSystemProvider(), objctId, uicontainer.userName, Utils.AGREEMESSAGE);
 				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.getUserProfile() ;

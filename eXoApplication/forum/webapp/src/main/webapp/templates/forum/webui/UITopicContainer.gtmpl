@@ -392,7 +392,7 @@
 										JCRPageList pageList = uicomponent.getPageListPost(topicId) ;
 										long max_page = pageList.getAvailablePage() ;
 										String iconClassTopic = topic.getIcon();
-										if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
+										if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
 										String topicTitle = topic.getTopicName();
 										String topicBy = topic.getOwner();
 										String postNewBy = topic.getLastPostBy() ;

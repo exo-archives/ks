@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -97,7 +98,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 		public void execute(Event<UIListSentPrivateMessage> event) throws Exception {
 			UIListSentPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
-			if(objctId != null && objctId.length() > 0) {
+			if(!ForumUtils.isEmpty(objctId)) {
 				uicontainer.forumService.saveReadMessage(ForumSessionUtils.getSystemProvider(), objctId, uicontainer.userName, Utils.SENDMESSAGE);
 				ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
 				UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
@@ -113,7 +114,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 		public void execute(Event<UIListSentPrivateMessage> event) throws Exception {
 			UIListSentPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			if(objctId != null && objctId.length() > 0) {
+			if(!ForumUtils.isEmpty(objctId)) {
 				uicontainer.forumService.removePrivateMessage(ForumSessionUtils.getSystemProvider(), objctId, uicontainer.userName, Utils.SENDMESSAGE);
 				event.getRequestContext().addUIComponentToUpdateByAjax(uicontainer.getParent());
 			}

@@ -139,8 +139,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String categoryOrder = uiForm.getUIStringInput(FIELD_CATEGORYORDER_INPUT).getValue();
 			String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
 			String userPrivate = uiForm.getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).getValue();
-			if(categoryOrder == null || categoryOrder.length() <= 0) categoryOrder = "0";
-			else if(categoryOrder.length() > 3) {
+			if(ForumUtils.isEmpty(categoryOrder)) categoryOrder = "0";
+			categoryOrder = ForumUtils.removeZeroFirstNumber(categoryOrder) ;
+			if(categoryOrder.length() > 3) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_CATEGORYORDER_INPUT) };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-large-number", args, ApplicationMessage.WARNING)) ;
@@ -149,7 +150,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			}
       userPrivate = ForumUtils.removeSpaceInString(userPrivate) ;
       String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
-    	if(erroUser != null && erroUser.length() > 0) {
+    	if(!ForumUtils.isEmpty(erroUser)) {
     		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
     		Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
     		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -171,7 +172,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			
-			if(uiForm.categoryId.length() > 0) {
+			if(!ForumUtils.isEmpty(uiForm.categoryId)) {
 				cat.setId(uiForm.categoryId) ;
 				forumService.saveCategory(ForumSessionUtils.getSystemProvider(), cat, false);
 				forumPortlet.cancelAction() ;

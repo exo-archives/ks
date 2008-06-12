@@ -175,7 +175,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	  String outPut = "" ;
 	  if(!values.isEmpty()) {
 	    for(String value : values) {
-	      if(value != null && value.trim().length() > 0){ 
+	    	if(!ForumUtils.isEmpty(value)) {
 	      	if(value.indexOf('(') > 0){
 	      		outPut += value.substring(0, value.indexOf('(')) + "\n" ;
 	      	}
@@ -395,8 +395,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	}
 	
 	private void setForumLinks() throws Exception {
-		this.forumLinks = this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).getForumLinks() ;
-		if(forumLinks.size() <= 0) {
+		UIForumLinks uiForumLinks = this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class) ;
+		boolean hasGetService = false;
+		if(uiForumLinks == null) hasGetService = true;
+		this.forumLinks = uiForumLinks.getForumLinks() ;
+		if(this.forumLinks == null || forumLinks.size() <= 0) hasGetService = true;
+		if(hasGetService) {
 			this.forumService.getAllLink(ForumSessionUtils.getSystemProvider());
 		}
 	}
@@ -457,7 +461,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	if(isAdmin) userRole = 0;
     	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
       List<String> moderateForums = new ArrayList<String>() ;
-    	if(moderateForum != null && moderateForum.length() > 0) {
+    	if(!ForumUtils.isEmpty(moderateForum)) {
         moderateForums = uiForm.listModerate ;
     	} 
     	List<String> NewModerates = new ArrayList<String> ();
@@ -490,7 +494,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     		if(userRole >= 1) userRole = 2;
     	}
     	String userTt = userProfile.getUserTitle() ;
-    	if(userTitle == null || userTitle.trim().length() == 0) {
+    	if(!ForumUtils.isEmpty(userTitle)) {
 				userTitle = userTt ;
 			}
     	if(userTitle.equals("Administrator") || userTitle.equals("Moderator") || userTitle.equals("User") || userTitle.equals("Guest")) {
@@ -516,7 +520,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	boolean isBanned = (Boolean)inputSetBan.getUIFormCheckBoxInput(FIELD_ISBANNED_CHECKBOX).getValue() ;
     	String until = inputSetBan.getUIFormSelectBox(FIELD_BANUNTIL_SELECTBOX).getValue() ;
     	long banUntil = 0;
-    	if(until != null && until.length() > 0) {
+    	if(!ForumUtils.isEmpty(until)) {
     		banUntil = Long.parseLong(until.substring(6));
     	}
     	String banReason = inputSetBan.getUIFormTextAreaInput(FIELD_BANREASON_TEXTAREA).getValue() ;

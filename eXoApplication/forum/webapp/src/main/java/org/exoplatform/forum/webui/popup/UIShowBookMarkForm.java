@@ -101,7 +101,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
     		if(forum == null || topic == null) {
     			uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
     			path = bookMark.getBookMarkId(path) ;
-    			if(path != null && path.length() > 0) {
+    			if(!ForumUtils.isEmpty(path)) {
     				bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
     				forumPortlet.setUserProfile() ;
     			}
@@ -123,7 +123,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
     		if(forum == null) {
     			uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
     			path = bookMark.getBookMarkId(path) ;
-    			if(path != null && path.length() > 0) {
+    			if(!ForumUtils.isEmpty(path)) {
     				bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
     				forumPortlet.setUserProfile() ;
     			}
@@ -141,7 +141,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				if(category == null) {
 					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 					path = bookMark.getBookMarkId(path) ;
-					if(path != null && path.length() > 0) {
+					if(!ForumUtils.isEmpty(path)) {
     				bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
     				forumPortlet.setUserProfile() ;
     			}

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -163,7 +164,7 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 	static  public class SaveActionListener extends EventListener<UITagForm> {
     public void execute(Event<UITagForm> event) throws Exception {
 			UITagForm uiForm = event.getSource() ;
-			if(uiForm.IdSelected != null && uiForm.IdSelected.length() > 0 && uiForm.topicPath != null && uiForm.topicPath.length() > 0) {
+			if(!ForumUtils.isEmpty(uiForm.IdSelected) && !ForumUtils.isEmpty(uiForm.topicPath)) {
 				uiForm.forumService.addTopicInTag(ForumSessionUtils.getSystemProvider(), uiForm.IdSelected, uiForm.topicPath);
 			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

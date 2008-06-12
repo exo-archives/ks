@@ -338,7 +338,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
       ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
       boolean isOffend = false ; 
 			String stringKey = forumAdministration.getCensoredKeyword() ;
-			if(stringKey != null && stringKey.length() > 0) {
+			if(!ForumUtils.isEmpty(stringKey)) {
 				stringKey = stringKey.toLowerCase() ;
 				String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
 				checksms = checksms.toLowerCase();
@@ -361,7 +361,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
         String canPost = threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue() ;
 				String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
 				String erroUser = ForumSessionUtils.checkValueUser(canPost) ;
-	    	if(erroUser != null && erroUser.length() > 0) {
+	    	if(!ForumUtils.isEmpty(erroUser)) {
 	    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 	    		Object[] args = { uiForm.getLabel(FIELD_CANPOST_INPUT), erroUser };
 	    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -369,7 +369,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	    		return ;
 	    	}
 	    	erroUser = ForumSessionUtils.checkValueUser(canView) ;
-	    	if(erroUser != null && erroUser.length() > 0) {
+	    	if(!ForumUtils.isEmpty(erroUser)) {
 	    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 	    		Object[] args = { uiForm.getLabel(FIELD_CANVIEW_INPUT), erroUser };
 	    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -412,7 +412,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
                 
 				topicNew.setCanView(canViews);
 				topicNew.setCanPost(canPosts);
-				if(uiForm.topicId != null && uiForm.topicId.length() > 0) {
+				if(!ForumUtils.isEmpty(uiForm.topicId)) {
 					topicNew.setId(uiForm.topicId);
 					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 					topicNew.setEditReason(editReason) ;
@@ -537,7 +537,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
   public void updateSelect(String selectField, String value ) throws Exception {
     UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField) ;
     String values = fieldInput.getValue() ;
-    if(values != null && values.trim().length() > 0) {
+    if(!ForumUtils.isEmpty(values)) {
     	values = ForumUtils.removeSpaceInString(values);
       if(!ForumUtils.isStringInStrings(values.split(","), value)){
         if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
@@ -553,7 +553,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
       String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
     	String[]array = objctId.split("/") ;
     	String childId = array[0] ;
-      if(childId != null && childId.length() > 0) {
+      if(!ForumUtils.isEmpty(childId)) {
         UIPopupContainer popupContainer = uiTopicForm.getAncestorOfType(UIPopupContainer.class) ;
         UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
         UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;

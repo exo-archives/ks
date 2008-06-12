@@ -128,16 +128,14 @@ public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent
           if(((UIFormCheckBoxInput)child).isChecked()) {
             Topic topic = topicUnApprove.getTopic(child.getName()) ;
             if (topic != null) {
+            	topic.setIsApproved(true);
               listTopic.add(topic) ;
             }
           }
         }
       }
       if(!listTopic.isEmpty()) {
-        for(Topic topic : listTopic) {
-          topic.setIsApproved(true);
-          topicUnApprove.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 3) ;
-        }
+        topicUnApprove.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), listTopic, 3) ;
       } else {
         Object[] args = { };
         throw new MessageException(new ApplicationMessage("UIPageListTopicUnApprove.sms.notCheck", args, ApplicationMessage.WARNING)) ;

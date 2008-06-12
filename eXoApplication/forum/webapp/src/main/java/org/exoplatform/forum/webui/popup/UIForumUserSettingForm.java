@@ -210,7 +210,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
 			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
 			UserProfile userProfile = uiForm.userProfile ;
-			if(userTitle == null || userTitle.trim().length() == 0) {
+			if(ForumUtils.isEmpty(userTitle)) {
 				userTitle = userProfile.getUserTitle() ;
 			}
 			String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;

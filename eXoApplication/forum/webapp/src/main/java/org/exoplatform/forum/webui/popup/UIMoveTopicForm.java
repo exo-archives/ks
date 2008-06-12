@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -95,7 +96,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIMoveTopicForm> event) throws Exception {
 			UIMoveTopicForm uiForm = event.getSource() ;
 			String forumPath = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			if(forumPath != null && forumPath.length() > 0) {
+			if(!ForumUtils.isEmpty(forumPath)) {
 				uiForm.forumService.moveTopic(ForumSessionUtils.getSystemProvider(), uiForm.topics , forumPath) ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;

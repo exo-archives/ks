@@ -181,7 +181,7 @@ public class UICategories extends UIContainer	{
 		if(userProfile.getUserRole() == 0) return true ;
 		if(category.getOwner().equals(userId)) return true ;
 		String userList = category.getUserPrivate() ;
-		if(userList != null && userList.length() > 0) {
+		if(!ForumUtils.isEmpty(userList)) {
 			String []uesrs = userList.split(",");
 			return ForumServiceUtils.hasPermission(uesrs, userId) ;
 		} else return true ;
@@ -251,7 +251,7 @@ public class UICategories extends UIContainer	{
 			UICategories uiContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String userName = uiContainer.userProfile.getUserId() ;
-			if(path != null && path.trim().length() > 0) {
+			if(!ForumUtils.isEmpty(path)) {
 				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;

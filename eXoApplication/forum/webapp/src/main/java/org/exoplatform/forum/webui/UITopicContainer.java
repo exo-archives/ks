@@ -296,7 +296,7 @@ public class UITopicContainer extends UIForm {
 			String path = uiTopicContainer.forum.getPath() ;
 			UIFormStringInput formStringInput = uiTopicContainer.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
-			if(text != null && text.trim().length() > 0 && path != null) {
+			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
 				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
@@ -329,7 +329,8 @@ public class UITopicContainer extends UIForm {
 				numberPage = stringInput2.getValue() ;
 			}
 			stringInput1.setValue("") ; stringInput2.setValue("") ;
-			if(numberPage != null && numberPage.trim().length() > 0) {
+			numberPage = ForumUtils.removeZeroFirstNumber(numberPage) ;
+			if(!ForumUtils.isEmpty(numberPage)) {
 				try {
 					long page = Long.parseLong(numberPage.trim()) ;
 					if(page < 0) {
@@ -592,31 +593,26 @@ public class UITopicContainer extends UIForm {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
-			String sms = "";
-			int i = 0 ;
+			Topic topic ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-						if(!topics.get(i).getIsClosed()){ sms = topics.get(i).getTopicName() ; break ;} 
-						++i ;
+						topic = uiTopicContainer.getTopic(child.getName());
+						if(topic != null) {
+							if(!topic.getIsClosed()) continue ;
+							topic.setIsClosed(false) ;
+							topics.add(topic);
+						}
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			if(topics.size() > 0 && sms.length() == 0) {
-				for(Topic topic : topics) {
-					topic.setIsClosed(false) ;
-					uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 1) ;
-				}
+			if(topics.size() > 0) {
+				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 1) ;
 			} 
-			if(topics.size() == 0 && sms.length() == 0){
-				Object[] args = { };
+			if(topics.size() == 0){
+				Object[] args = {"Open" };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
-			}
-			if(sms.length() > 0){
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Open", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -628,31 +624,26 @@ public class UITopicContainer extends UIForm {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
-			String sms = "";
-			int i = 0 ;
+			Topic topic ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-						if(topics.get(i).getIsClosed()){ sms = topics.get(i).getTopicName() ; break ;} 
-						++i ;
+						topic = uiTopicContainer.getTopic(child.getName());
+						if(topic != null) {
+							if(topic.getIsClosed()) continue ;
+							topic.setIsClosed(true) ;
+							topics.add(topic);
+						}
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			if(topics.size() > 0 && sms.length() == 0) {
-				for(Topic topic : topics) {
-					topic.setIsClosed(true) ;
-					uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 1) ;
-				}
+			if(topics.size() > 0) {
+				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 1) ;
 			} 
-			if(topics.size() == 0 && sms.length() == 0){
-				Object[] args = { };
+			if(topics.size() == 0){
+				Object[] args = { "Close" };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
-			}
-			if(sms.length() > 0){
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Close", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -664,31 +655,26 @@ public class UITopicContainer extends UIForm {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
-			String sms = "";
-			int i = 0 ;
+			Topic topic ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-						if(topics.get(i).getIsLock()){ sms = topics.get(i).getTopicName() ; break ;} 
-						++i ;
+						topic = uiTopicContainer.getTopic(child.getName());
+						if(topic != null) {
+							if(topic.getIsLock()) continue ;
+							topic.setIsLock(true) ;
+							topics.add(topic);
+						}
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			if(topics.size() > 0 && sms.length() == 0) {
-				for(Topic topic : topics) {
-					topic.setIsLock(true) ;
-					uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 2) ;
-				}
+			if(topics.size() > 0) {
+				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 2) ;
 			} 
-			if(topics.size() == 0 && sms.length() == 0){
-				Object[] args = { };
+			if(topics.size() == 0){
+				Object[] args = { "Locked" };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
-			}
-			if(sms.length() > 0){
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Locked", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -700,31 +686,26 @@ public class UITopicContainer extends UIForm {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
-			String sms = "";
-			int i = 0 ;
+			Topic topic ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-						if(!topics.get(i).getIsLock()){ sms = topics.get(i).getTopicName() ; break ;} 
-						++i ;
+						topic = uiTopicContainer.getTopic(child.getName());
+						if(topic != null) {
+							if(!topic.getIsLock()) continue ;
+							topic.setIsLock(false) ;
+							topics.add(topic);
+						}
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			if(topics.size() > 0 && sms.length() == 0) {
-				for(Topic topic : topics) {
-					topic.setIsLock(false) ;
-					uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 2) ;
-				}
+			if(topics.size() > 0) {
+				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 2) ;
 			} 
-			if(topics.size() == 0 && sms.length() == 0){
-				Object[] args = { };
+			if(topics.size() == 0){
+				Object[] args = { "UnLock" };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
-			}
-			if(sms.length() > 0){
-				Object[] args = { sms };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.UnLock", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -737,24 +718,19 @@ public class UITopicContainer extends UIForm {
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
 			Topic topic_ ; 
-			boolean hasChecked = false ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
 						topic_ = uiTopicContainer.getTopic(child.getName()) ;
-						if(topic_.getIsSticky()){ topics.add(topic_); } 
-						hasChecked = true ;
+						if(topic_.getIsSticky()){ topic_.setIsSticky(false) ; topics.add(topic_); } 
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(topics.size() > 0) {
-				for(Topic topic : topics) {
-					topic.setIsSticky(false) ;
-					uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 4) ;
-				}
-			} else if(!hasChecked){
-				Object[] args = { };
+				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 4) ;
+			} else {
+				Object[] args = { "UnStick" };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
@@ -768,24 +744,19 @@ public class UITopicContainer extends UIForm {
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
 			Topic topic_ ;
-			boolean hasChecked = false ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
 						topic_ = uiTopicContainer.getTopic(child.getName()) ;
-						if(!topic_.getIsSticky()){ topics.add(topic_); } 
-						hasChecked = true ;
+						if(!topic_.getIsSticky()){ topic_.setIsSticky(true) ;topics.add(topic_); } 
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(topics.size() > 0) {
-				for(Topic topic : topics) {
-					topic.setIsSticky(true) ;
-					uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 4) ;
-				}
-			}else if(!hasChecked){
-				Object[] args = { };
+				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 4) ;
+			}else {
+				Object[] args = { "Stick" };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
@@ -815,7 +786,7 @@ public class UITopicContainer extends UIForm {
 			} 
 			if(topics.size() == 0){
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -871,7 +842,7 @@ public class UITopicContainer extends UIForm {
 			} 
 			if(topics.size() == 0){
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -883,22 +854,21 @@ public class UITopicContainer extends UIForm {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
+			Topic topic_ ;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
+						topic_ = uiTopicContainer.getTopic(child.getName()) ;
+						if(topic_.getIsWaiting()){ topic_.setIsWaiting(false) ;topics.add(topic_); } 
 					}
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(topics.size() > 0) {
-				for(Topic topic : topics) {
-					topic.setIsWaiting(false) ;
-					uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 5) ;
-				}
+				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 5) ;
 			} 
 			if(topics.size() == 0){
-				Object[] args = { };
+				Object[] args = { "UnWaiting" };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
@@ -909,7 +879,7 @@ public class UITopicContainer extends UIForm {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			if(uiContainer.strQuery != null && uiContainer.strQuery.length() > 0) {
+			if(!ForumUtils.isEmpty(uiContainer.strQuery)) {
 				if(uiContainer.strQuery.indexOf(path) >= 0) {
 					if(uiContainer.strQuery.indexOf("descending") > 0) {
 						uiContainer.strQuery = path + " ascending";
@@ -934,7 +904,7 @@ public class UITopicContainer extends UIForm {
 			String path_ = topicContainer.categoryId+"/"+topicContainer.forumId+"/"+string ;
 			path = path.replaceFirst(string, path_);
 			String userName = topicContainer.userProfile.getUserId() ;
-			if(path != null && path.trim().length() > 0) {
+			if(!ForumUtils.isEmpty(path)) {
 				topicContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
 				UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;

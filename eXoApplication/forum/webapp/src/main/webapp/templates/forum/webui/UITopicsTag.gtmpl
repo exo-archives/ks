@@ -14,7 +14,7 @@
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String description = tag_.getDescription() ;
-	if(description == null || description.length() <=0) {
+	if(ForumUtils.isEmpty(description)) {
 		description = " ";
 	}
 %>

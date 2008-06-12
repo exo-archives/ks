@@ -163,7 +163,7 @@
 										actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+categoryId+'/'+forumId);
 										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",categoryId+'/'+forumId);
 										String lineHeight = "line-height: 12px;";
-										if(forumDescription == null || forumDescription.trim().length() <= 0) {
+										if(ForumUtils.isEmpty(forumDescription)) {
 											lineHeight = "line-height: 28px;";
 										}
 								%>

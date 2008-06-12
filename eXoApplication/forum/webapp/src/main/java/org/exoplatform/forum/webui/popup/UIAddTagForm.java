@@ -23,6 +23,7 @@ import java.util.TreeMap;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.webui.UIBreadcumbs;
@@ -122,7 +123,7 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 			//tagNameInput.addValidator(EmptyNameValidator.class) ;
 			String tagName = tagNameInput.getValue() ;
 			
-			if(tagName == null || tagName.trim().length() < 1) {
+			if(ForumUtils.isEmpty(tagName)) {
 			  throw new MessageException(new ApplicationMessage("UIAddTagForm.ms.tagnameisnull", null, ApplicationMessage.WARNING)) ;
 			}
 			

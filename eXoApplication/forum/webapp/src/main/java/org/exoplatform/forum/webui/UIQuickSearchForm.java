@@ -63,7 +63,7 @@ public class UIQuickSearchForm extends UIForm {
 			UIQuickSearchForm uiForm = event.getSource() ;
 			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
 			String text = formStringInput.getValue() ;
-			if(text != null && text.trim().length() > 0) {
+			if(!ForumUtils.isEmpty(text)) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				List<ForumSearch> list = null;
 				try {

@@ -26,7 +26,7 @@
 	if(isAdmin) isShowMenu = true ;
 	else isShowMenu = false ;
 	String description = category.getDescription() ;
-	if(description == null || description.length() <=0 ) description = "";
+	if(ForumUtils.isEmpty(description)) description = "";
 	int rCNB = 0;
 	String actionBookmark = "";
 %>
@@ -111,7 +111,7 @@
 									<div class="LeftOverButton" title="Search in this Category">
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
-												<div class="StatusIcon SearchIcon" style="width: 120px;">
+												<div class="StatusIcon SearchIcon">
 													<div class="DownArrow1Icon">Search this Category</div>
 												</div>
 											</div>
@@ -278,7 +278,7 @@
 							actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+path);
 							actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",path);
 							String lineHeight = "line-height: 12px;";
-							if(forumDescription == null || forumDescription.trim().length() <= 0) {
+							if(!ForumUtils.isEmpty(forumDescription)) {
 								lineHeight = "line-height: 28px;";
 							}
 					%>

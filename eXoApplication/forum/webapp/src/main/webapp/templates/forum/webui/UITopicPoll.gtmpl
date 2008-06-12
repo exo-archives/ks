@@ -165,7 +165,7 @@
 								  		<tbody>
 								  		<% 
 								  			 String classCss = "EvenRow" ;
-								  			 String[] colors = uicomponent.getColor();
+								  			 String[] colors = ForumUtils.getColor();
 								  			 String[] infoVote = uicomponent.getInfoVote();
 								  			 String[] number;
 								  			 String vote, percent, color, sum;

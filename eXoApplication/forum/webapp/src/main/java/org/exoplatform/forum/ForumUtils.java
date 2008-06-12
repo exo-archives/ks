@@ -109,7 +109,7 @@ public class ForumUtils {
   }
   
   public static boolean isValidEmailAddresses(String addressList) throws Exception {
-    if (addressList == null || addressList.length() <= 0)  return true ;
+    if (isEmpty(addressList))  return true ;
     try {
       InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
       String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
@@ -142,7 +142,7 @@ public class ForumUtils {
   }
   
 	public static String getTimeZoneNumberInString(String string) {
-		if(string != null && string.length() > 0) {
+		if(!isEmpty(string)) {
 			StringBuffer stringBuffer = new StringBuffer();
 			for(int i = 0; i <	string.length(); ++i) {
 				char c = string.charAt(i) ; 
@@ -180,7 +180,7 @@ public class ForumUtils {
 	}
 	
 	public static String[] splitForForum (String str) throws Exception {
-		if(str != null && str.length() > 0) {
+		if(!isEmpty(str)) {
 			if(str.contains(",")){ 
 				str.replaceAll(";", ",") ;
 				return str.trim().split(",") ;
@@ -205,7 +205,7 @@ public class ForumUtils {
 	}
 	
 	public static String removeSpaceInString(String str) throws Exception {
-		if(str != null && str.length() > 0) {
+		if(!isEmpty(str)) {
 			str = str.replaceAll(" ", "");
 			str = str.replaceAll(";", ",");
 			while (true) {
@@ -219,10 +219,28 @@ public class ForumUtils {
 		return str;
 	}
   
+	public static String removeZeroFirstNumber(String str) {
+	  if(!isEmpty(str)){
+	  	while(true) {
+	  		if(str.length() > 1) {
+	  			if(str.charAt(0)=='0'){
+	  				str = str.replaceFirst("0", "") ;
+	  			}	else break;
+	  		}	else break;
+	  	}
+	  }
+	  return str;
+  }
+	
+	public static boolean isEmpty(String str) {
+		if(str == null || str.trim().length() == 0) return true ;
+		else return false;
+	}
+
 	public static String[] addStringToString(String input, String output) throws Exception {
   	List<String> list = new ArrayList<String>();
-    if(output != null && output.trim().length() > 0) {
-      if(input!= null && input.trim().length() > 0) {
+    if(!isEmpty(output)) {
+      if(!isEmpty(input)) {
       	if(input.lastIndexOf(",") != (input.length() - 1)) input = input + ",";
         output = input + output ;
         String temp[] = ForumUtils.splitForForum(output) ;
@@ -253,6 +271,9 @@ public class ForumUtils {
 	  return label.replaceFirst("<keyWord>", key) ;
   }
 	
-	
+	public static String[] getColor() {
+		return new String[] {"blue", "DarkGoldenRod", "green", "yellow", "BlueViolet", "orange",
+				"darkBlue", "IndianRed","DarkCyan" ,"lawnGreen"} ; 
+	}
 	
 }

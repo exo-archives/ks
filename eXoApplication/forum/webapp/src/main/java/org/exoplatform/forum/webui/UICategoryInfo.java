@@ -123,7 +123,7 @@ public class UICategoryInfo extends UIContainer	{
 		long mumberUserOnline = 0;
 		String mostUserOnlines = forumStatistic.getMostUsersOnline();
 		Date date = getInstanceTempCalendar().getTime() ;
-		if(mostUserOnlines != null && mostUserOnlines.length() > 0) {
+		if(!ForumUtils.isEmpty(mostUserOnlines)) {
 			mumberUserOnline = Long.parseLong(mostUserOnlines.split(",")[0]) ;
 			if(this.mostUserOnline_ > mumberUserOnline) {
 				mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date) + " GMT+0";
