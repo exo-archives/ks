@@ -19,7 +19,7 @@
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							responseBy = question.getResponseBy() ;
-							Format formatter = new SimpleDateFormat("dd/MM/yyyy ");
+							Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
 						 	date = formatter.format(question.getDateResponse());
 							response = question.getResponses();
 						}

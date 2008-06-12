@@ -27,7 +27,7 @@
 												String categoryId = category.getId();
 												String categoryName = category.getName() ;
 												String description = category.getDescription() ;
-												Format formatter = new SimpleDateFormat("dd/MM/yyyy ");
+												Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
 						 						String date = formatter.format(category.getCreatedDate());
 												String link = uicomponent.event("Link", categoryId);
  										 	%>

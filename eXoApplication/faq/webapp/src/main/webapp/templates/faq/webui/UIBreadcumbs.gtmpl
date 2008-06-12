@@ -7,14 +7,29 @@
 				<% int t = 1 ;
 					for(namePath in uicomponent.getBreadcumbs()) {
 						String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
+						String title = "" ;
 						if(t < uicomponent.getMaxPath()) {
+							if(namePath.length() > 20) {
+								title = namePath ;
+								namePath = namePath.substring(0,19) + "..." ;
 				%>
-					<a href="$link" class="Selected">$namePath >></a>
+								<a href="$link" class="Selected" title="$title">$namePath >></a>
+							<% } else { %>
+								<a href="$link" class="Selected" >$namePath >></a>
+							<% } %>
 					<div class="RightArrowIcon"><span></span></div>
-				 <% } else {%>
-					<div class="Selected">$namePath</div>
-				 <% } %>
-			  <% t = t + 1 ;} %>
+				 <% } else {
+				 			if(namePath.length() > 20) {
+								title = namePath ;
+								namePath = namePath.substring(0,19) + "..." ;
+				%>
+								<div class="Selected" title="$title">$namePath </div>
+							<% } else { %>
+								<div class="Selected" >$namePath</div>
+							<% } 
+						} %>
+			  <% t = t + 1 ;
+			  } %>
 			  	<div style="clear: left"><span></span></div>
 				</div>
 				<div style="clear: both"><span></span></div>

@@ -65,9 +65,6 @@ public class UIBreadcumbs extends UIContainer {
 					oldPath = oldPath + "/" + string;
 					Category category = faqService.getCategoryById(string, FAQUtils.getSystemProvider()) ;
 					String categoryName = category.getName() ;
-					if(categoryName.length() > 20) {
-						categoryName = categoryName.substring(0,19) + "..." ;
-					}
 					breadcumbs_.add(categoryName) ;
 					paths_.add(oldPath) ;
 				}
