@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -133,8 +134,9 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			UIFormStringInput questionInput = uiForm.getUIStringInput(FIELD_QUESTION_INPUT) ;
 			String question = questionInput.getValue() ;
 			String timeOutStr = uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).getValue() ;
+			timeOutStr = ForumUtils.removeZeroFirstNumber(timeOutStr) ;
 			long timeOut = 0;
-			if(timeOutStr != null && timeOutStr.length() > 0){
+			if(!ForumUtils.isEmpty(timeOutStr)){
 				if(timeOutStr.length() > 4){
 					Object[] args = {uiForm.getLabel(FIELD_TIMEOUT_INPUT) };
 					throw new MessageException(new ApplicationMessage("UIPollForm.msg.longTimeOut", args, ApplicationMessage.WARNING)) ;
@@ -151,7 +153,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			if(values.size() > 0) {
 				for(String value : values) {
 					temp = value ;
-					if(temp != null && temp.length() > 0){
+					if(!ForumUtils.isEmpty(temp)){
 						options[i] = temp;
 					} 
 					++i;
@@ -160,7 +162,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			int sizeOption = options.length;
 			if(sizeOption < 2) sms = "Minimum" ;
 			if(sizeOption > 10) sms = "Maximum" ;
-			if(question == null || question.length() == 0) {
+			if(ForumUtils.isEmpty(question)) {
 				sms = "NotQuestion";
 				sizeOption = 0;
 			}
@@ -258,7 +260,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				detailContainer.getChild(UITopicDetail.class).setIsEditTopic(true) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
 			}
-			if(sms != null && sms.length() > 0) {
+			if(!ForumUtils.isEmpty(sms)) {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIPollForm.msg." + sms, args, ApplicationMessage.WARNING)) ;
 			}

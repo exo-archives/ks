@@ -114,31 +114,24 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 		this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA).setValue(str) ;
   }
 	
-  public void updateSelect(String selectField, String value) throws Exception {
-    UIFormTextAreaInput stringInput = getUIFormTextAreaInput(selectField) ;
-    String values = stringInput.getValue() ;
-    boolean canAdd = true ;
-    if(values != null && values.trim().length() > 0) {
-    	values.replaceAll(";", ",");
+  public void updateSelect(String selectField, String value ) throws Exception {
+    UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField) ;
+    String values = fieldInput.getValue() ;
+    if(!ForumUtils.isEmpty(values)) {
+    	values = ForumUtils.removeSpaceInString(values);
       if(!ForumUtils.isStringInStrings(values.split(","), value)){
-        if(values.trim().lastIndexOf(",") == (values.trim().length() - 1)) values = values.trim() ;
-        else values = values.trim() + ",";
-      } else {
-        canAdd = false ;
-      }
-    } else {
-      values = "" ;
-    }
-    if(canAdd) {
-      values = values.trim() + value ;
-      stringInput.setValue(values) ;
-    }
+        if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
+        values = values + value ;
+      } 
+    } else values = value ;
+    fieldInput.setValue(values) ;
   }
   
   @SuppressWarnings("unused")
   private int getIsSelected() {
   	return this.id ;
   }
+  
 	static	public class SelectTabActionListener extends EventListener<UIPrivateMessageForm> {
 		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
@@ -153,12 +146,11 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	UIPrivateMessageForm messageForm = event.getSource() ; 
     	UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
     	UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
-    	String sendTo = areaInput.getValue() ;
-    	if(sendTo != null && sendTo.trim().length() > 0)
-    		sendTo = sendTo.replaceAll(" ", "") ;
     	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
+    	String sendTo = areaInput.getValue() ;
+    	sendTo = ForumUtils.removeSpaceInString(sendTo) ;
     	String erroUser = ForumSessionUtils.checkValueUser(sendTo) ;
-    	if(erroUser != null && erroUser.length() > 0) {
+    	if(!ForumUtils.isEmpty(erroUser)) {
     		Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser };
     		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -168,7 +160,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	String mailTitle = stringInput.getValue() ;
     	UIFormWYSIWYGInput formWYSIWYGInput = MessageTab.getChild(UIFormWYSIWYGInput.class) ;
     	String message = formWYSIWYGInput.getValue();
-    	if(message != null && message.trim().length() > 0) {
+    	if(!ForumUtils.isEmpty(message)) {
 	    	ForumPrivateMessage privateMessage = new ForumPrivateMessage() ;
 	    	privateMessage.setFrom(messageForm.userName) ;
 	    	privateMessage.setSendTo(sendTo) ;
@@ -200,7 +192,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     public void execute(Event<UIPrivateMessageForm> event) throws Exception {
     	UIPrivateMessageForm messageForm = event.getSource() ;
       String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-      if(objctId != null && objctId.length() > 0) {
+      if(!ForumUtils.isEmpty(objctId)) {
         UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
         UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
         UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;

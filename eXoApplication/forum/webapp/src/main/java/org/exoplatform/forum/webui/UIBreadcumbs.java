@@ -68,7 +68,7 @@ public class UIBreadcumbs extends UIContainer {
 
 	public void setUpdataPath(String path) throws Exception {
 		isLink = false ;
-		if(path != null && path.length() > 0 && !path.equals(FORUM_SERVICE)) {
+		if(!ForumUtils.isEmpty(path) && !path.equals(FORUM_SERVICE)) {
 			String temp[] = path.split("/") ;
 			String pathNode = forumHomePath_;
 			path_.clear() ;
@@ -94,13 +94,13 @@ public class UIBreadcumbs extends UIContainer {
 						tempPath = string;
 							breadcumbs_.add(category.getCategoryName()) ;
 					}else if(obj instanceof Forum) {
-						if(tempPath != null && tempPath.length() > 0)
+						if(!ForumUtils.isEmpty(tempPath))
 							tempPath = tempPath + "/" + string ;
 						else tempPath = string;
 						Forum forum = (Forum)obj ;
 						breadcumbs_.add(forum.getForumName()) ;
 					}else if(obj instanceof Topic) {
-						if(tempPath != null && tempPath.length() > 0)
+						if(!ForumUtils.isEmpty(tempPath))
 							tempPath = tempPath + "/" + string ;
 						else tempPath = string;
 						Topic topic = (Topic)obj;

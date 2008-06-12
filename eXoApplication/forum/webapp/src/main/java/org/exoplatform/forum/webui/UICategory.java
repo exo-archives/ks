@@ -466,7 +466,7 @@ public class UICategory extends UIForm	{
 			String path = uiCategory.category.getPath() ;
 			UIFormStringInput formStringInput = uiCategory.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
-			if(text != null && text.trim().length() > 0 && path != null) {
+			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -493,7 +493,7 @@ public class UICategory extends UIForm	{
 			UICategory uiContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String userName = uiContainer.userProfile.getUserId() ;
-			if(path != null && path.trim().length() > 0) {
+			if(!ForumUtils.isEmpty(path)) {
 				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;

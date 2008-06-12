@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
@@ -124,7 +125,7 @@ public class UITopicPoll extends UIForm	{
 	
 	@SuppressWarnings("unused")
 	private Poll getPoll() throws Exception {
-		if(categoryId != null && categoryId.length() > 0) {
+		if(!ForumUtils.isEmpty(categoryId)) {
 			if(this.isEditPoll) {
 				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "guest") ;
 			}
@@ -157,7 +158,7 @@ public class UITopicPoll extends UIForm	{
 	private boolean getIsVoted() throws Exception {
 		if(poll_.getIsClosed()) return true ;
 		String userVote = ForumSessionUtils.getCurrentUser() ;
-		if(userVote == null  || userVote.length() <= 0) return true ;
+		if(ForumUtils.isEmpty(userVote)) return true ;
 		if(poll_.getTimeOut() > 0) {
 			Date today = new Date() ;
 			if((today.getTime() - this.poll_.getCreatedDate().getTime()) >= poll_.getTimeOut()*86400000) return true ;
@@ -198,11 +199,6 @@ public class UITopicPoll extends UIForm	{
 		}
 		infoVote[i] = "" + size ;
 		return infoVote ;
-	}
-	
-	@SuppressWarnings("unused")
-	private String[] getColor() throws Exception {
-		return new String[] {"blue", "DarkGoldenRod", "green", "yellow", "BlueViolet", "orange","darkBlue", "IndianRed","DarkCyan" ,"lawnGreen"} ; 
 	}
 	
 	static public class VoteActionListener extends EventListener<UITopicPoll> {
@@ -333,7 +329,7 @@ public class UITopicPoll extends UIForm	{
             String[] posHaveVoted = (setUserVote[pos].substring(setUserVote[pos].indexOf(":"))).split(":") ;
             setUserVote[pos] = setUserVote[pos].substring(0, setUserVote[pos].indexOf(":")) ;
             for(String posVoted : posHaveVoted) {
-              if(posVoted != null && posVoted.trim().length() > 0) {
+              if(!ForumUtils.isEmpty(posVoted)) {
                 doubleVote[Integer.parseInt(posVoted)] -= 1 ;
                 totalVote -= 1 ;
               }

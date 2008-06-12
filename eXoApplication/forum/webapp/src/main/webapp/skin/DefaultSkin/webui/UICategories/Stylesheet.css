@@ -44,7 +44,7 @@
 	line-height: 22px;
 	margin: 0px;
 	padding-left: 22px;
-	width: 120px;
+	width: auto; height: auto;
 }
 
 .UIForumCategory .ForumToolbar .DownArrow1Icon {

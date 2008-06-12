@@ -240,7 +240,7 @@ public class UISearchForm extends UIForm implements UISelector {
   }
   
 	private String checkValue(String input) throws Exception {
-		if(input !=null && input.trim().length() > 0){
+		if(!ForumUtils.isEmpty(input)){
 			try {
 				Integer.parseInt(input.trim()) ;
 				return input.trim() ;
@@ -257,7 +257,7 @@ public class UISearchForm extends UIForm implements UISelector {
   public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
     String values = fieldInput.getValue() ;
-    if(values != null && values.trim().length() > 0) {
+    if(!ForumUtils.isEmpty(values)) {
       if(!ForumUtils.isStringInStrings(values.split(","), value)){
         if(values.trim().lastIndexOf(",") != (values.length() - 1)) values = values.trim() + ",";
         values = values + value ;

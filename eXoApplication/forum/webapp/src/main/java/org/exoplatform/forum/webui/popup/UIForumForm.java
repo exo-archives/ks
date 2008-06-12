@@ -241,7 +241,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     	fieldInput.setValue(value) ;
     } else {
 	    String values = fieldInput.getValue() ;
-	    if(values != null && values.trim().length() > 0) {
+	    if(!ForumUtils.isEmpty(values)) {
 	    	values = ForumUtils.removeSpaceInString(values);
 	      if(!ForumUtils.isStringInStrings(values.split(","), value)){
 	        if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
@@ -266,7 +266,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String forumState = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATE_SELECTBOX).getValue();
 			String forumStatus = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).getValue();
 			String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
-			if(description == null || description.trim().length() <= 0) description = " " ;
+			if(ForumUtils.isEmpty(description)) description = " " ;
 			UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
 			String[] notifyWhenAddTopic = ForumUtils.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).getValue()) ;
 			String[] notifyWhenAddPost = ForumUtils.splitForForum(moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue()) ;
@@ -283,7 +283,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			postable = ForumUtils.removeSpaceInString(postable) ;
 			viewer = ForumUtils.removeSpaceInString(viewer) ;
 			
-			if(forumOrder == null || forumOrder.length() <= 0) forumOrder = "0";
+			if(ForumUtils.isEmpty(forumOrder)) forumOrder = "0";
+			forumOrder = ForumUtils.removeZeroFirstNumber(forumOrder) ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			Forum newForum = new Forum();
 			newForum.setForumName(forumTitle);
@@ -309,28 +310,28 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			}
       String erroUser = ForumSessionUtils.checkValueUser(moderators) ;
       UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-    	if(erroUser != null && erroUser.length() > 0) {
+    	if(!ForumUtils.isEmpty(erroUser)) {
     		Object[] args = { uiForm.getLabel(FIELD_MODERATOR_MULTIVALUE), erroUser };
     		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
     	}
     	erroUser = ForumSessionUtils.checkValueUser(topicable) ;
-    	if(erroUser != null && erroUser.length() > 0) {
+    	if(!ForumUtils.isEmpty(erroUser)) {
     		Object[] args = { uiForm.getLabel(FIELD_TOPICABLE_MULTIVALUE), erroUser };
     		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
     	}
     	erroUser = ForumSessionUtils.checkValueUser(postable) ;
-    	if(erroUser != null && erroUser.length() > 0) {
+    	if(!ForumUtils.isEmpty(erroUser)) {
     		Object[] args = { uiForm.getLabel(FIELD_POSTABLE_MULTIVALUE), erroUser };
     		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
     	}
     	erroUser = ForumSessionUtils.checkValueUser(viewer) ;
-    	if(erroUser != null && erroUser.length() > 0) {
+    	if(!ForumUtils.isEmpty(erroUser)) {
     		Object[] args = { uiForm.getLabel(FIELD_VIEWER_MULTIVALUE), erroUser };
     		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -348,7 +349,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			newForum.setViewForumRole(setViewer);
 			
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			if(uiForm.forumId.length() > 0)	{
+			if(!ForumUtils.isEmpty(uiForm.forumId))	{
 				newForum.setId(uiForm.forumId);
 				forumService.saveForum(ForumSessionUtils.getSystemProvider(), categoryId, newForum, false);
 			} else {
@@ -382,7 +383,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     	String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
     	String[]array = objctId.split("/") ;
     	String childId = array[0] ;
-    	if(childId != null && childId.length() > 0) {
+    	if(!ForumUtils.isEmpty(childId)) {
 				UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
@@ -398,7 +399,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     public void execute(Event<UIForumForm> event) throws Exception {
     	UIForumForm forumForm = event.getSource() ;
     	String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-    	if(objctId != null && objctId.length() > 0) {
+    	if(!ForumUtils.isEmpty(objctId)) {
     		UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class) ;
     		UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
     		UIAddMultiValueForm multiValueForm = popupAction.activate(UIAddMultiValueForm.class, 500) ;

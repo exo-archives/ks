@@ -61,7 +61,7 @@
 									<div><strong>$userName</strong> has no post!</div>
 									<% } 
 										String lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, userProfile.getLastLoginDate()) ;
-										if(lastLoginUser != null && lastLoginUser.length() > 0) {
+										if(!ForumUtils.isEmpty(lastLoginUser)) {
 									%>
 									<div>Last Login: $lastLoginUser</div>
 									<% } %>
@@ -73,7 +73,7 @@
   							<tbody>
   							<% 
   								String siteOfUser = contact.getPersonalSite() ;
-  								if(siteOfUser != null && siteOfUser.length() > 0) {
+  								if(!ForumUtils.isEmpty(siteOfUser)) {
   									siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
   								}
   								String []labels = uiform.getLabelProfile();  

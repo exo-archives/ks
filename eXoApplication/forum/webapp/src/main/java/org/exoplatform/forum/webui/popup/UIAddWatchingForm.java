@@ -66,13 +66,13 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 	public void initForm() throws Exception  {
 		List<String> list = new ArrayList<String>() ;
 		String userId = ForumSessionUtils.getCurrentUser() ;
-		if(userId != null && userId.length() > 0) {
+		if(!ForumUtils.isEmpty(userId)) {
 			UIFormStringInput userName = getUIStringInput(USER_NAME) ;
 			userName.setEditable(false) ;
 			userName.setValue(userId) ;
 			Contact contact = this.getPersonalContact(userId) ;
 			String email = contact.getEmailAddress() ;
-			if(email != null && email.trim().length() > 0)
+			if(!ForumUtils.isEmpty(email))
 				list.add(email);
 		}
 		list.add("");
@@ -128,7 +128,7 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 					throw new MessageException(new ApplicationMessage("UIAddMultiValueForm.msg.invalid-field", args, ApplicationMessage.WARNING)) ;
 				}
 			} 
-			if(values_.size() > 0 && path != null && path.length() > 0) {
+			if(values_.size() > 0 && !ForumUtils.isEmpty(path)) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				forumService.addWatch(ForumSessionUtils.getSystemProvider(), 1, path, values_) ;
 			}

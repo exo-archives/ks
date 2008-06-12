@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -76,43 +77,44 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	
 	public UIForumAdministrationForm() throws Exception {
 		addChild(UIListTopicOld.class, null, null) ;
+		this.setActions(new String[]{"Save", "Cancel"}) ;
+  }
+	
+	public void setInit() throws Exception{
 		this.administration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider());
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
 		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
 		UIFormInputWithActions activeTopicTab = new UIFormInputWithActions(FIELD_ACTIVETOPIC_TAB);
-		
+		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
+																"modifiedDate",	"topicCount", "postCount"}; 
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("Forum Name", "name")) ;
-		ls.add(new SelectItemOption<String>("Forum Order", "forumOrder")) ;
-		ls.add(new SelectItemOption<String>("Forum Status", "isLock")) ;
-		ls.add(new SelectItemOption<String>("Created Date", "createdDate")) ;
-		ls.add(new SelectItemOption<String>("Modified Date", "modifiedDate")) ;
-		ls.add(new SelectItemOption<String>("Thread Count", "topicCount")) ;
-		ls.add(new SelectItemOption<String>("Post Count", "postCount")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("forumName"), "name")) ;
+		for (String string : idLables) {
+			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
+		}
 		UIFormSelectBox forumSortBy = new UIFormSelectBox(FIELD_FORUMSORTBY_INPUT, FIELD_FORUMSORTBY_INPUT, ls);
 		forumSortBy.setValue(administration.getForumSortBy()) ;
 		
 		ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("Ascending", "ascending")) ;
-		ls.add(new SelectItemOption<String>("Descending", "descending")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
 		UIFormSelectBox forumSortByType = new UIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT, FIELD_FORUMSORTBYTYPE_INPUT, ls);
 		forumSortByType.setValue(administration.getForumSortByType()) ;
 		
+		idLables = new String[]{"isLock", "createdDate", "modifiedDate", 
+				"lastPostDate", "postCount", "viewCount", "numberAttachments"}; 
 		ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("Thread Name", "name")) ;
-		ls.add(new SelectItemOption<String>("Thread Status", "isLock")) ;
-		ls.add(new SelectItemOption<String>("Created Date", "createdDate")) ;
-		ls.add(new SelectItemOption<String>("Modified Date", "modifiedDate")) ;
-		ls.add(new SelectItemOption<String>("Last Post Date", "lastPostDate")) ;
-		ls.add(new SelectItemOption<String>("Post Count", "postCount")) ;
-		ls.add(new SelectItemOption<String>("View Count", "viewCount")) ;
-		ls.add(new SelectItemOption<String>("Number Attachment", "numberAttachments")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("threadName"), "name")) ;
+		for (String string : idLables) {
+			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
+		}
+		
 		UIFormSelectBox topicSortBy = new UIFormSelectBox(FIELD_TOPICSORTBY_INPUT, FIELD_TOPICSORTBY_INPUT, ls);
 		topicSortBy.setValue(administration.getTopicSortBy()) ;
 		
 		ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("Ascending", "ascending")) ;
-		ls.add(new SelectItemOption<String>("Descending", "descending")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
 		UIFormSelectBox topicSortByType = new UIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT, FIELD_TOPICSORTBYTYPE_INPUT, ls);
 		topicSortByType.setValue(administration.getTopicSortByType()) ;
 		
@@ -141,8 +143,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		addUIFormInput(forumSortTab) ;
 		addUIFormInput(forumCensorTab) ;
 		addUIFormInput(activeTopicTab) ;
-		this.setActions(new String[]{"Save", "Cancel"}) ;
-  }
+	}
+	
 	public boolean isRenderListTopic() {
   	return isRenderListTopic;
   }
@@ -169,13 +171,16 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			String topicSortBy = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBY_INPUT).getValue() ;
 			String topicSortByType = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT).getValue() ;
 			String censoredKeyword = forumCensor.getUIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA).getValue() ;
-			censoredKeyword = censoredKeyword.replaceAll(" ", "");
+			censoredKeyword = ForumUtils.removeSpaceInString(censoredKeyword);
+			if(!ForumUtils.isEmpty(censoredKeyword)) {
+				censoredKeyword = censoredKeyword.toLowerCase();
+			}
 			ForumAdministration forumAdministration = administrationForm.administration ;
 			forumAdministration.setForumSortBy(forumSortBy) ;
 			forumAdministration.setForumSortByType(forumSortByType) ;
 			forumAdministration.setTopicSortBy(topicSortBy) ;
 			forumAdministration.setTopicSortByType(topicSortByType) ;
-			forumAdministration.setCensoredKeyword(censoredKeyword.toLowerCase()) ;
+			forumAdministration.setCensoredKeyword(censoredKeyword) ;
 			administrationForm.forumService.saveForumAdministration(ForumSessionUtils.getSystemProvider(), forumAdministration) ;
 			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
@@ -187,7 +192,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm administrationForm = event.getSource() ;
 			String activeAbout = administrationForm.getUIStringInput(FIELD_ACTIVEABOUT_INPUT).getValue() ;
-			if(activeAbout != null && activeAbout.length() > 0) {
+			if(!ForumUtils.isEmpty(activeAbout)) {
 				try {
 	        long date = Long.parseLong(activeAbout) ;
 	        if(date > 0) {

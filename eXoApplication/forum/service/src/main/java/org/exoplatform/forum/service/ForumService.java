@@ -199,14 +199,14 @@ public interface ForumService {
 	 * 3. Save the topic data into the database
 	 * 4. Invalidate the TopicView if neccessary
 	 * @param forumId
-	 * @param topic
+	 * @param topics
 	 * @param isNew
 	 * @param isMove TODO
 	 * @param username
 	 * @return
 	 * @throws Exception
 	 */
-	public void modifyTopic(SessionProvider sProvider, Topic topic, int type) throws Exception ;
+	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception ;
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception;
 	/**
 	 * This method should:

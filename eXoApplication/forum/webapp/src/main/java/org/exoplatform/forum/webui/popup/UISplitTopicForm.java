@@ -23,6 +23,7 @@ import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -102,7 +103,7 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UISplitTopicForm> event) throws Exception {
     	UISplitTopicForm uiForm = event.getSource() ;
       String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue() ;
-      if(newTopicTitle != null && newTopicTitle.length() > 0) {
+      if(!ForumUtils.isEmpty(newTopicTitle)) {
 	    	List<UIComponent> children = uiForm.getChildren() ;
 				List<Post> posts = new ArrayList<Post>() ;
 				for(UIComponent child : children) {

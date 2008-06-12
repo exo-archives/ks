@@ -265,7 +265,7 @@ public class UITopicsTag extends UIForm {
 			}
 			if(!hasCheck) {
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", 
+				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", 
 						args, ApplicationMessage.WARNING)) ;
 			}else {
 				topicsTag.isUpdateTag = true ;

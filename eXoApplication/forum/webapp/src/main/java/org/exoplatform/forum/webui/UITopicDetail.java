@@ -573,7 +573,7 @@ public class UITopicDetail extends UIForm {
 			String path = topicDetail.topic.getPath() ;
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
-			if(text != null && text.trim().length() > 0 && path != null) {
+			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -612,8 +612,9 @@ public class UITopicDetail extends UIForm {
 			} else {
 				numberPage = stringInput2.getValue() ;
 			}
+			numberPage = ForumUtils.removeZeroFirstNumber(numberPage) ;
 			stringInput1.setValue("") ; stringInput2.setValue("") ;
-			if(numberPage != null && numberPage.trim().length() > 0) {
+			if(!ForumUtils.isEmpty(numberPage)) {
 				try {
 					long page = Long.parseLong(numberPage.trim()) ;
 					if(page < 0) {
@@ -740,7 +741,9 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsClosed()) {
 				topic.setIsClosed(false) ;
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 1) ;
+				List<Topic>topics = new ArrayList<Topic>();
+				topics.add(topic);
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 1) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -757,7 +760,9 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsClosed()) {
 				topic.setIsClosed(true) ;
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 1) ;
+				List<Topic>topics = new ArrayList<Topic>();
+				topics.add(topic);
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 1) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -774,7 +779,9 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsLock()) {
 				topic.setIsLock(true) ;
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 2) ;
+				List<Topic>topics = new ArrayList<Topic>();
+				topics.add(topic);
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 2) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -791,7 +798,9 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsLock()) {
 				topic.setIsLock(false) ;
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 2) ;
+				List<Topic>topics = new ArrayList<Topic>();
+				topics.add(topic);
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 2) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
@@ -823,7 +832,9 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsSticky()) {
 				topic.setIsSticky(true) ;
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 4) ;
+				List<Topic>topics = new ArrayList<Topic>();
+				topics.add(topic);
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 4) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -840,7 +851,9 @@ public class UITopicDetail extends UIForm {
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsSticky()) {
 				topic.setIsSticky(false) ;
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 4) ;
+				List<Topic>topics = new ArrayList<Topic>();
+				topics.add(topic);
+				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 4) ;
 				topicDetail.viewTopic = false ;
 				topicDetail.isEditTopic = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -876,7 +889,9 @@ public class UITopicDetail extends UIForm {
 			UITopicDetail topicDetail = event.getSource() ;
       Topic topic = topicDetail.topic;
       topic.setIsApproved(true) ;
-      topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 3) ;
+      List<Topic>topics = new ArrayList<Topic>();
+			topics.add(topic);
+			topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 3) ;
       topicDetail.viewTopic = false ;
       topicDetail.isEditTopic = true ;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
@@ -888,7 +903,9 @@ public class UITopicDetail extends UIForm {
       UITopicDetail topicDetail = event.getSource() ;
       Topic topic = topicDetail.topic;
       topic.setIsApproved(false) ;
-      topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topic, 3) ;
+      List<Topic>topics = new ArrayList<Topic>();
+			topics.add(topic);
+			topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 3) ;
       topicDetail.viewTopic = false ;
       topicDetail.isEditTopic = true ;
       event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;

@@ -825,38 +825,40 @@ public class JCRDataStorage{
 		}
 	}
 	
-	public void modifyTopic(SessionProvider sProvider, Topic topic, int type) throws Exception {
+	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
-		try {
-			String topicPath = topic.getPath();
-			Node topicNode = (Node)forumHomeNode.getSession().getItem(topicPath) ;
-			switch (type) {
-				case 1: { 
-					topicNode.setProperty("exo:isClosed", topic.getIsClosed()) ; 
-					break;
+		for (Topic topic : topics) {
+			try {
+				String topicPath = topic.getPath();
+				Node topicNode = (Node)forumHomeNode.getSession().getItem(topicPath) ;
+				switch (type) {
+					case 1: { 
+						topicNode.setProperty("exo:isClosed", topic.getIsClosed()) ; 
+						break;
+					}
+					case 2: { topicNode.setProperty("exo:isLock", topic.getIsLock()) ; break;}
+					case 3: { 
+						topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
+						break;
+					}
+					case 4: { topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ; break;}
+					case 5: { 
+						topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ; 
+						break;
+					}
+					case 6: { 
+						topicNode.setProperty("exo:isActive", topic.getIsActive()) ; 
+						break;
+					}
+					default: break;
 				}
-				case 2: { topicNode.setProperty("exo:isLock", topic.getIsLock()) ; break;}
-				case 3: { 
-					topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
-					break;
+				forumHomeNode.getSession().save() ;
+				if(type != 2 && type != 4 && type < 7) {
+					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
 				}
-				case 4: { topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ; break;}
-				case 5: { 
-					topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ; 
-					break;
-				}
-				case 6: { 
-					topicNode.setProperty("exo:isActive", topic.getIsActive()) ; 
-					break;
-				}
-				default: break;
+			} catch (RepositoryException e) {
+				e.printStackTrace() ;
 			}
-			forumHomeNode.getSession().save() ;
-			if(type != 2 && type != 4 && type < 7) {
-				queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
-			}
-		} catch (RepositoryException e) {
-			e.printStackTrace() ;
 		}
 	}
 	

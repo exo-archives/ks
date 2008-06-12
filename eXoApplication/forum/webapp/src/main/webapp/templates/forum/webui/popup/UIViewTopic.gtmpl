@@ -41,7 +41,7 @@
 			}
 			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 			String classIconPost = post.getIcon() ;
-			if(classIconPost == null || classIconPost.length() <= 0) 
+			if(ForumUtils.isEmpty(classIconPost)) 
 				classIconPost = "NormalTopicIcon" ;
 			String namePost = post.getName() ;
 			Date createdPostDate = post.getCreatedDate() ;
@@ -50,7 +50,7 @@
 			String message = ForumTransformHTML.convertCodeHTML(post.getMessage()) ;
 			String editBy = post.getModifiedBy() ;
 			String editDate ;
-			if(editBy != null && editBy.length() > 0) {
+			if(!ForumUtils.isEmpty(editBy)) {
 				Date modifileDate = post.getModifiedDate() ;// modifile
 				modifileDate.setTime(modifileDate.getTime() - setTime);
 				editDate = ForumUtils.getFormatDate(longDateFormat,modifileDate);
@@ -108,7 +108,7 @@
 									<% } else {%>
 									<div><strong>$owner</strong> has no post!</div>
 									<% } 
-									 if(location != null && location.length() > 0) {
+									 if(!ForumUtils.isEmpty(location)) {
 									%>
 									<div>Location: location</div>
 									<%} 
@@ -142,12 +142,12 @@
 							<div class="FootPost">
 								<div class="PostInfo">
 								<%  
-									if(editBy != null && editBy.length() > 0) {
+									if(!ForumUtils.isEmpty(editBy)) {
 								%>
 									<div>Last edited by <b>$editBy</b> on $editDate</div>
 									<%
 										String reason = post.getEditReason() ;
-										if(reason != null && reason.trim().length() > 0) { 
+										if(!ForumUtils.isEmpty(reason)) { 
 										reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
 									%>
 									<div>$reason</div>
