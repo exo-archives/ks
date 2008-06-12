@@ -662,6 +662,13 @@ UIFAQPortlet .ResultQuickSearch {
 	float:left ;
 }
 
+.UIFAQPortlet .ViewAttachFile {
+	line-height: 18px;
+	margin: 0px 0px 3px 5px; 
+	max-width: 100%;
+	white-space:normal; 
+}
+
 /******************************  UIResponseQuestion  ***************************************/
 .UIFAQPortlet .UIResponseForm textarea {
 	font-size:11px;
@@ -929,7 +936,8 @@ UIFAQPortlet .ResultQuickSearch {
 }
 
 .UIFAQPortlet .FileAttachmentIcon {
-	background: url('background/AttachmentIcon.gif') no-repeat left;
+	background: url('background/AttachmentIcon.gif') no-repeat left top;
+	padding-left: 20px;
 }
 
 .UIFAQPortlet .WatchManager {
