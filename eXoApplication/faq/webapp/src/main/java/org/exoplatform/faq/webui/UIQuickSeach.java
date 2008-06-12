@@ -18,11 +18,7 @@ package org.exoplatform.faq.webui;
 
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
@@ -53,27 +49,10 @@ import org.exoplatform.webui.form.UIFormStringInput;
 )
 public class UIQuickSeach  extends UIForm {
 	final static	private String FIELD_SEARCHVALUE = "inputValue" ;
-	private List<Category> categoryList_ = new ArrayList<Category>() ;
 	
 	public UIQuickSeach() throws Exception {
 		addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
 		this.setSubmitAction("Search") ;
-	}
-	
-	public List<Category> getListCategories(String text) {
-		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		List<Category> list = new ArrayList<Category>() ;
-		try {
-	    this.categoryList_ = faqService.getAllCategories(FAQUtils.getSystemProvider());
-	    for(Category cate : this.categoryList_) {
-	    	if(cate.getName().equals(text) || cate.getDescription().equals(text) || cate.getModerators().equals(text)) {
-	    		list.add(cate) ;
-	    	}
-	    }
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
-		return list;
 	}
 	
 	static public class SearchActionListener extends EventListener<UIQuickSeach> {

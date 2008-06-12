@@ -683,7 +683,7 @@ public class UIQuestions extends UIContainer {
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
         	UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-    			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 500) ;
+    			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 600) ;
     			popupContainer.setId("MoveCategoryForm") ;
     			uiMoveCategoryForm.setCategoryID(categoryId) ;
     			uiMoveCategoryForm.setListCate() ;
@@ -843,14 +843,14 @@ public class UIQuestions extends UIContainer {
 
 	static  public class EditSubCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
-    	UIQuestions question = event.getSource() ; 
+    	UIQuestions questions = event.getSource() ; 
     	String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
+			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction uiPopupAction = faqPortlet.getChild(UIPopupAction.class) ; 
-			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
+			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 			try {
-				String newPath = question.cutCaret(newPath_) ;
-				String pathService = question.cutCaret(question.getPathService(categoryId)) ;
+				String newPath = questions.cutCaret(newPath_) ;
+				String pathService = questions.cutCaret(questions.getPathService(categoryId)) ;
 				Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
@@ -868,21 +868,21 @@ public class UIQuestions extends UIContainer {
         	} else {
         		uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-moved-action", null, ApplicationMessage.WARNING)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-            question.setCategories() ;
+            questions.setCategories() ;
             event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
             return ;
         	}
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          question.setCategories() ;
+          questions.setCategories() ;
           event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
           return ;
         }
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setCategories() ;
+        questions.setCategories() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }

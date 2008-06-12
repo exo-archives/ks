@@ -23,12 +23,19 @@
     int i = 0 ;
     for(cate in uicomponent.getListCate()) {
     	String categoryName = cate.getCategory().getName() ;
-    	if(categoryName.length() > 50) categoryName = categoryName.substring(0, 49) + "..." ;
 		 	  String link = uicomponent.event("Save",cate.getCategory().getId());
       if(i == 0) {%>
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
-	    			<div id="FAQCate$i" style="float: left" style=" overflow-x: auto;"><a href="$link">$categoryName</a></div>
+	    			<% 
+	    			if(categoryName.length() > 50) {
+	    				String title = categoryName ; 
+	    				categoryName = categoryName.substring(0, 49) + "..." ;
+	    			 %>
+	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
+	    			<% } else { %>
+	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
+	    			<% } %>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
   	<%
@@ -45,7 +52,15 @@
           </div>
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
+	    			<% 
+	    			if(categoryName.length() > 50) {
+	    				String title = categoryName ; 
+	    				categoryName = categoryName.substring(0, 49) + "..." ;
+	    			 %>
+	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
+	    			<% } else { %>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
+	    			<% } %>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
     <%
@@ -53,7 +68,15 @@
           <div style="padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
+	    			<% 
+	    			if(categoryName.length() > 50) {
+	    				String title = categoryName ; 
+	    				categoryName = categoryName.substring(0, 49) + "..." ;
+	    			 %>
+	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
+	    			<% } else { %>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
+	    			<% } %>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
     <%
@@ -79,7 +102,15 @@
           }%>
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
+	    			<% 
+	    			if(categoryName.length() > 50) {
+	    				String title = categoryName ; 
+	    				categoryName = categoryName.substring(0, 49) + "..." ;
+	    			 %>
+	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
+	    			<% } else { %>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
+	    			<% } %>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
      <%
