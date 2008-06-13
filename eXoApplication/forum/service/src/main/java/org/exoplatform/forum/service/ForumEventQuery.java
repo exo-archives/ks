@@ -136,6 +136,9 @@ public class ForumEventQuery {
 	public void setToDateCreatedLastPost(Calendar toDateCreatedLastPost) {
   	this.toDateCreatedLastPost = toDateCreatedLastPost;
   }
+	public boolean getIsAnd() {
+	  return this.isAnd ;
+  }
 	
 	public String getPathQuery() {
 		isAnd = false ;

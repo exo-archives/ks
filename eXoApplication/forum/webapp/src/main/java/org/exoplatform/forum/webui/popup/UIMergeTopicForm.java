@@ -115,7 +115,9 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 				}
 				topicMerge.setTopicName(topicMergeTitle) ;
         try {
-          forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicMerge, false, false) ;
+        	List<Topic>list = new ArrayList<Topic>();
+        	list.add(topicMerge) ;
+          forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), list, 7) ;
         } catch (PathNotFoundException e) {
           
           // hung.hoang add

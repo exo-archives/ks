@@ -308,6 +308,13 @@ public class UISearchForm extends UIForm implements UISelector {
 			eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost) ;
 			eventQuery.setToDateCreatedLastPost(toDateCreatedLastPost) ;
 			
+			eventQuery.getPathQuery() ;
+			boolean isEmpty = eventQuery.getIsAnd() ;
+			if(!isEmpty) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-empty-search", null, ApplicationMessage.WARNING)) ;
+				return ;
+			}
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			List<ForumSearch> list = null ;
 			try {

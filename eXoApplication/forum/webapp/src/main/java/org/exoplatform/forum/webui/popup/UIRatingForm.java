@@ -88,7 +88,7 @@ public class UIRatingForm extends UIForm implements UIPopupComponent {
 			topic.setUserVoteRating(temp) ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			try {
-			  forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topic, false, false) ;
+			  forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topic, false, true) ;
       } catch (PathNotFoundException e) {
         UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         uiApp.addMessage(new ApplicationMessage("UIRatingForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
