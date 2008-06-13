@@ -34,28 +34,6 @@ public class ValidatorDataInput {
     return true ;
   }
   
-  public boolean isEmailAddress(String input) {
-    if(input != null && input.trim().length() > 0 && input.indexOf(" ") < 0) {
-      int aPosition =  input.indexOf("@");
-      int dotPos = input.lastIndexOf(".") ;
-      if(aPosition > 1 && (aPosition < dotPos - 1) && (dotPos < input.length() -1)) {
-        input = input.toLowerCase() ;
-        for(char c : input.toCharArray()) {
-          if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || c =='@' || c == '.' || c == '_') {
-            continue ;
-          } else {
-            return false ;
-          }
-        }
-        return true ;
-      } else {
-        return false ;
-      }
-    } else {
-      return false ;
-    }
-  }
-  
   public boolean isImage(String fileName) {
     String fileType = fileName.substring(fileName.lastIndexOf(".") + 1) ;
     if(typeImage.contains(fileType.toLowerCase()))
