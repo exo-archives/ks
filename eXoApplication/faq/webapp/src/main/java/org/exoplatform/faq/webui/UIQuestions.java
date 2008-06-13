@@ -48,7 +48,6 @@ import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -57,8 +56,6 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-
-import com.sun.mail.util.QEncoderStream;
 
 
 /**
@@ -540,7 +537,7 @@ public class UIQuestions extends UIContainer {
       ContactService contactService = questions.getApplicationComponent(ContactService.class) ;
       String email = "" ;
       String name = "" ;
-      Contact contact = contactService.getContact(SessionProviderFactory.createSessionProvider()
+      Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
       		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
       try {
       	name = contact.getFullName();

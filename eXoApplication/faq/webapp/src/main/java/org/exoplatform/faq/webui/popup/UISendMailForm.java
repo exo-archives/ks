@@ -28,7 +28,6 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.mail.service.Message;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -91,7 +90,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     @SuppressWarnings("unused")
     String email = "" ;
     ContactService contactService = getApplicationComponent(ContactService.class) ;
-    Contact contact = contactService.getContact(SessionProviderFactory.createSessionProvider()
+    Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
     		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
     try {
     	email = contact.getEmailAddress() ;
