@@ -123,24 +123,17 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
     public void execute(Event<UILanguageForm> event) throws Exception {
 			UILanguageForm languageForm = event.getSource() ;
 			UIPopupContainer popupContainer = languageForm.getAncestorOfType(UIPopupContainer.class) ;
-      if(languageForm.getIsManagerment()) {
-  			/*UIQuestionManagerForm questionManagerForm = popupContainer.getChild(UIQuestionManagerForm.class) ;
-        questionManagerForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;
-        questionManagerForm.initPage(true) ;*/
-      } else {
-        UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
-        if(questionForm == null ) {
-          UIFAQPortlet portlet = languageForm.getAncestorOfType(UIFAQPortlet.class) ;
-          UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
-          questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
-        }
-        questionForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;
-        questionForm.initPage(true) ;
+      UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
+      if(questionForm == null ) {
+        UIFAQPortlet portlet = languageForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
+        questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
       }
+      questionForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;
+      questionForm.initPage(true) ;
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-      //event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
 		}
 	}
 

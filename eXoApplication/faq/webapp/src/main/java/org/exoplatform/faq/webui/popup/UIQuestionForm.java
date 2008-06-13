@@ -327,15 +327,15 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     if(questionContents_.size() == 1) {
       LIST_LANGUAGE.clear() ;
       LIST_LANGUAGE.addAll(listLanguage) ;
-      return ;
     } else {
       int i = 0 ;
       while ( i < questionContents_.size()) {
         if(!listLanguage.contains(LIST_LANGUAGE.get(i))) {
           LIST_LANGUAGE.remove(i) ;
           questionContents_.remove(i) ;
+        } else {
+          i ++ ;
         }
-        i ++ ;
       }
       for(String language : listLanguage) {
         if(!LIST_LANGUAGE.contains(language)) {
@@ -489,7 +489,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       for(int i = 0 ; i < listFormWYSIWYGInput.getChildren().size(); i ++) {
         questionForm.questionContents_.add(((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(i)).getValue()) ;
       }
-      
 	    UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       UILanguageForm languageForm = popupAction.activate(UILanguageForm.class, 400) ;
