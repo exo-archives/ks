@@ -350,7 +350,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     public void execute(Event<UIQuestionForm> event) throws Exception {
       Node questionNode = null ;
       boolean questionIsApproved = true ;
-      ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
 			UIQuestionForm questionForm = event.getSource() ;			
       DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
       java.util.Date date = new java.util.Date();
@@ -359,7 +358,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       
       String author = questionForm.getUIStringInput(AUTHOR).getValue() ;
       String emailAddress = questionForm.getUIStringInput(EMAIL_ADDRESS).getValue() ;
-      if(!validatorDataInput.isEmailAddress(emailAddress)) {
+      if(!FAQUtils.isValidEmailAddresses(emailAddress)) {
         UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.email-address-invalid", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
