@@ -271,20 +271,17 @@
 	cursor: default;
 }
 
-.UIForumPortlet .ContentContainer .Moderator {
-	float: left;
-	font-weight: bold;
-}
-
 .UIForumPortlet .ContentContainer .ModeratorContent {
 	float: left;
 	padding: 2px 8px 0px 0px;
 }
 
 .UIForumPortlet .ContentContainer .EmoticonsIcon {
-	float: left;
-	width: 16px; height: 16px;
+	line-height: 18px;
 	margin: 0px 4px;
+	white-space: nowrap;
+	font-weight: bold;
+	padding-left: 20px;
 }
 
 .UIForumPortlet .ContentContainer .UIGrid .Tdbox	{

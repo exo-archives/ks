@@ -331,11 +331,9 @@
 										if(isOnline) userSmile = "OnlineIcon";
 										else userSmile = "OfflineIcon";
 									%>
-										<div class="ModeratorContent">
-											<div class="EmoticonsIcon $userSmile"><span></span></div>
-											<a href="#" class="Moderator">$forumModerator</a>
-											<div style="clear: left;"><span></span></div>
-										</div>
+										<a class="ModeratorContent" href="#">
+									    <div class="EmoticonsIcon $userSmile" >$forumModerator</div>
+								    </a>
 									<% } %>
 										<div style="clear: left;"><span></span></div>
 									</td>
