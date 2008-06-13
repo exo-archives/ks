@@ -17,11 +17,15 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -50,15 +54,42 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultQuickSearch extends UIForm implements UIPopupComponent{
-	private List<FAQFormSearch> formSearchs = new ArrayList<FAQFormSearch>() ;;
+	private List<FAQFormSearch> formSearchs = new ArrayList<FAQFormSearch>() ;
 	public ResultQuickSearch() throws Exception { this.setActions(new String[]{"Close"}) ;}
 	
-	public List<FAQFormSearch> getFormSearchs() {
-  	return this.formSearchs;
-  }
 	public void setFormSearchs(List<FAQFormSearch> formSearchs) {
 		this.formSearchs = formSearchs;
   }
+	
+	public List<FAQFormSearch> getFormSearchs() throws Exception {
+		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
+		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+  	String currentUser = FAQUtils.getCurrentUser() ;
+    if(serviceUtils.isAdmin(currentUser)) {
+    	return this.formSearchs;
+    } else {
+			for(FAQFormSearch faqSearch : formSearchs) {
+				if(faqSearch.getType().equals("faqCategory")) {
+					listQuickSearch.add(faqSearch) ;
+				} else {
+					String questionId = faqSearch.getId() ;
+					FAQService faqService = FAQUtils.getFAQService();
+				  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+				  String categoryIdOfQuestion = question.getCategoryId() ;
+				  Category cat = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
+				  String moderator[] = cat.getModerators() ;
+				  if(Arrays.asList(moderator).contains(currentUser)) {
+				  	listQuickSearch.add(faqSearch) ;
+					} else {
+						if(question.isApproved()) listQuickSearch.add(faqSearch) ;
+						else
+							continue ;
+					}
+				}
+			}
+			return listQuickSearch;
+    }
+	}
 	
   public void activate() throws Exception {}
 	public void deActivate() throws Exception {}

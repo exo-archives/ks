@@ -16,9 +16,15 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -47,8 +53,28 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	public ResultSearchQuestion() throws Exception {}
 	
   @SuppressWarnings("unused")
-  private List<Question> getListQuestion(){
-    return this.listQuestion_ ;
+  private List<Question> getListQuestion() throws Exception{
+  	List<Question> listQuestionSearch = new ArrayList<Question>();
+  	FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+  	String currentUser = FAQUtils.getCurrentUser() ;
+    if(serviceUtils.isAdmin(currentUser)) {
+    	return this.listQuestion_ ;
+		} else {
+			for(Question quest: listQuestion_) {
+				String categoryId = quest.getCategoryId() ;
+				FAQService faqService = FAQUtils.getFAQService();
+			  Category cat = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+			  String moderator[] = cat.getModerators() ;
+			  if(Arrays.asList(moderator).contains(currentUser)) {
+			  	listQuestionSearch.add(quest) ;
+				} else {
+					if(quest.isApproved()) listQuestionSearch.add(quest) ;
+					else
+						continue ;
+				}
+			}
+			return listQuestionSearch ;
+		}
   }
   
   public void setListQuestion(List<Question> listQuestion) {

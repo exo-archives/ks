@@ -28,8 +28,6 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -130,8 +128,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	public void setCategoryValue(String categoryId, boolean isUpdate) throws Exception{
 		if(isUpdate) {
 		  FAQService faqService = FAQUtils.getFAQService();
-      SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider() ;
-		  Category cat = faqService.getCategoryById(categoryId, sessionProvider) ;
+		  Category cat = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
 		  categoryId_ = categoryId ; 
 		  oldName_ = cat.getName() ;
 			getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;

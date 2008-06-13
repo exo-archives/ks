@@ -230,6 +230,11 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
       }
 			String author = advancedSearch.getUIStringInput(FIELD_AUTHOR).getValue() ;
 			String emailAddress = advancedSearch.getUIStringInput(FIELD_EMAIL_ADDRESS).getValue() ;
+			if(!FAQUtils.isValidEmailAddresses(emailAddress)) {
+      	uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.email-invalid",null)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	return ;
+      }
 //			String language = advancedSearch.getUIFormSelectBox(LANGUAGE).getValue() ;
 			String question = advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).getValue() ;
 			String response = advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).getValue() ;
