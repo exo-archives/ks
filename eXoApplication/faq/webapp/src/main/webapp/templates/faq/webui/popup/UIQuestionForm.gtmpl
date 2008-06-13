@@ -1,81 +1,94 @@
 <div class="UIQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="margin: 10px 10px 30px 10px;background-color:#F3F3F3;">
+		<div class="HorizontalLayout" >
 			<div class="UIFormInput">
 				<table class="UIFormGrid">
 					<tbody>						
 					<% 
 					for(field in uiform.getChildren()) { 
 						if(field.isRendered()) {
+					    if(field.getName().equals("ListQuestion")){
+								String action = uicomponent.getActions()[1] ;
+								String link = uicomponent.event(action) ;
+								String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+								int i = 0 ;
+								String[] listLanguage = uicomponent.getListLanguage() ;
+								String language = "" ;
+								for(fck in field.getChildren())  {
+									if(i == 0)
+										language = listLanguage[i++] + " ( default )" ;
+									else 
+										language = listLanguage[i++] ;
+						%>
+								  <tr>
+								    <td >&nbsp;</td>
+								    <td style="padding-left: 4px;">
+								      <div class="LanguageQuestion" > 
+													<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
+											</div>
+								    </td>
+								  </tr>
+								  <tr>
+								    <td align="right">
+								      <%=uicomponent.getLabel(field.getName()) %> : 
+								    </td>
+								    <td style="padding-left: 4px;">
+								      <div>
+												<% uiform.renderField(fck) %>
+												<div>&nbsp;*</div>
+											</div>
+								    </td>
+								  </tr>
+						<%	}
+							} else {
 					%>
-						<tr>
-							<%fieldName = uicomponent.getLabel(field.getName());
-								if(!fieldName.equals(uicomponent.getId())) { %>												
-								<td class="FieldLabel" width="100px;">
-									<%=uicomponent.getLabel(field.getName()) %> : 
-								</td>
-								<td class="FieldComponent">
-									<%if(field.getName().equals("ListQuestion")){
-											String action = uicomponent.getActions()[1] ;
-											String link = uicomponent.event(action) ;
-											String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-											int i = 0 ;
-											String[] listLanguage = uicomponent.getListLanguage() ;
-											String language = "" ;
-											for(fck in field.getChildren())  {
-												if(i == 0)
-													language = listLanguage[i++] + " ( default )" ;
-												else 
-													language = listLanguage[i++] ;
-									%>
-												<div>
-													<% uiform.renderField(fck) %>
-													<div>&nbsp;*</div>
-												</div>
-												<div class="LanguageQuestion" style="width: 100%"> 
-													<div style="vertical-align: middle; padding-left: 5px;">
-														<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
-													</div>
-												</div>
-												<div style="clear: left"><span></span></div>
-									<%	}
-										} else if(field.getName().equals("Attachment")){
-											if(!uicomponent.getListFile().isEmpty()) {
-												String name = "" ;
-												String link = "" ;
-												for(attachment in uicomponent.getListFile()) {
-										      name = attachment.getName() ;
-										      if(attachment.getId() != null) {
-										      	link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
-										      } else {
-										      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
-										      }
-										     %>
-									     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
-									     			$name &nbsp;&nbsp;&nbsp;
-														[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">
-															<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
-														</font></a>&nbsp;]
-													</div>
-									    <%}
-											}
-										} else {%>
-											<% uiform.renderField(field) %>
-											<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress")) {%> * <%}%><br>
+							
+								<tr>
+									<%fieldName = uicomponent.getLabel(field.getName());
+										if(!fieldName.equals(uicomponent.getId())) { %>												
+										<td class="FieldLabel" >
+											<%=uicomponent.getLabel(field.getName()) %> : 
+										</td>
+										<td class="FieldComponent">
+											<%if(field.getName().equals("Attachment")){
+													if(!uicomponent.getListFile().isEmpty()) {
+														String name = "" ;
+														String link = "" ;
+														for(attachment in uicomponent.getListFile()) {
+												      name = attachment.getName() ;
+												      if(attachment.getId() != null) {
+												      	link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+												      } else {
+												      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
+												      }
+												     %>
+											     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+											     			$name &nbsp;&nbsp;&nbsp;
+																[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">
+																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
+																</font></a>&nbsp;]
+															</div>
+											    <%}
+													}
+												} else {%>
+													<% uiform.renderField(field) %>
+													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress")) {%> * <%}%><br>
+											<%}%>
+										</td>
+									<%} else {%>
+										<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
 									<%}%>
-								</td>
-							<%} else {%>
-								<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
-							<%}%>
-						</tr>
-					<%}
+								</tr>
+							
+					<%  }
+					  }
 					}
 					%>						
 					</tbody>
 				</table>
 			</div>
-			
-			<div class="UIAction"> 
+		</div>
+		<div class="UIAction"> 
 				<table class="ActionContainer" align="center">
 					<tr>
 						<td align="center">
@@ -96,6 +109,5 @@
 					</tr>
 			  </table> 
 			</div>
-		</div>
 	<%uiform.end()%>
 </div>
