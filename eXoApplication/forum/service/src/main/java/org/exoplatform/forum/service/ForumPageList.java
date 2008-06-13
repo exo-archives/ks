@@ -122,7 +122,9 @@ public class ForumPageList extends JCRPageList {
 		if(postNode.hasProperty("exo:isHidden")) postNew.setIsHidden(postNode.getProperty("exo:isHidden").getBoolean()) ;
 		if(postNode.hasProperty("exo:userPrivate")) postNew.setUserPrivate(ValuesToStrings(postNode.getProperty("exo:userPrivate").getValues())) ;
 		if(postNode.hasProperty("exo:numberAttach")) {
-			if(postNode.getProperty("exo:numberAttach").getLong() > 0) {
+			long numberAttach = postNode.getProperty("exo:numberAttach").getLong();
+			postNew.setNumberAttach(numberAttach) ;
+			if(numberAttach > 0) {
 				NodeIterator postAttachments = postNode.getNodes();
 				List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
 				Node nodeFile ;

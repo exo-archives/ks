@@ -44,9 +44,11 @@ public class Post {
 	private String []userPrivate ;
 	private boolean isApproved = false ;
 	private boolean isHidden = false ;
+	private long numberAttach = 0;
 	private List<ForumAttachment> attachments = null ;
 	
 	
+
 	public Post() {
 		id = Utils.POST + IdGenerator.generate() ;
 		userPrivate = new String[]{"exoUserPri"};
@@ -103,6 +105,9 @@ public class Post {
 
 	public String getEditReason() {return editReason;}
 	public void setEditReason(String editReason) { this.editReason = editReason;}
+
+	public long getNumberAttach() { return numberAttach;}
+	public void setNumberAttach(long numberAttach) {this.numberAttach = numberAttach;}
 
 	public String[] getUserPrivate() {
   	return userPrivate;
