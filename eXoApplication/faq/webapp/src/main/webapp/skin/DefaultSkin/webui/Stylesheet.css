@@ -431,18 +431,15 @@
 }
 
 .UIFAQPortlet .LanguageQuestion {
-  background: url('background/FAQPortlet.gif') repeat-x center 0px;
-  height: 28px;
-  border: 1px solid #c7c7c7;
-  line-height: 28px ;
-  float: left ;
-  margin: 0px 0px 5px 0px ;
-}
-
-.UIFAQPortlet .AddLanguage {
   background: url('background/FAQPortlet.gif') repeat-x center -838px;
+  border: 1px solid gray;
+  border-bottom: none;
   height: 28px;
-  border: 1px solid #c7c7c7;
+  line-height: 28px ;
+  font-weight: bold;
+  padding-left: 8px;
+  margin-top: 4px;
+  width: 392px;
 }
 
 .UIFAQPortlet .AddLanguage .LanguageTitle {
@@ -657,8 +654,15 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .UIQuestionForm textarea {
 	font-size:11px;
 	height:150px;
-	width:95%;
+	width:400px;
 	float:left ;
+}
+
+.UIFAQPortlet .UIQuestionForm .HorizontalLayout {
+	border: 1px solid #c7c7c7;
+	margin: 10px;
+	background-color:#F3F3F3;
+	padding: 10px;
 }
 
 .UIFAQPortlet .ViewAttachFile {
