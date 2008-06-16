@@ -202,9 +202,24 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	
 	public void setValues(List<String> values) {
     this.listModerate = values ;
-		UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM) ;
+    UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM) ;
     String value = stringProcess(values) ;
-		inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value) ;
+    inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value) ;
+//    UIFormStringInput stringInput = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT) ;
+//    String userTitle = stringInput.getValue() ;
+//    boolean isChangeTitle = false;
+//    if(!values.isEmpty()) {
+//    	if(userTitle == null || userTitle.equals("User") || userTitle.equals("Guest")) {
+//    		userTitle = "Moderator" ;
+//    		isChangeTitle = true;
+//    	}
+//    } else {
+//    	if(userTitle.equals("Moderator")) {
+//    		userTitle = "User" ;
+//    		isChangeTitle = true;
+//    	}
+//    }
+//    if(isChangeTitle)stringInput.setValue(userTitle) ;
   }
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
@@ -497,11 +512,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	if(!ForumUtils.isEmpty(userTitle)) {
 				userTitle = userTt ;
 			}
-    	if(userTitle.equals("Administrator") || userTitle.equals("Moderator") || userTitle.equals("User") || userTitle.equals("Guest")) {
-    		if(userRole == 0) userTitle = "Administrator" ;
-    		if(userRole == 1) userTitle = "Moderator" ;
-    		if(userRole == 2) userTitle = "User" ;
-    	}
+    	
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
     	Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;

@@ -268,6 +268,14 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			int t = 0, k = 1 ;
 			String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
 				//uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
+			int maxText = ForumUtils.MAXTITLE ;
+			if(postTitle.length() > maxText) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				Object[] args = { uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
