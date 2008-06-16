@@ -18,7 +18,6 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -68,7 +67,7 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			ResultSearchCategory resultSearch = event.getSource() ;
 			UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+      FAQService faqService = FAQUtils.getFAQService() ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			uiQuestions.setCategories(categoryId) ;
 			uiQuestions.setListQuestion() ;
@@ -79,7 +78,9 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
       for(int i = listPath.size() -1 ; i >= 0; i --) {
       	oldPath = oldPath + "/" + listPath.get(i);
       }
-      breadcumbs.setUpdataPath("FAQService"+oldPath);
+      String newPath ="FAQService"+oldPath ;
+      uiQuestions.setPath(newPath) ;
+      breadcumbs.setUpdataPath(newPath);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
       UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;

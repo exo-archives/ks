@@ -71,7 +71,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
   @SuppressWarnings("unused")
   private String languageIsResponsed = "" ;
-  private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   @SuppressWarnings("unused")
   private String questionChanged_ = new String() ;
   
@@ -104,7 +104,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     questionLanguage.setResponse(question.getResponses()) ;
     
     listQuestionLanguage.add(questionLanguage) ;
-    listQuestionLanguage.addAll(faqService.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) ;
+    listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) ;
     questionChanged_ = question.getQuestion() ;
     // set info for form
     for(QuestionLanguage quesLanguage : listQuestionLanguage) {
@@ -181,9 +181,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       message.setMessageBcc(bcc) ;
       message.setSubject(subject) ;
       message.setMessageBody(body) ;
-      FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
       try {
-      	faqService.sendMessage(message) ;
+      	faqService_.sendMessage(message) ;
       } catch(Exception e) {
         uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-error", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;

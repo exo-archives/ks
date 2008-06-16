@@ -978,3 +978,29 @@ UIFAQPortlet .ResultQuickSearch {
   background: url('background/DotLine.gif') repeat-x bottom;
   padding: 4px 0px;
 }
+
+/******************************  Icon in search result  ***************************************/
+
+.UIFAQPortlet .NotResponseSearch {
+  background: url('background/NotResponse.gif') no-repeat left center;
+  padding-left: 28px;
+  line-height: 18px;
+  margin-top:4px;
+  height: 18px ;
+}
+
+.UIFAQPortlet .QuestionSearch {
+  background: url('background/questionIcon.PNG') no-repeat left center;
+  padding-left: 28px;
+  line-height: 18px;
+  margin: 4px 0px;
+  height: 18px ;
+}
+
+.UIFAQPortlet .FAQCategorySearch {
+  background: url('background/FAQPortlet.gif') no-repeat left -465px;
+  padding-left: 28px;
+  height: 18px;
+  line-height: 18px;
+  margin: 4px 0px;
+}

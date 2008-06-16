@@ -942,7 +942,8 @@ public class UIQuestions extends UIContainer {
 		    for(int i = listPath.size() -1 ; i >= 0; i --) {
 		    	oldPath = oldPath + "/" + listPath.get(i);
 		    } 
-		    breadcumbs.setUpdataPath("FAQService"+oldPath);
+		    newPath_ = "FAQService"+oldPath ;
+		    breadcumbs.setUpdataPath(newPath_);
         event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
         UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
       }

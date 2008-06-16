@@ -25,7 +25,10 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -44,6 +47,7 @@ import org.exoplatform.webui.form.UIForm;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/faq/webui/popup/ResultSearchQuestion.gtmpl",
 		events = {
+			@EventConfig(listeners = ResultSearchQuestion.ViewActionListener.class),
 			@EventConfig(listeners = ResultSearchQuestion.LinkActionListener.class),
 			@EventConfig(listeners = ResultSearchQuestion.CloseActionListener.class)
 		}
@@ -83,7 +87,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
   
-	static	public class LinkActionListener extends EventListener<ResultSearchQuestion> {
+	static	public class ViewActionListener extends EventListener<ResultSearchQuestion> {
 		public void execute(Event<ResultSearchQuestion> event) throws Exception {
 			ResultSearchQuestion resultSearch = event.getSource() ;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
@@ -93,6 +97,34 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 		  viewQuestion.setQuestion(questionId) ;
 			viewQuestion.setId("UIPopupViewQuestion") ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static	public class LinkActionListener extends EventListener<ResultSearchQuestion> {
+		public void execute(Event<ResultSearchQuestion> event) throws Exception {
+		  ResultSearchQuestion resultSearch = event.getSource() ;
+			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			FAQService faqService = FAQUtils.getFAQService() ;
+			Question question = faqService.getQuestionById(id, FAQUtils.getSystemProvider()) ;
+			String categoryId = question.getCategoryId() ;
+			UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
+			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			uiQuestions.setCategories(categoryId) ;
+			uiQuestions.setListQuestion() ;
+	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+	    breadcumbs.setUpdataPath(null) ;
+      String oldPath = "" ;
+	    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+	    for(int i = listPath.size() -1 ; i >= 0; i --) {
+	    	oldPath = oldPath + "/" + listPath.get(i);
+	    }
+	    String newPath = "FAQService"+oldPath ;
+	    uiQuestions.setPath(newPath) ;
+	    breadcumbs.setUpdataPath(newPath);
+			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+	    faqPortlet.cancelAction() ;
 		}
 	}
 	

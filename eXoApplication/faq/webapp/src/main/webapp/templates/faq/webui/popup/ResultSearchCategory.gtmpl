@@ -14,6 +14,7 @@
  									<table class="UIGrid" cellspacing="0" borderspacing="0">
  										<thead>
  											<tr>
+ 												<th><%= _ctx.appRes("ResultSearchCategory.title.icon"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.category"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.description"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.created-date"); %></th>
@@ -32,6 +33,7 @@
 												String link = uicomponent.event("Link", categoryId);
  										 	%>
 	 											<tr class="EvenRow"> 
+	 												<td class="text" align="center"><div class="FAQCategorySearch"><span></span></div></td>
 		 											<%
 													if(categoryName.length()>50) {
 														String title = categoryName ;
@@ -43,7 +45,7 @@
 													%>
 													<td class="text" align="left"><a href="$link">$categoryName</a></td>
 													<%}%>
-	 												<td class="text" align="left"><%= (description != null) ? description: ""%></td>
+	 												<td class="text" align="left" style=" overflow-x: auto;"><%= (description != null) ? description: ""%></td>
 	 												<td class="text" align="center"><%=date%></td>
 	 											</tr>
  												<% 

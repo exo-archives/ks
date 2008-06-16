@@ -57,7 +57,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	@SuppressWarnings("unused")
   private static List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCate = new ArrayList<Cate>() ;
-  private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 	public UIMoveCategoryForm() throws Exception {}
 	
@@ -94,7 +94,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     Cate parentCate = null ;
     Cate childCate = null ;
     
-    for(Category category : faqService.getSubCategories(null, sessionProvider)) {
+    for(Category category : faqService_.getSubCategories(null, sessionProvider)) {
       if(category != null && !category.getId().equals(categoryId_)) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
@@ -108,7 +108,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
       parentCate = listCate.get(listCate.size() - 1) ;
       listCate.remove(parentCate) ;
       this.listCate.add(parentCate) ;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider)){
+      for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider)){
         if(category != null && !category.getId().equals(categoryId_)) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;
@@ -122,7 +122,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {
     try {
-      return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
+      return faqService_.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
     } catch (Exception e) {
       e.printStackTrace();
       return null ;
@@ -172,24 +172,23 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     	UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
     	String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
     	String categoryId = moveCategory.getCategoryID() ;
-    	FAQService faqService  = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
     	if(destCategoryId.equals("null")) {
-    		Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+    		Category cate = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
     		String name = cate.getName() ;
     		String description = cate.getDescription() ;
     		Boolean isModeQuestion = cate.isModerateQuestions();
     		String[] moderator = cate.getModerators();
-    		faqService.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
+    		faqService_.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
     		cate.setName(name.trim()) ;
   			cate.setDescription(description) ;
   			cate.setCreatedDate(new Date()) ;
   			cate.setModerateQuestions(isModeQuestion) ;
   			cate.setModerators(moderator) ;
-    		faqService.saveCategory(null, cate, true, FAQUtils.getSystemProvider()) ;
+  			faqService_.saveCategory(null, cate, true, FAQUtils.getSystemProvider()) ;
     	}
     	if (!destCategoryId.equals("null") && categoryId != null) {
-    	  List<String> usersOfNewCateParent = Arrays.asList(faqService.getCategoryById(destCategoryId, FAQUtils.getSystemProvider()).getModerators()) ;
-    		faqService.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
+    	  List<String> usersOfNewCateParent = Arrays.asList(faqService_.getCategoryById(destCategoryId, FAQUtils.getSystemProvider()).getModerators()) ;
+    	  faqService_.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
         for(CateClass cateClass : moveCategory.getListObjCategory(destCategoryId)) {
           List<String> newUserList = new ArrayList<String>() ;
           newUserList.addAll(usersOfNewCateParent) ;
@@ -199,7 +198,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
             }
           }
           cateClass.getCategory().setModerators(newUserList.toArray(new String[]{})) ;
-          faqService.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, FAQUtils.getSystemProvider()) ;
+          faqService_.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, FAQUtils.getSystemProvider()) ;
         }
     	}
     	UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
