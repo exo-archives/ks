@@ -53,6 +53,11 @@ public class ForumUtils {
 	public static final String TAG = "Tag".intern() ;
 	public static final String POST = "Post".intern() ;
 	public static final String POLL = "Poll".intern() ;
+
+	
+	public static final int MAXSIGNATURE = 300;
+	public static final int MAXTITLE = 150;
+	public static final long MAXMESSAGE = 10000;
 	
 	
 	@SuppressWarnings("deprecation")

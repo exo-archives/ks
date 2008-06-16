@@ -33,6 +33,7 @@ import org.exoplatform.forum.webui.UITopicsTag;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -120,11 +121,16 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIAddTagForm> event) throws Exception {
 			UIAddTagForm uiForm = event.getSource() ;
 			UIFormStringInput tagNameInput = uiForm.getUIStringInput(FIELD_TAGNAME_INPUT) ;
-			//tagNameInput.addValidator(EmptyNameValidator.class) ;
 			String tagName = tagNameInput.getValue() ;
-			
+			int maxText = ForumUtils.MAXTITLE ;
 			if(ForumUtils.isEmpty(tagName)) {
 			  throw new MessageException(new ApplicationMessage("UIAddTagForm.ms.tagnameisnull", null, ApplicationMessage.WARNING)) ;
+			}else if(tagName.length() > maxText){
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				Object[] args = { uiForm.getLabel(FIELD_TAGNAME_INPUT), String.valueOf(maxText) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
 			}
 			
 			String color = uiForm.getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).getValue() ;

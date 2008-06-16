@@ -63,8 +63,11 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 	public void deActivate() throws Exception {}
 	
 	public void setForumLinks() throws Exception {
-		this.forumLinks = getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).getForumLinks() ; 
-		if(this.forumLinks.size() <= 0) {
+		UIForumLinks uiForumLinks = getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class) ;
+		if(uiForumLinks != null) {
+			this.forumLinks = uiForumLinks.getForumLinks();
+		}
+		if(this.forumLinks ==  null || this.forumLinks.size() <= 0) {
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider());
 		}
