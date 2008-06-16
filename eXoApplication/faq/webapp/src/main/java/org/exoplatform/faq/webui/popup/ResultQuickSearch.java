@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
@@ -50,6 +49,7 @@ import org.exoplatform.webui.form.UIForm;
 		template = "app:/templates/faq/webui/popup/ResultQuickSearch.gtmpl",
 		events = {
 			@EventConfig(listeners = ResultQuickSearch.LinkActionListener.class),
+			@EventConfig(listeners = ResultQuickSearch.LinkQuestionActionListener.class),
 			@EventConfig(listeners = ResultQuickSearch.CloseActionListener.class)
 		}
 )
@@ -98,7 +98,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		public void execute(Event<ResultQuickSearch> event) throws Exception {
 			ResultQuickSearch resultQuickSearch = event.getSource() ;
 			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+			FAQService faqService = FAQUtils.getFAQService() ;
 			if(id.indexOf("ategory")> 0){
 				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
@@ -111,7 +111,9 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		    for(int i = listPath.size() -1 ; i >= 0; i --) {
 		    	oldPath = oldPath + "/" + listPath.get(i);
 		    }
-		    breadcumbs.setUpdataPath("FAQService"+oldPath);
+		    String newPath = "FAQService"+oldPath ;
+		    uiQuestions.setPath(newPath) ;
+		    breadcumbs.setUpdataPath(newPath);
 				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 		    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 		    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
@@ -124,6 +126,34 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				viewQuestion.setId("UIPopupViewQuestion") ;
 			  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
+		}
+	}
+	
+	static	public class LinkQuestionActionListener extends EventListener<ResultQuickSearch> {
+		public void execute(Event<ResultQuickSearch> event) throws Exception {
+			ResultQuickSearch resultQuickSearch = event.getSource() ;
+			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			FAQService faqService = FAQUtils.getFAQService() ;
+			Question question = faqService.getQuestionById(id, FAQUtils.getSystemProvider()) ;
+			String categoryId = question.getCategoryId() ;
+			UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
+			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			uiQuestions.setCategories(categoryId) ;
+			uiQuestions.setListQuestion() ;
+	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+	    breadcumbs.setUpdataPath(null) ;
+      String oldPath = "" ;
+	    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+	    for(int i = listPath.size() -1 ; i >= 0; i --) {
+	    	oldPath = oldPath + "/" + listPath.get(i);
+	    }
+	    String newPath = "FAQService"+oldPath ;
+	    uiQuestions.setPath(newPath) ;
+	    breadcumbs.setUpdataPath(newPath);
+			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+	    faqPortlet.cancelAction() ;
 		}
 	}
 	

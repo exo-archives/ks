@@ -30,12 +30,9 @@
 												String name = formSearch.getName() ;
 												Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
 						 						String date = formatter.format(formSearch.getCreatedDate());
-						 						String icon = "QuestionIcon" ;
+						 						String icon = formSearch.getIcon() ;
 						 						String link = uicomponent.event("Link",Id);
-												if(formSearch.getType().equals("faqCategory")) { 
-													icon = "CategoryIcon" ;
-												}
-												 
+						 						String linkQuestion = uicomponent.event("LinkQuestion",Id);
  										 %>
  											<tr class="EvenRow">
  												<td class="text" align="center"><div class="$icon"><span></span></div></td>
@@ -52,9 +49,12 @@
  												<%}%>
  												<td class="text" align="center">$date</td>
  												<td style="width: 30px;" align="center">
- 													<a href="$link">
- 														<div class="CheckIcon" style="margin: 0px auto;"></div>
- 													</a>
+ 												<% if(Id.indexOf("ategory")> 0) {
+ 												 %>
+ 													<a href="$link"><div class="CheckIcon" style="margin: 0px auto;"></div></a>
+ 													<% } else { %>
+ 													<a href="$linkQuestion"><div class="CheckIcon" style="margin: 0px auto;"></div></a>
+ 													<% } %>
  												</td>
  											</tr>
  											<% 

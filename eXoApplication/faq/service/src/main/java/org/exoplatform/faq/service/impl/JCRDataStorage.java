@@ -53,6 +53,8 @@ import org.exoplatform.mail.service.ServerConfiguration;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
+import com.sun.mail.util.QEncoderStream;
+
 
 /**
  * Created by The eXo Platform SARL
@@ -734,6 +736,17 @@ public class JCRDataStorage {
 				formSearch.setId(id) ;
 				formSearch.setName(node.getProperty("exo:name").getString()) ;
 				formSearch.setType(type) ;
+				if(type.equals("faqCategory")) {
+					formSearch.setIcon("FAQCategorySearch") ;
+				} else {
+					Question question = getQuestionById(id, sProvider) ;
+					String response = question.getResponses() ;
+					if(response.equals(" ")) {
+						formSearch.setIcon("NotResponseSearch") ;
+					} else {
+						formSearch.setIcon("QuestionSearch") ;
+					}
+				}
 				formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
 				FormSearchs.add(formSearch) ;
 			}
@@ -793,6 +806,17 @@ public class JCRDataStorage {
 				formSearch.setId(id) ;
 				formSearch.setName(node.getProperty("exo:name").getString()) ;
 				formSearch.setType(type) ;
+				if(type.equals("faqCategory")) {
+					formSearch.setIcon("FAQCategorySearch") ;
+				} else {
+					Question question = getQuestionById(id, sProvider) ;
+					String response = question.getResponses() ;
+					if(response.equals(" ")) {
+						formSearch.setIcon("NotResponseSearch") ;
+					} else {
+						formSearch.setIcon("QuestionSearch") ;
+					}
+				}
 				formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
 				FormSearchs.add(formSearch) ;
 			}
@@ -858,7 +882,8 @@ public class JCRDataStorage {
 		      if(nodeObj.hasProperty("exo:createdDate")) question.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
 		      if(nodeObj.hasProperty("exo:categoryId")) question.setCategoryId(nodeObj.getProperty("exo:categoryId").getString()) ;
 		      if(nodeObj.hasProperty("exo:isApproved")) question.setApproved(nodeObj.getProperty("exo:isApproved").getBoolean()) ;
-		    	questionList.add(question) ;
+		      if(nodeObj.hasProperty("exo:responses")) question.setResponses(nodeObj.getProperty("exo:responses").getString()) ;
+		      questionList.add(question) ;
 				}
 			}
 		} catch (Exception e) {

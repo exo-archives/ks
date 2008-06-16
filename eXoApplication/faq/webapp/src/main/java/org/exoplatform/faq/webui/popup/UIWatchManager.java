@@ -61,7 +61,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   public void setCategoryID(String s) throws Exception {this.categoryId_ = s ; }
 	
   public List<String> getListEmail() throws Exception {
-  	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  	FAQService faqService = FAQUtils.getFAQService() ;
     List<String> emailList = faqService.getListMailInWacth(categoryId_, FAQUtils.getSystemProvider()) ;
     return emailList ;
   }
@@ -90,12 +90,14 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;
-	    FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	    FAQService faqService = FAQUtils.getFAQService() ;
 	    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), CategoryId) ;
 	    for(int i = listPath.size() -1 ; i >= 0; i --) {
 	    	oldPath = oldPath + "/" + listPath.get(i);
 	    }
-	    breadcumbs.setUpdataPath("FAQService"+oldPath);
+	    String newPath = "FAQService"+oldPath ;
+	    uiQuestions.setPath(newPath) ;
+	    breadcumbs.setUpdataPath(newPath) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;

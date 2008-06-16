@@ -106,7 +106,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       String categoryId = uiWatchForm.getCategoryID() ;
       String watchId = categoryId.substring(0, 4) ;
       if (categoryId != null) {
-      	FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+      	FAQService faqService =	FAQUtils.getFAQService() ;
       	if(uiWatchForm.isUpdate) {
       		faqService.deleteMailInWacth(categoryId, FAQUtils.getSystemProvider(), order) ;
       		faqService.addWatch(1, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
