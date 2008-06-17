@@ -501,7 +501,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
 	    UIQuestionForm questionForm = event.getSource() ;			
       UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      uiChildPopup.activate(UIAttachMentForm.class, 500) ;
+      uiChildPopup.activate(UIAttachMentForm.class, 550) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
 	  }
 	}
