@@ -50,7 +50,7 @@ public class FAQUtils {
   public static String[] specialString = {"!", "#", "$", "%", "^", "&"
                                             , ":", ">", "<", "~", "`", "]", "'", "/"} ;
   
-	static public FAQService getFAQService() throws Exception {
+  public static FAQService getFAQService() throws Exception {
     return (FAQService)PortalContainer.getComponent(FAQService.class) ;
   }
 	

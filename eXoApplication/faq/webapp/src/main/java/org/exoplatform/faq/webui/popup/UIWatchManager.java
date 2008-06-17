@@ -51,6 +51,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	private static String categoryId_ = "";
+	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIWatchManager() throws Exception {this.setActions(new String[]{"Cancel"}) ;}
 
 	public void activate() throws Exception {}
@@ -61,8 +62,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   public void setCategoryID(String s) throws Exception {this.categoryId_ = s ; }
 	
   public List<String> getListEmail() throws Exception {
-  	FAQService faqService = FAQUtils.getFAQService() ;
-    List<String> emailList = faqService.getListMailInWacth(categoryId_, FAQUtils.getSystemProvider()) ;
+    List<String> emailList = faqService_.getListMailInWacth(categoryId_, FAQUtils.getSystemProvider()) ;
     return emailList ;
   }
   static	public class EditEmailActionListener extends EventListener<UIWatchManager> {
@@ -90,8 +90,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;
-	    FAQService faqService = FAQUtils.getFAQService() ;
-	    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), CategoryId) ;
+	    List<String> listPath = faqService_.getCategoryPath(FAQUtils.getSystemProvider(), CategoryId) ;
 	    for(int i = listPath.size() -1 ; i >= 0; i --) {
 	    	oldPath = oldPath + "/" + listPath.get(i);
 	    }
@@ -111,8 +110,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			String emailList = event.getRequestContext().getRequestParameter(OBJECTID);
 			int order = Integer.parseInt(emailList.split("/")[1]);
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
-			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			faqService.deleteMailInWacth(categoryId_, FAQUtils.getSystemProvider(), order) ;
+			faqService_.deleteMailInWacth(categoryId_, FAQUtils.getSystemProvider(), order) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
