@@ -3,26 +3,30 @@
   <%uiform.begin()%>
   <div class="HorizontalLayout">
     <div class="FormContainer">
-      <table class="UIFormGrid">
-      	<tr>
-      		<td class="FieldLabel">
-      			<div style="width: 60px;">
-          		<%=uicomponent.getLabel("FileUpload") %> :
-          	</div>
-          </td>
-          <td class="FieldComponent">
-			      <%
-			        for(field in uiform.getChildren()) { 
-			          if(field.isRendered()) {
-			      %>
-  	              	<div style="float: left; width: 100%; padding-bottom:5px;">
+    	<div class="ViewFormAttachment">
+	      <table class="UIFormGrid" width="100%" style="max-width: 100%">
+	      	<%
+	      		int i = 1 ;
+		        for(field in uiform.getChildren()) { 
+		          if(field.isRendered()) {
+		      %>
+				      	<tr>
+				      		<td class="FieldLabel">
+				      			<div style="width: 80px; min-width: 75px;">
+				          		<%=(uicomponent.getLabel("FileUpload") + " " + i ) %> :
+				          	</div>
+				          </td>
+				          <td class="FieldComponent">
+  	              	<div class="FileAttachment">
   	              		<% uiform.renderField(field) %>
   	              	</div>
-			      <%	}
-		        	}%>
-		      </td>
-        </tr>
-      </table>
+						      </td>
+				        </tr>
+	        <%		i ++ ;
+	        		}
+        		}%>
+	      </table>
+      </div>
       <div class="UIAction"> 
         <table class="ActionContainer" align="center">
         	<tr>
