@@ -359,3 +359,11 @@
 .UIForumPortlet .UIForm .HorizontalLayout {
 	padding: 0px;
 }
+
+.UIForumPortlet .AddNewForumForm .UITabPane {
+	height: auto;
+}
+
+.UIForumPortlet #UIForumUserSettingForm .UITabPane {
+	height: auto;
+}
