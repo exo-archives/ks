@@ -26,12 +26,12 @@
  									i++;
  							 %>
  								<tr>
- 									<% if(email.length() > 120) {
- 											email1 = email.substring(0,119)+ "..." ;
+ 									<% if(email.length() > 110) {
+ 											email1 = email.substring(0,109)+ "..." ;
  									 %>
  										<td class="text" align="left"><a title="$email">$email1</a></td>
  									<% } else { %>
- 										<td class="text" align="left"><a>$email</a></td>
+ 										<td class="text" align="left">$email</td>
  									<% } %>
  									<td style="width: 60px;" align="center">
  										<a href="$linkCurrent" title="Link" style="float:center;">
