@@ -15,20 +15,7 @@
 									<%=uicomponent.getLabel(field.getName()) %> : 
 								</td>
 								<td class="FieldComponent">
-									<%if(field.getName().equals("QuestionRespone")){
-											String action = uicomponent.getActions()[1] ;
-											String link = uicomponent.event(action) ;
-											String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-											int i = 0 ;
-											String language = uicomponent.getLanguageIsResponse() ;
-									%>
-											<% uiform.renderField(field) %>
-											<div class="LanguageQuestion" style="width: 100%;"> 
-												<div style="vertical-align: middle; padding-left: 5px;">
-													<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
-												</div>
-											</div>
-									<%} else if(field.getName().equals("QuestionRelation")){ 
+									<%if(field.getName().equals("QuestionRelation")){ 
 											String link = uicomponent.event("AddRelation") ;
 									%>
 											<div style="float: left">
