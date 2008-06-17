@@ -454,7 +454,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIResponseForm response = event.getSource() ;
       UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      UIAttachMentForm attachMentForm = uiChildPopup.activate(UIAttachMentForm.class, 500) ;
+      UIAttachMentForm attachMentForm = uiChildPopup.activate(UIAttachMentForm.class, 550) ;
       attachMentForm.setResponse(true) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
     }
