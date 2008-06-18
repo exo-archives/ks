@@ -80,28 +80,114 @@ public class ForumTransformHTML {
       }
     }
  
+    //align right <div align="right">
+    String []aligns = new String[]{"right", "left", "center", "justify"};
+    String start, end; 
+    for (String string : aligns) {
+    	tagIndex = 0;
+    	lastIndex = -1;
+	    start = "["+string+"]" ; end = "[/"+string+"]" ;
+	    while ((tagIndex = b.indexOf(start, lastIndex)) != -1) {
+	    	lastIndex = tagIndex + 1;
+	    	try {
+	    		int clsIndex = b.indexOf(end);
+	    		String content = b.substring(tagIndex+string.length()+2, clsIndex);
+	    		b = StringUtils.replace(b, start + content + end,
+	    				"<div align=\""+string+"\">" + content + "</div>");
+	    	} catch (Exception e) {
+	    		System.out.println("Error in bbcode near char: " + tagIndex);
+	    		e.printStackTrace();
+	    		continue;
+	    	}
+	    }
+    }
+    //size 
+    tagIndex=0;
+    lastIndex=-0;
+    while ((tagIndex = b.indexOf("[size=", lastIndex))!=-1) {
+    	lastIndex = tagIndex+1;
+    	try {
+    		int clsIndex = b.indexOf("[/size]", tagIndex);
+    		String urlStr = b.substring(tagIndex, clsIndex);
+    		int fstb = urlStr.indexOf("=");
+    		int clsUrl = urlStr.indexOf("]");
+    		String size = urlStr.substring(fstb+1, clsUrl);
+    		String color_ = size;
+    		if(size.indexOf("\"") >= 0)color_ = color_.replaceAll("\"", "");
+    		if(size.indexOf("+") >= 0)color_ = color_.replace("+", "");
+    		String text = urlStr.substring(clsUrl + 1, clsIndex);
+    		buffer = new StringBuffer();
+    		buffer.append("<font size=\"").append(color_).append("\">").append(text).append("</font>") ;
+    		b = StringUtils.replace(b, "[size=" + size + "]" + text + "[/size]", buffer.toString() );
+    	} catch (Exception e) {
+    		System.out.println("Error in bbcode near char: " + tagIndex );
+    		e.printStackTrace();
+    		continue;
+    	}
+    }
+    //color
+    tagIndex=0;
+    lastIndex=-0;
+    while ((tagIndex = b.indexOf("[color=", lastIndex))!=-1) {
+    	lastIndex = tagIndex+1;
+    	try {
+    		int clsIndex = b.indexOf("[/color]", tagIndex);
+    		String urlStr = b.substring(tagIndex, clsIndex);
+    		int fstb = urlStr.indexOf("=");
+    		int clsUrl = urlStr.indexOf("]");
+    		String color = urlStr.substring(fstb+1, clsUrl);
+    		String color_ = color;
+    		if(color.indexOf("\"") >= 0)color_ = color.replaceAll("\"", "");
+    		String text = urlStr.substring(clsUrl + 1, clsIndex);
+    		buffer = new StringBuffer();
+    		buffer.append("<font color=\"").append(color_).append("\">").append(text).append("</font>") ;
+    		b = StringUtils.replace(b, "[color=" + color + "]" + text + "[/color]", buffer.toString() );
+    	} catch (Exception e) {
+    		System.out.println("Error in bbcode near char: " + tagIndex );
+    		e.printStackTrace();
+    		continue;
+    	}
+    }
     //Need to get the text inbetween a as well as the href
     tagIndex=0;
     lastIndex=-0;
-    while ((tagIndex = b.indexOf("[url=\"", lastIndex))!=-1) {
-      lastIndex = tagIndex+1;
-      try {
-        int clsIndex = b.indexOf("[/url]", tagIndex);
-        String urlStr = b.substring(tagIndex, clsIndex);
-        int fstb = urlStr.indexOf("=\"") + 1;
-        int clsUrl = urlStr.indexOf("]");
-        String href = urlStr.substring(fstb + 1,
-                         urlStr.indexOf("\"", fstb + 1));
-        String text = urlStr.substring(clsUrl + 1, urlStr.length());
-        buffer = new StringBuffer();
-        buffer.append("<a target='_blank' href=\"").append(href).append("\">").append(text).append("</a>") ;
-        b = StringUtils.replace(b, "[url=\"" + href + "\"]" + text + "[/url]", buffer.toString() );
-      } catch (Exception e) {
-        System.out.println("Error in bbcode near char: " + tagIndex );
-        e.printStackTrace();
-        continue;
-      }
+    while ((tagIndex = b.indexOf("[url=", lastIndex))!=-1) {
+    	lastIndex = tagIndex+1;
+    	try {
+    		int clsIndex = b.indexOf("[/url]", tagIndex);
+    		String urlStr = b.substring(tagIndex, clsIndex);
+    		int fstb = urlStr.indexOf("=");
+    		int clsUrl = urlStr.indexOf("]");
+    		String href = urlStr.substring(fstb+1, clsUrl);
+    		String href_ = href;
+    		if(href.indexOf("\"") >= 0)href_ = href.replaceAll("\"", "");
+    		String text = urlStr.substring(clsUrl + 1, clsIndex);
+    		buffer = new StringBuffer();
+    		buffer.append("<a target='_blank' href=\"").append(href_).append("\">").append(text).append("</a>") ;
+    		b = StringUtils.replace(b, "[url=" + href + "]" + text + "[/url]", buffer.toString() );
+    	} catch (Exception e) {
+    		System.out.println("Error in bbcode near char: " + tagIndex );
+    		e.printStackTrace();
+    		continue;
+    	}
     }
+    //url
+    tagIndex = 0;
+    lastIndex = -1;
+    while ((tagIndex = b.indexOf("[url]", lastIndex)) != -1) {
+    	lastIndex = tagIndex + 1;
+    	try {
+    		int clsIndex = b.indexOf("[/url]");
+    		String src = b.substring(tagIndex + 5, clsIndex);
+    		b = StringUtils.replace(b, "[url]" + src + "[/url]",
+    				"<a target='_blank' href=\"" + src + "\">" + src + "</a>");
+    	} catch (Exception e) {
+    		System.out.println("Error in bbcode near char: " + tagIndex);
+    		e.printStackTrace();
+    		continue;
+    	}
+    }
+    
     //Custom replaces
     if (b.indexOf("[!bbcode]")>=0 && b.indexOf("[!v]")<20) {
       b = StringUtils.replace(b, "[!bbcode]", "");
@@ -110,7 +196,7 @@ public class ForumTransformHTML {
     //Dir to images directory, should be replaced with a System propert
     b = StringUtils.replace(b, "[imgdir]", "/www/public/images/");
     b = StringUtils.replace(b, "[public]", "/www/public/");
- 
+    //css
     tagIndex=0;
     lastIndex = -1;
     while ((tagIndex = b.indexOf("[css:", lastIndex )) != -1) {
@@ -132,7 +218,7 @@ public class ForumTransformHTML {
         continue;
       }
     }
-
+    //Quote
     while ((tagIndex = b.indexOf("[QUOTE=", lastIndex )) != -1) {
     	lastIndex = tagIndex+1;
     	try {
@@ -192,23 +278,6 @@ public class ForumTransformHTML {
 //    	}
 //    }
 		
-    //spot
-    tagIndex = 0;
-    lastIndex = -1;
-    while ((tagIndex = b.indexOf("[spot]", lastIndex)) != -1) {
-      lastIndex = tagIndex + 1;
-      try {
-        int clsIndex = b.indexOf("[/spot]");
-        String src = b.substring(tagIndex + 6, clsIndex);
-        b = StringUtils.replace(b, "[spot]" + src + "[/spot]",
-                    "<a name=\"" + src + "\" />");
-      } catch (Exception e) {
-        System.out.println("Error in bbcode near char: " + tagIndex);
-        e.printStackTrace();
-        continue;
-      }
-    }
- 
     //Goto
     tagIndex=0;
     lastIndex = -1;

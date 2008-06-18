@@ -53,18 +53,26 @@
 									}
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
-									String titleTopicStatus = "Hot thread with new post" ;
-									String iconTopicStatus = "HotThreadNewPost" ;
-									if(topic.getIsLock()) {
-										iconTopicStatus = "HotThreadNewLockPost" ;
-										titleTopicStatus = "Hot thread with new post lock" ;
-									}
+									String newPost = "New";
+									String hot = ""; 
 									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
 									String title = "";
 									if(isReadTopic) {
 										title = "TitleNorman";
+										newPost = "NoNew"; 
 									} else {
 										title = "TitleBold";
+									}
+									if(topic.getPostCount() > 10) hot = "Hot"; 
+									String titleTopicStatus = hot+" Thread with "+newPost+" post" ;
+									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
+									if(topic.getIsLock()) {
+										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
+										titleTopicStatus = hot+" Thread with "+newPost+" post lock" ;
+									}
+									if(topic.getIsClosed()) {
+										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
+										titleTopicStatus = hot+" Thread with "+newPost+" post close" ;
 									}
 							%>
 								<tr class="$classRow">
