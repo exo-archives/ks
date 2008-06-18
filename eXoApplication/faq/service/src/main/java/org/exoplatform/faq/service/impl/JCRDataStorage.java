@@ -53,8 +53,6 @@ import org.exoplatform.mail.service.ServerConfiguration;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
-import com.sun.mail.util.QEncoderStream;
-
 
 /**
  * Created by The eXo Platform SARL
@@ -340,7 +338,6 @@ public class JCRDataStorage {
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
                                                 + "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
-//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
@@ -440,7 +437,6 @@ public class JCRDataStorage {
     	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
       StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
                                                   + "//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
-//      System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       Node parentCategory = result.getNodes().nextNode() ;
@@ -519,7 +515,6 @@ public class JCRDataStorage {
   	Node categoryHome = getCategoryHome(sProvider, null) ;
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() + "//element(*,exo:faqCategory)") ;
-//    System.out.println("\n\n\n query string => " + queryString.toString()+ "\n\n\n") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
   	NodeIterator iter = result.getNodes() ;

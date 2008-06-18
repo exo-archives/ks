@@ -439,6 +439,25 @@ public class UIQuestions extends UIContainer {
     return string.toString();
   }
   
+  private List<Category> getAllSubCategory(String categoryId) throws Exception {
+    List<Category> listResult = new ArrayList<Category>() ;
+    Stack<Category> stackCate = new Stack<Category>() ;
+    SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+    Category cate = null ;
+    listResult.add(faqService.getCategoryById(categoryId, sessionProvider)) ;
+    for(Category category : faqService.getSubCategories(categoryId, sessionProvider)) {
+      stackCate.push(category) ;
+    }
+    while(!stackCate.isEmpty()) {
+      cate = stackCate.pop() ;
+      listResult.add(cate) ;
+      for(Category category : faqService.getSubCategories(cate.getId(), sessionProvider)) {
+        stackCate.push(category) ;
+      }
+    }
+    return listResult ;
+  }
+  
 	static  public class AddCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
     	UIQuestions question = event.getSource() ; 
@@ -628,23 +647,6 @@ public class UIQuestions extends UIContainer {
       }
 		}
 	}
-  
-  private List<Category> getAllSubCategory(String cateId) throws Exception {
-    List<Category> listResult = new ArrayList<Category>() ;
-    Stack<Category> stackCate = new Stack<Category>() ;
-    Category cate = null ;
-    for(Category category : faqService.getSubCategories(cateId, FAQUtils.getSystemProvider())) {
-      stackCate.push(category) ;
-    }
-    while(!stackCate.isEmpty()) {
-      cate = stackCate.pop() ;
-      listResult.add(cate) ;
-      for(Category category : faqService.getSubCategories(cate.getId(), FAQUtils.getSystemProvider())) {
-        stackCate.push(category) ;
-      }
-    }
-    return listResult ;
-  }
 	
 	static	public class DeleteCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
@@ -654,15 +656,20 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			try {
-				Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+				SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+				Category cate = faqService.getCategoryById(categoryId, sessionProvider) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
-        	List<Question> listQuestion = faqService.getQuestionsByCatetory(categoryId, FAQUtils.getSystemProvider()).getAll() ;
-          for(Question ques: listQuestion) {
-          	String questionId = ques.getId() ;
-          	faqService.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;
+          List<Category> listCate = question.getAllSubCategory(categoryId) ;
+        	for(Category category : listCate) {
+          	String id = category.getId() ;
+          	List<Question> listQuestion = faqService.getQuestionsByCatetory(id, FAQUtils.getSystemProvider()).getAll() ;
+            for(Question ques: listQuestion) {
+            	String questionId = ques.getId() ;
+            	faqService.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;
+            }
           }
           faqService.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
     			question.setCategories() ;

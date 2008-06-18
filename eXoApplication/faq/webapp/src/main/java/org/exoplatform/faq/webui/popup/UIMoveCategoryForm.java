@@ -58,7 +58,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
   private static List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCate = new ArrayList<Cate>() ;
   private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  private SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+  private SessionProvider sessionProvider_ = FAQUtils.getSystemProvider() ;
 	public UIMoveCategoryForm() throws Exception {}
 	
 	public String getCategoryID() { return categoryId_; }
@@ -94,7 +94,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     Cate parentCate = null ;
     Cate childCate = null ;
     
-    for(Category category : faqService_.getSubCategories(null, sessionProvider)) {
+    for(Category category : faqService_.getSubCategories(null, sessionProvider_)) {
       if(category != null && !category.getId().equals(categoryId_)) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
@@ -108,7 +108,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
       parentCate = listCate.get(listCate.size() - 1) ;
       listCate.remove(parentCate) ;
       this.listCate.add(parentCate) ;
-      for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider)){
+      for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider_)){
         if(category != null && !category.getId().equals(categoryId_)) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;
@@ -130,16 +130,15 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
   }
   
   public List<CateClass> getListObjCategory (String newParentId) {
-    FAQService faqService  = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
     try {
       List<CateClass> listCate = new ArrayList<CateClass>() ;
       CateClass cateClass = new CateClass() ;
-      cateClass.setCategory(faqService.getCategoryById(this.categoryId_, FAQUtils.getSystemProvider())) ;
+      cateClass.setCategory(faqService_.getCategoryById(this.categoryId_, FAQUtils.getSystemProvider())) ;
       cateClass.setCateParentId(newParentId) ;
       listCate.add(cateClass) ;
       int i = 0 ;
       while(i < listCate.size()) {
-        for(Category category : faqService.getSubCategories(listCate.get(i).getCategory().getId(), FAQUtils.getSystemProvider())) {
+        for(Category category : faqService_.getSubCategories(listCate.get(i).getCategory().getId(), FAQUtils.getSystemProvider())) {
           cateClass = new CateClass() ;
           cateClass.setCategory(category) ;
           cateClass.setCateParentId(listCate.get(i).getCategory().getId()) ;
@@ -156,9 +155,8 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
   
 	@SuppressWarnings("unused")
   private List<Category> getCategories() throws Exception {
-		FAQService faqService =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		List<Category> categorys =	new ArrayList<Category>();
-		for (Category category :faqService.getAllCategories(FAQUtils.getSystemProvider())) {
+		for (Category category :faqService_.getAllCategories(FAQUtils.getSystemProvider())) {
 			if( !category.getId().equals(categoryId_) ) {
 				categorys.add(category) ;
 			}
