@@ -206,7 +206,7 @@
 											</td>
 										 	<td class="Tdbox">$topicCount</td>
 											<td class="Tdbox">$postCount</td>
-											<td >
+											<td style="width: 170px;">
 											<% boolean isOnline = false; String userSmile; 
 											for(forumModerator in forumModerators) {
 												isOnline = uicomponent.isOnline(forumModerator) ;
