@@ -67,8 +67,8 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			for(Question quest: listQuestion_) {
 				String categoryId = quest.getCategoryId() ;
 				FAQService faqService = FAQUtils.getFAQService();
-			  Category cat = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
-			  String moderator[] = cat.getModerators() ;
+			  Category category = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+			  String[] moderator = category.getModerators() ;
 			  if(Arrays.asList(moderator).contains(currentUser)) {
 			  	listQuestionSearch.add(quest) ;
 				} else {

@@ -76,8 +76,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 					FAQService faqService = FAQUtils.getFAQService();
 				  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
 				  String categoryIdOfQuestion = question.getCategoryId() ;
-				  Category cat = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
-				  String moderator[] = cat.getModerators() ;
+				  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
+				  String[] moderator = category.getModerators() ;
 				  if(Arrays.asList(moderator).contains(currentUser)) {
 				  	listQuickSearch.add(faqSearch) ;
 					} else {
