@@ -528,8 +528,16 @@
 						 				<% } %>
 						 			</tr>
 						 	<% 
-						 			i = i + 1;} 
-						 			} else {
+						 			i = i + 1;}
+							 		if(rCNB == 0){
+							 		%>
+						 				<tr>
+							 				<td colspan="10" align="center">
+							 					<div style="margin: 15px 0px 20px 0px"><strong><%=_ctx.appRes("UICategory.label.availableTheard"); %></strong></div>
+							 				</td>
+							 			</tr>
+							 	 <%} 
+						 		} else {
 						 				%>
 						 				<tr>
 							 				<td colspan="10" align="center">
@@ -628,7 +636,6 @@
 		</div>
 		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 		<div style="clear: left;"><span></span></div>
-		
 	</div>
 	<% //Begin RightClick Bookmark  %>
 	<div id="RightClickContainer" style="display: none;">
