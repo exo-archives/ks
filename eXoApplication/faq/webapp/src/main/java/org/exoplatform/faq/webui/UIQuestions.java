@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 import javax.jcr.PathNotFoundException;
 
@@ -627,6 +628,23 @@ public class UIQuestions extends UIContainer {
       }
 		}
 	}
+  
+  private List<Category> getAllSubCategory(String cateId) throws Exception {
+    List<Category> listResult = new ArrayList<Category>() ;
+    Stack<Category> stackCate = new Stack<Category>() ;
+    Category cate = null ;
+    for(Category category : faqService.getSubCategories(cateId, FAQUtils.getSystemProvider())) {
+      stackCate.push(category) ;
+    }
+    while(!stackCate.isEmpty()) {
+      cate = stackCate.pop() ;
+      listResult.add(cate) ;
+      for(Category category : faqService.getSubCategories(cate.getId(), FAQUtils.getSystemProvider())) {
+        stackCate.push(category) ;
+      }
+    }
+    return listResult ;
+  }
 	
 	static	public class DeleteCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
