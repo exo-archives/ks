@@ -99,6 +99,10 @@ public class FAQServiceImpl implements FAQService{
   public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
     return jcrData_.getQuestionLanguages(questionId, sProvider) ;
   }
+  
+  public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception {
+    return jcrData_.searchQuestionByLangage(listQuestion, languageSearch, questionSearch, responseSearch, sProvider) ;
+  }
 
 	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getSubCategories(categoryId, sProvider);

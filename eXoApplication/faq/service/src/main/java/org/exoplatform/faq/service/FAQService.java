@@ -165,12 +165,23 @@ public interface FAQService {
    * This method should:
    * 1. Lookup question
    * 2. Lookup languageNode of question
-   * 2. find all childern node of language node
+   * 3. find all childern node of language node
    * @param Question 
    * @return language list
    * @throws Exception
    */
   public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
+  /**
+   * This method should:
+   * 1. Lookup question
+   * 2. Lookup languageNode of question
+   * 3. find childrent node of language node is searched
+   * 4. find properties of childrent node, if contain input of user, get this question
+   * @param Question list, langage want search, question's content or response's content want search 
+   * @return Question list
+   * @throws Exception
+   */
+  public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions via question identify and from category identify

@@ -268,6 +268,44 @@ public class JCRDataStorage {
     return listQuestionLanguage ;
   }
   
+  public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception {
+    List<Question> listResult = new ArrayList<Question>() ;
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    Node questionNode = null ;
+    Node languageNode = null ;
+    Node node = null ;
+    String languages = "languages" ;
+    String questionContent = new String() ;
+    String responseContent = new String() ;
+    for(Question question : listQuestion) {
+      questionNode = questionHome.getNode(question.getId()) ;
+      if(questionNode.hasNode(languages)) {
+        languageNode = questionNode.getNode(languages) ;
+        if(languageNode.hasNode(languageSearch)) {
+          boolean isAdd = false ;
+          node = languageNode.getNode(languageSearch) ;
+          if(node.hasProperty("exo:name")) questionContent = node.getProperty("exo:name").getValue().getString() ;
+          if(node.hasProperty("exo:responses")) responseContent = node.getProperty("exo:responses").getValue().getString();
+          if((questionSearch == null || questionSearch.trim().length() < 1) && (responseSearch == null || responseSearch.trim().length() < 1)) {
+            isAdd = true ;
+          } else {
+            if((questionSearch!= null && questionSearch.trim().length() > 0 && questionContent.toLowerCase().indexOf(questionSearch) >= 0) || 
+                (responseSearch != null && responseSearch.trim().length() > 0 && responseContent.toLowerCase().indexOf(responseSearch) >= 0)) {
+              isAdd = true ;
+            }
+          }
+          if(isAdd) {
+            question.setLanguage(languageSearch) ;
+            question.setQuestion(questionContent) ;
+            question.setResponses(responseContent) ;
+            listResult.add(question) ;
+          }
+        }
+      }
+    }
+    return listResult ;
+  }
+  
   public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
   	Node questionHome = getQuestionHome(sProvider, null) ;
     Node questionNode ;
