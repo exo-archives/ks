@@ -20,7 +20,7 @@ import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
 import org.exoplatform.services.organization.auth.AuthenticationService;
-import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.organization.auth.Identity ;
 
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
@@ -35,6 +35,6 @@ public class AuthenticationLoginListener extends Listener<AuthenticationService,
 	@Override
 	public void onEvent(Event<AuthenticationService, Identity> event) throws Exception {
   	ForumService fservice = (ForumService) RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(ForumService.class) ;
-  	fservice.userLogin(event.getData().getUserId()) ;		
+  	fservice.userLogin(event.getData().getUsername()) ;		
 	}
 }
