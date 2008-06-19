@@ -52,28 +52,17 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
   private List<String> listLocaldName = new ArrayList<String>() ;
   private List<String> LANGAUGE_SELECT = new ArrayList<String>() ;
   
-  private boolean isManagerment_ = false ;
-  
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
-  
-  public void setIsManagerment (boolean isManagerment) {
-    this.isManagerment_ = isManagerment ;
-  }
-  private boolean getIsManagerment() {
-    return isManagerment_ ;
-  }
 	 
 	public UILanguageForm() throws Exception {
     List<String> listLanguage = new ArrayList<String>() ;
-    isManagerment_ = false ;
     
     LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
     for(Object object:configService.getLocalConfigs()) {      
       LocaleConfig localeConfig = (LocaleConfig)object ;
       Locale locale = localeConfig.getLocale() ;
       String displayName = locale.getDisplayLanguage() ;
-      String lang = locale.getLanguage() ;
       String localedName = locale.getDisplayName(locale) ;   
       listLanguage.add(displayName) ;
       listLocaldName.add(localedName) ;
@@ -87,14 +76,17 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
     this.LANGAUGE_SELECT.addAll(language);
   }
   
+  @SuppressWarnings("unused")
   private List<String> getListLanguage(){
     return this.LIST_LANGUAGE ;
   }
   
+  @SuppressWarnings("unused")
   private String[] getLocaledLanguage(){
     return this.listLocaldName.toArray(new String[]{}) ;
   }
   
+  @SuppressWarnings("unused")
   private List<String> getListSelected(){
     return this.LANGAUGE_SELECT ;
   }
@@ -120,6 +112,7 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
 	}
   
 	static public class SaveActionListener extends EventListener<UILanguageForm> {
+    @SuppressWarnings("static-access")
     public void execute(Event<UILanguageForm> event) throws Exception {
 			UILanguageForm languageForm = event.getSource() ;
 			UIPopupContainer popupContainer = languageForm.getAncestorOfType(UIPopupContainer.class) ;
