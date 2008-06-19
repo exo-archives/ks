@@ -202,7 +202,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {
     try {
-      return faqService.getAllQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
+      return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
     } catch (Exception e) {
       e.printStackTrace();
       return null ;
