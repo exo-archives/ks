@@ -308,9 +308,15 @@
 																else
 																	iconView = viewAction ;
 																String linkView = uicomponent.event(viewAction, qId) ;
+																String opacity = "1" ;
+																if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
+																	linkView = "javaScript: alert('" + 
+																							_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
+																	opacity = "0.5";
+																}
 																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
 														%>
-																<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem">
+																<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem" style="opacity:<%=opacity%>;">
 																	<div class="ItemIcon $iconView" style="padding:3px 0px 5px 5px;">
 																			<div style="padding-left: 20px;">$itemLabelView</div>
 																	</div>
@@ -550,8 +556,14 @@
 					        		 	if(action.indexOf("Response") >= 0 || action.indexOf("Move") >= 0 || action.indexOf("Print") >= 0) continue ; 
 						        	 	String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						           	String link = uicomponent.event(action,qId) ;
+						           	String opacity = "1" ;
+												if(action.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
+													link = "javaScript: alert('" + 
+																	_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
+													opacity = "0.5";
+												}
 						        %>
-					        		<a href="$link" class="ActionButton LightBlueStyle">
+					        		<a href="$link" class="ActionButton LightBlueStyle" style="opacity:<%=opacity%>">
 						      	  	<div class="ButtonLeft">
 						        	  	<div class="ButtonRight">
 						          	  	<div class="ButtonMiddle"> $actionLabel </div>
