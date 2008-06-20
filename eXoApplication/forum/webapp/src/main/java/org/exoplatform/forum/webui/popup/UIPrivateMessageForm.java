@@ -149,6 +149,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
     	String sendTo = areaInput.getValue() ;
     	sendTo = ForumUtils.removeSpaceInString(sendTo) ;
+    	sendTo = ForumUtils.removeStringResemble(sendTo) ;
     	String erroUser = ForumSessionUtils.checkValueUser(sendTo) ;
     	if(!ForumUtils.isEmpty(erroUser)) {
     		Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser };
@@ -158,6 +159,13 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
     	}
     	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
     	String mailTitle = stringInput.getValue() ;
+    	int maxText = 80 ;
+			if(mailTitle.length() > maxText) {
+				Object[] args = { messageForm.getLabel(FIELD_MAILTITLE_INPUT), String.valueOf(maxText) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
     	UIFormWYSIWYGInput formWYSIWYGInput = MessageTab.getChild(UIFormWYSIWYGInput.class) ;
     	String message = formWYSIWYGInput.getValue();
     	if(!ForumUtils.isEmpty(message)) {

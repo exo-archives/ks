@@ -19,8 +19,8 @@ package org.exoplatform.forum.service;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
-import org.exoplatform.services.organization.auth.impl.AuthenticationServiceImpl;
 import org.exoplatform.services.organization.auth.Identity;
+import org.exoplatform.services.organization.auth.impl.AuthenticationServiceImpl;
 
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang

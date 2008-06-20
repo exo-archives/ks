@@ -287,11 +287,11 @@ public class UITopicDetail extends UIForm {
 	@SuppressWarnings("unused")
 	private String getIdPostView() {
 		if(this.IdPostView.equals("true")){
-			this.IdPostView = "false" ;
+			this.IdPostView = "normal" ;
 			return this.IdLastPost ;
 		}
 		String temp = this.IdPostView ;
-		this.IdPostView = "false" ;
+		this.IdPostView = "normal" ;
 		return temp ;
 	}
 	

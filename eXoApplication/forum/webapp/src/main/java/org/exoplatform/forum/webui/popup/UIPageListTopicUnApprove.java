@@ -98,8 +98,8 @@ public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent
 
 	
 	@SuppressWarnings("unused")
-	private String getStringCleanHtmlCode(String sms) {
-		return ForumTransformHTML.getStringCleanHtmlCode(sms);
+	private String cleanHtmlCode(String sms) {
+		return ForumTransformHTML.cleanHtmlCode(sms);
 	}
 
 

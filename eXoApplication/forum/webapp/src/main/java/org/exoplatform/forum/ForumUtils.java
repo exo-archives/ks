@@ -237,6 +237,22 @@ public class ForumUtils {
 	  return str;
   }
 	
+	public static String removeStringResemble(String s) throws Exception {
+		List<String> list = new ArrayList<String>();
+    if(!isEmpty(s)) {
+      String temp[] = splitForForum(s) ;
+      s = ""; int i=0, l = temp.length;
+      for (String string : temp) {
+      	++i;
+      	if(list.contains(string) || string.length() == 0) continue ;
+        list.add(string) ;
+        if(i == l)s += string;
+        else s += string + ",";
+      }
+    }
+		return s;
+  }
+	
 	public static boolean isEmpty(String str) {
 		if(str == null || str.trim().length() == 0) return true ;
 		else return false;
@@ -248,7 +264,7 @@ public class ForumUtils {
       if(!isEmpty(input)) {
       	if(input.lastIndexOf(",") != (input.length() - 1)) input = input + ",";
         output = input + output ;
-        String temp[] = ForumUtils.splitForForum(output) ;
+        String temp[] = splitForForum(output) ;
         for (String string : temp) {
         	if(list.contains(string) || string.length() == 0) continue ;
 	        list.add(string) ;
@@ -272,9 +288,22 @@ public class ForumUtils {
 		return false;
 	}
 
-	public static String getLabel(String label, String key) {
-	  return label.replaceFirst("<keyWord>", key) ;
+	public static String getSubString(String str, int max) {
+		if(!isEmpty(str)) {
+			int l = str.length() ;
+			if(l > max) {
+				str = str.substring(0, (max-3)) ;
+				if(str.lastIndexOf(" ") > 0)
+					str = str.substring(0, str.lastIndexOf(" ")) + "...";
+				else str = str + "..." ;
+			}
+		}
+	  return str ;
   }
+	
+	public static String getLabel(String label, String key) {
+		return label.replaceFirst("<keyWord>", key) ;
+	}
 	
 	public static String[] getColor() {
 		return new String[] {"blue", "DarkGoldenRod", "green", "yellow", "BlueViolet", "orange",

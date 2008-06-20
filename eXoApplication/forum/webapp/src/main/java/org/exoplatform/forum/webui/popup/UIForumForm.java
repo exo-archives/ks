@@ -261,8 +261,26 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String categoryId = categorySelectBox.getValue();
 			
 			UIFormInputWithActions newForumForm = uiForm.getChildById(FIELD_NEWFORUM_FORM);
-			String forumTitle = newForumForm.getUIStringInput(FIELD_FORUMTITLE_INPUT).getValue().trim();
+			String forumTitle = newForumForm.getUIStringInput(FIELD_FORUMTITLE_INPUT).getValue();
+			forumTitle = forumTitle.trim() ;
+			int maxText = ForumUtils.MAXTITLE ;
+			if(forumTitle.length() > maxText) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				Object[] args = { uiForm.getLabel(FIELD_FORUMTITLE_INPUT), String.valueOf(maxText) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
 			String forumOrder = newForumForm.getUIStringInput(FIELD_FORUMORDER_INPUT).getValue();
+			if(ForumUtils.isEmpty(forumOrder)) forumOrder = "0";
+			forumOrder = ForumUtils.removeZeroFirstNumber(forumOrder) ;
+			if(forumOrder.length() > 3) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				Object[] args = { uiForm.getLabel(FIELD_FORUMORDER_INPUT) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-large-number", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
 			String forumState = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATE_SELECTBOX).getValue();
 			String forumStatus = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).getValue();
 			String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
@@ -283,8 +301,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			postable = ForumUtils.removeSpaceInString(postable) ;
 			viewer = ForumUtils.removeSpaceInString(viewer) ;
 			
-			if(ForumUtils.isEmpty(forumOrder)) forumOrder = "0";
-			forumOrder = ForumUtils.removeZeroFirstNumber(forumOrder) ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			Forum newForum = new Forum();
 			newForum.setForumName(forumTitle);

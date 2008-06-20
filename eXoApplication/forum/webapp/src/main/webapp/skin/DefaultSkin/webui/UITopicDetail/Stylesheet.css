@@ -245,11 +245,11 @@
 	padding: 10px;
 }
 
-.UITopicDetail .PostViewContainer .Quote {
+.UITopicDetail .PostViewContainer .Classquote {
 	background: #ededf7;
 	border: 1px solid #d8d8d8;
-	padding: 10px 15px;
-	margin: 5px 0px;
+	padding: 6px;
+	margin: 2px 0px;
 }
 
 .UIForumPortlet .UIRatingForm {

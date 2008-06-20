@@ -17,6 +17,12 @@
 
 package org.exoplatform.forum;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringUtils;
 /**
  * Created by The eXo Platform SAS
@@ -29,63 +35,69 @@ public class ForumTransformHTML {
 
 	public static String transform(String bbcode) {
     String b = bbcode.substring(0, bbcode.length());
-    //Simple find and replaces
-    b = StringUtils.replace(b, "[B]", "[b]" );
-    b = StringUtils.replace(b, "[/B]", "[/b]");
-    b = StringUtils.replace(b, "[I]", "[i]");
-    b = StringUtils.replace(b, "[/I]", "[/i]");
-    b = StringUtils.replace(b, "[U]", "[u]");
-    b = StringUtils.replace(b, "[/U]", "[/u]");
-    b = StringUtils.replace(b, "[/IMG]", "[img]");
-    b = StringUtils.replace(b, "[/IMG]", "[/img]");
-    b = StringUtils.replace(b, "[CSS:", "[css:");
-    b = StringUtils.replace(b, "[/CSS]", "[/css]");
-    b = StringUtils.replace(b, "[URL=\"", "[url=\"");
-    b = StringUtils.replace(b, "[/URL]", "[/url]");
-    b = StringUtils.replace(b, "[LINK=\"", "[url=\"");
-    b = StringUtils.replace(b, "[/LINK]", "[/url]");
-    b = StringUtils.replace(b, "[link=", "[url=");
-    b = StringUtils.replace(b, "[/link]", "[/url]");
-    b = StringUtils.replace(b, "[GOTO=", "[goto=");
-    b = StringUtils.replace(b, "[/GOTO]", "[/goto]");
-    b = StringUtils.replace(b, "[/quote]", "[/QUOTE]");
-    b = StringUtils.replace(b, "[quote", "[QUOTE");
     
+    StringBuffer buffer ;
+    int lastIndex=0;
+    int tagIndex=0;
+    //Lower Case bbc
+    String start, end; 
+    String []bbcs = new String[]{"B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT", 
+    		"RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS"};
+    for (String bbc : bbcs) {
+	    start = "["+bbc; end="[/"+bbc+"]";
+	    lastIndex=0;tagIndex=0;
+	    while ((tagIndex = b.indexOf(start, lastIndex))!=-1) {
+	      lastIndex = tagIndex+1;
+	      try {
+	        int clsIndex = b.indexOf(end);
+	        String content = b.substring(tagIndex + bbc.length()+1, clsIndex);
+	        String bbc_= bbc.toLowerCase() ;
+	        b = StringUtils.replace(b, "["+bbc + content + end, "["+bbc_ + content + "[/"+bbc_+"]");
+	      }  catch (Exception e) {
+	        System.out.println("Error in bbcode near char: " + tagIndex );
+	        e.printStackTrace();
+	        continue;
+	      }
+	    }
+    }
+    //Simple find and replaces
+    b = StringUtils.replace(b, "[U]", "<u>");
+    b = StringUtils.replace(b, "[/U]", "</u>");
+    b = StringUtils.replace(b, "[u]", "<u>");
+    b = StringUtils.replace(b, "[/u]", "</u>");
     b = StringUtils.replace(b, "[b]", "<b>" );
     b = StringUtils.replace(b, "[/b]", "</b>");
     b = StringUtils.replace(b, "[i]", "<i>");
     b = StringUtils.replace(b, "[/i]", "</i>");
-    b = StringUtils.replace(b, "[u]", "<u>");
-    b = StringUtils.replace(b, "[/u]", "</u>");
     b = StringUtils.replace(b, "[code]", "[CODE]");
     b = StringUtils.replace(b, "[/code]", "[/CODE]");
     b = StringUtils.replace(b, "[CODE]", "<code>");
     b = StringUtils.replace(b, "[/CODE]", "</code>");
-    StringBuffer buffer ;
+    b = StringUtils.replace(b, "&quot;", "\"");
+    System.out.println("\n\n" + b + "\n\n");
     //Need to get the text inbetween img's
-    int lastIndex=-0;;
-    int tagIndex=0;
+    lastIndex=-0;;
+    tagIndex=0;
     while ((tagIndex = b.indexOf("[img]", lastIndex))!=-1) {
-      lastIndex = tagIndex+1;
-      try {
-        int clsIndex = b.indexOf("[/img]");
-        String src = b.substring(tagIndex + 5, clsIndex);
-        buffer = new StringBuffer();
-        buffer.append("<img src=\"").append(src).append("\" />") ;
-        b = StringUtils.replace(b, "[img]" + src + "[/img]", buffer.toString());
-      }  catch (Exception e) {
-        System.out.println("Error in bbcode near char: " + tagIndex );
-        e.printStackTrace();
-        continue;
-      }
+    	lastIndex = tagIndex+1;
+    	try {
+    		int clsIndex = b.indexOf("[/img]");
+    		String src = b.substring(tagIndex + 5, clsIndex);
+    		buffer = new StringBuffer();
+    		buffer.append("<img src=\"").append(src).append("\" />") ;
+    		b = StringUtils.replace(b, "[img]" + src + "[/img]", buffer.toString());
+    	}  catch (Exception e) {
+    		System.out.println("Error in bbcode near char: " + tagIndex );
+    		e.printStackTrace();
+    		continue;
+    	}
     }
  
-    //align right <div align="right">
+    //align right <div align="right"> 
     String []aligns = new String[]{"right", "left", "center", "justify"};
-    String start, end; 
     for (String string : aligns) {
     	tagIndex = 0;
-    	lastIndex = -1;
+    	lastIndex = 0;
 	    start = "["+string+"]" ; end = "[/"+string+"]" ;
 	    while ((tagIndex = b.indexOf(start, lastIndex)) != -1) {
 	    	lastIndex = tagIndex + 1;
@@ -103,7 +115,7 @@ public class ForumTransformHTML {
     }
     //size 
     tagIndex=0;
-    lastIndex=-0;
+    lastIndex=0;
     while ((tagIndex = b.indexOf("[size=", lastIndex))!=-1) {
     	lastIndex = tagIndex+1;
     	try {
@@ -112,12 +124,12 @@ public class ForumTransformHTML {
     		int fstb = urlStr.indexOf("=");
     		int clsUrl = urlStr.indexOf("]");
     		String size = urlStr.substring(fstb+1, clsUrl);
-    		String color_ = size;
-    		if(size.indexOf("\"") >= 0)color_ = color_.replaceAll("\"", "");
-    		if(size.indexOf("+") >= 0)color_ = color_.replace("+", "");
-    		String text = urlStr.substring(clsUrl + 1, clsIndex);
+    		String size_ = size;
+    		if(size.indexOf("\"") >= 0)size_ = size_.replaceAll("\"", "");
+    		if(size.indexOf("+") >= 0)size_ = size_.replace("+", "");
+    		String text = urlStr.substring(clsUrl + 1);
     		buffer = new StringBuffer();
-    		buffer.append("<font size=\"").append(color_).append("\">").append(text).append("</font>") ;
+    		buffer.append("<font size=\"").append(size_).append("\">").append(text).append("</font>") ;
     		b = StringUtils.replace(b, "[size=" + size + "]" + text + "[/size]", buffer.toString() );
     	} catch (Exception e) {
     		System.out.println("Error in bbcode near char: " + tagIndex );
@@ -127,7 +139,7 @@ public class ForumTransformHTML {
     }
     //color
     tagIndex=0;
-    lastIndex=-0;
+    lastIndex=0;
     while ((tagIndex = b.indexOf("[color=", lastIndex))!=-1) {
     	lastIndex = tagIndex+1;
     	try {
@@ -138,7 +150,7 @@ public class ForumTransformHTML {
     		String color = urlStr.substring(fstb+1, clsUrl);
     		String color_ = color;
     		if(color.indexOf("\"") >= 0)color_ = color.replaceAll("\"", "");
-    		String text = urlStr.substring(clsUrl + 1, clsIndex);
+    		String text = urlStr.substring(clsUrl + 1);
     		buffer = new StringBuffer();
     		buffer.append("<font color=\"").append(color_).append("\">").append(text).append("</font>") ;
     		b = StringUtils.replace(b, "[color=" + color + "]" + text + "[/color]", buffer.toString() );
@@ -150,7 +162,7 @@ public class ForumTransformHTML {
     }
     //Need to get the text inbetween a as well as the href
     tagIndex=0;
-    lastIndex=-0;
+    lastIndex=0;
     while ((tagIndex = b.indexOf("[url=", lastIndex))!=-1) {
     	lastIndex = tagIndex+1;
     	try {
@@ -161,7 +173,7 @@ public class ForumTransformHTML {
     		String href = urlStr.substring(fstb+1, clsUrl);
     		String href_ = href;
     		if(href.indexOf("\"") >= 0)href_ = href.replaceAll("\"", "");
-    		String text = urlStr.substring(clsUrl + 1, clsIndex);
+    		String text = urlStr.substring(clsUrl + 1);
     		buffer = new StringBuffer();
     		buffer.append("<a target='_blank' href=\"").append(href_).append("\">").append(text).append("</a>") ;
     		b = StringUtils.replace(b, "[url=" + href + "]" + text + "[/url]", buffer.toString() );
@@ -173,7 +185,7 @@ public class ForumTransformHTML {
     }
     //url
     tagIndex = 0;
-    lastIndex = -1;
+    lastIndex = 0;
     while ((tagIndex = b.indexOf("[url]", lastIndex)) != -1) {
     	lastIndex = tagIndex + 1;
     	try {
@@ -198,7 +210,7 @@ public class ForumTransformHTML {
     b = StringUtils.replace(b, "[public]", "/www/public/");
     //css
     tagIndex=0;
-    lastIndex = -1;
+    lastIndex = 0;
     while ((tagIndex = b.indexOf("[css:", lastIndex )) != -1) {
       lastIndex = tagIndex+1;
       try {
@@ -218,11 +230,11 @@ public class ForumTransformHTML {
         continue;
       }
     }
-    //Quote
-    while ((tagIndex = b.indexOf("[QUOTE=", lastIndex )) != -1) {
+    //quote
+    while ((tagIndex = b.indexOf("[quote=", lastIndex )) != -1) {
     	lastIndex = tagIndex+1;
     	try {
-    		int clsIndex = b.indexOf("[/QUOTE]", tagIndex);
+    		int clsIndex = b.indexOf("[/quote]", tagIndex);
     		String urlStr = b.substring(tagIndex, clsIndex);
     		int fstb = urlStr.indexOf("=") + 1;
     		int clsUrl = urlStr.indexOf("]");
@@ -230,11 +242,11 @@ public class ForumTransformHTML {
     				urlStr.indexOf("]", fstb + 1));
     		String text = urlStr.substring(clsUrl + 1, urlStr.length());
     		buffer = new StringBuffer();
-    		buffer.append("<div>Quote:</div><div class=\"ClassQuote\">") ;
+    		buffer.append("<div>Quote:</div><div class=\"Classquote\">") ;
     		buffer.append("<div>Originally Posted by <strong>").append(userName).append("</strong></div>") ;
     		buffer.append("<div>").append(text).append("</div></div>") ;
     		b = StringUtils.replace(b,
-    				"[QUOTE=" + userName + "]" + text + "[/QUOTE]",
+    				"[quote=" + userName + "]" + text + "[/quote]",
     				buffer.toString());
     	} catch (Exception e) {
     		System.out.println("Error in BBcodeSmall near char: " + tagIndex );
@@ -243,16 +255,16 @@ public class ForumTransformHTML {
     	}
     }
     
-    while ((tagIndex = b.indexOf("[QUOTE]", lastIndex )) != -1) {
+    while ((tagIndex = b.indexOf("[quote]", lastIndex )) != -1) {
     	lastIndex = tagIndex+1;
     	try {
-    		int clsIndex = b.indexOf("[/QUOTE]", tagIndex);
+    		int clsIndex = b.indexOf("[/quote]", tagIndex);
     		String text = b.substring(tagIndex + 7, clsIndex);
     		buffer = new StringBuffer();
-    		buffer.append("<div>Quote:</div><div class=\"ClassQuote\">") ;
+    		buffer.append("<div>Quote:</div><div class=\"Classquote\">") ;
     		buffer.append("<div>").append(text).append("</div></div>") ;
     		b = StringUtils.replace(b,
-    				"[QUOTE]" + text + "[/QUOTE]",
+    				"[quote]" + text + "[/quote]",
     				buffer.toString());
     	} catch (Exception e) {
     		System.out.println("Error in BBcodeSmall near char: " + tagIndex );
@@ -268,7 +280,7 @@ public class ForumTransformHTML {
 //    		String text = b.substring(tagIndex + 7, clsIndex);
 //    		String text_ = text.replaceAll("&lt;","<").replaceAll("&gt;", ">").replaceAll("&nbsp;", "&#32");
 //    		buffer = new StringBuffer();
-//    		buffer.append("<div>Code:</div><div class=\"ClassQuote\">") ;
+//    		buffer.append("<div>Code:</div><div class=\"Classquote\">") ;
 //    		buffer.append("<div><xmp>").append(text_).append("</xmp></div></div>") ;
 //    		b = StringUtils.replace(b, "[CODE]" + text + "[/CODE]", buffer.toString());
 //    	} catch (Exception e) {
@@ -280,7 +292,7 @@ public class ForumTransformHTML {
 		
     //Goto
     tagIndex=0;
-    lastIndex = -1;
+    lastIndex = 0;
     while ((tagIndex = b.indexOf("[goto=\"", lastIndex))!=-1) {
       lastIndex = tagIndex+1;
       try {
@@ -304,17 +316,52 @@ public class ForumTransformHTML {
     return b;
   }
 	
-	public static String getStringCleanHtmlCode(String sms) {
+	public static String cleanHtmlCode(String sms) {
 		if(sms == null || sms.trim().length() <= 0) return "" ;
-		StringBuffer string = new StringBuffer();
-		char c; boolean get = true ;
-		for (int i = 0; i < sms.length(); i++) {
-			c = sms.charAt(i);
-			if(c == '<') get = false ;
-			if(get) string.append(c);
-			if(c == '>') get = true ;
+		List<String> bbcList = new ArrayList<String>();
+		//clean bbcode
+		String []bbcs = new String[]{"B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT", 
+				"RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS"};
+		bbcList.addAll(Arrays.asList(bbcs)) ; 
+		for (String bbc : bbcs) {
+			bbcList.add(bbc.toLowerCase()) ;
 		}
-		return string.toString();
+    int lastIndex=0;
+    int tagIndex=0;
+    String start, end; 
+    for (String bbc : bbcList) {
+	    start = "["+bbc; end="[/"+bbc+"]";
+	    lastIndex=0;tagIndex=0;
+	    while ((tagIndex = sms.indexOf(start, lastIndex))!=-1) {
+	      lastIndex = tagIndex+1;
+	      try {
+	        int clsIndex = sms.indexOf(end);
+	        String content = sms.substring(tagIndex, clsIndex);
+	        String content_ = content.substring(content.indexOf("]")+1) ;
+	        sms = StringUtils.replace(sms, content + end,  content_);
+	      }  catch (Exception e) {
+	        System.out.println("Error in bbcode near char: " + tagIndex );
+	        e.printStackTrace();
+	        continue;
+	      }
+	    }
+    }
+    sms = StringUtils.replace(sms, "[U]", "") ;
+    sms = StringUtils.replace(sms, "[/U]", "") ;
+    sms = StringUtils.replace(sms, "[u]", "") ;
+    sms = StringUtils.replace(sms, "[/u]", "") ;
+    //Clean html code
+  	String scriptregex = "<(script|style)[^>]*>[^<]*</(script|style)>";
+    Pattern p1 = Pattern.compile(scriptregex,Pattern.CASE_INSENSITIVE);
+    Matcher m1 = p1.matcher(sms);
+    sms = m1.replaceAll("");
+    String tagregex = "<[^>]*>";
+    Pattern p2 = Pattern.compile(tagregex);
+    Matcher m2 = p2.matcher(sms);
+    sms = m2.replaceAll("");
+    String multiplenewlines = "(\\n{1,2})(\\s*\\n)+"; 
+    sms = sms.replaceAll(multiplenewlines,"$1");
+		return sms;
 	}
 	
 	public static String convertCodeHTML(String s) {
@@ -367,17 +414,16 @@ public class ForumTransformHTML {
 		return buffer.toString() ;
   }
 	
-	
 	public static String clearQuote(String s) {
 		if(s == null || s.length() <= 0) return "" ;
 		StringBuffer buffer = new StringBuffer();
-		 s = StringUtils.replace(s, "[/quote]", "[/QUOTE]");
-	   s = StringUtils.replace(s, "[quote", "[QUOTE");
+		 s = StringUtils.replace(s, "[/QUOTE]", "[/quote]");
+	   s = StringUtils.replace(s, "[QUOTE", "[quote");
 		while(true) {
-			int t = s.indexOf('['+"QUOTE");
+			int t = s.indexOf('['+"quote");
 			if(t < 0 ) break;
 			String first = s.substring(0, t) ;
-			int t2 = s.indexOf('['+"/QUOTE");
+			int t2 = s.indexOf('['+"/quote");
 			if(t2 < 0) break ;
 			buffer.append(first+"</br>");
 			s = s.substring(t2+8);

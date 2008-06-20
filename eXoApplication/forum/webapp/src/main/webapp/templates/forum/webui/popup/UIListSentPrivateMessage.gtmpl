@@ -35,7 +35,7 @@
 				String mailId = mail.getId();
 				String nameMail = mail.getName() ;
 				if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
-				String fromUser = mail.getSendTo() ;
+				String fromUser = mail.getSendTo().replaceAll(",",", ") ;
 				Date fromDate = mail.getReceivedDate() ;
 				String strFromDate = ForumUtils.getFormatDate(formatDate,fromDate);
 		%>

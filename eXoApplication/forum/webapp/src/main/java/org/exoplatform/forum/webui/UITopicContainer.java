@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearch;
@@ -278,11 +277,6 @@ public class UITopicContainer extends UIForm {
 	private String[] getStarNumber(Topic topic) throws Exception {
 		double voteRating = topic.getVoteRating() ;
 		return ForumUtils.getStarNumber(voteRating) ;
-	}
-	
-	@SuppressWarnings("unused")
-	private String getStringCleanHtmlCode(String sms) {
-		return ForumTransformHTML.getStringCleanHtmlCode(sms);
 	}
 
 	@SuppressWarnings("unused")

@@ -224,7 +224,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(postTitle != null && postTitle.length() <= 3) {k = 0;}
@@ -278,7 +278,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			}
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			PortletRequestImp request = event.getRequestContext().getRequest();
 			String remoteAddr = request.getRemoteAddr();
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
@@ -341,7 +341,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				boolean hasTopicMod = false ;
 				if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 				if(isOffend || hasTopicMod) {
-          topicDetail.setIdPostView("false");
+          topicDetail.setIdPostView("normal");
 					Object[] args = { "" };
 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;

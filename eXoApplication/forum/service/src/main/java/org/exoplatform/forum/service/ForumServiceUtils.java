@@ -74,25 +74,12 @@ public class ForumServiceUtils {
 					}
 				}
 			}else {//user
-				users.add(str) ;
+				if(!users.contains(str)){
+					users.add(str) ;
+				}
 			}
 		}
   	return users ;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

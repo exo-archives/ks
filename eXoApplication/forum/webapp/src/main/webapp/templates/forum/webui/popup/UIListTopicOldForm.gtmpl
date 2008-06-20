@@ -41,10 +41,8 @@
 									String topicBy = topic.getOwner();
 									String isActive = "" + topic.getIsActive();
 									String lastPostDate = ForumUtils.getFormatDate(formatDate, topic.getCreatedDate());
-									String titlePost = ForumTransformHTML.getStringCleanHtmlCode(topic.getDescription());
-									if(titlePost.length() > 100) {
-										titlePost = titlePost.substring(0, 99) + "...";
-									}
+									String titlePost = ForumTransformHTML.cleanHtmlCode(topic.getDescription());
+									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postCount = String.valueOf(topic.getPostCount());
 									String titleTp = "Active";
 									if(topic.getIsActive())titleTp = "UnActive";

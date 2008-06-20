@@ -158,6 +158,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				return ;
 			}
       userPrivate = ForumUtils.removeSpaceInString(userPrivate) ;
+      userPrivate = ForumUtils.removeStringResemble(userPrivate) ;
       String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
     	if(!ForumUtils.isEmpty(erroUser)) {
     		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
