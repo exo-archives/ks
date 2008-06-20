@@ -176,6 +176,12 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     listQuestion_.clear() ;
     try {
       listQuestion_.addAll(this.pageList.getPage(pageSelect, null)) ;
+      UIFAQPageIterator pageIterator = null ;
+      while(listQuestion_.isEmpty() && pageSelect > 1) {
+        pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
+        listQuestion_.addAll(this.pageList.getPage(--pageSelect, null)) ;
+        pageIterator.setSelectPage(pageSelect) ;
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -188,6 +194,12 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     listQuestionNotYetAnswered_.clear() ;
     try {
       listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(pageSelectNotAnswer, null)) ;
+      UIFAQPageIterator pageIterator = null ;
+      while(listQuestionNotYetAnswered_.isEmpty() && pageSelectNotAnswer > 1) {
+        pageIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
+        listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(--pageSelectNotAnswer, null)) ;
+        pageIterator.setSelectPage(pageSelectNotAnswer) ;
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -280,7 +292,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
             questionManagerForm.isResponseQuestion = false ;
           }
         }
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+        //event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch(Exception e) {
         UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
