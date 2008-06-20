@@ -140,6 +140,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			uiQuestions.setCategories(categoryId) ;
 			uiQuestions.setListQuestion() ;
+			uiQuestions.questionView_ = id ;
 	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;
