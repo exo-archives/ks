@@ -18,9 +18,11 @@ package org.exoplatform.faq.webui.popup;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jcr.PathNotFoundException;
-
+import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -50,7 +52,8 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
-  public String questionId_ = null ;
+	private String questionId_ = null ;
+  private String language_ = "" ;
   private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   public UIPopupViewQuestion() throws Exception {this.setActions(new String[]{"Close"}) ;}
 	@SuppressWarnings("unused")
@@ -62,15 +65,27 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
     this.questionId_ = question ;
   }
   
+	public void setLanguage(String language) {
+    this.language_ = language ;
+  }
+  
   public Question getViewQuestion() {
   	FAQService fAQService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   	Question question = null;
     try {
 	    question = fAQService.getQuestionById(questionId_, FAQUtils.getSystemProvider());
+	    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
+	    listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider())) ;
+	    for(QuestionLanguage questionLanguage : listQuestionLanguage) {
+	    	if(questionLanguage.getLanguage().equals(language_)) {
+	    		question.setQuestion(questionLanguage.getQuestion()) ;
+	    		question.setResponses(questionLanguage.getResponse()) ;
+	    	}
+	    }
     } catch (Exception e) {
 	    e.printStackTrace();
     }
-  	return question; 
+  	return question;
   }
   
   public String getQuestionRelationById(String questionId) {

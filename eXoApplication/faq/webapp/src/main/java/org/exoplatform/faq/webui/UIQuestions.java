@@ -104,12 +104,12 @@ public class UIQuestions extends UIContainer {
   private boolean canEditQuestion = false ;
   private String categoryId_ = null ;
   private String parentId_ = null ;
-  private String questionView_ = "" ;
+  public String questionView_ = "" ;
   public static String newPath_ = "" ;
   String currentUser_ = "";
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
-  boolean isChangeLanguage = false ;
+  public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
+  public boolean isChangeLanguage = false ;
   private List<String> listLanguage = new ArrayList<String>() ;
   public String backPath_ = "" ;
   private static String language_ = "" ;
