@@ -284,7 +284,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String topicTitle = "  " + stringInputTitle.getValue();
 			topicTitle = topicTitle.trim() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
@@ -341,7 +341,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				return ;
 			}
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumTransformHTML.getStringCleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
       ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
       boolean isOffend = false ; 

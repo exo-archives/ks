@@ -259,10 +259,8 @@ UIForumPortlet.prototype.goLastPost = function(idLastPost) {
 	if(isDesktop === null){
 		if(idLastPost === "false") {
 			script:scroll(0,0);
-			var postForm = document.getElementById('banner') ;
-			if(postForm) {
-				postForm.scrollIntoView(true) ;
-			}
+			var viewPage = document.getElementById('UIForumPortlet') ;
+			if(viewPage)viewPage.scrollIntoView(true) ;
 		} else {
 			var obj = document.getElementById(idLastPost);
 			if(obj)obj.scrollIntoView(true);
@@ -366,14 +364,14 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 	 	if(popupWindow.style.display == "block") {
 			masklayer.style.width = forumPortlet.offsetWidth - 15 + "px";
 			masklayer.style.height = forumPortlet.offsetHeight - 15 + "px";
-			var isDesktop = document.getElementById('UIPageDesktop') ;
-			if(isDesktop === null){
-				script:scroll(0,0);
-				var postForm = document.getElementById('banner') ;
-				if(postForm != null) {
-					postForm.scrollIntoView(true) ;
-				}
-			}
+//			var isDesktop = document.getElementById('UIPageDesktop') ;
+//			if(isDesktop === null){
+//				script:scroll(0,0);
+//				var postForm = document.getElementById('banner') ;
+//				if(postForm != null) {
+//					postForm.scrollIntoView(true) ;
+//				}
+//			}
 		}
 		var closeButton = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
 		if(closeButton) {

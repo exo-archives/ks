@@ -39,10 +39,8 @@
 									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
-									String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
-									if(titlePost.length() > 100) {
-										titlePost = titlePost.substring(0, 99) + "...";
-									}
+									String titlePost = uicomponent.cleanHtmlCode(topic.getDescription());
+									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postView = String.valueOf(topic.getViewCount());
 									String titleTopicStatus = "Hot thread with new post" ;
 									String iconTopicStatus = "HotThreadNewPost" ;

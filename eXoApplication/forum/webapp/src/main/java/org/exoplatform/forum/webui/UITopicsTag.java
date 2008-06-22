@@ -166,8 +166,8 @@ public class UITopicsTag extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-	private String getStringCleanHtmlCode(String sms) {
-		return ForumTransformHTML.getStringCleanHtmlCode(sms);
+	private String cleanHtmlCode(String sms) {
+		return ForumTransformHTML.cleanHtmlCode(sms);
 	}
 	
 	@SuppressWarnings("unused")

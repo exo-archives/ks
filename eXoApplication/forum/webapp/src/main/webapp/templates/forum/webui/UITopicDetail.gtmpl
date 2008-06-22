@@ -690,8 +690,9 @@
 							</div>
 								<%	
 									if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
+									  String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
 								%>
-								<div class="Signature">__________________<br><%= userInfo.getSignature(); %></div>
+								<div class="Signature">__________________<br><%=signature;%></div>
 								<% } %>
 							<% if(hasAttachment) {%>
 							<div class="AttachmentContainer">

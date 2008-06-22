@@ -139,10 +139,8 @@
 									Date postDate = topic.getLastPostDate();
 									postDate.setTime(postDate.getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);	
-									String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
-									if(titlePost.length() > 100) {
-										titlePost = titlePost.substring(0, 99) + "...";
-									}
+									String titlePost = uicomponent.cleanHtmlCode(topic.getDescription());
+									titlePost = ForumUtils.getSubString(titlePost, 100);
 									int att = topic.getNumberAttachment() ;
 									if(att < 0) att = 0;
 									String attachment = String.valueOf(att);

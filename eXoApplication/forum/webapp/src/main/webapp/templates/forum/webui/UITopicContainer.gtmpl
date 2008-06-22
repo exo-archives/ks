@@ -1,14 +1,15 @@
 <%
+	import java.util.GregorianCalendar;
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumSessionUtils;
+	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.webui.UITopicContainer ;	
 	import org.exoplatform.forum.webui.UICategory ;
-	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.webui.UIForumPageIterator ;
+	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.service.JCRPageList ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
-	import org.exoplatform.forum.ForumUtils ;
-	import org.exoplatform.forum.ForumSessionUtils; 
 	import org.exoplatform.forum.service.UserProfile ;
-	import java.util.GregorianCalendar;
 	import org.exoplatform.web.application.JavascriptManager;
   def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -400,10 +401,8 @@
 										Date postDate = topic.getLastPostDate() ;
 										postDate.setTime(postDate.getTime() - setTime);
 										String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
-										String titlePost = uicomponent.getStringCleanHtmlCode(topic.getDescription());
-										if(titlePost.length() > 100) {
-											titlePost = titlePost.substring(0, 99) + "...";
-										}
+										String titlePost = ForumTransformHTML.cleanHtmlCode(topic.getDescription());
+										titlePost = ForumUtils.getSubString(titlePost, 100);
 										int att = topic.getNumberAttachment() ;
 										if(att < 0) att = 0;
 										String attachment = String.valueOf(att);

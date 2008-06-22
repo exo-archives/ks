@@ -101,8 +101,8 @@ public class UIPageListTopicByUser extends UIContainer{
 	}
 	
 	@SuppressWarnings("unused")
-	private String getStringCleanHtmlCode(String sms) {
-		return ForumTransformHTML.getStringCleanHtmlCode(sms);
+	private String cleanHtmlCode(String sms) {
+		return ForumTransformHTML.cleanHtmlCode(sms);
 	}
 
 	@SuppressWarnings("unused")
@@ -147,7 +147,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	      uiTopicDetail.setUpdateForum(forum) ;
 	      uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
 	      forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));
-	      uiTopicDetail.setIdPostView("false") ;
+	      uiTopicDetail.setIdPostView("normal") ;
 	      forumPortlet.cancelAction() ;
 	      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
       }
