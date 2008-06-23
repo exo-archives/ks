@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -171,51 +172,19 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   	return string ;
   }
   
-  public void checkValue(String[] strings) throws Exception {
-  	String userInvalid = "" ;
-    String userValid = "" ;
-    for(String string : strings) {
-    	if(string.indexOf("/") >= 0) {
-    		boolean checking = false ;
-    		if(FAQUtils.getGroup(string.trim()) != null) checking = true ;
-    		else if(string.indexOf(":") >= 0) {
-        	String member = string.substring(0, string.indexOf(":")) ;
-        	String groupMember = string.substring(string.indexOf("/"), string.length()) ;
-        	if(FAQUtils.getGroup(groupMember.trim()) != null && FAQUtils.getMember(member.trim()) != null || FAQUtils.getGroup(groupMember.trim()) != null && member.equals("*")) checking = true ;
-        	else
-        		checking = false ;
-        } else
-        	checking = false ;
-    		if(checking != false) {
-		      if(userValid.trim().length() > 0) userValid += "," ;
-	      	userValid += string ;
-    		} else {
-	        if(userInvalid.trim().length() > 0) userInvalid += ", " ;
-	        userInvalid += string.trim() ;
-    		}
-    		continue ;
-    	}
-      if(FAQUtils.getUserByUserId(string.trim()) != null) {
-        if(userValid.trim().length() > 0) userValid += "," ;
-        userValid += string.trim() ;
-      } else {
-        if(userInvalid.trim().length() > 0) userInvalid += ", " ;
-        userInvalid += string.trim() ;
+  public String cutWhiteSpace(String str) {
+  	if(!FAQUtils.isFieldEmpty(str)) {
+			str = str.replaceAll(" ", "");
+			str = str.replaceAll(";", ",");
+			while (true) {
+	      if(str.indexOf(",,") < 0) break ;
+	      str = StringUtils.replace(str, ",,", ",");
       }
-    }
-    if(userInvalid.length() > 0) 
-      throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-not-found", new String[]{userInvalid}, ApplicationMessage.WARNING)) ;
-  }
-  
-  public String cutWhiteSpace(String name) {
-  	StringBuffer string = new StringBuffer();
-    char c;
-    for (int i = 0; i < name.length(); i++) {
-     c = name.charAt(i) ;
-     if(c == 32) continue ;
-     string.append(c) ;
-      }
-    return string.toString();
+			if(str.lastIndexOf(",") == str.length() - 1) {
+				str = str.substring(0, str.length() - 1) ;
+			}
+		}
+		return str;
   }
   
   public void checkSameName (String name) throws Exception {
@@ -260,8 +229,14 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       }
       moderator = uiCategory.cutWhiteSpace(moderator) ;
       moderator = uiCategory.filterItemInString(moderator) ;
+      String erroUser = FAQUtils.checkValueUser(moderator) ;
+      if(!FAQUtils.isFieldEmpty(erroUser)) {
+    		Object[] args = { uiCategory.getLabel(FIELD_MODERATOR_INPUT), erroUser };
+    		uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.user-not-found", args, ApplicationMessage.WARNING)) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    		return ;
+    	}
       String[] users = FAQUtils.splitForFAQ(moderator) ;
-      uiCategory.checkValue(users) ;
       
 			Category cat = new Category();
 			cat.setName(name.trim()) ;

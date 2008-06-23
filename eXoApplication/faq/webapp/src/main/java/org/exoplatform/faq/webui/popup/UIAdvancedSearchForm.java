@@ -284,7 +284,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(fromDate != null) advanced.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
 				ResultSearchQuestion result = resultContainer.getChild(ResultSearchQuestion.class) ;
-				System.out.println("language:" + language);
 				if(!language.equals("English")) result.setContent(question,response) ; 
 				advanced.getUIFormTextAreaInput(FIELD_QUESTION).setValue(question) ;
 				advanced.getUIFormTextAreaInput(FIELD_RESPONSE).setValue(response) ;

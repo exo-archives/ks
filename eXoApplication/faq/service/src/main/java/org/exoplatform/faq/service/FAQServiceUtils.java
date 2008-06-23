@@ -79,7 +79,9 @@ public class FAQServiceUtils {
 					}
 				}
 			}else {
-				users.add(str) ;
+				if(!users.contains(str)){
+					users.add(str) ;
+				}
 			}
 		}
   	return users ;
