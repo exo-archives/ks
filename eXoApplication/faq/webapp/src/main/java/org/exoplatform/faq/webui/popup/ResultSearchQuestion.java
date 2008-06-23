@@ -25,6 +25,7 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -152,25 +153,32 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			uiQuestions.setCategories(categoryId) ;
 			uiQuestions.setListQuestion() ;
 			uiQuestions.questionView_ = questionId ;
-//			List<Question> listQuestion = uiQuestions.getListQuestion() ;
-//			int dem = 0 ;
-//			int pos = 0 ;
-//			for (Question ques : listQuestion) {
-//				if(ques.getId().equals(questionId)) pos = dem ;
-//				dem ++ ;
-//			}
-////			List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
-////			listQuestionLanguage.addAll(faqService.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) ;
-//      for(QuestionLanguage questionLanguage : uiQuestions.listQuestionLanguage) {
-//      	if(questionLanguage.getLanguage().equals(language_)) {
-//      		System.out.println("pos::::" + pos);
-//      		listQuestion.get(pos).setQuestion(questionLanguage.getQuestion()) ;
-//      		listQuestion.get(pos).setLanguage(questionLanguage.getLanguage()) ;
-//      		listQuestion.get(pos).setResponses(questionLanguage.getResponse()) ;
-//          break ;
-//        }
-//      }
-//      uiQuestions.isChangeLanguage = true ;
+      
+      int pos = 0 ;
+      for(Question question2 : uiQuestions.listQuestion_) {
+        if(question2.getId().equals(questionId)) {
+          pos = uiQuestions.listQuestion_.indexOf(question2) ;
+          break ;
+        }
+      }
+      uiQuestions.listQuestionLanguage.clear() ;
+      uiQuestions.listLanguage.clear() ;
+      QuestionLanguage questionLanguage = new QuestionLanguage() ;
+      questionLanguage.setQuestion(question.getQuestion()) ;
+      questionLanguage.setResponse(question.getResponses()) ;
+      questionLanguage.setLanguage(question.getLanguage()) ;
+      uiQuestions.listQuestionLanguage.add(questionLanguage) ;
+      uiQuestions.listQuestionLanguage.addAll(faqService.getQuestionLanguages(question.getId(), FAQUtils.getSystemProvider())) ;
+      for(QuestionLanguage language : uiQuestions.listQuestionLanguage) {
+        uiQuestions.listLanguage.add(language.getLanguage()) ;
+        if(language.getLanguage().equals(language_)) {
+          uiQuestions.listQuestion_.get(pos).setQuestion(language.getQuestion()) ;
+          uiQuestions.listQuestion_.get(pos).setLanguage(language.getLanguage()) ;
+          uiQuestions.listQuestion_.get(pos).setResponses(language.getResponse()) ;
+        }
+      }
+      uiQuestions.isChangeLanguage = true ;
+      
 	    event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    breadcumbs.setUpdataPath(null) ;

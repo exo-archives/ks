@@ -99,7 +99,7 @@ public class UIQuestions extends UIContainer {
   
 	private List<Category> categories_ = null ;
   private List<Boolean> categoryModerators = new ArrayList<Boolean>() ;
-  private List<Question> listQuestion_ =  null ;
+  public List<Question> listQuestion_ =  null ;
   private List<String> listCateId_ = new ArrayList<String>() ;
   private boolean canEditQuestion = false ;
   private String categoryId_ = null ;
@@ -110,7 +110,7 @@ public class UIQuestions extends UIContainer {
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
   public boolean isChangeLanguage = false ;
-  private List<String> listLanguage = new ArrayList<String>() ;
+  public List<String> listLanguage = new ArrayList<String>() ;
   public String backPath_ = "" ;
   private static String language_ = "" ;
   
