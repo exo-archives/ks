@@ -489,11 +489,10 @@
 					        		</a>
 					        	<%}%>
 									
-										<div class="ContentAction" onclick="eXo.faq.UIFAQPortlet.showMenu(this, event);">
-											<div style="position: relative;">
+										<div class="ContentAction" style="float: left;" onclick="eXo.faq.UIFAQPortlet.showMenu(this, event);">
+											<div class="BoxLanguageMenu">
 					        			<%
 					        			List listQuestLanguage = uicomponent.getQuestionLangauges(question) ;
-					        			String margin_top = listQuestLanguage.size() * (-35) + "px" ;
 					        			%>
 					        			<div class="UIPopupCategory UILanguageMenu" style="display:none ;">
 													<div class="UIRightClickPopupMenu" style="display: block;">
@@ -534,14 +533,14 @@
 														</div>
 													</div>
 												</div>
+												<a href="javaScript: void(0);" class="ActionButton LightBlueStyle" style="float: none;">
+							      	  	<div class="ButtonLeft" id="FAQButton">
+							        	  	<div class="ButtonRight">
+							          	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + "SelectLanguage")%></div>
+							            	</div>
+							          	</div>
+							        	</a>
 											</div>												
-											<a href="javaScript: void(0);" class="ActionButton LightBlueStyle">
-						      	  	<div class="ButtonLeft">
-						        	  	<div class="ButtonRight">
-						          	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + "SelectLanguage")%></div>
-						            	</div>
-						          	</div>
-						        	</a>
 										</div>
 					        	
 										<a href="javascript:void(0);" onclick="eXo.faq.UIFAQPortlet.printPreview(this) ;" class="ActionButton LightBlueStyle">

@@ -940,6 +940,11 @@ UIFAQPortlet .ResultQuickSearch {
 	display:none ;
 }
 
+.UIFAQPortlet .BoxLanguageMenu {
+  position: relative; 
+  border: solid 1px white;
+}
+
 .UIFAQPortlet .UILanguageMenu {
   left: 4px ;
   top: 0px ;
