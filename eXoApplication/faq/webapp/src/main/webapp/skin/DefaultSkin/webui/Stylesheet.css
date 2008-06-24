@@ -941,8 +941,8 @@ UIFAQPortlet .ResultQuickSearch {
 }
 
 .UIFAQPortlet .BoxLanguageMenu {
-  position: relative; 
-  border: solid 1px white;
+  position: relative;
+  border: 0px ;
 }
 
 .UIFAQPortlet .UILanguageMenu {

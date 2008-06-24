@@ -72,7 +72,7 @@ UIFAQPortlet.prototype.showMenu = function(obj, evt){
   var menu = eXo.core.DOMUtil.findFirstDescendantByClass(obj, "div", "UIRightClickPopupMenu") ;
   eXo.webui.UIPopupSelectCategory.show(obj, evt) ;
   var top = menu.offsetHeight ;
-  menu.style.top = -top + "px" ;
+  menu.style.top = -(top + 20 ) + "px" ;
 } ;
 
 UIFAQPortlet.prototype.printPreview = function(obj) {
