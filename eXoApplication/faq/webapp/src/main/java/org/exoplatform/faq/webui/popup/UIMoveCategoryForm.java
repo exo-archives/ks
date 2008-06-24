@@ -84,7 +84,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     }
   }
 
-  @SuppressWarnings("unused")
   public List<Cate> getListCate(){
     return this.listCate ;
   }

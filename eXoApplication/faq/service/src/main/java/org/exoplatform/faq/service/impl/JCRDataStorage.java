@@ -182,20 +182,26 @@ public class JCRDataStorage {
       			sendNotification(emails, message, null) ;    			
       		}
       	}
-    	}catch(Exception e) {
+    	} catch(Exception e) {
     		e.printStackTrace() ;
     	}    	
     }
     // Send notifycation when question responsed or edited or watching
   	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
   		try {
-  			Message message = new Message();
-        message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-  			//message.setMessageTo(question.getEmail());
-  			message.setSubject("eXo FAQ Question Responsed Notifycation!");
-  			message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
-  			sendNotification(null, message, question.getEmail()) ;
-  		}catch(Exception e) {
+  			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+      	if(cate.isNodeType("exo:faqWatching")){
+      		Value[] emails = cate.getProperty("exo:emailWatching").getValues() ;
+      		if(emails != null && emails.length > 0) { 
+						Message message = new Message();
+			      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+						//message.setMessageTo(question.getEmail());
+						message.setSubject("eXo FAQ Question Responsed Or Edit Notifycation!");
+						message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
+						sendNotification(emails, message, question.getEmail()) ;
+      		}
+      	}
+  		} catch(Exception e) {
   			e.printStackTrace() ;
   		}  		  		
   	}

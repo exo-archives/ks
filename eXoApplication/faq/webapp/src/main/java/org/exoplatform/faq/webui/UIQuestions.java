@@ -704,12 +704,25 @@ public class UIQuestions extends UIContainer {
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
-        	UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-    			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 600) ;
-    			popupContainer.setId("MoveCategoryForm") ;
-    			uiMoveCategoryForm.setCategoryID(categoryId) ;
-    			uiMoveCategoryForm.setListCate() ;
-    			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+        	List<Category> listCate = faqService.getSubCategories(null, FAQUtils.getSystemProvider()) ;
+        	String cateId = null ;
+        	if(listCate.size() == 1 ) {
+		      	for(Category cat: listCate) { cateId = cat.getId(); }
+		      } 
+        	if(listCate.size() > 1 || listCate.size() == 1 && !categoryId.equals(cateId)) {
+	        	UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+	    			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 600) ;
+	    			popupContainer.setId("MoveCategoryForm") ;
+	    			uiMoveCategoryForm.setCategoryID(categoryId) ;
+	    			uiMoveCategoryForm.setListCate() ;
+	    			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+        	} else {
+        		uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.cannot-move-category", null, ApplicationMessage.WARNING)) ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+            question.setCategories() ;
+            event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+            return ;
+        	}
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
