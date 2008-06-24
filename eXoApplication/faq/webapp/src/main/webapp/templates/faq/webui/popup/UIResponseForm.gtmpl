@@ -68,9 +68,9 @@
 							%>
 								<div style="margin: 0px 0px 3px 2px;">
 									&nbsp; - $viewString  &nbsp;&nbsp;&nbsp;&nbsp;
-									[&nbsp;<a href="$action"><font color="#058EE6" font-size="12px">
+									[<a href="$action"><font color="#058EE6" font-size="12px">
 										<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
-									</font></a>&nbsp;]
+									</font></a>]
 								</div>
 						<%}%>
 							</td>

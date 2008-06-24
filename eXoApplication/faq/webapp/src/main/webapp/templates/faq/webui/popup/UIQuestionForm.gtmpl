@@ -64,9 +64,9 @@
 												     %>
 											     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
 											     			$name &nbsp;&nbsp;&nbsp;
-																[&nbsp;<a href="$link"><font color="#058EE6" font-size="12px">
+																[<a href="$link"><font color="#058EE6" font-size="12px">
 																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
-																</font></a>&nbsp;]
+																</font></a>]
 															</div>
 											    <%}
 													}

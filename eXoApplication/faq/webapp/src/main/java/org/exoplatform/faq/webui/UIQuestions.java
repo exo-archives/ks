@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -282,6 +283,8 @@ public class UIQuestions extends UIContainer {
       } else {
         this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider).getAllSort() ;
       }
+    } catch (FileNotFoundException fileNotFount) { 
+      fileNotFount.printStackTrace() ;
     } catch(Exception e) {
       e.printStackTrace() ;
     }
@@ -947,6 +950,7 @@ public class UIQuestions extends UIContainer {
       uiQuestions.isChangeLanguage = false ;
       String strId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       String questionId = new String() ;
+      language_ = "" ;
       if(strId.indexOf("/") < 0) {
         questionId = strId ;
         uiQuestions.backPath_ = "" ;
@@ -1011,6 +1015,8 @@ public class UIQuestions extends UIContainer {
           uiQuestions.isChangeLanguage = true ;
           uiQuestions.questionView_ = "" ;
         }
+      } catch (FileNotFoundException fileNotFount) { 
+        fileNotFount.printStackTrace() ;
       } catch(Exception e) {
         UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
         UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
@@ -1034,16 +1040,18 @@ public class UIQuestions extends UIContainer {
       Question question2 = null ;
       try{
         question2 = faqService.getQuestionById(event.getRequestContext().getRequestParameter(OBJECTID), FAQUtils.getSystemProvider());
-      } catch(Exception e) {
+      } catch(javax.jcr.PathNotFoundException e) {
         UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         question.setListQuestion() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
-      }
+      } catch (Exception e) { 
+        e.printStackTrace() ;
+      } 
       UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
-      responseForm.setQuestionId(question2) ;
+      responseForm.setQuestionId(question2, language_) ;
       popupContainer.setId("FAQResponseQuestion") ;
       popupAction.activate(popupContainer, 720, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -1061,14 +1069,16 @@ public class UIQuestions extends UIContainer {
       Question question = null ;
       try{
         question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-      } catch(Exception e) {
+      } catch(javax.jcr.PathNotFoundException e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         questions.setListQuestion() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
-      }
+      } catch (Exception e) { 
+        e.printStackTrace() ;
+      } 
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
       questionForm.setQuestionId(question) ;
       popupContainer.setId("EditQuestion") ;
@@ -1087,14 +1097,18 @@ public class UIQuestions extends UIContainer {
       Question question = null ;
       try{
         question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-      } catch (Exception e) {
+      } catch (javax.jcr.PathNotFoundException e) {
+        System.out.println("\n\n\n\n==========>question is deleted");
+        e.printStackTrace() ;
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         questions.setListQuestion() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
-      }
+      } catch (Exception e) { 
+        e.printStackTrace() ;
+      } 
       UIDeleteQuestion deleteQuestion = popupContainer.addChild(UIDeleteQuestion.class, null, null) ;
       deleteQuestion.setQuestionId(question) ;
       popupContainer.setId("FAQDeleteQuestion") ;
@@ -1113,14 +1127,16 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       try {
         faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-      } catch (Exception e) {
+      } catch (javax.jcr.PathNotFoundException e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         questions.setListQuestion() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
-      }
+      } catch (Exception e) { 
+        e.printStackTrace() ;
+      } 
       UIMoveQuestionForm moveQuestionForm = popupContainer.addChild(UIMoveQuestionForm.class, null, null) ;
       moveQuestionForm.setQuestionId(questionId) ;
       popupContainer.setId("FAQMoveQuestion") ;
