@@ -104,14 +104,14 @@
 						</div>
 					</div>
 					<% } %>
-					<div class="ContentAction" style="float:right; margin: 2px 0px 0px 0px;">
+					<div class="ContentAction" style="float:right; margin: 2px 0px 0px 0px; width: 155px;">
 						<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
 							<div style="position: relative;">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 									<div class="LeftOverButton" title="Search in this Category">
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
-												<div class="StatusIcon SearchIcon">
+												<div class="SearchIcon">
 													<div class="DownArrow1Icon">Search this Category</div>
 												</div>
 											</div>

@@ -26,17 +26,26 @@
 	margin: 2px 0px 0px 0px;
 }
 
+.UIForumCategory .ForumToolbar .SeparatorLine {
+	float: right;
+	width: 2px; height: 19px;
+	margin: 0px 5px 0px 5px;
+}
+
+.UIForumCategory .ForumToolbar .SearchIcon {
+	background-position: left center;
+	cursor: pointer;
+	padding-left: 22px;
+	line-height: 22px;
+	height: 22px;
+	width: auto;
+} 
+
 .UIForumCategory .ForumToolbar .ManageCategoryButton {
 	cursor: pointer;
 	padding-left: 22px;
 	line-height: 22px;
 	height: 22px;
-}
-
-.UIForumCategory .ForumToolbar .SeparatorLine {
-	float: right;
-	width: 2px; height: 19px;
-	margin: 0px 5px 0px 5px;
 }
 
 .UIForumCategory .ForumToolbar .StatusIcon {
