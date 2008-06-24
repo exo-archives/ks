@@ -33,6 +33,15 @@
 	height: 22px;
 }
 
+.UIForumCategory .ForumToolbar .SearchIcon {
+	background-position: left center;
+	cursor: pointer;
+	padding-left: 22px;
+	line-height: 22px;
+	height: 22px;
+	width: auto;
+} 
+
 .UIForumCategory .ForumToolbar .SeparatorLine {
 	float: right;
 	width: 2px; height: 19px;
