@@ -8,7 +8,7 @@
 <div class="FAQUIAddRelationQuestion $uicomponent.id">
 	<% uiform.begin() %>
 	<!-- View interface -->
-	<div class="HorizontalLayout" style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; padding-bottom: 5px;">
+	<div class="HorizontalLayout ViewQuestionsToSelect">
 		<%
 		List listCate = uicomponent.getListCate() ;
 		Stack<String> stackCateid = new Stack<String>() ;
