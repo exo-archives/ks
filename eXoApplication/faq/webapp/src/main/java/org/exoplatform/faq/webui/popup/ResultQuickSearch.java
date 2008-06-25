@@ -54,11 +54,11 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultQuickSearch extends UIForm implements UIPopupComponent{
-	private List<FAQFormSearch> formSearchs = new ArrayList<FAQFormSearch>() ;
+	private List<FAQFormSearch> formSearchs_ = new ArrayList<FAQFormSearch>() ;
 	public ResultQuickSearch() throws Exception { this.setActions(new String[]{"Close"}) ;}
 	
 	public void setFormSearchs(List<FAQFormSearch> formSearchs) {
-		this.formSearchs = formSearchs;
+		this.formSearchs_ = formSearchs;
   }
 	
 	public List<FAQFormSearch> getFormSearchs() throws Exception {
@@ -66,9 +66,9 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
   	String currentUser = FAQUtils.getCurrentUser() ;
     if(serviceUtils.isAdmin(currentUser)) {
-    	return this.formSearchs;
+    	return this.formSearchs_;
     } else {
-			for(FAQFormSearch faqSearch : formSearchs) {
+			for(FAQFormSearch faqSearch : formSearchs_) {
 				if(faqSearch.getType().equals("faqCategory")) {
 					listQuickSearch.add(faqSearch) ;
 				} else {

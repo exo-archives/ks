@@ -629,14 +629,19 @@ public class JCRDataStorage {
   
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
   	Node catNode = getCategoryNodeById(categoryId, sProvider) ;
-  	Node destCatNode = getCategoryNodeById(destCategoryId, sProvider) ;	
+  	Node destCatNode ;
   	String resPath = catNode.getPath() ;
-  	String resNodePath = resPath.substring(0,resPath.lastIndexOf("/")) ;
-  	if(!resNodePath.equals(destCatNode.getPath())) {
-  		destCatNode.getSession().move(catNode.getPath(), destCatNode.getPath() +"/"+ categoryId) ;
-  		catNode.getSession().save() ;
-  		destCatNode.getSession().save() ;
+		String resNodePath = resPath.substring(0,resPath.lastIndexOf("/")) ;
+  	if(!destCategoryId.equals("null")) {
+			destCatNode = getCategoryNodeById(destCategoryId, sProvider) ;	
+  	} else {
+  		destCatNode = getCategoryHome(sProvider, null) ;
   	}
+  	if(!resNodePath.equals(destCatNode.getPath())) {
+			destCatNode.getSession().move(catNode.getPath(), destCatNode.getPath() +"/"+ categoryId) ;
+			catNode.getSession().save() ;
+			destCatNode.getSession().save() ;
+		}
   }
   
   public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception {

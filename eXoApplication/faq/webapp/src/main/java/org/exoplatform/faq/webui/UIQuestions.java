@@ -114,6 +114,7 @@ public class UIQuestions extends UIContainer {
   public List<String> listLanguage = new ArrayList<String>() ;
   public String backPath_ = "" ;
   private static String language_ = "" ;
+  private List<String> emailList_ = new ArrayList<String>() ;
   
 	public UIQuestions()throws Exception {
     backPath_ = null ;
@@ -414,9 +415,11 @@ public class UIQuestions extends UIContainer {
 	
   public List<String> getListEmail(String categoryId) throws Exception {
   	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-    List<String> emailList = faqService.getListMailInWacth(categoryId, FAQUtils.getSystemProvider()) ;
-    return emailList ;
+    emailList_ = faqService.getListMailInWacth(categoryId, FAQUtils.getSystemProvider()) ;
+    return emailList_ ;
   }
+  
+  public void setListEmail(List<String> list) { emailList_ = list ;}
   
   public void setPath(String s) { newPath_ = s ; }
 
