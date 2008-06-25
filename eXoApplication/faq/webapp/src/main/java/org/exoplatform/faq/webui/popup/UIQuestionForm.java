@@ -38,7 +38,6 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -442,6 +441,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      } catch (Exception e) {
+        e.printStackTrace() ;
       }
       
       if(!questionForm.isChildOfManager) {
@@ -464,7 +465,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
         if(questionManagerForm.isResponseQuestion && questionForm.getQuestionId().equals(responseForm.getQuestionId())) {
           responseForm.setIsChildren(true) ;
-          responseForm.setQuestionId(question_) ;
+          responseForm.setQuestionId(question_, "") ;
         }
         questionManagerForm.isEditQuestion = false ;
         UIPopupContainer popupContainer = questionManagerForm.getParent() ;
