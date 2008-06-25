@@ -370,7 +370,6 @@ public class JCRDataStorage {
           else attachment.setSize(0) ;
         } catch (FileNotFoundException fileNotFound) {
           attachment.setSize(0) ;
-          System.out.println("\n\n\n\n=====> JCRDataStorage.getQuestion() exception :\n\n\n\n");
           fileNotFound.printStackTrace() ;
         }
         listFile.add(attachment);
