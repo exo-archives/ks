@@ -167,23 +167,12 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     public void execute(Event<UIMoveCategoryForm> event) throws Exception {
     	UIMoveCategoryForm moveCategory = event.getSource() ;	
     	UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
+    	UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
     	String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
     	String categoryId = moveCategory.getCategoryID() ;
     	if(destCategoryId.equals("null")) {
-    		Category cate = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
-    		String name = cate.getName() ;
-    		String description = cate.getDescription() ;
-    		Boolean isModeQuestion = cate.isModerateQuestions();
-    		String[] moderator = cate.getModerators();
-    		faqService_.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
-    		cate.setName(name.trim()) ;
-  			cate.setDescription(description) ;
-  			cate.setCreatedDate(new Date()) ;
-  			cate.setModerateQuestions(isModeQuestion) ;
-  			cate.setModerators(moderator) ;
-  			faqService_.saveCategory(null, cate, true, FAQUtils.getSystemProvider()) ;
-    	}
-    	if (!destCategoryId.equals("null") && categoryId != null) {
+    		faqService_.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
+    	} else {
     	  List<String> usersOfNewCateParent = Arrays.asList(faqService_.getCategoryById(destCategoryId, FAQUtils.getSystemProvider()).getModerators()) ;
     	  faqService_.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
         for(CateClass cateClass : moveCategory.getListObjCategory(destCategoryId)) {
@@ -198,7 +187,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
           faqService_.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, FAQUtils.getSystemProvider()) ;
         }
     	}
-    	UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			questions.setCategories() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			faqPortlet.cancelAction() ;
