@@ -435,14 +435,15 @@
 
 .UIFAQPortlet .LanguageQuestion {
   background: url('background/FAQPortlet.gif') repeat-x center -838px;
-  border: 1px solid gray;
+  border: 1px solid #7f9db9;
   border-bottom: none;
   height: 28px;
   line-height: 28px ;
   font-weight: bold;
   padding-left: 8px;
   margin-top: 4px;
-  width: 392px;
+  width: 394px;
+  _width: 396px;
 }
 
 .UIFAQPortlet .AddLanguage .LanguageTitle {
@@ -659,6 +660,7 @@ UIFAQPortlet .ResultQuickSearch {
 	height:150px;
 	width:400px;
 	float:left ;
+	margin-top: 0px;
 }
 
 .UIFAQPortlet .UIQuestionForm .HorizontalLayout {
@@ -1026,4 +1028,12 @@ UIFAQPortlet .ResultQuickSearch {
   height: 18px;
   line-height: 18px;
   margin: 4px 0px;
+}
+
+.UIFAQPortlet .SubCategoryForm .UIFormGrid {
+  width: 100%;
+}
+
+.UIFAQPortlet .SubCategoryForm .UIFormGrid .UIFormGrid {
+  width: auto;
 }
