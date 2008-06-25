@@ -21,3 +21,11 @@
 .UIForumPortlet .UISearchForm .InputSearchForm .selectbox {
 	width: 204px;
 }
+
+.UIForumPortlet .UISearchForm .UIFormGrid  {
+	width: 100%;
+}
+
+.UIForumPortlet .UISearchForm .UIFormGrid .UIFormGrid {
+	width: auto;
+}
