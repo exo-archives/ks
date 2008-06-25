@@ -249,17 +249,15 @@
   background: url('background/NotResponse.gif') no-repeat left top;
   padding-left: 28px;
   line-height: 18px;
-  margin-top:8px;
   white-space:normal;
   min-height: 18px ;
 }
 
 .UIFAQPortlet .NotApproved {
-  background:transparent url(background/question_not_approved.gif) no-repeat left top;
+  background:transparent url(background/question_not_approved.gif) no-repeat left center;
   width: 16px;
   height: 18px;
   float: left;
-  line-height:18px;
 }
 
 .UIFAQPortlet .ViewQuestionNotApproved {

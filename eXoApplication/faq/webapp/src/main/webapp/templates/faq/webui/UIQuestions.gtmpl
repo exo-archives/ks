@@ -246,101 +246,99 @@
 					} else {
 						questionIcon = "NotResponse" ;
 					}
-		%>
-					<div class="$questionIcon">
-						<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
-								<!-- question content -->
-									<%
-									String titleQuestion = "" ;
-									if(questionContent.length() > 140) {
-										titleQuestion = questionContent ;
-										if(!uicomponent.getQuestionView().equals(qId)) {
-											questionContent = questionContent.substring(0, 139) + " ..." ;
-									%>
-											<a href="$linkQuestion" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
-								<%	} else {%>
-											<a href="$linkQuestion">
-									<%}
-									} else {
-										titleQuestion = "" ;
-									%>
-										<a href="$linkQuestion">
-								<%}
-									if(!question.isApproved()) {%>
-										<div style="float: left; width: 100%">
-											<div class="ViewQuestionNotApproved"> 
-												$questionContent
-											</div>
-											<div class="NotApproved"><span></span></div>
-										</div>
-										<div style="clear: left;"><span></span></div>
-								<%} else {%>
-										$questionContent
-								<%}%>
-								</a>
-							
-							<%if(titleQuestion.trim().length() > 0) {%>
-								<div style="clear: left;"><span></span></div>
-								<div id="titleQuestion$questionId" class="questionTitle">
-									$titleQuestion
+		%><div class="QuestionContainer">
+				<div class="$questionIcon"  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+					<!-- question content -->
+						<%
+						String titleQuestion = "" ;
+						if(questionContent.length() > 140) {
+							titleQuestion = questionContent ;
+							if(!uicomponent.getQuestionView().equals(qId)) {
+								questionContent = questionContent.substring(0, 139) + " ..." ;
+						%>
+					<a class="ViewQuestionNotApproved" href="$linkQuestion" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
+						$questionContent
+					</a>
+					<%	} else {%>
+					<a href="$linkQuestion" class="ViewQuestionNotApproved">
+						$questionContent
+					</a>
+						<%}
+						} else {
+							titleQuestion = "" ;
+						%>
+					<a class="ViewQuestionNotApproved" href="$linkQuestion"> 
+								$questionContent
+					</a>
+					<%}
+						if(!question.isApproved()) {%>
+								
+					<div class="NotApproved"><span></span></div>
+					<div style="clear: left;"><span></span></div>
+					<%} else {%>
+							$questionContent
+					<%}%>
+				
+				<%if(titleQuestion.trim().length() > 0) {%>
+					<div id="titleQuestion$questionId" class="questionTitle">
+						$titleQuestion
+					</div>
+				<%}%>
+				<!-- action of this question -->
+					<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;">
+						<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+							<div class="UIContextMenuContainer">
+															
+								<div class="TopLeftRightClickPopupMenu">
+									<div class="TopRightRightClickPopupMenu">
+										<div class="TopCenterRightClickPopupMenu"><span></span></div>
+										<div class="RightClickCustomItem" style="display: none;">Open</div>
+									</div>
 								</div>
-							<%}%>
-							<!-- action of this question -->
-								<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;">
-									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
-										<div class="UIContextMenuContainer">
-																		
-											<div class="TopLeftRightClickPopupMenu">
-												<div class="TopRightRightClickPopupMenu">
-													<div class="TopCenterRightClickPopupMenu"><span></span></div>
-													<div class="RightClickCustomItem" style="display: none;">Open</div>
+								
+								<div class="MiddleLeftRightClickPopupMenu">
+									<div class="MiddleRightRightClickPopupMenu">
+										<div class="UIRightPopupMenuContainer">
+											<%
+												String iconView = "" ;
+												for(viewAction in questionActions) {
+													if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
+														iconView = viewAction.replace("Question", "") ;
+													else
+														iconView = viewAction ;
+													String linkView = uicomponent.event(viewAction, qId) ;
+													String opacity = "1" ;
+													if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
+														linkView = "javaScript: alert('" + 
+																				_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
+														opacity = "0.5";
+													}
+													String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+											%>
+											<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem" style="opacity:<%=opacity%>;">
+												<div class="ItemIcon $iconView" style="padding:3px 0px 5px 5px;">
+														<div style="padding-left: 20px;">$itemLabelView</div>
 												</div>
-											</div>
+											</a>
+											<%
+												}
+											%>
 											
-											<div class="MiddleLeftRightClickPopupMenu">
-												<div class="MiddleRightRightClickPopupMenu">
-													<div class="UIRightPopupMenuContainer">
-														<%
-															String iconView = "" ;
-															for(viewAction in questionActions) {
-																if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
-																	iconView = viewAction.replace("Question", "") ;
-																else
-																	iconView = viewAction ;
-																String linkView = uicomponent.event(viewAction, qId) ;
-																String opacity = "1" ;
-																if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
-																	linkView = "javaScript: alert('" + 
-																							_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-																	opacity = "0.5";
-																}
-																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-														%>
-																<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem" style="opacity:<%=opacity%>;">
-																	<div class="ItemIcon $iconView" style="padding:3px 0px 5px 5px;">
-																			<div style="padding-left: 20px;">$itemLabelView</div>
-																	</div>
-																</a>
-														<%
-															}
-														%>
-														
-													</div>
-												</div>
-											</div>
-											
-											<div class="BottomLeftRightClickPopupMenu">
-												<div class="BottomRightRightClickPopupMenu">
-													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-												</div>
-											</div>
-									
 										</div>
 									</div>
 								</div>
+								
+								<div class="BottomLeftRightClickPopupMenu">
+									<div class="BottomRightRightClickPopupMenu">
+										<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+									</div>
+								</div>
+						
 							</div>
+						</div>
 					</div>
-					
+				</div>
+			</div>	
 					<%if(uicomponent.getQuestionView().equals(qId)) {
 						String responseBy = "..." ;
 						String date = "..." ;
