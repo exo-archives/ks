@@ -705,6 +705,15 @@ UIFAQPortlet .ResultQuickSearch {
 	width:530px;
 }
 
+/******************************  UIRAddRelationForm  ***************************************/
+.UIFAQPortlet .ViewQuestionsToSelect{
+	margin: 10px 10px 10px 10px;
+	background-color:#F3F3F3; 
+	padding-bottom: 5px;
+	max-height: 500px;
+	overflow: auto;
+}
+
 /******************************  UIQuestinoManager  ***************************************/
 .UIFAQPortlet .ResponseForm textarea {
 	font-size:11px;
