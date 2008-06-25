@@ -88,7 +88,7 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
       UIDeleteQuestion deleteQuestion = event.getSource() ;
       try{
         deleteQuestion.faqService.removeQuestion(deleteQuestion.question_.getId(), FAQUtils.getSystemProvider()) ;
-      } catch (PathNotFoundException e) { }
+      } catch (Exception e) { }
       if(!deleteQuestion.isManagement_) {
         UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

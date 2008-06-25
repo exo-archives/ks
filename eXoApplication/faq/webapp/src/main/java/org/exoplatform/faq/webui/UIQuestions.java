@@ -1015,9 +1015,7 @@ public class UIQuestions extends UIContainer {
           uiQuestions.isChangeLanguage = true ;
           uiQuestions.questionView_ = "" ;
         }
-      } catch (FileNotFoundException fileNotFount) { 
-        fileNotFount.printStackTrace() ;
-      } catch(Exception e) {
+      } catch(javax.jcr.PathNotFoundException e) {
         UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
         UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1025,6 +1023,8 @@ public class UIQuestions extends UIContainer {
         uiQuestions.setListQuestion() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
+      } catch (Exception e) { 
+        e.printStackTrace() ;
       }
       UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
