@@ -17,6 +17,7 @@
 
 package org.exoplatform.faq.service.impl;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -351,20 +352,27 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
     if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(questionNode.getProperty("exo:responseBy").getString()) ;  	
     if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ;  	
-  	NodeIterator nodeIterator = questionNode.getNodes() ;
     List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
+  	NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
     Node node ;
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
         FileAttachment attachment = new FileAttachment() ;
-        nodeFile = node.getNode("jcr:content") ;
-        attachment.setPath(node.getPath()) ;
-        attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-        attachment.setName(node.getName());
-        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
-        attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+        try{
+          nodeFile = node.getNode("jcr:content") ;
+          attachment.setPath(node.getPath()) ;
+          attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+          attachment.setName(node.getName());
+          attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+          if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+          else attachment.setSize(0) ;
+        } catch (FileNotFoundException fileNotFound) {
+          attachment.setSize(0) ;
+          System.out.println("\n\n\n\n=====> JCRDataStorage.getQuestion() exception :\n\n\n\n");
+          fileNotFound.printStackTrace() ;
+        }
         listFile.add(attachment);
       }
     }

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.service;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,20 +102,20 @@ public class QuestionPageList extends JCRPageList {
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;
     if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(questionNode.getProperty("exo:responseBy").getString()) ;   
     if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ; 
-    NodeIterator nodeIterator = questionNode.getNodes() ;
     List<FileAttachment> attList = new ArrayList<FileAttachment>() ;
+    NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
     Node node ;
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
         FileAttachment attachment = new FileAttachment() ;
-        nodeFile = node.getNode("jcr:content") ;
-        attachment.setPath(node.getPath()) ;
-        attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-        attachment.setName(node.getName());
-        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
         try{
+          nodeFile = node.getNode("jcr:content") ;
+          attachment.setPath(node.getPath()) ;
+          attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+          attachment.setName(node.getName());
+          attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
           if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
           else attachment.setSize(0);
         } catch (Exception e) {
