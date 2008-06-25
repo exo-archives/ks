@@ -360,10 +360,6 @@
 	padding: 0px;
 }
 
-.UIForumPortlet .AddNewForumForm .UITabPane {
-	height: auto;
-}
-
-.UIForumPortlet #UIForumUserSettingForm .UITabPane {
+.UIForumPortlet .UITabPane {
 	height: auto;
 }
