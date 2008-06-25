@@ -193,6 +193,11 @@
   padding: 8px;
 }
 
+.UIFAQPortlet .LockFunction {
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+}
+
 .UIFAQPortlet .FAQContainer .FAQContent .FAQCategory {
   background: url('background/FAQPortlet.gif') no-repeat left -465px;
   padding-left: 28px;
