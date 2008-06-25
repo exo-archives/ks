@@ -73,7 +73,7 @@
           <systemProperties>
             <property>
               <name>mock.portal.dir</name>
-              <value>${exo.projects.directory.src}/portal/branches/2.0.2/web/portal/src/main/webapp</value>
+              <value>${exo.projects.directory.src}/portal/branches/2.1.1/web/portal/src/main/webapp</value>
             </property>
           </systemProperties>
         </configuration>
