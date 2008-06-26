@@ -242,7 +242,7 @@
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Question {
-  background: url('background/questionIcon.PNG') no-repeat left top;
+  background: url('background/questionIcon.PNG') no-repeat left 0px;
   padding-left: 28px;
   line-height: 18px;
   margin: 8px 0px;
@@ -251,11 +251,12 @@
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
-  background: url('background/NotResponse.gif') no-repeat left top;
+  background: url('background/NotResponse.gif') no-repeat left 0px;
   padding-left: 28px;
   line-height: 18px;
   white-space:normal;
   min-height: 18px ;
+  margin: 8px 0px 8px 0px;
 }
 
 .UIFAQPortlet .NotApproved {
@@ -710,8 +711,9 @@ UIFAQPortlet .ResultQuickSearch {
 	margin: 10px 10px 10px 10px;
 	background-color:#F3F3F3; 
 	padding-bottom: 5px;
-	max-height: 450px;
+	max-height: 400px;
 	overflow: auto;
+	_height: 400px;
 }
 
 /******************************  UIQuestinoManager  ***************************************/
