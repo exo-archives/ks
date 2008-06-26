@@ -710,7 +710,7 @@ UIFAQPortlet .ResultQuickSearch {
 	margin: 10px 10px 10px 10px;
 	background-color:#F3F3F3; 
 	padding-bottom: 5px;
-	max-height: 500px;
+	max-height: 450px;
 	overflow: auto;
 }
 

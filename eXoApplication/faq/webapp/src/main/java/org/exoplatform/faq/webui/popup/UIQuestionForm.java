@@ -105,7 +105,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   private String author_ = "" ;
   private String email_ = "" ;
   private List<String> questionContents_ = new ArrayList<String>() ;
-  private boolean isChecked_ = true ;
+  private boolean isApproved_ = true ;
+  private boolean isActivated_ = true ;
   
   private boolean isChildOfManager = false ;
   
@@ -170,8 +171,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     addChild(inputEmailAddress) ;
     addChild(listFormWYSIWYGInput) ;
     if(questionId_ != null && questionId_.trim().length() > 0) {
-      addChild(inputIsApproved.setChecked(question_.isApproved())) ;
-      addChild(inputIsActivated.setChecked(question_.isActivated())) ;
+      addChild(inputIsApproved.setChecked(isApproved_)) ;
+      addChild(inputIsActivated.setChecked(isActivated_)) ;
     }
     addUIFormInput(inputAttachcment) ;
     if(question_ != null && !isEdit) {
@@ -209,7 +210,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       for(QuestionLanguage questionLanguage : listLanguageNode) {
         LIST_LANGUAGE.add(questionLanguage.getLanguage()) ;
       }
-      isChecked_ = question_.isApproved() ;
+      isApproved_ = question_.isApproved() ;
+      isActivated_ = question_.isActivated() ;
       initPage(false) ;
       UIFormStringInput authorQ = this.getChildById(AUTHOR) ;
       authorQ.setValue(question_.getAuthor()) ;
@@ -482,7 +484,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       questionForm.author_ = ((UIFormStringInput)questionForm.getChildById(AUTHOR)).getValue() ;
       questionForm.email_ = ((UIFormStringInput)questionForm.getChildById(EMAIL_ADDRESS)).getValue() ;
       if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
-        questionForm.isChecked_ = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
+        questionForm.isApproved_ = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked() ;
+        questionForm.isActivated_ = ((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked() ;
       }
       questionForm.questionContents_.clear() ;
       UIFormInputWithActions listFormWYSIWYGInput =  questionForm.getChildById(LIST_WYSIWYG_INPUT) ;
