@@ -18,7 +18,10 @@ package org.exoplatform.faq.webui;
 
 
 
+import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
@@ -52,7 +55,7 @@ public class UIQuickSeach  extends UIForm {
 	
 	public UIQuickSeach() throws Exception {
 		addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
-		this.setSubmitAction("Search") ;
+		this.setSubmitAction(this.event("Search")) ;
 	}
 	
 	static public class SearchActionListener extends EventListener<UIQuickSeach> {
@@ -64,19 +67,25 @@ public class UIQuickSeach  extends UIForm {
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			String text = formStringInput.getValue() ;
-			if(FAQUtils.isFieldEmpty(text)) {
-        uiApp.addMessage(new ApplicationMessage("UIQuickSeach.msg.no-text-to-search", null)) ;
+			if(text != null && text.trim().length() > 0) {
+				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+				List<FAQFormSearch> list = null ;
+				try {
+					list = faqService.getQuickSeach(FAQUtils.getSystemProvider(), text+",,all");
+				} catch (Exception e) {
+					uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIQuickSearch.msg.failure", null, ApplicationMessage.WARNING)) ;
+					return ;
+				}
+				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 800) ;
+				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
+				popupContainer.setId("ResultQuickSearch") ;
+				result.setFormSearchs(list);
+				formStringInput.setValue("") ;
+			} else {
+				uiApp.addMessage(new ApplicationMessage("UIQuickSeach.msg.no-text-to-search", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
-      }
-			UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 800) ;
-			ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
-			popupContainer.setId("ResultQuickSearch") ;
-			String textFiltered = FAQUtils.filterString(text, true) ;
-			if(textFiltered != null && textFiltered.trim().length() > 0) {
-				
-				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		  	result.setFormSearchs(faqService.getQuickSeach(FAQUtils.getSystemProvider(), textFiltered+",,all"));
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

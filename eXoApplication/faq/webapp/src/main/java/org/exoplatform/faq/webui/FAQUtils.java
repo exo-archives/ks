@@ -56,23 +56,44 @@ public class FAQUtils {
   }
 	
 	public static String filterString(String text, boolean isEmail) {
-
-    for (String str : specialString) {
-      text = text.replaceAll(str, "") ;
-    }
-    if (!isEmail) text = text.replaceAll(AKONG, "") ;
-    int i = 0 ;
-    while (i < text.length()) {
-      if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|'
-        || text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\' || text.charAt(i) == '+'
-        || text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$'
-        || text.charAt(i) == '"'  ) {
-        text = text.replace((text.charAt(i)) + "", "") ;
-      } else {
-        i ++ ;
-      }
-    }
+	  for (String str : specialString) {
+	    text = text.replaceAll(str, "") ;
+	  }
+	  if (!isEmail) text = text.replaceAll(AKONG, "") ;
+	  int i = 0 ;
+	  while (i < text.length()) {
+	    if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|'
+	      || text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\' || text.charAt(i) == '+'
+	      || text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$'
+	      || text.charAt(i) == '"'  ) {
+	      text = text.replace((text.charAt(i)) + "", "") ;
+	    } else {
+	      i ++ ;
+	    }
+	  }
     return text ;
+  }
+	
+	public static boolean CheckSpecial(String text) {
+		Boolean check = false ;
+		if(text != null && text.trim().length() > 0) {
+		  int i = 0 ;
+		  while (i < text.length()) {
+		    if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|'
+		      || text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\' || text.charAt(i) == '+'
+		      || text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$'
+		      || text.charAt(i) == '"' || text.charAt(i) == '!' || text.charAt(i) == '#' || text.charAt(i) == '%'
+		      || text.charAt(i) == ':' || text.charAt(i) == '&' || text.charAt(i) == '>' || text.charAt(i) == '<'
+		      || text.charAt(i) == '~' || text.charAt(i) == '`' || text.charAt(i) == ']' || text.charAt(i) == '/'	) {
+		      text = text.replace((text.charAt(i)) + "", "") ;
+		      check = true ;
+		    } else {
+		      i ++ ;
+		    }
+		  }
+		  return check ;
+		}
+    return false ;
   }
 	
 	public static User getUserByUserId(String userId) throws Exception {
