@@ -241,19 +241,26 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String language = advancedSearch.getUIFormSelectBox(FIELD_LANGUAGE).getValue() ;
 			String question = advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).getValue() ;
 			String response = advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).getValue() ;
+			if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
+					FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress) ||
+					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response)) {
+				uiApp = advancedSearch.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+				return ;
+			}
 			FAQEventQuery eventQuery = new FAQEventQuery() ;
 			eventQuery.setType(type) ;
-			if(!FAQUtils.isFieldEmpty(text)) eventQuery.setText(FAQUtils.filterString(text, true)) ;
-			if(!FAQUtils.isFieldEmpty(categoryName)) eventQuery.setName(FAQUtils.filterString(categoryName, false)) ;
+			eventQuery.setText(text) ;
+			eventQuery.setName(categoryName) ;
 			eventQuery.setIsModeQuestion(modeQuestion) ;
-			if(!FAQUtils.isFieldEmpty(moderator)) eventQuery.setModerator(FAQUtils.filterString(moderator, false)) ;
+			eventQuery.setModerator(moderator) ;
 			eventQuery.setFromDate(fromDate) ;
 			eventQuery.setToDate(toDate) ;
-			if(!FAQUtils.isFieldEmpty(author)) eventQuery.setAuthor(FAQUtils.filterString(author, false)) ;
-			if(!FAQUtils.isFieldEmpty(emailAddress)) eventQuery.setEmail(FAQUtils.filterString(emailAddress, true)) ;
+			eventQuery.setAuthor(author) ;
+			eventQuery.setEmail(emailAddress) ;
 			if(language.equals("English")) {
-				if(!FAQUtils.isFieldEmpty(question)) eventQuery.setQuestion(FAQUtils.filterString(question, false)) ;
-				if(!FAQUtils.isFieldEmpty(response)) eventQuery.setResponse(FAQUtils.filterString(response, false)) ;
+				eventQuery.setQuestion(question) ;
+				eventQuery.setResponse(response) ;
 			}
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 700) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
