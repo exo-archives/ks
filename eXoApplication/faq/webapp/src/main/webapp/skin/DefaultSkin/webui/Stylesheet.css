@@ -265,6 +265,12 @@
   float: left;
 }
 
+.UIFAQPortlet .QuestionContainer {
+  padding-top: 8px;
+  _padding-top: 3px;
+}
+
+
 .UIFAQPortlet .ViewQuestionNotApproved {
   display:table-cell;
   float: left;
