@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.form.UIForm;
@@ -79,7 +80,6 @@ public class UIForumInputWithActions extends UIFormInputSet {
             actionLabel = uiForm.getLabel(res, "action." + action.getActionName())  ;
           }catch(MissingResourceException ex) {
             actionLabel = action.getActionName() ;
-            System.out.println("\n Key: '"+uiForm.getId()+".label.action." + action.getActionName() + "' not found");
           }
           String actionLink ;
           if(action.getActionParameter() != null) {
@@ -90,9 +90,25 @@ public class UIForumInputWithActions extends UIFormInputSet {
           w.write("<a title=\"" + actionLabel + "\" href=\"" + actionLink +"\">") ;
           if(action.getActionType() == ActionData.TYPE_ICON) {
             w.write("<img src=\"/eXoResources/skin/DefaultSkin/background/Blank.gif\" class=\"" + action.getCssIconClass()+"\"/>") ;
-            if(action.isShowLabel) w.write(actionLabel) ;
+            if(action.isShowLabel) w.write(ForumUtils.getSubString(actionLabel, 30)) ;
           }else if(action.getActionType() == ActionData.TYPE_LINK){
-            w.write(actionLabel) ;
+            w.write(ForumUtils.getSubString(actionLabel, 30)) ;
+          }else if(action.getActionType() == ActionData.TYPE_ATT){
+          	System.out.println("\n\n" + actionLabel);
+          	String size = "";
+          	if(actionLabel.lastIndexOf("(") > 0) {
+          		size = actionLabel.substring(actionLabel.lastIndexOf("(")) ;
+          		actionLabel = actionLabel.substring(0,actionLabel.lastIndexOf("(")) ;
+          	}
+          	String type = "";
+          	int dot = actionLabel.lastIndexOf(".");
+          	if(dot > 0) {
+          		type = actionLabel.substring(dot) ;
+          		actionLabel = actionLabel.substring(0,dot) ;
+          	}
+          	actionLabel = ForumUtils.getSubString(actionLabel, 30) + type + size ;
+          	w.write("<img src=\"/eXoResources/skin/DefaultSkin/background/Blank.gif\" class=\"" + action.getCssIconClass()+"\"/>") ;
+          	if(action.isShowLabel)w.write(actionLabel) ;
           }
           w.write("</a>") ; w.write("&nbsp;") ; 
           if(action.isBreakLine()) w.write("<br/>") ; 
@@ -112,6 +128,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
   static public class ActionData {
     final public static int TYPE_ICON = 0 ;
     final public static int TYPE_LINK = 1 ;
+    final public static int TYPE_ATT = 2 ;
     
     private int actionType = 0 ;
     private String actionName ;

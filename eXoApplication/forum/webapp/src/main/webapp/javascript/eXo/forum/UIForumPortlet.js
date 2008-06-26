@@ -407,7 +407,7 @@ UIForumPortlet.prototype.reSizeImages = function() {
     for(var i=0; i<images_.length; i++)
     {
       var img = images_[i];
-			img.style.width= "auto" ;
+			img.style.width = "auto" ;
 			 if(img.width > max_width) {
 					img.style.width= max_width + "px" ;
 			 }

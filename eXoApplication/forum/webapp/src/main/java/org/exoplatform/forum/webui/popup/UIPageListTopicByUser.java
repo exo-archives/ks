@@ -53,8 +53,7 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
 		events = {
-				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class ),
-				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicsTagActionListener.class )
+				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class )
 		}
 )
 public class UIPageListTopicByUser extends UIContainer{
@@ -153,10 +152,4 @@ public class UIPageListTopicByUser extends UIContainer{
       }
 		}
 	}
-	static	public class OpenTopicsTagActionListener extends EventListener<UIPageListTopicByUser> {
-		public void execute(Event<UIPageListTopicByUser> event) throws Exception {
-			//UIPageListPostByUser uiForm = event.getSource() ;
-		}
-	}
-	
 }

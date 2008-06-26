@@ -893,15 +893,19 @@ public class UITopicContainer extends UIForm {
 	static public class AddBookMarkActionListener extends EventListener<UITopicContainer> {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer topicContainer = event.getSource();
-			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String string = path.substring(path.lastIndexOf("//")+2) ;
-			String path_ = topicContainer.categoryId+"/"+topicContainer.forumId+"/"+string ;
-			path = path.replaceFirst(string, path_);
-			String userName = topicContainer.userProfile.getUserId() ;
-			if(!ForumUtils.isEmpty(path)) {
-				topicContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
+			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(!ForumUtils.isEmpty(topicId)) {
+				try{
+				Topic topic = topicContainer.getTopic(topicId);
+				StringBuffer buffer =  new StringBuffer();
+				buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//")
+				.append(topicContainer.categoryId).append("/").append(topicContainer.forumId).append("/").append(topicId) ;
+				String userName = topicContainer.userProfile.getUserId() ;
+				topicContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, buffer.toString(), true) ;
 				UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;
+				} catch (Exception e) {
+				}
 			}
 		}
 	}

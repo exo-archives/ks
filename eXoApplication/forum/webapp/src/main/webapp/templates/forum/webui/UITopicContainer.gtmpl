@@ -441,8 +441,7 @@
 											}
 										}
 										
-										String actionBookmark = uicomponent.event("AddBookMark",iconClassTopic+"//"+topicTitle+"//"+topicId);
-										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",topicId);
+										String actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
 								%>
 									<tr class="$classRow">
 										<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>

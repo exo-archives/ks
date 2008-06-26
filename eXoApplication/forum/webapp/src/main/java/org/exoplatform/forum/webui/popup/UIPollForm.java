@@ -32,6 +32,7 @@ import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -64,6 +65,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_TIMEOUT_INPUT = "TimeOut" ;
 	public static final String FIELD_AGAINVOTE_CHECKBOX = "VoteAgain" ;
 	public static final String FIELD_MULTIVOTE_CHECKBOX = "MultiVote" ;
+	public static final int MAX_TITLE = 100 ;
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(FIELD_OPTIONS,FIELD_OPTIONS) ;
 	private String TopicPath ;
 	private Poll poll ;
@@ -146,25 +148,38 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			boolean isAgainVote = uiForm.getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).isChecked() ;
       boolean isMultiVote = uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).isChecked() ;
 			String sms = "";
-			int i = 0 ; 
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
-			String temp = "" ;
-			String[] options = new String[values.size()] ;	
-			if(values.size() > 0) {
-				for(String value : values) {
-					temp = value ;
-					if(!ForumUtils.isEmpty(temp)){
-						options[i] = temp;
-					} 
-					++i;
-				}
+			List<String> values_ = new ArrayList<String>();
+			int i = 1;
+			for(String value : values) {
+				if(!ForumUtils.isEmpty(value)){
+					if(value.length() > MAX_TITLE) {
+						UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+						Object[] args = { uiForm.getLabel(FIELD_OPTIONS)+"("+i+")", String.valueOf(MAX_TITLE) };
+						uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						return ;
+					}
+					values_.add(value);
+				} 
+				++i;
 			}
-			int sizeOption = options.length;
+			String[] options = values_.toArray(new String[]{}) ;
+			
+			int sizeOption = values_.size();
 			if(sizeOption < 2) sms = "Minimum" ;
 			if(sizeOption > 10) sms = "Maximum" ;
 			if(ForumUtils.isEmpty(question)) {
 				sms = "NotQuestion";
 				sizeOption = 0;
+			}else {
+				if(question.length() > MAX_TITLE) {
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					Object[] args = { uiForm.getLabel(FIELD_QUESTION_INPUT), String.valueOf(MAX_TITLE) };
+					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return ;
+				}
 			}
 			if(sizeOption >= 2 && sizeOption <= 10) {
 				String[] newUser = new String[] {};
@@ -179,7 +194,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 						double rmPecent = 0;
 						for(int j = sizeOption; j < oldVote.length; j++) {
 							rmPecent = rmPecent + Double.parseDouble(oldVote[j]) ;
-              voteRemoved.add(j+"") ;
+              voteRemoved.add(String.valueOf(j)) ;
 						}
 						rmPecent = 100 - rmPecent ;
 						for(int k = 0; k < sizeOption; ++k) {
