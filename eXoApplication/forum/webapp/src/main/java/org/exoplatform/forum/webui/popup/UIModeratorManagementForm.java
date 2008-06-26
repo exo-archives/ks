@@ -392,7 +392,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		addUIFormInput(inputSetBan);
 		UIPageListTopicByUser pageListTopicByUser = addChild(UIPageListTopicByUser.class, null, null) ;
 		pageListTopicByUser.setUserName(this.userProfile.getUserId()) ;
-		addChild(UIPageListPostByUser.class, null, null) ;
+		UIPageListPostByUser listPostByUser = addChild(UIPageListPostByUser.class, null, null) ;
+		listPostByUser.setUserName(this.userProfile.getUserId()) ;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -508,11 +509,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	} else {
     		if(userRole >= 1) userRole = 2;
     	}
-    	String userTt = userProfile.getUserTitle() ;
-    	if(!ForumUtils.isEmpty(userTitle)) {
-				userTitle = userTt ;
+    	if(ForumUtils.isEmpty(userTitle)) {
+				userTitle = userProfile.getUserTitle() ;
 			}
-    	
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
     	Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;

@@ -202,8 +202,8 @@ public class UICategories extends UIContainer	{
 	static public class OpenForumLinkActionListener extends EventListener<UICategories> {
     public void execute(Event<UICategories> event) throws Exception {
 			UICategories categories = event.getSource();
-			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String []id = forumId.trim().split(",");
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String []id = path.trim().split("/");
 			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.FORUM);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
@@ -211,7 +211,7 @@ public class UICategories extends UIContainer	{
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
-			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
+			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
@@ -221,8 +221,8 @@ public class UICategories extends UIContainer	{
 			UICategories categories = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
-			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			Topic topic = categories.getTopic(id[2], path) ;
+			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			if(topic == null) {
 				Object[] args = { "" };
 				UIApplication uiApp = categories.getAncestorOfType(UIApplication.class) ;
@@ -250,8 +250,25 @@ public class UICategories extends UIContainer	{
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String userName = uiContainer.userProfile.getUserId() ;
 			if(!ForumUtils.isEmpty(path)) {
+				String userName = uiContainer.userProfile.getUserId() ;
+				String type = path.substring(0, path.indexOf("//")) ;
+				if(type.equals("forum")) {
+					path = path.substring(path.indexOf("//")+2) ;
+					String categoryId = path.substring(0, path.indexOf("/")) ;
+					String forumId = path.substring(path.indexOf("/")+1) ;
+					Forum forum = uiContainer.getForumById(categoryId, forumId) ;
+					path = "ForumNormalIcon//" + forum.getForumName() + "//" + path;
+				}else if(type.equals("category")){
+					path = path.substring(path.indexOf("//")+2) ;
+					Category category = uiContainer.getCategory(path) ;
+					path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
+				} else {
+					path = path.substring(path.indexOf("//")+2) ;
+					String []id = path.trim().split("/");
+					Topic topic = uiContainer.getTopic(id[2], path) ;
+					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
+				}
 				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;

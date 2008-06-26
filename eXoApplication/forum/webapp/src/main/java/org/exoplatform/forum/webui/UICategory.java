@@ -492,8 +492,21 @@ public class UICategory extends UIForm	{
 		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String userName = uiContainer.userProfile.getUserId() ;
 			if(!ForumUtils.isEmpty(path)) {
+				int t = path.indexOf("//");
+				String type = path.substring(0, t) ;
+				if(type.equals("forum")) {
+					path = path.substring(t+2) ;
+					String forumId = path.substring(path.indexOf("/")+1) ;
+					Forum forum = uiContainer.getForum(forumId) ;
+					path = "ForumNormalIcon//" + forum.getForumName() + "//" + path;
+				} else {
+					path = path.substring(t+2) ;
+					String topicId = path.substring(path.lastIndexOf("/")+1);
+					Topic topic = uiContainer.getTopic(topicId) ;
+					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
+				}
+				String userName = uiContainer.userProfile.getUserId() ;
 				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;

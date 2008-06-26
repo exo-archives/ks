@@ -42,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 public class ForumUtils {
 	public static final String FIELD_EXOFORUM_LABEL = "eXoForum".intern() ;
 	public static final String FIELD_SEARCHFORUM_LABEL = "SearchForum".intern() ;
+	
 	public static final String SEARCHFORM_ID = "SearchForm".intern() ;
 	public static final String GOPAGE_ID_T = "goPageTop".intern() ;
 	public static final String GOPAGE_ID_B = "goPageBottom".intern() ;
@@ -78,7 +79,7 @@ public class ForumUtils {
     	strCase = "Tuesday" ;
     	break;
     case 3:
-    	strCase = "Webnesday" ;
+    	strCase = "Wednesday" ;
     	break;
     case 4:
     	strCase = "Thursday" ;
@@ -293,8 +294,9 @@ public class ForumUtils {
 			int l = str.length() ;
 			if(l > max) {
 				str = str.substring(0, (max-3)) ;
-				if(str.lastIndexOf(" ") > 0)
-					str = str.substring(0, str.lastIndexOf(" ")) + "...";
+				int space = str.lastIndexOf(" ");
+				if(space > 0)
+					str = str.substring(0, space) + "...";
 				else str = str + "..." ;
 			}
 		}

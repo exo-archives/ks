@@ -73,15 +73,16 @@ public class ForumTransformHTML {
     b = StringUtils.replace(b, "[/code]", "[/CODE]");
     b = StringUtils.replace(b, "[CODE]", "<code>");
     b = StringUtils.replace(b, "[/CODE]", "</code>");
+    b = StringUtils.replace(b, "[link]", "[url]");
+    b = StringUtils.replace(b, "[/link]", "[/url]");
     b = StringUtils.replace(b, "&quot;", "\"");
-    System.out.println("\n\n" + b + "\n\n");
     //Need to get the text inbetween img's
     lastIndex=-0;;
     tagIndex=0;
     while ((tagIndex = b.indexOf("[img]", lastIndex))!=-1) {
     	lastIndex = tagIndex+1;
     	try {
-    		int clsIndex = b.indexOf("[/img]");
+    		int clsIndex = b.indexOf("[/img]", tagIndex);
     		String src = b.substring(tagIndex + 5, clsIndex);
     		buffer = new StringBuffer();
     		buffer.append("<img src=\"").append(src).append("\" />") ;
@@ -102,7 +103,7 @@ public class ForumTransformHTML {
 	    while ((tagIndex = b.indexOf(start, lastIndex)) != -1) {
 	    	lastIndex = tagIndex + 1;
 	    	try {
-	    		int clsIndex = b.indexOf(end);
+	    		int clsIndex = b.indexOf(end, tagIndex);
 	    		String content = b.substring(tagIndex+string.length()+2, clsIndex);
 	    		b = StringUtils.replace(b, start + content + end,
 	    				"<div align=\""+string+"\">" + content + "</div>");
@@ -189,7 +190,7 @@ public class ForumTransformHTML {
     while ((tagIndex = b.indexOf("[url]", lastIndex)) != -1) {
     	lastIndex = tagIndex + 1;
     	try {
-    		int clsIndex = b.indexOf("[/url]");
+    		int clsIndex = b.indexOf("[/url]", tagIndex);
     		String src = b.substring(tagIndex + 5, clsIndex);
     		b = StringUtils.replace(b, "[url]" + src + "[/url]",
     				"<a target='_blank' href=\"" + src + "\">" + src + "</a>");
@@ -335,7 +336,7 @@ public class ForumTransformHTML {
 	    while ((tagIndex = sms.indexOf(start, lastIndex))!=-1) {
 	      lastIndex = tagIndex+1;
 	      try {
-	        int clsIndex = sms.indexOf(end);
+	        int clsIndex = sms.indexOf(end, tagIndex);
 	        String content = sms.substring(tagIndex, clsIndex);
 	        String content_ = content.substring(content.indexOf("]")+1) ;
 	        sms = StringUtils.replace(sms, content + end,  content_);
@@ -367,51 +368,10 @@ public class ForumTransformHTML {
 	public static String convertCodeHTML(String s) {
 		String link = "";
 		if(s == null || s.length() <= 0) return link ;
-		int i = 0, j = 0 ;
 		s = transform(s);
-		StringBuffer buffer = new StringBuffer();
-		while (true) {
-			i = s.indexOf("http://");
-			if(i < 0)break ;
-			if(i > 6 && s.substring(i-2,i).equalsIgnoreCase("=\"")) {
-				i = s.indexOf("/>");//<img />
-				if(i < 0) {
-					i = s.indexOf("</");//</a>
-					buffer.append(s.substring(0, i+4));
-					s = s.substring(i+4);
-				} else {
-					buffer.append(s.substring(0, i+2));
-					s = s.substring(i+2);
-				}
-			}else {
-				j = 0;
-				String temp = s.substring(i) ;
-				int []Int = {9,10,32,33,34,39,40,41,42,44,60,91,93,94,123,124,125,8221,8220};
-				boolean isEnd = false ;
-				while(true) {
-					char c = temp.charAt(j);
-					for (int k : Int) {
-	          if(k == (int)c){isEnd=true; break ;}
-          }
-					if(isEnd) break ;
-					j++ ;
-					if(j == temp.length()) break;
-				}
-				j = j + i;
-				buffer.append(s.substring(0, i) + "<a target=\"_blank\" href=\"");
-				if(j <= i){
-					link = s.substring(i); 
-					buffer.append(link + "\">" + link + "</a>") ;
-					break;
-				} else {
-					link = s.substring(i, j);
-					buffer.append(link + "\">" + link + "</a>") ;
-				}
-				s = s.substring(j);
-			}
-		}
-		buffer.append(s);
-		return buffer.toString() ;
+		s = s.replaceAll("[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", "<a target=\"blank_\" href=\"$0\">$0</a>");
+		s = s.replaceAll("[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}", "<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>") ;
+		return s ;
   }
 	
 	public static String clearQuote(String s) {

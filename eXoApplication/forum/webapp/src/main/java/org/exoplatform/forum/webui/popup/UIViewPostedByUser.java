@@ -22,7 +22,6 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 
 /**
@@ -35,22 +34,19 @@ import org.exoplatform.webui.form.UIForm;
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIViewListPostOrThreadByUser.gtmpl",
     events = {
-      @EventConfig(listeners = UIViewPostedByUser.CloseActionListener.class, phase=Phase.DECODE)
+      @EventConfig(listeners = UIViewPostedByUser.CloseActionListener.class)
     }
 )
 public class UIViewPostedByUser extends UIForm implements UIPopupComponent {
+	public UIViewPostedByUser() throws Exception {
+		addChild(UIPageListPostByUser.class, null, "UIPageListPostByUser") ;
+	}
 
-  public void activate() throws Exception { 
-  }
-
-  public void deActivate() throws Exception {  }
+  public void activate() throws Exception {}
+  public void deActivate() throws Exception {}
   
   public void setUserProfile(String userId) {
-    this.getChild(UIPageListPostByUser.class).setUserProfile(userId) ;
-  }
-  
-  public UIViewPostedByUser() throws Exception {
-    addChild(UIPageListPostByUser.class, null, "UIPageListPostByUser") ;
+    this.getChild(UIPageListPostByUser.class).setUserName(userId) ;
   }
   
   static public class CloseActionListener extends EventListener<UIViewPostedByUser> {

@@ -1923,34 +1923,27 @@ public class JCRDataStorage{
 		try {
 			newProfileNode = userProfileNode.getNode(userName) ;
 			if(newProfileNode.hasProperty("exo:bookmark")) {
-				String [] temp = ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues());
-				String [] bookMarks ;
-				if(isNew) bookMarks = new String[temp.length + 1];
-				else bookMarks = new String[temp.length - 1] ;
-				boolean isWrite = true ;
+				List<String> listOld = ValuesToList(newProfileNode.getProperty("exo:bookmark").getValues());
+				List<String> listNew = new ArrayList<String>();
 				String pathNew =	bookMark.substring(bookMark.lastIndexOf("//")+1) ;
 				String pathOld = "";
-				int j = 0;
-				for (int i = 0; i < temp.length; i++) {
-					pathOld = temp[i].substring(temp[i].lastIndexOf("//")+1) ;
-					if(pathNew.equals(pathOld)) {
-						if(isNew) {temp[i] = bookMark ;isWrite = false ; break;}
-						else {isWrite = false ; continue ;}
-					}
-					if(!isNew && j == temp.length-1) {isWrite = false; break;}
-					bookMarks[j] = temp[i];
-					++j;
+				boolean isAdd = true;
+				for (String string : listOld) {
+					pathOld = string.substring(string.lastIndexOf("//")+1) ;
+	        if(pathNew.equals(pathOld)) {
+	        	if(isNew){
+	        		listNew.add(bookMark);
+	        	}
+	        	isAdd = false;
+	        	continue;
+	        }
+	        listNew.add(string) ;
+        }
+				if(isAdd) {
+					listNew.add(bookMark) ;
 				}
-				if(isNew) {
-					if(isWrite) {
-						bookMarks[temp.length] = bookMark ;
-						newProfileNode.setProperty("exo:bookmark", bookMarks);
-					}else {
-						newProfileNode.setProperty("exo:bookmark", temp);
-					}
-				}else {
-					if(!isWrite)newProfileNode.setProperty("exo:bookmark", bookMarks);
-				}
+				String[] bookMarks = listNew.toArray(new String[] {});
+				newProfileNode.setProperty("exo:bookmark", bookMarks);
 				userProfileNode.getSession().save() ;
 			} else {
 				newProfileNode.setProperty("exo:bookmark", new String[]{bookMark});

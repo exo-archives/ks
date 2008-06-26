@@ -36,7 +36,7 @@
 			   if(uicomponent.getIsPrivate(userProfile,category)) {
 					 String title = category.getCategoryName();
 					 String categoryId = category.getId();
-					 actionBookmark = uicomponent.event("AddBookMark","CategoryNormalIcon//"+title+"//"+categoryId);
+					 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
 		 %>
 			<div class="UIForumCategory">
 				<div class="ForumToolbar">
@@ -159,9 +159,8 @@
 											classIconForum = "ForumCloseIcon";
 											titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 										}
-										String id = category.getId() + "," + forum.getId();
-										actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+categoryId+'/'+forumId);
-										actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",categoryId+'/'+forumId);
+										String ids = categoryId + "/" + forumId;
+										actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
 										String lineHeight = "line-height: 12px;";
 										if(ForumUtils.isEmpty(forumDescription)) {
 											lineHeight = "line-height: 28px;";
@@ -171,7 +170,7 @@
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 											<td>
 												<div style="float: left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-													<a href="<%=uicomponent.event("OpenForumLink", id)%>" style="$lineHeight" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+													<a href="<%=uicomponent.event("OpenForumLink", ids)%>" style="$lineHeight" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 															<div action="$actionBookmark" class="ClickPopupContent"></div>
@@ -183,8 +182,7 @@
 												<div class="ForumDescription">$forumDescription</div>
 											</td>
 											<%if(topicNewPost != null) {
-												actionBookmark = uicomponent.event("AddBookMark",topicNewPostIcon+"//"+topicNewPostTitle+"//"+topicPath);
-												actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",topicPath);
+												actionBookmark = uicomponent.event("AddBookMark","topic//"+topicPath)+ ";" + uicomponent.event("AddWatching",topicPath);
 											%>
 										 	<td >
 										 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>

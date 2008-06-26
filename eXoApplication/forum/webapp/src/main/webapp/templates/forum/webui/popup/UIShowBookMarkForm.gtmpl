@@ -20,6 +20,7 @@
 						lastIndex = links.lastIndexOf("//") ;
 						linkName = links.substring(index+2,lastIndex);
 						linkPath = links.substring(lastIndex + 2);
+						links = "topicIcon//topicName//"+linkPath;
 				%>
 					<div class="LinkContent">
 						<div class="IconContent $icon"><span></span></div>

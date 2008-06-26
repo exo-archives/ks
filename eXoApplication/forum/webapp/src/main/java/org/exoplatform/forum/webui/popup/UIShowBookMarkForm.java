@@ -160,7 +160,6 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
       event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
     }
   }
-
   static  public class DeleteLinkActionListener extends EventListener<UIShowBookMarkForm> {
   	public void execute(Event<UIShowBookMarkForm> event) throws Exception {
   		String path = event.getRequestContext().getRequestParameter(OBJECTID)	;

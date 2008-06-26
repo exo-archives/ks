@@ -160,10 +160,10 @@
 								</div>
 							</div>
 							<div class="BottomLeftRightClickPopupMenu">
-							<div class="BottomRightRightClickPopupMenu">
-								<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+								<div class="BottomRightRightClickPopupMenu">
+									<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+								</div>
 							</div>
-						</div>
 						</div>
 					</div>
 				</div>
@@ -243,10 +243,10 @@
 													</div>
 												</div>
 												<div class="BottomLeftRightClickPopupMenu">
-												<div class="BottomRightRightClickPopupMenu">
-													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+													<div class="BottomRightRightClickPopupMenu">
+														<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+													</div>
 												</div>
-											</div>
 											</div>
 										</div>
 									</div>
@@ -346,17 +346,17 @@
 						<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %>	
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">								
-									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-										<div class="LeftOverButton">
-											<div class="RightOverButton">
-												<div class="CenterOverButton">
-													<div class="StatusIcon ToolIcon">
-														<div class="DownArrow1Icon">Thread Tools</div>
-													</div>
+								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="StatusIcon ToolIcon">
+													<div class="DownArrow1Icon">Thread Tools</div>
 												</div>
 											</div>
 										</div>
 									</div>
+								</div>
 								<% /*Begin Popup Menu*/ %>
 								<div style="position: relative;">
 									<div class="UIPopupCategory" style="display: none; ">
@@ -477,9 +477,9 @@
 													</div>
 												</div>
 												<div class="BottomLeftRightClickPopupMenu">
-												<div class="BottomRightRightClickPopupMenu">
-													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-												</div>
+													<div class="BottomRightRightClickPopupMenu">
+														<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+													</div>
 											</div>
 											
 											</div>
@@ -577,7 +577,7 @@
 									<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
 									<div class="Name">$owner</div>
 									<div class="ContentAction" style="float: left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-											<div class="Action" style="float: none;"><span></span></div>
+										<div class="Action" style="float: none;"><span></span></div>
 										<div style="position: relative;">
 											<div class="UIPopupCategory" style="display: none; left: 2px; top:-2px; ">
 												<div class="UIRightClickPopupMenu" style="display: block;">
@@ -700,7 +700,8 @@
 								<div class="AttachmentContent">
 								<% for(attachment in attachments) {
 										 String urlFile = uicomponent.getFileSource(attachment) ;
-								 		 String fileName = attachment.getName() ;
+										 String titleFile = attachment.getName();
+							 		 	 String fileName = ForumUtils.getSubString(titleFile, 30);
 								 		 double sizeNumber = attachment.getSize() ;
 								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
@@ -710,7 +711,7 @@
 											<div class="Image"><img id="imgView${fileName}" src="$urlFile" height="100px;"/></div>
 						 					<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-						 						<a href="$urlFile" class="AttachmentLabel" >$fileName</a>
+						 						<a href="$urlFile" class="AttachmentLabel" title="$titleFile">$fileName</a>
 						 						<div style="clear: left;"><span></span></div>
 						 						<div class="Size">Size: ${size}</div>
 						 						<div class="Action">
@@ -868,10 +869,10 @@
 								</div>
 							</div>
 							<div class="BottomLeftRightClickPopupMenu">
-							<div class="BottomRightRightClickPopupMenu">
-								<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+								<div class="BottomRightRightClickPopupMenu">
+									<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+								</div>
 							</div>
-						</div>
 						</div>
 					</div>
 				</div>
@@ -890,38 +891,38 @@
 				  <div class="ForumToolbar">
 					  <div class="LeftBar">
 					  	<div class="RightBar">
-					  		<div class="CenterBar">
-					  			<div class="Title">Forum Quick Reply</div>
-						  		<div class="CollapseButton" title="Expand category" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+								<div class="CenterBar">
+									<div class="Title">Forum Quick Reply</div>
+									<div class="CollapseButton" title="Expand category" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 									<div style="clear: both;"><span></span></div>
-					  		</div>
-					  	</div>
-					  </div>
-				  </div>
-				  <div class="ContentContainer">
-					  <div class="ForumList">
-					  	<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
-					  	<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
-				  	</div>
-				    <div class="ActionContent">
-			  	<% for(action in uicomponent.getActions()) { 
-				    	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-				       String link = uicomponent.event(action) ;
-			    %>
-			    		<a href="$link" class="ActionButton LightBlueStyle">
-		      	  	<div class="ButtonLeft">
-		        	  	<div class="ButtonRight">
-		          	  	<div class="ButtonMiddle"> $actionLabel </div>
-		            	</div>
-		          	</div>
-		        	</a>
-			    <%}%>
-			      </div>
-				  </div>
-			  </div>
-    	</tr>
-    	</tbody>
- 	  </table> 
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ContentContainer">
+						<div class="ForumList">
+							<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
+							<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
+						</div>
+						<div class="ActionContent">
+					<% for(action in uicomponent.getActions()) { 
+							 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+							 String link = uicomponent.event(action) ;
+					%>
+							<a href="$link" class="ActionButton LightBlueStyle">
+								<div class="ButtonLeft">
+									<div class="ButtonRight">
+										<div class="ButtonMiddle"> $actionLabel </div>
+									</div>
+								</div>
+							</a>
+					<%}%>
+						</div>
+					</div>
+				</div>
+			</tr>
+			</tbody>
+ 		</table> 
 	</div>
 <% } %>
 	<% } else { %>

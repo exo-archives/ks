@@ -275,8 +275,7 @@
 								classIconForum = "ForumCloseIcon";
 								titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 							}
-							actionBookmark = uicomponent.event("AddBookMark",classIconForum+"//"+forumTitle+"//"+path);
-							actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",path);
+							actionBookmark = uicomponent.event("AddBookMark","forum//"+path) + ";" + uicomponent.event("AddWatching",path);
 							String lineHeight = "line-height: 12px;";
 							if(!ForumUtils.isEmpty(forumDescription)) {
 								lineHeight = "line-height: 28px;";
@@ -298,8 +297,7 @@
 										<div class="ForumDescription">$forumDescription</div>
 									</td>
 						 <% if(topicNewPost != null) { 
-						 			actionBookmark = uicomponent.event("AddBookMark",topicNewPostIcon+"//"+topicNewPostTitle+"//"+path+"/"+topicId);
-						 			actionBookmark = actionBookmark + ";" + uicomponent.event("AddWatching",path+"/"+topicId);
+						 			actionBookmark = uicomponent.event("AddBookMark","topic//"+path+"/"+topicId) + ";" + uicomponent.event("AddWatching",path+"/"+topicId);
 						 %>
 									<td >
 								 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>

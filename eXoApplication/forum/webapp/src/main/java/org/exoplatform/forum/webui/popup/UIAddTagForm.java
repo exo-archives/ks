@@ -122,7 +122,7 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 			UIAddTagForm uiForm = event.getSource() ;
 			UIFormStringInput tagNameInput = uiForm.getUIStringInput(FIELD_TAGNAME_INPUT) ;
 			String tagName = tagNameInput.getValue() ;
-			int maxText = ForumUtils.MAXTITLE ;
+			int maxText = 50 ;
 			if(ForumUtils.isEmpty(tagName)) {
 			  throw new MessageException(new ApplicationMessage("UIAddTagForm.ms.tagnameisnull", null, ApplicationMessage.WARNING)) ;
 			}else if(tagName.length() > maxText){

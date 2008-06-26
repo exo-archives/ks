@@ -32,13 +32,14 @@
 							<div class="AttachmentTitle">Attachments:</div>
 							<div class="AttachmentContent">
 							<% for(attachment in attachments) {
-							 		 String fileName = attachment.getName() ;
+							 		 String titleFile = attachment.getName();
+							 		 String fileName = ForumUtils.getSubString(titleFile, 30);
 							 		 long sizeNumber = attachment.getSize() ;
 							 		 String size =ForumUtils.getSizeFile(sizeNumber) ;
 							%>
 								<div class="AttachmentBox">
 									<div class="AttachmentIcon WordIcon"><span/></div>
-									<a class="AttachmentLabel" href="#">$fileName</a>
+									<a class="AttachmentLabel" title="$titleFile" href="#">$fileName</a>
 									<div style="clear: left;"><span/></div>
 									<div class="Size">Size: ${size}</div>
 								</div>
@@ -56,7 +57,8 @@
 								<%
 									for(attachment in attachments) {
 										 String urlFile = uicomponent.getFileSource(attachment) ;
-								 		 String fileName = attachment.getName() ;
+								 		 String titleFile = attachment.getName();
+							 		 	 String fileName = ForumUtils.getSubString(titleFile, 30);
 								 		 String unit = "Bytes" ;
 								 		 double sizeNumber = attachment.getSize() ;
 								 		 String size = ForumUtils.getSizeFile(sizeNumber);
@@ -67,7 +69,7 @@
 											<div class="Image"><img src="$urlFile" height="100px;"/></div>
 						 					<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-						 						<a href="$urlFile" class="AttachmentLabel" >$fileName</a>
+						 						<a href="$urlFile" class="AttachmentLabel" title="$titleFile">$fileName</a>
 						 						<div style="clear: left;"><span></span></div>
 						 						<div class="Size">Size: ${size}</div>
 						 						<div class="Action">

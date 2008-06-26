@@ -22,11 +22,11 @@
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 						<thead>
 							<tr>
-								<th style="width: 40px;"></th>
+								<th width="40px"></th>
 								<th>Post name</th>
-								<th style="width: 120px;">Created Date</th>
+								<th width="120px">Created Date</th>
 								<%if(isAdmin){ %>
-								<th style="width: 120px;">IP Logging</th>
+								<th width="120px">IP Logging</th>
 								<%} %>
 							</tr>
 						</thead>
@@ -41,7 +41,6 @@
 									String postTitle = post.getName() ;
 									String message = ForumTransformHTML.cleanHtmlCode(post.getMessage()) ;
 									String titlePost = ForumUtils.getSubString(message, 100);
-									else titlePost = message ;
 									String iconPost = post.getIcon() ;
 									Date postDate = post.getCreatedDate() ;
 									postDate.setTime(postDate.getTime() - setTime) ;

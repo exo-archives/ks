@@ -208,10 +208,11 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		for(ForumAttachment attachdata : attachments_) {
 			ActionData fileUpload = new ActionData() ;
 			fileUpload.setActionListener("") ;
-			fileUpload.setActionType(ActionData.TYPE_ICON) ;
+			fileUpload.setActionType(ActionData.TYPE_ATT) ;
 			fileUpload.setCssIconClass("AttachmentIcon ZipFileIcon") ;
-			String size = ForumUtils.getSizeFile((double)attachdata.getSize()) ;
-			fileUpload.setActionName(attachdata.getName() + "("+size+")") ;
+			String fileName = ForumUtils.getSizeFile((double)attachdata.getSize());
+			fileName = attachdata.getName() + "("+ fileName +")" ;
+			fileUpload.setActionName(fileName) ;
 			fileUpload.setShowLabel(true) ;
 			uploadedFiles.add(fileUpload) ;
 			ActionData removeAction = new ActionData() ;

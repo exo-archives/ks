@@ -63,21 +63,13 @@ public class UIPageListPostByUser extends UIContainer{
     }
 		return this.userProfile ;
 	}
-  public void setUserProfile(String userId) {
+	
+  public void setUserName(String userId) {
     this.userName = userId ;
-    try {
-      this.userProfile = new UserProfile() ;
-      this.userProfile.setUser(ForumSessionUtils.getUserByUserId(userId)) ;
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
   }
   
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Post> getPostsByUser() throws Exception {
-    if(this.userName == null)
-      this.userName = ((UIModeratorManagementForm)this.getParent()).getProfile().getUserId() ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		JCRPageList pageList  = forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), this.userName) ;
 		forumPageIterator.updatePageList(pageList) ;
