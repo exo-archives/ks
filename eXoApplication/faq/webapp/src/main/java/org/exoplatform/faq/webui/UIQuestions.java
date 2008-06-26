@@ -671,7 +671,7 @@ public class UIQuestions extends UIContainer {
           List<Category> listCate = question.getAllSubCategory(categoryId) ;
         	for(Category category : listCate) {
           	String id = category.getId() ;
-          	List<Question> listQuestion = faqService.getQuestionsByCatetory(id, FAQUtils.getSystemProvider()).getAll() ;
+          	List<Question> listQuestion = faqService.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider()).getAll() ;
             for(Question ques: listQuestion) {
             	String questionId = ques.getId() ;
             	faqService.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;
