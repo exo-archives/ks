@@ -237,20 +237,9 @@
 }
 
 /******************************	End OverButton	***************************************/
-.UIForumPortlet .UIRightClickPopupMenu .DisableMenuItem {
-	color:#cccccc ;	
-}
-
-.UIForumPortlet .UIRightClickPopupMenu a:hover.DisableMenuItem {
-	color:#cccccc ;	
-}
 
 .UIForumPortlet .SelectedItem {
 	background: #ffffcc ;
-}
-
-.UIForumPortlet .DisableLabel {
-	opacity:0.3;
 }
 
 .UIForumPortlet .UIPageIterator .Number {
@@ -364,3 +353,10 @@
 	height: auto;
 }
 
+.UIForumPortlet .DisabelLabel {
+	color: gray;
+	display:block;
+	line-height:16px;
+	white-space:nowrap;
+	cursor: none;
+}
