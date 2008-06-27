@@ -369,6 +369,7 @@ public class JCRDataStorage{
 				List<String> moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
 				if(moderators.size() > 0) {
 					for (String string : moderators) {
+						string = string.trim();
 						list = new ArrayList<String>() ;
 						try {
 							userProfileNode = userProfileHomeNode.getNode(string) ; 
@@ -394,6 +395,7 @@ public class JCRDataStorage{
 							userProfileNode.setProperty("exo:moderateForums", strings);
 							userProfileNode.setProperty("exo:userRole", 1);
 							userProfileNode.setProperty("exo:userTitle", Utils.MODERATOR);
+							userProfileHomeNode.save();
 						}
 					}
 				}
@@ -520,6 +522,28 @@ public class JCRDataStorage{
 			if(count < 0) count = 0;
 			forumStatistic.setProperty("exo:postCount", count) ;
 			forumHomeNode.getSession().save() ;
+			String []moderators = forum.getModerators();
+			Node userProfileHomeNode = getUserProfileNode(sProvider) ;
+			Node userProfileNode ;
+			forumId = forum.getForumName() + "(" + categoryId + "/" + forumId;
+			List<String> list ;
+			for (String user : moderators) {
+				list = new ArrayList<String>();
+				
+				try{
+					userProfileNode = userProfileHomeNode.getNode(user.trim());
+					list.addAll(ValuesToList(userProfileNode.getProperty("exo:moderateForums").getValues()));
+					if(list.contains(forumId)) list.remove(forumId) ;
+					userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
+					if(list.size() == 0) {
+						userProfileNode.setProperty("exo:userRole", 2);
+						userProfileNode.setProperty("exo:userTitle", Utils.USER);
+					}
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+      }
+			userProfileHomeNode.getSession().save();
 			return forum;
 		} catch (PathNotFoundException e) {
 			return null ;
