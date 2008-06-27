@@ -245,7 +245,6 @@
   background: url('background/questionIcon.PNG') no-repeat left 0px;
   padding-left: 28px;
   line-height: 18px;
-  margin: 8px 0px;
   white-space:normal;
   min-height: 18px ;
 }
@@ -266,8 +265,10 @@
 }
 
 .UIFAQPortlet .QuestionContainer {
-  padding-top: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   _padding-top: 3px;
+  _padding-bottom: 3px;
 }
 
 
