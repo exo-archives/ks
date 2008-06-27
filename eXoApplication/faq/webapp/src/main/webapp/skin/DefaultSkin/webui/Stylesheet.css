@@ -251,10 +251,8 @@
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
   background: url('background/NotResponse.gif') no-repeat left 0px;
-  padding-left: 28px;
-  line-height: 18px;
-  white-space:normal;
-  min-height: 18px ;
+  height: 16px ; width: 28px;
+  float: left;
 }
 
 .UIFAQPortlet .NotApproved {
@@ -265,10 +263,7 @@
 }
 
 .UIFAQPortlet .QuestionContainer {
-  padding-top: 4px;
-  padding-bottom: 4px;
-  _padding-top: 3px;
-  _padding-bottom: 3px;
+  margin: 8px 0px;
 }
 
 
@@ -276,7 +271,6 @@
   display:table-cell;
   float: left;
   line-height:18px;
-  max-width: 97%;
   padding-right: 5px ;
   white-space:normal;
 }
