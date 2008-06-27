@@ -324,7 +324,7 @@
 														 			classDisable = "DisableMenuItem" ;
 														 		}
 														 %>
-																<a class="MenuItem $classDisable" href="$link">	 
+																<a class="DisabelLabel" href="$link">	 
 																	<div class="ItemIcon $classIcon">
 																		$itemLabel
 																	</div>
