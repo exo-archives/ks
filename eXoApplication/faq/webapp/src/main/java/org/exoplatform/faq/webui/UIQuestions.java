@@ -354,7 +354,7 @@ public class UIQuestions extends UIContainer {
       InputStream input = attachment.getInputStream() ;
       String fileName = attachment.getName() ;
       return getFileSource(input, fileName, dservice);
-    } catch (PathNotFoundException e) {
+    } catch (Exception e) {
       e.printStackTrace() ;
       return null;
     }

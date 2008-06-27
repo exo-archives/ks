@@ -249,7 +249,7 @@
 			%>
 			<div class="QuestionContainer">
 				<div class="$questionIcon" ><span></span></div>
-				<div style="float: left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+				<div style="float: left; width: 95%;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 					<!-- question content -->
 						<%
 						String titleQuestion = "" ;
