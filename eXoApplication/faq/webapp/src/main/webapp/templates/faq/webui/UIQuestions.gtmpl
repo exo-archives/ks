@@ -248,7 +248,8 @@
 					}
 			%>
 			<div class="QuestionContainer">
-				<div class="$questionIcon"  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+				<div class="$questionIcon" ><span></span></div>
+				<div style="float: left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 					<!-- question content -->
 						<%
 						String titleQuestion = "" ;
@@ -274,14 +275,12 @@
 					<%}
 						if(!question.isApproved()) {%>
 							<div class="NotApproved"><span></span></div>
-							<div style="clear: left;"><span></span></div>
 					<%}%>
 							<div style="clear: left;"><span></span></div>
 						<% if(titleQuestion.trim().length() > 0) {%>
 							<div id="titleQuestion$questionId" class="questionTitle">
 								$titleQuestion
 							</div>
-							<div style="clear: left;"><span></span></div>
 					<%}%>
 				<!-- action of this question -->
 					<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;">
@@ -338,6 +337,7 @@
 					</div>
 					
 				</div>
+				<div style="clear: left;"><span></span></div>
 			</div>	
 					<%if(uicomponent.getQuestionView().equals(qId)) {
 						String responseBy = "..." ;
