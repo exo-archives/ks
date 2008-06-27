@@ -283,7 +283,7 @@
 
 .UIFAQPortlet .FAQContainer .FAQContent .questionTitle {
   width: 800px ;
-  z-index: 10 ;
+  z-index: 5 ;
   display: none ;
   border:1px solid #7E7E7F;
   background:#F6F6F6 none repeat scroll 0%;
