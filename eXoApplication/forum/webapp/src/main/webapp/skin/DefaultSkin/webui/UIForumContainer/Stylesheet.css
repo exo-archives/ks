@@ -119,6 +119,10 @@
 	margin: 0px 310px 0px 0px;
 }
 
+.UIForumContainer .LeftStartsList .ForumCategory {
+	width: 99%;
+}
+
 .UIForumContainer .RightStartsList {
 	float: right;
 	width: 300px;
