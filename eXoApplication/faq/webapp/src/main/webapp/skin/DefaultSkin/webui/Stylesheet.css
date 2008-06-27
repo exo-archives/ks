@@ -1053,3 +1053,11 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .SubCategoryForm .UIFormGrid .UIFormGrid {
   width: auto;
 }
+
+.UIFAQPortlet .UICategoryForm .UIFormGrid {
+  width: 100%;
+}
+
+.UIFAQPortlet .UICategoryForm .UIFormGrid .UIFormGrid {
+  width: auto;
+}
