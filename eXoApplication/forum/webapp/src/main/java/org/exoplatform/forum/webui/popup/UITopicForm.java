@@ -136,7 +136,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     UIFormTextAreaInput canView = new UIFormTextAreaInput(FIELD_CANVIEW_INPUT, FIELD_CANVIEW_INPUT, null);
     UIFormTextAreaInput canPost = new UIFormTextAreaInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true);
-		
+		formWYSIWYGInput.addValidator(MandatoryValidator.class);
 		UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
 		uiIconSelector.setSelectedIcon("IconsView");
 		
@@ -334,9 +334,16 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String topicTitle = "  " + stringInputTitle.getValue();
 			topicTitle = topicTitle.trim() ;
 			int maxText = ForumUtils.MAXTITLE ;
+			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(topicTitle.length() > maxText) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_TOPICTITLE_INPUT), String.valueOf(maxText) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
+			if(!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
+				Object[] args = { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
@@ -371,7 +378,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
 				String erroUser = ForumSessionUtils.checkValueUser(canPost) ;
 	    	if(!ForumUtils.isEmpty(erroUser)) {
-	    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 	    		Object[] args = { uiForm.getLabel(FIELD_CANPOST_INPUT), erroUser };
 	    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 	    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -379,7 +385,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	    	}
 	    	erroUser = ForumSessionUtils.checkValueUser(canView) ;
 	    	if(!ForumUtils.isEmpty(erroUser)) {
-	    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 	    		Object[] args = { uiForm.getLabel(FIELD_CANVIEW_INPUT), erroUser };
 	    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 	    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -423,7 +428,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setCanPost(canPosts);
 				if(!ForumUtils.isEmpty(uiForm.topicId)) {
 					topicNew.setId(uiForm.topicId);
-					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 					topicNew.setEditReason(editReason) ;
           try {
             forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, false, false);
@@ -432,7 +436,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     				topicDetail.setIsEditTopic(true) ;
           } catch (PathNotFoundException e) {
             // hung.hoang add
-            UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
             uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
             return ;            
@@ -449,7 +452,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ; 
     				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
     				forumPortlet.cancelAction() ;
-    				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
     				uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
     				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
@@ -462,7 +464,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				if(uiForm.forum != null) hasForumMod = uiForm.forum.getIsModerateTopic() ;
 				if(isOffend || hasForumMod) {
 					Object[] args = { "" };
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
 					else {
 						args = new Object[]{ "forum", "thread" };
@@ -473,7 +474,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
 				String sms = "" ;
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				if(k == 0) {
 					sms = "Thread Title" ;
 					if(t <= 4) sms = "Thread Title and Message";

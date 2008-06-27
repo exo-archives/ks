@@ -269,9 +269,16 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
 				//uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			int maxText = ForumUtils.MAXTITLE ;
+			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(postTitle.length() > maxText) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
+			if(!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
+				Object[] args = { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
@@ -322,7 +329,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						topicDetail.setIdPostView("true");
 						topicDetail.setUpdatePostPageList(true);
 					} else{
-						String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
 						post.setId(uiForm.postId) ;
 						post.setModifiedBy(userName) ;
 						post.setModifiedDate(new Date()) ;
@@ -343,7 +349,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				if(isOffend || hasTopicMod) {
           topicDetail.setIdPostView("normal");
 					Object[] args = { "" };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
 					else {
 						args = new Object[]{ "thread", "post" };
