@@ -100,16 +100,6 @@ public class FAQUtils {
   	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   	return organizationService.getUserHandler().findUserByName(userId) ;
   }
-	
-	public static Group getGroup(String group) throws Exception {
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	return organizationService.getGroupHandler().findGroupById(group) ;
-  }
-	
-  public static MembershipType getMember(String member) throws Exception {
-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		return organizationService.getMembershipTypeHandler().findMembershipType(member) ;
-	}
   
   @SuppressWarnings("unchecked")
   public static List<User> getAllUser() throws Exception {
