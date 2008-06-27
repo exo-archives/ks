@@ -110,16 +110,17 @@ public class QuestionPageList extends JCRPageList {
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
         FileAttachment attachment = new FileAttachment() ;
+        nodeFile = node.getNode("jcr:content") ;
+        attachment.setPath(node.getPath()) ;
+        attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+        attachment.setName(node.getName());
+        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
         try{
-          nodeFile = node.getNode("jcr:content") ;
-          attachment.setPath(node.getPath()) ;
-          attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-          attachment.setName(node.getName());
-          attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
           if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
           else attachment.setSize(0);
         } catch (Exception e) {
           attachment.setSize(0);
+          e.printStackTrace();
         }
         attList.add(attachment);
       }

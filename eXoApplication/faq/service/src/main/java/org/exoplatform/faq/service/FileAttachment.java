@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.faq.service;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import javax.jcr.ItemNotFoundException;
@@ -65,13 +66,15 @@ public class FileAttachment {
   	else {
   		Node attachment ;
       try{
-        attachment = (Node)getSesison().getItem(getPath()) ;      
+        attachment = (Node)getSesison().getItem(getPath()) ;
+        return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
       }catch (ItemNotFoundException e) {  
         return null ;
       } catch (PathNotFoundException ex) {
         return  null;
+      } catch(FileNotFoundException fileNotFoundException) {
+        return null;
       }
-      return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
   	}
   }
   

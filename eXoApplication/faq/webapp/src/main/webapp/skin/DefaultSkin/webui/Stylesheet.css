@@ -243,10 +243,8 @@
 
 .UIFAQPortlet .FAQContainer .FAQContent .Question {
   background: url('background/questionIcon.PNG') no-repeat left 0px;
-  padding-left: 28px;
-  line-height: 18px;
-  white-space:normal;
-  min-height: 18px ;
+  height: 16px ; width: 28px;
+  float: left;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
@@ -273,6 +271,7 @@
   line-height:18px;
   padding-right: 5px ;
   white-space:normal;
+  max-width: 95%;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .questionTitle {
