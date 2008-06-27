@@ -167,7 +167,7 @@ public class JCRDataStorage {
     }
     
     //Send notifycation when add new qustion in watching category
-    if(isNew) {
+    if(isNew && question.isApproved()) {
     	try {
     		Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
       	if(cate.isNodeType("exo:faqWatching")){
@@ -187,7 +187,7 @@ public class JCRDataStorage {
     	}    	
     }
     // Send notifycation when question responsed or edited or watching
-  	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0) {
+  	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0 && question.isApproved()) {
   		try {
   			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
       	if(cate.isNodeType("exo:faqWatching")){

@@ -18,7 +18,6 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -151,17 +150,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     }
     return null ;
   }
-  
-	@SuppressWarnings("unused")
-  private List<Category> getCategories() throws Exception {
-		List<Category> categorys =	new ArrayList<Category>();
-		for (Category category :faqService_.getAllCategories(FAQUtils.getSystemProvider())) {
-			if( !category.getId().equals(categoryId_) ) {
-				categorys.add(category) ;
-			}
-		}
-		return categorys ;
-	}
 	
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
     public void execute(Event<UIMoveCategoryForm> event) throws Exception {
