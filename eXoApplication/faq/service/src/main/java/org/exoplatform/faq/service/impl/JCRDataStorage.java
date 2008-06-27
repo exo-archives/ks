@@ -167,7 +167,6 @@ public class JCRDataStorage {
     }
     
     //Send notifycation when add new qustion in watching category
-    questionNode.getSession().save() ;
     if(isNew) {
     	try {
     		Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
