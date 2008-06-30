@@ -5,7 +5,8 @@
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.service.JCRPageList ;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
-	import org.exoplatform.forum.ForumUtils ; 
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.ForumSessionUtils; 
 	import java.util.GregorianCalendar;
 	import java.util.Date ; 
@@ -47,7 +48,7 @@
 									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
-									String titlePost = uicomponent.cleanHtmlCode(topic.getDescription());
+									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
@@ -112,7 +113,7 @@
 						 		%>
 						 		<tr>
 						 				<td colspan="7" align="center">
-						 					<div style="margin: 5px 0px 10px 0px"><b>Have not any topics</b></div>
+						 					<div style="margin: 5px 0px 10px 0px"><b>No Threads!</b></div>
 						 				</td>
 						 			</tr>
 					 		<%

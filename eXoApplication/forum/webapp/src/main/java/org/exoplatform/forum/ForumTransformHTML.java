@@ -54,8 +54,6 @@ public class ForumTransformHTML {
 	        String bbc_= bbc.toLowerCase() ;
 	        b = StringUtils.replace(b, "["+bbc + content + end, "["+bbc_ + content + "[/"+bbc_+"]");
 	      }  catch (Exception e) {
-	        System.out.println("Error in bbcode near char: " + tagIndex );
-	        e.printStackTrace();
 	        continue;
 	      }
 	    }
@@ -88,8 +86,6 @@ public class ForumTransformHTML {
     		buffer.append("<img src=\"").append(src).append("\" />") ;
     		b = StringUtils.replace(b, "[img]" + src + "[/img]", buffer.toString());
     	}  catch (Exception e) {
-    		System.out.println("Error in bbcode near char: " + tagIndex );
-    		e.printStackTrace();
     		continue;
     	}
     }
@@ -108,8 +104,6 @@ public class ForumTransformHTML {
 	    		b = StringUtils.replace(b, start + content + end,
 	    				"<div align=\""+string+"\">" + content + "</div>");
 	    	} catch (Exception e) {
-	    		System.out.println("Error in bbcode near char: " + tagIndex);
-	    		e.printStackTrace();
 	    		continue;
 	    	}
 	    }
@@ -133,8 +127,6 @@ public class ForumTransformHTML {
     		buffer.append("<font size=\"").append(size_).append("\">").append(text).append("</font>") ;
     		b = StringUtils.replace(b, "[size=" + size + "]" + text + "[/size]", buffer.toString() );
     	} catch (Exception e) {
-    		System.out.println("Error in bbcode near char: " + tagIndex );
-    		e.printStackTrace();
     		continue;
     	}
     }
@@ -156,8 +148,6 @@ public class ForumTransformHTML {
     		buffer.append("<font color=\"").append(color_).append("\">").append(text).append("</font>") ;
     		b = StringUtils.replace(b, "[color=" + color + "]" + text + "[/color]", buffer.toString() );
     	} catch (Exception e) {
-    		System.out.println("Error in bbcode near char: " + tagIndex );
-    		e.printStackTrace();
     		continue;
     	}
     }
@@ -179,8 +169,6 @@ public class ForumTransformHTML {
     		buffer.append("<a target='_blank' href=\"").append(href_).append("\">").append(text).append("</a>") ;
     		b = StringUtils.replace(b, "[url=" + href + "]" + text + "[/url]", buffer.toString() );
     	} catch (Exception e) {
-    		System.out.println("Error in bbcode near char: " + tagIndex );
-    		e.printStackTrace();
     		continue;
     	}
     }
@@ -195,8 +183,6 @@ public class ForumTransformHTML {
     		b = StringUtils.replace(b, "[url]" + src + "[/url]",
     				"<a target='_blank' href=\"" + src + "\">" + src + "</a>");
     	} catch (Exception e) {
-    		System.out.println("Error in bbcode near char: " + tagIndex);
-    		e.printStackTrace();
     		continue;
     	}
     }
@@ -226,8 +212,6 @@ public class ForumTransformHTML {
         buffer.append("<div class='").append(css).append("'>").append(text).append("</div>") ;
         b = StringUtils.replace(b, "[css:" + css + "]" + text + "[/css]",buffer.toString());
       } catch (Exception e) {
-        System.out.println("Error in BBcode near char: " + tagIndex );
-        e.printStackTrace();
         continue;
       }
     }
@@ -250,8 +234,6 @@ public class ForumTransformHTML {
     				"[quote=" + userName + "]" + text + "[/quote]",
     				buffer.toString());
     	} catch (Exception e) {
-    		System.out.println("Error in BBcodeSmall near char: " + tagIndex );
-    		e.printStackTrace();
     		continue;
     	}
     }
@@ -268,8 +250,6 @@ public class ForumTransformHTML {
     				"[quote]" + text + "[/quote]",
     				buffer.toString());
     	} catch (Exception e) {
-    		System.out.println("Error in BBcodeSmall near char: " + tagIndex );
-    		e.printStackTrace();
     		continue;
     	}
     }
@@ -309,8 +289,6 @@ public class ForumTransformHTML {
                     "<a href=\"" + href +
                     "\">" + text + "</a>");
       } catch (Exception e) {
-        System.out.println("Error in bbcode near char: " + tagIndex );
-        e.printStackTrace();
         continue;
       }
     }
@@ -341,8 +319,6 @@ public class ForumTransformHTML {
 	        String content_ = content.substring(content.indexOf("]")+1) ;
 	        sms = StringUtils.replace(sms, content + end,  content_);
 	      }  catch (Exception e) {
-	        System.out.println("Error in bbcode near char: " + tagIndex );
-	        e.printStackTrace();
 	        continue;
 	      }
 	    }
@@ -365,6 +341,11 @@ public class ForumTransformHTML {
 		return sms;
 	}
 	
+	public static String getTitleInHTMLCode(String s) {
+		s = cleanHtmlCode(s);
+		s = s.replaceAll("&nbsp;&nbsp;", "&nbsp;").replaceAll("&nbsp; ", " ").replaceAll("\n", "") ;
+		return s;
+	}
 	public static String convertCodeHTML(String s) {
 		String link = "";
 		if(s == null || s.length() <= 0) return link ;
@@ -379,6 +360,14 @@ public class ForumTransformHTML {
 		StringBuffer buffer = new StringBuffer();
 		 s = StringUtils.replace(s, "[/QUOTE]", "[/quote]");
 	   s = StringUtils.replace(s, "[QUOTE", "[quote");
+	   s = s.trim();
+	   System.out.println("\n\n" + s);
+	   if(s.indexOf("<br/>") == 0) s = s.replaceFirst("<br/>", "") ;
+	   if(s.indexOf("<p>") == 0) {
+	  	 s = s.replaceFirst("<p>", "") ;
+	  	 s = s.replaceFirst("</p>", "") ;
+	   }
+	   System.out.println("\n\n" + s + "\n\n");
 		while(true) {
 			int t = s.indexOf('['+"quote");
 			if(t < 0 ) break;

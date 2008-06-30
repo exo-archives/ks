@@ -23,13 +23,19 @@
 		  </div>
 		  <div class="ContentContainer">
 			  <div class="ForumList">
-			  	<div class="text"> 
-			  	<% boolean isMod = false ; 
+			  	<div class="text">
+			  	<% boolean isMod = false ;
+			  	int i = 1;
 			  	for(moderator in moderators) {
-				  	isMod = true ; 
+				  	isMod = true ;
+				  	if(i == moderators.size()) {
 			  	%>
+			  		<a href="#">$moderator</a>
+			  	<%}else {%> 
 			  		<a href="#">$moderator</a>,
-			  	<% } 
+			  	<%}
+			  	 ++i;
+			  	}			  	
 			  	if(!isMod){%>
 			  	<div>Not moderator</div>
 			  	<% } %>

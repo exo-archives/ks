@@ -4,6 +4,7 @@
 	import org.exoplatform.forum.service.Tag ;
 	import org.exoplatform.forum.webui.UIForumPageIterator ;
 	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 %>
 <% uiform.begin() %>
@@ -139,7 +140,7 @@
 									Date postDate = topic.getLastPostDate();
 									postDate.setTime(postDate.getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);	
-									String titlePost = uicomponent.cleanHtmlCode(topic.getDescription());
+									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									int att = topic.getNumberAttachment() ;
 									if(att < 0) att = 0;

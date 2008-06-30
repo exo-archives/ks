@@ -324,7 +324,7 @@
 														 			classDisable = "DisableMenuItem" ;
 														 		}
 														 %>
-																<a class="DisabelLabel" href="$link">	 
+																<a class="$classDisable" href="$link">	 
 																	<div class="ItemIcon $classIcon">
 																		$itemLabel
 																	</div>
@@ -363,8 +363,8 @@
 								<th style="width: 96px;">Rating</th>
 								<th style="width: 40px;">Tag</th>
 								<th style="width: 130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon">Last posts</div></a></th>
-								<th style="width: 50px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon">Replies</div></a></th>
-								<th style="width: 50px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon">Views</div></a></th>
+								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon">Replies</div></a></th>
+								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon">Views</div></a></th>
 								<% if(canEdit) { %>
 								<th style="width: 30px;"><input type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 								<% } %>
@@ -401,7 +401,7 @@
 										Date postDate = topic.getLastPostDate() ;
 										postDate.setTime(postDate.getTime() - setTime);
 										String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
-										String titlePost = ForumTransformHTML.cleanHtmlCode(topic.getDescription());
+										String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
 										titlePost = ForumUtils.getSubString(titlePost, 100);
 										int att = topic.getNumberAttachment() ;
 										if(att < 0) att = 0;

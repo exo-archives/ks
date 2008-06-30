@@ -1402,12 +1402,16 @@ public class JCRDataStorage{
 		List<Message> messages = new ArrayList<Message> () ;
 		List<String> emails_ = new ArrayList<String>();
 		ServerConfiguration config = getServerConfig() ;
+		Message message_;
 		for(String string : emails) {
 			if(emails_.contains(string)) continue ;
 			emails_.add(string) ;
-			message.setMessageTo(string) ;
-			message.setFrom(config.getUserName()) ;
-			messages.add(message) ;
+			message_ = new Message();
+			message_.setSubject(message.getSubject());
+			message_.setMessageBody(message.getMessageBody());
+			message_.setMessageTo(string) ;
+			message_.setFrom(config.getUserName()) ;
+			messages.add(message_) ;
 		}
 		try{
 			if(messages.size() > 0) {

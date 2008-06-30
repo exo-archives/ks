@@ -135,7 +135,7 @@ public class UISearchForm extends UIForm implements UISelector {
 		isLock.setValue("all");
 		list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>("All", "all")) ;
-		list.add(new SelectItemOption<String>("UnClose", "false")) ;
+		list.add(new SelectItemOption<String>("Open", "false")) ;
 		list.add(new SelectItemOption<String>("Closed", "true")) ;
 		UIFormSelectBox isClosed = new UIFormSelectBox(FIELD_ISCLOSED_SELECTBOX, FIELD_ISCLOSED_SELECTBOX, list) ;
 		isLock.setValue("all");
