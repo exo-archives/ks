@@ -262,7 +262,7 @@
 									$questionContent
 								</a>
 					<%	} else {%>
-								<a href="$linkQuestion" style="width: 95%;" class="ViewQuestionNotApproved">
+								<a href="$linkQuestion" class="ViewQuestionNotApproved" style="_width:95%;">
 									$questionContent
 								</a>
 						<%}
