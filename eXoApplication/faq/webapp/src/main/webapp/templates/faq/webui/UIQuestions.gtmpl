@@ -247,8 +247,8 @@
 						questionIcon = "NotResponse" ;
 					}
 			%>
-			<div class="QuestionContainer">
-				<div class="$questionIcon" ><span></span></div>
+			<div class="QuestionContainer" id="$qId">
+				<div class="$questionIcon"><span></span></div>
 				<div style="float: left; width: 95%;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 					<!-- question content -->
 						<%
@@ -453,10 +453,10 @@
 								
 							</style>
 							<div class="UIAction ResponsActions" >
-									<div style="float:left">
-										<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :</b> $responseBy , $date
-									</div>
-									<div style="float:right">
+								<div style="float:left">
+									<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :</b> $responseBy , $date
+								</div>
+								<div style="float:right">
 									<div class="PrintAction" style="display:none ;">
 										<a href="javascript:window.print() ;" class="ActionButton LightBlueStyle">
 					      	  	<div class="ButtonLeft">
@@ -568,8 +568,8 @@
 						        	</a>
 					          <%}%>
 									</div>
-							</div>
-							<div style="clear: both;"><span></span></div>
+								</div>
+								<div style="clear: both;"><span></span></div>
 							</div>
 						</div>
 					<%}%>
@@ -607,6 +607,13 @@
 			<div style="clear:right;"><span></span></div>
 			</div>
 		</div>
+		
+		<%
+			if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {
+		  	String divId = uicomponent.getQuestionView();
+		  	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.jumpToDiv('"+divId+"');");
+		  }
+		%>
 	</div>
 <% /* End View category*/ %>
 </div>
