@@ -1,5 +1,10 @@
 function UIFAQPortlet() {};
 
+UIFAQPortlet.prototype.jumpToDiv = function(id) {
+	var obj = document.getElementById(id);
+	if(obj)obj.scrollIntoView(true);
+};
+
 UIFAQPortlet.prototype.OverButton = function(oject) {
 	if(oject.className.indexOf("Action") > 0){
 		var Srt = "";
