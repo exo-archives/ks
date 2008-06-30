@@ -164,12 +164,7 @@ public class UITopicsTag extends UIForm {
 		double voteRating = topic.getVoteRating() ;
 		return ForumUtils.getStarNumber(voteRating) ;
 	}
-	
-	@SuppressWarnings("unused")
-	private String cleanHtmlCode(String sms) {
-		return ForumTransformHTML.cleanHtmlCode(sms);
-	}
-	
+
 	@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
 		String []ids = new String[tagIds.length-1] ; 

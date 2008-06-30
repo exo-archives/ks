@@ -862,8 +862,8 @@ public class UITopicContainer extends UIForm {
 				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 5) ;
 			} 
 			if(topics.size() == 0){
-				Object[] args = { "UnWaiting" };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheck", args, ApplicationMessage.WARNING)) ;
+				Object[] args = {};
+				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckUnWait", args, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

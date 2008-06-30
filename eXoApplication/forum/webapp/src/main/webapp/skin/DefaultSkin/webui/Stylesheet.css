@@ -353,10 +353,11 @@
 	height: auto;
 }
 
-.UIForumPortlet .DisabelLabel {
-	color: gray;
+.UIForumPortlet .DisableMenuItem {
 	display:block;
 	line-height:16px;
 	white-space:nowrap;
 	cursor: none;
+	filter: alpha(opacity: 50);
+	-moz-opacity: 0.5;
 }

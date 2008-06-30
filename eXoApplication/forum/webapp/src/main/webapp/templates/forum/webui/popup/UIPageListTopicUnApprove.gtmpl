@@ -3,7 +3,8 @@
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
-	import org.exoplatform.forum.ForumUtils ; 
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML;
   UserProfile userProfile = uicomponent.getUserProfile() ;
   List topics = uicomponent.getTopicsUnApprove() ;
 %>
@@ -39,7 +40,7 @@
 									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
-									String titlePost = uicomponent.cleanHtmlCode(topic.getDescription());
+									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postView = String.valueOf(topic.getViewCount());
 									String titleTopicStatus = "Hot thread with new post" ;
@@ -75,7 +76,7 @@
 					 		%>
 					 			<tr>
 					 				<td colspan="5" align="center">
-					 					<div class="ContentNotPost1">Empty</div>
+					 					<div class="ContentNotPost1">No Threads!</div>
 					 				</td>
 					 			</tr>
 					 		<%}%>

@@ -95,14 +95,6 @@ public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent
 		return topics ;
 	}
 	
-
-	
-	@SuppressWarnings("unused")
-	private String cleanHtmlCode(String sms) {
-		return ForumTransformHTML.cleanHtmlCode(sms);
-	}
-
-
   private Topic getTopic(String topicId) throws Exception {
     List<Topic> listTopic = this.topics ;
     for (Topic topic : listTopic) {

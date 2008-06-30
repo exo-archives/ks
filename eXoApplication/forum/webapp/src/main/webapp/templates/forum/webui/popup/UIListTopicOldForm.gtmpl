@@ -41,7 +41,7 @@
 									String topicBy = topic.getOwner();
 									String isActive = "" + topic.getIsActive();
 									String lastPostDate = ForumUtils.getFormatDate(formatDate, topic.getCreatedDate());
-									String titlePost = ForumTransformHTML.cleanHtmlCode(topic.getDescription());
+									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postCount = String.valueOf(topic.getPostCount());
 									String titleTp = "Active";
@@ -55,7 +55,7 @@
 										<% } %>
 											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="TitleNorman">$topicTitle</a>
 										</div>
-										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
+										<div ><a class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$isActive</div></td>
 								 	<td class="Tdbox" align="center"><div>$lastPostDate</div></td>
@@ -66,7 +66,7 @@
 												<a href="<%=uicomponent.event("ActiveTopic",topicId)%>" style="float: left;">
 													 <div class="Icon16x16 Topic${titleTp}Icon" title="$titleTp this Thread"><span></span></div>							
 												</a>
-												<a href="<%=uicomponent.event("DeleteTopic",topic.getPath())%>" style="float: left;">
+												<a href="javascript:if(confirm('<%=_ctx.appRes("UITopicDetail.confirm.DeleteTopic");%>'))<%=uicomponent.event("DeleteTopic",topic.getPath())%>" style="float: left;">
 													 <div class="Icon16x16 DeleteIcon" title="Delete this Thread"><span></span></div>							
 												</a>
 											</div>
@@ -78,7 +78,7 @@
 						 		%>
 						 		<tr>
 					 				<td colspan="7" align="center">
-					 					<div style="margin: 5px 0px 10px 0px"><b>Have not any topics</b></div>
+					 					<div style="margin: 5px 0px 10px 0px"><b>No Threads!</b></div>
 					 				</td>
 						 		</tr>
 					 		<%

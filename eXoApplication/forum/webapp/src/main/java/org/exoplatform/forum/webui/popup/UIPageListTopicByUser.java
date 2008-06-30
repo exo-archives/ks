@@ -98,11 +98,6 @@ public class UIPageListTopicByUser extends UIContainer{
 		double voteRating = topic.getVoteRating() ;
 		return ForumUtils.getStarNumber(voteRating) ;
 	}
-	
-	@SuppressWarnings("unused")
-	private String cleanHtmlCode(String sms) {
-		return ForumTransformHTML.cleanHtmlCode(sms);
-	}
 
 	@SuppressWarnings("unused")
   private JCRPageList getPageListPost(String topicPath) throws Exception {

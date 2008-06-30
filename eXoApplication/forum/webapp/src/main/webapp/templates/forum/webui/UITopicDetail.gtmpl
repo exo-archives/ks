@@ -229,7 +229,7 @@
 																<%
 																} else {
 																%>
-																	<a class="DisabelLabel" href="javaScript: void(0)">
+																	<a class="DisableMenuItem" href="javaScript: void(0)">
 																<%}%>
 																		<div class="ItemIcon $classIcon">
 																			$itemLabel
@@ -415,7 +415,7 @@
 															 		} 
 															 		if(!isView){ 
 													 		%>
-														 				<div class="DisabelLabel" >	 
+														 				<div class="DisableMenuItem" >	 
 																			<div class="ItemIcon $classIcon">
 																				$itemLabel
 																			</div>
@@ -456,7 +456,7 @@
 															 		 }
 															 		 if(!isView){ 
 													 			%>
-														 				<div class="DisabelLabel" >	 
+														 				<div class="DisableMenuItem" >	 
 																			<div class="ItemIcon $classIcon">
 																				<%=itemLabel%>
 																			</div>
