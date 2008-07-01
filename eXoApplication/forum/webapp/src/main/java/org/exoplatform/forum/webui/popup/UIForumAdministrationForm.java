@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -161,6 +162,23 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		return false ;
 	}
 	
+	private String removeSpaceInString(String str) throws Exception {
+		if(!ForumUtils.isEmpty(str)) {
+			str = str.replaceAll(";", ",");
+			while (str.indexOf(",,") > 0) {
+	      str = StringUtils.replace(str, ",,", ",");
+      }
+			while (str.indexOf("  ") > 0) {
+				str = StringUtils.replace(str, "  ", " ");
+			}
+			str = str.replaceAll(", ", ",");
+			if(str.lastIndexOf(",") == str.length() - 1) {
+				str = str.substring(0, str.length() - 1) ;
+			}
+		}
+		return str;
+	}
+  
 	static	public class SaveActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm administrationForm = event.getSource() ;
@@ -171,7 +189,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			String topicSortBy = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBY_INPUT).getValue() ;
 			String topicSortByType = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT).getValue() ;
 			String censoredKeyword = forumCensor.getUIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA).getValue() ;
-			censoredKeyword = ForumUtils.removeSpaceInString(censoredKeyword);
+			censoredKeyword = administrationForm.removeSpaceInString(censoredKeyword);
 			if(!ForumUtils.isEmpty(censoredKeyword)) {
 				censoredKeyword = censoredKeyword.toLowerCase();
 			}

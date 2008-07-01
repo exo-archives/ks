@@ -136,7 +136,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiForm = event.getSource() ;
 			String categoryTitle = uiForm.getUIStringInput(FIELD_CATEGORYTITLE_INPUT).getValue();
-			int maxText = 100;// ForumUtils.MAXTITLE ;
+			int maxText = ForumUtils.MAXTITLE ;
 			if(categoryTitle.length() > maxText) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_CATEGORYTITLE_INPUT), String.valueOf(maxText) };

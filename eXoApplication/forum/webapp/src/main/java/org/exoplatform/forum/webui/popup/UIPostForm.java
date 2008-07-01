@@ -186,7 +186,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				if(post.getName().indexOf(": ") > 0) title = post.getName() ;
 				else title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getName() ;
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
-				String value = "[QUOTE=" + post.getOwner() + "]" + ForumTransformHTML.clearQuote(message) + "[/QUOTE]<br/>";
+				String value = "[QUOTE=" + post.getOwner() + "]" + ForumTransformHTML.clearQuote(message) + "[/QUOTE]";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());

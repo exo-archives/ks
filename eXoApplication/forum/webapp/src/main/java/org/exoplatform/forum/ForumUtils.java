@@ -57,7 +57,7 @@ public class ForumUtils {
 
 	
 	public static final int MAXSIGNATURE = 300;
-	public static final int MAXTITLE = 150;
+	public static final int MAXTITLE = 100;
 	public static final long MAXMESSAGE = 10000;
 	
 	
@@ -214,8 +214,7 @@ public class ForumUtils {
 		if(!isEmpty(str)) {
 			str = str.replaceAll(" ", "");
 			str = str.replaceAll(";", ",");
-			while (true) {
-	      if(str.indexOf(",,") < 0) break ;
+			while (str.indexOf(",,") > 0) {
 	      str = StringUtils.replace(str, ",,", ",");
       }
 			if(str.lastIndexOf(",") == str.length() - 1) {
