@@ -17,7 +17,6 @@
 
 package org.exoplatform.faq.service.impl;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -168,18 +167,26 @@ public class JCRDataStorage {
     
     //Send notifycation when add new qustion in watching category
     if(isNew && question.isApproved()) {
+    	List<String> emails = new ArrayList<String>() ;
+    	List<String> emailsList = new ArrayList<String>() ;
     	try {
     		Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
       	if(cate.isNodeType("exo:faqWatching")){
-      		Value[] emails = cate.getProperty("exo:emailWatching").getValues() ;
-      		if(emails != null && emails.length > 0) {    			
+      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
+      		for(String email: emails) {
+      			String[] strings = Utils.splitForFAQ(email) ;
+      			for(String string_ : strings ) {
+      				emailsList.add(string_) ;
+      			}
+      		}
+      		if(emailsList != null && emailsList.size() > 0) { 			
       			Message message = new Message();
             message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
       			//message.setMessageTo(question.getEmail());
       			message.setSubject("eXo FAQ Watching Category Notifycation!");
       			message.setMessageBody("The category '" + cate.getProperty("exo:name").getString() 
       					+"' have just  added question:</br>" + question.getQuestion());
-      			sendNotification(emails, message, null) ;    			
+      			sendNotification(emailsList, message, null) ;    			
       		}
       	}
     	} catch(Exception e) {
@@ -188,17 +195,25 @@ public class JCRDataStorage {
     }
     // Send notifycation when question responsed or edited or watching
   	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0 && question.isApproved()) {
+  		List<String> emails = new ArrayList<String>() ;
+  		List<String> emailsList = new ArrayList<String>() ;
   		try {
   			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
       	if(cate.isNodeType("exo:faqWatching")){
-      		Value[] emails = cate.getProperty("exo:emailWatching").getValues() ;
-      		if(emails != null && emails.length > 0) { 
+      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
+      		for(String email: emails) {
+      			String[] strings = Utils.splitForFAQ(email) ;
+      			for(String string_ : strings ) {
+      				emailsList.add(string_) ;
+      			}
+      		}
+      		if(emailsList != null && emailsList.size() > 0) { 
 						Message message = new Message();
 			      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
 						//message.setMessageTo(question.getEmail());
 						message.setSubject("eXo FAQ Question Responsed Or Edit Notifycation!");
 						message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
-						sendNotification(emails, message, question.getEmail()) ;
+						sendNotification(emailsList, message, question.getEmail()) ;
       		}
       	}
   		} catch(Exception e) {
@@ -207,26 +222,34 @@ public class JCRDataStorage {
   	}
   }
   
-  private void sendNotification(Value[] emails, Message message, String authorEmail) throws Exception {
+  private void sendNotification(List<String> emails, Message message, String authorEmail) throws Exception {
   	List<Message> messages = new ArrayList<Message> () ;
-  	ServerConfiguration config = getServerConfig() ;
-  	if(authorEmail != null && authorEmail.length() > 0){
-  		message.setMessageTo(authorEmail) ;
-			message.setFrom(config.getUserName()) ;
-			messages.add(message) ;
+		List<String> emails_ = new ArrayList<String>();
+		ServerConfiguration config = getServerConfig() ;
+		Message message_ = new Message() ;
+		if(authorEmail != null && authorEmail.length() > 0){
+			emails.add(authorEmail) ;
   	}
-  	if(emails != null && emails.length > 0) {
-  		for(Value vl : emails) {
-  			message.setMessageTo(vl.getString()) ;
-  			message.setFrom(config.getUserName()) ;
-  			messages.add(message) ;
-  		}
-  	}
-  	if(messages.size() > 0) {
-  		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
-  		mService.sendMessages(messages, config) ;
-  	}
-  }
+		for(String string : emails) {
+			if(emails_.contains(string)) continue ;
+			emails_.add(string) ;
+			message_ = new Message() ;
+			message_.setSubject(message.getSubject());
+			message_.setMessageBody(message.getMessageBody());
+			message_.setMessageTo(string) ;
+			message_.setFrom(config.getUserName()) ;
+			messages.add(message_) ;
+		}
+		try{
+			if(messages.size() > 0) {
+				MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+				mService.sendMessages(messages, config) ;
+			}
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}
+		
+	}
   
   public void sendMessage(Message message) throws Exception {
   	List<Message> messages = new ArrayList<Message> () ;

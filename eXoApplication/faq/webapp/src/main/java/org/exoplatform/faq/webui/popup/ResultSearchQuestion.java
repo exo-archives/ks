@@ -153,7 +153,6 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			uiQuestions.setCategories(categoryId) ;
 			uiQuestions.setListQuestion() ;
 			uiQuestions.questionView_ = questionId ;
-      
       int pos = 0 ;
       for(Question question2 : uiQuestions.listQuestion_) {
         if(question2.getId().equals(questionId)) {
@@ -178,7 +177,6 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
         }
       }
       uiQuestions.isChangeLanguage = true ;
-      
 	    event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    breadcumbs.setUpdataPath(null) ;

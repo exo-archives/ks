@@ -16,8 +16,12 @@
  */
 package org.exoplatform.faq.service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+
+import javax.jcr.Value;
 
 
 /**
@@ -32,6 +36,13 @@ public class Utils {
 	public static final String EXO_FAQ_SETTING = "exo:faqSetting".intern();
 	public static final String EXO_PROCESSING_MODE = "exo:processingMode".intern() ;
 	public static final String EXO_DISPLAY_TYPE = "exo:displayType".intern() ;
+	
+	public static String[] splitForFAQ (String str) throws Exception {
+		if(str != null && str.length() > 0) {
+			if(str.contains(",")) return str.trim().split(",") ;
+			else return str.trim().split(";") ;
+		} else return new String[] {} ;
+	}
 	
 	static public class DatetimeComparator implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {
@@ -64,4 +75,29 @@ public class Utils {
       return name1.compareToIgnoreCase(name2) ;
     }
   }
+	
+	static public List<String> ValuesToList(Value[] values) throws Exception {
+		List<String> list = new ArrayList<String>() ;
+		if(values.length < 1) return list ;
+		if(values.length == 1) {
+			list.add(values[0].getString()) ;
+			return list ;
+		}
+		for(int i = 0; i < values.length; ++i) {
+			list.add(values[i].getString() );
+		}
+		return list;
+	}
+	
+	static public List<String> ListToList(List<String> list) throws Exception {
+		List<String> list1 = new ArrayList<String>() ;
+		for(String string: list) {
+			String[] strings = splitForFAQ(string) ;
+			for(String string_ : strings ) {
+    		list1.add(string_) ;
+    	}
+		}
+		return list1;
+	}
+	
 }
