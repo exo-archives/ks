@@ -611,7 +611,7 @@
 		<%
 			if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {
 		  	String divId = uicomponent.getQuestionView();
-		  	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.jumpToDiv('"+divId+"');");
+		  	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.jumToDiv('"+divId+"');");
 		  }
 		%>
 	</div>
