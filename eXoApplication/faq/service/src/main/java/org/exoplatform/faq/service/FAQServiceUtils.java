@@ -70,7 +70,7 @@ public class FAQServiceUtils {
 							}
 						}  					
 					}
-				}else { //group
+				} else { //group
 					List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
 					for(User user: userList) {
 						if(!users.contains(user.getUserName())){
@@ -78,7 +78,7 @@ public class FAQServiceUtils {
 						}
 					}
 				}
-			}else {
+			} else {
 				if(!users.contains(str)){
 					users.add(str) ;
 				}

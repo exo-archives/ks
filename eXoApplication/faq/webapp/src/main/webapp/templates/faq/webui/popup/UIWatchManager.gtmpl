@@ -8,7 +8,6 @@
  							<thead>
  								<tr>
  								<th><%= _ctx.appRes("UIWatchManager.label.email"); %></th>
- 								<th><%= _ctx.appRes("UIWatchManager.label.link"); %></th>
  								<th><%= _ctx.appRes("UIWatchManager.label.action"); %></th>
  								</tr>
  							</thead>
@@ -33,12 +32,10 @@
  									<% } else { %>
  										<td class="text" align="left">$email</td>
  									<% } %>
- 									<td style="width: 60px;" align="center">
- 										<a href="$linkCurrent" title="Link" style="float:center;">
+ 									<td style="width: 90px;" align="center">
+ 										<a href="$linkCurrent" title="Link" style="float:left;">
  											<div class="LinkWatchIcon" ></div>
  										</a>
- 									</td>
- 									<td style="width: 60px;" align="center">
  										<a href="$linkEdit" title="Edit Watch" style="float:left;">
  											<div class="EditWatchIcon" ></div>
  										</a>
