@@ -1,6 +1,6 @@
 function UIFAQPortlet() {};
 
-UIFAQPortlet.prototype.jumpToDiv = function(id) {
+UIFAQPortlet.prototype.jumToDiv = function(id) {
 	var obj = document.getElementById(id);
 	if(obj)obj.scrollIntoView(true);
 };
