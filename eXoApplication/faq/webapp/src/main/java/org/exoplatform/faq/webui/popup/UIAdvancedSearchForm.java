@@ -21,7 +21,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;

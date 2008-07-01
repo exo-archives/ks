@@ -24,8 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
-import javax.jcr.PathNotFoundException;
-
 import org.exoplatform.contact.service.Contact;
 import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
