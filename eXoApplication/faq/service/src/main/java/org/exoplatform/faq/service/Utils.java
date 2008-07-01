@@ -88,16 +88,4 @@ public class Utils {
 		}
 		return list;
 	}
-	
-	static public List<String> ListToList(List<String> list) throws Exception {
-		List<String> list1 = new ArrayList<String>() ;
-		for(String string: list) {
-			String[] strings = splitForFAQ(string) ;
-			for(String string_ : strings ) {
-    		list1.add(string_) ;
-    	}
-		}
-		return list1;
-	}
-	
 }

@@ -242,6 +242,7 @@ public class JCRDataStorage {
 		}
 		try{
 			if(messages.size() > 0) {
+				System.out.println("Send mails ......" + messages.size());
 				MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
 				mService.sendMessages(messages, config) ;
 			}
