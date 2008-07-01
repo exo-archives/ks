@@ -310,6 +310,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				List<FAQFormSearch> list = faqService.getAdvancedEmptry(FAQUtils.getSystemProvider(), text, fromDate, toDate) ;
 				result.setFormSearchs(list) ;
 			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
