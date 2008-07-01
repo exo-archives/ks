@@ -1333,23 +1333,28 @@ public class JCRDataStorage{
 					// set InfoPost for Forum
 					long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1 ;
 					forumNode.setProperty("exo:postCount", forumPostCount ) ;
-					if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-						if(!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
-						}
-					} else {
-						if(forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-							if(topicNode.getProperty("exo:isApproved").getBoolean()) {
+					boolean isSetLastPost = !topicNode.getProperty("exo:isClosed").getBoolean();
+					if(isSetLastPost)isSetLastPost = !topicNode.getProperty("exo:isWaiting").getBoolean();
+					if(isSetLastPost)isSetLastPost = topicNode.getProperty("exo:isActive").getBoolean() ;
+					if(isSetLastPost){
+						if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+							if(!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+								forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
+							}
+						} else {
+							if(forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+								if(topicNode.getProperty("exo:isApproved").getBoolean()) {
+									if(!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+										forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
+									}
+								}
+							}else {
 								if(!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
 								}
 							}
-						}else {
-							if(!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-								forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
-							}
+							saveUserReadTopic(sProvider, post.getOwner(), topicId, false) ;
 						}
-						saveUserReadTopic(sProvider, post.getOwner(), topicId, false) ;
 					}
 					List<String> emailList = new ArrayList<String>() ;
 					//Send notify for watching users
