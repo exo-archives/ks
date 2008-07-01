@@ -543,20 +543,19 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       } else {
         UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
         questionManagerForm.isEditQuestion = false ;
-        UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
+        UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class) ;
         UIAttachMentForm attachMentForm = popupContainer.findFirstComponentOfType(UIAttachMentForm.class) ;
         if(attachMentForm != null) {
           UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
           popupAction.deActivate() ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
         } else {
           UILanguageForm languageForm = popupContainer.findFirstComponentOfType(UILanguageForm.class) ;
           if(languageForm != null) {
             UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
             popupAction.deActivate() ;
-            event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
           }
         }
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
 		}
 	}

@@ -231,9 +231,9 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
             break ;
           }
         }
-        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ;
-        return ;
       }
+      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
   }
   
@@ -262,9 +262,9 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
             break ;
           }
         }
-        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ;
-        return ;
       }
+      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
   }
   
@@ -303,9 +303,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
             break ;
           }
         }
-        event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo) ;
-        return ;
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
   }
   
@@ -322,21 +321,22 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     public void execute(Event<UIQuestionsInfo> event) throws Exception {
       UIQuestionsInfo questionsInfo = event.getSource() ;
       String idTab = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
       if(idTab.equals("0")) {
         questionsInfo.isEditTab_ = true ;
         questionsInfo.isResponseTab_ = false ;
         
-        UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
         questionManagerForm.isViewEditQuestion = true ;
         questionManagerForm.isViewResponseQuestion = false ;
       } else {
         questionsInfo.isEditTab_ = false;
         questionsInfo.isResponseTab_ = true ;
         
-        UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
         questionManagerForm.isViewEditQuestion = false ;
         questionManagerForm.isViewResponseQuestion = true ;
       }
+      UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
   }
 }
