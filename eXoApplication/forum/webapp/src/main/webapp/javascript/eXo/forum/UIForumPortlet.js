@@ -315,7 +315,9 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 	if(objCmdElm === null) return ;
 	var parentElm = eXo.core.DOMUtil.findAncestorByClass(objElm, "FieldComponent") ;
 	var tagA = parentElm.getElementsByTagName('a') ;
+	var imgA = parentElm.getElementsByTagName('img') ;
 	for(var i=0; i < tagA.length; ++i) {
+		eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
 		tagA[i].setAttribute("tmpHref",tagA[i].href) ;
 		tagA[i].href = "javascript:void(0);" ;
 	}
@@ -324,11 +326,13 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 		objElm.disabled = 'disabled' ;
 		objElm.value = '' ;
 		for(var i=0; i < tagA.length; ++i) {
+			eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
 			tagA[i].href = "javascript:void(0);" ;
 		}
 	} else {
 		objElm.disabled = '' ;
 		for(var i=0; i < tagA.length; ++i) {
+			eXo.forum.UIForumPortlet.finterImage(imgA[i], false);
 			tagA[i].href = tagA[i].getAttribute("tmpHref") ;
 		}
 	}
@@ -336,12 +340,14 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 		if(this.value != '') {
 			objElm.disabled = '' ;
 			for(var i=0; i < tagA.length; ++i) {
+				eXo.forum.UIForumPortlet.finterImage(imgA[i], false);
 				tagA[i].href = tagA[i].getAttribute("tmpHref") ;
 			}
 		} else {
 			objElm.disabled = 'disabled' ;
 			objElm.value = '' ;
 			for(var i=0; i < tagA.length; ++i) {
+				eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
 				tagA[i].href = "javascript:void(0);" ;
 			}
 			if(elm === 'Postable') {
@@ -349,6 +355,17 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 			}
 		}
 	};
+};
+
+UIForumPortlet.prototype.finterImage = function(elm_, isFT) {
+	var isIE = document.all?true:false;
+	if(isFT){
+		if(!isIE) elm_.style.MozOpacity = "0.5";
+		else elm_.filters[0].opacity = "50";
+	} else {
+		if(!isIE) elm_.style.MozOpacity = "1";
+		else elm_.filters[0].opacity = "100";
+	}
 };
 
 UIForumPortlet.prototype.setMaskLayer = function() {

@@ -320,6 +320,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			try {
 				list = forumService.getAdvancedSearch(ForumSessionUtils.getSystemProvider(),eventQuery);
 			}catch (Exception e) {
+				e.printStackTrace();
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 				return ;
