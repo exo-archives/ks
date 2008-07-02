@@ -95,6 +95,20 @@
 	isNotReply = isLock ;
 	if(!isNotReply) isNotReply = !isShowMenu ;
 	boolean isModeratePost = uicomponent.getIsModeratePost() ;
+	
+	boolean isActive = topic.getIsActive();
+	boolean isApproved = true;
+	if(forum.getIsModerateTopic()){
+	  isApproved = topic.getIsApproved();
+	}
+	boolean isShowPost = true ;
+	if(!canEdit){
+	  if(!isActive || !isApproved){
+	    isNotReply = true;
+	    isShowPost = false;
+	    isShowMenu = false;
+	  }
+	}
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
@@ -498,7 +512,6 @@
 		
 <!-- Start ContentContainer -->
 		<%
-		boolean isShowPost = true ;
 		if(isClosed && !canEdit)	isShowPost = false ;
 		if(posts != null && posts.size() > 0 && isShowPost) {
 			int checked = (int)(uiform.getPageSelect()) - 1;
