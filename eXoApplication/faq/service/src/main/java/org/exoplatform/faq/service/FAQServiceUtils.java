@@ -34,12 +34,12 @@ import org.exoplatform.services.organization.User;
 public class FAQServiceUtils {
   String admin = "/platform/administrators" ;
   String orgManager = "/organization/management/executive-board" ;
-  OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  private static OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   @SuppressWarnings("unchecked")
   public boolean isAdmin(String userName) {
     try {
-      List<User> userList = organizationService.getUserHandler().findUsersByGroup(admin).getAll() ;
-      userList.addAll(organizationService.getUserHandler().findUsersByGroup(orgManager).getAll()) ;
+      List<User> userList = organizationService_.getUserHandler().findUsersByGroup(admin).getAll() ;
+      userList.addAll(organizationService_.getUserHandler().findUsersByGroup(orgManager).getAll()) ;
       for(User user : userList) {
         if(user.getUserName().equals(userName)) return true ;
       }
@@ -53,14 +53,13 @@ public class FAQServiceUtils {
   public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
   	List<String> users = new ArrayList<String> () ;
   	if(userGroupMembership == null || userGroupMembership.length <= 0) return users ; 
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   	for(String str : userGroupMembership) {
 			if(str.indexOf("/") >= 0) {
 				if(str.indexOf(":") >= 0) { //membership
 					String[] array = str.split(":") ;
-					List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
+					List<User> userList = organizationService_.getUserHandler().findUsersByGroup(array[1]).getAll() ;
 					for(User user: userList) {
-						Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
+						Collection<Membership> memberships = organizationService_.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
 						for(Membership member : memberships){
 							if(member.getMembershipType().equals(array[0])) {
 								if(!users.contains(user.getUserName())){
@@ -71,7 +70,7 @@ public class FAQServiceUtils {
 						}  					
 					}
 				} else { //group
-					List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
+					List<User> userList = organizationService_.getUserHandler().findUsersByGroup(str).getAll() ;
 					for(User user: userList) {
 						if(!users.contains(user.getUserName())){
 							users.add(user.getUserName()) ;
