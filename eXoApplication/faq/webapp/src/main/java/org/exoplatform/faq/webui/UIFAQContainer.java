@@ -28,10 +28,7 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
  */
 
 @ComponentConfig(
-		lifecycle=UIContainerLifecycle.class,
-    events = {
-        //@EventConfig(listeners = UIFAQContainer.SendEmailActionListener.class)   
-    }     
+		lifecycle=UIContainerLifecycle.class
 )
 public class UIFAQContainer extends UIContainer  {
   
