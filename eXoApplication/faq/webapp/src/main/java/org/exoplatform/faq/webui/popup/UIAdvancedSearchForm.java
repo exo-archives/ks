@@ -245,6 +245,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response)) {
 				uiApp = advancedSearch.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
 			FAQEventQuery eventQuery = new FAQEventQuery() ;

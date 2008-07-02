@@ -71,7 +71,7 @@ public class UIQuickSeach  extends UIForm {
 				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 				List<FAQFormSearch> list = null ;
 				try {
-					list = faqService.getQuickSeach(FAQUtils.getSystemProvider(), text+",,all");
+					list = faqService.getAdvancedEmptry(FAQUtils.getSystemProvider(), text, null, null);
 				} catch (Exception e) {
 					uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearch.msg.failure", null, ApplicationMessage.WARNING)) ;

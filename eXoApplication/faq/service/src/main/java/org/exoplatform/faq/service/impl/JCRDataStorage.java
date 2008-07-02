@@ -777,56 +777,6 @@ public class JCRDataStorage {
 		watchingNode.getSession().save();
   }
   
-  public List<FAQFormSearch> getQuickSeach(SessionProvider sProvider,String text) throws Exception {
-  	Node faqServiceHome = getFAQServiceHome(sProvider) ;
-  	String []valueQuery = text.split(",") ;
-  	String types[] = new String[] {"faqCategory", "faqQuestion"} ;
-		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
-		List<FAQFormSearch>FormSearchs = new ArrayList<FAQFormSearch>() ;
-		for (String type : types) {
-			StringBuffer queryString = new StringBuffer("/jcr:root" + faqServiceHome.getPath() + "//element(*,exo:").append(type).append(")");
-			boolean isOwner = false ;
-			queryString.append("[") ;
-			if(valueQuery[1] != null && valueQuery[1].length() > 0 && !valueQuery[1].equals("null")) {
-		  	queryString.append("(@exo:owner='").append(valueQuery[1]).append("')") ;
-		  	isOwner = true;
-		  }
-		  if(valueQuery[0] != null && valueQuery[0].length() > 0 && !valueQuery[0].equals("null")) {
-		  	if(isOwner) queryString.append(" and ");
-		  	queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
-		  }
-			queryString.append("]") ;
-		  Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		  QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes() ;
-		  Node node ;
-		  FAQFormSearch formSearch ;
-		  String id;
-			while(iter.hasNext()) {
-				formSearch = new FAQFormSearch() ;
-				node = (Node)iter.nextNode();
-				id = node.getName() ;
-				formSearch.setId(id) ;
-				formSearch.setName(node.getProperty("exo:name").getString()) ;
-				formSearch.setType(type) ;
-				if(type.equals("faqCategory")) {
-					formSearch.setIcon("FAQCategorySearch") ;
-				} else {
-					Question question = getQuestionById(id, sProvider) ;
-					String response = question.getResponses() ;
-					if(response.equals(" ")) {
-						formSearch.setIcon("NotResponseSearch") ;
-					} else {
-						formSearch.setIcon("QuestionSearch") ;
-					}
-				}
-				formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
-				FormSearchs.add(formSearch) ;
-			}
-		}
-  	return FormSearchs ;
-  }
-  
   private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
 		StringBuffer queryString = new StringBuffer() ;
 		if(fromDate != null && toDate != null) {
