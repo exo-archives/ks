@@ -508,6 +508,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           break ;
         }
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
     }
   }
 }

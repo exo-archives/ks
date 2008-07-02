@@ -100,11 +100,14 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     languageIsResponsed = question.getLanguage() ;
     QuestionLanguage questionLanguage = new QuestionLanguage() ;
     questionLanguage.setLanguage(question.getLanguage()) ;
-    questionLanguage.setQuestion(question.getQuestion()) ;
+    questionLanguage.setQuestion(question.getQuestion().replaceAll("\n", "<br>")) ;
     questionLanguage.setResponse(question.getResponses()) ;
     
     listQuestionLanguage.add(questionLanguage) ;
-    listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) ;
+    for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) {
+      questionLanguage2.setQuestion(questionLanguage2.getQuestion().replaceAll("\n", "<br>")) ;
+      listQuestionLanguage.add(questionLanguage2) ;
+    }
     questionChanged_ = question.getQuestion() ;
     // set info for form
     for(QuestionLanguage quesLanguage : listQuestionLanguage) {
@@ -224,7 +227,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
            body.setValue(content) ;
          }
        }
-       
+       event.getRequestContext().addUIComponentToUpdateByAjax(sendMailForm) ;
   	 }
    }
 	
