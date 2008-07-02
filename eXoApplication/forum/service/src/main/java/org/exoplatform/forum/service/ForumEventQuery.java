@@ -250,9 +250,11 @@ public class ForumEventQuery {
 			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ") ;
 			isAnd = true ;
 		} else if(fromDate != null){
+			if(isAnd) queryString.append(" and ") ;
 			queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
 			isAnd = true ;
 		} else if(toDate != null){
+			if(isAnd) queryString.append(" and ") ;
 			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
 			isAnd = true ;
 		}
