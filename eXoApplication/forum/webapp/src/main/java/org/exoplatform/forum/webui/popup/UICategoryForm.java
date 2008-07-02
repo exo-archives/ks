@@ -74,7 +74,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	public static final String FIELD_DESCRIPTION_INPUT = "Description" ;
 	
 	public static final String FIELD_USERPRIVATE_MULTIVALUE = "UserPrivate" ;
-	private Map<String, String> permission_ = new HashMap<String, String>() ;
 	public UICategoryForm() throws Exception {
 		UIFormStringInput categoryTitle = new UIFormStringInput(FIELD_CATEGORYTITLE_INPUT, FIELD_CATEGORYTITLE_INPUT, null);
 		categoryTitle.addValidator(MandatoryValidator.class);
@@ -123,13 +122,15 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 
 	public void updateSelect(String selectField, String value) throws Exception {
     UIFormStringInput fieldInput = getUIStringInput(selectField) ;
-    permission_.put(value, value) ;
-    StringBuilder sb = new StringBuilder() ;
-    for(String s : permission_.values()) {
-      if(sb != null && sb.length() > 0) sb.append(',') ;
-      sb.append(s) ;
-    }
-    fieldInput.setValue(sb.toString()) ;
+    String values = fieldInput.getValue() ;
+    if(!ForumUtils.isEmpty(values)) {
+    	values = ForumUtils.removeSpaceInString(values);
+      if(!ForumUtils.isStringInStrings(values.split(","), value)){
+        if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
+        values = values + value ;
+      } 
+    } else values = value ;
+    fieldInput.setValue(values) ;
   }
 	
 	static	public class SaveActionListener extends EventListener<UICategoryForm> {
@@ -145,7 +146,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				return ;
 			}
 			String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
-			if(description.length() > maxText) {
+			if(!ForumUtils.isEmpty(description) && description.length() > maxText) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_DESCRIPTION_INPUT), String.valueOf(maxText) };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
