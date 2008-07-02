@@ -65,7 +65,7 @@
 						 		%>
 						 		<tr>
 						 				<td colspan="3" align="center">
-						 					<div style="margin: 5px 0px 10px 0px"><b>Have not anny post</b></div>
+						 					<div style="margin: 5px 0px 10px 0px"><b>No Posts</b></div>
 						 				</td>
 						 			</tr>
 						 		<%

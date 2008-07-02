@@ -361,3 +361,8 @@
 	filter: alpha(opacity: 50);
 	-moz-opacity: 0.5;
 }
+
+.UIForumPortlet .DisableMenuItem {
+	*color: #b7b7b7;
+	_color: #b7b7b7;
+}
