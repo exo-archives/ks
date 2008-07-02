@@ -145,7 +145,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				return ;
 			}
 			String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
-			if(description.length() > maxText) {
+			if(!ForumUtils.isEmpty(description) && description.length() > maxText) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_DESCRIPTION_INPUT), String.valueOf(maxText) };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;

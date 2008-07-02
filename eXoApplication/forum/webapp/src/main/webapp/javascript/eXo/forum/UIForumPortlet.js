@@ -391,10 +391,10 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 };
 
 UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
-	if(imgElm.width > 130){  
+	if(imgElm.offsetWidth > 130){  
 		imgElm.style.width = "130px" ;
 	}
-	if(imgElm.height > 150){  
+	if(imgElm.offsetHeight > 150){  
 		imgElm.style.width = "150px" ;
 	}
 };
@@ -403,14 +403,16 @@ UIForumPortlet.prototype.reSizeImages = function() {
 	var topicDetailContainer = document.getElementById('UITopicDetailContainer');
 	if(topicDetailContainer) {
     var max_width = topicDetailContainer.offsetWidth - 250 ;
-    var images_ = document.images ;
-    for(var i=0; i<images_.length; i++)
-    {
+    var images_ =  topicDetailContainer.getElementsByTagName("img");
+    for(var i=0; i<images_.length; i++){
       var img = images_[i];
 			img.style.width = "auto" ;
-			 if(img.width > max_width) {
-					img.style.width= max_width + "px" ;
-			 }
+		  if(img.width > max_width) {
+				img.style.width= max_width + "px" ;
+		  }
+    }
+    topicDetailContainer.onresize = function() {
+    	document.title = new Date();
     }
 	}
 };
