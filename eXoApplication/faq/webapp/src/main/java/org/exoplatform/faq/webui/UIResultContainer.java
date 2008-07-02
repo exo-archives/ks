@@ -53,7 +53,6 @@ public class UIResultContainer extends UIContainer implements UIPopupComponent {
 	
 	public void processRender(WebuiRequestContext context) throws Exception {
 		context.getWriter().append("<span class=\"").append(getId()).append("\" id=\"").append(getId()).append("\">");
-		//renderChild(UIPopupAction.class) ;
 		renderChildren(context) ;
 		context.getWriter().append("</span>");
 	}
