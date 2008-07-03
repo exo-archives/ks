@@ -317,7 +317,7 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 	var tagA = parentElm.getElementsByTagName('a') ;
 	var imgA = parentElm.getElementsByTagName('img') ;
 	for(var i=0; i < tagA.length; ++i) {
-		eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
+//		eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
 		tagA[i].setAttribute("tmpHref",tagA[i].href) ;
 		tagA[i].href = "javascript:void(0);" ;
 	}
@@ -326,13 +326,13 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 		objElm.disabled = 'disabled' ;
 		objElm.value = '' ;
 		for(var i=0; i < tagA.length; ++i) {
-			eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
+//			eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
 			tagA[i].href = "javascript:void(0);" ;
 		}
 	} else {
 		objElm.disabled = '' ;
 		for(var i=0; i < tagA.length; ++i) {
-			eXo.forum.UIForumPortlet.finterImage(imgA[i], false);
+//			eXo.forum.UIForumPortlet.finterImage(imgA[i], false);
 			tagA[i].href = tagA[i].getAttribute("tmpHref") ;
 		}
 	}
@@ -340,14 +340,14 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 		if(this.value != '') {
 			objElm.disabled = '' ;
 			for(var i=0; i < tagA.length; ++i) {
-				eXo.forum.UIForumPortlet.finterImage(imgA[i], false);
+//				eXo.forum.UIForumPortlet.finterImage(imgA[i], false);
 				tagA[i].href = tagA[i].getAttribute("tmpHref") ;
 			}
 		} else {
 			objElm.disabled = 'disabled' ;
 			objElm.value = '' ;
 			for(var i=0; i < tagA.length; ++i) {
-				eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
+//				eXo.forum.UIForumPortlet.finterImage(imgA[i], true);
 				tagA[i].href = "javascript:void(0);" ;
 			}
 			if(elm === 'Postable') {
