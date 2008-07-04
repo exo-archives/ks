@@ -202,7 +202,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
       String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
       if(!ForumUtils.isEmpty(objctId)) {
         UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
-        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
         UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
         uiGroupSelector.setType(objctId) ;
         uiGroupSelector.setSelectedGroups(null) ;

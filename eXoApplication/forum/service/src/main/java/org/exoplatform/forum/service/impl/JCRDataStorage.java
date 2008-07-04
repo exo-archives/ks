@@ -529,15 +529,16 @@ public class JCRDataStorage{
 			List<String> list ;
 			for (String user : moderators) {
 				list = new ArrayList<String>();
-				
 				try{
 					userProfileNode = userProfileHomeNode.getNode(user.trim());
 					list.addAll(ValuesToList(userProfileNode.getProperty("exo:moderateForums").getValues()));
 					if(list.contains(forumId)) list.remove(forumId) ;
 					userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
 					if(list.size() == 0) {
-						userProfileNode.setProperty("exo:userRole", 2);
-						userProfileNode.setProperty("exo:userTitle", Utils.USER);
+						if(userProfileNode.getProperty("exo:moderateForums").getLong() > 0){
+							userProfileNode.setProperty("exo:userRole", 2);
+							userProfileNode.setProperty("exo:userTitle", Utils.USER);
+						}
 					}
 				}catch (Exception e) {
 					e.printStackTrace();

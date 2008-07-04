@@ -62,10 +62,10 @@
 													<tr>
 														<td class="FieldLabel"><%=_ctx.appRes("UIForumAdministrationForm.label.activeAbout")%>:</td>
 														<td class="FieldComponent">
-															<div style="float:left;">
+															<div class="InputContent">
 																<% uiform.renderField(uiform.FIELD_ACTIVEABOUT_INPUT) ;%>
 															</div>
-															<div style="float:left; margin-left:10px;">Day(s)</div>
+															<div style="float:left; margin-left:10px; white-space:nowrap;">Day(s)</div>
 															<div style="clear: left;"><span></span></div>
 														</td>
 													</tr>

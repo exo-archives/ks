@@ -391,8 +391,9 @@ public class ForumTransformHTML {
 		s = s.trim();
 		s = StringUtils.replace(s, "<p>[&nbsp;\\s?]</p>", "");
 		s = StringUtils.replace(s, "\n", "");
-		if (s.indexOf("<br/>") == 0)
+		while(s.indexOf("<br/>") == 0){
 			s = s.replaceFirst("<br/>", "");
+		}
 		if (s.indexOf("<p>") == 0) {
 			s = s.replaceFirst("<p>", "");
 			s = s.replaceFirst("</p>", "");
