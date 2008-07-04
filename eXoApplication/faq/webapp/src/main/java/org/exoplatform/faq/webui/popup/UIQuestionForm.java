@@ -529,6 +529,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         }
       }
       questionForm.refreshUploadFileList() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
     }
   }
   
