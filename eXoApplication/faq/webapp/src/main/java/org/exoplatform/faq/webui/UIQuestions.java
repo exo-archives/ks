@@ -188,7 +188,8 @@ public class UIQuestions extends UIContainer {
     }
   }
   
-  public void setLanguageView(String language){
+  @SuppressWarnings("static-access")
+	public void setLanguageView(String language){
     this.language_ = language;
   }
 	
@@ -1175,8 +1176,8 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UISendMailForm sendMailForm = popupContainer.addChild(UISendMailForm.class, null, null) ;
-      if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) language_ = "English" ;
-      sendMailForm.setUpdateQuestion(questionId , language_) ;
+      if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "English") ;
+      else sendMailForm.setUpdateQuestion(questionId , language_) ;
       popupContainer.setId("FAQSendMailForm") ;
       popupAction.activate(popupContainer, 700, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
