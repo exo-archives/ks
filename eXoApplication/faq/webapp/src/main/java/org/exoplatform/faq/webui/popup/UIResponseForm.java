@@ -456,6 +456,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         }
       }
       questionForm.refreshUploadFileList() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
     }
   }
   
@@ -470,6 +471,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         }
       }
       questionForm.listQuestIdRela.remove(quesId) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
     }
   }
   

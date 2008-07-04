@@ -187,6 +187,10 @@ public class UIQuestions extends UIContainer {
       setIsModerators() ;
     }
   }
+  
+  public void setLanguageView(String language){
+    this.language_ = language;
+  }
 	
   public void setCategories(String categoryId) throws Exception  {
   	setCategoryId(categoryId) ;
@@ -1171,7 +1175,7 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UISendMailForm sendMailForm = popupContainer.addChild(UISendMailForm.class, null, null) ;
-      if(FAQUtils.isFieldEmpty(language_)) language_ = "English" ;
+      if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) language_ = "English" ;
       sendMailForm.setUpdateQuestion(questionId , language_) ;
       popupContainer.setId("FAQSendMailForm") ;
       popupAction.activate(popupContainer, 700, 1000) ;

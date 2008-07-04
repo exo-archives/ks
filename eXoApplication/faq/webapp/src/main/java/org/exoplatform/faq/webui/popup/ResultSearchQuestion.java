@@ -177,6 +177,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
         }
       }
       uiQuestions.isChangeLanguage = true ;
+      uiQuestions.setLanguageView(language_);
 	    event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    breadcumbs.setUpdataPath(null) ;
