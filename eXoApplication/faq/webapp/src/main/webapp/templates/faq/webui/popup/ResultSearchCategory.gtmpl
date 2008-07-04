@@ -18,6 +18,7 @@
  												<th><%= _ctx.appRes("ResultSearchCategory.title.category"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.description"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.created-date"); %></th>
+ 												<th><%= _ctx.appRes("ResultSearchCategory.title.action"); %></th>
  											</tr>
  										</thead>
  										<tbody>
@@ -47,6 +48,9 @@
 													<%}%>
 	 												<td class="text" align="left" style=" overflow-x: auto;"><%= (description != null) ? description: ""%></td>
 	 												<td class="text" align="center"><%=date%></td>
+	 												<td style="width: 30px;" align="center">
+ 														<a href="$link"><div class="CheckIcon" style="margin: 0px auto;"></div></a>
+ 													</td>
 	 											</tr>
  												<% 
  												}

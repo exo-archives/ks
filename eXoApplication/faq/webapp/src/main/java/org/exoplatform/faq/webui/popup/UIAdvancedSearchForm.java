@@ -38,6 +38,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -105,7 +106,9 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_CATEGORY_MODERATOR, FIELD_CATEGORY_MODERATOR, null) ;
 		moderator.setRendered(false) ;
 		UIFormDateTimeInput fromDate = new UIFormDateTimeInput(FIELD_FROM_DATE, FIELD_FROM_DATE, null, false) ;
+//		fromDate.addValidator(DateTimeValidator.class) ;
 		UIFormDateTimeInput toDate = new UIFormDateTimeInput(FIELD_TO_DATE, FIELD_TO_DATE, null, false) ;
+//		toDate.addValidator(DateTimeValidator.class) ;
 		// search question
 		UIFormStringInput author = new UIFormStringInput(FIELD_AUTHOR, FIELD_AUTHOR, null) ;
 		author.setRendered(false) ;
@@ -188,6 +191,17 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   }
   
   public String[] getActions() {return new String[]{"Search", "Cancel"} ;}
+  
+  private Calendar getCalendar(UIFormDateTimeInput dateTimeInput, String field) throws Exception{
+  	Calendar calendar = dateTimeInput.getCalendar();
+  	if(!FAQUtils.isFieldEmpty(dateTimeInput.getValue())){
+  		if(calendar == null){
+  			Object[] args = {getLabel(field)};
+				throw new MessageException(new ApplicationMessage("UIAdvancedSearchForm.msg.error-input-text-date", args, ApplicationMessage.WARNING)) ;
+  		}
+  	}
+  	return calendar;
+  }
 	
 	static public class OnchangeActionListener extends EventListener<UIAdvancedSearchForm> {
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
@@ -221,8 +235,8 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String modeQuestion = advancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue() ;
 			if(modeQuestion.equals("emptry2")) modeQuestion = "emptry" ;
 			String moderator = advancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).getValue() ;
-			Calendar fromDate = advancedSearch.getUIFormDateTimeInput(FIELD_FROM_DATE).getCalendar() ;
-			Calendar toDate= advancedSearch.getUIFormDateTimeInput(FIELD_TO_DATE).getCalendar() ;
+			Calendar fromDate = advancedSearch.getCalendar(advancedSearch.getUIFormDateTimeInput(FIELD_FROM_DATE), FIELD_FROM_DATE) ;
+			Calendar toDate= advancedSearch.getCalendar(advancedSearch.getUIFormDateTimeInput(FIELD_TO_DATE), FIELD_TO_DATE) ;
 			if(advancedSearch.getFromDate() != null && advancedSearch.getToDate() != null) {
         if(advancedSearch.getFromDate().after(advancedSearch.getToDate())){
           uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.date-time-invalid", null)) ;
