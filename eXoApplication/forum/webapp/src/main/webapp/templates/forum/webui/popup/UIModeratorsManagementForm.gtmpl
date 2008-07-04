@@ -11,14 +11,15 @@
 %>
 <div class="UIModeratorsManagementForm">
 	<% uiform.begin() %>
-	<div>
+	<div class="UIComponentModerator">
+	<div style="overflow: auto;">
 		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 		<div style="clear: right;"><span></span></div>
 	</div>
+	<div><span></span></div>
   <div class="ModeratorsManagementContainer">
 		<div class="ManagementContent">	  	
 		 
-			<div class="ModeratorsGroup">
 			  <table cellspacing="0" borderspacing="0" id="PermissionInfo" class="UIGrid">
 				  <thead>
 				  	<tr>
@@ -56,15 +57,15 @@
 							<td class="text"><%=user.getIsBanned();%></td>
 						  <td>         
 				        <div style="margin: 0px auto;" class="ActionContainer">
-				        <div class="IconContent">
-				        	<a style="float:left" href="<%=uicomponent.event("EditProfile",user.getUserId());%>">
-					           <div title="Edit Profile" class="Icon16x16 EditIcon"><span></span></div>		          
-				        	</a>
-				        	<a style="float:left" href="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
-					           <div title="View Profile" class="Icon16x16 ViewProfileIcon"><span></span></div>		          
-				        	</a>
-				        	<div style="clear:left;"><span></span></div>
-				        </div>
+					        <div class="IconContent">
+					        	<a style="float:left" href="<%=uicomponent.event("EditProfile",user.getUserId());%>">
+						           <div title="Edit Profile" class="Icon16x16 EditIcon"><span></span></div>		          
+					        	</a>
+					        	<a style="float:left" href="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
+						           <div title="View Profile" class="Icon16x16 ViewProfileIcon"><span></span></div>		          
+					        	</a>
+					        	<div style="clear:left;"><span></span></div>
+					        </div>
 				        </div>
 				      </td>
 				    </tr>
@@ -74,15 +75,16 @@
 				   	} 
 				   %>
 				  </tbody>
-				</table> <!--End UIGrid-->              					
-			</div>
+				</table> 
 			 
 		</div>
 	</div>
+	<div><span></span></div>
 	<div>
 		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 		<div style="clear: right;"><span></span></div>
 	</div>
+	<div><span></span></div>
 <% if(uiform.getIsEdit()) { %>
 	<div class="UIFormTabPane">
     <div class="UITabPane">
@@ -156,6 +158,7 @@
     </div>  
   </div>
 <% } %>
+  </div>
   <div class="UIAction"> 
 		<table class="ActionContainer" align="center">
 			<tr>
