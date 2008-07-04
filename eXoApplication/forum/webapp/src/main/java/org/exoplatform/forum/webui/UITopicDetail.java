@@ -383,34 +383,43 @@ public class UITopicDetail extends UIForm {
 	}
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
-//		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		if(this.isUpdatePageList) {
-			String isApprove = "" ;
-			String isHidden = "" ;
-			String userLogin = this.userProfile.getUserId();
-			Topic topic = this.topic ;
-			long role = this.userProfile.getUserRole() ;
-			if(role >=2){ isHidden = "false" ;}
-			if(role == 1) {
-				if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
-					isHidden = "false" ;
+		try {
+			if (this.isUpdatePageList) {
+				String isApprove = "";
+				String isHidden = "";
+				String userLogin = this.userProfile.getUserId();
+				Topic topic = this.topic;
+				long role = this.userProfile.getUserRole();
+				if (role >= 2) {
+					isHidden = "false";
 				}
+				if (role == 1) {
+					if (!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)) {
+						isHidden = "false";
+					}
+				}
+				if (this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
+					if (isHidden.equals("false") && !(this.topic.getOwner().equals(userLogin)))
+						isApprove = "true";
+				}
+				this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(),
+				    this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
+				this.isUpdatePageList = false;
 			}
-			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-				if(isHidden.equals("false") && !(this.topic.getOwner().equals(userLogin))) isApprove = "true" ;
+			long maxPost = this.userProfile.getMaxPostInPage();
+			if (maxPost > 0)
+				this.maxPost = maxPost;
+			pageList.setPageSize(this.maxPost);
+			UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
+			forumPageIterator.updatePageList(this.pageList);
+			if (IdPostView.equals("true")) {
+				forumPageIterator.setSelectPage(pageList.getAvailablePage());
 			}
-			this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin)	; 
-			this.isUpdatePageList = false ;
+			this.isModeratePost = this.topic.getIsModeratePost();
+		} catch (Exception e) {
+			Object[] args = { };
+			throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING));
 		}
-		long maxPost = this.userProfile.getMaxPostInPage() ;
-		if(maxPost > 0) this.maxPost = maxPost ;
-		pageList.setPageSize(this.maxPost) ;
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		forumPageIterator.updatePageList(this.pageList) ;
-		if(IdPostView.equals("true")){
-			forumPageIterator.setSelectPage(pageList.getAvailablePage()) ;
-		}
-		this.isModeratePost = this.topic.getIsModeratePost() ;
 	}
 	
 	@SuppressWarnings("unused")
@@ -1167,7 +1176,12 @@ public class UITopicDetail extends UIForm {
 				post.setIcon(topic.getIcon());
 				post.setIsApproved(false) ;
 				post.setIsHidden(isOffend) ;
-				topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
+				try {
+					topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
+        } catch (PathNotFoundException e) {
+        	String[] args = new String[] { } ;
+  				throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+        }
         topicDetail.setUpdatePostPageList(true);
         textAreaInput.setValue("") ;
         boolean hasTopicMod = false ;

@@ -107,6 +107,7 @@
 	    isNotReply = true;
 	    isShowPost = false;
 	    isShowMenu = false;
+	    isUserCreatedTopic= false;
 	  }
 	}
 %>

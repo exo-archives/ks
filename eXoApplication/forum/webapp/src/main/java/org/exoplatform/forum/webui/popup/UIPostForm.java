@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -322,10 +324,15 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
+				boolean isParentDelete = false;
 				if(!ForumUtils.isEmpty(uiForm.postId)) {
 					if(uiForm.isQuote || uiForm.isMP) {
 						post.setRemoteAddr(remoteAddr) ;
-						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
+						try {
+							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
+            } catch (PathNotFoundException e) {
+	            isParentDelete = true;
+            }
 						topicDetail.setIdPostView("true");
 						topicDetail.setUpdatePostPageList(true);
 					} else{
@@ -333,16 +340,31 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						post.setModifiedBy(userName) ;
 						post.setModifiedDate(new Date()) ;
 						post.setEditReason(editReason) ;
-						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false) ;
+						try {
+							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false) ;
+						} catch (PathNotFoundException e) {
+							isParentDelete = true;
+						}
 						topicDetail.setIdPostView(uiForm.postId);
 					}
 				} else {
 					post.setRemoteAddr(remoteAddr) ;
-					uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
+					try {
+						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
+					} catch (PathNotFoundException e) {
+						isParentDelete = true;
+					}
           topicDetail.setIdPostView("true");
           topicDetail.setUpdatePostPageList(true);
 				}
 				uiForm.isMP = uiForm.isQuote = false;
+				if(isParentDelete){
+					Object[] args = { "" };
+					uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					forumPortlet.cancelAction() ;
+					return ;
+				}
 				forumPortlet.cancelAction() ;
 				boolean hasTopicMod = false ;
 				if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
