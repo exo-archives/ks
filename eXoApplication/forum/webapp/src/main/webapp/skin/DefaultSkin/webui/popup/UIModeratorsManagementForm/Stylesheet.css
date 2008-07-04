@@ -7,6 +7,12 @@
 	padding: 0px;
 }
 
+.UIModeratorsManagementForm .UIComponentModerator {
+  margin: auto;
+  width: 99%;
+  *width: 97%;
+}
+
 .UIModeratorsManagementForm .UITabPane .UITabContentContainer .UITabContent {
 	border-bottom: none ;
 }
@@ -17,20 +23,19 @@
 
 .UIModeratorsManagementForm .ModeratorsManagementContainer {
 	border: 1px solid #b7b7b7;
+	background: #f3f3f3;
 }
 
 .UIModeratorsManagementForm .ModeratorsManagementContainer .ManagementContent {
-	background: #f3f3f3;
-	padding: 10px;
+	padding: 14px;
 }
 
 .UIModeratorsManagementForm .ModeratorsManagement .HorizontalLayout {
 	border: none;
-	padding: 5px;
 }
 
-.UIModeratorsManagementForm .ModeratorsGroup {
-	padding: 5px;
+.UIModeratorsManagementForm .UITabPane .TabPaneContent {
+  padding: 0px;
 }
 
 .UIModeratorsManagementForm .ModeratorsGroup .UIFormWithTitle {
