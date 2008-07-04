@@ -11,8 +11,9 @@
 %>
 <div class="UIModeratorsManagementForm">
 	<% uiform.begin() %>
-	<div style="overflow:auto;">
+	<div>
 		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+		<div style="clear: right;"><span></span></div>
 	</div>
   <div class="ModeratorsManagementContainer">
 		<div class="ManagementContent">	  	
@@ -62,6 +63,7 @@
 				        	<a style="float:left" href="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
 					           <div title="View Profile" class="Icon16x16 ViewProfileIcon"><span></span></div>		          
 				        	</a>
+				        	<div style="clear:left;"><span></span></div>
 				        </div>
 				        </div>
 				      </td>
@@ -77,8 +79,9 @@
 			 
 		</div>
 	</div>
-	<div style="overflow:auto;">
+	<div>
 		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+		<div style="clear: right;"><span></span></div>
 	</div>
 <% if(uiform.getIsEdit()) { %>
 	<div class="UIFormTabPane">
