@@ -103,7 +103,7 @@
 	}
 	boolean isShowPost = true ;
 	if(!canEdit){
-	  if(!isActive || !isApproved){
+	  if(!isActive || !isApproved || topic.getIsWaiting()){
 	    isNotReply = true;
 	    isShowPost = false;
 	    isShowMenu = false;

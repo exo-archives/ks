@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -44,6 +45,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -266,6 +268,17 @@ public class UISearchForm extends UIForm implements UISelector {
     fieldInput.setValue(values) ;
   }
   
+  private Calendar getCalendar(UIFormDateTimeInput dateTimeInput, String faled) throws Exception{
+  	Calendar calendar = dateTimeInput.getCalendar();
+  	if(!ForumUtils.isEmpty(dateTimeInput.getValue())){
+  		if(calendar == null){
+  			Object[] args = {faled};
+				throw new MessageException(new ApplicationMessage("NameValidator.msg.erro-format-date", args, ApplicationMessage.WARNING)) ;
+  		}
+  	}
+  	return calendar;
+  }
+  
 	static	public class SearchActionListener extends EventListener<UISearchForm> {
     public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
@@ -284,10 +297,10 @@ public class UISearchForm extends UIForm implements UISelector {
 			String viewCountMin = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).getValue();
 			String viewCountMax = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
 			String moderator = inputSearchForm.getUIStringInput(FIELD_MODERATOR_INPUT).getValue();
-			Calendar fromDateCreated = inputSearchForm.getUIFormDateTimeInput(FROMDATECREATED).getCalendar() ;
-			Calendar toDateCreated= inputSearchForm.getUIFormDateTimeInput(TODATECREATED).getCalendar() ;
-			Calendar fromDateCreatedLastPost = inputSearchForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).getCalendar() ;
-			Calendar toDateCreatedLastPost = inputSearchForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST).getCalendar() ;
+			Calendar fromDateCreated = uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(FROMDATECREATED), FROMDATECREATED);
+			Calendar toDateCreated= uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(TODATECREATED), TODATECREATED);
+			Calendar fromDateCreatedLastPost = uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
+			Calendar toDateCreatedLastPost = uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
 			ForumEventQuery eventQuery = new ForumEventQuery() ;
 			eventQuery.setType(type) ;
 			eventQuery.setKeyValue(keyValue) ;

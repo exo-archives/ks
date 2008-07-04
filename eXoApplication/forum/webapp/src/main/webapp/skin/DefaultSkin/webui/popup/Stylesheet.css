@@ -17,3 +17,11 @@
 @import url('UIViewPost/Stylesheet.css') ;
 @import url('UIShowBookMarkForm/Stylesheet.css') ;
 @import url('UIPrivateMessageForm/Stylesheet.css') ;
+
+.UIForumAdministrationForm .InputContent{
+  float: left;
+}
+
+.UIForumAdministrationForm .InputContent input{
+  width: 150px;
+}

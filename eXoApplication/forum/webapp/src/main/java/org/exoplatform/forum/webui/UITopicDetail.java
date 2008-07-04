@@ -1071,18 +1071,19 @@ public class UITopicDetail extends UIForm {
 	  }
 	}
 	
-	
 	static public class PrivateMessageActionListener extends EventListener<UITopicDetail> {
 	  public void execute(Event<UITopicDetail> event) throws Exception {
       UITopicDetail topicDetail = event.getSource() ;
       String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
       UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIPrivateMessageForm messageForm = popupAction.createUIComponent(UIPrivateMessageForm.class, null, null);
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;
       messageForm.setFullMessage(false);
       messageForm.setUserProfile(topicDetail.userProfile);
       messageForm.setSendtoField(userId) ;
-      popupAction.activate(messageForm, 650, 480, true);
+      popupContainer.setId("PrivateMessageForm") ;
+      popupAction.activate(popupContainer, 650, 480) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 	  }
 	}
