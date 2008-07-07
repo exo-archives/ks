@@ -32,7 +32,7 @@
 								    <td align="right">
 								      <%=uicomponent.getLabel(field.getName()) %> : 
 								    </td>
-								    <td style="padding-left: 4px;">
+								    <td style="padding-left: 4px;white-space:nowrap;">
 								      <div>
 												<% uiform.renderField(fck) %>
 												<div>&nbsp;*</div>
