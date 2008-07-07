@@ -189,6 +189,13 @@
   _width: 99.5%;
 }
 
+.UIFAQPortlet .HorizontalLayout {
+  background-color:#F3F3F3;
+	border:1px solid #C7C7C7;
+	margin:10px;
+	padding:10px;
+}
+
 .UIFAQPortlet .FAQContainer .FAQContent {
   padding: 8px;
 }
@@ -419,16 +426,6 @@
   border: 1px solid #c7c7c7;
 }
 
-.UIFAQPortlet .UIResponse .HorizontalLayout {
-  padding: 8px;
-  background: #f7f7f7;
-}
-
-.UIFAQPortlet .UIAddquestion .HorizontalLayout {
-  padding: 8px;
-  background: #f7f7f7;
-}
-
 .UIFAQPortlet .UIFormUploadInput input{
   width: auto;
 }
@@ -476,11 +473,6 @@
   padding:8px;
 }
 
-.UIFAQPortlet .UISettingForm .UIForm .HorizontalLayout {
-  padding: 8px;
-  background-color: #EFEFEF;
-}
-
 .UIFAQPortlet .UIPopupViewQuestion {
 	padding: 8px;
 }
@@ -524,14 +516,15 @@ UIFAQPortlet .ResultQuickSearch {
   border: 1px solid #c7c7c7;
 }
 
-.UIFAQPortlet .UIAdvanceSearch .HorizontalLayout {
-  padding: 8px;
-  background: #f7f7f7;
-}
-
 .UIFAQPortlet .UIAdvanceSearch .SearchContent .HorizontalLayout {
   padding: 8px;
   background: #ffffff;
+  border-top: 0px;
+}
+
+.UIFAQPortlet .FAQUIQuestionInfo .HorizontalLayout {
+  padding: 0px;
+  margin: 0px;
   border-top: 0px;
 }
 
@@ -558,11 +551,6 @@ UIFAQPortlet .ResultQuickSearch {
 
 .UIFAQPortlet .UISendMailForm #FAQSelectCateList{
   width: 150px ;
-}
-
-.UIFAQPortlet .UISendMailForm .HorizontalLayout {
-  padding: 8px;
-  background: #f7f7f7;
 }
 
 /******************************  UIFAQPageIterator  ***************************************/
@@ -661,13 +649,6 @@ UIFAQPortlet .ResultQuickSearch {
 	width:400px;
 	float:left ;
 	margin-top: 0px;
-}
-
-.UIFAQPortlet .UIQuestionForm .HorizontalLayout {
-	border: 1px solid #c7c7c7;
-	margin: 10px;
-	background-color:#F3F3F3;
-	padding: 10px;
 }
 
 .UIFAQPortlet .ViewAttachFile {

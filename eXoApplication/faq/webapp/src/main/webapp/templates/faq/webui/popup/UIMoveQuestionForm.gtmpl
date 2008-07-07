@@ -1,19 +1,19 @@
 <div class="FAQUIMoveQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
-		<div style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; border: 1px solid #E6F3F3">
-			<table>
+		<div class="HorizontalLayout">
+			<table class="UIFormGrid">
 				<tr>
-					<td align="right" width="200px"> 
-						<div style="margin: 5px 10px 5px 2px;"> <%=_ctx.appRes(uicomponent.getName() + ".label." + "MoveQuestionTo")%>: </div>
+					<td class="FieldLabel"> 
+						<%=_ctx.appRes(uicomponent.getName() + ".label." + "MoveQuestionTo")%>:
 					</td>
-					<td align="left"> <div style="margin: 5px 10px 5px 2px;">
+					<td class="FieldComponent">
 						<%for(field in uiform.getChildren()) { 
 								if(field.isRendered() && field != null) {
 						%>
 									<% uiform.renderField(field) %>
 						<%	}
 							}%>
-					</div></td>
+					</td>
 				</tr>
 			</table>
 			
