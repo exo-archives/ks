@@ -97,15 +97,19 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     } catch (NullPointerException e) {
     	email = "" ;
     }
+    String quest = question.getQuestion().replaceAll("\n", "<br>") ;
+    quest = question.getQuestion().replaceAll("'", "&#39;") ;
     languageIsResponsed = question.getLanguage() ;
     QuestionLanguage questionLanguage = new QuestionLanguage() ;
     questionLanguage.setLanguage(question.getLanguage()) ;
-    questionLanguage.setQuestion(question.getQuestion().replaceAll("\n", "<br>")) ;
+    questionLanguage.setQuestion(quest) ;
     questionLanguage.setResponse(question.getResponses()) ;
     
     listQuestionLanguage.add(questionLanguage) ;
     for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) {
-      questionLanguage2.setQuestion(questionLanguage2.getQuestion().replaceAll("\n", "<br>")) ;
+    	String quest2 = questionLanguage2.getQuestion().replaceAll("\n", "<br>") ;
+      quest2 = questionLanguage2.getQuestion().replaceAll("'", "&#39;") ;
+    	questionLanguage2.setQuestion(quest2) ;
       listQuestionLanguage.add(questionLanguage2) ;
     }
     questionChanged_ = question.getQuestion() ;

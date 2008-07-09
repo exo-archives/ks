@@ -107,7 +107,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       if (categoryId != null) {
       	FAQService faqService =	FAQUtils.getFAQService() ;
       	if(uiWatchForm.isUpdate) {
-      		faqService.deleteMailInWacth(categoryId, FAQUtils.getSystemProvider(), order) ;
+      		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), order) ;
       		faqService.addWatch(1, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
       		UIWatchContainer watchContainer = uiWatchForm.getAncestorOfType(UIWatchContainer.class) ;
       		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 

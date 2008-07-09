@@ -116,11 +116,13 @@ public class FAQUtils {
   		} catch (Exception e) {
   			return false ;
   		}
-  		if(array[0].charAt(0) == '*' && array[0].length() == 1) {
-  			return true ;
-  		} else {
-  			if(organizationService.getMembershipTypeHandler().findMembershipType(array[0])== null) return false ;
-  		} 
+  		if(array[0].length() > 0) {
+	  		if(array[0].charAt(0) == '*' && array[0].length() == 1) {
+	  			return true ;
+	  		} else {
+	  			if(organizationService.getMembershipTypeHandler().findMembershipType(array[0])== null) return false ;
+	  		} 
+  		} else return false ;
 		} else { //group
 			try {
 				organizationService.getGroupHandler().findGroupById(str).getId() ;

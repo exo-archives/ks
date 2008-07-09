@@ -204,11 +204,11 @@ public interface FAQService {
   public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception;  
   
   public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception ;
-  public List<String> getListMailInWacth(String categoryId,  SessionProvider sProvider) throws Exception ;
-  public void deleteMailInWacth(String categoryId, SessionProvider sProvider, int order) throws Exception ;
-  public List<FAQFormSearch> getAdvancedEmptry(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;
-  public List<Category> getAdvancedSeachCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
-  public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  public List<String> getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
+  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, int order) throws Exception ;
+  public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;
+  public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception ;
   public void sendMessage(Message message) throws Exception ;
   
