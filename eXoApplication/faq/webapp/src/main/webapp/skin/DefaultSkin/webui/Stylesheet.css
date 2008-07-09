@@ -3,6 +3,7 @@
 .UIFAQPortlet {
   padding: 5px; height: 400px;
   min-width: 940px;
+  border: 1px solid #b7b7b7;
 }
 
 .UIFAQPortlet .UIBreadcumbs {
@@ -1039,4 +1040,8 @@ UIFAQPortlet .ResultQuickSearch {
 
 .UIFAQPortlet .UIAttachMentForm .SelectFileFrame {
   margin: 0px;
+}
+
+.UIFAQPortlet .UIRightClickPopupMenu .ItemIcon {
+	line-height: 16px;
 }
