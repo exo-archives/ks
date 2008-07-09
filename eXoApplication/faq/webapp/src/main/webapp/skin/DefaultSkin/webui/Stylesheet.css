@@ -1036,3 +1036,7 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .UICategoryForm .UIFormGrid .UIFormGrid {
   width: auto;
 }
+
+.UIFAQPortlet .UIAttachMentForm .SelectFileFrame {
+  margin: 0px;
+}

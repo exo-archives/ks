@@ -1,6 +1,6 @@
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="margin: 10px 10px 30px 10px;background-color:#F3F3F3;">
+		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table class="UIFormGrid">
 					<tbody>						
