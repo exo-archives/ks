@@ -22,6 +22,10 @@ import org.exoplatform.commons.utils.ISO8601;
 
 /**
  * Created by The eXo Platform SARL
+ * 
+ * This object intermediate to give search Category or question in form advance search.
+ * All value user input search will save this object
+ *  
  * Author : Truong Nguyen
  *					truong.nguyen@exoplatform.com
  * May 5, 2008, 3:48:51 PM

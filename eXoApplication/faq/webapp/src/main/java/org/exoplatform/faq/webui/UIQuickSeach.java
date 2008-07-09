@@ -71,7 +71,7 @@ public class UIQuickSeach  extends UIForm {
 				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 				List<FAQFormSearch> list = null ;
 				try {
-					list = faqService.getAdvancedEmptry(FAQUtils.getSystemProvider(), text, null, null);
+					list = faqService.getAdvancedEmpty(FAQUtils.getSystemProvider(), text, null, null);
 				} catch (Exception e) {
 					uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearch.msg.failure", null, ApplicationMessage.WARNING)) ;
@@ -98,8 +98,9 @@ public class UIQuickSeach  extends UIForm {
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 600) ;
 			resultContainer.setIsRenderedContainer(1) ;
-			resultContainer.getChild(UIAdvancedSearchForm.class) ;
+			UIAdvancedSearchForm uiAdvancedSearchForm = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			resultContainer.setId("AdvanceSearchForm") ;
+			uiAdvancedSearchForm.setValue(false, false, false, false, false, false, false, false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
   }

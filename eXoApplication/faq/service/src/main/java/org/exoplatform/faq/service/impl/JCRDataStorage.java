@@ -186,7 +186,7 @@ public class JCRDataStorage {
       			message.setSubject("eXo FAQ Watching Category Notifycation!");
       			message.setMessageBody("The category '" + cate.getProperty("exo:name").getString() 
       					+"' have just  added question:</br>" + question.getQuestion());
-      			sendNotification(emailsList, message, null) ;    			
+      			sendNotification(emailsList, message) ;    			
       		}
       	}
     	} catch(Exception e) {
@@ -194,7 +194,7 @@ public class JCRDataStorage {
     	}    	
     }
     // Send notifycation when question responsed or edited or watching
-  	if(!isNew && question.getResponses() != null && question.getResponses().length() > 0 && question.isApproved()) {
+  	if(!isNew && question.getResponses() != " " && question.isApproved()) {
   		List<String> emails = new ArrayList<String>() ;
   		List<String> emailsList = new ArrayList<String>() ;
   		try {
@@ -207,29 +207,39 @@ public class JCRDataStorage {
       				emailsList.add(string_) ;
       			}
       		}
-      		if(emailsList != null && emailsList.size() > 0) { 
+      		if(emailsList != null && emailsList.size() > 0) {
 						Message message = new Message();
 			      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-						//message.setMessageTo(question.getEmail());
 						message.setSubject("eXo FAQ Question Responsed Or Edit Notifycation!");
 						message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
-						sendNotification(emailsList, message, question.getEmail()) ;
+						sendNotification(emailsList, message) ;
       		}
-      	}
+      	} 
+  		} catch(Exception e) {
+  			e.printStackTrace() ;
+  		}  		  		
+  	}
+ // Send notifycation when question responsed to add that question
+  	if(question.getResponses() != " " && question.isApproved()) {
+  		List<String> emailsList = new ArrayList<String>() ;
+  		try {
+  			Message message = new Message();
+	      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+				message.setSubject("eXo FAQ Your Question is answered !");
+				message.setMessageBody("The question: " + question.getQuestion() + " have just responsed");
+				emailsList.add(question.getEmail()) ;
+				sendNotification(emailsList, message) ;
   		} catch(Exception e) {
   			e.printStackTrace() ;
   		}  		  		
   	}
   }
   
-  private void sendNotification(List<String> emails, Message message, String authorEmail) throws Exception {
+  private void sendNotification(List<String> emails, Message message) throws Exception {
   	List<Message> messages = new ArrayList<Message> () ;
 		List<String> emails_ = new ArrayList<String>();
 		ServerConfiguration config = getServerConfig() ;
 		Message message_ = new Message() ;
-		if(authorEmail != null && authorEmail.length() > 0){
-			emails.add(authorEmail) ;
-  	}
 		for(String string : emails) {
 			if(emails_.contains(string)) continue ;
 			emails_.add(string) ;
@@ -748,7 +758,7 @@ public class JCRDataStorage {
   	watchingNode.getSession().save();
   }
   
-  public List<String> getListMailInWacth(String categoryId, SessionProvider sProvider) throws Exception {
+  public List<String> getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
   	Node cate = getCategoryNodeById(categoryId, sProvider) ;
     List<String> listEmails = new ArrayList<String>() ;
     if(cate.isNodeType("exo:faqWatching")){
@@ -762,7 +772,7 @@ public class JCRDataStorage {
     return listEmails;
   }
   
-  public void deleteMailInWacth(String categoryId, SessionProvider sProvider, int order) throws Exception {
+  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, int order) throws Exception {
   	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
   	Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
 		List<String> vls = new ArrayList<String>() ;
@@ -796,7 +806,7 @@ public class JCRDataStorage {
 		return queryString.toString() ;
 	}
   
-  public List<FAQFormSearch> getAdvancedEmptry(SessionProvider sProvider,String text,Calendar fromDate, Calendar toDate) throws Exception {
+  public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider,String text,Calendar fromDate, Calendar toDate) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
   	String types[] = new String[] {"faqCategory", "faqQuestion"} ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
@@ -847,7 +857,7 @@ public class JCRDataStorage {
   	return FormSearchs ;
   }
 
-	public List<Category> getAdvancedSeachCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+	public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		List<Category> catList = new ArrayList<Category>() ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
@@ -879,7 +889,7 @@ public class JCRDataStorage {
 	  return catList;
   }
   
-  public List<Question> getAdvancedSeachQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		List<Question> questionList = new ArrayList<Question>() ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;

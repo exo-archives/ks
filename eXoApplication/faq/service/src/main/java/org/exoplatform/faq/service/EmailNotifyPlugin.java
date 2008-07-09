@@ -33,7 +33,8 @@ public class EmailNotifyPlugin extends BaseComponentPlugin {
 
   private Map<String,String> serverConfiguration_ = new HashMap<String, String>();
 
-  public EmailNotifyPlugin(InitParams params) {
+  @SuppressWarnings("unchecked")
+	public EmailNotifyPlugin(InitParams params) {
     PropertiesParam param = params.getPropertiesParam("email.configuration.info");
     if (param != null) {
       serverConfiguration_ = param.getProperties();

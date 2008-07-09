@@ -418,7 +418,7 @@ public class UIQuestions extends UIContainer {
 	
   public List<String> getListEmail(String categoryId) throws Exception {
   	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-    emailList_ = faqService.getListMailInWacth(categoryId, FAQUtils.getSystemProvider()) ;
+    emailList_ = faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider()) ;
     return emailList_ ;
   }
   

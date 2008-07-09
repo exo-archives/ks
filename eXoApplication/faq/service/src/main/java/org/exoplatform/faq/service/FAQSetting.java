@@ -17,6 +17,9 @@
 package org.exoplatform.faq.service;
 /**
  * Created by The eXo Platform SARL
+ * 
+ * This Object is used to set some properties of FAQ.
+ *  
  * Author : Truong Nguyen
  *					truong.nguyen@exoplatform.com
  * Apr 10, 2008, 2:07:25 PM
@@ -34,9 +37,38 @@ public class FAQSetting {
 		displayType = DISPLAY_TYPE_RELEVANCE ; 
 	}
 	
+	/**
+	 * This method will 2 value is true or false
+	 * if is true then display view: Do not process questions before showing
+	 * if is false then display view: Process questions before showing
+	 * 
+	 * @return processingMode
+	 */
 	public boolean getProcessingMode() { return processingMode ;}
+	
+	/**
+	 * there are two modes: Process/ Do not process questions.
+	 * It means: one question of user in those categories can be processed 
+	 * by special user groups which have right or not before showing.
+	 * This is a combo box with two values: 'Process questions before showing' and 'Do not process questions before showing'
+	 * 
+	 * @param b, if b = true then field Show Mode : Do not process questions before showing
+	 * 					 else field Show Mode : Process questions before showing
+	 */
 	public void setProcessingMode(boolean b) { processingMode = b ;} 
 	
+	/**
+	 * This method get one value is Alphabet or Post Date
+	 * 
+	 * @return displayType
+	 */
 	public String getDisplayMode() { return displayType ;}
+	
+	/**
+	 * All categories/questions can be displayed in some types depending on users.
+	 * This is a combo box with two values: Alphabet or Post Date
+	 * 
+	 * @param dis  the string to display is Alphabet or Post Date
+	 */
 	public void setDisplayMode(String dis) { displayType = dis ;} 
 }
