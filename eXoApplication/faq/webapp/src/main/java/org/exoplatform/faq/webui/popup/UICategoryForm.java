@@ -130,6 +130,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		if(isUpdate) {
 		  FAQService faqService = FAQUtils.getFAQService();
 		  Category cat = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+		  String modera[] = cat.getModeratorsCategory() ;
 		  categoryId_ = categoryId ; 
 		  oldName_ = cat.getName() ;
 			getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
@@ -307,9 +308,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
        UIPopupAction childPopup = categoryForm.getAncestorOfType(UIPopupContainer.class).getChild(UIPopupAction.class) ;
        UIGroupSelector uiGroupSelector = childPopup.activate(UIGroupSelector.class, 500) ;
        uiGroupSelector.setType(permType) ;
-       if(permType.equals("0") ) uiGroupSelector.setId("UIUserSelector") ;
-       if(permType.equals("1") ) uiGroupSelector.setId("UIMebershipSelector") ;
-       if(permType.equals("2") ) uiGroupSelector.setId("UIGroupSelector") ;
+       if(permType.equals(UISelectComponent.TYPE_USER) ) uiGroupSelector.setId("UIUserSelector") ;
+       if(permType.equals(UISelectComponent.TYPE_MEMBERSHIP) ) uiGroupSelector.setId("UIMebershipSelector") ;
+       if(permType.equals(UISelectComponent.TYPE_GROUP) ) uiGroupSelector.setId("UIGroupSelector") ;
        uiGroupSelector.setSelectedGroups(null) ;
        uiGroupSelector.setComponent(categoryForm, new String[]{FIELD_MODERATOR_INPUT}) ;
        event.getRequestContext().addUIComponentToUpdateByAjax(childPopup) ;  

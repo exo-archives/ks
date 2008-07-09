@@ -58,16 +58,24 @@ public class FAQServiceUtils {
 				if(str.indexOf(":") >= 0) { //membership
 					String[] array = str.split(":") ;
 					List<User> userList = organizationService_.getUserHandler().findUsersByGroup(array[1]).getAll() ;
-					for(User user: userList) {
-						Collection<Membership> memberships = organizationService_.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
-						for(Membership member : memberships){
-							if(member.getMembershipType().equals(array[0])) {
-								if(!users.contains(user.getUserName())){
-									users.add(user.getUserName()) ;
-								}
-								break ;
+					if(array[0].equals("*")) {
+						for(User user: userList) {
+							if(!users.contains(user.getUserName())){
+								users.add(user.getUserName()) ;
 							}
-						}  					
+						}
+					} else {
+						for(User user: userList) {
+							Collection<Membership> memberships = organizationService_.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
+							for(Membership member : memberships){
+								if(member.getMembershipType().equals(array[0])) {
+									if(!users.contains(user.getUserName())){
+										users.add(user.getUserName()) ;
+									}
+									break ;
+								}
+							}  					
+						}
 					}
 				} else { //group
 					List<User> userList = organizationService_.getUserHandler().findUsersByGroup(str).getAll() ;
