@@ -24,11 +24,12 @@
       <div class="OverflowContainer">
 	      <%                
 	      boolean even = true ;
-	      if(uicomponent.getCurrentGroup() != null) {
+	     if(uicomponent.getCurrentGroup() != null) {
 		      for(user in uicomponent.getList()){
 		        String rowCssClass = "OddRow" ;
 		        if(even) rowCssClass = "EvenRow" ;  
 		        even = !even ;
+						even = !even ;
 		        	key = "" ;
 			        if(uicomponent.isSelectMemberShip()){ 
 			        		 key = user + ":" +  uicomponent.getCurrentGroup().getId() ;
@@ -36,16 +37,30 @@
 			        	key = user ;
 			        } else if(uicomponent.isSelectGroup()){ 
 			        	key = uicomponent.getCurrentGroup().getId()+"/"+user ;
-			        }
-			          
+			        }    
 	      %>
 			      <div class="$rowCssClass">
 			        <div class="ItemIcon"><span></span></div>
-		        	<a href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>	
-		        	<div style="clear: left"><span></span></div>								           
+			        	<a href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>	
+			        	<div style="clear: left"><span></span></div>								           
 			      </div>
 	      <%}
-	      }%>
+	      } else if (uicomponent.isSelectGroup()){
+	      	for(user in uicomponent.getList()){
+		        String rowCssClass = "OddRow" ;
+		        if(even) rowCssClass = "EvenRow" ;  
+		        even = !even ;
+			      key = "/" + user ;    
+	      %>
+			      <div class="$rowCssClass">
+			        <div class="ItemIcon"><span></span></div>
+			        	<a href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>	
+			        	<div style="clear: left"><span></span></div>								           
+			      </div>
+	      <%}		
+	      
+	      }
+	      %>
       </div>
 	  </div>
 		<div style="clear: left"><span></span></div>
