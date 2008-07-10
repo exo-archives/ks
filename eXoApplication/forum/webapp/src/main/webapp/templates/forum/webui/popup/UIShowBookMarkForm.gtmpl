@@ -1,42 +1,38 @@
 <div class="UIShowBookMarkForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
-			<div class="UIFormInput">
-				<div class="TopContent">
-					<div class="IconContent"><span></span></div>
-					<div class="LinkName">Link Name</div>
-					<div class="DeleteAction">Action</div>
-					<div style="clear: left;"><span></span></div>
-				</div>
-				<div class="UIListContainer">
-				<% 
-					String linkName = ""; 
-					String linkPath = "";
-					String icon = ""; 
-					int index = 0, lastIndex = 0;
-					for(links in uiform.getBookMark()){
-						index = links.indexOf("//") ;
-						icon = links.substring(0, index);
-						lastIndex = links.lastIndexOf("//") ;
-						linkName = links.substring(index+2,lastIndex);
-						linkPath = links.substring(lastIndex + 2);
-						links = "topicIcon//topicName//"+linkPath;
-				%>
-					<div class="LinkContent">
-						<div class="IconContent $icon"><span></span></div>
-						<div class="LinkName"><a href="<%=uiform.event("OpenLink",linkPath);%>">$linkName</a></div>
-						<div class="DeleteAction">
-							<div class="IconDelete">
-								<a href="<%=uiform.event("DeleteLink",links);%>">
-									<div class="DeleteIcon"><span></span></div>
-								</a>
-							</div>
-						</div>
-						<div style="clear: left;"><span></span></div>
-					</div>
-				<% } %>
-				</div>
-			</div>
+			<table class="UIGrid">
+				<thead>
+					<th style="width: 35px;"></th>
+					<th>Link name</th>
+					<th style="width: 40px;">Action</th>
+				</thead>
+				<body>
+					<% 
+						String linkName = ""; 
+						String linkPath = "";
+						String icon = ""; 
+						int index = 0, lastIndex = 0;
+						for(links in uiform.getBookMark()){
+							index = links.indexOf("//") ;
+							icon = links.substring(0, index);
+							lastIndex = links.lastIndexOf("//") ;
+							linkName = links.substring(index+2,lastIndex);
+							linkPath = links.substring(lastIndex + 2);
+							links = "topicIcon//topicName//"+linkPath;
+					%>
+					<tr>
+						<td><div class="$icon" style="width: 24px; height: 24px;"><span></span></div></td>
+						<td><a href="<%=uiform.event("OpenLink",linkPath);%>">$linkName</a></td>
+						<td>
+							<a href="<%=uiform.event("DeleteLink",links);%>">
+								<div class="DeleteIcon"><span></span></div>
+							</a>
+						</td>
+					</tr>
+					<% } %>
+				</body>
+			</table>
 		</div>
 		<div class="UIAction"> 
 			<table class="ActionContainer" align="center">
