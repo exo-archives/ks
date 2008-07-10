@@ -500,8 +500,8 @@
 					        		</a>
 					        	<%}%>
 									
-										<div class="ContentAction" style="float: left;padding-top: 0px;" onclick="eXo.faq.UIFAQPortlet.showMenu(this, event);">
-											<a href="javaScript: void(0);" class="ActionButton LightBlueStyle" style="float: none;">
+										<div class="ActionButton" style="float: left;padding-top: 0px;" onclick="eXo.faq.UIFAQPortlet.showMenu(this, event);">
+											<a href="javaScript: void(0);" class="LightBlueStyle">
 						      	  	<div class="ButtonLeft">
 						        	  	<div class="ButtonRight">
 						          	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + "SelectLanguage")%></div>
