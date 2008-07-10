@@ -87,6 +87,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   
 	public void setUpdateQuestion(String questionId, String language) throws Exception {
     Question question = FAQUtils.getFAQService().getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+   if(language.equals("")) language = question.getLanguage() ;
     @SuppressWarnings("unused")
     String email = "" ;
     ContactService contactService = getApplicationComponent(ContactService.class) ;
