@@ -1176,7 +1176,7 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UISendMailForm sendMailForm = popupContainer.addChild(UISendMailForm.class, null, null) ;
-      if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "English") ;
+      if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "") ;
       else sendMailForm.setUpdateQuestion(questionId , language_) ;
       popupContainer.setId("FAQSendMailForm") ;
       popupAction.activate(popupContainer, 700, 1000) ;

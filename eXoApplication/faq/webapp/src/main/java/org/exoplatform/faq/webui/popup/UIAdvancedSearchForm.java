@@ -130,10 +130,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		addUIFormInput(toDate) ;
 	}
 	
-	public void setSelectType(String type) {
-	  this.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type) ;
-  }
-	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	

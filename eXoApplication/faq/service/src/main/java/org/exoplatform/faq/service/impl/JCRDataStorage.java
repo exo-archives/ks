@@ -225,8 +225,8 @@ public class JCRDataStorage {
   		try {
   			Message message = new Message();
 	      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-				message.setSubject("eXo FAQ Your Question is answered !");
-				message.setMessageBody("The question: " + question.getQuestion() + " have just responsed");
+				message.setSubject("eXo FAQ Your Question is answered or edit !");
+				message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edit notifycation!");
 				emailsList.add(question.getEmail()) ;
 				sendNotification(emailsList, message) ;
   		} catch(Exception e) {
