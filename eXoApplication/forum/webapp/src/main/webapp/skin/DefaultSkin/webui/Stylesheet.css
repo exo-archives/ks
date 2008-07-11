@@ -366,3 +366,8 @@
 	*color: #b7b7b7;
 	_color: #b7b7b7;
 }
+
+.UIForumPortlet .PageListPostHidden .UIAction {
+	padding: 0px;
+	margin: 16px 0px 8px 0px;
+}
