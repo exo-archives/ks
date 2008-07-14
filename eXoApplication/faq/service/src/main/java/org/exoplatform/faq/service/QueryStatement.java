@@ -19,94 +19,312 @@ package org.exoplatform.faq.service;
 import java.util.Date;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Jul 11, 2007  
+ * hung.nguyen@exoplatform.com
+ * Jul 11, 2007
  */
 public class QueryStatement {
 	
+	/** The Constant QUESTION. */
 	public static final String QUESTION = "exo:faqQuestion" ;
+	
+	/** The Constant CATEGORY. */
 	public static final String CATEGORY = "exo:faqCategory" ;
+	
+	/** The Constant ASC. */
 	public static final String ASC = "ascending" ;
+	
+	/** The Constant DESC. */
 	public static final String DESC = "descending" ;
 	
+	/** The type. */
 	private String type = QUESTION ;
+  
+  /** The text. */
   private String text = null ;
+  
+  /** The order by. */
   private String[] orderBy ; 
+  
+  /** The order type. */
   private String orderType = ASC ;//ascending or descending
+  
+  /** The created date. */
   private Date createdDate ;
   
   // properties for question
+  /** The question. */
   private String question ;
+  
+  /** The author. */
   private String author ;
+  
+  /** The email. */
   private String email ;
+  
+  /** The is activated. */
   private boolean isActivated = true ;
+  
+  /** The is approved. */
   private boolean isApproved = true ;
   
+  /** The category id. */
   private String categoryId ;
+  
+  /** The responses. */
   private List<String> responses ;
+  
+  /** The relations. */
   private List<String> relations ;
   
+  /** The name. */
   private String name ;
+  
+  /** The description. */
   private String description ;
+  
+  /** The moderators. */
   private List<String> moderators ;
  
+  /**
+   * Gets the type.
+   * 
+   * @return the type
+   */
   public String getType() { return type ; }
+  
+  /**
+   * Sets the type.
+   * 
+   * @param nt the new type
+   */
   public void setType(String nt) { this.type = nt ; }
   
+  /**
+   * Sets the text.
+   * 
+   * @param fullTextSearch the new text
+   */
   public void setText(String fullTextSearch) { this.text = fullTextSearch ; }
+  
+  /**
+   * Gets the text.
+   * 
+   * @return the text
+   */
   public String getText() { return text ; }
   
+  /**
+   * Gets the order by.
+   * 
+   * @return the order by
+   */
   public String[] getOrderBy() { return orderBy ; }
+  
+  /**
+   * Sets the order by.
+   * 
+   * @param order the new order by
+   */
   public void setOrderBy(String[] order) { this.orderBy = order ; }
   
+  /**
+   * Gets the order type.
+   * 
+   * @return the order type
+   */
   public String getOrderType() { return orderType ; }
+  
+  /**
+   * Sets the order type.
+   * 
+   * @param type the new order type
+   */
   public void setOrderType(String type) { this.orderType = type ; }
   
+  /**
+   * Sets the created date.
+   * 
+   * @param createdDate the new created date
+   */
   public void setCreatedDate(Date createdDate) { this.createdDate = createdDate; }
+	
+	/**
+	 * Gets the created date.
+	 * 
+	 * @return the created date
+	 */
 	public Date getCreatedDate() { return createdDate; }
 	
   // properties for question
   
+  /**
+   * Gets the question.
+   * 
+   * @return the question
+   */
   public String getQuestion() { return question ; }
+  
+  /**
+   * Sets the question.
+   * 
+   * @param name the new question
+   */
   public void setQuestion(String name) { this.question = name ; }
 
+  /**
+   * Gets the responses.
+   * 
+   * @return the responses
+   */
   public List<String> getResponses() { return responses ; }
+  
+  /**
+   * Sets the responses.
+   * 
+   * @param rp the new responses
+   */
   public void setResponses(List<String> rp) { this.responses = rp ; }	
   
+  /**
+   * Gets the relations.
+   * 
+   * @return the relations
+   */
   public List<String> getRelations() { return relations ; }
+  
+  /**
+   * Sets the relations.
+   * 
+   * @param rl the new relations
+   */
   public void setRelations(List<String> rl) { this.relations = rl ; }
 
+	/**
+	 * Sets the author.
+	 * 
+	 * @param author the new author
+	 */
 	public void setAuthor(String author) { this.author = author; }
+	
+	/**
+	 * Gets the author.
+	 * 
+	 * @return the author
+	 */
 	public String getAuthor() { return author; }
 
+	/**
+	 * Sets the email.
+	 * 
+	 * @param email the new email
+	 */
 	public void setEmail(String email) { this.email = email; }
+	
+	/**
+	 * Gets the email.
+	 * 
+	 * @return the email
+	 */
 	public String getEmail() { return email; }
 
+	/**
+	 * Sets the activated.
+	 * 
+	 * @param isActivated the new activated
+	 */
 	public void setActivated(boolean isActivated) {	this.isActivated = isActivated ; }
+	
+	/**
+	 * Checks if is activated.
+	 * 
+	 * @return true, if is activated
+	 */
 	public boolean isActivated() { return isActivated ; }
 
+	/**
+	 * Sets the approved.
+	 * 
+	 * @param isApproved the new approved
+	 */
 	public void setApproved(boolean isApproved) { this.isApproved = isApproved ; }
+	
+	/**
+	 * Checks if is approved.
+	 * 
+	 * @return true, if is approved
+	 */
 	public boolean isApproved() { return isApproved ; }
   
+	/**
+	 * Sets the category id.
+	 * 
+	 * @param catId the new category id
+	 */
 	public void setCategoryId(String catId) { this.categoryId = catId ; }
+	
+	/**
+	 * Gets the category id.
+	 * 
+	 * @return the category id
+	 */
 	public String getCategoryId() { return categoryId; }
 	
 	// properties for category
 	
+	/**
+	 * Gets the name.
+	 * 
+	 * @return the name
+	 */
 	public String getName() { return name ; }
+  
+  /**
+   * Sets the name.
+   * 
+   * @param name the new name
+   */
   public void setName(String name) { this.name = name ; }
 
+  /**
+   * Gets the description.
+   * 
+   * @return the description
+   */
   public String getDescription() { return description ; }
+  
+  /**
+   * Sets the description.
+   * 
+   * @param description the new description
+   */
   public void setDescription(String description) { this.description = description ; }	
   
+  /**
+   * Gets the moderators.
+   * 
+   * @return the moderators
+   */
   public List<String> getModerators() { return moderators ; }
+  
+  /**
+   * Sets the moderators.
+   * 
+   * @param mods the new moderators
+   */
   public void setModerators(List<String> mods) { this.moderators = mods ; }
   
+  /**
+   * Gets the query statement.
+   * 
+   * @return the query statement
+   * 
+   * @throws Exception the exception
+   */
   public String getQueryStatement() throws Exception {
-  	
   	return null ;
   }
   

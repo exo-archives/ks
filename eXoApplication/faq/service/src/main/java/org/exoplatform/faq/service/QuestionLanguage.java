@@ -16,26 +16,74 @@
  **/
 package org.exoplatform.faq.service;
 
+// TODO: Auto-generated Javadoc
 /**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Jul 11, 2007  
+ * A question may be have multi languages, user can write his question in
+ * one language or all languages are supported by portal (if he can). But only
+ * language is default will be set into question's property while other languages is saved
+ * as children node of question node. Each language node only contain three properties
+ * are name of language is used, content of question, content of response. And
+ * Language node's name is language's name too.
+ * 
+ * @author   Hung Nguyen Quang
+ * @since   Jul 11, 2007
  */
 public class QuestionLanguage {
+  
+  /** The language. */
   private String language ;
+  
+  /** The question. */
   private String question ;
+  
+  /** The response. */
   private String response ;
   
+  /**
+   * class constructor.
+   */
   public QuestionLanguage() { }
   
+  /**
+   * Get name of language is used to write quetsion.
+   * 
+   * @return  language name of language
+   */
   public String getLanguage() { return language ; }
+  
+  /**
+   * registers name of language for Language node and the name is Language node's name too.
+   * 
+   * @param lang  the name of language node
+   */
   public void setLanguage(String lang) { this.language = lang ; }
   
+  /**
+   * Get content of question is saved in this language node.
+   * 
+   * @return  content of question in this language
+   */
   public String getQuestion() { return question ; }
+  
+  /**
+   * Registers question content for thi language node.
+   * 
+   * @param q the content of question
+   */
   public void setQuestion(String q) { this.question = q ; }
 
+  /**
+   * Gets the response of quetsion in this Language node.
+   * 
+   * @return the response
+   */
   public String getResponse() { return response ; }
+  
+  /**
+   * Registers content of reponse, this content is only written by admin or moderator.
+   * 
+   * @param res the res
+   */
   public void setResponse(String res) { this.response = res ; }	
   
 }

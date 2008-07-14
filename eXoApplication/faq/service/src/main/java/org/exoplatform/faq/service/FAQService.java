@@ -29,9 +29,8 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
  * Created by The eXo Platform SARL
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Mar 04, 2008  
+ * @author  Hung Nguyen Quanghung.nguyen@exoplatform.com
+ * @since   Mar 04, 2008  
  */
 public interface FAQService {
   
@@ -40,6 +39,7 @@ public interface FAQService {
 	/**
    * This method should:
    * 1. Check exists category or NOT to create new or update exists category
+   * 
    * @param Category
    * @param is new category
    * @throws Exception
@@ -48,6 +48,7 @@ public interface FAQService {
   /**
    * This method should:
    * 1. Check exists of category and remove it
+   * 
    * @param Category identify
    * @throws Exception
    */
@@ -56,6 +57,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup category node via identify 
    * 2. Convert to Category object and return
+   * 
    * @param categoryId
    * @return Category
    * @throws Exception
@@ -65,6 +67,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup all the categories node
    * 2. Convert to category object and return list of category object
+   * 
    * @return Category list
    * @throws Exception
    */
@@ -73,6 +76,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup all the categories node, find category have user in moderators
    * 2. Convert to category object and return list of category object
+   * 
    * @return Category list
    * @throws Exception
    */
@@ -81,6 +85,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup all sub-categories of a category
    * 2. Convert to category object and return list of category object
+   * 
    * @param Category identify
    * @return Category list
    * @throws Exception
@@ -92,6 +97,7 @@ public interface FAQService {
   /**
    * This method should:
    * 1. Check exists question or NOT to create new or update exists question
+   * 
    * @param Question
    * @param is new question
    * @throws Exception
@@ -100,6 +106,7 @@ public interface FAQService {
   /**
    * This method should:
    * 1. Check exists question and remove it
+   * 
    * @param Category identify
    * @param Question identify
    * @throws Exception
@@ -109,6 +116,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup the question node via identify
    * 2. Convert to question object and return
+   * 
    * @param question identify
    * @return Question 
    * @throws Exception
@@ -118,6 +126,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup all questions node
    * 2. Convert to list of question object and return
+   * 
    * @return List of question
    * @throws Exception
    */
@@ -126,6 +135,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup all questions node have property response is null (have not yet answer)
    * 2. Convert to list of question object and return
+   * 
    * @return List of question
    * @throws Exception
    */
@@ -134,6 +144,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup questions, only question node is activated and approved  via category identify
    * 2. Convert to list of question object
+   * 
    * @param Category identify
    * @return Question list
    * @throws Exception
@@ -143,19 +154,32 @@ public interface FAQService {
    * This method should:
    * 1. Lookup all questions node via category identify
    * 2. Convert to list of question object
+   * 
    * @param Category identify
    * @return Question list
    * @throws Exception
    */
   public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
-  /*
+  
+  /**
+   * Get some informations of category: Lookup category node by category's id
+   * and count subcategories and quetions are contained in this catigory
    * 
-   * */
+   * @param   categoryId
+   * @param   sProvider
+   * @return              number of subcategories
+   *                      number of questions
+   *                      number of questions is not approved
+   *                      number of question is have not yet answered
+   * @throws  Exception   if not found category by id
+   *                      if not found question or lose file attach
+   */
   public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception ;
   /**
    * This method should:
    * 1. Lookup questions node via category identify
    * 2. Convert to list of question object
+   * 
    * @param Category identify
    * @return Question list
    * @throws Exception
@@ -166,6 +190,7 @@ public interface FAQService {
    * 1. Lookup question
    * 2. Lookup languageNode of question
    * 3. find all childern node of language node
+   * 
    * @param Question 
    * @return language list
    * @throws Exception
@@ -177,6 +202,7 @@ public interface FAQService {
    * 2. Lookup languageNode of question
    * 3. find childrent node of language node is searched
    * 4. find properties of childrent node, if contain input of user, get this question
+   * 
    * @param Question list, langage want search, question's content or response's content want search 
    * @return Question list
    * @throws Exception
@@ -187,6 +213,7 @@ public interface FAQService {
    * 1. Lookup questions via question identify and from category identify
    * 2. Lookup destination category
    * 2. Move questions to destination category
+   * 
    * @param Question identify list
    * @param source category identify
    * @param destination category identify
