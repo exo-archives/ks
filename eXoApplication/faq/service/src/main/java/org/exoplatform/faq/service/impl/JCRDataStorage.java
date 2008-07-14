@@ -115,6 +115,7 @@ public class JCRDataStorage {
     }
   }
   
+  @SuppressWarnings("static-access")
   private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider) throws Exception {
     questionNode.setProperty("exo:language", question.getLanguage()) ;
   	questionNode.setProperty("exo:name", question.getQuestion()) ;

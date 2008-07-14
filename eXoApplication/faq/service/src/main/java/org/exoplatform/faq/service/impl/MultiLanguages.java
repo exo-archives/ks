@@ -40,36 +40,84 @@ import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.faq.service.CategoryLanguage;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.faq.service.QuestionLanguage;
-import org.exoplatform.services.jcr.impl.core.query.lucene.NodeIndexer;
 import org.exoplatform.services.jcr.impl.core.value.DateValue;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
 
 /**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Jul 10, 2007  
+ * MultiLanguages class allow question and category have multi language.
+ * Question content and category's name is can written by one or 
+ * more languages. But only default language (only one language is default
+ * in system) is set as property of question/ category, 
+ * other languages is children of question/category. 
+ * 
+ * @author  Hung Nguyen Quang
+ * @since   Jul 10, 2007
  */
 
 public class MultiLanguages {
+	
+	/** The Constant LANGUAGES. */
 	final static public String LANGUAGES = "languages" ;
+  
+  /** The Constant EXO_LANGUAGE. */
   final static public String EXO_LANGUAGE = "exo:language" ;
+  
+  /** The Constant COMMENTS. */
   final static public String COMMENTS = "comments".intern() ;
+  
+  /** The Constant JCRCONTENT. */
   final static public String  JCRCONTENT = "jcr:content";
+  
+  /** The Constant JCRDATA. */
   final static public String  JCRDATA = "jcr:data";
+  
+  /** The Constant JCR_MIMETYPE. */
   final static public String  JCR_MIMETYPE = "jcr:mimeType";
+  
+  /** The Constant NTUNSTRUCTURED. */
   final static public String  NTUNSTRUCTURED = "nt:unstructured";
+  
+  /** The Constant VOTER_PROP. */
   final static String VOTER_PROP = "exo:voter".intern() ;  
+  
+  /** The Constant VOTING_RATE_PROP. */
   final static String VOTING_RATE_PROP = "exo:votingRate".intern() ;
+  
+  /** The Constant VOTE_TOTAL_PROP. */
   final static String VOTE_TOTAL_PROP = "exo:voteTotal".intern() ; 
+  
+  /** The Constant VOTE_TOTAL_LANG_PROP. */
   final static String VOTE_TOTAL_LANG_PROP = "exo:voteTotalOfLang".intern() ;
+  
+  /** The Constant NODE. */
   final static String NODE = "/node/" ;
+  
+  /** The Constant NODE_LANGUAGE. */
   final static String NODE_LANGUAGE = "/node/languages/" ;
+  
+  /** The Constant CONTENT_PATH. */
   final static String CONTENT_PATH = "/node/jcr:content/" ;
+  
+  /** The Constant TEMP_NODE. */
   final static String TEMP_NODE = "temp" ;
   
+  /**
+   * Class constructor, instantiates a new multi languages.
+   * 
+   * @throws Exception the exception
+   */
   public MultiLanguages()throws Exception {}  
 
+  /**
+   * Sets the property value.
+   * 
+   * @param propertyName the property name
+   * @param node the node
+   * @param requiredtype the requiredtype
+   * @param value the value
+   * @param isMultiple the is multiple
+   * @throws Exception the exception
+   */
   private void setPropertyValue(String propertyName, Node node, int requiredtype, Object value, boolean isMultiple) throws Exception {
     switch (requiredtype) {
     case PropertyType.STRING:
@@ -161,7 +209,15 @@ public class MultiLanguages {
     }
   }
   
-  public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception {
+  /**
+   * Adds the language node, when question have multi language, 
+   * eache language is a child node of question node.
+   * 
+   * @param questionNode  the question node which have multi language
+   * @param language the  language which is added in to questionNode
+   * @throws Exception    throw an exception when save a new language node
+   */
+  public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception{
   	if(!questionNode.isNodeType("mix:faqi18n")) {
   		questionNode.addMixin("mix:faqi18n") ;
   	}
@@ -183,6 +239,21 @@ public class MultiLanguages {
     questionNode.save() ;
   }
   
+  /**
+   * Removes the language, when question have multi language, and now one of them
+   * is not helpful, and admin or moderator want to delete it, this function will
+   * be called. And this function will do:
+   * <p>
+   * Get all children nodes of question node, and compare them with list language
+   * is inputted in this function. Each language node, if it's name is not contained
+   * in list language, it will be deleted.
+   * <p>
+   * After that, the remains of language nodes will be saved as children node of
+   * question node.
+   * 
+   * @param questionNode the question node which have multi language
+   * @param listLanguage the list languages will be saved
+   */
   public void removeLanguage(Node questionNode, List<String> listLanguage) {
     try {
       if(!questionNode.hasNode(LANGUAGES)) return ;
@@ -205,6 +276,14 @@ public class MultiLanguages {
     }
   }
   
+  /**
+   * Adds the language node, when category have multi language, 
+   * eache language is a child node of category node.
+   * 
+   * @param categoryNode the category node
+   * @param language the language
+   * @throws Exception the exception
+   */
   public void addLanguage(Node categoryNode, CategoryLanguage language) throws Exception {
   	if(!categoryNode.isNodeType("mix:faqi18n")) {
   		categoryNode.addMixin("mix:faqi18n") ;
@@ -225,6 +304,13 @@ public class MultiLanguages {
     categoryNode.save() ;
   }
   
+  /**
+   * Sets the mixin.
+   * 
+   * @param node the node
+   * @param newLang the new lang
+   * @throws Exception the exception
+   */
   private void setMixin(Node node, Node newLang) throws Exception {
     NodeType[] mixins = node.getMixinNodeTypes() ;
     for(NodeType mixin:mixins) {
@@ -248,6 +334,15 @@ public class MultiLanguages {
     }
   }
 
+  /**
+   * Adds the language.
+   * 
+   * @param node the node
+   * @param inputs the inputs
+   * @param language the language
+   * @param isDefault the is default
+   * @throws Exception the exception
+   */
   public void addLanguage(Node node, Map inputs, String language, boolean isDefault) throws Exception {
     Node newLanguageNode = null ;
     Node languagesNode = null ;
@@ -340,6 +435,16 @@ public class MultiLanguages {
     System.out.println("\n\n\n\n>>>>addLanguage() --> size of questionNodeChildren: " + node.getNodes().getSize());
   }
   
+  /**
+   * Adds the language.
+   * 
+   * @param node the node
+   * @param inputs the inputs
+   * @param language the language
+   * @param isDefault the is default
+   * @param nodeType the node type
+   * @throws Exception the exception
+   */
   public void addLanguage(Node node, Map inputs, String language, boolean isDefault, String nodeType) throws Exception {
     Node newLanguageNode = null ;
     Node languagesNode = null ;
@@ -452,6 +557,17 @@ public class MultiLanguages {
     node.getSession().save() ;    
   }
   
+  /**
+   * Adds the file language.
+   * 
+   * @param node the node
+   * @param value the value
+   * @param mimeType the mime type
+   * @param language the language
+   * @param isDefault the is default
+   * 
+   * @throws Exception the exception
+   */
   public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception {
     Node newLanguageNode = null ;
     Node languagesNode = null ;
@@ -493,6 +609,16 @@ public class MultiLanguages {
     node.getSession().save() ;    
   }
   
+  /**
+   * Adds the file language.
+   * 
+   * @param node the node
+   * @param language the language
+   * @param mappings the mappings
+   * @param isDefault the is default
+   * 
+   * @throws Exception the exception
+   */
   public void addFileLanguage(Node node, String language, Map mappings, boolean isDefault) throws Exception {
     Node newLanguageNode = null ;
     Node languagesNode = null ;
@@ -575,11 +701,29 @@ public class MultiLanguages {
     node.getSession().save() ;    
   }
   
+  /**
+   * Gets the default.
+   * 
+   * @param node the node
+   * 
+   * @return the default
+   * 
+   * @throws Exception the exception
+   */
   public String getDefault(Node node) throws Exception {
     if(node.hasProperty(EXO_LANGUAGE)) return node.getProperty(EXO_LANGUAGE).getString() ;
     return null ;
   }
 
+  /**
+   * Gets the supported languages.
+   * 
+   * @param node the node
+   * 
+   * @return the supported languages
+   * 
+   * @throws Exception the exception
+   */
   public List<String> getSupportedLanguages(Node node) throws Exception {
     List<String> languages = new ArrayList<String>();
     String defaultLang = getDefault(node) ;
@@ -594,6 +738,15 @@ public class MultiLanguages {
     return languages;
   }
 
+  /**
+   * Sets the vote property.
+   * 
+   * @param newLang the new lang
+   * @param node the node
+   * @param selectedLangNode the selected lang node
+   * 
+   * @throws Exception the exception
+   */
   private void setVoteProperty(Node newLang, Node node, Node selectedLangNode) throws Exception {
     if(hasMixin(newLang, "mix:votable")) {
       newLang.setProperty(VOTE_TOTAL_PROP, getVoteTotal(node)) ; 
@@ -625,6 +778,15 @@ public class MultiLanguages {
     }
   }
   
+  /**
+   * Sets the comment node.
+   * 
+   * @param node the node
+   * @param newLang the new lang
+   * @param selectedLangNode the selected lang node
+   * 
+   * @throws Exception the exception
+   */
   private void setCommentNode(Node node, Node newLang, Node selectedLangNode) throws Exception {
     if(node.hasNode(COMMENTS)) {
       node.getSession().move(node.getPath() + "/" + COMMENTS, newLang.getPath() + "/" + COMMENTS) ;
@@ -634,6 +796,15 @@ public class MultiLanguages {
     }
   }
   
+  /**
+   * Gets the vote total.
+   * 
+   * @param node the node
+   * 
+   * @return the vote total
+   * 
+   * @throws Exception the exception
+   */
   public long getVoteTotal(Node node) throws Exception {
     long voteTotal = 0;
     if(!node.hasNode(LANGUAGES) && node.hasProperty(VOTE_TOTAL_PROP)) {
@@ -652,6 +823,16 @@ public class MultiLanguages {
     return voteTotal ;
   }
   
+  /**
+   * Checks for mixin.
+   * 
+   * @param node the node
+   * @param nodeTypeName the node type name
+   * 
+   * @return true, if successful
+   * 
+   * @throws Exception the exception
+   */
   private boolean hasMixin(Node node, String nodeTypeName) throws Exception {
     NodeType[] mixinTypes = node.getMixinNodeTypes() ; 
     for(NodeType nodeType : mixinTypes) {
@@ -660,6 +841,14 @@ public class MultiLanguages {
     return false ;
   }
   
+  /**
+   * Sets the default.
+   * 
+   * @param node the node
+   * @param language the language
+   * 
+   * @throws Exception the exception
+   */
   public void setDefault(Node node, String language) throws Exception {
     String defaultLanguage = getDefault(node) ;
     if(!defaultLanguage.equals(language)){
@@ -703,6 +892,17 @@ public class MultiLanguages {
     }
   }
   
+  /**
+   * Process with data child node.
+   * 
+   * @param node the node
+   * @param selectedLangNode the selected lang node
+   * @param languagesNode the languages node
+   * @param defaultLanguage the default language
+   * @param nodeType the node type
+   * 
+   * @throws Exception the exception
+   */
   private void processWithDataChildNode(Node node, Node selectedLangNode, Node languagesNode, 
       String defaultLanguage, String nodeType) throws Exception {
     Node tempNode = node.addNode(TEMP_NODE, "nt:unstructured") ;
@@ -712,6 +912,15 @@ public class MultiLanguages {
     tempNode.remove() ;
   }
   
+  /**
+   * Checks for node type nt resource.
+   * 
+   * @param node the node
+   * 
+   * @return true, if successful
+   * 
+   * @throws Exception the exception
+   */
   private boolean hasNodeTypeNTResource(Node node) throws Exception {
     if(node.hasNodes()) {
       NodeIterator nodeIter = node.getNodes() ;
@@ -723,6 +932,15 @@ public class MultiLanguages {
     return false ;
   }
   
+  /**
+   * Gets the child node type.
+   * 
+   * @param node the node
+   * 
+   * @return the child node type
+   * 
+   * @throws Exception the exception
+   */
   private String getChildNodeType(Node node) throws Exception {
     if(node.hasNodes()) {
       NodeIterator nodeIter = node.getNodes() ;
@@ -734,6 +952,16 @@ public class MultiLanguages {
     return null ;
   }
 
+  /**
+   * Gets the language.
+   * 
+   * @param node the node
+   * @param language the language
+   * 
+   * @return the language
+   * 
+   * @throws Exception the exception
+   */
   public Node getLanguage(Node node, String language) throws Exception {
   	if(node.hasNode(LANGUAGES + "/"+ language)) return node.getNode(LANGUAGES + "/"+ language) ;
     return null;

@@ -27,41 +27,129 @@ import javax.jcr.Session;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 
+// TODO: Auto-generated Javadoc
 /**
  * Created by The eXo Platform SARL
- * Author : Duy Tu
- *          tu.duy@exoplatform.com
- * Nov 10, 2007 
+ * 
+ * @author   Duy Tu
+ * @since    Nov 10, 2007
  */
 public class FileAttachment {
+	
+	/** The id. */
 	private String id ;
+	
+	/** The path. */
 	private String path ;
+  
+  /** The workspace. */
   private String workspace ;
+  
+  /** The name. */
   private String name ;
+  
+  /** The mime type. */
   private String mimeType ;
+  
+  /** The size. */
   private long size ;
+  
+  /** The input. */
   private InputStream input ;
   
   
+  /**
+   * Gets the file's id, each file have an unique id.
+   * 
+   * @return the id
+   */
   public String getId() { return id ; }
+  
+  /**
+   * Sets the id for this file, setting the id for this file
+   * is done auto by system.
+   * 
+   * @param s the new id
+   */
   public void setId(String s) { this.id = s ; }
   
+  /**
+   * Gets the path of file, this path is used to view ow download file.
+   * 
+   * @return the path of file
+   */
   public String getPath() { return path ; }
+  
+  /**
+   * Sets the path which is the path in server. System auto set this property for File object
+   * 
+   * @param p the new path
+   */
   public void setPath(String p) { this.path = p ; }
   
+  /**
+   * Gets the workspace.
+   * 
+   * @return the workspace
+   */
   public String getWorkspace() { return workspace ; }
+  
+  /**
+   * Sets the workspace.
+   * 
+   * @param ws the new workspace
+   */
   public void setWorkspace(String ws) { workspace = ws ; }
   
+  /**
+   * Gets the mime type.
+   * 
+   * @return the mime type
+   */
   public String getMimeType() { return mimeType ; }
+  
+  /**
+   * Sets the mime type.
+   * 
+   * @param mimeType_ the new mime type
+   */
   public void setMimeType(String mimeType_) { this.mimeType = mimeType_ ; }
   
+  /**
+   * Gets the size of file.
+   * 
+   * @return the size
+   */
   public long getSize() { return size ; }
+  
+  /**
+   * Sets the size for file is uploaded, setting size for file is done auto by sytem.
+   * 
+   * @param size_ the new size
+   */
   public void setSize(long size_) { this.size = size_ ; }
   
+  /**
+   * Gets the name of file attach.
+   * 
+   * @return the name
+   */
   public String getName() { return name ; }
+  
+  /**
+   * Sets the name for file is uploaded.
+   * 
+   * @param name_ the new name
+   */
   public void setName(String name_) { this.name = name_ ; }
   
-  public InputStream getInputStream() throws Exception { 
+  /**
+   * Gets the input stream.
+   * 
+   * @return the input stream
+   * @throws Exception if Repository or value format occur exception
+   */
+  public InputStream getInputStream() throws Exception{ 
   	if(input != null)return input ;
   	else {
   		Node attachment ;
@@ -78,9 +166,21 @@ public class FileAttachment {
   	}
   }
   
+  /**
+   * Sets the input stream.
+   * 
+   * @param in the new input stream
+   * @throws Exception the exception
+   */
   public void setInputStream(InputStream in) throws Exception {input = in ; }
   
-  private Session getSesison()throws Exception {
+  /**
+   * Gets the sesison.
+   * 
+   * @return the sesison
+   * @throws Exception if Repository or RepositoryConfiguration occur exception
+   */
+  private Session getSesison() throws Exception {
     RepositoryService repoService = (RepositoryService)PortalContainer
       .getInstance().getComponentInstanceOfType(RepositoryService.class) ;
     return repoService.getDefaultRepository().getSystemSession(workspace) ;
