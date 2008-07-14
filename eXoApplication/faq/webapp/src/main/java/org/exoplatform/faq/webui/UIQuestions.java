@@ -957,47 +957,48 @@ public class UIQuestions extends UIContainer {
       String strId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       String questionId = new String() ;
       language_ = "" ;
-      if(strId.indexOf("/") < 0) {
-        questionId = strId ;
-        uiQuestions.backPath_ = "" ;
-        for(int i = 0; i < uiQuestions.listQuestion_.size(); i ++) {
-          if(uiQuestions.listQuestion_.get(i).getId().equals(uiQuestions.questionView_)) {
-            uiQuestions.listQuestion_.get(i).setQuestion(uiQuestions.listQuestionLanguage.get(0).getQuestion()) ;
-            uiQuestions.listQuestion_.get(i).setLanguage(uiQuestions.listQuestionLanguage.get(0).getLanguage()) ;
-            uiQuestions.listQuestion_.get(i).setResponses(uiQuestions.listQuestionLanguage.get(0).getResponse()) ;
-            break ;
-          }
-        }
-      } else {
-        if(uiQuestions.backPath_ != null && uiQuestions.backPath_.trim().length() > 0 && uiQuestions.backPath_.equals(strId)) {
-          uiQuestions.backPath_ = "" ;
-        } else {
-          uiQuestions.backPath_ = uiQuestions.categoryId_ + "/" + uiQuestions.questionView_ ;
-        }
-        String categoryId = strId.split("/")[0] ;
-        questionId = strId.split("/")[1] ;
-        
-        UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
-        uiQuestions.setCategoryId(categoryId) ;
-        uiQuestions.setListQuestion() ;
-        uiQuestions.listCateId_.clear() ;
-        uiQuestions.setIsModerators() ;
-        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-		    breadcumbs.setUpdataPath(null) ;
-        String oldPath = "" ;
-		    FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
-		    for(int i = listPath.size() -1 ; i >= 0; i --) {
-		    	oldPath = oldPath + "/" + listPath.get(i);
-		    } 
-		    newPath_ = "FAQService"+oldPath ;
-		    breadcumbs.setUpdataPath(newPath_);
-        event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-        UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-      }
-      
+      Question question = new Question();
       try{
-        Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+        if(strId.indexOf("/") < 0) {
+          questionId = strId ;
+          question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+          uiQuestions.backPath_ = "" ;
+          for(int i = 0; i < uiQuestions.listQuestion_.size(); i ++) {
+            if(uiQuestions.listQuestion_.get(i).getId().equals(uiQuestions.questionView_)) {
+              uiQuestions.listQuestion_.get(i).setQuestion(uiQuestions.listQuestionLanguage.get(0).getQuestion()) ;
+              uiQuestions.listQuestion_.get(i).setLanguage(uiQuestions.listQuestionLanguage.get(0).getLanguage()) ;
+              uiQuestions.listQuestion_.get(i).setResponses(uiQuestions.listQuestionLanguage.get(0).getResponse()) ;
+              break ;
+            }
+          }
+        } else {
+          if(uiQuestions.backPath_ != null && uiQuestions.backPath_.trim().length() > 0 && uiQuestions.backPath_.equals(strId)) {
+            uiQuestions.backPath_ = "" ;
+          } else {
+            uiQuestions.backPath_ = uiQuestions.categoryId_ + "/" + uiQuestions.questionView_ ;
+          }
+          questionId = strId.split("/")[1] ;
+          question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+          String categoryId = question.getCategoryId();
+          UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+          uiQuestions.setCategoryId(categoryId) ;
+          uiQuestions.setListQuestion() ;
+          uiQuestions.listCateId_.clear() ;
+          uiQuestions.setIsModerators() ;
+          UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+          breadcumbs.setUpdataPath(null) ;
+          String oldPath = "" ;
+          FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+          List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+          for(int i = listPath.size() -1 ; i >= 0; i --) {
+            oldPath = oldPath + "/" + listPath.get(i);
+          } 
+          newPath_ = "FAQService"+oldPath ;
+          breadcumbs.setUpdataPath(newPath_);
+          event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+          UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+        }
+        
         List<String> listRelaId = new ArrayList<String>() ;
         for(String quesRelaId : question.getRelations()) {
           try {
