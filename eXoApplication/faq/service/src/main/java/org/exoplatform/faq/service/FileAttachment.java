@@ -42,13 +42,13 @@ public class FileAttachment {
 	/** The path. */
 	private String path ;
   
-  /** The workspace. */
+  /** The work space. */
   private String workspace ;
   
   /** The name. */
   private String name ;
   
-  /** The mime type. */
+  /** The mine type. */
   private String mimeType ;
   
   /** The size. */
@@ -74,7 +74,7 @@ public class FileAttachment {
   public void setId(String s) { this.id = s ; }
   
   /**
-   * Gets the path of file, this path is used to view ow download file.
+   * Gets the path of file, this path is used to view own down load file.
    * 
    * @return the path of file
    */

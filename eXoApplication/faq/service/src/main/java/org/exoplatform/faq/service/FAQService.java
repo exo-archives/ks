@@ -163,11 +163,11 @@ public interface FAQService {
   
   /**
    * Get some informations of category: Lookup category node by category's id
-   * and count subcategories and quetions are contained in this catigory
+   * and count sub-categories and questions are contained in this category
    * 
    * @param   categoryId
    * @param   sProvider
-   * @return              number of subcategories
+   * @return              number of sub-categories
    *                      number of questions
    *                      number of questions is not approved
    *                      number of question is have not yet answered
@@ -189,7 +189,7 @@ public interface FAQService {
    * This method should:
    * 1. Lookup question
    * 2. Lookup languageNode of question
-   * 3. find all childern node of language node
+   * 3. find all children node of language node
    * 
    * @param Question 
    * @return language list
@@ -200,10 +200,10 @@ public interface FAQService {
    * This method should:
    * 1. Lookup question
    * 2. Lookup languageNode of question
-   * 3. find childrent node of language node is searched
-   * 4. find properties of childrent node, if contain input of user, get this question
+   * 3. find children node of language node is searched
+   * 4. find properties of children node, if contain input of user, get this question
    * 
-   * @param Question list, langage want search, question's content or response's content want search 
+   * @param Question list, language want search, question's content or response's content want search 
    * @return Question list
    * @throws Exception
    */
@@ -220,7 +220,13 @@ public interface FAQService {
    * @throws Exception
    */
   public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception ;  
-  
+  /**
+   * This method should:
+   * 1.Lookup all setting node
+   * @param sProvider
+   * @return
+   * @throws Exception
+   */
   public FAQSetting  getFAQSetting(SessionProvider sProvider) throws Exception ;  
   /**
    * This method to update FAQ setting

@@ -205,7 +205,7 @@ public class FAQUtils {
     return null ;
   }
   
-  public static Map prepareMap(List inputs, Map properties) throws Exception {
+	public static Map prepareMap(List inputs, Map properties) throws Exception {
     Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
     HashMap<String, JcrInputProperty> hasMap = new HashMap<String, JcrInputProperty>() ;
     for (int i = 0; i < inputs.size(); i++) {

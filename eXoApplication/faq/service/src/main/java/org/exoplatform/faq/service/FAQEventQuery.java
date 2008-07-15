@@ -43,8 +43,8 @@ public class FAQEventQuery {
 	private String response ;
 	private Calendar fromDate ;
 	private Calendar toDate ;
-	
 	private boolean isAnd = false ;
+
 	public FAQEventQuery() {}
 	
 	public String getType() {
@@ -120,6 +120,10 @@ public class FAQEventQuery {
   	this.toDate = toDate;
   }
 	
+	/**
+	 * This method is query on search 
+	 * @return string
+	 */
 	public String getPathQuery() {
 		isAnd = false ;
 		StringBuffer queryString = new StringBuffer() ;
@@ -180,7 +184,13 @@ public class FAQEventQuery {
   }
 	
 	
-
+/**
+ * This method check date time user input interface
+ * @param fromDate
+ * @param toDate
+ * @param property
+ * @return
+ */
 	private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
 		StringBuffer queryString = new StringBuffer() ;
 		if(fromDate != null && toDate != null) {

@@ -139,14 +139,9 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     }
   }
 
-  public void activate() throws Exception {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void deActivate() throws Exception {
-    // TODO Auto-generated method stub
-  }
+  public void activate() throws Exception {}
+  public void deActivate() throws Exception {}
+  
   public void setType(String type) {
     this.type_ = type;
   }

@@ -60,18 +60,41 @@ public class FAQServiceImpl implements FAQService{
 		jcrData_.addPlugin(plugin) ;
 	}
 	
+	/**
+	 * This method get all the categories node
+	 * @return 		Category list
+	 */
 	public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {
 		return jcrData_.getAllCategories(sProvider);
 	}
-
+	
+	/**
+	 * This method get all the question node 
+	 * and convert to list of question object (QuestionPageList)
+	 * @return 		QuestionPageList
+	 */
 	public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
 		return jcrData_.getAllQuestions(sProvider);
 	}
   
+	/**
+	 * This method get all question node have not yet answer 
+	 * and convert to list of question object (QuestionPageList)
+	 * @return		 QuestionPageList
+	 */
 	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
 	  return jcrData_.getQuestionsNotYetAnswer(sProvider);
 	}
-
+	
+	/**
+	 *This method get some informations of category: 
+	 *to count sub-categories, to count questions, to count question have not yet answer,
+	 *to count question is not approved are contained in this category
+   * 
+   * @param   	categoryId
+   * @param   	sProvider
+   * @return  	number of (sub-categories, questions, questions is not approved,question is have not yet answered)
+	 */
 	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getCategoryInfo(categoryId, sProvider);
 	}
@@ -88,27 +111,70 @@ public class FAQServiceImpl implements FAQService{
 	public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getCategoryById(categoryId, sProvider);
 	}
-
+	
+	/**
+	 * This method should get question node via identify
+   * @param 		question identify
+   * @return 		Question 
+	 */
 	public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getQuestionById(questionId, sProvider);
 	}
 
+	/**
+	 * This method should view questions, only question node is activated and approved  via category identify
+   * and convert to list of question object
+   * 
+   * @param		 	Category identify
+   * @return 		QuestionPageList
+	 */
 	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getQuestionsByCatetory(categoryId, sProvider);
 	}
   
+	/**
+	 * This method get all questions via category identify and convert to list of question list
+	 * 
+	 * @param 		Category identify
+	 * @return 		QuestionPageList
+	 */
 	public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getAllQuestionsByCatetory(categoryId, sProvider);
 	}
   
+	/**
+	 * This method every category should get list question, all question convert to list of question object
+	 * @param 		listCategoryId  is list via identify
+	 * @param 		isNotYetAnswer  if isNotYetAnswer = true then return list question is not yet answer
+	 * 						isNotYetAnswer  if isNotYetAnswer = false then return list all questions
+	 * @return 		QuestionPageList
+	 */
 	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getQuestionsByListCatetory(listCategoryId, isNotYetAnswer, sProvider);
 	}
   
+	/**
+	 * This method should lookup languageNode of question
+   * and find all child node of language node
+   * 
+   * @param Question identify
+   * @return language list
+	 */
   public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
     return jcrData_.getQuestionLanguages(questionId, sProvider) ;
   }
   
+  /**
+   * THis method should lookup languageNode of question
+   * so find child node of language node is searched
+   * and find properties of child node, if contain input of user, get this question
+   * 
+   * @param Question list
+   * @param langage want search
+   * @param question's content want search
+   * @param response's content want search 
+   * @return Question list
+   */
   public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception {
     return jcrData_.searchQuestionByLangage(listQuestion, languageSearch, questionSearch, responseSearch, sProvider) ;
   }
@@ -128,7 +194,14 @@ public class FAQServiceImpl implements FAQService{
 	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getSubCategories(categoryId, sProvider);
 	}
-
+	
+	/**
+	 * This method should lookup questions via question identify and from category identify
+   * so lookup destination category and move questions to destination category
+   * 
+   * @param Question identify list
+   * @param destination category identify
+	 */
 	public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception {
 		jcrData_.moveQuestions(questions, destCategoryId, sProvider) ;
 	}
@@ -143,17 +216,25 @@ public class FAQServiceImpl implements FAQService{
 	public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception {
 		jcrData_.removeCategory(categoryId, sProvider) ;
 	}
-
+	
+	/**
+	 * Remove one question in list
+	 * <p>
+	 * This function is used to remove one question in list
+	 * 
+	 * @param  			question identify
+	 * @param  			sProvider
+	 */
 	public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception {
 		jcrData_.removeQuestion(questionId, sProvider) ;
 	}
 
 
   /**
-	 * Add new category in list.
+	 * Add new or edit category in list.
 	 * <p>
-	 * This function is used to add new category in list. User will input information of fields need
-	 * in form add category, so user save then category will presistent in data
+	 * This function is used to add new or edit category in list. User will input information of fields need
+	 * in form add category, so user save then category will persistent in data
 	 * 
 	 * @param  			parentId is address id of the category parent where user want add sub category
 	 * when paretId = null so this category is parent category else sub category  
@@ -166,7 +247,13 @@ public class FAQServiceImpl implements FAQService{
 	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
 		jcrData_.saveCategory(parentId, cat, isAddNew, sProvider) ;
 	}
-
+	
+	/**
+	 * This method should create new question or update exists question
+	 * @param question is information but user input or edit to form interface of question 
+	 * @param isAddNew = true then add new question
+	 * 				isAddNew = false then update question
+	 */
 	public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
 		return jcrData_.saveQuestion(question, isAddNew, sProvider) ;
 	}
@@ -216,7 +303,7 @@ public class FAQServiceImpl implements FAQService{
    * @param 			type if type = 1 add watch on category else add watch on question
    * @param				watchType if watchType = 1 send email when had changed on category
    * @param				id of category with user want add watch on that category 
-   * @param				value, this address email (muti value) with input to interface will save on data
+   * @param				value, this address email (multiple value) with input to interface will save on data
    * @param				sProvider
    *  
    */
@@ -277,6 +364,14 @@ public class FAQServiceImpl implements FAQService{
   	return jcrData_.getAdvancedSearchCategory(sProvider, eventQuery); 
   }
   
+  /**
+   * This method should lookup all the categories node 
+   * so find category have user in moderators
+   * and convert to category object and return list of category object
+   * 
+   * @param 		user is name when user login  
+   * @return 		Category list
+   */
   public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception {
     return jcrData_.getListCateIdByModerator(user, sProvider); 
   }
@@ -295,6 +390,11 @@ public class FAQServiceImpl implements FAQService{
   	return jcrData_.getAdvancedSearchQuestion(sProvider, eventQuery) ;
   }
   
+  /**
+   * This method return path of category identify
+   * @param category identify
+   * @return list category name is sort(path of this category)
+   */
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception {
   	return jcrData_.getCategoryPath(sProvider, categoryId) ;
   }
@@ -302,45 +402,122 @@ public class FAQServiceImpl implements FAQService{
   /**
    * This function will send message to address but you want send
    * 
-   * @param				message is object save content with user want send to one or many adress amail
+   * @param				message is object save content with user want send to one or many address email
    */
   public void sendMessage(Message message) throws Exception {
   	jcrData_.sendMessage(message) ;
   }
-  // Multi Languages
+  // Multiple Languages
   
+  /**
+   * Adds the file language.
+   * 
+   * @param node the node
+   * @param value the value
+   * @param mimeType the mine type
+   * @param language the language
+   * @param isDefault the is default
+   * 
+   * @throws Exception the exception
+   */
 	public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception {
 		multiLanguages_.addFileLanguage(node, value, mimeType, language, isDefault) ;		
 	}
 	
+	/**
+   * Adds the file language.
+   * 
+   * @param node the node
+   * @param language the language
+   * @param mappings the mappings
+   * @param isDefault the is default
+   * 
+   * @throws Exception the exception
+   */
 	public void addFileLanguage(Node node, String language, Map mappings, boolean isDefault) throws Exception {
 		multiLanguages_.addFileLanguage(node, language, mappings, isDefault) ;
 	}
 	
+	/**
+   * Adds the language.
+   * 
+   * @param node the node
+   * @param inputs the inputs
+   * @param language the language
+   * @param isDefault the is default
+   * @throws Exception the exception
+   */
 	public void addLanguage(Node node, Map inputs, String language, boolean isDefault) throws Exception {
 		multiLanguages_.addLanguage(node, inputs, language, isDefault) ;
 	}
 	
+	/**
+   * Adds the language.
+   * 
+   * @param node the node
+   * @param inputs the inputs
+   * @param language the language
+   * @param isDefault the is default
+   * @param nodeType the node type
+   * @throws Exception the exception
+   */
 	public void addLanguage(Node node, Map inputs, String language, boolean isDefault, String nodeType) throws Exception {
 		multiLanguages_.addLanguage(node, inputs, language, isDefault, nodeType) ;
 	}
 	
+	/**
+   * Gets the default.
+   * 
+   * @param node the node
+   * @return the default
+   * @throws Exception the exception
+   */
 	public String getDefault(Node node) throws Exception {
 		return multiLanguages_.getDefault(node);
 	}
 	
+	/**
+   * Gets the language.
+   * 
+   * @param node the node
+   * @param language the language
+   * @return the language
+   * @throws Exception the exception
+   */
 	public Node getLanguage(Node node, String language) throws Exception {
 		return multiLanguages_.getLanguage(node, language);
 	}
 	
+	/**
+   * Gets the supported languages.
+   * 
+   * @param node the node
+   * @return the supported languages
+   * @throws Exception the exception
+   */
 	public List<String> getSupportedLanguages(Node node) throws Exception {
 		return multiLanguages_.getSupportedLanguages(node);
 	}
 	
+	/**
+   * Sets the default.
+   * 
+   * @param node the node
+   * @param language the language
+   * @throws Exception the exception
+   */
 	public void setDefault(Node node, String language) throws Exception {
 		multiLanguages_.setDefault(node, language) ;
 	}
 	
+	/**
+   * Adds the language node, when question have multiple language, 
+   * each language is a child node of question node.
+   * 
+   * @param questionNode  the question node which have multiple language
+   * @param language the  language which is added in to questionNode
+   * @throws Exception    throw an exception when save a new language node
+   */
 	public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception {
 		multiLanguages_.addLanguage(questionNode, language) ;
 	}
