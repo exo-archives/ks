@@ -50,7 +50,7 @@ public class FAQSetting {
 	 * there are two modes: Process/ Do not process questions.
 	 * It means: one question of user in those categories can be processed 
 	 * by special user groups which have right or not before showing.
-	 * This is a combo box with two values: 'Process questions before showing' and 'Do not process questions before showing'
+	 * This is a combobox with two values: 'Process questions before showing' and 'Do not process questions before showing'
 	 * 
 	 * @param b, if b = true then field Show Mode : Do not process questions before showing
 	 * 					 else field Show Mode : Process questions before showing
@@ -66,7 +66,7 @@ public class FAQSetting {
 	
 	/**
 	 * All categories/questions can be displayed in some types depending on users.
-	 * This is a combo box with two values: Alphabet or Post Date
+	 * This is a combobox with two values: Alphabet or Post Date
 	 * 
 	 * @param dis  the string to display is Alphabet or Post Date
 	 */

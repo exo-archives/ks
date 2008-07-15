@@ -87,7 +87,6 @@ import org.exoplatform.webui.event.EventListener;
 	    @EventConfig(listeners = UIQuestions.EditQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.DeleteQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.MoveQuestionActionListener.class),
-	    @EventConfig(listeners = UIQuestions.PrintQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.SendQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.ChangeQuestionActionListener.class)
       
@@ -164,7 +163,7 @@ public class UIQuestions extends UIContainer {
   
   @SuppressWarnings("unused")
   private String[] getActionQuestionWithUser(){
-    String[] action = new String[]{"PrintQuestion","SendQuestion"} ;
+    String[] action = new String[]{"SendQuestion"} ;
     return action ;
   }
   
@@ -1105,7 +1104,6 @@ public class UIQuestions extends UIContainer {
       try{
         question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
       } catch (javax.jcr.PathNotFoundException e) {
-        System.out.println("\n\n\n\n==========>question is deleted");
         e.printStackTrace() ;
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1149,12 +1147,6 @@ public class UIQuestions extends UIContainer {
       popupContainer.setId("FAQMoveQuestion") ;
       popupAction.activate(popupContainer, 500, 200) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    }
-  }
-  
-  static  public class PrintQuestionActionListener extends EventListener<UIQuestions> {
-    public void execute(Event<UIQuestions> event) throws Exception {
-      UIQuestions question = event.getSource() ; 
     }
   }
   

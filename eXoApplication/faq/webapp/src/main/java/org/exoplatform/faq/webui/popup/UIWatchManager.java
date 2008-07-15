@@ -109,10 +109,8 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			UIWatchManager watchManager = event.getSource() ;
 			String emailList = event.getRequestContext().getRequestParameter(OBJECTID);
 			int order = Integer.parseInt(emailList.split("/")[1]);
-			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
 			faqService_.deleteMailInWatch(categoryId_, FAQUtils.getSystemProvider(), order) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
 	}
 	

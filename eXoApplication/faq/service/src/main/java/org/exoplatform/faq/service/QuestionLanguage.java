@@ -18,7 +18,7 @@ package org.exoplatform.faq.service;
 
 // TODO: Auto-generated Javadoc
 /**
- * A question may be have multi languages, user can write his question in
+ * A question may be have multiple languages, user can write his question in
  * one language or all languages are supported by portal (if he can). But only
  * language is default will be set into question's property while other languages is saved
  * as children node of question node. Each language node only contain three properties
@@ -66,14 +66,14 @@ public class QuestionLanguage {
   public String getQuestion() { return question ; }
   
   /**
-   * Registers question content for thi language node.
+   * Registers question content for this language node.
    * 
    * @param q the content of question
    */
   public void setQuestion(String q) { this.question = q ; }
 
   /**
-   * Gets the response of quetsion in this Language node.
+   * Gets the response of question in this Language node.
    * 
    * @return the response
    */

@@ -35,6 +35,13 @@ public class FAQServiceUtils {
   String admin = "/platform/administrators" ;
   String orgManager = "/organization/management/executive-board" ;
   private static OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  
+  /**
+   * Check user is administrator or is not administrator
+   * 
+   * @param userName
+   * @return true if this user is administrator else false
+   */
   @SuppressWarnings("unchecked")
   public boolean isAdmin(String userName) {
     try {
@@ -48,7 +55,14 @@ public class FAQServiceUtils {
     }
     return false ;
   }
-
+  
+  /**
+   * Get moderator in user,group,membership become list user
+   * 
+   * @param userGroupMembership
+   * @return list users
+   * @throws Exception
+   */
   @SuppressWarnings("unchecked")
   public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
   	List<String> users = new ArrayList<String> () ;
