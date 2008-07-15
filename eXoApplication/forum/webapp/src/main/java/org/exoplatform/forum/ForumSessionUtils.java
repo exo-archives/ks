@@ -120,11 +120,11 @@ public class ForumSessionUtils {
   		} catch (Exception e) {
   			return false ;
   		}
-  		if(array[0].charAt(0) == '*' && array[0].length() == 1) {
+  		if(array[0].length() == 1 && array[0].charAt(0) == '*') {
   			return true ;
-  		} else {
+  		} else if(array[0].length() > 0){
   			if(organizationService.getMembershipTypeHandler().findMembershipType(array[0])== null) return false ;
-  		} 
+  		} else return false ;
 		} else { //group
 			try {
 				organizationService.getGroupHandler().findGroupById(str).getId() ;
