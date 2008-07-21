@@ -166,7 +166,7 @@
 									List emailWatch = uicomponent.getListEmail(categoryId) ;
 									if(emailWatch.size() > 0) {
 						%>
-						<a href="$linkWacth" title="Watch Manager" class="WatchManager">&nbsp;</a>
+						<a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
 						<%
 							} 
 						}

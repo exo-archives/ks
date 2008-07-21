@@ -33,13 +33,13 @@
  										<td class="text" align="left">$email</td>
  									<% } %>
  									<td style="width: 90px;" align="center">
- 										<a href="$linkCurrent" title="Link" style="float:left;">
+ 										<a href="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" style="float:left;">
  											<div class="LinkWatchIcon" ></div>
  										</a>
- 										<a href="$linkEdit" title="Edit Watch" style="float:left;">
+ 										<a href="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" style="float:left;">
  											<div class="EditWatchIcon" ></div>
  										</a>
- 										<a href="$linkDelete" title="Delete Watch" style="float:left;">
+ 										<a href="$linkDelete" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" style="float:left;">
  											<div class="DeleteWatchIcon" ></div>
  										</a>
  									</td>

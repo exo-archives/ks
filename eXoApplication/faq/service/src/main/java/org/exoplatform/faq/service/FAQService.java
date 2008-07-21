@@ -236,7 +236,7 @@ public interface FAQService {
    *  */
   public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception;  
   
-  public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception ;
+  public void addWatch(String id, String value, SessionProvider sProvider)throws Exception ;
   public List<String> getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
   public void deleteMailInWatch(String categoryId, SessionProvider sProvider, int order) throws Exception ;
   public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;

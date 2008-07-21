@@ -103,20 +103,15 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
         return ;
       }
       String categoryId = uiWatchForm.getCategoryID() ;
-      String watchId = categoryId.substring(0, 4) ;
       if (categoryId != null) {
       	FAQService faqService =	FAQUtils.getFAQService() ;
       	if(uiWatchForm.isUpdate) {
       		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), order) ;
-      		faqService.addWatch(1, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
+      		faqService.addWatch(categoryId , listEmail, FAQUtils.getSystemProvider()) ;
       		UIWatchContainer watchContainer = uiWatchForm.getAncestorOfType(UIWatchContainer.class) ;
       		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 
       	} else {
-	      	if(watchId.equals("Cate")) {
-	      		faqService.addWatch(1, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
-	      	} else {
-	      		faqService.addWatch(2, 1, categoryId , listEmail, FAQUtils.getSystemProvider()) ;
-	      	}	
+	      	faqService.addWatch(categoryId , listEmail, FAQUtils.getSystemProvider()) ;
 	      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
 	      			ApplicationMessage.INFO)) ;
 	       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
