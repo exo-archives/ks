@@ -300,15 +300,13 @@ public class FAQServiceImpl implements FAQService{
    * You have to register your email for whenever there is new question is inserted 
    * in the category or new category then there will  a notification sent to you.
    * 
-   * @param 			type if type = 1 add watch on category else add watch on question
-   * @param				watchType if watchType = 1 send email when had changed on category
    * @param				id of category with user want add watch on that category 
    * @param				value, this address email (multiple value) with input to interface will save on data
    * @param				sProvider
    *  
    */
-  public void addWatch(int type, int watchType, String id, String value, SessionProvider sProvider)throws Exception {
-  	jcrData_.addWatch(type, watchType, id, value, sProvider) ;
+  public void addWatch(String id, String value, SessionProvider sProvider)throws Exception {
+  	jcrData_.addWatch(id, value, sProvider) ;
   }
   
   /**
