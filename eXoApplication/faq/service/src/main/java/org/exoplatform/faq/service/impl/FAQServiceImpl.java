@@ -183,7 +183,7 @@ public class FAQServiceImpl implements FAQService{
   }
   
   /**
-   * THis method should lookup languageNode of question
+   * This method should lookup languageNode of question
    * so find child node of language node is searched
    * and find properties of child node, if contain input of user, get this question
    * 
@@ -233,7 +233,7 @@ public class FAQServiceImpl implements FAQService{
 	 * <p>
 	 * This function is used to remove one category in list
 	 * 
-	 * @param  	categoryId is address id of the category 
+	 * @param  	categoryId is address id of the category need remove 
 	 * @param  	sProvider
 	 * @throws Exception the exception
 	 */
@@ -264,7 +264,7 @@ public class FAQServiceImpl implements FAQService{
 	 * @param  	parentId is address id of the category parent where user want add sub category
 	 * when paretId = null so this category is parent category else sub category  
 	 * @param  	cat is properties that user input to interface will save on data
-	 * @param		isAddNew is true so add new category else edit category
+	 * @param		isAddNew is true when add new category else update category
 	 * @param		sProvider
 	 * @return  List parent category or list sub category
 	 * @see     list category
