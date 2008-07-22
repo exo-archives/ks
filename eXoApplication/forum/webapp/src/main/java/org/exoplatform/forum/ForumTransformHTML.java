@@ -41,7 +41,7 @@ public class ForumTransformHTML {
 		// Lower Case bbc
 		String start, end;
 		String[] bbcs = new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
-		    "RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS" };
+		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
 			end = "[/" + bbc + "]";
@@ -69,8 +69,6 @@ public class ForumTransformHTML {
 		b = StringUtils.replace(b, "[/b]", "</b>");
 		b = StringUtils.replace(b, "[i]", "<i>");
 		b = StringUtils.replace(b, "[/i]", "</i>");
-		b = StringUtils.replace(b, "[code]", "[CODE]");
-		b = StringUtils.replace(b, "[/code]", "[/CODE]");
 		b = StringUtils.replace(b, "[CODE]", "<code>");
 		b = StringUtils.replace(b, "[/CODE]", "</code>");
 		b = StringUtils.replace(b, "[link]", "[url]");
