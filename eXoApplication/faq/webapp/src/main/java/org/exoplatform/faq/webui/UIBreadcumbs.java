@@ -19,9 +19,7 @@ package org.exoplatform.faq.webui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -41,7 +39,6 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIBreadcumbs extends UIContainer {
-	private FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
 	public List<String> paths_ = new ArrayList<String>();
 	private String path_ = "FAQService" ;
@@ -63,7 +60,7 @@ public class UIBreadcumbs extends UIContainer {
 				for (String string : temp) {
 					if(string.equals("FAQService")) continue ;
 					oldPath = oldPath + "/" + string;
-					Category category = faqService.getCategoryById(string, FAQUtils.getSystemProvider()) ;
+					Category category = FAQUtils.getFAQService().getCategoryById(string, FAQUtils.getSystemProvider()) ;
 					String categoryName = category.getName() ;
 					breadcumbs_.add(categoryName) ;
 					paths_.add(oldPath) ;

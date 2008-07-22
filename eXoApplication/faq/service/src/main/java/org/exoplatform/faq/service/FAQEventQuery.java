@@ -25,106 +25,280 @@ import org.exoplatform.commons.utils.ISO8601;
  * 
  * This object intermediate to give search Category or question in form advance search.
  * All value user input search will save this object
- *  
+ * 
  * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ * truong.nguyen@exoplatform.com
  * May 5, 2008, 3:48:51 PM
  */
 public class FAQEventQuery {
+	
+	/** The type. */
 	private String type ;
+	
+	/** The text. */
 	private String text ;
+	
+	/** The name. */
 	private String name ;
+	
+	/** The is mode question. */
 	private String isModeQuestion ;
+	
+	/** The moderator. */
 	private String moderator ;
+	
+	/** The path. */
 	private String path;
+	
+	/** The author. */
 	private String author;
+	
+	/** The email. */
 	private String email ;
+	
+	/** The question. */
 	private String question;
+	
+	/** The response. */
 	private String response ;
+	
+	/** The from date. */
 	private Calendar fromDate ;
+	
+	/** The to date. */
 	private Calendar toDate ;
+	
+	/** The is and. */
 	private boolean isAnd = false ;
 
+	/**
+	 * Instantiates a new fAQ event query.
+	 */
 	public FAQEventQuery() {}
 	
+	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
 	public String getType() {
   	return type;
   }
+	
+	/**
+	 * Sets the type.
+	 * 
+	 * @param type the new type
+	 */
 	public void setType(String type) {
   	this.type = type;
   }
+	
+	/**
+	 * Gets the text.
+	 * 
+	 * @return the text
+	 */
 	public String getText() {
   	return text;
   }
+	
+	/**
+	 * Sets the text.
+	 * 
+	 * @param text the new text
+	 */
 	public void setText(String text) {
   	this.text = text;
   }
+	
+	/**
+	 * Gets the name.
+	 * 
+	 * @return the name
+	 */
 	public String getName() {
   	return name;
   }
+	
+	/**
+	 * Sets the checks if is mode question.
+	 * 
+	 * @param isModeQuestion the new checks if is mode question
+	 */
 	public void setIsModeQuestion(String isModeQuestion) {
   	this.isModeQuestion = isModeQuestion;
   }
+	
+	/**
+	 * Gets the checks if is mode question.
+	 * 
+	 * @return the checks if is mode question
+	 */
 	public String getIsModeQuestion() {
   	return isModeQuestion;
   }
+	
+	/**
+	 * Sets the name.
+	 * 
+	 * @param name the new name
+	 */
 	public void setName(String name) {
   	this.name = name;
   }
+	
+	/**
+	 * Gets the moderator.
+	 * 
+	 * @return the moderator
+	 */
 	public String getModerator() {
   	return moderator;
   }
+	
+	/**
+	 * Sets the moderator.
+	 * 
+	 * @param moderator the new moderator
+	 */
 	public void setModerator(String moderator) {
   	this.moderator = moderator;
   }
+	
+	/**
+	 * Gets the path.
+	 * 
+	 * @return the path
+	 */
 	public String getPath() {
   	return path;
   }
+	
+	/**
+	 * Sets the path.
+	 * 
+	 * @param path the new path
+	 */
 	public void setPath(String path) {
   	this.path = path;
   }
+	
+	/**
+	 * Gets the author.
+	 * 
+	 * @return the author
+	 */
 	public String getAuthor() {
   	return author;
   }
+	
+	/**
+	 * Sets the author.
+	 * 
+	 * @param author the new author
+	 */
 	public void setAuthor(String author) {
   	this.author = author;
   }
-	public String getIsLock() {
+	
+	/**
+	 * Gets the email.
+	 * 
+	 * @return the checks if is lock
+	 */
+	public String getEmail() {
   	return email;
   }
+	
+	/**
+	 * Sets the email.
+	 * 
+	 * @param email the new email
+	 */
 	public void setEmail(String email) {
   	this.email = email;
   }
+	
+	/**
+	 * Gets the question.
+	 * 
+	 * @return the question
+	 */
 	public String getQuestion() {
 		return question;
 	}
+	
+	/**
+	 * Sets the question.
+	 * 
+	 * @param question the new question
+	 */
 	public void setQuestion(String question) {
 		this.question = question;
 	}
+	
+	/**
+	 * Gets the response.
+	 * 
+	 * @return the response
+	 */
 	public String getResponse() {
 		return response;
 	}
+	
+	/**
+	 * Sets the response.
+	 * 
+	 * @param response the new response
+	 */
 	public void setResponse(String response) {
 		this.response = response;
 	}
+	
+	/**
+	 * Gets the from date.
+	 * 
+	 * @return the from date
+	 */
 	public Calendar getFromDate() {
   	return fromDate;
   }
+	
+	/**
+	 * Sets the from date.
+	 * 
+	 * @param fromDate the new from date
+	 */
 	public void setFromDate(Calendar fromDate) {
   	this.fromDate = fromDate;
   }
+	
+	/**
+	 * Gets the to date.
+	 * 
+	 * @return the to date
+	 */
 	public Calendar getToDate() {
   	return toDate;
   }
+	
+	/**
+	 * Sets the to date.
+	 * 
+	 * @param toDate the new to date
+	 */
 	public void setToDate(Calendar toDate) {
   	this.toDate = toDate;
   }
 	
 	/**
 	 * This method is query on search 
-	 * @return string
+	 * Gets the path query.
+	 * 
+	 * @return string the path query
 	 */
-	public String getPathQuery() {
+public String getPathQuery() {
 		isAnd = false ;
 		StringBuffer queryString = new StringBuffer() ;
     if(path != null && path.length() > 0) queryString.append("/jcr:root").append(path).append("//element(*,exo:").append(type).append(")") ;
@@ -184,14 +358,17 @@ public class FAQEventQuery {
   }
 	
 	
-/**
- * This method check date time user input interface
- * @param fromDate
- * @param toDate
- * @param property
- * @return
+	/**
+ * This method check date time user input interface 
+ * Sets the date from to.
+ * 
+ * @param fromDate the from date
+ * @param toDate the to date
+ * @param property the property
+ * 
+ * @return the string
  */
-	private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
+private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
 		StringBuffer queryString = new StringBuffer() ;
 		if(fromDate != null && toDate != null) {
 			if(isAnd) queryString.append(" and ") ;
