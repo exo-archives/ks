@@ -188,6 +188,11 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     return listQuestion_ ;
   }
   
+  /**
+   * Gets the list question not answered.
+   * 
+   * @return the list question not answered
+   */
   @SuppressWarnings("unused")
   private List<Question> getListQuestionNotAnswered() {
     pageSelectNotAnswer = pageQuesNotAnswerIterator.getPageSelected() ;

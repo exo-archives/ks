@@ -19,7 +19,6 @@ package org.exoplatform.faq.service;
 import java.util.Date;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang

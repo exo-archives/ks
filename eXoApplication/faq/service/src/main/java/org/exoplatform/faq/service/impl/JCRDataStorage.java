@@ -432,10 +432,11 @@ public class JCRDataStorage {
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-        + "//element(*,exo:faqQuestion)[@exo:responses=' ']").append("order by @exo:createdDate ascending");
+        + "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
+    pageList.setNotYetAnswered(true);
     return pageList ;
   }
   
@@ -480,14 +481,12 @@ public class JCRDataStorage {
         queryString.append(" or ") ;
       i ++ ;
     }
-    if(!isNotYetAnswer) {
-      queryString.append(")]order by @exo:createdDate ascending");
-    } else {
-      queryString.append(") and (@exo:responses=' ')]order by @exo:createdDate ascending");
-    }
+    queryString.append(")]order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
+    QuestionPageList pageList = null;
+    pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
+    pageList.setNotYetAnswered(isNotYetAnswer);
     return pageList ;
   }
   

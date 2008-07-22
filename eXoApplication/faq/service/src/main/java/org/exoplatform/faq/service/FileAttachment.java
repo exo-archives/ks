@@ -27,9 +27,10 @@ import javax.jcr.Session;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 
-// TODO: Auto-generated Javadoc
 /**
  * Created by The eXo Platform SARL
+ * File Attachment is used to store infor of file is attached when upload file
+ * or get files of question when view in page.
  * 
  * @author   Duy Tu
  * @since    Nov 10, 2007
@@ -60,6 +61,7 @@ public class FileAttachment {
   
   /**
    * Gets the file's id, each file have an unique id.
+   * this id is used to edit question when upload file
    * 
    * @return the id
    */
@@ -137,7 +139,7 @@ public class FileAttachment {
   public String getName() { return name ; }
   
   /**
-   * Sets the name for file is uploaded.
+   * Sets the name of file for fileAttachment object when upload or get data.
    * 
    * @param name_ the new name
    */

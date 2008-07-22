@@ -22,9 +22,8 @@ import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
-// TODO: Auto-generated Javadoc
 /**
- * Data of question is stored in this class, it's used in processings
+ * Data of question node is stored in question object which is used in processings: 
  * add new question, edit question and reponse question.
  * 
  * @author : Hung Nguyen Quang
@@ -91,7 +90,7 @@ public class Question {
   /**
    * Set an id for Question object.
    * 
-   * @param id  id which you want set for question
+   * @param id  the id of question object
    */
   public void setId(String id) { this.id = id ; }
   

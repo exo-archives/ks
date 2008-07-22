@@ -446,7 +446,6 @@ public class FAQServiceImpl implements FAQService{
   public void sendMessage(Message message) throws Exception {
   	jcrData_.sendMessage(message) ;
   }
-  // Multiple Languages
   
   /**
    * Adds the file language.
