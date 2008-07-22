@@ -33,6 +33,10 @@ public class FAQFormSearch {
 	private String name ;
 	private String icon ;
 	private Date createdDate ;
+	
+	/**
+	 * Instantiates a new object form search.
+	 */
 	public FAQFormSearch() {}
 	
 	/**

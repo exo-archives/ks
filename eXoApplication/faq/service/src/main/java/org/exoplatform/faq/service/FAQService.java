@@ -37,8 +37,7 @@ public interface FAQService {
 	public void addPlugin(ComponentPlugin plugin) throws Exception ;
 	
 	/**
-   * This method should:
-   * 1. Check exists category or NOT to create new or update exists category
+   * This method should check exists category or NOT to create new or update exists category
    * 
    * @param Category
    * @param is new category
@@ -46,17 +45,15 @@ public interface FAQService {
    */
 	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception ;  
   /**
-   * This method should:
-   * 1. Check exists of category and remove it
+   * This method should check exists of category and remove it
    * 
    * @param Category identify
    * @throws Exception
    */
   public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception ;
   /**
-   * This method should:
-   * 1. Lookup category node via identify 
-   * 2. Convert to Category object and return
+   * This method should lookup category via identify 
+   * and convert to Category object and return
    * 
    * @param categoryId
    * @return Category
@@ -64,27 +61,24 @@ public interface FAQService {
    */
   public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception ;  
   /**
-   * This method should:
-   * 1. Lookup all the categories node
-   * 2. Convert to category object and return list of category object
+   * This method should lookup all the category
+   * and convert to category object and return list of category object
    * 
    * @return Category list
    * @throws Exception
    */
   public List<Category> getAllCategories(SessionProvider sProvider) throws Exception ;  
   /**
-   * This method should:
-   * 1. Lookup all the categories node, find category have user in moderators
-   * 2. Convert to category object and return list of category object
+   * This method should lookup all the category, find category have user in moderators
+   * and convert to category object and return list of category object
    * 
    * @return Category list
    * @throws Exception
    */
   public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception ;  
   /**
-   * This method should:
-   * 1. Lookup all sub-categories of a category
-   * 2. Convert to category object and return list of category object
+   * This method should lookup all sub-categories of a category
+   * and convert to category object and return list of category object
    * 
    * @param Category identify
    * @return Category list
@@ -220,29 +214,114 @@ public interface FAQService {
    * @throws Exception
    */
   public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception ;  
+  
   /**
-   * This method should:
-   * 1.Lookup all setting node
-   * @param sProvider
-   * @return
-   * @throws Exception
+   * This method should lookup all setting.
+   * 
+   * @param sProvider the session provider
+   * @return the FAQ setting
+   * @throws Exception the exception
    */
   public FAQSetting  getFAQSetting(SessionProvider sProvider) throws Exception ;  
+  
   /**
-   * This method to update FAQ setting
-   * @param categoryId
-   * @param newSetting
-   * @throws Exception
-   *  */
+   * This method to update FAQ setting.
+   * 
+   * @param newSetting the new setting
+   * @param sProvider the session provider
+   * @throws Exception the exception
+   */
   public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception;  
   
+  /**
+   * This function is used to allow user can watch a category. 
+   * You have to register your email for whenever there is new question is inserted 
+   * in the category or new category then there will  a notification sent to you.
+   * 
+   * @param		id of category with user want add watch on that category 
+   * @param		value, this address email (multiple value) with input to interface will save on data
+   * @param		sProvider the session provider
+   * @throws Exception the exception
+   *  
+   */
   public void addWatch(String id, String value, SessionProvider sProvider)throws Exception ;
+  
+  /**
+   * This method will get list mail of one category. User see list this mails and 
+   * edit or delete mail if need
+   * 
+   * @param		CategoryId is id of category
+   * @param		sProvider the session provider
+   * @return	list email of current category
+   * @see			list email where user manager	
+   * @throws Exception the exception				
+   */
   public List<String> getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
+  
+  /**
+   * This method will delete watch in one category 
+   * 
+   * @param	 categoryId is id of current category
+   * @param	 sProvider the session provider
+   * @param	 order is location current of one watch with user want delete 
+   * @throws Exception the exception
+   */
   public void deleteMailInWatch(String categoryId, SessionProvider sProvider, int order) throws Exception ;
+  
+  /**
+   * This method will return list object FAQFormSearch
+   * <p>
+   * In instance system filter categories and questions coherent value with user need search
+   * 
+   * @param  	sProvider the session provider
+   * @param		text is value user input with search.
+   * @param		fromDate, toDate is time user want search 
+   * @return	list FAQFormSearch
+   * @see		 list categories and question was filter
+   * @throws Exception the exception
+   */
   public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;
+  
+  /**
+   * This method will return list category when user input value search
+   * <p>
+   * With many categories , it's difficult to find a category which user want to see.
+   * So to support to users can find their categories more quickly and accurate,
+   *  user can use 'Search Category' function
+   * 
+   * @param	 sProvider the session provider
+   * @param	 eventQuery is object save value in form advanced search 
+   * @throws Exception the exception
+   */
   public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  
+  /**
+   * This method should lookup all the categories node 
+   * so find category have user in moderators
+   * and convert to category object and return list of category object
+   * 
+   * @param  user is name when user login
+   * @param	 sProvider the session provider 
+   * @return Category list
+   * @throws Exception the exception
+   */
   public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  
+  /**
+   * This method return path of category identify
+   * @param  category identify
+   * @param	 sProvider the session provider 
+   * @return list category name is sort(path of this category)
+   * @throws Exception the exception
+   */
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception ;
+  
+  /**
+   * This method will send message to address but you want send
+   * 
+   * @param	 message is object save content with user want send to one or many address email
+   * @throws Exception the exception
+   */
   public void sendMessage(Message message) throws Exception ;
   
   public List<String> getSupportedLanguages(Node node) throws Exception ;

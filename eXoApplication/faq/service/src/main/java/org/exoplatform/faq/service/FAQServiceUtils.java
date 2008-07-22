@@ -59,7 +59,7 @@ public class FAQServiceUtils {
   /**
    * Get moderator in user,group,membership become list user
    * 
-   * @param userGroupMembership
+   * @param userGroupMembership is string user input to interface
    * @return list users
    * @throws Exception
    */
