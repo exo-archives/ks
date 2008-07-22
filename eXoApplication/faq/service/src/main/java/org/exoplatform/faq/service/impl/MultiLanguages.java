@@ -109,7 +109,7 @@ public class MultiLanguages {
   public MultiLanguages()throws Exception {}  
 
   /**
-   * Sets the property value.
+   * Sets the property value for the node
    * 
    * @param propertyName the property name
    * @param node the node
@@ -268,17 +268,15 @@ public class MultiLanguages {
       }
       questionNode.getSession().save() ;
     } catch (PathNotFoundException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (RepositoryException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
   
   /**
    * Adds the language node, when category have multi language, 
-   * eache language is a child node of category node.
+   * each language is a child node of category node.
    * 
    * @param categoryNode the category node
    * @param language the language
@@ -560,13 +558,13 @@ public class MultiLanguages {
   /**
    * Adds the file language.
    * 
-   * @param node the node
-   * @param value the value
-   * @param mimeType the mime type
-   * @param language the language
-   * @param isDefault the is default
+   * @param node        the node
+   * @param value       the value
+   * @param mimeType    the mime type
+   * @param language    the language
+   * @param isDefault   the is default
    * 
-   * @throws Exception the exception
+   * @throws Exception  the exception
    */
   public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception {
     Node newLanguageNode = null ;
@@ -842,12 +840,14 @@ public class MultiLanguages {
   }
   
   /**
-   * Sets the default.
+   * Sets the default language for the Node. If this language is not
+   * default, get language node have name is <code>language</code>
+   * and swap all properties of this language node with default language
    * 
-   * @param node the node
-   * @param language the language
+   * @param node        the node is 
+   * @param language    the name of language which will be default language 
    * 
-   * @throws Exception the exception
+   * @throws Exception  the exception when language node not found
    */
   public void setDefault(Node node, String language) throws Exception {
     String defaultLanguage = getDefault(node) ;
@@ -895,13 +895,13 @@ public class MultiLanguages {
   /**
    * Process with data child node.
    * 
-   * @param node the node
-   * @param selectedLangNode the selected lang node
-   * @param languagesNode the languages node
-   * @param defaultLanguage the default language
-   * @param nodeType the node type
+   * @param node              the node
+   * @param selectedLangNode  the selected lang node
+   * @param languagesNode     the languages node
+   * @param defaultLanguage   the default language
+   * @param nodeType          the node type
    * 
-   * @throws Exception the exception
+   * @throws Exception        the exception
    */
   private void processWithDataChildNode(Node node, Node selectedLangNode, Node languagesNode, 
       String defaultLanguage, String nodeType) throws Exception {
@@ -913,13 +913,16 @@ public class MultiLanguages {
   }
   
   /**
-   * Checks for node type nt resource.
+   * Checks for node type nt resource. Get all children node of this node,
+   * if one of children node have type is <code>nt:resource</code> return
+   * <code>true</code> opposite return <code>false</code>
    * 
-   * @param node the node
+   * @param node        the node
    * 
-   * @return true, if successful
+   * @return            <code>trie</code> if one of children node have type is
+   *                    <code>nt:resource</code> and <code>false</code> if opposite
    * 
-   * @throws Exception the exception
+   * @throws Exception  the exception
    */
   private boolean hasNodeTypeNTResource(Node node) throws Exception {
     if(node.hasNodes()) {
@@ -953,12 +956,13 @@ public class MultiLanguages {
   }
 
   /**
-   * Gets the language.
+   * get language node which have name is <code>language</code> and all properties of
+   * this language node.
    * 
-   * @param node the node
-   * @param language the language
+   * @param node        the node
+   * @param language    the name of language
    * 
-   * @return the language
+   * @return            language node which have name is <code>language</code>
    * 
    * @throws Exception the exception
    */

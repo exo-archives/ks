@@ -31,7 +31,6 @@ import javax.jcr.query.QueryResult;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-// TODO: Auto-generated Javadoc
 
 /**
  * All questions and their properties, methods are getted from database
@@ -55,6 +54,19 @@ public class QuestionPageList extends JCRPageList {
   /** The sort by_. */
   private String sortBy_= "postdate";
   
+  /** The is not yet answered. */
+  private boolean isNotYetAnswered = false;
+  
+  /**
+   * Sets the not yet answered.
+   * 
+   * @param isNotYetAnswered  the new not yet answered, is <code>true</code> if want get 
+   *                          questoins not yet answered and is <code>false</code> if opposite
+   */
+  public void setNotYetAnswered(boolean isNotYetAnswered) {
+    this.isNotYetAnswered = isNotYetAnswered;
+  }
+
   /**
    * Class constructor specifying iter contain quetion nodes, value,
    * it's query or not, how to sort all question.
@@ -63,7 +75,7 @@ public class QuestionPageList extends JCRPageList {
    * @param pageSize    this param is used to set number of question per page
    * @param value       query string is used to get question node
    * @param isQuery     is <code>true</code> is param value is query string
-   * and is <code>false</code> if opposite
+   *                    and is <code>false</code> if opposite
    * @param sort        how to sort all questions are getted
    * 
    * @throws Exception  if repository occur exception
@@ -76,9 +88,16 @@ public class QuestionPageList extends JCRPageList {
     sortBy_= sort ;
     setAvailablePage(iter.getSize()) ;    
   }
-  
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.JCRPageList#populateCurrentPage(long, java.lang.String)
+
+  /**
+   * Get questions to view in page. Base on total questions, number of question per page,
+   * current page, this function get right questions. For example: have 100 questions,
+   * view 10 quesitons per page, and current page is 1, this function will get questions 
+   * form first question to tenth question and put them into a list which is viewed.
+   * 
+   * @param username  the name of current user
+   * @param page      number of current page
+   * @see             org.exoplatform.faq.service.JCRPageList#populateCurrentPage(long, java.lang.String)
    */
   protected void populateCurrentPage(long page, String username) throws Exception  {
     if(iter_ == null) {
@@ -104,13 +123,27 @@ public class QuestionPageList extends JCRPageList {
       iter_.skip(position) ;
     }
     currentListPage_ = new ArrayList<Question>() ;
-    for(int i = 0; i < pageSize; i ++) {
-      // add != null to fix bug 514
-      if(iter_ != null && iter_.hasNext()){
-        currentNode = iter_.nextNode() ;
+    if(!isNotYetAnswered) {
+      for(int i = 0; i < pageSize; i ++) {
+        // add != null to fix bug 514
+        if(iter_ != null && iter_.hasNext()){
+          currentNode = iter_.nextNode() ;
           currentListPage_.add(getQuestion(currentNode));
-      }else {
-        break ;
+        }else {
+          break ;
+        }
+      }
+    } else {
+      Question question = new Question();
+      for(int i = 0; i < pageSize; i ++) {
+        // add != null to fix bug 514
+        if(iter_ != null && iter_.hasNext()){
+          currentNode = iter_.nextNode() ;
+          question = getQuestionNotYetAnswered(currentNode);
+          if(question != null) currentListPage_.add(question);
+        }else {
+          break ;
+        }
       }
     }
     iter_ = null ;    
@@ -145,6 +178,75 @@ public class QuestionPageList extends JCRPageList {
     NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
     Node node ;
+    while(nodeIterator.hasNext()){
+      node = nodeIterator.nextNode() ;
+      if(node.isNodeType("nt:file")) {
+        FileAttachment attachment = new FileAttachment() ;
+        nodeFile = node.getNode("jcr:content") ;
+        attachment.setPath(node.getPath()) ;
+        attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+        attachment.setName(node.getName());
+        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+        try{
+          if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+          else attachment.setSize(0);
+        } catch (Exception e) {
+          attachment.setSize(0);
+          e.printStackTrace();
+        }
+        attList.add(attachment);
+      }
+    }
+    question.setAttachMent(attList) ;
+    return question ;
+  }
+  
+  /**
+   * Gets the question not yet answered. If question's response is null
+   * then return this question, else if question have multi languages and
+   * one of them don't have response then resturn this question else return null
+   * 
+   * @param questionNode the question node
+   * 
+   * @return the question not yet answered
+   * 
+   * @throws Exception the exception
+   */
+  private Question getQuestionNotYetAnswered(Node questionNode) throws Exception{
+    String response = "";
+    String languages = "languages";
+    Question question = new Question() ;
+    question.setId(questionNode.getName()) ;
+    NodeIterator nodeIterator = null;
+    Node node = null;
+    if(questionNode.hasProperty("exo:responses")) response = questionNode.getProperty("exo:responses").getString() ;
+    if(response != null && response.trim().length() > 0) {
+      if(questionNode.hasNode(languages)){
+        Node languageNode = questionNode.getNode(languages);
+        nodeIterator = languageNode.getNodes();
+        while(nodeIterator.hasNext()){
+          node = nodeIterator.nextNode();
+          if(node.hasProperty("exo:responses")) response = node.getProperty("exo:responses").getValue().getString();
+          if(response != null && response.trim().length() > 0) return null;
+        }
+      }
+    }
+    
+    if(questionNode.hasProperty("exo:language")) question.setLanguage(questionNode.getProperty("exo:language").getString()) ;
+    if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
+    if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
+    if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
+    if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
+    if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
+    if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
+    if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
+    if(questionNode.hasProperty("exo:responses")) question.setResponses(questionNode.getProperty("exo:responses").getString()) ;
+    if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;
+    if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(questionNode.getProperty("exo:responseBy").getString()) ;   
+    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ; 
+    List<FileAttachment> attList = new ArrayList<FileAttachment>() ;
+    nodeIterator = questionNode.getNodes() ;
+    Node nodeFile ;
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
@@ -273,21 +375,16 @@ public class QuestionPageList extends JCRPageList {
    */
   public void setList(List<Question> contacts) { }
   
-  /**
-   * Gets the jCR session.
-   * 
-   * @return the jCR session
-   * 
-   * @throws Exception the exception
-   */
   @SuppressWarnings("deprecation")
   /**
    * Get a Session from Portal container, and this session is used to set a query
    * 
    * @return          an session object
+   * 
    * @throw Exception if repository config occur exception
    *                  or if repository occur exception
    *                  or if login or workspace occur exception
+   *                  
    * @see             Session
    */
   private Session getJCRSession() throws Exception {

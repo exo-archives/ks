@@ -26,7 +26,7 @@ import java.util.List;
  * May 3, 2008 ,1:48:11 AM 
  */
 public class ValidatorDataInput {
-  private List<String> typeImage = Arrays.asList(new String[]{"gif", "jpg", "png"}) ;
+  private List<String> typeImage = Arrays.asList(new String[]{"gif", "jpg", "jpeg", "tiff", "bmp", "png", "tif"}) ;
   
   public boolean isNotEmptyInput(String inputString) {
     if(inputString == null || inputString.trim().length() < 1)

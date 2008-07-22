@@ -28,12 +28,24 @@ import org.exoplatform.mail.service.Message;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
- * Created by The eXo Platform SARL
+ * Created by The eXo Platform SARL.
+ * <p>
+ * FAQService is interface provide functions for processing database
+ * with category and question include: add, edit, remove and search
+ * categories or questions.
+ * 
  * @author  Hung Nguyen Quanghung.nguyen@exoplatform.com
- * @since   Mar 04, 2008  
+ * @since   Mar 04, 2008
  */
 public interface FAQService {
   
+	/**
+	 * Adds the plugin.
+	 * 
+	 * @param plugin the plugin
+	 * 
+	 * @throws Exception the exception
+	 */
 	public void addPlugin(ComponentPlugin plugin) throws Exception ;
 	
 	/**
@@ -44,174 +56,259 @@ public interface FAQService {
    * @throws Exception
    */
 	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception ;  
+  
   /**
    * This method should check exists of category and remove it
    * 
-   * @param Category identify
-   * @throws Exception
+   * @param categoryId the category id
+   * @param sProvider the s provider
+   * 
+   * @throws Exception the exception
    */
   public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception ;
+  
   /**
    * This method should lookup category via identify 
    * and convert to Category object and return
    * 
-   * @param categoryId
+   * @param categoryId the category id
+   * @param sProvider the s provider
+   * 
    * @return Category
-   * @throws Exception
+   * 
+   * @throws Exception the exception
    */
   public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception ;  
+  
   /**
    * This method should lookup all the category
    * and convert to category object and return list of category object
    * 
-   * @return Category list
-   * @throws Exception
-   */
-  public List<Category> getAllCategories(SessionProvider sProvider) throws Exception ;  
-  /**
-   * This method should lookup all the category, find category have user in moderators
-   * and convert to category object and return list of category object
+   * @param sProvider the s provider
    * 
    * @return Category list
-   * @throws Exception
+   * 
+   * @throws Exception the exception
+   */
+  public List<Category> getAllCategories(SessionProvider sProvider) throws Exception ;  
+  
+  /**
+   * Get all categories of user.
+   * the first lookup all the categories, find categories which have 
+   * <code>user</code> in moderators after that put this categories 
+   * into a list category object
+   * 
+   * @param user      the name of user
+   * @param sProvider the session provider
+   * 
+   * @return Category list
+   * 
+   * @throws Exception if can't found user
    */
   public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception ;  
+  
   /**
    * This method should lookup all sub-categories of a category
    * and convert to category object and return list of category object
    * 
-   * @param Category identify
+   * @param categoryId the category id
+   * @param sProvider the s provider
+   * 
    * @return Category list
-   * @throws Exception
+   * 
+   * @throws Exception the exception
    */
   public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception ;
+  
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception ;
   
-  
   /**
-   * This method should:
-   * 1. Check exists question or NOT to create new or update exists question
+   * Save question after create new question or edit infor of quesiton which is existed.
+   * If param <code>isAddNew</code> is <code>true</code> then create new question node
+   * and set properties of question object to this node else reset infor for
+   * this question node
    * 
-   * @param Question
-   * @param is new question
-   * @throws Exception
+   * @param question  the question
+   * @param isAddNew  is <code>true</code> if create new question node
+   *                  and is <code>false</code> if edit question node
+   * @param sProvider the sesison provider
+   * 
+   * @return the question node
+   * 
+   * @throws Exception if path of question nod not found
    */
   public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Check exists question and remove it
+   * Delete question by question's id. Check question if it's existed then remove it
    * 
-   * @param Category identify
-   * @param Question identify
-   * @throws Exception
+   * @param questionId  the id of question is deleted
+   * @param sProvider the s provider
+   * 
+   * @throws Exception  if question not found
    */
   public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup the question node via identify
-   * 2. Convert to question object and return
+   * Lookup the question node via identify, convert to question object and return
    * 
-   * @param question identify
-   * @return Question 
-   * @throws Exception
+   * @param questionId the question id
+   * @param sProvider the s provider
+   * 
+   * @return Question
+   * 
+   * @throws Exception the exception
    */
   public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup all questions node
-   * 2. Convert to list of question object and return
+   * Get all questions
+   * 
+   * @param sProvider the s provider
    * 
    * @return List of question
-   * @throws Exception
+   * 
+   * @throws Exception  if attachment not foune
    */
   public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup all questions node have property response is null (have not yet answer)
-   * 2. Convert to list of question object and return
+   * Get all questisons not yet answered, the first get all questions 
+   * which have property response is null (have not yet answer) then
+   * convert to list of question object
+   * 
+   * @param sProvider   the session provider
    * 
    * @return List of question
-   * @throws Exception
+   * 
+   * @throws Exception  if lost attachment
    */
   public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup questions, only question node is activated and approved  via category identify
-   * 2. Convert to list of question object
+   * Get questions are activagted and approved in the category.
+   * The first get category from id which is specified by param <code>categoryId</code>
+   * then lookup questions of this category, only question is activated and approved  
+   * via category identify, the last convert to list of question object
    * 
-   * @param Category identify
+   * @param categoryId  the category id
+   * @param sProvider   the session provider
+   * 
    * @return Question list
-   * @throws Exception
+   * 
+   * @throws Exception  if can't found category
    */
   public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup all questions node via category identify
-   * 2. Convert to list of question object
+   * Get all questions of the category.
+   * The first get category from id which is specified by param <code>categoryId</code>
+   * then get all questions of this category and put them into an question page list object
    * 
-   * @param Category identify
-   * @return Question list
-   * @throws Exception
+   * @param categoryId    the id of category
+   * @param sProvider     the session provider
+   * 
+   * @return Question page list
+   * 
+   * @throws Exception    when category not found
    */
   public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
   
   /**
    * Get some informations of category: Lookup category node by category's id
-   * and count sub-categories and questions are contained in this category
+   * and count sub-categories and questions are contained in this category.
    * 
-   * @param   categoryId
-   * @param   sProvider
+   * @param categoryId the category id
+   * @param sProvider the s provider
+   * 
    * @return              number of sub-categories
-   *                      number of questions
-   *                      number of questions is not approved
-   *                      number of question is have not yet answered
+   * number of questions
+   * number of questions is not approved
+   * number of question is have not yet answered
+   * 
    * @throws  Exception   if not found category by id
-   *                      if not found question or lose file attach
+   * if not found question or lose file attach
+   * @throws Exception the exception
    */
   public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup questions node via category identify
-   * 2. Convert to list of question object
+   * Get questions in list categories.
+   * <p>
+   * With each category in the list categories, if <code>isNotYetAnswer</code>
+   * is <code>false</code> get all questoin in this catgory else get questions 
+   * which is not yet answered, and put them in to a QuestionPageList object
    * 
-   * @param Category identify
-   * @return Question list
-   * @throws Exception
+   * @param listCategoryId  the list category id
+   * @param isNotYetAnswer  is <code>true</code> if get qeustions not yet answered
+   *                        is <code>false</code> if want get all questions in list categories
+   * @param sProvider       the session provider
+   * 
+   * @return Question page list
+   * 
+   * @throws Exception      the exception
    */
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup question
-   * 2. Lookup languageNode of question
-   * 3. find all children node of language node
+   * Get all language nodes of question node which have id is specified,
+   * with each language node get properties of them and set into 
+   * QuestionLanguage object. One QuestionLanguage object have properties: 
+   * <ul>
+   * <li> Language: the name of language
+   * <li> Question: content of questions is written by Language
+   * <li> Response: content of response is written by Language
+   * </ul>
    * 
-   * @param Question 
-   * @return language list
-   * @throws Exception
+   * @param questionId  the id of question
+   * @param sProvider   the session provider
+   * 
+   * @return list languages are support by the question
+   * 
+   * @throws Exception  when question not found
    */
   public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup question
-   * 2. Lookup languageNode of question
-   * 3. find children node of language node is searched
-   * 4. find properties of children node, if contain input of user, get this question
+   * Search question by language.
+   * <p>
+   * From list questions, find all questions which support the language is specified and
+   * have properties question and response is specified to search.
+   * <p>
+   * With each question object of list questions, find child node which have name is
+   * <code>languageSearch</code>, if it's existed then compare it's properties
+   * question and response with params <code>questionSearch</code> and <code>responseSearch</code>,
+   * have some cases: 
+   * <ul>
+   * <li>The first: if one of params <code>questionSearch</code> and <code>responseSearch</code> is null 
+   *     then bypassing this property when search. 
+   * <li>The second: if all of params <code>questionSearch</code> and <code>responseSearch</code> is null
+   *     then get this question object.
+   * <li>The third: if all of  params <code>questionSearch</code> and <code>responseSearch</code> not null 
+   *     then compare language node's properties question and content with them.
+   * </ul>
+   * else bypassing this question node and check next question object
    * 
-   * @param Question list, language want search, question's content or response's content want search 
-   * @return Question list
-   * @throws Exception
+   * @param listQuestion    the list question to search, this list questions are must be specified to search
+   * @param languageSearch  the name of language node
+   * @param questionSearch  the question's content, if <code>null</code> then bypassing this property
+   * @param responseSearch  the response's content, if <code>null</code> then bypassing this property
+   * @param sProvider       the session provider
+   * 
+   * @return                Question list
+   * 
+   * @throws Exception      when question node not found
    */
   public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception ;
+  
   /**
-   * This method should:
-   * 1. Lookup questions via question identify and from category identify
-   * 2. Lookup destination category
-   * 2. Move questions to destination category
+   * Move all of questions to category which have id is  specified
    * 
-   * @param Question identify list
-   * @param source category identify
-   * @param destination category identify
-   * @throws Exception
+   * @param questions the questions
+   * @param destCategoryId the dest category id
+   * @param sProvider the s provider
+   * 
+   * @throws Exception the exception
    */
   public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception ;  
   
@@ -324,15 +421,122 @@ public interface FAQService {
    */
   public void sendMessage(Message message) throws Exception ;
   
+  /**
+   * Get all languages is supported for this node.
+   * 
+   * @param node the node
+   * 
+   * @return the supported languages
+   * 
+   * @throws Exception the exception
+   */
   public List<String> getSupportedLanguages(Node node) throws Exception ;
+  
+  /**
+   * Set default language for the node, if default language is not
+   * <code>default</code> then swap default with this language node
+   * 
+   * @param node the node
+   * @param language the language
+   * 
+   * @throws Exception the exception
+   */
   public void setDefault(Node node, String language) throws Exception ;
+  
+  /**
+   * Add language for the node, if param <code>isDefault</code> is <code>true</code> then
+   * this language is set default language for the node, opposite then this language is
+   * child node.
+   * 
+   * @param node the node
+   * @param inputs the inputs
+   * @param language the language
+   * @param isDefault the is default
+   * 
+   * @throws Exception the exception
+   */
   public void addLanguage(Node node, Map inputs, String language, boolean isDefault) throws Exception ;
+  
+  /**
+   * Add language for the node, if param <code>isDefault</code> is <code>true</code> then
+   * this language is set default language for the node, opposite then this language is
+   * child node. And set type for this language node is <code>nodeType</code>
+   * 
+   * @param node the node
+   * @param inputs the inputs
+   * @param language the language
+   * @param isDefault the is default
+   * @param nodeType the node type
+   * 
+   * @throws Exception the exception
+   */
   public void addLanguage(Node node, Map inputs, String language, boolean isDefault, String nodeType) throws Exception ;
+  
+  /**
+   * Adds the file language.
+   * 
+   * @param node        he node
+   * @param value       the value
+   * @param mimeType    the mime type
+   * @param language    the language
+   * @param isDefault   the is default
+   * 
+   * @throws Exception  the exception
+   */
   public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception ;
+  
+  /**
+   * Adds the file language.
+   * 
+   * @param node the node
+   * @param language the language
+   * @param mappings the mappings
+   * @param isDefault the is default
+   * 
+   * @throws Exception the exception
+   */
   public void addFileLanguage(Node node, String language, Map mappings, boolean isDefault) throws Exception ;
+  
+  /**
+   * Get the name of language which is default of the node
+   * 
+   * @param node        the node
+   * 
+   * @return            the name of default language
+   * 
+   * @throws Exception  the exception
+   */
   public String getDefault(Node node) throws Exception ;
+  
+  /**
+   * Get language node which have name is <code>language</code> and all properties of
+   * this language node.
+   * 
+   * @param node        the node
+   * @param language    the name of language
+   * 
+   * @return            language node which have name is <code>language</code>
+   * 
+   * @throws Exception the exception
+   */
   public Node getLanguage(Node node, String language) throws Exception ;
   
+  /**
+   * Add language for question node, this function only use for Question node, 
+   * and language node is added not default.
+   * <p>
+   * the first, get this language node if it's existed, opposite add new language node.
+   * Then set properties for this node: node's name, question's content and
+   * response's content.
+   * 
+   * @param questionNode  add language node for this question node
+   * @param language      The QuestionLanguage object which is add for the question node,
+   *                      language object have some properties: name, question's content
+   *                      and response's content. Property <code>response</code> may be don't need
+   *                      setting value if question not yet answered
+   * 
+   * @throws Exception the exception
+   */
   public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception ;
 
 }

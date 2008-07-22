@@ -16,7 +16,6 @@
  **/
 package org.exoplatform.faq.service;
 
-// TODO: Auto-generated Javadoc
 /**
  * A question may be have multiple languages, user can write his question in
  * one language or all languages are supported by portal (if he can). But only
@@ -75,14 +74,14 @@ public class QuestionLanguage {
   /**
    * Gets the response of question in this Language node.
    * 
-   * @return the response
+   * @return the response's content
    */
   public String getResponse() { return response ; }
   
   /**
    * Registers content of reponse, this content is only written by admin or moderator.
    * 
-   * @param res the res
+   * @param res the respnose of question
    */
   public void setResponse(String res) { this.response = res ; }	
   
