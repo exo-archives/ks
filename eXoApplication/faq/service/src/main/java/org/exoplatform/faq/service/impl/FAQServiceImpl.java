@@ -61,17 +61,21 @@ public class FAQServiceImpl implements FAQService{
 	}
 	
 	/**
-	 * This method get all the categories node
-	 * @return 		Category list
+	 * This method get all the category
+	 * @param	 sProvider is session provider
+	 * @return Category list
+	 * @throws Exception the exception
 	 */
 	public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {
 		return jcrData_.getAllCategories(sProvider);
 	}
 	
 	/**
-	 * This method get all the question node 
+	 * This method get all the question 
 	 * and convert to list of question object (QuestionPageList)
-	 * @return 		QuestionPageList
+	 * @param		sProvider
+	 * @return 	QuestionPageList
+	 * @throws Exception the exception
 	 */
 	public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
 		return jcrData_.getAllQuestions(sProvider);
@@ -80,7 +84,9 @@ public class FAQServiceImpl implements FAQService{
 	/**
 	 * This method get all question node have not yet answer 
 	 * and convert to list of question object (QuestionPageList)
-	 * @return		 QuestionPageList
+	 * @param		sProvider
+	 * @return	QuestionPageList
+	 * @throws Exception the exception
 	 */
 	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
 	  return jcrData_.getQuestionsNotYetAnswer(sProvider);
@@ -91,9 +97,10 @@ public class FAQServiceImpl implements FAQService{
 	 *to count sub-categories, to count questions, to count question have not yet answer,
 	 *to count question is not approved are contained in this category
    * 
-   * @param   	categoryId
-   * @param   	sProvider
-   * @return  	number of (sub-categories, questions, questions is not approved,question is have not yet answered)
+   * @param   categoryId
+   * @param   sProvider
+   * @return  number of (sub-categories, questions, questions is not approved,question is have not yet answered)
+   * @throws Exception the exception
 	 */
 	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getCategoryInfo(categoryId, sProvider);
@@ -103,10 +110,11 @@ public class FAQServiceImpl implements FAQService{
 	 * Returns an category that can then be get property of this category.
 	 * <p>
 	 *
-	 * @param  			categoryId is address id of the category so you want get
-	 * @param  			sProvider
-	 * @return      category is id = categoryId
-	 * @see         current category
+	 * @param  	categoryId is address id of the category so you want get
+	 * @param  	sProvider
+	 * @return  category is id = categoryId
+	 * @see     current category
+	 * @throws Exception the exception
 	 */
 	public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getCategoryById(categoryId, sProvider);
@@ -114,8 +122,10 @@ public class FAQServiceImpl implements FAQService{
 	
 	/**
 	 * This method should get question node via identify
-   * @param 		question identify
-   * @return 		Question 
+   * @param 	question identify
+   * @param		sProvider
+   * @return 	Question
+   * @throws Exception the exception 
 	 */
 	public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getQuestionById(questionId, sProvider);
@@ -125,8 +135,10 @@ public class FAQServiceImpl implements FAQService{
 	 * This method should view questions, only question node is activated and approved  via category identify
    * and convert to list of question object
    * 
-   * @param		 	Category identify
-   * @return 		QuestionPageList
+   * @param		Category identify
+   * @param		sProvider
+   * @return 	QuestionPageList
+   * @throws Exception the exception
 	 */
 	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getQuestionsByCatetory(categoryId, sProvider);
@@ -135,8 +147,10 @@ public class FAQServiceImpl implements FAQService{
 	/**
 	 * This method get all questions via category identify and convert to list of question list
 	 * 
-	 * @param 		Category identify
-	 * @return 		QuestionPageList
+	 * @param 	Category identify
+	 * @param		sProvider
+	 * @return 	QuestionPageList
+	 * @throws Exception the exception
 	 */
 	public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getAllQuestionsByCatetory(categoryId, sProvider);
@@ -144,10 +158,12 @@ public class FAQServiceImpl implements FAQService{
   
 	/**
 	 * This method every category should get list question, all question convert to list of question object
-	 * @param 		listCategoryId  is list via identify
-	 * @param 		isNotYetAnswer  if isNotYetAnswer = true then return list question is not yet answer
-	 * 						isNotYetAnswer  if isNotYetAnswer = false then return list all questions
-	 * @return 		QuestionPageList
+	 * @param 	listCategoryId  is list via identify
+	 * @param 	isNotYetAnswer  if isNotYetAnswer = true then return list question is not yet answer
+	 * 					isNotYetAnswer  if isNotYetAnswer = false then return list all questions
+	 * @param		sProvider
+	 * @return 	QuestionPageList
+	 * @throws Exception the exception
 	 */
 	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getQuestionsByListCatetory(listCategoryId, isNotYetAnswer, sProvider);
@@ -157,8 +173,10 @@ public class FAQServiceImpl implements FAQService{
 	 * This method should lookup languageNode of question
    * and find all child node of language node
    * 
-   * @param Question identify
-   * @return language list
+   * @param 	Question identify
+   * @param		sProvider
+   * @return 	language list
+   * @throws Exception the exception
 	 */
   public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
     return jcrData_.getQuestionLanguages(questionId, sProvider) ;
@@ -169,11 +187,13 @@ public class FAQServiceImpl implements FAQService{
    * so find child node of language node is searched
    * and find properties of child node, if contain input of user, get this question
    * 
-   * @param Question list
-   * @param langage want search
-   * @param question's content want search
-   * @param response's content want search 
-   * @return Question list
+   * @param 	Question list
+   * @param 	langage want search
+   * @param 	question's content want search
+   * @param 	response's content want search
+   * @param		sProvider 
+   * @return 	Question list
+   * @throws Exception the exception
    */
   public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception {
     return jcrData_.searchQuestionByLangage(listQuestion, languageSearch, questionSearch, responseSearch, sProvider) ;
@@ -186,10 +206,11 @@ public class FAQServiceImpl implements FAQService{
 	 * if categoryId = null then list category is list parent category
 	 * else this view list category of one value parent category that you communicate categoryId 
 	 *  
-	 * @param  			categoryId is address id of the category 
-	 * @param  			sProvider
-	 * @return      List parent category or list sub category
-	 * @see         list category
+	 * @param  	categoryId is address id of the category 
+	 * @param  	sProvider
+	 * @return  List parent category or list sub category
+	 * @see     list category
+	 * @throws Exception the exception
 	 */
 	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getSubCategories(categoryId, sProvider);
@@ -201,6 +222,8 @@ public class FAQServiceImpl implements FAQService{
    * 
    * @param Question identify list
    * @param destination category identify
+   * @param sProvider
+   * @throws Exception the exception
 	 */
 	public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception {
 		jcrData_.moveQuestions(questions, destCategoryId, sProvider) ;
@@ -210,8 +233,9 @@ public class FAQServiceImpl implements FAQService{
 	 * <p>
 	 * This function is used to remove one category in list
 	 * 
-	 * @param  			categoryId is address id of the category 
-	 * @param  			sProvider
+	 * @param  	categoryId is address id of the category 
+	 * @param  	sProvider
+	 * @throws Exception the exception
 	 */
 	public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception {
 		jcrData_.removeCategory(categoryId, sProvider) ;
@@ -222,8 +246,9 @@ public class FAQServiceImpl implements FAQService{
 	 * <p>
 	 * This function is used to remove one question in list
 	 * 
-	 * @param  			question identify
-	 * @param  			sProvider
+	 * @param  	question identify
+	 * @param  	sProvider
+	 * @throws Exception the exception
 	 */
 	public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception {
 		jcrData_.removeQuestion(questionId, sProvider) ;
@@ -236,13 +261,14 @@ public class FAQServiceImpl implements FAQService{
 	 * This function is used to add new or edit category in list. User will input information of fields need
 	 * in form add category, so user save then category will persistent in data
 	 * 
-	 * @param  			parentId is address id of the category parent where user want add sub category
+	 * @param  	parentId is address id of the category parent where user want add sub category
 	 * when paretId = null so this category is parent category else sub category  
-	 * @param  			cat is properties that user input to interface will save on data
-	 * @param				isAddNew is true so add new category else edit category
-	 * @param				sProvider
-	 * @return      List parent category or list sub category
-	 * @see         list category
+	 * @param  	cat is properties that user input to interface will save on data
+	 * @param		isAddNew is true so add new category else edit category
+	 * @param		sProvider
+	 * @return  List parent category or list sub category
+	 * @see     list category
+	 * @throws Exception the exception
 	 */
 	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
 		jcrData_.saveCategory(parentId, cat, isAddNew, sProvider) ;
@@ -253,6 +279,7 @@ public class FAQServiceImpl implements FAQService{
 	 * @param question is information but user input or edit to form interface of question 
 	 * @param isAddNew = true then add new question
 	 * 				isAddNew = false then update question
+	 * @param	sProvider
 	 */
 	public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
 		return jcrData_.saveQuestion(question, isAddNew, sProvider) ;
@@ -260,6 +287,8 @@ public class FAQServiceImpl implements FAQService{
 	
 	/**
 	 * This method is used to get some properties of FAQ. 
+	 * @param sProvider
+	 * @throws Exception the exception
 	 */
   public FAQSetting getFAQSetting(SessionProvider sProvider) throws Exception {
     return jcrData_.getFAQSetting(sProvider);
@@ -270,10 +299,10 @@ public class FAQServiceImpl implements FAQService{
    * <p>
    * This function is used(Users of FAQ Administrator) choose some properties in object FAQSetting
    * 
-   * @param			newSetting is properties of object FAQSetting that user input to interface will save on data
-   * @param			sProvider
-   * @return		all value depend FAQSetting will configuration follow properties but user choose
-   * @see				
+   * @param	 newSetting is properties of object FAQSetting that user input to interface will save on data
+   * @param	 sProvider
+   * @return all value depend FAQSetting will configuration follow properties but user choose
+   * @throws Exception the exception
    */
   public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception {
   	jcrData_.saveFAQSetting(newSetting, sProvider);
@@ -285,11 +314,12 @@ public class FAQServiceImpl implements FAQService{
 	 * This function is used to move category in list. User will right click on category need
 	 * move, so user choose in list category one another category want to put
 	 * 
-	 * @param  			categoryId is address id of the category that user want plate
-	 * @param  			destCategoryId is address id of the category that user want put
-	 * @param				sProvider
-	 * @return      category will put new plate
-	 * @see         no see category this plate but user see that category at new plate
+	 * @param  	categoryId is address id of the category that user want plate
+	 * @param  	destCategoryId is address id of the category that user want put
+	 * @param		sProvider
+	 * @return  category will put new plate
+	 * @see     no see category this plate but user see that category at new plate
+	 * @throws Exception the exception
 	 */
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
   	jcrData_.moveCategory(categoryId, destCategoryId, sProvider);
@@ -300,9 +330,10 @@ public class FAQServiceImpl implements FAQService{
    * You have to register your email for whenever there is new question is inserted 
    * in the category or new category then there will  a notification sent to you.
    * 
-   * @param				id of category with user want add watch on that category 
-   * @param				value, this address email (multiple value) with input to interface will save on data
-   * @param				sProvider
+   * @param		id of category with user want add watch on that category 
+   * @param		value, this address email (multiple value) with input to interface will save on data
+   * @param		sProvider
+   * @throws Exception the exception
    *  
    */
   public void addWatch(String id, String value, SessionProvider sProvider)throws Exception {
@@ -313,10 +344,11 @@ public class FAQServiceImpl implements FAQService{
    * This method will get list mail of one category. User see list this mails and 
    * edit or delete mail if need
    * 
-   * @param				CategoryId is id of category
-   * @param				sProvider
-   * @return			list email of current category
-   * @see					list email where user manager					
+   * @param		CategoryId is id of category
+   * @param		sProvider
+   * @return	list email of current category
+   * @see			list email where user manager	
+   * @throws Exception the exception				
    */
   public List<String> getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
     return jcrData_.getListMailInWatch(categoryId, sProvider); 
@@ -325,9 +357,10 @@ public class FAQServiceImpl implements FAQService{
   /**
    * This function will delete watch in one category 
    * 
-   * @param				categoryId is id of current category
-   * @param				sProvider
-   * @param				order is location current of one watch with user want delete 
+   * @param	 categoryId is id of current category
+   * @param	 sProvider
+   * @param	 order is location current of one watch with user want delete 
+   * @throws Exception the exception
    */
   public void deleteMailInWatch(String categoryId, SessionProvider sProvider, int order) throws Exception {
   	jcrData_.deleteMailInWatch(categoryId, sProvider, order);
@@ -338,11 +371,12 @@ public class FAQServiceImpl implements FAQService{
    * <p>
    * In instance system filter categories and questions coherent value with user need search
    * 
-   * @param  			sProvider
-   * @param				text is value user input with search.
-   * @param				fromDate, toDate is time user want search 
-   * @return			list FAQFormSearch
-   * @see					list categories and question was filter
+   * @param  	sProvider
+   * @param		text is value user input with search.
+   * @param		fromDate, toDate is time user want search 
+   * @return	list FAQFormSearch
+   * @see		 list categories and question was filter
+   * @throws Exception the exception
    */
   public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception {
   	return jcrData_.getAdvancedEmpty(sProvider, text, fromDate, toDate); 
@@ -355,8 +389,9 @@ public class FAQServiceImpl implements FAQService{
    * So to support to users can find their categories more quickly and accurate,
    *  user can use 'Search Category' function
    * 
-   * @param				sProvider
-   * @param				eventQuery is object save value in form advanced search 
+   * @param	 sProvider
+   * @param	 eventQuery is object save value in form advanced search 
+   * @throws Exception the exception
    */
   public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.getAdvancedSearchCategory(sProvider, eventQuery); 
@@ -367,8 +402,10 @@ public class FAQServiceImpl implements FAQService{
    * so find category have user in moderators
    * and convert to category object and return list of category object
    * 
-   * @param 		user is name when user login  
-   * @return 		Category list
+   * @param  user is name when user login
+   * @param	 sProvider  
+   * @return Category list
+   * @throws Exception the exception
    */
   public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception {
     return jcrData_.getListCateIdByModerator(user, sProvider); 
@@ -381,8 +418,9 @@ public class FAQServiceImpl implements FAQService{
    * So to support to users can find their questions more quickly and accurate,
    *  user can use 'Search Question' function
    * 
-   * @param				sProvider
-   * @param				eventQuery is object save value in form advanced search 
+   * @param	 sProvider
+   * @param	 eventQuery is object save value in form advanced search 
+   * @throws Exception the exception
    */
   public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.getAdvancedSearchQuestion(sProvider, eventQuery) ;
@@ -390,8 +428,10 @@ public class FAQServiceImpl implements FAQService{
   
   /**
    * This method return path of category identify
-   * @param category identify
+   * @param  category identify
+   * @param	 sProvider
    * @return list category name is sort(path of this category)
+   * @throws Exception the exception
    */
   public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception {
   	return jcrData_.getCategoryPath(sProvider, categoryId) ;
@@ -400,7 +440,8 @@ public class FAQServiceImpl implements FAQService{
   /**
    * This function will send message to address but you want send
    * 
-   * @param				message is object save content with user want send to one or many address email
+   * @param	 message is object save content with user want send to one or many address email
+   * @throws Exception the exception
    */
   public void sendMessage(Message message) throws Exception {
   	jcrData_.sendMessage(message) ;
