@@ -937,14 +937,17 @@ public class JCRDataStorage{
 			//send watching notification and send notify
 			if(forumNode.isNodeType("exo:forumWatching")){
 				emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues())) ;
-				if(emailList.size() > 0) {					
-					Message message = new Message();
-					message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-					message.setSubject("eXo Forum Watching Notification!");
-					message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString() 
-							+"</b>' have just	added thread:</br>" + topic.getTopicName());
-					sendNotification(emailList, message) ;					
-				}
+			}
+			if(forumNode.hasProperty("exo:notifyWhenAddTopic")){
+				emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddTopic").getValues())) ;
+			}
+			if(emailList.size() > 0) {					
+				Message message = new Message();
+				message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+				message.setSubject("eXo Forum Watching Notification!");
+				message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString() 
+						+"</b>' have just	added thread:</br>" + topic.getTopicName() + "<div>" + topic.getDescription() + "</div>");
+				sendNotification(emailList, message) ;					
 			}
 		} else {
 			topicNode = forumNode.getNode(topic.getId()) ;
