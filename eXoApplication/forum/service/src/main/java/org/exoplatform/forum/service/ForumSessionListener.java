@@ -24,7 +24,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.auth.AuthenticationService;
-import org.exoplatform.services.organization.auth.Identity;
+import org.exoplatform.services.security.Identity;
 
 /**
  * Created by The eXo Platform SAS        
@@ -60,13 +60,19 @@ public class ForumSessionListener implements HttpSessionListener {
   public void sessionDestroyed(HttpSessionEvent event) {
     try {
       String portalContainerName = event.getSession().getServletContext().getServletContextName() ;
-    	RootContainer rootContainer = RootContainer.getInstance() ;
+      /*RootContainer rootContainer = RootContainer.getInstance() ;
     	PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
     	AuthenticationService authenService = (AuthenticationService)portalContainer.getComponentInstanceOfType(AuthenticationService.class) ;
       Identity identity = authenService.getCurrentIdentity() ;
+      */
+      RootContainer rootContainer = RootContainer.getInstance() ;
+    	PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
+    	AuthenticationService authenService = (AuthenticationService)RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(AuthenticationService.class) ;
+      Identity identity = authenService.getCurrentIdentity() ;
+      
       if(identity != null) {
       	ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
-      	fservice.userLogout(identity.getUsername()) ;
+      	fservice.userLogout(identity.getUserId()) ;
       }
     } catch(Exception ex) {
       log.error("Error while destroying a portal session",ex);

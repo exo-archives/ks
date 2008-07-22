@@ -53,7 +53,12 @@
     <filter-name>FactoryInitializedFilter</filter-name>
     <filter-class>org.exoplatform.frameworks.jcr.web.SimpleSessionFactoryInitializedFilter</filter-class>
   </filter>
-
+  
+  <filter>
+	<filter-name>SetCurrentIdentityFilter</filter-name>
+	<filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+  </filter>
+  	
   <filter-mapping>
     <filter-name>ResourceRequestFilter</filter-name>
     <url-pattern>/javascript/*</url-pattern>
@@ -103,6 +108,12 @@
     <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
     <url-pattern>/rest/*</url-pattern>
   </filter-mapping> 
+  
+  <filter-mapping>
+    <filter-name>SetCurrentIdentityFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
 
   <!-- ================================================================== -->
   <!--           LISTENER                                                 -->
@@ -114,7 +125,7 @@
     <listener-class>org.exoplatform.forum.service.ForumSessionListener</listener-class>
   </listener>
   <listener>
-    <listener-class>org.exoplatform.portal.webui.skin.SkinListener</listener-class>
+    <listener-class>org.exoplatform.portal.webui.skin.SkinConfigListener</listener-class>
   </listener>    
   <listener>
     <listener-class>org.exoplatform.portal.webui.javascript.JavascriptListener</listener-class>
