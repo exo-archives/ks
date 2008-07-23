@@ -73,6 +73,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   
   private boolean isEditTab_ = true ;
   private boolean isResponseTab_ = false ;
+  private boolean isChangeTab_ = false;
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -172,19 +173,22 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() {
-    pageSelect = pageIterator.getPageSelected() ;
-    listQuestion_.clear() ;
-    try {
-      listQuestion_.addAll(this.pageList.getPage(pageSelect, null)) ;
-      UIFAQPageIterator pageIterator = null ;
-      while(listQuestion_.isEmpty() && pageSelect > 1) {
-        pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
-        listQuestion_.addAll(this.pageList.getPage(--pageSelect, null)) ;
-        pageIterator.setSelectPage(pageSelect) ;
+    if(!isChangeTab_){
+      pageSelect = pageIterator.getPageSelected() ;
+      listQuestion_.clear() ;
+      try {
+        listQuestion_.addAll(this.pageList.getPage(pageSelect, null)) ;
+        UIFAQPageIterator pageIterator = null ;
+        while(listQuestion_.isEmpty() && pageSelect > 1) {
+          pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
+          listQuestion_.addAll(this.pageList.getPage(--pageSelect, null)) ;
+          pageIterator.setSelectPage(pageSelect) ;
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
+    isChangeTab_ = false;
     return listQuestion_ ;
   }
   
@@ -195,19 +199,22 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
    */
   @SuppressWarnings("unused")
   private List<Question> getListQuestionNotAnswered() {
-    pageSelectNotAnswer = pageQuesNotAnswerIterator.getPageSelected() ;
-    listQuestionNotYetAnswered_.clear() ;
-    try {
-      listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(pageSelectNotAnswer, null)) ;
-      UIFAQPageIterator pageIterator = null ;
-      while(listQuestionNotYetAnswered_.isEmpty() && pageSelectNotAnswer > 1) {
-        pageIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
-        listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(--pageSelectNotAnswer, null)) ;
-        pageIterator.setSelectPage(pageSelectNotAnswer) ;
+    if(!isChangeTab_){
+      pageSelectNotAnswer = pageQuesNotAnswerIterator.getPageSelected() ;
+      listQuestionNotYetAnswered_.clear() ;
+      try {
+        listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(pageSelectNotAnswer, null)) ;
+        UIFAQPageIterator pageIterator = null ;
+        while(listQuestionNotYetAnswered_.isEmpty() && pageSelectNotAnswer > 1) {
+          pageIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
+          listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(--pageSelectNotAnswer, null)) ;
+          pageIterator.setSelectPage(pageSelectNotAnswer) ;
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
+    isChangeTab_ = false;
     return listQuestionNotYetAnswered_ ;
   }
   
@@ -340,6 +347,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         questionManagerForm.isViewEditQuestion = false ;
         questionManagerForm.isViewResponseQuestion = true ;
       }
+      questionsInfo.isChangeTab_ = true;
       UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
