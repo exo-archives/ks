@@ -21,7 +21,7 @@
 										language = listLanguage[i++] ;
 						%>
 								  <tr>
-								    <td >&nbsp;</td>
+								    <td width="80">&nbsp;</td>
 								    <td style="padding-left: 4px;">
 								      <div class="LanguageQuestion" > 
 													<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
@@ -29,7 +29,7 @@
 								    </td>
 								  </tr>
 								  <tr>
-								    <td align="right">
+								    <td width="80" align="right">
 								      <%=uicomponent.getLabel(field.getName()) %> : 
 								    </td>
 								    <td style="padding-left: 4px;white-space:nowrap;">
@@ -46,7 +46,7 @@
 								<tr>
 									<%fieldName = uicomponent.getLabel(field.getName());
 										if(!fieldName.equals(uicomponent.getId())) { %>												
-										<td class="FieldLabel" >
+										<td class="FieldLabel" width="80">
 											<%=uicomponent.getLabel(field.getName()) %> : 
 										</td>
 										<td class="FieldComponent">
