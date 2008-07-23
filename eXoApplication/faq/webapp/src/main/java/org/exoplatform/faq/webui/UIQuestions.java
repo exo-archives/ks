@@ -117,7 +117,7 @@ public class UIQuestions extends UIContainer {
     backPath_ = null ;
 	  this.categoryId_ = new String() ;
     currentUser_ = FAQUtils.getCurrentUser() ;
-		addChild(UIQuickSeach.class, null, null) ;
+		addChild(UIQuickSearch.class, null, null) ;
     setCategories() ;
 	}
   

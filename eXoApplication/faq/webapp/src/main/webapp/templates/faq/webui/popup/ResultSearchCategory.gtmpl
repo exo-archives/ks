@@ -34,7 +34,7 @@
 												String link = uicomponent.event("Link", categoryId);
  										 	%>
 	 											<tr class="EvenRow"> 
-	 												<td class="text" align="center"><div class="FAQCategorySearch"><span></span></div></td>
+	 												<td class="text" style="width: 30px;" align="center"><div class="FAQCategorySearch"><span></span></div></td>
 		 											<%
 													if(categoryName.length()>50) {
 														String title = categoryName ;
