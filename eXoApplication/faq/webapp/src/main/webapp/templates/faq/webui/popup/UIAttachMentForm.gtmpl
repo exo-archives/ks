@@ -4,7 +4,7 @@
   <div class="HorizontalLayout">
     <div class="FormContainer">
     	<div class="ViewFormAttachment">
-	      <table class="UIFormGrid" width="100%" style="max-width: 100%">
+	      <table width="100%" border-collapse:collapse; border-spacing:0px; margin:0px; padding:0px;>
 	      	<%
 	      		int i = 1 ;
 		        for(field in uiform.getChildren()) { 
