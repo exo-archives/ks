@@ -57,23 +57,23 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
+ *          hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class ,
-		template =	"app:/templates/faq/webui/popup/UIQuestionForm.gtmpl",
-		events = {
-		  @EventConfig(listeners = UIQuestionForm.AddLanguageActionListener.class),
-		  @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
-			@EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
-			@EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
-			@EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class)
-		}
+    lifecycle = UIFormLifecycle.class ,
+    template =  "app:/templates/faq/webui/popup/UIQuestionForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UIQuestionForm.AddLanguageActionListener.class),
+      @EventConfig(listeners = UIQuestionForm.AttachmentActionListener.class),
+      @EventConfig(listeners = UIQuestionForm.SaveActionListener.class),
+      @EventConfig(listeners = UIQuestionForm.CancelActionListener.class),
+      @EventConfig(listeners = UIQuestionForm.RemoveAttachmentActionListener.class)
+    }
 )
-public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
-	public static final String AUTHOR = "Author" ;
+public class UIQuestionForm extends UIForm implements UIPopupComponent  {
+  public static final String AUTHOR = "Author" ;
   public static final String EMAIL_ADDRESS = "EmailAddress" ;
   public static final String WYSIWYG_INPUT = "Question" ;
   public static final String LIST_WYSIWYG_INPUT = "ListQuestion" ;
@@ -112,7 +112,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
-	
+  
   @SuppressWarnings("static-access")
   public UIQuestionForm() throws Exception {
     isChildOfManager = false ;
@@ -125,10 +125,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     actionField_ = new HashMap<String, List<ActionData>>() ;
     questionId_ = new String() ;
     question_ = null ;
-	}
+  }
   
-  public void refresh() throws Exception {  	
-  	listFileAttach_.clear() ;
+  public void refresh() throws Exception {    
+    listFileAttach_.clear() ;
   }
 
   public void initPage(boolean isEdit) {
@@ -345,13 +345,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       }
     }
   }
-	
-	static public class SaveActionListener extends EventListener<UIQuestionForm> {
+  
+  static public class SaveActionListener extends EventListener<UIQuestionForm> {
     @SuppressWarnings({ "static-access", "unchecked" })
     public void execute(Event<UIQuestionForm> event) throws Exception {
       Node questionNode = null ;
       boolean questionIsApproved = true ;
-			UIQuestionForm questionForm = event.getSource() ;			
+      UIQuestionForm questionForm = event.getSource() ;     
       DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
       java.util.Date date = new java.util.Date();
       String dateStr = dateFormat.format(date) ;
@@ -394,7 +394,19 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
         question_.setResponses(" ") ;
-        questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions() ;
+        try{
+          questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions() ;
+        } catch(Exception exception){
+          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          
+          UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+          UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+          popupAction.deActivate() ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+          return;
+        }
         question_.setApproved(questionIsApproved) ;
         question_.setDateResponse(date) ;
       } else {
@@ -473,13 +485,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         UIPopupContainer popupContainer = questionManagerForm.getParent() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
-		}
-	}
+    }
+  }
 
-	static public class AddLanguageActionListener extends EventListener<UIQuestionForm> {
-	  @SuppressWarnings("unchecked")
+  static public class AddLanguageActionListener extends EventListener<UIQuestionForm> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UIQuestionForm> event) throws Exception {
-	    UIQuestionForm questionForm = event.getSource() ;
+      UIQuestionForm questionForm = event.getSource() ;
       
       questionForm.author_ = ((UIFormStringInput)questionForm.getChildById(AUTHOR)).getValue() ;
       questionForm.email_ = ((UIFormStringInput)questionForm.getChildById(EMAIL_ADDRESS)).getValue() ;
@@ -492,23 +504,23 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       for(int i = 0 ; i < listFormWYSIWYGInput.getChildren().size(); i ++) {
         questionForm.questionContents_.add(((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(i)).getValue()) ;
       }
-	    UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class);
+      UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       UILanguageForm languageForm = popupAction.activate(UILanguageForm.class, 400) ;
       languageForm.setListSelected(questionForm.LIST_LANGUAGE) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	  }
-	}
+    }
+  }
   
-	static public class AttachmentActionListener extends EventListener<UIQuestionForm> {
-	  public void execute(Event<UIQuestionForm> event) throws Exception {
-	    UIQuestionForm questionForm = event.getSource() ;			
+  static public class AttachmentActionListener extends EventListener<UIQuestionForm> {
+    public void execute(Event<UIQuestionForm> event) throws Exception {
+      UIQuestionForm questionForm = event.getSource() ;     
       UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       uiChildPopup.activate(UIAttachMentForm.class, 550) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
-	  }
-	}
+    }
+  }
   
   static public class RemoveAttachmentActionListener extends EventListener<UIQuestionForm> {
     @SuppressWarnings("static-access")
@@ -533,9 +545,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
     }
   }
   
-	static public class CancelActionListener extends EventListener<UIQuestionForm> {
+  static public class CancelActionListener extends EventListener<UIQuestionForm> {
     public void execute(Event<UIQuestionForm> event) throws Exception {
-			UIQuestionForm questionForm = event.getSource() ;
+      UIQuestionForm questionForm = event.getSource() ;
       if(!questionForm.isChildOfManager) {
         UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
@@ -558,6 +570,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
         }
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
-		}
-	}
+    }
+  }
 }
