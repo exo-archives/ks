@@ -35,7 +35,7 @@
 						 						String linkQuestion = uicomponent.event("LinkQuestion",Id);
  										 %>
  											<tr class="EvenRow">
- 												<td class="text" align="center"><div class="$icon"><span></span></div></td>
+ 												<td class="text" style="width: 30px;" align="center"><div class="$icon"><span></span></div></td>
  												<%
 												if(name.length()>100) {
 													String title = name ;
@@ -47,7 +47,7 @@
  												%>
  												<td class="text" align="left"><a href="$link">$name</a></td>
  												<%}%>
- 												<td class="text" align="center">$date</td>
+ 												<td class="text" style="width: 90px;" align="center">$date</td>
  												<td style="width: 30px;" align="center">
  												<% if(Id.indexOf("ategory")> 0) {
  												 %>

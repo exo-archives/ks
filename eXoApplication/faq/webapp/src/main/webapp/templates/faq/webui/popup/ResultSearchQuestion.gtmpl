@@ -43,7 +43,7 @@
 											}
  										 %>
 	 											<tr class="EvenRow">
-	 												<td class="text" align="center"><div class="$icon"><span></span></div></td>
+	 												<td class="text" style="width: 30px;" align="center"><div class="$icon"><span></span></div></td>
 	 												<td class="text" align="left"><%= author%></td>
 	 												<td class="text" align="left"><%= (email != null) ? email: ""%></td>
 	 												<%
