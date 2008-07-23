@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2007 eXo Platform SAS.
+ * Copyright (C) 2003-2008 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -112,7 +112,7 @@ public class FAQServiceImpl implements FAQService{
 	 *
 	 * @param  	categoryId is address id of the category so you want get
 	 * @param  	sProvider
-	 * @return  category is id = categoryId
+	 * @return  category is id equal categoryId
 	 * @see     current category
 	 * @throws Exception the exception
 	 */
@@ -159,8 +159,8 @@ public class FAQServiceImpl implements FAQService{
 	/**
 	 * This method every category should get list question, all question convert to list of question object
 	 * @param 	listCategoryId  is list via identify
-	 * @param 	isNotYetAnswer  if isNotYetAnswer = true then return list question is not yet answer
-	 * 					isNotYetAnswer  if isNotYetAnswer = false then return list all questions
+	 * @param 	isNotYetAnswer  if isNotYetAnswer equal true then return list question is not yet answer
+	 * 					isNotYetAnswer  if isNotYetAnswer equal false then return list all questions
 	 * @param		sProvider
 	 * @return 	QuestionPageList
 	 * @throws Exception the exception
@@ -203,7 +203,7 @@ public class FAQServiceImpl implements FAQService{
 	 * Returns an list category that can then be view on the screen.
 	 * <p>
 	 * This method always returns immediately, this view list category in screen.
-	 * if categoryId = null then list category is list parent category
+	 * if categoryId equal null then list category is list parent category
 	 * else this view list category of one value parent category that you communicate categoryId 
 	 *  
 	 * @param  	categoryId is address id of the category 
@@ -262,7 +262,7 @@ public class FAQServiceImpl implements FAQService{
 	 * in form add category, so user save then category will persistent in data
 	 * 
 	 * @param  	parentId is address id of the category parent where user want add sub category
-	 * when paretId = null so this category is parent category else sub category  
+	 * when paretId equal null so this category is parent category else sub category  
 	 * @param  	cat is properties that user input to interface will save on data
 	 * @param		isAddNew is true when add new category else update category
 	 * @param		sProvider
@@ -277,8 +277,8 @@ public class FAQServiceImpl implements FAQService{
 	/**
 	 * This method should create new question or update exists question
 	 * @param question is information but user input or edit to form interface of question 
-	 * @param isAddNew = true then add new question
-	 * 				isAddNew = false then update question
+	 * @param isAddNew equal true then add new question
+	 * 				isAddNew equal false then update question
 	 * @param	sProvider
 	 */
 	public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
@@ -315,7 +315,7 @@ public class FAQServiceImpl implements FAQService{
 	 * move, so user choose in list category one another category want to put
 	 * 
 	 * @param  	categoryId is address id of the category that user want plate
-	 * @param  	destCategoryId is address id of the category that user want put
+	 * @param  	destCategoryId is address id of the category that user want put( destination )
 	 * @param		sProvider
 	 * @return  category will put new plate
 	 * @see     no see category this plate but user see that category at new plate
