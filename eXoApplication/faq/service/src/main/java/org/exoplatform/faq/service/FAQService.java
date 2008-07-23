@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2007 eXo Platform SAS.
+ * Copyright (C) 2003-2008 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -49,21 +49,28 @@ public interface FAQService {
 	public void addPlugin(ComponentPlugin plugin) throws Exception ;
 	
 	/**
-   * This method should check exists category or NOT to create new or update exists category
-   * 
-   * @param Category
-   * @param is new category
-   * @throws Exception
-   */
+	 * This method should check exists category or NOT to create new or update exists category
+	 * <p>
+	 * This function is used to add new or edit category in list. User will input information of fields need
+	 * in form add category, so user save then category will persistent in data
+	 * 
+	 * @param  	parentId is address id of the category parent where user want add sub category
+	 * when paretId = null so this category is parent category else sub category  
+	 * @param  	cat is properties that user input to interface will save on data
+	 * @param		isAddNew is true when add new category else update category
+	 * @param		sProvider is session provider
+	 * @return  List parent category or list sub category
+	 * @see     list category
+	 * @throws Exception the exception
+	 */
 	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception ;  
   
-  /**
+	/**
    * This method should check exists of category and remove it
-   * 
-   * @param categoryId the category id
-   * @param sProvider the s provider
-   * 
-   * @throws Exception the exception
+	 * 
+	 * @param  	categoryId is address id of the category need remove 
+	 * @param  	sProvider is session provider
+	 * @throws Exception the exception
    */
   public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception ;
   
@@ -71,12 +78,11 @@ public interface FAQService {
    * This method should lookup category via identify 
    * and convert to Category object and return
    * 
-   * @param categoryId the category id
-   * @param sProvider the s provider
-   * 
-   * @return Category
-   * 
-   * @throws Exception the exception
+   * @param  	categoryId is address id of the category so you want get
+	 * @param  	sProvider is session provider
+	 * @return  category is id = categoryId
+	 * @see     current category
+	 * @throws Exception the exception
    */
   public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception ;  
   
@@ -84,8 +90,7 @@ public interface FAQService {
    * This method should lookup all the category
    * and convert to category object and return list of category object
    * 
-   * @param sProvider the s provider
-   * 
+   * @param  sProvider is session provider
    * @return Category list
    * 
    * @throws Exception the exception
