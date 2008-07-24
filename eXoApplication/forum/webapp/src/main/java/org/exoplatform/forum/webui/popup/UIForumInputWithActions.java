@@ -94,7 +94,6 @@ public class UIForumInputWithActions extends UIFormInputSet {
           }else if(action.getActionType() == ActionData.TYPE_LINK){
             w.write(ForumUtils.getSubString(actionLabel, 30)) ;
           }else if(action.getActionType() == ActionData.TYPE_ATT){
-          	System.out.println("\n\n" + actionLabel);
           	String size = "";
           	if(actionLabel.lastIndexOf("(") > 0) {
           		size = actionLabel.substring(actionLabel.lastIndexOf("(")) ;

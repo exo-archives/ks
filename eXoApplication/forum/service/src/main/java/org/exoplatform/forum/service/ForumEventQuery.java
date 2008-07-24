@@ -210,7 +210,6 @@ public class ForumEventQuery {
     }
     stringBuffer.append("]");
     if(isAnd) queryString.append(stringBuffer.toString()) ;
-//    System.out.println("\n\n--->>PathQR:  " + queryString.toString() + "\n\n");
 	  return queryString.toString();
   }
 	
