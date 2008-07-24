@@ -655,7 +655,6 @@ UIFAQPortlet .ResultQuickSearch {
 .UIFAQPortlet .ViewAttachFile {
 	line-height: 18px;
 	margin: 0px 0px 3px 5px; 
-	max-width: 100%;
 	white-space:normal; 
 }
 
