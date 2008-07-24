@@ -60,7 +60,6 @@ public class ForumPageList extends JCRPageList {
 		if(iter_ == null) {
 			iter_ = setQuery(sProvider_, isQuery_, value_) ;
 		}
-		System.out.println("\n\n getPage " + iter_.getSize());
 		if(iter_ != null)setAvailablePage(iter_.getSize()) ;
 		Node currentNode ;
 		long pageSize = 0 ;

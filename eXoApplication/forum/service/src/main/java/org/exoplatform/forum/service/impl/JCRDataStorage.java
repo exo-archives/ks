@@ -266,7 +266,6 @@ public class JCRDataStorage{
 			} else {
 					queryBuffer.append(",@exo:createdDate ascending") ;
 			}
-//			System.out.println("\n " + queryBuffer.toString() + "\n\n");
 			Query query = qm.createQuery(queryBuffer.toString() , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
