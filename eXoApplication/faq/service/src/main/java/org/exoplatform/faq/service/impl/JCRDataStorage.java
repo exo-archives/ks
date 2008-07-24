@@ -184,9 +184,13 @@ public class JCRDataStorage {
       			Message message = new Message();
             message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
       			//message.setMessageTo(question.getEmail());
-      			message.setSubject("eXo FAQ Watching Category Notifycation!");
-      			message.setMessageBody("The category '" + cate.getProperty("exo:name").getString() 
-      					+"' have just  added question:</br>" + question.getQuestion());
+      			message.setSubject("eXo FAQ Watching Category Notifycation! email");
+      			message.setMessageBody("<p>Hi you,</p>" 
+      					+"<p>You have received this email because you registered for eXo FAQ Category Notification</p>"
+      					+"<p>We would like to inform that Category '" + cate.getProperty("exo:name").getString() 
+      					+"' has been added new Question with content below: </p>"
+      					+"<p>" + question.getQuestion() + "<p>"
+      					+"<p>Regards & thanks</p>");
       			sendNotification(emailsList, message) ;    			
       		}
       	}
@@ -211,8 +215,13 @@ public class JCRDataStorage {
       		if(emailsList != null && emailsList.size() > 0) {
 						Message message = new Message();
 			      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-						message.setSubject("eXo FAQ Question Responsed Or Edit Notifycation!");
-						message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edited");
+						message.setSubject("eXo FAQ Watching Notifycation! email");
+						message.setMessageBody("<p>Hi you,</p>" 
+      					+"<p>You have received this email because you registered for eXo FAQ Category Notification</p>"
+      					+"<p>We would like to inform that the question: '" + question.getQuestion() 
+      					+"' has been edited or responded </p>"
+      					+"<p>" + question.getResponses() + "</p>"
+      					+"<p>Regards & thanks</p>");
 						sendNotification(emailsList, message) ;
       		}
       	} 
@@ -226,8 +235,11 @@ public class JCRDataStorage {
   		try {
   			Message message = new Message();
 	      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-				message.setSubject("eXo FAQ Your Question is answered or edit !");
-				message.setMessageBody("The question: " + question.getQuestion() + " have just responsed or edit notifycation!");
+				message.setSubject("eXo FAQ Your Question is answered or edit ! ");
+				message.setMessageBody("<p>We would like to inform your question: '" + question.getQuestion() 
+  					+"' has been edited or responded </p>"
+  					+"<p>" + question.getResponses() + "<p>"
+  					+"<p>Regards & thanks</p>");
 				emailsList.add(question.getEmail()) ;
 				sendNotification(emailsList, message) ;
   		} catch(Exception e) {

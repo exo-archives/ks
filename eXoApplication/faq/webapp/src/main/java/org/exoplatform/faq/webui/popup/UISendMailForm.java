@@ -124,7 +124,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     addChild(new UIFormStringInput(TO, TO, null)) ;
     addChild(new UIFormStringInput(ADD_CC, ADD_CC, null)) ;
     addChild(new UIFormStringInput(ADD_BCC, ADD_BCC, null)) ;
-    addChild(new UIFormStringInput(SUBJECT, SUBJECT, this.getLabel("From") + FAQUtils.getCurrentUser() + " " + this.getLabel("sent-to-you"))) ;
+    addChild(new UIFormStringInput(SUBJECT, SUBJECT, this.getLabel("change-title"))) ;
     UIFormSelectBox questionLanguages = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToSendFriend()) ;
     questionLanguages.setSelectedValues(new String[]{language}) ;
     questionLanguages.setOnChange("ChangeLanguage") ;
@@ -133,10 +133,12 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     for(QuestionLanguage questionLangua : listQuestionLanguage) {
       if(questionLangua.getLanguage().equals(language)) {
      	 String response = questionLangua.getResponse() ;
-        if(response.equals(" ")) content ="<b>" + this.getLabel( "Question") + "</b> "+ questionLangua.getQuestion() ;
+        if(response.equals(" ")) content =this.getLabel("change-content1") + FAQUtils.getCurrentUser()+ " " + this.getLabel("change-content2")
+        														+"<p><b>" + this.getLabel( "Question") + "</b> "+ questionLangua.getQuestion() + "</p>";
         else 
-        	content ="<p><b>" + this.getLabel( "Question") + "</b> "+ questionLangua.getQuestion() + "</p>" +
-        			"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>" ;
+        	content =this.getLabel("change-content1") + FAQUtils.getCurrentUser()+ " " + this.getLabel("change-content2")
+        								+"<p><b>" + this.getLabel( "Question") + "</b> "+ questionLangua.getQuestion() + "</p>" 
+        								+"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>" ;
       }
     }
     addChild(new UIFormWYSIWYGInput(MESSAGE, null, content, true)) ;
@@ -225,10 +227,12 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
         	 String response = questionLanguage.getResponse() ;
            @SuppressWarnings("unused")
           String content = "" ;
-           if(response.equals(" ")) content ="<b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() ;
+           if(response.equals(" ")) content =sendMailForm.getLabel("change-content1") + FAQUtils.getCurrentUser() + " "+sendMailForm.getLabel("change-content2")
+          	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() + "</p>";
            else 
-           	content ="<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() + "</p>" +
-           			"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response + "</p>";
+           	content =sendMailForm.getLabel("change-content1") + FAQUtils.getCurrentUser()+ " " + sendMailForm.getLabel("change-content2")
+           			+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() + "</p>"
+           			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response + "</p>";
            body.setValue(content) ;
          }
        }
