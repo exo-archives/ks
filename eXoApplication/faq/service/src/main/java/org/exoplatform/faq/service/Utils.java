@@ -38,7 +38,7 @@ public class Utils {
 	public static final String EXO_DISPLAY_TYPE = "exo:displayType".intern() ;
 	
 	/**
-	 *  This method convert string to string[]
+	 *  This method convert string to string[] with split comma
 	 * @param str
 	 * @return string[] 
 	 * @throws Exception
