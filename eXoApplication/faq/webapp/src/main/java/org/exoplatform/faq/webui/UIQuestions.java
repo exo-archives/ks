@@ -297,6 +297,32 @@ public class UIQuestions extends UIContainer {
     this.listQuestion_ = listQuestion ;
   }
   
+  private String convertSize(long size){
+    String result = "bytes";
+    long  residual = 0;
+    int i = 0;
+    while(size >= 1000){
+      i ++;
+      residual = size % 1024;
+      size /= 1024;
+    }
+    switch (i) {
+      case 1:
+        result = "KB";
+        break;
+      case 2:
+        result = "MB";
+        break;
+    }
+    if(residual > 1000){
+      String str = residual + "";
+      result = size + "." + str.substring(0, 3) + " " + result;
+    }else{
+      result = size + "." + residual + " " + result;
+    }
+    return result;
+  }
+  
   @SuppressWarnings("unused")
   public List<Question> getListQuestion() {
     return this.listQuestion_ ;

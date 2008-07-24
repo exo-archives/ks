@@ -118,7 +118,7 @@
 <% 
 	List categories = uicomponent.getCategories() ; 
 %>
-	<div class="FAQContainer">
+	<div class="FAQContainer" id="FAQViewContent">
 		<div class="FAQContent">
 		<%  
 			String id = "";
@@ -365,6 +365,7 @@
 										    String fileName = fileAttachment.getName() ;
 										    long fileSize = fileAttachment.getSize() ;
 									    	if(fileSize > 0){
+									    		String size = uicomponent.convertSize(fileSize);
 											    String dataPath = "" ;
 											    String fileStream = "" ;
 											    try{
@@ -386,7 +387,7 @@
 												    	<div style="clear: left;"><span></span></div>
 									 						<div class="LabelBox">
 										 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-										 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
+										 						<div class="Size AttachmentLabel">$fileName ( $size )</div>
 										 						<div style="clear: left;"><span></span></div>
 										 						<div class="Action" style="padding-top: 0px;">
 										 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">
@@ -405,7 +406,7 @@
 															</div>
 															<div style="clear: left;"><span></span></div>
 															<div class="Size">
-																<%=_ctx.appRes(uicomponent.getName() + ".label." + "SizeFile")%>: $fileSize B
+																<%=_ctx.appRes(uicomponent.getName() + ".label." + "SizeFile")%>: $size
 															</div>
 														</div>
 										    <%}
@@ -620,11 +621,10 @@
 			<div style="clear:right;"><span></span></div>
 			</div>
 		</div>
-		
 		<%
 			if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {
 		  	String divId = uicomponent.getQuestionView();
-		  	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.jumToDiv('"+divId+"');");
+		  	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.jumToQuestion('"+divId+"');");
 		  }
 		%>
 	</div>
