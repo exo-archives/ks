@@ -34,12 +34,12 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 /**
  * @author Hung Nguyen (hung.nguyen@exoplatform.com)
  * @since July 25, 2007
- */
+ **/
 public class ForumPageList extends JCRPageList {
-	
 	private boolean isQuery_ = false ;
 	private String value_ ;
 	private SessionProvider sProvider_ ;
+	private NodeIterator iter_ = null;
 	
 	public ForumPageList(SessionProvider sProvider, NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
 		super(pageSize) ;
@@ -50,19 +50,18 @@ public class ForumPageList extends JCRPageList {
 			iter = setQuery(sProvider, isQuery_, value_) ;
 		}
 		if(iter != null){
+			iter_ = iter ;
 			setAvailablePage(iter.getSize()) ;
-			setIter(iter) ;
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void populateCurrentPage(long page, NodeIterator iter) throws Exception	{
-		if(iter == null) {
-			iter = setQuery(sProvider_, isQuery_, value_) ;
-			setIter(iter) ;
+	protected void populateCurrentPage(long page) throws Exception	{
+		if(iter_ == null) {
+			iter_ = setQuery(sProvider_, isQuery_, value_) ;
 		}
-		//System.out.println("\n\n getPage " + iter.getSize());
-		if(iter != null)setAvailablePage(iter.getSize()) ;
+		System.out.println("\n\n getPage " + iter_.getSize());
+		if(iter_ != null)setAvailablePage(iter_.getSize()) ;
 		Node currentNode ;
 		long pageSize = 0 ;
 		if(page > 0) {
@@ -71,15 +70,15 @@ public class ForumPageList extends JCRPageList {
 			if(page == 1) position = 0;
 			else {
 				position = (page-1) * pageSize ;
-				iter.skip(position) ;
+				iter_.skip(position) ;
 			}
 		} else {
-			pageSize = iter.getSize() ;
+			pageSize = iter_.getSize() ;
 		}
 		currentListPage_ = new ArrayList<Object>() ;
 		for(int i = 0; i < pageSize; i ++) {
-			if(iter.hasNext()){
-				currentNode = iter.nextNode() ;
+			if(iter_.hasNext()){
+				currentNode = iter_.nextNode() ;
 				if(currentNode.isNodeType("exo:post")) {
 					currentListPage_.add(getPost(currentNode)) ;
 				}else if(currentNode.isNodeType("exo:topic")) {
@@ -93,12 +92,12 @@ public class ForumPageList extends JCRPageList {
 				break ;
 			}
 		}
+		iter_ = null;
 		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
 	}
 	
 	private NodeIterator setQuery(SessionProvider sProvider, boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
-		//System.out.println("\n\n  setQR");
 		Session session = getJCRSession(sProvider);
 		if(isQuery) {
 			QueryManager qm = session.getWorkspace().getQueryManager() ;

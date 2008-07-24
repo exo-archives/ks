@@ -34,7 +34,6 @@ abstract public class JCRPageList {
 	protected long availablePage_	= 1;
 	protected long currentPage_ = 1 ;
 	protected List currentListPage_ ;
-	private NodeIterator iter_ = null ;
 	
 	public JCRPageList(long pageSize) {
 		pageSize_ = pageSize ;
@@ -53,16 +52,16 @@ abstract public class JCRPageList {
 	
 	public List currentPage() throws Exception {
 		if(currentListPage_ == null) {
-			populateCurrentPage(currentPage_, iter_) ;
+			populateCurrentPage(currentPage_) ;
 		}
 		return currentListPage_	;
 	}
 	
-	abstract protected void populateCurrentPage(long page, NodeIterator iter) throws Exception	 ;
+	abstract protected void populateCurrentPage(long page) throws Exception	 ;
 	
 	public List getPage(long page) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPage(page, iter_) ;
+		populateCurrentPage(page) ;
 		return currentListPage_ ;
 	}
 		
@@ -86,11 +85,4 @@ abstract public class JCRPageList {
 		}
 	}
 
-	public NodeIterator getIter() {
-  	return iter_;
-  }
-
-	public void setIter(NodeIterator iter) {
-  	this.iter_ = iter;
-  }
 }
