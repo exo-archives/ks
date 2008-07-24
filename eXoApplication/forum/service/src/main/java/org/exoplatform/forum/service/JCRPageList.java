@@ -18,6 +18,8 @@ package org.exoplatform.forum.service;
 
 import java.util.List;
 
+import javax.jcr.NodeIterator;
+
 import org.exoplatform.commons.exception.ExoMessageException;
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
@@ -32,6 +34,7 @@ abstract public class JCRPageList {
 	protected long availablePage_	= 1;
 	protected long currentPage_ = 1 ;
 	protected List currentListPage_ ;
+	private NodeIterator iter_ = null ;
 	
 	public JCRPageList(long pageSize) {
 		pageSize_ = pageSize ;
@@ -50,16 +53,16 @@ abstract public class JCRPageList {
 	
 	public List currentPage() throws Exception {
 		if(currentListPage_ == null) {
-			populateCurrentPage(currentPage_) ;
+			populateCurrentPage(currentPage_, iter_) ;
 		}
 		return currentListPage_	;
 	}
 	
-	abstract protected void populateCurrentPage(long page) throws Exception	 ;
+	abstract protected void populateCurrentPage(long page, NodeIterator iter) throws Exception	 ;
 	
 	public List getPage(long page) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPage(page) ;
+		populateCurrentPage(page, iter_) ;
 		return currentListPage_ ;
 	}
 		
@@ -82,4 +85,12 @@ abstract public class JCRPageList {
 			availablePage_ = pages ;
 		}
 	}
+
+	public NodeIterator getIter() {
+  	return iter_;
+  }
+
+	public void setIter(NodeIterator iter) {
+  	this.iter_ = iter;
+  }
 }
