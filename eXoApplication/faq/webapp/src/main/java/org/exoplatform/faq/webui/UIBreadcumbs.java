@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -107,9 +109,22 @@ public class UIBreadcumbs extends UIContainer {
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				uiQuestions.setPath(paths) ;
 				String cate = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
+				try {
+					uiQuestions.setCategories(cate) ;
+				} catch (Exception e) {
+					UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
+  				uiContainer.updateIsRender(true) ;
+  				uiQuestions.setCategories(null) ;
+  				uiBreadcums.setUpdataPath("FAQService");
+          event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+          return ;
+				}
 				uiQuestions.setCategories(cate) ;
 				uiQuestions.setListQuestion() ;
-        uiQuestions.backPath_ = "" ;
+				uiQuestions.backPath_ = "" ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}
 			uiBreadcums.setUpdataPath(paths);

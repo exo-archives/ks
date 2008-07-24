@@ -71,10 +71,9 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   }
   
   public Question getViewQuestion() {
-  	FAQService fAQService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   	Question question = null;
     try {
-	    question = fAQService.getQuestionById(questionId_, FAQUtils.getSystemProvider());
+	    question = faqService_.getQuestionById(questionId_, FAQUtils.getSystemProvider());
 	    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
 	    listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider())) ;
 	    for(QuestionLanguage questionLanguage : listQuestionLanguage) {
