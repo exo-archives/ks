@@ -75,11 +75,11 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	final static private String FIELD_LANGUAGE = "Language" ;
 	final static private String FIELD_QUESTION = "Question" ;
 	final static private String FIELD_RESPONSE = "Response" ;
-	final static private String ITEM_EMPTRY= "emptry" ;
+	final static private String ITEM_EMPTY= "empty" ;
 	final static private String ITEM_CATEGORY="faqCategory" ;
 	final static private String ITEM_QUESTION="faqQuestion" ;
 	
-	final static private String ITEM_MODERATEQUESTION_EMPTRY2= "emptry2" ;
+	final static private String ITEM_MODERATEQUESTION_EMPTY2= "empty2" ;
 	final static private String ITEM_MODERATEQUESTION_TRUE="true" ;
 	final static private String ITEM_MODERATEQUESTION_FALSE="false" ;
 	
@@ -90,14 +90,14 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	public UIAdvancedSearchForm() throws Exception {
 		UIFormStringInput text = new UIFormStringInput(FIELD_TEXT, FIELD_TEXT, null) ;
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(ITEM_EMPTRY, "emptry")) ;
+		list.add(new SelectItemOption<String>(ITEM_EMPTY, "empty")) ;
 		list.add(new SelectItemOption<String>(ITEM_CATEGORY, "faqCategory")) ;
 		list.add(new SelectItemOption<String>(ITEM_QUESTION, "faqQuestion")) ;
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX, FIELD_SEARCHOBJECT_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
 		UIFormStringInput categoryName = new UIFormStringInput(FIELD_CATEGORY_NAME, FIELD_CATEGORY_NAME, null) ;
 		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_EMPTRY2, "emptry2"));
+		list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_EMPTY2, "empty2"));
 		list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_TRUE, "true"));
 		list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_FALSE, "false"));
 		UIFormSelectBox modeQuestion = new UIFormSelectBox(FIELD_ISMODERATEQUESTION, FIELD_ISMODERATEQUESTION, list) ;
@@ -209,7 +209,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String text = advancedSearch.getUIStringInput(FIELD_TEXT).getValue() ;
 			String categoryName = advancedSearch.getUIStringInput(FIELD_CATEGORY_NAME).getValue() ;
 			String modeQuestion = advancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue() ;
-			if(modeQuestion.equals("emptry2")) modeQuestion = "emptry" ;
+			if(modeQuestion.equals("empty2")) modeQuestion = "empty" ;
 			String moderator = advancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).getValue() ;
 			Calendar fromDate = advancedSearch.getCalendar(advancedSearch.getUIFormDateTimeInput(FIELD_FROM_DATE), FIELD_FROM_DATE) ;
 			Calendar toDate= advancedSearch.getCalendar(advancedSearch.getUIFormDateTimeInput(FIELD_TO_DATE), FIELD_TO_DATE) ;

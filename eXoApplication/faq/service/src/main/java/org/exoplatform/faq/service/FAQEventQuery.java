@@ -315,7 +315,7 @@ public String getPathQuery() {
 		  	stringBuffer.append("(jcr:contains(@exo:name, '").append(name).append("'))") ;
 		  	isAnd = true ;
 		  }
-		  if(isModeQuestion != null && isModeQuestion.length() > 0 && !isModeQuestion.equals("emptry")) {
+		  if(isModeQuestion != null && isModeQuestion.length() > 0 && !isModeQuestion.equals("empty")) {
 		  	if(isAnd) stringBuffer.append(" and ");
 				stringBuffer.append("(@exo:isModerateQuestions='").append(isModeQuestion).append("')") ;
 				isAnd = true ;

@@ -25,8 +25,10 @@ import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -68,7 +70,15 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       FAQService faqService = FAQUtils.getFAQService() ;
-			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+      UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+      try {
+				faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+			} catch (Exception e) {
+				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return ;
+			}
 			uiQuestions.setCategories(categoryId) ;
 			uiQuestions.setListQuestion() ;
       UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;

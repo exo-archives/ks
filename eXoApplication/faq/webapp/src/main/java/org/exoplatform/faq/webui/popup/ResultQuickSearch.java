@@ -31,8 +31,10 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -102,6 +104,14 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 			if(id.indexOf("ategory")> 0){
 				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				try {
+					faqService.getCategoryById(id, FAQUtils.getSystemProvider()) ;
+				} catch (Exception e) {
+					UIApplication uiApplication = resultQuickSearch.getAncestorOfType(UIApplication.class) ;
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        return ;
+				}
 				uiQuestions.setCategories(id) ;
 				uiQuestions.setListQuestion() ;
 		    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
@@ -119,6 +129,14 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 		    faqPortlet.cancelAction() ;
 			} else {
+				try {
+					faqService.getQuestionById(id, FAQUtils.getSystemProvider()) ;
+				} catch (Exception e) {
+					UIApplication uiApplication = resultQuickSearch.getAncestorOfType(UIApplication.class) ;
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        return ;
+				}
 				UIResultContainer uiResultContainer = resultQuickSearch.getParent() ;
 				UIPopupAction popupAction = uiResultContainer.getChild(UIPopupAction.class) ;
 				UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 650) ;
@@ -134,27 +152,34 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 			ResultQuickSearch resultQuickSearch = event.getSource() ;
 			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
-			Question question = faqService.getQuestionById(id, FAQUtils.getSystemProvider()) ;
-			String categoryId = question.getCategoryId() ;
-			UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
-			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			uiQuestions.setCategories(categoryId) ;
-			uiQuestions.setListQuestion() ;
-			uiQuestions.questionView_ = id ;
-	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-	    breadcumbs.setUpdataPath(null) ;
-      String oldPath = "" ;
-	    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
-	    for(int i = listPath.size() -1 ; i >= 0; i --) {
-	    	oldPath = oldPath + "/" + listPath.get(i);
-	    }
-	    String newPath = "FAQService"+oldPath ;
-	    uiQuestions.setPath(newPath) ;
-	    breadcumbs.setUpdataPath(newPath);
-			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
-	    faqPortlet.cancelAction() ;
+			try {
+				Question question = faqService.getQuestionById(id, FAQUtils.getSystemProvider()) ;
+				String categoryId = question.getCategoryId() ;
+				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
+				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				uiQuestions.setCategories(categoryId) ;
+				uiQuestions.setListQuestion() ;
+				uiQuestions.questionView_ = id ;
+		    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+		    breadcumbs.setUpdataPath(null) ;
+	      String oldPath = "" ;
+		    List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+		    for(int i = listPath.size() -1 ; i >= 0; i --) {
+		    	oldPath = oldPath + "/" + listPath.get(i);
+		    }
+		    String newPath = "FAQService"+oldPath ;
+		    uiQuestions.setPath(newPath) ;
+		    breadcumbs.setUpdataPath(newPath);
+				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+		    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+		    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+		    faqPortlet.cancelAction() ;
+			} catch (Exception e) {
+				UIApplication uiApplication = resultQuickSearch.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return ;
+			}
 		}
 	}
 	
