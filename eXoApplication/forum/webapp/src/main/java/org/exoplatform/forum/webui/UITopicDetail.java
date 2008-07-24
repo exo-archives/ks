@@ -417,8 +417,7 @@ public class UITopicDetail extends UIForm {
 			}
 			this.isModeratePost = this.topic.getIsModeratePost();
 		} catch (Exception e) {
-			Object[] args = { };
-			throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING));
+			e.printStackTrace();
 		}
 	}
 	
@@ -449,7 +448,7 @@ public class UITopicDetail extends UIForm {
     	long availablePage = this.pageList.getAvailablePage() ;
   		this.pageSelect = availablePage ;
   		forumPageIterator.setSelectPage(availablePage);
-  		this.posts = this.pageList.getPage(this.pageSelect) ;
+  		this.posts = this.pageList.getPage(availablePage) ;
     }
 		if(this.posts.size() > 0 && this.posts != null) {
 			for (Post post : this.posts) {

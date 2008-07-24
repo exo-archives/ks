@@ -27,35 +27,42 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+
 /**
  * @author Hung Nguyen (hung.nguyen@exoplatform.com)
  * @since July 25, 2007
  */
 public class ForumPageList extends JCRPageList {
 	
-	private NodeIterator iter_ = null ;
 	private boolean isQuery_ = false ;
 	private String value_ ;
-	private Node rootNode_;
+	private SessionProvider sProvider_ ;
 	
-	public ForumPageList(Node rootNode, NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
+	public ForumPageList(SessionProvider sProvider, NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
 		super(pageSize) ;
-		iter_ = iter ;
 		value_ = value ;
 		isQuery_ = isQuery ;
-		rootNode_ = rootNode ;
-		if(iter_ == null) {
-			iter_ = setQuery(rootNode, isQuery_, value_) ;
+		sProvider_ = sProvider ;
+		if(iter == null) {
+			iter = setQuery(sProvider, isQuery_, value_) ;
 		}
-		if(iter_ != null)setAvailablePage(iter_.getSize()) ;		
+		if(iter != null){
+			setAvailablePage(iter.getSize()) ;
+			setIter(iter) ;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void populateCurrentPage(long page) throws Exception	{
-		if(iter_ == null) {
-			iter_ = setQuery(rootNode_, isQuery_, value_) ;
+	protected void populateCurrentPage(long page, NodeIterator iter) throws Exception	{
+		if(iter == null) {
+			iter = setQuery(sProvider_, isQuery_, value_) ;
+			setIter(iter) ;
 		}
-		if(iter_ != null)setAvailablePage(iter_.getSize()) ;
+		//System.out.println("\n\n getPage " + iter.getSize());
+		if(iter != null)setAvailablePage(iter.getSize()) ;
 		Node currentNode ;
 		long pageSize = 0 ;
 		if(page > 0) {
@@ -64,15 +71,15 @@ public class ForumPageList extends JCRPageList {
 			if(page == 1) position = 0;
 			else {
 				position = (page-1) * pageSize ;
-				iter_.skip(position) ;
+				iter.skip(position) ;
 			}
 		} else {
-			pageSize = iter_.getSize() ;
+			pageSize = iter.getSize() ;
 		}
 		currentListPage_ = new ArrayList<Object>() ;
 		for(int i = 0; i < pageSize; i ++) {
-			if(iter_.hasNext()){
-				currentNode = iter_.nextNode() ;
+			if(iter.hasNext()){
+				currentNode = iter.nextNode() ;
 				if(currentNode.isNodeType("exo:post")) {
 					currentListPage_.add(getPost(currentNode)) ;
 				}else if(currentNode.isNodeType("exo:topic")) {
@@ -86,13 +93,13 @@ public class ForumPageList extends JCRPageList {
 				break ;
 			}
 		}
-		iter_ = null ;
 		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
 	}
 	
-	private NodeIterator setQuery(Node rootNode, boolean isQuery, String value) throws Exception {
-		Session session = rootNode.getSession() ;
+	private NodeIterator setQuery(SessionProvider sProvider, boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
+		//System.out.println("\n\n  setQR");
+		Session session = getJCRSession(sProvider);
 		if(isQuery) {
 			QueryManager qm = session.getWorkspace().getQueryManager() ;
 			Query query = qm.createQuery(value, Query.XPATH);
@@ -264,11 +271,11 @@ public class ForumPageList extends JCRPageList {
 		return Str;
 	}
 	
-//	private Session getJCRSession(SessionProvider sProvider) throws Exception {
-//    RepositoryService  repositoryService = (RepositoryService)PortalContainer.getComponent(RepositoryService.class) ;
-//    String defaultWS = 
-//      repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
-//    return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
-//  }
+	private Session getJCRSession(SessionProvider sProvider) throws Exception {
+    RepositoryService  repositoryService = (RepositoryService)PortalContainer.getComponent(RepositoryService.class) ;
+    String defaultWS = 
+      repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
+    return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
+  }
 
 }

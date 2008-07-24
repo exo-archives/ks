@@ -20,322 +20,824 @@ import java.util.List;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+
+// TODO: Auto-generated Javadoc
 /**
- * Created by The eXo Platform SARL	
+ * Created by The eXo Platform SARL.
  */
 public interface ForumService {
-	
-	public void addPlugin(ComponentPlugin plugin) throws Exception ;
+
+	/**
+	 * Adds the plugin.
+	 * 
+	 * @param plugin the plugin
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void addPlugin(ComponentPlugin plugin) throws Exception;
 	
 	/**
-	 * This method should: 
-	 * 1. Load all the forum categories from the database
-	 * 2. Sort the categories by the categories order
-	 * 3. Cache the list of the categories in the service
-	 * 4. Return the list of the categories
-	 * @return
-	 * @throws Exception
+	 * Gets the categories.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * 
+	 * @return the list category
+	 * 
+	 * @throws Exception the exception
 	 */
 	public List<Category> getCategories(SessionProvider sProvider) throws Exception;
+	
 	/**
-	 * This method should
-	 * 1. If the list of the categories is not loaded and cached, call the method getCategories() 
-	 * 2. Search the category in the cached categories list
-	 * 3. Return the found category or null.
-	 * @param categoryId
-	 * @param accessUser
-	 * @return
-	 * @throws Exception
+	 * Gets the category.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId is the id of category.
+	 * 
+	 * @return the category
+	 * 
+	 * @throws Exception the exception
 	 */
 	public Category getCategory(SessionProvider sProvider, String categoryId) throws Exception;
+	
 	/**
-	 * This method should:
-	 * 1. Check all the mandatory field for the category
-	 * 2. Store the category into the database
-	 * 3. Invalidate the cache
-	 * 4. Return the created category
-	 * @param category
-	 * @return
-	 * @throws Exception
-	 */
-	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew)throws Exception;
-	/**
-	 * This method should:
-	 * 1. Check for the mandatory fields
-	 * 2. Update the database
-	 * 3. Invalidate the cache
+	 * Save category. Check exists category, if not to create new else update exists category
 	 * 
-	 * @param categoryId
-	 * @param newCategory
-	 * @return
-	 * @throws Exception
-	 */
-	public Category removeCategory(SessionProvider sProvider, String categoryId)throws Exception;	
-	/**
-	 * This method should: 
-	 * 1. Load all the forums
-	 * 2. Sort the forum by the forum order
-	 * 3. cache the forums
-	 * 4. Return the forum list
-	 * @param categoryId
-	 * @return
-	 * @throws Exception
-	 */
-	public List<Forum> getForums(SessionProvider sProvider, String categoryId)throws Exception;
-	/**
-	 * This method should:
-	 * 1. Find the category id from the forum id
-	 * 2. Check to see if the forums of	the category is cached
-	 * 3. Load the forums according to the category id if the forums is not cached
-	 * 4. searh the forum in the cache
-	 * 5. Return the found forum or	null
-	 * @param forumId
-	 * @return
-	 * @throws Exception
-	 */
-	public Forum getForum(SessionProvider sProvider, String categoryId, String forumId)throws Exception;	
-	/**
-	 * This method should:
-	 * 1. Check all the mandatory fields of the forum
-	 * 2. Save the forum into the database
-	 * 3. Invalidate the cache
+	 * @param sProvider is the SessionProvider
+	 * @param category is the category
+	 * @param isNew is the true when add new category or false when update category.
 	 * 
-	 * @param categoryId
-	 * @param forum
-	 * @param isNew
-	 * @return
-	 * @throws Exception
+	 * @throws Exception the exception
 	 */
-	public void modifyForum(SessionProvider sProvider, Forum forum, int type) throws Exception ;
+	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception;
+	
+	/**
+	 * Removes the category. Check exists of category and remove it 
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId is the id of category removed
+	 * 
+	 * @return the category 
+	 * 
+	 * @throws Exception the exception
+	 */
+	public Category removeCategory(SessionProvider sProvider, String categoryId) throws Exception;
+	
+	/**
+	 * Gets the forums in the category identify. 
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId is the id of category have list forum
+	 * 
+	 * @return the list forum
+	 * 
+	 * @throws Exception the exception
+	 */
+	public List<Forum> getForums(SessionProvider sProvider, String categoryId) throws Exception;
+	
+	/**
+	 * Gets the forum in the category identify.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId is the id of category identify.
+	 * @param forumId is the id of forum identify.
+	 * 
+	 * @return the forum
+	 * 
+	 * @throws Exception the exception
+	 */
+	public Forum getForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
+	
+	/**
+	 * Modify this forum identify.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param forum is the object forum that should  be modified
+	 * @param type is choose when modify this forum.
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void modifyForum(SessionProvider sProvider, Forum forum, int type) throws Exception;
+
+	/**
+	 * Save forum.Check exists forum, if not to create new else update exists forum
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId is the id of category identify.
+	 * @param forum is the object forum need save.
+	 * @param isNew is the new
+	 * 
+	 * @throws Exception the exception
+	 */
 	public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception;
+
+	/**
+	 * Save user is moderator of list forum
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param forumPaths is the list path of forums, one forum have only path.
+	 * @param userName is the userId of Account login of portal system.
+	 * @param isDelete is false when you want to add userId into list moderator of forums
+	 * 				isDelete is true when you want to remove userId from list moderator of forums.
+	 * 
+	 * @throws Exception the exception
+	 */
 	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths, String userName, boolean isDelete) throws Exception;
 	
 	/**
-	 * This method should:
-	 * 1. Check the mandatory fields
-	 * 2. Update the forum data in the database
-	 * 3. Invalidate or update the cache
-	 * @param categoryId
-	 * @param forumId
-	 * @return
-	 * @throws Exception
+	 * Remove the forum in category identify.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId is the id of category.
+	 * @param forumId is the id of forum need remove.
+	 * 
+	 * @return the forum
+	 * 
+	 * @throws Exception the exception
 	 */
-	public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId)throws Exception;	
+	public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
+	
 	/**
-	 * This method should:
-	 * 1. Check to see if the user has the right to remove the forum. Throw an exception if the user do not
-	 *		have the right
-	 * 2. Move the forum data from the database
-	 * 3. Invalidate the cache
-	 * @param forumId 
-	 * @param forumPath
-	 * @param destCategoryPath
-	 * @return
-	 * @throws Exception
+	 * Move forum. Move list forum to category by path of category
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param forums is the list object forum
+	 * @param destCategoryPath is the destination path of category
+	 * 
+	 * @throws Exception the exception
 	 */
-	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath)throws Exception;	
+	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath) throws Exception;
+	
 	/**
-	 * This method should: 
-	 * 1. Implement a JCRPageList in jcrext module
-	 * 2. Check the user access permission with the forum access permission
-	 * 3. Create the query and create the JCRPageList or DBPageList	object
-	 * @param forumId
-	 * @param isWaiting TODO
-	 * @param strQuery TODO
-	 * @param iSApproved 
-	 * @return
-	 * @throws Exception
+	 * Gets the page topic in forum identify.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId is the id of category
+	 * @param forumId is the id of forum
+	 * @param isApproved is a string that presents status isApproved of object Topic.
+	 *   			if it equal "true" then this function return page topic have isApproved equal true
+	 *   			if it equal "false" then this function return page topic have isApproved equal false
+	 *        if it is empty then this function return page topic, not check isApproved.
+	 * @param isWaiting is a string that presents status isWaiting of object Topic.
+	 *   			if it equal "true" then this function return page topic have isWaiting equal true
+	 *   			if it equal "false" then this function return page topic have isWaiting equal false
+	 *        if it is empty then this function return page topic, not check isWaiting.
+	 * @param strQuery is a string. It's content have command Query. This function will return page topic suitable to content of that strQuery
+	 * 
+	 * @return the page topic
+	 * 
+	 * @throws Exception the exception
 	 */
 	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery) throws Exception;
+	
 	/**
-	 * This method should:
+	 * Gets the page topic by user.
 	 * 
-	 * 1. Load the topic from the database
+	 * @param sProvider is the SessionProvider
+	 * @param userName the user name
 	 * 
-	 * @param username
-	 * @param topicId
-	 * @return
-	 * @throws Exception
+	 * @return the page topic by user
+	 * 
+	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception ;
-	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception ;
+	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception;
+
+	/**
+	 * Gets the page topic old.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param date the date
+	 * 
+	 * @return the page topic old
+	 * 
+	 * @throws Exception the exception
+	 */
+	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception;
+
+	/**
+	 * Gets the topics.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * 
+	 * @return the topics
+	 * 
+	 * @throws Exception the exception
+	 */
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
+	
 	/**
-	 * This method should:
+	 * Gets the topic.
 	 * 
-	 * 1. Load the topic from the database
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * @param userRead the user read
 	 * 
-	 * @param username
-	 * @param topicId
-	 * @return
-	 * @throws Exception
+	 * @return the topic
+	 * 
+	 * @throws Exception the exception
 	 */
-	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;		
+	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;
+	
 	/**
-	 * This method should:
-	 * 1. Load the topic from the database
-	 * @param topicPath
-	 * @param isLastPost TODO
-	 * @return
-	 * @throws Exception
+	 * Gets the topic by path.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param topicPath the topic path
+	 * @param isLastPost is the last post
+	 * 
+	 * @return the topic by path
+	 * 
+	 * @throws Exception the exception
 	 */
 	public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception;
+	
 	/**
-	 * This method should: 
-	 * 1. Load the topic and the list of the post belong to the topic. Create the TopicView object and 
-	 *		cache the topic view
-	 * 2. Return the TopicView object or null
+	 * Gets the topic view.
 	 * 
-	 * @param username
-	 * @param topicId
-	 * @return
-	 * @throws Exception
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * 
+	 * @return the topic view
+	 * 
+	 * @throws Exception the exception
 	 */
 	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
+	
 	/**
-	 * This method should:
-	 * 1. Check the user permission
-	 * 2. Check all the mandatory field of the topic object
-	 * 3. Save the topic data into the database
-	 * 4. Invalidate the TopicView if neccessary
-	 * @param forumId
-	 * @param topics
-	 * @param isNew
-	 * @param isMove TODO
-	 * @param username
-	 * @return
-	 * @throws Exception
+	 * Modify topic.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param topics the topics
+	 * @param type the type
+	 * 
+	 * @throws Exception the exception
 	 */
-	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception ;
-	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception;
+	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception;
+
 	/**
-	 * This method should:
-	 * 1. Check the user permission
-	 * 2. check the Topic mandatory	fields
-	 * 3. Save the Topic data
-	 * 4. Invalidate the cache of TopicView
-	 * @param username
-	 * @param topicId
-	 * @param newTopic
-	 * @return
-	 * @throws Exception
+	 * Save topic.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topic the topic
+	 * @param isNew is the new
+	 * @param isMove is the move
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception;
+	
+	/**
+	 * Removes the topic.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * 
+	 * @return the topic
+	 * 
+	 * @throws Exception the exception
 	 */
 	public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
+	
 	/**
-	 * This method should:
-	 * 1. Check the user permission
-	 * 2. Move the topic from the database, throw exception if	the topic is not existed
-	 * 3. Invalidate the TopicView cache
-	 * @param topicId 
-	 * @param topicPath
-	 * @param destForumPath
-	 * @return
-	 * @throws Exception
+	 * Move topic.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param topics the topics
+	 * @param destForumPath the dest forum path
+	 * 
+	 * @throws Exception the exception
 	 */
 	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception;
+	
 	/**
-	 * This method should: 
-	 * 1. Check the user permission
-	 * 2. Load the posts that belong to the topic
+	 * Gets the posts.
 	 * 
-	 * The developer should consider to use the method getTopicView(String username, String topicId)
-	 * instead of this method
-	 * @param topicId
-	 * @param isApproved TODO
-	 * @param isHidden TODO
-	 * @param strQuery TODO
-	 * @param userLogin TODO
-	 * @param username
-	 * @return
-	 * @throws Exception
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * @param isApproved is the approved
+	 * @param isHidden is the hidden
+	 * @param strQuery the str query
+	 * @param userLogin the user login
+	 * 
+	 * @return the posts
+	 * 
+	 * @throws Exception the exception
 	 */
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, 
-			String isApproved, String isHidden, String strQuery, String userLogin )throws Exception;
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception ;
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId,
+	    String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
+
 	/**
-	 * This method should:
-	 * 1. Check the user permission
-	 * 2. Load the Page Post data from the database
-	 * @param username
-	 * @param postId
-	 * @return
-	 * @throws Exception
+	 * Gets the page post by user.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param userName the user name
+	 * 
+	 * @return the page post by user
+	 * 
+	 * @throws Exception the exception
 	 */
-	public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId)throws Exception;
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception;
+
 	/**
-	 * This method should: 
-	 * 1. Check the user permission
-	 * 2. Check the madatory field of the post
-	 * 3. Save the post data into the database
-	 * 4. Invalidate the TopicView data cache
-	 * @param topicId
-	 * @param post
-	 * @param isNew
-	 * @param username
-	 * @return
-	 * @throws Exception
+	 * This method should: 1. Check the user permission 2. Load the Page Post data
+	 * from the database
+	 * 
+	 * @param postId the post id
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * 
+	 * @return the post
+	 * 
+	 * @throws Exception the exception
 	 */
-	public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew)throws Exception;
-	public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId)throws Exception;
-	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath) throws Exception ;
-	
-	public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId)throws Exception;
-	public void savePoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll, boolean isNew, boolean isVote)throws Exception;
-	public Poll removePoll(SessionProvider sProvider, String categoryId, String forumId, String topicId)throws Exception;
-	public void setClosedPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll) throws Exception ;
-	
-	public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception ;
-	public List<ForumLinkData> getAllLink(SessionProvider sProvider)throws Exception ;
-	public String getForumHomePath(SessionProvider sProvider) throws Exception ;
+	public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId,
+	    String postId) throws Exception;
 
-	public void addTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception ;
-	public void removeTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception ;
-	public Tag getTag(SessionProvider sProvider, String tagId) throws Exception ;
-	public List<Tag> getTags(SessionProvider sProvider) throws Exception ;
-	public List<Tag> getTagsByUser(SessionProvider sProvider, String userName) throws Exception ;
-	public List<Tag> getTagsByTopic(SessionProvider sProvider, String[] tagIds) throws Exception ;
-	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId) throws Exception ;
-	public void saveTag(SessionProvider sProvider, Tag newTag, boolean isNew) throws Exception ;
-	public void removeTag(SessionProvider sProvider, String tagId) throws Exception ;
+	/**
+	 * This method should: 1. Check the user permission 2. Check the madatory
+	 * field of the post 3. Save the post data into the database 4. Invalidate the
+	 * TopicView data cache
+	 * 
+	 * @param topicId the topic id
+	 * @param post the post
+	 * @param isNew is the new
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void savePost(SessionProvider sProvider, String categoryId, String forumId,
+	    String topicId, Post post, boolean isNew) throws Exception;
 
-	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception ;
-	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception ;
-	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception ;
-	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception ;
-	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception ;
+	/**
+	 * Removes the post.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * @param postId the post id
+	 * 
+	 * @return the post
+	 * 
+	 * @throws Exception the exception
+	 */
+	public Post removePost(SessionProvider sProvider, String categoryId, String forumId,
+	    String topicId, String postId) throws Exception;
 
-	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception ;
-	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception ;
-	
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception ;
-	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception ;
-	
-	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception ;
-	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception ;
-	
-	public void userLogin(String userId)throws Exception ;
-	public void userLogout(String userId)throws Exception ;
-	public boolean isOnline(String userId) throws Exception ;
-	public List<String> getOnlineUsers() throws Exception ;
-	public String getLastLogin() throws Exception ;
-	
-	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type ) throws Exception ;
-	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage ) throws Exception ;
-	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception ;
-	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception ;
-	
-	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception;
+	/**
+	 * Move post.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param posts the posts
+	 * @param destTopicPath the dest topic path
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath)
+	    throws Exception;
+
+	/**
+	 * Gets the poll.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * 
+	 * @return the poll
+	 * 
+	 * @throws Exception the exception
+	 */
+	public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
+
+	/**
+	 * Save poll.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * @param poll the poll
+	 * @param isNew is the new
+	 * @param isVote is the vote
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void savePoll(SessionProvider sProvider, String categoryId, String forumId,
+	    String topicId, Poll poll, boolean isNew, boolean isVote) throws Exception;
+
+	/**
+	 * Removes the poll.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * 
+	 * @return the poll
+	 * 
+	 * @throws Exception the exception
+	 */
+	public Poll removePoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
+
+	/**
+	 * Sets the closed poll.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param categoryId the category id
+	 * @param forumId the forum id
+	 * @param topicId the topic id
+	 * @param poll the poll
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void setClosedPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll) throws Exception;
+
+	/**
+	 * Gets the object name by path.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param path the path
+	 * 
+	 * @return the object name by path
+	 * 
+	 * @throws Exception the exception
+	 */
+	public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception;
+
+	/**
+	 * Gets the all link.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * 
+	 * @return the all link
+	 * 
+	 * @throws Exception the exception
+	 */
+	public List<ForumLinkData> getAllLink(SessionProvider sProvider) throws Exception;
+
+	/**
+	 * Gets the forum home path.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * 
+	 * @return the forum home path
+	 * 
+	 * @throws Exception the exception
+	 */
+	public String getForumHomePath(SessionProvider sProvider) throws Exception;
+
+	/**
+	 * Adds the topic in tag.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param tagId the tag id
+	 * @param topicPath the topic path
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void addTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception;
+
+	/**
+	 * Removes the topic in tag.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param tagId the tag id
+	 * @param topicPath the topic path
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void removeTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception;
+
+	/**
+	 * Gets the tag.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param tagId the tag id
+	 * 
+	 * @return the tag
+	 * 
+	 * @throws Exception the exception
+	 */
+	public Tag getTag(SessionProvider sProvider, String tagId) throws Exception;
+
+	/**
+	 * Gets the tags.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * 
+	 * @return the tags
+	 * 
+	 * @throws Exception the exception
+	 */
+	public List<Tag> getTags(SessionProvider sProvider) throws Exception;
+
+	/**
+	 * Gets the tags by user.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param userName the user name
+	 * 
+	 * @return the tags by user
+	 * 
+	 * @throws Exception the exception
+	 */
+	public List<Tag> getTagsByUser(SessionProvider sProvider, String userName) throws Exception;
+
+	/**
+	 * Gets the tags by topic.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param tagIds the tag ids
+	 * 
+	 * @return the tags by topic
+	 * 
+	 * @throws Exception the exception
+	 */
+	public List<Tag> getTagsByTopic(SessionProvider sProvider, String[] tagIds) throws Exception;
+
+	/**
+	 * Gets the topics by tag.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param tagId the tag id
+	 * 
+	 * @return the topics by tag
+	 * 
+	 * @throws Exception the exception
+	 */
+	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId) throws Exception;
+
+	/**
+	 * Save tag.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param newTag the new tag
+	 * @param isNew is the new
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void saveTag(SessionProvider sProvider, Tag newTag, boolean isNew) throws Exception;
+
+	/**
+	 * Removes the tag.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param tagId the tag id
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void removeTag(SessionProvider sProvider, String tagId) throws Exception;
+
+	/**
+	 * Save user profile.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param userProfile the user profile
+	 * @param isOption is the option
+	 * @param isBan is the ban
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption,
+	    boolean isBan) throws Exception;
+
+	/**
+	 * Gets the user profile.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param userName the user name
+	 * @param isGetOption is the get option
+	 * @param isGetBan is the get ban
+	 * @param isLogin is the login
+	 * 
+	 * @return the user profile
+	 * 
+	 * @throws Exception the exception
+	 */
+	public UserProfile getUserProfile(SessionProvider sProvider, String userName,
+	    boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception;
+
+	/**
+	 * Gets the user info.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param userName the user name
+	 * 
+	 * @return the user info
+	 * 
+	 * @throws Exception the exception
+	 */
+	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception;
+
+	/**
+	 * Save user bookmark.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param userName the user name
+	 * @param bookMark the book mark
+	 * @param isNew is the new
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception;
+
+	/**
+	 * Gets the page list user profile.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * 
+	 * @return the page list user profile
+	 * 
+	 * @throws Exception the exception
+	 */
+	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception;
+
+	/**
+	 * Save forum statistic.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param forumStatistic the forum statistic
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception;
+
+	/**
+	 * Gets the forum statistic.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * 
+	 * @return the forum statistic
+	 * 
+	 * @throws Exception the exception
+	 */
+	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception;
+
+	/**
+	 * Gets the quick search.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param textQuery the text query
+	 * @param pathQuery the path query
+	 * 
+	 * @return the quick search
+	 * 
+	 * @throws Exception the exception
+	 */
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception;
+
+	/**
+	 * Gets the advanced search.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param eventQuery the event query
+	 * 
+	 * @return the advanced search
+	 * 
+	 * @throws Exception the exception
+	 */
+	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception;
+
+	/**
+	 * Save forum administration.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param forumAdministration the forum administration
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception;
+
+	/**
+	 * Gets the forum administration.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * 
+	 * @return the forum administration
+	 * 
+	 * @throws Exception the exception
+	 */
+	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception;
+
+	/**
+	 * User login.
+	 * 
+	 * @param userId the user id
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void userLogin(String userId) throws Exception;
+
+	/**
+	 * User logout.
+	 * 
+	 * @param userId the user id
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void userLogout(String userId) throws Exception;
+
+	/**
+	 * Checks if is online.
+	 * 
+	 * @param userId the user id
+	 * 
+	 * @return true, if is online
+	 * 
+	 * @throws Exception the exception
+	 */
+	public boolean isOnline(String userId) throws Exception;
+
+	/**
+	 * Gets the online users.
+	 * 
+	 * @return the online users
+	 * 
+	 * @throws Exception the exception
+	 */
+	public List<String> getOnlineUsers() throws Exception;
+
+	/**
+	 * Gets the last login.
+	 * 
+	 * @return the last login
+	 * 
+	 * @throws Exception the exception
+	 */
+	public String getLastLogin() throws Exception;
+
+	/**
+	 * Gets the private message.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param userName the user name
+	 * @param type the type
+	 * 
+	 * @return the private message
+	 * 
+	 * @throws Exception the exception
+	 */
+	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception;
+
+	/**
+	 * Save private message.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param privateMessage the private message
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception;
+
+	/**
+	 * Save read message.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param messageId the message id
+	 * @param userName the user name
+	 * @param type the type
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception;
+
+	/**
+	 * Removes the private message.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param messageId the message id
+	 * @param userName the user name
+	 * @param type the type
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception;
+
+	/**
+	 * Adds the watch.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param watchType the watch type
+	 * @param path the path
+	 * @param values the values
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String> values) throws Exception;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
