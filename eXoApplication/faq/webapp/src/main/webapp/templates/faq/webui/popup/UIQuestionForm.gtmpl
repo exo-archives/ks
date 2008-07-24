@@ -49,7 +49,7 @@
 										<td class="FieldLabel" width="80">
 											<%=uicomponent.getLabel(field.getName()) %> : 
 										</td>
-										<td class="FieldComponent">
+										<td class="FieldComponent" style="white-space:normal;">
 											<%if(field.getName().equals("Attachment")){
 													if(!uicomponent.getListFile().isEmpty()) {
 														String name = "" ;
@@ -62,7 +62,7 @@
 												      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
 												      }
 												     %>
-											     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+											     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon" style="white-space:normal;">
 											     			$name &nbsp;&nbsp;&nbsp;
 																[<a href="$link"><font color="#058EE6" font-size="12px">
 																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
