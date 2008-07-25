@@ -18,8 +18,6 @@ package org.exoplatform.forum.service;
 
 import java.util.List;
 
-import javax.jcr.NodeIterator;
-
 import org.exoplatform.commons.exception.ExoMessageException;
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
