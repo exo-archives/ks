@@ -304,6 +304,7 @@
 }
 
 .UIForumPortlet .SelectFileFrame {
+	white-space: normal;
 	width: 300px;
 }
 
