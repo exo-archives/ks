@@ -6,14 +6,15 @@ package org.exoplatform.forum.test;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
+import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.exoplatform.services.log.LogService;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.test.BasicTestCase;
 
 
@@ -33,35 +34,45 @@ public class BaseForumTestCase extends BasicTestCase {
   final protected static String DEFAULT_WS = "production".intern() ;
   final protected static String MAIL_HOME = "mailHome".intern() ;
   
-  protected Node rootNode_;
-  protected Node mailHomeNode_;
-  protected Node systemNode_;
-  protected ManageableRepository repository_;
-  protected SimpleCredentials credentials_;
-  protected PortalContainer manager_;  
-  protected Session session_ ;  
+  protected static Log          log = ExoLogger.getLogger("sample.services.test");  
+  protected RepositoryService   repositoryService;
+  protected StandaloneContainer container;
+  
+  protected final String REPO_NAME = "repository".intern();
+  protected final String SYSTEM_WS = "system".intern();
+  protected final String COLLABORATION_WS = "collaboration".intern();
+  protected Node root_ ;
+  
   protected ForumService forumService_ ;
+  protected SessionProvider sProvider_ ;
   public void setUp() throws Exception{
     
-    LogService logService = 
-      (LogService) RootContainer.getInstance().getComponentInstanceOfType(LogService.class); 
+  	String containerConf = getClass().getResource("/conf/portal/test-configuration.xml").toString();
+    String loginConf = Thread.currentThread().getContextClassLoader().getResource("login.conf").toString();
 
-    logService.setLogLevel("org.exoplatform.services.jcr", LogService.DEBUG, true);     
+    StandaloneContainer.addConfigurationURL(containerConf);
+    container = StandaloneContainer.getInstance();
     
-    manager_ = PortalContainer.getInstance() ;
-    //if(System.getProperty("java.security.auth.login.config") == null)
-      //System.setProperty("java.security.auth.login.config", "src/main/login.conf" );
+    if (System.getProperty("java.security.auth.login.config") == null)
+      System.setProperty("java.security.auth.login.config", loginConf);
 
-    //credentials_ = new SimpleCredentials("exo", "exo".toCharArray());
+    repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
+    
+    // Initialize datas
+    SessionProviderService sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;
+    sProvider_ = sessionProviderService.getSystemSessionProvider(null) ;
+    
+    forumService_ = (ForumService) container.getComponentInstanceOfType(ForumService.class) ;
 
-    RepositoryService repositoryService = 
-      (RepositoryService) manager_.getComponentInstanceOfType(RepositoryService.class);
-        
-    repository_ = repositoryService.getDefaultRepository();
-    forumService_ = (ForumService)manager_.getComponentInstanceOfType(ForumService.class) ;
-    
-    session_ = repository_.getSystemSession(DEFAULT_WS) ;   
-    rootNode_ = session_.getRootNode(); 
-    
+    //    String defaultWS = repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
+//    Session session = sProvider_.getSession(defaultWS, repositoryService.getCurrentRepository()) ; 
+    	
+    //Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(COLLABORATION_WS);
+    //root_ = session.getRootNode();
+  }
+	  
+  
+  public void tearDown() throws Exception {
+  	//Remove datas  	
   }
 }

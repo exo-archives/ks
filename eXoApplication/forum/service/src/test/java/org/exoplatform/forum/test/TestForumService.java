@@ -6,6 +6,11 @@ package org.exoplatform.forum.test;
 
 import java.util.Date;
 
+import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+
 
 /**
  * Created by The eXo Platform SARL
@@ -15,29 +20,10 @@ import java.util.Date;
  */
 public class TestForumService extends BaseForumTestCase{
 
-  public void testForumService() throws Exception {
-    assertNull(null) ;
+	public void testForumService() throws Exception {
+    assertNotNull(forumService_);
   }
   
-//  private String getTimeZonNumberInString(String string) {
-//  	if(string != null && string.length() > 0) {
-//  		StringBuffer stringBuffer = new StringBuffer();
-//  		int t = 0;
-//  		for(int i = 0; i <  string.length(); ++i) {
-//  			char c = string.charAt(i) ; 
-//  			if (Character.isDigit(c) || c == '-' || c == '+' || c == ':'){
-//          if(c == ':') c = '.';
-//          if(c == '-' || c == '+') t = t + 1;
-//          if(c == '3' && string.charAt(i-1) == ':') c = '5';
-//          if(t == 1 || t == 0) stringBuffer.append(c);
-//          if(t == 2) t = 1;
-//        }
-//  		}
-//  		return stringBuffer.toString() ;
-//  	}
-//  	return null ;
-//  }
-  @SuppressWarnings("deprecation")
   public void testCategory() throws Exception {  
 //	 Category cat = createCategory() ;
 //    forumService_.saveCategory(cat, true) ;
@@ -56,8 +42,7 @@ public class TestForumService extends BaseForumTestCase{
 //    assertNotNull(forumService_.removeCategory(cat.getId()));
 //    int i = 0;
 //    String t = "+";
-    Date postDate = new Date();
-    System.out.println("\n" + "   test:   "  + postDate.getHours() + " : " + postDate.getMinutes() );
+    System.out.println("\n" + "   test:   "  );
 
       
 //      
@@ -321,16 +306,16 @@ public class TestForumService extends BaseForumTestCase{
 //		return forum;
 //  }
 //  
-//  private Category createCategory() {
-//    Category cat = new Category() ;
-//    cat.setOwner("nqhung") ;
-//    cat.setCategoryName("testCategory") ;
-//    cat.setCategoryOrder(1) ;
-//    cat.setCreatedDate(new Date()) ;
-//    cat.setDescription("desciption") ;
-//    cat.setModifiedBy("nqhung") ;
-//    cat.setModifiedDate(new Date()) ;    
-//    return cat ;
-//  }
-//  
+  private Category createCategory() {
+    Category cat = new Category() ;
+    cat.setOwner("nqhung") ;
+    cat.setCategoryName("testCategory") ;
+    cat.setCategoryOrder(1) ;
+    cat.setCreatedDate(new Date()) ;
+    cat.setDescription("desciption") ;
+    cat.setModifiedBy("nqhung") ;
+    cat.setModifiedDate(new Date()) ;    
+    return cat ;
+  }
+  
 }
