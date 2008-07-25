@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.FAQEventQuery;
+import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
@@ -102,6 +104,15 @@ public class TestFAQService extends FAQServiceTestCase{
 	
 //	Delete category 2
 	faqService_.removeCategory(cate2.getId(), sProvider_) ;
+	
+//	get all Category 
+	List<Category> listAllAfterRemove = faqService_.getAllCategories(sProvider_) ;
+	assertEquals(listAllAfterRemove.size(), 2) ;
+	
+//	get list category by moderator
+	List<String> listCateByModerator = faqService_.getListCateIdByModerator("root", sProvider_);
+	assertEquals(listCateByModerator.size(), 1);
+	
 	
 	}
 	
@@ -186,7 +197,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question3.setLanguage("English") ;
 		question3.setAuthor("Phung Hai Nam") ;
 		question3.setEmail("phunghainam@yahoo.com") ;
-		question3.setQuestion("Nguyen van truong test question 33333333 ?") ;
+		question3.setQuestion("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
 		question3.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question3, true, sProvider_) ;
 		
@@ -200,7 +211,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question4.setLanguage("English") ;
 		question4.setAuthor("Pham Dinh Tan") ;
 		question4.setEmail("phamdinhtan@yahoo.com") ;
-		question4.setQuestion("Nguyen van truong test question 44444444 ?") ;
+		question4.setQuestion("Nguyen van truong test question nguyenvantruong ?") ;
 		question4.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question4, true, sProvider_) ;
     
@@ -214,7 +225,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question5.setLanguage("English") ;
 		question5.setAuthor("Ly Dinh Quang") ;
 		question5.setEmail("lydinhquang@yahoo.com") ;
-		question5.setQuestion("Nguyen van truong test question 5555555 ?") ;
+		question5.setQuestion("Nguyen van truong test question 55555555555 ?") ;
 		question5.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question5, true, sProvider_) ;
     
@@ -222,10 +233,14 @@ public class TestFAQService extends FAQServiceTestCase{
     List<Question> listAllQuestion = faqService_.getAllQuestions(sProvider_).getAll();
     assertEquals(listAllQuestion.size(), 5) ;
 
-//  get list question by cateogy
+//  get list question by category of question 1
   	List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_).getAll() ;
   	assertEquals(listQuestionByCategory.size(), 2) ;
-  	 
+
+//  	remove question
+  	faqService_.removeQuestion(question5.getId(), sProvider_);
+  	List<Question> listAllQuestionAfterRemove = faqService_.getAllQuestions(sProvider_).getAll();
+    assertEquals(listAllQuestionAfterRemove.size(), 4) ;
 	}
 	
 	public void testWatch() throws Exception {
@@ -244,5 +259,41 @@ public class TestFAQService extends FAQServiceTestCase{
 		}
 	}
 	
+	public void testSearch() throws Exception {
+		
+//		quick search with text = "test"
+		List<FAQFormSearch> listQuickSearch = faqService_.getAdvancedEmpty(sProvider_, "test", null, null) ;
+		assertEquals(listQuickSearch.size(), 6) ;
+		
+//		search all category and question in database
+		List<FAQFormSearch> listSearchAll = faqService_.getAdvancedEmpty(sProvider_, "", null, null) ;
+		assertEquals(listSearchAll.size(), 13) ;
+		
+//		advance search all category in database
+		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
+		eventQueryCategory.setType("faqCategory");
+		List<Category> listAllCategroy = faqService_.getAdvancedSearchCategory(sProvider_, eventQueryCategory) ;
+		assertEquals(listAllCategroy.size(), 9) ;
+		
+//	advance search all question in database
+		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
+		eventQueryQuestion.setType("faqQuestion");
+		List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
+		assertEquals(listAllQuestion.size(), 4) ;
+		
+//	advance search with category name = "Sub"
+		FAQEventQuery eventQuerySub = new FAQEventQuery() ;
+		eventQuerySub.setType("faqCategory");
+		eventQuerySub.setName("Sub") ;
+		List<Category> listAllSub = faqService_.getAdvancedSearchCategory(sProvider_, eventQuerySub) ;
+		assertEquals(listAllSub.size(), 1) ;
+		
+//	advance search with category name = "Sub"
+		FAQEventQuery eventQueryAdvanceQuestion = new FAQEventQuery() ;
+		eventQueryAdvanceQuestion.setType("faqQuestion");
+		eventQueryAdvanceQuestion.setQuestion("nguyenvantruong") ;
+		List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
+		assertEquals(listSearchAdvanceQuestion.size(), 2) ;
+	}
 	
 }
