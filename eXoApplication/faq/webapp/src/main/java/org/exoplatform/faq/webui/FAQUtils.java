@@ -244,4 +244,17 @@ public class FAQUtils {
     return rawinputs;
   }
   
+	public static String getSubString(String str, int max) {
+		if(!isFieldEmpty(str)) {
+			int l = str.length() ;
+			if(l > max) {
+				str = str.substring(0, (max-3)) ;
+				int space = str.lastIndexOf(" ");
+				if(space > 0)
+					str = str.substring(0, space) + "...";
+				else str = str + "..." ;
+			}
+		}
+	  return str ;
+  }
 }
