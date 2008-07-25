@@ -54,16 +54,20 @@ public class TestFAQService extends FAQServiceTestCase{
   
 	public void testCategory() throws Exception {
 		Category cate1 = createCategory() ;
-//	add category
 	faqService_.saveCategory(null, cate1, true, sProvider_) ;
-	
-//get category Id	
+//add category Id	
 	assertNotNull(faqService_.getCategoryById(cate1.getId(), sProvider_)) ;
 	
-//	edit category 
+//	get Categories
+	List<Category> listCate = faqService_.getSubCategories(null, sProvider_) ;
+	assertEquals(listCate.size(), 1) ;
+	
+//update category 
 	cate1.setName("Nguyen van truong test category111111") ;
 	cate1.setCreatedDate(new Date()) ;
 	faqService_.saveCategory(null, cate1, false, sProvider_);
+	assertNotNull(cate1) ;
+	assertEquals("Nguyen van truong test category111111", cate1.getName());
 	
 //	add category 2
 	Category cate2 = createCategory() ;
@@ -71,41 +75,34 @@ public class TestFAQService extends FAQServiceTestCase{
 	cate2.setModerators(new String[]{"Demo"}) ;
 	faqService_.saveCategory(null, cate2, true, sProvider_) ;
 	
-//	add sub categoy 1
+//	add sub category 1
 	Category subCate1 = createCategory() ;
 	subCate1.setName("Nguyen van truong test Sub category 1") ;
-	subCate1.setModerators(new String[]{"Truong","Demo"}) ;
+	subCate1.setModerators(new String[]{"marry","Demo"}) ;
 	faqService_.saveCategory(cate1.getId(), subCate1, true, sProvider_) ;
-// get all category
-	List<Category> list = faqService_.getAllCategories(sProvider_) ;
-	System.out.println("\n\n Get all Categroy :");
-	for(Category cate: list) {
-			String[] moderator = cate.getModerators() ;
-			List<String> listModerator = new ArrayList<String>() ;
-			for(String string: moderator) {
-				listModerator.add(string) ;
-			}
-		System.out.println(cate.getName()+"=="+cate.getDescription()+"=="+listModerator+"=="+cate.isModerateQuestions()+"=="+cate.getCreatedDate());
-	}
-	
-//move category 
-	faqService_.moveCategory(cate2.getId(), cate1.getId(), sProvider_) ;
 	
 //	get sub category
 	List<Category> listSubCate = faqService_.getSubCategories(cate1.getId(), sProvider_) ;
-	System.out.println("\n\n get all category in category 1:");
-	for(Category cate : listSubCate) {
-//		String[] moderator = cate.getModerators() ;
-//		List<String> listModerator = new ArrayList<String>() ;
-//		for(String string: moderator) {
-//			listModerator.add(string) ;
-//		}
-		System.out.println(cate.getName()+"=="+cate.getDescription()+"=="+cate.getModerators()+"=="+cate.isModerateQuestions()+"=="+cate.getCreatedDate());
-	}
+	assertEquals(listSubCate.size(), 1) ;
 
-//	Delete category
-	faqService_.removeCategory(cate1.getId(), sProvider_) ;
-
+//update sub category 
+	subCate1.setName("Sub category 1") ;
+	subCate1.setCreatedDate(new Date()) ;
+	faqService_.saveCategory(cate1.getId(), subCate1, false, sProvider_);
+	assertNotNull(subCate1) ;
+	assertEquals("Sub category 1", subCate1.getName());
+	
+//	get all Category 
+	List<Category> listAll = faqService_.getAllCategories(sProvider_) ;
+	assertEquals(listAll.size(), 3) ;
+	
+//move category 
+	faqService_.moveCategory(cate2.getId(), cate1.getId(), sProvider_) ;
+	assertNotNull(faqService_.getCategoryById(cate2.getId(), sProvider_)) ;
+	
+//	Delete category 2
+	faqService_.removeCategory(cate2.getId(), sProvider_) ;
+	
 	}
 	
 	 public Category createCategory() {
@@ -123,7 +120,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		Category cate = createCategory() ;
 		faqService_.saveCategory(null, cate, true, sProvider_) ;
 		assertNotNull(faqService_.getCategoryById(cate.getId(), sProvider_)) ;
-//		assertNull(faqService_.getCategoryById(cate.getId(), sProvider_)) ;
 	}
 	 
 	public Question createQuestion() throws Exception {
@@ -148,13 +144,17 @@ public class TestFAQService extends FAQServiceTestCase{
 		Question question1 = createQuestion() ;
 //		save question 1
 		faqService_.saveQuestion(question1, true, sProvider_) ;
-		System.out.println("==>categoryId1:" + question1.getCategoryId());
-	
-//		Edit question 1
-		question1.setQuestion("Nguyen van truong test question 11111111") ;
-		question1.setDateResponse(new Date()) ;
-		question1.setResponses(" ") ; //Nguyen van truong test response 11111111
+
+//		get question 1
+		assertNotNull(faqService_.getQuestionById(question1.getId(), sProvider_)) ;
+		List<Question> listQuestion = faqService_.getQuestionsNotYetAnswer(sProvider_).getAll() ;
+		assertEquals(listQuestion.size(), 1) ; 
+		
+//		update question 1
+		question1.setQuestion("Nguyen van truong test question 11111111 ?") ;
 		faqService_.saveQuestion(question1, false, sProvider_) ;
+		assertNotNull(question1) ;
+		assertEquals("Nguyen van truong test question 11111111 ?", question1.getQuestion());
 		
 //		Add question 2
 		Question question2 = createQuestion() ;
@@ -166,10 +166,15 @@ public class TestFAQService extends FAQServiceTestCase{
     question2.setLanguage("English") ;
     question2.setAuthor("Mai Van Ha") ;
     question2.setEmail("truong_tb1984@yahoo.com") ;
-    question2.setQuestion("Nguyen van truong test question 2222222") ;
+    question2.setQuestion("Nguyen van truong test question 2222222 ?") ;
     question2.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question2, true, sProvider_) ;
-    System.out.println("==>categoryId2:" + question2.getCategoryId());
+    
+//    move question 2 to category of question 1
+    List<String> listQues = new ArrayList<String>() ;
+    listQues.add(question2.getId());
+    faqService_.moveQuestions(listQues, question1.getCategoryId(), sProvider_);
+    assertNotNull(faqService_.getQuestionById(question2.getId(), sProvider_)) ;
     
 //	Add question 3
 		Question question3 = createQuestion() ;
@@ -181,7 +186,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question3.setLanguage("English") ;
 		question3.setAuthor("Phung Hai Nam") ;
 		question3.setEmail("phunghainam@yahoo.com") ;
-		question3.setQuestion("Nguyen van truong test question 33333333") ;
+		question3.setQuestion("Nguyen van truong test question 33333333 ?") ;
 		question3.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question3, true, sProvider_) ;
 		
@@ -195,7 +200,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question4.setLanguage("English") ;
 		question4.setAuthor("Pham Dinh Tan") ;
 		question4.setEmail("phamdinhtan@yahoo.com") ;
-		question4.setQuestion("Nguyen van truong test question 44444444") ;
+		question4.setQuestion("Nguyen van truong test question 44444444 ?") ;
 		question4.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question4, true, sProvider_) ;
     
@@ -209,58 +214,35 @@ public class TestFAQService extends FAQServiceTestCase{
 		question5.setLanguage("English") ;
 		question5.setAuthor("Ly Dinh Quang") ;
 		question5.setEmail("lydinhquang@yahoo.com") ;
-		question5.setQuestion("Nguyen van truong test question 5555555") ;
+		question5.setQuestion("Nguyen van truong test question 5555555 ?") ;
 		question5.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question5, true, sProvider_) ;
     
-//    response question 2
-    question2.setDateResponse(new Date()) ;
-    question2.setResponses("Nguyen van truong test response 22222222 ") ;//Nguyen van truong test response 22222222
-    question2.setRelations(new String[]{"Nguyen van truong test question 33333333"}) ;
-    faqService_.saveQuestion(question2, false, sProvider_) ;
-		
-//    move question 3 to category(question1.getCategoryId())
-    question3.setCategoryId(question1.getCategoryId()) ;
-    faqService_.saveQuestion(question3, false, sProvider_) ;
-    
-//    get question by category
-    List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_).getAll();
-    Category categoryQuestion1 = faqService_.getCategoryById(question1.getCategoryId(), sProvider_) ;
-    System.out.println("\n\n List question in category " + categoryQuestion1.getName());
-    for(Question ques: listQuestionByCategory) {
-    	System.out.println("==" + ques.getQuestion()+"=="+ques.getResponses()+"=="+ques.getRelations().length+"=="+ ques.getCreatedDate());
-    }
-    
-//    get list question not yet answer
-    List<Question> listQuestionNotYes = faqService_.getQuestionsNotYetAnswer(sProvider_).getAll();
-    System.out.println("\n\n List question not yet answer: ");
-    for(Question ques: listQuestionNotYes) {
-    	List<String> listRelations = new ArrayList<String>() ;
-    	String[] relations = ques.getRelations();
-    	if(relations.length > 0){ 
-		  	for(String string: relations) {
-		  		listRelations.add(string);
-		  	}
-    	}
-    	System.out.println("==" + ques.getQuestion()+"=="+ques.getResponses()+"=="+listRelations+"=="+ ques.getCreatedDate());
-    }
-    
-//  move category
-    faqService_.moveCategory(question4.getCategoryId(), question1.getCategoryId(), sProvider_) ;
-    faqService_.moveCategory(question5.getCategoryId(), question1.getCategoryId(), sProvider_) ;
-    List<Category> listSubCate = faqService_.getSubCategories( question1.getCategoryId(), sProvider_) ;
-    System.out.println("\n\n List Category when move in funtion testQuestion:");
-  	for(Category cate : listSubCate) {
-  		System.out.println(cate.getName()+"=="+cate.getDescription()+"=="+cate.getModerators()+"=="+cate.isModerateQuestions()+"=="+cate.getCreatedDate());
-  	}
-    
-//		get all question
-//    List<Question> listAllQuestion = faqService_.getAllQuestions(sProvider_).getAll() ;
-//    for(Question ques: listAllQuestion) {
-//    	System.out.println("==" + ques.getQuestion()+"=="+ques.getResponses()+"=="+ques.getRelations());
-//    	faqService_.removeQuestion(question1.getId(), sProvider_);
-//    }
-    
+//    get list all question
+    List<Question> listAllQuestion = faqService_.getAllQuestions(sProvider_).getAll();
+    assertEquals(listAllQuestion.size(), 5) ;
+
+//  get list question by cateogy
+  	List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_).getAll() ;
+  	assertEquals(listQuestionByCategory.size(), 2) ;
+  	 
 	}
+	
+	public void testWatch() throws Exception {
+		Category cateWatch = createCategory() ;
+		cateWatch.setName("test cate add watch") ;
+		faqService_.saveCategory(null, cateWatch, true, sProvider_) ;
+		
+//		add  watch
+		faqService_.addWatch(cateWatch.getId(), "truongtb19@gmail.com", sProvider_) ;
+		List<String> emailList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
+
+//		get email watch		
+		assertEquals(emailList.size(), 1) ;
+		for(String email : emailList) {
+			assertEquals(email, "truongtb19@gmail.com");
+		}
+	}
+	
 	
 }
