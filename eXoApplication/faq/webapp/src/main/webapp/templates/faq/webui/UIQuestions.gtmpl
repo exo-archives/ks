@@ -2,6 +2,7 @@
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
+	import org.exoplatform.faq.webui.FAQUtils;
 	import org.exoplatform.faq.service.FileAttachment;
 	
 	String compId = uicomponent.getId() ; 
@@ -149,7 +150,7 @@
 						 String titleCategorys = "" ;
 						 if(categoryName.length() > 80) {
 						 	titleCategorys = categoryName ;
-							categoryName = categoryName.substring(0, 79) + "...";
+							categoryName = FAQUtils.getSubString(categoryName, 80);
 							%>
 							<a href="$link" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleCategory$categoryId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleCategory$categoryId')">
 								$categoryName
