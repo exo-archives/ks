@@ -412,7 +412,7 @@ UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
 		imgElm.style.width = "130px" ;
 	}
 	if(imgElm.offsetHeight > 150){  
-		imgElm.style.width = "150px" ;
+		imgElm.style.height = "150px" ;
 	}
 };
 
@@ -425,6 +425,7 @@ UIForumPortlet.prototype.reSizeImages = function() {
 	    var images_ =  topicDetailContainer.getElementsByTagName("img");
 	    for(var i=0; i<images_.length; i++){
 	      var img = images_[i];
+	      if(img.className === "Img") continue ;
 				img.style.width = "auto" ;
 			  if(img.width > max_width) {
 					img.style.width= max_width + "px" ;

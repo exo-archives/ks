@@ -412,5 +412,42 @@ public class ForumTransformHTML {
 		// }
 		return s;
 	}
-
+	
+	public static String recontent(String s) {
+		StringBuffer buffer = new StringBuffer();
+		while (true) {
+		int i = s.indexOf("src=") ;
+		if(i < 0) break;
+		int t =  s.indexOf(".jpg");
+		if(t < 0) break;
+		String link = s.substring((i+5), (t+4)) ;
+		String link_ = link.replace("s144/", "");
+		buffer.append("[DIV=float:left; padding: 5px 0px; height: 144px;]").append("[URL=\"").append(link_).append("\"]").append("[ IMG]")
+		.append(link).append("[/ IMG][/URL][/DIV]");
+		s = s.substring(t+10) ;
+		}
+	  return buffer.toString();
+  }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
