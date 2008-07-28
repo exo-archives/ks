@@ -8,7 +8,6 @@ import javax.jcr.Node;
 import javax.jcr.Session;
 
 import org.apache.commons.logging.Log;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -64,11 +63,8 @@ public class BaseForumTestCase extends BasicTestCase {
     
     forumService_ = (ForumService) container.getComponentInstanceOfType(ForumService.class) ;
 
-    //    String defaultWS = repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
-//    Session session = sProvider_.getSession(defaultWS, repositoryService.getCurrentRepository()) ; 
-    	
-    //Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(COLLABORATION_WS);
-    //root_ = session.getRootNode();
+    Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(COLLABORATION_WS);
+    root_ = session.getRootNode();
   }
 	  
   

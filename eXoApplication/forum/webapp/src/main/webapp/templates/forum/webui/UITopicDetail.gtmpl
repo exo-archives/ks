@@ -641,7 +641,7 @@
 									if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
-								<img src="$avatarUrl" class="Img" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+								<img src="$avatarUrl" class="Img" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="131px"/>
 								<% } %>
 								<div class="InfoMember">
 									<div>Join Date: $joinDate</div>
