@@ -945,7 +945,7 @@ public class JCRDataStorage{
 				message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
 				message.setSubject("eXo Forum Watching Notification!");
 				message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString() 
-						+"</b>' have just	added thread:</br>" + topic.getTopicName() + "<div>" + topic.getDescription() + "</div>");
+						+"</b>' have just	added thread:</br>" + topic.getTopicName() + "<div>" + Utils.convertCodeHTML(topic.getDescription()) + "</div>");
 				sendNotification(emailList, message) ;					
 			}
 		} else {
@@ -1374,7 +1374,7 @@ public class JCRDataStorage{
 						message.setSubject("eXo Thread Watching Notification!");
 						message.setMessageBody("The Thread '<b>"
 						    + topicNode.getProperty("exo:name").getString()
-						    + "</b>' have just	added post:<div>" + post.getMessage() + "</div>");
+						    + "</b>' have just	added post:<div>" + Utils.convertCodeHTML(post.getMessage()) + "</div>");
 						sendNotification(emailList, message);
 					}
 				}
@@ -1391,7 +1391,7 @@ public class JCRDataStorage{
 					// message.setMessageTo(question.getEmail());
 					message.setSubject("eXo Forum Watching Notification!");
 					message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString()
-					    + "</b>' have just	added post:<div>" + post.getMessage() + "</div>");
+					    + "</b>' have just	added post:<div>" + Utils.convertCodeHTML(post.getMessage()) + "</div>");
 					sendNotification(emailList, message);
 				}
 			}
