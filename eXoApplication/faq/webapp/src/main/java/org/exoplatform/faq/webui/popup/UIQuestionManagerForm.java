@@ -42,8 +42,8 @@ import org.exoplatform.webui.form.UIForm;
 
 public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   public static final String UI_QUESTION_INFO = "QuestionInfo" ;
-  public static final String UI_QUESTION_FORM = "QuestionForm" ;
-  public static final String UI_RESPONSE_FORM = "ResponseForm" ;
+  public static final String UI_QUESTION_FORM = "UIQuestionForm" ;
+  public static final String UI_RESPONSE_FORM = "UIResponseForm" ;
   
   public boolean isEditQuestion = false ;
   public boolean isResponseQuestion = false ;

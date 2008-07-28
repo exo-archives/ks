@@ -21,8 +21,8 @@
 										language = listLanguage[i++] ;
 						%>
 								  <tr>
-								    <td width="80">&nbsp;</td>
-								    <td style="padding-left: 4px;">
+								    <td width="14%">&nbsp;</td>
+								    <td width="86%" style="padding-left: 4px;">
 								      <div class="LanguageQuestion" > 
 													<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
 											</div>
