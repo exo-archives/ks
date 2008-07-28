@@ -162,7 +162,10 @@
 								$categoryName
 							</a>
 						<% } %>
-						($numberOfSubCate Category, $numberOfQuestion Questions, $questionNotAnswer Not yet answered, $questionNotApproved is not approved)
+						($numberOfSubCate <%=_ctx.appRes(uicomponent.getName() + ".label.TotalCategories")%>, 
+						$numberOfQuestion <%=_ctx.appRes(uicomponent.getName() + ".label.TotalQuestions")%>, 
+						$questionNotAnswer <%=_ctx.appRes(uicomponent.getName() + ".label.TotalQuestionsNotYetAnswered")%>, 
+						$questionNotApproved <%=_ctx.appRes(uicomponent.getName() + ".label.TotalQuestionsNotApproved")%>)
 						<% if(listCateModerator.get(i)) {
 									List emailWatch = uicomponent.getListEmail(categoryId) ;
 									if(emailWatch.size() > 0) {
