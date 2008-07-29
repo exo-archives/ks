@@ -62,6 +62,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	private static String language_ = "English" ;
 	private String question_ = "" ;
 	private String response_ = "" ;
+	private String text_ = "";
 	public ResultSearchQuestion() throws Exception {}
 	
   @SuppressWarnings("unused")
@@ -92,7 +93,12 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
   	} else {
   		List<Question> listQuestionSearchByLanguage = new ArrayList<Question>();
   		List<Question> listQuestionLanguage = new ArrayList<Question>();
-  		listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestion_, language_, question_, response_, sProvider) ;
+  		if(FAQUtils.isFieldEmpty(text_)) {
+  			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestion_, language_, question_, response_, sProvider) ;
+  		} else {
+  			List<Question> listQuestionSearchByLanguageTemp = faqService.searchQuestionByLangage(listQuestion_, language_, text_, text_, sProvider) ;
+  			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestionSearchByLanguageTemp, language_, question_, response_, sProvider) ;
+  		}
   		if(serviceUtils.isAdmin(currentUser)) {
 		  	return listQuestionSearchByLanguage ;
 			} else {
@@ -117,9 +123,10 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
     this.listQuestion_ = listQuestion ;
   }
   
-	public void setContent(String question, String response) {
+	public void setContent(String question, String response, String text) {
     this.question_ = question ;
     this.response_ = response ;
+    this.text_ = text;
   }
   
 	@SuppressWarnings("static-access")
