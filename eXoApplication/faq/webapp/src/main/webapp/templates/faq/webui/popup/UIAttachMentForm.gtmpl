@@ -4,7 +4,7 @@
   <div class="HorizontalLayout">
     <div class="FormContainer">
     	<div class="ViewFormAttachment">
-	      <table width="100%">
+	      <table class="UIFormGrid">
 	      	<%
 	      		int i = 1 ;
 		        for(field in uiform.getChildren()) { 
@@ -12,9 +12,7 @@
 		      %>
 				      	<tr>
 				      		<td class="FieldLabel">
-				      			<div style="width: 80px; min-width: 75px;">
 				          		<%=(uicomponent.getLabel("FileUpload") + " " + i ) %> :
-				          	</div>
 				          </td>
 				          <td class="FieldComponent">
   	              	<div class="FileAttachment">
