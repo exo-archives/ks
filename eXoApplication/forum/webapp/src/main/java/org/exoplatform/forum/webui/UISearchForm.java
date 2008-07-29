@@ -392,6 +392,7 @@ public class UISearchForm extends UIForm implements UISelector {
 				UIForumPortlet forumPortlet = searchForm.getAncestorOfType(UIForumPortlet.class) ;
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true) ;
 				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
+				uiGroupSelector.setId("UIUserSelector");
 	      uiGroupSelector.setType(UISelectComponent.TYPE_USER) ;
 	      uiGroupSelector.setSelectedGroups(null) ;
 	      uiGroupSelector.setComponent(searchForm, new String[]{FIELD_SEARCHUSER_INPUT}) ;
