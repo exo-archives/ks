@@ -199,12 +199,14 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	static  public class AddValuesUserActionListener extends EventListener<UIPrivateMessageForm> {
     public void execute(Event<UIPrivateMessageForm> event) throws Exception {
     	UIPrivateMessageForm messageForm = event.getSource() ;
-      String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-      if(!ForumUtils.isEmpty(objctId)) {
+      String type = event.getRequestContext().getRequestParameter(OBJECTID)	;
+      if(!ForumUtils.isEmpty(type)) {
         UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
         UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
         UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
-        uiGroupSelector.setType(objctId) ;
+        if(type.equals("0")) uiGroupSelector.setId("UIUserSelector");
+				else if(type.equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
+        uiGroupSelector.setType(type) ;
         uiGroupSelector.setSelectedGroups(null) ;
         uiGroupSelector.setComponent(messageForm, new String[]{FIELD_SENDTO_TEXTAREA}) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;

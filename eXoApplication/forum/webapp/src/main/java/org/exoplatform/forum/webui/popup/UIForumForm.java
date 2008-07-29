@@ -403,6 +403,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
+				if(array[1].equals("0")) uiGroupSelector.setId("UIUserSelector");
+				else if(array[1].equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
 	      uiGroupSelector.setType(array[1]) ;
 	      uiGroupSelector.setSelectedGroups(null) ;
 	      uiGroupSelector.setComponent(forumForm, new String[]{childId}) ;
