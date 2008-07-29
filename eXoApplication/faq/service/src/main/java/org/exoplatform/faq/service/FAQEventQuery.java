@@ -293,6 +293,14 @@ public class FAQEventQuery {
   }
 	
 	/**
+	 * Gets the checks.
+	 * 
+	 * @return the checks if is true or false
+	 */
+	public boolean getIsAnd() {
+	  return this.isAnd ;
+  }
+	/**
 	 * This method is query on search 
 	 * Gets the path query.
 	 * 

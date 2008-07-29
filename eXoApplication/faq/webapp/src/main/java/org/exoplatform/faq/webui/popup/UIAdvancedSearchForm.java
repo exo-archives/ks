@@ -238,6 +238,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
+			Boolean isEmptyMulti = false;
 			FAQEventQuery eventQuery = new FAQEventQuery() ;
 			eventQuery.setType(type) ;
 			eventQuery.setText(text) ;
@@ -251,6 +252,17 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			if(language.equals("English")) {
 				eventQuery.setQuestion(question) ;
 				eventQuery.setResponse(response) ;
+			} else {
+				if(type.equals("faqQuestion")) eventQuery.setText("") ;
+				if(!FAQUtils.isFieldEmpty(question) || !FAQUtils.isFieldEmpty(response) || !FAQUtils.isFieldEmpty(text)) isEmptyMulti = true;
+				else isEmptyMulti = false ;
+			}
+			eventQuery.getPathQuery() ;
+			boolean isEmpty = eventQuery.getIsAnd() ;
+			if(!isEmpty && !isEmptyMulti) {
+				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-empty-search", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
 			}
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 700) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
@@ -281,7 +293,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(fromDate != null) advanced.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
 				ResultSearchQuestion result = resultContainer.getChild(ResultSearchQuestion.class) ;
-				if(!language.equals("English")) result.setContent(question,response) ; 
+				if(!language.equals("English")) result.setContent(question,response,text) ; 
 				advanced.getUIFormTextAreaInput(FIELD_QUESTION).setValue(question) ;
 				advanced.getUIFormTextAreaInput(FIELD_RESPONSE).setValue(response) ;
 				result.setLanguage(language) ;
@@ -297,7 +309,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(fromDate != null) advanced.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
 				ResultQuickSearch result = resultContainer.getChild(ResultQuickSearch.class) ;
-				if(!FAQUtils.isFieldEmpty(text)) text = FAQUtils.filterString(text, true) ;
 				List<FAQFormSearch> list = faqService.getAdvancedEmpty(FAQUtils.getSystemProvider(), text, fromDate, toDate) ;
 				result.setFormSearchs(list) ;
 			}
