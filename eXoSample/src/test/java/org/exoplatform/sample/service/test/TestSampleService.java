@@ -20,6 +20,9 @@ import org.exoplatform.sample.service.Information;
 import org.exoplatform.sample.service.SampleService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
+import org.exoplatform.services.organization.UserHandler;
 
 
 /**
@@ -33,16 +36,26 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 public class TestSampleService extends BaseSampleServiceTestCase{
 	private SampleService sampleService_ ;
 	private SessionProvider sProvider_ ;
+	OrganizationService service_;
+  UserHandler userHandler_ ;
 	public void setUp() throws Exception {
     super.setUp() ;
     sampleService_ = (SampleService) container.getComponentInstanceOfType(SampleService.class) ;
     SessionProviderService sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;
     sProvider_ = sessionProviderService.getSystemSessionProvider(null) ;
+    service_ = (OrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
+    userHandler_ = service_.getUserHandler() ; 
   }
   
 	public void testSampleService() throws Exception {
   	assertNotNull(sampleService_) ;
   	assertNotNull(sProvider_) ;
+  	
+  	createUser("test") ;
+  	User u = userHandler_.findUserByName("test");    
+    assertTrue("Found user instance", u != null);
+    assertEquals("Expect user name is: ", "test", u.getUserName());
+  	 
   } 
   
 	public void testAddItem() throws Exception {
@@ -94,5 +107,16 @@ public class TestSampleService extends BaseSampleServiceTestCase{
   	assertEquals(location, "TP HCM") ;
   	location = sampleService_.getLocation("xxx", sProvider_) ;
   	assertNull(location) ;
+  }
+  
+  public User createUser(String userName) throws Exception {   
+    User user = userHandler_.createUserInstance() ;
+    user.setUserName(userName) ;
+    user.setPassword("default") ;
+    user.setFirstName("default") ;
+    user.setLastName("default") ;
+    user.setEmail("exo@exoportal.org") ;
+    userHandler_.createUser(user, true);
+    return user ;
   }
 }

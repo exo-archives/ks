@@ -38,7 +38,7 @@ public class SampleServiceImpl implements SampleService{
 	}
 	
 	private Node getSampleServiceHome(SessionProvider sProvider) throws Exception {
-    Node appNode = nodeHierarchy_.getPublicApplicationNode(sProvider)  ;
+    Node appNode = nodeHierarchy_.getUserApplicationNode(sProvider, "test") ;
   	try {
       return  appNode.getNode("SampleApp") ;
     } catch (PathNotFoundException ex) {
