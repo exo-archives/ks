@@ -9,7 +9,7 @@
 		%>
 		</div>
 		<div style="float: right;margin-top: 6px;"><%= _ctx.appRes("UIQuickSeach.label.search"); %></div>
-		<div style="clear: right;"><span/></div>
+		<div style="clear: right;"><span></span></div>
 	</div>
   <%uiform.end()%>
 </div>
