@@ -374,6 +374,7 @@ public class UITopicPoll extends UIForm	{
 			UIPollForm	pollForm = popupAction.createUIComponent(UIPollForm.class, null, null) ;
 			String path = topicPoll.categoryId + "/" + topicPoll.forumId + "/" + topicPoll.topicId;
 			pollForm.setTopicPath(path) ;
+			topicPoll.poll_ = topicPoll.getPoll();
 			pollForm.setUpdatePoll(topicPoll.poll_, true) ;
 			popupAction.activate(pollForm, 662, 466) ;
 			topicPoll.isEditPoll = true ;
