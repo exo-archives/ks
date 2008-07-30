@@ -482,7 +482,8 @@
 	padding-left: 20px;
 	background-color: #EFEFEF;
 }
-UIFAQPortlet .ResultSearchCategory {
+
+.UIFAQPortlet .ResultSearchCategory {
 	padding: 2px;
 }
 
@@ -492,7 +493,7 @@ UIFAQPortlet .ResultSearchCategory {
 	font-weight:bold;
 }
 
-UIFAQPortlet .ResultSearchQuestion {
+.UIFAQPortlet .ResultSearchQuestion {
 	padding: 2px;
 }
 
@@ -501,14 +502,31 @@ UIFAQPortlet .ResultSearchQuestion {
 	padding-left: 1px;
 	font-weight:bold;
 }
-UIFAQPortlet .ResultQuickSearch {
+
+.UIFAQPortlet .ResultQuickSearch {
 	padding: 2px;
+}
+
+.UIFAQPortlet .UIResultContainer .UIGrid {
+	width: 97%;
+	margin: auto;
 }
 
 .UIFAQPortlet .ResultQuickSearch .TitleMoveThreads {
 	line-height: 30px;
 	padding-left: 1px;
 	font-weight:bold;
+}
+
+#xEditingArea(height: 200px;)
+
+.UIFAQPortlet .UIWatchManager {
+	padding: 2px;
+}
+
+.UIFAQPortlet .UIWatchManager .UIGrid {
+	width: 97%;
+	margin: auto;
 }
 /******************************   Search  ***************************************/
 
@@ -543,7 +561,7 @@ UIFAQPortlet .ResultQuickSearch {
 
 .UIFAQPortlet .UISendMailForm #Message___Frame{
   width: 500px ;
-  height: 200px;
+  height: 300px;
 }
 
 .UIFAQPortlet .UISendMailForm #To{

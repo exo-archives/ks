@@ -140,7 +140,7 @@ public class UIQuestions extends UIContainer {
   
   private String[] getSecondActionCategory() {
 
-    String[] action = new String[]{"AddCategory", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
+    String[] action = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
     return action ;
   }
   
