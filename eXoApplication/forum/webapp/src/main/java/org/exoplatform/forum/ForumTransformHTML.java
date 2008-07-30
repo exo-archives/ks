@@ -40,7 +40,7 @@ public class ForumTransformHTML {
 		int tagIndex = 0;
 		// Lower Case bbc
 		String start, end;
-		String[] bbcs = new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
+		String[] bbcs = new String[] { "B", "I", "[highlight]", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
 		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
@@ -110,7 +110,7 @@ public class ForumTransformHTML {
 				}
 			}
 		}
-		// size
+		// size [size=-1]jlfjsdfjds[/size] font-size: 12px;
 		tagIndex = 0;
 		lastIndex = 0;
 		while ((tagIndex = b.indexOf("[size=", lastIndex)) != -1) {
@@ -122,10 +122,12 @@ public class ForumTransformHTML {
 				int clsUrl = urlStr.indexOf("]");
 				String size = urlStr.substring(fstb + 1, clsUrl);
 				String size_ = size;
+				
 				if (size.indexOf("\"") >= 0)
 					size_ = size_.replaceAll("\"", "");
-				if (size.indexOf("+") >= 0)
+				if (size.indexOf("+") >= 0){
 					size_ = size_.replace("+", "");
+				}
 				String text = urlStr.substring(clsUrl + 1);
 				buffer = new StringBuffer();
 				buffer.append("<font size=\"").append(size_).append("\">").append(text).append("</font>");
@@ -217,6 +219,21 @@ public class ForumTransformHTML {
 				buffer = new StringBuffer();
 				buffer.append("<div class='").append(css).append("'>").append(text).append("</div>");
 				b = StringUtils.replace(b, "[css:" + css + "]" + text + "[/css]", buffer.toString());
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		//highlight
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[highlight]", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/highlight]", tagIndex);
+				String urlStr = b.substring(tagIndex+11, clsIndex);
+				buffer = new StringBuffer();
+				buffer.append("<span style=\"font-weight:bold; color: blue;\">").append(urlStr).append("</span>");
+				b = StringUtils.replace(b, "[highlight]" + urlStr + "[/highlight]", buffer.toString());
 			} catch (Exception e) {
 				continue;
 			}

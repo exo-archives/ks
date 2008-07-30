@@ -381,14 +381,6 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 	 	if(popupWindow.style.display == "block") {
 			masklayer.style.width = forumPortlet.offsetWidth - 15 + "px";
 			masklayer.style.height = forumPortlet.offsetHeight - 15 + "px";
-//			var isDesktop = document.getElementById('UIPageDesktop') ;
-//			if(isDesktop === null){
-//				script:scroll(0,0);
-//				var postForm = document.getElementById('banner') ;
-//				if(postForm != null) {
-//					postForm.scrollIntoView(true) ;
-//				}
-//			}
 		}
 		var closeButton = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
 		if(closeButton) {
@@ -402,7 +394,7 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 			newDiv.onclick = function(){
 				masklayer.style.width = "auto";
 				masklayer.style.height = "auto";
-			}
+			};
 		}
 	}
 };
