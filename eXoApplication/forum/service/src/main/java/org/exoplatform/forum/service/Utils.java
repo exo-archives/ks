@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -21,8 +21,8 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 2, 2008 - 3:33:33 AM  
+ *					tu.duy@exoplatform.com
+ * Jun 2, 2008 - 3:33:33 AM	
  */
 public class Utils {
 
@@ -58,7 +58,7 @@ public class Utils {
 		// Lower Case bbc
 		String start, end;
 		String[] bbcs = new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
-		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS" };
+				"RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
 			end = "[/" + bbc + "]";
@@ -71,7 +71,7 @@ public class Utils {
 					String content = b.substring(tagIndex + bbc.length() + 1, clsIndex);
 					String bbc_ = bbc.toLowerCase();
 					b = StringUtils.replace(b, "[" + bbc + content + end, "[" + bbc_ + content + "[/" + bbc_
-					    + "]");
+							+ "]");
 				} catch (Exception e) {
 					continue;
 				}
@@ -121,7 +121,7 @@ public class Utils {
 					int clsIndex = b.indexOf(end, tagIndex);
 					String content = b.substring(tagIndex + string.length() + 2, clsIndex);
 					b = StringUtils.replace(b, start + content + end, "<div align=\"" + string + "\">"
-					    + content + "</div>");
+							+ content + "</div>");
 				} catch (Exception e) {
 					continue;
 				}
@@ -190,7 +190,7 @@ public class Utils {
 				String text = urlStr.substring(clsUrl + 1);
 				buffer = new StringBuffer();
 				buffer.append("<a target='_blank' href=\"").append(href_).append("\">").append(text)
-				    .append("</a>");
+						.append("</a>");
 				b = StringUtils.replace(b, "[url=" + href + "]" + text + "[/url]", buffer.toString());
 			} catch (Exception e) {
 				continue;
@@ -205,7 +205,7 @@ public class Utils {
 				int clsIndex = b.indexOf("[/url]", tagIndex);
 				String src = b.substring(tagIndex + 5, clsIndex);
 				b = StringUtils.replace(b, "[url]" + src + "[/url]", "<a target='_blank' href=\"" + src
-				    + "\">" + src + "</a>");
+						+ "\">" + src + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -238,6 +238,22 @@ public class Utils {
 				continue;
 			}
 		}
+		
+		//highlight
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[highlight]", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/highlight]", tagIndex);
+				String urlStr = b.substring(tagIndex+11, clsIndex);
+				buffer = new StringBuffer();
+				buffer.append("<span style=\"font-weight:bold; color: blue;\">").append(urlStr).append("</span>");
+				b = StringUtils.replace(b, "[highlight]" + urlStr + "[/highlight]", buffer.toString());
+			} catch (Exception e) {
+				continue;
+			}
+		}
 		// quote
 		while ((tagIndex = b.indexOf("[quote=", lastIndex)) != -1) {
 			lastIndex = tagIndex + 1;
@@ -251,10 +267,10 @@ public class Utils {
 				buffer = new StringBuffer();
 				buffer.append("<div>Quote:</div><div class=\"Classquote\">");
 				buffer.append("<div>Originally Posted by <strong>").append(userName).append(
-				    "</strong></div>");
+						"</strong></div>");
 				buffer.append("<div>").append(text).append("</div></div>");
 				b = StringUtils.replace(b, "[quote=" + userName + "]" + text + "[/quote]", buffer
-				    .toString());
+						.toString());
 			} catch (Exception e) {
 				continue;
 			}
@@ -287,7 +303,7 @@ public class Utils {
 				String href = urlStr.substring(fstb + 1, urlStr.indexOf("\"", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
 				b = StringUtils.replace(b, "[goto=\"" + href + "\"]" + text + "[/goto]", "<a href=\""
-				    + href + "\">" + text + "</a>");
+						+ href + "\">" + text + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -301,11 +317,11 @@ public class Utils {
 			return link;
 		s = transform(s);
 		s = s.replaceAll(
-		    "[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
-		    "<a target=\"blank_\" href=\"$0\">$0</a>");
+				"[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
+				"<a target=\"blank_\" href=\"$0\">$0</a>");
 		s = s.replaceAll(
-		    "[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
-		    "<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
+				"[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
+				"<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
 		return s;
 	}
 }
