@@ -970,11 +970,11 @@ public class JCRDataStorage{
 		topicNode.setProperty("exo:canPost", topic.getCanPost()) ;
 		topicNode.setProperty("exo:userVoteRating", topic.getUserVoteRating()) ;
 		topicNode.setProperty("exo:voteRating", topic.getVoteRating()) ;
-		topicNode.setProperty("exo:numberAttachments", 0) ;
 		//forumHomeNode.save() ;
 		forumHomeNode.getSession().save() ;
 		if(!isMove) {
 			if(isNew) {
+				topicNode.setProperty("exo:numberAttachments", 0) ;
 				// createPost first
 				String id = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST) ;
 				Post post = new Post() ;
