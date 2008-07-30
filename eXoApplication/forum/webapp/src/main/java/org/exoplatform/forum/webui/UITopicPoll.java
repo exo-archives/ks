@@ -403,6 +403,7 @@ public class UITopicPoll extends UIForm	{
     public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
 			topicPoll.isAgainVote = true ;
+			topicPoll.poll_= topicPoll.getPoll();
 			topicPoll.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll) ;
 		}
