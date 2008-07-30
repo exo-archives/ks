@@ -383,11 +383,6 @@
 									 for(topic in topics){
 										boolean isLockTopic = topic.getIsLock() ;
 										if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
-										if(topic.getIsClosed()) {
-											if(!canEdit) {
-												continue ;
-											}
-										}
 										if(i%2 == 0) classRow = "whileRow";
 										else classRow = "OddRow";
 										String topicId = topic.getId();

@@ -159,7 +159,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				}
 				if(!isRead && bookMark.userProfile.getUserRole() == 0) isRead = true; 
 				if(isRead){
-					List<Forum> list = bookMark.forumService.getForums(ForumSessionUtils.getSystemProvider(), path);
+					List<Forum> list = bookMark.forumService.getForums(ForumSessionUtils.getSystemProvider(), path, "");
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.getChild(UICategory.class).update(category, list);
 					categoryContainer.updateIsRender(false) ;

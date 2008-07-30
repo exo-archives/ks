@@ -85,7 +85,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private List<Forum> getForums(String categoryId) throws Exception {
 		List<Forum> forums = new ArrayList<Forum>() ;
-		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId)) {
+		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
 			if(forum.getId().equalsIgnoreCase(this.forumId)) continue ;
 			forums.add(forum) ;
 		}
