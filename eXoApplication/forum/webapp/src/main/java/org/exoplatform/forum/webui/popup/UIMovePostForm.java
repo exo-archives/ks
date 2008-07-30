@@ -81,7 +81,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private List<Forum> getForums(String categoryId) throws Exception {
-		return this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId) ;
+		return this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "") ;
 	}
 
 	@SuppressWarnings("unused")

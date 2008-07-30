@@ -9,6 +9,13 @@
 	padding: 1px;
 }
 
+.UIForumPortlet .UIViewMemberProfile .ViewContainer {
+  min-height: 270px;
+}
+*html .UIForumPortlet .UIViewMemberProfile .ViewContainer {
+  height: 270px;
+}
+
 .UIForumPortlet .UIViewMemberProfile .ViewMemberProfileContainer .UserLabel{
 	background-position: right;
 	padding: 1px 18px 2px 0px;

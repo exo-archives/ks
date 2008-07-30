@@ -40,6 +40,7 @@ import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -111,7 +112,7 @@ public class UITopicContainer extends UIForm {
   @SuppressWarnings("unused")
   private boolean canViewThreads = true ;
 	private UserProfile userProfile = null;
-  private String strQuery = "" ;
+  private String strOrderBy = "" ;
 	public UITopicContainer() throws Exception {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
@@ -173,7 +174,7 @@ public class UITopicContainer extends UIForm {
 	private void initPage() throws Exception {
     this.canViewThreads = true ;
     this.canAddNewThread = true ;
-		String isApprove = "" ;
+		StringBuffer strQuery = new StringBuffer() ;
 		long role = this.userProfile.getUserRole() ;
 		String userId = this.userProfile.getUserId() ;
     String[] strings = this.forum.getCreateTopicRole() ;
@@ -186,15 +187,17 @@ public class UITopicContainer extends UIForm {
 
     boolean isModerator = false ;
     if(role == 0) isModerator = true;
+    else {strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'") ;}
 		if(role == 1) {
 			isModerator = ForumServiceUtils.hasPermission(forum.getModerators(), userId) ;
 		}
     if(this.forum.getIsModerateTopic()) {
-			if(!isModerator) isApprove = "true" ;
+			if(!isModerator) {
+				if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
+				strQuery.append("@exo:isApproved='true'") ;
+			}
 		}
-    String isWaiting = "false" ;
-    if(isModerator) isWaiting = "" ;
-		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, isApprove, isWaiting, strQuery);
+		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, strQuery.toString(), strOrderBy);
 		long maxTopic = userProfile.getMaxTopicInPage() ;
 		if(maxTopic > 0) this.maxTopic = maxTopic ;
 		try{
@@ -873,18 +876,18 @@ public class UITopicContainer extends UIForm {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			if(!ForumUtils.isEmpty(uiContainer.strQuery)) {
-				if(uiContainer.strQuery.indexOf(path) >= 0) {
-					if(uiContainer.strQuery.indexOf("descending") > 0) {
-						uiContainer.strQuery = path + " ascending";
+			if(!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
+				if(uiContainer.strOrderBy.indexOf(path) >= 0) {
+					if(uiContainer.strOrderBy.indexOf("descending") > 0) {
+						uiContainer.strOrderBy = path + " ascending";
 					} else {
-						uiContainer.strQuery = path + " descending";
+						uiContainer.strOrderBy = path + " descending";
 					}
 				} else {
-					uiContainer.strQuery = path + " ascending";
+					uiContainer.strOrderBy = path + " ascending";
 				}
 			} else {
-				uiContainer.strQuery = path + " ascending";
+				uiContainer.strOrderBy = path + " ascending";
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}

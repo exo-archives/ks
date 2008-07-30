@@ -129,7 +129,7 @@ public class UICategory extends UIForm	{
 	@SuppressWarnings("unchecked")
 	private List<Forum> getForumList() throws Exception {
 		if(this.isEditForum) {
-			this.forums = forumService.getForums(ForumSessionUtils.getSystemProvider(), this.categoryId);
+			this.forums = forumService.getForums(ForumSessionUtils.getSystemProvider(), this.categoryId, "");
 			this.isEditForum = false ;
       this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
 		}

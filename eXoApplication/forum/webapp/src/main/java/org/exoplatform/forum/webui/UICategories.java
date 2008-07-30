@@ -120,7 +120,7 @@ public class UICategories extends UIContainer	{
   
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		List<Forum> forumList = null ;
-			forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId);
+			forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId,"" );
 			if(mapListForum.containsKey(categoryId)) {
 				mapListForum.remove(categoryId) ;
 			}
