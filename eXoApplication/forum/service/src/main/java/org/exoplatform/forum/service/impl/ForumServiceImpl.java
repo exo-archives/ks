@@ -96,8 +96,8 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getForum(sProvider, categoryId, forumId);
 	}
 	
-	public List<Forum> getForums(SessionProvider sProvider, String categoryId) throws Exception {
-		return storage_.getForums(sProvider, categoryId);
+	public List<Forum> getForums(SessionProvider sProvider, String categoryId, String strQuery) throws Exception {
+		return storage_.getForums(sProvider, categoryId, strQuery);
 	}
 	
 	public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
@@ -124,8 +124,8 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getTopicView(sProvider, categoryId, forumId, topicId);
 	}
 	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery) throws Exception {
-		return storage_.getPageTopic(sProvider, categoryId, forumId, isApproved, isWaiting, strQuery);
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
+		return storage_.getPageTopic(sProvider, categoryId, forumId, strQuery, strOrderBy);
 	}
 
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception {

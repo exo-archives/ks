@@ -47,7 +47,7 @@ public interface DataStorage {
 	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew)throws Exception;
 	public Category removeCategory(SessionProvider sProvider, String categoryId)throws Exception;	
 
-	public List<Forum> getForums(SessionProvider sProvider, String categoryId)throws Exception;
+	public List<Forum> getForums(SessionProvider sProvider, String categoryId, String strQuery)throws Exception;
 	public Forum getForum(SessionProvider sProvider, String categoryId, String forumId)throws Exception;
 	public void modifyForum(SessionProvider sProvider, Forum forum, int type) throws Exception ;
 	public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception;
@@ -55,7 +55,7 @@ public interface DataStorage {
 	public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId)throws Exception;	
 	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath)throws Exception;	
 	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery) throws Exception;
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
 	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception ;
 	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception ;
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
