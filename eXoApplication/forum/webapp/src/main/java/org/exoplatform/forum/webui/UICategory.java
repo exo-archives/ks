@@ -129,7 +129,9 @@ public class UICategory extends UIForm	{
 	@SuppressWarnings("unchecked")
 	private List<Forum> getForumList() throws Exception {
 		if(this.isEditForum) {
-			this.forums = forumService.getForums(ForumSessionUtils.getSystemProvider(), this.categoryId, "");
+			String strQuery = "";
+			if(this.userProfile.getUserRole() != 0) strQuery = "@exo:isClosed='false'";
+			this.forums = forumService.getForums(ForumSessionUtils.getSystemProvider(), this.categoryId, strQuery);
 			this.isEditForum = false ;
       this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
 		}

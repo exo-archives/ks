@@ -120,11 +120,13 @@ public class UICategories extends UIContainer	{
   
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		List<Forum> forumList = null ;
-			forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId,"" );
-			if(mapListForum.containsKey(categoryId)) {
-				mapListForum.remove(categoryId) ;
-			}
-			mapListForum.put(categoryId, forumList) ;
+		String strQuery = "";
+		if(this.userProfile.getUserRole() != 0) strQuery = "@exo:isClosed='false'";
+		forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, strQuery);
+		if(mapListForum.containsKey(categoryId)) {
+			mapListForum.remove(categoryId) ;
+		}
+		mapListForum.put(categoryId, forumList) ;
 		String forumId ;
 		for (Forum forum : forumList) {
 			forumId = forum.getId() ;
