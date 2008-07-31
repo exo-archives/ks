@@ -747,7 +747,7 @@ public class JCRDataStorage{
 		if(topicNode.hasProperty("exo:numberAttachments")) topicNew.setNumberAttachment(topicNode.getProperty("exo:numberAttachments").getLong()) ;
 		if(topicNode.hasProperty("exo:icon")) topicNew.setIcon(topicNode.getProperty("exo:icon").getString()) ;
 		
-		if(topicNode.hasProperty("exo:isNotifyWhenAddPost")) topicNew.setIsNotifyWhenAddPost(topicNode.getProperty("exo:isNotifyWhenAddPost").getBoolean()) ;
+		if(topicNode.hasProperty("exo:isNotifyWhenAddPost")) topicNew.setIsNotifyWhenAddPost(topicNode.getProperty("exo:isNotifyWhenAddPost").getString()) ;
 		if(topicNode.hasProperty("exo:isModeratePost")) topicNew.setIsModeratePost(topicNode.getProperty("exo:isModeratePost").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isClosed")) topicNew.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isLock")) {
@@ -1379,6 +1379,8 @@ public class JCRDataStorage{
 					}
 				}
 				emailList = new ArrayList<String>();
+				String ownerTopicEmail = topicNode.getProperty("exo:isNotifyWhenAddPost").getString();
+				if(ownerTopicEmail.trim().length() > 0) emailList.add(ownerTopicEmail);
 				if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
 					emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
 				}
@@ -2310,7 +2312,6 @@ public class JCRDataStorage{
 		}
 	}
 	
-	//TODO Need to review
 	public List<ForumLinkData> getAllLink(SessionProvider sProvider) throws Exception {
 		List<ForumLinkData> forumLinks = new ArrayList<ForumLinkData>() ;
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
