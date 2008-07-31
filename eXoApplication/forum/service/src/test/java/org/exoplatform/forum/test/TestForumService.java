@@ -69,7 +69,7 @@ public class TestForumService extends BaseForumTestCase{
   	for (int i = 0; i < 5; i++) {
   		forumService_.saveForum(sProvider_, cat.getId(), createdForum(), true);
   	}
-  	forums.addAll(forumService_.getForums(sProvider_, catId));
+  	forums.addAll(forumService_.getForums(sProvider_, catId, ""));
   	// check size of list forum
   	assertEquals(forums.size(), 6);
 
