@@ -32,54 +32,72 @@
 				<div class="Response" style="width: 97%;">$response</div>
 				<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
 				<div class="AttachmentContent">
+				<%
+						if(!question.getAttachMent().isEmpty()) {
+				%>
 					<div style="margin-top: 5px; margin-bottom: 5px;">
 						<%
-						if(!question.getAttachMent().isEmpty()) {
 							for(FileAttachment fileAttachment : question.getAttachMent()){
 						    String fileName = fileAttachment.getName() ;
-						    String fileSize = fileAttachment.getSize() ;
-						    String dataPath = "" ;
-						    String fileStream = "" ;
-						    try{
-						      dataPath = fileAttachment.getDataPath() ;
-						      fileStream = fileAttachment.getInputStream() ;
-						    } catch(Exception e) {
-						    	dataPath = "null" ;
-						      fileStream = "null" ;
-						    }
-						    String fileType = fileAttachment.getMimeType() ;
-						    String fileWorkSpace = fileAttachment.getWorkspace() ;
-						    ValidatorDataInput validate = new ValidatorDataInput() ;
-					    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
-						    if(validate.isImage(fileName)) {
+						    long fileSize = fileAttachment.getSize() ;
+						    if(fileSize > 0){
+						    	String size = uicomponent.convertSize(fileSize);
+							    String dataPath = "" ;
+							    String fileStream = "" ;
+							    try{
+							      dataPath = fileAttachment.getDataPath() ;
+							      fileStream = fileAttachment.getInputStream() ;
+							    } catch(Exception e) {
+							    	dataPath = "null" ;
+							      fileStream = "null" ;
+							    }
+							    String fileType = fileAttachment.getMimeType() ;
+							    String fileWorkSpace = fileAttachment.getWorkspace() ;
+							    ValidatorDataInput validate = new ValidatorDataInput() ;
+						    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
+						    	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
+							    if(validate.isImage(fileName)) {
 						    %>
-						    	<div  style="float: left; margin-left: 5px;">
+						    	<div  style="float: left; margin-left: 5px;" id="divId${fileName}">
 							    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile"></div>
+				 						<div style="clear: left;"><span></span></div>
 				 						<div class="LabelBox">
 					 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-					 						<div class="Size AttachmentLabel">$fileName ( $fileSize B )</div>
+					 						<div class="Size AttachmentLabel">$fileName ( $size )</div>
 					 						<div style="clear: left;"><span></span></div>
 					 						<div class="Action" style="padding-top: 0px;">
 					 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); "><%= _ctx.appRes("UIPopupViewQuestion.label.view"); %></div>
 					 							<div class="Icon Download"><a href="$linkImage"><%= _ctx.appRes("UIPopupViewQuestion.label.download"); %></a></div>
-					 							<div style="clear: left;"><span></span></div>
 					 						</div>
 					 					</div>
 				 					</div>
 					    <%} else {
-					    		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 					    %>
 					    		<div class="LabelBox">
-										<div class="AttachmentIcon ${typeFileIcon}Icon"><span></span></div>
-										<a class="AttachmentLabel" href="$linkImage">$fileName</a>
+										<div class="AttachmentIcon FileAttachmentIcon" style="width: auto; height: auto;">
+											<a class="AttachmentLabel" href="$linkImage">$fileName</a>
+										</div>
 										<div style="clear: left;"><span></span></div>
-										<div class="Size">Size: $fileSize</div>
+										<div class="Size">Size: $size</div>
 									</div>
 					    <%}
-					  	}
-				  	} else {%>
+					    } else {
+					    	%>
+					    		<div class="LabelBox" style="margin: 10px 10px 0px 5px;">
+						    		<div class="FalseIcon" style="padding-left: 15px;">
+						    			<a style="color: red;" href="javaScript: void(0)">
+						    				<%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%>
+						    			</a>
+						    		</div>
+						    		<div style="clear: left;"><span></span></div>
+					    		</div>
+					    	<%
+					    	}
+					  	} %>
+					  	</div>
+				  	<%} else {%>
+				  	&nbsp;
 			  	<%}%>
-			  	</div>
 			  	<div style="clear: left;"><span></span></div>
 				</div>
 				<div class="RelatedQuestionsView"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br>

@@ -21,8 +21,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.PathNotFoundException;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -103,24 +101,56 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
     }
   }
   
+  public String convertSize(long size){
+    String result = "bytes";
+    long  residual = 0;
+    int i = 0;
+    while(size >= 1000){
+      i ++;
+      residual = size % 1024;
+      size /= 1024;
+    }
+    switch (i) {
+      case 1:
+        result = "KB";
+        break;
+      case 2:
+        result = "MB";
+        break;
+    }
+    if(residual > 1000){
+      String str = residual + "";
+      result = size + "." + str.substring(0, 3) + " " + result;
+    }else{
+      result = size + "." + residual + " " + result;
+    }
+    return result;
+  }
+  
+  @SuppressWarnings("unused")  
+  private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+    byte[] imageBytes = null;
+    if (input != null) {
+      imageBytes = new byte[input.available()];
+      input.read(imageBytes);
+      ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+      InputStreamDownloadResource dresource = new InputStreamDownloadResource(
+          byteImage, "image");
+      dresource.setDownloadName(fileName);
+      return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+    }
+    return null;
+  }
+  
   @SuppressWarnings("unused")
-  private String getFileSource(FileAttachment attachment) throws Exception {
+	private String getFileSource(FileAttachment attachment) throws Exception {
     DownloadService dservice = getApplicationComponent(DownloadService.class) ;
     try {
       InputStream input = attachment.getInputStream() ;
       String fileName = attachment.getName() ;
-      byte[] imageBytes = null;
-      if (input != null) {
-        imageBytes = new byte[input.available()];
-        input.read(imageBytes);
-        ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-        InputStreamDownloadResource dresource = new InputStreamDownloadResource(
-            byteImage, "image");
-        dresource.setDownloadName(fileName);
-        return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
-      }
-      return null;
-    } catch (PathNotFoundException e) {
+      return getFileSource(input, fileName, dservice);
+    } catch (Exception e) {
+      e.printStackTrace() ;
       return null;
     }
   }
