@@ -184,9 +184,9 @@ public class JCRDataStorage {
       			Message message = new Message();
             message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
       			//message.setMessageTo(question.getEmail());
-      			message.setSubject("eXo FAQ Watching Category Notifycation! email");
+      			message.setSubject("FAQ Watching Category Notification! ");
       			message.setMessageBody("<p>Hi you,</p>" 
-      					+"<p>You have received this email because you registered for eXo FAQ Category Notification</p>"
+      					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
       					+"<p>We would like to inform that Category '" + cate.getProperty("exo:name").getString() 
       					+"' has been added new Question with content below: </p>"
       					+"<p>" + question.getQuestion() + "<p>"
@@ -215,9 +215,9 @@ public class JCRDataStorage {
       		if(emailsList != null && emailsList.size() > 0) {
 						Message message = new Message();
 			      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-						message.setSubject("eXo FAQ Watching Notifycation! email");
+						message.setSubject("FAQ Watching Category Notification! ");
 						message.setMessageBody("<p>Hi you,</p>" 
-      					+"<p>You have received this email because you registered for eXo FAQ Category Notification</p>"
+      					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
       					+"<p>We would like to inform that the question: '" + question.getQuestion() 
       					+"' has been edited or responded </p>"
       					+"<p>" + question.getResponses() + "</p>"
@@ -235,7 +235,7 @@ public class JCRDataStorage {
   		try {
   			Message message = new Message();
 	      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-				message.setSubject("eXo FAQ Your Question is answered or edit ! ");
+				message.setSubject("FAQ Your Question is answered or edit ! ");
 				message.setMessageBody("<p>We would like to inform your question: '" + question.getQuestion() 
   					+"' has been edited or responded </p>"
   					+"<p>" + question.getResponses() + "<p>"
