@@ -1004,7 +1004,7 @@
 	padding-top: 3px;
 }
 
-.UIPrintPreview .ResponseContent .AttachmentContent .LabelBox {
+.UIPrintPreview .AttachmentContent .LabelBox .Action{
   display:none;
 }
 
