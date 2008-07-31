@@ -92,7 +92,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Forum> getForums(SessionProvider sProvider, String categoryId) throws Exception;
+	public List<Forum> getForums(SessionProvider sProvider, String categoryId, String strQuery) throws Exception;
 	
 	/**
 	 * Gets the forum in the category identify.
@@ -187,7 +187,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery) throws Exception;
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
 	
 	/**
 	 * Gets the page topic by user.

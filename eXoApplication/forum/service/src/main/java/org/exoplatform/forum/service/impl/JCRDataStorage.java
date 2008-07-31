@@ -247,7 +247,7 @@ public class JCRDataStorage{
 	}
 	
 	
-	public List<Forum> getForums(SessionProvider sProvider, String categoryId) throws Exception {
+	public List<Forum> getForums(SessionProvider sProvider, String categoryId, String strQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try {
 			ForumAdministration administration = getForumAdministration(sProvider) ;
@@ -256,8 +256,11 @@ public class JCRDataStorage{
 			Node catNode = forumHomeNode.getNode(categoryId) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 			StringBuffer queryBuffer = new StringBuffer() ;
-			queryBuffer.append("/jcr:root").append(catNode.getPath()).append("//element(*,exo:forum) order by @exo:").
-				append(orderBy).append(" ").append(orderType);
+			queryBuffer.append("/jcr:root").append(catNode.getPath()).append("//element(*,exo:forum)"); 
+			if(strQuery != null && strQuery.trim().length() > 0){
+				queryBuffer.append("[").append(strQuery).append("]") ;
+			}
+			queryBuffer.append("order by @exo:").append(orderBy).append(" ").append(orderType);
 			if(!orderBy.equals("forumOrder")){
 				queryBuffer.append(",@exo:forumOrder ascending") ;
 				if(!orderBy.equals("createdDate")) {
@@ -582,8 +585,8 @@ public class JCRDataStorage{
 		forumHomeNode.getSession().save() ;
 	}
 	
-	
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery) throws Exception {
+	//Old: SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery
+	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		try {
 			Node CategoryNode = forumHomeNode.getNode(categoryId) ;
@@ -595,14 +598,11 @@ public class JCRDataStorage{
 			StringBuffer stringBuffer = new StringBuffer() ;
 			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)");
 			stringBuffer.append("[@exo:isActive='true'") ;
-			if(isWaiting != null && isWaiting.length() > 0){
-				stringBuffer.append(" and @exo:isWaiting='").append(isWaiting).append("'");
-			} 
-			if(isApproved != null && isApproved.length() > 0){
-				stringBuffer.append(" and @exo:isApproved='").append(isApproved).append("'");
+			if(strQuery != null && strQuery.length() > 0){//@exo:isClosed, @exo:isWaiting , @exo:isApprove
+				stringBuffer.append(" and ").append(strQuery);
 			} 
 			stringBuffer.append("] order by @exo:isSticky descending");
-			if(strQuery == null || strQuery.trim().length() <= 0) {
+			if(strOrderBy == null || strOrderBy.trim().length() <= 0) {
 				if(orderBy != null && orderBy.length() > 0) {
 					stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType) ;
 					if(!orderBy.equals("createdDate")) {
@@ -612,8 +612,8 @@ public class JCRDataStorage{
 					stringBuffer.append(",@exo:createdDate descending") ;
 				}
 			} else {
-				stringBuffer.append(",@exo:").append(strQuery) ;
-				if(strQuery.indexOf("createdDate") < 0) {
+				stringBuffer.append(",@exo:").append(strOrderBy) ;
+				if(strOrderBy.indexOf("createdDate") < 0) {
 					stringBuffer.append(",@exo:createdDate descending") ;
 				}
 			}
