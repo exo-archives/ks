@@ -78,7 +78,7 @@
 											<a class="AttachmentLabel" href="$linkImage">$fileName</a>
 										</div>
 										<div style="clear: left;"><span></span></div>
-										<div class="Size">Size: $size</div>
+										<div class="Size"><%= _ctx.appRes("UIPopupViewQuestion.label.size"); %> $size</div>
 									</div>
 					    <%}
 					    } else {
