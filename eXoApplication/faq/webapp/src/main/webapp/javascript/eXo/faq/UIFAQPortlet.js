@@ -2,7 +2,10 @@ function UIFAQPortlet() {};
 
 UIFAQPortlet.prototype.jumToQuestion = function(id) {
 	var obj = document.getElementById(id);
-	if(obj)obj.scrollIntoView(true);
+	if(!obj) return ;
+	var faqViewContent = document.getElementById("FAQViewContent") ;
+	var scroll = eXo.core.Browser.findPosYInContainer(obj, faqViewContent) ;
+	faqViewContent.scrollTop = scroll ;
 };
 
 UIFAQPortlet.prototype.OverButton = function(oject) {
