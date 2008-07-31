@@ -43,7 +43,7 @@ public class Topic {
 	private long numberAttachments = 0 ;
 	
 	private boolean isModeratePost = false ;
-	private boolean isNotifyWhenAddPost = false ;	
+	private String isNotifyWhenAddPost = new String() ;	
 	private boolean isClosed = false ;
 	private boolean isLock = false ;
 	private boolean isApproved = false ;
@@ -106,8 +106,8 @@ public class Topic {
 	public boolean getIsModeratePost() { return isModeratePost;}
 	public void setIsModeratePost(boolean isModeratePost) { this.isModeratePost = isModeratePost;}
 
-	public boolean getIsNotifyWhenAddPost() { return isNotifyWhenAddPost;}
-	public void setIsNotifyWhenAddPost(boolean isNotifyWhenAddPost) { this.isNotifyWhenAddPost = isNotifyWhenAddPost;}
+	public String getIsNotifyWhenAddPost() { return isNotifyWhenAddPost;}
+	public void setIsNotifyWhenAddPost(String isNotifyWhenAddPost) { this.isNotifyWhenAddPost = isNotifyWhenAddPost;}
 	
 	public boolean getIsClosed() { return isClosed;}
 	public void setIsClosed(boolean isClosed) { this.isClosed = isClosed;}
