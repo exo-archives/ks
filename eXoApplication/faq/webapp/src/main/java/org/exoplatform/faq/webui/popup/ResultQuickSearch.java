@@ -83,7 +83,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				  if(Arrays.asList(moderator).contains(currentUser)) {
 				  	listQuickSearch.add(faqSearch) ;
 					} else {
-						if(question.isApproved()) listQuickSearch.add(faqSearch) ;
+						if(question.isApproved() && question.isActivated()) listQuickSearch.add(faqSearch) ;
 						else
 							continue ;
 					}
