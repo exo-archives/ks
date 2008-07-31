@@ -83,7 +83,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				  if(Arrays.asList(moderator).contains(currentUser)) {
 				  	listQuestionSearch.add(quest) ;
 					} else {
-						if(quest.isApproved()) listQuestionSearch.add(quest) ;
+						if(quest.isApproved() && quest.isActivated()) listQuestionSearch.add(quest) ;
 						else
 							continue ;
 					}
