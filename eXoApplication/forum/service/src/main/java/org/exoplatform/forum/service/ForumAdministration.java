@@ -31,7 +31,7 @@ public class ForumAdministration {
 	public ForumAdministration() {
 		forumSortBy = "forumOrder" ;
 		forumSortByType = "ascending" ;
-		topicSortBy = "createdDate" ;
+		topicSortBy = "lastPostDate" ;
 		topicSortByType = "descending";
   }
 	

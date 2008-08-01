@@ -139,10 +139,6 @@ public class ForumServiceImpl implements ForumService{
 	public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
 		return storage_.removeTopic(sProvider, categoryId, forumId, topicId);
 	}
-
-	public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew) throws Exception {
-		storage_.savePost(sProvider, categoryId, forumId, topicId, post, isNew);
-	}
 	
 	public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
 		return storage_.getPost(sProvider, categoryId, forumId, topicId, postId);
@@ -151,6 +147,14 @@ public class ForumServiceImpl implements ForumService{
 	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, 
 			String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
 		return storage_.getPosts(sProvider, categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
+	}
+	
+	public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew) throws Exception {
+		storage_.savePost(sProvider, categoryId, forumId, topicId, post, isNew);
+	}
+
+	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {
+		storage_.modifyPost(sProvider, posts, type);
 	}
 	
 	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath) throws Exception {

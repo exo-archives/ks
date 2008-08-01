@@ -989,6 +989,7 @@ public class UITopicDetail extends UIForm {
       UITopicDetail topicDetail = event.getSource() ;
       boolean haveCheck = false ;
       Post post = new Post() ;
+      List<Post> posts = new ArrayList<Post>();
       List<UIComponent> children = topicDetail.getChildren() ;
       for(UIComponent child : children) {
         if(child instanceof UIFormCheckBoxInput) {
@@ -996,11 +997,12 @@ public class UITopicDetail extends UIForm {
             haveCheck = true ;
             post = topicDetail.getPost(((UIFormCheckBoxInput)child).getName());
             post.setIsHidden(true) ;
-            topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, false) ;
+            posts.add(post) ;
           }
         }
       }
       if(haveCheck) {
+      	topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
       } else {
         throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", new String[]{}, ApplicationMessage.WARNING)) ;

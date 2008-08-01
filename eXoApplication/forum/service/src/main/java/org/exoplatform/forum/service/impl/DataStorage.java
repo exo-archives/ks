@@ -71,6 +71,7 @@ public interface DataStorage {
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception ;
 	public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId)throws Exception;
 	public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew)throws Exception;
+	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception;
 	public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId)throws Exception;
 	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath) throws Exception ;
 	

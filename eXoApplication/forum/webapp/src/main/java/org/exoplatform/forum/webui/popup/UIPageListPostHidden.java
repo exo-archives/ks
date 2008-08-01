@@ -124,6 +124,7 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
       UIPageListPostHidden postHidden = event.getSource() ;
       List<UIComponent>listChild = postHidden.getChildren() ;
       Post post = new Post() ;
+      List<Post> posts = new ArrayList<Post>();
       boolean haveCheck = false ;
       for (UIComponent child : listChild) {
         if (child instanceof UIFormCheckBoxInput) {
@@ -131,12 +132,14 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
             haveCheck = true ;
             post = postHidden.getPost(child.getName()) ;
             post.setIsHidden(false) ;
-            postHidden.forumService.savePost(ForumSessionUtils.getSystemProvider(), postHidden.categoryId, postHidden.forumId, postHidden.topicId, post, false) ;
+            posts.add(post) ;
           }
         }
       }
       if(!haveCheck) {
         throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null)) ;
+      } else {
+      	postHidden.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
       }
       UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class) ;
       forumPortlet.cancelAction() ;

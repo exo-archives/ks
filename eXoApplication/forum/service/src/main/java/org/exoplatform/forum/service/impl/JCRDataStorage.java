@@ -322,8 +322,8 @@ public class JCRDataStorage{
 		try {
 			Node catNode = forumHomeNode.getNode(categoryId) ;
 			Node forumNode;
-			boolean isNewModerateTopic  = forum.getIsModerateTopic();
-			boolean isModerateTopic  = isNewModerateTopic;
+			boolean isNewModerateTopic	= forum.getIsModerateTopic();
+			boolean isModerateTopic	= isNewModerateTopic;
 			if(isNew) {
 				forumNode = catNode.addNode(forum.getId(), "exo:forum") ;
 				forumNode.setProperty("exo:id", forum.getId()) ;
@@ -545,7 +545,7 @@ public class JCRDataStorage{
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
-      }
+			}
 			userProfileHomeNode.getSession().save();
 			return forum;
 		} catch (PathNotFoundException e) {
@@ -605,16 +605,16 @@ public class JCRDataStorage{
 			if(strOrderBy == null || strOrderBy.trim().length() <= 0) {
 				if(orderBy != null && orderBy.length() > 0) {
 					stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType) ;
-					if(!orderBy.equals("createdDate")) {
-						stringBuffer.append(",@exo:createdDate descending") ;
+					if(!orderBy.equals("lastPostDate")) {
+						stringBuffer.append(",@exo:lastPostDate descending") ;
 					}
 				} else {
-					stringBuffer.append(",@exo:createdDate descending") ;
+					stringBuffer.append(",@exo:lastPostDate descending") ;
 				}
 			} else {
 				stringBuffer.append(",@exo:").append(strOrderBy) ;
-				if(strOrderBy.indexOf("createdDate") < 0) {
-					stringBuffer.append(",@exo:createdDate descending") ;
+				if(strOrderBy.indexOf("lastPostDate") < 0) {
+					stringBuffer.append(",@exo:lastPostDate descending") ;
 				}
 			}
 			String pathQuery = stringBuffer.toString();
@@ -703,18 +703,14 @@ public class JCRDataStorage{
 			while (iter.hasNext()) {
 				topicNode = iter.nextNode() ;
 				if(!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-					if(!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
-						isSavePath = true ;
-						break;
-					}
+					forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
+					isSavePath = true ;
+					break;
 				} else {
 					if(topicNode.getProperty("exo:isApproved").getBoolean()) {
-						if(!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
-							isSavePath = true;
-							break;
-						}
+						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath()) ;
+						isSavePath = true;
+						break;
 					}
 				}
 			}
@@ -1153,7 +1149,6 @@ public class JCRDataStorage{
 		}
 	}
 	
-	
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception {
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider) ;
@@ -1327,13 +1322,8 @@ public class JCRDataStorage{
 			postAttachmentNode.remove();
 		}
 		if (isNew) {
-			// set InfoPost for Topic
 			long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
-			topicNode.setProperty("exo:postCount", topicPostCount);
-			topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
-			topicNode.setProperty("exo:lastPostBy", post.getOwner());
 			long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong() + numberAttach;
-			topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 			// set InfoPost for Forum
 			long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1;
 			forumNode.setProperty("exo:postCount", forumPostCount);
@@ -1344,10 +1334,26 @@ public class JCRDataStorage{
 				isSetLastPost = topicNode.getProperty("exo:isActive").getBoolean();
 			if (isSetLastPost) {
 				if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+					// set InfoPost for Topic
+					if(!post.getIsHidden()) {
+						topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+						topicNode.setProperty("exo:postCount", topicPostCount);
+						topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
+						topicNode.setProperty("exo:lastPostBy", post.getOwner());
+					}
 					if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
 					}
 				} else {
+					if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+						// set InfoPost for Topic
+						if(!post.getIsHidden()) {
+							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+							topicNode.setProperty("exo:postCount", topicPostCount);
+							topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
+							topicNode.setProperty("exo:lastPostBy", post.getOwner());
+						}
+					}
 					if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 						if (topicNode.getProperty("exo:isApproved").getBoolean()) {
 							if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
@@ -1373,8 +1379,8 @@ public class JCRDataStorage{
 						// message.setMessageTo(question.getEmail());
 						message.setSubject("eXo Thread Watching Notification!");
 						message.setMessageBody("The Thread '<b>"
-						    + topicNode.getProperty("exo:name").getString()
-						    + "</b>' have just	added post:<div>" + Utils.convertCodeHTML(post.getMessage()) + "</div>");
+								+ topicNode.getProperty("exo:name").getString()
+								+ "</b>' have just	added post:<div>" + Utils.convertCodeHTML(post.getMessage()) + "</div>");
 						sendNotification(emailList, message);
 					}
 				}
@@ -1393,18 +1399,93 @@ public class JCRDataStorage{
 					// message.setMessageTo(question.getEmail());
 					message.setSubject("eXo Forum Watching Notification!");
 					message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString()
-					    + "</b>' have just	added post:<div>" + Utils.convertCodeHTML(post.getMessage()) + "</div>");
+							+ "</b>' have just	added post:<div>" + Utils.convertCodeHTML(post.getMessage()) + "</div>");
 					sendNotification(emailList, message);
 				}
 			}
 		} else {
 			long temp = topicNode.getProperty("exo:numberAttachments").getLong()
-			    - postNode.getProperty("exo:numberAttach").getLong();
+					- postNode.getProperty("exo:numberAttach").getLong();
 			topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
 		}
 		postNode.setProperty("exo:numberAttach", numberAttach);
 		// forumHomeNode.save() ;
 		forumHomeNode.getSession().save();
+	}
+	
+	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		for (Post post : posts) {
+			try {
+				boolean isGetLastPost = false;
+				String postPath = post.getPath();
+				String topicPath = postPath.substring(0,postPath.lastIndexOf("/"));
+				Node postNode = (Node)forumHomeNode.getSession().getItem(postPath) ;
+				Node topicNode = (Node)forumHomeNode.getSession().getItem(topicPath) ;
+				Calendar lastPostDate = topicNode.getProperty("exo:lastPostDate").getDate();
+				Calendar postDate = postNode.getProperty("exo:createdDate").getDate();
+				switch (type) {
+					case 1: { 
+						if(postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
+							topicNode.setProperty("exo:lastPostDate", postDate);
+							topicNode.setProperty("exo:lastPostBy", post.getOwner());
+							isGetLastPost = true;
+						}
+						postNode.setProperty("exo:isApproved", post.getIsApproved()) ; 
+						long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
+						long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong();
+						newNumberAttach = newNumberAttach + postNode.getProperty("exo:numberAttach").getLong();
+						topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+						topicNode.setProperty("exo:postCount", topicPostCount);
+						break;
+					}
+					case 2: {
+						if(!post.getIsHidden()){
+							if(postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
+								topicNode.setProperty("exo:lastPostDate", postDate);
+								topicNode.setProperty("exo:lastPostBy", post.getOwner());
+							}
+						}else {
+							System.out.println("\n" + postNode.getName() + "\n");
+							Node postLastNode = getLastDatePost(forumHomeNode, topicNode);
+							if(postLastNode != null) {
+								topicNode.setProperty("exo:lastPostDate", postLastNode.getProperty("exo:createdDate").getDate());
+								topicNode.setProperty("exo:lastPostBy", postLastNode.getProperty("exo:owner").getString());
+							}
+						}
+						postNode.setProperty("exo:isHidden", post.getIsHidden()) ; 
+						isGetLastPost = true;
+						break;
+					}
+					default: break;
+				}
+				forumHomeNode.getSession().save() ;
+				if(isGetLastPost) queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
+			}catch (PathNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private Node getLastDatePost(Node forumHomeNode, Node node) throws Exception {
+		String strQuery = "[@exo:isHidden='false'] order by @exo:createdDate descending" ;
+		if(node.hasProperty("exo:isModeratePost")) {
+			if(node.getProperty("exo:isModeratePost").getBoolean()){
+				strQuery = "[@exo:isHidden='false' and @exo:isApproved='true'] order by @exo:createdDate descending" ;
+			}
+		}
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+		String pathQuery = "/jcr:root" + node.getPath() + "//element(*,exo:post)" + strQuery;
+		Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+		QueryResult result = query.execute() ;
+		NodeIterator iter = result.getNodes();
+		Node postNode = null ;
+		while (iter.hasNext()) {
+			postNode = iter.nextNode() ;
+			break;
+		}
+		System.out.println("\n\n" + postNode.getName() + "\n\n");
+		return postNode ;
 	}
 	
 	private void sendNotification(List<String> emails, Message message) throws Exception {
@@ -1967,15 +2048,15 @@ public class JCRDataStorage{
 				boolean isAdd = true;
 				for (String string : listOld) {
 					pathOld = string.substring(string.lastIndexOf("//")+1) ;
-	        if(pathNew.equals(pathOld)) {
-	        	if(isNew){
-	        		listNew.add(bookMark);
-	        	}
-	        	isAdd = false;
-	        	continue;
-	        }
-	        listNew.add(string) ;
-        }
+					if(pathNew.equals(pathOld)) {
+						if(isNew){
+							listNew.add(bookMark);
+						}
+						isAdd = false;
+						continue;
+					}
+					listNew.add(string) ;
+				}
 				if(isAdd) {
 					listNew.add(bookMark) ;
 				}
@@ -2265,11 +2346,11 @@ public class JCRDataStorage{
 	
 	@SuppressWarnings("deprecation")
 	private Calendar getGreenwichMeanTime() {
-		Calendar  calendar = GregorianCalendar.getInstance() ;
-    calendar.setLenient(false) ;
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
-    return  calendar;
+		Calendar	calendar = GregorianCalendar.getInstance() ;
+		calendar.setLenient(false) ;
+		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+		calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
+		return	calendar;
 	}
 	
 	public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception {

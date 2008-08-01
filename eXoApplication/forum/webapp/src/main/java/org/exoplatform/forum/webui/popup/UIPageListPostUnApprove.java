@@ -126,18 +126,21 @@ public class UIPageListPostUnApprove extends UIForm implements UIPopupComponent 
       //List<Post> listPost = new ArrayList<Post>() ;
       Post post = new Post() ;
       boolean haveCheck = false ;
+      List<Post> posts = new ArrayList<Post>();
       for (UIComponent child : listChild) {
         if (child instanceof UIFormCheckBoxInput) {
           if(((UIFormCheckBoxInput)child).isChecked()) {
             haveCheck = true ;
             post = postUnApprove.getPost(child.getName()) ;
             post.setIsApproved(true) ;
-            postUnApprove.forumService.savePost(ForumSessionUtils.getSystemProvider(), postUnApprove.categoryId, postUnApprove.forumId, postUnApprove.topicId, post, false) ;
+            posts.add(post) ;
           }
         }
       }
       if(!haveCheck) {
         throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null)) ;
+      } else {
+      	postUnApprove.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 1) ;
       }
       UIForumPortlet forumPortlet = postUnApprove.getAncestorOfType(UIForumPortlet.class) ;
       forumPortlet.cancelAction() ;
