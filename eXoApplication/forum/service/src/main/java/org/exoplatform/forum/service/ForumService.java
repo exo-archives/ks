@@ -382,7 +382,8 @@ public interface ForumService {
 	 */
 	public void savePost(SessionProvider sProvider, String categoryId, String forumId,
 	    String topicId, Post post, boolean isNew) throws Exception;
-
+	
+	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception;
 	/**
 	 * Removes the post.
 	 * 

@@ -400,6 +400,7 @@ UIForumPortlet.prototype.setMaskLayer = function() {
 };
 
 UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
+	imgElm.style.width = "auto" ;
 	if(imgElm.offsetWidth > 130){  
 		imgElm.style.width = "130px" ;
 	}
