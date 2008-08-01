@@ -14,7 +14,7 @@
   float: left;
   background: url('background/FAQPortlet.gif') no-repeat left -243px;
   width: 16px; height: 14px;
-  margin: 5px 8px 0px 8px;
+  margin: 8px 8px 0px 8px;
 }
 
 .UIFAQPortlet .UIBreadcumbs .Selected {
@@ -23,7 +23,7 @@
 }
 
 .UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar {
-	line-height: 25px;
+	line-height: 29px;
 	overflow: auto;
 }
 
@@ -132,7 +132,7 @@
   float:right;
   height:16px;
   margin:6px 3px 0px 3px;
-  width:16px;
+  width:19px;
   cursor: pointer;
 }
 
