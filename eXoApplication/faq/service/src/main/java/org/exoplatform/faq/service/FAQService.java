@@ -275,6 +275,20 @@ public interface FAQService {
   public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
   
   /**
+   * This method should lookup languageNode of question
+   * so find child node of language node is searched
+   * and find properties of child node, if contain input of user, get this question
+   * 
+   * @param 	Question list
+   * @param 	langage want search
+   * @param 	term content want search in all field question
+   * @param		sProvider 
+   * @return 	Question list
+   * @throws Exception the exception
+   */
+  public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception ;
+  
+  /**
    * Search question by language.
    * <p>
    * From list questions, find all questions which support the language is specified and
