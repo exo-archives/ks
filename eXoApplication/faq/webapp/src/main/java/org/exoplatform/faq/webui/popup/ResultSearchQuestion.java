@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
@@ -67,7 +66,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() throws Exception {
-  	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  	FAQService faqService = FAQUtils.getFAQService() ;
   	FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
   	String currentUser = FAQUtils.getCurrentUser() ;
   	SessionProvider sProvider = FAQUtils.getSystemProvider() ;
@@ -95,8 +94,10 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
   		List<Question> listQuestionLanguage = new ArrayList<Question>();
   		if(FAQUtils.isFieldEmpty(text_)) {
   			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestion_, language_, question_, response_, sProvider) ;
+  		} else if(!FAQUtils.isFieldEmpty(text_) && FAQUtils.isFieldEmpty(question_) && FAQUtils.isFieldEmpty(response_)){
+  			listQuestionSearchByLanguage = faqService.searchQuestionByLangageOfText(listQuestion_, language_, text_, sProvider) ;
   		} else {
-  			List<Question> listQuestionSearchByLanguageTemp = faqService.searchQuestionByLangage(listQuestion_, language_, text_, text_, sProvider) ;
+  			List<Question> listQuestionSearchByLanguageTemp = faqService.searchQuestionByLangageOfText(listQuestion_, language_, text_, sProvider) ;
   			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestionSearchByLanguageTemp, language_, question_, response_, sProvider) ;
   		}
   		if(serviceUtils.isAdmin(currentUser)) {

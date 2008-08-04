@@ -320,6 +320,47 @@ public class JCRDataStorage {
     return listQuestionLanguage ;
   }
   
+  public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception {
+    List<Question> listResult = new ArrayList<Question>() ;
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    Node questionNode = null ;
+    Node languageNode = null ;
+    Node node = null ;
+    String languages = "languages" ;
+    text = text.toLowerCase() ;
+    String authorContent = new String() ;
+    String emailContent = new String() ;
+    String questionContent = new String() ;
+    String responseContent = new String() ;
+    for(Question question : listQuestion) {
+      questionNode = questionHome.getNode(question.getId()) ;
+      if(questionNode.hasNode(languages)) {
+        languageNode = questionNode.getNode(languages) ;
+        if(languageNode.hasNode(languageSearch)) {
+          boolean isAdd = false ;
+          node = languageNode.getNode(languageSearch) ;
+          if(questionNode.hasProperty("exo:author")) authorContent = questionNode.getProperty("exo:author").getValue().getString() ;
+          if(questionNode.hasProperty("exo:email")) emailContent = questionNode.getProperty("exo:email").getValue().getString() ;
+          if(node.hasProperty("exo:name")) questionContent = node.getProperty("exo:name").getValue().getString() ;
+          if(node.hasProperty("exo:responses")) responseContent = node.getProperty("exo:responses").getValue().getString();
+          if((questionContent.toLowerCase().indexOf(text) >= 0) ||(responseContent.toLowerCase().indexOf(text) >= 0)||
+              ( authorContent.toLowerCase().indexOf(text) >= 0)||(emailContent.toLowerCase().indexOf(text) >= 0)) {
+            isAdd = true ;
+          }
+          if(isAdd) {
+          	question.setAuthor(authorContent) ;
+          	question.setEmail(emailContent) ;
+            question.setLanguage(languageSearch) ;
+            question.setQuestion(questionContent) ;
+            question.setResponses(responseContent) ;
+            listResult.add(question) ;
+          }
+        }
+      }
+    }
+    return listResult ;
+  }
+  
   public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception {
     List<Question> listResult = new ArrayList<Question>() ;
     Node questionHome = getQuestionHome(sProvider, null) ;
@@ -341,10 +382,16 @@ public class JCRDataStorage {
           if((questionSearch == null || questionSearch.trim().length() < 1) && (responseSearch == null || responseSearch.trim().length() < 1)) {
             isAdd = true ;
           } else {
-            if((questionSearch!= null && questionSearch.trim().length() > 0 && questionContent.toLowerCase().indexOf(questionSearch) >= 0) || 
-                (responseSearch != null && responseSearch.trim().length() > 0 && responseContent.toLowerCase().indexOf(responseSearch) >= 0)) {
+            if((questionSearch!= null && questionSearch.trim().length() > 0 && questionContent.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0) &&
+                (responseSearch == null || responseSearch.trim().length() < 1 )) {
               isAdd = true ;
-            }
+            } else if((responseSearch!= null && responseSearch.trim().length() > 0 && responseContent.toLowerCase().indexOf(responseSearch.toLowerCase()) >= 0) &&
+                (questionSearch == null || questionSearch.trim().length() < 1 )) {
+              isAdd = true ;
+            } else if((questionSearch!= null && questionSearch.trim().length() > 0 && questionContent.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0) &&
+                (responseSearch != null && responseSearch.trim().length() > 0 && responseContent.toLowerCase().indexOf(responseSearch.toLowerCase()) >= 0)) {
+              isAdd = true ;
+            } 
           }
           if(isAdd) {
             question.setLanguage(languageSearch) ;
