@@ -229,6 +229,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		UIFormStringInput userId = new UIFormStringInput(FIELD_USERID_INPUT, FIELD_USERID_INPUT, null);
 		userId.setValue(this.userProfile.getUserId());
 		userId.setEditable(false) ;
+		userId.setEnable(false) ;
 		UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
 		userTitle.setValue(this.userProfile.getUserTitle());
 		

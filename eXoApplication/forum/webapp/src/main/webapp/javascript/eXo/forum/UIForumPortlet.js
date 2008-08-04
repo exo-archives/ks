@@ -410,22 +410,22 @@ UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
 };
 
 UIForumPortlet.prototype.reSizeImages = function() {
-	var topicDetailContainer = document.getElementById('UITopicDetailContainer');
-	if(topicDetailContainer) {
-		var isDesktop = document.getElementById('UIPageDesktop') ;
-		if(!isDesktop){
-	    var max_width = topicDetailContainer.offsetWidth - 225 ;
-	    var images_ =  topicDetailContainer.getElementsByTagName("img");
-	    for(var i=0; i<images_.length; i++){
-	      var img = images_[i];
-	      if(img.className === "Img") continue ;
-				img.style.width = "auto" ;
-			  if(img.width > max_width) {
-					img.style.width= max_width + "px" ;
-			  }
-	    }
-		}
-	}
+//	var topicDetailContainer = document.getElementById('UITopicDetailContainer');
+//	if(topicDetailContainer) {
+//		var isDesktop = document.getElementById('UIPageDesktop') ;
+//		if(!isDesktop){
+//	    var max_width = topicDetailContainer.offsetWidth - 225 ;
+//	    var images_ =  topicDetailContainer.getElementsByTagName("img");
+//	    for(var i=0; i<images_.length; i++){
+//	      var img = images_[i];
+//	      if(img.className === "Img") continue ;
+//				img.style.width = "auto" ;
+//			  if(img.width > max_width) {
+//					img.style.width= max_width + "px" ;
+//			  }
+//	    }
+//		}
+//	}
 };
 
 UIForumPortlet.prototype.resetFielForm = function(idElm) {

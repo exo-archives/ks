@@ -1440,20 +1440,21 @@ public class JCRDataStorage{
 						break;
 					}
 					case 2: {
-						if(!post.getIsHidden()){
-							if(postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
-								topicNode.setProperty("exo:lastPostDate", postDate);
-								topicNode.setProperty("exo:lastPostBy", post.getOwner());
-							}
-						}else {
+						if(post.getIsHidden()){
+							postNode.setProperty("exo:isHidden", true) ; 
 							System.out.println("\n" + postNode.getName() + "\n");
-							Node postLastNode = getLastDatePost(forumHomeNode, topicNode);
+							Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
 							if(postLastNode != null) {
 								topicNode.setProperty("exo:lastPostDate", postLastNode.getProperty("exo:createdDate").getDate());
 								topicNode.setProperty("exo:lastPostBy", postLastNode.getProperty("exo:owner").getString());
 							}
+						} else {
+							postNode.setProperty("exo:isHidden", false) ; 
+							if(postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
+								topicNode.setProperty("exo:lastPostDate", postDate);
+								topicNode.setProperty("exo:lastPostBy", post.getOwner());
+							}
 						}
-						postNode.setProperty("exo:isHidden", post.getIsHidden()) ; 
 						isGetLastPost = true;
 						break;
 					}
@@ -1467,7 +1468,7 @@ public class JCRDataStorage{
 		}
 	}
 	
-	private Node getLastDatePost(Node forumHomeNode, Node node) throws Exception {
+	private Node getLastDatePost(Node forumHomeNode, Node node, Node postNode_) throws Exception {
 		String strQuery = "[@exo:isHidden='false'] order by @exo:createdDate descending" ;
 		if(node.hasProperty("exo:isModeratePost")) {
 			if(node.getProperty("exo:isModeratePost").getBoolean()){
@@ -1482,7 +1483,8 @@ public class JCRDataStorage{
 		Node postNode = null ;
 		while (iter.hasNext()) {
 			postNode = iter.nextNode() ;
-			break;
+			if(postNode.getName().equals(postNode_.getName())) continue ;
+			else break;
 		}
 		System.out.println("\n\n" + postNode.getName() + "\n\n");
 		return postNode ;
