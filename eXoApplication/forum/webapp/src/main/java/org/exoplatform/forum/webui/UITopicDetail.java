@@ -1042,14 +1042,9 @@ public class UITopicDetail extends UIForm {
 					}
 				}
 			}
-			if(posts.size() > 0) {
-				for(Post post : posts) {
-					topicDetail.forumService.removePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-				}
-			} else {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", args, ApplicationMessage.WARNING)) ;
+			for(Post post : posts) {
+				topicDetail.forumService.removePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			}
 		}
 	}
