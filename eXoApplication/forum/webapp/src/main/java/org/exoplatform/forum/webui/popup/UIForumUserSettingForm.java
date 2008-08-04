@@ -155,12 +155,12 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		UIFormStringInput userId = new UIFormStringInput(FIELD_USERID_INPUT, FIELD_USERID_INPUT, null);
 		userId.setValue(this.userProfile.getUserId());
 		userId.setEditable(false) ;
-		userId.setEnable(true);
+		userId.setEnable(false);
 		UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
 		userTitle.setValue(this.userProfile.getUserTitle());
 		if(this.userProfile.getUserRole() > 0) {
 			userTitle.setEditable(false) ;
-			userTitle.setEnable(true);
+			userTitle.setEnable(false);
 		}
 		UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
 		signature.setValue(this.userProfile.getSignature());

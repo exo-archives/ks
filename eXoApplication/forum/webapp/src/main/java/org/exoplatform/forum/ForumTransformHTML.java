@@ -432,16 +432,17 @@ public class ForumTransformHTML {
 	
 	public static String recontent(String s) {
 		StringBuffer buffer = new StringBuffer();
+		int k =0;
 		while (true) {
-		int i = s.indexOf("src=") ;
-		if(i < 0) break;
-		int t =  s.indexOf(".jpg");
-		if(t < 0) break;
-		String link = s.substring((i+5), (t+4)) ;
-		String link_ = link.replace("s144/", "");
-		buffer.append("[DIV=float:left; padding: 5px 0px; height: 144px;]").append("[URL=\"").append(link_).append("\"]").append("[ IMG]")
-		.append(link).append("[/ IMG][/URL][/DIV]");
-		s = s.substring(t+10) ;
+			int i = s.indexOf("src=") ;
+			if(i < 0) break;
+			int t =  s.indexOf(".JPG");
+			if(t < 0) t =  s.indexOf(".jpg");
+			if(t < 0) break;
+			String link = s.substring((i+5), (t+4)) ;
+			String link_ = link.replace("s72/", "");
+			buffer.append("<a href=\"").append(link_).append("\">anh ").append(k).append("</a><br/>");
+			s = s.substring(t+10) ;
 		}
 	  return buffer.toString();
   }

@@ -214,14 +214,12 @@ public class ForumUtils {
 		if(!isEmpty(str)) {
 			str = str.replaceAll(" ", "");
 			str = str.replaceAll(";", ",");
-			while (str.indexOf(",,") > 0) {
-	      str = StringUtils.replace(str, ",,", ",");
-      }
+			str = str.replaceAll(",,", ",");
 			if(str.lastIndexOf(",") == str.length() - 1) {
 				str = str.substring(0, str.length() - 1) ;
 			}
-		}
-		return str;
+			return str;
+		} else return "";
 	}
   
 	public static String removeZeroFirstNumber(String str) {
@@ -249,8 +247,8 @@ public class ForumUtils {
         if(i == l)s += string;
         else s += string + ",";
       }
-    }
-		return s;
+      return s;
+    } else return "";
   }
 	
 	public static boolean isEmpty(String str) {
