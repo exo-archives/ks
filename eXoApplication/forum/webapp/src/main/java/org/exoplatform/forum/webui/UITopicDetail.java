@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -143,7 +143,7 @@ public class UITopicDetail extends UIForm {
 	private boolean isGetTopic = false ;
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
-	private List<Post>  posts ;
+	private List<Post>	posts ;
 	private boolean isEdit = false ;
 	private long maxPost = 10 ;
 	private UserProfile userProfile = null;
@@ -152,9 +152,9 @@ public class UITopicDetail extends UIForm {
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, Contact> mapContact = new HashMap<String, Contact>();
 //replace when portal fix bug show image
-  private boolean isRefreshed = true ;
-  public void setRefreshed(boolean b) { isRefreshed = b ; }
-  public boolean isRefreshed() { return isRefreshed ; }
+	private boolean isRefreshed = true ;
+	public void setRefreshed(boolean b) { isRefreshed = b ; }
+	public boolean isRefreshed() { return isRefreshed ; }
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
@@ -168,12 +168,12 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() {
+	private UserProfile getUserProfile() {
 		return userProfile ;
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean isOnline(String userId) throws Exception {
+	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;
 	}
 	
@@ -261,26 +261,26 @@ public class UITopicDetail extends UIForm {
 	public void setUpdateForum(Forum forum) throws Exception {
 		this.forum = forum ;
 	}
-  
-  @SuppressWarnings("unused")
-  private boolean isCanPostReply() throws Exception {
-  	String userName = this.userProfile.getUserId() ;
-    boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
-    if(this.userProfile.getUserRole() > 0 && !isMod) {
-      List<String> listUser = new ArrayList<String>() ;
-      listUser.addAll(ForumServiceUtils.getUserPermission(this.topic.getCanPost())) ;
-      listUser.addAll(ForumServiceUtils.getUserPermission(this.forum.getReplyTopicRole())) ;
-      if(!listUser.isEmpty() && listUser.size() > 0) {
-        if(!listUser.contains(userName)) {
-          return false ;
-        }
-      }
-    }
-    return true ;
-  }
 	
 	@SuppressWarnings("unused")
-  private Forum getForum() throws Exception {
+	private boolean isCanPostReply() throws Exception {
+		String userName = this.userProfile.getUserId() ;
+		boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
+		if(this.userProfile.getUserRole() > 0 && !isMod) {
+			List<String> listUser = new ArrayList<String>() ;
+			listUser.addAll(ForumServiceUtils.getUserPermission(this.topic.getCanPost())) ;
+			listUser.addAll(ForumServiceUtils.getUserPermission(this.forum.getReplyTopicRole())) ;
+			if(!listUser.isEmpty() && listUser.size() > 0) {
+				if(!listUser.contains(userName)) {
+					return false ;
+				}
+			}
+		}
+		return true ;
+	}
+	
+	@SuppressWarnings("unused")
+	private Forum getForum() throws Exception {
 		return this.forum ;
 	}
 	
@@ -296,8 +296,8 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	public void setIdPostView(String IdPostView) {
-	  this.IdPostView = IdPostView ;
-  }
+		this.IdPostView = IdPostView ;
+	}
 	
 	public void setGetTopic(boolean isGetTopic) {
 		this.isGetTopic = isGetTopic ;
@@ -311,7 +311,7 @@ public class UITopicDetail extends UIForm {
 		this.pageList = pageList ;
 		this.isUpdatePageList = false ;
 	}
-  
+	
 	@SuppressWarnings("unused")
 	private Topic getTopic() throws Exception {
 		try {
@@ -325,33 +325,33 @@ public class UITopicDetail extends UIForm {
 			return null ;
 		}
 	}
-  
-  @SuppressWarnings("unused")
-  private boolean userCanView() {
-    try {
-      List<String> listUser = new ArrayList<String>() ;
-      Topic topic = this.getTopic() ;
-      listUser.addAll(ForumServiceUtils.getUserPermission(topic.getCanView())) ;
-      Forum forum = this.getForum() ;
-      listUser.addAll(ForumServiceUtils.getUserPermission(forum.getViewForumRole())) ;
-      if(listUser.isEmpty()|| listUser.size() == 0 || listUser.contains(this.getUserProfile().getUserId())) return true;
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return false ;
-  }
-  
+	
 	@SuppressWarnings("unused")
-  private String getFileSource(ForumAttachment attachment) throws Exception {
-    DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-    try {
-    	InputStream input = attachment.getInputStream() ;
-    	String fileName = attachment.getName() ;
-    	return ForumSessionUtils.getFileSource(input, fileName, dservice);
-    } catch (PathNotFoundException e) {
-	    return null;
-    }
-  }
+	private boolean userCanView() {
+		try {
+			List<String> listUser = new ArrayList<String>() ;
+			Topic topic = this.getTopic() ;
+			listUser.addAll(ForumServiceUtils.getUserPermission(topic.getCanView())) ;
+			Forum forum = this.getForum() ;
+			listUser.addAll(ForumServiceUtils.getUserPermission(forum.getViewForumRole())) ;
+			if(listUser.isEmpty()|| listUser.size() == 0 || listUser.contains(this.getUserProfile().getUserId())) return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false ;
+	}
+	
+	@SuppressWarnings("unused")
+	private String getFileSource(ForumAttachment attachment) throws Exception {
+		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		try {
+			InputStream input = attachment.getInputStream() ;
+			String fileName = attachment.getName() ;
+			return ForumSessionUtils.getFileSource(input, fileName, dservice);
+		} catch (PathNotFoundException e) {
+			return null;
+		}
+	}
 
 		@SuppressWarnings("unused")
 	private Contact getPersonalContact(String userId) throws Exception {
@@ -370,16 +370,16 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private String getAvatarUrl(Contact contact) throws Exception {
+	private String getAvatarUrl(Contact contact) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		try {
 			ContactAttachment attachment = contact.getAttachment() ; 
-    	InputStream input = attachment.getInputStream() ;
-    	String fileName = attachment.getFileName() ;
-    	return ForumSessionUtils.getFileSource(input, fileName, dservice);
-    } catch (NullPointerException e) {
-	    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-    }
+			InputStream input = attachment.getInputStream() ;
+			String fileName = attachment.getFileName() ;
+			return ForumSessionUtils.getFileSource(input, fileName, dservice);
+		} catch (NullPointerException e) {
+			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+		}
 	}
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
@@ -403,7 +403,7 @@ public class UITopicDetail extends UIForm {
 						isApprove = "true";
 				}
 				this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(),
-				    this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
+						this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
 				this.isUpdatePageList = false;
 			}
 			long maxPost = this.userProfile.getMaxPostInPage();
@@ -422,12 +422,12 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean getIsModeratePost(){return this.isModeratePost; }
+	private boolean getIsModeratePost(){return this.isModeratePost; }
 	public void setUpdatePostPageList(boolean isUpdatePageList) {
-	  this.isUpdatePageList = isUpdatePageList;
-  }
+		this.isUpdatePageList = isUpdatePageList;
+	}
 	@SuppressWarnings("unused")
-  private long getPageSelect() {return this.pageSelect ;}
+	private long getPageSelect() {return this.pageSelect ;}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
@@ -444,12 +444,12 @@ public class UITopicDetail extends UIForm {
 		if(this.pageSelect < 1) return null ;
 		try {
 			this.posts = this.pageList.getPage(this.pageSelect) ;
-    } catch (Exception e) {
-    	long availablePage = this.pageList.getAvailablePage() ;
-  		this.pageSelect = availablePage ;
-  		forumPageIterator.setSelectPage(availablePage);
-  		this.posts = this.pageList.getPage(availablePage) ;
-    }
+		} catch (Exception e) {
+			long availablePage = this.pageList.getAvailablePage() ;
+			this.pageSelect = availablePage ;
+			forumPageIterator.setSelectPage(availablePage);
+			this.posts = this.pageList.getPage(availablePage) ;
+		}
 		if(this.posts.size() > 0 && this.posts != null) {
 			for (Post post : this.posts) {
 				if(getUIFormCheckBoxInput(post.getId()) != null) {
@@ -464,8 +464,8 @@ public class UITopicDetail extends UIForm {
 		return this.posts ;
 	}
 	
-  @SuppressWarnings("unchecked")
-  public List<Post> getAllPost() throws Exception {return this.pageList.getPage(0) ;}
+	@SuppressWarnings("unchecked")
+	public List<Post> getAllPost() throws Exception {return this.pageList.getPage(0) ;}
 	
 	private Post getPost(String postId) throws Exception {
 		for(Post post : this.posts) {
@@ -475,11 +475,11 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private void setIsEdit( boolean isEdit) {
+	private void setIsEdit( boolean isEdit) {
 		this.isEdit = isEdit ;
 	}
 	@SuppressWarnings("unused")
-  private void setPostRules(boolean isNull) throws Exception {
+	private void setPostRules(boolean isNull) throws Exception {
 		boolean isLock = isNull ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		if(!isNull) {
@@ -511,18 +511,18 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserInfo(String userName) throws Exception {
+	private UserProfile getUserInfo(String userName) throws Exception {
 		UserProfile userProfile = this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
 		if (userProfile.getUser() == null) {
-    	User user = ForumSessionUtils.getUserByUserId(userName) ; 
+			User user = ForumSessionUtils.getUserByUserId(userName) ; 
 			userProfile.setUser(user) ;
 			mapUserProfile.put(userName, userProfile) ;
-    }
+		}
 		return userProfile ;
 	}
 	
 	static public class AddPostActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -538,7 +538,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class RatingTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String[] userVoteRating = topicDetail.topic.getUserVoteRating() ;
@@ -563,7 +563,7 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	static public class AddTagTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -576,7 +576,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SearchFormActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String path = topicDetail.topic.getPath() ;
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
@@ -609,7 +609,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class GoNumberPageActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			int idbt = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
 			UIFormStringInput stringInput1 = topicDetail.getUIStringInput(ForumUtils.GOPAGE_ID_T) ;
@@ -639,16 +639,16 @@ public class UITopicDetail extends UIForm {
 						topicDetail.getChild(UIForumPageIterator.class).setSelectPage(page) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 					}
-	      } catch (NumberFormatException e) {
-		      Object[] args = { "go page" };
+				} catch (NumberFormatException e) {
+					Object[] args = { "go page" };
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
-	      }
+				}
 			}
 		}
 	}
 
 	static public class EditActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
@@ -665,7 +665,7 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	static public class DeleteActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			topicDetail.forumService.removePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, postId) ;
@@ -675,7 +675,7 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	static public class QuoteActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
@@ -709,7 +709,7 @@ public class UITopicDetail extends UIForm {
 	}
 //--------------------------------	 Topic Menu		-------------------------------------------//
 	static public class EditTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -725,13 +725,13 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	static public class PrintPageActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 //			UITopicDetail topicDetail = event.getSource() ;
 		}
 	}
 
 	static public class AddPollActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
@@ -744,7 +744,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SetOpenTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsClosed()) {
@@ -763,7 +763,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SetCloseTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsClosed()) {
@@ -782,7 +782,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SetLockedTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsLock()) {
@@ -801,7 +801,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SetUnLockTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsLock()) {
@@ -820,7 +820,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SetMoveTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -835,7 +835,7 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	static public class SetStickTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
 			if(!topic.getIsSticky()) {
@@ -854,7 +854,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SetUnStickTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
 			if(topic.getIsSticky()) {
@@ -873,7 +873,7 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SplitTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			List<Post>list = topicDetail.getAllPost() ;
 			if(list.size() > 1) {
@@ -889,39 +889,39 @@ public class UITopicDetail extends UIForm {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.NotSplit", args, ApplicationMessage.WARNING)) ;
 			}
-    }
+		}
 	}
 
 	static public class SetApproveTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-      Topic topic = topicDetail.topic;
-      topic.setIsApproved(true) ;
-      List<Topic>topics = new ArrayList<Topic>();
+			Topic topic = topicDetail.topic;
+			topic.setIsApproved(true) ;
+			List<Topic>topics = new ArrayList<Topic>();
 			topics.add(topic);
 			topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 3) ;
-      topicDetail.viewTopic = false ;
-      topicDetail.isEditTopic = true ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-    }
-  }
-  
+			topicDetail.viewTopic = false ;
+			topicDetail.isEditTopic = true ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+		}
+	}
+	
 	static public class SetUnApproveTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
-      UITopicDetail topicDetail = event.getSource() ;
-      Topic topic = topicDetail.topic;
-      topic.setIsApproved(false) ;
-      List<Topic>topics = new ArrayList<Topic>();
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			Topic topic = topicDetail.topic;
+			topic.setIsApproved(false) ;
+			List<Topic>topics = new ArrayList<Topic>();
 			topics.add(topic);
 			topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 3) ;
-      topicDetail.viewTopic = false ;
-      topicDetail.isEditTopic = true ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			topicDetail.viewTopic = false ;
+			topicDetail.isEditTopic = true ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
 
 	static public class SetDeleteTopicActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
 			topicDetail.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic.getId()) ;
@@ -938,12 +938,12 @@ public class UITopicDetail extends UIForm {
 
 	//---------------------------------	Post Menu	 --------------------------------------//
 	static public class MergePostActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 		}
 	}
 
 	static public class MovePostActionListener extends EventListener<UITopicDetail> {
-    @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
@@ -970,67 +970,61 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class SetApprovePostActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
-      UITopicDetail topicDetail = event.getSource() ;
-      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-      UIPageListPostUnApprove postUnApprove = popupContainer.addChild(UIPageListPostUnApprove.class, null, null) ;
-      postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-      popupContainer.setId("PageListPostUnApprove") ;
-      popupAction.activate(popupContainer, 500, 360) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIPageListPostUnApprove postUnApprove = popupContainer.addChild(UIPageListPostUnApprove.class, null, null) ;
+			postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
+			popupContainer.setId("PageListPostUnApprove") ;
+			popupAction.activate(popupContainer, 500, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
 	static public class SetHiddenPostActionListener extends EventListener<UITopicDetail> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicDetail> event) throws Exception {
-      UITopicDetail topicDetail = event.getSource() ;
-      boolean haveCheck = false ;
-      Post post = new Post() ;
-      List<Post> posts = new ArrayList<Post>();
-      List<UIComponent> children = topicDetail.getChildren() ;
-      for(UIComponent child : children) {
-        if(child instanceof UIFormCheckBoxInput) {
-          if(((UIFormCheckBoxInput)child).isChecked()) {
-            haveCheck = true ;
-            post = topicDetail.getPost(((UIFormCheckBoxInput)child).getName());
-            post.setIsHidden(true) ;
-            posts.add(post) ;
-          }
-        }
-      }
-      if(haveCheck) {
-      	topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-      } else {
-        throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", new String[]{}, ApplicationMessage.WARNING)) ;
-      }
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			Post post = new Post() ;
+			List<Post> posts = new ArrayList<Post>();
+			List<UIComponent> children = topicDetail.getChildren() ;
+			for(UIComponent child : children) {
+				if(child instanceof UIFormCheckBoxInput) {
+					if(((UIFormCheckBoxInput)child).isChecked()) {
+						post = topicDetail.getPost(((UIFormCheckBoxInput)child).getName());
+						post.setIsHidden(true) ;
+						posts.add(post) ;
+					}
+				}
+			}
+			topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
 
 	static public class SetUnHiddenPostActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
-    	UITopicDetail topicDetail = event.getSource() ;
-      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-      UIPageListPostHidden listPostHidden = popupContainer.addChild(UIPageListPostHidden.class, null, null) ;
-      listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-      popupContainer.setId("PageListPostHidden") ;
-      popupAction.activate(popupContainer, 500, 360) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIPageListPostHidden listPostHidden = popupContainer.addChild(UIPageListPostHidden.class, null, null) ;
+			listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
+			popupContainer.setId("PageListPostHidden") ;
+			popupAction.activate(popupContainer, 500, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
 	static public class SetUnApproveAttachmentActionListener extends EventListener<UITopicDetail> {
-    public void execute(Event<UITopicDetail> event) throws Exception {
+		public void execute(Event<UITopicDetail> event) throws Exception {
 		}
 	}
-  
+	
 	static public class DeletePostActionListener extends EventListener<UITopicDetail> {
-    @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			List<UIComponent> children = topicDetail.getChildren() ;
@@ -1055,47 +1049,47 @@ public class UITopicDetail extends UIForm {
 	}
 
 	static public class ViewPublicUserInfoActionListener extends EventListener<UITopicDetail> {
-	  public void execute(Event<UITopicDetail> event) throws Exception {
-	    UITopicDetail topicDetail = event.getSource() ;
-      String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIViewUserProfile viewUserProfile = popupAction.createUIComponent(UIViewUserProfile.class, null, null) ;
-      UserProfile userProfile ;
-      if(topicDetail.mapUserProfile.containsKey(userId)){
-      	userProfile = topicDetail.mapUserProfile.get(userId) ;
-  		} else {
-      	userProfile = topicDetail.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userId) ;
-      	User user = ForumSessionUtils.getUserByUserId(userId) ; 
-      	userProfile.setUser(user) ;
-  		}
-      viewUserProfile.setUserProfile(userProfile) ;
-      viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
-      Contact contact = null ;
-      if(topicDetail.mapContact.containsKey(userId)) {
-      	contact = topicDetail.mapContact.get(userId) ;
-      }
-      viewUserProfile.setContact(contact) ;
-      popupAction.activate(viewUserProfile, 670, 400, true) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	  }
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIViewUserProfile viewUserProfile = popupAction.createUIComponent(UIViewUserProfile.class, null, null) ;
+			UserProfile userProfile ;
+			if(topicDetail.mapUserProfile.containsKey(userId)){
+				userProfile = topicDetail.mapUserProfile.get(userId) ;
+			} else {
+				userProfile = topicDetail.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userId) ;
+				User user = ForumSessionUtils.getUserByUserId(userId) ; 
+				userProfile.setUser(user) ;
+			}
+			viewUserProfile.setUserProfile(userProfile) ;
+			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
+			Contact contact = null ;
+			if(topicDetail.mapContact.containsKey(userId)) {
+				contact = topicDetail.mapContact.get(userId) ;
+			}
+			viewUserProfile.setContact(contact) ;
+			popupAction.activate(viewUserProfile, 670, 400, true) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
 	}
 	
 	static public class PrivateMessageActionListener extends EventListener<UITopicDetail> {
-	  public void execute(Event<UITopicDetail> event) throws Exception {
-      UITopicDetail topicDetail = event.getSource() ;
-      String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-      UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;
-      messageForm.setFullMessage(false);
-      messageForm.setUserProfile(topicDetail.userProfile);
-      messageForm.setSendtoField(userId) ;
-      popupContainer.setId("PrivateMessageForm") ;
-      popupAction.activate(popupContainer, 650, 480) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	  }
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;
+			messageForm.setFullMessage(false);
+			messageForm.setUserProfile(topicDetail.userProfile);
+			messageForm.setSendtoField(userId) ;
+			popupContainer.setId("PrivateMessageForm") ;
+			popupAction.activate(popupContainer, 650, 480) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
 	}
 	
 	static public class ViewPostedByUserActionListener extends EventListener<UITopicDetail> {
@@ -1113,21 +1107,21 @@ public class UITopicDetail extends UIForm {
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-  
+	
 	static public class ViewThreadByUserActionListener extends EventListener<UITopicDetail> {
-	  public void execute(Event<UITopicDetail> event) throws Exception {
-	    UITopicDetail topicDetail = event.getSource() ;
-	    String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-	    UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-	    UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-	    UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-	    @SuppressWarnings("unused")
-	    UIViewTopicCreatedByUser topicCreatedByUser = popupContainer.addChild(UIViewTopicCreatedByUser.class, null, null) ;
-      topicCreatedByUser.setUserId(userId) ;
-	    popupContainer.setId("ViewTopicCreatedByUser") ;
-	    popupAction.activate(popupContainer, 760, 350) ;
-	    event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	  }
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			@SuppressWarnings("unused")
+			UIViewTopicCreatedByUser topicCreatedByUser = popupContainer.addChild(UIViewTopicCreatedByUser.class, null, null) ;
+			topicCreatedByUser.setUserId(userId) ;
+			popupContainer.setId("ViewTopicCreatedByUser") ;
+			popupAction.activate(popupContainer, 760, 350) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
 	}
 	
 	static public class QuickReplyActionListener extends EventListener<UITopicDetail> {
@@ -1145,8 +1139,8 @@ public class UITopicDetail extends UIForm {
 					String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
 					checksms = checksms.toLowerCase().trim();
 					for (String string : censoredKeyword) {
-			      if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
-		      }
+						if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
+					}
 				}
 				StringBuffer buffer = new StringBuffer();
 				for (int j = 0; j < message.length(); j++) {
@@ -1164,7 +1158,7 @@ public class UITopicDetail extends UIForm {
 					} else {
 						buffer.append(c) ;
 					}
-	      }
+				}
 				String userName = topicDetail.userProfile.getUserId() ;
 				PortletRequestImp request = event.getRequestContext().getRequest();
 				String remoteAddr = request.getRemoteAddr();
@@ -1179,13 +1173,13 @@ public class UITopicDetail extends UIForm {
 				post.setIsHidden(isOffend) ;
 				try {
 					topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
-        } catch (PathNotFoundException e) {
-        	String[] args = new String[] { } ;
-  				throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
-        }
-        topicDetail.setUpdatePostPageList(true);
-        textAreaInput.setValue("") ;
-        boolean hasTopicMod = false ;
+				} catch (PathNotFoundException e) {
+					String[] args = new String[] { } ;
+					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+				}
+				topicDetail.setUpdatePostPageList(true);
+				textAreaInput.setValue("") ;
+				boolean hasTopicMod = false ;
 				if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
 				if(isOffend || hasTopicMod) {
 					Object[] args = { "" };
@@ -1229,7 +1223,7 @@ public class UITopicDetail extends UIForm {
 					} else {
 						buffer.append(c) ;
 					}
-	      } 
+				} 
 				String userName = topicDetail.userProfile.getUserId() ;
 				Topic topic = topicDetail.topic ;
 				Post post = new Post() ;
@@ -1252,5 +1246,4 @@ public class UITopicDetail extends UIForm {
 			}
 		}
 	}
-  
 }

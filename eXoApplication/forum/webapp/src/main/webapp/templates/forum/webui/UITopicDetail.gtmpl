@@ -239,18 +239,30 @@
 																}
 																if(posts.size() <= 1)isView = false ;
 																if(isView) {
+																	if(action.equals("DeletePost")){
+																%>
+																		<a class="MenuItem" href="javaScript:if(eXo.forum.UIForumPortlet.OneChecked('UITopicDetail')){$link;} else {alert('<%=_ctx.appRes("UITopicDetail.msg.notCheck")%>');};">
+																			<div class="ItemIcon $classIcon">
+																				$itemLabel
+																			</div>
+																		</a>
+																<%
+																	} else {
 																%>
 																	<a class="MenuItem" href="$link">
-																<%
-																} else {
-																%>
-																	<a class="DisableMenuItem" href="javaScript: void(0)">
-																<%}%>
 																		<div class="ItemIcon $classIcon">
 																			$itemLabel
 																		</div>
 																	</a>
-																<%
+																<%}
+																} else {
+																%>
+																	<a class="DisableMenuItem" href="javaScript: void(0)">
+																		<div class="ItemIcon $classIcon">
+																			$itemLabel
+																		</div>
+																	</a>
+																<%}
 															}
 															%>
 
