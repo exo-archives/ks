@@ -44,6 +44,20 @@ UIForumPortlet.prototype.selectItem = function(obj) {
 	}
 } ;
 
+
+UIForumPortlet.prototype.OneChecked = function(formName) {
+	var form = document.forms[formName];
+	if(form) {
+		var checkboxs = form.elements;
+		for(var i = 0; i < checkboxs.length; i ++){
+			if(checkboxs[i].checked){
+				return true;
+			}
+		}
+	}
+	return false;
+} ;
+
 UIForumPortlet.prototype.checkAll = function(obj) {
 		var DOMUtil = eXo.core.DOMUtil ;
 		var thead = DOMUtil.findAncestorByTagName(obj, "thead") ;
