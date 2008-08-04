@@ -1,6 +1,6 @@
 <div class="UIShowBookMarkForm">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout">
+		<div class="HorizontalLayout" style="_width: 88%;">
 			<table class="UIGrid">
 				<thead>
 					<th style="width: 35px;"></th>
