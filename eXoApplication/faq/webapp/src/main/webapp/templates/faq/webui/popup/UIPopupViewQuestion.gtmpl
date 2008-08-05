@@ -10,123 +10,127 @@
 	<div><% uiform.begin() %></div>
 	<%uicomponent.renderChildren() ;%>
 	<div class= "ViewQuestion" >
-			<% 
- 						Question question = uicomponent.getViewQuestion() ; 
-						String qId = question.getId();
-						String content = question.getQuestion() ;
-						String responseBy = "..." ;
-						String date = "..." ;
-						String response = "<center><b>" + _ctx.appRes("UIPopupViewQuestion.title.not-answer")+ "</center></b>" ;
-						
-						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
-							responseBy = question.getResponseBy() ;
-							Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
-						 	date = formatter.format(question.getDateResponse());
-							response = question.getResponses();
-						}
-					%>
-			<div class="ResponseContent">
-				<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b></div>
-				<div class="Response" style="width: 97%;">$content</div>
-				<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
-				<div class="Response" style="width: 97%;">$response</div>
-				<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
-				<div class="AttachmentContent">
-				<%
-						if(!question.getAttachMent().isEmpty()) {
-				%>
-					<div style="margin-top: 5px; margin-bottom: 5px;">
-						<%
-							for(FileAttachment fileAttachment : question.getAttachMent()){
-						    String fileName = fileAttachment.getName() ;
-						    long fileSize = fileAttachment.getSize() ;
-						    if(fileSize > 0){
-						    	String size = uicomponent.convertSize(fileSize);
-							    String dataPath = "" ;
-							    String fileStream = "" ;
-							    try{
-							      dataPath = fileAttachment.getDataPath() ;
-							      fileStream = fileAttachment.getInputStream() ;
-							    } catch(Exception e) {
-							    	dataPath = "null" ;
-							      fileStream = "null" ;
-							    }
-							    String fileType = fileAttachment.getMimeType() ;
-							    String fileWorkSpace = fileAttachment.getWorkspace() ;
-							    ValidatorDataInput validate = new ValidatorDataInput() ;
-						    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
-						    	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
-							    if(validate.isImage(fileName)) {
-						    %>
-						    	<div  style="float: left; margin-left: 5px;" id="divId${fileName}">
-							    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile"></div>
-				 						<div style="clear: left;"><span></span></div>
-				 						<div class="LabelBox">
-					 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-					 						<div class="Size AttachmentLabel">$fileName ( $size )</div>
-					 						<div style="clear: left;"><span></span></div>
-					 						<div class="Action" style="padding-top: 0px;">
-					 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); "><%= _ctx.appRes("UIPopupViewQuestion.label.view"); %></div>
-					 							<div class="Icon Download"><a href="$linkImage"><%= _ctx.appRes("UIPopupViewQuestion.label.download"); %></a></div>
-					 						</div>
-					 					</div>
-				 					</div>
-					    <%} else {
-					    %>
-					    		<div class="LabelBox">
-										<div class="AttachmentIcon FileAttachmentIcon" style="width: auto; height: auto;">
-											<a class="AttachmentLabel" href="$linkImage">$fileName</a>
-										</div>
-										<div style="clear: left;"><span></span></div>
-										<div class="Size"><%= _ctx.appRes("UIPopupViewQuestion.label.size"); %> $size</div>
-									</div>
-					    <%}
-					    } else {
-					    	%>
-					    		<div class="LabelBox" style="margin: 10px 10px 0px 5px;">
-						    		<div class="FalseIcon" style="padding-left: 15px;">
-						    			<a style="color: red;" href="javaScript: void(0)">
-						    				<%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%>
-						    			</a>
-						    		</div>
-						    		<div style="clear: left;"><span></span></div>
-					    		</div>
-					    	<%
-					    	}
-					  	} %>
-					  	</div>
-				  	<%} else {%>
-				  	&nbsp;
-			  	<%}%>
-			  	<div style="clear: left;"><span></span></div>
-				</div>
-				<div class="RelatedQuestionsView"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br>
-					<%String questionRelationById = "" ;
-						String cateRelaId = "" ;
-						String quesRelaId = "" ;
-						String quesRelaCont = "" ;
-						String linkRelaQues = "" ;
-						for(String relationId : question.getRelations()) { 
-							quesRelaCont = "" ;
-							questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
-							if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
-								cateRelaId = questionRelationById.split("/")[0] ;
-								quesRelaId = questionRelationById.split("/")[1] ;
-								quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
-							}
-							if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
-								if (quesRelaCont.length() > 50) {
-									quesRelaCont = quesRelaCont.substring(0, 49)+ "..." ;
+		<table class="UIFormGridTableForm">
+			<tbody>	
+				<% 
+		 						Question question = uicomponent.getViewQuestion() ; 
+								String qId = question.getId();
+								String content = question.getQuestion() ;
+								String responseBy = "..." ;
+								String date = "..." ;
+								String response = "<center><b>" + _ctx.appRes("UIPopupViewQuestion.title.not-answer")+ "</center></b>" ;
+								
+								if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+									responseBy = question.getResponseBy() ;
+									Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
+								 	date = formatter.format(question.getDateResponse());
+									response = question.getResponses();
 								}
+							%>
+				<div class="ResponseContent">
+					<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b></div>
+					<div class="Response" style="width: 97%;">$content</div>
+					<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
+					<div class="Response" style="width: 97%;">$response</div>
+					<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
+					<div class="AttachmentContent">
+					<%
+							if(!question.getAttachMent().isEmpty()) {
 					%>
-								&nbsp; - <a > $quesRelaCont<br></a>
-					<% 	}
-						}%>
-				</div>
-				<div class=" ResponsActions">
-						<div ><b><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %></b> $responseBy , $date</div>
-				 </div>
-			</div>
+						<div style="margin-top: 5px; margin-bottom: 5px;">
+							<%
+								for(FileAttachment fileAttachment : question.getAttachMent()){
+							    String fileName = fileAttachment.getName() ;
+							    long fileSize = fileAttachment.getSize() ;
+							    if(fileSize > 0){
+							    	String size = uicomponent.convertSize(fileSize);
+								    String dataPath = "" ;
+								    String fileStream = "" ;
+								    try{
+								      dataPath = fileAttachment.getDataPath() ;
+								      fileStream = fileAttachment.getInputStream() ;
+								    } catch(Exception e) {
+								    	dataPath = "null" ;
+								      fileStream = "null" ;
+								    }
+								    String fileType = fileAttachment.getMimeType() ;
+								    String fileWorkSpace = fileAttachment.getWorkspace() ;
+								    ValidatorDataInput validate = new ValidatorDataInput() ;
+							    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
+							    	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
+								    if(validate.isImage(fileName)) {
+							    %>
+							    	<div  style="float: left; margin-left: 5px;" id="divId${fileName}">
+								    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile"></div>
+					 						<div style="clear: left;"><span></span></div>
+					 						<div class="LabelBox">
+						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
+						 						<div class="Size AttachmentLabel">$fileName ( $size )</div>
+						 						<div style="clear: left;"><span></span></div>
+						 						<div class="Action" style="padding-top: 0px;">
+						 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); "><%= _ctx.appRes("UIPopupViewQuestion.label.view"); %></div>
+						 							<div class="Icon Download"><a href="$linkImage"><%= _ctx.appRes("UIPopupViewQuestion.label.download"); %></a></div>
+						 						</div>
+						 					</div>
+					 					</div>
+						    <%} else {
+						    %>
+						    		<div class="LabelBox">
+											<div class="AttachmentIcon FileAttachmentIcon" style="width: auto; height: auto;">
+												<a class="AttachmentLabel" href="$linkImage">$fileName</a>
+											</div>
+											<div style="clear: left;"><span></span></div>
+											<div class="Size"><%= _ctx.appRes("UIPopupViewQuestion.label.size"); %> $size</div>
+										</div>
+						    <%}
+						    } else {
+						    	%>
+						    		<div class="LabelBox" style="margin: 10px 10px 0px 5px;">
+							    		<div class="FalseIcon" style="padding-left: 15px;">
+							    			<a style="color: red;" href="javaScript: void(0)">
+							    				<%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%>
+							    			</a>
+							    		</div>
+							    		<div style="clear: left;"><span></span></div>
+						    		</div>
+						    	<%
+						    	}
+						  	} %>
+						  	</div>
+					  	<%} else {%>
+					  	&nbsp;
+				  	<%}%>
+				  	<div style="clear: left;"><span></span></div>
+					</div>
+					<div class="RelatedQuestionsView"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br>
+						<%String questionRelationById = "" ;
+							String cateRelaId = "" ;
+							String quesRelaId = "" ;
+							String quesRelaCont = "" ;
+							String linkRelaQues = "" ;
+							for(String relationId : question.getRelations()) { 
+								quesRelaCont = "" ;
+								questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
+								if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
+									cateRelaId = questionRelationById.split("/")[0] ;
+									quesRelaId = questionRelationById.split("/")[1] ;
+									quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
+								}
+								if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
+									if (quesRelaCont.length() > 50) {
+										quesRelaCont = quesRelaCont.substring(0, 49)+ "..." ;
+									}
+						%>
+									&nbsp; - <a > $quesRelaCont<br></a>
+						<% 	}
+							}%>
+					</div>
+					<div class=" ResponsActions">
+							<div ><b><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %></b> $responseBy , $date</div>
+					 </div>
+					</div>
+				</tbody>
+			</table>
 		</div>
 		<div class="UIAction">
     	<table class="ActionContainer" align="center">
