@@ -217,6 +217,7 @@ public class MultiLanguages {
    * @param language the  language which is added in to questionNode
    * @throws Exception    throw an exception when save a new language node
    */
+  @SuppressWarnings("static-access")
   public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception{
   	if(!questionNode.isNodeType("mix:faqi18n")) {
   		questionNode.addMixin("mix:faqi18n") ;
@@ -234,8 +235,13 @@ public class MultiLanguages {
     	langNode = languagesNode.addNode(language.getLanguage(), NTUNSTRUCTURED) ;
     }
     
+    GregorianCalendar cal = new GregorianCalendar() ;
+    if(language.getDateResponse() != null)	cal.setTime(language.getDateResponse()) ;
+    
     langNode.setProperty("exo:name", language.getQuestion()) ;
-    langNode.setProperty("exo:responses", language.getResponse()) ;   
+    langNode.setProperty("exo:responses", language.getResponse()) ;
+    langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
+    langNode.setProperty("exo:dateResponse", cal.getInstance()) ;
     questionNode.save() ;
   }
   

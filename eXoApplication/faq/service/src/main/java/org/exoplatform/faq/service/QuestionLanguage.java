@@ -16,6 +16,8 @@
  **/
 package org.exoplatform.faq.service;
 
+import java.util.Date;
+
 /**
  * A question may be have multiple languages, user can write his question in
  * one language or all languages are supported by portal (if he can). But only
@@ -38,12 +40,36 @@ public class QuestionLanguage {
   /** The response. */
   private String response ;
   
+  /** The answerer */
+  private String responseBy;
+  
+  /** The date response. */
+  private Date dateResponse ;
+  
   /**
    * class constructor.
    */
   public QuestionLanguage() { }
   
   /**
+   * Get the name of person who answered for question in this language
+   * 
+   * @return	the name of answerer
+   */
+  public String getResponseBy() {
+  	return responseBy;
+  }
+  
+  /**
+   * Registers the name of person who answer question in this language.
+   * 
+   * @param author	the name of person who answer question
+   */
+	public void setResponseBy(String responseBy) {
+  	this.responseBy = responseBy;
+  }
+
+	/**
    * Get name of language is used to write quetsion.
    * 
    * @return  language name of language
@@ -83,6 +109,22 @@ public class QuestionLanguage {
    * 
    * @param res the respnose of question
    */
-  public void setResponse(String res) { this.response = res ; }	
+  public void setResponse(String res) { this.response = res ; }
+
+  /**
+   * Get the date when question whith this language is answered
+   * @return	date when question is responsed
+   */
+	public Date getDateResponse() {
+  	return dateResponse;
+  }
+
+	/**
+	 * Registers date when response question
+	 * @param dateResponse	the date when question is responsed
+	 */
+	public void setDateResponse(Date dateResponse) {
+  	this.dateResponse = dateResponse;
+  }	
   
 }

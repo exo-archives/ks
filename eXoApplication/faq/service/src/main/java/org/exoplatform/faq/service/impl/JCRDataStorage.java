@@ -313,6 +313,8 @@ public class JCRDataStorage {
         questionLanguage.setLanguage(node.getName()) ;
         if(node.hasProperty("exo:name")) questionLanguage.setQuestion(node.getProperty("exo:name").getValue().getString());
         if(node.hasProperty("exo:responses")) questionLanguage.setResponse(node.getProperty("exo:responses").getValue().getString());
+        if(node.hasProperty("exo:responseBy")) questionLanguage.setResponseBy(node.getProperty("exo:responseBy").getValue().getString());
+        if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(node.getProperty("exo:dateResponse").getDate().getTime());
         
         listQuestionLanguage.add(questionLanguage) ;
       }

@@ -64,7 +64,8 @@ public class QuestionPageList extends JCRPageList {
   private List<Question> listQuestions = null;
   
   /**
-   * Sets the not yet answered.
+   * Sets the not yet answered. Set parameter is <code>true</code> if want get questions are not
+   * yet answered opposite set is <code>false</code> or don't do (default value is <code>false</code>)
    * 
    * @param isNotYetAnswered  the new not yet answered, is <code>true</code> if want get 
    *                          questoins not yet answered and is <code>false</code> if opposite

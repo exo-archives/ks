@@ -113,6 +113,8 @@ public class UIQuestions extends UIContainer {
   private static String language_ = "" ;
   private List<String> emailList_ = new ArrayList<String>() ;
   
+  private String[] sizes = new String[]{"bytes", "KB", "MB"};
+  
 	public UIQuestions()throws Exception {
     backPath_ = null ;
 	  this.categoryId_ = new String() ;
@@ -298,7 +300,7 @@ public class UIQuestions extends UIContainer {
   }
   
   private String convertSize(long size){
-    String result = "bytes";
+    String result = "";
     long  residual = 0;
     int i = 0;
     while(size >= 1000){
@@ -306,19 +308,11 @@ public class UIQuestions extends UIContainer {
       residual = size % 1024;
       size /= 1024;
     }
-    switch (i) {
-      case 1:
-        result = "KB";
-        break;
-      case 2:
-        result = "MB";
-        break;
-    }
     if(residual > 1000){
       String str = residual + "";
-      result = size + "." + str.substring(0, 3) + " " + result;
+      result = size + "." + str.substring(0, 3) + " " + sizes[i];
     }else{
-      result = size + "." + residual + " " + result;
+      result = size + "." + residual + " " + sizes[i];
     }
     return result;
   }
@@ -347,6 +341,8 @@ public class UIQuestions extends UIContainer {
         quesLanguage.setLanguage(question.getLanguage()) ;
         quesLanguage.setQuestion(question.getQuestion()) ;
         quesLanguage.setResponse(question.getResponses()) ;
+        quesLanguage.setResponseBy(question.getResponseBy());
+        quesLanguage.setDateResponse(question.getDateResponse());
         listQuestionLanguage.add(quesLanguage) ;
         
         listQuestionLanguage.addAll(faqService.getQuestionLanguages(question.getId(), FAQUtils.getSystemProvider())) ;
@@ -608,7 +604,7 @@ public class UIQuestions extends UIContainer {
       questionForm.setCategoryId(categoryId) ;
       questionForm.refresh() ;
       popupContainer.setId("AddQuestion") ;
-      popupAction.activate(popupContainer, 600, 420) ;
+      popupAction.activate(popupContainer, 600, 450) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
@@ -993,6 +989,7 @@ public class UIQuestions extends UIContainer {
               uiQuestions.listQuestion_.get(i).setQuestion(uiQuestions.listQuestionLanguage.get(0).getQuestion()) ;
               uiQuestions.listQuestion_.get(i).setLanguage(uiQuestions.listQuestionLanguage.get(0).getLanguage()) ;
               uiQuestions.listQuestion_.get(i).setResponses(uiQuestions.listQuestionLanguage.get(0).getResponse()) ;
+              uiQuestions.listQuestion_.get(i).setDateResponse(uiQuestions.listQuestionLanguage.get(0).getDateResponse());
               break ;
             }
           }
@@ -1114,7 +1111,7 @@ public class UIQuestions extends UIContainer {
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
       questionForm.setQuestionId(question) ;
       popupContainer.setId("EditQuestion") ;
-      popupAction.activate(popupContainer, 600, 420) ;
+      popupAction.activate(popupContainer, 600, 450) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
@@ -1211,9 +1208,11 @@ public class UIQuestions extends UIContainer {
       language_ = stringInput[1] ;
       for(QuestionLanguage questionLanguage : uiQuestions.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(language_)) {
-          uiQuestions.listQuestion_.get(pos).setQuestion(questionLanguage.getQuestion()) ;
-          uiQuestions.listQuestion_.get(pos).setLanguage(questionLanguage.getLanguage()) ;
-          uiQuestions.listQuestion_.get(pos).setResponses(questionLanguage.getResponse()) ;
+          uiQuestions.listQuestion_.get(pos).setQuestion(questionLanguage.getQuestion());
+          uiQuestions.listQuestion_.get(pos).setLanguage(questionLanguage.getLanguage());
+          uiQuestions.listQuestion_.get(pos).setResponses(questionLanguage.getResponse());
+          uiQuestions.listQuestion_.get(pos).setResponseBy(questionLanguage.getResponseBy());
+          uiQuestions.listQuestion_.get(pos).setDateResponse(questionLanguage.getDateResponse());
           break ;
         }
       }
