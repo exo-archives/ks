@@ -476,11 +476,11 @@
 
 .UIFAQPortlet .UIPopupViewQuestion {
 	padding: 8px;
+	background-color: #EFEFEF;
 }
 
 .UIFAQPortlet .UIPopupViewQuestion .ViewQuestion {
 	padding-left: 20px;
-	background-color: #EFEFEF;
 }
 
 .UIFAQPortlet .ResultSearchCategory {
