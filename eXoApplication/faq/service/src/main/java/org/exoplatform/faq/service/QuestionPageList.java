@@ -18,12 +18,16 @@ package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -57,6 +61,8 @@ public class QuestionPageList extends JCRPageList {
   /** The is not yet answered. */
   private boolean isNotYetAnswered = false;
   
+  private List<Question> listQuestions = null;
+  
   /**
    * Sets the not yet answered.
    * 
@@ -65,6 +71,50 @@ public class QuestionPageList extends JCRPageList {
    */
   public void setNotYetAnswered(boolean isNotYetAnswered) {
     this.isNotYetAnswered = isNotYetAnswered;
+    setTotalQuestion();
+  }
+  
+  /**
+   * get total questions are not yet ansewered. The first, get all questions in faq system
+   * then each questions check if property <code>response</code> in default language 
+   * is <code>null</code> then put this question into the <code>List</code> 
+   * else get all children nodes of this question (if it have) and check if one of them is 
+   * not yet ansewred then put this question into the <code>List</code>
+   * 
+   */
+  private void setTotalQuestion(){
+  	listQuestions = new ArrayList<Question>();
+  	String response = "";
+  	NodeIterator nodeIterator = iter_;
+  	NodeIterator languageIter = null;
+  	Node questionNode = null;
+  	Node languageNode = null;
+  	Node language;
+  	while(nodeIterator.hasNext()){
+  		questionNode = nodeIterator.nextNode();
+  		try {
+        response = questionNode.getProperty("exo:responses").getValue().getString();
+        if(response == null || response.trim().length() < 1){
+        	listQuestions.add(getQuestion(questionNode));
+        } else {
+        	if(questionNode.hasNode("languages")){
+        		languageNode = questionNode.getNode("languages");
+        		languageIter = languageNode.getNodes();
+        		while(languageIter.hasNext()){
+        			language = languageIter.nextNode();
+        			response = language.getProperty("exo:responses").getValue().getString();
+        			if(response == null || response.trim().length() < 1) {
+        				listQuestions.add(getQuestion(questionNode));
+        				break;
+        			}
+        		}
+        	}
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+  	}
+  	setAvailablePage(listQuestions.size()) ;
   }
 
   /**
@@ -111,16 +161,21 @@ public class QuestionPageList extends JCRPageList {
         Node node = (Node)session.getItem(value_) ;
         iter_ = node.getNodes() ;
       }
+      if(isNotYetAnswered)	setTotalQuestion();
       session.logout() ;
     }
-    setAvailablePage(iter_.getSize()) ;
+    if(isNotYetAnswered){
+    	setAvailablePage(listQuestions.size()) ;
+    } else {
+    	setAvailablePage(iter_.getSize()) ;
+    }
     Node currentNode ;
     long pageSize = getPageSize() ;
     long position = 0 ;
     if(page == 1) position = 0;
     else {
       position = (page-1) * pageSize ;
-      iter_.skip(position) ;
+      if(!isNotYetAnswered)	iter_.skip(position) ;
     }
     currentListPage_ = new ArrayList<Question>() ;
     if(!isNotYetAnswered) {
@@ -134,13 +189,11 @@ public class QuestionPageList extends JCRPageList {
         }
       }
     } else {
-      Question question = new Question();
-      for(int i = 0; i < pageSize; i ++) {
+      pageSize += position;
+      for(int i = (int)position; i < pageSize; i ++) {
         // add != null to fix bug 514
-        if(iter_ != null && iter_.hasNext()){
-          currentNode = iter_.nextNode() ;
-          question = getQuestionNotYetAnswered(currentNode);
-          if(question != null) currentListPage_.add(question);
+        if(i < listQuestions.size()){
+          currentListPage_.add(listQuestions.get(i));
         }else {
           break ;
         }
@@ -178,75 +231,6 @@ public class QuestionPageList extends JCRPageList {
     NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
     Node node ;
-    while(nodeIterator.hasNext()){
-      node = nodeIterator.nextNode() ;
-      if(node.isNodeType("nt:file")) {
-        FileAttachment attachment = new FileAttachment() ;
-        nodeFile = node.getNode("jcr:content") ;
-        attachment.setPath(node.getPath()) ;
-        attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-        attachment.setName(node.getName());
-        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
-        try{
-          if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-          else attachment.setSize(0);
-        } catch (Exception e) {
-          attachment.setSize(0);
-          e.printStackTrace();
-        }
-        attList.add(attachment);
-      }
-    }
-    question.setAttachMent(attList) ;
-    return question ;
-  }
-  
-  /**
-   * Gets the question not yet answered. If question's response is null
-   * then return this question, else if question have multi languages and
-   * one of them don't have response then resturn this question else return null
-   * 
-   * @param questionNode the question node
-   * 
-   * @return the question not yet answered
-   * 
-   * @throws Exception the exception
-   */
-  private Question getQuestionNotYetAnswered(Node questionNode) throws Exception{
-    String response = "";
-    String languages = "languages";
-    Question question = new Question() ;
-    question.setId(questionNode.getName()) ;
-    NodeIterator nodeIterator = null;
-    Node node = null;
-    if(questionNode.hasProperty("exo:responses")) response = questionNode.getProperty("exo:responses").getString() ;
-    if(response != null && response.trim().length() > 0) {
-      if(questionNode.hasNode(languages)){
-        Node languageNode = questionNode.getNode(languages);
-        nodeIterator = languageNode.getNodes();
-        while(nodeIterator.hasNext()){
-          node = nodeIterator.nextNode();
-          if(node.hasProperty("exo:responses")) response = node.getProperty("exo:responses").getValue().getString();
-          if(response != null && response.trim().length() > 0) return null;
-        }
-      }
-    }
-    
-    if(questionNode.hasProperty("exo:language")) question.setLanguage(questionNode.getProperty("exo:language").getString()) ;
-    if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
-    if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
-    if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
-    if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
-    if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
-    if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
-    if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
-    if(questionNode.hasProperty("exo:responses")) question.setResponses(questionNode.getProperty("exo:responses").getString()) ;
-    if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;
-    if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(questionNode.getProperty("exo:responseBy").getString()) ;   
-    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ; 
-    List<FileAttachment> attList = new ArrayList<FileAttachment>() ;
-    nodeIterator = questionNode.getNodes() ;
-    Node nodeFile ;
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
