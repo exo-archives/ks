@@ -70,6 +70,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
       @EventConfig(listeners = UIResponseForm.AttachmentActionListener.class),
       @EventConfig(listeners = UIResponseForm.RemoveAttachmentActionListener.class),
       @EventConfig(listeners = UIResponseForm.RemoveRelationActionListener.class),
+      @EventConfig(listeners = UIResponseForm.ViewEditQuestionActionListener.class),
       @EventConfig(listeners = UIResponseForm.ChangeQuestionActionListener.class)
     }
 )
@@ -85,6 +86,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private static final String IS_APPROVED = "IsApproved" ;
   private static Question question_ = null ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  
+  private boolean isViewEditQuestion_ = false;
+  private String labelContent_ = new String();
   
   // form input :
   private UIFormStringInput questionContent_ ;
@@ -140,8 +144,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       QuestionLanguage questionLanguage = new QuestionLanguage() ;
       questionLanguage.setLanguage(question.getLanguage()) ;
       questionLanguage.setQuestion(question.getQuestion()) ;
+      
       if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
         questionLanguage.setResponse(question.getResponses()) ;
+        questionLanguage.setResponseBy(question.getResponseBy());
+        questionLanguage.setDateResponse(question.getDateResponse());
       } else {
         questionLanguage.setResponse("") ;
       }
@@ -152,6 +159,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         if(language.getLanguage().equals(languageIsResponsed)) {
           questionChanged_ = language.getQuestion() ;
           questionContent_.setValue(language.getQuestion()) ;
+          labelContent_ = language.getQuestion();
           responseQuestion_.setValue(language.getResponse()) ;
         }
       }
@@ -313,23 +321,28 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       if(question_.getLanguage().equals(response.languageIsResponsed)) {
         question_.setQuestion(questionContent) ;
-        //set response of question
-        question_.setResponses(responseQuestionContent);
+        if(!question_.getResponses().trim().equals(responseQuestionContent)){
+        	question_.setResponseBy(user) ;
+        	question_.setResponses(responseQuestionContent);
+        	question_.setDateResponse(date) ;
+        }
       } else {
         question_.setQuestion(response.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
-        question_.setResponses(response.listQuestionLanguage.get(0).getResponse()) ;
+        if(!question_.getResponses().trim().equals(response.listQuestionLanguage.get(0).getResponse().trim())){
+        	question_.setResponseBy(user) ;
+        	question_.setResponses(response.listQuestionLanguage.get(0).getResponse()) ;
+        	question_.setDateResponse(date) ;
+        }
       }
-      question_.setResponseBy(user) ;
-      question_.setDateResponse(date) ;
       for(QuestionLanguage questionLanguage : response.listQuestionLanguage) {
-        if(questionLanguage.getLanguage().equals(response.languageIsResponsed)) {
+        if(questionLanguage.getLanguage().equals(response.languageIsResponsed) && !question_.getLanguage().equals(response.languageIsResponsed)) {
           questionLanguage.setQuestion(questionContent) ;
-          questionLanguage.setResponse(responseQuestionContent) ;
-        } else {
-          if(questionLanguage.getResponse() != null && questionLanguage.getResponse().trim().length() > 0 && 
-              validatorDataInput.fckContentIsNotEmpty(questionLanguage.getResponse())) {
-            questionLanguage.setResponse(questionLanguage.getResponse()) ;
+          if(!questionLanguage.getResponse().trim().equals(responseQuestionContent)){
+          	questionLanguage.setResponseBy(user);
+          	questionLanguage.setResponse(responseQuestionContent) ;
+          	questionLanguage.setDateResponse(date);
           }
+          break;
         }
       }
       // set relateion of question:
@@ -475,12 +488,21 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     }
   }
   
+  static public class ViewEditQuestionActionListener extends EventListener<UIResponseForm> {
+    public void execute(Event<UIResponseForm> event) throws Exception {
+      UIResponseForm responseForm = event.getSource();
+      responseForm.isViewEditQuestion_ = true;
+      event.getRequestContext().addUIComponentToUpdateByAjax(responseForm);
+    }
+  }
+  
   static public class ChangeQuestionActionListener extends EventListener<UIResponseForm> {
     @SuppressWarnings("static-access")
     public void execute(Event<UIResponseForm> event) throws Exception {
       UIResponseForm questionForm = event.getSource() ;
       UIFormSelectBox formSelectBox = questionForm.getChildById(QUESTION_LANGUAGE) ;
       String language = formSelectBox.getValue() ;
+      if(questionForm.languageIsResponsed != null && language.equals(questionForm.languageIsResponsed)) return ;
       UIFormWYSIWYGInput responseContent = questionForm.getChildById(RESPONSE_CONTENT) ;
       UIFormTextAreaInput questionContent = questionForm.getChildById(QUESTION_CONTENT) ;
       if(questionContent.getValue() == null || questionContent.getValue().trim().length() < 1) {
@@ -489,12 +511,17 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ;
       }
-      
+      ValidatorDataInput validatorDataInput = new ValidatorDataInput();
       for(QuestionLanguage questionLanguage : questionForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(questionForm.languageIsResponsed)) {
           String content = responseContent.getValue();
-          if(content!= null && content.trim().length() > 0) {
-            questionLanguage.setResponse(content) ;
+          if(content!= null && validatorDataInput.fckContentIsNotEmpty(content)) {
+          	if(!content.trim().equals(questionLanguage.getResponse().trim()))	{
+          		questionLanguage.setResponseBy(FAQUtils.getCurrentUser());
+          		questionLanguage.setResponse(content) ;
+          		java.util.Date date = new java.util.Date();
+          		questionLanguage.setDateResponse(date);
+          	}
           } else {
             questionLanguage.setResponse(" ") ;
           }
@@ -506,10 +533,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         if(questionLanguage.getLanguage().equals(language)) {
           questionForm.languageIsResponsed = language ;
           questionContent.setValue(questionLanguage.getQuestion()) ;
+          questionForm.labelContent_ = questionLanguage.getQuestion();
           responseContent.setValue(questionLanguage.getResponse()) ;
           break ;
         }
       }
+      questionForm.isViewEditQuestion_ = false;
       event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
     }
   }
