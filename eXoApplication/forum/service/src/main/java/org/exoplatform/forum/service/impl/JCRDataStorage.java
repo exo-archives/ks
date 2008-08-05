@@ -823,21 +823,21 @@ public class JCRDataStorage{
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 			StringBuffer stringBuffer = new StringBuffer() ;
 			stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:topic)[@exo:owner='")
-									.append(userName).append("']") ;
+									.append(userName).append("' and @exo:isClosed='false' and @exo:isActive='true']") ;
 			String pathQuery =	stringBuffer.toString();
 			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes(); 
 			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
-			Node userProfileNode = getUserProfileNode(sProvider) ;
-			try {
-				Node userNode = userProfileNode.getNode(userName) ;
-				if(userNode.hasProperty("exo:totalTopic")) {
-					userNode.setProperty("exo:totalTopic", pagelist.getAvailable());
-					userProfileNode.getSession().save() ;
-				}
-			} catch (PathNotFoundException e) {
-			}
+//			Node userProfileNode = getUserProfileNode(sProvider) ;
+//			try {
+//				Node userNode = userProfileNode.getNode(userName) ;
+//				if(userNode.hasProperty("exo:totalTopic")) {
+//					userNode.setProperty("exo:totalTopic", pagelist.getAvailable());
+//					userProfileNode.getSession().save() ;
+//				}
+//			} catch (PathNotFoundException e) {
+//			}
 			return pagelist ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
@@ -1153,20 +1153,20 @@ public class JCRDataStorage{
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
-			String pathQuery = "/jcr:root" + forumHomeNode.getPath() + "//element(*,exo:post)[@exo:owner='"+userName+"']";
+			String pathQuery = "/jcr:root" + forumHomeNode.getPath() + "//element(*,exo:post)[@exo:owner='"+userName+"' and @exo:isHidden='false']";
 			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 			QueryResult result = query.execute() ;
-			NodeIterator iter = result.getNodes(); 
+			NodeIterator iter = result.getNodes();
 			JCRPageList pagelist = new ForumPageList(sProvider,iter, 10, pathQuery, true) ;
-			Node userProfileNode = getUserProfileNode(sProvider) ;
-			try {
-				Node userNode = userProfileNode.getNode(userName) ;
-				if(userNode.hasProperty("exo:totalPost")) {
-					userNode.setProperty("exo:totalPost", pagelist.getAvailable());
-					userProfileNode.getSession().save() ;
-				}
-			} catch (PathNotFoundException e) {
-			}
+//			Node userProfileNode = getUserProfileNode(sProvider) ;
+//			try {
+//				Node userNode = userProfileNode.getNode(userName) ;
+//				if(userNode.hasProperty("exo:totalPost")) {
+//					userNode.setProperty("exo:totalPost", pagelist.getAvailable());
+//					userProfileNode.getSession().save() ;
+//				}
+//			} catch (PathNotFoundException e) {
+//			}
 			return pagelist ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
