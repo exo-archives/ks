@@ -258,9 +258,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="BottomLeftRightClickPopupMenu" style="display: none">
+		<div class="BottomLeftRightClickPopupMenu">
 			<div class="BottomRightRightClickPopupMenu">
-				<div class="BottomCenterRightClickPopupMenu" style="border-bottom: 1px solid #c4c4c4"><span></span></div>
+				<div class="BottomCenterRightClickPopupMenu" ><span></span></div>
 			</div>
 		</div>
 	</div>
