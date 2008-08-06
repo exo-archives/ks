@@ -57,14 +57,14 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 		}
 )
 public class UISendMailForm extends UIForm implements UIPopupComponent	{
-  private static final String FROM_NAME = "FromName" ;
-  private static final String FROM = "From" ;
-  private static final String TO = "To" ;
+  private static final String FILED_FROM_NAME = "FromName" ;
+  private static final String FILED_FROM = "From" ;
+  private static final String FILED_TO = "To" ;
   private static final String ADD_CC = "AddCc" ;
   private static final String ADD_BCC = "AddBcc" ;
-  private static final String SUBJECT = "Subject" ;
-  private static final String QUESTION_LANGUAGE = "Language" ;
-  private static final String MESSAGE = "Message" ;
+  private static final String FILED_SUBJECT = "Subject" ;
+  private static final String FILED_QUESTION_LANGUAGE = "Language" ;
+  private static final String FILED_MESSAGE = "Message" ;
   final static public String FIELD_FROM_INPUT = "fromInput" ;
 	
   private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
@@ -117,13 +117,13 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
     }
     
-    addChild(new UIFormStringInput(FROM_NAME,FROM_NAME, null)) ;
-    addChild(new UIFormStringInput(FROM, FROM, email)) ;
-    addChild(new UIFormStringInput(TO, TO, null)) ;
+    addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, null)) ;
+    addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email)) ;
+    addChild(new UIFormStringInput(FILED_TO, FILED_TO, null)) ;
     addChild(new UIFormStringInput(ADD_CC, ADD_CC, null)) ;
     addChild(new UIFormStringInput(ADD_BCC, ADD_BCC, null)) ;
-    addChild(new UIFormStringInput(SUBJECT, SUBJECT, this.getLabel("change-title"))) ;
-    UIFormSelectBox questionLanguages = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToSendFriend()) ;
+    addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title"))) ;
+    UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, getListLanguageToSendFriend()) ;
     questionLanguages.setSelectedValues(new String[]{language}) ;
     questionLanguages.setOnChange("ChangeLanguage") ;
     addChild(questionLanguages) ;
@@ -139,21 +139,23 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
         								+"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>" ;
       }
     }
-    addChild(new UIFormWYSIWYGInput(MESSAGE, null, content, true)) ;
+    addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, null, content, true)) ;
 	}
 
 	static public class SendActionListener extends EventListener<UISendMailForm> {
     public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;		
 			UIApplication uiApp = sendMailForm.getAncestorOfType(UIApplication.class) ;
-      String formName = ((UIFormStringInput)sendMailForm.getChildById(FROM_NAME)).getValue() ;
-      String from = ((UIFormStringInput)sendMailForm.getChildById(FROM)).getValue() ;
-      String fullFrom = formName + "(" + from + ")" ;
-      String to = ((UIFormStringInput)sendMailForm.getChildById(TO)).getValue() ;
-      String subject = ((UIFormStringInput)sendMailForm.getChildById(SUBJECT)).getValue() ;
+      String fromName = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM_NAME)).getValue() ;
+      String from = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM)).getValue() ;
+      String fullFrom = "" ;
+      if(!FAQUtils.isFieldEmpty(fromName)) fullFrom = fromName + "<" + from + ">";
+      else fullFrom = fromName + "(" + from + ")";
+      String to = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
+      String subject = ((UIFormStringInput)sendMailForm.getChildById(FILED_SUBJECT)).getValue() ;
       String cc = ((UIFormStringInput)sendMailForm.getChildById(ADD_CC)).getValue() ;
       String bcc = ((UIFormStringInput)sendMailForm.getChildById(ADD_BCC)).getValue() ;
-      String body = ((UIFormWYSIWYGInput)sendMailForm.getChildById(MESSAGE)).getValue() ;
+      String body = ((UIFormWYSIWYGInput)sendMailForm.getChildById(FILED_MESSAGE)).getValue() ;
       if (to != null && to.indexOf(";") > -1) to = to.replace(';', ',') ;
       if (cc != null && cc.indexOf(";") > -1) cc = cc.replace(';', ',') ;
       if (bcc != null && bcc.indexOf(";") > -1) bcc = bcc.replace(';', ',') ;
@@ -216,8 +218,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
    static public class ChangeLanguageActionListener extends EventListener<UISendMailForm> {
   	 public void execute(Event<UISendMailForm> event) throws Exception {
   		 UISendMailForm sendMailForm = event.getSource() ;
-  		 UIFormSelectBox formSelectBox = sendMailForm.getChildById(QUESTION_LANGUAGE) ;
-  		 UIFormWYSIWYGInput body = sendMailForm.getChildById(MESSAGE) ;
+  		 UIFormSelectBox formSelectBox = sendMailForm.getChildById(FILED_QUESTION_LANGUAGE) ;
+  		 UIFormWYSIWYGInput body = sendMailForm.getChildById(FILED_MESSAGE) ;
        String language = formSelectBox.getValue() ;
        for(QuestionLanguage questionLanguage : sendMailForm.listQuestionLanguage) {
          if(questionLanguage.getLanguage().equals(language)) {
