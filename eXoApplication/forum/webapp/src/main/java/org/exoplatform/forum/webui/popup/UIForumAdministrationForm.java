@@ -215,7 +215,9 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	        long date = Long.parseLong(activeAbout) ;
 	        if(date > 0) {
 		        administrationForm.setRenderListTopic(true) ;
-		        administrationForm.getChild(UIListTopicOld.class).setDate(date) ;
+		        UIListTopicOld listTopicOld = administrationForm.getChild(UIListTopicOld.class);
+		        listTopicOld.setDate(date) ;
+		        listTopicOld.setIsUpdate(true);
 		        event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
 	        }
         } catch (Exception e) {
