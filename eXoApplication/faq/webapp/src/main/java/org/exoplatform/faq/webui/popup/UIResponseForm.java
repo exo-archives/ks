@@ -516,7 +516,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         if(questionLanguage.getLanguage().equals(questionForm.languageIsResponsed)) {
           String content = responseContent.getValue();
           if(content!= null && validatorDataInput.fckContentIsNotEmpty(content)) {
-          	if(!content.trim().equals(questionLanguage.getResponse().trim()))	{
+          	if(questionLanguage.getResponse() == null || !content.trim().equals(questionLanguage.getResponse().trim()))	{
           		questionLanguage.setResponseBy(FAQUtils.getCurrentUser());
           		questionLanguage.setResponse(content) ;
           		java.util.Date date = new java.util.Date();

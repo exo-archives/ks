@@ -97,7 +97,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
-  private List<QuestionLanguage> listLanguageNode = new ArrayList<QuestionLanguage>() ;
+  private Map<String, QuestionLanguage> listLanguageNode = new HashMap<String, QuestionLanguage>() ;
   private String categoryId_ = null ;
   private String questionId_ = null ;
   private String defaultLanguage_ = "" ;
@@ -199,6 +199,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
   
   @SuppressWarnings("static-access")
   public void setQuestionId(Question question){
+  	List<QuestionLanguage> questionLanguages = new ArrayList<QuestionLanguage>();
     questionId_ = question.getId() ;
     categoryId_ = null ;
     try {
@@ -206,9 +207,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       defaultLanguage_ = question_.getLanguage() ;
       LIST_LANGUAGE.clear() ;
       LIST_LANGUAGE.add(defaultLanguage_) ;
-      listLanguageNode = fAQService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider()) ;
-      for(QuestionLanguage questionLanguage : listLanguageNode) {
-        LIST_LANGUAGE.add(questionLanguage.getLanguage()) ;
+      questionLanguages = fAQService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider()) ;
+      for(QuestionLanguage questionLanguage : questionLanguages) {
+      	listLanguageNode.put(questionLanguage.getLanguage(), questionLanguage);
+        LIST_LANGUAGE.add(questionLanguage.getLanguage());
       }
       isApproved_ = question_.isApproved() ;
       isActivated_ = question_.isActivated() ;
@@ -220,7 +222,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       
       ((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(0)).setValue(question_.getQuestion()) ;
       int i = 1 ;
-      for(QuestionLanguage questionLanguage : listLanguageNode) {
+      for(QuestionLanguage questionLanguage : questionLanguages) {
         ((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(i++)).setValue(questionLanguage.getQuestion()) ;
       }
     } catch (Exception e) {
@@ -422,23 +424,36 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent 	{
       
       try{
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
-            questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
+          questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
           multiLanguages.removeLanguage(questionNode, questionForm.LIST_LANGUAGE) ;
+          if(questionForm.LIST_LANGUAGE.size() > 1) {
+          	try{
+          		QuestionLanguage questionLanguage = new QuestionLanguage() ;
+          		for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
+          			questionLanguage = questionForm.listLanguageNode.get(questionForm.LIST_LANGUAGE.get(i));
+          			questionLanguage.setQuestion(listQuestionContent.get(i).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          			multiLanguages.addLanguage(questionNode, questionLanguage) ;
+          		}
+          	} catch(Exception e) {
+          		e.printStackTrace() ;
+          	}
+          }
         } else if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1){
           questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider()) ;
-        }
-        if(questionForm.LIST_LANGUAGE.size() > 1) {
-          try{
-            QuestionLanguage questionLanguage = new QuestionLanguage() ;
-            for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
-              questionLanguage.setLanguage(questionForm.LIST_LANGUAGE.get(i)) ;
-              questionLanguage.setQuestion(listQuestionContent.get(i).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
-              multiLanguages.addLanguage(questionNode, questionLanguage) ;
-            }
-          } catch(Exception e) {
-            e.printStackTrace() ;
+          if(questionForm.LIST_LANGUAGE.size() > 1) {
+          	try{
+          		QuestionLanguage questionLanguage = new QuestionLanguage() ;
+          		for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
+          			questionLanguage.setLanguage(questionForm.LIST_LANGUAGE.get(i)) ;
+          			questionLanguage.setQuestion(listQuestionContent.get(i).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          			multiLanguages.addLanguage(questionNode, questionLanguage) ;
+          		}
+          	} catch(Exception e) {
+          		e.printStackTrace() ;
+          	}
           }
         }
+        
         if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
           if(questionIsApproved) {
             UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
