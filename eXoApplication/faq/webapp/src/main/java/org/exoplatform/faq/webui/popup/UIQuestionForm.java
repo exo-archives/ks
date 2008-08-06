@@ -433,7 +433,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
             for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
               questionLanguage.setLanguage(questionForm.LIST_LANGUAGE.get(i)) ;
               questionLanguage.setQuestion(listQuestionContent.get(i).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
-              questionLanguage.setResponse(" ") ;
               multiLanguages.addLanguage(questionNode, questionLanguage) ;
             }
           } catch(Exception e) {
