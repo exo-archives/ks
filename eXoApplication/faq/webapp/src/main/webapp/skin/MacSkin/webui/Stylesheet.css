@@ -624,41 +624,42 @@
 
 .UIFAQPageIterator .LastTopPageIcon {
   vertical-align: middle ;
-  background: url('background/ScrollDoubleBackArrows.gif') no-repeat ;
+  background: url('background/FAQPortlet.gif') no-repeat left -910px;
   cursor: pointer ;
 }
 
 .UIFAQPageIterator .NextTopPageIcon {
-  background: url('background/ScrollDoubleNextArrows.gif') no-repeat ;
+   background: url('background/FAQPortlet.gif') no-repeat left -927px;
   cursor: pointer ;
 }
 
 .UIFAQPageIterator .LastPageIcon {
-  background: url('background/ScrollSingleBackArrow.gif') no-repeat ;
+   background: url('background/FAQPortlet.gif') no-repeat left -943px;
   cursor: pointer ; 
 }
 
 .UIFAQPageIterator .NextPageIcon {
-  background: url('background/ScrollSingleNextArrow.gif') no-repeat ;
+   background: url('background/FAQPortlet.gif') no-repeat left -960px;
   cursor: pointer ;
 }
 
 .UIFAQPageIterator .DisableLastTopPageIcon {
   vertical-align: middle ;
-  background: url('background/DoubleBackArrows.gif') no-repeat ;
+   background: url('background/FAQPortlet.gif') no-repeat left -978px;
 }
 
 .UIFAQPageIterator .DisableNextTopPageIcon {
-  background: url('background/DoubleNextArrows.gif') no-repeat ;
+   background: url('background/FAQPortlet.gif') no-repeat left -995px;
 }
 
 .UIFAQPageIterator .DisableLastPageIcon {
-  background: url('background/SingleBackArrow.gif') no-repeat ;
+   background: url('background/FAQPortlet.gif') no-repeat left -1012px;
 }
 
 .UIFAQPageIterator .DisableNextPageIcon {
-  background: url('background/SingleNextArrow.gif') no-repeat ;
+   background: url('background/FAQPortlet.gif') no-repeat left -1029px;
 }
+
 
 /******************************  UI AddNew/Edit Question  ***************************************/
 
