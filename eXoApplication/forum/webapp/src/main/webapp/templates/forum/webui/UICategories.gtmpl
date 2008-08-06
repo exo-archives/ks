@@ -47,11 +47,11 @@
 									<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 										<a href="<%=uicomponent.event("OpenCategory", category.getId())%>">$title</a>
 										<div style="position: relative;">
-										<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
-											<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block; font-weight:normal;">
-												<div action="$actionBookmark" class="ClickPopupContent"></div>
-											</div>
-									  </div>
+											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
+												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block; font-weight:normal;">
+													<div action="$actionBookmark" class="ClickPopupContent"></div>
+												</div>
+										  </div>
 									  </div>
 									</div>
 									 <% ++rCNB; %>
@@ -258,9 +258,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="BottomLeftRightClickPopupMenu" style="display: none">
+		<div class="BottomLeftRightClickPopupMenu">
 			<div class="BottomRightRightClickPopupMenu">
-				<div class="BottomCenterRightClickPopupMenu" style="border-bottom: 1px solid #c4c4c4"><span></span></div>
+				<div class="BottomCenterRightClickPopupMenu"><span></span></div>
 			</div>
 		</div>
 	</div>
