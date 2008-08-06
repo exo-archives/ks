@@ -55,10 +55,18 @@ public class UIListTopicOld extends UIContainer {
 	private boolean isUpdate = false ;
 	public UIListTopicOld() throws Exception {
 		addChild(UIForumPageIterator.class, null, "PageListTopicTopicOld") ;
+		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
+		forumPageIterator.setUpdateListTopicOld(true);
 	}
 	
 	public long getDate() { return date;}
-	public void setDate(long date) {this.date = date;}
+	public void setDate(long date) {
+		if(this.date != 0){
+			UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
+			forumPageIterator.setSelectPage(1);
+		}
+		this.date = date;
+	}
 	
 	@SuppressWarnings("unused")
   private UserProfile getUserProfile() throws Exception {
@@ -68,17 +76,25 @@ public class UIListTopicOld extends UIContainer {
 		return userProfile ;
 	}
 	
+	public void setIsUpdate(boolean isUpdate){
+		this.isUpdate = isUpdate;
+	}
+	
 	@SuppressWarnings({ "unused", "unchecked" })
   private List<Topic> getTopicsOld() throws Exception {
 		if(topics == null || topics.size() == 0 || isUpdate) {
 			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date);
-			pageList.setPageSize(10) ;
-			UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;
-			pageIterator.updatePageList(pageList) ;
-			long page = pageIterator.getPageSelected() ;
-			List<Topic> topics = new ArrayList<Topic>();
-			if(pageList != null)topics = pageList.getPage(page) ;
-			this.topics = topics ;
+			if(pageList != null) {
+				pageList.setPageSize(10) ;
+				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;
+				pageIterator.updatePageList(pageList) ;
+				long page = pageIterator.getPageSelected() ;
+				List<Topic> topics = new ArrayList<Topic>();
+				topics = pageList.getPage(page) ;
+				this.topics = topics ;
+			} else {
+				this.topics.clear();
+			}
 			isUpdate = false ;
 		}
 		return this.topics ;
