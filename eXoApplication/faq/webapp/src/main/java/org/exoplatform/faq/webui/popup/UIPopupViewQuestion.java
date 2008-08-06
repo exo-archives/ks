@@ -54,14 +54,15 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
 	private String questionId_ = null ;
   private String language_ = "" ;
   private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  private String[] sizes = new String[]{"bytes", "KB", "MB"};
   public UIPopupViewQuestion() throws Exception {this.setActions(new String[]{"Close"}) ;}
 	@SuppressWarnings("unused")
   public String getQuestion(){
     return this.questionId_ ;
   }
   
-  public void setQuestion(String question) {
-    this.questionId_ = question ;
+  public void setQuestion(String questionId) {
+    this.questionId_ = questionId ;
   }
   
 	public void setLanguage(String language) {
@@ -78,6 +79,8 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
 	    	if(questionLanguage.getLanguage().equals(language_)) {
 	    		question.setQuestion(questionLanguage.getQuestion()) ;
 	    		question.setResponses(questionLanguage.getResponse()) ;
+	    		question.setResponseBy(questionLanguage.getResponseBy()) ;
+	    		question.setDateResponse(questionLanguage.getDateResponse());
 	    	}
 	    }
     } catch (Exception e) {
@@ -101,8 +104,9 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
     }
   }
   
-  public String convertSize(long size){
-    String result = "bytes";
+  @SuppressWarnings("unused")
+	private String convertSize(long size){
+    String result = "";
     long  residual = 0;
     int i = 0;
     while(size >= 1000){
@@ -110,19 +114,11 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
       residual = size % 1024;
       size /= 1024;
     }
-    switch (i) {
-      case 1:
-        result = "KB";
-        break;
-      case 2:
-        result = "MB";
-        break;
-    }
     if(residual > 1000){
       String str = residual + "";
-      result = size + "." + str.substring(0, 3) + " " + result;
+      result = size + "." + str.substring(0, 3) + " " + sizes[i];
     }else{
-      result = size + "." + residual + " " + result;
+      result = size + "." + residual + " " + sizes[i];
     }
     return result;
   }
