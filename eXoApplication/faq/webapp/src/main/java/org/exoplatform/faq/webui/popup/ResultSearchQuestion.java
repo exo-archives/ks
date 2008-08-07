@@ -110,7 +110,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				  if(Arrays.asList(moderator).contains(currentUser)) {
 				  	listQuestionLanguage.add(quest) ;
 					} else {
-						if(quest.isApproved()) listQuestionLanguage.add(quest) ;
+						if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;
 						else
 							continue ;
 					}

@@ -282,10 +282,14 @@ public class JCRDataStorage {
   		message.setFrom(from) ;
   		messages.add(message) ;
   	}
-  	if(messages.size() > 0) {
-  		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
-  		mService.sendMessages(messages, config) ;
-  	}
+  	try{
+			if(messages.size() > 0) {
+				MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+				mService.sendMessages(messages, config) ;
+			}
+  	}catch(Exception e) {
+			e.printStackTrace() ;
+		}
   }
 
   private ServerConfiguration getServerConfig() throws Exception {
