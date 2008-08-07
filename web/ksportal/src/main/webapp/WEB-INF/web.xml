@@ -94,7 +94,7 @@
     <url-pattern>/public/*</url-pattern>
   </filter-mapping>
 
-  <filter-mapping>
+  <!--filter-mapping>
     <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
     <url-pattern>/private/*</url-pattern>
   </filter-mapping>
@@ -107,7 +107,7 @@
    <filter-mapping>
     <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
     <url-pattern>/rest/*</url-pattern>
-  </filter-mapping> 
+  </filter-mapping--> 
   
   <filter-mapping>
     <filter-name>SetCurrentIdentityFilter</filter-name>
