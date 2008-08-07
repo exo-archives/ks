@@ -17,11 +17,15 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.contact.service.Contact;
 import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.faq.service.EmailNotifyPlugin;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -66,7 +70,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private static final String FILED_QUESTION_LANGUAGE = "Language" ;
   private static final String FILED_MESSAGE = "Message" ;
   final static public String FIELD_FROM_INPUT = "fromInput" ;
-	
+  private static Map<String, String> serverConfig_ = new HashMap<String, String>();
+  
   private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
   private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
   @SuppressWarnings("unused")
@@ -84,6 +89,15 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private List<SelectItemOption<String>> getListLanguageToSendFriend() {
     return listLanguageToReponse ;
   }
+  
+  public void addPlugin(ComponentPlugin plugin) throws Exception {
+		try{
+			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}
+		
+	}
   
 	public void setUpdateQuestion(String questionId, String language) throws Exception {
     Question question = FAQUtils.getFAQService().getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
@@ -148,9 +162,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			UIApplication uiApp = sendMailForm.getAncestorOfType(UIApplication.class) ;
       String fromName = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM_NAME)).getValue() ;
       String from = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM)).getValue() ;
-      String fullFrom = "" ;
-      if(!FAQUtils.isFieldEmpty(fromName)) fullFrom = fromName + "<" + from + ">";
-      else fullFrom = fromName + "(" + from + ")";
+      String fullFrom = fromName +" (" + from +  ") <"+ serverConfig_.get("account")+">" ;
       String to = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
       String subject = ((UIFormStringInput)sendMailForm.getChildById(FILED_SUBJECT)).getValue() ;
       String cc = ((UIFormStringInput)sendMailForm.getChildById(ADD_CC)).getValue() ;
@@ -159,7 +171,11 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       if (to != null && to.indexOf(";") > -1) to = to.replace(';', ',') ;
       if (cc != null && cc.indexOf(";") > -1) cc = cc.replace(';', ',') ;
       if (bcc != null && bcc.indexOf(";") > -1) bcc = bcc.replace(';', ',') ;
-      if (FAQUtils.isFieldEmpty(from)) {
+      if (FAQUtils.isFieldEmpty(fromName)) {
+        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.fromName-field-empty", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
+      } else if (FAQUtils.isFieldEmpty(from)) {
         uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.from-field-empty", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
