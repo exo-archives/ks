@@ -156,10 +156,16 @@ public class UIForumListSearch extends UIContainer {
     		Object[] args = { };
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", args, ApplicationMessage.WARNING)) ;
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				/*UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);*/
+				for(ForumSearch search : uiForm.listEvent){
+					if(search.getId().equals(objId)){
+						uiForm.listEvent.remove(search);
+						return;
+					}
+				}
     	}
     	if(!isRead) {
     		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
