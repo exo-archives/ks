@@ -90,7 +90,15 @@
   							%>
   								<tr>
 										<td class="Label">$label:</td>
-										<td class="LabelProfile">$content</td>
+										<td class="LabelProfile">
+										<%
+											if(user.getEmail().equals(content)) {
+										%>
+											<a target="_blank" href="mailto:$content"> $content </a>
+										<%} else {%>
+												$content
+										<%}%>
+										</td>
 									</tr>
 								<%} %>
 								</tbody>
