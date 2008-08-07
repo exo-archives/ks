@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
+import org.dom4j.util.PerThreadSingleton;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -33,6 +35,7 @@ import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -69,6 +72,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 public class UIModeratorManagementForm extends UIForm implements UIPopupComponent {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
+	private String[] permissionUser = null;
   private JCRPageList pageList ;
 	private boolean isEdit = false ;
 	private UserProfile userProfile = new UserProfile();
@@ -106,6 +110,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   
 	public UIModeratorManagementForm() throws Exception {
 		addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+    ResourceBundle res = context.getApplicationResourceBundle() ;
+		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin"), 
+																	res.getString("UIForumPortlet.label.PermissionModerator"),
+																	res.getString("UIForumPortlet.label.PermissionUser")};
   }
 	
   @SuppressWarnings("unused")
@@ -510,8 +519,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	} else {
     		if(userRole >= 1) userRole = 2;
     	}
-    	if(ForumUtils.isEmpty(userTitle)) {
-				userTitle = userProfile.getUserTitle() ;
+			if(userTitle == null || userTitle.trim().length() < 1 || Arrays.asList(uiForm.permissionUser).contains(userTitle)) {
+				userTitle = uiForm.permissionUser[(int)userRole];
 			}
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;

@@ -36,19 +36,7 @@
 				  	List listUser = uiform.getListProFileUser() ;  
 				  	String userRole = "" ;
 				  	for(user in listUser) {
-				  		switch (user.getUserRole()) {
-						    case 0:
-						      userRole = "Adminstrator" ;
-						      break;
-						    case 1:
-						      userRole = "Moderator" ;
-						      break;
-						    case 2:
-						      userRole = "User" ;
-						      break;
-						    default:
-						      break;
-					    }
+				  		userRole = uicomponent.permissionUser[(int)user.getUserRole()];
 				  %>
 			      <tr class="$classRowTable">
 						  <td class="text"><%=user.getUserId();%></td>
