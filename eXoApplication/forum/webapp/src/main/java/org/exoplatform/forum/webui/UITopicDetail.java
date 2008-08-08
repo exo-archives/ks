@@ -1152,6 +1152,11 @@ public class UITopicDetail extends UIForm {
 	static public class PrivateMessageActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
+			String currentUser = ForumSessionUtils.getCurrentUser();
+			if(topicDetail.userProfile.getIsBanned()){
+				String[] args = new String[] { } ;
+				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsBannedCanNotSendMail", args, ApplicationMessage.WARNING)) ;
+			}
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
