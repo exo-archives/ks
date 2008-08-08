@@ -32,7 +32,7 @@
 					<table class="UIFormGrid">
 						<tbody>
 							<tr>
-								<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</td>
+								<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</td>
 								<td class="FieldComponent" style="width: 60px;">
 									<div class="TimeOutInput">
 		              	<% uiform.renderChild(uicomponent.FIELD_TIMEOUT_INPUT) %>
@@ -41,13 +41,13 @@
 								<td class="Label"><%=_ctx.appRes("UIPollForm.label.DayFromNow"); %></td>
 							</tr>
 							<tr>
-								<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</td>
+								<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</td>
 								<td class="FieldComponent">
 		              <% uiform.renderChild(uicomponent.FIELD_AGAINVOTE_CHECKBOX) %>
 								</td>
 							</tr>
 							<tr>
-								<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%>:</td>
+								<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%>:</td>
 								<td class="FieldComponent">
 		              <% uiform.renderChild(uicomponent.FIELD_MULTIVOTE_CHECKBOX) %>
 								</td>
