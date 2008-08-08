@@ -4,14 +4,17 @@
 	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isBan = userProfile.getIsBanned() ;
 	boolean isNotLogin= ForumSessionUtils.isAnonim();
-	boolean isLock = uicomponent.getIsLock() ;
-	String not = "";
+	String canCreatThread = "";
+	String canPost = "";
 	if(isBan || isNotLogin) {
-		not = "not";
-	}
-	if(not.length() == 0) {
-		if(isLock) {
-			not = "not";
+		canCreatThread = "not";
+		canPost = "not";
+	} else{
+		if(!uicomponent.canCreateNewThread) {
+			canCreatThread = "not";
+		}
+		if(!uicomponent.canAddPost){
+			canPost = "not";
 		}
 	}
 %>
@@ -30,10 +33,10 @@
 	  </div>
 	  <div class="ContentContainer">
 		  <div class="ForumList">
-		  	<div class="text">You <span class="BoldTitle">can $not</span> post new thread</div>
-		  	<div class="text">You <span class="BoldTitle">can $not</span> post replies</div>
-		  	<div class="text">You <span class="BoldTitle">can $not</span> post attachments</div>
-		  	<div class="text">You <span class="BoldTitle">can $not</span> edit your posts</div>
+		  	<div class="text">You <span class="BoldTitle">can $canCreatThread</span> post new thread</div>
+		  	<div class="text">You <span class="BoldTitle">can $canPost</span> post replies</div>
+		  	<div class="text">You <span class="BoldTitle">can $canPost</span> post attachments</div>
+		  	<div class="text">You <span class="BoldTitle">can $canPost</span> edit your posts</div>
 	  	</div>
 	  </div>
   </div>

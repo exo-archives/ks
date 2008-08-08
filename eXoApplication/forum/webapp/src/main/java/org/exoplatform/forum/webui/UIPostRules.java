@@ -31,8 +31,9 @@ import org.exoplatform.webui.core.UIContainer;
 		template =	"app:/templates/forum/webui/UIPostRules.gtmpl"
 )
 public class UIPostRules extends UIContainer	{
-  private boolean isLock = false ;
   private UserProfile userProfile ;
+  private boolean canCreateNewThread = false;
+  private boolean canAddPost = false;
   
 	public UIPostRules() throws Exception {		
 	}	
@@ -50,11 +51,15 @@ public class UIPostRules extends UIContainer	{
 	}
 	
   public void setLock(boolean isLock) {
-    this.isLock = isLock ;
+    canCreateNewThread = !isLock;
+    canAddPost = !isLock;
   }
-  
-	@SuppressWarnings("unused")
-  private boolean getIsLock() {
-    return this.isLock;
-  }
+	
+	public void setCanAddPost(boolean canAddPost){
+		this.canAddPost = canAddPost;
+	}
+	
+	public void setCanCreateNewThread(boolean canCreatThread){
+		this.canCreateNewThread = canCreatThread;
+	}
 }

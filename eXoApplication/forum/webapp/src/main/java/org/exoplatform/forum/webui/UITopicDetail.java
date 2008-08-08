@@ -479,34 +479,66 @@ public class UITopicDetail extends UIForm {
 		this.isEdit = isEdit ;
 	}
 	@SuppressWarnings("unused")
-	private void setPostRules(boolean isNull) throws Exception {
-		boolean isLock = isNull ;
+	public void setPostRules(boolean isNull) throws Exception {
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		if(!isNull) {
 			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-			isLock = this.forum.getIsClosed() ;
-			if(!isLock)isLock = this.forum.getIsLock() ;
-			if(!isLock) {
-				if(this.topic != null) { 
-					isLock = this.topic.getIsClosed() ;
-					if(!isLock) isLock = this.topic.getIsLock() ;
+			
+			if(this.forum.getIsClosed() || this.forum.getIsLock()){
+				postRules.setCanCreateNewThread(false);
+				postRules.setCanAddPost(false);
+			} else {
+				/**
+				 * set with forum
+				 */
+				String userLogin = this.userProfile.getUserId() ;
+				String[] strings = this.forum.getCreateTopicRole();
+				if(strings != null && strings.length > 0) {
+					boolean canCreatTopic = false;
+					canCreatTopic = ForumServiceUtils.hasPermission(strings, userLogin);
+					if(this.isEdit || canCreatTopic){
+						postRules.setCanCreateNewThread(true);
+						postRules.setCanAddPost(true);
+					} else {
+						boolean canReply = false;
+						postRules.setCanCreateNewThread(false);
+						strings = this.forum.getReplyTopicRole() ;
+						if(strings != null && strings.length > 0) {
+							canReply = ForumServiceUtils.hasPermission(strings, userLogin);
+							if(canReply){
+								postRules.setCanAddPost(true);
+							} else {
+								/**
+								 * set with topic
+								 */
+								if(this.topic != null){
+									if (this.topic.getIsClosed() || this.topic.getIsLock()){
+										postRules.setCanAddPost(false);
+									} else {
+										strings = this.topic.getCanPost() ;
+										if(strings != null && strings.length > 0) {
+											postRules.setCanAddPost(ForumServiceUtils.hasPermission(strings, userLogin));
+										} else {
+											postRules.setCanAddPost(true);
+										}
+									}
+								} else {
+									postRules.setCanAddPost(false);
+								}
+							}
+						} else {
+							postRules.setCanAddPost(true);
+						}
+					}
+				} else {
+					postRules.setCanCreateNewThread(true);
+					postRules.setCanAddPost(true);
 				}
 			}
-			String userLogin = this.userProfile.getUserId() ;
-			String[] strings = this.forum.getCreateTopicRole();
-			if(!isLock && strings != null && strings.length > 0) {
-				if(!this.isEdit)isLock = !ForumServiceUtils.hasPermission(strings, userLogin) ;
-			}
-			strings = this.forum.getReplyTopicRole() ;
-			if(!isLock && strings != null && strings.length > 0) {
-				if(!this.isEdit)isLock = !ForumServiceUtils.hasPermission(strings, userLogin) ;
-			}
-			strings = this.topic.getCanPost() ;
-			if(!isLock && strings != null && strings.length > 0) {
-				if(!this.isEdit)isLock = !ForumServiceUtils.hasPermission(strings, userLogin) ;
-			}
+		} else {
+			postRules.setCanCreateNewThread(!isNull);
+			postRules.setCanAddPost(!isNull);
 		}
-		postRules.setLock(isLock) ;
 		postRules.setUserProfile(this.userProfile) ;
 	}
 	
