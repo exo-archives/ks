@@ -18,7 +18,6 @@ package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -289,7 +288,17 @@ public class UISearchForm extends UIForm implements UISelector {
 			String path = "" ;
 			String byUser = inputSearchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).getValue() ;
 			String isLock = inputSearchForm.getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).getValue();
-			String isClosed = inputSearchForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).getValue();
+			String isClosed = "all" ;
+			String remain = "";
+			if(uiForm.getIsAdmin()) {
+				isClosed = inputSearchForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).getValue();
+			} else {
+				if(type.equals(Utils.FORUM)) {
+					isClosed = "false";
+				}else if(type.equals(Utils.TOPIC)) {
+					isClosed = "false"; remain = "@exo:isActiveByForum='true'";
+				}else if(type.equals(Utils.POST)) remain = "@exo:isActiveByTopic='true'";
+			}
 			String topicCountMin = inputSearchForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).getValue();
 			String topicCountMax = inputSearchForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
 			String postCountMin = inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).getValue();
@@ -320,9 +329,10 @@ public class UISearchForm extends UIForm implements UISelector {
 			eventQuery.setToDateCreated(toDateCreated) ;
 			eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost) ;
 			eventQuery.setToDateCreatedLastPost(toDateCreatedLastPost) ;
-			
+
 			eventQuery.getPathQuery() ;
 			boolean isEmpty = eventQuery.getIsAnd() ;
+			eventQuery.setRemain(remain) ;
 			if(!isEmpty) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-empty-search", null, ApplicationMessage.WARNING)) ;

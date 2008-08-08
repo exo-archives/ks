@@ -40,7 +40,6 @@ import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -105,6 +104,7 @@ public class UITopicContainer extends UIForm {
 	private long page = 1 ;
 	private boolean isGoPage = false;
 	private boolean isUpdate = false;
+	private boolean isModerator = false ;
 	private long maxTopic = 10 ;
 	private long maxPost = 10 ;
   @SuppressWarnings("unused")
@@ -185,7 +185,7 @@ public class UITopicContainer extends UIForm {
     if(strings != null && strings.length > 0)
       this.canViewThreads = ForumServiceUtils.hasPermission(strings, userId) ;
 
-    boolean isModerator = false ;
+    isModerator = false ;
     if(role == 0) isModerator = true;
     else {strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'") ;}
 		if(role == 1) {
@@ -294,12 +294,18 @@ public class UITopicContainer extends UIForm {
 			UIFormStringInput formStringInput = uiTopicContainer.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
+				StringBuffer type = new StringBuffer();
+				if(uiTopicContainer.isModerator){ 
+					type.append("true,").append(Utils.TOPIC).append("/").append(Utils.POST);
+				} else {
+					type.append("false,").append(Utils.TOPIC).append("/").append(Utils.POST);
+				}
 				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,topic/post", path);
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path);
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;

@@ -23,7 +23,6 @@ import java.util.List;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -405,8 +404,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setLastPostDate(new Date());
 				topicNew.setDescription(message);
 				if(whenNewPost){
-					ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class);
-					Contact contact = contactService.getPersonalContact(userName);
+					Contact contact = ForumSessionUtils.getPersonalContact(userName);
 					topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
 				} else {
 					topicNew.setIsNotifyWhenAddPost("");
@@ -436,6 +434,9 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
                 
 				topicNew.setCanView(canViews);
 				topicNew.setCanPost(canPosts);
+				boolean hasForumMod = false ;
+				if(uiForm.forum != null) hasForumMod = uiForm.forum.getIsModerateTopic() ;
+				topicNew.setIsApproved(!hasForumMod) ;
 				if(!ForumUtils.isEmpty(uiForm.topicId)) {
 					topicNew.setId(uiForm.topicId);
 					topicNew.setEditReason(editReason) ;
@@ -470,8 +471,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				}
 				uiForm.topic = new Topic();
 				forumPortlet.cancelAction() ;
-				boolean hasForumMod = false ;
-				if(uiForm.forum != null) hasForumMod = uiForm.forum.getIsModerateTopic() ;
 				if(isOffend || hasForumMod) {
 					Object[] args = { "" };
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;

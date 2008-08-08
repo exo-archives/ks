@@ -313,7 +313,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setCreatedDate(new Date()) ;
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				post.setIcon(uiIconSelector.getSelectedIcon());
-				post.setIsApproved(false) ;
 				post.setAttachments(uiForm.getAttachFileList()) ;
 				post.setIsHidden(isOffend) ;
 				String[]userPrivate = new String[]{"exoUserPri"};
@@ -321,6 +320,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					userPrivate = new String[]{userName, uiForm.post_.getOwner()};
 				}
 				post.setUserPrivate(userPrivate);
+				boolean hasTopicMod = false ;
+				if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
+				post.setIsApproved(!hasTopicMod) ;
+				
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
@@ -366,8 +369,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					return ;
 				}
 				forumPortlet.cancelAction() ;
-				boolean hasTopicMod = false ;
-				if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 				if(isOffend || hasTopicMod) {
           topicDetail.setIdPostView("normal");
 					Object[] args = { "" };

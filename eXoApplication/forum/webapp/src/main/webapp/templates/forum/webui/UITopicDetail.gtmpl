@@ -537,10 +537,12 @@
 				String avatarUrl = "" ;
 				String location = "" ;
 				boolean isCity = false;
-				if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
-				if(contact.getHomeCountry() != null) {
-					if(isCity)location = location + ", ";
-					location = location + contact.getHomeCountry() ;
+				if(contact != null) {
+					if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
+					if(contact.getHomeCountry() != null) {
+						if(isCity)location = location + ", ";
+						location = location + contact.getHomeCountry() ;
+					}
 				}
 				UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 				String classIconPost = post.getIcon() ;
@@ -560,9 +562,12 @@
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + post.getId().substring(15);
-				User user = userInfo.getUser() ; 
-				Date userCreated = user.getCreatedDate() ;
-				String joinDate = ForumUtils.getFormatDate(shortDateFormat, userCreated) ;
+				User user = userInfo.getUser() ;
+				String joinDate = ""; 
+				if(user != null){
+					Date userCreated = user.getCreatedDate() ;
+					joinDate = ForumUtils.getFormatDate(shortDateFormat, userCreated) ;
+				}
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
@@ -686,7 +691,7 @@
 							<% if(checked > 0 && canEdit) {%>
 								<div class="PostViewTitle" style="float: left;">
 									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
-									<div class="PostTime">Posted: $createdDate</div>
+									<div class="PostTime">Posted: $createdDate </div>
 								</div>
 								<div class="CheckPost" style="float: right;">
 									<div class="IPIcon" title="IP: <%=post.getRemoteAddr();%>"><span></span></div>
