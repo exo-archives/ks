@@ -2,6 +2,7 @@
 	import org.exoplatform.forum.service.ForumPrivateMessage ;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML;
 %>
 <div class="UIViewPrivateMessageForm UIViewMemberProfile">
 <% uiform.begin() %>
@@ -9,6 +10,7 @@
 	ForumPrivateMessage privateMessage = uicomponent.getPrivateMessage() ;
 	String title =  privateMessage.getName() ;
 	String message = privateMessage.getMessage() ;
+	message = ForumTransformHTML.convertCodeHTML(message);
 %>
 	<div class="ViewMemberProfileContainer">
 		<div class="MessageContent">

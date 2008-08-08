@@ -41,6 +41,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIMovePostForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
@@ -149,6 +150,7 @@ public class UITopicDetail extends UIForm {
 	private UserProfile userProfile = null;
 	private String userName = " " ;
 	private boolean isModeratePost = false ;
+	private boolean isMod = false ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, Contact> mapContact = new HashMap<String, Contact>();
 //replace when portal fix bug show image
@@ -265,8 +267,10 @@ public class UITopicDetail extends UIForm {
 	@SuppressWarnings("unused")
 	private boolean isCanPostReply() throws Exception {
 		String userName = this.userProfile.getUserId() ;
-		boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
-		if(this.userProfile.getUserRole() > 0 && !isMod) {
+		isMod = false;
+		if(this.userProfile.getUserRole() == 0) isMod = true;
+		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
+		if(!isMod) {
 			List<String> listUser = new ArrayList<String>() ;
 			listUser.addAll(ForumServiceUtils.getUserPermission(this.topic.getCanPost())) ;
 			listUser.addAll(ForumServiceUtils.getUserPermission(this.forum.getReplyTopicRole())) ;
@@ -553,7 +557,8 @@ public class UITopicDetail extends UIForm {
 		return userProfile ;
 	}
 	
-	private List<Post> getPostsSelected() throws Exception{
+	@SuppressWarnings("unchecked")
+  private List<Post> getPostsSelected() throws Exception{
 		List<Post> posts = new ArrayList<Post>();
 		List<UIComponent> children = this.getChildren() ;
 		for(UIComponent child : children) {
@@ -627,6 +632,12 @@ public class UITopicDetail extends UIForm {
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
+				StringBuffer type = new StringBuffer();
+				if(topicDetail.isMod){ 
+					type.append("true,").append(Utils.POST);
+				} else {
+					type.append("false,").append(Utils.POST);
+				}
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -634,7 +645,7 @@ public class UITopicDetail extends UIForm {
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,post", path);
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,post", "", path);
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
@@ -1254,8 +1265,10 @@ public class UITopicDetail extends UIForm {
 				post.setOwner(userName) ;
 				post.setRemoteAddr(remoteAddr) ;
 				post.setIcon(topic.getIcon());
-				post.setIsApproved(false) ;
 				post.setIsHidden(isOffend) ;
+				boolean hasTopicMod = false ;
+				if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
+				post.setIsApproved(!hasTopicMod) ;
 				try {
 					topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
 				} catch (PathNotFoundException e) {
@@ -1264,8 +1277,6 @@ public class UITopicDetail extends UIForm {
 				}
 				topicDetail.setUpdatePostPageList(true);
 				textAreaInput.setValue("") ;
-				boolean hasTopicMod = false ;
-				if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
 				if(isOffend || hasTopicMod) {
 					Object[] args = { "" };
 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;

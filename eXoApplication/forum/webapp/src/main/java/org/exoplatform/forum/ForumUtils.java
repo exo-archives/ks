@@ -30,8 +30,6 @@ import java.util.List;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-
-import org.apache.commons.lang.StringUtils;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu

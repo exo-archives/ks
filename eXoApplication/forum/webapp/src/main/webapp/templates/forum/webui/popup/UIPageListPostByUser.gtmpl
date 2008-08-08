@@ -4,8 +4,8 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
-	List posts = uicomponent.getPostsByUser() ;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
+	List posts = uicomponent.getPostsByUser() ;
 	boolean isAdmin = false;
 	if(userProfile.getUserRole() == 0)isAdmin = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;

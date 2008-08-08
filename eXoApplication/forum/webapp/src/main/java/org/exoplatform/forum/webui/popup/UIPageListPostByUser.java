@@ -71,9 +71,11 @@ public class UIPageListPostByUser extends UIContainer{
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Post> getPostsByUser() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		JCRPageList pageList  = forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), this.userName) ;
+		boolean isMod = false;
+		if(this.userProfile.getUserRole() == 0) isMod = true;
+		JCRPageList pageList  = forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), this.userName, isMod) ;
 		forumPageIterator.updatePageList(pageList) ;
-		pageList.setPageSize(6) ;
+		if(pageList != null) pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
 		List<Post> posts = pageList.getPage(page) ;
     this.posts = posts ;

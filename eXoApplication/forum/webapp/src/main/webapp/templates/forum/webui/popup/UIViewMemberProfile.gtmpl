@@ -1,4 +1,4 @@
-<%  
+<%	
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.forum.ForumUtils;
@@ -6,27 +6,35 @@
 %>
 <div class="UIViewMemberProfile">
 <% uiform.begin() %>
-<%  
+<%	
 	UserProfile userProfile = uiform.getUserProfile() ;
 	UserProfile userProfileLogin = uiform.getUserProfileLogin() ;
 	String userName = userProfile.getUserId() ;
-	User user = uiform.getUser() ;
 	Contact contact = uiform.getContact(userName) ;
 	String avatarUrl = "";
 	String birthDay = "" ;
-	Date birthDayDate = contact.getBirthday() ;
+	String location = "" ;
+	Date birthDayDate =	null;
+	boolean isCity = false;
+	if(contact != null) {
+		birthDayDate = contact.getBirthday() ;
+		if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
+		if(contact.getHomeCountry() != null) {
+			if(isCity) location = location + ", ";
+			location = location + contact.getHomeCountry() ;
+		}
+	}
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
 	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
-	String location = "" ;
-	boolean isCity = false;
-	if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
-	if(contact.getHomeCountry() != null) {
-		if(isCity)location = location + ", ";
-		location = location + contact.getHomeCountry() ;
+	String createdDate = "";
+	String fullName = userName;
+	User user = uiform.getUser() ;
+	if(user != null){ 
+	  createdDate = ForumUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
+	  fullName = user.getFullName();
 	}
-	String createdDate = ForumUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
 	long totalPost = userProfile.getTotalPost();
-	shortDateFormat = shortDateFormat +  ", " + userProfileLogin.getTimeFormat();
+	shortDateFormat = shortDateFormat +	", " + userProfileLogin.getTimeFormat();
 	String userSmile = "OfflineIcon";
 	String titleSmile = "Offline" ;
 	if(uicomponent.isOnline(userName)) {
@@ -35,23 +43,27 @@
 	}
 %>
 	<div class="ViewMemberProfileContainer">
-		<div class="TitleBar"><div class="TitleIcon"><%=_ctx.appRes("UIViewUserProfile.label.ViewMemberProfileOf");%>: <span class="UserLabel $userSmile" title="${userName}'s $titleSmile"><%=user.getFullName();%></span></div></div>
+		<div class="TitleBar">
+			<div class="TitleIcon">
+				<%=_ctx.appRes("UIViewUserProfile.label.ViewMemberProfileOf");%>: <span class="UserLabel $userSmile" title="${userName}'s $titleSmile">$fullName</span>
+			</div>
+		</div>
 		<div class="ViewContainer">
 			<table class="TablePost" cellspacing="0" borderspacing="0">
-  			<tbody>
-  				<tr>
+				<tbody>
+					<tr>
 						<td class="MemberContainer">
-				  		<div class="MemberContent">
-				  		<%  
-				  			boolean isDisplayAvatar = userProfile.getIsDisplayAvatar(); 
-				  		  if(isDisplayAvatar) {
+							<div class="MemberContent">
+							<%	
+								boolean isDisplayAvatar = userProfile.getIsDisplayAvatar(); 
+								if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
 								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
 								<% } %>
-					  		<div class="Rank"><%=userProfile.getUserTitle();%></div>
-					  		<div class="InfoMember">
-					  			<div>Join Date: $createdDate</div>
+								<div class="Rank"><%=userProfile.getUserTitle();%></div>
+								<div class="InfoMember">
+									<div>Join Date: $createdDate</div>
 									<% if(totalPost > 0) { 
 											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat,userProfile.getLastPostDate()) ;
 									%>
@@ -65,45 +77,55 @@
 									%>
 									<div>Last Login: $lastLoginUser</div>
 									<% } %>
-					  		</div>
-					  	</div>
-					  </td>
+								</div>
+							</div>
+						</td>
 						<td class="ProfileContainer">
 							<table class="TablePost" cellspacing="0" borderspacing="0">
-  							<tbody>
-  							<% 
-  								String siteOfUser = contact.getPersonalSite() ;
-  								if(!ForumUtils.isEmpty(siteOfUser)) {
-  									siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
-  								}
-  								String []labels = uiform.getLabelProfile();  
-  								String []contents = [userName,user.getFirstName(),user.getLastName(),birthDay,contact.getGender(),user.getEmail(),
-  								  contact.getJobTitle(),location,contact.getWorkPhone1(),contact.getMobilePhone(),siteOfUser]; 
-  								//String []contents = [userName,user.getFirstName(),user.getLastName(),birthDay," ",user.getEmail()," ",location]; 
-  								int i = 0 ;
-  								for(label in labels) {
-  									String content = "";
-  									content = contents[i];
-  									if(content == null) content = "";
-  									label = _ctx.appRes(uicomponent.getName() + ".label." + label) ;
-  									++i ;
-  							%>
-  								<tr>
+								<tbody>
+								<% 
+									String firstName = "";
+									String lastName = "";
+									String email = "";
+									String gender = "";
+									String jobTitle = "";
+									String workPhone = "";
+									String mobile = "";
+									String siteOfUser = "";
+									if(contact != null) {
+										gender		 = contact.getGender();
+										jobTitle	 = contact.getJobTitle();
+										workPhone	= contact.getWorkPhone1();
+										mobile		 = contact.getMobilePhone();
+										siteOfUser = contact.getPersonalSite() ;
+									}
+									if(user != null){
+										firstName = user.getFirstName();
+										lastName	= user.getLastName() ;
+										email		 = "<a target=\"_blank\" href=\"mailto:"+user.getEmail()+"\">"+user.getEmail()+"</a>" ;
+									}
+									if(!ForumUtils.isEmpty(siteOfUser)) {
+										siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
+									}
+									String []labels = uiform.getLabelProfile();	
+									String []contents = [userName, firstName, lastName, birthDay, gender, email,
+										jobTitle, location, workPhone, mobile, siteOfUser]; 
+									int i = 0 ;
+									for(label in labels) {
+										String content = "";
+										content = contents[i];
+										if(content == null) content = "";
+										label = _ctx.appRes(uicomponent.getName() + ".label." + label) ;
+										++i ;
+								%>
+									<tr>
 										<td class="Label">$label:</td>
-										<td class="LabelProfile">
-										<%
-											if(user.getEmail().equals(content)) {
-										%>
-											<a target="_blank" href="mailto:$content"> $content </a>
-										<%} else {%>
-												$content
-										<%}%>
-										</td>
+										<td class="LabelProfile"><span>$content</span></td>
 									</tr>
 								<%} %>
 								</tbody>
 							</table>
-					  </td>
+						</td>
 					</tr>
 				</tbody>
 			</table>

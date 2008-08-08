@@ -23,6 +23,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -65,15 +66,19 @@ public class UIQuickSearchForm extends UIForm {
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text)) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				UserProfile userProfile = forumPortlet.getUserProfile() ;
+				String type = "";
+				if(userProfile.getUserRole() == 0) type = "true,all";
+				else type = "false,all" ;
 				List<ForumSearch> list = null;
 				try {
-					list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,all", "");
+					list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type, "");
 				}catch (Exception e) {
 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 					return ;
 				}
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;				
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;

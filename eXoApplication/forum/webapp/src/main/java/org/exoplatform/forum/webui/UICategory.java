@@ -277,7 +277,7 @@ public class UICategory extends UIForm	{
 				for (Forum forum : forums) {
 					if(forum.getIsLock()) continue ;
 					forum.setIsLock(true) ;
-					uiCategory.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum, false);
+					uiCategory.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 2);
 				}
 				uiCategory.isEditForum = true ;
 			} else {
@@ -305,7 +305,7 @@ public class UICategory extends UIForm	{
 				for (Forum forum : forums) {
 					if(!forum.getIsLock()) continue ;
 					forum.setIsLock(false) ;
-					uiCategory.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum, false);
+					uiCategory.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 2);
 				}
 				uiCategory.isEditForum = true ;
 			} else {
@@ -332,7 +332,7 @@ public class UICategory extends UIForm	{
 			if(forums.size() > 0) {
 				for (Forum forum : forums) {
 					forum.setIsClosed(false) ;
-					uiCategory.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum, false);
+					uiCategory.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 1);
 				}
 				uiCategory.isEditForum = true ;
 			} 
@@ -358,7 +358,7 @@ public class UICategory extends UIForm	{
 			if(forums.size() > 0) {
 				for (Forum forum : forums) {
 					forum.setIsClosed(true) ;
-					uiCategory.forumService.saveForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum, false);
+					uiCategory.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 1);
 				}
 				uiCategory.isEditForum = true ;
 			} 
@@ -469,6 +469,12 @@ public class UICategory extends UIForm	{
 			UIFormStringInput formStringInput = uiCategory.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
+				StringBuffer type = new StringBuffer();
+				if(uiCategory.getUserProfile().getUserRole() == 0){ 
+					type.append("true,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
+				} else {
+					type.append("false,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
+				}
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -476,7 +482,7 @@ public class UICategory extends UIForm	{
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,forum/topic/post", path);
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path);
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
