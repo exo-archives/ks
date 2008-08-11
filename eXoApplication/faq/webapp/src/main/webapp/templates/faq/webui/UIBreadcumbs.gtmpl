@@ -1,3 +1,6 @@
+<% 
+	import org.exoplatform.faq.webui.FAQUtils;
+%>
 <div class="UIBreadcumbs" id="$uicomponent.id">
 	<div class="LeftBreadcumbsBar">
 		<div class="RightBreadcumbsBar"> 
@@ -11,6 +14,7 @@
 						if(t < uicomponent.getMaxPath()) {
 							if(namePath.length() > 20) {
 								title = namePath ;
+								title = FAQUtils.getTitle(title) ; 
 								namePath = namePath.substring(0,19) + "..." ;
 				%>
 								<a href="$link" class="Selected" title="$title">$namePath >></a>
@@ -21,6 +25,7 @@
 				 <% } else {
 				 			if(namePath.length() > 20) {
 								title = namePath ;
+								title = FAQUtils.getTitle(title) ; 
 								namePath = namePath.substring(0,19) + "..." ;
 				%>
 								<div class="Selected" title="$title">$namePath </div>

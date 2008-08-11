@@ -1,6 +1,7 @@
 <%  
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.webui.FAQUtils;
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
@@ -30,6 +31,7 @@
 	    			<% 
 	    			if(categoryName.length() > 50) {
 	    				String title = categoryName ; 
+	    				title = FAQUtils.getTitle(title) ; 
 	    				categoryName = categoryName.substring(0, 49) + "..." ;
 	    			 %>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
@@ -55,6 +57,7 @@
 	    			<% 
 	    			if(categoryName.length() > 50) {
 	    				String title = categoryName ; 
+	    				title = FAQUtils.getTitle(title) ; 
 	    				categoryName = categoryName.substring(0, 49) + "..." ;
 	    			 %>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
@@ -70,7 +73,8 @@
 	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
 	    			<% 
 	    			if(categoryName.length() > 50) {
-	    				String title = categoryName ; 
+	    				String title = categoryName ;
+	    				title = FAQUtils.getTitle(title) ;  
 	    				categoryName = categoryName.substring(0, 49) + "..." ;
 	    			 %>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
@@ -105,6 +109,7 @@
 	    			<% 
 	    			if(categoryName.length() > 50) {
 	    				String title = categoryName ; 
+	    				title = FAQUtils.getTitle(title) ; 
 	    				categoryName = categoryName.substring(0, 49) + "..." ;
 	    			 %>
 	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>

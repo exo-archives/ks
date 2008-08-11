@@ -1,6 +1,7 @@
 <% 
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.webui.FAQUtils;
 	import java.text.Format;
 	import java.text.SimpleDateFormat;
 	import java.util.Date;
@@ -39,9 +40,14 @@
  												<%
 												if(name.length()>100) {
 													String title = name ;
+													title = FAQUtils.getTitle(title) ; 
 													name = name.substring(0,99)+ "..."
  												%>
- 												<td class="text" align="left"><a href="$link" title="$title">$name</a></td>
+ 												<td class="text" align="left">
+ 													<a href="$link" title="$title">
+ 														$name
+ 													</a>
+ 												</td>
  												<%
 												} else {
  												%>

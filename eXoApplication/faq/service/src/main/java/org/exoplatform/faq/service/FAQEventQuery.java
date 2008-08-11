@@ -310,7 +310,7 @@ public String getPathQuery() {
 		isAnd = false ;
 		StringBuffer queryString = new StringBuffer() ;
     if(path != null && path.length() > 0) queryString.append("/jcr:root").append(path).append("//element(*,exo:").append(type).append(")") ;
-    else  queryString.append("//element(*,").append(type).append(")") ;
+    else  queryString.append("//element(*,exo:").append(type).append(")") ;
     StringBuffer stringBuffer = new StringBuffer() ;
     stringBuffer.append("[");
     if(text != null && text.length() > 0 ) {
