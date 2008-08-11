@@ -28,6 +28,7 @@
 								<%if(isAdmin){ %>
 								<th width="120px">IP Logging</th>
 								<%} %>
+								<th width="40px">Delete</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -59,6 +60,11 @@
 									<%if(isAdmin){ %>
 									<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
 									<%} %>
+									<td class="Tdbox" align="center" style="padding-left:5px;">
+										<a href="<%=uicomponent.event("DeletePostLink", post.getId());%>">
+											<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
+										</a>
+									</td>
 					 			</tr>
 						 	<% i = i + 1;}
 						 		} else {

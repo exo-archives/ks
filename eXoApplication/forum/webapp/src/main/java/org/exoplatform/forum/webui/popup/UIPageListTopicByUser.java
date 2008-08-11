@@ -52,7 +52,8 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
 		events = {
-				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class )
+				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class ),
+				@EventConfig(listeners = UIPageListTopicByUser.DeleteTopicActionListener.class,confirm="UITopicContainer.confirm.SetDeleteTopic" )
 		}
 )
 public class UIPageListTopicByUser extends UIContainer{
@@ -82,7 +83,11 @@ public class UIPageListTopicByUser extends UIContainer{
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null)pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
-		List<Topic> topics = pageList.getPage(page) ;
+		List<Topic> topics = null;
+		while(topics == null && page >= 1){
+			topics = pageList.getPage(page) ;
+			if(topics == null) page--;
+		}
     this.topics = topics ;
 		return topics ;
 	}
@@ -109,6 +114,21 @@ public class UIPageListTopicByUser extends UIContainer{
 		if(maxPost > 0)	pageListPost.setPageSize(maxPost) ;
 		return pageListPost;
 	}
+	
+	static	public class DeleteTopicActionListener extends EventListener<UIPageListTopicByUser> {
+    public void execute(Event<UIPageListTopicByUser> event) throws Exception {
+			UIPageListTopicByUser uiForm = event.getSource() ;
+      String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      Topic topic = uiForm.getTopicById(topicId);
+      String[] path = topic.getPath().split("/");
+      int i = path.length ;
+      String categoryId = path[i-3];
+      String forumId = path[i-2] ;
+      uiForm.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId);
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+	
 	static	public class OpenTopicActionListener extends EventListener<UIPageListTopicByUser> {
     public void execute(Event<UIPageListTopicByUser> event) throws Exception {
 			UIPageListTopicByUser uiForm = event.getSource() ;
