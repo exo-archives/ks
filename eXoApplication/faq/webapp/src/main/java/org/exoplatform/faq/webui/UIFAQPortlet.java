@@ -16,9 +16,12 @@
  */
 package org.exoplatform.faq.webui;
 
+import javax.portlet.PortletPreferences;
+
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
@@ -56,4 +59,11 @@ public class UIFAQPortlet extends UIPortletApplication {
 		popupAction.deActivate() ;
 		context.addUIComponentToUpdateByAjax(popupAction) ;
 	}
+  
+  public static String getPreferenceDisplay() {
+    PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+    String repository = portletPref.getValue("display", "") ;
+    return repository ;
+  }
 } 

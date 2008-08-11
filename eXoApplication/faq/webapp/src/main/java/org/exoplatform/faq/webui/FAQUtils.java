@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.portlet.PortletPreferences;
 
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
@@ -33,6 +34,8 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormInputBase;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
@@ -270,4 +273,10 @@ public class FAQUtils {
     return text ;
 	}
 	
+	public static String getPreferenceDisplay() {
+    PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+    String repository = portletPref.getValue("display", "") ;
+    return repository ;
+  }
 }

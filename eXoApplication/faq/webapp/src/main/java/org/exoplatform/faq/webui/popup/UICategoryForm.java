@@ -77,12 +77,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	
 	public void init(boolean isAddNew) throws Exception {
 		isAddNew_ = isAddNew ;
-		FAQSetting faSetting = faqService_.getFAQSetting(FAQUtils.getSystemProvider()) ;
-		Boolean processingMode = faSetting.getProcessingMode() ;
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
-    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false ).setChecked(!processingMode)) ;
+    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false )) ;
     UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
     inputset.addUIFormInput(moderator) ;
     List<ActionData> actionData = new ArrayList<ActionData>() ;

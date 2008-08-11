@@ -32,6 +32,7 @@ import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -119,6 +120,13 @@ public class UIQuestions extends UIContainer {
     backPath_ = null ;
 	  this.categoryId_ = new String() ;
     currentUser_ = FAQUtils.getCurrentUser() ;
+    FAQSetting faqSetting = faqService.getFAQSetting(FAQUtils.getSystemProvider()) ;
+    String display = faqSetting.getProcessingMode() ;
+		String portletDisplay = FAQUtils.getPreferenceDisplay();
+		if(display == null || !display.equals(portletDisplay)){
+			faqSetting.setProcessingMode(portletDisplay);
+			faqService.saveFAQSetting(faqSetting, FAQUtils.getSystemProvider());
+		}
 		addChild(UIQuickSearch.class, null, null) ;
     setCategories() ;
 	}

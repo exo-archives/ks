@@ -25,7 +25,7 @@ package org.exoplatform.faq.service;
  * Apr 10, 2008, 2:07:25 PM
  */
 public class FAQSetting {
-	private boolean processingMode ;
+	private String processingMode ;
 	private String displayType ;
 	
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
@@ -33,7 +33,6 @@ public class FAQSetting {
 	public static String DISPLAY_TYPE_RELEVANCE = "relevance" ;
 	
 	public FAQSetting() {
-		processingMode = true ;
 		displayType = DISPLAY_TYPE_RELEVANCE ; 
 	}
 	
@@ -44,7 +43,7 @@ public class FAQSetting {
 	 * 
 	 * @return processingMode
 	 */
-	public boolean getProcessingMode() { return processingMode ;}
+	public String getProcessingMode() { return processingMode ;}
 	
 	/**
 	 * there are two modes: Process/ Do not process questions.
@@ -55,7 +54,7 @@ public class FAQSetting {
 	 * @param b, if b = true then field Show Mode : Do not process questions before showing
 	 * 					 else field Show Mode : Process questions before showing
 	 */
-	public void setProcessingMode(boolean b) { processingMode = b ;} 
+	public void setProcessingMode(String b) { processingMode = b ;} 
 	
 	/**
 	 * This method get one value is Alphabet or Post Date
