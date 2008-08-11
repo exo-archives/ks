@@ -25,6 +25,20 @@
 .UIPageDesktop #UIWindow-forum {
 	width: 870px;
 }
+
+.UIForumPortlet .UIRightClickPopupMenu .FixHeight {
+	height: 0px;
+	width: 0px;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .MenuItem {
+	display: block;
+}
+
+.Vista .UIForumPortlet .UIRightClickPopupMenu {
+	width: 180px;
+}
+
 /**************************** UIActionForum *********************************/
 .UIForumPortlet .UIActionForum {
 	padding: 2px 3px;
