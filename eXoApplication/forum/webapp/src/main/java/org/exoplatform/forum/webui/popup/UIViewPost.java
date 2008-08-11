@@ -90,8 +90,9 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			UIViewPost uiForm = event.getSource() ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
-				popupContainer.getChild(UIPopupAction.class).deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+				popupAction.deActivate();
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
