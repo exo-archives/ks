@@ -56,7 +56,7 @@ public interface DataStorage {
 	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath)throws Exception;	
 	
 	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception ;
+	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception ;
 	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception ;
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;		
@@ -68,7 +68,7 @@ public interface DataStorage {
 	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception;
 	
 	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin)throws Exception;
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception ;
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception ;
 	public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId)throws Exception;
 	public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew)throws Exception;
 	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception;
@@ -103,7 +103,7 @@ public interface DataStorage {
 	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception ;
 	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception ;
 	
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception ;
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery) throws Exception ;
 	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception ;
 	
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception ;

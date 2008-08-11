@@ -199,7 +199,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception;
+	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception;
 
 	/**
 	 * Gets the page topic old.
@@ -342,12 +342,12 @@ public interface ForumService {
 	 * 
 	 * @param sProvider is the SessionProvider
 	 * @param userName the user name
-	 * 
+	 * @param isMod TODO
 	 * @return the page post by user
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception;
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception;
 
 	/**
 	 * This method should: 1. Check the user permission 2. Load the Page Post data
@@ -695,13 +695,13 @@ public interface ForumService {
 	 * 
 	 * @param sProvider is the SessionProvider
 	 * @param textQuery the text query
+	 * @param type is type user and type object(forum, topic and post)
 	 * @param pathQuery the path query
-	 * 
 	 * @return the quick search
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception;
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery) throws Exception;
 
 	/**
 	 * Gets the advanced search.

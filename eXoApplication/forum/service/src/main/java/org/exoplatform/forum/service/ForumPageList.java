@@ -125,6 +125,7 @@ public class ForumPageList extends JCRPageList {
 		if(postNode.hasProperty("exo:icon")) postNew.setIcon(postNode.getProperty("exo:icon").getString()) ;
 		if(postNode.hasProperty("exo:isApproved")) postNew.setIsApproved(postNode.getProperty("exo:isApproved").getBoolean()) ;
 		if(postNode.hasProperty("exo:isHidden")) postNew.setIsHidden(postNode.getProperty("exo:isHidden").getBoolean()) ;
+		if(postNode.hasProperty("exo:isActiveByTopic")) postNew.setIsActiveByTopic(postNode.getProperty("exo:isActiveByTopic").getBoolean()) ;
 		if(postNode.hasProperty("exo:userPrivate")) postNew.setUserPrivate(ValuesToStrings(postNode.getProperty("exo:userPrivate").getValues())) ;
 		if(postNode.hasProperty("exo:numberAttach")) {
 			long numberAttach = postNode.getProperty("exo:numberAttach").getLong();
@@ -181,6 +182,7 @@ public class ForumPageList extends JCRPageList {
 		if(topicNode.hasProperty("exo:isSticky")) topicNew.setIsSticky(topicNode.getProperty("exo:isSticky").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isWaiting")) topicNew.setIsWaiting(topicNode.getProperty("exo:isWaiting").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isActive")) topicNew.setIsActive(topicNode.getProperty("exo:isActive").getBoolean()) ;
+		if(topicNode.hasProperty("exo:isActiveByForum")) topicNew.setIsActiveByForum(topicNode.getProperty("exo:isActiveByForum").getBoolean()) ;
 		if(topicNode.hasProperty("exo:canView")) topicNew.setCanView(ValuesToStrings(topicNode.getProperty("exo:canView").getValues())) ;
 		if(topicNode.hasProperty("exo:canPost")) topicNew.setCanPost(ValuesToStrings(topicNode.getProperty("exo:canPost").getValues())) ;
 		if(topicNode.hasProperty("exo:isPoll")) topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
