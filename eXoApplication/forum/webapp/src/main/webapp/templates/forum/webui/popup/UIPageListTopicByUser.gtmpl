@@ -32,6 +32,7 @@
 								<th style="width: 96px;">Rating</th>
 								<th style="width: 40px;">Replies</th>
 								<th style="width: 40px;">Views</th>
+								<th style="width: 40px;">Delete</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -107,6 +108,11 @@
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">$postView</td>
+									<td class="Tdbox" align="center" style="padding-left:5px;">
+										<a href="<%=uicomponent.event("DeleteTopic", topicId)%>">
+											<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
+										</a>
+									</td>
 					 			</tr>
 						 	<% i = i + 1;}
 						 	} else {

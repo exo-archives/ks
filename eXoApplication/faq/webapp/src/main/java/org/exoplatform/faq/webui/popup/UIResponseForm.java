@@ -337,7 +337,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       for(QuestionLanguage questionLanguage : response.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(response.languageIsResponsed) && !question_.getLanguage().equals(response.languageIsResponsed)) {
           questionLanguage.setQuestion(questionContent) ;
-          if(!questionLanguage.getResponse().trim().equals(responseQuestionContent.trim())){
+          if(questionLanguage.getResponse() == null || !questionLanguage.getResponse().trim().equals(responseQuestionContent.trim())){
           	questionLanguage.setResponseBy(user);
           	questionLanguage.setResponse(responseQuestionContent) ;
           	questionLanguage.setDateResponse(date);

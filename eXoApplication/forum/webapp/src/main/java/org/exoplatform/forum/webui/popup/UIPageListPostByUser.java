@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UIForumSummary;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -42,7 +43,8 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/popup/UIPageListPostByUser.gtmpl",
 		events = {
-			@EventConfig(listeners = UIPageListPostByUser.OpenPostLinkActionListener.class)
+			@EventConfig(listeners = UIPageListPostByUser.OpenPostLinkActionListener.class),
+			@EventConfig(listeners = UIPageListPostByUser.DeletePostLinkActionListener.class, confirm="UITopicDetail.confirm.DeleteTopic")
 		}
 )
 public class UIPageListPostByUser extends UIContainer{
@@ -77,7 +79,11 @@ public class UIPageListPostByUser extends UIContainer{
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null) pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
-		List<Post> posts = pageList.getPage(page) ;
+		List<Post> posts = null;
+		while(posts == null && page >= 1){
+			posts = pageList.getPage(page) ;
+			if(posts == null) page--;
+		}
     this.posts = posts ;
 		return posts ;
 	}
@@ -100,6 +106,21 @@ public class UIPageListPostByUser extends UIContainer{
       viewPost.setPostView(post) ;
       viewPost.setViewUserInfo(false) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static	public class DeletePostLinkActionListener extends EventListener<UIPageListPostByUser> {
+		public void execute(Event<UIPageListPostByUser> event) throws Exception {
+			UIPageListPostByUser uiForm = event.getSource() ;
+			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			Post post = uiForm.getPostById(postId);
+			String[] path = post.getPath().split("/");
+			int length = path.length;
+			String topicId = path[length - 2];
+			String forumId = path[length - 3];
+			String categoryId = path[length - 4];
+			uiForm.forumService.removePost(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, postId);
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	
