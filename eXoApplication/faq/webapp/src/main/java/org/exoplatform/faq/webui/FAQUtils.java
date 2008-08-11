@@ -257,4 +257,17 @@ public class FAQUtils {
 		}
 	  return str ;
   }
+	
+	public static String getTitle(String text) {
+		int i = 0 ;
+	  while (i < text.length()) {
+	    if (text.charAt(i) == '"'  ) {
+	      text = text.replace((text.charAt(i)) + "", "&quot;") ;
+	    } else {
+	      i ++ ;
+	    }
+	  }
+    return text ;
+	}
+	
 }
