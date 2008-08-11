@@ -289,12 +289,14 @@ public class UIQuestions extends UIContainer {
 	
   public void setListQuestion() {
     isChangeLanguage = false;
+    boolean approved = false;
+    if(FAQUtils.getPreferenceDisplay().equals("approved")) approved = true;
     try{
       SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
       if(!canEditQuestion) {
-        this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider).getAll() ;
+        this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider, approved).getAll() ;
       } else {
-        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider).getAllSort() ;
+        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider, approved).getAllSort() ;
       }
     } catch (FileNotFoundException fileNotFount) { 
       fileNotFount.printStackTrace() ;
@@ -703,7 +705,7 @@ public class UIQuestions extends UIContainer {
           List<Category> listCate = question.getAllSubCategory(categoryId) ;
         	for(Category category : listCate) {
           	String id = category.getId() ;
-          	List<Question> listQuestion = faqService.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider()).getAll() ;
+          	List<Question> listQuestion = faqService.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider(), false).getAll() ;
             for(Question ques: listQuestion) {
             	String questionId = ques.getId() ;
             	faqService.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;

@@ -203,7 +203,7 @@ public interface FAQService {
    * 
    * @throws Exception  if can't found category
    */
-  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
+  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception ;
   
   /**
    * Get all questions of the category.
@@ -217,7 +217,7 @@ public interface FAQService {
    * 
    * @throws Exception    when category not found
    */
-  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception ;
+  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception ;
   
   /**
    * Get some informations of category: Lookup category node by category's id
