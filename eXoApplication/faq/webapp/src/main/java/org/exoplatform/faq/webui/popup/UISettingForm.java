@@ -50,21 +50,13 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 		}
 )
 public class UISettingForm extends UIForm implements UIPopupComponent	{
-	public static final String SHOW_MODE = "show-mode".intern(); 
 	public static final String DISPLAY_TYPE = "display-type".intern(); 
-	public static final String ITEM_NOT_PROCESS = "true".intern() ;
-	public static final String ITEM_PROCESS= "false".intern() ;
 	public static final String ITEM_CREATE_DATE= "postdate".intern() ;
 	public static final String ITEM_ALPHABET= "alphabet".intern() ;
 	
 	public UISettingForm() throws Exception {}
 	
 	public void init() throws Exception {
-		
-		List<SelectItemOption<String>> showMode = new ArrayList<SelectItemOption<String>>();
-		showMode.add(new SelectItemOption<String>(ITEM_NOT_PROCESS, "true"));
-		showMode.add(new SelectItemOption<String>(ITEM_PROCESS,"false" ));
-		addUIFormInput(new UIFormSelectBox(SHOW_MODE, SHOW_MODE, showMode));
 		
 		List<SelectItemOption<String>> displayType = new ArrayList<SelectItemOption<String>>();
 		displayType.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
@@ -77,7 +69,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
     FAQService mailSrv = getApplicationComponent(FAQService.class);
     FAQSetting setting = mailSrv.getFAQSetting(SessionProviderFactory.createSystemProvider()) ;
     if (setting != null) {
-      getUIFormSelectBox(SHOW_MODE).setValue(String.valueOf(setting.getProcessingMode())) ;
       getUIFormSelectBox(DISPLAY_TYPE).setValue(String.valueOf(setting.getDisplayMode()));
       
     }
@@ -93,10 +84,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;			
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
-			System.out.println("\n\n=======> " + uiPortlet.getPreferenceDisplay() + "\n\n");
 			FAQService service = FAQUtils.getFAQService() ;
 			FAQSetting faqSetting = new FAQSetting() ;
-			faqSetting.setProcessingMode(Boolean.valueOf(settingForm.getUIFormSelectBox(SHOW_MODE).getValue()));
 			faqSetting.setDisplayMode(String.valueOf(settingForm.getUIFormSelectBox(DISPLAY_TYPE).getValue())) ;
 			service.saveFAQSetting(faqSetting, SessionProviderFactory.createSystemProvider()) ;
 			UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;

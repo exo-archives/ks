@@ -774,7 +774,7 @@ public class JCRDataStorage {
     FAQSetting setting = new FAQSetting();
     if (settingNode != null ){
       try {
-        setting.setProcessingMode((settingNode.getProperty(Utils.EXO_PROCESSING_MODE).getBoolean()));
+        setting.setProcessingMode((settingNode.getProperty(Utils.EXO_PROCESSING_MODE).getString()));
         setting.setDisplayMode((settingNode.getProperty(Utils.EXO_DISPLAY_TYPE).getString()));
       } catch(Exception e) { 
       	e.printStackTrace() ;

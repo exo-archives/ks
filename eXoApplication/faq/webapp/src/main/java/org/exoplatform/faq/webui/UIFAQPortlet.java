@@ -60,7 +60,7 @@ public class UIFAQPortlet extends UIPortletApplication {
 		context.addUIComponentToUpdateByAjax(popupAction) ;
 	}
   
-  public String getPreferenceDisplay() {
+  public static String getPreferenceDisplay() {
     PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
     PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
     String repository = portletPref.getValue("display", "") ;
