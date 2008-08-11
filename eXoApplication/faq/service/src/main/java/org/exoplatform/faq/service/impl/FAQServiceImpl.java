@@ -140,8 +140,8 @@ public class FAQServiceImpl implements FAQService{
    * @return 	QuestionPageList
    * @throws Exception the exception
 	 */
-	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
-		return jcrData_.getQuestionsByCatetory(categoryId, sProvider);
+	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception {
+		return jcrData_.getQuestionsByCatetory(categoryId, sProvider, approved);
 	}
   
 	/**
@@ -152,8 +152,8 @@ public class FAQServiceImpl implements FAQService{
 	 * @return 	QuestionPageList
 	 * @throws Exception the exception
 	 */
-	public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
-	  return jcrData_.getAllQuestionsByCatetory(categoryId, sProvider);
+	public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception {
+	  return jcrData_.getAllQuestionsByCatetory(categoryId, sProvider, approved);
 	}
   
 	/**

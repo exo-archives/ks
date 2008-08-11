@@ -505,13 +505,21 @@ public class JCRDataStorage {
     return pageList ;
   }
   
-  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
+  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception {
   	Node questionHome = getQuestionHome(sProvider, null) ;
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-                                                + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-                                                append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
-                                                append("]").append("order by @exo:createdDate ascending");
+    StringBuffer queryString = null;
+    if(approved) {
+	    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+	                                    + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+	                                    append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
+	                                    append("]").append("order by @exo:createdDate ascending");
+    } else {
+    	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+          + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+          append(" and (@exo:isActivated='true')").
+          append("]").append("order by @exo:createdDate ascending");
+    }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     
@@ -519,14 +527,22 @@ public class JCRDataStorage {
     return pageList ;
   }
   
-  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider) throws Exception {
+  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     FAQSetting faqSetting = getFAQSetting(sProvider) ;
   	String sortBy = faqSetting.getDisplayMode() ;
-    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-        + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
-        append("]");
+    StringBuffer queryString = null;
+    if(approved){
+	    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+	        + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+	        append(" and (@exo:isApproved='true')").
+	        append("]");
+    } else {
+    	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+	        + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
+	        append("]");
+    }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, sortBy) ;

@@ -37,7 +37,10 @@ public class FAQServiceUtils {
   private static OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   
   /**
-   * Check user is administrator or is not administrator
+   * Check user is administrator or is not administrator. The first, 
+   * get all addmins from groups addmin and organization management.
+   * Then check if current user is contained in these groups then return 
+   * <code>true</code> else return <code>false</code>
    * 
    * @param userName
    * @return true if this user is administrator else false

@@ -234,7 +234,7 @@ public class TestFAQService extends FAQServiceTestCase{
     assertEquals(listAllQuestion.size(), 5) ;
 
 //  get list question by category of question 1
-  	List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_).getAll() ;
+  	List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, false).getAll() ;
   	assertEquals(listQuestionByCategory.size(), 2) ;
 
 //  	remove question

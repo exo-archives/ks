@@ -120,7 +120,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {
     try {
-      return faqService_.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider()).getAll() ;
+      return faqService_.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider(), false).getAll() ;
     } catch (Exception e) {
       e.printStackTrace();
       return null ;
