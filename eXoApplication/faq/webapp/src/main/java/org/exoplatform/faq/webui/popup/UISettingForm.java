@@ -93,6 +93,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;			
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			System.out.println("\n\n=======> " + uiPortlet.getPreferenceDisplay() + "\n\n");
 			FAQService service = FAQUtils.getFAQService() ;
 			FAQSetting faqSetting = new FAQSetting() ;
 			faqSetting.setProcessingMode(Boolean.valueOf(settingForm.getUIFormSelectBox(SHOW_MODE).getValue()));

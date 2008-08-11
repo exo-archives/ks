@@ -25,5 +25,12 @@
       <short-title>FAQ Portlet</short-title>
       <keywords>faq</keywords>
     </portlet-info>
+    <portlet-preferences>
+    	<preference>
+        <name>display</name>
+        <value>approved</value> <!--approved/both -->
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>  
   </portlet>  
 </portlet-app>
