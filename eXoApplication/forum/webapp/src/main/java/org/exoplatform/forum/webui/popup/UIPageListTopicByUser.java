@@ -140,7 +140,8 @@ public class UIPageListTopicByUser extends UIContainer{
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
 				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
 				viewTopic.setTopic(topic) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				//event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } else {
 	      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 	      String []id = topic.getPath().split("/") ;
