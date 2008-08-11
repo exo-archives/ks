@@ -7,9 +7,6 @@ package org.exoplatform.forum.test;
 import java.util.Date;
 
 import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 
 /**

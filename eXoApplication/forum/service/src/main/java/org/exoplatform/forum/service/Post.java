@@ -42,7 +42,8 @@ public class Post {
 	private String remoteAddr;
 	private String icon; 
 	private String []userPrivate ;
-	private boolean isApproved = false ;
+	private boolean isApproved = true ;
+	private boolean isActiveByTopic = true ;
 	private boolean isHidden = false ;
 	private long numberAttach = 0;
 	private List<ForumAttachment> attachments = null ;
@@ -103,17 +104,15 @@ public class Post {
 	public boolean getIsHidden() {return isHidden;}
 	public void setIsHidden(boolean isHidden) {this.isHidden = isHidden;}
 
+	public boolean getIsActiveByTopic() {return isActiveByTopic;}
+	public void setIsActiveByTopic(boolean isActiveByTopic) {this.isActiveByTopic = isActiveByTopic;}
+
 	public String getEditReason() {return editReason;}
 	public void setEditReason(String editReason) { this.editReason = editReason;}
 
 	public long getNumberAttach() { return numberAttach;}
 	public void setNumberAttach(long numberAttach) {this.numberAttach = numberAttach;}
 
-	public String[] getUserPrivate() {
-  	return userPrivate;
-  }
-
-	public void setUserPrivate(String[] userPrivate) {
-  	this.userPrivate = userPrivate;
-  }
+	public String[] getUserPrivate() {return userPrivate;}
+	public void setUserPrivate(String[] userPrivate) {this.userPrivate = userPrivate;}
 }

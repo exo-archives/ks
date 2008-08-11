@@ -19,6 +19,7 @@ package org.exoplatform.forum.service;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
+import org.exoplatform.services.organization.auth.impl.AuthenticationServiceImpl;
 import org.exoplatform.services.security.Identity;
 
 

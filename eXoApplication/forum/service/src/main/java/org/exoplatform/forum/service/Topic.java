@@ -46,17 +46,18 @@ public class Topic {
 	private String isNotifyWhenAddPost = new String() ;	
 	private boolean isClosed = false ;
 	private boolean isLock = false ;
-	private boolean isApproved = false ;
+	private boolean isApproved = true ;
 	private boolean isSticky = false ;
 	private boolean isPoll = false ;
 	private boolean isWaiting = false ;
-	private boolean isActive = true;
+	private boolean isActive = true ;
+	private boolean isActiveByForum = true ;
 	
-	private String[] canView;
-	private String[] canPost;
+	private String[] canView ;
+	private String[] canPost ;
 	private String[] userVoteRating ;
 	private String[] tagId ;
-	private Double voteRating = 0.0;
+	private Double voteRating = 0.0 ;
 	private List<ForumAttachment> attachments ;
 	
 	public Topic(){ 
@@ -127,6 +128,9 @@ public class Topic {
 	public boolean getIsApproved() { return isApproved;}
 	public void setIsApproved(boolean isApproved) { this.isApproved = isApproved;}
 
+	public boolean getIsActiveByForum() { return isActiveByForum; }
+	public void setIsActiveByForum(boolean isActiveByForum) { this.isActiveByForum = isActiveByForum;}
+
 	public boolean getIsSticky() { return isSticky;}
 	public void setIsSticky(boolean isSticky) { this.isSticky = isSticky;}
 
@@ -156,12 +160,7 @@ public class Topic {
 	public boolean getIsWaiting() {return isWaiting;}
 	public void setIsWaiting(boolean isWaiting) {this.isWaiting = isWaiting;}
 
-	public boolean getIsActive() {
-  	return isActive;
-  }
-
-	public void setIsActive(boolean isActive) {
-  	this.isActive = isActive;
-  }
+	public boolean getIsActive() {return isActive;}
+	public void setIsActive(boolean isActive) {this.isActive = isActive;}
 
 }

@@ -20,6 +20,7 @@ public class ForumEventQuery {
 	private String viewCountMin;
 	private String viewCountMax;
 	private String moderator;
+	private String remain;
 	private Calendar fromDateCreated ;
 	private Calendar toDateCreated ;
 	private Calendar fromDateCreatedLastPost ;
@@ -112,6 +113,12 @@ public class ForumEventQuery {
 	public void setModerator(String moderator) {
   	this.moderator = moderator;
   }
+	public String getRemain() {
+  	return remain;
+  }
+	public void setRemain(String remain) {
+  	this.remain = remain;
+  }
 	public Calendar getFromDateCreated() {
   	return fromDateCreated;
   }
@@ -144,7 +151,7 @@ public class ForumEventQuery {
 		isAnd = false ;
 		StringBuffer queryString = new StringBuffer() ;
     if(path != null && path.length() > 0) queryString.append("/jcr:root").append(path).append("//element(*,exo:").append(type).append(")") ;
-    else  queryString.append("//element(*,").append(type).append(")") ;
+    else  queryString.append("//element(*,exo:").append(type).append(")") ;
     StringBuffer stringBuffer = new StringBuffer() ;
     stringBuffer.append("[");
     if(valueIn.equals("title")) {
@@ -181,6 +188,11 @@ public class ForumEventQuery {
     if(isLock != null && isLock.length() > 0 && !isLock.equals("all")) {
     	if(isAnd) stringBuffer.append(" and ");
     	stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
+    	isAnd = true ;
+    }
+    if(remain != null && remain.length() > 0) {
+    	if(isAnd) stringBuffer.append(" and ");
+    	stringBuffer.append("(").append(remain).append(")") ;
     	isAnd = true ;
     }
     if(moderator != null && moderator.length() > 0) {

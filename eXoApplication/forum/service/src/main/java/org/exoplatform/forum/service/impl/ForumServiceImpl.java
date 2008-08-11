@@ -268,12 +268,12 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getPageTopicOld(sProvider, date) ;
 	}
 	
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception {
-	  return storage_.getPageTopicByUser(sProvider, userName);
+	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
+	  return storage_.getPageTopicByUser(sProvider, userName, isMod);
   }
 
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception {
-	  return storage_.getPagePostByUser(sProvider, userName);
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
+	  return storage_.getPagePostByUser(sProvider, userName, isMod);
   }
 
 	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {
@@ -284,8 +284,8 @@ public class ForumServiceImpl implements ForumService{
 		storage_.saveForumStatistic(sProvider, forumStatistic) ;
   }
 
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
-	  return storage_.getQuickSearch(sProvider, textQuery, pathQuery);
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery) throws Exception {
+	  return storage_.getQuickSearch(sProvider, textQuery, type, pathQuery);
   }
 
 	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider,ForumEventQuery eventQuery) throws Exception {

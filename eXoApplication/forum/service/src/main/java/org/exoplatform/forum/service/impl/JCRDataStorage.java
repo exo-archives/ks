@@ -304,7 +304,7 @@ public class JCRDataStorage{
 			switch (type) {
 			case 1: { 
 				forumNode.setProperty("exo:isClosed", forum.getIsClosed()) ; 
-//				queryLastTopic(sProvider, forumPath);
+				setActiveTopicByForum(sProvider, forumNode, forum.getIsClosed());
 				break;
 			}
 			case 2: { forumNode.setProperty("exo:isLock", forum.getIsLock()) ; break;}
@@ -585,6 +585,37 @@ public class JCRDataStorage{
 		forumHomeNode.getSession().save() ;
 	}
 	
+	private void setActiveTopicByForum(SessionProvider sProvider, Node forumNode, boolean isClosed) throws Exception {
+		NodeIterator iter = forumNode.getNodes() ;
+		Node topicNode = null;
+		isClosed = !isClosed;
+		System.out.println("\n\nisActiveForum: " + isClosed + "\n\n");
+		while (iter.hasNext()) {
+			topicNode = iter.nextNode() ;
+			if(topicNode.isNodeType("exo:topic")){
+				topicNode.setProperty("exo:isActiveByForum", isClosed) ;
+				setActivePostByTopic(sProvider, topicNode, isClosed);
+			}
+		}
+		getForumHomeNode(sProvider).getSession().save();
+	}
+	
+	private void setActivePostByTopic(SessionProvider sProvider, Node topicNode, boolean isActiveTopic) throws Exception {
+		if(isActiveTopic) isActiveTopic = topicNode.getProperty("exo:isApproved").getBoolean();
+		if(isActiveTopic) isActiveTopic = !(topicNode.getProperty("exo:isWaiting").getBoolean());
+		if(isActiveTopic) isActiveTopic = !(topicNode.getProperty("exo:isClosed").getBoolean()) ;
+		if(isActiveTopic) isActiveTopic = topicNode.getProperty("exo:isActive").getBoolean() ;
+		Node postNode = null;
+		NodeIterator iter = topicNode.getNodes() ;
+		System.out.println("\nisActiveTopic: " + isActiveTopic);
+		while (iter.hasNext()) {
+			postNode = iter.nextNode() ;
+			if(postNode.isNodeType("exo:post")){
+				postNode.setProperty("exo:isActiveByTopic", isActiveTopic) ;
+			}
+		}
+		getForumHomeNode(sProvider).getSession().save();
+	}
 	//Old: SessionProvider sProvider, String categoryId, String forumId, String isApproved, String isWaiting, String strQuery
 	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
@@ -754,6 +785,7 @@ public class JCRDataStorage{
 		if(topicNode.hasProperty("exo:isSticky")) topicNew.setIsSticky(topicNode.getProperty("exo:isSticky").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isWaiting")) topicNew.setIsWaiting(topicNode.getProperty("exo:isWaiting").getBoolean()) ;
 		if(topicNode.hasProperty("exo:isActive")) topicNew.setIsActive(topicNode.getProperty("exo:isActive").getBoolean()) ;
+		if(topicNode.hasProperty("exo:isActiveByForum")) topicNew.setIsActiveByForum(topicNode.getProperty("exo:isActiveByForum").getBoolean()) ;
 		if(topicNode.hasProperty("exo:canView")) topicNew.setCanView(ValuesToStrings(topicNode.getProperty("exo:canView").getValues())) ;
 		if(topicNode.hasProperty("exo:canPost")) topicNew.setCanPost(ValuesToStrings(topicNode.getProperty("exo:canPost").getValues())) ;
 		if(topicNode.hasProperty("exo:isPoll")) topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
@@ -821,13 +853,15 @@ public class JCRDataStorage{
 		}
 	}
 	
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName) throws Exception {
+	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 			StringBuffer stringBuffer = new StringBuffer() ;
 			stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:topic)[@exo:owner='")
-									.append(userName).append("' and @exo:isClosed='false' and @exo:isActive='true']") ;
+									.append(userName);
+			if(!isMod) stringBuffer.append("' and @exo:isClosed='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true']") ;
+			else stringBuffer.append("']") ;
 			String pathQuery =	stringBuffer.toString();
 			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 			QueryResult result = query.execute() ;
@@ -858,20 +892,24 @@ public class JCRDataStorage{
 				switch (type) {
 					case 1: { 
 						topicNode.setProperty("exo:isClosed", topic.getIsClosed()) ; 
+						setActivePostByTopic(sProvider, topicNode, !(topic.getIsClosed())) ;
 						break;
 					}
 					case 2: { topicNode.setProperty("exo:isLock", topic.getIsLock()) ; break;}
 					case 3: { 
 						topicNode.setProperty("exo:isApproved", topic.getIsApproved()) ;
+						setActivePostByTopic(sProvider, topicNode, topic.getIsApproved()) ;
 						break;
 					}
 					case 4: { topicNode.setProperty("exo:isSticky", topic.getIsSticky()) ; break;}
 					case 5: { 
 						topicNode.setProperty("exo:isWaiting", topic.getIsWaiting()) ; 
+						setActivePostByTopic(sProvider, topicNode, !(topic.getIsWaiting())) ;
 						break;
 					}
 					case 6: { 
 						topicNode.setProperty("exo:isActive", topic.getIsActive()) ; 
+						setActivePostByTopic(sProvider, topicNode, topic.getIsActive()) ;
 						break;
 					}
 					case 7: {
@@ -910,6 +948,7 @@ public class JCRDataStorage{
 			topicNode.setProperty("exo:postCount", -1) ;
 			topicNode.setProperty("exo:viewCount", 0) ;
 			topicNode.setProperty("exo:tagId", topic.getTagId());
+			topicNode.setProperty("exo:isActiveByForum", true) ;
 			// setTopicCount for Forum
 			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1 ;
 			forumNode.setProperty("exo:topicCount", newTopicCount ) ;
@@ -1153,15 +1192,18 @@ public class JCRDataStorage{
 		}
 	}
 	
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName) throws Exception {
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
-			String pathQuery = "/jcr:root" + forumHomeNode.getPath() + "//element(*,exo:post)[@exo:owner='"+userName+"' and @exo:isHidden='false']";
-			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+			StringBuffer pathQuery = new StringBuffer(); 
+				pathQuery.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:post)[@exo:owner='").append(userName);
+			if(isMod) pathQuery.append("']") ; 
+			else pathQuery.append("' and @exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true']");
+			Query query = qm.createQuery(pathQuery.toString() , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes();
-			JCRPageList pagelist = new ForumPageList(sProvider,iter, 10, pathQuery, true) ;
+			JCRPageList pagelist = new ForumPageList(sProvider,iter, 10, pathQuery.toString(), true) ;
 //			Node userProfileNode = getUserProfileNode(sProvider) ;
 //			try {
 //				Node userNode = userProfileNode.getNode(userName) ;
@@ -1216,6 +1258,7 @@ public class JCRDataStorage{
 		if(postNode.hasProperty("exo:icon")) postNew.setIcon(postNode.getProperty("exo:icon").getString()) ;
 		if(postNode.hasProperty("exo:isApproved")) postNew.setIsApproved(postNode.getProperty("exo:isApproved").getBoolean()) ;
 		if(postNode.hasProperty("exo:isHidden")) postNew.setIsHidden(postNode.getProperty("exo:isHidden").getBoolean()) ;
+		if(postNode.hasProperty("exo:isActiveByTopic")) postNew.setIsActiveByTopic(postNode.getProperty("exo:isActiveByTopic").getBoolean()) ;
 		if(postNode.hasProperty("exo:userPrivate")) postNew.setUserPrivate(ValuesToStrings(postNode.getProperty("exo:userPrivate").getValues())) ;
 		if(postNode.hasProperty("exo:numberAttach")) {
 			long numberAttach = postNode.getProperty("exo:numberAttach").getLong();
@@ -1256,6 +1299,7 @@ public class JCRDataStorage{
 			postNode.setProperty("exo:path", postNode.getPath());
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			postNode.setProperty("exo:userPrivate", post.getUserPrivate());
+			postNode.setProperty("exo:isActiveByTopic", true) ;
 			Node userProfileNode = getUserProfileNode(sProvider);
 			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
 			long postCount = forumStatistic.getProperty("exo:postCount").getLong();
@@ -1330,7 +1374,6 @@ public class JCRDataStorage{
 			long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong() + numberAttach;
 			// set InfoPost for Forum
 			long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1;
-			forumNode.setProperty("exo:postCount", forumPostCount);
 			boolean isSetLastPost = !topicNode.getProperty("exo:isClosed").getBoolean();
 			if (isSetLastPost)
 				isSetLastPost = !topicNode.getProperty("exo:isWaiting").getBoolean();
@@ -1340,18 +1383,23 @@ public class JCRDataStorage{
 				if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 					// set InfoPost for Topic
 					if(!post.getIsHidden()) {
+						forumNode.setProperty("exo:postCount", forumPostCount);
+						
 						topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 						topicNode.setProperty("exo:postCount", topicPostCount);
 						topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
 						topicNode.setProperty("exo:lastPostBy", post.getOwner());
+						forumNode.setProperty("exo:postCount", forumPostCount);
 					}
 					if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
 					}
 				} else {
-					if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+					if (post.getIsApproved()) {
 						// set InfoPost for Topic
 						if(!post.getIsHidden()) {
+							forumNode.setProperty("exo:postCount", forumPostCount);
+							
 							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 							topicNode.setProperty("exo:postCount", topicPostCount);
 							topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
@@ -1419,52 +1467,72 @@ public class JCRDataStorage{
 	
 	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		Node userProfileNode = getUserProfileNode(sProvider) ;
 		for (Post post : posts) {
 			try {
 				boolean isGetLastPost = false;
 				String postPath = post.getPath();
 				String topicPath = postPath.substring(0,postPath.lastIndexOf("/"));
+				String forumPath = postPath.substring(0,topicPath.lastIndexOf("/"));
 				Node postNode = (Node)forumHomeNode.getSession().getItem(postPath) ;
 				Node topicNode = (Node)forumHomeNode.getSession().getItem(topicPath) ;
+				Node forumNode = (Node)forumHomeNode.getSession().getItem(forumPath) ;
 				Calendar lastPostDate = topicNode.getProperty("exo:lastPostDate").getDate();
 				Calendar postDate = postNode.getProperty("exo:createdDate").getDate();
+				long topicPostCount = topicNode.getProperty("exo:postCount").getLong() ;
+				long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong();
+				long forumPostCount = forumNode.getProperty("exo:postCount").getLong();
+//				Node userNode = null;
+//				try {
+//					userNode = userProfileNode.getNode(post.getOwner()) ;
+//				} catch (PathNotFoundException e) {
+//				}
+				
 				switch (type) {
 					case 1: { 
-						if(postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
-							topicNode.setProperty("exo:lastPostDate", postDate);
-							topicNode.setProperty("exo:lastPostBy", post.getOwner());
-							isGetLastPost = true;
-						}
-						postNode.setProperty("exo:isApproved", post.getIsApproved()) ; 
-						long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
-						long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong();
-						newNumberAttach = newNumberAttach + postNode.getProperty("exo:numberAttach").getLong();
-						topicNode.setProperty("exo:numberAttachments", newNumberAttach);
-						topicNode.setProperty("exo:postCount", topicPostCount);
+						postNode.setProperty("exo:isApproved", true) ; 
 						break;
 					}
 					case 2: {
 						if(post.getIsHidden()){
 							postNode.setProperty("exo:isHidden", true) ; 
-							System.out.println("\n" + postNode.getName() + "\n");
 							Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
 							if(postLastNode != null) {
 								topicNode.setProperty("exo:lastPostDate", postLastNode.getProperty("exo:createdDate").getDate());
 								topicNode.setProperty("exo:lastPostBy", postLastNode.getProperty("exo:owner").getString());
+								isGetLastPost = true;
 							}
+//							if(userNode.hasProperty("exo:totalPost")) {
+//								userNode.setProperty("exo:totalPost", userNode.getProperty("exo:totalPost").getLong() - 1 );
+//							}
+							newNumberAttach = newNumberAttach - postNode.getProperty("exo:numberAttach").getLong();
+							if(newNumberAttach < 0) newNumberAttach = 0;
+							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+							topicNode.setProperty("exo:postCount", topicPostCount-1);
+							forumNode.setProperty("exo:postCount", forumPostCount-1);
 						} else {
 							postNode.setProperty("exo:isHidden", false) ; 
-							if(postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
-								topicNode.setProperty("exo:lastPostDate", postDate);
-								topicNode.setProperty("exo:lastPostBy", post.getOwner());
-							}
 						}
-						isGetLastPost = true;
 						break;
 					}
 					default: break;
 				}
+				if(!post.getIsHidden() && post.getIsApproved()){
+//					if(userNode.hasProperty("exo:totalPost")) {
+//						userNode.setProperty("exo:totalPost", userNode.getProperty("exo:totalPost").getLong() +1 );
+//					}
+					if(postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
+						topicNode.setProperty("exo:lastPostDate", postDate);
+						topicNode.setProperty("exo:lastPostBy", post.getOwner());
+						isGetLastPost = true;
+					}
+					newNumberAttach = newNumberAttach + postNode.getProperty("exo:numberAttach").getLong();
+					topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+					topicNode.setProperty("exo:postCount", topicPostCount+1);
+					forumNode.setProperty("exo:postCount", forumPostCount+1);
+				}
 				forumHomeNode.getSession().save() ;
+				userProfileNode.getSession().save() ;
 				if(isGetLastPost) queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
 			}catch (PathNotFoundException e) {
 				e.printStackTrace();
@@ -1473,15 +1541,11 @@ public class JCRDataStorage{
 	}
 	
 	private Node getLastDatePost(Node forumHomeNode, Node node, Node postNode_) throws Exception {
-		String strQuery = "[@exo:isHidden='false'] order by @exo:createdDate descending" ;
-		if(node.hasProperty("exo:isModeratePost")) {
-			if(node.getProperty("exo:isModeratePost").getBoolean()){
-				strQuery = "[@exo:isHidden='false' and @exo:isApproved='true'] order by @exo:createdDate descending" ;
-			}
-		}
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
-		String pathQuery = "/jcr:root" + node.getPath() + "//element(*,exo:post)" + strQuery;
-		Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+		StringBuffer pathQuery = new StringBuffer();
+		pathQuery.append("/jcr:root").append(node.getPath())
+						 .append("//element(*,exo:post)[@exo:isHidden='false' and @exo:isApproved='true'] order by @exo:createdDate descending") ;
+		Query query = qm.createQuery(pathQuery.toString() , Query.XPATH) ;
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes();
 		Node postNode = null ;
@@ -1490,7 +1554,6 @@ public class JCRDataStorage{
 			if(postNode.getName().equals(postNode_.getName())) continue ;
 			else break;
 		}
-		System.out.println("\n\n" + postNode.getName() + "\n\n");
 		return postNode ;
 	}
 	
@@ -2449,32 +2512,43 @@ public class JCRDataStorage{
 		return forumLinks ;
 	}
 
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String pathQuery) throws Exception {
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type_, String pathQuery) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>() ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 		if(pathQuery == null || pathQuery.length() <= 0) {
 			pathQuery = forumHomeNode.getPath() ;
 		}
-		String []valueQuery = textQuery.split(",") ;//text, user, type
+		String []values = type_.split(",") ;//user(admin or not admin), type(forum, topic, post)
+		boolean isAdmin = false;
+		if(values[0].equals("true")) isAdmin = true;
 		String types[] = new String[] {Utils.FORUM, Utils.TOPIC, Utils.POST} ;;
-		if(!valueQuery[2].equals("all")) {
-			types = valueQuery[2].split("/") ;
+		if(!values[1].equals("all")) {
+			types = values[1].split("/") ;
 		}
-		boolean isOwner = false ;
+		boolean isAnd = false ;
 		for (String type : types) {
 			StringBuffer queryString = new StringBuffer() ;
 			queryString.append("/jcr:root").append(pathQuery).append("//element(*,exo:").append(type).append(")");
 			queryString.append("[") ;
-			if(valueQuery[1] != null && valueQuery[1].length() > 0 && !valueQuery[1].equals("null")) {
-				queryString.append("(@exo:owner='").append(valueQuery[1]).append("')") ;
-				isOwner = true;
+			if(textQuery != null && textQuery.length() > 0 && !textQuery.equals("null")) {
+				queryString.append("(jcr:contains(., '").append(textQuery).append("'))") ;
+				isAnd = true ;
 			}
-			if(valueQuery[0] != null && valueQuery[0].length() > 0 && !valueQuery[0].equals("null")) {
-				if(isOwner) queryString.append(" and ");
-				queryString.append("(jcr:contains(., '").append(valueQuery[0]).append("'))") ;
+			if(!isAdmin){
+				if(type.equals(Utils.FORUM)){
+					if(isAnd) queryString.append(" and ");
+					queryString.append("@exo:isClosed='true'");
+				} else if(type.equals(Utils.TOPIC)){
+					if(isAnd) queryString.append(" and ");
+					queryString.append("@exo:isClosed='true' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true'");
+				} else if(type.equals(Utils.POST)){
+					if(isAnd) queryString.append(" and ");
+					queryString.append("@exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true'");
+				}
 			}
 			queryString.append("]") ;
+			System.out.println("\n\npath: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
@@ -2511,6 +2585,7 @@ public class JCRDataStorage{
 		eventQuery.setPath(path) ;
 		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
+		System.out.println("\n\npath: " + queryString);
 		Query query = qm.createQuery(queryString, Query.XPATH) ;
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes() ;

@@ -5,10 +5,8 @@
 package org.exoplatform.forum.test;
 
 import javax.jcr.Node;
-import javax.jcr.Session;
 
 import org.apache.commons.logging.Log;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.jcr.RepositoryService;
