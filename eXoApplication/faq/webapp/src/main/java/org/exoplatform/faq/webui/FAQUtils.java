@@ -208,6 +208,7 @@ public class FAQUtils {
     return null ;
   }
   
+	@SuppressWarnings("unchecked")
 	public static Map prepareMap(List inputs, Map properties) throws Exception {
     Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
     HashMap<String, JcrInputProperty> hasMap = new HashMap<String, JcrInputProperty>() ;
@@ -264,11 +265,8 @@ public class FAQUtils {
 	public static String getTitle(String text) {
 		int i = 0 ;
 	  while (i < text.length()) {
-	    if (text.charAt(i) == '"'  ) {
-	      text = text.replace((text.charAt(i)) + "", "&quot;") ;
-	    } else {
-	      i ++ ;
-	    }
+	    if (text.charAt(i) == '"'  ) text = text.replace((text.charAt(i)) + "", "&quot;") ;
+	    else i ++ ;
 	  }
     return text ;
 	}

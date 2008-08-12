@@ -38,16 +38,12 @@
  											<tr class="EvenRow">
  												<td class="text" style="width: 30px;" align="center"><div class="$icon"><span></span></div></td>
  												<%
-												if(name.length()>100) {
+												if(name.length()>90) {
 													String title = name ;
 													title = FAQUtils.getTitle(title) ; 
-													name = name.substring(0,99)+ "..."
+													name = FAQUtils.getSubString(name, 90);
  												%>
- 												<td class="text" align="left">
- 													<a href="$link" title="$title">
- 														$name
- 													</a>
- 												</td>
+ 												<td class="text" align="left"><a href="$link" title="$title">$name</a></td>
  												<%
 												} else {
  												%>

@@ -51,7 +51,7 @@
 													if(questionContent.length()>50) {
 														String title = questionContent ;
 														title = FAQUtils.getTitle(title) ; 
-														questionContent = questionContent.substring(0,49)+ "..."
+														questionContent = FAQUtils.getSubString(questionContent,50) ;
 													%>
 													<td class="text" align="left"><a href="$view" title="$title">$questionContent</a></td>
 													<%

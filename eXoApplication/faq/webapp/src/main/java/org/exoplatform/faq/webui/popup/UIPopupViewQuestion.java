@@ -117,7 +117,7 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
     if(residual > 1000){
       String str = residual + "";
       result = size + "." + str.substring(0, 3) + " " + sizes[i];
-    }else{
+    } else {
       result = size + "." + residual + " " + sizes[i];
     }
     return result;
