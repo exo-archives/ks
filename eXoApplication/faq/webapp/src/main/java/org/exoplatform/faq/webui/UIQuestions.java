@@ -96,6 +96,7 @@ import org.exoplatform.webui.event.EventListener;
 public class UIQuestions extends UIContainer {
   private static String SEARCH_INPUT = "SearchInput" ;
   
+  private FAQSetting faqSetting_ = null;
 	private List<Category> categories_ = null ;
   private List<Boolean> categoryModerators = new ArrayList<Boolean>() ;
   public List<Question> listQuestion_ =  null ;
@@ -114,61 +115,66 @@ public class UIQuestions extends UIContainer {
   private static String language_ = "" ;
   private List<String> emailList_ = new ArrayList<String>() ;
   
-  private String[] sizes = new String[]{"bytes", "KB", "MB"};
+  private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "Setting", "QuestionManagament"} ;
+  private String[] firstTollbar_ = new String[]{"AddCategory", "QuestionManagament", "Setting"} ;
+  private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
+  private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
+  private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
+  private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
+  private String[] userActionQues_ = new String[]{"SendQuestion"} ;
+  private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
   
 	public UIQuestions()throws Exception {
     backPath_ = null ;
 	  this.categoryId_ = new String() ;
     currentUser_ = FAQUtils.getCurrentUser() ;
-    FAQSetting faqSetting = faqService.getFAQSetting(FAQUtils.getSystemProvider()) ;
-    String display = faqSetting.getProcessingMode() ;
-		String portletDisplay = FAQUtils.getPreferenceDisplay();
-		if(display == null || !display.equals(portletDisplay)){
-			faqSetting.setProcessingMode(portletDisplay);
-			faqService.saveFAQSetting(faqSetting, FAQUtils.getSystemProvider());
+    faqSetting_ = new FAQSetting() ;
+		FAQUtils.getPorletPreference(faqSetting_);
+		if(currentUser_ != null && currentUser_.trim().length() > 0){
+			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser_, faqSetting_);
 		}
 		addChild(UIQuickSearch.class, null, null) ;
     setCategories() ;
 	}
   
   public String[] getActionTollbar() {
-    String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "Setting", "QuestionManagament"} ;
     return secondTollbar_ ;
+  }
+  
+  public FAQSetting getFAQSetting(){
+  	return faqSetting_;
+  }
+  
+  public void setFAQSetting(FAQSetting setting){
+  	this.faqSetting_ = setting;
   }
   
   @SuppressWarnings("unused")
   private String[] getFirstTollbar() {
-    String[] firstTollbar_ = new String[]{"AddCategory", "QuestionManagament", "Setting"} ;
     return firstTollbar_ ;
   }
   
   @SuppressWarnings("unused")
   private String[] getActionCategory(){
-    String[] action = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
-    return action ;
+    return firstActionCate_ ;
   }
   
   private String[] getSecondActionCategory() {
-
-    String[] action = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
-    return action ;
+    return secondActionCate_ ;
   }
   
   private String[] getActionCategoryWithUser() {
-    String[] action = new String[]{"AddNewQuestion", "Watch"} ;
-    return action ;
+    return userActionsCate_ ;
   }
   
   
   @SuppressWarnings("unused")
   private String[] getActionQuestion(){
-    String[] action ;
     if(canEditQuestion) {
-      action = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
+      return moderatorActionQues_;
     } else {
-      action = new String[]{"SendQuestion"} ;
+      return userActionQues_;
     }
-    return action ;
   }
   
   @SuppressWarnings("unused")
@@ -290,13 +296,13 @@ public class UIQuestions extends UIContainer {
   public void setListQuestion() {
     isChangeLanguage = false;
     boolean approved = false;
-    if(FAQUtils.getPreferenceDisplay().equals("approved")) approved = true;
+    if(faqSetting_.getProcessingMode().equals("approved")) approved = true;
     try{
       SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
       if(!canEditQuestion) {
-        this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider, approved).getAll() ;
+        this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider, this.faqSetting_).getAll() ;
       } else {
-        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider, approved).getAllSort() ;
+        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider, this.faqSetting_).getAll() ;
       }
     } catch (FileNotFoundException fileNotFount) { 
       fileNotFount.printStackTrace() ;
@@ -320,9 +326,9 @@ public class UIQuestions extends UIContainer {
     }
     if(residual > 1000){
       String str = residual + "";
-      result = size + "." + str.substring(0, 3) + " " + sizes[i];
+      result = size + "." + str.substring(0, 3) + " " + sizes_[i];
     }else{
-      result = size + "." + residual + " " + sizes[i];
+      result = size + "." + residual + " " + sizes_[i];
     }
     return result;
   }
@@ -609,6 +615,7 @@ public class UIQuestions extends UIContainer {
       } catch (NullPointerException e) {
       	email = "" ;
       }
+      questionForm.setFaqSetting_(questions.faqSetting_);
       questionForm.setAuthor(name) ;
       questionForm.setEmail(email) ;
       questionForm.setCategoryId(categoryId) ;
@@ -703,9 +710,11 @@ public class UIQuestions extends UIContainer {
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
           List<Category> listCate = question.getAllSubCategory(categoryId) ;
+          FAQSetting faqSetting = new FAQSetting();
+          faqSetting.setProcessingMode(FAQUtils.DISPLAYBOTH);
         	for(Category category : listCate) {
           	String id = category.getId() ;
-          	List<Question> listQuestion = faqService.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider(), false).getAll() ;
+          	List<Question> listQuestion = faqService.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider(), faqSetting).getAll() ;
             for(Question ques: listQuestion) {
             	String questionId = ques.getId() ;
             	faqService.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;
@@ -851,6 +860,7 @@ public class UIQuestions extends UIContainer {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
 			UISettingForm uiSetting = popupAction.activate(UISettingForm.class, 400) ;
 			popupContainer.setId("CategorySettingForm") ;
+			uiSetting.setFaqSetting(question.faqSetting_);
       uiSetting.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

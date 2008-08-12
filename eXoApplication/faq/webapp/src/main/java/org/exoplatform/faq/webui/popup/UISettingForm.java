@@ -50,27 +50,43 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 		}
 )
 public class UISettingForm extends UIForm implements UIPopupComponent	{
-	public static final String DISPLAY_TYPE = "display-type".intern(); 
+	public static final String ORDER_BY = "order-by".intern(); 
+	public static final String ORDER_TYPE = "order-type".intern(); 
 	public static final String ITEM_CREATE_DATE= "postdate".intern() ;
 	public static final String ITEM_ALPHABET= "alphabet".intern() ;
+	public static final String ASC= "ascending".intern() ;
+	public static final String DESC= "descending".intern() ;
+	
+	private FAQSetting faqSetting_ = new FAQSetting();
 	
 	public UISettingForm() throws Exception {}
 	
 	public void init() throws Exception {
 		
-		List<SelectItemOption<String>> displayType = new ArrayList<SelectItemOption<String>>();
-		displayType.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
-		displayType.add(new SelectItemOption<String>(ITEM_ALPHABET, FAQSetting.DISPLAY_TYPE_ALPHABET ));
-		addUIFormInput(new UIFormSelectBox(DISPLAY_TYPE, DISPLAY_TYPE, displayType));
+		List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
+		orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
+		orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET, FAQSetting.DISPLAY_TYPE_ALPHABET ));
+		addUIFormInput(new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy));
+		
+		List<SelectItemOption<String>> orderType = new ArrayList<SelectItemOption<String>>();
+		orderType.add(new SelectItemOption<String>(ASC, FAQSetting.ORDERBY_TYPE_ASC ));
+		orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC ));
+		addUIFormInput(new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType));
 		fillData() ;
 	}
 	
+	public FAQSetting getFaqSetting() {
+  	return faqSetting_;
+  }
+
+	public void setFaqSetting(FAQSetting faqSetting) {
+  	this.faqSetting_ = faqSetting;
+  }
+
 	public void fillData() throws Exception {    
-    FAQService mailSrv = getApplicationComponent(FAQService.class);
-    FAQSetting setting = mailSrv.getFAQSetting(SessionProviderFactory.createSystemProvider()) ;
-    if (setting != null) {
-      getUIFormSelectBox(DISPLAY_TYPE).setValue(String.valueOf(setting.getDisplayMode()));
-      
+    if (faqSetting_ != null) {
+      getUIFormSelectBox(ORDER_BY).setValue(String.valueOf(faqSetting_.getOrderBy()));
+      getUIFormSelectBox(ORDER_TYPE).setValue(String.valueOf(faqSetting_.getOrderType()));
     }
   }
   
@@ -85,10 +101,12 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UISettingForm settingForm = event.getSource() ;			
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQService service = FAQUtils.getFAQService() ;
-			FAQSetting faqSetting = new FAQSetting() ;
-			faqSetting.setDisplayMode(String.valueOf(settingForm.getUIFormSelectBox(DISPLAY_TYPE).getValue())) ;
-			service.saveFAQSetting(faqSetting, SessionProviderFactory.createSystemProvider()) ;
+			FAQSetting faqSetting = settingForm.faqSetting_ ;
+			faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
+			faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
+			service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;
 			UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			questions.setFAQSetting(faqSetting);
 			questions.setCategories() ;
 			questions.setListQuestion() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;

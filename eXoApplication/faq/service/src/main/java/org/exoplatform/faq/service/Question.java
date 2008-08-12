@@ -118,7 +118,8 @@ public class Question {
   public void setLanguage(String language) { this.language = language; }
   
   /**
-   * Get question's language, this is default language of system.
+   * Get question's language, this is default language of system
+   * when created question.
    * 
    * @return language the language is default of system and question
    */
@@ -190,7 +191,7 @@ public class Question {
 	public void setCreatedDate(Date createdDate) { this.createdDate = createdDate; }
   
   /**
-   * Return date time when question is created.
+   * Return date time when question is created or updated.
    * 
    * @return  the date time of question
    */

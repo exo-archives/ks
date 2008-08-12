@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -53,6 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 
 public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
+	private FAQSetting faqSetting_;
 	@SuppressWarnings("unused")
   private static List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCate = new ArrayList<Cate>() ;
@@ -85,6 +87,10 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 
   public List<Cate> getListCate(){
     return this.listCate ;
+  }
+  
+  public void setFAQSetting(FAQSetting faqSetting){
+  	this.faqSetting_ = faqSetting;
   }
   
   public void setListCate() throws Exception {
@@ -120,7 +126,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {
     try {
-      return faqService_.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider(), false).getAll() ;
+      return faqService_.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider(), faqSetting_).getAll() ;
     } catch (Exception e) {
       e.printStackTrace();
       return null ;

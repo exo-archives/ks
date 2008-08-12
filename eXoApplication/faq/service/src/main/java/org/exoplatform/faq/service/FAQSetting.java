@@ -32,10 +32,8 @@ public class FAQSetting {
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
 	public static String DISPLAY_TYPE_POSTDATE = "postdate" ;
 	public static String DISPLAY_TYPE_RELEVANCE = "relevance" ;
-	
-	public FAQSetting() {
-		orderBy = DISPLAY_TYPE_RELEVANCE ; 
-	}
+	public static String ORDERBY_TYPE_ASC = "asc" ;
+	public static String ORDERBY_TYPE_DESC = "desc" ;
 	
 	/**
 	 * This method will 2 value is true or false
@@ -70,5 +68,23 @@ public class FAQSetting {
 	 * 
 	 * @param dis  the string to display is Alphabet or Post Date
 	 */
-	public void setDisplayMode(String dis) { orderBy = dis ;} 
+	public void setDisplayMode(String dis) { orderBy = dis ;}
+
+	public String getOrderBy() {
+  	return orderBy;
+  }
+
+	public void setOrderBy(String orderBy) {
+  	this.orderBy = orderBy;
+  }
+
+	public String getOrderType() {
+  	return orderType;
+  }
+
+	public void setOrderType(String orderType) {
+  	this.orderType = orderType;
+  } 
+	
+	
 }

@@ -24,6 +24,7 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
@@ -234,7 +235,9 @@ public class TestFAQService extends FAQServiceTestCase{
     assertEquals(listAllQuestion.size(), 5) ;
 
 //  get list question by category of question 1
-  	List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, false).getAll() ;
+    FAQSetting setting = new FAQSetting();
+    setting.setProcessingMode("both");
+  	List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, setting).getAll() ;
   	assertEquals(listQuestionByCategory.size(), 2) ;
 
 //  	remove question

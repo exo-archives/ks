@@ -140,8 +140,8 @@ public class FAQServiceImpl implements FAQService{
    * @return 	QuestionPageList
    * @throws Exception the exception
 	 */
-	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception {
-		return jcrData_.getQuestionsByCatetory(categoryId, sProvider, approved);
+	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
+		return jcrData_.getQuestionsByCatetory(categoryId, sProvider, faqSetting);
 	}
   
 	/**
@@ -152,8 +152,8 @@ public class FAQServiceImpl implements FAQService{
 	 * @return 	QuestionPageList
 	 * @throws Exception the exception
 	 */
-	public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception {
-	  return jcrData_.getAllQuestionsByCatetory(categoryId, sProvider, approved);
+	public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
+	  return jcrData_.getAllQuestionsByCatetory(categoryId, sProvider, faqSetting);
 	}
   
 	/**
@@ -320,8 +320,8 @@ public class FAQServiceImpl implements FAQService{
    * @return all value depend FAQSetting will configuration follow properties but user choose
    * @throws Exception the exception
    */
-  public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception {
-  	jcrData_.saveFAQSetting(newSetting, sProvider);
+  public void saveFAQSetting(FAQSetting faqSetting,String userName, SessionProvider sProvider) throws Exception {
+  	jcrData_.saveFAQSetting(faqSetting,userName, sProvider);
   }
   
   /**
@@ -574,5 +574,9 @@ public class FAQServiceImpl implements FAQService{
    */
 	public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception {
 		multiLanguages_.addLanguage(questionNode, language) ;
+	}
+	
+	public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception {
+		jcrData_.getUserSetting(sProvider, userName, faqSetting);
 	}
 }

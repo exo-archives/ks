@@ -30,6 +30,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -97,7 +98,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
-  private Map<String, QuestionLanguage> listLanguageNode = new HashMap<String, QuestionLanguage>() ;
+  private Map<String, QuestionLanguage> mapLanguageNode_ = new HashMap<String, QuestionLanguage>() ;
   private String categoryId_ = null ;
   private String questionId_ = null ;
   private String defaultLanguage_ = "" ;
@@ -109,6 +110,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private boolean isActivated_ = true ;
   
   private boolean isChildOfManager = false ;
+  private FAQSetting faqSetting_ = null;
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -118,7 +120,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     isChildOfManager = false ;
     LIST_LANGUAGE.clear() ;
     listFileAttach_.clear() ;
-    listLanguageNode.clear() ;
+    mapLanguageNode_.clear() ;
     questionContents_.clear() ;
     
     listFileAttach_ = new ArrayList<FileAttachment>() ;
@@ -127,7 +129,14 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     question_ = null ;
   }
   
-  public void refresh() throws Exception {    
+  public FAQSetting getFaqSetting_() {
+  	return faqSetting_;
+  }
+	public void setFaqSetting_(FAQSetting faqSetting_) {
+  	this.faqSetting_ = faqSetting_;
+  }
+	
+	public void refresh() throws Exception {    
     listFileAttach_.clear() ;
   }
 
@@ -194,7 +203,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     this.removeChildById(IS_APPROVED) ;
     this.removeChildById(IS_ACTIVATED) ;
     listFileAttach_.clear() ;
-    listLanguageNode.clear() ;
+    mapLanguageNode_.clear() ;
   }
   
   @SuppressWarnings("static-access")
@@ -209,7 +218,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       LIST_LANGUAGE.add(defaultLanguage_) ;
       questionLanguages = fAQService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider()) ;
       for(QuestionLanguage questionLanguage : questionLanguages) {
-      	listLanguageNode.put(questionLanguage.getLanguage(), questionLanguage);
+      	mapLanguageNode_.put(questionLanguage.getLanguage(), questionLanguage);
         LIST_LANGUAGE.add(questionLanguage.getLanguage());
       }
       isApproved_ = question_.isApproved() ;
@@ -430,7 +439,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           	try{
           		QuestionLanguage questionLanguage = new QuestionLanguage() ;
           		for(int i = 1; i < questionForm.LIST_LANGUAGE.size() ; i ++) {
-          			questionLanguage = questionForm.listLanguageNode.get(questionForm.LIST_LANGUAGE.get(i));
+          			questionLanguage = questionForm.mapLanguageNode_.get(questionForm.LIST_LANGUAGE.get(i));
+          			if(questionLanguage == null){
+          				questionLanguage = new QuestionLanguage();
+          				questionLanguage.setLanguage(questionForm.LIST_LANGUAGE.get(i));
+          			}
           			questionLanguage.setQuestion(listQuestionContent.get(i).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           			multiLanguages.addLanguage(questionNode, questionLanguage) ;
           		}
@@ -455,7 +468,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         }
         
         if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
-          if(questionIsApproved) {
+          if(questionIsApproved || questionForm.faqSetting_.getProcessingMode().equals(FAQUtils.DISPLAYBOTH)) {
             UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
             uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.add-new-question-successful", null, ApplicationMessage.INFO)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
