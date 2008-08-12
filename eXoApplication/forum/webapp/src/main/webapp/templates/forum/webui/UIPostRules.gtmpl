@@ -6,15 +6,18 @@
 	boolean isNotLogin= ForumSessionUtils.isAnonim();
 	String canCreatThread = "";
 	String canPost = "";
+	String you = _ctx.appRes("UIPostRules.label.You") ;
+	String can = _ctx.appRes("UIPostRules.label.can") ;
+	String not = _ctx.appRes("UIPostRules.label.not") ;
 	if(isBan || isNotLogin) {
-		canCreatThread = "not";
-		canPost = "not";
+		canCreatThread = not;
+		canPost = not;
 	} else{
 		if(!uicomponent.canCreateNewThread) {
-			canCreatThread = "not";
+			canCreatThread = not;
 		}
 		if(!uicomponent.canAddPost){
-			canPost = "not";
+			canPost = not;
 		}
 	}
 %>
@@ -24,7 +27,7 @@
 		  <div class="LeftBar">
 		  	<div class="RightBar">
 		  		<div class="CenterBar">
-		  			<div class="Title">Forum Rules</div>
+		  			<div class="Title"><%=_ctx.appRes("UIPostRules.label.PostRules")%></div>
 			  		<div class="CollapseButton" title="Collapse"  onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 						<div style="clear: both;"><span></span></div>
 		  		</div>
@@ -33,10 +36,10 @@
 	  </div>
 	  <div class="ContentContainer">
 		  <div class="ForumList">
-		  	<div class="text">You <span class="BoldTitle">can $canCreatThread</span> post new thread</div>
-		  	<div class="text">You <span class="BoldTitle">can $canPost</span> post replies</div>
-		  	<div class="text">You <span class="BoldTitle">can $canPost</span> post attachments</div>
-		  	<div class="text">You <span class="BoldTitle">can $canPost</span> edit your posts</div>
+		  	<div class="text">$you <span class="BoldTitle">$can $canCreatThread</span> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></div>
+		  	<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></div>
+		  	<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></div>
+		  	<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></div>
 	  	</div>
 	  </div>
   </div>
