@@ -31,8 +31,7 @@ import javax.jcr.Value;
  * Apr 10, 2008, 4:40:22 PM
  */
 public class Utils {
-	public static final String KEY_FAQ_SETTING = "FAQSetting".intern() ;
-	
+	public static final String KEY_FAQ_SETTING = "FAQSetting".intern() ;	
 	public static final String EXO_FAQ_SETTING = "exo:faqSetting".intern();
 	public static final String EXO_PROCESSING_MODE = "exo:processingMode".intern() ;
 	public static final String EXO_DISPLAY_TYPE = "exo:displayType".intern() ;
