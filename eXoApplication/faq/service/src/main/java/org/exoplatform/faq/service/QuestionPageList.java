@@ -276,14 +276,13 @@ public class QuestionPageList extends JCRPageList {
   }
   
   /**
-   * Get all node is stored in a NodeIterator, with each node,
-   * system get all values of this node and set them into a question object,
-   * an this question object is push into a list questions.
+   * Get all nodes is stored in a NodeIterator and sort them by FAQSetting,
+   * with each node, system get all values of this node and set them into 
+   * a question object, an this question object is push into a list questions.
    * 
    * @return              list questions
    * 
    * @throws  Exception   if query or repository or path of node is occur Exception
-   * @throws Exception the exception
    * 
    * @see                 Question
    * @see                 List
@@ -304,54 +303,11 @@ public class QuestionPageList extends JCRPageList {
       session.logout() ;
     }
     
-    
     List<Question> questions = new ArrayList<Question>();
     while (iter_.hasNext()) {
       Node questionNode = iter_.nextNode();
       questions.add(getQuestion(questionNode));
     }
-    return questions; 
-  }
-	
-  /**
-   * Get all question and sort them by name or date time.
-   * Form all question is got form database and sort by name or
-   * date time when question is created, they are pushed into NodeIterator,
-   * with each node in NodeIterator, system get all values of this node and
-   * set them into a question object, an this question object is push into a list questions
-   * 
-   * @return            list quetsions are sorted
-   * 
-   * @throws Exception  if query or repository or path of node is occur Exception
-   * 
-   * @see               Question
-   * @see               List
-   */
-	public List<Question> getAllSort() throws Exception { 
-    if(iter_ == null) {
-      Session session = getJCRSession() ;
-      if(isQuery_) {
-        QueryManager qm = session.getWorkspace().getQueryManager() ;
-        Query query = qm.createQuery(value_, Query.XPATH);
-        QueryResult result = query.execute();
-        iter_ = result.getNodes();
-      } else {
-        Node node = (Node)session.getItem(value_) ;
-        iter_ = node.getNodes() ;
-      }
-      session.logout() ;
-    }
-    List<Question> questions = new ArrayList<Question>();
-    while (iter_.hasNext()) {
-      Node questionNode = iter_.nextNode();
-      questions.add(getQuestion(questionNode));
-    }
-    if(sortBy_.equals("postdate")) {
-    	Collections.sort(questions, new Utils.DatetimeComparatorQuestion()) ;
-    }
-		if(sortBy_.equals("alphabet")) {
-			Collections.sort(questions, new Utils.NameComparatorQuestion()) ;
-		}
     return questions; 
   }
 	

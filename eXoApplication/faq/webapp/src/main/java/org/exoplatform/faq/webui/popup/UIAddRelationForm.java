@@ -22,6 +22,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -53,6 +54,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   private static List<Question> listQuestion = new ArrayList<Question>() ;
   private static List<String> quesIdsSelect = new ArrayList<String>() ;
   private String questionId_ ;
+  private FAQSetting faqSetting_ = new FAQSetting();
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
  
@@ -87,6 +89,11 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     setListCate() ;
+    faqSetting_.setProcessingMode(FAQUtils.DISPLAYAPPROVED);
+  }
+  
+  public void setFAQSetting(FAQSetting faqSetting){
+  	this.faqSetting_ = faqSetting;
   }
   
   public void setRelationed(List<String> listRelation) {
@@ -202,7 +209,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {
     try {
-      return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider(), true).getAll() ;
+      return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider(), faqSetting_).getAll() ;
     } catch (Exception e) {
       e.printStackTrace();
       return null ;

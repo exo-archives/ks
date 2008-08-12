@@ -65,6 +65,7 @@ public class JCRDataStorage {
   final private static String QUESTION_HOME = "questions".intern() ;
   final private static String CATEGORY_HOME = "catetories".intern() ;
   final private static String FAQ_APP = "faqApp".intern() ;
+  final private static String USER_SETTING = "UserSetting".intern();
   final private static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
   private Map<String, String> serverConfig_ = new HashMap<String, String>();
   private NodeHierarchyCreator nodeHierarchyCreator_ ;
@@ -81,6 +82,21 @@ public class JCRDataStorage {
 		}
 		
 	}
+  
+  public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception{
+  	Node userNode = nodeHierarchyCreator_.getUserNode(sProvider, userName);
+  	if(userNode.hasNode(FAQ_APP)){
+  		Node userSettingNode = userNode.getNode(FAQ_APP).getNode(USER_SETTING);
+  		if(userSettingNode.hasProperty("exo:ordeBy")) faqSetting.setOrderBy(userSettingNode.getProperty("exo:ordeBy").getValue().getString());
+  		if(userSettingNode.hasProperty("exo:ordeType")) faqSetting.setOrderType(userSettingNode.getProperty("exo:ordeType").getValue().getString());
+  	} else {
+  		Node appNode = userNode.addNode(FAQ_APP);
+  		Node UserSettingNode = appNode.addNode(USER_SETTING);
+  		UserSettingNode.setProperty("exo:ordeBy", faqSetting.getOrderBy());
+  		UserSettingNode.setProperty("exo:ordeType", faqSetting.getOrderType());
+  		userNode.getSession().save();
+  	}
+  }
   
   private Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
     Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)  ;
@@ -505,21 +521,33 @@ public class JCRDataStorage {
     return pageList ;
   }
   
-  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception {
+  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
   	Node questionHome = getQuestionHome(sProvider, null) ;
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = null;
-    if(approved) {
+    if(faqSetting.getProcessingMode().equals("approved")) {
 	    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
 	                                    + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
 	                                    append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
-	                                    append("]").append("order by @exo:createdDate ascending");
+	                                    append("]");
     } else {
     	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
           + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
           append(" and (@exo:isActivated='true')").
-          append("]").append("order by @exo:createdDate ascending");
+          append("]");
     }
+    // order by and ascending or deascending
+    if(faqSetting.getOrderBy().equals("created")){
+    	queryString.append("order by @exo:createdDate ");
+    } else {
+    	queryString.append("order by @exo:name ");
+    }
+    if(faqSetting.getOrderType().equals("asc")){
+    	queryString.append("ascending");
+    } else {
+    	queryString.append("descending");
+    }
+    
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     
@@ -527,13 +555,12 @@ public class JCRDataStorage {
     return pageList ;
   }
   
-  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception {
+  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-    FAQSetting faqSetting = getFAQSetting(sProvider) ;
   	String sortBy = faqSetting.getDisplayMode() ;
     StringBuffer queryString = null;
-    if(approved){
+    if(faqSetting.getProcessingMode().equals("approved")){
 	    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
 	        + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
 	        append(" and (@exo:isApproved='true')").
@@ -542,6 +569,17 @@ public class JCRDataStorage {
     	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
 	        + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
 	        append("]");
+    }
+    //  order by and ascending or deascending
+    if(faqSetting.getOrderBy().equals("created")){
+    	queryString.append("order by @exo:createdDate ");
+    } else {
+    	queryString.append("order by @exo:name ");
+    }
+    if(faqSetting.getOrderType().equals("asc")){
+    	queryString.append("ascending");
+    } else {
+    	queryString.append("descending");
     }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
@@ -764,19 +802,12 @@ public class JCRDataStorage {
 		}
   }
   
-  public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception {
-    Node faqServiceHome = getFAQServiceHome(sProvider) ;
-    Node settingNode = null;
-    try {
-      settingNode = faqServiceHome.getNode(Utils.KEY_FAQ_SETTING) ;
-    } catch(PathNotFoundException e) {
-      settingNode = faqServiceHome.addNode(Utils.KEY_FAQ_SETTING, Utils.EXO_FAQ_SETTING) ;      
-    }
-   
-    settingNode.setProperty(Utils.EXO_PROCESSING_MODE, newSetting.getProcessingMode());
-    settingNode.setProperty(Utils.EXO_DISPLAY_TYPE, newSetting.getDisplayMode());
-    if(!settingNode.isNew()) settingNode.save();
-    else settingNode.getSession().save() ;
+  public void saveFAQSetting(FAQSetting faqSetting,String userName, SessionProvider sProvider) throws Exception {
+  	Node userNode = nodeHierarchyCreator_.getUserNode(sProvider, userName);
+  	Node userSettingNode = userNode.getNode(FAQ_APP).getNode(USER_SETTING);
+  	userSettingNode .setProperty("exo:ordeBy", faqSetting.getOrderBy());
+  	userSettingNode .setProperty("exo:ordeType", faqSetting.getOrderType());
+  	userNode.save() ;
   }
   
   public FAQSetting  getFAQSetting(SessionProvider sProvider) throws Exception  {

@@ -5,9 +5,15 @@
 			 					<table class="UIFormGrid">									
 									<tbody>
 										<tr>
-											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.display-type"); %></td>
+											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.order-by"); %></td>
 											<td class="FieldComponent">
-												<%uicomponent.renderField(uicomponent.DISPLAY_TYPE)%>
+												<%uicomponent.renderField(uicomponent.ORDER_BY)%>
+											</td>
+										</tr>
+										<tr>
+											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.order-type"); %></td>
+											<td class="FieldComponent">
+												<%uicomponent.renderField(uicomponent.ORDER_TYPE)%>
 											</td>
 										</tr>
 									</tbody>

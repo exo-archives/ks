@@ -25,16 +25,15 @@ package org.exoplatform.faq.service;
  * Apr 10, 2008, 2:07:25 PM
  */
 public class FAQSetting {
-	private String processingMode ;
-	private String displayType ;
+	private String displayMode ;
+	private String orderBy ;
+	private String orderType ;
 	
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
 	public static String DISPLAY_TYPE_POSTDATE = "postdate" ;
 	public static String DISPLAY_TYPE_RELEVANCE = "relevance" ;
-	
-	public FAQSetting() {
-		displayType = DISPLAY_TYPE_RELEVANCE ; 
-	}
+	public static String ORDERBY_TYPE_ASC = "asc" ;
+	public static String ORDERBY_TYPE_DESC = "desc" ;
 	
 	/**
 	 * This method will 2 value is true or false
@@ -43,7 +42,7 @@ public class FAQSetting {
 	 * 
 	 * @return processingMode
 	 */
-	public String getProcessingMode() { return processingMode ;}
+	public String getProcessingMode() { return displayMode ;}
 	
 	/**
 	 * there are two modes: Process/ Do not process questions.
@@ -54,14 +53,14 @@ public class FAQSetting {
 	 * @param b, if b = true then field Show Mode : Do not process questions before showing
 	 * 					 else field Show Mode : Process questions before showing
 	 */
-	public void setProcessingMode(String b) { processingMode = b ;} 
+	public void setProcessingMode(String b) { displayMode = b ;} 
 	
 	/**
 	 * This method get one value is Alphabet or Post Date
 	 * 
 	 * @return displayType
 	 */
-	public String getDisplayMode() { return displayType ;}
+	public String getDisplayMode() { return orderBy ;}
 	
 	/**
 	 * All categories/questions can be displayed in some types depending on users.
@@ -69,5 +68,23 @@ public class FAQSetting {
 	 * 
 	 * @param dis  the string to display is Alphabet or Post Date
 	 */
-	public void setDisplayMode(String dis) { displayType = dis ;} 
+	public void setDisplayMode(String dis) { orderBy = dis ;}
+
+	public String getOrderBy() {
+  	return orderBy;
+  }
+
+	public void setOrderBy(String orderBy) {
+  	this.orderBy = orderBy;
+  }
+
+	public String getOrderType() {
+  	return orderType;
+  }
+
+	public void setOrderType(String orderType) {
+  	this.orderType = orderType;
+  } 
+	
+	
 }

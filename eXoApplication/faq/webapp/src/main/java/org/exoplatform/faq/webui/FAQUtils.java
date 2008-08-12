@@ -28,6 +28,7 @@ import javax.portlet.PortletPreferences;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
@@ -48,6 +49,8 @@ import org.exoplatform.webui.form.UIFormUploadInput;
  * Apr 14, 2008, 2:56:30 PM
  */
 public class FAQUtils {
+	public static String DISPLAYAPPROVED = "approved";
+	public static String DISPLAYBOTH = "both";
 	private static String AKONG = "@" ;
   public static String[] specialString = {"!", "#", "$", "%", "^", "&"
                                             , ":", ">", "<", "~", "`", "]", "'", "/"} ;
@@ -271,10 +274,11 @@ public class FAQUtils {
     return text ;
 	}
 	
-	public static String getPreferenceDisplay() {
+	public static void getPorletPreference(FAQSetting faqSetting) {
     PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
     PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-    String repository = portletPref.getValue("display", "") ;
-    return repository ;
+    faqSetting.setProcessingMode(portletPref.getValue("display", "")) ;
+    faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
+    faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
   }
 }

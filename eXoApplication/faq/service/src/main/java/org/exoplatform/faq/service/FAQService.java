@@ -203,7 +203,7 @@ public interface FAQService {
    * 
    * @throws Exception  if can't found category
    */
-  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception ;
+  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
   
   /**
    * Get all questions of the category.
@@ -217,7 +217,7 @@ public interface FAQService {
    * 
    * @throws Exception    when category not found
    */
-  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, boolean approved) throws Exception ;
+  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
   
   /**
    * Get some informations of category: Lookup category node by category's id
@@ -347,7 +347,7 @@ public interface FAQService {
    * @param sProvider the session provider
    * @throws Exception the exception
    */
-  public void saveFAQSetting(FAQSetting newSetting, SessionProvider sProvider) throws Exception;  
+  public void saveFAQSetting(FAQSetting faqSetting,String userName, SessionProvider sProvider) throws Exception;  
   
   /**
    * This function is used to allow user can watch a category. 
@@ -557,5 +557,7 @@ public interface FAQService {
    * @throws Exception the exception
    */
   public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception ;
+  
+  public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception ;
 
 }
