@@ -5,6 +5,7 @@
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.service.FileAttachment;
+	import org.exoplatform.faq.webui.FAQUtils;
  %>
 <div class="UIPopupViewQuestion $uicomponent.id" >
 	<div><% uiform.begin() %></div>
@@ -117,11 +118,13 @@
 									quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
 								}
 								if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
+								String title = quesRelaCont ;
 									if (quesRelaCont.length() > 50) {
-										quesRelaCont = quesRelaCont.substring(0, 49)+ "..." ;
+										title = FAQUtils.getTitle(title) ;
+										quesRelaCont = FAQUtils.getSubString(quesRelaCont, 50); 
 									}
 						%>
-									&nbsp; - <a > $quesRelaCont<br></a>
+									&nbsp; - <a title="$title" > $quesRelaCont<br></a>
 						<% 	}
 							}%>
 					</div>

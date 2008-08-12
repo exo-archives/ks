@@ -1,3 +1,6 @@
+<% 
+	import org.exoplatform.faq.webui.FAQUtils;
+%>
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
@@ -63,7 +66,7 @@
 								String action = uicomponent.event("RemoveRelation",uicomponent.getListIdQuesRela().get(i ++)) ;
 								viewString = questionContent.replaceAll("<p>","").replaceAll("</p>","").replaceAll("<br>","") ;
 								if(viewString.length() > 85) {
-				          viewString = viewString.substring(0, 84) + "..." ;
+				          viewString = FAQUtils.getSubString(viewString, 85) ;
 				        }
 							%>
 								<div style="margin: 0px 0px 3px 2px;">
