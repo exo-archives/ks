@@ -12,10 +12,10 @@
 						String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
 						String title = "" ;
 						if(t < uicomponent.getMaxPath()) {
-							if(namePath.length() > 20) {
+							if(namePath.length() > 30) {
 								title = namePath ;
 								title = FAQUtils.getTitle(title) ; 
-								namePath = namePath.substring(0,19) + "..." ;
+								namePath = FAQUtils.getSubString(namePath,30);
 				%>
 								<a href="$link" class="Selected" title="$title">$namePath >></a>
 							<% } else { %>
@@ -23,10 +23,10 @@
 							<% } %>
 					<div class="RightArrowIcon"><span></span></div>
 				 <% } else {
-				 			if(namePath.length() > 20) {
+				 			if(namePath.length() > 30) {
 								title = namePath ;
 								title = FAQUtils.getTitle(title) ; 
-								namePath = namePath.substring(0,19) + "..." ;
+								namePath = FAQUtils.getSubString(namePath,30);
 				%>
 								<div class="Selected" title="$title">$namePath </div>
 							<% } else { %>

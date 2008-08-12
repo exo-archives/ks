@@ -260,7 +260,7 @@
 						if(questionContent.length() > 140) {
 							titleQuestion = questionContent ;
 							if(!uicomponent.getQuestionView().equals(qId)) {
-								questionContent = questionContent.substring(0, 139) + " ..." ;
+								questionContent = FAQUtils.getSubString(questionContent, 140);
 						%>
 								<a class="ViewQuestionNotApproved" href="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
 									$questionContent

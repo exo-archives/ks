@@ -65,6 +65,21 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
     List<String> emailList = faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()) ;
     return emailList ;
   }
+  
+  public static String getSubString(String str, int max) {
+		if(!FAQUtils.isFieldEmpty(str)) {
+			int l = str.length() ;
+			if(l > max) {
+				str = str.substring(0, (max-3)) ;
+				int comma = str.lastIndexOf(",");
+				if(comma > 0)
+					str = str.substring(0, comma) + "...";
+				else str = str + "..." ;
+			}
+		}
+	  return str ;
+  }
+  
   static	public class EditEmailActionListener extends EventListener<UIWatchManager> {
 		public void execute(Event<UIWatchManager> event) throws Exception {
 			UIWatchManager watchManager = event.getSource() ;

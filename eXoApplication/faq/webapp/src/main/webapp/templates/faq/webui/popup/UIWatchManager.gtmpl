@@ -26,9 +26,10 @@
  							 %>
  								<tr>
  									<% if(email.length() > 110) {
- 											email1 = email.substring(0,109)+ "..." ;
+ 											String title = email ;
+ 											email = uicomponent.getSubString(email,110)
  									 %>
- 										<td class="text" align="left"><a title="$email">$email1</a></td>
+ 										<td class="text" align="left"><a title="$title">$email</a></td>
  									<% } else { %>
  										<td class="text" align="left">$email</td>
  									<% } %>
