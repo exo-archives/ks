@@ -78,7 +78,7 @@ public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Topic> getTopicsUnApprove() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		JCRPageList pageList  = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApprove='false'", "") ;
+		JCRPageList pageList  = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
 		forumPageIterator.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
