@@ -36,31 +36,11 @@ public class FAQSetting {
 	public static String ORDERBY_TYPE_DESC = "desc" ;
 	
 	/**
-	 * This method will 2 value is true or false
-	 * if is true then display view: Do not process questions before showing
-	 * if is false then display view: Process questions before showing
-	 * 
-	 * @return processingMode
-	 */
-	public String getProcessingMode() { return displayMode ;}
-	
-	/**
-	 * there are two modes: Process/ Do not process questions.
-	 * It means: one question of user in those categories can be processed 
-	 * by special user groups which have right or not before showing.
-	 * This is a combobox with two values: 'Process questions before showing' and 'Do not process questions before showing'
-	 * 
-	 * @param b, if b = true then field Show Mode : Do not process questions before showing
-	 * 					 else field Show Mode : Process questions before showing
-	 */
-	public void setProcessingMode(String b) { displayMode = b ;} 
-	
-	/**
 	 * This method get one value is Alphabet or Post Date
 	 * 
 	 * @return displayType
 	 */
-	public String getDisplayMode() { return orderBy ;}
+	public String getDisplayMode() { return displayMode ;}
 	
 	/**
 	 * All categories/questions can be displayed in some types depending on users.
@@ -68,7 +48,7 @@ public class FAQSetting {
 	 * 
 	 * @param dis  the string to display is Alphabet or Post Date
 	 */
-	public void setDisplayMode(String dis) { orderBy = dis ;}
+	public void setDisplayMode(String displayMode) { this.displayMode = displayMode ;}
 
 	public String getOrderBy() {
   	return orderBy;

@@ -236,7 +236,7 @@ public class TestFAQService extends FAQServiceTestCase{
 
 //  get list question by category of question 1
     FAQSetting setting = new FAQSetting();
-    setting.setProcessingMode("both");
+    setting.setDisplayMode("both");
   	List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, setting).getAll() ;
   	assertEquals(listQuestionByCategory.size(), 2) ;
 

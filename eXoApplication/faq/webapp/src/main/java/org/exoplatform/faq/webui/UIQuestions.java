@@ -295,8 +295,6 @@ public class UIQuestions extends UIContainer {
 	
   public void setListQuestion() {
     isChangeLanguage = false;
-    boolean approved = false;
-    if(faqSetting_.getProcessingMode().equals("approved")) approved = true;
     try{
       SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
       if(!canEditQuestion) {
@@ -603,17 +601,19 @@ public class UIQuestions extends UIContainer {
       ContactService contactService = questions.getApplicationComponent(ContactService.class) ;
       String email = "" ;
       String name = "" ;
-      Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
-      		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
-      try {
-      	name = contact.getFullName();
-      } catch (NullPointerException e) {
-      	name = "" ;
-      }
-      try {
-      	email = contact.getEmailAddress() ;
-      } catch (NullPointerException e) {
-      	email = "" ;
+      if(FAQUtils.getCurrentUser() != null){
+	      Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
+	      		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
+	      try {
+	      	name = contact.getFullName();
+	      } catch (NullPointerException e) {
+	      	name = "" ;
+	      }
+	      try {
+	      	email = contact.getEmailAddress() ;
+	      } catch (NullPointerException e) {
+	      	email = "" ;
+	      }
       }
       questionForm.setFaqSetting_(questions.faqSetting_);
       questionForm.setAuthor(name) ;
@@ -711,7 +711,7 @@ public class UIQuestions extends UIContainer {
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
           List<Category> listCate = question.getAllSubCategory(categoryId) ;
           FAQSetting faqSetting = new FAQSetting();
-          faqSetting.setProcessingMode(FAQUtils.DISPLAYBOTH);
+          faqSetting.setDisplayMode(FAQUtils.DISPLAYBOTH);
         	for(Category category : listCate) {
           	String id = category.getId() ;
           	List<Question> listQuestion = faqService.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider(), faqSetting).getAll() ;

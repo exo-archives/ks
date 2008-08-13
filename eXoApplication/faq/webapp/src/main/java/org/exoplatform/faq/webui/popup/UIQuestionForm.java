@@ -370,7 +370,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       
       String author = questionForm.getUIStringInput(AUTHOR).getValue() ;
       String emailAddress = questionForm.getUIStringInput(EMAIL_ADDRESS).getValue() ;
-      if(!FAQUtils.isValidEmailAddresses(emailAddress)) {
+      if(author == null || author.trim().length() < 1) {
+      	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+      	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.author-is-null", null, ApplicationMessage.WARNING)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      	return ;
+      }
+      if(emailAddress == null || emailAddress.trim().length() < 1 || !FAQUtils.isValidEmailAddresses(emailAddress)) {
         UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.email-address-invalid", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -468,14 +474,14 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         }
         
         if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
-          if(questionIsApproved || questionForm.faqSetting_.getProcessingMode().equals(FAQUtils.DISPLAYBOTH)) {
-            UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-            uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.add-new-question-successful", null, ApplicationMessage.INFO)) ;
-            event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          if(questionIsApproved) {
+          	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+          	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.add-new-question-successful", null, ApplicationMessage.INFO)) ;
+          	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
           } else {
-            UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-            uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-not-is-approved", null, ApplicationMessage.INFO)) ;
-            event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+          	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-not-is-approved", null, ApplicationMessage.INFO)) ;
+          	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
           }
         }
       } catch (PathNotFoundException notFoundException) {

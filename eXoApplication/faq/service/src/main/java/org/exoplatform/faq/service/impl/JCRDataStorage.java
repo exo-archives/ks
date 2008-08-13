@@ -505,7 +505,7 @@ public class JCRDataStorage {
                                                 + "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
     return pageList ;
   }
   
@@ -516,7 +516,7 @@ public class JCRDataStorage {
         + "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
     pageList.setNotYetAnswered(true);
     return pageList ;
   }
@@ -525,7 +525,7 @@ public class JCRDataStorage {
   	Node questionHome = getQuestionHome(sProvider, null) ;
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = null;
-    if(faqSetting.getProcessingMode().equals("approved")) {
+    if(faqSetting.getDisplayMode().equals("approved")) {
 	    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
 	                                    + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
 	                                    append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
@@ -551,16 +551,15 @@ public class JCRDataStorage {
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
+		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
     return pageList ;
   }
   
   public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-  	String sortBy = faqSetting.getDisplayMode() ;
     StringBuffer queryString = null;
-    if(faqSetting.getProcessingMode().equals("approved")){
+    if(faqSetting.getDisplayMode().equals("approved")){
 	    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
 	        + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
 	        append(" and (@exo:isApproved='true')").
@@ -583,7 +582,7 @@ public class JCRDataStorage {
     }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
-    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, sortBy) ;
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
     
     return pageList ;
   }
@@ -604,7 +603,7 @@ public class JCRDataStorage {
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = null;
-    pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true, null) ;
+    pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
     pageList.setNotYetAnswered(isNotYetAnswer);
     return pageList ;
   }
@@ -821,7 +820,7 @@ public class JCRDataStorage {
     FAQSetting setting = new FAQSetting();
     if (settingNode != null ){
       try {
-        setting.setProcessingMode((settingNode.getProperty(Utils.EXO_PROCESSING_MODE).getString()));
+        setting.setDisplayMode((settingNode.getProperty(Utils.EXO_PROCESSING_MODE).getString()));
         setting.setDisplayMode((settingNode.getProperty(Utils.EXO_DISPLAY_TYPE).getString()));
       } catch(Exception e) { 
       	e.printStackTrace() ;

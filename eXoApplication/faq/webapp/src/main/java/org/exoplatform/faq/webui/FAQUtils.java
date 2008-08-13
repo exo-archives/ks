@@ -277,7 +277,7 @@ public class FAQUtils {
 	public static void getPorletPreference(FAQSetting faqSetting) {
     PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
     PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-    faqSetting.setProcessingMode(portletPref.getValue("display", "")) ;
+    faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
     faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
     faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
   }
