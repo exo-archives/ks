@@ -89,7 +89,8 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     setListCate() ;
-    faqSetting_.setProcessingMode(FAQUtils.DISPLAYAPPROVED);
+    FAQUtils.getPorletPreference(faqSetting_);
+    faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
   }
   
   public void setFAQSetting(FAQSetting faqSetting){

@@ -17,17 +17,12 @@
 package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
-import javax.jcr.ValueFormatException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -54,9 +49,6 @@ public class QuestionPageList extends JCRPageList {
   
   /** The value_. */
   private String value_ ;
-  
-  /** The sort by_. */
-  private String sortBy_= "postdate";
   
   /** The is not yet answered. */
   private boolean isNotYetAnswered = false;
@@ -131,12 +123,11 @@ public class QuestionPageList extends JCRPageList {
    * 
    * @throws Exception  if repository occur exception
    */
-  public QuestionPageList(NodeIterator iter, long pageSize, String value, boolean isQuery, String sort) throws Exception{
+  public QuestionPageList(NodeIterator iter, long pageSize, String value, boolean isQuery) throws Exception{
     super(pageSize) ;
     iter_ = iter ;
     value_ = value ;
     isQuery_ = isQuery ;
-    sortBy_= sort ;
     setAvailablePage(iter.getSize()) ;    
   }
 
