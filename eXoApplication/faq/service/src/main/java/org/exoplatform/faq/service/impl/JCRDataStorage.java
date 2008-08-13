@@ -744,8 +744,7 @@ public class JCRDataStorage {
     if(orderBy.equals("created")) {
     	if(orderType.equals("asc")) Collections.sort(catList, new Utils.DatetimeComparatorASC()) ;
     	else Collections.sort(catList, new Utils.DatetimeComparatorDESC()) ;
-    }
-		if(orderBy.equals("alphabet")) {
+    } else {
 			if(orderType.equals("asc")) Collections.sort(catList, new Utils.NameComparatorASC()) ;
 			else Collections.sort(catList, new Utils.NameComparatorDESC()) ;
 		}
