@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -50,18 +51,31 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 		}
 )
 public class UISettingForm extends UIForm implements UIPopupComponent	{
+	private final String DISPLAY_MODE = "display-mode".intern();
 	public static final String ORDER_BY = "order-by".intern(); 
 	public static final String ORDER_TYPE = "order-type".intern(); 
+	private final String DISPLAY_APPROVED = "approved";
+	private final String DISPLAY_BOTH = "both";
 	public static final String ITEM_CREATE_DATE= "created".intern() ;
 	public static final String ITEM_ALPHABET= "alphabet".intern() ;
 	public static final String ASC= "asc".intern() ;
 	public static final String DESC= "desc".intern() ;
 	
 	private FAQSetting faqSetting_ = new FAQSetting();
+	private boolean isAdmin = false;
 	
 	public UISettingForm() throws Exception {}
 	
 	public void init() throws Exception {
+		
+		FAQServiceUtils serviceUtils = new FAQServiceUtils();
+		if(serviceUtils.isAdmin(FAQUtils.getCurrentUser())){
+			isAdmin = true;
+			List<SelectItemOption<String>> displayMode = new ArrayList<SelectItemOption<String>>();
+			displayMode.add(new SelectItemOption<String>(DISPLAY_APPROVED, DISPLAY_APPROVED ));
+			displayMode.add(new SelectItemOption<String>(DISPLAY_BOTH, DISPLAY_BOTH ));
+			addUIFormInput(new UIFormSelectBox(DISPLAY_MODE, DISPLAY_MODE, displayMode));
+		}
 		
 		List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
 		orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
@@ -85,6 +99,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 
 	public void fillData() throws Exception {    
     if (faqSetting_ != null) {
+    	if(isAdmin) getUIFormSelectBox(DISPLAY_MODE).setValue(String.valueOf(faqSetting_.getDisplayMode()));
       getUIFormSelectBox(ORDER_BY).setValue(String.valueOf(faqSetting_.getOrderBy()));
       getUIFormSelectBox(ORDER_TYPE).setValue(String.valueOf(faqSetting_.getOrderType()));
     }
@@ -102,6 +117,13 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQService service = FAQUtils.getFAQService() ;
 			FAQSetting faqSetting = settingForm.faqSetting_ ;
+			if(settingForm.isAdmin){
+				String display = settingForm.getUIFormSelectBox(settingForm.DISPLAY_MODE).getValue();
+				if(display != faqSetting.getDisplayMode()){
+					faqSetting.setDisplayMode(display);
+					FAQUtils.savePortletPreference(faqSetting);
+				}
+			}
 			faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 			faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
 			service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;

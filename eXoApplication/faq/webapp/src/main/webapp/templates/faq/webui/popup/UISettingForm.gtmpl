@@ -4,6 +4,15 @@
 	 					<div class="HorizontalLayout">
 			 					<table class="UIFormGrid">									
 									<tbody>
+									<%
+									if(uicomponent.isAdmin){%>
+										<tr>
+											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.display-mode"); %></td>
+											<td class="FieldComponent">
+												<%uicomponent.renderField(uicomponent.DISPLAY_MODE)%>
+											</td>
+										</tr>
+								<%}%>
 										<tr>
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.order-by"); %></td>
 											<td class="FieldComponent">
