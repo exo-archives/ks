@@ -76,6 +76,24 @@
 									</div>
 									<div class="SeparatorLine"><span></span></div>
 						<%}%>
+						<% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
+								String actionSetting = uicomponent.event("Setting") ;
+						%>
+							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"   class="DefaultStyle FAQBar">
+									<a href="$actionSetting" >
+										<div class="LeftOverButton">
+											<div class="RightOverButton">
+												<div class="CenterOverButton">
+													<div class="Icon Setting">
+														<%=_ctx.appRes(uicomponent.getName() + ".action." + "Settings")%>
+													</div>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+								<div class="SeparatorLine"><span></span></div>
+							<% } %>
 							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"   class="DefaultStyle FAQBar">
 								<a href="javascript:void(0);" onclick="eXo.faq.UIFAQPortlet.printAll(this)">
 									<div class="LeftOverButton">

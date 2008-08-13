@@ -115,8 +115,8 @@ public class UIQuestions extends UIContainer {
   private static String language_ = "" ;
   private List<String> emailList_ = new ArrayList<String>() ;
   
-  private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "Setting", "QuestionManagament"} ;
-  private String[] firstTollbar_ = new String[]{"AddCategory", "QuestionManagament", "Setting"} ;
+  private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
+  private String[] firstTollbar_ = new String[]{"AddCategory", "QuestionManagament"} ;
   private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
   private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
   private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
