@@ -84,9 +84,9 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     isResponseTab_ = false ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_INTERATOR) ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
-    setListQuestion() ;
     FAQUtils.getPorletPreference(faqSetting_);
     faqService_.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
+    setListQuestion() ;
     setActions(new String[]{""}) ;
   }
   
