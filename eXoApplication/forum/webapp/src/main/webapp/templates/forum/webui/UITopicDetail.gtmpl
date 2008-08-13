@@ -126,7 +126,7 @@
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
 							<% if(isNotReply) { %>
-									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
+									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
 									<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
@@ -141,7 +141,7 @@
 				</div>
 			</div>
 		</div>
-		<div title="Go to page Number " class="GotoPageIcon" >
+		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon" >
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative; ">
@@ -164,7 +164,7 @@
 												<div class="ButtonLeft">
 													<div class="ButtonRight">
 														<div class="ButtonMiddle">
-														 <a href="<%=uicomponent.event("GoNumberPage","1")%>">Go Page</a>
+														 <a href="<%=uicomponent.event("GoNumberPage","1")%>"><%=_ctx.appRes(uiformId + ".action.GoPage");%></a>
 														</div>
 													</div>
 												</div>
@@ -202,7 +202,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="StatusIcon ModerationIcon">
-													<div class="DownArrow1Icon">Moderation</div>
+													<div class="DownArrow1Icon"><%=_ctx.appRes(uiformId + ".label.Moderation");%></div>
 												</div>
 											</div>
 										</div>
@@ -289,7 +289,7 @@
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon TagIcon">
-														Tag
+														<%=_ctx.appRes(uiformId + ".label.Tag");%>
 													</div>
 												</div>
 											</div>
@@ -305,7 +305,7 @@
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon VoteIcon">
-														Vote Thread
+														<%=_ctx.appRes(uiformId + ".label.VoteThread");%>
 													</div>
 												</div>
 											</div>
@@ -317,11 +317,11 @@
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">									
 										<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-											<div class="LeftOverButton" title="Search in this thread">
+											<div class="LeftOverButton" title="<%=_ctx.appRes(uiformId + ".title.SearchInThisThread");%>">
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
 														<div class="StatusIcon SearchIcon">
-															<div class="DownArrow1Icon">Search this Thread</div>
+															<div class="DownArrow1Icon"><%=_ctx.appRes(uiformId + ".label.SearchThisThread");%></div>
 														</div>
 													</div>
 												</div>
@@ -348,7 +348,7 @@
 																		<div class="ButtonLeft">
 																			<div class="ButtonRight">
 																				<div class="ButtonMiddle">
-																				 <a href="<%=uicomponent.event("SearchForm")%>">&nbsp;Search&nbsp;</a>
+																				 <a href="<%=uicomponent.event("SearchForm")%>">&nbsp;<%=_ctx.appRes(uiformId + ".label.Search");%>&nbsp;</a>
 																				</div>
 																			</div>
 																		</div>
@@ -378,7 +378,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="StatusIcon ToolIcon">
-													<div class="DownArrow1Icon">Thread Tools</div>
+													<div class="DownArrow1Icon"><%=_ctx.appRes(uiformId + ".label.ThreadTools");%></div>
 												</div>
 											</div>
 										</div>
@@ -661,25 +661,25 @@
 								<img src="$avatarUrl" class="Img" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="125px"/>
 								<% } %>
 								<div class="InfoMember">
-									<div>Join Date: $joinDate</div>
+									<div><%=_ctx.appRes(uiformId + ".label.JoinDate");%>: $joinDate</div>
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
 											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateTimeFormat,lastPostOfUser) ;
 									%>
-									<div>Posts: $totalPost</div>
-									<div>Last Post: $lastPostDateOfUser</div>
+									<div><%=_ctx.appRes(uiformId + ".label.Posts");%>: $totalPost</div>
+									<div><%=_ctx.appRes(uiformId + ".label.LastPost");%>: $lastPostDateOfUser</div>
 									<% } else {%>
-									<div><strong>$owner</strong> has no post!</div>
+									<div><strong>$owner</strong><%=_ctx.appRes(uiformId + ".label.hasNoPost");%></div>
 									<% } 
 									 if(!ForumUtils.isEmpty(location)) {
 									%>
-									<div>Location: $location</div>
+									<div><%=_ctx.appRes(uiformId + ".label.Location");%>: $location</div>
 									<%} 
 										String lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, userInfo.getLastLoginDate()) ;
 									%>
-									<div>Last Login: $lastLoginUser</div>
+									<div><%=_ctx.appRes(uiformId + ".label.LastLogin");%>: $lastLoginUser</div>
 								</div>
 							</div>
 						</td>
@@ -691,7 +691,7 @@
 							<% if(checked > 0 && canEdit) {%>
 								<div class="PostViewTitle" style="float: left;">
 									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
-									<div class="PostTime">Posted: $createdDate </div>
+									<div class="PostTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>Posted: $createdDate </div>
 								</div>
 								<div class="CheckPost" style="float: right;">
 									<div class="IPIcon" title="IP: <%=post.getRemoteAddr();%>"><span></span></div>
@@ -704,7 +704,7 @@
 								<% } else { %>
 								<div class="PostViewTitle">
 									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
-									<div class="PostTime">Posted: $createdDate</div>
+									<div class="PostTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate</div>
 								</div>
 								<% } %>
 							</div>
@@ -727,7 +727,7 @@
 								<% } %>
 							<% if(hasAttachment) {%>
 							<div class="AttachmentContainer">
-								<div class="AttachmentTitle">Attachments:</div>
+								<div class="AttachmentTitle"><%=_ctx.appRes(uiformId + ".label.Attachments");%>:</div>
 								<div class="AttachmentContent">
 								<% for(attachment in attachments) {
 										 String urlFile = uicomponent.getFileSource(attachment) ;
@@ -744,10 +744,10 @@
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 						 						<a href="$urlFile" class="AttachmentLabel" title="$titleFile">$fileName</a>
 						 						<div style="clear: left;"><span></span></div>
-						 						<div class="Size">Size: ${size}</div>
+						 						<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
 						 						<div class="Action">
-						 							<div class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.openPicture(this,'imgView${fileName}')">View</div>
-						 							<div class="Icon Download"><a href="$urlFile">Download</a></div>
+						 							<div class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.openPicture(this,'imgView${fileName}')"><%=_ctx.appRes(uiformId + ".action.View");%></div>
+						 							<div class="Icon Download"><a href="$urlFile"><%=_ctx.appRes(uiformId + ".action.Download");%></a></div>
 						 						</div>
 						 					</div>
 							 				<div style="clear: left;"><span></span></div>
@@ -758,7 +758,7 @@
 											<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
 											<a class="AttachmentLabel" href="$urlFile">$fileName</a>
 											<div style="clear: left;"><span/></div>
-											<div class="Size">Size: ${size}</div>
+											<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>Size: ${size}</div>
 										</div>
 									<% } %>
 									</div>
@@ -773,7 +773,7 @@
 								<%  
 									if(!ForumUtils.isEmpty(editBy)) {
 								%>
-									<div>Last edited by <a href="#">$editBy</a> on $editDate</div>
+									<div><%=_ctx.appRes(uiformId + ".label.LastEditedBy");%> <a href="#">$editBy</a> <%=_ctx.appRes(uiformId + ".label.on");%> $editDate</div>
 									<%
 										String reason = post.getEditReason() ;
 										if(!ForumUtils.isEmpty(reason)) { 
@@ -834,7 +834,7 @@
 			jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('"+idLastPost+"');");
 		 } else {
 		%>
-		<div class="ContentNotPost">You have no permission to view this thread !</div>
+		<div class="ContentNotPost"><%=_ctx.appRes(uiformId + ".label.NoPermission");%></div>
 	<% } %>
 <!-- End ContentContainer -->
 	</div>	
@@ -851,7 +851,7 @@
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
 							<% if(isNotReply) { %>
-									<div class="IconButton LockIcon" title="You can not reply this thread."><span class="LockLabel"></span>Post Reply</div>
+									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddPost")%>">
 									<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
@@ -866,7 +866,7 @@
 				</div>
 			</div>
 		</div>
-		<div title="Go to page Number " class="GotoPageIcon" >
+		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon" >
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative;">
@@ -889,7 +889,7 @@
 												<div class="ButtonLeft">
 													<div class="ButtonRight">
 														<div class="ButtonMiddle">
-														 <a href="<%=uicomponent.event("GoNumberPage","2")%>">Go Page</a>
+														 <a href="<%=uicomponent.event("GoNumberPage","1")%>"><%=_ctx.appRes(uiformId + ".action.GoPage");%></a>
 														</div>
 													</div>
 												</div>
@@ -923,7 +923,7 @@
 					  <div class="LeftBar">
 					  	<div class="RightBar">
 								<div class="CenterBar">
-									<div class="Title">Forum Quick Reply</div>
+									<div class="Title"><%=_ctx.appRes(uiformId + ".title.ForumQuickReply");%></div>
 									<div class="CollapseButton" title="Expand category" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 									<div style="clear: both;"><span></span></div>
 								</div>
@@ -943,7 +943,7 @@
 							<a href="$link" class="ActionButton LightBlueStyle">
 								<div class="ButtonLeft">
 									<div class="ButtonRight">
-										<div class="ButtonMiddle"> $actionLabel </div>
+										<div class="ButtonMiddle">$actionLabel</div>
 									</div>
 								</div>
 							</a>
