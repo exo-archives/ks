@@ -281,4 +281,15 @@ public class FAQUtils {
     faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
     faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
   }
+	
+	public static void savePortletPreference(FAQSetting setting){
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+    try {
+	    portletPref.setValue("display", setting.getDisplayMode());
+	    portletPref.store();
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
+	}
 }
