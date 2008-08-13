@@ -123,7 +123,7 @@ public interface FAQService {
    * 
    * @throws Exception the exception
    */
-  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception ;
+  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
   
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception ;
   
@@ -330,15 +330,6 @@ public interface FAQService {
    * @throws Exception the exception
    */
   public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception ;  
-  
-  /**
-   * This method should lookup all setting.
-   * 
-   * @param sProvider the session provider
-   * @return the FAQ setting
-   * @throws Exception the exception
-   */
-  public FAQSetting  getFAQSetting(SessionProvider sProvider) throws Exception ;  
   
   /**
    * This method to update FAQ setting.

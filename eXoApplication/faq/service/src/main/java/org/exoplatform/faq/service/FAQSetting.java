@@ -30,8 +30,7 @@ public class FAQSetting {
 	private String orderType ;
 	
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
-	public static String DISPLAY_TYPE_POSTDATE = "postdate" ;
-	public static String DISPLAY_TYPE_RELEVANCE = "relevance" ;
+	public static String DISPLAY_TYPE_POSTDATE = "created" ;
 	public static String ORDERBY_TYPE_ASC = "asc" ;
 	public static String ORDERBY_TYPE_DESC = "desc" ;
 	

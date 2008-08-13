@@ -726,7 +726,7 @@ public class JCRDataStorage {
   	return catList ;
   }
   
-  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
+  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
   	List<Category> catList = new ArrayList<Category>() ;
   	Node parentCategory ;
   	if(categoryId != null) {
@@ -734,17 +734,20 @@ public class JCRDataStorage {
   	}else {
   		parentCategory = getCategoryHome(sProvider, null) ;
   	}
-  	FAQSetting faqSetting = getFAQSetting(sProvider) ;
-  	String sortBy = faqSetting.getDisplayMode() ;
+  	String orderBy = faqSetting.getOrderBy() ;
+  	String orderType = faqSetting.getOrderType();
   	NodeIterator iter = parentCategory.getNodes() ;
     while(iter.hasNext()) {
     	catList.add(getCategory(iter.nextNode())) ;
     } 
-    if(sortBy.equals("postdate")) {
-    	Collections.sort(catList, new Utils.DatetimeComparator()) ;
+//  order by and ascending or descending
+    if(orderBy.equals("created")) {
+    	if(orderType.equals("asc")) Collections.sort(catList, new Utils.DatetimeComparatorASC()) ;
+    	else Collections.sort(catList, new Utils.DatetimeComparatorDESC()) ;
     }
-		if(sortBy.equals("alphabet")) {
-			Collections.sort(catList, new Utils.NameComparator()) ;
+		if(orderBy.equals("alphabet")) {
+			if(orderType.equals("asc")) Collections.sort(catList, new Utils.NameComparatorASC()) ;
+			else Collections.sort(catList, new Utils.NameComparatorDESC()) ;
 		}
   	return catList ;
   }
@@ -807,26 +810,6 @@ public class JCRDataStorage {
   	userSettingNode .setProperty("exo:ordeBy", faqSetting.getOrderBy());
   	userSettingNode .setProperty("exo:ordeType", faqSetting.getOrderType());
   	userNode.save() ;
-  }
-  
-  public FAQSetting  getFAQSetting(SessionProvider sProvider) throws Exception  {
-  	Node faqServiceHome = getFAQServiceHome(sProvider);		
-    Node settingNode = null;
-    try{
-    	settingNode = faqServiceHome.getNode(Utils.KEY_FAQ_SETTING) ;
-    }catch(PathNotFoundException e) {
-    	return new FAQSetting() ;
-    }
-    FAQSetting setting = new FAQSetting();
-    if (settingNode != null ){
-      try {
-        setting.setDisplayMode((settingNode.getProperty(Utils.EXO_PROCESSING_MODE).getString()));
-        setting.setDisplayMode((settingNode.getProperty(Utils.EXO_DISPLAY_TYPE).getString()));
-      } catch(Exception e) { 
-      	e.printStackTrace() ;
-      }      
-    }
-  	return setting ;
   }
 
   private String [] ValuesToStrings(Value[] Val) throws Exception {

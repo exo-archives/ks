@@ -54,7 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 
 public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
-	private FAQSetting faqSetting_;
+	private FAQSetting faqSetting_ ;
 	@SuppressWarnings("unused")
   private static List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCate = new ArrayList<Cate>() ;
@@ -98,7 +98,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     Cate parentCate = null ;
     Cate childCate = null ;
     
-    for(Category category : faqService_.getSubCategories(null, sessionProvider_)) {
+    for(Category category : faqService_.getSubCategories(null, sessionProvider_, faqSetting_)) {
       if(category != null && !category.getId().equals(categoryId_)) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
@@ -112,7 +112,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
       parentCate = listCate.get(listCate.size() - 1) ;
       listCate.remove(parentCate) ;
       this.listCate.add(parentCate) ;
-      for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider_)){
+      for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider_, faqSetting_)){
         if(category != null && !category.getId().equals(categoryId_)) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;
@@ -142,7 +142,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
       listCate.add(cateClass) ;
       int i = 0 ;
       while(i < listCate.size()) {
-        for(Category category : faqService_.getSubCategories(listCate.get(i).getCategory().getId(), FAQUtils.getSystemProvider())) {
+        for(Category category : faqService_.getSubCategories(listCate.get(i).getCategory().getId(), FAQUtils.getSystemProvider(), faqSetting_)) {
           cateClass = new CateClass() ;
           cateClass.setCategory(category) ;
           cateClass.setCateParentId(listCate.get(i).getCategory().getId()) ;

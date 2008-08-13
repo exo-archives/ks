@@ -23,6 +23,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -60,7 +61,7 @@ import org.exoplatform.webui.form.UIForm;
 public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   private static final String LIST_QUESTION_INTERATOR = "FAQUserPageIteratorTab1" ;
   private static final String LIST_QUESTION_NOT_ANSWERED_INTERATOR = "FAQUserPageIteratorTab2" ;
-  
+  private FAQSetting faqSetting_ = new FAQSetting();
   private static FAQService faqService_ =(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ; 
   private JCRPageList pageList ;
   private JCRPageList pageListNotAnswer ;
@@ -84,6 +85,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_INTERATOR) ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
     setListQuestion() ;
+    FAQUtils.getPorletPreference(faqSetting_);
+    faqService_.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
     setActions(new String[]{""}) ;
   }
   
@@ -136,7 +139,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       listCateId.addAll(faqService_.getListCateIdByModerator(user, sProvider)) ;
       int i = 0 ;
       while(i < listCateId.size()) {
-        for(Category category : faqService_.getSubCategories(listCateId.get(i), sProvider)) {
+        for(Category category : faqService_.getSubCategories(listCateId.get(i), sProvider, faqSetting_ )) {
           if(!listCateId.contains(category.getId())) {
             listCateId.add(category.getId()) ;
           }
