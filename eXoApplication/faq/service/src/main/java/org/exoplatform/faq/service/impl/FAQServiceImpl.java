@@ -228,8 +228,8 @@ public class FAQServiceImpl implements FAQService{
 	 * @see     list category
 	 * @throws Exception the exception
 	 */
-	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider) throws Exception {
-		return jcrData_.getSubCategories(categoryId, sProvider);
+	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
+		return jcrData_.getSubCategories(categoryId, sProvider ,faqSetting);
 	}
 	
 	/**
@@ -300,15 +300,6 @@ public class FAQServiceImpl implements FAQService{
 	public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
 		return jcrData_.saveQuestion(question, isAddNew, sProvider) ;
 	}
-	
-	/**
-	 * This method is used to get some properties of FAQ. 
-	 * @param sProvider
-	 * @throws Exception the exception
-	 */
-  public FAQSetting getFAQSetting(SessionProvider sProvider) throws Exception {
-    return jcrData_.getFAQSetting(sProvider);
-  }
   
   /**
    * This function is used to set some properties of FAQ. 

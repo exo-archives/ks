@@ -31,12 +31,6 @@ import javax.jcr.Value;
  * Apr 10, 2008, 4:40:22 PM
  */
 public class Utils {
-	public static final String KEY_FAQ_SETTING = "FAQSetting".intern() ;
-	
-	public static final String EXO_FAQ_SETTING = "exo:faqSetting".intern();
-	public static final String EXO_PROCESSING_MODE = "exo:processingMode".intern() ;
-	public static final String EXO_DISPLAY_TYPE = "exo:displayType".intern() ;
-	
 	/**
 	 *  This method convert string to string[] split with comma
 	 * @param str
@@ -55,7 +49,7 @@ public class Utils {
 	 * @author Administrator
 	 *
 	 */
-	static public class DatetimeComparator implements Comparator<Object> {
+	static public class DatetimeComparatorASC implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {
     	Date date1 = ((Category) o1).getCreatedDate() ;
       Date date2  = ((Category) o2).getCreatedDate() ;
@@ -67,7 +61,7 @@ public class Utils {
 	 * @author Administrator
 	 *
 	 */
-	static public class NameComparator implements Comparator<Object> {
+	static public class NameComparatorASC implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {
     	String name1 = ((Category) o1).getName() ;
       String name2  = ((Category) o2).getName() ;
@@ -76,28 +70,27 @@ public class Utils {
   }
 	
 	/**
-	 * This method sort list question is date ascending
+	 * This method sort list category is date descending
 	 * @author Administrator
 	 *
 	 */
-	static public class DatetimeComparatorQuestion implements Comparator<Object> {
+	static public class DatetimeComparatorDESC implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {
-    	Date date1 = ((Question) o1).getCreatedDate() ;
-      Date date2  = ((Question) o2).getCreatedDate() ;
-      return date1.compareTo(date2) ;
+    	Date date1 = ((Category) o1).getCreatedDate() ;
+      Date date2  = ((Category) o2).getCreatedDate() ;
+      return date2.compareTo(date1) ;
     }
   }
-	
 	/**
-	 * This method sort list question is name ascending
+	 * This method sort list category is name descending
 	 * @author Administrator
 	 *
 	 */
-	static public class NameComparatorQuestion implements Comparator<Object> {
+	static public class NameComparatorDESC implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {
-    	String name1 = ((Question) o1).getQuestion() ;
-      String name2  = ((Question) o2).getQuestion() ;
-      return name1.compareToIgnoreCase(name2) ;
+    	String name1 = ((Category) o1).getName() ;
+      String name2  = ((Category) o2).getName() ;
+      return name2.compareToIgnoreCase(name1) ;
     }
   }
 	

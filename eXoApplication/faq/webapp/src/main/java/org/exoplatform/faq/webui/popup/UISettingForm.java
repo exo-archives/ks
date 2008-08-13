@@ -52,10 +52,10 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String ORDER_BY = "order-by".intern(); 
 	public static final String ORDER_TYPE = "order-type".intern(); 
-	public static final String ITEM_CREATE_DATE= "postdate".intern() ;
+	public static final String ITEM_CREATE_DATE= "created".intern() ;
 	public static final String ITEM_ALPHABET= "alphabet".intern() ;
-	public static final String ASC= "ascending".intern() ;
-	public static final String DESC= "descending".intern() ;
+	public static final String ASC= "asc".intern() ;
+	public static final String DESC= "desc".intern() ;
 	
 	private FAQSetting faqSetting_ = new FAQSetting();
 	

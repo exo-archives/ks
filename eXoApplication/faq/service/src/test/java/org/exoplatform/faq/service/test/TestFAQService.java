@@ -41,6 +41,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 public class TestFAQService extends FAQServiceTestCase{
 	private FAQService faqService_ ;
+	private FAQSetting faqSetting_ = new FAQSetting();
 	private SessionProvider sProvider_ ;
 	private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
 	public void setUp() throws Exception {
@@ -48,6 +49,9 @@ public class TestFAQService extends FAQServiceTestCase{
     faqService_ = (FAQService) container.getComponentInstanceOfType(FAQService.class) ;
     SessionProviderService sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;
     sProvider_ = sessionProviderService.getSystemSessionProvider(null) ;
+    faqSetting_.setDisplayMode("both");
+    faqSetting_.setOrderBy("created");
+    faqSetting_.setOrderType("asc") ;
   }
 	
 	public void testFAQService() throws Exception {
@@ -62,7 +66,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	assertNotNull(faqService_.getCategoryById(cate1.getId(), sProvider_)) ;
 	
 //	get Categories
-	List<Category> listCate = faqService_.getSubCategories(null, sProvider_) ;
+	List<Category> listCate = faqService_.getSubCategories(null, sProvider_, faqSetting_) ;
 	assertEquals(listCate.size(), 1) ;
 	
 //update category 
@@ -85,7 +89,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	faqService_.saveCategory(cate1.getId(), subCate1, true, sProvider_) ;
 	
 //	get sub category
-	List<Category> listSubCate = faqService_.getSubCategories(cate1.getId(), sProvider_) ;
+	List<Category> listSubCate = faqService_.getSubCategories(cate1.getId(), sProvider_, faqSetting_) ;
 	assertEquals(listSubCate.size(), 1) ;
 
 //update sub category 

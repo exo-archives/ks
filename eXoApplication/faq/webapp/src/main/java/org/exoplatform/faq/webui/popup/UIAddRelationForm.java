@@ -129,7 +129,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     Cate parentCate = null ;
     Cate childCate = null ;
     
-    for(Category category : faqService.getSubCategories(null, sessionProvider)) {
+    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_)) {
       if(category != null) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
@@ -143,7 +143,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       parentCate = listCate.get(listCate.size() - 1) ;
       listCate.remove(parentCate) ;
       this.listCate.add(parentCate) ;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider)){
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_)){
         if(category != null) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;

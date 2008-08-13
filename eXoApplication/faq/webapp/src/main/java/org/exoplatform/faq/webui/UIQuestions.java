@@ -196,9 +196,9 @@ public class UIQuestions extends UIContainer {
     if(categories_ != null)
       categories_.clear() ;
     if(this.categoryId_ == null || this.categoryId_.trim().length() < 1) {
-      categories_ = faqService.getSubCategories(null, FAQUtils.getSystemProvider()) ;
+      categories_ = faqService.getSubCategories(null, FAQUtils.getSystemProvider(), this.faqSetting_) ;
     } else {
-      categories_ = faqService.getSubCategories(this.categoryId_, FAQUtils.getSystemProvider()) ;
+      categories_ = faqService.getSubCategories(this.categoryId_, FAQUtils.getSystemProvider(), this.faqSetting_) ;
       setIsModerators() ;
     }
   }
@@ -489,13 +489,13 @@ public class UIQuestions extends UIContainer {
     SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
     Category cate = null ;
     listResult.add(faqService.getCategoryById(categoryId, sessionProvider)) ;
-    for(Category category : faqService.getSubCategories(categoryId, sessionProvider)) {
+    for(Category category : faqService.getSubCategories(categoryId, sessionProvider, this.faqSetting_)) {
       stackCate.push(category) ;
     }
     while(!stackCate.isEmpty()) {
       cate = stackCate.pop() ;
       listResult.add(cate) ;
-      for(Category category : faqService.getSubCategories(cate.getId(), sessionProvider)) {
+      for(Category category : faqService.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_)) {
         stackCate.push(category) ;
       }
     }
@@ -753,7 +753,7 @@ public class UIQuestions extends UIContainer {
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
-        	List<Category> listCate = faqService.getSubCategories(null, FAQUtils.getSystemProvider()) ;
+        	List<Category> listCate = faqService.getSubCategories(null, FAQUtils.getSystemProvider(), question.faqSetting_) ;
         	String cateId = null ;
         	if(listCate.size() == 1 ) {
 		      	for(Category cat: listCate) { cateId = cat.getId(); }
@@ -763,6 +763,7 @@ public class UIQuestions extends UIContainer {
 	    			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 600) ;
 	    			popupContainer.setId("MoveCategoryForm") ;
 	    			uiMoveCategoryForm.setCategoryID(categoryId) ;
+	    			uiMoveCategoryForm.setFAQSetting(question.faqSetting_) ;
 	    			uiMoveCategoryForm.setListCate() ;
 	    			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         	} else {
