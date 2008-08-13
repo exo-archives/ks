@@ -615,7 +615,6 @@ public class UIQuestions extends UIContainer {
 	      	email = "" ;
 	      }
       }
-      questionForm.setFaqSetting_(questions.faqSetting_);
       questionForm.setAuthor(name) ;
       questionForm.setEmail(email) ;
       questionForm.setCategoryId(categoryId) ;
