@@ -32,16 +32,16 @@ import java.util.Date;
 public class QuestionLanguage {
   
   /** The language. */
-  private String language ;
+  private String language = " " ;
   
   /** The question. */
-  private String question ;
+  private String question = " " ;
   
   /** The response. */
-  private String response ;
+  private String response = " " ;
   
   /** The answerer */
-  private String responseBy;
+  private String responseBy = " ";
   
   /** The date response. */
   private Date dateResponse ;
