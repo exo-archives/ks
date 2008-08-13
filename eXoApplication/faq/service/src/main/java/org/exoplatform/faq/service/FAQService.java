@@ -549,6 +549,16 @@ public interface FAQService {
    */
   public void addLanguage(Node questionNode, QuestionLanguage language) throws Exception ;
   
+  /**
+   * Get setting of user to view data (categories and questions). At first time user come, 
+   * system will create setting for user (automatically) base on setting of admin 
+   * (Default setting of FAQ system). After that, when user login again, his setting is getted.
+   * 
+   * @param sProvider	system provider
+   * @param userName	the name of user
+   * @param faqSetting	the setting of user
+   * @throws Exception	when can't find user or faqSetting
+   */
   public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception ;
 
 }
