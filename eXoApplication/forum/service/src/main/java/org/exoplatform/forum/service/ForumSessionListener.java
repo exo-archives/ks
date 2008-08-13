@@ -23,7 +23,9 @@ import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.organization.auth.AuthenticationService;
+import org.exoplatform.services.organization.auth.Identity;
+
 
 /**
  * Created by The eXo Platform SAS        
@@ -57,23 +59,16 @@ public class ForumSessionListener implements HttpSessionListener {
    * 
    */
   public void sessionDestroyed(HttpSessionEvent event) {
-  	try {
+    try {
       String portalContainerName = event.getSession().getServletContext().getServletContextName() ;
-      if(ConversationState.getCurrent() != null ){
-  	  	RootContainer rootContainer = RootContainer.getInstance() ;
-  	    PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
-  	    ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
-  	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
-  	  }
-      
-      /*RootContainer rootContainer = RootContainer.getInstance() ;
-	    PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
-	    ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
-	    AuthenticationService authenService = (AuthenticationService)portalContainer.getComponentInstanceOfType(AuthenticationService.class) ;
-      System.out.println("\n\n ===========> sessionDestroyed \n\n");
-	    if(authenService.getCurrentIdentity() != null) {
-      	fservice.userLogout(authenService.getCurrentIdentity().getUserId()) ;
-      }*/
+    	RootContainer rootContainer = RootContainer.getInstance() ;
+    	PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
+    	AuthenticationService authenService = (AuthenticationService)RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(AuthenticationService.class) ;
+      Identity identity = authenService.getCurrentIdentity() ;
+      if(identity != null) {
+      	ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
+      	fservice.userLogout(identity.getUsername()) ;
+      }
     } catch(Exception ex) {
       log.error("Error while destroying a portal session",ex);
     } finally {
