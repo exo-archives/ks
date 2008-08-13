@@ -49,18 +49,36 @@ public class FAQSetting {
 	 */
 	public void setDisplayMode(String displayMode) { this.displayMode = displayMode ;}
 
+	/**
+	 * Get field is ordered of datas are get from FAQ system, value is returned : alphabet or created date
+	 * @return	order of categories and questions
+	 */
 	public String getOrderBy() {
   	return orderBy;
   }
 
+	/**
+	 * Registers field which is ordered when get them from database
+	 * 
+	 * @param orderBy	only one of two case: alphabet or created
+	 */
 	public void setOrderBy(String orderBy) {
   	this.orderBy = orderBy;
   }
 
+	/**
+	 * Get how to order when get data, have two values: ascending and descending
+	 * @return	ascending or descending
+	 */
 	public String getOrderType() {
   	return orderType;
   }
 
+	/**
+	 * Registers order of the field which is chosen when get data,
+	 * input one of tow values: <code>ascending</code> and <code>descending</code>
+	 * @param orderType	ascending or descending
+	 */
 	public void setOrderType(String orderType) {
   	this.orderType = orderType;
   } 

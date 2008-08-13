@@ -110,7 +110,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private boolean isActivated_ = true ;
   
   private boolean isChildOfManager = false ;
-  private FAQSetting faqSetting_ = null;
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -129,13 +128,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     question_ = null ;
   }
   
-  public FAQSetting getFaqSetting_() {
-  	return faqSetting_;
-  }
-	public void setFaqSetting_(FAQSetting faqSetting_) {
-  	this.faqSetting_ = faqSetting_;
-  }
-	
 	public void refresh() throws Exception {    
     listFileAttach_.clear() ;
   }
