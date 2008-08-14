@@ -26,8 +26,10 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -62,12 +64,21 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String DESC= "desc".intern() ;
 	
 	private FAQSetting faqSetting_ = new FAQSetting();
-	private boolean isEditPortlet = false;
+	private boolean isEditPortlet_ = false;
 	
-	public UISettingForm() throws Exception {}
+	public UISettingForm() throws Exception {
+		isEditPortlet_ = false;
+	}
+	
+	public void setIsEditPortlet(boolean isEditPortLet){
+		this.isEditPortlet_ = isEditPortLet;
+		if(isEditPortLet){
+			FAQUtils.getPorletPreference(faqSetting_);
+		}
+	}
 	
 	public void init() throws Exception {
-		if(isEditPortlet){
+		if(isEditPortlet_){
 			List<SelectItemOption<String>> displayMode = new ArrayList<SelectItemOption<String>>();
 			displayMode.add(new SelectItemOption<String>(DISPLAY_APPROVED, DISPLAY_APPROVED ));
 			displayMode.add(new SelectItemOption<String>(DISPLAY_BOTH, DISPLAY_BOTH ));
@@ -96,7 +107,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 
 	public void fillData() throws Exception {    
     if (faqSetting_ != null) {
-    	if(isEditPortlet){
+    	if(isEditPortlet_){
     		getUIFormSelectBox(DISPLAY_MODE).setValue(String.valueOf(faqSetting_.getDisplayMode()));
     	}
   		getUIFormSelectBox(ORDER_BY).setValue(String.valueOf(faqSetting_.getOrderBy()));
@@ -118,20 +129,24 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			FAQSetting faqSetting = settingForm.faqSetting_ ;
 			faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 			faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
-			if(settingForm.isEditPortlet){
+			if(settingForm.isEditPortlet_){
 				faqSetting.setDisplayMode(settingForm.getUIFormSelectBox(settingForm.DISPLAY_MODE).getValue());
 				FAQUtils.savePortletPreference(faqSetting);
+				UIApplication uiApplication = settingForm.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return ;
 			} else {
 				service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;
+				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				questions.setFAQSetting(faqSetting);
+				questions.setCategories() ;
+				questions.setListQuestion() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
+				uiPopupAction.deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 			}
-			UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			questions.setFAQSetting(faqSetting);
-			questions.setCategories() ;
-			questions.setListQuestion() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
-      uiPopupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
 

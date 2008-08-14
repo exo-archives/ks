@@ -17,6 +17,7 @@
     <supports>
       <mime-type>text/html</mime-type>
       <portlet-mode>help</portlet-mode>
+      <portlet-mode>edit</portlet-mode>
     </supports>
     <supported-locale>en</supported-locale>
     <resource-bundle>locale.portlet.faq.FAQPortlet</resource-bundle>
@@ -29,7 +30,7 @@
     <portlet-preferences>
     	<preference>
         <name>display</name>
-        <value>approved</value> <!--approved/both -->
+        <value>both</value> <!--approved/both -->
         <read-only>false</read-only>
       </preference>
       <preference>
