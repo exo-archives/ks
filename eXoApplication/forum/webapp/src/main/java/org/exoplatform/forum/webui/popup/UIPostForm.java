@@ -93,6 +93,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private String forumId ;
 	private String topicId ;
 	private String postId ;
+	private boolean isMod = false ;
 	private Topic topic ;
 	private Post post_ = new Post();
 	private boolean isQuote = false ;
@@ -103,9 +104,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
     UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
     editReason.setRendered(false);
     UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB) ;
+    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true) ;
+    formWYSIWYGInput.addValidator(MandatoryValidator.class);
     threadContent.addChild(postTitle) ;
     threadContent.addChild(editReason) ;
-    threadContent.addChild(new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true)) ;
+    threadContent.addChild(formWYSIWYGInput) ;
     threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
     threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
     UIFormInputIconSelector inputIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
@@ -291,21 +294,25 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			PortletRequestImp request = event.getRequestContext().getRequest();
 			String remoteAddr = request.getRemoteAddr();
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
-			boolean isOffend = false ; 
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
-			String stringKey = forumAdministration.getCensoredKeyword();
-			if(!ForumUtils.isEmpty(stringKey)) {
-				stringKey = stringKey.toLowerCase() ;
-				String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
-				checksms = checksms.toLowerCase().trim();
-				for (String string : censoredKeyword) {
-		      if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
-		      if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
-	      }
-			}
 			t = checksms.length() ;
 			if(postTitle.trim().length() <= 3) {k = 0;}
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
+				boolean isOffend = false ; 
+				boolean hasTopicMod = false ;
+				if(!uiForm.isMod()) {
+					String stringKey = forumAdministration.getCensoredKeyword();
+					if(!ForumUtils.isEmpty(stringKey)) {
+						stringKey = stringKey.toLowerCase() ;
+						String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
+						checksms = checksms.toLowerCase().trim();
+						for (String string : censoredKeyword) {
+							if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
+							if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
+						}
+					}
+					if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
+				}
         Post post = new Post();
 				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
@@ -320,8 +327,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					userPrivate = new String[]{userName, uiForm.post_.getOwner()};
 				}
 				post.setUserPrivate(userPrivate);
-				boolean hasTopicMod = false ;
-				if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 				post.setIsApproved(!hasTopicMod) ;
 				
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
@@ -374,7 +379,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					Object[] args = { "" };
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
 					else {
-						args = new Object[]{ "thread", "post" };
+						args = new Object[]{};
 						uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING)) ;
 					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -448,5 +453,13 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
 		}
-	}	
+	}
+
+	public boolean isMod() {
+  	return isMod;
+  }
+
+	public void setMod(boolean isMod) {
+  	this.isMod = isMod;
+  }	
 }

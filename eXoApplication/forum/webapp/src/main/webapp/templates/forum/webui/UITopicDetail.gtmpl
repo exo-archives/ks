@@ -99,16 +99,16 @@
 	boolean isActive = topic.getIsActive();
 	boolean isApproved = true;
 	if(forum.getIsModerateTopic()){
-	  isApproved = topic.getIsApproved();
+		isApproved = topic.getIsApproved();
 	}
 	boolean isShowPost = true ;
 	if(!canEdit){
-	  if(!isActive || !isApproved || topic.getIsWaiting()){
-	    isNotReply = true;
-	    isShowPost = false;
-	    isShowMenu = false;
-	    isUserCreatedTopic= false;
-	  }
+		if(!isActive || !isApproved || topic.getIsWaiting()){
+			isNotReply = true;
+			isShowPost = false;
+			isShowMenu = false;
+			isUserCreatedTopic= false;
+		}
 	}
 %>
 <div class="UITopicDetail">
@@ -470,9 +470,9 @@
 															 		 if(action.length() < 11) classIcon = action + "Icon";
 															 		 else classIcon = action.replaceFirst("Topic", "Icon");
 															 		 if(action.equals("SetApprovePost")){
-															 		   isApprove = true;
-															 		   if(!topic.getIsModeratePost()) continue ;
-															 		   else classIcon = "SetApprovePostIcon" ;
+															 			 isApprove = true;
+															 			 if(!topic.getIsModeratePost()) continue ;
+															 			 else classIcon = "SetApprovePostIcon" ;
 																	 }
 														 			 link = uicomponent.event(action,uiformId,uiformId) ;
 															 		 itemLabel = _ctx.appRes(uiformId + ".action." + action);
@@ -597,7 +597,7 @@
 						<td class="MemberContainer">
 							<div class="MemberContent">
 							
-						<%  String userSmile = "OfflineIcon";
+						<%	String userSmile = "OfflineIcon";
 								String titleSmile = "Offline" ;
 								if(uicomponent.isOnline(owner)) {
 									 userSmile = "AvailableIcon";
@@ -654,7 +654,7 @@
 								</div>
 										
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
-								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();  
+								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
@@ -721,7 +721,7 @@
 							</div>
 								<%	
 									if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
-									  String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
+										String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
 								%>
 								<div class="Signature">__________________<br><%=signature;%></div>
 								<% } %>
@@ -738,7 +738,7 @@
 								 		 String typeFile = attachment.mimeType ;
 								%>
 										<div class="AttachmentBox">
-										<% if(typeFile.indexOf("jpeg") > 0) {%>
+										<% if(typeFile.indexOf("image") >= 0) {%>
 											<div class="Image"><img id="imgView${fileName}" src="$urlFile" height="100px;"/></div>
 						 					<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
@@ -770,7 +770,7 @@
 						</div>
 							<div class="FootPost">
 								<div class="PostInfo">
-								<%  
+								<%	
 									if(!ForumUtils.isEmpty(editBy)) {
 								%>
 									<div><%=_ctx.appRes(uiformId + ".label.LastEditedBy");%> <a href="#">$editBy</a> <%=_ctx.appRes(uiformId + ".label.on");%> $editDate</div>
@@ -915,13 +915,13 @@
 	</div>
 <% if(!isNotReply){ %>
 	<div class="UIAction"> 
-    <table class="ActionContainer" align="center">
-    	<tbody>
-    	<tr>
-	    	<div class="ForumCategory ForumQuickReply">
-				  <div class="ForumToolbar">
-					  <div class="LeftBar">
-					  	<div class="RightBar">
+		<table class="ActionContainer" align="center">
+			<tbody>
+			<tr>
+				<div class="ForumCategory ForumQuickReply">
+					<div class="ForumToolbar">
+						<div class="LeftBar">
+							<div class="RightBar">
 								<div class="CenterBar">
 									<div class="Title"><%=_ctx.appRes(uiformId + ".title.ForumQuickReply");%></div>
 									<div class="CollapseButton" title="Expand category" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>

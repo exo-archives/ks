@@ -194,10 +194,18 @@ public class UICategories extends UIContainer	{
 			UICategories uiContainer = event.getSource();
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UICategoryContainer categoryContainer = uiContainer.getParent() ;
-			categoryContainer.updateIsRender(false) ;
-			UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
-			uiCategory.update(uiContainer.getCategory(categoryId), uiContainer.getForumList(categoryId)) ;
-			((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
+			try {
+				UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
+				uiCategory.update(uiContainer.getCategory(categoryId), uiContainer.getForumList(categoryId)) ;
+				categoryContainer.updateIsRender(false) ;
+				((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
+      } catch (Exception e) {
+      	Object[] args = { "" };
+				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(categoryContainer) ;
+      }
     }
 	}
 	
@@ -292,25 +300,3 @@ public class UICategories extends UIContainer	{
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

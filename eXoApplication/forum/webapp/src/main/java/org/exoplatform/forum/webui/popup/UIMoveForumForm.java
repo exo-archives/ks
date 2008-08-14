@@ -30,8 +30,10 @@ import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -101,21 +103,27 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
 			String categoryPath = event.getRequestContext().getRequestParameter(OBJECTID);
 			List<Forum> forums = uiForm.forums_ ;
 			String categoryId = categoryPath.substring((categoryPath.lastIndexOf("/")+1))	;
-			forumService.moveForum(ForumSessionUtils.getSystemProvider(), forums, categoryPath) ;
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-			if(uiForm.isForumUpdate) {
-				forumPortlet.updateIsRendered(ForumUtils.FORUM);
-				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-				uiForumContainer.setIsRenderChild(true) ;
-				UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
-				uiForumContainer.getChild(UIForumDescription.class).setForum(forums.get(0));
-				uiTopicContainer.setUpdateForum(categoryId, forums.get(0)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-			} else {
-				UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class);
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
-			}
+			try {
+				forumService.moveForum(ForumSessionUtils.getSystemProvider(), forums, categoryPath) ;
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+				if(uiForm.isForumUpdate) {
+					forumPortlet.updateIsRendered(ForumUtils.FORUM);
+					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+					uiForumContainer.setIsRenderChild(true) ;
+					UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class);
+					uiForumContainer.getChild(UIForumDescription.class).setForum(forums.get(0));
+					uiTopicContainer.setUpdateForum(categoryId, forums.get(0)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+				} else {
+					UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class);
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
+				}
+      } catch (Exception e) {
+      	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+      	uiApp.addMessage(new ApplicationMessage("UIMoveForumForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+      	return;
+      }
 		}
 	}
  

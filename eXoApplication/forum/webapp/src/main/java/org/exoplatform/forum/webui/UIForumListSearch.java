@@ -169,7 +169,7 @@ public class UIForumListSearch extends UIContainer {
     	}
     	if(!isRead) {
     		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				String[] s = new String[]{userName};
+				String[] s = new String[]{};
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 				return;
 			}

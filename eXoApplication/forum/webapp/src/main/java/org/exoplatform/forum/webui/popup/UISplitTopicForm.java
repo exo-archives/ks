@@ -133,22 +133,21 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 					try {
             forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic, true, true) ;
-          } catch (PathNotFoundException e) {
-            
-            // hung.hoang add
-            UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-            uiApp.addMessage(new ApplicationMessage("UISplitTopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
-            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-            return ;            
+            String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
+            forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath);
+          } catch (Exception e) {
+          	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+          	UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+          	event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+          	Object[] args = { };
+          	throw new MessageException(new ApplicationMessage("UISplitTopicForm.msg.forum-deleted", args, ApplicationMessage.WARNING)) ;
           }          
-					String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
-					forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath);
 				}else {
 					Object[] args = { };
 					throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", args, ApplicationMessage.WARNING)) ;
 				}
       } else {
-      	Object[] args = {FIELD_SPLITTHREAD_INPUT };
+      	Object[] args = {uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
 				throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
       }
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
