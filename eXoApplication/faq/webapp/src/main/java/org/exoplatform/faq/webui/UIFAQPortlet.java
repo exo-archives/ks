@@ -16,13 +16,19 @@
  */
 package org.exoplatform.faq.webui;
 
+import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
+import org.exoplatform.faq.webui.popup.UISettingForm;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
+import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
@@ -44,6 +50,37 @@ public class UIFAQPortlet extends UIPortletApplication {
   	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
     uiPopup.setId("UIFAQPopupAction") ;
     uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
+  }
+  
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
+    //context.getJavascriptManager().importJavascript("eXo.ecm.ECMUtils","/ecm/javascript/");
+    //context.getJavascriptManager().addJavascript("eXo.ecm.ECMUtils.init('UIFastContentCreatorPortlet') ;");
+    PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
+    if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+    	if(getChild(UISettingForm.class) != null) {
+    		removeChild(UISettingForm.class);
+    	}
+    	if(getChild(UIFAQContainer.class) == null){
+	    	addChild(UIFAQContainer.class, null, null) ;
+	    	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
+	      uiPopup.setId("UIFAQPopupAction") ;
+	      uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
+    	}
+    }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+    	if(getChild(UISettingForm.class) == null) {
+    		FAQServiceUtils serviceUtils = new FAQServiceUtils();
+    		if(serviceUtils.isAdmin(FAQUtils.getCurrentUser())){
+	    		removeChild(UIFAQContainer.class);
+	    		removeChild(UIPopupAction.class);
+		    	UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
+		    	settingForm.setRendered(true);
+		    	settingForm.setIsEditPortlet(true);
+		    	settingForm.init();
+	    	}
+    	}
+    }
+    
+    super.processRender(app, context) ;
   }
   
   public void renderPopupMessages() throws Exception {

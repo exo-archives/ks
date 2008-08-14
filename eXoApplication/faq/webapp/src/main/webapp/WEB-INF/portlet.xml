@@ -17,6 +17,7 @@
     <supports>
       <mime-type>text/html</mime-type>
       <portlet-mode>help</portlet-mode>
+      <portlet-mode>edit</portlet-mode>
     </supports>
     <supported-locale>en</supported-locale>
     <resource-bundle>locale.portlet.faq.FAQPortlet</resource-bundle>
@@ -25,5 +26,23 @@
       <short-title>FAQ Portlet</short-title>
       <keywords>faq</keywords>
     </portlet-info>
+    
+    <portlet-preferences>
+    	<preference>
+        <name>display</name>
+        <value>both</value> <!--approved/both -->
+        <read-only>false</read-only>
+      </preference>
+      <preference>
+        <name>orderBy</name>
+        <value>alphabet</value> <!--alphabet/created -->
+        <read-only>false</read-only>
+      </preference>
+      <preference>
+        <name>orderType</name>
+        <value>asc</value>      <!-- asc/desc -->
+        <read-only>false</read-only>
+      </preference>
+    </portlet-preferences>  
   </portlet>  
 </portlet-app>

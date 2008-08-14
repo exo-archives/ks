@@ -5,7 +5,7 @@
 			 					<table class="UIFormGrid">									
 									<tbody>
 									<%
-									if(uicomponent.isEditPortlet){%>
+									if(uicomponent.isEditPortlet_){%>
 										<tr>
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.display-mode"); %></td>
 											<td class="FieldComponent">
@@ -35,6 +35,7 @@
 					<td align="center">
 				<% for(action in uicomponent.getActions()) {
 						 if(action.indexOf("Values") > 0) continue ; 
+						 if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						 String link = uicomponent.event(action) ;
 				%>

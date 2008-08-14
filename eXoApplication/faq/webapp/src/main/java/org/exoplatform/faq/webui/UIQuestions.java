@@ -95,6 +95,7 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIQuestions extends UIContainer {
   private static String SEARCH_INPUT = "SearchInput" ;
+  private static final String OBJECT_ITERATOR = "object_iter";
   
   private FAQSetting faqSetting_ = null;
 	private List<Category> categories_ = null ;
@@ -106,7 +107,7 @@ public class UIQuestions extends UIContainer {
   private String parentId_ = null ;
   public String questionView_ = "" ;
   public static String newPath_ = "" ;
-  String currentUser_ = "";
+  private String currentUser_ = "";
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
   public boolean isChangeLanguage = false ;
@@ -128,12 +129,13 @@ public class UIQuestions extends UIContainer {
     backPath_ = null ;
 	  this.categoryId_ = new String() ;
     currentUser_ = FAQUtils.getCurrentUser() ;
-    faqSetting_ = new FAQSetting() ;
+    faqSetting_ = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting_);
 		if(currentUser_ != null && currentUser_.trim().length() > 0){
 			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser_, faqSetting_);
 		}
 		addChild(UIQuickSearch.class, null, null) ;
+		//addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
     setCategories() ;
 	}
   
@@ -193,6 +195,11 @@ public class UIQuestions extends UIContainer {
   }
   
   public void setCategories() throws Exception  {
+  	if(currentUser_ != null) faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser_, faqSetting_);
+  	else FAQUtils.getPorletPreference(this.faqSetting_);
+  	/*System.out.println("\n\n\n\n----------> setCategories: display mode: " + this.faqSetting_.getDisplayMode());
+  	System.out.println("\n\n\n\n----------> setCategories: order by: " + this.faqSetting_.getOrderBy());
+  	System.out.println("\n\n\n\n----------> setCategories: order type: " + this.faqSetting_.getOrderType());*/
     if(categories_ != null)
       categories_.clear() ;
     if(this.categoryId_ == null || this.categoryId_.trim().length() < 1) {
