@@ -24,6 +24,7 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
@@ -57,40 +58,60 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	private List<FAQFormSearch> formSearchs_ = new ArrayList<FAQFormSearch>() ;
+	FAQSetting faqSetting_ = new FAQSetting() ;
 	public ResultQuickSearch() throws Exception { this.setActions(new String[]{"Close"}) ;}
 	
-	public void setFormSearchs(List<FAQFormSearch> formSearchs) {
-		this.formSearchs_ = formSearchs;
+	public void setFormSearchs(List<FAQFormSearch> formSearchs) throws Exception {
+		FAQService faqService = FAQUtils.getFAQService();
+		FAQUtils.getPorletPreference(faqSetting_);
+    faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
+    this.formSearchs_ = formSearchs;
   }
 	
 	public List<FAQFormSearch> getFormSearchs() throws Exception {
 		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
 		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
   	String currentUser = FAQUtils.getCurrentUser() ;
-    if(serviceUtils.isAdmin(currentUser)) {
-    	return this.formSearchs_;
-    } else {
-			for(FAQFormSearch faqSearch : formSearchs_) {
+  	if(faqSetting_.getDisplayMode().equals("both")) {
+		  if(serviceUtils.isAdmin(currentUser)) {
+		  	return this.formSearchs_;
+		  } else {
+				for(FAQFormSearch faqSearch : formSearchs_) {
+					if(faqSearch.getType().equals("faqCategory")) {
+						listQuickSearch.add(faqSearch) ;
+					} else {
+						String questionId = faqSearch.getId() ;
+						FAQService faqService = FAQUtils.getFAQService();
+					  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+					  String categoryIdOfQuestion = question.getCategoryId() ;
+					  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
+					  String[] moderator = category.getModerators() ;
+					  if(Arrays.asList(moderator).contains(currentUser)) {
+					  	listQuickSearch.add(faqSearch) ;
+						} else {
+							if(question.isActivated()) listQuickSearch.add(faqSearch) ;
+							else
+								continue ;
+						}
+					}
+				}
+				return listQuickSearch;
+		  }
+  	} else {
+  		for(FAQFormSearch faqSearch : formSearchs_) {
 				if(faqSearch.getType().equals("faqCategory")) {
 					listQuickSearch.add(faqSearch) ;
 				} else {
 					String questionId = faqSearch.getId() ;
 					FAQService faqService = FAQUtils.getFAQService();
 				  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-				  String categoryIdOfQuestion = question.getCategoryId() ;
-				  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
-				  String[] moderator = category.getModerators() ;
-				  if(Arrays.asList(moderator).contains(currentUser)) {
-				  	listQuickSearch.add(faqSearch) ;
-					} else {
-						if(question.isApproved() && question.isActivated()) listQuickSearch.add(faqSearch) ;
-						else
-							continue ;
-					}
+					if(question.isApproved() && question.isActivated()) listQuickSearch.add(faqSearch) ;
+					else
+						continue ;
 				}
 			}
-			return listQuickSearch;
-    }
+  		return listQuickSearch;
+  	}
 	}
 	
   public void activate() throws Exception {}

@@ -48,7 +48,19 @@
 													%>
 													<td class="text" align="left"><a href="$link">$categoryName</a></td>
 													<%}%>
-	 												<td class="text" align="left" style="width: 100px; overflow-x: auto;"><%= (description != null) ? description: ""%></td>
+													<% if(description != null) {
+															if(description.length()>25) {
+															String titledescrip = description ;
+															titledescrip = FAQUtils.getTitle(titledescrip) ;
+															description = FAQUtils.getSubString(description, 25);
+															%> 
+															<td class="text" align="left"><a title="$titledescrip">$description</a></td>
+															<%  } else { %>
+															<td class="text" align="left"><%=description%></td>
+															<% }
+	 												 } else { %>
+	 												<td class="text" align="left"><%=""%></td>
+	 												<% } %>
 	 												<td class="text" align="center"><%=date%></td>
 	 												<td style="width: 30px;" align="center">
  														<a href="$link"><div class="CheckIcon" style="margin: 0px auto;"></div></a>

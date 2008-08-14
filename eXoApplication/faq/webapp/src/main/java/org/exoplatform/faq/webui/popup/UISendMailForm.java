@@ -105,12 +105,14 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     @SuppressWarnings("unused")
     String email = "" ;
     ContactService contactService = getApplicationComponent(ContactService.class) ;
-    Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
-    		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
-    try {
-    	email = contact.getEmailAddress() ;
-    } catch (NullPointerException e) {
-    	email = "" ;
+    if(FAQUtils.getCurrentUser() != null){
+		  Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
+		  		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
+		  try {
+		  	email = contact.getEmailAddress() ;
+		  } catch (NullPointerException e) {
+		  	email = "" ;
+		  }
     }
     String quest = question.getQuestion().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
     languageIsResponsed = question.getLanguage() ;
