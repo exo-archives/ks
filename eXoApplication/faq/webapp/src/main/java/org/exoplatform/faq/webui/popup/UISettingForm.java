@@ -62,15 +62,12 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String DESC= "desc".intern() ;
 	
 	private FAQSetting faqSetting_ = new FAQSetting();
-	private boolean isAdmin = false;
+	private boolean isEditPortlet = false;
 	
 	public UISettingForm() throws Exception {}
 	
 	public void init() throws Exception {
-		
-		FAQServiceUtils serviceUtils = new FAQServiceUtils();
-		if(serviceUtils.isAdmin(FAQUtils.getCurrentUser())){
-			isAdmin = true;
+		if(isEditPortlet){
 			List<SelectItemOption<String>> displayMode = new ArrayList<SelectItemOption<String>>();
 			displayMode.add(new SelectItemOption<String>(DISPLAY_APPROVED, DISPLAY_APPROVED ));
 			displayMode.add(new SelectItemOption<String>(DISPLAY_BOTH, DISPLAY_BOTH ));
@@ -99,9 +96,11 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 
 	public void fillData() throws Exception {    
     if (faqSetting_ != null) {
-    	if(isAdmin) getUIFormSelectBox(DISPLAY_MODE).setValue(String.valueOf(faqSetting_.getDisplayMode()));
-      getUIFormSelectBox(ORDER_BY).setValue(String.valueOf(faqSetting_.getOrderBy()));
-      getUIFormSelectBox(ORDER_TYPE).setValue(String.valueOf(faqSetting_.getOrderType()));
+    	if(isEditPortlet){
+    		getUIFormSelectBox(DISPLAY_MODE).setValue(String.valueOf(faqSetting_.getDisplayMode()));
+    	}
+  		getUIFormSelectBox(ORDER_BY).setValue(String.valueOf(faqSetting_.getOrderBy()));
+  		getUIFormSelectBox(ORDER_TYPE).setValue(String.valueOf(faqSetting_.getOrderType()));
     }
   }
   
@@ -117,16 +116,14 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQService service = FAQUtils.getFAQService() ;
 			FAQSetting faqSetting = settingForm.faqSetting_ ;
-			if(settingForm.isAdmin){
-				String display = settingForm.getUIFormSelectBox(settingForm.DISPLAY_MODE).getValue();
-				if(display != faqSetting.getDisplayMode()){
-					faqSetting.setDisplayMode(display);
-					FAQUtils.savePortletPreference(faqSetting);
-				}
-			}
 			faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 			faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
-			service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;
+			if(settingForm.isEditPortlet){
+				faqSetting.setDisplayMode(settingForm.getUIFormSelectBox(settingForm.DISPLAY_MODE).getValue());
+				FAQUtils.savePortletPreference(faqSetting);
+			} else {
+				service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;
+			}
 			UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			questions.setFAQSetting(faqSetting);
 			questions.setCategories() ;

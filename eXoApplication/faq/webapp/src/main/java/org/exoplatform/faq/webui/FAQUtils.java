@@ -287,6 +287,8 @@ public class FAQUtils {
     PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
     try {
 	    portletPref.setValue("display", setting.getDisplayMode());
+	    portletPref.setValue("orderBy", setting.getOrderBy());
+	    portletPref.setValue("orderType", setting.getOrderType());
 	    portletPref.store();
     } catch (Exception e) {
 	    e.printStackTrace();
