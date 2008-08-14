@@ -16,8 +16,6 @@
  */
 package org.exoplatform.faq.webui.popup;
 
-import javax.jcr.PathNotFoundException;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;

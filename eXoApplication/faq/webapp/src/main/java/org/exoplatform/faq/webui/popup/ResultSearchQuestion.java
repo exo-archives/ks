@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -62,33 +63,52 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	private String question_ = "" ;
 	private String response_ = "" ;
 	private String text_ = "";
+	private FAQSetting faqSetting_ = new FAQSetting() ;
 	public ResultSearchQuestion() throws Exception {}
 	
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() throws Exception {
-  	FAQService faqService = FAQUtils.getFAQService() ;
   	FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+  	FAQService faqService = FAQUtils.getFAQService() ;
+  	FAQUtils.getPorletPreference(faqSetting_);
+    faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
   	String currentUser = FAQUtils.getCurrentUser() ;
   	SessionProvider sProvider = FAQUtils.getSystemProvider() ;
   	if(language_.equals("English")) {
   		List<Question> listQuestionSearch = new ArrayList<Question>();
-		  if(serviceUtils.isAdmin(currentUser)) {
-		  	return this.listQuestion_ ;
-			} else {
-				for(Question quest: listQuestion_) {
-					String categoryId = quest.getCategoryId() ;
+  		if(faqSetting_.getDisplayMode().equals("both")) {
+			  if(serviceUtils.isAdmin(currentUser)) {
+			  	return this.listQuestion_ ;
+				} else {
+					for(Question quest: listQuestion_) {
+						String categoryId = quest.getCategoryId() ;
+					  Category category = faqService.getCategoryById(categoryId, sProvider) ;
+					  String[] moderator = category.getModerators() ;
+					  if(Arrays.asList(moderator).contains(currentUser)) {
+					  	listQuestionSearch.add(quest) ;
+						} else {
+							if(quest.isActivated()) listQuestionSearch.add(quest) ;
+							else
+								continue ;
+						}
+					}
+					return listQuestionSearch ;
+				}
+  		} else {
+  			for(Question quest: listQuestion_) {
+  				String categoryId = quest.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
 				  String[] moderator = category.getModerators() ;
 				  if(Arrays.asList(moderator).contains(currentUser)) {
-				  	listQuestionSearch.add(quest) ;
+				  	if(quest.isApproved()) listQuestionSearch.add(quest) ;
 					} else {
-						if(quest.isApproved() && quest.isActivated()) listQuestionSearch.add(quest) ;
+						if(quest.isApproved()&& quest.isActivated()) listQuestionSearch.add(quest) ;
 						else
 							continue ;
 					}
 				}
-				return listQuestionSearch ;
-			}
+  			return listQuestionSearch ;
+  		}
   	} else {
   		List<Question> listQuestionSearchByLanguage = new ArrayList<Question>();
   		List<Question> listQuestionLanguage = new ArrayList<Question>();
@@ -100,22 +120,38 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
   			List<Question> listQuestionSearchByLanguageTemp = faqService.searchQuestionByLangageOfText(listQuestion_, language_, text_, sProvider) ;
   			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestionSearchByLanguageTemp, language_, question_, response_, sProvider) ;
   		}
-  		if(serviceUtils.isAdmin(currentUser)) {
-		  	return listQuestionSearchByLanguage ;
-			} else {
-				for(Question quest: listQuestionSearchByLanguage) {
-					String categoryId = quest.getCategoryId() ;
+  		if(faqSetting_.getDisplayMode().equals("both")) {
+	  		if(serviceUtils.isAdmin(currentUser)) {
+			  	return listQuestionSearchByLanguage ;
+				} else {
+					for(Question quest: listQuestionSearchByLanguage) {
+						String categoryId = quest.getCategoryId() ;
+					  Category category = faqService.getCategoryById(categoryId, sProvider) ;
+					  String[] moderator = category.getModerators() ;
+					  if(Arrays.asList(moderator).contains(currentUser)) {
+					  	listQuestionLanguage.add(quest) ;
+						} else {
+							if(quest.isActivated()) listQuestionLanguage.add(quest) ;
+							else
+								continue ;
+						}
+					}
+					return listQuestionLanguage ;
+	  		}
+  		} else {
+  			for(Question quest: listQuestionSearchByLanguage) {
+  				String categoryId = quest.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
 				  String[] moderator = category.getModerators() ;
 				  if(Arrays.asList(moderator).contains(currentUser)) {
-				  	listQuestionLanguage.add(quest) ;
+				  	if(quest.isApproved()) listQuestionLanguage.add(quest) ;
 					} else {
 						if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;
 						else
 							continue ;
 					}
 				}
-				return listQuestionLanguage ;
+  			return listQuestionLanguage ;
   		}
   	}
   }

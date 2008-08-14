@@ -999,7 +999,7 @@ public class JCRDataStorage {
 		      if(nodeObj.hasProperty("exo:createdDate")) question.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
 		      if(nodeObj.hasProperty("exo:categoryId")) question.setCategoryId(nodeObj.getProperty("exo:categoryId").getString()) ;
 		      if(nodeObj.hasProperty("exo:isApproved")) question.setApproved(nodeObj.getProperty("exo:isApproved").getBoolean()) ;
-		      if(nodeObj.hasProperty("exo:isActivated")) question.setApproved(nodeObj.getProperty("exo:isActivated").getBoolean()) ;
+		      if(nodeObj.hasProperty("exo:isActivated")) question.setActivated(nodeObj.getProperty("exo:isActivated").getBoolean()) ;
 		      if(nodeObj.hasProperty("exo:responses")) question.setResponses(nodeObj.getProperty("exo:responses").getString()) ;
 		      questionList.add(question) ;
 				}
