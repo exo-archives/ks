@@ -589,7 +589,6 @@ public class JCRDataStorage{
 		NodeIterator iter = forumNode.getNodes() ;
 		Node topicNode = null;
 		isClosed = !isClosed;
-		System.out.println("\n\nisActiveForum: " + isClosed + "\n\n");
 		while (iter.hasNext()) {
 			topicNode = iter.nextNode() ;
 			if(topicNode.isNodeType("exo:topic")){
@@ -607,7 +606,6 @@ public class JCRDataStorage{
 		if(isActiveTopic) isActiveTopic = topicNode.getProperty("exo:isActive").getBoolean() ;
 		Node postNode = null;
 		NodeIterator iter = topicNode.getNodes() ;
-		System.out.println("\nisActiveTopic: " + isActiveTopic);
 		while (iter.hasNext()) {
 			postNode = iter.nextNode() ;
 			if(postNode.isNodeType("exo:post")){
@@ -927,8 +925,7 @@ public class JCRDataStorage{
 				if(type != 2 && type != 4 && type < 7) {
 					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")) );
 				}
-			} catch (RepositoryException e) {
-				e.printStackTrace() ;
+			} catch (PathNotFoundException e) {
 			}
 		}
 	}

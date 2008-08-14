@@ -60,41 +60,41 @@ public class ForumUtils {
 	
 	
 	@SuppressWarnings("deprecation")
-  public static String getFormatDate(String format, Date myDate) {
+	public static String getFormatDate(String format, Date myDate) {
 		/*h,hh,H, m, mm, D, DD, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
 		 * */
 		if(myDate == null) return null;
 		String strCase = "" ;
 		int day = myDate.getDay() ;
 		switch (day) {
-    case 0:
-    	strCase = "Sunday" ;
-	    break;
-    case 1:
-    	strCase = "Monday" ;
-    	break;
-    case 2:
-    	strCase = "Tuesday" ;
-    	break;
-    case 3:
-    	strCase = "Wednesday" ;
-    	break;
-    case 4:
-    	strCase = "Thursday" ;
-    	break;
-    case 5:
-    	strCase = "Friday" ;
-    	break;
-    case 6:
-    	strCase = "Saturday" ;
-    	break;
-    default:
-	    break;
-    }
+		case 0:
+			strCase = "Sunday" ;
+			break;
+		case 1:
+			strCase = "Monday" ;
+			break;
+		case 2:
+			strCase = "Tuesday" ;
+			break;
+		case 3:
+			strCase = "Wednesday" ;
+			break;
+		case 4:
+			strCase = "Thursday" ;
+			break;
+		case 5:
+			strCase = "Friday" ;
+			break;
+		case 6:
+			strCase = "Saturday" ;
+			break;
+		default:
+			break;
+		}
 		String form = "temp" + format ;
 		if(form.indexOf("DDDD") > 0) {
 			Format formatter = new SimpleDateFormat(form.substring(form.indexOf("DDDD") + 5));
-			return strCase + ", "  + formatter.format(myDate).replaceAll(",", ", ");
+			return strCase + ", "	+ formatter.format(myDate).replaceAll(",", ", ");
 		} else if(form.indexOf("DDD") > 0) {
 			Format formatter = new SimpleDateFormat(form.substring(form.indexOf("DDD") + 4));
 			return strCase.replaceFirst("day", "") + ", " + formatter.format(myDate).replaceAll(",", ", ");
@@ -102,32 +102,32 @@ public class ForumUtils {
 			Format formatter = new SimpleDateFormat(format);
 			return formatter.format(myDate);
 		}
-  }
+	}
 	
-  public static Calendar getInstanceTempCalendar() { 
-    Calendar  calendar = GregorianCalendar.getInstance() ;
-    calendar.setLenient(false) ;
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
-    return  calendar;
-  }
-  
-  public static boolean isValidEmailAddresses(String addressList) throws Exception {
-    if (isEmpty(addressList))  return true ;
-    try {
-      InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
-      String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
-      for (int i = 0 ; i < iAdds.length; i ++) {
-        if(!iAdds[i].getAddress().toString().matches(emailRegex)) return false;
-      }
-    } catch(AddressException e) {
-      return false ;
-    }
-    return true ;
-  }
-  
-  public static String getSizeFile(double size) {
-  	String unit = " Byte" ;
+	public static Calendar getInstanceTempCalendar() { 
+		Calendar	calendar = GregorianCalendar.getInstance() ;
+		calendar.setLenient(false) ;
+		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+		calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset) ; 
+		return	calendar;
+	}
+	
+	public static boolean isValidEmailAddresses(String addressList) throws Exception {
+		if (isEmpty(addressList))	return true ;
+		try {
+			InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
+			String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
+			for (int i = 0 ; i < iAdds.length; i ++) {
+				if(!iAdds[i].getAddress().toString().matches(emailRegex)) return false;
+			}
+		} catch(AddressException e) {
+			return false ;
+		}
+		return true ;
+	}
+	
+	public static String getSizeFile(double size) {
+		String unit = " Byte" ;
 		if(size >= 1000) {
 			size = size/1024 ;
 			unit = " Kb" ;
@@ -142,9 +142,9 @@ public class ForumUtils {
 			if(str.length() > (t+4))
 				str = str.substring(0,(t+4)) ;
 		}
-	  return (str + unit);
-  }
-  
+		return (str + unit);
+	}
+	
 	public static String getTimeZoneNumberInString(String string) {
 		if(!isEmpty(string)) {
 			StringBuffer stringBuffer = new StringBuffer();
@@ -219,35 +219,35 @@ public class ForumUtils {
 			return str;
 		} else return "";
 	}
-  
+	
 	public static String removeZeroFirstNumber(String str) {
-	  if(!isEmpty(str)){
-	  	while(true) {
-	  		if(str.length() > 1) {
-	  			if(str.charAt(0)=='0'){
-	  				str = str.replaceFirst("0", "") ;
-	  			}	else break;
-	  		}	else break;
-	  	}
-	  }
-	  return str;
-  }
+		if(!isEmpty(str)){
+			while(true) {
+				if(str.length() > 1) {
+					if(str.charAt(0)=='0'){
+						str = str.replaceFirst("0", "") ;
+					}	else break;
+				}	else break;
+			}
+		}
+		return str;
+	}
 	
 	public static String removeStringResemble(String s) throws Exception {
 		List<String> list = new ArrayList<String>();
-    if(!isEmpty(s)) {
-      String temp[] = splitForForum(s) ;
-      s = ""; int i=0, l = temp.length;
-      for (String string : temp) {
-      	++i;
-      	if(list.contains(string) || string.length() == 0) continue ;
-        list.add(string) ;
-        if(i == l)s += string;
-        else s += string + ",";
-      }
-      return s;
-    } else return "";
-  }
+		if(!isEmpty(s)) {
+			String temp[] = splitForForum(s) ;
+			s = ""; int i=0, l = temp.length;
+			for (String string : temp) {
+				++i;
+				if(list.contains(string) || string.length() == 0) continue ;
+				list.add(string) ;
+				if(i == l)s += string;
+				else s += string + ",";
+			}
+			return s;
+		} else return "";
+	}
 	
 	public static boolean isEmpty(String str) {
 		if(str == null || str.trim().length() == 0) return true ;
@@ -255,29 +255,29 @@ public class ForumUtils {
 	}
 
 	public static String[] addStringToString(String input, String output) throws Exception {
-  	List<String> list = new ArrayList<String>();
-    if(!isEmpty(output)) {
-      if(!isEmpty(input)) {
-      	if(input.lastIndexOf(",") != (input.length() - 1)) input = input + ",";
-        output = input + output ;
-        String temp[] = splitForForum(output) ;
-        for (String string : temp) {
-        	if(list.contains(string) || string.length() == 0) continue ;
-	        list.add(string) ;
-        }
-      }
-    }
-    return list.toArray(new String[] {}) ;
-  }
-  
+		List<String> list = new ArrayList<String>();
+		if(!isEmpty(output)) {
+			if(!isEmpty(input)) {
+				if(input.lastIndexOf(",") != (input.length() - 1)) input = input + ",";
+				output = input + output ;
+				String temp[] = splitForForum(output) ;
+				for (String string : temp) {
+					if(list.contains(string) || string.length() == 0) continue ;
+					list.add(string) ;
+				}
+			}
+		}
+		return list.toArray(new String[] {}) ;
+	}
+	
 	public static boolean isStringInStrings(String []strings, String string) {
 		string = string.trim();
-	  for (String string1 : strings) {
-	  	string1 = string1.trim();
-	    if(string.equals(string1)) return true ;
-    }
-	  return false;
-  }
+		for (String string1 : strings) {
+			string1 = string1.trim();
+			if(string.equals(string1)) return true ;
+		}
+		return false;
+	}
 
 	public static boolean isStringInList(List<String>list, String string) {
 		if(list.contains(string)) return true;
@@ -295,8 +295,8 @@ public class ForumUtils {
 				else str = str + "..." ;
 			}
 		}
-	  return str ;
-  }
+		return str ;
+	}
 	
 	public static String getLabel(String label, String key) {
 		return label.replaceFirst("<keyWord>", key) ;

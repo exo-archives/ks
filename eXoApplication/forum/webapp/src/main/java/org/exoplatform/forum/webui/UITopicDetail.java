@@ -266,10 +266,6 @@ public class UITopicDetail extends UIForm {
 	
 	@SuppressWarnings("unused")
 	private boolean isCanPostReply() throws Exception {
-		String userName = this.userProfile.getUserId() ;
-		isMod = false;
-		if(this.userProfile.getUserRole() == 0) isMod = true;
-		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
 		if(!isMod) {
 			List<String> listUser = new ArrayList<String>() ;
 			listUser.addAll(ForumServiceUtils.getUserPermission(this.topic.getCanPost())) ;
@@ -387,21 +383,17 @@ public class UITopicDetail extends UIForm {
 	}
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
+		String userLogin = this.userProfile.getUserId();
+		isMod = false;
+		if(this.userProfile.getUserRole() == 0) isMod = true;
+		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin) ;
 		try {
 			if (this.isUpdatePageList) {
 				String isApprove = "";
 				String isHidden = "";
-				String userLogin = this.userProfile.getUserId();
 				Topic topic = this.topic;
-				long role = this.userProfile.getUserRole();
-				if (role >= 2) {
-					isHidden = "false";
-				}
-				if (role == 1) {
-					if (!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)) {
-						isHidden = "false";
-					}
-				}
+				if(isMod) isHidden = "false"; 
+				
 				if (this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
 					if (isHidden.equals("false") && !(this.topic.getOwner().equals(userLogin)))
 						isApprove = "true";
@@ -580,6 +572,7 @@ public class UITopicDetail extends UIForm {
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
 			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 			postForm.updatePost("", false, false, null) ;
+			postForm.setMod(topicDetail.isMod) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIAddPostContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
@@ -713,6 +706,7 @@ public class UITopicDetail extends UIForm {
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
 			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 			postForm.updatePost(postId, false, false, topicDetail.getPost(postId)) ;
+			postForm.setMod(topicDetail.isMod) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIEditPostContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
@@ -757,6 +751,7 @@ public class UITopicDetail extends UIForm {
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
 			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 			postForm.updatePost(postId, false, true, topicDetail.getPost(postId)) ;
+			postForm.setMod(topicDetail.isMod) ;
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIPrivatePostContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
@@ -773,6 +768,7 @@ public class UITopicDetail extends UIForm {
 			UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
 			topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum) ;
 			topicForm.setUpdateTopic(topicDetail.topic, true) ;
+			topicForm.setMod(topicDetail.isMod) ;
 			popupContainer.setId("UIEditTopicContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -1169,7 +1165,6 @@ public class UITopicDetail extends UIForm {
 	static public class PrivateMessageActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			String currentUser = ForumSessionUtils.getCurrentUser();
 			if(topicDetail.userProfile.getIsBanned()){
 				String[] args = new String[] { } ;
 				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsBannedCanNotSendMail", args, ApplicationMessage.WARNING)) ;
@@ -1226,17 +1221,21 @@ public class UITopicDetail extends UIForm {
 			ForumAdministration forumAdministration = topicDetail.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
-			boolean isOffend = false ;
 			String checksms = message ;
 			if(checksms != null && checksms.trim().length() > 3) {
-				String stringKey = forumAdministration.getCensoredKeyword();
-				if(stringKey != null && stringKey.length() > 0) {
-					stringKey = stringKey.toLowerCase() ;
-					String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
-					checksms = checksms.toLowerCase().trim();
-					for (String string : censoredKeyword) {
-						if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
+				boolean isOffend = false ;
+				boolean hasTopicMod = false ;
+				if(!topicDetail.isMod) {
+					String stringKey = forumAdministration.getCensoredKeyword();
+					if(stringKey != null && stringKey.length() > 0) {
+						stringKey = stringKey.toLowerCase() ;
+						String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
+						checksms = checksms.toLowerCase().trim();
+						for (String string : censoredKeyword) {
+							if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
+						}
 					}
+					if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
 				}
 				StringBuffer buffer = new StringBuffer();
 				for (int j = 0; j < message.length(); j++) {
@@ -1266,8 +1265,6 @@ public class UITopicDetail extends UIForm {
 				post.setRemoteAddr(remoteAddr) ;
 				post.setIcon(topic.getIcon());
 				post.setIsHidden(isOffend) ;
-				boolean hasTopicMod = false ;
-				if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
 				post.setIsApproved(!hasTopicMod) ;
 				try {
 					topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
@@ -1282,7 +1279,7 @@ public class UITopicDetail extends UIForm {
 					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
 					else {
-						args = new Object[]{ "thread", "post" };
+						args = new Object[]{ };
 						uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING)) ;
 					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;

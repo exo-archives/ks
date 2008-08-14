@@ -207,7 +207,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				}
 			}
 			if(!isRead) {
-				String[] s = new String[]{userName};
+				String[] s = new String[]{};
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 				return;
 			}

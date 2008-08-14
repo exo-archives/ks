@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -107,12 +107,12 @@ public class UITopicContainer extends UIForm {
 	private boolean isModerator = false ;
 	private long maxTopic = 10 ;
 	private long maxPost = 10 ;
-  @SuppressWarnings("unused")
-  private boolean canAddNewThread = true ;
-  @SuppressWarnings("unused")
-  private boolean canViewThreads = true ;
+	@SuppressWarnings("unused")
+	private boolean canAddNewThread = true ;
+	@SuppressWarnings("unused")
+	private boolean canViewThreads = true ;
 	private UserProfile userProfile = null;
-  private String strOrderBy = "" ;
+	private String strOrderBy = "" ;
 	public UITopicContainer() throws Exception {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
@@ -121,7 +121,7 @@ public class UITopicContainer extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() {
+	private UserProfile getUserProfile() {
 		return userProfile ;
 	}
 
@@ -151,14 +151,14 @@ public class UITopicContainer extends UIForm {
 		}
 	}
 
-  public boolean getCanAddNewThread(){
-    return this.canAddNewThread ;
-  }
-  
-  public boolean getCanViewThread(){
-    return this.canViewThreads ;
-  }
-  
+	public boolean getCanAddNewThread(){
+		return this.canAddNewThread ;
+	}
+	
+	public boolean getCanViewThread(){
+		return this.canViewThreads ;
+	}
+	
 	private Forum getForum() throws Exception {
 		if(this.isUpdate) {
 			this.forum = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
@@ -172,26 +172,26 @@ public class UITopicContainer extends UIForm {
 	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
-    this.canViewThreads = true ;
-    this.canAddNewThread = true ;
+		this.canViewThreads = true ;
+		this.canAddNewThread = true ;
 		StringBuffer strQuery = new StringBuffer() ;
 		long role = this.userProfile.getUserRole() ;
 		String userId = this.userProfile.getUserId() ;
-    String[] strings = this.forum.getCreateTopicRole() ;
-    if( strings != null && strings.length > 0)
-    	this.canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
+		String[] strings = this.forum.getCreateTopicRole() ;
+		if( strings != null && strings.length > 0)
+			this.canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
 
-    strings = this.forum.getViewForumRole() ;
-    if(strings != null && strings.length > 0)
-      this.canViewThreads = ForumServiceUtils.hasPermission(strings, userId) ;
+		strings = this.forum.getViewForumRole() ;
+		if(strings != null && strings.length > 0)
+			this.canViewThreads = ForumServiceUtils.hasPermission(strings, userId) ;
 
-    isModerator = false ;
-    if(role == 0) isModerator = true;
-    else {strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'") ;}
+		isModerator = false ;
+		if(role == 0) isModerator = true;
+		else {strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'") ;}
 		if(role == 1) {
 			isModerator = ForumServiceUtils.hasPermission(forum.getModerators(), userId) ;
 		}
-    if(this.forum.getIsModerateTopic()) {
+		if(this.forum.getIsModerateTopic()) {
 			if(!isModerator) {
 				if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
 				strQuery.append("@exo:isApproved='true'") ;
@@ -222,7 +222,7 @@ public class UITopicContainer extends UIForm {
 	@SuppressWarnings("unused")
 	private String[] getActionMenuTopic() throws Exception {
 		String []actions = {"EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic",
-        "SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "SetUnWaiting", "ApproveTopics"}; 
+				"SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "SetUnWaiting", "ApproveTopics"}; 
 		return actions;
 	}
 	
@@ -320,7 +320,7 @@ public class UITopicContainer extends UIForm {
 	}
 	
 	static public class GoNumberPageActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer topicContainer = event.getSource() ;
 			int idbt = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
 			UIFormStringInput stringInput1 = topicContainer.getUIStringInput(ForumUtils.GOPAGE_ID_T) ;
@@ -350,22 +350,23 @@ public class UITopicContainer extends UIForm {
 						topicContainer.getChild(UIForumPageIterator.class).setSelectPage(page) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 					}
-	      } catch (NumberFormatException e) {
-		      Object[] args = { "go page" };
+				} catch (NumberFormatException e) {
+					Object[] args = { "go page" };
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
-	      }
+				}
 			}
 		}
 	}
 	
 	static public class AddTopicActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource() ;
 			UIForumPortlet forumPortlet =uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
 			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum) ;
+			topicForm.setMod(uiTopicContainer.isModerator) ;
 			popupContainer.setId("UIAddTopicContainer") ;
 			popupAction.activate(popupContainer, 670, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -373,7 +374,7 @@ public class UITopicContainer extends UIForm {
 	}
 	
 	static public class OpenTopicsTagActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource() ;
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -386,7 +387,7 @@ public class UITopicContainer extends UIForm {
 	}
 	
 	static public class OpenTopicActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			String idAndNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String []temp = idAndNumber.split(",") ;
@@ -435,16 +436,16 @@ public class UITopicContainer extends UIForm {
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
 				UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
-        uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 				return;
 			}
 		}
 	}
 
 	static public class EditForumActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -462,7 +463,7 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetLockedForumActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsLock(true);
@@ -474,7 +475,7 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class SetUnLockForumActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsLock(false);
@@ -486,7 +487,7 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class SetOpenForumActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsClosed(false);
@@ -498,7 +499,7 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class SetCloseForumActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsClosed(true);
@@ -510,19 +511,19 @@ public class UITopicContainer extends UIForm {
 	} 
 	
 	static public class ApproveTopicsActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-      UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIPageListTopicUnApprove pageListTopicUnApprove  = popupAction.createUIComponent(UIPageListTopicUnApprove.class, null, null) ;
-      pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
-      popupAction.activate(pageListTopicUnApprove, 500, 365) ;
+			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPageListTopicUnApprove pageListTopicUnApprove	= popupAction.createUIComponent(UIPageListTopicUnApprove.class, null, null) ;
+			pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
+			popupAction.activate(pageListTopicUnApprove, 500, 365) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	
 	
 	static public class MoveForumActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			List <Forum> forums = new ArrayList<Forum>();
@@ -539,7 +540,7 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class RemoveForumActionListener extends EventListener<UITopicContainer> {
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -558,8 +559,8 @@ public class UITopicContainer extends UIForm {
 	
 
 	static public class EditTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			Topic topic = null ;
@@ -580,6 +581,7 @@ public class UITopicContainer extends UIForm {
 				UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
 				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum) ;
 				topicForm.setUpdateTopic(topic, true) ;
+				topicForm.setMod(uiTopicContainer.isModerator) ;
 				popupContainer.setId("UIEditTopicContainer") ;
 				popupAction.activate(popupContainer, 670, 460) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -591,8 +593,8 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetOpenTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -622,8 +624,8 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class SetCloseTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -653,8 +655,8 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetLockedTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -684,8 +686,8 @@ public class UITopicContainer extends UIForm {
 	}
 	
 	static public class SetUnLockTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -715,8 +717,8 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class SetUnStickTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -741,8 +743,8 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetStickTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -767,8 +769,8 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetMoveTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -796,8 +798,8 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class MergeTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -825,8 +827,8 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetDeleteTopicActionListener extends EventListener<UITopicContainer> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -853,7 +855,7 @@ public class UITopicContainer extends UIForm {
 	
 	static public class SetUnWaitingActionListener extends EventListener<UITopicContainer> {
 		@SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
@@ -906,7 +908,7 @@ public class UITopicContainer extends UIForm {
 			if(!ForumUtils.isEmpty(topicId)) {
 				try{
 				Topic topic = topicContainer.getTopic(topicId);
-				StringBuffer buffer =  new StringBuffer();
+				StringBuffer buffer = new StringBuffer();
 				buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//")
 				.append(topicContainer.categoryId).append("/").append(topicContainer.forumId).append("/").append(topicId) ;
 				String userName = topicContainer.userProfile.getUserId() ;
