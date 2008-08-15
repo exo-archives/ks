@@ -20,6 +20,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -57,15 +58,25 @@ public class UIFAQPortlet extends UIPortletApplication {
     //context.getJavascriptManager().addJavascript("eXo.ecm.ECMUtils.init('UIFastContentCreatorPortlet') ;");
     PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
     if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
-    	if(getChild(UISettingForm.class) != null) {
-    		removeChild(UISettingForm.class);
-    	}
     	if(getChild(UIFAQContainer.class) == null){
+    		if(getChild(UISettingForm.class) != null) {
+    			removeChild(UISettingForm.class);
+    		}
 	    	addChild(UIFAQContainer.class, null, null) ;
 	    	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
 	      uiPopup.setId("UIFAQPopupAction") ;
 	      uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
-    	}
+    	} /*else {
+    		UIFAQContainer container = getChild(UIFAQContainer.class);
+    		container.updateIsRender(true);
+    		PortletPreferences portletPref = portletReqContext.getRequest().getPreferences() ;
+    		UIQuestions questions = getChild(UIFAQContainer.class).getChild(UIQuestions.class);
+    		FAQSetting faqSetting = new FAQSetting();
+    		faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
+        faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
+        faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
+        questions.setFAQSetting(faqSetting);
+    	}*/
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
     	if(getChild(UISettingForm.class) == null) {
     		FAQServiceUtils serviceUtils = new FAQServiceUtils();
