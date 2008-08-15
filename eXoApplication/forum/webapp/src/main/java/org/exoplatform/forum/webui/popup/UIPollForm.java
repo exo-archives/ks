@@ -68,7 +68,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	public static final int MAX_TITLE = 100 ;
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(FIELD_OPTIONS,FIELD_OPTIONS) ;
 	private String TopicPath ;
-	private Poll poll ;
+	private Poll poll = new Poll() ;
 	private boolean isUpdate = false ;
 	
 	@SuppressWarnings("unchecked")
@@ -256,7 +256,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				poll.setVote(vote) ;
 				poll.setTimeOut(timeOut) ;
 				poll.setUserVote(new String[] {}) ;
-				poll.setIsClosed(false);
+				poll.setIsClosed(uiForm.poll.getIsClosed());
 				String[] id = uiForm.TopicPath.trim().split("/") ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				if(uiForm.isUpdate) {

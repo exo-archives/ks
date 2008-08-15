@@ -205,7 +205,7 @@
 									  	</tbody>
 										</table>
 										<div class="TotalVotes"><%=_ctx.appRes("UITopicPoll.label.TotalVoters"); %>: $sum</div>
-										<% if( isAgain && !isAnonim) { %>
+										<% if(isAgain && !isAnonim && !poll.getIsClosed()) { %>
 			   						<div class="UIAction">
 							        <table class="ActionContainer" align="center">
 							          <tr>
