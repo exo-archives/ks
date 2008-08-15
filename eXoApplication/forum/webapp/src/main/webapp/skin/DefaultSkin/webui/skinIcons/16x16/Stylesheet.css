@@ -394,3 +394,7 @@
 .UIForumPortlet .TopicUnActiveIcon {
 	background: url('icons/TopicActiveIcon.gif') no-repeat left center;
 }
+
+.UIForumPortlet .MoveForumLockIcon {
+	background: url('icons/ForumLockIcon.gif') no-repeat left center;
+}

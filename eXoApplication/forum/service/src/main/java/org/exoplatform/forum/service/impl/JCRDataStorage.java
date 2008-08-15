@@ -1761,6 +1761,7 @@ public class JCRDataStorage{
 						pollNode.setProperty("exo:owner", poll.getOwner()) ;
 						pollNode.setProperty("exo:userVote", new String[] {}) ;
 						pollNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
+						pollNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
 						topicNode.setProperty("exo:isPoll", true);
 					} else {
 						pollNode = topicNode.getNode(pollId) ;
@@ -1770,7 +1771,9 @@ public class JCRDataStorage{
 					}
 					pollNode.setProperty("exo:vote", poll.getVote()) ;
 					pollNode.setProperty("exo:modifiedBy", poll.getModifiedBy()) ;
-					pollNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
+					if(poll.getTimeOut() == 0) {
+						pollNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
+					}
 					pollNode.setProperty("exo:timeOut", poll.getTimeOut()) ;
 					pollNode.setProperty("exo:question", poll.getQuestion()) ;
 					pollNode.setProperty("exo:option", poll.getOption()) ;
@@ -1796,6 +1799,10 @@ public class JCRDataStorage{
 				if(topicNode.hasNode(pollId)) {
 					Node pollNode = topicNode.getNode(pollId) ;
 					pollNode.setProperty("exo:isClosed", poll.getIsClosed()) ;
+					if(poll.getTimeOut() == 0) {
+						pollNode.setProperty("exo:modifiedDate", getGreenwichMeanTime()) ;
+						pollNode.setProperty("exo:timeOut", 0) ;
+					}
 					forumHomeNode.save() ;
 					forumHomeNode.getSession().save() ;
 				}

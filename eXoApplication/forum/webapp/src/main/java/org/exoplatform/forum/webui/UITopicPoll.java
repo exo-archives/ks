@@ -95,7 +95,7 @@ public class UITopicPoll extends UIForm	{
 		this.topicId = topicId;
 		this.isEditPoll = true ;
 	}
-
+	
 	@SuppressWarnings("unchecked")
   private void init() throws Exception {
 		if(this.hasChildren()){
@@ -412,9 +412,15 @@ public class UITopicPoll extends UIForm	{
 
 	static public class ClosedPollActionListener extends EventListener<UITopicPoll> {
 		public void execute(Event<UITopicPoll> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UITopicPoll topicPoll = event.getSource() ;
 			Poll poll = topicPoll.poll_ ;
-			poll.setIsClosed(!poll.getIsClosed()) ;
+			if(id.equals("true")) {
+				poll.setIsClosed(false) ;
+				poll.setTimeOut(0);
+			} else {
+				poll.setIsClosed(!poll.getIsClosed()) ;
+			}
 			topicPoll.forumService.setClosedPoll(ForumSessionUtils.getSystemProvider(), topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll) ;
 			topicPoll.isAgainVote = false ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll) ;

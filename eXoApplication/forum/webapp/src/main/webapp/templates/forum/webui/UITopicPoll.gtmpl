@@ -14,6 +14,22 @@
 		long timeOut = poll.getTimeOut() ;
 		boolean displayVoted = uicomponent.getIsVoted();
 		boolean isAnonim = ForumSessionUtils.isAnonim();
+		boolean isAgain = poll.getIsAgainVote() ;
+		boolean isTimeOut = false;
+		String timeOutDate = "";
+		if(timeOut > 0) {
+			Date dateOut = poll.getModifiedDate() ;
+			Date today = new Date() ;
+			timeOut = timeOut*86400000 ;
+			dateOut.setTime(dateOut.getTime() + timeOut);
+			UserProfile option = uicomponent.getOption();
+			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((option.getLongDateFormat() + ", " + option.getTimeFormat()),dateOut);
+			if(dateOut.getTime() < today.getTime()) {
+				timeOutDate = " Poll is Closed !" ;
+				isAgain = false ;
+				isTimeOut = true;
+			}
+		}
 	%>
 <div class="UITopicPoll">
 	<div class="ForumToolbar">
@@ -45,11 +61,11 @@
 	  			<div class="SeparatorLine"><span></span></div>
 	  			<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<a href="<%=uicomponent.event("ClosedPoll");%>">
+							<a href="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
 								<div class="LeftOverButton">
 									<div class="RightOverButton">
 										<div class="CenterOverButton">
-										<% if(poll.getIsClosed()){ %>
+										<% if(poll.getIsClosed() || isTimeOut){ %>
 											<div class="StatusIcon OpenPollIcon">
 												<%=_ctx.appRes("UITopicPoll.label.OpenPoll"); %>
 											</div>
@@ -89,18 +105,7 @@
 	
 	<div class="TopicPollContainer">
 		<% 
-		boolean isAgain = poll.getIsAgainVote() ;
 		if(timeOut > 0) {
-			Date dateOut = poll.getCreatedDate() ;
-			Date today = new Date() ;
-			timeOut = timeOut*86400000 ;
-			dateOut.setTime(dateOut.getTime() + timeOut);
-			UserProfile option = uicomponent.getOption();
-			String timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((option.getLongDateFormat() + ", " + option.getTimeFormat()),dateOut);
-			if(dateOut.getTime() < today.getTime()) {
-				timeOutDate = " Poll is Closed !" ;
-				isAgain = false ;
-			}
 		%>
 		<div class="PollTime">$timeOutDate</div>
 		<% } %>
