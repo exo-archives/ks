@@ -27,8 +27,10 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -238,13 +240,23 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       responseForm.setListIdQuesRela(listQuestionId) ;
       
       List<String> listOption = new ArrayList<String>() ;
+      boolean someQuestionIsDeleted = false;
       for(String id : listQuestionId) {
-        String contentQue = faqService.getQuestionById(id, FAQUtils.getSystemProvider()).getQuestion() ;
-        listOption.add(contentQue) ;
+      	try{
+      		String contentQue = faqService.getQuestionById(id, FAQUtils.getSystemProvider()).getQuestion() ;
+      		listOption.add(contentQue) ;
+      	} catch(Exception e){
+      		e.printStackTrace();
+      		someQuestionIsDeleted = true;
+      	}
       }
       responseForm.setListRelationQuestion(listOption) ;
       //((UIFormSelectBox)responseForm.getChildById(responseForm.RELATIONS)).setOptions(listOption) ;
-      
+      if(someQuestionIsDeleted){
+	      UIApplication uiApplication = addRelationForm.getAncestorOfType(UIApplication.class) ;
+	      uiApplication.addMessage(new ApplicationMessage("UIAddRelationForm.msg.question-id-moved", new Object[]{}, ApplicationMessage.WARNING)) ;
+	      event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      }
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
