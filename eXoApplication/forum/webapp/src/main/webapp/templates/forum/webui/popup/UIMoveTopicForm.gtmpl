@@ -35,9 +35,12 @@
 	      		String forumName = forum.getForumName() ;
 	      		String objectId = forum.getPath() ;
 	      		String link = uicomponent.event("Save",objectId ) ;
+	      		String classForumIcon = "ThreadsIcon";
+	      		if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
+	      		if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
 	      %>
 			    <div class="Node">
-			      <div class="Icon ThreadsIcon"><span></span></div>
+			      <div class="Icon $classForumIcon"><span></span></div>
 			      <div class="NodeLabel"> 
 				      <a href="$link">$forumName</a>  
 				    </div>

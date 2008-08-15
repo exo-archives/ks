@@ -60,7 +60,15 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	private String forumId ;
 	private List<Topic> topics ;
 	private boolean isFormTopic = false ;
-	
+	private boolean isAdmin = false;
+	public boolean isAdmin() {
+  	return isAdmin;
+  }
+
+	public void setAdmin(boolean isAdmin) {
+  	this.isAdmin = isAdmin;
+  }
+
 	public UIMoveTopicForm() throws Exception {
 	}
 	

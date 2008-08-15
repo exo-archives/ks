@@ -38,7 +38,7 @@
 		              	<% uiform.renderChild(uicomponent.FIELD_TIMEOUT_INPUT) %>
 		              </div>
 								</td>
-								<td class="Label"><%=_ctx.appRes("UIPollForm.label.DayFromNow"); %></td>
+								<td class="Label"><%=_ctx.appRes("UIPollForm.label.DayAfter") + " " + uicomponent.getDateAfter();%> </td>
 							</tr>
 							<tr>
 								<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</td>

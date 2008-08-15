@@ -98,6 +98,16 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 		this.TopicPath = topicPath ;
 	}
 	
+
+	@SuppressWarnings("unused")
+  private String getDateAfter() throws Exception {
+		String date = ForumUtils.getFormatDate("MM-dd-yyyy", new Date()) ;;
+		if(poll != null && poll.getTimeOut() > 0) {
+			date = ForumUtils.getFormatDate("MM-dd-yyyy", poll.getModifiedDate()) ;
+		}
+		return date;
+	}
+	
 	@SuppressWarnings("unchecked")
   public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
 		if(isUpdate) {
