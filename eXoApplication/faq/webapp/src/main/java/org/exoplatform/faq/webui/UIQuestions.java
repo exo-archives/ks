@@ -718,10 +718,12 @@ public class UIQuestions extends UIContainer {
           List<Category> listCate = question.getAllSubCategory(categoryId) ;
           FAQSetting faqSetting = new FAQSetting();
           faqSetting.setDisplayMode(FAQUtils.DISPLAYBOTH);
+          faqSetting.setOrderBy("alphabet");
+          faqSetting.setOrderType("asc");
         	for(Category category : listCate) {
           	String id = category.getId() ;
           	List<Question> listQuestion = faqService.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider(), faqSetting).getAll() ;
-            for(Question ques: listQuestion) {
+          	for(Question ques: listQuestion) {
             	String questionId = ques.getId() ;
             	faqService.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;
             }

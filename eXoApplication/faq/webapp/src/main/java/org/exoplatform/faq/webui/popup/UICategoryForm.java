@@ -27,6 +27,8 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -249,12 +251,25 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         /*----modified by Mai Van Ha----*/
           List<String> listUser = new ArrayList<String>() ;
           listUser.addAll(Arrays.asList(users)) ;
-          Category category = faqService_.getCategoryById(parentCate, FAQUtils.getSystemProvider()) ;
-          for(String user : category.getModerators()) {
-            if(!listUser.contains(user)) {
-              listUser.add(user) ;
-            }
-          }
+          try {
+	          Category category = faqService_.getCategoryById(parentCate, FAQUtils.getSystemProvider()) ;
+	          for(String user : category.getModerators()) {
+	            if(!listUser.contains(user)) {
+	              listUser.add(user) ;
+	            }
+	          }
+          } catch (Exception e) {
+          		UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+              uiApp.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+              event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+              UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
+      				uiContainer.updateIsRender(true) ;
+      				questions.setCategories(null) ;
+      				breadcumbs.setUpdataPath("FAQService");
+      				faqPortlet.cancelAction() ;
+              event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+              return ;
+					}
           cat.setModerators(listUser.toArray(new String[]{})) ;
         /*-----End---------------------*/
           try {
