@@ -58,6 +58,13 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 	}
 
+	@Override
+	public void processDecode(WebuiRequestContext context) throws Exception {
+		String objId = context.getRequestParameter(OBJECTID) ; 
+//		System.out.println("\n\n"+objId);
+	  super.processDecode(context);
+	}
+	
 	public void updateIsRendered(String selected) throws Exception {
 		if(selected == ForumUtils.CATEGORIES) {
 			isCategoryRendered = true ;
@@ -107,7 +114,8 @@ public class UIForumPortlet extends UIPortletApplication {
 		context.addUIComponentToUpdateByAjax(popupAction) ;
 	}
 	
-	public UserProfile getUserProfile() {
+	public UserProfile getUserProfile() throws Exception {
+		if(this.userProfile == null) setUserProfile() ;
 	  return this.userProfile ;
   }
   @SuppressWarnings("deprecation")

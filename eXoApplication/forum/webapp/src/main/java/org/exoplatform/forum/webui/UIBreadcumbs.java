@@ -139,7 +139,7 @@ public class UIBreadcumbs extends UIContainer {
 	}
 	
 	@SuppressWarnings("unused")
-  private long getNewMessage() {
+  private long getNewMessage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
 		return this.userProfile.getNewMessage() ;
 	}
@@ -162,6 +162,24 @@ public class UIBreadcumbs extends UIContainer {
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+			}else	if(path.lastIndexOf(Utils.TOPIC) > 0) {
+				String []id = path.split("/") ;
+    		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+    		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
+    		if(topic != null) {
+	    		forumPortlet.updateIsRendered(ForumUtils.FORUM);
+	    		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+	  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+	  			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+	  			uiForumContainer.setIsRenderChild(false) ;
+	  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+	  			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+	  			uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
+	  			uiTopicDetail.setUpdateForum(forum) ;
+	  			uiTopicDetail.setIdPostView("false") ;
+	  			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
+	  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+    		}
 			}else	if(path.lastIndexOf(Utils.FORUM) > 0) {
 				String id[] = path.split("/");
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);

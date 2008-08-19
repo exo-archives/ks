@@ -624,6 +624,7 @@
 																	<%
 																		String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 																		for(viewAction in menuViewInfos) {
+																		  if(userProfile.getUserRole() == 3 && viewAction.equals("PrivateMessage")) continue;
 																			String linkView = uicomponent.event(viewAction, owner) ;
 																			String classIcon = "" ;
 																			String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);

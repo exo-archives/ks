@@ -174,6 +174,7 @@ public class UITopicContainer extends UIForm {
 	private void initPage() throws Exception {
 		this.canViewThreads = true ;
 		this.canAddNewThread = true ;
+		if(this.userProfile == null) this.userProfile = new UserProfile();
 		StringBuffer strQuery = new StringBuffer() ;
 		long role = this.userProfile.getUserRole() ;
 		String userId = this.userProfile.getUserId() ;
