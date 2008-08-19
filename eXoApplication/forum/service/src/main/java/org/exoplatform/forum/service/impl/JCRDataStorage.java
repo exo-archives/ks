@@ -699,9 +699,11 @@ public class JCRDataStorage{
 	public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost)throws Exception {
 		Topic topic = null ;
 		Node topicNode ;
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		if(topicPath == null || topicPath.length() <= 0) return null;
+		if(topicPath.indexOf(forumHomeNode.getName()) < 0) topicPath = forumHomeNode.getPath() + "/" + topicPath;
 		try {
-			topicNode = (Node)getForumHomeNode(sProvider).getSession().getItem(topicPath) ;
+			topicNode = (Node)forumHomeNode.getSession().getItem(topicPath) ;
 			topic = getTopicNode(topicNode) ;
 			if(topic == null && isLastPost) {
 				if(topicPath != null && topicPath.length() > 0) {

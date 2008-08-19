@@ -205,6 +205,7 @@ public class UITopicDetail extends UIForm {
 		isRefreshed = true ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
+		if(this.userProfile == null) this.userProfile = new UserProfile();
 		String userName = this.userProfile.getUserId() ;
 		if(!this.viewTopic) userName = "guest" ;
 		boolean isGetService = false ;

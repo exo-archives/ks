@@ -92,11 +92,6 @@ public class UISearchForm extends UIForm implements UISelector {
 	final static	private String FROMDATECREATEDLASTPOST = "FromDateCreatedLastPost" ;
 	final static	private String TODATECREATEDLASTPOST = "ToDateCreatedLastPost" ;
 	
-	
-//	final static	private String FIELD_LASTPOSTFROMTO_INPUT = "LastPostFromTo" ;
-//  final static  private String FROM = "From" ;
-//  final static  private String TO = "To" ;
-	
 	private UserProfile userProfile = null;
 	
 	public void setUserProfile(UserProfile userProfile) {

@@ -58,7 +58,7 @@ public class UIListSentPrivateMessage extends UIContainer {
   	addChild(UIForumPageIterator.class, null, "PageListSentMessage") ;
   }
   @SuppressWarnings("unused")
-  private UserProfile getUserProfile(){
+  private UserProfile getUserProfile() throws Exception{
   	if(userProfile == null) {
   		userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
   	}
@@ -76,12 +76,14 @@ public class UIListSentPrivateMessage extends UIContainer {
 		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.SENDMESSAGE) ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
-		pageList.setPageSize(10) ;
-		long page = forumPageIterator.getPageSelected() ;
-		this.listSend = pageList.getPage(page) ;
-		if(pageList.getAvailable() > 10){
-  		isRenderIterator = true;
-  	}
+		if(pageList != null){
+			pageList.setPageSize(10) ;
+			long page = forumPageIterator.getPageSelected() ;
+			this.listSend = pageList.getPage(page) ;
+			if(pageList.getAvailable() > 10){
+	  		isRenderIterator = true;
+	  	}
+		}
 		return this.listSend ;
 	}
   

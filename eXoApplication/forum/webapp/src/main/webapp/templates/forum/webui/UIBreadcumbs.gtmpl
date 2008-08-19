@@ -1,5 +1,6 @@
 <%  
 	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.ForumSessionUtils;
 %>
 <div class="UIBreadcumbs" id="$uicomponent.id">
 	<div class="LeftBreadcumbs">
@@ -9,7 +10,8 @@
 					<div class="OpenIcon"><span></span></div>
 				<% int t = 1 ;
 					for(namePath in uicomponent.getBreadcumbs()) {
-						String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
+						String link = uicomponent.url("ChangePath", uicomponent.getPath(t-1)) ;
+						String event = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
 						if(namePath.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.eXoForum");
 						}
@@ -18,7 +20,7 @@
 						}
 						if(t < uicomponent.getMaxPath()) {
 				%>
-					<a href="$link" class="Selected">$namePath</a>
+					<a href="$link" onclick="$event; return false;" class="Selected">$namePath</a>
 					<div class="RightArrowIcon"><span></span></div>
 				 <% } else {
 				 		 	if(uicomponent.isLink()) {
@@ -35,7 +37,7 @@
 			  	<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">
-					<%if(t == 2){
+					<%if(t == 2 && !ForumSessionUtils.isAnonim()){
 						String newMessage = _ctx.appRes("UIBreadcumbs.label.PrivateMessages") ; 
 						if(uicomponent.getNewMessage() > 0) {
 						  newMessage = "<b>"+newMessage+"(" + uicomponent.getNewMessage() + ") </b>";
@@ -54,7 +56,7 @@
 							<div class="RSSIcon" ><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></div>	
 						</div>	
 					</a>
-					<%if(t == 2){%>
+					<%if(t == 2 && !ForumSessionUtils.isAnonim()){%>
 					<div style="clear: left"><span></span></div>
 					<%}%>				
 				</div>
