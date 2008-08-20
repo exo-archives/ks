@@ -37,6 +37,14 @@
 	background: url('icons/ViewProfileIcon.gif') no-repeat left center ;
 }
 
+.UIForumPortlet .ClosePostsIcon {
+	background: url('icons/ClosePostsIcon.gif') no-repeat left center ;
+}
+
+.UIForumPortlet .LockPostsIcon {
+	background: url('icons/LockPostsIcon.gif') no-repeat left center ;
+}
+
 .UIForumPortlet .SmallGrayPlus {
 	background: url('icons/SmallGrayPlus.gif') no-repeat left top;
 }
