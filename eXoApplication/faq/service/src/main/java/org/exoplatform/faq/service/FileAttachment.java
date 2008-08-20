@@ -76,7 +76,7 @@ public class FileAttachment {
   public void setId(String s) { this.id = s ; }
   
   /**
-   * Gets the path of file, this path is used to view own down load file.
+   * Gets the path of file, this path is used to view or down load file.
    * 
    * @return the path of file
    */
@@ -146,9 +146,9 @@ public class FileAttachment {
   public void setName(String name_) { this.name = name_ ; }
   
   /**
-   * Gets the input stream.
+   * Gets the input stream which is file's data.
    * 
-   * @return the input stream
+   * @return data of file
    * @throws Exception if Repository or value format occur exception
    */
   public InputStream getInputStream() throws Exception{ 
@@ -169,7 +169,7 @@ public class FileAttachment {
   }
   
   /**
-   * Sets the input stream.
+   * Sets the input stream which is file's data.
    * 
    * @param in the new input stream
    * @throws Exception the exception

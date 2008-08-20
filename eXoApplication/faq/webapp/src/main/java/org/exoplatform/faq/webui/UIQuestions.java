@@ -195,11 +195,6 @@ public class UIQuestions extends UIContainer {
   }
   
   public void setCategories() throws Exception  {
-  	if(currentUser_ != null) faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser_, faqSetting_);
-  	else FAQUtils.getPorletPreference(this.faqSetting_);
-  	/*System.out.println("\n\n\n\n----------> setCategories: display mode: " + this.faqSetting_.getDisplayMode());
-  	System.out.println("\n\n\n\n----------> setCategories: order by: " + this.faqSetting_.getOrderBy());
-  	System.out.println("\n\n\n\n----------> setCategories: order type: " + this.faqSetting_.getOrderType());*/
     if(categories_ != null)
       categories_.clear() ;
     if(this.categoryId_ == null || this.categoryId_.trim().length() < 1) {

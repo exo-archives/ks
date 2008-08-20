@@ -76,6 +76,9 @@
 										<% } %> 
  									</tbody>
  								</table>
+ 									<div style="overflow:auto;">
+										<% uicomponent.renderChild(uicomponent.LIST_RESULT_SEARCH) ; %>
+									</div>
  						</div>
  					</div>
  				</div>

@@ -69,8 +69,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   private UIFAQPageIterator pageQuesNotAnswerIterator ;
   private List<Question> listQuestion_ = new ArrayList<Question>() ;
   private List<Question> listQuestionNotYetAnswered_ = new ArrayList<Question>() ;
-  private long pageSelect = 0 ;
-  private long pageSelectNotAnswer = 0 ;
+  private long pageSelect = 1 ;
+  private long pageSelectNotAnswer = 1 ;
   
   private boolean isEditTab_ = true ;
   private boolean isResponseTab_ = false ;
@@ -146,7 +146,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         }
         i ++ ;
       }
-      if(!listCateId.isEmpty()) {
+      if(!listCateId.isEmpty() && listCateId.size() > 0) {
         this.pageList = faqService_.getQuestionsByListCatetory(listCateId, false, sProvider) ;
         this.pageList.setPageSize(5);
         pageIterator.updatePageList(this.pageList) ;
@@ -178,14 +178,16 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   private List<Question> getListQuestion() {
     if(!isChangeTab_){
       pageSelect = pageIterator.getPageSelected() ;
-      listQuestion_.clear() ;
+      listQuestion_ = new ArrayList<Question>();
       try {
         listQuestion_.addAll(this.pageList.getPage(pageSelect, null)) ;
-        UIFAQPageIterator pageIterator = null ;
-        while(listQuestion_.isEmpty() && pageSelect > 1) {
-          pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
-          listQuestion_.addAll(this.pageList.getPage(--pageSelect, null)) ;
-          pageIterator.setSelectPage(pageSelect) ;
+        if(listQuestion_.isEmpty()){
+	        UIFAQPageIterator pageIterator = null ;
+	        while(listQuestion_.isEmpty() && pageSelect > 1) {
+	          pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
+	          listQuestion_.addAll(this.pageList.getPage(--pageSelect, null)) ;
+	          pageIterator.setSelectPage(pageSelect) ;
+	        }
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -256,14 +258,15 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     @SuppressWarnings("static-access")
     public void execute(Event<UIQuestionsInfo> event) throws Exception {
       UIQuestionsInfo questionsInfo = event.getSource() ;
-      String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      String[] param = event.getRequestContext().getRequestParameter(OBJECTID).split("/");
       
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
       try{
-        Question question = faqService_.getQuestionById(quesId, FAQUtils.getSystemProvider()) ;
+        Question question = faqService_.getQuestionById(param[0], FAQUtils.getSystemProvider()) ;
         UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
         responseForm.setIsChildren(true) ;
-        responseForm.setQuestionId(question, "") ;
+        if(param.length == 1) responseForm.setQuestionId(question, "") ;
+        else responseForm.setQuestionId(question, param[1]) ;
         questionManagerForm.isViewEditQuestion = false ;
         questionManagerForm.isViewResponseQuestion = true ;
         questionManagerForm.isResponseQuestion = true ;
@@ -272,7 +275,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         for(int i = 0; i < questionsInfo.listQuestion_.size() ; i ++) {
-          if(questionsInfo.listQuestion_.get(i).getId().equals(quesId)) {
+          if(questionsInfo.listQuestion_.get(i).getId().equals(param[0])) {
             questionsInfo.listQuestion_.remove(i) ;
             break ;
           }

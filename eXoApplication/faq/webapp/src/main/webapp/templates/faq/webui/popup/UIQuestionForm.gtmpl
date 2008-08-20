@@ -21,15 +21,15 @@
 										language = listLanguage[i++] ;
 						%>
 								  <tr>
-								    <td width="14%">&nbsp;</td>
-								    <td width="86%" style="padding-left: 4px;">
+								    <td width="15%">&nbsp;</td>
+								    <td width="85%" style="padding-left: 4px;">
 								      <div class="LanguageQuestion" > 
 													<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
 											</div>
 								    </td>
 								  </tr>
 								  <tr>
-								    <td width="80" align="right">
+								    <td align="right">
 								      <%=uicomponent.getLabel(field.getName()) %> : 
 								    </td>
 								    <td style="padding-left: 4px;white-space:nowrap;">
@@ -46,10 +46,10 @@
 								<tr>
 									<%fieldName = uicomponent.getLabel(field.getName());
 										if(!fieldName.equals(uicomponent.getId())) { %>												
-										<td class="FieldLabel" width="80">
+										<td class="FieldLabel" width="15%">
 											<%=uicomponent.getLabel(field.getName()) %> : 
 										</td>
-										<td class="FieldComponent" style="white-space:normal;">
+										<td class="FieldComponent" style="white-space:normal;" width="85%">
 											<%if(field.getName().equals("Attachment")){
 													if(!uicomponent.getListFile().isEmpty()) {
 														String name = "" ;

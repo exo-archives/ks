@@ -156,6 +156,11 @@
 														<table class="UIGrid">
 															<tr>
 																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th>
+																	<div style="padding-right: 4px;">
+																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Languages")%></b>
+																	</div>
+																</th>
 																<th width="60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
 															</tr>
 															<%
@@ -169,6 +174,17 @@
 																%>
 																	<tr>
 																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
+																		<td class="text" align="left" style="margin-right: 4px;">
+																		<%
+																			String linkResponseByLanguage = "";
+																			for(String language : question.getLanguagesNotYetAnswered().split(",")){
+																				linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getId() + "/" + language ) ;
+																		%>
+																			<a href="$linkResponseByLanguage" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>" >
+																				<div style="padding: 0px 4px 4px 0px;">- &nbsp;$language</div>
+																			</a>
+																		<%}%>
+																		</td>
 																		<td align="center">
 																			<div style="float: left">
 																				<a href="$linkResponse" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>" >

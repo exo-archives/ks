@@ -25,10 +25,13 @@ import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
+import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
@@ -58,20 +61,34 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	private List<FAQFormSearch> formSearchs_ = new ArrayList<FAQFormSearch>() ;
+	private String LIST_RESULT_SEARCH = "listResultSearch";
+	private UIFAQPageIterator pageIterator ;
+	private JCRPageList pageList ;
 	FAQSetting faqSetting_ = new FAQSetting() ;
-	public ResultQuickSearch() throws Exception { this.setActions(new String[]{"Close"}) ;}
+	
+	public ResultQuickSearch() throws Exception { 
+		addChild(UIFAQPageIterator.class, null, LIST_RESULT_SEARCH) ;
+		this.setActions(new String[]{"Close"}) ;
+	}
 	
 	public void setFormSearchs(List<FAQFormSearch> formSearchs) throws Exception {
 		FAQService faqService = FAQUtils.getFAQService();
 		FAQUtils.getPorletPreference(faqSetting_);
     faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
-    this.formSearchs_ = formSearchs;
+    formSearchs_ = formSearchs;
+    pageList = new QuestionPageList(formSearchs_, 10);
+    pageList.setPageSize(5);
+    pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+    pageIterator.updatePageList(pageList);
   }
 	
 	public List<FAQFormSearch> getFormSearchs() throws Exception {
 		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
 		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
   	String currentUser = FAQUtils.getCurrentUser() ;
+  	long pageSelected = pageIterator.getPageSelected();
+  	formSearchs_ = new ArrayList<FAQFormSearch>();
+  	formSearchs_.addAll(pageList.getPageResultSearch(pageSelected, FAQUtils.getCurrentUser()));
   	if(faqSetting_.getDisplayMode().equals("both")) {
 		  if(serviceUtils.isAdmin(currentUser)) {
 		  	return this.formSearchs_;

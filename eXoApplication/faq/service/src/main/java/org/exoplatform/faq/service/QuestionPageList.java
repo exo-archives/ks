@@ -53,7 +53,11 @@ public class QuestionPageList extends JCRPageList {
   /** The is not yet answered. */
   private boolean isNotYetAnswered = false;
   
-  private List<Question> listQuestions = null;
+  private List<Question> listQuestions_ = null;
+  
+  private List<FAQFormSearch> listFAQFormSearchS_ = null;
+  
+  private List<Category> listCategories_ = null;
   
   /**
    * Sets the not yet answered. Set parameter is <code>true</code> if want get questions are not
@@ -76,38 +80,40 @@ public class QuestionPageList extends JCRPageList {
    * 
    */
   private void setTotalQuestion(){
-  	listQuestions = new ArrayList<Question>();
+  	listQuestions_ = new ArrayList<Question>();
   	String response = "";
   	NodeIterator nodeIterator = iter_;
   	NodeIterator languageIter = null;
   	Node questionNode = null;
   	Node languageNode = null;
   	Node language;
+  	String languages = null;
   	while(nodeIterator.hasNext()){
+  		languages = new String();
   		questionNode = nodeIterator.nextNode();
   		try {
         response = questionNode.getProperty("exo:responses").getValue().getString();
         if(response == null || response.trim().length() < 1){
-        	listQuestions.add(getQuestion(questionNode));
-        } else {
-        	if(questionNode.hasNode("languages")){
-        		languageNode = questionNode.getNode("languages");
-        		languageIter = languageNode.getNodes();
-        		while(languageIter.hasNext()){
-        			language = languageIter.nextNode();
-        			response = language.getProperty("exo:responses").getValue().getString();
-        			if(response == null || response.trim().length() < 1) {
-        				listQuestions.add(getQuestion(questionNode));
-        				break;
-        			}
-        		}
-        	}
+        	languages = questionNode.getProperty("exo:language").getValue().getString();
         }
+      	if(questionNode.hasNode("languages")){
+      		languageNode = questionNode.getNode("languages");
+      		languageIter = languageNode.getNodes();
+      		while(languageIter.hasNext()){
+      			language = languageIter.nextNode();
+      			response = language.getProperty("exo:responses").getValue().getString();
+      			if(response == null || response.trim().length() < 1) {
+      				if(languages != null && languages.trim().length() > 0) languages += ",";
+      				languages += language.getName();
+      			}
+      		}
+      	}
+      	if(languages != null && languages.trim().length() > 0) listQuestions_.add(getQuestion(questionNode).setLanguagesNotYetAnswered(languages));
       } catch (Exception e) {
         e.printStackTrace();
       }
   	}
-  	setAvailablePage(listQuestions.size()) ;
+  	setAvailablePage(listQuestions_.size()) ;
   }
 
   /**
@@ -123,12 +129,30 @@ public class QuestionPageList extends JCRPageList {
    * 
    * @throws Exception  if repository occur exception
    */
-  public QuestionPageList(NodeIterator iter, long pageSize, String value, boolean isQuery) throws Exception{
+  public QuestionPageList(NodeIterator iter, long pageSize, String value, boolean isQuery) throws Exception {
     super(pageSize) ;
     iter_ = iter ;
     value_ = value ;
     isQuery_ = isQuery ;
     setAvailablePage(iter.getSize()) ;    
+  }
+  
+  public QuestionPageList(List<FAQFormSearch> faqFormSearchs, long pageSize) throws Exception {
+  	super(pageSize) ;
+  	this.listFAQFormSearchS_ = faqFormSearchs;
+  	setAvailablePage(faqFormSearchs.size()) ;    
+  }
+  
+  public QuestionPageList(List<Category> listCategories) throws Exception {
+  	super(10) ;
+  	this.listCategories_ = listCategories;
+  	setAvailablePage(listCategories.size()) ;    
+  }
+  
+  public QuestionPageList(List<Question> listQuestions, int size) throws Exception{
+  	super(10) ;
+  	this.listQuestions_ = listQuestions;
+  	setAvailablePage(size) ;    
   }
 
   /**
@@ -142,7 +166,7 @@ public class QuestionPageList extends JCRPageList {
    * @see             org.exoplatform.faq.service.JCRPageList#populateCurrentPage(long, java.lang.String)
    */
   protected void populateCurrentPage(long page, String username) throws Exception  {
-    if(iter_ == null) {
+    if(iter_ == null || !iter_.hasNext()) {
       Session session = getJCRSession() ;
       if(isQuery_) {
         QueryManager qm = session.getWorkspace().getQueryManager() ;
@@ -157,25 +181,25 @@ public class QuestionPageList extends JCRPageList {
       session.logout() ;
     }
     if(isNotYetAnswered){
-    	setAvailablePage(listQuestions.size()) ;
+    	setAvailablePage(listQuestions_.size()) ;
     } else {
     	setAvailablePage(iter_.getSize()) ;
     }
-    Node currentNode ;
     long pageSize = getPageSize() ;
     long position = 0 ;
     if(page == 1) position = 0;
     else {
       position = (page-1) * pageSize ;
-      if(!isNotYetAnswered)	iter_.skip(position) ;
     }
+    iter_.skip(position) ;
     currentListPage_ = new ArrayList<Question>() ;
     if(!isNotYetAnswered) {
+    	Question question = new Question();
       for(int i = 0; i < pageSize; i ++) {
         // add != null to fix bug 514
         if(iter_ != null && iter_.hasNext()){
-          currentNode = iter_.nextNode() ;
-          currentListPage_.add(getQuestion(currentNode));
+        	question = getQuestion(iter_.nextNode());
+          currentListPage_.add(question);
         }else {
           break ;
         }
@@ -184,14 +208,59 @@ public class QuestionPageList extends JCRPageList {
       pageSize += position;
       for(int i = (int)position; i < pageSize; i ++) {
         // add != null to fix bug 514
-        if(i < listQuestions.size()){
-          currentListPage_.add(listQuestions.get(i));
+        if(i < listQuestions_.size()){
+          currentListPage_.add(listQuestions_.get(i));
         }else {
           break ;
         }
       }
     }
     iter_ = null ;    
+  }
+  
+  @Override
+  protected void populateCurrentPageResultSearch(long page, String username) throws Exception {
+	  long pageSize = getPageSize();
+	  long position = 0;
+	  if(page == 1) position = 0;
+	  else {
+	  	position = (page - 1) * pageSize;
+	  }
+	  pageSize *= page ;
+	  currentListResultSearch_ = new ArrayList<FAQFormSearch>();
+	  for(int i = (int)position; i < pageSize && i < this.listFAQFormSearchS_.size(); i ++){
+	  	currentListResultSearch_.add(listFAQFormSearchS_.get(i));
+	  }
+  }
+  
+  @Override
+  protected void populateCurrentPageCategoriesSearch(long page, String username) throws Exception {
+  	long pageSize = getPageSize();
+	  long position = 0;
+	  if(page == 1) position = 0;
+	  else {
+	  	position = (page - 1) * pageSize;
+	  }
+	  pageSize *= page ;
+	  currentListCategory_ = new ArrayList<Category>();
+	  for(int i = (int)position; i < pageSize && i < this.listCategories_.size(); i ++){
+	  	currentListCategory_.add(listCategories_.get(i));
+	  }
+  }
+
+	@Override
+  protected void populateCurrentPageQuestionsSearch(long page, String username) throws Exception {
+		long pageSize = getPageSize();
+	  long position = 0;
+	  if(page == 1) position = 0;
+	  else {
+	  	position = (page - 1) * pageSize;
+	  }
+	  pageSize *= page ;
+	  currentListPage_ = new ArrayList<Question>();
+	  for(int i = (int)position; i < pageSize && i < this.listQuestions_.size(); i ++){
+	  	currentListPage_.add(listQuestions_.get(i));
+	  }
   }
   
   /**
@@ -326,5 +395,4 @@ public class QuestionPageList extends JCRPageList {
       repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
     return sessionProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
   }
-
 }

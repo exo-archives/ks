@@ -47,7 +47,7 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   
   public boolean isEditQuestion = false ;
   public boolean isResponseQuestion = false ;
-  public boolean isViewEditQuestion = false ;
+  public boolean isViewEditQuestion = true ;
   public boolean isViewResponseQuestion = false ;
 
   public void activate() throws Exception { }
@@ -61,7 +61,6 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     addChild(UIQuestionsInfo.class, null, UI_QUESTION_INFO) ;
     addChild(UIQuestionForm.class, null, UI_QUESTION_FORM) ;
     addChild(UIResponseForm.class, null, UI_RESPONSE_FORM) ;
-    //setActions(new String[]{"Cancel"}) ;
     setActions(new String[]{"Cancel"}) ;
   }
   

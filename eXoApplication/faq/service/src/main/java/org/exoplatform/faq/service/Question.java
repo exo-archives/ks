@@ -73,6 +73,8 @@ public class Question {
   /** The list attachments. */
   private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
   
+  private String languagesNotYetAnswered = "";
+  
   /**
    * Class constructor specifying id of object is created.
    */
@@ -294,5 +296,21 @@ public class Question {
    * @param responseBy  the name of admin or moderator
    */
   public void setResponseBy(String responseBy) { this.responseBy = responseBy; }
-  
+
+  /**
+   * Get list languages of question which are not yet answered
+   * @return	list languages
+   */
+	public String getLanguagesNotYetAnswered() {
+  	return languagesNotYetAnswered;
+  }
+
+	/**
+	 * Registers language is not yet answered
+	 * @param languagesNotYetAnswered
+	 */
+	public Question setLanguagesNotYetAnswered(String languagesNotYetAnswered) {
+  	this.languagesNotYetAnswered = languagesNotYetAnswered;
+  	return this;
+  }
 }
