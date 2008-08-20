@@ -6,14 +6,14 @@
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 %>
-<div class="UIMoveCategoryForm $uicomponent.id">
+<div class="UIMoveCategoryForm $uicomponent.id" style="background-color:white;">
 	<% uiform.begin() %>
 	<div class="TitleMoveThreads"><%= _ctx.appRes("UIMoveFAQForm.title.chooseCategory"); %>
 	  <% String linkRoot = uicomponent.event("Save", null); %>	
 	</div>
-	  <div style="margin: 5px 0px 5px 0px ;">
+	  <div class="ViewQuestionsToSelect " style="margin: 5px 0px 5px 0px ; padding-top: 10px;">
 			<div class="Icon FAQCategoryViewMove"><span></span></div>
-			<div id="" style="float: left" ><a href="$linkRoot"><%= _ctx.appRes("UIMoveFAQForm.title.root"); %></a></div>
+			<div id="" style="float: left" ><a href="javaScript: void(0)" ondblclick="$linkRoot"><%= _ctx.appRes("UIMoveFAQForm.title.root"); %></a></div>
 			<div style="clear: left;"><span></span></div>
 			<div style="margin-left: 30px;">
 		<%
@@ -22,7 +22,9 @@
     StringBuffer stringBuffer = new StringBuffer() ;
     int n = listCate.size() ;
     int i = 0 ;
+    int id = 0;
     for(cate in uicomponent.getListCate()) {
+    	id ++;
     	String categoryName = cate.getCategory().getName() ;
 		 	  String link = uicomponent.event("Save",cate.getCategory().getId());
       if(i == 0) {%>
@@ -34,9 +36,17 @@
 	    				title = FAQUtils.getTitle(title) ; 
 	    				categoryName = FAQUtils.getSubString(categoryName, 50);
 	    			 %>
-	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
+	    			<div id="FAQCate$i" style="float: left">
+	    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+	    					$categoryName
+	    				</a>
+	    			</div>
 	    			<% } else { %>
-	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
+	    			<div id="FAQCate$i" style="float: left">
+	    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+	    					$categoryName
+	    				</a>
+	    			</div>
 	    			<% } %>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
@@ -44,7 +54,7 @@
       } else if(i > 0) {
         int sub = cate.getDeft() - listCate.get(i - 1).getDeft() ;
         if(sub == 0) {%>
-          <div style="padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
+          <div style="padding-left: 30px ; margin-top: 10px; display: none;" id="FAQViewChild$i">
     <%
           for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
             <div style="margin: 5px 0px 5px 0px ;">
@@ -60,15 +70,23 @@
 	    				title = FAQUtils.getTitle(title) ; 
 	    				categoryName = FAQUtils.getSubString(categoryName, 50);
 	    			 %>
-	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
+	    			<div id="FAQCate$i" style="float: left">
+	    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+	    					$categoryName
+	    				</a>
+	    			</div>
 	    			<% } else { %>
-	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
+	    			<div id="FAQCate$i" style="float: left">
+	    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+	    					$categoryName
+	    				</a>
+	    			</div>
 	    			<% } %>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
     <%
         } else if(sub > 0) {%>
-          <div style="padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
+          <div style="padding-left: 30px ; margin-top: 10px; display: none;" id="FAQViewChild$i">
           <div style="margin: 5px 0px 5px 0px ;">
 	    			<div class="Icon FAQCategoryViewMove"><span></span></div>
 	    			<% 
@@ -77,15 +95,23 @@
 	    				title = FAQUtils.getTitle(title) ;  
 	    				categoryName = FAQUtils.getSubString(categoryName, 50);
 	    			 %>
-	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
+	    			<div id="FAQCate$i" style="float: left">
+	    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+	    					$categoryName
+	    				</a>
+	    			</div>
 	    			<% } else { %>
-	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
+	    			<div id="FAQCate$i" style="float: left">
+	    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+	    					$categoryName
+	    				</a>
+	    			</div>
 	    			<% } %>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
     <%
         } else {%>
-          <div style="padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
+          <div style="padding-left: 30px ; margin-top: 10px; display: none;" id="FAQViewChild$i">
      <%
           for(Question question : uicomponent.getQuestions(stackCateid.pop())) {
             stringBuffer.append( question.getQuestion()) ;%>
@@ -112,9 +138,17 @@
 	    				title = FAQUtils.getTitle(title) ; 
 	    				categoryName = FAQUtils.getSubString(categoryName, 50);
 	    			 %>
-	    			<div id="FAQCate$i" style="float: left"><a href="$link" title="$title">$categoryName</a></div>
+		    			<div id="FAQCate$i" style="float: left">
+		    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+		    					$categoryName
+		    				</a>
+		    			</div>
 	    			<% } else { %>
-	    			<div id="FAQCate$i" style="float: left"><a href="$link">$categoryName</a></div>
+	    			<div id="FAQCate$i" style="float: left">
+	    				<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+	    					$categoryName
+	    				</a>
+	    			</div>
 	    			<% } %>
 	    			<div style="clear: left;"><span></span></div>
 	    		</div>
@@ -124,7 +158,7 @@
       stackCateid.push(cate.getCategory().getId()) ;
       i ++ ;
     }%>
-    <div style="padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
+    <div style="padding-left: 30px ; margin-top: 10px; display: none;" id="FAQViewChild$i">
    	<%
     for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
       <div style="margin: 5px 0px 5px 0px ;">
@@ -144,7 +178,7 @@
     }
 		%>
 		</div>
-	   </div>
+</div>
 
 	
 

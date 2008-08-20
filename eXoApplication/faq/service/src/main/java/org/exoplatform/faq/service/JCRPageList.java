@@ -34,6 +34,8 @@ abstract public class JCRPageList {
   protected long availablePage_  = 1;
   protected long currentPage_ = 1 ;
   protected List<Question> currentListPage_ ;
+  protected List<Category> currentListCategory_;
+  protected List<FAQFormSearch> currentListResultSearch_ ;
   
   /**
    * Constructor set pagesize for JCRPageList, pagesize is number of objects per page
@@ -144,6 +146,28 @@ abstract public class JCRPageList {
     checkAndSetPage(page) ;
     populateCurrentPage(page, username) ;
     return currentListPage_ ;
+  }
+  
+  abstract protected void populateCurrentPageResultSearch(long page, String username) throws Exception   ;
+  
+  public List<FAQFormSearch> getPageResultSearch(long page, String username) throws Exception   {
+  	checkAndSetPage(page) ;
+  	populateCurrentPageResultSearch(page, username) ;
+  	return currentListResultSearch_ ;
+  }
+  abstract protected void populateCurrentPageCategoriesSearch(long page, String username) throws Exception   ;
+  
+  public List<Category> getPageResultCategoriesSearch(long page, String username) throws Exception   {
+  	checkAndSetPage(page) ;
+  	populateCurrentPageCategoriesSearch(page, username) ;
+  	return  currentListCategory_;
+  }
+  abstract protected void populateCurrentPageQuestionsSearch(long page, String username) throws Exception   ;
+  
+  public List<Question> getPageResultQuestionsSearch(long page, String username) throws Exception   {
+  	checkAndSetPage(page) ;
+  	populateCurrentPageQuestionsSearch(page, username) ;
+  	return currentListPage_ ;
   }
   
   /**

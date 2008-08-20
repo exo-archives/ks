@@ -24,11 +24,14 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
+import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
@@ -64,7 +67,13 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	private String response_ = "" ;
 	private String text_ = "";
 	private FAQSetting faqSetting_ = new FAQSetting() ;
-	public ResultSearchQuestion() throws Exception {}
+	public ResultSearchQuestion() throws Exception {
+		addChild(UIFAQPageIterator.class, null, LIST_RESULT_SEARCH) ;
+	}
+	
+	private String LIST_RESULT_SEARCH = "listResultQuestionsSearch";
+	private UIFAQPageIterator pageIterator ;
+	private JCRPageList pageList ;
 	
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() throws Exception {
@@ -74,6 +83,15 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
     faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
   	String currentUser = FAQUtils.getCurrentUser() ;
   	SessionProvider sProvider = FAQUtils.getSystemProvider() ;
+  	
+  	long pageSelected = pageIterator.getPageSelected();
+  	listQuestion_ = new ArrayList<Question>();
+  	try {
+  		listQuestion_.addAll(pageList.getPageResultQuestionsSearch(pageSelected, FAQUtils.getCurrentUser()));
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
+  	
   	if(language_.equals("English")) {
   		List<Question> listQuestionSearch = new ArrayList<Question>();
   		if(faqSetting_.getDisplayMode().equals("both")) {
@@ -158,6 +176,14 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
   
   public void setListQuestion(List<Question> listQuestion) {
     this.listQuestion_ = listQuestion ;
+    try {
+	    pageList = new QuestionPageList(listQuestion, listQuestion.size());
+	    pageList.setPageSize(5);
+	    pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+	    pageIterator.updatePageList(pageList);
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
   }
   
 	public void setContent(String question, String response, String text) {

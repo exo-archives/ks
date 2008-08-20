@@ -16,13 +16,17 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.JCRPageList;
+import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
+import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -50,15 +54,35 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 	private List<Category> listCategory = null ;
-	public ResultSearchCategory() throws Exception {}
+	private String LIST_RESULT_SEARCH = "listResultCategoriesSearch";
+	private UIFAQPageIterator pageIterator ;
+	private JCRPageList pageList ;
+	public ResultSearchCategory() throws Exception {
+		addChild(UIFAQPageIterator.class, null, LIST_RESULT_SEARCH) ;
+	}
 	
   @SuppressWarnings("unused")
   private List<Category> getListCategory(){
-    return this.listCategory ;
+  	long pageSelected = pageIterator.getPageSelected();
+  	listCategory = new ArrayList<Category>();
+  	try {
+	    listCategory.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
+    return listCategory ;
   }
   
   public void setListCategory(List<Category> listCategory) {
     this.listCategory = listCategory ;
+    try {
+	    pageList = new QuestionPageList(listCategory);
+	    pageList.setPageSize(5);
+	    pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+	    pageIterator.updatePageList(pageList);
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
   }
   
   public void activate() throws Exception {}
