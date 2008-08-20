@@ -110,23 +110,26 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 					for(Topic topic : uiForm.listTopic) {
 						if(topicMergeId.equals(topic.getId())) {continue ;}
-						JCRPageList pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), "", "", "", "") ;
-						List<Post> posts = pageList.getPage(0) ;
 						try {
+							JCRPageList pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), "", "", "", "") ;
+							List<Post> posts = pageList.getPage(0) ;
 							forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath) ;
 							forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId()) ;
 	          } catch (Exception e) {
 		          isMerge = false;
+		          break;
 	          }
 					}
-					topicMerge.setTopicName(topicMergeTitle) ;
-	        try {
-	        	List<Topic>list = new ArrayList<Topic>();
-	        	list.add(topicMerge) ;
-	          forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), list, 7) ;
-	        } catch (PathNotFoundException e) {
-	          isMerge = false;
-	        }
+					if(isMerge){
+						topicMerge.setTopicName(topicMergeTitle) ;
+		        try {
+		        	List<Topic>list = new ArrayList<Topic>();
+		        	list.add(topicMerge) ;
+		          forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), list, 7) ;
+		        } catch (PathNotFoundException e) {
+		          isMerge = false;
+		        }
+					}
 				} else {
 					isMerge = false;
 				}
@@ -134,15 +137,14 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIMergeTopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
         	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        	return ;
         }
-        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
-				forumPortlet.cancelAction() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 			} else {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIMergeTopicForm.msg.checkEmptyTitle", args, ApplicationMessage.WARNING)) ;
 			}
+			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
+			forumPortlet.cancelAction() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}
 	}
 	
