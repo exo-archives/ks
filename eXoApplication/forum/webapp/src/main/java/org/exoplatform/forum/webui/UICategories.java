@@ -79,7 +79,7 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings({ "deprecation", "unused" })
-  private UserProfile getUserProfile() {
+  private UserProfile getUserProfile() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		return this.userProfile ;
 	}

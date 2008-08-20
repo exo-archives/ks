@@ -54,7 +54,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() {
+  private UserProfile getUserProfile() throws Exception {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
   

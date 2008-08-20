@@ -94,7 +94,7 @@ public class UISearchForm extends UIForm implements UISelector {
 	
 	private UserProfile userProfile = null;
 	
-	public void setUserProfile(UserProfile userProfile) {
+	public void setUserProfile(UserProfile userProfile) throws Exception {
 		try {
 			this.userProfile = userProfile ;
     } catch (Exception e) {

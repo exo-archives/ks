@@ -101,7 +101,7 @@ public class UIForumLinks extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private void setForumLinks() {
+  private void setForumLinks() throws Exception {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;

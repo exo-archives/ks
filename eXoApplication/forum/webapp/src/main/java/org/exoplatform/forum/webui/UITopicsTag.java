@@ -77,7 +77,7 @@ public class UITopicsTag extends UIForm {
 		addChild(UIForumPageIterator.class, null, "TagPageIterator") ;
 	}
 	
-	public void setIdTag(String tagId) {
+	public void setIdTag(String tagId) throws Exception {
 		this.tagId = tagId ;
 		this.isUpdateTag = true ;
 		this.isUpdateTopicTag = true ;

@@ -91,7 +91,7 @@ public class UICategory extends UIForm	{
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 	}
 	
-	private UserProfile getUserProfile() {
+	private UserProfile getUserProfile() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		return this.userProfile ;
 	}
