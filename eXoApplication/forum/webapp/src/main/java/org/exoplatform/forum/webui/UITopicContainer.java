@@ -843,7 +843,11 @@ public class UITopicContainer extends UIForm {
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(topics.size() > 0) {
 				for(Topic topic : topics) {
-					uiTopicContainer.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic.getId()) ;
+					try{
+						uiTopicContainer.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic.getId()) ;
+					}catch(Exception e){
+						e.printStackTrace();
+					}
 				}
 			} else if (topics.size() == 0){
 				Object[] args = { };
