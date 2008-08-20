@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.webui.popup.UIForumAdministrationForm;
 import org.exoplatform.forum.webui.popup.UIListTopicOld;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
