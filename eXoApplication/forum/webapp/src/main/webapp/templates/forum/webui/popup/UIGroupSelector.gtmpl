@@ -24,16 +24,19 @@
       <div class="OverflowContainer">
 	      <%                
 	      boolean even = true ;
+	      String key = "";
 	     if(uicomponent.getCurrentGroup() != null) {
 		      for(user in uicomponent.getList()){
 		        String rowCssClass = "OddRow" ;
 		        if(even) rowCssClass = "EvenRow" ;  
 		        even = !even ;
-						if (uicomponent.isSelectGroup()) {
-		        	key = uicomponent.getCurrentGroup().getId() +  "/" + user ;
-		       	} else if (uicomponent.isSelectUser()) {
-		       		key = user ;
-		       	}      
+						if(uicomponent.isSelectMemberShip()){ 
+		        		 key = user + ":" +  uicomponent.getCurrentGroup().getId() ;
+		        } else if(uicomponent.isSelectUser()){ 
+		        	key = user ;
+		        } else if(uicomponent.isSelectGroup()){ 
+		        	key = uicomponent.getCurrentGroup().getId()+"/"+user ;
+		        } 
 	      %>
 			      <div class="$rowCssClass" style="while-space: normal;">
 			        <div class="ItemIcon" style="width: 10px; float: left;"><span></span></div>
