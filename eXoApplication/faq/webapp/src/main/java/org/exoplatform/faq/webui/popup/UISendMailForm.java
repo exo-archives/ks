@@ -104,10 +104,16 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
    if(language.equals("")) language = question.getLanguage() ;
     @SuppressWarnings("unused")
     String email = "" ;
+    String name = "" ;
     ContactService contactService = getApplicationComponent(ContactService.class) ;
     if(FAQUtils.getCurrentUser() != null){
 		  Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
 		  		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
+		  try {
+      	name = contact.getFullName();
+      } catch (NullPointerException e) {
+      	name = "" ;
+      }
 		  try {
 		  	email = contact.getEmailAddress() ;
 		  } catch (NullPointerException e) {
@@ -133,28 +139,30 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
     }
     
-    addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, null)) ;
+    addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, name)) ;
     addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email)) ;
     addChild(new UIFormStringInput(FILED_TO, FILED_TO, null)) ;
     addChild(new UIFormStringInput(ADD_CC, ADD_CC, null)) ;
     addChild(new UIFormStringInput(ADD_BCC, ADD_BCC, null)) ;
-    addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title"))) ;
     UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, getListLanguageToSendFriend()) ;
     questionLanguages.setSelectedValues(new String[]{language}) ;
     questionLanguages.setOnChange("ChangeLanguage") ;
     addChild(questionLanguages) ;
     String content = "" ;
+    String contenQuestion = "" ;
     for(QuestionLanguage questionLangua : listQuestionLanguage) {
       if(questionLangua.getLanguage().equals(language)) {
+       contenQuestion =  questionLangua.getQuestion() ;
      	 String response = questionLangua.getResponse() ;
         if(response.equals(" ")) content =this.getLabel("change-content1") + this.getLabel("change-content2")
-        														+"<p><b>" + this.getLabel( "Question") + "</b> "+ questionLangua.getQuestion() + "</p>";
+        														+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>";
         else 
         	content =this.getLabel("change-content1") + this.getLabel("change-content2")
-        								+"<p><b>" + this.getLabel( "Question") + "</b> "+ questionLangua.getQuestion() + "</p>" 
+        								+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>" 
         								+"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>" ;
       }
     }
+    addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title")+ contenQuestion)) ;
     addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, null, content, true)) ;
 	}
 

@@ -91,6 +91,9 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
   
   public void setFAQSetting(FAQSetting faqSetting){
   	this.faqSetting_ = faqSetting;
+  	String orderType = faqSetting.getOrderType() ;
+  	if(orderType.equals("asc")) faqSetting.setOrderType("desc") ;
+  	else faqSetting.setOrderType("asc") ;
   }
   
   public void setListCate() throws Exception {
@@ -121,6 +124,9 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
         }
       }
     }
+    String orderType = faqSetting_.getOrderType() ;
+  	if(orderType.equals("asc")) faqSetting_.setOrderType("desc") ;
+  	else faqSetting_.setOrderType("asc") ;
   }
 	
   @SuppressWarnings("unused")

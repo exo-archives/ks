@@ -17,11 +17,11 @@
 								title = FAQUtils.getTitle(title) ; 
 								namePath = FAQUtils.getSubString(namePath,30);
 				%>
-								<a href="$link" class="Selected" title="$title">$namePath >></a>
+								<a href="$link" class="Selected" title="$title">$namePath</a>
 							<% } else { %>
-								<a href="$link" class="Selected" >$namePath >></a>
+								<a href="$link" class="Selected" >$namePath</a>
 							<% } %>
-					<div class="RightArrowIcon"><span></span></div>
+							<div class="RightArrowIcon"><span></span></div>
 				 <% } else {
 				 			if(namePath.length() > 30) {
 								title = namePath ;

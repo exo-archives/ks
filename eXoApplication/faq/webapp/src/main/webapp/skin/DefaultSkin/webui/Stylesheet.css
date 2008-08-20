@@ -6,25 +6,35 @@
   border: 1px solid #b7b7b7;
 }
 
-.UIFAQPortlet .UIBreadcumbs {
-  padding:0px ;
-}
+/******************************************** UIBreadcumbs ****************************************/
 
-.UIFAQPortlet .UIBreadcumbs .OpenIcon {
+.UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar .OpenIcon {
   float: left;
   background: url('background/FAQPortlet.gif') no-repeat left -243px;
   width: 16px; height: 14px;
   margin: 5px 8px 0px 8px;
 }
 
-.UIFAQPortlet .UIBreadcumbs .Selected {
-  float: left;
-  font-weight: boldd;
+.UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar a.Selected {
+	float: left;
+	color: #1e1f21;
+	font-weight: bold;
+	padding: 0px 5px;
+	line-height: 25px;
 }
 
-.UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar {
+.UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar .Selected {
+	float: left;
+	color: #1e1f21;	
+	padding: 0px 5px;
 	line-height: 25px;
-	overflow: auto;
+}
+
+.UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar .RightArrowIcon {
+	float: left;
+	background: url('background/IconBreadcumbs15x12.gif') no-repeat ;
+	width: 15px; height: 12px;	
+	margin: 8px 0px 0px 0px;
 }
 
 .UIFAQPortlet .UICategoriesSummary {

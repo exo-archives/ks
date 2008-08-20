@@ -16,9 +16,12 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.exoplatform.contact.service.Contact;
+import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -52,9 +55,24 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	private boolean isUpdate = false ;
 	private static int order ;
 	public UIWatchForm() throws Exception {
-  	userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
+		List<String> list = new ArrayList<String>() ;
+    ContactService contactService = getApplicationComponent(ContactService.class) ;
+		String user = FAQUtils.getCurrentUser() ;
+		userName = new UIFormStringInput(USER_NAME, USER_NAME, null) ;
+		if(!FAQUtils.isFieldEmpty(user)) {
+			userName.setValue(user) ;
+			userName.setEditable(false) ;
+			Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
+		  		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
+		  String email = contact.getEmailAddress() ;
+		  if(!FAQUtils.isFieldEmpty(email)) {
+		  	list.add(email);
+		  }
+		}
+	  list.add("");
   	emailAddress = new UIFormMultiValueInputSet(EMAIL_ADDRESS, EMAIL_ADDRESS );
 		emailAddress.setType(UIFormStringInput.class) ;
+		emailAddress.setValue(list) ;
   	addUIFormInput(userName);
 		addUIFormInput(emailAddress);
   }

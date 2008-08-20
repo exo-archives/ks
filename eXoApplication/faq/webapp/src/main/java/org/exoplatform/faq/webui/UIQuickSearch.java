@@ -80,7 +80,7 @@ public class UIQuickSearch  extends UIForm {
 				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
 				popupContainer.setId("ResultQuickSearch") ;
 				result.setFormSearchs(list);
-				formStringInput.setValue("") ;
+//				formStringInput.setValue("") ;
 			} else {
 				uiApp.addMessage(new ApplicationMessage("UIQuickSeach.msg.no-text-to-search", null)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
