@@ -1371,6 +1371,7 @@ public class JCRDataStorage{
 		if (isNew) {
 			long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
 			long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong() + numberAttach;
+			if(topicPostCount == 0){topicNode.setProperty("exo:postCount", topicPostCount);}
 			// set InfoPost for Forum
 			long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1;
 			boolean isSetLastPost = !topicNode.getProperty("exo:isClosed").getBoolean();
@@ -1384,8 +1385,8 @@ public class JCRDataStorage{
 					if(!post.getIsHidden()) {
 						forumNode.setProperty("exo:postCount", forumPostCount);
 						
-						topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 						topicNode.setProperty("exo:postCount", topicPostCount);
+						topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 						topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
 						topicNode.setProperty("exo:lastPostBy", post.getOwner());
 						forumNode.setProperty("exo:postCount", forumPostCount);

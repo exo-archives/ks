@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.dom4j.util.PerThreadSingleton;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
