@@ -53,7 +53,7 @@
 					<a href="<%=uicomponent.event("Rss");%>" >
 					<%}%>
 						<div class="SeparatorLine">
-							<div class="RSSIcon" ><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></div>	
+							<div class="RSSIcon_" style="height: 25px;" ><%//=_ctx.appRes("UIBreadcumbs.label.Rss");%></div>	
 						</div>	
 					</a>
 					<%if(t == 2 && !ForumSessionUtils.isAnonim()){%>
