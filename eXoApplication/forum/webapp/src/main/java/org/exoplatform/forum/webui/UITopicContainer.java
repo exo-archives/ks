@@ -845,8 +845,7 @@ public class UITopicContainer extends UIForm {
 				for(Topic topic : topics) {
 					uiTopicContainer.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic.getId()) ;
 				}
-			} 
-			if(topics.size() == 0){
+			} else if (topics.size() == 0){
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", args, ApplicationMessage.WARNING)) ;
 			}

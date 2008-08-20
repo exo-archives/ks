@@ -26,9 +26,9 @@
 								<th>Post name</th>
 								<th width="120px">Created Date</th>
 								<%if(isAdmin){ %>
-								<th width="120px">IP Logging</th>
+									<th width="120px">IP Logging</th>
+									<th width="40px">Delete</th>
 								<%} %>
-								<th width="40px">Delete</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -58,18 +58,18 @@
 										<div class="RatingInfoContainer">$createdDate</div>
 									</td>
 									<%if(isAdmin){ %>
-									<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
+										<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
+										<td class="Tdbox" align="center" style="padding-left:5px;">
+											<a href="<%=uicomponent.event("DeletePostLink", post.getId());%>">
+												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
+											</a>
+										</td>
 									<%} %>
-									<td class="Tdbox" align="center" style="padding-left:5px;">
-										<a href="<%=uicomponent.event("DeletePostLink", post.getId());%>">
-											<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
-										</a>
-									</td>
 					 			</tr>
 						 	<% i = i + 1;}
 						 		} else {
 						 		%>
-						 		<tr>
+						 			<tr>
 						 				<td colspan="3" align="center">
 						 					<div style="margin: 5px 0px 10px 0px"><b>No Posts</b></div>
 						 				</td>
