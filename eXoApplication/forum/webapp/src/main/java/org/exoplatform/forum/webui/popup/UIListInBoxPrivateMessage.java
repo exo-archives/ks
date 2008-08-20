@@ -58,7 +58,7 @@ public class UIListInBoxPrivateMessage extends UIContainer{
   	addChild(UIForumPageIterator.class, null, "PageListInBoxMessage") ;
   }
   @SuppressWarnings("unused")
-  private UserProfile getUserProfile(){
+  private UserProfile getUserProfile() throws Exception{
   	if(userProfile == null) {
   		userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
   	}

@@ -75,7 +75,7 @@ public class UITopicPoll extends UIForm	{
 	}
 
 	@SuppressWarnings("unused")
-  private UserProfile getOption() {
+  private UserProfile getOption() throws Exception {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
 	
