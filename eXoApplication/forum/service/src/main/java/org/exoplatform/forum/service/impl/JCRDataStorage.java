@@ -860,22 +860,14 @@ public class JCRDataStorage{
 			StringBuffer stringBuffer = new StringBuffer() ;
 			stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:topic)[@exo:owner='")
 									.append(userName);
-			if(!isMod) stringBuffer.append("' and @exo:isClosed='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true']") ;
+			if(!isMod) stringBuffer.append("' and @exo:isClosed='false' and @exo:isWaiting='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true']") ;
 			else stringBuffer.append("']") ;
 			String pathQuery =	stringBuffer.toString();
+//			System.out.println("\n\npathQuery: " + pathQuery);
 			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes(); 
 			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
-//			Node userProfileNode = getUserProfileNode(sProvider) ;
-//			try {
-//				Node userNode = userProfileNode.getNode(userName) ;
-//				if(userNode.hasProperty("exo:totalTopic")) {
-//					userNode.setProperty("exo:totalTopic", pagelist.getAvailable());
-//					userProfileNode.getSession().save() ;
-//				}
-//			} catch (PathNotFoundException e) {
-//			}
 			return pagelist ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
@@ -1199,6 +1191,7 @@ public class JCRDataStorage{
 				pathQuery.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:post)[@exo:owner='").append(userName);
 			if(isMod) pathQuery.append("']") ; 
 			else pathQuery.append("' and @exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true']");
+//			System.out.println("\n\n" + pathQuery.toString());
 			Query query = qm.createQuery(pathQuery.toString() , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes();
