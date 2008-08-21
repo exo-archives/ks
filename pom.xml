@@ -20,9 +20,10 @@
     
     <module>eXoApplication/forum/webapp</module>
     <module>eXoApplication/forum/service</module>
+   
+    <!-- alternative providers for forum (requires CS) -->
+    <module>component/providers</module>
     
-    <!--module>eXoApplication/content/webapp</module>
-    <module>eXoApplication/content/service</module-->
   </modules>
 
   <build>
