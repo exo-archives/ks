@@ -692,7 +692,7 @@
 							<% if(checked > 0 && canEdit) {%>
 								<div class="PostViewTitle" style="float: left;">
 									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
-									<div class="PostTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>Posted: $createdDate </div>
+									<div class="PostTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </div>
 								</div>
 								<div class="CheckPost" style="float: right;">
 									<div class="IPIcon" title="IP: <%=post.getRemoteAddr();%>"><span></span></div>
