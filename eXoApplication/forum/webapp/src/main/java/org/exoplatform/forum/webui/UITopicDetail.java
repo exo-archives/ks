@@ -154,9 +154,6 @@ public class UITopicDetail extends UIForm {
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, Contact> mapContact = new HashMap<String, Contact>();
 //replace when portal fix bug show image
-	private boolean isRefreshed = true ;
-	public void setRefreshed(boolean b) { isRefreshed = b ; }
-	public boolean isRefreshed() { return isRefreshed ; }
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
@@ -185,7 +182,6 @@ public class UITopicDetail extends UIForm {
 		this.topicId = topicId ;
 		this.viewTopic = viewTopic ;
 		this.isUpdatePageList = true ;
-		isRefreshed = true ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
 		String userName = this.userProfile.getUserId() ;
@@ -202,7 +198,6 @@ public class UITopicDetail extends UIForm {
 		this.topicId = topic.getId() ;
 		this.viewTopic = viewTopic ;
 		this.isUpdatePageList = true ;
-		isRefreshed = true ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
 		if(this.userProfile == null) this.userProfile = new UserProfile();
@@ -236,7 +231,6 @@ public class UITopicDetail extends UIForm {
 		this.pageSelect = numberPage ;
 		this.isGopage = true ;
 		this.isEditTopic = false ;
-		isRefreshed = true ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
 		String userName = this.userProfile.getUserId() ;
@@ -1288,7 +1282,6 @@ public class UITopicDetail extends UIForm {
 				} else {
 					topicDetail.IdPostView = "true";
 				}
-				topicDetail.isRefreshed = true ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			}else {
 				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
