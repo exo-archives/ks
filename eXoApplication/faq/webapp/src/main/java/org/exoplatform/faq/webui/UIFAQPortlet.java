@@ -20,16 +20,13 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.faq.service.FAQServiceUtils;
-import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UISettingForm;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
@@ -52,6 +49,12 @@ public class UIFAQPortlet extends UIPortletApplication {
     uiPopup.setId("UIFAQPopupAction") ;
     uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
   }
+  
+  public void processDecode(WebuiRequestContext context) throws Exception {
+		String objId = context.getRequestParameter(OBJECTID) ; 
+//		System.out.println("\n\n objectId:"+objId);
+	  super.processDecode(context);
+	}
   
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
     //context.getJavascriptManager().importJavascript("eXo.ecm.ECMUtils","/ecm/javascript/");

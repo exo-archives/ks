@@ -203,6 +203,7 @@ public class JCRDataStorage {
       			message.setSubject("FAQ Watching Category Notification! ");
       			message.setMessageBody("<p>Hi you,</p>" 
       					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
+//      					+"<p>We would like to inform : http://localhost:8080/portal/private/classic/&objectId=" +question.getCategoryId()
       					+"<p>We would like to inform that Category '" + cate.getProperty("exo:name").getString() 
       					+"' has been added new Question with content below: </p>"
       					+"<p>" + question.getQuestion() + "<p>"
