@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration>
 	
-	<component>
+ <component>
     <key>org.exoplatform.forum.service.ForumService</key>
     <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
+  </component>    
+
+ <!--
+   Choose a provider for contact information of forum users.
+   Common options are: 
+    - DefaultContactProvider : takes a mix of attributes in profile of portal user
+    - BusinessProfileContactProvider : uses business profile of portal user
+    - PersonalProfileContactProvider : uses business profile of portal user
+    - ContactServiceContactProvider (only with eXo CS) : uses CS contact information instead of portal profile
+  -->
+ <component>
+    <key>org.exoplatform.forum.service.user.ContactProvider</key>
+    <type>org.exoplatform.forum.service.user.DefaultContactProvider</type>
   </component>    
   
   <external-component-plugins>

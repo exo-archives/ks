@@ -25,8 +25,7 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactAttachment;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -42,6 +41,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.popup.UIMovePostForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
@@ -152,7 +152,7 @@ public class UITopicDetail extends UIForm {
 	private boolean isModeratePost = false ;
 	private boolean isMod = false ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
-	private Map<String, Contact> mapContact = new HashMap<String, Contact>();
+	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 //replace when portal fix bug show image
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
@@ -349,8 +349,8 @@ public class UITopicDetail extends UIForm {
 	}
 
 		@SuppressWarnings("unused")
-	private Contact getPersonalContact(String userId) throws Exception {
-			Contact contact ;
+	private ForumContact getPersonalContact(String userId) throws Exception {
+			ForumContact contact ;
 		if(mapContact.containsKey(userId)){
 			contact = mapContact.get(userId) ;
 		} else {
@@ -358,23 +358,27 @@ public class UITopicDetail extends UIForm {
 			mapContact.put(userId, contact) ;
 		}
 		if(contact == null) {
-			contact = new Contact() ;
-			contact.setId(userId) ;
+			contact = new ForumContact() ;
 		}
 		return contact ;
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(Contact contact) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		try {
-			ContactAttachment attachment = contact.getAttachment() ; 
-			InputStream input = attachment.getInputStream() ;
-			String fileName = attachment.getFileName() ;
-			return ForumSessionUtils.getFileSource(input, fileName, dservice);
-		} catch (NullPointerException e) {
-			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-		}
+	private String getAvatarUrl(ForumContact contact) throws Exception {
+//		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+//		try {
+//			ContactAttachment attachment = contact.getAttachment() ; 
+//			InputStream input = attachment.getInputStream() ;
+//			String fileName = attachment.getFileName() ;
+//			return ForumSessionUtils.getFileSource(input, fileName, dservice);
+//		} catch (NullPointerException e) {
+//			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+//		}
+	  if (contact.getAvatarUrl() == null ) {
+	    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+	  } else {
+	    return contact.getAvatarUrl();
+	  }
 	}
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
@@ -1141,7 +1145,7 @@ public class UITopicDetail extends UIForm {
 			}
 			viewUserProfile.setUserProfile(userProfile) ;
 			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
-			Contact contact = null ;
+			ForumContact contact = null ;
 			if(topicDetail.mapContact.containsKey(userId)) {
 				contact = topicDetail.mapContact.get(userId) ;
 			}

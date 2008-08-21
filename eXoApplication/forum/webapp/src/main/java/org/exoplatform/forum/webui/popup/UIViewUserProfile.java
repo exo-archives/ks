@@ -18,13 +18,12 @@ package org.exoplatform.forum.webui.popup;
 
 import java.io.InputStream;
 
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactAttachment;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -52,17 +51,17 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	
 	private UserProfile userProfile ;
 	private UserProfile userProfileLogin ;
-	private Contact contact = null;
+	private ForumContact contact = null;
 	
 	
-	public Contact getContact(String userId) throws Exception {
+	public ForumContact getContact(String userId) throws Exception {
 		if(contact == null) {
 			contact = getPersonalContact(userId) ;
 		}
   	return contact;
   }
 
-	public void setContact(Contact contact) {
+	public void setContact(ForumContact contact) {
   	this.contact = contact;
   }
 
@@ -92,26 +91,30 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return this.userProfileLogin ;
 	}
 	
-  private Contact getPersonalContact(String userId) throws Exception {
-		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+  private ForumContact getPersonalContact(String userId) throws Exception {
+		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new Contact() ;
-			contact.setId(userId) ;
+			contact = new ForumContact() ;
 		}
 		return contact ;
 	}
 	
 	@SuppressWarnings("unused")
-  private String getAvatarUrl(Contact contact) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		try {
-			ContactAttachment attachment = contact.getAttachment() ; 
-    	InputStream input = attachment.getInputStream() ;
-    	String fileName = attachment.getFileName() ;
-    	return ForumSessionUtils.getFileSource(input, fileName, dservice);
-    } catch (NullPointerException e) {
-	    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-    }
+  private String getAvatarUrl(ForumContact contact) throws Exception {
+//  DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+//  try {
+//    ContactAttachment attachment = contact.getAttachment() ; 
+//    InputStream input = attachment.getInputStream() ;
+//    String fileName = attachment.getFileName() ;
+//    return ForumSessionUtils.getFileSource(input, fileName, dservice);
+//  } catch (NullPointerException e) {
+//    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+//  }
+  if (contact.getAvatarUrl() == null ) {
+    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+  } else {
+    return contact.getAvatarUrl();
+  }
 	}
 	
 	@SuppressWarnings("unused")

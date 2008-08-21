@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
-import org.exoplatform.contact.service.Contact;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -34,6 +33,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
@@ -409,7 +409,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setLastPostDate(new Date());
 				topicNew.setDescription(message);
 				if(whenNewPost){
-					Contact contact = ForumSessionUtils.getPersonalContact(userName);
+					ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
 					topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
 				} else {
 					topicNew.setIsNotifyWhenAddPost("");

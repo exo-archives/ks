@@ -21,8 +21,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -169,12 +167,7 @@ public class ForumSessionUtils {
   	return erroUser;
   }
   
-  public static Contact getPersonalContact(String userId) throws Exception {
-  	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;
-	  return contactService.getPersonalContact(userId);
-  }
-  
-  public static ForumContact _getPersonalContact(String userId) throws Exception {
+  public static ForumContact getPersonalContact(String userId) throws Exception {
     ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
     return provider.getForumContact(userId);
   }

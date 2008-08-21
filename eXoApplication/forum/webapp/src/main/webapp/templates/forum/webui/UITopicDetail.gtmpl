@@ -10,7 +10,7 @@
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
-	import org.exoplatform.contact.service.Contact ;
+	import org.exoplatform.forum.service.user.ForumContact;
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
@@ -531,15 +531,15 @@
 			String shortDateFormat = userProfile.getShortDateFormat() ;
 			for(post in posts) {
 				String owner = post.getOwner() ;
-				Contact contact = uiform.getPersonalContact(owner) ;
+				ForumContact contact = uiform.getPersonalContact(owner) ;
 				String avatarUrl = "" ;
 				String location = "" ;
 				boolean isCity = false;
 				if(contact != null) {
-					if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
-					if(contact.getHomeCountry() != null) {
+					if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
+					if(contact.getCountry() != null) {
 						if(isCity)location = location + ", ";
-						location = location + contact.getHomeCountry() ;
+						location = location + contact.getCountry() ;
 					}
 				}
 				UserProfile userInfo = uicomponent.getUserInfo(owner) ;

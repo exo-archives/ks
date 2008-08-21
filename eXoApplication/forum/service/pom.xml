@@ -43,5 +43,6 @@
       <artifactId>exo.cs.eXoApplication.mail.service</artifactId>
       <version>${org.exoplatform.cs.version}</version>      
     </dependency>
+
   </dependencies>
 </project>

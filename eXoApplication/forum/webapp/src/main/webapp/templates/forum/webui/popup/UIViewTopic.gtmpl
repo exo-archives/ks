@@ -1,7 +1,7 @@
 <%
 	import org.exoplatform.forum.webui.UIForumPageIterator;  
 	import org.exoplatform.forum.service.Post;
-	import org.exoplatform.contact.service.Contact;
+	import org.exoplatform.forum.service.user.ForumContact;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.ForumSessionUtils;
@@ -30,14 +30,14 @@
 		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 		for(post in posts) {
 			String owner = post.getOwner() ;
-			Contact contact = uiform.getPersonalContact(owner) ;
+			ForumContact contact = uiform.getPersonalContact(owner) ;
 			String avatarUrl = uiform.getAvatarUrl(contact) ;
 			String location = "" ;
 			boolean isCity = false;
-			if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
-			if(contact.getHomeCountry() != null) {
+			if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
+			if(contact.getCountry() != null) {
 				if(isCity)location = location + ", ";
-				location = location + contact.getHomeCountry() ;
+				location = location + contact.getCountry() ;
 			}
 			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 			String classIconPost = post.getIcon() ;
