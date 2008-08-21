@@ -9,10 +9,10 @@
  <!--
    Choose a provider for contact information of forum users.
    Common options are: 
-    - DefaultContactProvider : takes a mix of attributes in profile of portal user
-    - BusinessProfileContactProvider : uses business profile of portal user
-    - PersonalProfileContactProvider : uses business profile of portal user
-    - ContactServiceContactProvider (only with eXo CS) : uses CS contact information instead of portal profile
+    - org.exoplatform.forum.service.user.DefaultContactProvider : takes a mix of attributes in profile of portal user
+    - org.exoplatform.forum.service.user.BusinessProfileContactProvider : uses business profile of portal user
+    - org.exoplatform.forum.service.user.PersonalProfileContactProvider : uses business profile of portal user
+    - org.exoplatform.forum.provider.cs.CSContactProvider (only with eXo CS) : uses CS contact information instead of portal profile
   -->
  <component>
     <key>org.exoplatform.forum.service.user.ContactProvider</key>

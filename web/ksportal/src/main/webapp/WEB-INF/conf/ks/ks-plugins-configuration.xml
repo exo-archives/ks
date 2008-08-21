@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration>
+
+  <!-- Uncomment the following block to use CS contact for forum user profile -->
+  <!--component>
+    <key>org.exoplatform.forum.service.user.ContactProvider</key>
+    <type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
+  </componen-->t>    
+
 	<external-component-plugins>
   	<target-component>org.exoplatform.faq.service.FAQService</target-component>  	
 	  <component-plugin>
@@ -37,4 +44,6 @@
 	    </init-params>
 	  </component-plugin>	   
   </external-component-plugins>   
+
+  
 </configuration>
