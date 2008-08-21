@@ -5,7 +5,7 @@
   <!--component>
     <key>org.exoplatform.forum.service.user.ContactProvider</key>
     <type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
-  </componen-->t>    
+  </componen-->   
 
 	<external-component-plugins>
   	<target-component>org.exoplatform.faq.service.FAQService</target-component>  	
