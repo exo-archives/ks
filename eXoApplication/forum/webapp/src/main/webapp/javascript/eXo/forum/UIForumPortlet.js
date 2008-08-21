@@ -472,4 +472,15 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	}
 };
 
+UIForumPortlet.prototype.ReloadImage = function() {
+	if(eXo.core.Browser.isIE6()) {
+		var aImage = document.getElementsByTagName("img");
+		var length = aImage.length;
+		for (var i = 0; i < length; ++ i) {
+			aImage[i].src = aImage[i].src; 
+		}
+		setTimeout(eXo.forum.UIForumPortlet.ReloadImage, 2000);
+	}
+} 
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

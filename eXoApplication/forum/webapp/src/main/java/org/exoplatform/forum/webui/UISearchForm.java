@@ -80,8 +80,8 @@ public class UISearchForm extends UIForm implements UISelector {
 	final static	private String FIELD_TOPICCOUNTMAX_INPUT = "TopicCountMax" ;
 	final static	private String FIELD_POSTCOUNTMIN_INPUT = "PostCountMin" ;
 	final static	private String FIELD_POSTCOUNTMAX_INPUT = "PostCountMax" ;
-	final static	private String FIELD_VIEWCOUNTMAX_INPUT = "ViewCountMin" ;
-	final static	private String FIELD_VIEWCOUNTMIN_INPUT = "ViewCountMax" ;
+	final static	private String FIELD_VIEWCOUNTMIN_INPUT = "ViewCountMin" ;
+	final static	private String FIELD_VIEWCOUNTMAX_INPUT = "ViewCountMax" ;
 	final static	private String FIELD_ISLOCK_SELECTBOX = "IsLock" ;
 	final static	private String FIELD_ISCLOSED_SELECTBOX = "IsClosed" ;
 	final static	private String FIELD_MODERATOR_INPUT = "Moderator" ;

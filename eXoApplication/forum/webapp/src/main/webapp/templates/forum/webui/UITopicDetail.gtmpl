@@ -17,10 +17,8 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.reSizeImages();");
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');
-	if(uicomponent.isRefreshed()) {
-		uicomponent.setRefreshed(false);
-		jsmanager.addJavascript("if(eXo.core.Browser.isIE6()) {top.location.reload();};") ;
-	}
+	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
+
 	String uiformId = uicomponent.getName() ;
 	boolean isNull = false ;
 	boolean isShowMenu;

@@ -79,7 +79,7 @@
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
 							<% if(isLock || !isShowMenu || hasCreadTopic) { %>
-									<div class="IconButton LockIcon" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span>New Thread</div>
+									<div class="IconButton LockIcon" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddTopic")%>">
 									<div class="IconButton AddTheradIcon"><span class="LabelIcon"></span>
@@ -568,7 +568,7 @@
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
 							<% if(isLock || !isShowMenu || hasCreadTopic) { %>
-								<div class="IconButton LockIcon" title="Forum is Closed for Posting"><span class="LockLabel"></span>New Thread</div>
+								<div class="IconButton LockIcon" title="Forum is Closed for Posting"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddTopic")%>">
 									<div class="IconButton AddTheradIcon"><span class="LabelIcon"></span>
