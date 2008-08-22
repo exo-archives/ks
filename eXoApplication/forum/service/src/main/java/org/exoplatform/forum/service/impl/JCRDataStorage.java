@@ -2552,7 +2552,7 @@ public class JCRDataStorage{
 				}
 			}
 			queryString.append("]") ;
-			System.out.println("\n\npath: " + queryString.toString());
+//			System.out.println("\n\npath: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;

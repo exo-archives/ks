@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
@@ -59,20 +60,47 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String topicId ;
 	private List<Post> posts ;
+	private UserProfile userProfile ;
+	private List<Category> categories;
 	public UIMovePostForm() throws Exception {
 	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	public void updatePost(String topicId, List<Post> posts) {
+	public void updatePost(String topicId, List<Post> posts) throws Exception {
 		this.topicId = topicId ;
 		this.posts = posts ;
+		setCategories() ;
 	}
 	
+	public UserProfile getUserProfile() throws Exception {
+	  return this.userProfile ;
+  }
+	public void setUserProfile(UserProfile userProfile) throws Exception {
+	  this.userProfile = userProfile ;
+	  if(this.userProfile == null) {
+	  	this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+	  }
+  }
+	
+	private void setCategories() throws Exception {
+		this.categories = new ArrayList<Category>();
+		for (Category category : this.forumService.getCategories(ForumSessionUtils.getSystemProvider())) {
+			if(this.userProfile.getUserRole() == 1) {
+				if(!ForumUtils.isEmpty(category.getUserPrivate())){
+					String []list = ForumUtils.splitForForum(category.getUserPrivate()) ; 
+					if(!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
+						continue ;
+					}
+				}
+			}
+			categories.add(category) ;
+		}
+	}
 	@SuppressWarnings("unused")
 	private List<Category> getCategories() throws Exception {
-		return this.forumService.getCategories(ForumSessionUtils.getSystemProvider()) ;
+		return  this.categories;
 	}
 	
 	@SuppressWarnings("unused")
@@ -83,14 +111,33 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private List<Forum> getForums(String categoryId) throws Exception {
-		return this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "") ;
+		List<Forum> forums = new ArrayList<Forum>() ;
+		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
+			if(this.userProfile.getUserRole() == 1){
+				if(forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <=0){
+					if(forum.getIsClosed())continue ; 
+					if(forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())){
+						continue ;
+					}
+				}
+			}
+			forums.add(forum) ;
+		}
+		return forums ;
 	}
 
 	@SuppressWarnings("unused")
-	private List<Topic> getTopics(String categoryId, String forumId) throws Exception {
+	private List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
 		List<Topic> topics = new ArrayList<Topic>() ;
-		for(Topic topic : this.forumService.getTopics(ForumSessionUtils.getSystemProvider(), categoryId, forumId)) {
+		List<Topic> topics_ = this.forumService.getTopics(ForumSessionUtils.getSystemProvider(), categoryId, forumId) ;; 
+		for(Topic topic : topics_) {
 			if(topic.getId().equalsIgnoreCase(this.topicId)) continue ;
+			if(this.userProfile.getUserRole() == 1){
+				if(!isMode) {
+					if(!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting()) continue ;
+					if(topic.getCanPost().length > 0 && !ForumUtils.isStringInStrings(topic.getCanPost(), this.userProfile.getUserId())) continue ;
+				}
+			}
 			topics.add(topic) ;
 		}
 		return topics ;
