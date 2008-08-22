@@ -72,6 +72,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private boolean isCategoriesUpdate = true;
 	private boolean isForumUpdate = false;
+	private boolean isMode = false;
 	private String forumId = "";
 	private int id = 0 ;
 	public static final String FIELD_NEWFORUM_FORM = "newForum" ;
@@ -96,7 +97,12 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public static final String FIELD_TOPICABLE_MULTIVALUE = "Topicable" ;
 	
 	@SuppressWarnings("unchecked")
-	public UIForumForm() throws Exception {
+	public UIForumForm() throws Exception {}
+
+	public boolean isMode() {return isMode;}
+	public void setMode(boolean isMode) {this.isMode = isMode;}
+	
+	public void initForm() throws Exception {
 		List<Category> categorys = forumService.getCategories(ForumSessionUtils.getSystemProvider());
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		for (Category category :categorys) {
@@ -131,7 +137,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormTextAreaInput postable = new UIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE, FIELD_POSTABLE_MULTIVALUE, null);
 		UIFormTextAreaInput topicable = new UIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, null);
 		
-		UIFormCheckBoxInput checkWhenAddTopic = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
+		UIFormCheckBoxInput<Boolean> checkWhenAddTopic = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
 		
 		addUIFormInput(categoryId) ;
 		UIFormInputWithActions newForum = new UIFormInputWithActions(FIELD_NEWFORUM_FORM);
@@ -156,6 +162,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		List<ActionData> actions ;
 		ActionData ad ;int i ;
 		for (String fieldPermission : fieldPermissions) {
+			if(isMode && fieldPermission.equals(FIELD_MODERATOR_MULTIVALUE)) continue ;
 			actions = new ArrayList<ActionData>() ;
 			i = 0;
 			for(String string : strings) {
@@ -215,7 +222,10 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			moderationOptions.getUIFormCheckBoxInput(FIELD_MODERATETHREAD_CHECKBOX).setChecked(forum.getIsModerateTopic());
 			
 			UIFormInputWithActions forumPermission = this.getChildById(FIELD_FORUMPERMISSION_FORM);
-			forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getModerators()));
+			UIFormTextAreaInput areaInput = forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE);
+			areaInput.setValue(ForumUtils.unSplitForForum(forum.getModerators()));
+			areaInput.setEditable(!isMode) ;
+			areaInput.setEnable(!isMode) ;
 			forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getViewForumRole()));
 			forumPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getCreateTopicRole()));
 			forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getReplyTopicRole()));

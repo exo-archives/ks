@@ -16,12 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.io.InputStream;
-
 import org.exoplatform.contact.service.Contact;
 import org.exoplatform.contact.service.ContactAttachment;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;

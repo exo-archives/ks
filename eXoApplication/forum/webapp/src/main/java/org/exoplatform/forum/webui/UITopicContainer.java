@@ -17,9 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -42,7 +40,6 @@ import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
-import org.exoplatform.portal.webui.container.UIContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -119,6 +116,9 @@ public class UITopicContainer extends UIForm {
 	private String strOrderBy = "" ;
 	private boolean isLogin = false;
 	
+	public boolean isLogin() {return isLogin;}
+	public void setLogin(boolean isLogin) {this.isLogin = isLogin;}
+
 	public UITopicContainer() throws Exception {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
@@ -300,6 +300,15 @@ public class UITopicContainer extends UIForm {
 			UIFormStringInput formStringInput = uiTopicContainer.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
+				for (int i = 0; i < special.length(); i++) {
+		      char c = special.charAt(i);
+		      if(text.indexOf(c) >= 0) {
+		      	UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+						return ;
+		      }
+	      }
 				StringBuffer type = new StringBuffer();
 				if(uiTopicContainer.isModerator){ 
 					type.append("true,").append(Utils.TOPIC).append("/").append(Utils.POST);
@@ -458,6 +467,10 @@ public class UITopicContainer extends UIForm {
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null) ;
+			boolean isMode = false ;
+			if(uiTopicContainer.userProfile.getUserRole() == 1) isMode = true;
+			forumForm.setMode(isMode);
+			forumForm.initForm();
 			forumForm.setCategoryValue(uiTopicContainer.categoryId, false) ;
 			forumForm.setForumValue(forum, true);
 			forumForm.setForumUpdate(true) ;
@@ -791,6 +804,7 @@ public class UITopicContainer extends UIForm {
 			if(topics.size() > 0) {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIMoveTopicForm moveTopicForm = popupAction.createUIComponent(UIMoveTopicForm.class, null, null) ;
+				moveTopicForm.setUserProfile(uiTopicContainer.userProfile) ;
 				moveTopicForm.updateTopic(uiTopicContainer.forumId, topics, false);
 				popupAction.activate(moveTopicForm, 400, 420) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

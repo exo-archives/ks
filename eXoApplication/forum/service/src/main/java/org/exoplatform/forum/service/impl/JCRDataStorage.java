@@ -1386,6 +1386,8 @@ public class JCRDataStorage{
 					}
 					if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+					}else if(topicNode.getProperty("exo:isApproved").getBoolean()){
+						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
 					}
 				} else {
 					if (post.getIsApproved()) {
@@ -1407,6 +1409,8 @@ public class JCRDataStorage{
 						}
 					} else {
 						if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+						}else if(post.getIsApproved()){
 							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
 						}
 					}

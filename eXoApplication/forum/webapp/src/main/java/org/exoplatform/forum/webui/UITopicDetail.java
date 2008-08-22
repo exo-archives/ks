@@ -25,8 +25,6 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactAttachment;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -42,6 +40,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.popup.UIMovePostForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
@@ -152,7 +151,7 @@ public class UITopicDetail extends UIForm {
 	private boolean isModeratePost = false ;
 	private boolean isMod = false ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
-	private Map<String, Contact> mapContact = new HashMap<String, Contact>();
+	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 //replace when portal fix bug show image
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
@@ -349,8 +348,8 @@ public class UITopicDetail extends UIForm {
 	}
 
 		@SuppressWarnings("unused")
-	private Contact getPersonalContact(String userId) throws Exception {
-			Contact contact ;
+	private ForumContact getPersonalContact(String userId) throws Exception {
+			ForumContact contact ;
 		if(mapContact.containsKey(userId)){
 			contact = mapContact.get(userId) ;
 		} else {
@@ -358,23 +357,27 @@ public class UITopicDetail extends UIForm {
 			mapContact.put(userId, contact) ;
 		}
 		if(contact == null) {
-			contact = new Contact() ;
-			contact.setId(userId) ;
+			contact = new ForumContact() ;
 		}
 		return contact ;
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(Contact contact) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		try {
-			ContactAttachment attachment = contact.getAttachment() ; 
-			InputStream input = attachment.getInputStream() ;
-			String fileName = attachment.getFileName() ;
-			return ForumSessionUtils.getFileSource(input, fileName, dservice);
-		} catch (NullPointerException e) {
-			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-		}
+	private String getAvatarUrl(ForumContact contact) throws Exception {
+//		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+//		try {
+//			ContactAttachment attachment = contact.getAttachment() ; 
+//			InputStream input = attachment.getInputStream() ;
+//			String fileName = attachment.getFileName() ;
+//			return ForumSessionUtils.getFileSource(input, fileName, dservice);
+//		} catch (NullPointerException e) {
+//			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+//		}
+	  if (contact.getAvatarUrl() == null ) {
+	    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+	  } else {
+	    return contact.getAvatarUrl();
+	  }
 	}
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
@@ -420,7 +423,7 @@ public class UITopicDetail extends UIForm {
 	@SuppressWarnings("unused")
 	private long getPageSelect() {return this.pageSelect ;}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
 		if(this.pageList == null) return null ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
@@ -620,6 +623,15 @@ public class UITopicDetail extends UIForm {
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
+				for (int i = 0; i < special.length(); i++) {
+		      char c = special.charAt(i);
+		      if(text.indexOf(c) >= 0) {
+		      	UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+						return ;
+		      }
+	      }
 				StringBuffer type = new StringBuffer();
 				if(topicDetail.isMod){ 
 					type.append("true,").append(Utils.POST);
@@ -633,7 +645,7 @@ public class UITopicDetail extends UIForm {
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text+",,post", "", path);
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path);
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
@@ -872,6 +884,7 @@ public class UITopicDetail extends UIForm {
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIMoveTopicForm moveTopicForm = popupAction.createUIComponent(UIMoveTopicForm.class, null, null) ;
+			moveTopicForm.setUserProfile(topicDetail.userProfile) ;
 			List <Topic> topics = new ArrayList<Topic>();
 			topics.add(topicDetail.topic) ;
 			topicDetail.isEditTopic = true ;
@@ -1048,29 +1061,23 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	static public class SetHiddenPostActionListener extends EventListener<UITopicDetail> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicDetail> event) throws Exception {
-      UITopicDetail topicDetail = event.getSource() ;
-      boolean haveCheck = false ;
-      Post post = new Post() ;
-      List<Post> posts = new ArrayList<Post>();
-      List<UIComponent> children = topicDetail.getChildren() ;
-      for(UIComponent child : children) {
-        if(child instanceof UIFormCheckBoxInput) {
-          if(((UIFormCheckBoxInput)child).isChecked()) {
-            haveCheck = true ;
-            post = topicDetail.getPost(((UIFormCheckBoxInput)child).getName());
-            post.setIsHidden(true) ;
-            posts.add(post) ;
-          }
-        }
-      }
-      if(haveCheck) {
-      	topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-      } else {
-        throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", new String[]{}, ApplicationMessage.WARNING)) ;
-      }
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			Post post = new Post() ;
+			List<Post> posts = new ArrayList<Post>();
+			List<UIComponent> children = topicDetail.getChildren() ;
+			for(UIComponent child : children) {
+				if(child instanceof UIFormCheckBoxInput) {
+					if(((UIFormCheckBoxInput)child).isChecked()) {
+						post = topicDetail.getPost(((UIFormCheckBoxInput)child).getName());
+						post.setIsHidden(true) ;
+						posts.add(post) ;
+					}
+				}
+			}
+			topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
 
@@ -1147,7 +1154,7 @@ public class UITopicDetail extends UIForm {
 			}
 			viewUserProfile.setUserProfile(userProfile) ;
 			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
-			Contact contact = null ;
+			ForumContact contact = null ;
 			if(topicDetail.mapContact.containsKey(userId)) {
 				contact = topicDetail.mapContact.get(userId) ;
 			}
