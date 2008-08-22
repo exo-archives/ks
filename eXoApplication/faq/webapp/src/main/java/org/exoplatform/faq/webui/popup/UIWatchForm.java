@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -56,15 +54,12 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	private static int order ;
 	public UIWatchForm() throws Exception {
 		List<String> list = new ArrayList<String>() ;
-    ContactService contactService = getApplicationComponent(ContactService.class) ;
 		String user = FAQUtils.getCurrentUser() ;
 		userName = new UIFormStringInput(USER_NAME, USER_NAME, null) ;
 		if(!FAQUtils.isFieldEmpty(user)) {
-			userName.setValue(user) ;
+			userName.setValue(FAQUtils.getFullName(user)) ;
 			userName.setEditable(false) ;
-			Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
-		  		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
-		  String email = contact.getEmailAddress() ;
+		  String email = FAQUtils.getEmailUser(user) ;
 		  if(!FAQUtils.isFieldEmpty(email)) {
 		  	list.add(email);
 		  }

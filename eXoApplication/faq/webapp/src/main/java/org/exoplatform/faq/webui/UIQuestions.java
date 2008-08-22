@@ -24,8 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -600,22 +598,12 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
-      ContactService contactService = questions.getApplicationComponent(ContactService.class) ;
       String email = "" ;
       String name = "" ;
-      if(FAQUtils.getCurrentUser() != null){
-	      Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
-	      		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
-	      try {
-	      	name = contact.getFullName();
-	      } catch (NullPointerException e) {
-	      	name = "" ;
-	      }
-	      try {
-	      	email = contact.getEmailAddress() ;
-	      } catch (NullPointerException e) {
-	      	email = "" ;
-	      }
+      String userName = FAQUtils.getCurrentUser() ;
+      if(!FAQUtils.isFieldEmpty(userName)){
+	      name = FAQUtils.getFullName(userName) ;
+	      email = FAQUtils.getEmailUser(userName) ;
       }
       questionForm.setAuthor(name) ;
       questionForm.setEmail(email) ;

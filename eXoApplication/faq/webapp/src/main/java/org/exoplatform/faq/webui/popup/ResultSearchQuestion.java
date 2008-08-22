@@ -186,6 +186,17 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
     }
   }
   
+  @SuppressWarnings("unused")
+  private long getTotalpages(String pageInteratorId) {
+    UIFAQPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH) ;
+    try {
+      return pageIterator.getInfoPage().get(3) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return 1 ;
+    }
+  }
+  
 	public void setContent(String question, String response, String text) {
     this.question_ = question ;
     this.response_ = response ;

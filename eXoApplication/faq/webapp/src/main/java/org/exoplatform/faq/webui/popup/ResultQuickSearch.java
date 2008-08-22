@@ -77,9 +77,20 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
     faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
     formSearchs_ = formSearchs;
     pageList = new QuestionPageList(formSearchs_, 10);
-    pageList.setPageSize(5);
+    pageList.setPageSize(10);
     pageIterator = this.getChildById(LIST_RESULT_SEARCH);
     pageIterator.updatePageList(pageList);
+  }
+	
+	@SuppressWarnings("unused")
+  private long getTotalpages(String pageInteratorId) {
+    UIFAQPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH) ;
+    try {
+      return pageIterator.getInfoPage().get(3) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return 1 ;
+    }
   }
 	
 	public List<FAQFormSearch> getFormSearchs() throws Exception {
