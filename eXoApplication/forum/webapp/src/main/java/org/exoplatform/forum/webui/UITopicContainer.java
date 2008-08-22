@@ -194,11 +194,9 @@ public class UITopicContainer extends UIForm {
 			this.canViewThreads = ForumServiceUtils.hasPermission(strings, userId) ;
 
 		isModerator = false ;
-		if(role == 0) isModerator = true;
+		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
 		else {strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'") ;}
-		if(role == 1) {
-			isModerator = ForumServiceUtils.hasPermission(forum.getModerators(), userId) ;
-		}
+		
 		if(this.forum.getIsModerateTopic()) {
 			if(!isModerator) {
 				if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
