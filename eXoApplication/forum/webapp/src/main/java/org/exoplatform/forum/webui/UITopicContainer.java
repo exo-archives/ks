@@ -87,7 +87,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class,confirm="UITopicContainer.confirm.SetDeleteTopic"),
+			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 			@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),

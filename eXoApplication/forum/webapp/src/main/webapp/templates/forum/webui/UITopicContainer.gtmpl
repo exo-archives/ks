@@ -186,13 +186,23 @@
 														 			classIcon = classIcon + " DisableMenuItem";
 														 			link = "javaScript: void(0)" ;
 														 		}
+														 		if(!action.equals("SetDeleteTopic")){
 														 %> 
-															<a class="MenuItem" href="$link">	 
-																<div class="ItemIcon $classIcon">
-																	$itemLabel
-																</div>
-															</a>
-														 <% } %>
+																	<a class="MenuItem" href="$link">	 
+																		<div class="ItemIcon $classIcon">
+																			$itemLabel
+																		</div>
+																	</a>
+														 <% 
+														 		} else {%>
+														 			<a class="MenuItem" href="javaScript: void(0)"
+														 				onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread")%>')){$link;}">	 
+																		<div class="ItemIcon $classIcon">
+																			$itemLabel
+																		</div>
+																	</a>
+														 	<%}
+														 } %>
 														</div>
 													</div>
 												</div>
@@ -367,7 +377,7 @@
 								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon">Replies</div></a></th>
 								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon">Views</div></a></th>
 								<% if(canEdit) { %>
-								<th style="width: 30px;"><input type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+								<th style="width: 30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 								<% } %>
 							</tr>
 						</thead>

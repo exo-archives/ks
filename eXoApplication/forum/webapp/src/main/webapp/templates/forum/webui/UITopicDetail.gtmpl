@@ -239,7 +239,8 @@
 																if(isView) {
 																	if(action.equals("DeletePost")){
 																%>
-																		<a class="MenuItem" href="javaScript:if(eXo.forum.UIForumPortlet.OneChecked('UITopicDetail')){$link;} else {alert('<%=_ctx.appRes("UITopicDetail.msg.notCheck")%>');};">
+																		<a class="MenuItem" href="javaScript: void(0)"
+														 					onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeletePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneTopic")%>')){$link;}">	 
 																			<div class="ItemIcon $classIcon">
 																				$itemLabel
 																			</div>

@@ -116,7 +116,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetUnHiddenPostActionListener.class ),	
 //			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class,confirm="UITopicDetail.confirm.DeletePosts" ),
+			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class ),
 			
 			@EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
 			@EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class),

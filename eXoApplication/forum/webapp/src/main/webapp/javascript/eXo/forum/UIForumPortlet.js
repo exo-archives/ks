@@ -58,6 +58,27 @@ UIForumPortlet.prototype.OneChecked = function(formName) {
 	return false;
 } ;
 
+UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, multiAns1, multiAns2, onlyAns) {
+	var form = document.forms[formName];
+	var total = 0;
+	if(form) {
+		var checkboxs = form.elements;
+		for(var i = 0; i < checkboxs.length; i ++){
+			if(checkboxs[i].checked){
+				total = total + 1;
+			}
+		}
+	}
+	if(document.getElementById(checkAllName) != null && document.getElementById(checkAllName).checked){
+		total = total - 1;
+	}
+	if(total > 1){
+		return confirm(multiAns1 + " " + total + " " + multiAns2);
+	} else {
+		return confirm(onlyAns);
+	}
+} ;
+
 UIForumPortlet.prototype.checkAll = function(obj) {
 		var DOMUtil = eXo.core.DOMUtil ;
 		var thead = DOMUtil.findAncestorByTagName(obj, "thead") ;
