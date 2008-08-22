@@ -271,7 +271,6 @@
 							}
 							if(forum.getIsClosed() == true){
 								isClose = "true" ;
-								if(userProfile.getUserRole() != 0) continue ;
 								classIconForum = "ForumCloseIcon";
 								titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 							}

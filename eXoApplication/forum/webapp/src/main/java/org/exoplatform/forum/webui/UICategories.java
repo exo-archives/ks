@@ -122,7 +122,7 @@ public class UICategories extends UIContainer	{
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		List<Forum> forumList = null ;
 		String strQuery = "";
-		if(this.userProfile.getUserRole() != 0) strQuery = "@exo:isClosed='false'";
+		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
 		forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, strQuery);
 		if(mapListForum.containsKey(categoryId)) {
 			mapListForum.remove(categoryId) ;
