@@ -26,6 +26,7 @@ import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
@@ -59,31 +60,55 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String forumId ;
 	private List<Topic> topics ;
+	private List<Category> categories;
 	private boolean isFormTopic = false ;
 	private boolean isAdmin = false;
+	private UserProfile userProfile ;
 	public boolean isAdmin() {
   	return isAdmin;
   }
-
 	public void setAdmin(boolean isAdmin) {
   	this.isAdmin = isAdmin;
   }
-
-	public UIMoveTopicForm() throws Exception {
-	}
 	
+	public UserProfile getUserProfile() throws Exception {
+	  return this.userProfile ;
+  }
+	public void setUserProfile(UserProfile userProfile) throws Exception {
+	  this.userProfile = userProfile ;
+	  if(this.userProfile == null) {
+	  	this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+	  }
+  }
+	
+	public UIMoveTopicForm() throws Exception {}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	public void updateTopic(String forumId, List<Topic> topics, boolean isFormTopic) {
+	public void updateTopic(String forumId, List<Topic> topics, boolean isFormTopic) throws Exception {
 		this.forumId = forumId ;
 		this.topics = topics ;
 		this.isFormTopic = isFormTopic ;
+		setCategories() ;
 	}
 	
+	private void setCategories() throws Exception {
+		this.categories = new ArrayList<Category>();
+		for (Category category : this.forumService.getCategories(ForumSessionUtils.getSystemProvider())) {
+			if(this.userProfile.getUserRole() == 1) {
+				if(!ForumUtils.isEmpty(category.getUserPrivate())){
+					String []list = ForumUtils.splitForForum(category.getUserPrivate()) ; 
+					if(!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
+						continue ;
+					}
+				}
+			}
+			categories.add(category) ;
+		}
+	}
 	@SuppressWarnings("unused")
 	private List<Category> getCategories() throws Exception {
-		return this.forumService.getCategories(ForumSessionUtils.getSystemProvider()) ;
+		return  this.categories;
 	}
 	
 	@SuppressWarnings("unused")
@@ -97,7 +122,14 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 		List<Forum> forums = new ArrayList<Forum>() ;
 		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
 			if(forum.getId().equalsIgnoreCase(this.forumId)) continue ;
-			forum.getCreateTopicRole();
+			if(this.userProfile.getUserRole() == 1){
+				if(forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <=0){
+					if(forum.getIsClosed())continue ; 
+					if(forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())){
+						continue ;
+					}
+				}
+			}
 			forums.add(forum) ;
 		}
 		return forums ;

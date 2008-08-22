@@ -219,6 +219,7 @@ public class UICategory extends UIForm	{
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null) ;
+			forumForm.initForm();
 			forumForm.setCategoryValue(uiCategory.categoryId, false) ;
 			forumForm.setForumUpdate(false) ;
 			popupContainer.setId("AddNewForumForm") ;
@@ -246,6 +247,8 @@ public class UICategory extends UIForm	{
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null) ;
+				forumForm.setMode(false) ;
+				forumForm.initForm();
 				forumForm.setCategoryValue(uiCategory.categoryId, false) ;
 				forumForm.setForumValue(forum, true);
 				forumForm.setForumUpdate(false) ;
@@ -470,6 +473,15 @@ public class UICategory extends UIForm	{
 			UIFormStringInput formStringInput = uiCategory.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
+				for (int i = 0; i < special.length(); i++) {
+		      char c = special.charAt(i);
+		      if(text.indexOf(c) >= 0) {
+		      	UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+						return ;
+		      }
+	      }
 				StringBuffer type = new StringBuffer();
 				if(uiCategory.getUserProfile().getUserRole() == 0){ 
 					type.append("true,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);

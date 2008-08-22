@@ -25,7 +25,6 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -624,6 +623,15 @@ public class UITopicDetail extends UIForm {
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
+				for (int i = 0; i < special.length(); i++) {
+		      char c = special.charAt(i);
+		      if(text.indexOf(c) >= 0) {
+		      	UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+						return ;
+		      }
+	      }
 				StringBuffer type = new StringBuffer();
 				if(topicDetail.isMod){ 
 					type.append("true,").append(Utils.POST);
@@ -876,6 +884,7 @@ public class UITopicDetail extends UIForm {
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIMoveTopicForm moveTopicForm = popupAction.createUIComponent(UIMoveTopicForm.class, null, null) ;
+			moveTopicForm.setUserProfile(topicDetail.userProfile) ;
 			List <Topic> topics = new ArrayList<Topic>();
 			topics.add(topicDetail.topic) ;
 			topicDetail.isEditTopic = true ;
