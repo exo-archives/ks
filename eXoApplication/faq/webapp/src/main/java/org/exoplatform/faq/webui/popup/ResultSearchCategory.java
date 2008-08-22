@@ -85,6 +85,17 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
     }
   }
   
+  @SuppressWarnings("unused")
+  private long getTotalpages(String pageInteratorId) {
+    UIFAQPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH) ;
+    try {
+      return pageIterator.getInfoPage().get(3) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return 1 ;
+    }
+  }
+  
   public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
   

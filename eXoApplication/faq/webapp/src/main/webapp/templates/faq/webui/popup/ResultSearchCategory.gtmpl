@@ -76,9 +76,14 @@
 										<% } %> 
  									</tbody>
  								</table>
+ 								<% 
+ 								long totalPages = uicomponent.getTotalpages("LIST_RESULT_SEARCH") ;
+					       if(totalPages > 1) {
+					       %>
  									<div style="overflow:auto;">
 										<% uicomponent.renderChild(uicomponent.LIST_RESULT_SEARCH) ; %>
 									</div>
+								<% } %>
  						</div>
  					</div>
  				</div>

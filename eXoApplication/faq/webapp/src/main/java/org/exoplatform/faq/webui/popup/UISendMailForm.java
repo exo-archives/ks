@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.EmailNotifyPlugin;
@@ -105,20 +103,10 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     @SuppressWarnings("unused")
     String email = "" ;
     String name = "" ;
-    ContactService contactService = getApplicationComponent(ContactService.class) ;
-    if(FAQUtils.getCurrentUser() != null){
-		  Contact contact = contactService.getContact(FAQUtils.getSystemProvider()
-		  		, FAQUtils.getCurrentUser(), FAQUtils.getCurrentUser()) ;
-		  try {
-      	name = contact.getFullName();
-      } catch (NullPointerException e) {
-      	name = "" ;
-      }
-		  try {
-		  	email = contact.getEmailAddress() ;
-		  } catch (NullPointerException e) {
-		  	email = "" ;
-		  }
+    String userName = FAQUtils.getCurrentUser() ;
+    if(!FAQUtils.isFieldEmpty(userName)){
+      name = FAQUtils.getFullName(userName) ;
+      email = FAQUtils.getEmailUser(userName) ;
     }
     String quest = question.getQuestion().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
     languageIsResponsed = question.getLanguage() ;

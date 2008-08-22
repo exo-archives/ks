@@ -186,6 +186,20 @@ public class FAQUtils {
     return Util.getPortalRequestContext().getRemoteUser();
   }
   
+  static public String getEmailUser(String userName) throws Exception {
+  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	User user = organizationService.getUserHandler().findUserByName(userName) ;
+  	String email = user.getEmail() ;
+    return email;
+  }
+  
+  static public String getFullName(String userName) throws Exception {
+  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	User user = organizationService.getUserHandler().findUserByName(userName) ;
+  	String fullName = user.getFullName() ;
+    return fullName ;
+  }
+  
   public static boolean isFieldEmpty(String s) {
     if (s == null || s.length() == 0) return true ;
     return false ;    
