@@ -1019,6 +1019,7 @@ public class UITopicDetail extends UIForm {
 			if(posts.size() > 0) {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIMovePostForm movePostForm = popupAction.createUIComponent(UIMovePostForm.class, null, null) ;
+				movePostForm.setUserProfile(topicDetail.userProfile) ;
 				movePostForm.updatePost(topicDetail.topicId, posts);
 				popupAction.activate(movePostForm, 400, 430) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
