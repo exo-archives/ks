@@ -131,7 +131,7 @@ public class UICategory extends UIForm	{
 	private List<Forum> getForumList() throws Exception {
 		if(this.isEditForum) {
 			String strQuery = "";
-			if(this.userProfile.getUserRole() != 0) strQuery = "@exo:isClosed='false'";
+			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
 			this.forums = forumService.getForums(ForumSessionUtils.getSystemProvider(), this.categoryId, strQuery);
 			this.isEditForum = false ;
       this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
