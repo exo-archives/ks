@@ -74,14 +74,23 @@
 																String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
 																String classIconItem = action + "Icon";
 																String link = uicomponent.event(action,uicomponent.id,"category") ;
+																if(!action.equals("RemoveForum")){
 														%>
 																 <a class="MenuItem" href="$link">	 
 																	<div class="ItemIcon $classIconItem">
 																		<%=nameItem%>
 																	</div>
 																 </a>
-														<%	if(action.equals("DeleteCategory")) { %>
-															 <div class="LineMenu"><span></span></div>
+														<%	} else {%>
+																	<a class="MenuItem" href="javaScript: void(0)"
+																		onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneForum")%>')){$link;}">	 
+																		<div class="ItemIcon $classIconItem">
+																			<%=nameItem%>
+																		</div>
+															 		</a>
+															<%}
+																if(action.equals("DeleteCategory")) { %>
+															 		<div class="LineMenu"><span></span></div>
 														<%	}
 															} 
 														%>
@@ -177,7 +186,7 @@
 						<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
 						<th style="width: 170px;"><%=_ctx.appRes("UICategory.label.moderator");%></th>
 						<% if(isShowMenu){ %>
-						<th style="width: 30px;"><input type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+						<th style="width: 30px;"><input id="UIFORUMCheckAllForum" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 						<% } %>
 					</tr>
 				</thead>
