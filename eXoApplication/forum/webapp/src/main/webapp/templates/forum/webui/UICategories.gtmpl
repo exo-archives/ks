@@ -36,7 +36,11 @@
 			   if(uicomponent.getIsPrivate(userProfile,category)) {
 					 String title = category.getCategoryName();
 					 String categoryId = category.getId();
-					 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
+					if(uicomponent.userProfile.getUserRole() < 3){
+						 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
+					} else {
+						actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
+					}
 		 %>
 			<div class="UIForumCategory">
 				<div class="ForumToolbar">
@@ -160,7 +164,11 @@
 											titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 										}
 										String ids = categoryId + "/" + forumId;
-										actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
+										if(uicomponent.userProfile.getUserRole() < 3){
+											actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
+										} else {
+											actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
+										}
 										String lineHeight = "line-height: 12px;";
 										if(ForumUtils.isEmpty(forumDescription)) {
 											lineHeight = "line-height: 28px;";
@@ -182,7 +190,11 @@
 												<div class="ForumDescription">$forumDescription</div>
 											</td>
 											<%if(topicNewPost != null) {
-												actionBookmark = uicomponent.event("AddBookMark","topic//"+topicPath)+ ";" + uicomponent.event("AddWatching",topicPath);
+												if(uicomponent.userProfile.getUserRole() < 3){
+													actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath);
+												} else {
+													actionBookmark = uicomponent.event("ShareLink","topic//" + topicPath);
+												}
 											%>
 										 	<td >
 										 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
@@ -247,7 +259,11 @@
 				<div class="UIRightPopupMenuContainer">
 					<a href="" class="MenuItem AddBookmark">
 						<div class="ItemIcon AddLinkToBookIcon">
-							<span>Add Bookmark this Link</span>
+						<%if(uicomponent.userProfile.getUserRole() < 3){%>
+								<span>Add Bookmark this Link</span>
+						<%} else {%>
+								<span>Share link</span>
+						<%}%>
 						</div>
 					</a>
 					<a href="" class="MenuItem AddWatching">

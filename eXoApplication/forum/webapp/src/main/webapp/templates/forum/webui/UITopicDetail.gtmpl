@@ -281,6 +281,7 @@
 								</div>
 							</div>
 							<% } %>
+						<%if(userProfile.getUserRole() != 3) {%>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
@@ -313,6 +314,7 @@
 									</a>
 								</div>
 							</div>
+						<%}%>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">									

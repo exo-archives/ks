@@ -275,7 +275,11 @@
 								classIconForum = "ForumCloseIcon";
 								titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 							}
-							actionBookmark = uicomponent.event("AddBookMark","forum//"+path) + ";" + uicomponent.event("AddWatching",path);
+							if(uicomponent.userProfile.getUserRole() < 3){
+								actionBookmark = uicomponent.event("AddBookMark","forum//"+path) + ";" + uicomponent.event("AddWatching",path);
+							} else {
+								actionBookmark = uicomponent.event("ShareLink","forum//"+path);
+							}
 							String lineHeight = "line-height: 12px;";
 							if(!ForumUtils.isEmpty(forumDescription)) {
 								lineHeight = "line-height: 28px;";
@@ -297,7 +301,11 @@
 										<div class="ForumDescription">$forumDescription</div>
 									</td>
 						 <% if(topicNewPost != null) { 
-						 			actionBookmark = uicomponent.event("AddBookMark","topic//"+path+"/"+topicId) + ";" + uicomponent.event("AddWatching",path+"/"+topicId);
+						 			if(uicomponent.userProfile.getUserRole() < 3){
+								 		actionBookmark = uicomponent.event("AddBookMark","topic//"+path+"/"+topicId) + ";" + uicomponent.event("AddWatching",path+"/"+topicId);
+									} else {
+										actionBookmark = uicomponent.event("ShareLink","topic//"+path+"/"+topicId);
+									}
 						 %>
 									<td >
 								 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
@@ -357,7 +365,11 @@
 				<div class="UIRightPopupMenuContainer">
 					<a href="" class="MenuItem AddBookmark">
 						<div class="ItemIcon AddLinkToBookIcon">
+						<%if(uicomponent.userProfile.getUserRole() < 3){%>
 							<span>Add Bookmark this Link</span>
+						<%} else {%>
+							<span>Share link</span>
+						<%}%>
 						</div>
 					</a>
 					<a href="" class="MenuItem AddWatching">
