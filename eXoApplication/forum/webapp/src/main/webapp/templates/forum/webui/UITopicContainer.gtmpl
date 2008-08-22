@@ -436,7 +436,16 @@
 											}
 										}
 										
-										String actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
+										String actionBookmark;
+										if(uicomponent.isLogin){
+											actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
+										} else {
+											String newId = uicomponent.categoryId + "/" + uicomponent.forumId + "/" + topicId;
+											String link = uiform.url("ShareLink", topicId)
+																		.replaceFirst("UITopicContainer","UIBreadcumbs")
+																		.replaceFirst("ShareLink","ChangePath");
+											actionBookmark = uicomponent.event("ShareLink", link);
+										}
 								%>
 									<tr class="$classRow">
 										<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
@@ -643,7 +652,11 @@
 				<div class="UIRightPopupMenuContainer">
 					<a href="" class="MenuItem AddBookmark">
 						<div class="ItemIcon AddLinkToBookIcon">
-							<span>Add Bookmark this Link</span>
+							<%if(uicomponent.isLogin){%>
+								<span>Add Bookmark this Link</span>
+							<%} else {%>
+								<span>Share Topic's link</span>
+							<%}%>
 						</div>
 					</a>
 					<a href="" class="MenuItem AddWatching">

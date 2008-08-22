@@ -17,7 +17,9 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -40,6 +42,7 @@ import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
+import org.exoplatform.portal.webui.container.UIContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -91,7 +94,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 			@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
-			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
+			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
+			@EventConfig(listeners = UITopicContainer.ShareLinkActionListener.class)
 		}
 )
 public class UITopicContainer extends UIForm {
@@ -113,11 +117,14 @@ public class UITopicContainer extends UIForm {
 	private boolean canViewThreads = true ;
 	private UserProfile userProfile = null;
 	private String strOrderBy = "" ;
+	private boolean isLogin = false;
+	
 	public UITopicContainer() throws Exception {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 		addChild(UIForumPageIterator.class, null, "ForumPageIterator") ;
+		if(ForumSessionUtils.getCurrentUser() != null) isLogin = true;
 	}
 	
 	@SuppressWarnings("unused")
@@ -922,6 +929,16 @@ public class UITopicContainer extends UIForm {
 				} catch (Exception e) {
 				}
 			}
+		}
+	}
+	
+	static public class ShareLinkActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer topicContainer = event.getSource();
+			String link = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIApplication uiApp = topicContainer.getAncestorOfType(UIApplication.class) ;
+    	uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.shareLinkToGuest", new Object[]{link}, ApplicationMessage.INFO)) ;
+    	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 		}
 	}
 	
