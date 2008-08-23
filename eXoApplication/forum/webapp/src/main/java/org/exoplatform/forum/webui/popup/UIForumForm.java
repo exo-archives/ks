@@ -121,8 +121,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormSelectBox forumState = new UIFormSelectBox(FIELD_FORUMSTATE_SELECTBOX, FIELD_FORUMSTATE_SELECTBOX, ls) ;
 		forumState.setDefaultValue("open");
 		ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("UnLock", "unlock")) ;
-		ls.add(new SelectItemOption<String>("Locked", "locked")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("UnLock"), "unlock")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("Locked"), "locked")) ;
 		UIFormSelectBox forumStatus = new UIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX, FIELD_FORUMSTATUS_SELECTBOX, ls) ;
 		forumStatus.setDefaultValue("unlock");
 		
