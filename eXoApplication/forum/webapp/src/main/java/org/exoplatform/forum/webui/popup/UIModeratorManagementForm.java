@@ -58,7 +58,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
  */
 @ComponentConfig(
     lifecycle = UIFormLifecycle.class,
-    template = "app:/templates/forum/webui/popup/UIModeratorsManagementForm.gtmpl",
+    template = "app:/templates/forum/webui/popup/UIModeratorManagementForm.gtmpl",
     events = {
       @EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.EditProfileActionListener.class), 

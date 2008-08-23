@@ -9,7 +9,7 @@
   jsmanager.addJavascript("eXo.forum.UIForumPortlet.setEnableInput();");
 
 %>
-<div class="UIModeratorsManagementForm">
+<div class="UIModeratorManagementForm">
 	<% uiform.begin() %>
 	<div class="UIComponentModerator">
 	<div style="overflow: auto;">
@@ -23,11 +23,11 @@
 			  <table cellspacing="0" borderspacing="0" id="PermissionInfo" class="UIGrid">
 				  <thead>
 				  	<tr>
-				      <th width="30%">User Name</th>
-				      <th width="25%">User Title</th>
-				      <th width="15%">User Role</th>
-				      <th width="12%">Is Banned</th>
-				      <th>Action</th>
+				      <th width="30%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>
+				      <th width="25%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserTitle");%></th>
+				      <th width="15%"><%=_ctx.appRes("UIModeratorManagementForm.label.UserRole");%></th>
+				      <th width="12%"><%=_ctx.appRes("UIModeratorManagementForm.label.IsBanned");%></th>
+				      <th><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 				    </tr>
 				  </thead>
 				  <tbody>
@@ -47,10 +47,10 @@
 				        <div style="margin: 0px auto;" class="ActionContainer">
 					        <div class="IconContent">
 					        	<a style="float:left" href="<%=uicomponent.event("EditProfile",user.getUserId());%>">
-						           <div title="Edit Profile" class="Icon16x16 EditIcon"><span></span></div>		          
+						           <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="Icon16x16 EditIcon"><span></span></div>		          
 					        	</a>
 					        	<a style="float:left" href="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
-						           <div title="View Profile" class="Icon16x16 ViewProfileIcon"><span></span></div>		          
+						           <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="Icon16x16 ViewProfileIcon"><span></span></div>		          
 					        	</a>
 					        	<div style="clear:left;"><span></span></div>
 					        </div>
