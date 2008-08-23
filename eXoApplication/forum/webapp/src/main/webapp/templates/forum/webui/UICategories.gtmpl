@@ -259,15 +259,15 @@
 					<a href="" class="MenuItem AddBookmark">
 						<div class="ItemIcon AddLinkToBookIcon">
 						<%if(uicomponent.userProfile.getUserRole() < 3){%>
-								<span>Add Bookmark this Link</span>
+								<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
 						<%} else {%>
-								<span>Share link</span>
+								<span><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></span>
 						<%}%>
 						</div>
 					</a>
 					<a href="" class="MenuItem AddWatching">
 						<div class="ItemIcon AddWatchingIcon">
-							<span>Add Watching</span>
+							<span><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></span>
 						</div>
 					</a>
 				</div>
