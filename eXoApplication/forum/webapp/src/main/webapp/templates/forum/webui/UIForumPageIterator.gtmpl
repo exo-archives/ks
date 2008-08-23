@@ -40,7 +40,7 @@
 	    <div style="clear: left;"><span></span></div>
 	  </div>
 	  <div class="LeftPageIteratorBlock">
-	  	<div class="TotalPages">Total pages:</div>
+	  	<div class="TotalPages"><%=_ctx.appRes("UIPageListTopicByUser.label.TotalPages");%>:</div>
 	  	<div class="PagesTotalNumber"><%=max_page%></div>
 	  	<div style="clear: left;"><span></span></div>
 	  </div>

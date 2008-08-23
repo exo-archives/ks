@@ -30,12 +30,12 @@
 							<tr>
 								<th style="width: 40px;"></th>
 								<th style="width: 40px;"></th>
-								<th>Thread/Thread starter</th>
-								<th style="width: 96px;">Rating</th>
-								<th style="width: 40px;">Replies</th>
-								<th style="width: 40px;">Views</th>
+								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
+								<th style="width: 96px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Rating");%></th>
+								<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Replies");%></th>
+								<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Views");%></th>
 								<%if(isAdmin){ %>
-									<th style="width: 40px;">Delete</th>
+									<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
 								<%}%>
 							</tr>
 						</thead>
