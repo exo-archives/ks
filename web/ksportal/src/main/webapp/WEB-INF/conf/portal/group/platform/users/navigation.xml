@@ -26,20 +26,6 @@
 		    <page-reference>group::platform/users::forum</page-reference>
 	  	</node>
 	  	
-	    <node>
-		    <uri>knowledge/blog</uri>
-		    <name>Blog</name>
-		    <label>#{platform.users.knowledge.blog}</label>
-		    <page-reference>group::platform/users::blog</page-reference>
-	  	</node>
-	  	
-	  	<node>
-		    <uri>knowledge/wiki</uri>
-		    <name>Wiki</name>
-		    <label>#{platform.users.knowledge.wiki}</label>
-		    <page-reference>group::platform/users::wiki</page-reference>
-	  	</node>
-	  	
 	  	<node>
 		    <uri>knowledge/faq</uri>
 		    <name>FAQ</name>
