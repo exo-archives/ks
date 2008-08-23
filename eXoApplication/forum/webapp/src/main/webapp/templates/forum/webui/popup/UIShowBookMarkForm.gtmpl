@@ -4,8 +4,8 @@
 			<table class="UIGrid">
 				<thead>
 					<th style="width: 35px;"></th>
-					<th>Link name</th>
-					<th style="width: 40px;">Action</th>
+					<th><%=_ctx.appRes("UIShowBookMarkForm.label.linkName")%></th>
+					<th style="width: 40px;"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
 				</thead>
 				<body>
 					<% 
