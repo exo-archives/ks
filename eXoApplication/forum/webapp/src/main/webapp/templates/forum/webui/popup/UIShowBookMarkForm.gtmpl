@@ -44,7 +44,7 @@
 						<a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle">Cancel</div>
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel")%></div>
 								</div>
 							</div>
 						</a>
