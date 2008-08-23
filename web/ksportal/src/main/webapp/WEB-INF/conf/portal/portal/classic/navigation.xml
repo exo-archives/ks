@@ -3,13 +3,30 @@
   <owner-type>portal</owner-type>
   <owner-id>classic</owner-id>
   <priority>1</priority>
-
   <page-nodes>
-	  <node>
-	    <uri>home</uri>
-	    <name>home</name>
-	    <label>#{home}</label>
-	    <page-reference>portal::classic::homepage</page-reference>	    
-	  </node>    
+    <node>
+      <uri>home</uri>
+      <name>home</name>
+      <label>#{portal.classic.home}</label>
+      <page-reference>portal::classic::homepage</page-reference>
+    </node>
+    <node>
+      <uri>forum</uri>
+      <name>Forum</name>
+      <label>#{portal.classic.forum}</label>
+      <page-reference>portal::classic::forum</page-reference>
+    </node>
+    <node>
+      <uri>faq</uri>
+      <name>FAQ</name>
+      <label>#{portal.classic.faq}</label>
+      <page-reference>portal::classic::faq</page-reference>
+    </node>
+    <node>
+      <uri>tour</uri>
+      <name>Tour</name>
+      <label>#{portal.classic.tour}</label>
+      <page-reference>portal::classic::tour</page-reference>
+    </node>    
   </page-nodes>
 </node-navigation>

@@ -1,0 +1,23 @@
+<%	import org.exoplatform.portal.webui.util.Util; 
+String toururi = Util.getPortalRequestContext().getPortalURI() + "tour";
+%>
+<div>
+
+	<div>Looking for a quick overview ?<br>
+	  <a href="$toururi">Take a tour</a>
+	</div>
+	
+	<div>Want to try with your own account?<br>
+	  <a href="/public/classic/register">Sign Up</a></div>
+	
+	<div>eXo KS is open source and free for download<br>
+	  <a href="http://forge.objectweb.org">Download community version</a></div>
+	
+	<div>You need support? Learn about the 
+	  <a href="http://www.exoplatform.com">professional version</a></div>
+	
+	<div>eXo Platform logo</div>
+	
+	<div>Tell us how we are doing. Send 
+	  <a href="mailto:ks@exoplatform.com?subject=KS demo feedback">feedback</a></div>
+</div>

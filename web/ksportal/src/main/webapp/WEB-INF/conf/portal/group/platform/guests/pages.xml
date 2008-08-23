@@ -9,8 +9,8 @@
     <edit-permission>*:/platform/administrators</edit-permission>
     <application>
       <instance-id>group#platform/guests:/exoadmin/AccountPortlet/Account</instance-id>
-      <title>New Account</title>
-      <show-info-bar>false</show-info-bar>
+      <title>Create my account</title>
+      <show-info-bar>true</show-info-bar>
     </application>  
   </page>
   

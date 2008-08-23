@@ -6,7 +6,7 @@
     <window-id>portal#classic:/web/BannerPortlet/banner</window-id>
     <preference>
       <name>template</name>
-      <value>par:/groovy/groovy/webui/component/UIBannerPortlet.gtmpl</value>
+      <value>system:/templates/header.gtmpl</value>
       <read-only>false</read-only>
     </preference>
   </portlet-preferences>
@@ -26,10 +26,10 @@
   <portlet-preferences>
     <owner-type>portal</owner-type>
     <owner-id>classic</owner-id>
-    <window-id>portal#classic:/web/GroovyPortlet/groovyportlet</window-id>
+    <window-id>portal#classic:/web/HomePagePortlet/sidebar</window-id>
     <preference>
       <name>template</name>
-      <value>par:/groovy/groovy/webui/component/UIGroovyPortlet.gtmpl</value>
+      <value>system:/templates/sidebar.gtmpl</value>
       <read-only>false</read-only>
     </preference>
   </portlet-preferences>
@@ -37,10 +37,37 @@
   <portlet-preferences>
     <owner-type>portal</owner-type>
     <owner-id>classic</owner-id>
+    <window-id>portal#classic:/web/HomePagePortlet/tour</window-id>
+    <preference>
+      <name>template</name>
+      <value>system:/templates/tour.gtmpl</value>
+      <read-only>false</read-only>
+    </preference>
+  </portlet-preferences>  
+  
+  <portlet-preferences>
+    <owner-type>portal</owner-type>
+    <owner-id>classic</owner-id>
+    <window-id>portal#classic:/web/NavigationPortlet/menu</window-id>
+    <preference>
+      <name>useAJAX</name>
+      <value>false</value>
+      <read-only>false</read-only>
+    </preference>
+     <preference>
+      <name>template</name>
+      <value>system:/templates/menu.gtmpl</value>
+      <read-only>false</read-only>
+    </preference>   
+  </portlet-preferences>  
+  
+  <portlet-preferences>
+    <owner-type>portal</owner-type>
+    <owner-id>classic</owner-id>
     <window-id>portal#classic:/web/HomePagePortlet/homepageportlet</window-id>
     <preference>
       <name>template</name>
-      <value>system:/templates/groovy/webui/component/UIHomePagePortlet.gtmpl</value>
+      <value>system:/templates/home.gtmpl</value>
       <read-only>false</read-only>
     </preference>
   </portlet-preferences>

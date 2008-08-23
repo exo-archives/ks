@@ -1,0 +1,92 @@
+<% 
+
+  import org.exoplatform.portal.webui.util.Util ;
+%>
+<div class="UIHomePagePortlet" id="$uicomponent.id">
+	<div class="PortletDecoration">
+		<div class="HomePortletAdBackround">
+			<div class="AdImage__">
+				<div class="EmptyBlock"><span></span></div>
+
+				<div><h2>Welcome to eXo KS Live Demo</h2></div>
+				<table>
+				  <tr>
+				    <td>
+						<%String forumuri = Util.getPortalRequestContext().getPortalURI() + "forum" %>
+						<div style="text-align: center">
+						  <h3><a href="$forumuri">Forum</a></h3>
+						  It's time to open discussion with your portal audience!
+						</div>
+						<div>
+							<li>Unlimited categories and forums</li>
+							<li>Thread permissions, quick reply, preview, tags and votes</li>
+							<li>Private messages, bookmarks, watch, search</li>
+							<li>Advanced moderation : lock, close, merge, split, approve...</li>
+							<li>Full administration : bans, censored keyword, auto-prune,... </li>			
+						</div>
+						<div style="text-align: center"><h4><a href="$forumuri">Try eXo Forum</a></h4></div>				    
+				    </td>
+				    <td>
+						<%String faquri = Util.getPortalRequestContext().getPortalURI() + "faq" %>
+						<div style="text-align: center">
+						  <h3><a href="$faquri">FAQ</a></h3>
+						  Capture and manage key knowledge efficiently in FAQs.
+						</div>
+						<div>
+							<li>Unlimited categories and questions</li>
+							<li>Public / private categories</li>
+							<li>Multi-language Q/A</li>
+							<li>Questions moderation</li>
+							<li>and many more!</li>
+						</div>
+						<div style="text-align: center"><h4><a href="$faquri">Try eXo FAQ</a></h4></div>					    
+				    </td>
+				  </tr>
+				</table>
+
+				
+			</div>
+		</div>
+		<!--
+		<div class="HomePortletContent">
+			<div class="InstructionTitle">Try eXo Collaboration Suite 2.0 with following available user accounts:</div>
+			<div class="UserAccountsContainer">
+				<div class="AccountsContainerDeco">
+					<div class="AccountBlock AdministratorUser">
+						<div class="AccountInfos">
+							<div class="AccountTitle">Administrator</div>
+							<div class="Username">Username:<span>root</span></div>
+							<div class="Passwords">Password:<span>exo</span></div>
+						</div>
+					</div>
+					<div class="SeparatorLine"><span></span></div>
+					<div class="AccountBlock ManagerUser">
+						<div class="AccountInfos">
+							<div class="AccountTitle">Manager</div>
+							<div class="Username">Username:<span>john</span></div>
+							<div class="Passwords">Password:<span>exo</span></div>
+						</div>
+					</div>
+					<div class="SeparatorLine"><span></span></div>
+					<div class="AccountBlock NormalUser">
+						<div class="AccountInfos">
+							<div class="AccountTitle">User</div>
+							<div class="Username">Username:<span>mary</span></div>
+							<div class="Passwords">Password:<span>exo</span></div>
+						</div>
+					</div>
+					<div class="SeparatorLine"><span></span></div>
+					<div class="AccountBlock DemoUser" style="margin-right: 0px;">
+						<div class="AccountInfos">
+							<div class="AccountTitle">Demo</div>
+							<div class="Username">Username:<span>demo</span></div>
+							<div class="Passwords">Password:<span>exo</span></div>
+						</div>
+					</div>
+					<div style="clear: both"><span></span></div>
+				</div>
+			</div>
+		</div>
+		-->
+	</div>		
+</div>

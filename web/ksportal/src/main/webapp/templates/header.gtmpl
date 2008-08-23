@@ -1,0 +1,47 @@
+<%
+	import org.exoplatform.portal.application.PortalRequestContext;
+	import org.exoplatform.portal.webui.util.Util;
+	
+	
+	def prContext = _ctx.getRequestContext().getParentAppRequestContext();
+	
+	String signInAction = "if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ShowLoginForm', true));" ;
+	String changeLanguageAction = "if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ChangeLanguage', true));" ;
+	String portletId = uicomponent.getId() ;	
+%>
+<div id="$portletId" class="UIBannerPortlet UIApplication">
+	<div class="ApplicationMinWidth">
+
+	        <div class="MiddleBanner_">
+	        	<div class="BannerTitle_">
+	        		<%String homeuri = Util.getPortalRequestContext().getPortalURI() + "home" %>
+	        		eXo Platform SAS introduces<h1><a href="$homeuri">eXo Knowledge Suite</a></h1>
+	        	</div>
+						<div class="LoginContainer">
+							<div class="LoginContent">
+								<%if(prContext.getRemoteUser() != null) {%>
+								  	<div class="LoginLeft" style="float: left">
+								  		You are connected as 
+									  	<span style="padding: 0px 10px 0px 2px; color: red; font-weight:bold;">
+									  		<%=prContext.getRemoteUser();%> 
+									  	</span>
+								  	</div>
+									  <div class="LoginRight" style="float: left;" title="Sign Out">
+									    <div class="LoginSeperatorLine"><span></span></div>				  	
+											<a class="LogoutIcon" onclick="eXo.portal.logout();"><%=_ctx.appRes("UILogged.action.signout")%></a>
+										</div>
+										<div style="clear: left;"><span></span></div>
+								<%} else {%>
+										<div class="SignIn">
+										    <a class="SettingIcon" onclick="$changeLanguageAction" alt="language settings"></a>
+											<a class="LoginIcon_" onclick="$signInAction"><%=_ctx.appRes("UILoginForm.label.Signin")%></a>										
+											<div style="clear: right;"><span>demo account : demo / exo</span></div>
+										</div>
+							  <%}%>   
+							</div>
+							<div style="clear: right;"><span></span></div>
+						</div>
+	  </div>
+  </div>
+</div>
+
