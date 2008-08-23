@@ -2,14 +2,14 @@
   <% uiform.begin() %>  
 	<div class="SearchForm">
 		<div class="SeparatorLine" style="float:right;"><span></span></div>
-		<a class="AdvancedSearch" title="Advance Search" href="<%=uicomponent.event("AdvancedSearch");%>"><span></span></a>
-		<a class="Search" title="Search" href="<%=uicomponent.event("Search");%>"><span></span></a>
+		<a class="AdvancedSearch" title="<%=_ctx.appRes("UIQuickSearchForm.title.AdvanceSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"><span></span></a>
+		<a class="Search" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"><span></span></a>
 		<div class="Input">
 		<%  
 			uiform.renderChildren() ;
 		%>
 		</div>
-		<div class="Label">Search:</div>
+		<div class="Label"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:</div>
 		<div class="SeparatorLine" style="float:right;"><span></span></div>
 		<div style="clear:both;"><span></span></div>
 	</div>
