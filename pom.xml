@@ -8,16 +8,17 @@
 
   <modules>
     <module>web/ksportal</module>
-    
+<!--    
     <module>eXoApplication/blog/webapp</module>
     <module>eXoApplication/blog/service</module>
-    
+-->    
     <module>eXoApplication/faq/webapp</module>
     <module>eXoApplication/faq/service</module>
-    
+
+<!--    
     <module>eXoApplication/wiki/webapp</module>
     <module>eXoApplication/wiki/service</module>
-    
+-->    
     <module>eXoApplication/forum/webapp</module>
     <module>eXoApplication/forum/service</module>
    
