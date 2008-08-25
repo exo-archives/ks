@@ -1,3 +1,7 @@
+<%  
+	import org.exoplatform.portal.webui.util.Util;
+%>
+
 <div class="UIShowBookMarkForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout" style="_width: 88%;">
@@ -13,6 +17,8 @@
 						String linkPath = "";
 						String icon = "";
 						String linkBm = ""; 
+						String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+						
 						int index = 0, lastIndex = 0;
 						for(links in uiform.getBookMark()){
 							index = links.indexOf("//") ;
@@ -21,8 +27,16 @@
 							linkName = links.substring(index+2,lastIndex);
 							linkPath = links.substring(lastIndex + 2);
 							links = "topicIcon//topicName//"+linkPath;
-							linkBm = uiform.url("OpenLink",linkPath);
-							linkBm = linkBm.replaceFirst("UIShowBookMarkForm","UIBreadcumbs").replaceFirst("OpenLink","ChangePath") ;
+							linkBm = uiform.url("OpenLink",linkPath);							
+							linkBm = linkBm.replaceFirst("UIShowBookMarkForm","UIBreadcumbs").replaceFirst("OpenLink","ChangePath");							
+						  if(linkBm.indexOf("/classic") > 0) {
+						    if(linkBm.indexOf("/classic/" + selectedNode) < 0){
+						      linkBm = linkBm.replaceFirst("/classic", "/classic/" + selectedNode) ;
+						    }									
+							}else if(linkBm.indexOf("/webos") > 0) {
+								linkBm = linkBm.replaceFirst("/classic", "/classic/" + selectedNode) ;									
+							}
+							
 					%>
 					<tr>
 						<td><div class="$icon" style="width: 24px; height: 24px;"><span></span></div></td>
