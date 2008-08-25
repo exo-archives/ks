@@ -533,11 +533,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	} else {
     		if(userRole >= 1) userRole = 2;
     	}
-			if(userTitle == null || userTitle.trim().length() < 1 || Arrays.asList(uiForm.permissionUser).contains(userTitle.toLowerCase())) {
+			if(userTitle == null || userTitle.trim().length() < 1 || 
+					(!userTitle.equals(userProfile.getUserTitle()) && Arrays.asList(uiForm.permissionUser).contains(userTitle.toLowerCase()))) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.UserTitleInvalid", new Object[]{}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				userTitle = userProfile.getUserTitle() ;
 				return;
 			}
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;

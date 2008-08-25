@@ -708,6 +708,17 @@ public class UITopicContainer extends UIForm {
 		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
+			try{
+				if(uiTopicContainer.getForum().getIsLock()){
+					UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.ForumIsLocked", new Object[]{}, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return;
+				}
+			} catch (Exception e){
+				e.printStackTrace();
+				return;
+			}
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
 			Topic topic ;
