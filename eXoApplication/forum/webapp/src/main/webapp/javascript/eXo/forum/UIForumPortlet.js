@@ -493,4 +493,32 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	}
 };
 
+UIForumPortlet.prototype.ReloadImage = function() {
+	if(eXo.core.Browser.isIE6()) {
+		var aImage = document.getElementsByTagName("img");
+		var length = aImage.length;
+		for (var i = 0; i < length; ++ i) {
+			aImage[i].src = aImage[i].src; 
+		}
+		setTimeout(eXo.forum.UIForumPortlet.ReloadImage, 2000);
+	}
+} 
+
+UIForumPortlet.prototype.shareLink = function(obj){
+	var shareLinkContainer = document.getElementById("popupShareLink");
+	var shareLink = eXo.core.DOMUtil.findDescendantsByTagName(shareLinkContainer,"input")[0] ;
+	if(shareLinkContainer.style.display != "none")
+		shareLinkContainer.style.display = "none" ;
+	else
+		shareLinkContainer.style.display = "block" ;
+	shareLink.value = window.location.protocol + "//" + window.location.host + 	shareLinkContainer.getAttribute("shareLink") ;
+	shareLink.select() ;
+	shareLink.onclick = function(){this.select();} ;
+};
+
+UIForumPortlet.prototype.closeShareLink = function(obj){
+	var popup = eXo.core.DOMUtil.findAncestorByClass(obj,"UIPopupWindow") ;
+	popup.style.display = "none" ;
+};
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

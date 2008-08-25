@@ -83,8 +83,9 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/img]", tagIndex);
 				String src = b.substring(tagIndex + 5, clsIndex);
+				String src_ = cleanHtmlCode(src).replaceAll("&nbsp;", "").replaceAll(" ", "").trim() ;
 				buffer = new StringBuffer();
-				buffer.append("<img src=\"").append(src).append("\" />");
+				buffer.append("<img src=\"").append(src_).append("\" />");
 				b = StringUtils.replace(b, "[img]" + src + "[/img]", buffer.toString());
 			} catch (Exception e) {
 				continue;
@@ -189,7 +190,7 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/url]", tagIndex);
 				String src = b.substring(tagIndex + 5, clsIndex);
-				b = StringUtils.replace(b, "[url]" + src + "[/url]", "<a target='_blank' href=\"" + src
+				b = StringUtils.replace(b, "[url]" + src + "[/url]", "<a target='_blank' href=\"" + src.trim()
 				    + "\">" + src + "</a>");
 			} catch (Exception e) {
 				continue;

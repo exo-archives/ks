@@ -278,15 +278,17 @@ public class UISearchForm extends UIForm implements UISelector {
 			UISearchForm uiForm = event.getSource() ;
 			UIForumInputWithActions inputSearchForm = uiForm.getChildById(FIELD_INPUTSEARCH_FORM);
 			String keyValue = inputSearchForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
-			String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
-			for (int i = 0; i < special.length(); i++) {
-	      char c = special.charAt(i);
-	      if(keyValue.indexOf(c) >= 0) {
-	      	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
-					return ;
+			if(!ForumUtils.isEmpty(keyValue)) {
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
+				for (int i = 0; i < special.length(); i++) {
+		      char c = special.charAt(i);
+		      if(keyValue.indexOf(c) >= 0) {
+		      	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+						return ;
+		      }
 	      }
-      }
+			}
 			String type = inputSearchForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
 			String valueIn = inputSearchForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).getValue() ;
 			String path = "" ;

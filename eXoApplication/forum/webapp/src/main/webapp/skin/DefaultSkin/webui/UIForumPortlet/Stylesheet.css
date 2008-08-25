@@ -107,6 +107,9 @@
 .UIForumPortlet .UIBreadcumbs .RSSBar {
 	float: right;
 }
+*html .UIForumPortlet .UIBreadcumbs .RSSBar {
+	width: 100px;
+}
 
 .UIForumPortlet .UIBreadcumbs .RSSBar .SeparatorLine {
 	background: url('background/SeparatorLine2x27.gif') no-repeat left;
