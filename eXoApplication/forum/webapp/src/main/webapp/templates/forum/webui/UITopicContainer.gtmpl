@@ -94,7 +94,7 @@
 			</div>
 		</div>
 		
-		<div title="Go to page Number " class="GotoPageIcon" >
+		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon" >
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative;">
@@ -117,7 +117,7 @@
 												<div class="ButtonLeft">
 													<div class="ButtonRight">
 														<div class="ButtonMiddle">
-														 <a href="<%=uicomponent.event("GoNumberPage","1")%>">Go Page</a>
+														 <a href="<%=uicomponent.event("GoNumberPage","1")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
 														</div>
 													</div>
 												</div>
@@ -369,7 +369,7 @@
 							<tr>
 								<th style="width: 40px;">&nbsp;</th>
 								<th style="width: 40px;">&nbsp;</th>
-								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon">Thread/Thread starter</div></a></th>
+								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon">Topic/Topic starter</div></a></th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
 								<th style="width: 96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>">Rating</a></th>
 								<th style="width: 40px;">Tag</th>
@@ -603,7 +603,7 @@
 			</div>
 		</div>
 		
-		<div title="Go to page Number " class="GotoPageIcon" >
+		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon" >
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative;">
@@ -626,7 +626,7 @@
 												<div class="ButtonLeft">
 													<div class="ButtonRight">
 														<div class="ButtonMiddle">
-														 <a href="<%=uicomponent.event("GoNumberPage","2")%>">Go Page</a>
+														 <a href="<%=uicomponent.event("GoNumberPage","2")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
 														</div>
 													</div>
 												</div>
