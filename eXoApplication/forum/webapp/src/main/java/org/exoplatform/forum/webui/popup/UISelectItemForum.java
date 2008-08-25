@@ -56,14 +56,17 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 	List<ForumLinkData> forumLinks = null;
 	private Map<String, List<ForumLinkData>> mapListForum = new HashMap<String, List<ForumLinkData>>() ;
 	private Map<String, List<ForumLinkData>> mapListTopic = new HashMap<String, List<ForumLinkData>>() ;
+	private List<String> listIdIsSelected = new ArrayList<String>();
 	public UISelectItemForum() {
 	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	public void setForumLinks() throws Exception {
+	public void setForumLinks(List<String> listIds) throws Exception {
 		UIForumLinks uiForumLinks = getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class) ;
+		listIdIsSelected = new ArrayList<String>();
+		listIdIsSelected.addAll(listIds);
 		if(uiForumLinks != null) {
 			this.forumLinks = uiForumLinks.getForumLinks();
 		}
@@ -72,7 +75,6 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 			this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider());
 		}
 	}
-	
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<ForumLinkData> getForumLinks() throws Exception {
@@ -87,10 +89,11 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 				for (ForumLinkData forumlist : this.forumLinks) {
 					if(forumlist.getType().equals(Utils.FORUM) && forumlist.getPath().indexOf(cateId) >= 0) {
 						linkForum.add(forumlist) ;
-						if(getUIFormCheckBoxInput(forumlist.getPath()) != null) {
-							getUIFormCheckBoxInput(forumlist.getPath()).setChecked(false) ;
-						}else {
-							addUIFormInput(new UIFormCheckBoxInput(forumlist.getPath(), forumlist.getPath(), false) );
+						if(getUIFormCheckBoxInput(forumlist.getPath()) == null) {
+							if(listIdIsSelected.contains(forumlist.getId()))
+								addUIFormInput((new UIFormCheckBoxInput(forumlist.getPath(), forumlist.getPath(), false)).setChecked(true));
+							else 
+								addUIFormInput((new UIFormCheckBoxInput(forumlist.getPath(), forumlist.getPath(), false)).setChecked(false));
 						}
 					}
 				}
