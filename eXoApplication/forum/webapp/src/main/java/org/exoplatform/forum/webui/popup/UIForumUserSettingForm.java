@@ -17,10 +17,12 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -30,6 +32,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -81,7 +84,15 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private UserProfile userProfile = null ;
+	private String[] permissionUser = null;
+	
 	public UIForumUserSettingForm() throws Exception {
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+    ResourceBundle res = context.getApplicationResourceBundle() ;
+		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), 
+																	res.getString("UIForumPortlet.label.PermissionModerator").toLowerCase(),
+																	res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase(),
+																	res.getString("UIForumPortlet.label.PermissionUser").toLowerCase()};
 	}
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
@@ -214,15 +225,19 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
 			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
 			UserProfile userProfile = uiForm.userProfile ;
-			if(ForumUtils.isEmpty(userTitle)) {
+			if(ForumUtils.isEmpty(userTitle) || Arrays.asList(uiForm.permissionUser).contains(userTitle.toLowerCase())) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.UserTitleInvalid", new Object[]{}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				userTitle = userProfile.getUserTitle() ;
+				return;
 			}
 			int maxText = ForumUtils.MAXSIGNATURE ;
 			String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
 			if(!ForumUtils.isEmpty(signature) && signature.length() > maxText) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_SIGNATURE_TEXTAREA), String.valueOf(maxText) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.UserTitleInvalid", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}

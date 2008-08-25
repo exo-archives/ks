@@ -34,9 +34,11 @@ import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -111,9 +113,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
     ResourceBundle res = context.getApplicationResourceBundle() ;
-		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin"), 
-																	res.getString("UIForumPortlet.label.PermissionModerator"),
-																	res.getString("UIForumPortlet.label.PermissionUser")};
+		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), 
+																	res.getString("UIForumPortlet.label.PermissionModerator").toLowerCase(),
+																	res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase(),
+																	res.getString("UIForumPortlet.label.PermissionUser").toLowerCase()};
   }
 	
   @SuppressWarnings("unused")
@@ -530,8 +533,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	} else {
     		if(userRole >= 1) userRole = 2;
     	}
-			if(userTitle == null || userTitle.trim().length() < 1 || Arrays.asList(uiForm.permissionUser).contains(userTitle)) {
-				userTitle = uiForm.permissionUser[(int)userRole];
+			if(userTitle == null || userTitle.trim().length() < 1 || Arrays.asList(uiForm.permissionUser).contains(userTitle.toLowerCase())) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.UserTitleInvalid", new Object[]{}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				userTitle = userProfile.getUserTitle() ;
+				return;
 			}
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
