@@ -26,6 +26,8 @@ import org.exoplatform.contact.service.ContactService;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
+import org.exoplatform.forum.service.user.ContactProvider;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -167,10 +169,13 @@ public class ForumSessionUtils {
   	return erroUser;
   }
   
-  public static Contact getPersonalContact(String userId) throws Exception {
+  /*public static Contact getPersonalContact(String userId) throws Exception {
   	ContactService contactService = (ContactService) PortalContainer.getComponent(ContactService.class) ;
 	  return contactService.getPersonalContact(userId);
+  }*/
+  
+  public static ForumContact getPersonalContact(String userId) throws Exception {
+    ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
+    return provider.getForumContact(userId);
   }
-  
-  
 }

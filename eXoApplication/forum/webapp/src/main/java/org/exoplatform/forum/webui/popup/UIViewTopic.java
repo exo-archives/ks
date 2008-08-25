@@ -16,17 +16,20 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.exoplatform.contact.service.Contact;
 import org.exoplatform.contact.service.ContactAttachment;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -109,11 +112,10 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		return this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
 	}
 	@SuppressWarnings("unused")
-	private Contact getPersonalContact(String userId) throws Exception {
-		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+	private ForumContact getPersonalContact(String userId) throws Exception {
+		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new Contact() ;
-			contact.setId(userId) ;
+			contact = new ForumContact() ;			
 		}
 		return contact ;
 	}

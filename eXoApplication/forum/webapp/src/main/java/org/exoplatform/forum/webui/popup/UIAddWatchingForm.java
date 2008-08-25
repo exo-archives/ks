@@ -24,6 +24,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -70,7 +71,7 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 			UIFormStringInput userName = getUIStringInput(USER_NAME) ;
 			userName.setEditable(false) ;
 			userName.setValue(userId) ;
-			Contact contact = this.getPersonalContact(userId) ;
+			ForumContact contact = this.getPersonalContact(userId) ;
 			String email = contact.getEmailAddress() ;
 			if(!ForumUtils.isEmpty(email))
 				list.add(email);
@@ -95,11 +96,10 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 		addUIFormInput(uiFormMultiValue) ;
 	}
 	
-	private Contact getPersonalContact(String userId) throws Exception {
-		Contact contact = ForumSessionUtils.getPersonalContact(userId) ;
+	private ForumContact getPersonalContact(String userId) throws Exception {
+		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new Contact() ;
-			contact.setId(userId) ;
+			contact = new ForumContact() ;
 		}
 		return contact ;
 	}
