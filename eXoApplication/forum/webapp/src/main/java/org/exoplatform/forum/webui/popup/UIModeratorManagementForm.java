@@ -193,6 +193,18 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	  return outPut ;
 	}
 	
+	private List<String> setListForumIds(){
+		List<String> listId = new ArrayList<String>();
+		if(!this.listModerate.isEmpty()){
+			for(String value : listModerate){
+				if(value != null && value.trim().length() > 0){
+					listId.add(value.substring(value.lastIndexOf("/") + 1));
+				}
+			}
+		}
+		return listId;
+	}
+	
 	private List<String> getModerateList(List<String> forumsModerate) {
 		List<String> list = new ArrayList<String>() ;
 		for (String string : forumsModerate) {
@@ -611,7 +623,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   		UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UISelectItemForum selectItemForum = popupAction.activate(UISelectItemForum.class, 400) ;
-			selectItemForum.setForumLinks() ;
+			selectItemForum.setForumLinks(uiForm.setListForumIds()) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
   	}
   }
