@@ -65,6 +65,8 @@ import org.exoplatform.webui.form.UIForm;
 public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private UserProfile userProfile ;
+	private boolean isOpen = true;
+	
 	private String []bookMark = new String[]{}; 
 	public UIShowBookMarkForm() {
 	}
@@ -112,7 +114,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 			if(!isRead){
 				length = 0;
 			}
-			
+			System.out.println("\n\n cate okie");
 			if(length == 3) {
 				String path_ = "" ;
 				Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
@@ -159,11 +161,15 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 					}
 					return ;
 				}
-				if(!isRead && forum.getModerators() != null && forum.getModerators().length > 0) {
-					isRead = ForumUtils.isStringInStrings(forum.getModerators(), userName);
+				if(forum.getIsClosed()) {
+					if(bookMark.userProfile.getUserRole() > 0){
+						if(forum.getModerators() != null && forum.getModerators().length > 0) {
+							isRead = ForumUtils.isStringInStrings(forum.getModerators(), userName);
+						}else {
+							isRead = false;
+						}
+					}
 				}
-				if(isRead)isRead = !forum.getIsClosed();
-				if(!isRead && bookMark.userProfile.getUserRole() == 0) isRead = true; 
 				if(isRead) {
 					forumPortlet.updateIsRendered(ForumUtils.FORUM);
 					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
@@ -174,7 +180,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 					forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
 				}
 			} else if(length == 1){
-				if(!isRead && bookMark.userProfile.getUserRole() == 0) isRead = true; 
+				if(!isRead && bookMark.userProfile.getUserRole() == 0) isRead = true;
 				if(isRead){
 					List<Forum> list = bookMark.forumService.getForums(ForumSessionUtils.getSystemProvider(), path, "");
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -185,8 +191,8 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				}
 			}
 			if(!isRead) {
-				String[] s = new String[]{};
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
+//				String[] s = new String[]{};
+//				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 				return;
 			}
 			forumPortlet.cancelAction() ;
@@ -211,4 +217,12 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 			forumPortlet.cancelAction() ;
 		}
 	}
+
+	public boolean getIsOpen() {
+  	return isOpen;
+  }
+
+	public void setIsOpen(boolean isOpen) {
+  	this.isOpen = isOpen;
+  }
 }

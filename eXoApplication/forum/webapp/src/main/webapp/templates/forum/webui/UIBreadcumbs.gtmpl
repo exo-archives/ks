@@ -8,17 +8,18 @@
 			<div class="CenterBreadcumbs">
 				<div class="BreadcumbsInfoBar">
 					<div class="OpenIcon"><span></span></div>
-				<% int t = 1 ;
+				<% int t = 0 ;
+				  String link = "";
 				  for(namePath in uicomponent.getBreadcumbs()) {
-						String link = uicomponent.url("ChangePath", uicomponent.getPath(t-1)) ;
-						String event = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
+						link = uicomponent.url("ChangePath", uicomponent.getPath(t)) ;
+						String event = uicomponent.event("ChangePath", uicomponent.getPath(t)) ;
 						if(namePath.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.eXoForum");
 						}
 						if(namePath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.SearchForums");
 						}
-						if(t < uicomponent.getMaxPath()) {
+						if(t <= uicomponent.getMaxPath()) {
 				%>
 					<a href="$link" onclick="$event; return false;" class="Selected">$namePath</a>
 					<div class="RightArrowIcon"><span></span></div>
@@ -28,19 +29,22 @@
 					<a href="$link" class="Selected">$namePath</a>
 					<% 	} else{ %>				 
 					<div class="Selected">$namePath</div>
-					<!-- share link popup start -->
-					<div id="popuShareLink" style="width: 350px; display: none; visibility: visible; z-index: 4; top: 225px; left: 482px;"  class="UIPopupWindow UIDragObject" shareLink="$link">
+				 <%		
+				 			}
+				 		} 
+				  t = t + 1 ;
+				  } 
+				 %>
+	<!-- share link popup start -->
+					<div id="popupShareLink" style="width: 350px; display: none; visibility: visible; z-index: 4; top: 225px; left: 482px;"  class="UIPopupWindow UIDragObject" shareLink="$link">
 						<div class="NormalStyle">
 						  <div class="TopLeftCornerDecorator">
 						    <div class="TopRightCornerDecorator">
 						      <div class="TopCenterDecorator">
 						        <div class="OverflowContainer">
 							        <div class="PopupTitleIcon"><span/></div>
-							        
-							          <!-- <div class="CloseButton" title="Close Window" onclick="javascript:ajaxGet('/portal/private/classic/forum?portal:componentId=forum&portal:type=action&portal:isSecure=false&amp;uicomponent=UIForumPopupWindow&amp;op=ClosePopup&amp;ajaxRequest=true')"><span></span></div> -->
 							          <div onclick="eXo.forum.UIForumPortlet.closeShareLink(this);" title="Close Window" class="CloseButton"><span/><div style="width: 16px; height: 16px;" class="ClosePopup"><span/></div></div>
-							        
-							        <div class="PopupTitle">Share Link</div>
+							        <div class="PopupTitle"><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></div>
 							      </div>
 						      </div>
 						    </div>
@@ -66,13 +70,7 @@
 						  </div>
 						</div>
 					</div>
-					<!-- share link popup end -->					
-				 <%		
-				 			}
-				 		} 
-				  t = t + 1 ;
-				  } 
-				 %>
+  <!-- share link popup end -->	
 			  	<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">
@@ -84,17 +82,15 @@
 							newMessage = newMessage + "&nbsp;" ;
 						}
 					%>
-					<div class="SeparatorLine">
-						<a style="float:left; line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
+					<div class="SeparatorLine" style="height: 24px;">
+					  <a style="line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
 							 $newMessage
 						</a>
 					</div>
 					<%} else {%>
-					<div >
-						<div class="SeparatorLine">
-							<div onclick="eXo.forum.UIForumPortlet.shareLink(this);">shares link</div>
-						</div>	
-					</div>
+					<div class="SeparatorLine">
+						<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></div>
+					</div>	
 					<%}%>
 				</div>
 				<div style="clear: both"><span></span></div>

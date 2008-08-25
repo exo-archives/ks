@@ -505,7 +505,7 @@ UIForumPortlet.prototype.ReloadImage = function() {
 } 
 
 UIForumPortlet.prototype.shareLink = function(obj){
-	var shareLinkContainer = document.getElementById("popuShareLink");
+	var shareLinkContainer = document.getElementById("popupShareLink");
 	var shareLink = eXo.core.DOMUtil.findDescendantsByTagName(shareLinkContainer,"input")[0] ;
 	if(shareLinkContainer.style.display != "none")
 		shareLinkContainer.style.display = "none" ;
@@ -514,11 +514,11 @@ UIForumPortlet.prototype.shareLink = function(obj){
 	shareLink.value = window.location.protocol + "//" + window.location.host + 	shareLinkContainer.getAttribute("shareLink") ;
 	shareLink.select() ;
 	shareLink.onclick = function(){this.select();} ;
-}
+};
 
 UIForumPortlet.prototype.closeShareLink = function(obj){
 	var popup = eXo.core.DOMUtil.findAncestorByClass(obj,"UIPopupWindow") ;
 	popup.style.display = "none" ;
-}
+};
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
