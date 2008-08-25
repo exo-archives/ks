@@ -179,9 +179,9 @@ public class JCRDataStorage{
 
 	private Category getCategory(Node cateNode) throws Exception {
 		Category cat = new Category() ;
-		if(cateNode.hasProperty("exo:id"))cat.setId(cateNode.getProperty("exo:id").getString()) ;
+		cat.setId(cateNode.getName()) ;
+		cat.setPath(cateNode.getPath()) ;
 		if(cateNode.hasProperty("exo:owner"))cat.setOwner(cateNode.getProperty("exo:owner").getString()) ;
-		if(cateNode.hasProperty("exo:path"))cat.setPath(cateNode.getProperty("exo:path").getString()) ;
 		if(cateNode.hasProperty("exo:name"))cat.setCategoryName(cateNode.getProperty("exo:name").getString()) ;
 		if(cateNode.hasProperty("exo:categoryOrder"))cat.setCategoryOrder(cateNode.getProperty("exo:categoryOrder").getLong()) ;
 		if(cateNode.hasProperty("exo:createdDate"))cat.setCreatedDate(cateNode.getProperty("exo:createdDate").getDate().getTime()) ;
@@ -200,7 +200,7 @@ public class JCRDataStorage{
 			catNode = forumHomeNode.addNode(category.getId(), "exo:forumCategory") ;
 			catNode.setProperty("exo:id", category.getId()) ;
 			catNode.setProperty("exo:owner", category.getOwner()) ;
-			catNode.setProperty("exo:path", catNode.getPath()) ;
+			catNode.setProperty("exo:path", "");//catNode.getPath()) ;
 			catNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
 		} else {
 			catNode = forumHomeNode.getNode(category.getId()) ;
@@ -328,7 +328,7 @@ public class JCRDataStorage{
 				forumNode = catNode.addNode(forum.getId(), "exo:forum") ;
 				forumNode.setProperty("exo:id", forum.getId()) ;
 				forumNode.setProperty("exo:owner", forum.getOwner()) ;
-				forumNode.setProperty("exo:path", forumNode.getPath()) ;
+				forumNode.setProperty("exo:path", "");//forumNode.getPath()) ;
 				forumNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
 				forumNode.setProperty("exo:lastTopicPath", forum.getLastTopicPath()) ;
 				forumNode.setProperty("exo:postCount", 0) ;
@@ -932,7 +932,7 @@ public class JCRDataStorage{
 		if(isNew) {
 			topicNode = forumNode.addNode(topic.getId(), "exo:topic") ;
 			topicNode.setProperty("exo:id", topic.getId()) ;
-			topicNode.setProperty("exo:path", topicNode.getPath()) ;
+			topicNode.setProperty("exo:path", "");//topicNode.getPath()) ;
 			topicNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
 			topicNode.setProperty("exo:lastPostBy", topic.getLastPostBy()) ;
 			topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime()) ;
@@ -1288,7 +1288,7 @@ public class JCRDataStorage{
 			postNode = topicNode.addNode(post.getId(), "exo:post");
 			postNode.setProperty("exo:id", post.getId());
 			postNode.setProperty("exo:owner", post.getOwner());
-			postNode.setProperty("exo:path", postNode.getPath());
+			postNode.setProperty("exo:path", "");//postNode.getPath());
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			postNode.setProperty("exo:userPrivate", post.getUserPrivate());
 			postNode.setProperty("exo:isActiveByTopic", true) ;
