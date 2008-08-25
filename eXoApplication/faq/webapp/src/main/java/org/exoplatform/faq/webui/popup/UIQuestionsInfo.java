@@ -54,6 +54,7 @@ import org.exoplatform.webui.form.UIForm;
       @EventConfig(listeners = UIQuestionsInfo.EditQuestionActionListener.class),
       @EventConfig(listeners = UIQuestionsInfo.DeleteQuestionActionListener.class),
       @EventConfig(listeners = UIQuestionsInfo.ChangeTabActionListener.class),
+      @EventConfig(listeners = UIQuestionsInfo.ChangeQuestionStatusActionListener.class),
       @EventConfig(listeners = UIQuestionsInfo.ResponseQuestionActionListener.class)
     }
 )
@@ -357,5 +358,27 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
+  }
+  
+  static public class ChangeQuestionStatusActionListener extends EventListener<UIQuestionsInfo> {
+  	public void execute(Event<UIQuestionsInfo> event) throws Exception {
+  		UIQuestionsInfo questionsInfo = event.getSource() ;
+  		String[] objectId = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
+  		try{
+  			Question question = faqService_.getQuestionById(objectId[1],FAQUtils.getSystemProvider());
+  			if(objectId[0].equals("approved")){
+  				question.setApproved(!question.isApproved());
+  			} else {
+  				question.setActivated(!question.isActivated());
+  			}
+  			faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider());
+  		}catch (Exception e){
+  			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+  		}
+  		UIPopupContainer popupContainer = questionsInfo.getAncestorOfType(UIPopupContainer.class);
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+  	}
   }
 }

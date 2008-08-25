@@ -90,24 +90,44 @@
 															if(!questionList.isEmpty()) {
 																String linkDelete = "" ;
 																String linkEdit = "" ;
+																String actionChangeStatus = "";
 																for(Question question in questionList) {
 																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
 																	linkEdit = uicomponent.event("EditQuestion", question.getId()) ;
+																	actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "approved" + "/" + question.getId()) ;
 																%>
 																	<tr>
 																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "") ;%></td>
 																		<td class="text" align="center">
 																		<%if(question.isApproved()) {%>
-																				<div class="TrueIcon"><%=_ctx.appRes(uicomponent.getName() + ".label." + "IsApproved")%></div>
+																				<div class="TrueIcon">
+																					<a href="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "UnApprove")%>">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsApproved")%>
+																					</a>
+																				</div>
 																		<%} else {%>
-																				<div class="FalseIcon"><%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotApproved")%></div>
+																				<div class="FalseIcon">
+																					<a href="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "Approve")%>">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotApproved")%>
+																					</a>
+																				</div>
 																		<%}%>
 																		</td>
 																		<td class="text" align="center">
-																		<%if(question.isActivated()) {%>
-																				<div class="TrueIcon"><%=_ctx.appRes(uicomponent.getName() + ".label." + "IsActivated")%></div>
+																		<%
+																		actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "activate" + "/" + question.getId()) ;
+																		if(question.isActivated()) {%>
+																				<div class="TrueIcon">
+																					<a href="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "UnActivated")%>">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsActivated")%>
+																					</a>
+																				</div>
 																		<%} else {%>
-																				<div class="FalseIcon"><%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotActivated")%></div>
+																				<div class="FalseIcon">
+																					<a href="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "Activate")%>">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotActivated")%>
+																					</a>
+																				</div>
 																		<%}%>
 																		</td>
 																		<td align="center">
