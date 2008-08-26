@@ -207,7 +207,8 @@ public class JCRDataStorage {
       					+"<p>We would like to inform that Category '" + cate.getProperty("exo:name").getString() 
       					+"' has been added new Question with content below: </p>"
       					+"<p>" + question.getQuestion() + "<p>"
-      					+"<p>Regards & thanks</p>");
+      					+"<p>Regards & thanks</p>" +
+      							"Link: " + question.getLink());
       			sendNotification(emailsList, message) ;    			
       		}
       	}
