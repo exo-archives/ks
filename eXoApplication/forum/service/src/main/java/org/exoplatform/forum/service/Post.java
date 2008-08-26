@@ -41,6 +41,7 @@ public class Post {
 	private String message;
 	private String remoteAddr;
 	private String icon; 
+	private String link = "";
 	private String []userPrivate ;
 	private boolean isApproved = true ;
 	private boolean isActiveByTopic = true ;
@@ -115,4 +116,7 @@ public class Post {
 
 	public String[] getUserPrivate() {return userPrivate;}
 	public void setUserPrivate(String[] userPrivate) {this.userPrivate = userPrivate;}
+	
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
 }

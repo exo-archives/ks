@@ -58,6 +58,8 @@ import org.exoplatform.forum.webui.popup.UIViewPost;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -132,6 +134,7 @@ public class UITopicDetail extends UIForm {
 	private String categoryId ;
 	private String forumId ; 
 	private String topicId = "";
+	private String link = "";
 	private boolean viewTopic = true ;
 	private Forum forum;
 	private Topic topic = new Topic();
@@ -174,6 +177,8 @@ public class UITopicDetail extends UIForm {
 	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;
 	}
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
 	
 	public void setUpdateTopic(String categoryId, String forumId, String topicId, boolean viewTopic) throws Exception {
 		this.categoryId = categoryId ;
@@ -1257,6 +1262,28 @@ public class UITopicDetail extends UIForm {
 						buffer.append(c) ;
 					}
 				}
+				
+			// set link
+	      PortalRequestContext portalContext = Util.getPortalRequestContext();
+	      String url = portalContext.getRequest().getRequestURL().toString();
+				
+				url = url.replaceFirst("http://", "") ;
+				url = url.substring(0, url.indexOf("/")) ;
+				url = "http://" + url;
+				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+				String link = topicDetail.getLink();
+				link = link.replaceFirst("UITopicDetail","UIBreadcumbs").replaceFirst("ViewThreadByUser","ChangePath").replaceAll("&amp;", "&");							
+			  if(link.indexOf("/classic") > 0) {
+			    if(link.indexOf("/classic/" + selectedNode) < 0){
+			      link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;
+			    }									
+				}else if(link.indexOf("/webos") > 0) {
+					link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;									
+				}
+			  link = link.replaceFirst("pathId", (topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId)) ;
+				
+				link = url + link;
+				//
 				String userName = topicDetail.userProfile.getUserId() ;
 				PortletRequestImp request = event.getRequestContext().getRequest();
 				String remoteAddr = request.getRemoteAddr();
@@ -1269,6 +1296,7 @@ public class UITopicDetail extends UIForm {
 				post.setIcon(topic.getIcon());
 				post.setIsHidden(isOffend) ;
 				post.setIsApproved(!hasTopicMod) ;
+				post.setLink(link);
 				try {
 					topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true) ;
 				} catch (PathNotFoundException e) {

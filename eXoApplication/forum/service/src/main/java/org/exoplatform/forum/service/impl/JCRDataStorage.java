@@ -974,8 +974,10 @@ public class JCRDataStorage{
 				Message message = new Message();
 				message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
 				message.setSubject("eXo Forum Watching Notification!");
-				message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString() 
-						+"</b>' have just	added thread:</br>" + topic.getTopicName() + "<div>" + Utils.convertCodeHTML(topic.getDescription()) + "</div>");
+				StringBuffer body = new StringBuffer();
+				body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString() ).append("</b>' have just	added topic: <b>").append(topic.getTopicName()).append("</b><div>")
+				.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> You have goto this link and view it: " + topic.getLink() + "<br/><br/><br/>");
+				message.setMessageBody(body.toString());
 				sendNotification(emailList, message) ;					
 			}
 		} else {
@@ -1018,6 +1020,7 @@ public class JCRDataStorage{
 				post.setIsApproved(true) ;
 				post.setAttachments(topic.getAttachments()) ;
 				post.setUserPrivate( new String[]{"exoUserPri"});
+				post.setLink(topic.getLink()) ;
 				savePost(sProvider, categoryId, forumId, topic.getId(), post, true) ;
 			} else {
 				String id = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST) ;
@@ -1427,9 +1430,10 @@ public class JCRDataStorage{
 						message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML);
 						// message.setMessageTo(question.getEmail());
 						message.setSubject("eXo Thread Watching Notification!");
-						message.setMessageBody("The Thread '<b>"
-								+ topicNode.getProperty("exo:name").getString()
-								+ "</b>' have just	added post:<div>" + Utils.convertCodeHTML(post.getMessage()) + "</div>");
+						StringBuffer body = new StringBuffer();
+						body.append("The Topic '<b>").append(topicNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
+						.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: " + post.getLink() + "<br/><br/><br/>");
+						message.setMessageBody(body.toString());
 						sendNotification(emailList, message);
 					}
 				}
@@ -1447,8 +1451,11 @@ public class JCRDataStorage{
 					message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML);
 					// message.setMessageTo(question.getEmail());
 					message.setSubject("eXo Forum Watching Notification!");
-					message.setMessageBody("The Forum '<b>" + forumNode.getProperty("exo:name").getString()
-							+ "</b>' have just	added post:<div>" + Utils.convertCodeHTML(post.getMessage()) + "</div>");
+					StringBuffer body = new StringBuffer();
+					body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
+					.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: " + post.getLink() + "<br/><br/><br/>");
+					
+					message.setMessageBody(body.toString());
 					sendNotification(emailList, message);
 				}
 			}
@@ -2526,7 +2533,7 @@ public class JCRDataStorage{
 		String []values = type_.split(",") ;//user(admin or not admin), type(forum, topic, post)
 		boolean isAdmin = false;
 		if(values[0].equals("true")) isAdmin = true;
-		String types[] = new String[] {Utils.FORUM, Utils.TOPIC, Utils.POST} ;;
+		String types[] = new String[] {Utils.CATEGORY, Utils.FORUM, Utils.TOPIC, Utils.POST} ;;
 		if(!values[1].equals("all")) {
 			types = values[1].split("/") ;
 		}

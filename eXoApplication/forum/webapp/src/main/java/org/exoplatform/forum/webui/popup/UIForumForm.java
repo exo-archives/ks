@@ -273,7 +273,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			UIFormInputWithActions newForumForm = uiForm.getChildById(FIELD_NEWFORUM_FORM);
 			String forumTitle = newForumForm.getUIStringInput(FIELD_FORUMTITLE_INPUT).getValue();
 			forumTitle = forumTitle.trim() ;
-			int maxText = ForumUtils.MAXTITLE ;
+			int maxText = 50;//ForumUtils.MAXTITLE ;
 			if(forumTitle.length() > maxText) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_FORUMTITLE_INPUT), String.valueOf(maxText) };
