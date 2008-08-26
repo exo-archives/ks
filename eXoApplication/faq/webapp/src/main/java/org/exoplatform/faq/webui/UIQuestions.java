@@ -1180,7 +1180,9 @@ public class UIQuestions extends UIContainer {
       UIMoveQuestionForm moveQuestionForm = popupContainer.addChild(UIMoveQuestionForm.class, null, null) ;
       moveQuestionForm.setQuestionId(questionId) ;
       popupContainer.setId("FAQMoveQuestion") ;
-      popupAction.activate(popupContainer, 500, 150) ;
+      moveQuestionForm.setFAQSetting(questions.faqSetting_) ;
+      popupAction.activate(popupContainer, 600, 400) ;
+      moveQuestionForm.setListCate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }

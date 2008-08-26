@@ -22,21 +22,21 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
-import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormSelectBox;
 
 /**
  * Created by The eXo Platform SAS
@@ -53,45 +53,104 @@ import org.exoplatform.webui.form.UIFormSelectBox;
     }
 )
 public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
-  private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private String questionId_ = new String() ;
-  private static String  LIST_CATEGORY = "FAQListCategory" ;
-  public void activate() throws Exception { }
-  public void deActivate() throws Exception { }
+  private String categoryId_ ;
+	private FAQSetting faqSetting_ ;
+	@SuppressWarnings("unused")
+  private List<Cate> listCate = new ArrayList<Cate>() ;
+  private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  private SessionProvider sessionProvider_ = FAQUtils.getSystemProvider() ;
+public UIMoveQuestionForm() throws Exception {}
+	
+	public String getCategoryID() { return categoryId_; }
+  public void setCategoryID(String s) { categoryId_ = s ; }
   
-  public UIMoveQuestionForm() throws Exception {
-    
-  }
-  
-  public void setQuestionId(String questionId) {
-    this.questionId_ = questionId ;
-    try {
-      initPage() ;
-    } catch (Exception e) {
-      e.printStackTrace();
+  public void activate() throws Exception {}
+  public void deActivate() throws Exception {}
+	
+	public class Cate{
+    private Category category;
+    private int deft ;
+    public Category getCategory() {
+      return category;
+    }
+    public void setCategory(Category category) {
+      this.category = category;
+    }
+    public int getDeft() {
+      return deft;
+    }
+    public void setDeft(int deft) {
+      this.deft = deft;
     }
   }
+
+  public List<Cate> getListCate(){
+    return this.listCate ;
+  }
   
-  private void initPage() throws Exception {
-    faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-    List<SelectItemOption<String>> listOption = new ArrayList<SelectItemOption<String>>() ;
-    for(Category category : faqService.getAllCategories(FAQUtils.getSystemProvider()) ){
-      if(category.getName().length() > 40) {
-        listOption.add(new SelectItemOption<String>(category.getName().substring(0, 39) + "...", category.getId())) ;
-      } else {
-        listOption.add(new SelectItemOption<String>(category.getName(), category.getId())) ;
+  public void setQuestionId(String questionId) throws Exception {
+    this.questionId_ = questionId ;
+    Question question = faqService_.getQuestionById(questionId_, sessionProvider_) ;
+    this.categoryId_ = question.getCategoryId() ;
+  }
+  
+  public void setFAQSetting(FAQSetting faqSetting){
+  	this.faqSetting_ = faqSetting;
+  	String orderType = faqSetting.getOrderType() ;
+  	if(orderType.equals("asc")) faqSetting.setOrderType("desc") ;
+  	else faqSetting.setOrderType("asc") ;
+  }
+  
+  public void setListCate() throws Exception {
+    List<Cate> listCate = new ArrayList<Cate>() ;
+    Cate parentCate = null ;
+    Cate childCate = null ;
+    
+    for(Category category : faqService_.getSubCategories(null, sessionProvider_, faqSetting_)) {
+      if(category != null && !category.getId().equals(categoryId_)) {
+        Cate cate = new Cate() ;
+        cate.setCategory(category) ;
+        cate.setDeft(0) ;
+        listCate.add(cate) ;
       }
     }
-    UIFormSelectBox formSelectBox = new UIFormSelectBox(LIST_CATEGORY, LIST_CATEGORY,listOption) ;
-    addChild(formSelectBox) ;
+    
+    while (!listCate.isEmpty()) {
+      parentCate = new Cate() ;
+      parentCate = listCate.get(listCate.size() - 1) ;
+      listCate.remove(parentCate) ;
+      this.listCate.add(parentCate) ;
+      for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider_, faqSetting_)){
+        if(category != null && !category.getId().equals(categoryId_)) {
+          childCate = new Cate() ;
+          childCate.setCategory(category) ;
+          childCate.setDeft(parentCate.getDeft() + 1) ;
+          listCate.add(childCate) ;
+        }
+      }
+    }
+    String orderType = faqSetting_.getOrderType() ;
+  	if(orderType.equals("asc")) faqSetting_.setOrderType("desc") ;
+  	else faqSetting_.setOrderType("asc") ;
+  }
+	
+  @SuppressWarnings("unused")
+  public List<Question> getQuestions(String cateId) {
+    try {
+      return faqService_.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider(), faqSetting_).getAll() ;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null ;
+    }
   }
   
   static public class OkActionListener extends EventListener<UIMoveQuestionForm> {
     public void execute(Event<UIMoveQuestionForm> event) throws Exception {
       UIMoveQuestionForm moveQuestionForm = event.getSource() ;
-      String cateId = ((UIFormSelectBox)moveQuestionForm.getChildById(LIST_CATEGORY)).getValue() ;
-      try{
-        Question question = faqService.getQuestionById(moveQuestionForm.questionId_, FAQUtils.getSystemProvider()) ;
+      String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
+      try {
+        Question question = faqService_.getQuestionById(moveQuestionForm.questionId_, FAQUtils.getSystemProvider()) ;
         if(cateId.equals(question.getCategoryId())) {
           UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
           uiApplication.addMessage(new ApplicationMessage("UIMoveQuestionForm.msg.choice-orther", null, ApplicationMessage.WARNING)) ;
@@ -99,7 +158,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
           return ;
         }
         question.setCategoryId(cateId) ;
-        faqService.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
+        faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
       }catch (Exception e) {
         UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;

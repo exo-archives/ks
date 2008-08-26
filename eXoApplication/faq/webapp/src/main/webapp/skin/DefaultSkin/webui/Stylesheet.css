@@ -242,7 +242,25 @@
 .UIFAQPortlet .FAQContainer .FAQContent .Sup-Title {
   font-weight: bold;
 }
+/******************************  Move Questions ***************************************/
 
+.UIFAQPortlet .UIMoveQuestionForm {
+	padding: 10px;
+}
+
+.UIFAQPortlet .UIMoveQuestionForm .TitleMoveThreads {
+	padding-left: 10px;
+	line-height: 20px;
+	font-weight: bold;
+	width: 90%;
+}
+
+.UIFAQPortlet .UIMoveQuestionForm .ViewQuestionsToSelect {
+	background-color:#F3F3F3;
+	margin:10px;
+	overflow:auto;
+	padding-bottom:5px;
+}
 /******************************  UIFAQ Sup-Category  ***************************************/
 
 .UIFAQPortlet .UIFAQSupCategory{
