@@ -103,7 +103,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private String categoryId_ = null ;
   private String questionId_ = null ;
   private String defaultLanguage_ = "" ;
-  private String link = "";
+  private String link_ = "";
   private String author_ = "" ;
   private String email_ = "" ;
   private List<String> questionContents_ = new ArrayList<String>() ;
@@ -115,8 +115,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
-  public String getLink() {return link;}
-	public void setLink(String link) { this.link = link;}
+  public String getLink() {return link_;}
+	public void setLink(String link) { this.link_ = link;}
 	
   @SuppressWarnings("static-access")
   public UIQuestionForm() throws Exception {
@@ -434,8 +434,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       question_.setAttachMent(questionForm.listFileAttach_) ;
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      //link
       
+      //link
       String link = questionForm.getLink().replaceFirst("UIQuestionForm", "UIBreadcumbs").replaceFirst("AddLanguage", "ChangePath").replaceAll("&amp;", "&");
       String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
       if(link.indexOf("/classic") > 0) {
@@ -450,17 +450,12 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 			url = url.replaceFirst("http://", "") ;
 			url = url.substring(0, url.indexOf("/")) ;
 			url = "http://" + url;
-			String path = questions.getPathService(questionForm.getCategoryId())+"/"+questionForm.categoryId_ ;
+			String path = "" ;
+			if(FAQUtils.isFieldEmpty(questionForm.questionId_)) path = questions.getPathService(questionForm.getCategoryId())+"/"+questionForm.getCategoryId() ;
+			else path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
 			link = link.replaceFirst("OBJECTID", path);
 			link = url + link;
-			
-			System.out.println("\n\n\n============>>>>>>>> " + link);
-			
       question_.setLink(link) ;
-      
-      
-      
-      
       
       try{
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {

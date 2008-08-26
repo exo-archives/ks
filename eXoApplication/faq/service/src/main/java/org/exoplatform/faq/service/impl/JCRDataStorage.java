@@ -239,7 +239,8 @@ public class JCRDataStorage {
       					+"<p>We would like to inform that the question: '" + question.getQuestion() 
       					+"' has been edited or responded </p>"
       					+"<p>" + question.getResponses() + "</p>"
-      					+"<p>Regards & thanks</p>");
+      					+"<p>Regards & thanks</p>"+
+  							"Link: " + question.getLink());
 						sendNotification(emailsList, message) ;
       		}
       	} 
@@ -257,7 +258,8 @@ public class JCRDataStorage {
 				message.setMessageBody("<p>We would like to inform your question: '" + question.getQuestion() 
   					+"' has been edited or responded </p>"
   					+"<p>" + question.getResponses() + "<p>"
-  					+"<p>Regards & thanks</p>");
+  					+"<p>Regards & thanks</p>"+
+						"Link: " + question.getLink());
 				emailsList.add(question.getEmail()) ;
 				sendNotification(emailsList, message) ;
   		} catch(Exception e) {

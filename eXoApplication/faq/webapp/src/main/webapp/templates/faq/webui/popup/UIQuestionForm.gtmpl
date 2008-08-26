@@ -5,7 +5,7 @@
 				<table class="UIFormGrid">
 					<tbody>				
 					<% 
-					String url = uicomponent.url("AddLanguage", "OBJECTID") ;
+					String url = uicomponent.url("Attachment", "OBJECTID") ;
 					uicomponent.setLink(url);
 					for(field in uiform.getChildren()) { 
 						if(field.isRendered()) {
