@@ -20,11 +20,11 @@
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 						<thead>
 							<tr>
-								<th>Thread/Thread starter</th>
-								<th style="width: 50px;">Is Active</th>
-								<th style="width: 66px;">Last Post</th>
-								<th style="width: 40px;">Replies</th>
-								<th style="width: 80px;">Action</th>
+								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
+								<th style="width: 50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.IsActive");%></th>
+								<th style="width: 66px;"><%=_ctx.appRes("UITopicDetail.label.LastPost");%></th>
+								<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Replies");%></th>
+								<th style="width: 80px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 							</tr>
 						</thead>
 						<tbody>

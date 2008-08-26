@@ -113,7 +113,7 @@
 							<tr>
 								<th style="width: 40px;"></th>
 								<th style="width: 40px;"></th>
-								<th>Thread/Thread starter</th>
+								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
 								<th style="width: 96px;">Rating</th>
 								<th style="width: 40px;">Tag</th>

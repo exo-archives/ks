@@ -22,9 +22,9 @@
 							<tr>
 								<th style="width: 40px;"></th>
 								<th style="width: 40px;"></th>
-								<th>Thread/Thread starter</th>
-								<th style="width: 50px;">Views</th>
-								<th style="width: 50px;">Action</th>
+								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
+								<th style="width: 50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Views");%></th>
+								<th style="width: 50px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -101,7 +101,7 @@
         		<a href="$link" class="ActionButton LightBlueStyle">
 	      	  	<div class="ButtonLeft">
 	        	  	<div class="ButtonRight">
-	          	  	<div class="ButtonMiddle"> $actionLabel </div>
+	          	  	<div class="ButtonMiddle">$actionLabel</div>
 	            	</div>
 	          	</div>
 	        	</a>
