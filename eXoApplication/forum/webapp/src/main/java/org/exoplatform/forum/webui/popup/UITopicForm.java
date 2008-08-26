@@ -40,6 +40,8 @@ import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -109,6 +111,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private String categoryId; 
 	private String forumId ;
 	private String topicId ;
+	private String link = "";
 	private Forum forum ;
 	private boolean isMod = false;
 	private int id = 0;
@@ -187,6 +190,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		this.setActions(new String[]{"PreviewThread","SubmitThread","Attachment","Cancel"}) ;
 	}
 	
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
 	public void setTopicIds(String categoryId, String forumId, Forum forum) {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
@@ -398,6 +403,27 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					return ;
 				}
+				// set link
+	      PortalRequestContext portalContext = Util.getPortalRequestContext();
+	      String url = portalContext.getRequest().getRequestURL().toString();
+				
+				url = url.replaceFirst("http://", "") ;
+				url = url.substring(0, url.indexOf("/")) ;
+				url = "http://" + url;
+				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+				String link = uiForm.getLink();
+				link = link.replaceFirst("UITopicForm","UIBreadcumbs").replaceFirst("PreviewThread","ChangePath").replaceAll("&amp;", "&");							
+			  if(link.indexOf("/classic") > 0) {
+			    if(link.indexOf("/classic/" + selectedNode) < 0){
+			      link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;
+			    }									
+				}else if(link.indexOf("/webos") > 0) {
+					link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;									
+				}
+			  link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
+				
+				link = url + link;
+				//
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Topic topicNew = uiForm.topic;
 				topicNew.setOwner(userName);
@@ -408,6 +434,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setLastPostBy(userName);
 				topicNew.setLastPostDate(new Date());
 				topicNew.setDescription(message);
+				topicNew.setLink(link);
 				if(whenNewPost){
 					ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
 					topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());

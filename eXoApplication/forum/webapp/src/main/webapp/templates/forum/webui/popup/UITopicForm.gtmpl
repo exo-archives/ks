@@ -21,6 +21,8 @@
 				            	 String classCss = "SelectedTab" ;
 				            	 int i =0; 
 				            	 String href = "";
+				            	 String url = uicomponent.url("PreviewThread","pathId");
+                       uicomponent.setLink(url);
 				            	 for(tabconten in uiform.getChildren()){
 				            	 	 href ="javascript:void(0);";
 					            	 if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;

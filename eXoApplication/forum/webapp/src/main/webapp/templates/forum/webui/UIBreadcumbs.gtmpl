@@ -19,7 +19,7 @@
 						if(namePath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.SearchForums");
 						}
-						if(t <= uicomponent.getMaxPath()) {
+						if(t+1 < uicomponent.getMaxPath()) {
 				%>
 					<a href="$link" onclick="$event; return false;" class="Selected">$namePath</a>
 					<div class="RightArrowIcon"><span></span></div>

@@ -16,6 +16,8 @@
 			            <%
 				            String classCss = "SelectedTab" ; 
                     int i = 0;
+                    String url = uicomponent.url("PreviewPost","pathId");
+                    uicomponent.setLink(url);
                   	for(String tabconten : uicomponent.getChildren()){ 
                   		String link = "javascript:void(0);";
                   		if(uiform.tabIsSelected(i)) classCss = "SelectedTab" ;

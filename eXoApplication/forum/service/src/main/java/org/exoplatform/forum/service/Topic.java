@@ -40,6 +40,7 @@ public class Topic {
 	private long postCount = 0;	
 	private long viewCount = 0;
 	private String icon ;
+	private String link = "";
 	private long numberAttachments = 0 ;
 	
 	private boolean isModeratePost = false ;
@@ -163,4 +164,6 @@ public class Topic {
 	public boolean getIsActive() {return isActive;}
 	public void setIsActive(boolean isActive) {this.isActive = isActive;}
 
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
 }

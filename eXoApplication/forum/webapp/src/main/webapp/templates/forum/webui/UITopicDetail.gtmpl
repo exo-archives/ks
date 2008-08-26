@@ -108,6 +108,8 @@
 			isUserCreatedTopic= false;
 		}
 	}
+	String url = uicomponent.url("ViewThreadByUser","pathId");
+  uicomponent.setLink(url);
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>

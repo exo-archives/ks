@@ -35,6 +35,8 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -98,6 +100,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private Post post_ = new Post();
 	private boolean isQuote = false ;
 	private boolean isMP = false ;
+	private String link = "";
 	public UIPostForm() throws Exception {
     UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
     postTitle.addValidator(MandatoryValidator.class);
@@ -119,6 +122,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
     this.setActions(new String[] {"PreviewPost", "SubmitPost", "Attachment", "Cancel"}) ;
 	}
 	
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
   @SuppressWarnings("unused")
   private boolean tabIsSelected(int tabId) {
     if(this.tabId == tabId) return true ;
@@ -313,6 +318,27 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					}
 					if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 				}
+				// set link
+	      PortalRequestContext portalContext = Util.getPortalRequestContext();
+	      String url = portalContext.getRequest().getRequestURL().toString();
+				
+				url = url.replaceFirst("http://", "") ;
+				url = url.substring(0, url.indexOf("/")) ;
+				url = "http://" + url;
+				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+				String link = uiForm.getLink();
+				link = link.replaceFirst("UIPostForm","UIBreadcumbs").replaceFirst("PreviewPost","ChangePath").replaceAll("&amp;", "&");							
+			  if(link.indexOf("/classic") > 0) {
+			    if(link.indexOf("/classic/" + selectedNode) < 0){
+			      link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;
+			    }									
+				}else if(link.indexOf("/webos") > 0) {
+					link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;									
+				}
+			  link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
+				
+				link = url + link;
+				//
         Post post = new Post();
 				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
@@ -322,6 +348,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setIcon(uiIconSelector.getSelectedIcon());
 				post.setAttachments(uiForm.getAttachFileList()) ;
 				post.setIsHidden(isOffend) ;
+				post.setLink(link);
 				String[]userPrivate = new String[]{"exoUserPri"};
 				if(uiForm.isMP){
 					userPrivate = new String[]{userName, uiForm.post_.getOwner()};
