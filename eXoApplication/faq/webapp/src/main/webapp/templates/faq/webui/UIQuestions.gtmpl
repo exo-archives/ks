@@ -9,7 +9,7 @@
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 %>
-<div class="UIQuestions" id="$uicomponent.id">
+<div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
 	<div class="FAQToolbar">
   	<div class="LeftBar">
   			<div class="RightBar">

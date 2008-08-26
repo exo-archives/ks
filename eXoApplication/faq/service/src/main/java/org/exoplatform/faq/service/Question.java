@@ -70,6 +70,7 @@ public class Question {
   /** The date response. */
   private Date dateResponse ;
   
+  private String link = "";
   /** The list attachments. */
   private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
   
@@ -313,4 +314,7 @@ public class Question {
   	this.languagesNotYetAnswered = languagesNotYetAnswered;
   	return this;
   }
+
+	public String getLink() {return link;}
+	public void setLink(String link) { this.link = link;}
 }

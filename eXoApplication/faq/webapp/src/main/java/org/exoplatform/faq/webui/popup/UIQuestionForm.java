@@ -38,6 +38,8 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -101,7 +103,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private String categoryId_ = null ;
   private String questionId_ = null ;
   private String defaultLanguage_ = "" ;
-  
+  private String link = "";
   private String author_ = "" ;
   private String email_ = "" ;
   private List<String> questionContents_ = new ArrayList<String>() ;
@@ -113,6 +115,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
+  public String getLink() {return link;}
+	public void setLink(String link) { this.link = link;}
+	
   @SuppressWarnings("static-access")
   public UIQuestionForm() throws Exception {
     isChildOfManager = false ;
@@ -427,6 +432,35 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       question_.setQuestion(listQuestionContent.get(0).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
       question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
+      UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+      //link
+      
+      String link = questionForm.getLink().replaceFirst("UIQuestionForm", "UIBreadcumbs").replaceFirst("AddLanguage", "ChangePath").replaceAll("&amp;", "&");
+      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+      if(link.indexOf("/classic") > 0) {
+		    if(link.indexOf("/classic/" + selectedNode) < 0){
+		      link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;
+		    }									
+			}else if(link.indexOf("/webos") > 0) {
+				link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;									
+			}
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      String url = portalContext.getRequest().getRequestURL().toString();
+			url = url.replaceFirst("http://", "") ;
+			url = url.substring(0, url.indexOf("/")) ;
+			url = "http://" + url;
+			String path = questions.getPathService(questionForm.getCategoryId())+"/"+questionForm.categoryId_ ;
+			link = link.replaceFirst("OBJECTID", path);
+			link = url + link;
+			
+			System.out.println("\n\n\n============>>>>>>>> " + link);
+			
+      question_.setLink(link) ;
+      
+      
+      
+      
       
       try{
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
@@ -484,9 +518,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       }
       
       if(!questionForm.isChildOfManager) {
-        UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-        UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
         questions.setListQuestion() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
         popupAction.deActivate() ;
