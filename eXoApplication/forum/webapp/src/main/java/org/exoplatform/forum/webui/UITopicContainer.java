@@ -529,18 +529,6 @@ public class UITopicContainer extends UIForm {
 		}
 	} 
 	
-	static public class ApproveTopicsActionListener extends EventListener<UITopicContainer> {
-		public void execute(Event<UITopicContainer> event) throws Exception {
-			UITopicContainer uiTopicContainer = event.getSource();
-			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPageListTopicUnApprove pageListTopicUnApprove	= popupAction.createUIComponent(UIPageListTopicUnApprove.class, null, null) ;
-			pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
-			popupAction.activate(pageListTopicUnApprove, 500, 365) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-		}
-	}	
-	
 	static public class MoveForumActionListener extends EventListener<UITopicContainer> {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
@@ -575,7 +563,38 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	//----------------------------------MenuThread---------------------------------
-	
+	static public class ApproveTopicsActionListener extends EventListener<UITopicContainer> {
+		@SuppressWarnings("unchecked")
+    public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiTopicContainer = event.getSource();
+			List<UIComponent> children = uiTopicContainer.getChildren() ;
+			List <Topic> topics = new ArrayList<Topic>();
+			Topic topic ;
+			for(UIComponent child : children) {
+				if(child instanceof UIFormCheckBoxInput) {
+					if(((UIFormCheckBoxInput)child).isChecked()) {
+						topic = uiTopicContainer.getTopic(child.getName());
+						if(topic != null) {
+							if(topic.getIsApproved()) continue ;
+							topic.setIsApproved(true);
+							topics.add(topic);
+						}
+					}
+				}
+			}
+			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			if(topics.size() > 0) {
+				uiTopicContainer.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 3) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+				UIPageListTopicUnApprove pageListTopicUnApprove	= popupAction.createUIComponent(UIPageListTopicUnApprove.class, null, null) ;
+				pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
+				popupAction.activate(pageListTopicUnApprove, 500, 365) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			}
+		}
+	}	
 
 	static public class EditTopicActionListener extends EventListener<UITopicContainer> {
 		@SuppressWarnings("unchecked")

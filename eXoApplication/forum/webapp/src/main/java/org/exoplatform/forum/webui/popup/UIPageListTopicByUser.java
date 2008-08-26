@@ -53,7 +53,7 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
 		events = {
 				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class ),
-				@EventConfig(listeners = UIPageListTopicByUser.DeleteTopicActionListener.class,confirm="UITopicContainer.confirm.SetDeleteTopic" )
+				@EventConfig(listeners = UIPageListTopicByUser.DeleteTopicActionListener.class,confirm="UITopicContainer.confirm.SetDeleteOneThread" )
 		}
 )
 public class UIPageListTopicByUser extends UIContainer{

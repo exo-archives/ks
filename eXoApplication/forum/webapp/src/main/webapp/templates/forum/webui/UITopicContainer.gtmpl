@@ -369,7 +369,7 @@
 							<tr>
 								<th style="width: 40px;">&nbsp;</th>
 								<th style="width: 40px;">&nbsp;</th>
-								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon">Topic/Topic starter</div></a></th>
+								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
 								<th style="width: 96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>">Rating</a></th>
 								<th style="width: 40px;">Tag</th>

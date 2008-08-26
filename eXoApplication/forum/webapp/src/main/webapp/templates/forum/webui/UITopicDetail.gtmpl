@@ -242,7 +242,7 @@
 																	if(action.equals("DeletePost")){
 																%>
 																		<a class="MenuItem" href="javaScript: void(0)"
-														 					onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeletePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneTopic")%>')){$link;}">	 
+														 					onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeletePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost")%>')){$link;}">	 
 																			<div class="ItemIcon $classIcon">
 																				$itemLabel
 																			</div>
