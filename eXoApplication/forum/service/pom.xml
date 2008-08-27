@@ -41,7 +41,13 @@
     <dependency>
       <groupId>org.exoplatform.cs</groupId>
       <artifactId>exo.cs.eXoApplication.mail.service</artifactId>
-      <version>${org.exoplatform.cs.version}</version>      
+      <version>${org.exoplatform.cs.version}</version>     
+       <exclusions>
+         <exclusion>
+           <groupId>org.exoplatform.core</groupId>
+           <artifactId>exo.core.component.security</artifactId>
+         </exclusion>
+       </exclusions>
     </dependency>
   </dependencies>
 </project>
