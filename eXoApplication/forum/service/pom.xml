@@ -38,11 +38,11 @@
       <version>${org.exoplatform.kernel.version}</version>
     </dependency>
     
-    <dependency>
+    <!--dependency>
       <groupId>org.exoplatform.cs</groupId>
       <artifactId>exo.cs.eXoApplication.mail.service</artifactId>
       <version>${org.exoplatform.cs.version}</version>      
-    </dependency>
+    </dependency-->
 
   </dependencies>
 </project>

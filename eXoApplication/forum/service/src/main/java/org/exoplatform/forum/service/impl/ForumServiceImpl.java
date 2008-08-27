@@ -35,6 +35,7 @@ import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
@@ -334,7 +335,10 @@ public class ForumServiceImpl implements ForumService{
 	public String getLastLogin() throws Exception {
 		return lastLogin_ ;
 	}
-
+ 
+	public SendMessageInfo getMessageInfo(String name) throws Exception {
+		return storage_.getMessageInfo(name) ;
+	}
 
 }
 

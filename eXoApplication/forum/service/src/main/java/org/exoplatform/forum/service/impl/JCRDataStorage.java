@@ -35,6 +35,8 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.BufferAttachment;
@@ -54,17 +56,23 @@ import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.mail.service.MailService;
-import org.exoplatform.mail.service.Message;
-import org.exoplatform.mail.service.ServerConfiguration;
+//import org.exoplatform.mail.service.MailService;
+//import org.exoplatform.mail.service.Message;
+//import org.exoplatform.mail.service.ServerConfiguration;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
+import org.exoplatform.services.mail.MailService;
+import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.scheduler.JobInfo;
+import org.exoplatform.services.scheduler.JobSchedulerService;
+import org.exoplatform.services.scheduler.PeriodInfo;
 
 /**
  * Created by The eXo Platform SARL
@@ -79,6 +87,8 @@ public class JCRDataStorage{
 
 	private NodeHierarchyCreator nodeHierarchyCreator_ ;
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
+	private Map<String, SendMessageInfo> messagesInfoMap_ = new HashMap<String, SendMessageInfo>() ;
+	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator ;
 	}
@@ -972,13 +982,15 @@ public class JCRDataStorage{
 			}
 			if(emailList.size() > 0) {					
 				Message message = new Message();
-				message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+				//message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+				message.setMimeType("text/html") ;
 				message.setSubject("eXo Forum Watching Notification!");
 				StringBuffer body = new StringBuffer();
 				body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString() ).append("</b>' have just	added topic: <b>").append(topic.getTopicName()).append("</b><div>")
 				.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> You have goto this link and view it: " + topic.getLink() + "<br/><br/><br/>");
-				message.setMessageBody(body.toString());
-				sendNotification(emailList, message) ;					
+				//message.setMessageBody(body.toString());
+				message.setBody(body.toString());
+				sendEmailNotification(emailList, message) ;					
 			}
 		} else {
 			topicNode = forumNode.getNode(topic.getId()) ;
@@ -1427,14 +1439,14 @@ public class JCRDataStorage{
 					emailList = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
 					if (emailList.size() > 0) {
 						Message message = new Message();
-						message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML);
+						message.setMimeType("text/html");
 						// message.setMessageTo(question.getEmail());
 						message.setSubject("eXo Thread Watching Notification!");
 						StringBuffer body = new StringBuffer();
 						body.append("The Topic '<b>").append(topicNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
 						.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: " + post.getLink() + "<br/><br/><br/>");
-						message.setMessageBody(body.toString());
-						sendNotification(emailList, message);
+						message.setBody(body.toString());
+						sendEmailNotification(emailList, message);
 					}
 				}
 				emailList = new ArrayList<String>();
@@ -1448,15 +1460,15 @@ public class JCRDataStorage{
 				}
 				if (emailList.size() > 0) {
 					Message message = new Message();
-					message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML);
+					message.setMimeType("text/html");
 					// message.setMessageTo(question.getEmail());
 					message.setSubject("eXo Forum Watching Notification!");
 					StringBuffer body = new StringBuffer();
 					body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
 					.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: " + post.getLink() + "<br/><br/><br/>");
 					
-					message.setMessageBody(body.toString());
-					sendNotification(emailList, message);
+					message.setBody(body.toString());
+					sendEmailNotification(emailList, message);
 				}
 			}
 		} else {
@@ -1561,33 +1573,35 @@ public class JCRDataStorage{
 		return postNode ;
 	}
 	
-	private void sendNotification(List<String> emails, Message message) throws Exception {
-		List<Message> messages = new ArrayList<Message> () ;
+	/*private void sendNotification(List<String> emails, Message message) throws Exception {
+		//List<Message> messages = new ArrayList<Message> () ;
 		List<String> emails_ = new ArrayList<String>();
-		ServerConfiguration config = getServerConfig() ;
+		//ServerConfiguration config = getServerConfig() ;
 		Message message_;
 		for(String string : emails) {
 			if(emails_.contains(string)) continue ;
 			emails_.add(string) ;
 			message_ = new Message();
 			message_.setSubject(message.getSubject());
-			message_.setMessageBody(message.getMessageBody());
-			message_.setMessageTo(string) ;
-			message_.setFrom(config.getUserName()) ;
-			messages.add(message_) ;
+			message_.setBody(message.getBody());
+			//message_.setTo(string) ;
+			//message_.setFrom(config.getUserName()) ;
+			//messages.add(message_) ;
 		}
 		try{
 			if(messages.size() > 0) {
 				MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
 				mService.sendMessages(messages, config) ;
 			}
+			
+			
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}
 		
-	}
+	}*/
 	
-	private ServerConfiguration getServerConfig() throws Exception {
+	/*private ServerConfiguration getServerConfig() throws Exception {
 		ServerConfiguration config = new ServerConfiguration();
 		config.setUserName(serverConfig_.get("account"));
 		config.setPassword(serverConfig_.get("password"));
@@ -1595,7 +1609,7 @@ public class JCRDataStorage{
 		config.setOutgoingHost(serverConfig_.get("outgoing"));
 		config.setOutgoingPort(serverConfig_.get("port"));
 		return config ;
-	}
+	}*/
 	
 	public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
@@ -2651,9 +2665,25 @@ public class JCRDataStorage{
 			e.printStackTrace();
 		}
 	}
-
-
 	
+	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
+    Calendar cal = new GregorianCalendar();
+    PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
+    String name = String.valueOf(cal.getTime().getTime()) ;
+    Class clazz = Class.forName("org.exoplatform.forum.service.SendMailJob");
+    JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
+    ExoContainer container = ExoContainerContext.getCurrentContainer();
+    JobSchedulerService schedulerService = 
+    	(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+    messagesInfoMap_.put(name, new SendMessageInfo(addresses, message)) ;
+    schedulerService.addPeriodJob(info, periodInfo);
+  }
+
+	public SendMessageInfo getMessageInfo(String name) throws Exception {
+		SendMessageInfo messageInfo = messagesInfoMap_.get(name) ;
+		messagesInfoMap_.remove(name) ;
+		return  messageInfo ;
+	}
 	
 	
 	

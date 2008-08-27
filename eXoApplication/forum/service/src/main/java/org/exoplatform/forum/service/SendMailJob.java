@@ -1,0 +1,93 @@
+/**
+ * Copyright (C) 2003-2007 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ **/
+package org.exoplatform.forum.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.RootContainer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.mail.MailService;
+import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.scheduler.JobInfo;
+import org.exoplatform.services.scheduler.JobSchedulerService;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+
+public class SendMailJob extends Thread implements Job, Runnable  {
+  private Thread thread ;
+  
+	public SendMailJob() throws Exception {
+		setDaemon(true) ;	
+		start() ;
+		
+	}
+	public void start() { 
+		if ( thread == null ) { 
+    	thread = new Thread(this); 
+    	thread.start(); 
+    }
+	} 
+	
+	@SuppressWarnings("deprecation")
+  public void destroy() {
+		thread.stop() ;
+		thread = null ;
+	} 
+	
+	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
+	
+	@SuppressWarnings("deprecation")
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+	  try {
+	  	RootContainer rootContainer = RootContainer.getInstance() ;
+	    PortalContainer portalContainer = rootContainer.getPortalContainer("portal") ;
+	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
+	    ForumService forumService = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
+	    String name = context.getJobDetail().getName();
+	    
+	    SendMessageInfo messageInfo = forumService.getMessageInfo(name) ;
+	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
+	    Message message = messageInfo.getMessage() ;
+	    
+		  JobSchedulerService schedulerService = (JobSchedulerService)portalContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
+		  		  
+		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
+		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
+		  	List<String> sentMessages = new ArrayList<String>() ;
+		  	for(String address : emailAddresses) {
+		  		if(!sentMessages.contains(address)) {
+		  			message.setTo(address) ;
+			  		mailService.sendMessage(message) ;
+			  		sentMessages.add(address) ;
+		  		}
+		  	}
+		  	System.out.println("\n\n####  Notification messages of forum service has sent !!!");
+		  }
+		  schedulerService.removeJob(info) ;		  
+
+	  } catch (Exception e) {
+		  e.printStackTrace();			
+	  }
+	  if (log_.isDebugEnabled()) {
+		log_.debug("Send Forum notification job done");
+	  }
+  }
+}
