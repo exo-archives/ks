@@ -58,6 +58,7 @@ import org.exoplatform.forum.webui.popup.UIViewPost;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
+import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.User;
@@ -126,6 +127,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.ViewPostedByUserActionListener.class ), 
 			@EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
 			@EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
+			@EventConfig(listeners = UITopicDetail.WatchOptionActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class )
 		}
 )
@@ -1271,15 +1273,14 @@ public class UITopicDetail extends UIForm {
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+				String portalName = "/" + Util.getUIPortal().getName() ;
 				String link = topicDetail.getLink();
 				link = link.replaceFirst("UITopicDetail","UIBreadcumbs").replaceFirst("ViewThreadByUser","ChangePath").replaceAll("&amp;", "&");							
-			  if(link.indexOf("/classic") > 0) {
-			    if(link.indexOf("/classic/" + selectedNode) < 0){
-			      link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;
+				if(link.indexOf(portalName) > 0) {
+			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
+			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
 			    }									
-				}else if(link.indexOf("/webos") > 0) {
-					link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;									
-				}
+				}	
 			  link = link.replaceFirst("pathId", (topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId)) ;
 				
 				link = url + link;
@@ -1369,4 +1370,20 @@ public class UITopicDetail extends UIForm {
 			}
 		}
 	}
+	
+	static public class WatchOptionActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource();
+			Topic topic = topicDetail.topic ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
+			watchToolsForm.setPath(topic.getPath());
+			watchToolsForm.setEmails(topic.getEmailNotification()) ;
+			watchToolsForm.setIsTopic(true);
+			popupAction.activate(watchToolsForm, 500, 365) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}	
+	
 }

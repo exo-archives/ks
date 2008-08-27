@@ -40,6 +40,7 @@ import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
+import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -78,6 +79,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UITopicContainer.SetCloseForumActionListener.class),
 			@EventConfig(listeners = UITopicContainer.MoveForumActionListener.class),
 			@EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class,confirm="UITopicContainer.confirm.RemoveForum"),//Menu Topic
+			@EventConfig(listeners = UITopicContainer.WatchOptionActionListener.class),
+			
 			@EventConfig(listeners = UITopicContainer.EditTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetOpenTopicActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetCloseTopicActionListener.class),
@@ -143,6 +146,10 @@ public class UITopicContainer extends UIForm {
 		this.userProfile = forumPortlet.getUserProfile() ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
 	}
+	
+	public void setIdUpdate(boolean isUpdate) {
+	  this.isUpdate = isUpdate;
+  }
 	
 	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs) throws Exception {
 		this.forumId = forumId ;
@@ -221,7 +228,7 @@ public class UITopicContainer extends UIForm {
 	
 	@SuppressWarnings("unused")
 	private String[] getActionMenuForum() throws Exception {
-		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum"};
+		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "WatchOption"};
 		return actions;
 	}
 
@@ -559,6 +566,21 @@ public class UITopicContainer extends UIForm {
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(uiTopicContainer.categoryId) ;
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}	
+
+	static public class WatchOptionActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiTopicContainer = event.getSource();
+			Forum forum = uiTopicContainer.getForum() ;
+			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
+			watchToolsForm.setPath(forum.getPath());
+			watchToolsForm.setEmails(forum.getEmailNotification()) ;
+			watchToolsForm.setIsTopic(false);
+			popupAction.activate(watchToolsForm, 500, 365) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	
 	

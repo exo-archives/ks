@@ -124,7 +124,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 			if(forum.getId().equalsIgnoreCase(this.forumId)) continue ;
 			if(this.userProfile.getUserRole() == 1){
 				if(forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <=0){
-					if(forum.getIsClosed())continue ; 
+					if(forum.getIsClosed() || forum.getIsLock())continue ; 
 					if(forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())){
 						continue ;
 					}

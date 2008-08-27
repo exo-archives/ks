@@ -326,15 +326,14 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+				String portalName = "/" + Util.getUIPortal().getName() ;
 				String link = uiForm.getLink();
 				link = link.replaceFirst("UIPostForm","UIBreadcumbs").replaceFirst("PreviewPost","ChangePath").replaceAll("&amp;", "&");							
-			  if(link.indexOf("/classic") > 0) {
-			    if(link.indexOf("/classic/" + selectedNode) < 0){
-			      link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;
+				if(link.indexOf(portalName) > 0) {
+			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
+			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
 			    }									
-				}else if(link.indexOf("/webos") > 0) {
-					link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;									
-				}
+				}		
 			  link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
 				
 				link = url + link;

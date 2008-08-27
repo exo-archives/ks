@@ -115,4 +115,5 @@ public interface DataStorage {
 	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception ;
 	
 	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception;
+	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception;
 }

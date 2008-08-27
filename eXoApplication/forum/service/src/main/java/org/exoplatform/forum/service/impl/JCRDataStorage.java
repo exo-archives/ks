@@ -37,7 +37,6 @@ import javax.jcr.query.QueryResult;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
@@ -62,13 +61,9 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-//import org.exoplatform.mail.service.MailService;
-//import org.exoplatform.mail.service.Message;
-//import org.exoplatform.mail.service.ServerConfiguration;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
-import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
@@ -86,7 +81,8 @@ import org.exoplatform.services.scheduler.PeriodInfo;
 public class JCRDataStorage{
 
 	private NodeHierarchyCreator nodeHierarchyCreator_ ;
-	private Map<String, String> serverConfig_ = new HashMap<String, String>();
+	@SuppressWarnings("unused")
+  private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, SendMessageInfo> messagesInfoMap_ = new HashMap<String, SendMessageInfo>() ;
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
@@ -514,6 +510,9 @@ public class JCRDataStorage{
 		if(forumNode.hasProperty("exo:createTopicRole")) forum.setCreateTopicRole(ValuesToStrings(forumNode.getProperty("exo:createTopicRole").getValues())) ;
 		if(forumNode.hasProperty("exo:replyTopicRole")) forum.setReplyTopicRole(ValuesToStrings(forumNode.getProperty("exo:replyTopicRole").getValues())) ;
 		if(forumNode.hasProperty("exo:moderators")) forum.setModerators(ValuesToStrings(forumNode.getProperty("exo:moderators").getValues())) ;
+		if(forumNode.isNodeType("exo:forumWatching")) {
+			forum.setEmailNotification(ValuesToStrings(forumNode.getProperty("exo:emailWatching").getValues()));
+		}
 		return forum;
 	}
 
@@ -802,6 +801,9 @@ public class JCRDataStorage{
 		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(ValuesToStrings(topicNode.getProperty("exo:userVoteRating").getValues())) ;
 		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(ValuesToStrings(topicNode.getProperty("exo:tagId").getValues())) ;
 		if(topicNode.hasProperty("exo:voteRating")) topicNew.setVoteRating(topicNode.getProperty("exo:voteRating").getDouble()) ;
+		if (topicNode.isNodeType("exo:forumWatching")) {
+			topicNew.setEmailNotification(ValuesToStrings(topicNode.getProperty("exo:emailWatching").getValues()));
+		}
 		String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST) ;
 		try {
 			Node FirstPostNode	= topicNode.getNode(idFirstPost) ;
@@ -1431,6 +1433,8 @@ public class JCRDataStorage{
 					}
 					saveUserReadTopic(sProvider, post.getOwner(), topicId, false);
 				}
+			} else {
+				postNode.setProperty("exo:isActiveByTopic", false) ;
 			}
 			List<String> emailList = new ArrayList<String>();
 			// Send notify for watching users
@@ -2639,7 +2643,7 @@ public class JCRDataStorage{
 		Node watchingNode = null;
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		String string = forumHomeNode.getPath() ;
-		path = string + "/" + path ;
+		if(path.indexOf(forumHomeNode.getName()) < 0)path = string + "/" + path ;
 		try{
 			watchingNode = (Node)forumHomeNode.getSession().getItem(path) ;
 			//add watching for node
@@ -2666,7 +2670,35 @@ public class JCRDataStorage{
 		}
 	}
 	
-	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
+	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception {
+		Node watchingNode = null;
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		String string = forumHomeNode.getPath() ;
+		if(path.indexOf(forumHomeNode.getName()) < 0)path = string + "/" + path ;
+		try{
+			watchingNode = (Node)forumHomeNode.getSession().getItem(path) ;
+			List<String> newValues = new ArrayList<String>();
+			//add watching for node
+			if(watchingNode.isNodeType("exo:forumWatching")) {
+				if(watchType == 1) {
+					String[] strings = ValuesToStrings(watchingNode.getProperty("exo:emailWatching").getValues()) ;
+					for(String str : strings) {
+						if(values.contains(str)) continue ;
+						newValues.add(str) ;
+					}
+					watchingNode.setProperty("exo:emailWatching", getStringsInList(newValues)) ;
+					watchingNode.save() ;
+					watchingNode.getSession().save();
+				}
+			} 
+		} catch (PathNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+  private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
     Calendar cal = new GregorianCalendar();
     PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
     String name = String.valueOf(cal.getTime().getTime()) ;

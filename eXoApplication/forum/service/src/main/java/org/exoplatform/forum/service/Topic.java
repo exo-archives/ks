@@ -58,6 +58,7 @@ public class Topic {
 	private String[] canPost ;
 	private String[] userVoteRating ;
 	private String[] tagId ;
+	private String[] emailNotification ;
 	private Double voteRating = 0.0 ;
 	private List<ForumAttachment> attachments ;
 	
@@ -67,6 +68,7 @@ public class Topic {
 		canPost = new String [] {} ;
 		userVoteRating = new String [] {} ;
 		tagId = new String [] {} ;
+		emailNotification = new String [] {} ;
 	}
 	
 	public String getOwner(){return owner;} 
@@ -166,4 +168,7 @@ public class Topic {
 
 	public String getLink() {return link;}
 	public void setLink(String link) {this.link = link;}
+	
+	public String[] getEmailNotification(){return emailNotification;}	
+	public void setEmailNotification(String[] emailNotification){this.emailNotification = emailNotification;}
 }

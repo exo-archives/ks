@@ -32,7 +32,7 @@
 						<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><%=_ctx.appRes("UIViewUserProfile.action.Close");%></div>
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
 								</div>
 							</div>
 						</a>

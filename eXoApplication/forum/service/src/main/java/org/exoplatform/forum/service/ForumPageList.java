@@ -189,6 +189,9 @@ public class ForumPageList extends JCRPageList {
 		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(ValuesToStrings(topicNode.getProperty("exo:userVoteRating").getValues())) ;
 		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(ValuesToStrings(topicNode.getProperty("exo:tagId").getValues())) ;
 		if(topicNode.hasProperty("exo:voteRating")) topicNew.setVoteRating(topicNode.getProperty("exo:voteRating").getDouble()) ;
+		if (topicNode.isNodeType("exo:forumWatching")) {
+			topicNew.setEmailNotification(ValuesToStrings(topicNode.getProperty("exo:emailWatching").getValues()));
+		}
 		String idFirstPost = topicNode.getName().replaceFirst("topic", "post") ;
 		if(topicNode.hasNode(idFirstPost)) {
 			Node FirstPostNode	= topicNode.getNode(idFirstPost) ;

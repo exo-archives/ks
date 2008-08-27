@@ -305,6 +305,10 @@ public class ForumServiceImpl implements ForumService{
 		storage_.addWatch(sProvider, watchType, path, values) ; 
 	}
 
+	public void removeWatch(SessionProvider sProvider, int watchType, String path,List<String> values) throws Exception {
+		storage_.removeWatch(sProvider, watchType, path, values) ; 
+	}
+
 	public synchronized void userLogin(String userId) throws Exception {
 		lastLogin_ = userId ;
 		onlineUsers_.put(userId, true) ;		
@@ -341,19 +345,3 @@ public class ForumServiceImpl implements ForumService{
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
