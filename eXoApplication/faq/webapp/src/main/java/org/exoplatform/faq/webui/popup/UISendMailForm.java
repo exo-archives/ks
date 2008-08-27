@@ -68,6 +68,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private static final String FILED_QUESTION_LANGUAGE = "Language" ;
   private static final String FILED_MESSAGE = "Message" ;
   final static public String FIELD_FROM_INPUT = "fromInput" ;
+  final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
   private static Map<String, String> serverConfig_ = new HashMap<String, String>();
   
   private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
@@ -147,11 +148,11 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
      	 String response = questionLangua.getResponse() ;
         if(response.equals(" ")) content =this.getLabel("change-content1") + this.getLabel("change-content2")
         														+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
-        														+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>";
+        														+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>" ;
         else 
         	content =this.getLabel("change-content1") + this.getLabel("change-content2")
         								+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>" 
-        								+"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>" 
+        								+"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>"
         								+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>";
       }
     }
@@ -204,6 +205,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       	return ;
       }  
       Message  message = new Message(); 
+      message.setMimeType(MIMETYPE_TEXTHTML) ;
       message.setFrom(fullFrom) ;
       message.setTo(to) ;
       message.setCC(cc) ;
