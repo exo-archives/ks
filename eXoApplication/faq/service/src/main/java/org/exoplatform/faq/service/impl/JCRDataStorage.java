@@ -35,6 +35,8 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Category;
@@ -47,11 +49,14 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.mail.service.MailService;
-import org.exoplatform.mail.service.Message;
-import org.exoplatform.mail.service.ServerConfiguration;
+import org.exoplatform.faq.service.notify.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.mail.MailService;
+import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.scheduler.JobInfo;
+import org.exoplatform.services.scheduler.JobSchedulerService;
+import org.exoplatform.services.scheduler.PeriodInfo;
 
 
 /**
@@ -67,7 +72,9 @@ public class JCRDataStorage {
   final private static String FAQ_APP = "faqApp".intern() ;
   final private static String USER_SETTING = "UserSetting".intern();
   final private static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
+  final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
   private Map<String, String> serverConfig_ = new HashMap<String, String>();
+  private Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
   private NodeHierarchyCreator nodeHierarchyCreator_ ;
   private boolean isOwner = false ;
   public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
@@ -198,18 +205,16 @@ public class JCRDataStorage {
       		}
       		if(emailsList != null && emailsList.size() > 0) { 			
       			Message message = new Message();
-            message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
-      			//message.setMessageTo(question.getEmail());
+            message.setMimeType(MIMETYPE_TEXTHTML) ;
       			message.setSubject("FAQ Watching Category Notification! ");
-      			message.setMessageBody("<p>Hi you,</p>" 
+      			message.setBody("<p>Hi you,</p>" 
       					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
-//      					+"<p>We would like to inform : http://localhost:8080/portal/private/classic/&objectId=" +question.getCategoryId()
       					+"<p>We would like to inform that Category '" + cate.getProperty("exo:name").getString() 
       					+"' has been added new Question with content below: </p>"
       					+"<p>" + question.getQuestion() + "<p>"
       					+"<p>Regards & thanks</p>" +
-      							"Link: " + question.getLink());
-      			sendNotification(emailsList, message) ;    			
+  							"Click "+"<a href =" + question.getLink()+">here</a> for more details!");
+      			sendEmailNotification(emailsList, message) ;    			
       		}
       	}
     	} catch(Exception e) {
@@ -232,16 +237,16 @@ public class JCRDataStorage {
       		}
       		if(emailsList != null && emailsList.size() > 0) {
 						Message message = new Message();
-			      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+			      message.setMimeType(MIMETYPE_TEXTHTML) ;
 						message.setSubject("FAQ Watching Category Notification! ");
-						message.setMessageBody("<p>Hi you,</p>" 
+						message.setBody("<p>Hi you,</p>" 
       					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
       					+"<p>We would like to inform that the question: '" + question.getQuestion() 
       					+"' has been edited or responded </p>"
       					+"<p>" + question.getResponses() + "</p>"
       					+"<p>Regards & thanks</p>"+
-  							"Link: " + question.getLink());
-						sendNotification(emailsList, message) ;
+      					"Click "+"<a href =" + question.getLink()+">here</a> for more details!");
+						sendEmailNotification(emailsList, message) ;
       		}
       	} 
   		} catch(Exception e) {
@@ -253,73 +258,25 @@ public class JCRDataStorage {
   		List<String> emailsList = new ArrayList<String>() ;
   		try {
   			Message message = new Message();
-	      message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+	      message.setMimeType(MIMETYPE_TEXTHTML) ;
 				message.setSubject("FAQ Your Question is answered or edit ! ");
-				message.setMessageBody("<p>We would like to inform your question: '" + question.getQuestion() 
+				message.setBody("<p>We would like to inform your question: '" + question.getQuestion() 
   					+"' has been edited or responded </p>"
   					+"<p>" + question.getResponses() + "<p>"
   					+"<p>Regards & thanks</p>"+
-						"Link: " + question.getLink());
+  					"Click "+"<a href =" + question.getLink()+">here</a> for more details!");
 				emailsList.add(question.getEmail()) ;
-				sendNotification(emailsList, message) ;
+				sendEmailNotification(emailsList, message) ;
   		} catch(Exception e) {
   			e.printStackTrace() ;
   		}  		  		
   	}
   }
-  
-  private void sendNotification(List<String> emails, Message message) throws Exception {
-  	List<Message> messages = new ArrayList<Message> () ;
-		List<String> emails_ = new ArrayList<String>();
-		ServerConfiguration config = getServerConfig() ;
-		Message message_ = new Message() ;
-		for(String string : emails) {
-			if(emails_.contains(string)) continue ;
-			emails_.add(string) ;
-			message_ = new Message() ;
-			message_.setSubject(message.getSubject());
-			message_.setMessageBody(message.getMessageBody());
-			message_.setMessageTo(string) ;
-			message_.setFrom(config.getUserName()) ;
-			messages.add(message_) ;
-		}
-		try{
-			if(messages.size() > 0) {
-				MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
-				mService.sendMessages(messages, config) ;
-			}
-		}catch(Exception e) {
-			e.printStackTrace() ;
-		}
-		
-	}
+
   
   public void sendMessage(Message message) throws Exception {
-  	List<Message> messages = new ArrayList<Message> () ;
-  	ServerConfiguration config = getServerConfig() ;
-  	String from = message.getFrom() ;
-  	if (from != null && from.length() > 0) {
-  		message.setFrom(from) ;
-  		messages.add(message) ;
-  	}
-  	try{
-			if(messages.size() > 0) {
-				MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
-				mService.sendMessages(messages, config) ;
-			}
-  	}catch(Exception e) {
-			e.printStackTrace() ;
-		}
-  }
-
-  private ServerConfiguration getServerConfig() throws Exception {
-  	ServerConfiguration config = new ServerConfiguration();
-  	config.setUserName(serverConfig_.get("account"));
-		config.setPassword(serverConfig_.get("password"));
-		config.setSsl(true);
-		config.setOutgoingHost(serverConfig_.get("outgoing"));
-		config.setOutgoingPort(serverConfig_.get("port"));
-		return config ;
+		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+		mService.sendMessage(message) ;		
   }
   
   public List<QuestionLanguage> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
@@ -1028,5 +985,24 @@ public class JCRDataStorage {
     }
 		return breadcums;
   }
+  
+  private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
+    Calendar cal = new GregorianCalendar();
+    PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
+    String name = String.valueOf(cal.getTime().getTime()) ;
+    Class clazz = Class.forName("org.exoplatform.faq.service.notify.NotifyJob");
+    JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", clazz);
+    ExoContainer container = ExoContainerContext.getCurrentContainer();
+    JobSchedulerService schedulerService = 
+    	(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+    messagesInfoMap_.put(name, new NotifyInfo(addresses, message)) ;
+    schedulerService.addPeriodJob(info, periodInfo);
+  }
+
+	public NotifyInfo getMessageInfo(String name) throws Exception {
+		NotifyInfo messageInfo = messagesInfoMap_.get(name) ;
+		messagesInfoMap_.remove(name) ;
+		return  messageInfo ;
+	}
 
 }

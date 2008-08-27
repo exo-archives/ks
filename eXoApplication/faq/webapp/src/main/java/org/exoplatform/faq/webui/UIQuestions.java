@@ -47,6 +47,8 @@ import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -106,6 +108,7 @@ public class UIQuestions extends UIContainer {
   public String questionView_ = "" ;
   public static String newPath_ = "" ;
   private String currentUser_ = "";
+  private String link_ ="";
 	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
   public boolean isChangeLanguage = false ;
@@ -482,6 +485,9 @@ public class UIQuestions extends UIContainer {
       }
     return string.toString();
   }
+  
+  public String getLink() {return link_;}
+	public void setLink(String link) { this.link_ = link;}
   
   private List<Category> getAllSubCategory(String categoryId) throws Exception {
     List<Category> listResult = new ArrayList<Category>() ;
@@ -1193,8 +1199,10 @@ public class UIQuestions extends UIContainer {
       String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
       Question question = null ;
+      String categoryId = null ;
       try{
         question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+        categoryId = question.getCategoryId() ;
       } catch (Exception e) {
         UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1206,6 +1214,25 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       UISendMailForm sendMailForm = popupContainer.addChild(UISendMailForm.class, null, null) ;
+      //link
+      String link = uiQuestions.getLink().replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("Setting", "ChangePath").replaceAll("&amp;", "&");
+      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+      if(link.indexOf("/classic") > 0) {
+		    if(link.indexOf("/classic/" + selectedNode) < 0){
+		      link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;
+		    }									
+			}else if(link.indexOf("/webos") > 0) {
+				link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;									
+			}
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      String url = portalContext.getRequest().getRequestURL().toString();
+			url = url.replaceFirst("http://", "") ;
+			url = url.substring(0, url.indexOf("/")) ;
+			url = "http://" + url;
+			String path = uiQuestions.getPathService(categoryId)+"/"+ categoryId ;
+			link = link.replaceFirst("OBJECTID", path);
+			link = url + link;
+			sendMailForm.setLink(link);
       if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "") ;
       else sendMailForm.setUpdateQuestion(questionId , language_) ;
       popupContainer.setId("FAQSendMailForm") ;
