@@ -18,7 +18,7 @@
 						String icon = "";
 						String linkBm = ""; 
 						String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-						
+						String portalName = "/" + Util.getUIPortal().getName() ;
 						int index = 0, lastIndex = 0;
 						for(links in uiform.getBookMark()){
 							index = links.indexOf("//") ;
@@ -29,14 +29,11 @@
 							links = "topicIcon//topicName//"+linkPath;
 							linkBm = uiform.url("OpenLink",linkPath);							
 							linkBm = linkBm.replaceFirst("UIShowBookMarkForm","UIBreadcumbs").replaceFirst("OpenLink","ChangePath");							
-						  if(linkBm.indexOf("/classic") > 0) {
-						    if(linkBm.indexOf("/classic/" + selectedNode) < 0){
-						      linkBm = linkBm.replaceFirst("/classic", "/classic/" + selectedNode) ;
+							if(linkBm.indexOf(portalName) > 0) {
+						    if(linkBm.indexOf(portalName + "/" + selectedNode) < 0){
+						      linkBm = linkBm.replaceFirst(portalName, portalName + "/" + selectedNode) ;
 						    }									
-							}else if(linkBm.indexOf("/webos") > 0) {
-								linkBm = linkBm.replaceFirst("/classic", "/classic/" + selectedNode) ;									
-							}
-							
+							}							
 					%>
 					<tr>
 						<td><div class="$icon" style="width: 24px; height: 24px;"><span></span></div></td>
@@ -47,7 +44,7 @@
 							</a>
 						</td>
 					</tr>
-					<% } %>
+					<% }%>
 				</body>
 			</table>
 		</div>
