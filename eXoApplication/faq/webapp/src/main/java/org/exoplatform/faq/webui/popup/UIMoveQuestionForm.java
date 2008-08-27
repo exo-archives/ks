@@ -108,7 +108,7 @@ public UIMoveQuestionForm() throws Exception {}
     Cate childCate = null ;
     
     for(Category category : faqService_.getSubCategories(null, sessionProvider_, faqSetting_)) {
-      if(category != null && !category.getId().equals(categoryId_)) {
+      if(category != null ) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
         cate.setDeft(0) ;
@@ -122,7 +122,7 @@ public UIMoveQuestionForm() throws Exception {}
       listCate.remove(parentCate) ;
       this.listCate.add(parentCate) ;
       for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider_, faqSetting_)){
-        if(category != null && !category.getId().equals(categoryId_)) {
+        if(category != null ) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;
           childCate.setDeft(parentCate.getDeft() + 1) ;

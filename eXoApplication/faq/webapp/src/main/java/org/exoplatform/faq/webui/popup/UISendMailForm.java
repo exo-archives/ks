@@ -77,12 +77,15 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   @SuppressWarnings("unused")
   private String questionChanged_ = new String() ;
-  
+  private String link_ = "" ;
 	public UISendMailForm() throws Exception { this.setActions(new String[]{"Send", "Cancel"}) ;}
 	
 	public void activate() throws Exception {}
   public void deActivate() throws Exception {}
 	
+  public String getLink() {return link_;}
+	public void setLink(String link) { this.link_ = link;}
+  
   @SuppressWarnings("unused")
   private List<SelectItemOption<String>> getListLanguageToSendFriend() {
     return listLanguageToReponse ;
@@ -99,7 +102,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   
 	public void setUpdateQuestion(String questionId, String language) throws Exception {
     Question question = FAQUtils.getFAQService().getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-   if(language.equals("")) language = question.getLanguage() ;
+    if(language.equals("")) language = question.getLanguage() ;
     @SuppressWarnings("unused")
     String email = "" ;
     String name = "" ;
@@ -143,11 +146,13 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
        contenQuestion =  questionLangua.getQuestion() ;
      	 String response = questionLangua.getResponse() ;
         if(response.equals(" ")) content =this.getLabel("change-content1") + this.getLabel("change-content2")
-        														+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>";
+        														+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
+        														+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>";
         else 
         	content =this.getLabel("change-content1") + this.getLabel("change-content2")
         								+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>" 
-        								+"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>" ;
+        								+"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>" 
+        								+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>";
       }
     }
     addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title")+ contenQuestion)) ;
@@ -242,11 +247,13 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
            @SuppressWarnings("unused")
           String content = "" ;
            if(response.equals(" ")) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
-          	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() + "</p>";
+          	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() + "</p>"
+          	 													+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
            else 
            	content =sendMailForm.getLabel("change-content1")+ sendMailForm.getLabel("change-content2")
            			+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() + "</p>"
-           			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response + "</p>";
+           			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response + "</p>"
+           			+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
            body.setValue(content) ;
          }
        }
