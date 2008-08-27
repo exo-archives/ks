@@ -29,7 +29,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.mail.service.Message;
+import org.exoplatform.services.mail.Message;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -200,11 +200,11 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       }  
       Message  message = new Message(); 
       message.setFrom(fullFrom) ;
-      message.setMessageTo(to) ;
-      message.setMessageCc(cc) ;
-      message.setMessageBcc(bcc) ;
+      message.setTo(to) ;
+      message.setCC(cc) ;
+      message.setBCC(bcc) ;
       message.setSubject(subject) ;
-      message.setMessageBody(body) ;
+      message.setBody(body) ;
       try {
       	faqService_.sendMessage(message) ;
       } catch(Exception e) {

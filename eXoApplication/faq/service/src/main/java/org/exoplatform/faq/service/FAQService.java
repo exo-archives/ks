@@ -24,8 +24,9 @@ import javax.jcr.Node;
 import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.mail.service.Message;
+import org.exoplatform.faq.service.notify.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.mail.Message;
 
 /**
  * Created by The eXo Platform SARL.
@@ -561,4 +562,5 @@ public interface FAQService {
    */
   public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception ;
 
+  public NotifyInfo getMessageInfo(String name) throws Exception  ;
 }
