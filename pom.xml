@@ -8,15 +8,8 @@
 
   <modules>
     <module>web/ksportal</module>
-    
-    <module>eXoApplication/blog/webapp</module>
-    <module>eXoApplication/blog/service</module>
-    
     <module>eXoApplication/faq/webapp</module>
     <module>eXoApplication/faq/service</module>
-    
-    <module>eXoApplication/wiki/webapp</module>
-    <module>eXoApplication/wiki/service</module>
     
     <module>eXoApplication/forum/webapp</module>
     <module>eXoApplication/forum/service</module>
@@ -73,7 +66,7 @@
           <systemProperties>
             <property>
               <name>mock.portal.dir</name>
-              <value>${exo.projects.directory.src}/portal/tags/2.0.1/web/portal/src/main/webapp</value>
+              <value>${exo.projects.directory.src}/portal/tags/2.2/web/portal/src/main/webapp</value>
             </property>
           </systemProperties>
         </configuration>
@@ -112,14 +105,14 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <org.exoplatform.kernel.version>2.0.1</org.exoplatform.kernel.version>
-        <org.exoplatform.core.version>2.0.2</org.exoplatform.core.version>
-        <!--org.exoplatform.ws.version>trunk</org.exoplatform.ws.version-->
-        <org.exoplatform.jcr.version>1.8.3</org.exoplatform.jcr.version>
-        <org.exoplatform.pc.version>2.0rc5</org.exoplatform.pc.version>
-        <org.exoplatform.portal.version>2.0.1</org.exoplatform.portal.version>
+        <org.exoplatform.kernel.version>2.0.2</org.exoplatform.kernel.version>
+        <org.exoplatform.core.version>2.1</org.exoplatform.core.version>
+        <org.exoplatform.ws.version>1.2</org.exoplatform.ws.version>
+        <org.exoplatform.jcr.version>1.9</org.exoplatform.jcr.version>
+        <org.exoplatform.pc.version>2.0.1</org.exoplatform.pc.version>
+        <org.exoplatform.portal.version>2.2</org.exoplatform.portal.version>
         <org.exoplatform.ks.version>trunk</org.exoplatform.ks.version>
-        <org.exoplatform.cs.version>trunk</org.exoplatform.cs.version>
+        <org.exoplatform.cs.version>1.0</org.exoplatform.cs.version>
         <test.classes>Test</test.classes>
         <test.skip>true</test.skip>
       </properties>
