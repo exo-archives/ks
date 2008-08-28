@@ -241,22 +241,26 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   		 UISendMailForm sendMailForm = event.getSource() ;
   		 UIFormSelectBox formSelectBox = sendMailForm.getChildById(FILED_QUESTION_LANGUAGE) ;
   		 UIFormWYSIWYGInput body = sendMailForm.getChildById(FILED_MESSAGE) ;
+  		 UIFormStringInput subject = sendMailForm.getChildById(FILED_SUBJECT) ;
        String language = formSelectBox.getValue() ;
+       String contenQuestion = "" ;
        for(QuestionLanguage questionLanguage : sendMailForm.listQuestionLanguage) {
          if(questionLanguage.getLanguage().equals(language)) {
         	 sendMailForm.languageIsResponsed = language ;
+        	 contenQuestion =  questionLanguage.getQuestion() ;
         	 String response = questionLanguage.getResponse() ;
            @SuppressWarnings("unused")
           String content = "" ;
            if(response.equals(" ")) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
-          	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() + "</p>"
+          	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
           	 													+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
            else 
            	content =sendMailForm.getLabel("change-content1")+ sendMailForm.getLabel("change-content2")
-           			+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ questionLanguage.getQuestion() + "</p>"
+           			+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
            			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response + "</p>"
            			+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
            body.setValue(content) ;
+           subject.setValue(sendMailForm.getLabel("change-title")+contenQuestion) ;
          }
        }
        event.getRequestContext().addUIComponentToUpdateByAjax(sendMailForm) ;
