@@ -9,7 +9,7 @@
 <div class="UIMoveQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
 	<div class="TitleMoveThreads"><%=_ctx.appRes(uicomponent.getName() + ".label." + "MoveQuestionTo")%>:</div>
-	  <div class="ViewQuestionsToSelect " style="margin: 5px 0px 5px 0px ; padding-top: 10px;">
+	  <div class="ViewQuestionsAtMove" style="margin: 5px 0px 5px 0px ; padding-top: 10px;">
 			<div style="margin-left: 30px;">
 		<%
 		List listCate = uicomponent.getListCate() ;

@@ -6,12 +6,12 @@
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 %>
-<div class="UIMoveCategoryForm $uicomponent.id" style="background-color:white;">
+<div class="UIMoveCategoryForm $uicomponent.id">
 	<% uiform.begin() %>
 	<div class="TitleMoveThreads"><%= _ctx.appRes("UIMoveFAQForm.title.chooseCategory"); %>
 	  <% String linkRoot = uicomponent.event("Save", null); %>	
 	</div>
-	  <div class="ViewQuestionsToSelect " style="margin: 5px 0px 5px 0px ; padding-top: 10px;">
+	  <div class="ViewCategoryToSelect" style="margin: 5px 0px 5px 0px ; padding-top: 10px;">
 			<div class="Icon FAQCategoryViewMove"><span></span></div>
 			<div id="" style="float: left" ><a href="javaScript: void(0)" ondblclick="$linkRoot"><%= _ctx.appRes("UIMoveFAQForm.title.root"); %></a></div>
 			<div style="clear: left;"><span></span></div>
