@@ -366,13 +366,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
       String link = response.getLink().replaceFirst("UIResponseForm", "UIBreadcumbs").replaceFirst("Attachment", "ChangePath").replaceAll("&amp;", "&");
       String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-      if(link.indexOf("/classic") > 0) {
-		    if(link.indexOf("/classic/" + selectedNode) < 0){
-		      link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;
+      String portalName = "/" + Util.getUIPortal().getName() ;
+      if(link.indexOf(portalName) > 0) {
+		    if(link.indexOf(portalName + "/" + selectedNode) < 0){
+		      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
 		    }									
-			}else if(link.indexOf("/webos") > 0) {
-				link = link.replaceFirst("/classic", "/classic/" + selectedNode) ;									
-			}
+			}	
       PortalRequestContext portalContext = Util.getPortalRequestContext();
       String url = portalContext.getRequest().getRequestURL().toString();
 			url = url.replaceFirst("http://", "") ;

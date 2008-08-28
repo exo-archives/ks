@@ -156,7 +156,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
         								+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>";
       }
     }
-    addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title")+ contenQuestion)) ;
+    addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title")+ contenQuestion.replaceAll("<br>", " "))) ;
     addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, null, content, true)) ;
 	}
 
