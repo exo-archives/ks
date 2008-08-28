@@ -96,6 +96,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
   		List<Question> listQuestionSearch = new ArrayList<Question>();
   		if(faqSetting_.getDisplayMode().equals("both")) {
 			  if(serviceUtils.isAdmin(currentUser)) {
+			  	setListQuestion(listQuestion_) ;
 			  	return this.listQuestion_ ;
 				} else {
 					for(Question quest: listQuestion_) {
@@ -110,6 +111,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 								continue ;
 						}
 					}
+					setListQuestion(listQuestionSearch) ;
 					return listQuestionSearch ;
 				}
   		} else {
@@ -125,6 +127,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 							continue ;
 					}
 				}
+  			setListQuestion(listQuestionSearch) ;
   			return listQuestionSearch ;
   		}
   	} else {
@@ -140,6 +143,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
   		}
   		if(faqSetting_.getDisplayMode().equals("both")) {
 	  		if(serviceUtils.isAdmin(currentUser)) {
+	  			setListQuestion(listQuestionSearchByLanguage) ;
 			  	return listQuestionSearchByLanguage ;
 				} else {
 					for(Question quest: listQuestionSearchByLanguage) {
@@ -154,6 +158,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 								continue ;
 						}
 					}
+					setListQuestion(listQuestionLanguage) ;
 					return listQuestionLanguage ;
 	  		}
   		} else {
@@ -169,13 +174,13 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 							continue ;
 					}
 				}
+  			setListQuestion(listQuestionLanguage);
   			return listQuestionLanguage ;
   		}
   	}
   }
   
   public void setListQuestion(List<Question> listQuestion) {
-    this.listQuestion_ = listQuestion ;
     try {
 	    pageList = new QuestionPageList(listQuestion, listQuestion.size());
 	    pageList.setPageSize(5);
