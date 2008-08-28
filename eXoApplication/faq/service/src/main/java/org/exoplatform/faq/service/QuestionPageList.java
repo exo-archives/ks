@@ -191,9 +191,9 @@ public class QuestionPageList extends JCRPageList {
     else {
       position = (page-1) * pageSize ;
     }
-    iter_.skip(position) ;
     currentListPage_ = new ArrayList<Question>() ;
     if(!isNotYetAnswered) {
+    	iter_.skip(position) ;
     	Question question = new Question();
       for(int i = 0; i < pageSize; i ++) {
         // add != null to fix bug 514

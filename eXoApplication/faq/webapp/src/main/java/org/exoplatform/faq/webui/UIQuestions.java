@@ -744,6 +744,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			try {
 				Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
@@ -756,12 +757,13 @@ public class UIQuestions extends UIContainer {
 		      	for(Category cat: listCate) { cateId = cat.getId(); }
 		      } 
         	if(listCate.size() > 1 || listCate.size() == 1 && !categoryId.equals(cateId)) {
-	        	UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-	    			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 600) ;
+//	    			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 600) ;
+        		UIMoveCategoryForm uiMoveCategoryForm = popupContainer.addChild(UIMoveCategoryForm.class, null, null) ;
 	    			popupContainer.setId("MoveCategoryForm") ;
 	    			uiMoveCategoryForm.setCategoryID(categoryId) ;
 	    			uiMoveCategoryForm.setFAQSetting(question.faqSetting_) ;
 	    			uiMoveCategoryForm.setListCate() ;
+	    			popupAction.activate(popupContainer, 600, 400) ;
 	    			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         	} else {
         		uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.cannot-move-category", null, ApplicationMessage.WARNING)) ;
