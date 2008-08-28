@@ -41,6 +41,11 @@ public class ForumPageList extends JCRPageList {
 	private SessionProvider sProvider_ ;
 	private NodeIterator iter_ = null;
 	
+	public ForumPageList(long pageSize, int size) {
+		super(pageSize) ;
+		setAvailablePage(size);
+	};
+	
 	public ForumPageList(SessionProvider sProvider, NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
 		super(pageSize) ;
 		value_ = value ;
@@ -94,6 +99,23 @@ public class ForumPageList extends JCRPageList {
 		iter_ = null;
 		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
 	}
+	
+
+	@SuppressWarnings("unchecked")
+  @Override
+  protected void populateCurrentPageSearch(long page, List list) throws Exception {
+		long pageSize = getPageSize();
+	  long position = 0;
+	  if(page == 1) position = 0;
+	  else {
+	  	position = (page - 1) * pageSize;
+	  }
+	  pageSize *= page ;
+	  currentListPage_ = new ArrayList<ForumSearch>();
+	  for(int i = (int)position; i < pageSize && i < list.size(); i ++){
+	  	currentListPage_.add(list.get(i));
+	  }
+  }
 	
 	private NodeIterator setQuery(SessionProvider sProvider, boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
@@ -280,5 +302,6 @@ public class ForumPageList extends JCRPageList {
       repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
     return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
   }
+
 
 }

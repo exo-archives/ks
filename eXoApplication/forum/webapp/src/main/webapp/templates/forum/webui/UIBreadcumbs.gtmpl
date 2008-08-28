@@ -83,24 +83,26 @@
 			  	<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">
-					<%if(!ForumSessionUtils.isAnonim()){
+					<%
+					long numberOfNewMessage = uicomponent.getNewMessage();
+					if(!ForumSessionUtils.isAnonim() && numberOfNewMessage >= 0){
 						String newMessage = _ctx.appRes("UIBreadcumbs.label.PrivateMessages") ; 
-						if(uicomponent.getNewMessage() > 0) {
+						if(numberOfNewMessage > 0) {
 						  newMessage = "<b>"+newMessage+"(" + uicomponent.getNewMessage() + ") </b>";
 						} else {
 							newMessage = newMessage + "&nbsp;" ;
 						}
 					%>
-					<div class="SeparatorLine" style="height: 24px;">
-					  <a style="line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
-							 $newMessage
-						</a>
-					</div>
-					<%} else {%>
-					<div class="SeparatorLine">
-						<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></div>
-					</div>	
-					<%}%>
+						<div class="SeparatorLine" style="height: 24px;">
+						  <a style="line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
+								 $newMessage
+							</a>
+						</div>
+				<%} else {%>
+						<div class="SeparatorLine">
+							<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></div>
+						</div>	
+				<%}%>
 				</div>
 				<div style="clear: both"><span></span></div>
 			</div>

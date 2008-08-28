@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -23,8 +24,10 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -36,6 +39,7 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.UIPageIterator;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -54,15 +58,40 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIForumListSearch extends UIContainer {
 	private List<ForumSearch> listEvent = null ;
-	public UIForumListSearch() {
-  }
+	public final String SEARCH_ITERATOR = "forumSearchIterator";
+	private JCRPageList pageList ;
+	private UIForumPageIterator pageIterator ;
+	List<ForumSearch> list = null;
+	public UIForumListSearch() throws Exception {}
 	
 	public void setListSearchEvent(List<ForumSearch> listEvent) {
-	  this.listEvent = listEvent ;
+		this.listEvent = listEvent ;
+		pageList = new ForumPageList(10, listEvent.size());
+		pageList.setPageSize(10);
+		pageIterator = this.getAncestorOfType(UICategories.class).getChildById(SEARCH_ITERATOR);
+		pageIterator.updatePageList(pageList);
+		try {
+	    if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
   }
 	
 	public List<ForumSearch> getListEvent() {
-	  return this.listEvent ;
+		long pageSelect = pageIterator.getPageSelected() ;
+    list = new ArrayList<ForumSearch>();
+    try {
+    	list.addAll(this.pageList.getPageSearch(pageSelect, this.listEvent)) ;
+      if(list.isEmpty()){
+        while(list.isEmpty() && pageSelect > 1) {
+          list.addAll(this.pageList.getPageSearch(--pageSelect, this.listEvent)) ;
+          pageIterator.setSelectPage(pageSelect) ;
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+	  return list ;
   }
 	
 	private ForumSearch getForumSearch(String id) {

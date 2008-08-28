@@ -24,7 +24,12 @@
 	<div class="UIForumWorkingWorkspace">
 	<%  
 		if(uicomponent.getIsRendered()) {
-			uicomponent.renderChildren() ;
+			uicomponent.renderChild(uicomponent.FORUM_LIST_SEARCH);
+	%>
+			<div style="padding-bottom: 20px;">
+			<%uicomponent.renderChild(uicomponent.SEARCH_ITERATOR);%>
+			</div>
+	<%
 		} else {
 	%>
 	

@@ -141,7 +141,11 @@ public class UIBreadcumbs extends UIContainer {
 	@SuppressWarnings("unused")
   private long getNewMessage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
-		return this.userProfile.getNewMessage() ;
+		if(!userProfile.getIsBanned()){
+			return this.userProfile.getNewMessage() ;
+		} else {
+			return -1;
+		}
 	}
 	
 	
