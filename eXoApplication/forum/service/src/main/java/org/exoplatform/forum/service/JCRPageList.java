@@ -62,6 +62,14 @@ abstract public class JCRPageList {
 		populateCurrentPage(page) ;
 		return currentListPage_ ;
 	}
+	
+	abstract protected void populateCurrentPageSearch(long page, List list) throws Exception	 ;
+	
+	public List getPageSearch(long page, List<ForumSearch> list) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(page, list) ;
+		return currentListPage_ ;
+	}
 		
 	protected void checkAndSetPage(long page) throws Exception	{
 		if(page < 0 || page > availablePage_) {
