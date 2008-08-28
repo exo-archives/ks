@@ -211,9 +211,9 @@ public class JCRDataStorage {
       					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
       					+"<p>We would like to inform that Category '" + cate.getProperty("exo:name").getString() 
       					+"' has been added new Question with content below: </p>"
-      					+"<p>" + question.getQuestion() + "<p>"
-      					+"<p>Regards & thanks</p>" +
-  							"Click "+"<a href =" + question.getLink()+">here</a> for more details!");
+      					+"<p>"+question.getQuestion()+"<p>"
+      					+"<p>Click "+"<a href =" + question.getLink()+">here</a> for more details!</p>"
+      					+"Regards & thanks");
       			sendEmailNotification(emailsList, message) ;    			
       		}
       	}
@@ -241,11 +241,11 @@ public class JCRDataStorage {
 						message.setSubject("FAQ Watching Category Notification! ");
 						message.setBody("<p>Hi you,</p>" 
       					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
-      					+"<p>We would like to inform that the question: '" + question.getQuestion() 
+      					+"<p>We would like to inform that the question: '" + question.getQuestion()
       					+"' has been edited or responded </p>"
-      					+"<p>" + question.getResponses() + "</p>"
-      					+"<p>Regards & thanks</p>"+
-      					"Click "+"<a href =" + question.getLink()+">here</a> for more details!");
+      					+"<p>"+question.getResponses()+"</p>"
+      					+"<p>Click "+"<a href =" + question.getLink()+">here</a> for more details!</p>"
+      					+"Regards & thanks");
 						sendEmailNotification(emailsList, message) ;
       		}
       	} 
@@ -262,9 +262,9 @@ public class JCRDataStorage {
 				message.setSubject("FAQ Your Question is answered or edit ! ");
 				message.setBody("<p>We would like to inform your question: '" + question.getQuestion() 
   					+"' has been edited or responded </p>"
-  					+"<p>" + question.getResponses() + "<p>"
-  					+"<p>Regards & thanks</p>"+
-  					"Click "+"<a href =" + question.getLink()+">here</a> for more details!");
+  					+"<p>"+question.getResponses()+"<p>"
+  					+"<p>Click "+"<a href =" + question.getLink()+">here</a> for more details!</p>"
+  					+"Regards & thanks");
 				emailsList.add(question.getEmail()) ;
 				sendEmailNotification(emailsList, message) ;
   		} catch(Exception e) {

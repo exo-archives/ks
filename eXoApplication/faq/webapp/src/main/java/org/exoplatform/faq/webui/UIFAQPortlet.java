@@ -50,12 +50,6 @@ public class UIFAQPortlet extends UIPortletApplication {
     uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
   }
   
-//  public void processDecode(WebuiRequestContext context) throws Exception {
-//		String objId = context.getRequestParameter(OBJECTID) ; 
-//		System.out.println("\n\n objectId:"+objId);
-//	  super.processDecode(context);
-//	}
-  
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
     //context.getJavascriptManager().importJavascript("eXo.ecm.ECMUtils","/ecm/javascript/");
     //context.getJavascriptManager().addJavascript("eXo.ecm.ECMUtils.init('UIFastContentCreatorPortlet') ;");
