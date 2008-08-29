@@ -1,4 +1,11 @@
 <project>
+
+  <parent>
+    <groupId>org.exoplatform</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0.0-rc1</version>
+  </parent>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>config</artifactId>
