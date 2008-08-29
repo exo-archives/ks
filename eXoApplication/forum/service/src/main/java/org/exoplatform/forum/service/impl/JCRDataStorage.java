@@ -53,6 +53,7 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.SendMessageInfo;
@@ -944,7 +945,7 @@ public class JCRDataStorage{
 		if(isNew) {
 			topicNode = forumNode.addNode(topic.getId(), "exo:topic") ;
 			topicNode.setProperty("exo:id", topic.getId()) ;
-			topicNode.setProperty("exo:path", "");//topicNode.getPath()) ;
+			topicNode.setProperty("exo:path", forumId) ;
 			topicNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
 			topicNode.setProperty("exo:lastPostBy", topic.getLastPostBy()) ;
 			topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime()) ;
@@ -1256,6 +1257,7 @@ public class JCRDataStorage{
 		Post postNew = new Post() ;
 		postNew.setId(postNode.getName()) ;
 		postNew.setPath(postNode.getPath()) ;
+		
 		if(postNode.hasProperty("exo:owner")) postNew.setOwner(postNode.getProperty("exo:owner").getString()) ;
 		if(postNode.hasProperty("exo:createdDate")) postNew.setCreatedDate(postNode.getProperty("exo:createdDate").getDate().getTime()) ;
 		if(postNode.hasProperty("exo:modifiedBy")) postNew.setModifiedBy(postNode.getProperty("exo:modifiedBy").getString()) ;
@@ -1305,7 +1307,7 @@ public class JCRDataStorage{
 			postNode = topicNode.addNode(post.getId(), "exo:post");
 			postNode.setProperty("exo:id", post.getId());
 			postNode.setProperty("exo:owner", post.getOwner());
-			postNode.setProperty("exo:path", "");//postNode.getPath());
+			postNode.setProperty("exo:path", forumId);//postNode.getPath());
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			postNode.setProperty("exo:userPrivate", post.getUserPrivate());
 			postNode.setProperty("exo:isActiveByTopic", true) ;
@@ -2419,7 +2421,6 @@ public class JCRDataStorage{
 		forumHomeNode.getSession().save() ;
 	}
 	
-	
 	private String [] ValuesToStrings(Value[] Val) throws Exception {
 		if(Val.length < 1) return new String[]{} ;
 		if(Val.length == 1) return new String[]{Val[0].getString()} ;
@@ -2722,9 +2723,118 @@ public class JCRDataStorage{
 		return  messageInfo ;
 	}
 	
+	private String getPath(String index, String path) throws Exception {
+		int t = path.indexOf(index);
+		if(t > 0){
+			path = path.substring(t+1) ;
+		}
+		return path;
+	} 
 	
+	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception {
+		JobWattingForModerator wattingForModerator = new JobWattingForModerator();
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		String string = forumHomeNode.getPath() ;
+		
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+		StringBuffer stringBuffer = new StringBuffer() ;
+		String pathQuery = "";
+		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)");
+		StringBuffer buffer = new StringBuffer();
+		int l =  paths.length;
+		if(l > 0) {
+			buffer.append(" and (");
+			for (int i = 0; i < l; i++) {
+				if(i > 0) buffer.append(" or ");
+				String str = getPath(("/"+Utils.FORUM), paths[i]);
+				buffer.append("@exo:path='").append(str).append("'");
+	    }
+			buffer.append(")");
+		}
+
+		pathQuery = stringBuffer.toString() + "[@exo:isApproved='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
+		System.out.println("\n\npathQuery1: " + pathQuery);
+		
+		Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+		QueryResult result = query.execute() ;
+		NodeIterator iter = result.getNodes(); 
+		JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
+		wattingForModerator.setTopicUnApproved(pagelist);
+		
+		pathQuery = stringBuffer.toString() + "[@exo:isWaiting='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
+		System.out.println("\n\npathQuery2: " + pathQuery);
+		query = qm.createQuery(pathQuery , Query.XPATH) ;
+		result = query.execute() ;
+		iter = result.getNodes(); 
+		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
+		wattingForModerator.setTopicWaiting(pagelist);
+		
+		stringBuffer = new StringBuffer() ;
+		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)");
+		
+		pathQuery = stringBuffer.toString() + "[@exo:isApproved='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
+		System.out.println("\n\npathQuery3: " + pathQuery);
+		query = qm.createQuery(pathQuery , Query.XPATH) ;
+		result = query.execute() ;
+		iter = result.getNodes(); 
+		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
+		wattingForModerator.setPostsUnApproved(pagelist);
+
+		pathQuery = stringBuffer.toString() + "[@exo:isHidden='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
+		System.out.println("\n\npathQuery4: " + pathQuery + "\n\n");
+		query = qm.createQuery(pathQuery , Query.XPATH) ;
+		result = query.execute() ;
+		iter = result.getNodes(); 
+		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
+		wattingForModerator.setPostsUnApproved(pagelist);
+		
+		return wattingForModerator;
+  }
 	
-	
+	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		Node newProfileNode = userProfileNode.getNode(userId) ;
+		long t = newProfileNode.getProperty("exo:userRole").getLong() ;
+		int totalJob = 0;
+		if(t < 2) {
+			String string = forumHomeNode.getPath() ;
+			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+			StringBuffer stringBuffer = new StringBuffer() ;
+			String pathQuery = "";
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)");
+			StringBuffer buffer = new StringBuffer();
+			if(t == 1){
+				String[] paths = ValuesToStrings(newProfileNode.getProperty("exo:moderateForums").getValues()) ;
+				int l =  paths.length;
+				if(l > 0) {
+					buffer.append(" and (");
+					for (int i = 0; i < l; i++) {
+						if(i > 0) buffer.append(" or ");
+						String str = getPath(("/"+Utils.FORUM), paths[i]);
+						buffer.append("@exo:path='").append(str).append("'");
+			    }
+					buffer.append(")");
+				}
+			}
+			pathQuery = stringBuffer.toString() + "[(@exo:isApproved='false' or @exo:isWaiting='true')" + buffer.toString() + "] order by @exo:modifiedDate descending";
+//			System.out.println("\n\npathQueryTopic: " + pathQuery);
+			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes(); 
+			totalJob = (int)iter.getSize() ;
+			
+			stringBuffer = new StringBuffer() ;
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)");
+			pathQuery = stringBuffer.toString() + "[(@exo:isApproved='false' or @exo:isHidden='true')" + buffer.toString() + "] order by @exo:modifiedDate descending";
+//			System.out.println("\n\npathQueryPost: " + pathQuery);
+			query = qm.createQuery(pathQuery , Query.XPATH) ;
+			result = query.execute() ;
+			iter = result.getNodes(); 
+			totalJob = totalJob + (int)iter.getSize() ;
+		}
+		return totalJob;
+	}
 	
 	
 

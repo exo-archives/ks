@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
@@ -116,4 +117,6 @@ public interface DataStorage {
 	
 	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception;
 	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception;
+	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception ;
+	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception ;
 }

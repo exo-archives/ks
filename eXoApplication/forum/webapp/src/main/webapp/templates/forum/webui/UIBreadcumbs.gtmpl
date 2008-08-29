@@ -2,6 +2,7 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.portal.webui.util.Util;
+	import org.exoplatform.forum.service.JobWattingForModerator;
 %>
 <div class="UIBreadcumbs" id="$uicomponent.id">
 	<div class="LeftBreadcumbs">
@@ -10,6 +11,7 @@
 				<div class="BreadcumbsInfoBar">
 					<div class="OpenIcon"><span></span></div>
 				<% int t = 0 ;
+				  uicomponent.setUserProfile();
 				  String link = "";
 				  String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 					String portalName = "/" + Util.getUIPortal().getName() ;
@@ -86,23 +88,34 @@
 					<%
 					long numberOfNewMessage = uicomponent.getNewMessage();
 					if(!ForumSessionUtils.isAnonim() && numberOfNewMessage >= 0){
+						String fl = "";
 						String newMessage = _ctx.appRes("UIBreadcumbs.label.PrivateMessages") ; 
 						if(numberOfNewMessage > 0) {
 						  newMessage = "<b>"+newMessage+"(" + uicomponent.getNewMessage() + ") </b>";
 						} else {
 							newMessage = newMessage + "&nbsp;" ;
 						}
+						if(uicomponent.userProfile.getUserRole() <= 1) fl = "float: left;";
 					%>
-						<div class="SeparatorLine" style="height: 24px;">
-						  <a style="line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
-								 $newMessage
-							</a>
-						</div>
-				<%} else {%>
-						<div class="SeparatorLine">
-							<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></div>
-						</div>	
-				<%}%>
+					<div class="SeparatorLine" style="height: 24px; $fl">
+					  <a style="line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
+							 $newMessage
+						</a>
+					</div>
+					<%  
+						if(uicomponent.userProfile.getUserRole() <= 1) {
+				      int total = uicomponent.getTotalJobWattingForModerator();
+					%>
+					<div class="SeparatorLine" style="$fl">
+						<div style="line-height: 24px;"><%//=_ctx.appRes("UIForumPortlet.label.ShareLink");%>Pending: ($total)</div>
+					</div>	
+					<div style="clear: left"><span></span></div>
+				  <%}
+					} else {%>
+					<div class="SeparatorLine">
+						<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></div>
+					</div>	
+					<%}%>
 				</div>
 				<div style="clear: both"><span></span></div>
 			</div>

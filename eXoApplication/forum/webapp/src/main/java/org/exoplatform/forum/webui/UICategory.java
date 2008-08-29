@@ -75,8 +75,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UICategory.OpenForumLinkActionListener.class),
 				@EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class),
 				@EventConfig(listeners = UICategory.AddBookMarkActionListener.class),
-				@EventConfig(listeners = UICategory.AddWatchingActionListener.class),
-				@EventConfig(listeners = UICategory.ShareLinkActionListener.class)
+				@EventConfig(listeners = UICategory.AddWatchingActionListener.class)
 		}
 )
 public class UICategory extends UIForm	{
@@ -549,13 +548,4 @@ public class UICategory extends UIForm	{
 		}
 	}
 	
-	static public class ShareLinkActionListener extends EventListener<UICategory> {
-		public void execute(Event<UICategory> event) throws Exception {
-			UICategory category = event.getSource();
-			String link = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
-    	uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.shareLinkToGuest", new Object[]{link}, ApplicationMessage.INFO)) ;
-    	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-		}
-	}
 }

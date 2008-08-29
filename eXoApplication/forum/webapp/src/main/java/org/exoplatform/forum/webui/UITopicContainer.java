@@ -94,8 +94,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 			@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 			@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
-			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
-			@EventConfig(listeners = UITopicContainer.ShareLinkActionListener.class)
+			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
 		}
 )
 public class UITopicContainer extends UIForm {
@@ -993,16 +992,6 @@ public class UITopicContainer extends UIForm {
 				} catch (Exception e) {
 				}
 			}
-		}
-	}
-	
-	static public class ShareLinkActionListener extends EventListener<UITopicContainer> {
-		public void execute(Event<UITopicContainer> event) throws Exception {
-			UITopicContainer topicContainer = event.getSource();
-			String link = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UIApplication uiApp = topicContainer.getAncestorOfType(UIApplication.class) ;
-    	uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.shareLinkToGuest", new Object[]{link}, ApplicationMessage.INFO)) ;
-    	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 		}
 	}
 	

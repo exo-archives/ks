@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -59,7 +60,9 @@ public class UIBreadcumbs extends UIContainer {
 	private String forumHomePath_ ;
 	public static final String FORUM_SERVICE = Utils.FORUM_SERVICE ;
 	private UserProfile userProfile ;
+	JobWattingForModerator wattingForModerator;
 	private boolean isLink = false ;
+//	private String[] path = new String[]{};
 	public UIBreadcumbs()throws Exception {
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
@@ -122,6 +125,53 @@ public class UIBreadcumbs extends UIContainer {
 	}
 	
 	@SuppressWarnings("unused")
+	private void setUserProfile() throws Exception {
+		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+	}
+	
+	@SuppressWarnings("unused")
+  private int getTotalJobWattingForModerator() throws Exception {
+		return forumService.getTotalJobWattingForModerator(ForumSessionUtils.getSystemProvider(), this.userProfile.getUserId());
+	}
+	
+//	
+//	public String[] getPath() {
+//		if(userProfile.getUserRole() <= 1) {
+//			if(userProfile.getUserRole() == 1){
+//				path = this.userProfile.getModerateForums() ;
+//			} 
+//		}
+//  	return path;
+//  }
+//
+//	public void setPath(String[] path) {
+//  	this.path = path;
+//  }
+//	@SuppressWarnings("unused")
+//  private JobWattingForModerator getJobWattingForModerator() throws Exception {
+//		wattingForModerator = forumService.getJobWattingForModerator(ForumSessionUtils.getSystemProvider(), this.getPath()) ;
+//		return wattingForModerator;
+//	}
+//	
+//	@SuppressWarnings("unused")
+//  private long getTopicUACount() throws Exception{ 
+//		return wattingForModerator.getTopicUnApproved().getAvailable();
+//	}
+//	@SuppressWarnings("unused")
+//	private long getTopicWaitCount() throws Exception{ 
+//		return wattingForModerator.getTopicWaiting().getAvailable();
+//	}
+//	@SuppressWarnings("unused")
+//	private long getPostHiddenCount() throws Exception{ 
+//		return wattingForModerator.getPostsHidden().getAvailable();
+//	}
+//	@SuppressWarnings("unused")
+//	private long getPostUACount() throws Exception{ 
+//		return wattingForModerator.getPostsUnApproved().getAvailable();
+//	}
+//	
+	
+	@SuppressWarnings("unused")
   private boolean isLink() {return this.isLink;}
 	@SuppressWarnings("unused")
 	private String getPath(int index) {
@@ -140,7 +190,6 @@ public class UIBreadcumbs extends UIContainer {
 	
 	@SuppressWarnings("unused")
   private long getNewMessage() throws Exception {
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
 		if(!userProfile.getIsBanned()){
 			return this.userProfile.getNewMessage() ;
 		} else {
