@@ -203,7 +203,7 @@ public class JCRDataStorage {
       				emailsList.add(string_) ;
       			}
       		}
-      		if(emailsList != null && emailsList.size() > 0) { 			
+      		if(emailsList != null && emailsList.size() > 0) {
       			Message message = new Message();
             message.setMimeType(MIMETYPE_TEXTHTML) ;
       			message.setSubject("FAQ Watching Category Notification! ");
@@ -214,7 +214,7 @@ public class JCRDataStorage {
       					+"<p>"+question.getQuestion()+"<p>"
       					+"<p>Click "+"<a href =" + question.getLink()+">here</a> for more details!</p>"
       					+"Regards & thanks");
-      			sendEmailNotification(emailsList, message) ;    			
+      			sendEmailNotification(emailsList, message) ;
       		}
       	}
     	} catch(Exception e) {
@@ -239,7 +239,7 @@ public class JCRDataStorage {
 						Message message = new Message();
 			      message.setMimeType(MIMETYPE_TEXTHTML) ;
 						message.setSubject("FAQ Watching Category Notification! ");
-						message.setBody("<p>Hi you,</p>" 
+						message.setBody("<p>Hi you,</p>"
       					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
       					+"<p>We would like to inform that the question: '" + question.getQuestion()
       					+"' has been edited or responded </p>"
@@ -269,7 +269,7 @@ public class JCRDataStorage {
 				sendEmailNotification(emailsList, message) ;
   		} catch(Exception e) {
   			e.printStackTrace() ;
-  		}  		  		
+  		}
   	}
   }
 
