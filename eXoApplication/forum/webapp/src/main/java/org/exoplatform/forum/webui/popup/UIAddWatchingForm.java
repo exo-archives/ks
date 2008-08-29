@@ -139,6 +139,7 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}
 	}
 	

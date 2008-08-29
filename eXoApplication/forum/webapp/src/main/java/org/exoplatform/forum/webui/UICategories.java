@@ -55,7 +55,6 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
 			@EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
 			@EventConfig(listeners = UICategories.AddWatchingActionListener.class),
-			@EventConfig(listeners = UICategories.ShareLinkActionListener.class),
 			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class)
 		}
 )
@@ -291,16 +290,6 @@ public class UICategories extends UIContainer	{
 		}
 	}
 
-	static public class ShareLinkActionListener extends EventListener<UICategories> {
-		public void execute(Event<UICategories> event) throws Exception {
-			UICategories uiContainer = event.getSource();
-			String link = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
-    	uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.shareLinkToGuest", new Object[]{link}, ApplicationMessage.INFO)) ;
-    	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-		}
-	}
-	
 	static public class AddWatchingActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiContainer = event.getSource();

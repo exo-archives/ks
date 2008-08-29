@@ -1,3 +1,7 @@
+<%  
+	import org.exoplatform.portal.webui.util.Util;
+%>
+
 <div class="UIShowBookMarkForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout" style="_width: 88%;">
@@ -9,10 +13,12 @@
 				</thead>
 				<body>
 					<% 
-						String linkName = ""; 
+						String linkName = "";
 						String linkPath = "";
 						String icon = "";
-						String linkBm = ""; 
+						String linkBm = "";
+						String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+						String portalName = "/" + Util.getUIPortal().getName() ;
 						int index = 0, lastIndex = 0;
 						for(links in uiform.getBookMark()){
 							index = links.indexOf("//") ;
@@ -21,19 +27,24 @@
 							linkName = links.substring(index+2,lastIndex);
 							linkPath = links.substring(lastIndex + 2);
 							links = "topicIcon//topicName//"+linkPath;
-							linkBm = uiform.url("OpenLink",linkPath);
-							linkBm = linkBm.replaceFirst("UIShowBookMarkForm","UIBreadcumbs").replaceFirst("OpenLink","ChangePath") ;
+							linkBm = uiform.url("OpenLink",linkPath);							
+							linkBm = linkBm.replaceFirst("UIShowBookMarkForm","UIBreadcumbs").replaceFirst("OpenLink","ChangePath");
+							if(linkBm.indexOf(portalName) > 0) {
+						    if(linkBm.indexOf(portalName + "/" + selectedNode) < 0){
+						      linkBm = linkBm.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+						    }									
+							}							
 					%>
 					<tr>
-						<td><div class="$icon" style="width: 24px; height: 24px;"><span></span></div></td>
-						<td><a onclick="<%=uiform.event("OpenLink",linkPath);%>; window.location.href=this.href; return false;" href="$linkBm">$linkName</a></td>
+						<td><div class="$icon" style="width: 24px;height: 24px;"><span></span></div></td>
+						<td><a onclick="<%=uiform.event("OpenLink",linkPath);%>;window.location.href=this.href; return false;" href="$linkBm">$linkName</a></td>
 						<td>
 							<a href="<%=uiform.event("DeleteLink",links);%>">
 								<div class="DeleteIcon"><span></span></div>
 							</a>
 						</td>
 					</tr>
-					<% } %>
+					<% }%>
 				</body>
 			</table>
 		</div>

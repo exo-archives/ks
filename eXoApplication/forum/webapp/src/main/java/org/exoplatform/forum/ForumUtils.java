@@ -288,9 +288,9 @@ public class ForumUtils {
 		if(!isEmpty(str)) {
 			int l = str.length() ;
 			if(l > max) {
-				str = str.substring(0, (max-3)) ;
+				str = str.substring(0, max) ;
 				int space = str.lastIndexOf(" ");
-				if(space > 0)
+				if(space > (max-6))
 					str = str.substring(0, space) + "...";
 				else str = str + "..." ;
 			}

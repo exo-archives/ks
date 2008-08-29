@@ -48,6 +48,7 @@ public class Forum {
 	private String[] moderators;
 	
 	private String[] replyTopicRole;
+	private String[] emailNotification;
 	
 	
 	public Forum() {
@@ -57,6 +58,7 @@ public class Forum {
 		createTopicRole = new String[] {};
 		moderators = new String[] {};
 		replyTopicRole = new String[] {};
+		emailNotification = new String[] {};
 		id = Utils.FORUM + IdGenerator.generate() ;
 	}
 	
@@ -132,4 +134,7 @@ public class Forum {
 	
 	public String[] getModerators(){return moderators;}	
 	public void setModerators(String[] moderators){this.moderators = moderators;}
+
+	public String[] getEmailNotification(){return emailNotification;}	
+	public void setEmailNotification(String[] emailNotification){this.emailNotification = emailNotification;}
 }

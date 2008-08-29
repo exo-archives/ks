@@ -33,8 +33,10 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
@@ -304,6 +306,18 @@ public class ForumServiceImpl implements ForumService{
 		storage_.addWatch(sProvider, watchType, path, values) ; 
 	}
 
+	public void removeWatch(SessionProvider sProvider, int watchType, String path,List<String> values) throws Exception {
+		storage_.removeWatch(sProvider, watchType, path, values) ; 
+	}
+	
+	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception {
+		return storage_.getJobWattingForModerator(sProvider, paths); 
+	}
+	
+	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
+		return storage_.getTotalJobWattingForModerator(sProvider, userId);
+	}
+	
 	public synchronized void userLogin(String userId) throws Exception {
 		lastLogin_ = userId ;
 		onlineUsers_.put(userId, true) ;		
@@ -334,22 +348,9 @@ public class ForumServiceImpl implements ForumService{
 	public String getLastLogin() throws Exception {
 		return lastLogin_ ;
 	}
-
+ 
+	public SendMessageInfo getMessageInfo(String name) throws Exception {
+		return storage_.getMessageInfo(name) ;
+	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

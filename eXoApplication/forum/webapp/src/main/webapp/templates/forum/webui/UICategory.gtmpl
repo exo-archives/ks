@@ -362,6 +362,7 @@
 	</div>
 	<% //Begin RightClick Bookmark  %>
 	<div id="RightClickContainer" style="display: none;">
+		<%if(uicomponent.userProfile.getUserRole() < 3){%>
 		<div class="TopLeftRightClickPopupMenu">
 			<div class="TopRightRightClickPopupMenu">
 				<div class="TopCenterRightClickPopupMenu"><span></span></div>
@@ -373,11 +374,7 @@
 				<div class="UIRightPopupMenuContainer">
 					<a href="" class="MenuItem AddBookmark">
 						<div class="ItemIcon AddLinkToBookIcon">
-						<%if(uicomponent.userProfile.getUserRole() < 3){%>
 							<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
-						<%} else {%>
-							<span><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></span>
-						<%}%>
 						</div>
 					</a>
 					<a href="" class="MenuItem AddWatching">
@@ -395,6 +392,7 @@
 	      </div>
 	    </div>
 	  </div>
+	 <% } %>
 	</div>
 	<% //End RightClick Bookmark  %>
 <%uiform.end()%>

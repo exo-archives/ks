@@ -35,7 +35,8 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.commons.utils.ISO8601;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
@@ -52,19 +53,22 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.mail.service.MailService;
-import org.exoplatform.mail.service.Message;
-import org.exoplatform.mail.service.ServerConfiguration;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
+import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.scheduler.JobInfo;
+import org.exoplatform.services.scheduler.JobSchedulerService;
+import org.exoplatform.services.scheduler.PeriodInfo;
 
 /**
  * Created by The eXo Platform SARL
@@ -78,7 +82,10 @@ import org.exoplatform.services.jcr.util.IdGenerator;
 public class JCRDataStorage{
 
 	private NodeHierarchyCreator nodeHierarchyCreator_ ;
-	private Map<String, String> serverConfig_ = new HashMap<String, String>();
+	@SuppressWarnings("unused")
+  private Map<String, String> serverConfig_ = new HashMap<String, String>();
+	private Map<String, SendMessageInfo> messagesInfoMap_ = new HashMap<String, SendMessageInfo>() ;
+	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator ;
 	}
@@ -504,6 +511,9 @@ public class JCRDataStorage{
 		if(forumNode.hasProperty("exo:createTopicRole")) forum.setCreateTopicRole(ValuesToStrings(forumNode.getProperty("exo:createTopicRole").getValues())) ;
 		if(forumNode.hasProperty("exo:replyTopicRole")) forum.setReplyTopicRole(ValuesToStrings(forumNode.getProperty("exo:replyTopicRole").getValues())) ;
 		if(forumNode.hasProperty("exo:moderators")) forum.setModerators(ValuesToStrings(forumNode.getProperty("exo:moderators").getValues())) ;
+		if(forumNode.isNodeType("exo:forumWatching")) {
+			forum.setEmailNotification(ValuesToStrings(forumNode.getProperty("exo:emailWatching").getValues()));
+		}
 		return forum;
 	}
 
@@ -792,6 +802,9 @@ public class JCRDataStorage{
 		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(ValuesToStrings(topicNode.getProperty("exo:userVoteRating").getValues())) ;
 		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(ValuesToStrings(topicNode.getProperty("exo:tagId").getValues())) ;
 		if(topicNode.hasProperty("exo:voteRating")) topicNew.setVoteRating(topicNode.getProperty("exo:voteRating").getDouble()) ;
+		if (topicNode.isNodeType("exo:forumWatching")) {
+			topicNew.setEmailNotification(ValuesToStrings(topicNode.getProperty("exo:emailWatching").getValues()));
+		}
 		String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST) ;
 		try {
 			Node FirstPostNode	= topicNode.getNode(idFirstPost) ;
@@ -932,7 +945,7 @@ public class JCRDataStorage{
 		if(isNew) {
 			topicNode = forumNode.addNode(topic.getId(), "exo:topic") ;
 			topicNode.setProperty("exo:id", topic.getId()) ;
-			topicNode.setProperty("exo:path", "");//topicNode.getPath()) ;
+			topicNode.setProperty("exo:path", forumId) ;
 			topicNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
 			topicNode.setProperty("exo:lastPostBy", topic.getLastPostBy()) ;
 			topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime()) ;
@@ -972,13 +985,15 @@ public class JCRDataStorage{
 			}
 			if(emailList.size() > 0) {					
 				Message message = new Message();
-				message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+				//message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML) ;
+				message.setMimeType("text/html") ;
 				message.setSubject("eXo Forum Watching Notification!");
 				StringBuffer body = new StringBuffer();
 				body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString() ).append("</b>' have just	added topic: <b>").append(topic.getTopicName()).append("</b><div>")
 				.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> You have goto this link and view it: " + topic.getLink() + "<br/><br/><br/>");
-				message.setMessageBody(body.toString());
-				sendNotification(emailList, message) ;					
+				//message.setMessageBody(body.toString());
+				message.setBody(body.toString());
+				sendEmailNotification(emailList, message) ;					
 			}
 		} else {
 			topicNode = forumNode.getNode(topic.getId()) ;
@@ -1242,6 +1257,7 @@ public class JCRDataStorage{
 		Post postNew = new Post() ;
 		postNew.setId(postNode.getName()) ;
 		postNew.setPath(postNode.getPath()) ;
+		
 		if(postNode.hasProperty("exo:owner")) postNew.setOwner(postNode.getProperty("exo:owner").getString()) ;
 		if(postNode.hasProperty("exo:createdDate")) postNew.setCreatedDate(postNode.getProperty("exo:createdDate").getDate().getTime()) ;
 		if(postNode.hasProperty("exo:modifiedBy")) postNew.setModifiedBy(postNode.getProperty("exo:modifiedBy").getString()) ;
@@ -1291,7 +1307,7 @@ public class JCRDataStorage{
 			postNode = topicNode.addNode(post.getId(), "exo:post");
 			postNode.setProperty("exo:id", post.getId());
 			postNode.setProperty("exo:owner", post.getOwner());
-			postNode.setProperty("exo:path", "");//postNode.getPath());
+			postNode.setProperty("exo:path", forumId);//postNode.getPath());
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			postNode.setProperty("exo:userPrivate", post.getUserPrivate());
 			postNode.setProperty("exo:isActiveByTopic", true) ;
@@ -1424,6 +1440,8 @@ public class JCRDataStorage{
 					}
 					saveUserReadTopic(sProvider, post.getOwner(), topicId, false);
 				}
+			} else {
+				postNode.setProperty("exo:isActiveByTopic", false) ;
 			}
 			List<String> emailList = new ArrayList<String>();
 			// Send notify for watching users
@@ -1432,14 +1450,14 @@ public class JCRDataStorage{
 					emailList = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
 					if (emailList.size() > 0) {
 						Message message = new Message();
-						message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML);
+						message.setMimeType("text/html");
 						// message.setMessageTo(question.getEmail());
 						message.setSubject("eXo Thread Watching Notification!");
 						StringBuffer body = new StringBuffer();
 						body.append("The Topic '<b>").append(topicNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
 						.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: " + post.getLink() + "<br/><br/><br/>");
-						message.setMessageBody(body.toString());
-						sendNotification(emailList, message);
+						message.setBody(body.toString());
+						sendEmailNotification(emailList, message);
 					}
 				}
 				emailList = new ArrayList<String>();
@@ -1453,15 +1471,15 @@ public class JCRDataStorage{
 				}
 				if (emailList.size() > 0) {
 					Message message = new Message();
-					message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML);
+					message.setMimeType("text/html");
 					// message.setMessageTo(question.getEmail());
 					message.setSubject("eXo Forum Watching Notification!");
 					StringBuffer body = new StringBuffer();
 					body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
 					.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: " + post.getLink() + "<br/><br/><br/>");
 					
-					message.setMessageBody(body.toString());
-					sendNotification(emailList, message);
+					message.setBody(body.toString());
+					sendEmailNotification(emailList, message);
 				}
 			}
 		} else {
@@ -1566,33 +1584,35 @@ public class JCRDataStorage{
 		return postNode ;
 	}
 	
-	private void sendNotification(List<String> emails, Message message) throws Exception {
-		List<Message> messages = new ArrayList<Message> () ;
+	/*private void sendNotification(List<String> emails, Message message) throws Exception {
+		//List<Message> messages = new ArrayList<Message> () ;
 		List<String> emails_ = new ArrayList<String>();
-		ServerConfiguration config = getServerConfig() ;
+		//ServerConfiguration config = getServerConfig() ;
 		Message message_;
 		for(String string : emails) {
 			if(emails_.contains(string)) continue ;
 			emails_.add(string) ;
 			message_ = new Message();
 			message_.setSubject(message.getSubject());
-			message_.setMessageBody(message.getMessageBody());
-			message_.setMessageTo(string) ;
-			message_.setFrom(config.getUserName()) ;
-			messages.add(message_) ;
+			message_.setBody(message.getBody());
+			//message_.setTo(string) ;
+			//message_.setFrom(config.getUserName()) ;
+			//messages.add(message_) ;
 		}
 		try{
 			if(messages.size() > 0) {
 				MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
 				mService.sendMessages(messages, config) ;
 			}
+			
+			
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}
 		
-	}
+	}*/
 	
-	private ServerConfiguration getServerConfig() throws Exception {
+	/*private ServerConfiguration getServerConfig() throws Exception {
 		ServerConfiguration config = new ServerConfiguration();
 		config.setUserName(serverConfig_.get("account"));
 		config.setPassword(serverConfig_.get("password"));
@@ -1600,7 +1620,7 @@ public class JCRDataStorage{
 		config.setOutgoingHost(serverConfig_.get("outgoing"));
 		config.setOutgoingPort(serverConfig_.get("port"));
 		return config ;
-	}
+	}*/
 	
 	public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
@@ -2401,7 +2421,6 @@ public class JCRDataStorage{
 		forumHomeNode.getSession().save() ;
 	}
 	
-	
 	private String [] ValuesToStrings(Value[] Val) throws Exception {
 		if(Val.length < 1) return new String[]{} ;
 		if(Val.length == 1) return new String[]{Val[0].getString()} ;
@@ -2630,7 +2649,7 @@ public class JCRDataStorage{
 		Node watchingNode = null;
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		String string = forumHomeNode.getPath() ;
-		path = string + "/" + path ;
+		if(path.indexOf(forumHomeNode.getName()) < 0)path = string + "/" + path ;
 		try{
 			watchingNode = (Node)forumHomeNode.getSession().getItem(path) ;
 			//add watching for node
@@ -2656,13 +2675,166 @@ public class JCRDataStorage{
 			e.printStackTrace();
 		}
 	}
+	
+	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception {
+		Node watchingNode = null;
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		String string = forumHomeNode.getPath() ;
+		if(path.indexOf(forumHomeNode.getName()) < 0)path = string + "/" + path ;
+		try{
+			watchingNode = (Node)forumHomeNode.getSession().getItem(path) ;
+			List<String> newValues = new ArrayList<String>();
+			//add watching for node
+			if(watchingNode.isNodeType("exo:forumWatching")) {
+				if(watchType == 1) {
+					String[] strings = ValuesToStrings(watchingNode.getProperty("exo:emailWatching").getValues()) ;
+					for(String str : strings) {
+						if(values.contains(str)) continue ;
+						newValues.add(str) ;
+					}
+					watchingNode.setProperty("exo:emailWatching", getStringsInList(newValues)) ;
+					watchingNode.save() ;
+					watchingNode.getSession().save();
+				}
+			} 
+		} catch (PathNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+  private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
+    Calendar cal = new GregorianCalendar();
+    PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
+    String name = String.valueOf(cal.getTime().getTime()) ;
+    Class clazz = Class.forName("org.exoplatform.forum.service.SendMailJob");
+    JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
+    ExoContainer container = ExoContainerContext.getCurrentContainer();
+    JobSchedulerService schedulerService = 
+    	(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+    messagesInfoMap_.put(name, new SendMessageInfo(addresses, message)) ;
+    schedulerService.addPeriodJob(info, periodInfo);
+  }
 
+	public SendMessageInfo getMessageInfo(String name) throws Exception {
+		SendMessageInfo messageInfo = messagesInfoMap_.get(name) ;
+		messagesInfoMap_.remove(name) ;
+		return  messageInfo ;
+	}
+	
+	private String getPath(String index, String path) throws Exception {
+		int t = path.indexOf(index);
+		if(t > 0){
+			path = path.substring(t+1) ;
+		}
+		return path;
+	} 
+	
+	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception {
+		JobWattingForModerator wattingForModerator = new JobWattingForModerator();
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		String string = forumHomeNode.getPath() ;
+		
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+		StringBuffer stringBuffer = new StringBuffer() ;
+		String pathQuery = "";
+		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)");
+		StringBuffer buffer = new StringBuffer();
+		int l =  paths.length;
+		if(l > 0) {
+			buffer.append(" and (");
+			for (int i = 0; i < l; i++) {
+				if(i > 0) buffer.append(" or ");
+				String str = getPath(("/"+Utils.FORUM), paths[i]);
+				buffer.append("@exo:path='").append(str).append("'");
+	    }
+			buffer.append(")");
+		}
 
+		pathQuery = stringBuffer.toString() + "[@exo:isApproved='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
+		System.out.println("\n\npathQuery1: " + pathQuery);
+		
+		Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+		QueryResult result = query.execute() ;
+		NodeIterator iter = result.getNodes(); 
+		JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
+		wattingForModerator.setTopicUnApproved(pagelist);
+		
+		pathQuery = stringBuffer.toString() + "[@exo:isWaiting='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
+		System.out.println("\n\npathQuery2: " + pathQuery);
+		query = qm.createQuery(pathQuery , Query.XPATH) ;
+		result = query.execute() ;
+		iter = result.getNodes(); 
+		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
+		wattingForModerator.setTopicWaiting(pagelist);
+		
+		stringBuffer = new StringBuffer() ;
+		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)");
+		
+		pathQuery = stringBuffer.toString() + "[@exo:isApproved='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
+		System.out.println("\n\npathQuery3: " + pathQuery);
+		query = qm.createQuery(pathQuery , Query.XPATH) ;
+		result = query.execute() ;
+		iter = result.getNodes(); 
+		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
+		wattingForModerator.setPostsUnApproved(pagelist);
+
+		pathQuery = stringBuffer.toString() + "[@exo:isHidden='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
+		System.out.println("\n\npathQuery4: " + pathQuery + "\n\n");
+		query = qm.createQuery(pathQuery , Query.XPATH) ;
+		result = query.execute() ;
+		iter = result.getNodes(); 
+		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true) ;
+		wattingForModerator.setPostsUnApproved(pagelist);
+		
+		return wattingForModerator;
+  }
 	
-	
-	
-	
-	
+	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		Node userProfileNode = getUserProfileNode(sProvider) ;
+		Node newProfileNode = userProfileNode.getNode(userId) ;
+		long t = newProfileNode.getProperty("exo:userRole").getLong() ;
+		int totalJob = 0;
+		if(t < 2) {
+			String string = forumHomeNode.getPath() ;
+			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+			StringBuffer stringBuffer = new StringBuffer() ;
+			String pathQuery = "";
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)");
+			StringBuffer buffer = new StringBuffer();
+			if(t == 1){
+				String[] paths = ValuesToStrings(newProfileNode.getProperty("exo:moderateForums").getValues()) ;
+				int l =  paths.length;
+				if(l > 0) {
+					buffer.append(" and (");
+					for (int i = 0; i < l; i++) {
+						if(i > 0) buffer.append(" or ");
+						String str = getPath(("/"+Utils.FORUM), paths[i]);
+						buffer.append("@exo:path='").append(str).append("'");
+			    }
+					buffer.append(")");
+				}
+			}
+			pathQuery = stringBuffer.toString() + "[(@exo:isApproved='false' or @exo:isWaiting='true')" + buffer.toString() + "] order by @exo:modifiedDate descending";
+//			System.out.println("\n\npathQueryTopic: " + pathQuery);
+			Query query = qm.createQuery(pathQuery , Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes(); 
+			totalJob = (int)iter.getSize() ;
+			
+			stringBuffer = new StringBuffer() ;
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)");
+			pathQuery = stringBuffer.toString() + "[(@exo:isApproved='false' or @exo:isHidden='true')" + buffer.toString() + "] order by @exo:modifiedDate descending";
+//			System.out.println("\n\npathQueryPost: " + pathQuery);
+			query = qm.createQuery(pathQuery , Query.XPATH) ;
+			result = query.execute() ;
+			iter = result.getNodes(); 
+			totalJob = totalJob + (int)iter.getSize() ;
+		}
+		return totalJob;
+	}
 	
 	
 

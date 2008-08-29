@@ -406,3 +406,13 @@
 .UIForumPortlet .MoveForumLockIcon {
 	background: url('icons/ForumLockIcon.gif') no-repeat left center;
 }
+
+.UIForumPortlet .WatchOptionIcon {
+	background: url('icons/ForumWatch.gif') no-repeat left center;
+}
+
+.UIForumPortlet .WatchOption {
+	background: url('icons/ForumWatch.gif') no-repeat left center;
+}
+
+

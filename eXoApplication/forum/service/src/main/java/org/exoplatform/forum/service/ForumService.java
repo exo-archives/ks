@@ -841,4 +841,8 @@ public interface ForumService {
 	 * @throws Exception the exception
 	 */
 	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String> values) throws Exception;
+	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String> values) throws Exception;
+	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception ;
+	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception ;
+	public SendMessageInfo getMessageInfo(String name) throws Exception ;
 }

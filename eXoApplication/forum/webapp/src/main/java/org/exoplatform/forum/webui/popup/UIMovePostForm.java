@@ -115,7 +115,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
 			if(this.userProfile.getUserRole() == 1){
 				if(forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <=0){
-					if(forum.getIsClosed())continue ; 
+					if(forum.getIsClosed() || forum.getIsLock())continue ; 
 					if(forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())){
 						continue ;
 					}

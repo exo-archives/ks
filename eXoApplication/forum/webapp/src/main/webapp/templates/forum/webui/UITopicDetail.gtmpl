@@ -407,7 +407,7 @@
 															if(!isUserCreatedTopic) {
 																String[] menuTopicActions = ["EditTopic", "PrintPage", "AddPoll", "SetOpenTopic", "SetCloseTopic", 
 																"SetLockedTopic", "SetUnLockTopic", "SetStickTopic", "SetUnStickTopic", "SplitTopic", 
-																"SetApproveTopic", "SetMoveTopic", "SetDeleteTopic"] ;
+																"SetApproveTopic", "SetMoveTopic", "SetDeleteTopic", "WatchOption"] ;
 																String link = new String() ;
 														 		String itemLabel = new String() ;
 														 		String classIcon = new String() ;

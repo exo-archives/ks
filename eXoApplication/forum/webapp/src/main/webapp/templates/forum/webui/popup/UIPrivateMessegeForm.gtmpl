@@ -170,7 +170,7 @@
 						<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("Close")%>">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><%=_ctx.appRes("UIModeratorManagementForm.action.Close");%></div>
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
 								</div>
 							</div>
 						</a>

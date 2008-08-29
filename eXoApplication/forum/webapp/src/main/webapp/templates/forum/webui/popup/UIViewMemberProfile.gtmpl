@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.forum.ForumUtils;
-	import org.exoplatform.contact.service.Contact;
+	import org.exoplatform.forum.service.user.ForumContact;
 %>
 <div class="UIViewMemberProfile">
 <% uiform.begin() %>
@@ -10,7 +10,7 @@
 	UserProfile userProfile = uiform.getUserProfile() ;
 	UserProfile userProfileLogin = uiform.getUserProfileLogin() ;
 	String userName = userProfile.getUserId() ;
-	Contact contact = uiform.getContact(userName) ;
+	ForumContact contact = uiform.getContact(userName) ;
 	String avatarUrl = "";
 	String birthDay = "" ;
 	String location = "" ;
@@ -18,10 +18,10 @@
 	boolean isCity = false;
 	if(contact != null) {
 		birthDayDate = contact.getBirthday() ;
-		if(contact.getHomeCity() != null) {isCity = true; location = contact.getHomeCity();}
-		if(contact.getHomeCountry() != null) {
+		if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
+		if(contact.getCountry() != null) {
 			if(isCity) location = location + ", ";
-			location = location + contact.getHomeCountry() ;
+			location = location + contact.getCountry() ;
 		}
 	}
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
@@ -94,10 +94,10 @@
 									String siteOfUser = "";
 									if(contact != null) {
 										gender		 = contact.getGender();
-										jobTitle	 = contact.getJobTitle();
-										workPhone	= contact.getWorkPhone1();
-										mobile		 = contact.getMobilePhone();
-										siteOfUser = contact.getPersonalSite() ;
+										jobTitle	 = contact.getJob();
+										workPhone	= contact.getPhone();
+										mobile		 = contact.getMobile();
+										siteOfUser = contact.getWebSite() ;
 									}
 									if(user != null){
 										firstName = user.getFirstName();
@@ -138,7 +138,7 @@
 					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle"><%=_ctx.appRes("UIViewUserProfile.action.Close");%></div>
+								<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
 							</div>
 						</div>
 					</a>
