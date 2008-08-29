@@ -757,7 +757,6 @@ public class UIQuestions extends UIContainer {
 		      	for(Category cat: listCate) { cateId = cat.getId(); }
 		      } 
         	if(listCate.size() > 1 || listCate.size() == 1 && !categoryId.equals(cateId)) {
-//	    			UIMoveCategoryForm uiMoveCategoryForm = popupAction.activate(UIMoveCategoryForm.class, 600) ;
         		UIMoveCategoryForm uiMoveCategoryForm = popupContainer.addChild(UIMoveCategoryForm.class, null, null) ;
 	    			popupContainer.setId("MoveCategoryForm") ;
 	    			uiMoveCategoryForm.setCategoryID(categoryId) ;
@@ -1160,7 +1159,7 @@ public class UIQuestions extends UIContainer {
       UIDeleteQuestion deleteQuestion = popupContainer.addChild(UIDeleteQuestion.class, null, null) ;
       deleteQuestion.setQuestionId(question) ;
       popupContainer.setId("FAQDeleteQuestion") ;
-      popupAction.activate(popupContainer, 450, 400) ;
+      popupAction.activate(popupContainer, 450, 250) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
