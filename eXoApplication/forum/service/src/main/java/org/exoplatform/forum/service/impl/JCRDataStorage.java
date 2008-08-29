@@ -1191,7 +1191,7 @@ public class JCRDataStorage{
 			Node forumHomeNode = getForumHomeNode(sProvider) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 			StringBuffer pathQuery = new StringBuffer(); 
-				pathQuery.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:post)[@exo:owner='").append(userName);
+				pathQuery.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:post)[@exo:isFirstPost='false' and @exo:owner='").append(userName);
 			if(isMod) pathQuery.append("']") ; 
 			else pathQuery.append("' and @exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true']");
 //			System.out.println("\n\n" + pathQuery.toString());
@@ -1295,6 +1295,11 @@ public class JCRDataStorage{
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			postNode.setProperty("exo:userPrivate", post.getUserPrivate());
 			postNode.setProperty("exo:isActiveByTopic", true) ;
+			if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+				postNode.setProperty("exo:isFirstPost", true) ;
+			} else {
+				postNode.setProperty("exo:isFirstPost", false) ;
+			}
 			Node userProfileNode = getUserProfileNode(sProvider);
 			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
 			long postCount = forumStatistic.getProperty("exo:postCount").getLong();
