@@ -2636,7 +2636,7 @@ public class JCRDataStorage{
 		eventQuery.setPath(path) ;
 		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
-		System.out.println("\n\npath: " + queryString);
+		//System.out.println("\n\npath: " + queryString);
 		Query query = qm.createQuery(queryString, Query.XPATH) ;
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes() ;

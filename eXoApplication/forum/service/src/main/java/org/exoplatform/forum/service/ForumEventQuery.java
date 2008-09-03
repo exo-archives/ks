@@ -299,11 +299,11 @@ public class ForumEventQuery {
     	stringBuffer.append(temp) ;
     }
     // add to search for user and moderator:
-    /*if(type.equals("topic") && userPermission > 0){
+    if(type.equals("topic") && userPermission > 1){
 			if(isAnd) stringBuffer.append(" and ");
-			stringBuffer.append("(@exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true')");
+			stringBuffer.append("(@exo:isApproved='true' and @exo:isActive='true')");
 			
-			stringBuffer.append(" and (").append("@exo:canPost=' '");
+			/*stringBuffer.append(" and (").append("@exo:canPost=' '");
 			for(String str : listOfUser){
 				stringBuffer.append(" or @exo:canPost='").append(str).append("'");
 			}
@@ -312,8 +312,15 @@ public class ForumEventQuery {
 			for(String str : listOfUser){
 				stringBuffer.append(" or @exo:canView='").append(str).append("'");
 			}
-			stringBuffer.append(")");
-		}*/
+			stringBuffer.append(")");*/
+		} else if(type.equals("post")){
+    	if(isAnd) stringBuffer.append(" and ");
+    	stringBuffer.append("(@exo:userPrivate='exoUserPri'");
+			for(String currentUser : listOfUser){
+				stringBuffer.append(" or @exo:userPrivate='").append(currentUser).append("'");
+			}
+			stringBuffer.append(") and (@exo:isFirstPost='false')");
+    }
     stringBuffer.append("]");
     if(isAnd) queryString.append(stringBuffer.toString()) ;
 	  return queryString.toString();
