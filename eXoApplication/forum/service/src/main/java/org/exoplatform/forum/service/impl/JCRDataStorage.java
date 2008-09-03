@@ -1673,7 +1673,7 @@ public class JCRDataStorage{
 		}
 	}
 	
-	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath) throws Exception {
+	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		//Node Topic move Post
 		String srcTopicPath = posts.get(0).getPath();
@@ -1684,6 +1684,7 @@ public class JCRDataStorage{
 		Node destForumNode = (Node)destTopicNode.getParent() ;
 		long totalAtt = 0;
 		long totalpost = (long)posts.size() ;
+		int count  = 0;
 		for (Post post : posts) {
 			totalAtt = totalAtt + post.getNumberAttach() ;
 			String newPostPath = destTopicPath + "/" + post.getId();
@@ -1692,6 +1693,12 @@ public class JCRDataStorage{
 			Node postNode = (Node)forumHomeNode.getSession().getItem(newPostPath) ;
 			postNode.setProperty("exo:path", newPostPath) ;
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime()) ;
+			if(isCreatNewTopic && count == 0){
+				count ++;
+				postNode.setProperty("exo:isFirstPost", true);
+			} else {
+				postNode.setProperty("exo:isFirstPost", false);
+			}
 		}
 		//set srcTopicNode
 		long temp = srcTopicNode.getProperty("exo:postCount").getLong() ;
@@ -2547,7 +2554,7 @@ public class JCRDataStorage{
 		return forumLinks ;
 	}
 
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type_, String pathQuery) throws Exception {
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type_, String pathQuery, List<String> currentUserInfo) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>() ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
@@ -2573,17 +2580,26 @@ public class JCRDataStorage{
 			if(!isAdmin){
 				if(type.equals(Utils.FORUM)){
 					if(isAnd) queryString.append(" and ");
-					queryString.append("@exo:isClosed='true'");
+					queryString.append("(@exo:isClosed='false'");
+					for(String currentUser : currentUserInfo){
+						queryString.append(" or @exo:moderators='").append(currentUser).append("'");
+					}
+					queryString.append(")");
 				} else if(type.equals(Utils.TOPIC)){
 					if(isAnd) queryString.append(" and ");
-					queryString.append("@exo:isClosed='true' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true'");
+					queryString.append("@exo:isClosed='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true'");
 				} else if(type.equals(Utils.POST)){
 					if(isAnd) queryString.append(" and ");
-					queryString.append("@exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true'");
+					queryString.append("(@exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true'")
+											.append(" and (@exo:userPrivate='exoUserPri'");
+					for(String currentUser : currentUserInfo){
+						queryString.append(" or @exo:userPrivate='").append(currentUser).append("'");
+					}
+					queryString.append(") and @exo:isFirstPost='false')");
 				}
 			}
 			queryString.append("]") ;
-//			System.out.println("\n\npath: " + queryString.toString());
+			System.out.println("\n\npath: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;

@@ -1,11 +1,15 @@
 package org.exoplatform.forum.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.exoplatform.commons.utils.ISO8601;
 
 
 public class ForumEventQuery {
+	long userPermission = 0;
+	List<String> listOfUser = null;
 	private String type ;
 	private String keyValue ;
 	private String valueIn ;
@@ -25,6 +29,19 @@ public class ForumEventQuery {
 	private Calendar toDateCreated ;
 	private Calendar fromDateCreatedLastPost ;
 	private Calendar toDateCreatedLastPost ;
+
+	public void setListOfUser(List<String> listOfUser){
+		this.listOfUser = new ArrayList<String>();
+		this.listOfUser.addAll(listOfUser);
+	}
+	
+	public long getUserPermission() {
+  	return userPermission;
+  }
+
+	public void setUserPermission(long userPermission) {
+  	this.userPermission = userPermission;
+  }
 	
 	private boolean isAnd = false ;
 	public ForumEventQuery() {}
@@ -180,15 +197,76 @@ public class ForumEventQuery {
     	stringBuffer.append(")");
 			isAnd = true ;
 		}
-    if(isClosed != null && isClosed.length() > 0 && !isClosed.equals("all")) {
-    	if(isAnd) stringBuffer.append(" and ");
-    	stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')") ;
-    	isAnd = true ;
+    if(isClosed != null && isClosed.length() > 0) {
+    	if(userPermission == 1){
+	    	if(type.equals("forum")){
+	    		if(isAnd) stringBuffer.append(" and ");
+	    		if(isClosed.equals("all")) {
+		    		stringBuffer.append("(@exo:isClosed='false'");
+		    		for(String str : listOfUser){
+		    			stringBuffer.append(" or @exo:moderators='").append(str).append("'");
+		    		}
+		    		stringBuffer.append(")") ;
+	    		} else if(isClosed.equals("false")){
+	    			stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')") ;
+	    		} else if(isClosed.equals("true")){
+	    			stringBuffer.append("(@exo:isClosed='").append(isClosed).append("' and (@exo:moderators='").
+	    										append(listOfUser.get(0)).append("'") ;
+	    			for(String str : listOfUser){
+		    			stringBuffer.append(" or @exo:moderators='").append(str).append("'");
+		    		}
+	    			stringBuffer.append("))") ;
+	    		}
+	    		isAnd = true ;
+	    	} else {
+	    		if(!isClosed.equals("all")){
+	    			if(isAnd) stringBuffer.append(" and ");
+	    			stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')") ;
+	    			isAnd = true ;
+	    		}
+	    	}
+    	} else {
+    		if(!isClosed.equals("all")){
+    			if(isAnd) stringBuffer.append(" and ");
+    			stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')") ;
+    			isAnd = true ;
+    		}
+    	}
     }
-    if(isLock != null && isLock.length() > 0 && !isLock.equals("all")) {
-    	if(isAnd) stringBuffer.append(" and ");
-    	stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
-    	isAnd = true ;
+    if(isLock != null && isLock.length() > 0) {
+    	if(userPermission == 0){
+    		if(!isLock.equals("all")){
+    			if(isAnd) stringBuffer.append(" and ");
+    			stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
+    			isAnd = true ;
+    		}
+    	} else if(userPermission == 1){
+    		if(type.equals("forum")){
+    			if(isAnd) stringBuffer.append(" and ");
+	    		if(isLock.equals("all")){
+	    			stringBuffer.append("(@exo:isLock='false'");
+	    			for(String str : listOfUser){
+	    				stringBuffer.append(" or @exo:moderators='").append(str).append("'");
+	    			}
+	    			stringBuffer.append(")") ;
+	    		} else if (isLock.equals("true")){
+	    			stringBuffer.append("(@exo:isLock='true' and (@exo:moderators='").append(listOfUser.get(0)).append("'");
+	    			for(String str : listOfUser){
+	    				stringBuffer.append(" or @exo:moderators='").append(str).append("'");
+	    			}
+	    			stringBuffer.append("))") ;
+	    		} else {
+	    			stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
+	    		}
+	    		isAnd = true ;
+    		} else {
+    			if(!isLock.equals("all")){
+    				if(isAnd) stringBuffer.append(" and ");
+  		    	stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
+  		    	isAnd = true ;
+      		}
+    		}
+    	}
     }
     if(remain != null && remain.length() > 0) {
     	if(isAnd) stringBuffer.append(" and ");
@@ -220,6 +298,22 @@ public class ForumEventQuery {
     if(temp != null && temp.length() > 0) { 
     	stringBuffer.append(temp) ;
     }
+    // add to search for user and moderator:
+    /*if(type.equals("topic") && userPermission > 0){
+			if(isAnd) stringBuffer.append(" and ");
+			stringBuffer.append("(@exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true')");
+			
+			stringBuffer.append(" and (").append("@exo:canPost=' '");
+			for(String str : listOfUser){
+				stringBuffer.append(" or @exo:canPost='").append(str).append("'");
+			}
+			
+			stringBuffer.append(" or @exo:canView=' '");
+			for(String str : listOfUser){
+				stringBuffer.append(" or @exo:canView='").append(str).append("'");
+			}
+			stringBuffer.append(")");
+		}*/
     stringBuffer.append("]");
     if(isAnd) queryString.append(stringBuffer.toString()) ;
 	  return queryString.toString();

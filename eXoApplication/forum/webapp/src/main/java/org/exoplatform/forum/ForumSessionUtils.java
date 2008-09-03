@@ -18,6 +18,7 @@ package org.exoplatform.forum;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
@@ -29,6 +30,7 @@ import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.impl.GroupImpl;
@@ -37,6 +39,26 @@ public class ForumSessionUtils {
   
   static public String getCurrentUser() throws Exception {
     return Util.getPortalRequestContext().getRemoteUser();
+  }
+  
+  public static List<String> getAllGroupAndMembershipOfUser() throws Exception{
+  	List<String> listOfUser = new ArrayList<String>();
+  	String user = Util.getPortalRequestContext().getRemoteUser();
+		listOfUser.add(user);
+		String value = "";
+		String id = "";
+		Membership membership = null;
+		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(user).toArray()){
+			id = object.toString();
+			id = id.replace("Membership[", "").replace("]", "");
+			membership = organizationService_.getMembershipHandler().findMembership(id);
+			value = membership.getGroupId();
+			listOfUser.add(value);
+			value = membership.getMembershipType() + ":" + value;
+			listOfUser.add(value);
+		}
+		return listOfUser;
   }
   
   public static boolean isAnonim() throws Exception {

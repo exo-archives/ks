@@ -103,7 +103,7 @@ public class UISearchForm extends UIForm implements UISelector {
   }
 	private boolean getIsAdmin() {
 		if(this.userProfile != null) {
-			if(this.userProfile.getUserRole() == 0) return true ;
+			if(this.userProfile.getUserRole() < 2) return true ;
 		}
 		return false ;
 	}
@@ -317,6 +317,8 @@ public class UISearchForm extends UIForm implements UISelector {
 			Calendar fromDateCreatedLastPost = uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
 			Calendar toDateCreatedLastPost = uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
 			ForumEventQuery eventQuery = new ForumEventQuery() ;
+			eventQuery.setListOfUser(ForumSessionUtils.getAllGroupAndMembershipOfUser());
+			eventQuery.setUserPermission(uiForm.userProfile.getUserRole());
 			eventQuery.setType(type) ;
 			eventQuery.setKeyValue(keyValue) ;
 			eventQuery.setValueIn(valueIn) ;

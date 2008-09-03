@@ -131,7 +131,7 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 					try {
             forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic, true, true) ;
             String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
-            forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath);
+            forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath, true);
           } catch (Exception e) {
           	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
           	UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
