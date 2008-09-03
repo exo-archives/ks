@@ -74,7 +74,7 @@ public class UIPageListPostByUser extends UIContainer{
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		boolean isMod = false;
 		if(this.userProfile.getUserRole() == 0) isMod = true;
-		JCRPageList pageList  = forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), this.userName, isMod) ;
+		JCRPageList pageList  = forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), this.userName, this.userProfile.getUserId(), isMod) ;
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null) pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;

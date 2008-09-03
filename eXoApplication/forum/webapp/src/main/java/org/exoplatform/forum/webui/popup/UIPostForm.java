@@ -318,6 +318,12 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					}
 					if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 				}
+				if(isOffend && uiForm.isMP) {
+					Object[] args = { "" };
+					uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.PrivateCensor", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return ;
+				}
 				// set link
 	      PortalRequestContext portalContext = Util.getPortalRequestContext();
 	      String url = portalContext.getRequest().getRequestURL().toString();

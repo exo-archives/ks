@@ -428,22 +428,22 @@
 										//ThreadNewPost ,ThreadNoNewPost , 
 										//ThreadNewIsClose ,ThreadNoNewIsClose
 										//ThreadNewIsLock , ThreadNoNewIsLock
-										String titleTopicStatus = hot+" Thread with "+newPost+" post" ;
-										String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
+										String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
+										String iconTopicStatus = hot+"Topic"+newPost+"Post" ;
 										if(topic.getIsLock() || isLock) {
-											iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
-											titleTopicStatus = hot+" Thread with "+newPost+" post lock" ;
+											iconTopicStatus = hot+"Topic"+newPost+"LockPost" ;
+											titleTopicStatus = hot+" Topic with "+newPost+" post lock" ;
 										}
 										if(topic.getIsClosed()) {
-											iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
-											titleTopicStatus = hot+" Thread with "+newPost+" post close" ;
+											iconTopicStatus = hot+"Topic"+newPost+"ClosePost" ;
+											titleTopicStatus = hot+" Topic with "+newPost+" post close" ;
 										}
 										String approved = "" ;
 										if(canEdit){
-											if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>This thread is pending for Censor ! </span>)" ;
+											if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>This topic is pending for Censor ! </span>)" ;
 											if(isApproveTopic && !topic.getIsApproved()) { 
-												if(approved.length() > 0) approved = "&nbsp;(<span style='color:#f77617;'>This thread is pending for Approval and Censor ! </span>)" ;
-												else approved = "&nbsp;(<span style='color:#f77617;'>This thread is pending for Approval !</span>)" ;
+												if(approved.length() > 0) approved = "&nbsp;(<span style='color:#f77617;'>This topic is pending for Approval and Censor ! </span>)" ;
+												else approved = "&nbsp;(<span style='color:#f77617;'>This topic is pending for Approval !</span>)" ;
 											}
 										}
 										
@@ -505,7 +505,7 @@
 											<% String[] classNames = uicomponent.getStarNumber(topic) ; 
 												 String SumVote = classNames[5] ;
 											%>
-						 						<div class="AvgRatingImages" title="Thread Rating: $SumVote votes, 5 average">
+						 						<div class="AvgRatingImages" title="Topic Rating: $SumVote votes, 5 average">
 						 					<%	
 												for(className in classNames) {
 													if(className.equals("star")) className = "Voted" ;

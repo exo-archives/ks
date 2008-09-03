@@ -274,8 +274,8 @@ public class ForumServiceImpl implements ForumService{
 	  return storage_.getPageTopicByUser(sProvider, userName, isMod);
   }
 
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
-	  return storage_.getPagePostByUser(sProvider, userName, isMod);
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception {
+	  return storage_.getPagePostByUser(sProvider, userName, userId, isMod);
   }
 
 	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {
