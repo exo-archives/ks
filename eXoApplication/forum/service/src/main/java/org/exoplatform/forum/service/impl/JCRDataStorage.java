@@ -986,7 +986,8 @@ public class JCRDataStorage{
 				message.setSubject("eXo Forum Watching Notification!");
 				StringBuffer body = new StringBuffer();
 				body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString() ).append("</b>' have just	added topic: <b>").append(topic.getTopicName()).append("</b><div>")
-				.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> You have goto this link and view it: " + topic.getLink() + "<br/><br/><br/>");
+				.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> You have goto this link and view it: <a target=\"_blank\" href=\"" + topic.getLink() 
+						+ "\">" + topic.getLink() + "</a><br/><br/><br/>");
 				//message.setMessageBody(body.toString());
 				message.setBody(body.toString());
 				sendEmailNotification(emailList, message) ;					
@@ -1452,7 +1453,8 @@ public class JCRDataStorage{
 						message.setSubject("eXo Thread Watching Notification!");
 						StringBuffer body = new StringBuffer();
 						body.append("The Topic '<b>").append(topicNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
-						.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: " + post.getLink() + "<br/><br/><br/>");
+						.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: <a target=\"_blank\" href=\"" + post.getLink() 
+						+ "\">" + post.getLink() + "</a><br/><br/><br/>");
 						message.setBody(body.toString());
 						sendEmailNotification(emailList, message);
 					}
@@ -1473,7 +1475,8 @@ public class JCRDataStorage{
 					message.setSubject("eXo Forum Watching Notification!");
 					StringBuffer body = new StringBuffer();
 					body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
-					.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: " + post.getLink() + "<br/><br/><br/>");
+					.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: <a target=\"_blank\" href=\"" + post.getLink() 
+						+ "\">" + post.getLink() + "</a><br/><br/><br/>");
 					
 					message.setBody(body.toString());
 					sendEmailNotification(emailList, message);

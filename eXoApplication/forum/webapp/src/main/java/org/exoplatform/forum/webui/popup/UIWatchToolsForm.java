@@ -85,9 +85,10 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 				topicContainer.setIdUpdate(true);
 			}
 			String []strings = new String[(uiForm.emails.length-1)];
+			int j = 0;
 			for (int i = 0; i < uiForm.emails.length; i++) {
 				if(uiForm.emails[i].equals(email)) continue ;
-	      strings[i] = uiForm.emails[i];
+	      strings[j] = uiForm.emails[i]; ++j;
       }
 			uiForm.emails = strings ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
