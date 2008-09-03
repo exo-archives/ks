@@ -3,7 +3,7 @@
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>config</artifactId>
   <name>eXo Knowledge Suite Config</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0-RC3</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -75,7 +75,7 @@
           <systemProperties>
             <property>
               <name>mock.portal.dir</name>
-              <value>${exo.projects.directory.src}/portal/branches/2.2/web/portal/src/main/webapp</value>
+              <value>${exo.projects.directory.src}/portal/tags/2.2/web/portal/src/main/webapp</value>
             </property>
           </systemProperties>
         </configuration>
@@ -121,7 +121,7 @@
         <org.exoplatform.pc.version>2.0.1</org.exoplatform.pc.version>
         <org.exoplatform.portal.version>2.2</org.exoplatform.portal.version>
         <org.exoplatform.cs.version>1.1-SNAPSHOT</org.exoplatform.cs.version>        
-        <org.exoplatform.ks.version>1.0-SNAPSHOT</org.exoplatform.ks.version>        
+        <org.exoplatform.ks.version>1.0-RC3</org.exoplatform.ks.version>        
         <test.classes>Test</test.classes>
         <test.skip>true</test.skip>
       </properties>
