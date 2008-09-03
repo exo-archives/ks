@@ -854,12 +854,8 @@ public class JCRDataStorage{
 			Query query = qm.createQuery(stringBuffer.toString() , Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes(); 
-			if(iter.getSize() > 0) {
-				JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, stringBuffer.toString() , true) ;
-				return pagelist ;
-			} else {
-				return null;
-			}
+			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, stringBuffer.toString() , true) ;
+			return pagelist ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
 			return null ;
@@ -1201,14 +1197,15 @@ public class JCRDataStorage{
 		}
 	}
 	
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception {
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider) ;
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
 			StringBuffer pathQuery = new StringBuffer(); 
 				pathQuery.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:post)[@exo:isFirstPost='false' and @exo:owner='").append(userName);
 			if(isMod) pathQuery.append("']") ; 
-			else pathQuery.append("' and @exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true']");
+			else pathQuery.append("' and @exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true' and ((@exo:userPrivate='").append(userId).append("') or (@exo:userPrivate='exoUserPri'))]");
+			
 //			System.out.println("\n\n" + pathQuery.toString());
 			Query query = qm.createQuery(pathQuery.toString() , Query.XPATH) ;
 			QueryResult result = query.execute() ;

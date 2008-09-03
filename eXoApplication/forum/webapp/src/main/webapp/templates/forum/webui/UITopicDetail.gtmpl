@@ -47,6 +47,7 @@
 		userLogin = userProfile.getUserId() ;
 		setTime = (long)(userProfile.getTimeZone()*3600000) ;
 		isBanned = userProfile.getIsBanned() ;
+		posts = uicomponent.getPostPageList() ;
 		if(userProfile.getUserRole() == 0) isAdmin = true;
 		if(isBanned) {
 			isShowMenu = false ;
@@ -70,26 +71,32 @@
 			}
 		}
 		uicomponent.setIsEdit(canEdit) ;
-		if(!isLock && forum != null)isLock = forum.getIsLock() ;
-		if(!isLock && topic != null)isLock = topic.getIsLock() ;
-		if(!isLock && forum != null)isLock = forum.getIsClosed() ;
-		if(!isLock && topic != null)isLock = topic.getIsClosed() ;
-		if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
-		if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
-		if(!canEdit) {
-			if(!isLock) {
-				if(!isBanned)
-					isLock = !uicomponent.isCanPostReply();
+		if(posts != null && posts.size() > 0) {
+			if(!isLock && forum != null)isLock = forum.getIsLock() ;
+			if(!isLock && topic != null)isLock = topic.getIsLock() ;
+			if(!isLock && forum != null)isLock = forum.getIsClosed() ;
+			if(!isLock && topic != null)isLock = topic.getIsClosed() ;
+			if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
+			if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
+			if(!canEdit) {
+				if(!isLock) {
+					if(!isBanned)
+						isLock = !uicomponent.isCanPostReply();
+				}
+				if(!isClosed){ 
+					isClosed = !uicomponent.userCanView() ;
+				}
 			}
-			if(!isClosed){ 
-				isClosed = !uicomponent.userCanView() ;
+			if(!canEdit) {
+				if(topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
 			}
+		} else {
+		  isClosed = true;
+		  isNotReply = true;
+		  isLock = false;
+		  isShowMenu = false;
 		}
-		if(!canEdit) {
-			if(topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
-		}
-		posts = uicomponent.getPostPageList() ;
-	}
+	} 
 	isNotReply = isLock ;
 	if(!isNotReply) isNotReply = !isShowMenu ;
 	boolean isModeratePost = uicomponent.getIsModeratePost() ;
@@ -110,6 +117,12 @@
 	}
 	String url = uicomponent.url("ViewThreadByUser","pathId");
   uicomponent.setLink(url);
+  if(isNull){
+	  isClosed = true;
+	  isNotReply = true;
+	  isLock = false;
+	  isShowMenu = false;
+	}
 %>
 <div class="UITopicDetail">
 <% uiform.begin() %>
@@ -837,8 +850,12 @@
 			String idLastPost = uicomponent.getIdPostView() ;
 			jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('"+idLastPost+"');");
 		 } else {
+		 if(canEdit){
 		%>
+		<div class="ContentNotPost"><%=_ctx.appRes(uiformId + ".label.TopicDeleted");%></div>
+		<% }else{ %>
 		<div class="ContentNotPost"><%=_ctx.appRes(uiformId + ".label.NoPermission");%></div>
+		<% } %>
 	<% } %>
 <!-- End ContentContainer -->
 	</div>	
