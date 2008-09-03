@@ -410,7 +410,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath)
+	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic)
 	    throws Exception;
 
 	/**
@@ -702,7 +702,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery) throws Exception;
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser) throws Exception;
 
 	/**
 	 * Gets the advanced search.

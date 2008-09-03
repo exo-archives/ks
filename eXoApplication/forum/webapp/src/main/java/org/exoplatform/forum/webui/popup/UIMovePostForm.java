@@ -149,7 +149,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 			String topicPath = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			if(!ForumUtils.isEmpty(topicPath)) {
 				try {
-					uiForm.forumService.movePost(ForumSessionUtils.getSystemProvider(), uiForm.posts, topicPath) ;
+					uiForm.forumService.movePost(ForumSessionUtils.getSystemProvider(), uiForm.posts, topicPath, false) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
 					String[] temp = topicPath.split("/") ;

@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -137,7 +138,7 @@ public class UIForumListSearch extends UIContainer {
     		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;
     		if(forum != null) {
     			isRead = !forum.getIsClosed();
-  				if(!isRead && userProfile.getUserRole() == 0) isRead = true; 
+  				if(!isRead && userProfile.getUserRole() == 0 || Arrays.asList(forum.getModerators()).contains(userProfile.getUserId())) isRead = true; 
   				if(isRead) {
 		  			forumPortlet.updateIsRendered(ForumUtils.FORUM);
 		  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;

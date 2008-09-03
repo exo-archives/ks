@@ -108,12 +108,13 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					String categoryId = temp[temp.length - 3] ;
 					String forumId = temp[temp.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+					int count = 0;
 					for(Topic topic : uiForm.listTopic) {
 						if(topicMergeId.equals(topic.getId())) {continue ;}
 						try {
 							JCRPageList pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), "", "", "", "") ;
 							List<Post> posts = pageList.getPage(0) ;
-							forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath) ;
+							forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath, false) ;
 							forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId()) ;
 	          } catch (Exception e) {
 		          isMerge = false;

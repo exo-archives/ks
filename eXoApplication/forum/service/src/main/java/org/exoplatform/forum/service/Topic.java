@@ -64,8 +64,8 @@ public class Topic {
 	
 	public Topic(){ 
 		id = Utils.TOPIC + IdGenerator.generate();
-		canView = new String [] {} ;
-		canPost = new String [] {} ;
+		canView = new String [] {" "} ;
+		canPost = new String [] {" "} ;
 		userVoteRating = new String [] {} ;
 		tagId = new String [] {} ;
 		emailNotification = new String [] {} ;

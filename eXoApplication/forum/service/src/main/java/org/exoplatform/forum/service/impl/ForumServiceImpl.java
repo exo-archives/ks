@@ -159,8 +159,8 @@ public class ForumServiceImpl implements ForumService{
 		storage_.modifyPost(sProvider, posts, type);
 	}
 	
-	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath) throws Exception {
-		storage_.movePost(sProvider, posts, destTopicPath);
+	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic) throws Exception {
+		storage_.movePost(sProvider, posts, destTopicPath, isCreatNewTopic);
 	}
 	
 	public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
@@ -286,8 +286,8 @@ public class ForumServiceImpl implements ForumService{
 		storage_.saveForumStatistic(sProvider, forumStatistic) ;
   }
 
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery) throws Exception {
-	  return storage_.getQuickSearch(sProvider, textQuery, type, pathQuery);
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser) throws Exception {
+	  return storage_.getQuickSearch(sProvider, textQuery, type, pathQuery, currentUser);
   }
 
 	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider,ForumEventQuery eventQuery) throws Exception {
