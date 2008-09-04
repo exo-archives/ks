@@ -973,9 +973,16 @@ public class JCRDataStorage{
 			
 			List<String> emailList = new ArrayList<String>() ;
 			//send watching notification and send notify
-			if(forumNode.isNodeType("exo:forumWatching")){
+			
+			/*
+			 * check if topic is activated, is approved, is not closed, is not locked, is not wated 
+			 * and forum is activate then send email for users who add watching.
+			 */
+			if(forumNode.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && 
+					!topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()){
 				emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues())) ;
 			}
+			
 			if(forumNode.hasProperty("exo:notifyWhenAddTopic")){
 				emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddTopic").getValues())) ;
 			}
@@ -1444,7 +1451,12 @@ public class JCRDataStorage{
 			List<String> emailList = new ArrayList<String>();
 			// Send notify for watching users
 			if (!topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-				if (topicNode.isNodeType("exo:forumWatching")) {
+				
+				/*
+				 * check is approved, is activate by topic and is not hidden before send mail
+				 */
+				if (topicNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && 
+						(post.getUserPrivate()== null || post.getUserPrivate().length < 1)) {
 					emailList = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
 					if (emailList.size() > 0) {
 						Message message = new Message();
@@ -1459,15 +1471,22 @@ public class JCRDataStorage{
 						sendEmailNotification(emailList, message);
 					}
 				}
+				
 				emailList = new ArrayList<String>();
 				String ownerTopicEmail = topicNode.getProperty("exo:isNotifyWhenAddPost").getString();
 				if(ownerTopicEmail.trim().length() > 0) emailList.add(ownerTopicEmail);
 				if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
 					emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
 				}
-				if (forumNode.isNodeType("exo:forumWatching")) {
+				
+				/*
+				 * check is approved, is activate by topic and is not hidden before send mail
+				 */
+				if(forumNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && 
+						(post.getUserPrivate()== null || post.getUserPrivate().length < 1)){
 					emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
 				}
+				
 				if (emailList.size() > 0) {
 					Message message = new Message();
 					message.setMimeType("text/html");
