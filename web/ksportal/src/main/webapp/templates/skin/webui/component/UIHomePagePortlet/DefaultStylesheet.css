@@ -1,11 +1,12 @@
+
 .UIWindow .UIHomePagePortlet {	
 	margin: 0px;
-	padding: 10px;
+	padding: 10px; 
 }
 
 .UIHomePagePortlet {	
 	margin: 0px 5px 5px 5px;
-	border: 1px solid #fff;
+	border: 1px solid #fff; 
 }
 
 .UIHomePagePortlet .PortletDecoration{	
@@ -122,4 +123,173 @@
 	font-size: 16px;
 	color: #2c6fbd;
 	line-height: 25px;
+}
+
+
+
+
+
+.UIBannerPortlet {
+	background: #fff url('DefaultSkin/background/BannerPortlet.gif') repeat-x top;
+	height: 84px; font-size: 11px; font-family: tahoma;
+}
+
+.UIBannerPortlet .BannerTitle_{
+	float: left;
+	background: #fff url('DefaultSkin/background/BannerTitle.gif') no-repeat top left;
+	width: 336px; height: 84px;
+}
+
+.UIBannerPortlet .MiddleBanner_ .LoginContainer{
+	float: right; width: 400px;
+	margin-top: 57px;
+}
+
+.UIBannerPortlet .LoginContainer .FlagIcon {
+	background: url('DefaultSkin/background/FlagIcon22x13.gif') no-repeat right;
+	float: right;
+	width: 22px; height:13px;
+	margin: 6px 15px 0px 0px;
+}
+
+.UIBannerPortlet .LoginContainer .Dotline {
+	background: url('DefaultSkin/background/DotLine2x24.gif') no-repeat right;
+	float: right;
+	width: 2px; height:24px;
+	margin: 0px 10px;
+}
+
+.UIBannerPortlet .LoginContainer .SignIn {
+	background: url('DefaultSkin/background/SignIn13x13.gif') no-repeat left;
+	float: right;
+	line-height:13px;
+	padding-left: 20px;
+	font-weight: bold;
+	color: gray;
+	margin:6px 0px 0px 10px;
+}
+
+.UIBannerPortlet .LoginContainer .DotIcon {
+	background: url('DefaultSkin/background/DotLine16x24.gif') no-repeat right;
+	float: right;
+	width: 16px; height:24px;
+}
+
+.UIBannerPortlet .LoginContainer .TextAcount {
+	float: right;
+	line-height:24px;
+	color: gray;
+}
+
+
+.UIHomePagePortlet .HomePortletAdBackround {
+	margin-right: 224px;
+}
+
+.UIHomePagePortlet .HomeBackground {
+	background: url('DefaultSkin/background/HomeBackground.gif') repeat-x ;
+	height: 314px;
+}
+
+.UIHomePagePortlet .HomeBackground .HomeImage {
+	background: url('DefaultSkin/background/KSHomePage786x314.jpg') no-repeat right;
+	height: 314px;
+}
+
+.UIHomePagePortlet .Decorator .DecoratorTL {
+	background: url('DefaultSkin/background/DecoratorTL.gif') no-repeat left;
+	padding-left: 7px;
+}
+
+.UIHomePagePortlet .Decorator .DecoratorTR {
+	background: url('DefaultSkin/background/DecoratorTR.gif') no-repeat right;
+	padding-right: 66px;
+}
+
+.UIHomePagePortlet .Decorator .DecoratorTC {
+	background: url('DefaultSkin/background/DecoratorTC.gif') repeat-x ;
+	height: 88px;
+}
+
+.UIHomePagePortlet .Decorator .DecoratorMC {
+	background: url('DefaultSkin/background/DecoratorMC.gif') repeat-x ;
+	height: 139px;
+	border-top: none;
+	border-left: 1px solid #b7b7b7;
+	border-right: 1px solid #b7b7b7;
+}
+
+.UIHomePagePortlet .Decorator .DecoratorBL {
+	background: url('DefaultSkin/background/DecoratorBL.gif') no-repeat left;
+	padding-left: 7px;
+}
+
+.UIHomePagePortlet .Decorator .DecoratorBR {
+	background: url('DefaultSkin/background/DecoratorBR.gif') no-repeat right;
+	padding-right: 7px;
+}
+
+.UIHomePagePortlet .Decorator .DecoratorBC {
+	background: url('DefaultSkin/background/DecoratorBC.gif') repeat-x ;
+	height: 7px;
+}
+
+.UIHomePagePortlet .Decorator .ForumIcon {
+	float: left;
+	background: url('DefaultSkin/background/ForumIcon.gif') no-repeat left ;
+	width:102px; height: 79px;
+	margin:7px 10px 0px;
+}
+
+.UIHomePagePortlet .Decorator .ForumLabel {
+	float: left;
+	padding: 10px 0px 0px 0px;
+	font-weight: bold;
+}
+
+.UIHomePagePortlet .Decorator .ForumLabel .Label {
+	line-height: 20px;
+	width:240px;
+}
+
+.UIHomePagePortlet .Decorator .ForumLabel .Title {
+	line-height: 30px;
+	font-size: 24px;
+	color:#1363c8;
+}
+
+.UIHomePagePortlet .Decorator .FAQIcon {
+	float: left;
+	background: url('DefaultSkin/background/FAQIcon.gif') no-repeat left ;
+	width:102px; height: 79px;
+	margin:7px 10px 0px;
+}
+
+.UIHomePagePortlet .Decorator .FAQLabel {
+	float: left;
+	padding: 10px 0px 0px 0px;
+	font-weight: bold;
+}
+
+.UIHomePagePortlet .Decorator .FAQLabel .Label {
+	line-height: 20px;
+	width:240px;
+}
+
+.UIHomePagePortlet .Decorator .FAQLabel .Title {
+	line-height: 30px;
+	font-size: 24px;
+	color:#1363c8;
+}
+
+.UIHomePagePortlet .Decorator .Button {
+	background: url('DefaultSkin/background/Button.gif') no-repeat left ;
+	height: 30px; width: 160px;
+	cursor: pointer;
+	float: right;
+}
+
+.UIHomePagePortlet .SideBar {
+	float: right;
+	width: 220px;
 }
