@@ -17,13 +17,9 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQServiceUtils;
-import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -35,7 +31,6 @@ import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -63,10 +58,6 @@ import org.exoplatform.webui.form.UIForm;
 public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	private List<Question> listQuestion_ = null ;
 	private static String language_ = "English" ;
-	private String question_ = "" ;
-	private String response_ = "" ;
-	private String text_ = "";
-	private FAQSetting faqSetting_ = new FAQSetting() ;
 	public ResultSearchQuestion() throws Exception {
 		addChild(UIFAQPageIterator.class, null, LIST_RESULT_SEARCH) ;
 	}
@@ -77,110 +68,18 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	
   @SuppressWarnings("unused")
   private List<Question> getListQuestion() throws Exception {
-  	FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-  	FAQService faqService = FAQUtils.getFAQService() ;
-  	FAQUtils.getPorletPreference(faqSetting_);
-    faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
-  	String currentUser = FAQUtils.getCurrentUser() ;
-  	SessionProvider sProvider = FAQUtils.getSystemProvider() ;
-  	
   	long pageSelected = pageIterator.getPageSelected();
-  	listQuestion_ = new ArrayList<Question>();
+  	listQuestion_ = new ArrayList<Question>() ;
   	try {
   		listQuestion_.addAll(pageList.getPageResultQuestionsSearch(pageSelected, FAQUtils.getCurrentUser()));
     } catch (Exception e) {
 	    e.printStackTrace();
     }
-  	
-  	if(language_.equals("English")) {
-  		List<Question> listQuestionSearch = new ArrayList<Question>();
-  		if(faqSetting_.getDisplayMode().equals("both")) {
-			  if(serviceUtils.isAdmin(currentUser)) {
-			  	setListQuestion(listQuestion_) ;
-			  	return this.listQuestion_ ;
-				} else {
-					for(Question quest: listQuestion_) {
-						String categoryId = quest.getCategoryId() ;
-					  Category category = faqService.getCategoryById(categoryId, sProvider) ;
-					  String[] moderator = category.getModerators() ;
-					  if(Arrays.asList(moderator).contains(currentUser)) {
-					  	listQuestionSearch.add(quest) ;
-						} else {
-							if(quest.isActivated()) listQuestionSearch.add(quest) ;
-							else
-								continue ;
-						}
-					}
-					setListQuestion(listQuestionSearch) ;
-					return listQuestionSearch ;
-				}
-  		} else {
-  			for(Question quest: listQuestion_) {
-  				String categoryId = quest.getCategoryId() ;
-				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
-				  String[] moderator = category.getModerators() ;
-				  if(Arrays.asList(moderator).contains(currentUser)) {
-				  	if(quest.isApproved()) listQuestionSearch.add(quest) ;
-					} else {
-						if(quest.isApproved()&& quest.isActivated()) listQuestionSearch.add(quest) ;
-						else
-							continue ;
-					}
-				}
-  			setListQuestion(listQuestionSearch) ;
-  			return listQuestionSearch ;
-  		}
-  	} else {
-  		List<Question> listQuestionSearchByLanguage = new ArrayList<Question>();
-  		List<Question> listQuestionLanguage = new ArrayList<Question>();
-  		if(FAQUtils.isFieldEmpty(text_)) {
-  			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestion_, language_, question_, response_, sProvider) ;
-  		} else if(!FAQUtils.isFieldEmpty(text_) && FAQUtils.isFieldEmpty(question_) && FAQUtils.isFieldEmpty(response_)){
-  			listQuestionSearchByLanguage = faqService.searchQuestionByLangageOfText(listQuestion_, language_, text_, sProvider) ;
-  		} else {
-  			List<Question> listQuestionSearchByLanguageTemp = faqService.searchQuestionByLangageOfText(listQuestion_, language_, text_, sProvider) ;
-  			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestionSearchByLanguageTemp, language_, question_, response_, sProvider) ;
-  		}
-  		if(faqSetting_.getDisplayMode().equals("both")) {
-	  		if(serviceUtils.isAdmin(currentUser)) {
-	  			setListQuestion(listQuestionSearchByLanguage) ;
-			  	return listQuestionSearchByLanguage ;
-				} else {
-					for(Question quest: listQuestionSearchByLanguage) {
-						String categoryId = quest.getCategoryId() ;
-					  Category category = faqService.getCategoryById(categoryId, sProvider) ;
-					  String[] moderator = category.getModerators() ;
-					  if(Arrays.asList(moderator).contains(currentUser)) {
-					  	listQuestionLanguage.add(quest) ;
-						} else {
-							if(quest.isActivated()) listQuestionLanguage.add(quest) ;
-							else
-								continue ;
-						}
-					}
-					setListQuestion(listQuestionLanguage) ;
-					return listQuestionLanguage ;
-	  		}
-  		} else {
-  			for(Question quest: listQuestionSearchByLanguage) {
-  				String categoryId = quest.getCategoryId() ;
-				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
-				  String[] moderator = category.getModerators() ;
-				  if(Arrays.asList(moderator).contains(currentUser)) {
-				  	if(quest.isApproved()) listQuestionLanguage.add(quest) ;
-					} else {
-						if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;
-						else
-							continue ;
-					}
-				}
-  			setListQuestion(listQuestionLanguage);
-  			return listQuestionLanguage ;
-  		}
-  	}
+    return listQuestion_ ;
   }
   
   public void setListQuestion(List<Question> listQuestion) {
+  	this.listQuestion_ = listQuestion ;
     try {
 	    pageList = new QuestionPageList(listQuestion, listQuestion.size());
 	    pageList.setPageSize(5);
@@ -200,12 +99,6 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
       e.printStackTrace();
       return 1 ;
     }
-  }
-  
-	public void setContent(String question, String response, String text) {
-    this.question_ = question ;
-    this.response_ = response ;
-    this.text_ = text;
   }
   
 	@SuppressWarnings("static-access")

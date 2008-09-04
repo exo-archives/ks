@@ -17,14 +17,10 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQServiceUtils;
-import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
@@ -64,7 +60,6 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	private String LIST_RESULT_SEARCH = "listResultSearch";
 	private UIFAQPageIterator pageIterator ;
 	private JCRPageList pageList ;
-	FAQSetting faqSetting_ = new FAQSetting() ;
 	
 	public ResultQuickSearch() throws Exception { 
 		addChild(UIFAQPageIterator.class, null, LIST_RESULT_SEARCH) ;
@@ -72,14 +67,15 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	}
 	
 	public void setFormSearchs(List<FAQFormSearch> formSearchs) throws Exception {
-		FAQService faqService = FAQUtils.getFAQService();
-		FAQUtils.getPorletPreference(faqSetting_);
-    faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
-    formSearchs_ = formSearchs;
-    pageList = new QuestionPageList(formSearchs_, 10);
-    pageList.setPageSize(10);
-    pageIterator = this.getChildById(LIST_RESULT_SEARCH);
-    pageIterator.updatePageList(pageList);
+    this.formSearchs_ = formSearchs;
+    try {
+	    pageList = new QuestionPageList(formSearchs_, 10);
+	    pageList.setPageSize(10);
+	    pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+	    pageIterator.updatePageList(pageList);
+    } catch (Exception e) {
+    	 e.printStackTrace();
+    }
   }
 	
 	@SuppressWarnings("unused")
@@ -94,59 +90,14 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
   }
 	
 	public List<FAQFormSearch> getFormSearchs() throws Exception {
-		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
-		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-  	String currentUser = FAQUtils.getCurrentUser() ;
   	long pageSelected = pageIterator.getPageSelected();
   	formSearchs_ = new ArrayList<FAQFormSearch>();
-  	formSearchs_.addAll(pageList.getPageResultSearch(pageSelected, FAQUtils.getCurrentUser()));
-  	if(faqSetting_.getDisplayMode().equals("both")) {
-		  if(serviceUtils.isAdmin(currentUser)) {
-		  	return this.formSearchs_;
-		  } else {
-				for(FAQFormSearch faqSearch : formSearchs_) {
-					if(faqSearch.getType().equals("faqCategory")) {
-						listQuickSearch.add(faqSearch) ;
-					} else {
-						String questionId = faqSearch.getId() ;
-						FAQService faqService = FAQUtils.getFAQService();
-					  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-					  String categoryIdOfQuestion = question.getCategoryId() ;
-					  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
-					  String[] moderator = category.getModerators() ;
-					  if(Arrays.asList(moderator).contains(currentUser)) {
-					  	listQuickSearch.add(faqSearch) ;
-						} else {
-							if(question.isActivated()) listQuickSearch.add(faqSearch) ;
-							else
-								continue ;
-						}
-					}
-				}
-				return listQuickSearch;
-		  }
-  	} else {
-  		for(FAQFormSearch faqSearch : formSearchs_) {
-				if(faqSearch.getType().equals("faqCategory")) {
-					listQuickSearch.add(faqSearch) ;
-				} else {
-					String questionId = faqSearch.getId() ;
-					FAQService faqService = FAQUtils.getFAQService();
-				  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-				  String categoryIdOfQuestion = question.getCategoryId() ;
-				  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
-				  String[] moderator = category.getModerators() ;
-				  if(Arrays.asList(moderator).contains(currentUser)) {
-				  	if(question.isApproved()) listQuickSearch.add(faqSearch) ;
-					} else {
-						if(question.isApproved()&& question.isActivated()) listQuickSearch.add(faqSearch) ;
-						else
-							continue ;
-					}
-				}
-			}
-  		return listQuickSearch;
+  	try {
+  		formSearchs_.addAll(pageList.getPageResultSearch(pageSelected, FAQUtils.getCurrentUser()));
+  	} catch (Exception e) {
+  		 e.printStackTrace();
   	}
+  	return formSearchs_ ;
 	}
 	
   public void activate() throws Exception {}
@@ -248,7 +199,6 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-
 
 }
 

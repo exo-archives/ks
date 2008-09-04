@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,10 +26,13 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIResultContainer;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -86,6 +90,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	final static private String ITEM_LANGUAGE_ENGLISH = "English" ;
 	final static private String ITEM_LANGUAGE_VIETNAMESE = "Vietnamese" ;
 	final static private String ITEM_LANGUAGE_FRENCH = "French" ;
+	private FAQSetting faqSetting_ = new FAQSetting() ;
 	
 	public UIAdvancedSearchForm() throws Exception {
 		UIFormStringInput text = new UIFormStringInput(FIELD_TEXT, FIELD_TEXT, null) ;
@@ -182,7 +187,156 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   	}
   	return calendar;
   }
+  
+  @SuppressWarnings("unused")
+  private List<Question> getResultListQuestion(String language,String question,String response,String text,List<Question> listResultQuesiton) throws Exception {
+  	FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+  	FAQService faqService = FAQUtils.getFAQService() ;
+  	FAQUtils.getPorletPreference(faqSetting_);
+  	String currentUser = FAQUtils.getCurrentUser() ;
+  	if(currentUser != null && currentUser.trim().length() > 0){
+			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser, faqSetting_);
+		}
+  	SessionProvider sProvider = FAQUtils.getSystemProvider() ;
+  	
+  	if(language.equals("English")) {
+  		List<Question> listQuestionSearch = new ArrayList<Question>();
+  		if(faqSetting_.getDisplayMode().equals("both")) {
+			  if(serviceUtils.isAdmin(currentUser)) {
+			  	return listResultQuesiton ;
+				} else {
+					for(Question quest: listResultQuesiton) {
+						String categoryId = quest.getCategoryId() ;
+					  Category category = faqService.getCategoryById(categoryId, sProvider) ;
+					  String[] moderator = category.getModerators() ;
+					  if(Arrays.asList(moderator).contains(currentUser)) {
+					  	listQuestionSearch.add(quest) ;
+						} else {
+							if(quest.isActivated()) listQuestionSearch.add(quest) ;
+							else
+								continue ;
+						}
+					}
+					return listQuestionSearch ;
+				}
+  		} else {
+  			for(Question quest: listResultQuesiton) {
+  				String categoryId = quest.getCategoryId() ;
+				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
+				  String[] moderator = category.getModerators() ;
+				  if(Arrays.asList(moderator).contains(currentUser)) {
+				  	if(quest.isApproved()) listQuestionSearch.add(quest) ;
+					} else {
+						if(quest.isApproved()&& quest.isActivated()) listQuestionSearch.add(quest) ;
+						else
+							continue ;
+					}
+				}
+  			return listQuestionSearch ;
+  		}
+  	} else {
+  		List<Question> listQuestionSearchByLanguage = new ArrayList<Question>();
+  		List<Question> listQuestionLanguage = new ArrayList<Question>();
+  		if(FAQUtils.isFieldEmpty(text)) {
+  			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listResultQuesiton, language, question, response, sProvider) ;
+  		} else if(!FAQUtils.isFieldEmpty(text) && FAQUtils.isFieldEmpty(question) && FAQUtils.isFieldEmpty(response)){
+  			listQuestionSearchByLanguage = faqService.searchQuestionByLangageOfText(listResultQuesiton, language, text, sProvider) ;
+  		} else {
+  			List<Question> listQuestionSearchByLanguageTemp = faqService.searchQuestionByLangageOfText(listResultQuesiton, language, text, sProvider) ;
+  			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestionSearchByLanguageTemp, language, question, response, sProvider) ;
+  		}
+  		if(faqSetting_.getDisplayMode().equals("both")) {
+	  		if(serviceUtils.isAdmin(currentUser)) {
+			  	return listQuestionSearchByLanguage ;
+				} else {
+					for(Question quest: listQuestionSearchByLanguage) {
+						String categoryId = quest.getCategoryId() ;
+					  Category category = faqService.getCategoryById(categoryId, sProvider) ;
+					  String[] moderator = category.getModerators() ;
+					  if(Arrays.asList(moderator).contains(currentUser)) {
+					  	listQuestionLanguage.add(quest) ;
+						} else {
+							if(quest.isActivated()) listQuestionLanguage.add(quest) ;
+							else
+								continue ;
+						}
+					}
+					return listQuestionLanguage ;
+	  		}
+  		} else {
+  			for(Question quest: listQuestionSearchByLanguage) {
+  				String categoryId = quest.getCategoryId() ;
+				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
+				  String[] moderator = category.getModerators() ;
+				  if(Arrays.asList(moderator).contains(currentUser)) {
+				  	if(quest.isApproved()) listQuestionLanguage.add(quest) ;
+					} else {
+						if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;
+						else
+							continue ;
+					}
+				}
+  			return listQuestionLanguage ;
+  		}
+  	}
+  }
 	
+  private List<FAQFormSearch> getResultListSearchEmpty(List<FAQFormSearch> formSearchs_) throws Exception {
+		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
+		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+  	FAQService faqService = FAQUtils.getFAQService() ;
+  	FAQUtils.getPorletPreference(faqSetting_);
+  	String currentUser = FAQUtils.getCurrentUser() ;
+  	if(currentUser != null && currentUser.trim().length() > 0){
+			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser, faqSetting_);
+		}
+  	if(faqSetting_.getDisplayMode().equals("both")) {
+		  if(serviceUtils.isAdmin(currentUser)) {
+		  	return formSearchs_;
+		  } else {
+				for(FAQFormSearch faqSearch : formSearchs_) {
+					if(faqSearch.getType().equals("faqCategory")) {
+						listQuickSearch.add(faqSearch) ;
+					} else {
+						String questionId = faqSearch.getId() ;
+					  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+					  String categoryIdOfQuestion = question.getCategoryId() ;
+					  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
+					  String[] moderator = category.getModerators() ;
+					  if(Arrays.asList(moderator).contains(currentUser)) {
+					  	listQuickSearch.add(faqSearch) ;
+						} else {
+							if(question.isActivated()) listQuickSearch.add(faqSearch) ;
+							else
+								continue ;
+						}
+					}
+				}
+				return listQuickSearch;
+		  }
+  	} else {
+  		for(FAQFormSearch faqSearch : formSearchs_) {
+				if(faqSearch.getType().equals("faqCategory")) {
+					listQuickSearch.add(faqSearch) ;
+				} else {
+					String questionId = faqSearch.getId() ;
+				  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+				  String categoryIdOfQuestion = question.getCategoryId() ;
+				  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
+				  String[] moderator = category.getModerators() ;
+				  if(Arrays.asList(moderator).contains(currentUser)) {
+				  	if(question.isApproved()) listQuickSearch.add(faqSearch) ;
+					} else {
+						if(question.isApproved()&& question.isActivated()) listQuickSearch.add(faqSearch) ;
+						else
+							continue ;
+					}
+				}
+			}
+  		return listQuickSearch;
+  	}
+	}
+  
 	static public class OnchangeActionListener extends EventListener<UIAdvancedSearchForm> {
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
 			UIAdvancedSearchForm uiAdvancedSearchForm = event.getSource() ;	
@@ -293,13 +447,13 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(fromDate != null) advanced.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
 				ResultSearchQuestion result = resultContainer.getChild(ResultSearchQuestion.class) ;
-				if(!language.equals("English")) result.setContent(question,response,text) ; 
 				advanced.getUIFormTextAreaInput(FIELD_QUESTION).setValue(question) ;
 				advanced.getUIFormTextAreaInput(FIELD_RESPONSE).setValue(response) ;
 				result.setLanguage(language) ;
  				List<Question> list = faqService.getAdvancedSearchQuestion(FAQUtils.getSystemProvider(),eventQuery);
  				popupContainer.setId("ResultSearchQuestion") ;
- 				result.setListQuestion(list) ;
+ 				List<Question> listResult = advancedSearch.getResultListQuestion(language, question, response, text, list) ;
+ 				result.setListQuestion(listResult) ; 
 			} else {
 				resultContainer.setIsRenderedContainer(2) ;
 				UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
@@ -310,7 +464,8 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
 				ResultQuickSearch result = resultContainer.getChild(ResultQuickSearch.class) ;
 				List<FAQFormSearch> list = faqService.getAdvancedEmpty(FAQUtils.getSystemProvider(), text, fromDate, toDate) ;
-				result.setFormSearchs(list) ;
+				List<FAQFormSearch> listResult = advancedSearch.getResultListSearchEmpty(list) ;
+				result.setFormSearchs(listResult) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
