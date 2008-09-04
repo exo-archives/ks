@@ -53,7 +53,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultSearchCategory extends UIForm implements UIPopupComponent{
-	private List<Category> listCategory = null ;
+	private List<Category> listCategory_ = null ;
 	private String LIST_RESULT_SEARCH = "listResultCategoriesSearch";
 	private UIFAQPageIterator pageIterator ;
 	private JCRPageList pageList ;
@@ -64,17 +64,17 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
   @SuppressWarnings("unused")
   private List<Category> getListCategory(){
   	long pageSelected = pageIterator.getPageSelected();
-  	listCategory = new ArrayList<Category>();
+  	listCategory_ = new ArrayList<Category>();
   	try {
-	    listCategory.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
+	    listCategory_.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
     } catch (Exception e) {
 	    e.printStackTrace();
     }
-    return listCategory ;
+    return listCategory_ ;
   }
   
   public void setListCategory(List<Category> listCategory) {
-    this.listCategory = listCategory ;
+    this.listCategory_ = listCategory ;
     try {
 	    pageList = new QuestionPageList(listCategory);
 	    pageList.setPageSize(5);
