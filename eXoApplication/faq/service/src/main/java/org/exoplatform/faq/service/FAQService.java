@@ -143,7 +143,7 @@ public interface FAQService {
    * 
    * @throws Exception if path of question nod not found
    */
-  public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception ;
+  public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
   
   /**
    * Delete question by question's id. Check question if it's existed then remove it
