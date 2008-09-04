@@ -43,15 +43,14 @@ public class ForumSessionUtils {
     return Util.getPortalRequestContext().getRemoteUser();
   }
   
-  public static List<String> getAllGroupAndMembershipOfUser() throws Exception{
+  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
   	List<String> listOfUser = new ArrayList<String>();
-  	String user = Util.getPortalRequestContext().getRemoteUser();
-		listOfUser.add(user);
+		listOfUser.add(userId);
 		String value = "";
 		String id = "";
 		Membership membership = null;
 		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(user).toArray()){
+		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
 			id = object.toString();
 			id = id.replace("Membership[", "").replace("]", "");
 			membership = organizationService_.getMembershipHandler().findMembership(id);

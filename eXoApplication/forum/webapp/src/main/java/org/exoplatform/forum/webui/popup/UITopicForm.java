@@ -460,8 +460,17 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setIcon(uiIconSelector.getSelectedIcon());
 				//topicNew.setAttachmentFirstPost(0) ;
 				canPost = ForumUtils.removeSpaceInString(canPost) ;
+				String temp = "" ;
+				if(!ForumUtils.isEmpty(canPost)) {
+					temp = ForumUtils.unSplitForForum(uiForm.forum.getPoster());
+				}
+				if(ForumUtils.isEmpty(temp)) temp = canPost;
+				String[]canPosts = ForumUtils.addStringToString(canPost, temp);
+				if(!ForumUtils.isEmpty(canView)) {
+					temp = ForumUtils.unSplitForForum(uiForm.forum.getViewer());
+					canView = canView + "," + temp;
+				}
 				canView = ForumUtils.removeSpaceInString(canView) ;
-				String[]canPosts = ForumUtils.addStringToString(canPost, canPost);
 				String[]canViews = ForumUtils.addStringToString(canPost, canView);
 								
 				topicNew.setCanView(canViews);

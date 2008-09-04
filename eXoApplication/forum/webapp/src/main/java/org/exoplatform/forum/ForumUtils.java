@@ -267,6 +267,7 @@ public class ForumUtils {
 				}
 			}
 		}
+		if(list.size() == 0) list.add(" ");
 		return list.toArray(new String[] {}) ;
 	}
 	

@@ -226,9 +226,9 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			areaInput.setValue(ForumUtils.unSplitForForum(forum.getModerators()));
 			areaInput.setEditable(!isMode) ;
 			areaInput.setEnable(!isMode) ;
-			forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getViewForumRole()));
+			forumPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getViewer()));
 			forumPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getCreateTopicRole()));
-			forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getReplyTopicRole()));
+			forumPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).setValue(ForumUtils.unSplitForForum(forum.getPoster()));
 		}
 	}
 	
@@ -364,15 +364,15 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
     		return ;
     	}
     	
-    	String []setModerators = ForumUtils.addStringToString(moderators, moderators) ;
-    	String []setTopicable = ForumUtils.addStringToString(topicable, topicable) ;
-    	String []setPostable = ForumUtils.addStringToString(topicable, postable);
-    	String []setViewer = ForumUtils.addStringToString(postable, viewer) ;
+    	String []setModerators = ForumUtils.splitForForum(moderators) ;
+    	String []setTopicable = ForumUtils.splitForForum(topicable) ;
+    	String []setPostable = ForumUtils.splitForForum(postable);
+    	String []setViewer = ForumUtils.splitForForum(viewer) ;
       
 			newForum.setModerators(setModerators);
 			newForum.setCreateTopicRole(setTopicable);
-			newForum.setReplyTopicRole(setPostable);
-			newForum.setViewForumRole(setViewer);
+			newForum.setPoster(setPostable);
+			newForum.setViewer(setViewer);
 			
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			if(!ForumUtils.isEmpty(uiForm.forumId))	{

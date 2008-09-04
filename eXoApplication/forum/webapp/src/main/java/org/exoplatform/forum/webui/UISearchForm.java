@@ -317,7 +317,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			Calendar fromDateCreatedLastPost = uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
 			Calendar toDateCreatedLastPost = uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
 			ForumEventQuery eventQuery = new ForumEventQuery() ;
-			eventQuery.setListOfUser(ForumSessionUtils.getAllGroupAndMembershipOfUser());
+			eventQuery.setListOfUser(ForumSessionUtils.getAllGroupAndMembershipOfUser(uiForm.userProfile.getUserId()));
 			eventQuery.setUserPermission(uiForm.userProfile.getUserRole());
 			eventQuery.setType(type) ;
 			eventQuery.setKeyValue(keyValue) ;

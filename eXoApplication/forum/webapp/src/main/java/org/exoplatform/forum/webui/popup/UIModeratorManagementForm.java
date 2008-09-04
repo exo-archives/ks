@@ -115,8 +115,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     ResourceBundle res = context.getApplicationResourceBundle() ;
 		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), 
 																	res.getString("UIForumPortlet.label.PermissionModerator").toLowerCase(),
-																	res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase(),
-																	res.getString("UIForumPortlet.label.PermissionUser").toLowerCase()};
+																	res.getString("UIForumPortlet.label.PermissionUser").toLowerCase(),
+																	res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase()};
   }
 	
   @SuppressWarnings("unused")
