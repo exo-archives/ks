@@ -26,6 +26,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -98,7 +99,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private UIFormWYSIWYGInput responseQuestion_ ; 
   private UIFormInputWithActions inputAttachment_ ; 
   private UIFormCheckBoxInput checkShowAnswer_ ;
-  private UIFormCheckBoxInput isApproved_ ;
+  private UIFormCheckBoxInput<Boolean> isApproved_ ;
   
   // question infor :
   private String questionId_ = new String() ;
@@ -116,13 +117,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private String languageIsResponsed = "" ;
   private String link_ = "" ;
   private boolean isChildren_ = false ;
+  private FAQSetting faqSetting_;
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
   public String getLink() {return link_;}
 	public void setLink(String link) { this.link_ = link;}
-	
+	public void setFAQSetting(FAQSetting faqSetting) {this.faqSetting_= faqSetting;}
   public UIResponseForm() throws Exception {
     isChildren_ = false ;
     questionContent_ = new UIFormTextAreaInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
@@ -383,7 +385,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       question_.setLink(link) ;
       
       try{
-        questionNode = faqService.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
+        questionNode = faqService.saveQuestion(question_, false, FAQUtils.getSystemProvider(),response.faqSetting_) ;
         MultiLanguages multiLanguages = new MultiLanguages() ;
         for(int i = 1; i < response.listQuestionLanguage.size(); i ++) {
           multiLanguages.addLanguage(questionNode, response.listQuestionLanguage.get(i)) ;

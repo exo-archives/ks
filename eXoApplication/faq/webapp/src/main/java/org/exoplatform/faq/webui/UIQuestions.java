@@ -611,6 +611,7 @@ public class UIQuestions extends UIContainer {
 	      name = FAQUtils.getFullName(userName) ;
 	      email = FAQUtils.getEmailUser(userName) ;
       }
+      questionForm.setFAQSetting(questions.faqSetting_) ;
       questionForm.setAuthor(name) ;
       questionForm.setEmail(email) ;
       questionForm.setCategoryId(categoryId) ;
@@ -1049,7 +1050,7 @@ public class UIQuestions extends UIContainer {
         }
         if(listRelaId.size() < question.getRelations().length) {
           question.setRelations(listRelaId.toArray(new String[]{})) ;
-          faqService.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
+          faqService.saveQuestion(question, false, FAQUtils.getSystemProvider(),uiQuestions.faqSetting_) ;
           for(int i = 0 ; i < uiQuestions.getListQuestion().size() ; i ++) {
             if(uiQuestions.getListQuestion().get(i).getId().equals(questionId)) {
               uiQuestions.getListQuestion().set(i, question) ;
@@ -1100,6 +1101,7 @@ public class UIQuestions extends UIContainer {
       } 
       UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
       responseForm.setQuestionId(question2, language_) ;
+      responseForm.setFAQSetting(question.faqSetting_);
       popupContainer.setId("FAQResponseQuestion") ;
       popupAction.activate(popupContainer, 720, 1000) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -1129,6 +1131,7 @@ public class UIQuestions extends UIContainer {
       } 
       UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
       questionForm.setQuestionId(question) ;
+      questionForm.setFAQSetting(questions.faqSetting_);
       popupContainer.setId("EditQuestion") ;
       popupAction.activate(popupContainer, 600, 450) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

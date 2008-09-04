@@ -371,7 +371,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   			} else {
   				question.setActivated(!question.isActivated());
   			}
-  			faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider());
+  			faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(),questionsInfo.faqSetting_);
   		}catch (Exception e){
   			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;

@@ -298,8 +298,8 @@ public class FAQServiceImpl implements FAQService{
 	 * 				isAddNew equal false then update question
 	 * @param	sProvider
 	 */
-	public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider) throws Exception {
-		return jcrData_.saveQuestion(question, isAddNew, sProvider) ;
+	public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
+		return jcrData_.saveQuestion(question, isAddNew, sProvider, faqSetting) ;
 	}
   
   /**

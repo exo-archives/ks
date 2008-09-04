@@ -30,6 +30,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -88,8 +89,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private UIFormStringInput inputAuthor = null ;
   private UIFormStringInput inputEmailAddress = null ;
   private static UIFormInputWithActions listFormWYSIWYGInput = null ;
-  private UIFormCheckBoxInput inputIsApproved = null ;
-  private UIFormCheckBoxInput inputIsActivated = null ;
+  private UIFormCheckBoxInput<Boolean> inputIsApproved = null ;
+  private UIFormCheckBoxInput<Boolean> inputIsActivated = null ;
   private UIFormInputWithActions inputAttachcment = null ;
   
   private static FAQService fAQService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -111,13 +112,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private boolean isActivated_ = true ;
   
   private boolean isChildOfManager = false ;
-  
+  private FAQSetting faqSetting_ ;
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
   public String getLink() {return link_;}
 	public void setLink(String link) { this.link_ = link;}
-	
+	public void setFAQSetting(FAQSetting faqSetting) {this.faqSetting_ = faqSetting;}
   @SuppressWarnings("static-access")
   public UIQuestionForm() throws Exception {
     isChildOfManager = false ;
@@ -457,7 +458,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       
       try{
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
-          questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider()) ;
+          questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider(), questionForm.faqSetting_) ;
           multiLanguages.removeLanguage(questionNode, questionForm.LIST_LANGUAGE) ;
           if(questionForm.LIST_LANGUAGE.size() > 1) {
           	try{
@@ -476,7 +477,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           	}
           }
         } else if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1){
-          questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider()) ;
+          questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider(),questionForm.faqSetting_) ;
           if(questionForm.LIST_LANGUAGE.size() > 1) {
           	try{
           		QuestionLanguage questionLanguage = new QuestionLanguage() ;

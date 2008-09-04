@@ -159,7 +159,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	public void testQuestion() throws Exception {
 		Question question1 = createQuestion() ;
 //		save question 1
-		faqService_.saveQuestion(question1, true, sProvider_) ;
+		faqService_.saveQuestion(question1, true, sProvider_,faqSetting_) ;
 
 //		get question 1
 		assertNotNull(faqService_.getQuestionById(question1.getId(), sProvider_)) ;
@@ -168,7 +168,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		
 //		update question 1
 		question1.setQuestion("Nguyen van truong test question 11111111 ?") ;
-		faqService_.saveQuestion(question1, false, sProvider_) ;
+		faqService_.saveQuestion(question1, false, sProvider_,faqSetting_) ;
 		assertNotNull(question1) ;
 		assertEquals("Nguyen van truong test question 11111111 ?", question1.getQuestion());
 		
@@ -184,7 +184,7 @@ public class TestFAQService extends FAQServiceTestCase{
     question2.setEmail("truong_tb1984@yahoo.com") ;
     question2.setQuestion("Nguyen van truong test question 2222222 ?") ;
     question2.setCreatedDate(new Date()) ;
-    faqService_.saveQuestion(question2, true, sProvider_) ;
+    faqService_.saveQuestion(question2, true, sProvider_,faqSetting_) ;
     
 //    move question 2 to category of question 1
     List<String> listQues = new ArrayList<String>() ;
@@ -204,7 +204,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question3.setEmail("phunghainam@yahoo.com") ;
 		question3.setQuestion("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
 		question3.setCreatedDate(new Date()) ;
-    faqService_.saveQuestion(question3, true, sProvider_) ;
+    faqService_.saveQuestion(question3, true, sProvider_,faqSetting_) ;
 		
 //	Add question 4
 		Question question4 = createQuestion() ;
@@ -218,7 +218,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question4.setEmail("phamdinhtan@yahoo.com") ;
 		question4.setQuestion("Nguyen van truong test question nguyenvantruong ?") ;
 		question4.setCreatedDate(new Date()) ;
-    faqService_.saveQuestion(question4, true, sProvider_) ;
+    faqService_.saveQuestion(question4, true, sProvider_,faqSetting_) ;
     
 //	Add question 5
 		Question question5 = createQuestion() ;
@@ -232,7 +232,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question5.setEmail("lydinhquang@yahoo.com") ;
 		question5.setQuestion("Nguyen van truong test question 55555555555 ?") ;
 		question5.setCreatedDate(new Date()) ;
-    faqService_.saveQuestion(question5, true, sProvider_) ;
+    faqService_.saveQuestion(question5, true, sProvider_,faqSetting_) ;
     
 //    get list all question
     List<Question> listAllQuestion = faqService_.getAllQuestions(sProvider_).getAll();

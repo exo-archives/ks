@@ -158,7 +158,7 @@ public UIMoveQuestionForm() throws Exception {}
           return ;
         }
         question.setCategoryId(cateId) ;
-        faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider()) ;
+        faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(),moveQuestionForm.faqSetting_) ;
       }catch (Exception e) {
         UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
