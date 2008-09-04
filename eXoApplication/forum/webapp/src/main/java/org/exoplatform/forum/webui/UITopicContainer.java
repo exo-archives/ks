@@ -113,7 +113,6 @@ public class UITopicContainer extends UIForm {
 	@SuppressWarnings("unused")
 	private boolean canAddNewThread = true ;
 	@SuppressWarnings("unused")
-	private boolean canViewThreads = true ;
 	private UserProfile userProfile = null;
 	private String strOrderBy = "" ;
 	private boolean isLogin = false;
@@ -168,10 +167,6 @@ public class UITopicContainer extends UIForm {
 		return this.canAddNewThread ;
 	}
 	
-	public boolean getCanViewThread(){
-		return this.canViewThreads ;
-	}
-	
 	private Forum getForum() throws Exception {
 		if(this.isUpdate) {
 			this.forum = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
@@ -185,7 +180,6 @@ public class UITopicContainer extends UIForm {
 	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
-		this.canViewThreads = true ;
 		this.canAddNewThread = true ;
 		if(this.userProfile == null) this.userProfile = new UserProfile();
 		StringBuffer strQuery = new StringBuffer() ;
@@ -195,19 +189,18 @@ public class UITopicContainer extends UIForm {
 		if( strings != null && strings.length > 0)
 			this.canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
 
-		strings = this.forum.getViewForumRole() ;
-		if(strings != null && strings.length > 0)
-			this.canViewThreads = ForumServiceUtils.hasPermission(strings, userId) ;
-
 		isModerator = false ;
 		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
-		else {strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'") ;}
-		
-		if(this.forum.getIsModerateTopic()) {
-			if(!isModerator) {
-				if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
-				strQuery.append("@exo:isApproved='true'") ;
+		else {
+			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'  and (@exo:owner='").append(userId).append("' or @exo:canView=' '") ;
+			for (String string : ForumSessionUtils.getAllGroupAndMembershipOfUser(userId)) {
+				strQuery.append(" or @exo:canView='"+string+"'") ;
 			}
+			strQuery.append(")");
+		}
+		if(!isModerator && this.forum.getIsModerateTopic()) {
+			if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
+			strQuery.append("@exo:isApproved='true'") ;
 		}
 		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, strQuery.toString(), strOrderBy);
 		long maxTopic = userProfile.getMaxTopicInPage() ;
@@ -326,7 +319,7 @@ public class UITopicContainer extends UIForm {
 				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser());
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(uiTopicContainer.getUserProfile().getUserId()));
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;

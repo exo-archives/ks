@@ -360,9 +360,9 @@ public class JCRDataStorage{
 			forumNode.setProperty("exo:isClosed", forum.getIsClosed()) ;
 			forumNode.setProperty("exo:isLock", forum.getIsLock()) ;
 			
-			forumNode.setProperty("exo:viewForumRole", forum.getViewForumRole()) ;
+			forumNode.setProperty("exo:viewer", forum.getViewer()) ;
 			forumNode.setProperty("exo:createTopicRole", forum.getCreateTopicRole()) ;
-			forumNode.setProperty("exo:replyTopicRole", forum.getReplyTopicRole()) ;
+			forumNode.setProperty("exo:poster", forum.getPoster()) ;
 			
 			String []oldModeratoForums = new String[]{};
 			if(!isNew)oldModeratoForums = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues()); 
@@ -507,9 +507,9 @@ public class JCRDataStorage{
 		
 		if(forumNode.hasProperty("exo:notifyWhenAddPost")) forum.setNotifyWhenAddPost(ValuesToStrings(forumNode.getProperty("exo:notifyWhenAddPost").getValues())) ;
 		if(forumNode.hasProperty("exo:notifyWhenAddTopic")) forum.setNotifyWhenAddTopic(ValuesToStrings(forumNode.getProperty("exo:notifyWhenAddTopic").getValues())) ;
-		if(forumNode.hasProperty("exo:viewForumRole")) forum.setViewForumRole(ValuesToStrings(forumNode.getProperty("exo:viewForumRole").getValues())) ;
+		if(forumNode.hasProperty("exo:viewer")) forum.setViewer(ValuesToStrings(forumNode.getProperty("exo:viewer").getValues())) ;
 		if(forumNode.hasProperty("exo:createTopicRole")) forum.setCreateTopicRole(ValuesToStrings(forumNode.getProperty("exo:createTopicRole").getValues())) ;
-		if(forumNode.hasProperty("exo:replyTopicRole")) forum.setReplyTopicRole(ValuesToStrings(forumNode.getProperty("exo:replyTopicRole").getValues())) ;
+		if(forumNode.hasProperty("exo:poster")) forum.setPoster(ValuesToStrings(forumNode.getProperty("exo:poster").getValues())) ;
 		if(forumNode.hasProperty("exo:moderators")) forum.setModerators(ValuesToStrings(forumNode.getProperty("exo:moderators").getValues())) ;
 		if(forumNode.isNodeType("exo:forumWatching")) {
 			forum.setEmailNotification(ValuesToStrings(forumNode.getProperty("exo:emailWatching").getValues()));

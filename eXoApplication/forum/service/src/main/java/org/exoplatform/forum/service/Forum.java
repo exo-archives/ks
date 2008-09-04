@@ -43,21 +43,22 @@ public class Forum {
 	private boolean isClosed = false ;
 	private boolean isLock = false ;
 
-	private String[] viewForumRole;
-	private String[] createTopicRole;
 	private String[] moderators;
+	private String[] createTopicRole;
 	
-	private String[] replyTopicRole;
+	private String[] viewer;
+	private String[] poster;
+	
 	private String[] emailNotification;
 	
 	
 	public Forum() {
 		notifyWhenAddTopic = new String[] {};
 		notifyWhenAddPost = new String[] {};
-		viewForumRole = new String[] {};
+		viewer = new String[] {};
 		createTopicRole = new String[] {};
 		moderators = new String[] {};
-		replyTopicRole = new String[] {};
+		poster = new String[] {};
 		emailNotification = new String[] {};
 		id = Utils.FORUM + IdGenerator.generate() ;
 	}
@@ -123,14 +124,14 @@ public class Forum {
 	public boolean getIsLock() { return isLock;}
 	public void setIsLock(boolean isLock) { this.isLock = isLock;}
 	
-	public String[] getViewForumRole(){return viewForumRole;}
-	public void setViewForumRole(String[] viewForumRole){this.viewForumRole = viewForumRole;}
-	
 	public String[] getCreateTopicRole(){return createTopicRole;}
 	public void setCreateTopicRole(String[] createTopicRole){this.createTopicRole = createTopicRole;}
 	
-	public String[] getReplyTopicRole(){return replyTopicRole;}
-	public void setReplyTopicRole(String[] replyTopicRole){this.replyTopicRole = replyTopicRole;}
+	public String[] getPoster(){return poster;}
+	public void setPoster(String[] poster){this.poster = poster;}
+	
+	public String[] getViewer(){return viewer;}
+	public void setViewer(String[] viewer){this.viewer = viewer;}
 	
 	public String[] getModerators(){return moderators;}	
 	public void setModerators(String[] moderators){this.moderators = moderators;}

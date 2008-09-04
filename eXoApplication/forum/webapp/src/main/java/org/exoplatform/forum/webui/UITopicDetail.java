@@ -270,8 +270,8 @@ public class UITopicDetail extends UIForm {
 		if(!isMod) {
 			List<String> listUser = new ArrayList<String>() ;
 			listUser.addAll(ForumServiceUtils.getUserPermission(this.topic.getCanPost())) ;
-			listUser.addAll(ForumServiceUtils.getUserPermission(this.forum.getReplyTopicRole())) ;
-			if(!listUser.isEmpty() && listUser.size() > 0) {
+			if(!listUser.isEmpty() && listUser.size() > 0 && !listUser.get(0).equals(" ")) {
+				listUser.addAll(ForumServiceUtils.getUserPermission(this.forum.getPoster())) ;
 				if(!listUser.contains(userName)) {
 					return false ;
 				}
@@ -333,11 +333,14 @@ public class UITopicDetail extends UIForm {
 			List<String> listUser = new ArrayList<String>() ;
 			Topic topic = this.getTopic() ;
 			listUser.addAll(ForumServiceUtils.getUserPermission(topic.getCanView())) ;
-			Forum forum = this.getForum() ;
-			listUser.addAll(ForumServiceUtils.getUserPermission(forum.getViewForumRole())) ;
-			if(listUser.isEmpty()|| listUser.size() == 0 || listUser.contains(this.getUserProfile().getUserId())) return true;
+			if(!listUser.isEmpty() && listUser.size() > 0 && !listUser.get(0).equals(" ")){
+				Forum forum = this.getForum() ;
+				listUser.addAll(ForumServiceUtils.getUserPermission(forum.getViewer())) ;
+			}
+			if(listUser.isEmpty()|| listUser.size() == 0 || listUser.get(0).equals(" ") || listUser.contains(this.getUserProfile().getUserId())) return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false ;
 		}
 		return false ;
 	}
@@ -503,7 +506,7 @@ public class UITopicDetail extends UIForm {
 					} else {
 						boolean canReply = false;
 						postRules.setCanCreateNewThread(false);
-						strings = this.forum.getReplyTopicRole() ;
+						strings = this.forum.getPoster() ;
 						if(strings != null && strings.length > 0) {
 							canReply = ForumServiceUtils.hasPermission(strings, userLogin);
 							if(canReply){
@@ -652,7 +655,7 @@ public class UITopicDetail extends UIForm {
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser());
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(topicDetail.getUserProfile().getUserId()));
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;

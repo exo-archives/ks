@@ -77,7 +77,7 @@ public class UIQuickSearchForm extends UIForm {
 				else type = "false,all" ;
 				List<ForumSearch> list = null;
 				try {
-					list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type, "", ForumSessionUtils.getAllGroupAndMembershipOfUser());
+					list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type, "", ForumSessionUtils.getAllGroupAndMembershipOfUser(userProfile.getUserId()));
 				}catch (Exception e) {
 					e.printStackTrace();
 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
