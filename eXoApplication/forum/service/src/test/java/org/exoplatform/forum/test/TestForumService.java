@@ -27,7 +27,7 @@ public class TestForumService extends BaseForumTestCase{
     assertNotNull(forumService_);
     assertNotNull(sProvider_);
   }
-  
+  /*
   public void testCategory() throws Exception {  
 	Category cat = createCategory() ;
     // add category
@@ -98,7 +98,7 @@ public class TestForumService extends BaseForumTestCase{
   	forum = forumService_.getForum(sProvider_, cate.getId(), forumId);
   	assertNull(forum);
 
-  }
+  }*/
 //  
 //  public void testTopic() throws Exception {
 //    Category cat = createCategory();
