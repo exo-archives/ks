@@ -20,8 +20,12 @@
 			<div class="LoginContainer">
 				<div class="LoginContent">
 					<div class="FlagIcon"><span></span></div>
-					<div class="Dotline"><span></span></div>	
-					<a class="SignIn" href="aa">Sign in</a>			  
+					<div class="Dotline"><span></span></div>
+					<%if(prContext.getAccessPath() == PortalRequestContext.PRIVATE_ACCESS) {%>	
+					<a class="SignIn" href="$signOutAction">Sign out</a>
+					<% }else{ %>
+					<a class="SignIn" href="$signInAction">Sign in</a>
+					<% } %>
 					<div class="DotIcon"><span></span></div>
 					<div class="TextAcount">Demo account: <span style="font-weight: bold;">demo/exo</span></div>	
 					<div style="clear: right"><span></span></div>	   
