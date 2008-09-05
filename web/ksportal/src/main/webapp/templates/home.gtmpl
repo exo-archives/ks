@@ -2,36 +2,24 @@
 
   import org.exoplatform.portal.webui.util.Util ;
 %>
+
+<div class="UIHomePagePortlet" id="$uicomponent.id">
+	
 <div class="UIHomePagePortlet" >
 	<div class="PortletDecoration">
-		<div class="SideBar">
-			<div>Looking for a quick overview ?<br>
-			  <a href="#">Take a tour</a>
-			</div>
-			
-			<div>Want to try with your own account?<br>
-			  <a href="/public/classic/register">Sign Up</a></div>
-			
-			<div>eXo KS is open source and free for download<br>
-			  <a href="http://forge.objectweb.org">Download community version</a></div>
-			
-			<div>You need support? Learn about the 
-			  <a href="http://www.exoplatform.com">professional version</a></div>
-			
-			<div>eXo Platform logo</div>
-			
-			<div>Tell us how we are doing. Send 
-			  <a href="mailto:ks@exoplatform.com?subject=KS demo feedback">feedback</a></div>
-		</div>
+		
 		<div class="HomePortletAdBackround">
 			<div class="AdImage__">
+
 				<div class="HomeBackground">
 					<div class="HomeImage"><span></span></div>
 				</div>
-				<table style="table-layout: fixed; width: 100%;">
+				
+				<table style="table-layout: fixed; width: 100%">
 				  <tr>
-				    <td >
-				    	<div class="Decorator">
+				    <td>
+						<%String forumuri = Util.getPortalRequestContext().getPortalURI() + "forum" %>
+							<div class="Decorator">
 				    		<div class="DecoratorTL">
 				    			<div class="DecoratorTR">
 				    				<div class="DecoratorTC">
@@ -43,67 +31,67 @@
 				    					<div style="clear: left;"><span></span></div>
 				    				</div>
 								</div>
-							</div>
-							<div class="DecoratorML">
-				    			<div class="DecoratorMR">
-				    				<div class="DecoratorMC">
-										<div style="padding:0px 0px 10px 20px;">
-											<div>Unlimited categories and forums</div>
-											<div>Thread permissions, quick reply, preview, tags and votes</div>
-											<div>Private messages, bookmarks, watch, search</div>
-											<div>Advanced moderation : lock, close, merge, split, approve...</div>
-											<div>Full administration : bans, censored keyword, auto-prune,... </div>			
+								</div>
+								<div class="DecoratorML">
+					    			<div class="DecoratorMR">
+					    				<div class="DecoratorMC">
+											<div style="padding:0px 0px 10px 120px;">
+											<div class="CheckIcon">Unlimited categories and forums</div>
+											<div class="CheckIcon">Thread permissions, quick reply, preview...</div>
+											<div class="CheckIcon">Private messages, bookmarks, watch...</div>
+											<div class="CheckIcon">Advanced moderation : lock, close, approve...</div>
+											<div class="CheckIcon">Full administration : bans, auto-prune,... </div>			
 										</div>
-										<div class="Button"><span></span></div>	
+											<div class="Button"><span></span></div>	
+										</div>
+									</div>
+								</div>	
+								<div class="DecoratorBL">
+					    			<div class="DecoratorBR">
+					    				<div class="DecoratorBC"><span></span></div>
 									</div>
 								</div>
-							</div>	
-							<div class="DecoratorBL">
-				    			<div class="DecoratorBR">
-				    				<div class="DecoratorBC"><span></span></div>
-								</div>
-							</div>
-						</div>		    
-				    </td>
+							</div>				    
+						</td>
 				    <td>
-						<div class="Decorator">
+						<%String faquri = Util.getPortalRequestContext().getPortalURI() + "faq" %>
+							<div class="Decorator">
 				    		<div class="DecoratorTL">
 				    			<div class="DecoratorTR">
 				    				<div class="DecoratorTC">
 				    					<div class="FAQIcon"><span></span></div>
 				    					<div class="FAQLabel">
 					    					<div class="Title">FAQ</div>
-					    					<div class="Label">It's time to open discussion with your portal audience!</div>
+					    					<div class="Label">Capture and manage key knowledge efficiently in FAQ.</div>
 				    					</div>
 				    					<div style="clear: left;"><span></span></div>
 				    				</div>
-								</div>
-							</div>
-							<div class="DecoratorML">
-				    			<div class="DecoratorMR">
-				    				<div class="DecoratorMC">
-										<div style="padding:0px 0px 10px 20px;">
-											<div>Unlimited categories and questions</div>
-											<div>Public / private categories</div>
-											<div>Multi-language Q/A</div>
-											<div>Questions moderation</div>
-											<div>and many more!</div>
-										</div>
-										<div class="Button"><span></span></div>	
 									</div>
 								</div>
-							</div>	
-							<div class="DecoratorBL">
-				    			<div class="DecoratorBR">
-				    				<div class="DecoratorBC"><span></span></div>
+								<div class="DecoratorML">
+					    			<div class="DecoratorMR">
+					    				<div class="DecoratorMC">
+											<div style="padding:0px 0px 10px 120px;">
+											<div class="CheckIcon">Unlimited categories and questions</div>
+											<div class="CheckIcon">Public / private categories</div>
+											<div class="CheckIcon">Multi-language Q/A</div>
+											<div class="CheckIcon">Questions moderation</div>
+											<div class="CheckIcon">and many more!</div>
+										</div>
+											<div class="Button"><span></span></div>	
+										</div>
+									</div>
+								</div>	
+								<div class="DecoratorBL">
+					    			<div class="DecoratorBR">
+					    				<div class="DecoratorBC"><span></span></div>
+									</div>
 								</div>
-							</div>
-						</div>		    				    
+							</div>					    
 				    </td>
 				  </tr>
 				</table>
-			</div>
-		</div>
-		<div style="clear: right;"><span></span></div>
-	</div>		
+
+				
+		
 </div>

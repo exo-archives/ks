@@ -17,7 +17,7 @@
     <window-id>portal#classic:/web/FooterPortlet/footer</window-id>
     <preference>
       <name>template</name>
-      <value>par:/groovy/groovy/webui/component/UIFooterPortlet.gtmpl</value>
+      <value>system:/templates/UIFooterPortlet.gtmpl</value>
       <read-only>false</read-only>
     </preference>
   </portlet-preferences>

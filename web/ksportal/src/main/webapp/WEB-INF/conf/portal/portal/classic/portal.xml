@@ -45,10 +45,10 @@
       <instance-id>portal#classic:/web/BreadcumbsPortlet/breadcumbs</instance-id>
       <show-info-bar>false</show-info-bar>
     </application>
-    <application>
+    <!--application>
       <instance-id>portal#classic:/web/NavigationPortlet/menu</instance-id>
       <show-info-bar>false</show-info-bar>
-    </application>     
+    </application-->     
     <application>
       <instance-id>portal#classic:/web/FooterPortlet/footer</instance-id>
       <show-info-bar>false</show-info-bar>
