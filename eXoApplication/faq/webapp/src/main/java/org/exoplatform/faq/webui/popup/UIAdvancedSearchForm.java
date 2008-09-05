@@ -31,6 +31,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuickSearch;
 import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -281,62 +282,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   	}
   }
 	
-  private List<FAQFormSearch> getResultListSearchEmpty(List<FAQFormSearch> formSearchs_) throws Exception {
-		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
-		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-  	FAQService faqService = FAQUtils.getFAQService() ;
-  	FAQUtils.getPorletPreference(faqSetting_);
-  	String currentUser = FAQUtils.getCurrentUser() ;
-  	if(currentUser != null && currentUser.trim().length() > 0){
-			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser, faqSetting_);
-		}
-  	if(faqSetting_.getDisplayMode().equals("both")) {
-		  if(serviceUtils.isAdmin(currentUser)) {
-		  	return formSearchs_;
-		  } else {
-				for(FAQFormSearch faqSearch : formSearchs_) {
-					if(faqSearch.getType().equals("faqCategory")) {
-						listQuickSearch.add(faqSearch) ;
-					} else {
-						String questionId = faqSearch.getId() ;
-					  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-					  String categoryIdOfQuestion = question.getCategoryId() ;
-					  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
-					  String[] moderator = category.getModerators() ;
-					  if(Arrays.asList(moderator).contains(currentUser)) {
-					  	listQuickSearch.add(faqSearch) ;
-						} else {
-							if(question.isActivated()) listQuickSearch.add(faqSearch) ;
-							else
-								continue ;
-						}
-					}
-				}
-				return listQuickSearch;
-		  }
-  	} else {
-  		for(FAQFormSearch faqSearch : formSearchs_) {
-				if(faqSearch.getType().equals("faqCategory")) {
-					listQuickSearch.add(faqSearch) ;
-				} else {
-					String questionId = faqSearch.getId() ;
-				  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
-				  String categoryIdOfQuestion = question.getCategoryId() ;
-				  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
-				  String[] moderator = category.getModerators() ;
-				  if(Arrays.asList(moderator).contains(currentUser)) {
-				  	if(question.isApproved()) listQuickSearch.add(faqSearch) ;
-					} else {
-						if(question.isApproved()&& question.isActivated()) listQuickSearch.add(faqSearch) ;
-						else
-							continue ;
-					}
-				}
-			}
-  		return listQuickSearch;
-  	}
-	}
-  
 	static public class OnchangeActionListener extends EventListener<UIAdvancedSearchForm> {
     public void execute(Event<UIAdvancedSearchForm> event) throws Exception {
 			UIAdvancedSearchForm uiAdvancedSearchForm = event.getSource() ;	
@@ -464,7 +409,8 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
 				ResultQuickSearch result = resultContainer.getChild(ResultQuickSearch.class) ;
 				List<FAQFormSearch> list = faqService.getAdvancedEmpty(FAQUtils.getSystemProvider(), text, fromDate, toDate) ;
-				List<FAQFormSearch> listResult = advancedSearch.getResultListSearchEmpty(list) ;
+				UIQuickSearch quickSearch = uiPortlet.findFirstComponentOfType(UIQuickSearch.class) ;
+				List<FAQFormSearch> listResult = quickSearch.getResultListQuickSearch(list) ;
 				result.setFormSearchs(listResult) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

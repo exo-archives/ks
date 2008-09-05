@@ -64,7 +64,7 @@ public class UIQuickSearch  extends UIForm {
 		this.setSubmitAction(this.event("Search")) ;
 	}
 	
-	public List<FAQFormSearch> getResultListQuickSearch(List<FAQFormSearch> formSearchs_) throws Exception {
+	public List<FAQFormSearch> getResultListQuickSearch(List<FAQFormSearch> formSearchs) throws Exception {
 		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
 		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
   	FAQService faqService = FAQUtils.getFAQService() ;
@@ -75,9 +75,9 @@ public class UIQuickSearch  extends UIForm {
 		}
   	if(faqSetting_.getDisplayMode().equals("both")) {
 		  if(serviceUtils.isAdmin(currentUser)) {
-		  	return formSearchs_;
+		  	return formSearchs;
 		  } else {
-				for(FAQFormSearch faqSearch : formSearchs_) {
+				for(FAQFormSearch faqSearch : formSearchs) {
 					if(faqSearch.getType().equals("faqCategory")) {
 						listQuickSearch.add(faqSearch) ;
 					} else {
@@ -98,7 +98,7 @@ public class UIQuickSearch  extends UIForm {
 				return listQuickSearch;
 		  }
   	} else {
-  		for(FAQFormSearch faqSearch : formSearchs_) {
+  		for(FAQFormSearch faqSearch : formSearchs) {
 				if(faqSearch.getType().equals("faqCategory")) {
 					listQuickSearch.add(faqSearch) ;
 				} else {
