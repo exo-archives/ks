@@ -210,24 +210,24 @@
 									  	</tbody>
 										</table>
 										<div class="TotalVotes"><%=_ctx.appRes("UITopicPoll.label.TotalVoters"); %>: $sum</div>
-										<% if(isAgain && !isAnonim && !poll.getIsClosed()) { %>
-			   						<div class="UIAction">
-							        <table class="ActionContainer" align="center">
-							          <tr>
-							          	<td align="center">
-														<a href="<%=uicomponent.event("VoteAgainPoll")%>" class="ActionButton LightBlueStyle">
-							                <div class="ButtonLeft">
-							                  <div class="ButtonRight">
-							                    <div class="ButtonMiddle">
-							                    	<%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %>
-							                    </div>
-							                  </div>
-							                </div>
-														</a>
-							          	</td>
-							          </tr>         
-							        </table>
-							      </div>
+										<% if(isAgain && !isAnonim && !poll.getIsClosed() && !uicomponent.userIsBanned) { %>
+				   						<div class="UIAction">
+								        <table class="ActionContainer" align="center">
+								          <tr>
+								          	<td align="center">
+															<a href="<%=uicomponent.event("VoteAgainPoll")%>" class="ActionButton LightBlueStyle">
+								                <div class="ButtonLeft">
+								                  <div class="ButtonRight">
+								                    <div class="ButtonMiddle">
+								                    	<%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %>
+								                    </div>
+								                  </div>
+								                </div>
+															</a>
+								          	</td>
+								          </tr>         
+								        </table>
+								      </div>
 							     <% } %>
 									</div>
 		            </div>

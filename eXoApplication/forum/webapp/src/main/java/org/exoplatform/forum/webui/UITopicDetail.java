@@ -170,8 +170,7 @@ public class UITopicDetail extends UIForm {
 		this.setActions(new String[]{"PreviewReply","QuickReply"} );
 	}
 	
-	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() {
+	public UserProfile getUserProfile() {
 		return userProfile ;
 	}
 	

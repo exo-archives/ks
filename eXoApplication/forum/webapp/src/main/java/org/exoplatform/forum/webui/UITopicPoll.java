@@ -68,6 +68,7 @@ public class UITopicPoll extends UIForm	{
 	private boolean isAgainVote = false ;
 	private boolean isEditPoll = false ;
   private boolean canViewEditMenu = false ;
+  private boolean userIsBanned = false;
 	private Topic topic ;
 	private Forum forum ;
 	
@@ -158,6 +159,8 @@ public class UITopicPoll extends UIForm	{
 	private boolean getIsVoted() throws Exception {
 		if(poll_.getIsClosed()) return true ;
 		String userVote = ForumSessionUtils.getCurrentUser() ;
+		userIsBanned = this.getAncestorOfType(UITopicDetailContainer.class).getChild(UITopicDetail.class).getUserProfile().getIsBanned();
+		if(userIsBanned) return true;
 		if(ForumUtils.isEmpty(userVote)) return true ;
 		if(poll_.getTimeOut() > 0) {
 			Date today = new Date() ;
