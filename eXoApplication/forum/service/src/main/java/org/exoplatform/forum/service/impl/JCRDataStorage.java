@@ -195,7 +195,7 @@ public class JCRDataStorage{
 		if(cateNode.hasProperty("exo:description"))cat.setDescription(cateNode.getProperty("exo:description").getString()) ;
 		if(cateNode.hasProperty("exo:modifiedBy"))cat.setModifiedBy(cateNode.getProperty("exo:modifiedBy").getString()) ;
 		if(cateNode.hasProperty("exo:modifiedDate"))cat.setModifiedDate(cateNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
-		if(cateNode.hasProperty("exo:userPrivate"))cat.setUserPrivate(cateNode.getProperty("exo:userPrivate").getString()) ;
+		if(cateNode.hasProperty("exo:userPrivate"))cat.setUserPrivate(ValuesToStrings(cateNode.getProperty("exo:userPrivate").getValues())) ;
 		if(cateNode.hasProperty("exo:forumCount"))cat.setForumCount(cateNode.getProperty("exo:forumCount").getLong()) ;
 		return cat;
 	}
@@ -2523,11 +2523,12 @@ public class JCRDataStorage{
 		}
 	}
 	
-	public List<ForumLinkData> getAllLink(SessionProvider sProvider) throws Exception {
+	public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum) throws Exception {
 		List<ForumLinkData> forumLinks = new ArrayList<ForumLinkData>() ;
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
-		StringBuffer queryString = new StringBuffer("/jcr:root" + forumHomeNode.getPath() +"//element(*,exo:forumCategory) order by @exo:categoryOrder ascending") ;
+		StringBuffer queryString = new StringBuffer();
+		queryString.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:forumCategory)").append(strQueryCate).append(" order by @exo:categoryOrder ascending, @exo:createdDate ascending") ;
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 		QueryResult result = query.execute() ;
 		NodeIterator iter = result.getNodes() ;
@@ -2541,7 +2542,9 @@ public class JCRDataStorage{
 			linkData.setPath(cateNode.getName());
 			forumLinks.add(linkData) ;
 			{
-				queryString = new StringBuffer("/jcr:root" + cateNode.getPath() + "//element(*,exo:forum) order by @exo:forumOrder ascending,@exo:createdDate ascending");
+				queryString = new StringBuffer();
+				queryString.append("/jcr:root").append(cateNode.getPath()).append("//element(*,exo:forum)").append(strQueryForum).append(" order by @exo:forumOrder ascending,@exo:createdDate ascending");
+//				System.out.println("\n\nqueryString: " + queryString.toString() + "\n\n");
 				query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 				result = query.execute() ;
 				NodeIterator iterForum = result.getNodes() ;

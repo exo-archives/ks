@@ -486,12 +486,14 @@ public interface ForumService {
 	 * Gets the all link.
 	 * 
 	 * @param sProvider is the SessionProvider
+	 * @param strQueryCate TODO
+	 * @param strQueryForum TODO
 	 * 
 	 * @return the all link
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumLinkData> getAllLink(SessionProvider sProvider) throws Exception;
+	public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum) throws Exception;
 
 	/**
 	 * Gets the forum home path.

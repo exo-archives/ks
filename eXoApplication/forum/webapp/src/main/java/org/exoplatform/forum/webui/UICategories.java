@@ -98,7 +98,7 @@ public class UICategories extends UIContainer	{
 	public List<Category> getPrivateCategories() {
 		List<Category> list = new ArrayList<Category>() ;
 		for (Category cate : this.categoryList) {
-	    if(cate.getUserPrivate() != null && cate.getUserPrivate().length() > 1) {
+	    if(cate.getUserPrivate() != null && cate.getUserPrivate().length > 0) {
 	    	list.add(cate) ;
 	    }
     }
@@ -186,9 +186,8 @@ public class UICategories extends UIContainer	{
 		String userId = userProfile.getUserId() ;
 		if(userProfile.getUserRole() == 0) return true ;
 		if(category.getOwner().equals(userId)) return true ;
-		String userList = category.getUserPrivate() ;
-		if(!ForumUtils.isEmpty(userList)) {
-			String []uesrs = userList.split(",");
+		String []uesrs = category.getUserPrivate() ;
+		if(uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
 			return ForumServiceUtils.hasPermission(uesrs, userId) ;
 		} else return true ;
 	}

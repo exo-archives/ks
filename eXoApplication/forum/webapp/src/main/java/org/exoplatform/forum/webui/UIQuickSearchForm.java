@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -26,8 +25,6 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.services.organization.Membership;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -38,7 +35,6 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.hibernate.mapping.Collection;
 
 /**
  * Created by The eXo Platform SARL

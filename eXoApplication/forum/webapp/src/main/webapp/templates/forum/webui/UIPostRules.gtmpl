@@ -13,10 +13,10 @@
 		canCreatThread = not;
 		canPost = not;
 	} else{
-		if(!uicomponent.canCreateNewThread) {
+		if(!uicomponent.isCanCreateNewThread()) {
 			canCreatThread = not;
 		}
-		if(!uicomponent.canAddPost){
+		if(!uicomponent.isCanAddPost()){
 			canPost = not;
 		}
 	}

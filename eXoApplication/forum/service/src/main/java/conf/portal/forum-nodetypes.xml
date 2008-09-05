@@ -337,7 +337,7 @@
 			<propertyDefinition name="exo:categoryOrder" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
 				<valueConstraints/>
 			</propertyDefinition>		
-			<propertyDefinition name="exo:userPrivate" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
+			<propertyDefinition name="exo:userPrivate" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">		
 				<valueConstraints/>
 			</propertyDefinition>		
 			<propertyDefinition name="exo:forumCount" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		

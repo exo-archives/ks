@@ -17,9 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -59,26 +57,43 @@ public class UIForumLinks extends UIForm {
 	public static final String FIELD_FORUMHOMEPAGE_LABEL = "forumHomePage" ;
 	private String path	= Utils.FORUM_SERVICE;
 	private List<ForumLinkData> forumLinks = null;
-	private List<Category> categoryPrivateList = new ArrayList<Category>() ;
-	private Map<String, Forum> AllForum = new HashMap<String, Forum>() ;
 	private UserProfile userProfile = new UserProfile();
 	public UIForumLinks() throws Exception {}
 	
+	
+	private String getStrQuery(List<String> list, String property){
+		StringBuffer strQueryCate = new StringBuffer();
+		int t = 0;
+		for (String string : list) {
+			if(t == 0) strQueryCate.append("@exo:").append(property).append("='").append(string).append("'");
+			else strQueryCate.append(" or @exo:").append(property).append("='").append(string).append("'");
+			++t;
+    }
+		return strQueryCate.toString();
+	}
+	
   public void setUpdateForumLinks() throws Exception {
-		this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider());
+  	
+  	String strQueryCate = "";
+  	String strQueryForum = "";
+  	List<String>listUser = ForumSessionUtils.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
+  	if(this.userProfile.getUserRole() > 0) {
+  		strQueryCate = getStrQuery(listUser, "userPrivate");
+  		if(!ForumUtils.isEmpty(strQueryCate)) strQueryCate = "[@exo:userPrivate=' ' or "+strQueryCate+"]";
+  		strQueryForum = getStrQuery(listUser, "moderators") ;
+  		if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "[@exo:isClosed='false' or "+strQueryForum+"]";
+  	}
+  	
+		this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider(), strQueryCate, strQueryForum);
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL)+"/" + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE)) ;
 		String space = "&nbsp; &nbsp; ",  type = "/categoryLink"; 
-		boolean isRenderForum = true ;
 		for(ForumLinkData linkData : forumLinks) {
 			if(linkData.getType().equals(Utils.FORUM)) {
-				if(IsForumClose(linkData.getId()) || !isRenderForum) continue ;
 				type = "/" + FIELD_FORUMLINK_SELECTBOX; 
 				space = "&nbsp; &nbsp; &nbsp; &nbsp; " ;
 			}
 			if(linkData.getType().equals(Utils.CATEGORY)) {
-				isRenderForum = true ;
-				if(IsCategoryPrivate(linkData.getId())) {isRenderForum = false ;continue ;}
 				type = "/categoryLink"; 
 				space = "&nbsp; &nbsp; " ;
 			}
@@ -105,35 +120,6 @@ public class UIForumLinks extends UIForm {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
-		this.categoryPrivateList = categories.getPrivateCategories() ;
-		this.AllForum = categories.getAllForum() ;
-	}
-	
-	private boolean IsForumClose(String forumId) {
-		if(this.userProfile.getUserRole() == 0) return false ;
-		Forum forum = this.AllForum.get(forumId) ; 
-		if(forum != null) return forum.getIsClosed() ;
-		return false ;
-	}
-	
-	private boolean IsCategoryPrivate(String cateId) throws Exception {
-		if(this.userProfile.getUserRole() == 0) return false ;
-		for (Category cate : this.categoryPrivateList) {
-	    if(cate.getId().equals(cateId)) {
-	    	String userLogin = this.userProfile.getUserId() ;
-	    	if(userLogin == null) return true ;
-	    	String []users = cate.getUserPrivate().split(",") ;
-	    	if(users.length == 1){
-	    		if(!users[0].equals(userLogin)) return true ;
-	    	} else {
-	    		for (String string : users) {
-	    			if(string.equals(userLogin)) return false ;
-          }
-	    		return true ;
-	    	}
-	    }
-    }
-		return false ;
 	}
 	
 	public List<ForumLinkData> getForumLinks() throws Exception {

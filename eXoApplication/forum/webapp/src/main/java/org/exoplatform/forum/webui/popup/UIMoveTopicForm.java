@@ -96,8 +96,8 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 		this.categories = new ArrayList<Category>();
 		for (Category category : this.forumService.getCategories(ForumSessionUtils.getSystemProvider())) {
 			if(this.userProfile.getUserRole() == 1) {
-				if(!ForumUtils.isEmpty(category.getUserPrivate())){
-					String []list = ForumUtils.splitForForum(category.getUserPrivate()) ; 
+				String []list = category.getUserPrivate() ; 
+				if(list != null && list.length > 0 && list[0].equals(" ")){
 					if(!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
 						continue ;
 					}

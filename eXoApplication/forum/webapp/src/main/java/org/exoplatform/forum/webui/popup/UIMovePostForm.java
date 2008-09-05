@@ -88,8 +88,8 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 		this.categories = new ArrayList<Category>();
 		for (Category category : this.forumService.getCategories(ForumSessionUtils.getSystemProvider())) {
 			if(this.userProfile.getUserRole() == 1) {
-				if(!ForumUtils.isEmpty(category.getUserPrivate())){
-					String []list = ForumUtils.splitForForum(category.getUserPrivate()) ; 
+				String []list = category.getUserPrivate();
+				if(list !=  null && list.length > 0 && !list[0].equals(" ")){
 					if(!ForumUtils.isStringInStrings(list, this.userProfile.getUserId())) {
 						continue ;
 					}
@@ -114,7 +114,8 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 		List<Forum> forums = new ArrayList<Forum>() ;
 		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
 			if(this.userProfile.getUserRole() == 1){
-				if(forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <=0){
+				String []moderators = forum.getModerators();
+				if(moderators.length > 0 && !ForumUtils.isStringInStrings(moderators, this.userProfile.getUserId()) || moderators.length <=0){
 					if(forum.getIsClosed() || forum.getIsLock())continue ; 
 					if(forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())){
 						continue ;
