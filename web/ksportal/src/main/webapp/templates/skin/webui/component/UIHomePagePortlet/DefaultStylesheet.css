@@ -71,9 +71,11 @@
 	color: gray;
 }
 
+/***************************************************************************************************/
 
 .UIHomePagePortlet {
 	border-right: 1px solid #b7b7b7;
+	background: white;
 }
 
 .UIHomePagePortlet .HomeBackground {
@@ -190,6 +192,8 @@
 	float: right;
 }
 
+/***************************************************************************************************/
+
 .SideBar {
 	background: #f1f1f1 url('DefaultSkin/background/SideBarBG.gif') repeat-x top ;
 	float: right;
@@ -264,10 +268,58 @@
 	font-size: 12px;
 }
 
-.UIFooter .UIBreadcumbs{
-	background: url('DefaultSkin/background/BreadcumbsPortletBG.gif') repeat-x ;
+/***************************************************************************************************/
+
+.UIBreadcumbsPortlet {
+	margin: 0px;
+}
+
+.UIBreadcumbs {
+  background: url('DefaultSkin/background/BreadcumbsPortletBG.gif') repeat-x ;
 	height: 29px;
 	line-height: 29px;
+}
+
+.UIBreadcumbs a {
+	float: left ;
+}
+
+.UIBreadcumbs a.Selected {
+	color: white ; 
+}
+
+.UIBreadcumbs .HomeIcon {
+	float: left;
+  margin: 5px 5px 0px 3px ;
+}
+
+.UIBreadcumbs .LeftBreadcumbsBar {
+  padding-left: 0px ;
+  background: none;
+  height: auto;
+}
+
+.UIBreadcumbs .RightBreadcumbsBar {
+  padding-right: 0px;
+  background: none;
+  height: auto;
+}
+
+.UIBreadcumbs .BreadcumbsInfoBar {
+  height: auto; line-height: 29px; 
+  background: none;
+}
+
+.UIBreadcumbs .RightBlackGridArrowIcon {
+  float: left;
+  margin: 5px 0px 0px 0px;
+}
+
+
+/***************************************************************************************************/
+.UIFooter {
+	background: white;
+	padding: 3px 5px;
 }
 
 .UIFooter .FooterInfoContainer {
