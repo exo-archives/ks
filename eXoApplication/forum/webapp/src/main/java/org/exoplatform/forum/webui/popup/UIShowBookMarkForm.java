@@ -107,7 +107,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				}
 				return ;
 			}
-			String[] privateUser = ForumUtils.splitForForum(category.getUserPrivate()) ;
+			String[] privateUser = category.getUserPrivate() ;
 			if(privateUser.length > 0) {
 				isRead = ForumUtils.isStringInStrings(privateUser, userName);
 			}
@@ -191,8 +191,8 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				}
 			}
 			if(!isRead) {
-//				String[] s = new String[]{};
-//				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
+				String[] s = new String[]{};
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 				return;
 			}
 			forumPortlet.cancelAction() ;

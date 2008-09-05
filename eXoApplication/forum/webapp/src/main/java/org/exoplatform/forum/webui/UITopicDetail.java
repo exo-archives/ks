@@ -316,7 +316,7 @@ public class UITopicDetail extends UIForm {
 	private Topic getTopic() throws Exception {
 		try {
 			if(this.isEditTopic || this.topic == null) {
-				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "guest") ;
+				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, Utils.GUEST) ;
 				this.isEditTopic = false ;
 			}
 			return this.topic ;

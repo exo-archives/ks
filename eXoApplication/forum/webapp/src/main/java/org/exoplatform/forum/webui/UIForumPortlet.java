@@ -57,13 +57,13 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UIForumLinks.class, null, null).setRendered(false) ;
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 	}
-
-	@Override
-	public void processDecode(WebuiRequestContext context) throws Exception {
-		String objId = context.getRequestParameter(OBJECTID) ; 
-//		System.out.println("\n\n"+objId);
-	  super.processDecode(context);
-	}
+//
+//	@Override
+//	public void processDecode(WebuiRequestContext context) throws Exception {
+//		String objId = context.getRequestParameter(OBJECTID) ; 
+////		System.out.println("\n\n"+objId);
+//	  super.processDecode(context);
+//	}
 	
 	public void updateIsRendered(String selected) throws Exception {
 		if(selected == ForumUtils.CATEGORIES) {

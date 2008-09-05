@@ -33,11 +33,12 @@
 						    if(linkBm.indexOf(portalName + "/" + selectedNode) < 0){
 						      linkBm = linkBm.replaceFirst(portalName, portalName + "/" + selectedNode) ;
 						    }									
-							}							
+							}	
+							//window.location.href=this.href;						
 					%>
 					<tr>
 						<td><div class="$icon" style="width: 24px;height: 24px;"><span></span></div></td>
-						<td><a onclick="<%=uiform.event("OpenLink",linkPath);%>;window.location.href=this.href; return false;" href="$linkBm">$linkName</a></td>
+						<td><a onclick="<%=uiform.event("OpenLink",linkPath);%>; return false;" href="$linkBm">$linkName</a></td>
 						<td>
 							<a href="<%=uiform.event("DeleteLink",links);%>">
 								<div class="DeleteIcon"><span></span></div>

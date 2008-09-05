@@ -171,8 +171,8 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getObjectNameByPath(sProvider, path);
 	}
 	
-	public List<ForumLinkData> getAllLink(SessionProvider sProvider)throws Exception {
-		return storage_.getAllLink(sProvider) ;
+	public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum)throws Exception {
+		return storage_.getAllLink(sProvider, strQueryCate, strQueryForum) ;
 	}
 	
 	public String getForumHomePath(SessionProvider sProvider) throws Exception {

@@ -316,7 +316,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 							if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
 						}
 					}
-					if(uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
+					if(uiForm.topic != null && !uiForm.isMP) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 				}
 				if(isOffend && uiForm.isMP) {
 					Object[] args = { "" };

@@ -108,7 +108,6 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					String categoryId = temp[temp.length - 3] ;
 					String forumId = temp[temp.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-					int count = 0;
 					for(Topic topic : uiForm.listTopic) {
 						if(topicMergeId.equals(topic.getId())) {continue ;}
 						try {

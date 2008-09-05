@@ -108,13 +108,14 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	public void setCategoryValue(Category category, boolean isUpdate) {
+	public void setCategoryValue(Category category, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			this.categoryId = category.getId() ;
 			getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(category.getCategoryName()) ;
 			getUIStringInput(FIELD_CATEGORYORDER_INPUT).setValue(Long.toString(category.getCategoryOrder())) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(category.getDescription()) ;
-			getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).setValue(category.getUserPrivate()) ;
+			String userPrivate = ForumUtils.unSplitForForum(category.getUserPrivate());
+			getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).setValue(userPrivate) ;
 		}
 	}
 
@@ -164,15 +165,17 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String userPrivate = uiForm.getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).getValue();
       userPrivate = ForumUtils.removeSpaceInString(userPrivate) ;
       userPrivate = ForumUtils.removeStringResemble(userPrivate) ;
-      String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
-    	if(!ForumUtils.isEmpty(erroUser)) {
-    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-    		Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
-    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-    		return ;
-    	}
-    	
+      String []userPrivates = ForumUtils.splitForForum(userPrivate);
+      if(!ForumUtils.isEmpty(userPrivate)) {
+      	String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
+	    	if(!ForumUtils.isEmpty(erroUser)) {
+	    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+	    		Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
+	    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+	    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	    		return ;
+	    	}
+      } else {userPrivates = new String[]{" "};}
     	String userName = ForumSessionUtils.getCurrentUser();
     	Category cat = new Category();
     	cat.setOwner(userName) ;
@@ -182,7 +185,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     	cat.setDescription(description) ;
     	cat.setModifiedBy(userName) ;
     	cat.setModifiedDate(new Date()) ;
-      cat.setUserPrivate(userPrivate) ;
+      cat.setUserPrivate(userPrivates) ;
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;

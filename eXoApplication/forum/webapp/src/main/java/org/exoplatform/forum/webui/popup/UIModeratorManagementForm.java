@@ -441,7 +441,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		else this.forumLinks = uiForumLinks.getForumLinks() ;
 		if(this.forumLinks == null || forumLinks.size() <= 0) hasGetService = true;
 		if(hasGetService) {
-			this.forumService.getAllLink(ForumSessionUtils.getSystemProvider());
+			this.forumService.getAllLink(ForumSessionUtils.getSystemProvider(), "", "");
 		}
 	}
 	

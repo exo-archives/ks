@@ -35,6 +35,14 @@ public class UIPostRules extends UIContainer	{
   private boolean canCreateNewThread = false;
   private boolean canAddPost = false;
   
+	public boolean isCanCreateNewThread() {
+  	return canCreateNewThread;
+  }
+
+	public boolean isCanAddPost() {
+  	return canAddPost;
+  }
+
 	public UIPostRules() throws Exception {		
 	}	
 	

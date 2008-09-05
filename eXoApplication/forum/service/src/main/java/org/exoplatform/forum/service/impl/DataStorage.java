@@ -82,7 +82,7 @@ public interface DataStorage {
 	public void setClosedPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll) throws Exception ;
 	
 	public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception ;
-	public List<ForumLinkData> getAllLink(SessionProvider sProvider)throws Exception ;
+	public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum) throws Exception;
 	public String getForumHomePath(SessionProvider sProvider) throws Exception ;
 
 	public void addTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception ;

@@ -33,10 +33,11 @@ public class Category {
 	 private Date modifiedDate;
 	 private String name;
 	 private String description;	 
-	 private String userPrivate = new String() ;
+	 private String[] userPrivate ;
 	 private long forumCount = 0;
 	 public Category(){
 		 id = Utils.CATEGORY + IdGenerator.generate() ;
+		 userPrivate = new String[] {};
 	 }
 
 	 public String getId(){return id;}
@@ -66,8 +67,8 @@ public class Category {
 	 public String getDescription(){return description;}	 
 	 public void setDescription(String description){this.description = description;}
 
-	 public String getUserPrivate(){return userPrivate;}	 
-	 public void setUserPrivate(String userPrivate){this.userPrivate = userPrivate;}
+	 public String[] getUserPrivate(){return userPrivate;}	 
+	 public void setUserPrivate(String[] userPrivate){this.userPrivate = userPrivate;}
 
 	 public long getForumCount() {return forumCount;}
 	 public void setForumCount(long forumCount) {this.forumCount = forumCount;}

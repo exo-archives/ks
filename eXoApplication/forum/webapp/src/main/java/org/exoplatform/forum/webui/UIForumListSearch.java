@@ -40,7 +40,6 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.UIPageIterator;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -78,7 +77,8 @@ public class UIForumListSearch extends UIContainer {
     }
   }
 	
-	public List<ForumSearch> getListEvent() {
+	@SuppressWarnings("unchecked")
+  public List<ForumSearch> getListEvent() {
 		long pageSelect = pageIterator.getPageSelected() ;
     list = new ArrayList<ForumSearch>();
     try {
@@ -118,7 +118,7 @@ public class UIForumListSearch extends UIContainer {
     		String categoryId = forumSearch.getId() ;
     		Category category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), categoryId) ;
     		if(category != null) {
-	    		String[] privateUser = ForumUtils.splitForForum(category.getUserPrivate()) ;
+	    		String[] privateUser = category.getUserPrivate() ;
 					if(privateUser.length > 0) {
 						isRead = ForumUtils.isStringInStrings(privateUser, userName);
 					}
