@@ -98,7 +98,7 @@ public class TestForumService extends BaseForumTestCase{
   	forum = forumService_.getForum(sProvider_, cate.getId(), forumId);
   	assertNull(forum);
 
-  }*/
+  }
 //  
 //  public void testTopic() throws Exception {
 //    Category cat = createCategory();
@@ -284,5 +284,5 @@ public class TestForumService extends BaseForumTestCase{
     cat.setModifiedDate(new Date()) ;    
     return cat ;
   }
-  
+  */
 }
