@@ -297,7 +297,7 @@
 								</div>
 							</div>
 							<% } %>
-						<%if(userProfile.getUserRole() != 3) {%>
+						<%if(userProfile.getUserRole() != 3 && !userProfile.getIsBanned()) {%>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
