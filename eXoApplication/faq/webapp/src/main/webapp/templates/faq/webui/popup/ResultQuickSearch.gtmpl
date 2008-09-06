@@ -75,6 +75,7 @@
 					       %>
  								<div style="overflow:auto;">
 									<% uicomponent.renderChild(uicomponent.LIST_RESULT_SEARCH) ; %>
+									<div style="clear: both;"><span></span></div>
 								</div>
 								<% } %>
  						</div>
