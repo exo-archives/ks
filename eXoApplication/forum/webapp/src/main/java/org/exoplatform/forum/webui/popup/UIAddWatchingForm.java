@@ -111,6 +111,7 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String path = uiForm.path;
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
+			System.out.println("");
 			boolean isEmail = true;
 			List<String> values_ = new ArrayList<String>();
 			if(values.size() > 0) {
@@ -130,7 +131,7 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 			} 
 			if(values_.size() > 0 && !ForumUtils.isEmpty(path)) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				forumService.addWatch(ForumSessionUtils.getSystemProvider(), 1, path, values_) ;
+				forumService.addWatch(ForumSessionUtils.getSystemProvider(), 1, path, values_, ForumSessionUtils.getCurrentUser()) ;
 			}
 			uiForm.path = "";
 			uiForm.initForm() ;
