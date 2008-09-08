@@ -17,6 +17,7 @@
 package org.exoplatform.forum.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -1455,9 +1456,20 @@ public class JCRDataStorage{
 				/*
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
-				if (topicNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && 
-						(post.getUserPrivate()== null || post.getUserPrivate().length < 1)) {
-					emailList = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
+				if (topicNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+					if(post.getUserPrivate() == null || post.getUserPrivate().length == 1){
+						emailList = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
+					} else if(post.getUserPrivate().length == 2) {
+						List<String> emails = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
+						List<String> usersList = Arrays.asList(post.getUserPrivate());
+						int i = 0;
+						for(String user : ValuesToList(topicNode.getProperty("exo:userWatching").getValues())){
+							if(usersList.contains(user)){
+								emailList.add(emails.get(i));
+							}
+							i ++;
+						}
+					}
 					if (emailList.size() > 0) {
 						Message message = new Message();
 						message.setMimeType("text/html");
@@ -1482,9 +1494,20 @@ public class JCRDataStorage{
 				/*
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
-				if(forumNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden() && 
-						(post.getUserPrivate()== null || post.getUserPrivate().length < 1)){
-					emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
+				if(forumNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()){
+					if((post.getUserPrivate()== null || post.getUserPrivate().length == 1)){
+						emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
+					} else if(post.getUserPrivate().length == 2) {
+						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
+						List<String> usersList = Arrays.asList(post.getUserPrivate());
+						int i = 0;
+						for(String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())){
+							if(usersList.contains(user)){
+								emailList.add(emails.get(i));
+							}
+							i ++;
+						}
+					}
 				}
 				
 				if (emailList.size() > 0) {
@@ -2683,7 +2706,7 @@ public class JCRDataStorage{
 		return listSearchEvent;
 	}
 
-	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception {
+	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String>values, String currentUser)throws Exception {
 		Node watchingNode = null;
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
 		String string = forumHomeNode.getPath() ;
@@ -2693,18 +2716,28 @@ public class JCRDataStorage{
 			//add watching for node
 			if(watchingNode.isNodeType("exo:forumWatching")) {
 				if(watchType == 1) {//send email when had changed on category
-					String[] strings = ValuesToStrings(watchingNode.getProperty("exo:emailWatching").getValues()) ;
-					for(String str : strings) {
-						if(values.contains(str)) continue ;
-						values.add(str) ;
+					List<String> listEmail = new ArrayList<String>();
+					listEmail.addAll(Arrays.asList(ValuesToStrings(watchingNode.getProperty("exo:emailWatching").getValues()))) ;
+					List<String> listUsers = new ArrayList<String>();
+					listUsers.addAll(Arrays.asList(ValuesToStrings(watchingNode.getProperty("exo:userWatching").getValues()))) ;
+					for(String str : values) {
+						if(listEmail.contains(str)) continue ;
+						listEmail.add(0, str) ;
+						listUsers.add(0, currentUser);
 					}
-					watchingNode.setProperty("exo:emailWatching", getStringsInList(values)) ;
+					watchingNode.setProperty("exo:emailWatching", getStringsInList(listEmail)) ;
+					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers)) ;
 				}
 				watchingNode.save() ;
 			} else {
 				watchingNode.addMixin("exo:forumWatching") ;
 				if(watchType == 1) { //send email when had changed on category 
+					List<String> listUsers = new ArrayList<String>();
+					for(int i = 0; i < values.size(); i ++){
+						listUsers.add(currentUser);
+					}
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(values)) ;
+					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers)) ;
 				}
 				watchingNode.save() ;
 			}
@@ -2722,15 +2755,19 @@ public class JCRDataStorage{
 		try{
 			watchingNode = (Node)forumHomeNode.getSession().getItem(path) ;
 			List<String> newValues = new ArrayList<String>();
+			List<String> listNewUsers = new ArrayList<String>();
 			//add watching for node
 			if(watchingNode.isNodeType("exo:forumWatching")) {
 				if(watchType == 1) {
 					String[] strings = ValuesToStrings(watchingNode.getProperty("exo:emailWatching").getValues()) ;
-					for(String str : strings) {
-						if(values.contains(str)) continue ;
-						newValues.add(str) ;
+					String[] listOldUsers = ValuesToStrings(watchingNode.getProperty("exo:userWatching").getValues()) ;
+					for(int i = 0; i < strings.length; i ++) {
+						if(values.contains(strings[i])) continue ;
+						newValues.add(strings[i]) ;
+						listNewUsers.add(listOldUsers[i]);
 					}
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(newValues)) ;
+					watchingNode.setProperty("exo:userWatching", getStringsInList(listNewUsers)) ;
 					watchingNode.save() ;
 					watchingNode.getSession().save();
 				}
