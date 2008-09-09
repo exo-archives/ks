@@ -25,9 +25,9 @@
  									i++;
  							 %>
  								<tr>
- 									<% if(email.length() > 110) {
+ 									<% if(email.length() > 90) {
  											String title = email ;
- 											email = uicomponent.getSubString(email,110)
+ 											email = uicomponent.getSubString(email,90)
  									 %>
  										<td class="text" align="left"><a title="$title">$email</a></td>
  									<% } else { %>

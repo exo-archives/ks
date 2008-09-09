@@ -88,7 +88,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			String emailList = list.split("/")[0] ;
 			UIWatchContainer watchContainer = watchManager.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
-			UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 600) ;
+			UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 420) ;
 			watchForm.setUpdateWatch(order,categoryId_,emailList, true) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

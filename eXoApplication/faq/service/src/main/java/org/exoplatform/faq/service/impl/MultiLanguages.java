@@ -235,13 +235,13 @@ public class MultiLanguages {
     	langNode = languagesNode.addNode(language.getLanguage(), NTUNSTRUCTURED) ;
     }
     
-    GregorianCalendar cal = new GregorianCalendar() ;
-    if(language.getDateResponse() != null)	cal.setTime(language.getDateResponse()) ;
+    java.util.Calendar calendar = new GregorianCalendar() ;
+    if(language.getDateResponse() != null)	calendar.setTime(language.getDateResponse()) ;
     
     langNode.setProperty("exo:name", language.getQuestion()) ;
     langNode.setProperty("exo:responses", language.getResponse()) ;
     langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
-    langNode.setProperty("exo:dateResponse", cal.getInstance()) ;
+    langNode.setProperty("exo:dateResponse", calendar) ;
     questionNode.save() ;
   }
   

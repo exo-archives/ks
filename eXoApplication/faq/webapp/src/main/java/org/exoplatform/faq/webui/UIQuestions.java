@@ -904,7 +904,7 @@ public class UIQuestions extends UIContainer {
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
         	UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-    			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 800) ;
+    			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
     			UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
     			popupContainer.setId("WatchManager") ;
     			watchManager.setCategoryID(cateId) ;
