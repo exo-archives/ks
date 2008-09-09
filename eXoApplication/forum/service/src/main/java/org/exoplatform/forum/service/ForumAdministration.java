@@ -27,7 +27,9 @@ public class ForumAdministration {
 	private String topicSortBy ;//Name, isLock, lastPostDate, postCount,  numberAttachments.
 	private String topicSortByType; 
 	private String censoredKeyword ;
+	private String notifyEmailContent;
 	
+
 	public ForumAdministration() {
 		forumSortBy = "forumOrder" ;
 		forumSortByType = "ascending" ;
@@ -65,4 +67,10 @@ public class ForumAdministration {
 	public void setCensoredKeyword(String censoredKeyword) {
   	this.censoredKeyword = censoredKeyword;
   }
+	public String getNotifyEmailContent() {
+		return notifyEmailContent;
+	}
+	public void setNotifyEmailContent(String notifyEmailContent) {
+		this.notifyEmailContent = notifyEmailContent;
+	}
 }

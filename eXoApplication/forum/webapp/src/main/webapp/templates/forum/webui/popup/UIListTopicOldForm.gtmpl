@@ -64,7 +64,7 @@
 										<div class="ActionContainer" style="margin: 0px auto;">
 											<div class="IconContent">
 												<a href="<%=uicomponent.event("ActiveTopic",topicId)%>" style="float: left;">
-													 <div class="Icon16x16 Topic${titleTp}Icon" title="$titleTp this Thread"><span></span></div>							
+													 <div class="Icon16x16 Topic${titleTp}Icon" title="$titleTp this Topic"><span></span></div>							
 												</a>
 												<a href="javascript:if(confirm('<%=_ctx.appRes("UITopicDetail.confirm.DeleteTopic");%>'))<%=uicomponent.event("DeleteTopic",topic.getPath())%>" style="float: left;">
 													 <div class="Icon16x16 DeleteIcon" title="Delete this Thread"><span></span></div>							

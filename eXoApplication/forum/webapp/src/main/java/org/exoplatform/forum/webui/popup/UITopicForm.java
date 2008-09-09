@@ -495,6 +495,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					try {
 						forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, true, false);
 					} catch (PathNotFoundException e) {
+						e.printStackTrace();
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 						categoryContainer.updateIsRender(true) ;

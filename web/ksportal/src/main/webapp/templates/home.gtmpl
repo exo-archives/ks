@@ -25,7 +25,7 @@
 				    				<div class="DecoratorTC">
 				    					<div class="ForumIcon"><span></span></div>
 				    					<div class="ForumLabel">
-					    					<div class="Title">Forum</div>
+					    					<div class="Title"><a href="$forumuri">Forum</a></div>
 					    					<div class="Label">It's time to open discussion with your portal audience!</div>
 				    					</div>
 				    					<div style="clear: left;"><span></span></div>
@@ -42,7 +42,9 @@
 											<div class="CheckIcon">Advanced moderation : lock, close, approve...</div>
 											<div class="CheckIcon">Full administration : bans, auto-prune,... </div>			
 										</div>
-											<div class="Button"><span></span></div>	
+										  <a href="$forumuri">
+											  <div class="Button"><span></span></div>
+											</a>	
 										</div>
 									</div>
 								</div>	
@@ -61,7 +63,7 @@
 				    				<div class="DecoratorTC">
 				    					<div class="FAQIcon"><span></span></div>
 				    					<div class="FAQLabel">
-					    					<div class="Title">FAQ</div>
+					    					<div class="Title"><a href="$faquri">FAQ</a></div>
 					    					<div class="Label">Capture and manage key knowledge efficiently in FAQ.</div>
 				    					</div>
 				    					<div style="clear: left;"><span></span></div>
@@ -78,7 +80,9 @@
 											<div class="CheckIcon">Questions moderation</div>
 											<div class="CheckIcon">and many more!</div>
 										</div>
-											<div class="Button"><span></span></div>	
+										  <a href="$faquri">
+											  <div class="Button"><span></span></div>
+											</a>	
 										</div>
 									</div>
 								</div>	

@@ -65,6 +65,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_FORUMSORT_TAB = "forumSortTab" ;
 	public static final String FIELD_CENSOREDKEYWORD_TAB = "forumCensorTab" ;
 	public static final String FIELD_ACTIVETOPIC_TAB = "activeTopicTab" ;
+	public static final String FIELD_NOTIFYEMAIL_TAB = "notifyEmailTab" ;
 	
 	public static final String FIELD_FORUMSORTBY_INPUT = "forumSortBy" ;
 	public static final String FIELD_FORUMSORTBYTYPE_INPUT = "forumSortByType" ;
@@ -72,6 +73,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_TOPICSORTBYTYPE_INPUT = "topicSortByType" ;
 	
 	public static final String FIELD_CENSOREDKEYWORD_TEXTAREA = "censorKeyword" ;
+	
+	public static final String FIELD_NOTIFYEMAIL_TEXTAREA = "notifyEmail" ;
 	
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
@@ -86,6 +89,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
 		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
 		UIFormInputWithActions activeTopicTab = new UIFormInputWithActions(FIELD_ACTIVETOPIC_TAB);
+		UIFormInputWithActions notifyEmailTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_TAB);
 		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
 																"modifiedDate",	"topicCount", "postCount"}; 
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
@@ -131,11 +135,17 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		UIFormRadioBoxInput setActive = new UIFormRadioBoxInput(FIELD_SETACTIVE_INPUT, FIELD_SETACTIVE_INPUT, options);
 		setActive.setValue("false") ;
 		
+		UIFormTextAreaInput notifyEmail = new UIFormTextAreaInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, null);
+		String value = administration.getNotifyEmailContent();
+		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
+		notifyEmail.setValue(value) ;
+		
 		forumSortTab.addUIFormInput(forumSortBy) ;
 		forumSortTab.addUIFormInput(forumSortByType) ;
 		forumSortTab.addUIFormInput(topicSortBy) ;
 		forumSortTab.addUIFormInput(topicSortByType) ;
 		
+		notifyEmailTab.addUIFormInput(notifyEmail) ;
 		forumCensorTab.addUIFormInput(censorKeyword) ;
 		
 		addUIFormInput(activeAbout);
@@ -143,6 +153,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		
 		addUIFormInput(forumSortTab) ;
 		addUIFormInput(forumCensorTab) ;
+		addUIFormInput(notifyEmailTab) ;
 		addUIFormInput(activeTopicTab) ;
 	}
 	
@@ -162,43 +173,29 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		return false ;
 	}
 	
-	private String removeSpaceInString(String str) throws Exception {
-		if(!ForumUtils.isEmpty(str)) {
-			str = str.replaceAll(";", ",");
-			while (str.indexOf(",,") > 0) {
-	      str = StringUtils.replace(str, ",,", ",");
-      }
-			while (str.indexOf("  ") > 0) {
-				str = StringUtils.replace(str, "  ", " ");
-			}
-			str = str.replaceAll(", ", ",");
-			if(str.lastIndexOf(",") == str.length() - 1) {
-				str = str.substring(0, str.length() - 1) ;
-			}
-		}
-		return str;
-	}
-  
 	static	public class SaveActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm administrationForm = event.getSource() ;
 			UIFormInputWithActions forumSortTab = administrationForm.getChildById(FIELD_FORUMSORT_TAB) ;
 			UIFormInputWithActions forumCensor = administrationForm.getChildById(FIELD_CENSOREDKEYWORD_TAB) ;
+			UIFormInputWithActions notifyEmailTab = administrationForm.getChildById(FIELD_NOTIFYEMAIL_TAB) ;
 			String forumSortBy = forumSortTab.getUIFormSelectBox(FIELD_FORUMSORTBY_INPUT).getValue() ;
 			String forumSortByType = forumSortTab.getUIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT).getValue() ;
 			String topicSortBy = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBY_INPUT).getValue() ;
 			String topicSortByType = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT).getValue() ;
 			String censoredKeyword = forumCensor.getUIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA).getValue() ;
-			censoredKeyword = administrationForm.removeSpaceInString(censoredKeyword);
+			censoredKeyword = ForumUtils.removeSpaceInString(censoredKeyword);
 			if(!ForumUtils.isEmpty(censoredKeyword)) {
 				censoredKeyword = censoredKeyword.toLowerCase();
 			}
+			String notifyEmail = notifyEmailTab.getUIFormTextAreaInput(FIELD_NOTIFYEMAIL_TEXTAREA).getValue() ;
 			ForumAdministration forumAdministration = administrationForm.administration ;
 			forumAdministration.setForumSortBy(forumSortBy) ;
 			forumAdministration.setForumSortByType(forumSortByType) ;
 			forumAdministration.setTopicSortBy(topicSortBy) ;
 			forumAdministration.setTopicSortByType(topicSortByType) ;
 			forumAdministration.setCensoredKeyword(censoredKeyword) ;
+			forumAdministration.setNotifyEmailContent(notifyEmail) ;
 			administrationForm.forumService.saveForumAdministration(ForumSessionUtils.getSystemProvider(), forumAdministration) ;
 			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
