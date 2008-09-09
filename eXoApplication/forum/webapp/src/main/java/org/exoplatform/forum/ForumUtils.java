@@ -48,7 +48,7 @@ public class ForumUtils {
 	public static final String CATEGORIES = "Categories".intern() ;
 	public static final String CATEGORY = "Category".intern() ;
 	public static final String FORUM = "Forum".intern() ;
-	public static final String THREAD = "Thread".intern() ;
+	public static final String THREAD = "Topic".intern() ;
 	public static final String TAG = "Tag".intern() ;
 	public static final String POST = "Post".intern() ;
 	public static final String POLL = "Poll".intern() ;

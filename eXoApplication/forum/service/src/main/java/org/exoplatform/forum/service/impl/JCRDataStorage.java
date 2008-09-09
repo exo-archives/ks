@@ -136,6 +136,7 @@ public class JCRDataStorage{
 		forumAdminNode.setProperty("exo:topicSortBy", forumAdministration.getTopicSortBy()) ;
 		forumAdminNode.setProperty("exo:topicSortByType", forumAdministration.getTopicSortByType()) ;
 		forumAdminNode.setProperty("exo:censoredKeyword", forumAdministration.getCensoredKeyword()) ;
+		forumAdminNode.setProperty("exo:notifyEmailContent", forumAdministration.getNotifyEmailContent()) ;
 		forumHomeNode.getSession().save() ;
 	}
 	
@@ -150,6 +151,7 @@ public class JCRDataStorage{
 			if(forumAdminNode.hasProperty("exo:topicSortBy"))forumAdministration.setTopicSortBy(forumAdminNode.getProperty("exo:topicSortBy").getString()) ;
 			if(forumAdminNode.hasProperty("exo:topicSortByType"))forumAdministration.setTopicSortByType(forumAdminNode.getProperty("exo:topicSortByType").getString()) ;
 			if(forumAdminNode.hasProperty("exo:censoredKeyword"))forumAdministration.setCensoredKeyword(forumAdminNode.getProperty("exo:censoredKeyword").getString()) ;
+			if(forumAdminNode.hasProperty("exo:notifyEmailContent"))forumAdministration.setNotifyEmailContent(forumAdminNode.getProperty("exo:notifyEmailContent").getString()) ;
 			return forumAdministration;
 		} catch (PathNotFoundException e) {
 			return forumAdministration;
@@ -1451,6 +1453,15 @@ public class JCRDataStorage{
 			}
 			List<String> emailList = new ArrayList<String>();
 			// Send notify for watching users
+			Node forumAdminNode = null;
+			try{
+				forumAdminNode = forumHomeNode.getNode(Utils.FORUMADMINISTRATION) ;
+			} catch (Exception e) {
+			}
+			String content = "";
+			if(forumAdminNode != null) {
+				if(forumAdminNode.hasProperty("exo:notifyEmailContent"))content = forumAdminNode.getProperty("exo:notifyEmailContent").getString() ;
+			}
 			if (!topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 				
 				/*
@@ -1479,7 +1490,16 @@ public class JCRDataStorage{
 						body.append("The Topic '<b>").append(topicNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
 						.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: <a target=\"_blank\" href=\"" + post.getLink() 
 						+ "\">" + post.getLink() + "</a><br/><br/><br/>");
-						message.setBody(body.toString());
+						if(content != null && content.length() > 0) {
+							String content_ = topicNode.getProperty("exo:name").getString();
+							content_ = content.replace("&objectName", content_);
+							content_ = content_.replaceAll("&objectWatch", "Topic");
+							content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
+							content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">" + post.getLink() + "</a><br/>");
+							message.setBody(content_);
+						} else {
+							message.setBody(body.toString());
+						}
 						sendEmailNotification(emailList, message);
 					}
 				}
@@ -1520,7 +1540,15 @@ public class JCRDataStorage{
 					.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: <a target=\"_blank\" href=\"" + post.getLink() 
 						+ "\">" + post.getLink() + "</a><br/><br/><br/>");
 					
-					message.setBody(body.toString());
+					if(content != null && content.length() > 0) {
+						content = content.replaceAll("&objectWatch", "Forum");
+						content = content.replaceAll("&objectName", forumNode.getProperty("exo:name").getString());
+						content = content.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
+						content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">" + post.getLink() + "</a><br/>");
+						message.setBody(content);
+					} else {
+						message.setBody(body.toString());
+					}
 					sendEmailNotification(emailList, message);
 				}
 			}
@@ -2644,7 +2672,7 @@ public class JCRDataStorage{
 				}
 			}
 			queryString.append("]") ;
-			System.out.println("\n\npath: " + queryString.toString());
+//			System.out.println("\n\npath: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
@@ -2828,7 +2856,7 @@ public class JCRDataStorage{
 		}
 
 		pathQuery = stringBuffer.toString() + "[@exo:isApproved='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
-		System.out.println("\n\npathQuery1: " + pathQuery);
+//		System.out.println("\n\npathQuery1: " + pathQuery);
 		
 		Query query = qm.createQuery(pathQuery , Query.XPATH) ;
 		QueryResult result = query.execute() ;
@@ -2837,7 +2865,7 @@ public class JCRDataStorage{
 		wattingForModerator.setTopicUnApproved(pagelist);
 		
 		pathQuery = stringBuffer.toString() + "[@exo:isWaiting='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
-		System.out.println("\n\npathQuery2: " + pathQuery);
+//		System.out.println("\n\npathQuery2: " + pathQuery);
 		query = qm.createQuery(pathQuery , Query.XPATH) ;
 		result = query.execute() ;
 		iter = result.getNodes(); 
@@ -2848,7 +2876,7 @@ public class JCRDataStorage{
 		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)");
 		
 		pathQuery = stringBuffer.toString() + "[@exo:isApproved='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
-		System.out.println("\n\npathQuery3: " + pathQuery);
+//		System.out.println("\n\npathQuery3: " + pathQuery);
 		query = qm.createQuery(pathQuery , Query.XPATH) ;
 		result = query.execute() ;
 		iter = result.getNodes(); 
@@ -2856,7 +2884,7 @@ public class JCRDataStorage{
 		wattingForModerator.setPostsUnApproved(pagelist);
 
 		pathQuery = stringBuffer.toString() + "[@exo:isHidden='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
-		System.out.println("\n\npathQuery4: " + pathQuery + "\n\n");
+//		System.out.println("\n\npathQuery4: " + pathQuery + "\n\n");
 		query = qm.createQuery(pathQuery , Query.XPATH) ;
 		result = query.execute() ;
 		iter = result.getNodes(); 

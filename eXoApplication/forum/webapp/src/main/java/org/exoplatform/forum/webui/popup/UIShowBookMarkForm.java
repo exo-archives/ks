@@ -108,13 +108,12 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				return ;
 			}
 			String[] privateUser = category.getUserPrivate() ;
-			if(privateUser.length > 0) {
+			if(bookMark.userProfile.getUserRole() > 0 && privateUser.length > 0 && !privateUser[0].equals(" ")) {
 				isRead = ForumUtils.isStringInStrings(privateUser, userName);
 			}
 			if(!isRead){
 				length = 0;
 			}
-			System.out.println("\n\n cate okie");
 			if(length == 3) {
 				String path_ = "" ;
 				Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
@@ -129,14 +128,14 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 					}
 					return ;
 				}
-				
-				if(isRead &&topic.getCanView() != null && topic.getCanView().length > 0){
-					isRead = ForumUtils.isStringInStrings(topic.getCanView(), userName);
-				}
-				if(!isRead && forum.getModerators() != null && forum.getModerators().length > 0) {
-					isRead = ForumUtils.isStringInStrings(forum.getModerators(), userName);
-				}
-				if(!isRead && bookMark.userProfile.getUserRole() == 0) isRead = true; 
+				if(bookMark.userProfile.getUserRole() > 0){
+					if(isRead &&topic.getCanView() != null && topic.getCanView()[0].equals(" ")){
+						isRead = ForumUtils.isStringInStrings(topic.getCanView(), userName);
+					}
+					if(!isRead && forum.getModerators() != null && forum.getModerators().length > 0) {
+						isRead = ForumUtils.isStringInStrings(forum.getModerators(), userName);
+					}
+				} else isRead = true; 
 				if(isRead){
 					forumPortlet.updateIsRendered(ForumUtils.FORUM);
 					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;

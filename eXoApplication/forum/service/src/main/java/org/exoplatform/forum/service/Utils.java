@@ -315,13 +315,16 @@ public class Utils {
 		String link = "";
 		if (s == null || s.length() <= 0)
 			return link;
-		s = transform(s);
-		s = s.replaceAll(
-				"[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
-				"<a target=\"blank_\" href=\"$0\">$0</a>");
-		s = s.replaceAll(
-				"[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
-				"<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
+		try {
+			s = transform(s);
+			s = s.replaceAll(
+					"[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
+			"<a target=\"blank_\" href=\"$0\">$0</a>");
+			s = s.replaceAll(
+					"[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
+			"<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
+    } catch (Exception e) {
+    }
 		return s;
 	}
 }

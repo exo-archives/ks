@@ -555,6 +555,9 @@
 			<propertyDefinition name="exo:censoredKeyword" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
+			<propertyDefinition name="exo:notifyEmailContent" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
 		</propertyDefinitions>
 	</nodeType>	 	 	 	
 	
