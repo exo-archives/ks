@@ -154,8 +154,9 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:responses", question.getResponses()) ;
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
     questionNode.setProperty("exo:responseBy", question.getResponseBy()) ;
-    cal.setTime(question.getDateResponse()) ;
-    questionNode.setProperty("exo:dateResponse", cal.getInstance()) ;
+    java.util.Calendar calendar = new GregorianCalendar();
+    calendar.setTime(question.getDateResponse());
+    questionNode.setProperty("exo:dateResponse", calendar) ;
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
     List<String> listFileName = new ArrayList<String>() ;
