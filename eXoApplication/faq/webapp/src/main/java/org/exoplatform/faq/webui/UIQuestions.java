@@ -993,7 +993,9 @@ public class UIQuestions extends UIContainer {
   
 	static  public class ViewQuestionActionListener extends EventListener<UIQuestions> {
 	  public void execute(Event<UIQuestions> event) throws Exception {
-	    UIQuestions uiQuestions = event.getSource() ; 
+	    UIQuestions uiQuestions = event.getSource() ;
+	    UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+      UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
       uiQuestions.isChangeLanguage = false ;
       String strId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       String questionId = new String() ;
@@ -1022,23 +1024,61 @@ public class UIQuestions extends UIContainer {
           questionId = strId.split("/")[1] ;
           question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
           String categoryId = question.getCategoryId();
-          UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
-          uiQuestions.setCategoryId(categoryId) ;
-          uiQuestions.setListQuestion() ;
-          uiQuestions.listCateId_.clear() ;
-          uiQuestions.setIsModerators() ;
-          UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-          breadcumbs.setUpdataPath(null) ;
-          String oldPath = "" ;
-          FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-          List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
-          for(int i = listPath.size() -1 ; i >= 0; i --) {
-            oldPath = oldPath + "/" + listPath.get(i);
-          } 
-          newPath_ = "FAQService"+oldPath ;
-          breadcumbs.setUpdataPath(newPath_);
-          event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-          UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+          FAQSetting faqSetting = uiQuestions.faqSetting_ ;
+          String currentUser = FAQUtils.getCurrentUser() ;
+          FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+          Category category = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+				  String[] moderator = category.getModerators() ;
+				  if(faqSetting.getClass().equals("both")) {
+				  	if(serviceUtils.isAdmin(currentUser) || Arrays.asList(moderator).contains(currentUser) || question.isActivated()) {
+			        uiQuestions.setCategoryId(categoryId) ;
+			        uiQuestions.setListQuestion() ;
+			        uiQuestions.listCateId_.clear() ;
+			        uiQuestions.setIsModerators() ;
+			        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+			        breadcumbs.setUpdataPath(null) ;
+			        String oldPath = "" ;
+			        FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+			        List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+			        for(int i = listPath.size() -1 ; i >= 0; i --) {
+			          oldPath = oldPath + "/" + listPath.get(i);
+			        } 
+			        newPath_ = "FAQService"+oldPath ;
+			        breadcumbs.setUpdataPath(newPath_);
+			        event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+			        UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+	          } else {
+	          	uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.INFO)) ;
+	            event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	            event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+	            return ;
+	          }
+				  } else {
+				  	if(serviceUtils.isAdmin(currentUser)&&question.isApproved() || Arrays.asList(moderator).contains(currentUser)&&question.isApproved()
+				  			|| question.isActivated()&&question.isApproved()) {
+			        uiQuestions.setCategoryId(categoryId) ;
+			        uiQuestions.setListQuestion() ;
+			        uiQuestions.listCateId_.clear() ;
+			        uiQuestions.setIsModerators() ;
+			        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+			        breadcumbs.setUpdataPath(null) ;
+			        String oldPath = "" ;
+			        FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+			        List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+			        for(int i = listPath.size() -1 ; i >= 0; i --) {
+			          oldPath = oldPath + "/" + listPath.get(i);
+			        } 
+			        newPath_ = "FAQService"+oldPath ;
+			        breadcumbs.setUpdataPath(newPath_);
+			        event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+			        UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+		        } else {
+		        	uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.INFO)) ;
+		          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+		          event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+		          return ;
+		        }
+				  }
         }
         
         List<String> listRelaId = new ArrayList<String>() ;
@@ -1065,8 +1105,6 @@ public class UIQuestions extends UIContainer {
           uiQuestions.questionView_ = "" ;
         }
       } catch(javax.jcr.PathNotFoundException e) {
-        UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
-        UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         uiQuestions.setListQuestion() ;
