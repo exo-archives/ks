@@ -250,7 +250,7 @@ public class ForumTransformHTML {
 				String userName = urlStr.substring(fstb, urlStr.indexOf("]", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
 				buffer = new StringBuffer();
-				buffer.append("<div>Quote:</div><div class=\"Classquote\">");
+				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>Originally Posted by <strong>").append(userName).append(
 				    "</strong></div>");
 				buffer.append("<div>").append(text).append("</div></div>");
@@ -267,7 +267,7 @@ public class ForumTransformHTML {
 				int clsIndex = b.indexOf("[/quote]", tagIndex);
 				String text = b.substring(tagIndex + 7, clsIndex);
 				buffer = new StringBuffer();
-				buffer.append("<div>Quote:</div><div class=\"Classquote\">");
+				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>").append(text).append("</div></div>");
 				b = StringUtils.replace(b, "[quote]" + text + "[/quote]", buffer.toString());
 			} catch (Exception e) {

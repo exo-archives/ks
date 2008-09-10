@@ -29,6 +29,7 @@
 	if(ForumUtils.isEmpty(description)) description = "";
 	int rCNB = 0;
 	String actionBookmark = "";
+	
 %>
 <div class="UIForumCategory" style="padding: 2px 10px;">
 <%uiform.begin()%>
@@ -215,7 +216,8 @@
 						String topicNewPostTitle = "";
 						String lastPostBy = "";
 						String dateTime = "";
-						String openLinkLastPost = "#";
+						String openLinkLastPost = "javascript:void(0)";
+						String urlLastPost = "javascript:void(0)";
 						String titleTopic = "" ;
 					 	String topicId = "";
 					 	String path = "";
@@ -253,6 +255,8 @@
 								if(topicNewPost.getIsClosed()) {
 									if(ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin) {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+										urlLastPost = uicomponent.url("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+										urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 									} else {
 										openLinkLastPost = "javascript:void(0)";
 										titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
@@ -261,12 +265,16 @@
 									if(forum.getIsModerateTopic()) {
 										if(topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin){
 											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+											urlLastPost = uicomponent.url("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+											urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 										} else {
 											openLinkLastPost = "javascript:void(0)";
 											titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 										}
 									} else {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+										urlLastPost = uicomponent.url("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+										urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 									}
 								}
 								titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
@@ -292,12 +300,15 @@
 							if(!ForumUtils.isEmpty(forumDescription)) {
 								lineHeight = "line-height: 28px;";
 							}
+							String link = uicomponent.event("OpenForumLink", forumId);
+							String url = uicomponent.url("OpenForumLink", forumId);
+							url = ForumSessionUtils.getBreadcumbUrl(url, uicomponent.id, "OpenForumLink" );
 					%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 									<td >
 										<div style="float:left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-											<a style="$lineHeight" href="<%=uicomponent.event("OpenForumLink", forumId)%>" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+											<a style="$lineHeight" onclick="$link; return false;" href="$url" class="ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 													<div action="$actionBookmark" class="ClickPopupContent"></div>
@@ -318,7 +329,7 @@
 									<td >
 								 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
 								 		<div style="float: left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-								 			<a href="$openLinkLastPost" title="$titleTopic" class="LastPostTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 45);%></a>
+								 			<a onclick="$openLinkLastPost; return false;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 45);%></a>
 											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 													<div action="$actionBookmark" class="ClickPopupContent"></div>

@@ -196,7 +196,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				if(post.getName().indexOf(": ") > 0) title = post.getName() ;
 				else title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getName() ;
         threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
-				String value = "[QUOTE=" + post.getOwner() + "]" + ForumTransformHTML.clearQuote(message) + "[/QUOTE]";
+				String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
         threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
@@ -327,21 +327,12 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				// set link
 	      PortalRequestContext portalContext = Util.getPortalRequestContext();
 	      String url = portalContext.getRequest().getRequestURL().toString();
-				
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
-				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-				String portalName = "/" + Util.getUIPortal().getName() ;
 				String link = uiForm.getLink();
-				link = link.replaceFirst("UIPostForm","UIBreadcumbs").replaceFirst("PreviewPost","ChangePath").replaceAll("&amp;", "&");							
-				if(link.indexOf(portalName) > 0) {
-			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
-			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-			    }									
-				}		
+				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewPost");	
 			  link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
-				
 				link = url + link;
 				//
         Post post = new Post();

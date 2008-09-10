@@ -1270,21 +1270,12 @@ public class UITopicDetail extends UIForm {
 			// set link
 	      PortalRequestContext portalContext = Util.getPortalRequestContext();
 	      String url = portalContext.getRequest().getRequestURL().toString();
-				
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
-				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-				String portalName = "/" + Util.getUIPortal().getName() ;
 				String link = topicDetail.getLink();
-				link = link.replaceFirst("UITopicDetail","UIBreadcumbs").replaceFirst("ViewThreadByUser","ChangePath").replaceAll("&amp;", "&");							
-				if(link.indexOf(portalName) > 0) {
-			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
-			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-			    }									
-				}	
+				link = ForumSessionUtils.getBreadcumbUrl(link, topicDetail.getId(), "ViewThreadByUser");				
 			  link = link.replaceFirst("pathId", (topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId)) ;
-				
 				link = url + link;
 				//
 				String userName = topicDetail.userProfile.getUserId() ;

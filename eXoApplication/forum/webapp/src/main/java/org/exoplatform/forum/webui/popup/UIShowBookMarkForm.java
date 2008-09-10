@@ -93,12 +93,14 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class) ;
 			UIApplication uiApp = bookMark.getAncestorOfType(UIApplication.class) ;
+			UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
 			String []id = path.split("/") ;
 			int length = id.length ;
 			String userName = bookMark.userProfile.getUserId();
 			boolean isRead = true;
 			Category category = bookMark.forumService.getCategory(ForumSessionUtils.getSystemProvider(), id[0]);
 			if(category == null) {
+				breadcumbs.setOpen(false) ;
 				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 				path = bookMark.getBookMarkId(path) ;
 				if(!ForumUtils.isEmpty(path)) {
@@ -120,6 +122,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				if(forum != null)path_ = forum.getPath()+"/"+id[2] ;
 				Topic topic = bookMark.forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path_, false) ;
 				if(forum == null || topic == null) {
+					breadcumbs.setOpen(false) ;
 					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 					path = bookMark.getBookMarkId(path) ;
 					if(!ForumUtils.isEmpty(path)) {
@@ -152,6 +155,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 			} else if(length == 2){
 				Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
 				if(forum == null) {
+					breadcumbs.setOpen(false) ;
 					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 					path = bookMark.getBookMarkId(path) ;
 					if(!ForumUtils.isEmpty(path)) {
@@ -190,10 +194,12 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				}
 			}
 			if(!isRead) {
+				breadcumbs.setOpen(false) ;
 				String[] s = new String[]{};
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 				return;
 			}
+			System.out.println("\n\n tttttt\n\n");
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

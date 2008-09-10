@@ -407,21 +407,12 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				// set link
 	      PortalRequestContext portalContext = Util.getPortalRequestContext();
 	      String url = portalContext.getRequest().getRequestURL().toString();
-				
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
-				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-				String portalName = "/" + Util.getUIPortal().getName() ;
 				String link = uiForm.getLink();
-				link = link.replaceFirst("UITopicForm","UIBreadcumbs").replaceFirst("PreviewThread","ChangePath").replaceAll("&amp;", "&");							
-				if(link.indexOf(portalName) > 0) {
-			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
-			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-			    }									
-				}	
-			  link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
-				
+				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewThread");	
+			  link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topic.getId())) ;
 				link = url + link;
 				//
 				String userName = ForumSessionUtils.getCurrentUser() ;
