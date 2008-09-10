@@ -16,13 +16,18 @@
  */
 package org.exoplatform.sample.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.sample.service.Information;
 import org.exoplatform.sample.service.SampleService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.picocontainer.Startable;
 
 /**
  * Created by The eXo Platform SARL
@@ -31,10 +36,32 @@ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
  * Mar 04, 2008  
  */
 
-public class SampleServiceImpl implements SampleService{
+public class SampleServiceImpl implements SampleService, Startable{
   private NodeHierarchyCreator nodeHierarchy_ ;
+  private List<TestPlugin> plugins_ = new ArrayList<TestPlugin>();
+  
 	public SampleServiceImpl(NodeHierarchyCreator nodeHierarchy) throws Exception {
 		nodeHierarchy_ = nodeHierarchy ;
+	}
+	
+	public void start() {
+		try{
+      for(TestPlugin plugin : plugins_) {
+        plugin.init() ;
+      }
+    }catch (Exception e) {
+      e.printStackTrace();
+    }
+	}
+
+	public void stop() {
+		// TODO Auto-generated method stub		
+	}
+	
+	public void addPlugin(ComponentPlugin plugin) throws Exception {
+		if(plugin instanceof TestPlugin) {
+			plugins_.add((TestPlugin)plugin) ;
+		}
 	}
 	
 	private Node getSampleServiceHome(SessionProvider sProvider) throws Exception {
@@ -124,5 +151,5 @@ public class SampleServiceImpl implements SampleService{
 			return sampleHome.getNode(id).getProperty("exo:YOB").getString() ;
 		}
 		return null;
-	}
+	}	
 }

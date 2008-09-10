@@ -130,6 +130,44 @@
 		<key>org.exoplatform.sample.service.SampleService</key>
 		<type>org.exoplatform.sample.service.impl.SampleServiceImpl</type>
 	</component>
+	
+	<external-component-plugins>
+    <target-component>org.exoplatform.sample.service.SampleService</target-component>  	  
+		  <component-plugin>
+			  <name>sampleServicePlugin</name>
+		    <set-method>addPlugin</set-method>
+		    <type>org.exoplatform.sample.service.impl.TestPlugin</type>
+		    <init-params>
+		    	<value-param>
+	        	<name>testValueParam</name>
+	        	<value>Value Parameter</value>
+	        </value-param>	        
+	        <object-param>
+		    		<name>sample.configuration</name>
+	          <description>sample configuration</description>
+	          <object type="org.exoplatform.sample.service.impl.TestConfig">	          	
+	          	<field  name="objectParams">
+	          		<collection type="java.util.ArrayList">
+	          		  <value>
+	          				<object type="org.exoplatform.sample.service.impl.TestConfig$ObjectParam">
+		          			  <field  name="name"><string>Name 01</string></field>		          				          				
+		          				<field  name="value"><string>Value 01</string></field>		          				          						          				
+		          			</object>
+		          		</value>
+		          		<value>	
+		          			<object type="org.exoplatform.sample.service.impl.TestConfig$ObjectParam">
+		          			  <field  name="name"><string>Name 02</string></field>		          				          				
+		          				<field  name="value"><string>Value 02</string></field>		          				          						          				
+		          			</object>
+		          		</value>
+		          	</collection>
+	          	</field>          	          
+	          </object>
+		    	</object-param>
+		    </init-params>	  
+		  </component-plugin> 
+	</external-component-plugins>
+	
 		
   <external-component-plugins>
     <target-component>org.exoplatform.services.naming.InitialContextInitializer</target-component>
