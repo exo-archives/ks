@@ -1029,55 +1029,39 @@ public class UIQuestions extends UIContainer {
           FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
           Category category = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
 				  String[] moderator = category.getModerators() ;
+				  Boolean check = false ;
 				  if(faqSetting.getClass().equals("both")) {
 				  	if(serviceUtils.isAdmin(currentUser) || Arrays.asList(moderator).contains(currentUser) || question.isActivated()) {
-			        uiQuestions.setCategoryId(categoryId) ;
-			        uiQuestions.setListQuestion() ;
-			        uiQuestions.listCateId_.clear() ;
-			        uiQuestions.setIsModerators() ;
-			        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-			        breadcumbs.setUpdataPath(null) ;
-			        String oldPath = "" ;
-			        FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			        List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
-			        for(int i = listPath.size() -1 ; i >= 0; i --) {
-			          oldPath = oldPath + "/" + listPath.get(i);
-			        } 
-			        newPath_ = "FAQService"+oldPath ;
-			        breadcumbs.setUpdataPath(newPath_);
-			        event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-			        UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-	          } else {
-	          	uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.INFO)) ;
-	            event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-	            event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-	            return ;
-	          }
+				  		check = true ;
+				  	}
 				  } else {
 				  	if(serviceUtils.isAdmin(currentUser)&&question.isApproved() || Arrays.asList(moderator).contains(currentUser)&&question.isApproved()
 				  			|| question.isActivated()&&question.isApproved()) {
-			        uiQuestions.setCategoryId(categoryId) ;
-			        uiQuestions.setListQuestion() ;
-			        uiQuestions.listCateId_.clear() ;
-			        uiQuestions.setIsModerators() ;
-			        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-			        breadcumbs.setUpdataPath(null) ;
-			        String oldPath = "" ;
-			        FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			        List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
-			        for(int i = listPath.size() -1 ; i >= 0; i --) {
-			          oldPath = oldPath + "/" + listPath.get(i);
-			        } 
-			        newPath_ = "FAQService"+oldPath ;
-			        breadcumbs.setUpdataPath(newPath_);
-			        event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-			        UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-		        } else {
-		        	uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.INFO)) ;
-		          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-		          event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-		          return ;
+				  		check = true ;
 		        }
+				  }
+				  if (check) {
+		        uiQuestions.setCategoryId(categoryId) ;
+		        uiQuestions.setListQuestion() ;
+		        uiQuestions.listCateId_.clear() ;
+		        uiQuestions.setIsModerators() ;
+		        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+		        breadcumbs.setUpdataPath(null) ;
+		        String oldPath = "" ;
+		        FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		        List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+		        for(int i = listPath.size() -1 ; i >= 0; i --) {
+		          oldPath = oldPath + "/" + listPath.get(i);
+		        } 
+		        newPath_ = "FAQService"+oldPath ;
+		        breadcumbs.setUpdataPath(newPath_);
+		        event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+		        UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+				  } else {
+	        	uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.INFO)) ;
+	          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	          event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+	          return ;
 				  }
         }
         
