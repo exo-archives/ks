@@ -225,7 +225,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   				String categoryId = quest.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
 				  String[] moderator = category.getModerators() ;
-				  if(Arrays.asList(moderator).contains(currentUser)) {
+				  if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
 				  	if(quest.isApproved()) listQuestionSearch.add(quest) ;
 					} else {
 						if(quest.isApproved()&& quest.isActivated()) listQuestionSearch.add(quest) ;
@@ -269,7 +269,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   				String categoryId = quest.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
 				  String[] moderator = category.getModerators() ;
-				  if(Arrays.asList(moderator).contains(currentUser)) {
+				  if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
 				  	if(quest.isApproved()) listQuestionLanguage.add(quest) ;
 					} else {
 						if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;
