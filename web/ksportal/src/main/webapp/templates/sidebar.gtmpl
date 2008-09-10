@@ -1,0 +1,28 @@
+<%	import org.exoplatform.portal.webui.util.Util; 
+String toururi = Util.getPortalRequestContext().getPortalURI() + "tour";
+%>
+
+<div class="SideBar">
+	<div class="DownloadButton"><span></span></div>
+	<div class="ArowIcon">eXo KS is open source and FREE for download</div>
+	<div class="DotLine"><span></span></div>
+	<div class="ArowIcon">Looking for a quick overview </div>
+	<div class="LeftButton">
+		<div class="RightButton">
+			<div class="CenterButton"><a href="$toururi" style="color: white;">Take a tour</a></div>
+		</div>
+	</div>	
+	<div class="DotLine"><span></span></div>	
+	<div class="ArowIcon">Want to try with your own account?</div>
+	<a href="/public/classic/register" class="SignUp">Sign up</a>
+	<div class="DotLine"><span></span></div>
+	<div class="VersionIcon"><span></span></div>			
+	<div class="ArowIcon" style="margin-bottom: 0px;">You need support? Learn about the </div>
+	<a href="http://www.exoplatform.com" class="ProVersion">professional version</a>
+	<div class="DotLine"><span></span></div>
+	<div class="LeftButton">
+		<div class="RightButton">
+			<div class="CenterButton"><a href="mailto:ks@exoplatform.com?subject=KS demo feedback" style="color: white;">Feedback</a></div>
+		</div>
+	</div>	
+</div>

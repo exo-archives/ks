@@ -16,7 +16,7 @@ FCKConfig.ToolbarSets["eXoForum"] = [
 	['TextColor','BGColor'],
 	['Style','FontFormat','FontName','FontSize']
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
-	['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat','-','Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text']
+	['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat','-','Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
 
 ] ;
 
@@ -26,6 +26,7 @@ FCKConfig.eXoPath = FCKConfig.BasePath.substr(0, FCKConfig.BasePath.length - 7) 
 FCKConfig.eXoForumPlugins = FCKConfig.eXoPath + "plugins/forum/" ;
 
 FCKConfig.Plugins.Add( 'forumButton', null, FCKConfig.eXoForumPlugins) ;
+FCKConfig.Plugins.Add( 'help', null, FCKConfig.eXoPath + "plugins/") ;
 
 //Other plugins like bog, wiki...
 eXoPlugin.switchToolBar = function(R) {
