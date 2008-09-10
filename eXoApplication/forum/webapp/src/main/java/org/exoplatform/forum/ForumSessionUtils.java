@@ -193,5 +193,37 @@ public class ForumSessionUtils {
     return provider.getForumContact(userId);
   }
   
+  public static String getBreadcumbUrl(String link, String componentName, String actionName) throws Exception {
+  	String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+		String portalName = "/" + Util.getUIPortal().getName() ;
+		link = link.replaceFirst(componentName,"UIBreadcumbs").replaceFirst(actionName,"ChangePath").replaceAll("&amp;", "&");							
+		if(link.indexOf(portalName) > 0) {
+	    if(link.indexOf(portalName + "/" + selectedNode) < 0){
+	      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+	    }									
+		}	
+  	return link;
+  }
   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -62,7 +62,8 @@ public class UIBreadcumbs extends UIContainer {
 	private UserProfile userProfile ;
 	JobWattingForModerator wattingForModerator;
 	private boolean isLink = false ;
-//	private String[] path = new String[]{};
+	private boolean isOpen = true;
+	//	private String[] path = new String[]{};
 	public UIBreadcumbs()throws Exception {
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
@@ -134,6 +135,14 @@ public class UIBreadcumbs extends UIContainer {
 		return forumService.getTotalJobWattingForModerator(ForumSessionUtils.getSystemProvider(), this.userProfile.getUserId());
 	}
 	
+	public boolean isOpen() {
+  	return isOpen;
+  }
+
+	public void setOpen(boolean isOpen) {
+  	this.isOpen = isOpen;
+  }
+	
 //	
 //	public String[] getPath() {
 //		if(userProfile.getUserRole() <= 1) {
@@ -202,53 +211,58 @@ public class UIBreadcumbs extends UIContainer {
 	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
     public void execute(Event<UIBreadcumbs> event) throws Exception {
-			UIBreadcumbs uiBreadcums = event.getSource() ;			
-			String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = uiBreadcums.getAncestorOfType(UIForumPortlet.class) ;
-			if(path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) > 0) {
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-			}else if(path.equals(FORUM_SERVICE)){
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-			}else	if(path.lastIndexOf(Utils.TOPIC) > 0) {
-				String []id = path.split("/") ;
-    		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-    		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
-    		if(topic != null) {
-	    		forumPortlet.updateIsRendered(ForumUtils.FORUM);
-	    		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
-	  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-	  			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-	  			uiForumContainer.setIsRenderChild(false) ;
-	  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-	  			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-	  			uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
-	  			uiTopicDetail.setUpdateForum(forum) ;
-	  			uiTopicDetail.setIdPostView("false") ;
-	  			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
-	  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
-    		}
-			}else	if(path.lastIndexOf(Utils.FORUM) > 0) {
-				String id[] = path.split("/");
-				forumPortlet.updateIsRendered(ForumUtils.FORUM);
-				UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
-				forumContainer.setIsRenderChild(true) ;
-				forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
-				forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
-			}else {
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.getChild(UICategory.class).updateByBreadcumbs(path) ;
-				categoryContainer.updateIsRender(false) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+			UIBreadcumbs uiBreadcums = event.getSource() ;
+			if(uiBreadcums.isOpen()) {
+				String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
+				UIForumPortlet forumPortlet = uiBreadcums.getAncestorOfType(UIForumPortlet.class) ;
+				if(path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) > 0) {
+					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+					categoryContainer.updateIsRender(true) ;
+					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+				}else if(path.equals(FORUM_SERVICE)){
+					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+					categoryContainer.updateIsRender(true) ;
+					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+				}else	if(path.lastIndexOf(Utils.TOPIC) > 0) {
+					String []id = path.split("/") ;
+	    		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	    		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
+	    		if(topic != null) {
+		    		forumPortlet.updateIsRendered(ForumUtils.FORUM);
+		    		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+		  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+		  			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+		  			uiForumContainer.setIsRenderChild(false) ;
+		  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+		  			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+		  			uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
+		  			uiTopicDetail.setUpdateForum(forum) ;
+		  			uiTopicDetail.setIdPostView("false") ;
+		  			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
+		  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+	    		}
+				}else	if(path.lastIndexOf(Utils.FORUM) > 0) {
+					String id[] = path.split("/");
+					forumPortlet.updateIsRendered(ForumUtils.FORUM);
+					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
+					forumContainer.setIsRenderChild(true) ;
+					forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
+					forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
+				}else {
+					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+					categoryContainer.getChild(UICategory.class).updateByBreadcumbs(path) ;
+					categoryContainer.updateIsRender(false) ;
+					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+				}
+				uiBreadcums.setUpdataPath(path);
+				forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				System.out.println("\n\n========> not open\n\n");
+				uiBreadcums.isOpen = true;
 			}
-			uiBreadcums.setUpdataPath(path);
-			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}	
 	
