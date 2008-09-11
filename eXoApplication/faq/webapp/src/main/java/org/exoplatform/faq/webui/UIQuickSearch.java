@@ -85,7 +85,7 @@ public class UIQuickSearch  extends UIForm {
 					  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
 					  String categoryIdOfQuestion = question.getCategoryId() ;
 					  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
-					  String[] moderator = category.getModerators() ;
+					  String[] moderator = category.getModeratorsCategory() ;
 					  if(Arrays.asList(moderator).contains(currentUser)) {
 					  	listQuickSearch.add(faqSearch) ;
 						} else {
@@ -106,7 +106,7 @@ public class UIQuickSearch  extends UIForm {
 				  Question question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
 				  String categoryIdOfQuestion = question.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
-				  String[] moderator = category.getModerators() ;
+				  String[] moderator = category.getModeratorsCategory() ;
 				  if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
 				  	if(question.isApproved()) listQuickSearch.add(faqSearch) ;
 					} else {

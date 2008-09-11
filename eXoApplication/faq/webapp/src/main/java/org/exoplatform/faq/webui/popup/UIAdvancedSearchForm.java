@@ -209,7 +209,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 					for(Question quest: listResultQuesiton) {
 						String categoryId = quest.getCategoryId() ;
 					  Category category = faqService.getCategoryById(categoryId, sProvider) ;
-					  String[] moderator = category.getModerators() ;
+					  String[] moderator = category.getModeratorsCategory() ;
 					  if(Arrays.asList(moderator).contains(currentUser)) {
 					  	listQuestionSearch.add(quest) ;
 						} else {
@@ -224,7 +224,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   			for(Question quest: listResultQuesiton) {
   				String categoryId = quest.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
-				  String[] moderator = category.getModerators() ;
+				  String[] moderator = category.getModeratorsCategory() ;
 				  if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
 				  	if(quest.isApproved()) listQuestionSearch.add(quest) ;
 					} else {
@@ -253,7 +253,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 					for(Question quest: listQuestionSearchByLanguage) {
 						String categoryId = quest.getCategoryId() ;
 					  Category category = faqService.getCategoryById(categoryId, sProvider) ;
-					  String[] moderator = category.getModerators() ;
+					  String[] moderator = category.getModeratorsCategory() ;
 					  if(Arrays.asList(moderator).contains(currentUser)) {
 					  	listQuestionLanguage.add(quest) ;
 						} else {
@@ -268,7 +268,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   			for(Question quest: listQuestionSearchByLanguage) {
   				String categoryId = quest.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
-				  String[] moderator = category.getModerators() ;
+				  String[] moderator = category.getModeratorsCategory() ;
 				  if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
 				  	if(quest.isApproved()) listQuestionLanguage.add(quest) ;
 					} else {
