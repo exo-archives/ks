@@ -24,7 +24,7 @@
 		<div class="LeftDescription">
 			<div class="RightDescription">
 				<div class="CenterDescription">
-					<span class="NameForum">Description:</span> 
+					<span class="NameForum"><%=_ctx.appRes("UICategoryForm.label.Description");%>:</span> 
 					<span class="Description">$description</span>
 				</div>
 			</div>
@@ -40,19 +40,19 @@
 				<div class="LeftBar">
 					<div class="RightBar">
 						<div class="CenterBar">
-							<div class="Title"><span style="font-weight: normal;">Tag Name:</span>$tagName_</div>
+							<div class="Title"><span style="font-weight: normal;"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:</span>$tagName_</div>
 							<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 							<div class="SeparatorLine" style="margin-right: 7px;"><span></span></div>
 							<div class="ToolbarActionsTag" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-										<div class="LeftOverButton">
-											<div class="RightOverButton">
-												<div class="CenterOverButton">
-													<div class="StatusIcon ToolIcon">Manage Tag</div>
-												</div>
+								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="StatusIcon ToolIcon"><%=_ctx.appRes("UITopicsTag.label.ManageTag");%></div>
 											</div>
 										</div>
 									</div>
+								</div>
 								<% /*Begin Popup Menu*/ %>
 								<div style="position: relative;">
 									<div class="UIPopupCategory" style="display: none;">
@@ -69,22 +69,16 @@
 														<div class="MiddleRightRightClickPopupMenu">
 															<div class="UIRightPopupMenuContainer">
 																<a class="MenuItem" href="<%=uicomponent.event("EditTag");%>">	 
-																	<div class="ItemIcon EditTopicIcon ">
-																		Edit Tag
-																	</div>
+																	<div class="ItemIcon EditTopicIcon "><%=_ctx.appRes("UITopicsTag.label.EditTag");%></div>
 																</a>
 																<a class="MenuItem" href="<%=uicomponent.event("RemoveTag");%>">	 
-																	<div class="ItemIcon SetDeleteIcon">
-																		Remove this Tag
-																	</div>
+																	<div class="ItemIcon SetDeleteIcon"><%=_ctx.appRes("UITopicsTag.label.RemoveTag");%></div>
 																</a>
 															</div>
 															<div class="UIRightPopupMenuContainer">
 																<div class="RightClickCustomItem"><span></span></div>
 																<a class="MenuItem" href="<%= uicomponent.event("RemoveTopic");%>">	 
-																	<div class="ItemIcon classIconItem">
-																		Remove Topics in Tag
-																	</div>
+																	<div class="ItemIcon classIconItem"><%=_ctx.appRes("UITopicsTag.label.RemoveTopicsTag");%></div>
 																</a>
 															</div>
 														</div>
@@ -115,11 +109,11 @@
 								<th style="width: 40px;"></th>
 								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
-								<th style="width: 96px;">Rating</th>
-								<th style="width: 40px;">Tag</th>
-								<th style="width: 130px;"><div class="DownArrow1Icon">Last posts</div></th>
-								<th style="width: 50px;">Replies</th>
-								<th style="width: 50px;">Views</th>
+								<th style="width: 96px;"><%=_ctx.appRes("UITopicContainer.label.Rating");%></th>
+								<th style="width: 40px;"><%=_ctx.appRes("UITopicContainer.label.Tag");%></th>
+								<th style="width: 130px;"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></th>
+								<th style="width: 50px;"><%=_ctx.appRes("UITopicContainer.label.Replies");%></th>
+								<th style="width: 50px;"><%=_ctx.appRes("UITopicContainer.label.Views");%></th>
 								<th style="width: 30px;"><input type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 							</tr>
 						</thead>
@@ -161,7 +155,7 @@
 									<td >
 										<div >
 										<% if(topic.getIsSticky()) {%>
-											<span class="Text StickyIcon">Sticky:</span>
+											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
 											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="Title">$topicTitle</a>
 											<% if(max_page > 1) { %>
@@ -178,7 +172,7 @@
 											if(max_page > 5) { 
 												number = String.valueOf(max_page) ;
 											%>
-											<span>... <a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">Last page</a> )</span>
+											<span>... <a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
 											<%} else {%>
 											<span>)</span>
 											<%} 
@@ -192,7 +186,7 @@
 										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
 											 String SumVote = classNames[5] ;
 										%>
-					 						<div class="AvgRatingImages" title="Thread Rating: $SumVote votes, 5 average">
+					 						<div class="AvgRatingImages" title="Topic Rating: $SumVote votes, 5 average">
 					 					<%	
 											for(className in classNames) {
 												if(className.equals("star")) className = "Voted" ;
@@ -218,7 +212,7 @@
 								 	<td >
 								 		<div class="DateTime">$lastPostDate</div>
 								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
-										<div class="PostInfos LastPostInfos">by <a href="#" class="PostBy">$postNewBy</a></div>
+										<div class="PostInfos LastPostInfos"><%=_ctx.appRes("UITopicContainer.label.by");%> <a href="#" class="PostBy">$postNewBy</a></div>
 										<div style="clear: right;"><span></span></div>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
@@ -229,7 +223,7 @@
 					 			</tr>
 						 	<% i = i + 1;} %>
 						</tbody>
-					</table>							
+					</table>
 				</div>
 			</div>
 		</div>

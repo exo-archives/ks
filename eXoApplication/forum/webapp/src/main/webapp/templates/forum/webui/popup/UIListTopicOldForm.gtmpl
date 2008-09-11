@@ -51,7 +51,7 @@
 									<td >
 										<div >
 										<% if(topic.getIsSticky()) {%>
-											<span class="Text StickyIcon">Sticky:</span>
+											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
 											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="TitleNorman">$topicTitle</a>
 										</div>
