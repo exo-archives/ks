@@ -1028,7 +1028,7 @@ public class UIQuestions extends UIContainer {
           String currentUser = FAQUtils.getCurrentUser() ;
           FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
           Category category = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
-				  String[] moderator = category.getModerators() ;
+				  String[] moderator = category.getModeratorsCategory() ;
 				  Boolean check = false ;
 				  if(faqSetting.getClass().equals("both")) {
 				  	if(serviceUtils.isAdmin(currentUser) || Arrays.asList(moderator).contains(currentUser) || question.isActivated()) {
