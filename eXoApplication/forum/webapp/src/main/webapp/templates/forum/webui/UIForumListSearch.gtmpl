@@ -12,9 +12,9 @@
 				<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 					<thead>
 						<tr>
-							<th style="width: 80px;"> Type </th>
+							<th style="width: 80px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
 							<th style="width: 40px;">&nbsp;</th>
-							<th> Name </th>
+							<th><%=_ctx.appRes("UIForumListSearch.label.Name");%></th>
 						</tr>
 					</thead>
 				  <tbody>
@@ -43,7 +43,7 @@
 					  } 
 					} else {%>
 				  	<tr class="$classRow">
-							<td class="Tdbox" colspan="10"><div class="" >Sorry - no matches. Please try some different terms.</div></td>
+							<td class="Tdbox" colspan="10"><div class="" ><%=_ctx.appRes("UIForumListSearch.label.NoMatches");%></div></td>
 				  	</tr>
 					<% } %> 
 				  </tbody>

@@ -31,6 +31,7 @@
  }
 	uicomponent.initPage() ;
 	String forumName = forum.getForumName();
+	String subForumName = ForumUtils.getSubString(forumName, 35);
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
@@ -148,7 +149,7 @@
 				<div class="LeftBar">
 					<div class="RightBar">
 						<div class="CenterBar" style="padding-right: 10px;">
-							<div class="Title"><span style="font-weight: normal;">Thread in forum: </span>$forumName</div>
+							<div class="Title"><span style="font-weight: normal;"><%=_ctx.appRes("UITopicContainer.label.TopicInForum");%>: </span><span title="$forumName">$subForumName</span></div>
 						<% if(isShowMenu && canEdit) { %>	
 							<div class="ContentAction" onclick="eXo.forum.UIForumPortlet.checkActionTopic(this, event);">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
@@ -156,7 +157,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="StatusIcon ModerationIcon">
-													<div class="DownArrow1Icon">Moderation</div>
+													<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Moderation");%></div>
 												</div>
 											</div>
 										</div>
@@ -222,11 +223,11 @@
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
 									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-										<div class="LeftOverButton" title="Search in this forum">
+										<div class="LeftOverButton" title="<%=_ctx.appRes("UITopicContainer.title.SearchForum");%>">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon SearchIcon">
-														<div class="DownArrow1Icon">Search this Forum</div>
+														<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.SearchThisForum");%></div>
 													</div>
 												</div>
 											</div>
@@ -253,7 +254,7 @@
 																	<div class="ButtonLeft">
 																		<div class="ButtonRight">
 																			<div class="ButtonMiddle">
-																			 <a href="<%=uicomponent.event("SearchForm")%>">&nbsp;Search&nbsp;</a>
+																			 <a href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UITopicContainer.label.Search");%></a>
 																			</div>
 																		</div>
 																	</div>
@@ -283,7 +284,7 @@
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon ToolIcon">
-														<div class="DownArrow1Icon">Forum Tools</div>
+														<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.ForumTools");%></div>
 													</div>
 												</div>
 											</div>
@@ -371,11 +372,11 @@
 								<th style="width: 40px;">&nbsp;</th>
 								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
-								<th style="width: 96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>">Rating</a></th>
-								<th style="width: 40px;">Tag</th>
-								<th style="width: 130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon">Last posts</div></a></th>
-								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon">Replies</div></a></th>
-								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon">Views</div></a></th>
+								<th style="width: 96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
+								<th style="width: 40px;"><%=_ctx.appRes("UITopicContainer.label.Tag");%></th>
+								<th style="width: 130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></a></th>
+								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
+								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
 								<% if(canEdit) { %>
 								<th style="width: 30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 								<% } %>
@@ -421,13 +422,9 @@
 										title = "TitleNorman";
 										newPost = "NoNew"; 
 									} 
-									if(topic.getPostCount() > 10) hot = "Hot"; 
-									//HotThreadNewPost ,HotThreadNoNewPost
-									//ThreadNewPost ,ThreadNoNewPost , 
-									//ThreadNewIsClose ,ThreadNoNewIsClose
-									//ThreadNewIsLock , ThreadNoNewIsLock
-									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
+									if(topic.getPostCount() > 30) hot = "Hot"; 
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
+									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
 									if(topic.getIsLock() || isLock) {
 										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
 										titleTopicStatus = hot+" Topic with "+newPost+" post lock" ;
@@ -438,10 +435,10 @@
 									}
 									String approved = "" ;
 									if(canEdit){
-										if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>This topic is pending for Censor ! </span>)" ;
+										if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)" ;
 										if(isApproveTopic && !topic.getIsApproved()) { 
-											if(approved.length() > 0) approved = "&nbsp;(<span style='color:#f77617;'>This topic is pending for Approval and Censor ! </span>)" ;
-											else approved = "&nbsp;(<span style='color:#f77617;'>This topic is pending for Approval !</span>)" ;
+											if(approved.length() > 0) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending")+"</span>)" ;
+											else approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval")+"</span>)" ;
 										}
 									}
 									
@@ -459,7 +456,7 @@
 									<td >
 										<div >
 										<% if(topic.getIsSticky()) {%>
-											<span class="Text StickyIcon" style="float:left;">Sticky:</span>
+											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
 											<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 												<a onclick="$link; return false;" href="$url" title="$titlePost" class="$title">$topicTitle</a>
@@ -484,7 +481,7 @@
 											if(max_page > 5) { 
 												number = String.valueOf(max_page) ;
 											%>
-											<span>... <a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url">Last page</a> )</span>
+											<span>... <a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
 											<%} else {%>
 											<span>)</span>
 											<%} 
@@ -526,7 +523,7 @@
 								 	<td >
 								 		<div class="DateTime">$lastPostDate</div>
 								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
-										<div class="PostInfos LastPostInfos">by <a href="#" class="PostBy">$postNewBy</a></div>
+										<div class="PostInfos LastPostInfos"><%=_ctx.appRes("UITopicContainer.label.by");%> <a href="#" class="PostBy">$postNewBy</a></div>
 										<div style="clear: right;"><span></span></div>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
@@ -541,7 +538,7 @@
 						 		%>
 					 				<tr>
 						 				<td colspan="10" align="center">
-						 					<div style="margin: 15px 0px 20px 0px"><strong><%=_ctx.appRes("UICategory.label.availableTheard"); %></strong></div>
+						 					<div style="margin: 15px 0px 20px 0px"><strong><%=_ctx.appRes("UICategory.label.availableTheard");%></strong></div>
 						 				</td>
 						 			</tr>
 						 	 <%} 
@@ -549,7 +546,7 @@
 					 				%>
 					 				<tr>
 						 				<td colspan="10" align="center">
-						 					<div style="margin: 15px 0px 20px 0px"><strong>This forum is empty</strong></div>
+						 					<div style="margin: 15px 0px 20px 0px"><strong><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></strong></div>
 						 				</td>
 						 			</tr>
 					 	<%}%>

@@ -25,7 +25,7 @@
 			UserProfile option = uicomponent.getOption();
 			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((option.getLongDateFormat() + ", " + option.getTimeFormat()),dateOut);
 			if(dateOut.getTime() < today.getTime()) {
-				timeOutDate = " Poll is Closed !" ;
+				timeOutDate = _ctx.appRes("UITopicPoll.label.PollClosed");
 				isAgain = false ;
 				isTimeOut = true;
 			}

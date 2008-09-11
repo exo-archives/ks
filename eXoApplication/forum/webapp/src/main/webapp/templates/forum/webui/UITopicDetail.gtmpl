@@ -587,18 +587,18 @@
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
-					alert = alert + "This post is hidden" ;
+					alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
 					isAnd = true;
 				}
 				if(post.getUserPrivate().length > 1){
-					if(isAnd) alert = alert + " and private"
-					else alert = alert + "This post is private" ;
+					if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPrivate");
+					else alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
 					isAnd = true;
 				}
 				if(isModeratePost) {
 					if(!post.getIsApproved()) {
-						if(isAnd) alert = alert + " and pending for approval"
-						else alert = alert + "This post is pending for approval" ;
+						if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPendingApproval");
+						else alert = alert + _ctx.appRes("UITopicDetail.label.PostPendingApproval");
 						isAnd = true;
 					}
 				}

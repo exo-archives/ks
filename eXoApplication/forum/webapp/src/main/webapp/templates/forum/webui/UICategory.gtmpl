@@ -27,6 +27,7 @@
 	else isShowMenu = false ;
 	String description = category.getDescription() ;
 	if(ForumUtils.isEmpty(description)) description = "";
+	String subDescription = ForumUtils.getSubString(description, 35);
 	int rCNB = 0;
 	String actionBookmark = "";
 	
@@ -37,7 +38,7 @@
 		<div class="LeftBar">
 			<div class="RightBar">
 				<div class="CenterBar CategoryDetectPosition">
-					<div class="Title"><%=category.getCategoryName()%> : <span>$description</span></div>
+					<div class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></div>
 					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(isShowMenu){ %>
 					<div class="SeparatorLine"><span></span></div>

@@ -22,7 +22,7 @@
 							  		<div class="ButtonLeft">
 							  			<div class="ButtonRight">
 							  				<div class="ButtonMiddle">
-							  				 <a href="<%=uicomponent.event("Select")%>"><div style="padding: 0px 10px;">Go</div></a>
+							  				 <a href="<%=uicomponent.event("Select")%>"><div style="padding: 0px 10px;"><%=_ctx.appRes("UIForumPortlet.label.Go");%></div></a>
 							  				</div>
 							  			</div>
 							  		</div>
