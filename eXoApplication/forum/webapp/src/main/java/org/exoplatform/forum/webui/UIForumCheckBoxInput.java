@@ -49,7 +49,6 @@ public class UIForumCheckBoxInput<T> extends UIFormInputBase<T>{
     setId(name);
   }
   
-  
   @SuppressWarnings("unchecked")
   public UIFormInput setValue(T value){
     if(value == null) return super.setValue(value);
@@ -108,5 +107,4 @@ public class UIForumCheckBoxInput<T> extends UIFormInputBase<T>{
     w.write(" class='checkbox'/> ") ;
     w.write(name + "<br/>") ;
   }
-
 }

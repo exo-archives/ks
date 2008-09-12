@@ -1,5 +1,5 @@
 <%
-	import org.exoplatform.forum.webui.UIForumPageIterator;  
+	import org.exoplatform.forum.webui.UIForumPageIterator;	
 	import org.exoplatform.forum.service.Post;
 	import org.exoplatform.forum.service.user.ForumContact;
 	import org.exoplatform.forum.ForumUtils;
@@ -9,23 +9,23 @@
 	import org.exoplatform.services.organization.User;
 %>
 <div class="UIViewTopic UITopicDetail">
-  <% uiform.begin() %>
-<%  
+	<% uiform.begin() %>
+<%	
 	uicomponent.initPage() ;
 	List posts = uicomponent.getPostPageList();
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 %>
-  <div class="ViewTopicContainer">
-	  <div class="ViewTopicPageIterator">
-	  	<% 
-	  	if(uicomponent.getIsRenderIter()) {
-	  		uicomponent.renderChild(UIForumPageIterator.class) ;
-	  	%>
-	  		<div style="clear: right;"><span></span></div>
-	  	<%} %>
-	  </div>
-  <%  
-  	String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
+	<div class="ViewTopicContainer">
+		<div class="ViewTopicPageIterator">
+			<% 
+			if(uicomponent.getIsRenderIter()) {
+				uicomponent.renderChild(UIForumPageIterator.class) ;
+			%>
+				<div style="clear: right;"><span></span></div>
+			<%} %>
+		</div>
+	<%	
+		String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 		String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 		for(post in posts) {
@@ -68,8 +68,8 @@
 			if(post.getUserPrivate().length > 1){
 				privatePost = "(<span style='color:blue;font-weight:normal;'>This post is Private !</span>)" ;
 			}
-  %>
-  	<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
+	%>
+		<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
 			<table class="TablePost" cellspacing="0" borderspacing="0">
 				<tbody>
 					<tr>
@@ -77,7 +77,7 @@
 						<td class="MemberContainer">
 							<div class="MemberContent">
 							
-								<%  String userSmile = "OfflineIcon";
+								<%	String userSmile = "OfflineIcon";
 										String titleSmile = "Offline" ;
 										if(uicomponent.isOnline(owner)) {
 											 userSmile = "AvailableIcon";
@@ -90,7 +90,7 @@
 									<div style="clear: left;"><span></span></div>
 								</div>
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
-								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();  
+								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
 								%>
 								<img src="$avatarUrl" class="Img" onload ="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
@@ -141,7 +141,7 @@
 							</div>
 							<div class="FootPost">
 								<div class="PostInfo">
-								<%  
+								<%	
 									if(!ForumUtils.isEmpty(editBy)) {
 								%>
 									<div>Last edited by <b>$editBy</b> on $editDate</div>
@@ -163,15 +163,15 @@
 			</table>
 		</div>
 		<% } %>
-	  <div class="ViewTopicPageIterator">
-	  	<% 
-	  	if(uicomponent.getIsRenderIter()) {
-	  		uicomponent.renderChild(UIForumPageIterator.class) ;
-	  	%>
-	  		<div style="clear: right;"><span></span></div>
-	  	<%} %>
-	  </div>
-  </div>
+		<div class="ViewTopicPageIterator">
+			<% 
+			if(uicomponent.getIsRenderIter()) {
+				uicomponent.renderChild(UIForumPageIterator.class) ;
+			%>
+				<div style="clear: right;"><span></span></div>
+			<%} %>
+		</div>
+	</div>
 	<div class="UIAction"> 
 		<table class="ActionContainer" align="center">
 			<tr>

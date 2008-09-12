@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -69,7 +69,7 @@ public class UIRatingForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class VoteTopicActionListener extends EventListener<UIRatingForm> {
-    public void execute(Event<UIRatingForm> event) throws Exception {
+		public void execute(Event<UIRatingForm> event) throws Exception {
 			UIRatingForm uiForm = event.getSource() ;
 			String vote = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			Topic topic = uiForm.topic ;
@@ -88,20 +88,20 @@ public class UIRatingForm extends UIForm implements UIPopupComponent {
 			topic.setUserVoteRating(temp) ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			try {
-			  forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topic, false, true) ;
-      } catch (PathNotFoundException e) {
-        UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-        uiApp.addMessage(new ApplicationMessage("UIRatingForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        return ;
-      }
-      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topic, false, true) ;
+			} catch (PathNotFoundException e) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIRatingForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIRatingForm> {
-    public void execute(Event<UIRatingForm> event) throws Exception {
+		public void execute(Event<UIRatingForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}

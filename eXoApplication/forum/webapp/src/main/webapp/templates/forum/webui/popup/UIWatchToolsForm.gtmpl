@@ -1,7 +1,7 @@
 <div class="UIWatchToolsForm">
 	<% uiform.begin() %>
 	<div class="UITopicContainer">
-   	<div class="UIForumContainer">
+	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
@@ -39,20 +39,20 @@
 			</div>
 		</div>
 	</div>
-	  <div class="UIAction"> 
-	    <table class="ActionContainer" align="center">
-			  <tr>
-				  <td align="center">
-        		<a href="<%=uicomponent.event("Close")%>" class="ActionButton LightBlueStyle">
-	      	  	<div class="ButtonLeft">
-	        	  	<div class="ButtonRight">
-	          	  	<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
-	            	</div>
-	          	</div>
-	        	</a>
-          </td>
+		<div class="UIAction"> 
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+						<a href="<%=uicomponent.event("Close")%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+								</div>
+							</div>
+						</a>
+					</td>
 				</tr>
-	 	  </table> 
-    </div>
-  <%uiform.end()%>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
 </div>

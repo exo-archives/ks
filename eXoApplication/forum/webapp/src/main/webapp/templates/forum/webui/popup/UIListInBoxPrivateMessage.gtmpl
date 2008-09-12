@@ -1,4 +1,4 @@
-<%  
+<%
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.service.ForumPrivateMessage;
 	import org.exoplatform.forum.webui.UIForumPageIterator;

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -30,8 +30,8 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 10, 2008 - 9:16:19 AM  
+ *					tu.duy@exoplatform.com
+ * May 10, 2008 - 9:16:19 AM	
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
@@ -52,27 +52,24 @@ public class UIViewPrivateMessageForm extends UIForm implements UIPopupComponent
 	
 	public UserProfile getUserProfile() { return userProfile;}
 	public void setUserProfile(UserProfile userProfile) {
-  	this.userProfile = userProfile;
-  }
+		this.userProfile = userProfile;
+	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	static  public class CloseActionListener extends EventListener<UIViewPrivateMessageForm> {
-    public void execute(Event<UIViewPrivateMessageForm> event) throws Exception {
-    	UIViewPrivateMessageForm uiForm = event.getSource() ;
-    	UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-      if(popupContainer == null) {
-        UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-        forumPortlet.cancelAction() ;
-      } else {
-      	UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-      	popupAction.deActivate() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-      }
-    }
-  }
-
-
-
+	static	public class CloseActionListener extends EventListener<UIViewPrivateMessageForm> {
+		public void execute(Event<UIViewPrivateMessageForm> event) throws Exception {
+			UIViewPrivateMessageForm uiForm = event.getSource() ;
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			if(popupContainer == null) {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+			} else {
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+				popupAction.deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			}
+		}
+	}
 }

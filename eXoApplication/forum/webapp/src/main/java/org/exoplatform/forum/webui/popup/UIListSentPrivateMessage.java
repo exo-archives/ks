@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -37,8 +37,8 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * Jun 3, 2008 - 9:49:22 AM  
+ *					tu.duy@exoplatform.com
+ * Jun 3, 2008 - 9:49:22 AM	
  */
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/popup/UIListSentPrivateMessage.gtmpl",
@@ -50,29 +50,29 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIListSentPrivateMessage extends UIContainer {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-	private UserProfile userProfile = null  ;
-  private List<ForumPrivateMessage> listSend = null; 
-  private String userName = "";
-  private boolean isRenderIterator = false ;
-  public UIListSentPrivateMessage() throws Exception {
-  	addChild(UIForumPageIterator.class, null, "PageListSentMessage") ;
-  }
-  @SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception{
-  	if(userProfile == null) {
-  		userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-  	}
-  	this.userName = userProfile.getUserId() ;
-  	return userProfile ;
-  }
-  
-  @SuppressWarnings("unused")
-  private boolean isRenderIterator(){
-  	return isRenderIterator ;
-  }
-  
-  @SuppressWarnings({ "unused", "unchecked" })
-  private List<ForumPrivateMessage> getPrivateMessageSendByUser() throws Exception {
+	private UserProfile userProfile = null	;
+	private List<ForumPrivateMessage> listSend = null; 
+	private String userName = "";
+	private boolean isRenderIterator = false ;
+	public UIListSentPrivateMessage() throws Exception {
+		addChild(UIForumPageIterator.class, null, "PageListSentMessage") ;
+	}
+	@SuppressWarnings("unused")
+	private UserProfile getUserProfile() throws Exception{
+		if(userProfile == null) {
+			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		}
+		this.userName = userProfile.getUserId() ;
+		return userProfile ;
+	}
+	
+	@SuppressWarnings("unused")
+	private boolean isRenderIterator(){
+		return isRenderIterator ;
+	}
+	
+	@SuppressWarnings({ "unused", "unchecked" })
+	private List<ForumPrivateMessage> getPrivateMessageSendByUser() throws Exception {
 		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.SENDMESSAGE) ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
@@ -81,22 +81,22 @@ public class UIListSentPrivateMessage extends UIContainer {
 			long page = forumPageIterator.getPageSelected() ;
 			this.listSend = pageList.getPage(page) ;
 			if(pageList.getAvailable() > 10){
-	  		isRenderIterator = true;
-	  	}
+				isRenderIterator = true;
+			}
 		}
 		return this.listSend ;
 	}
-  
-  @SuppressWarnings("unused")
-  private ForumPrivateMessage getPrivateMessage(String id)throws Exception {
+	
+	@SuppressWarnings("unused")
+	private ForumPrivateMessage getPrivateMessage(String id)throws Exception {
 		List<ForumPrivateMessage> list = this.listSend ;
 		for (ForumPrivateMessage forumPrivateMessage : list) {
-	    if(forumPrivateMessage.getId().equals(id)) return forumPrivateMessage ;
-    }
+			if(forumPrivateMessage.getId().equals(id)) return forumPrivateMessage ;
+		}
 		return null;
 	}
-  
-  static	public class ViewMessageActionListener extends EventListener<UIListSentPrivateMessage> {
+	
+	static	public class ViewMessageActionListener extends EventListener<UIListSentPrivateMessage> {
 		public void execute(Event<UIListSentPrivateMessage> event) throws Exception {
 			UIListSentPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -104,15 +104,15 @@ public class UIListSentPrivateMessage extends UIContainer {
 				uicontainer.forumService.saveReadMessage(ForumSessionUtils.getSystemProvider(), objctId, uicontainer.userName, Utils.SENDMESSAGE);
 				ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
 				UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
-	      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-	      UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 600) ;
-	      privateMessageForm.setPrivateMessage(privateMessage);
-	      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+				UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 600) ;
+				privateMessageForm.setPrivateMessage(privateMessage);
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}
 		}
 	}
-  
-  static	public class DeleteMessageActionListener extends EventListener<UIListSentPrivateMessage> {
+	
+	static	public class DeleteMessageActionListener extends EventListener<UIListSentPrivateMessage> {
 		public void execute(Event<UIListSentPrivateMessage> event) throws Exception {
 			UIListSentPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
@@ -122,42 +122,15 @@ public class UIListSentPrivateMessage extends UIContainer {
 			}
 		}
 	}
-  
-  static	public class ForwardMessageActionListener extends EventListener<UIListSentPrivateMessage> {
+	
+	static	public class ForwardMessageActionListener extends EventListener<UIListSentPrivateMessage> {
 		public void execute(Event<UIListSentPrivateMessage> event) throws Exception {
 			UIListSentPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
 			UIPrivateMessageForm privateMessageForm = uicontainer.getParent() ;
 			privateMessageForm.setUpdate(privateMessage, false) ;
-    	event.getRequestContext().addUIComponentToUpdateByAjax(privateMessageForm) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(privateMessageForm) ;
 		}
-	}
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+	}	
 }

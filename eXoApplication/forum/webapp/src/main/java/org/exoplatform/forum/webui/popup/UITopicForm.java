@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
-import org.exoplatform.contact.service.Contact;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -405,14 +404,14 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					return ;
 				}
 				// set link
-	      PortalRequestContext portalContext = Util.getPortalRequestContext();
-	      String url = portalContext.getRequest().getRequestURL().toString();
+				PortalRequestContext portalContext = Util.getPortalRequestContext();
+				String url = portalContext.getRequest().getRequestURL().toString();
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				String link = uiForm.getLink();
 				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewThread");	
-			  link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topic.getId())) ;
+				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topic.getId())) ;
 				link = url + link;
 				//
 				String userName = ForumSessionUtils.getCurrentUser() ;

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,7 +19,6 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -44,8 +43,8 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 5, 2008 - 9:01:20 AM  
+ *					tu.duy@exoplatform.com
+ * May 5, 2008 - 9:01:20 AM	
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
@@ -82,7 +81,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public UIForumAdministrationForm() throws Exception {
 		addChild(UIListTopicOld.class, null, null) ;
 		this.setActions(new String[]{"Save", "Cancel"}) ;
-  }
+	}
 	
 	public void setInit() throws Exception{
 		this.administration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider());
@@ -158,17 +157,17 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	}
 	
 	public boolean isRenderListTopic() {
-  	return isRenderListTopic;
-  }
+		return isRenderListTopic;
+	}
 
 	public void setRenderListTopic(boolean isRenderListTopic) {
-  	this.isRenderListTopic = isRenderListTopic;
-  }
+		this.isRenderListTopic = isRenderListTopic;
+	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
 	@SuppressWarnings("unused")
-  private boolean getIsSelected(int id) {
+	private boolean getIsSelected(int id) {
 		if(this.id == id) return true ;
 		return false ;
 	}
@@ -209,17 +208,17 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			String activeAbout = administrationForm.getUIStringInput(FIELD_ACTIVEABOUT_INPUT).getValue() ;
 			if(!ForumUtils.isEmpty(activeAbout)) {
 				try {
-	        long date = Long.parseLong(activeAbout) ;
-	        if(date > 0) {
-		        administrationForm.setRenderListTopic(true) ;
-		        UIListTopicOld listTopicOld = administrationForm.getChild(UIListTopicOld.class);
-		        listTopicOld.setDate(date) ;
-		        listTopicOld.setIsUpdate(true);
-		        event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
-	        }
-        } catch (Exception e) {
-	        e.printStackTrace();
-        }
+					long date = Long.parseLong(activeAbout) ;
+					if(date > 0) {
+						administrationForm.setRenderListTopic(true) ;
+						UIListTopicOld listTopicOld = administrationForm.getChild(UIListTopicOld.class);
+						listTopicOld.setDate(date) ;
+						listTopicOld.setIsUpdate(true);
+						event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -239,6 +238,4 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			forumPortlet.cancelAction() ;
 		}
 	}
-
-	
 }

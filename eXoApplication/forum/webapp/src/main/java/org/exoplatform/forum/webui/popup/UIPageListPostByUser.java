@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -31,18 +30,8 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.webui.UIBreadcumbs;
-import org.exoplatform.forum.webui.UICategory;
-import org.exoplatform.forum.webui.UICategoryContainer;
-import org.exoplatform.forum.webui.UIForumContainer;
-import org.exoplatform.forum.webui.UIForumDescription;
-import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.forum.webui.UITopicDetailContainer;
-import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -54,7 +43,7 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
+ *					tu.duy@exoplatform.com
  * 06-03-2008, 04:41:47
  */
 @ComponentConfig(
@@ -66,33 +55,33 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIPageListPostByUser extends UIContainer{
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-  private UserProfile userProfile = new UserProfile() ;
-  private String userName = new String() ;
-  private List<Post> posts = new ArrayList<Post>() ;
+	private UserProfile userProfile = new UserProfile() ;
+	private String userName = new String() ;
+	private List<Post> posts = new ArrayList<Post>() ;
 	public UIPageListPostByUser() throws Exception {
-    this.userProfile = null ;
-    this.userName = null ;
+		this.userProfile = null ;
+		this.userName = null ;
 		addChild(UIForumPageIterator.class, null, "PageListPostByUser") ;
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
-    if(this.userProfile == null) {
-      this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-    }
+	private UserProfile getUserProfile() throws Exception {
+		if(this.userProfile == null) {
+			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		}
 		return this.userProfile ;
 	}
 	
-  public void setUserName(String userId) {
-    this.userName = userId ;
-  }
-  
+	public void setUserName(String userId) {
+		this.userName = userId ;
+	}
+	
 	@SuppressWarnings({ "unchecked", "unused" })
-  private List<Post> getPostsByUser() throws Exception {
+	private List<Post> getPostsByUser() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		boolean isMod = false;
 		if(this.userProfile.getUserRole() < 2) isMod = true;
-		JCRPageList pageList  = forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), this.userName, this.userProfile.getUserId(), isMod) ;
+		JCRPageList pageList	= forumService.getPagePostByUser(ForumSessionUtils.getSystemProvider(), this.userName, this.userProfile.getUserId(), isMod) ;
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null) pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
@@ -101,26 +90,26 @@ public class UIPageListPostByUser extends UIContainer{
 			posts = pageList.getPage(page) ;
 			if(posts == null) page--;
 		}
-    this.posts = posts ;
+		this.posts = posts ;
 		return posts ;
 	}
-  
-  private Post getPostById(String postId) {
-    for(Post post : this.posts) {
-      if(post.getId().equals(postId)) return post ;
-    }
-    return null ;
-  }
+	
+	private Post getPostById(String postId) {
+		for(Post post : this.posts) {
+			if(post.getId().equals(postId)) return post ;
+		}
+		return null ;
+	}
 	
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostByUser> {
-    public void execute(Event<UIPageListPostByUser> event) throws Exception {
+		public void execute(Event<UIPageListPostByUser> event) throws Exception {
 			UIPageListPostByUser uiForm = event.getSource() ;
-      String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      Post post = uiForm.getPostById(postId) ;
-      
-      UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-      String path =  post.getPath().replaceFirst("/exo:applications/ForumService/", "");
-      String []id = path.split("/") ;
+			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			Post post = uiForm.getPostById(postId) ;
+			
+			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+			String path =	post.getPath().replaceFirst("/exo:applications/ForumService/", "");
+			String []id = path.split("/") ;
 			boolean isRead = true;
 			Category category = uiForm.forumService.getCategory(ForumSessionUtils.getSystemProvider(), id[0]);
 			if(category == null) {

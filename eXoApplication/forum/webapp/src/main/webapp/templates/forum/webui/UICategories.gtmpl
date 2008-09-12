@@ -9,8 +9,8 @@
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.web.application.JavascriptManager;
-  def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UICategories') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UICategories') ;") ;
 	UserProfile userProfile = uicomponent.getUserProfile();
@@ -25,7 +25,7 @@
 %>
 <div class="UICategories" id="$componentId">
 	<div class="UIForumWorkingWorkspace">
-	<%  
+	<%	
 		if(uicomponent.getIsRendered()) {
 			uicomponent.renderChild(uicomponent.FORUM_LIST_SEARCH);
 	%>
@@ -41,7 +41,7 @@
 		<%
 			List categories = uicomponent.getCategoryList();
 			 for(category in categories) {
-			   if(uicomponent.getIsPrivate(userProfile,category)) {
+				 if(uicomponent.getIsPrivate(userProfile,category)) {
 					 String title = category.getCategoryName();
 					 String categoryId = category.getId();
 					if(uicomponent.userProfile.getUserRole() < 3){
@@ -66,8 +66,8 @@
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block; font-weight:normal;">
 													<div action="$actionBookmark" class="ClickPopupContent"></div>
 												</div>
-										  </div>
-									  </div>
+											</div>
+										</div>
 									</div>
 									 <% ++rCNB; %>
 								</div>
@@ -124,7 +124,7 @@
 										String titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 										String forumTitle = forum.getForumName();
 										String forumDescription = forum.getDescription();
-										List  forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
+										List	forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
 										String topicCount = (String)forum.getTopicCount();
 										String postCount = (String)forum.getPostCount();
 										String openLinkLastPost = "javascript:void(0)";
@@ -203,10 +203,10 @@
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 															<div action="$actionBookmark" class="ClickPopupContent"></div>
 														</div>
-												  </div>
+													</div>
 												</div>
 												<div style="clear: left;"><span></span></div>
-												  <% ++rCNB; %>
+													<% ++rCNB; %>
 												<div class="ForumDescription">$forumDescription</div>
 											</td>
 											<%if(topicNewPost != null) {
@@ -224,9 +224,9 @@
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 															<div action="$actionBookmark" class="ClickPopupContent"></div>
 														</div>
-												  </div>
+													</div>
 												</div>
-												  <% ++rCNB; %>
+													<% ++rCNB; %>
 												<div style="clear: left;"><span></span></div>
 												<div class="LastPostInfos">by&nbsp;<a style="color: #058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
 											<%} else { %>	
@@ -244,8 +244,8 @@
 												else userSmile = "OfflineIcon";
 											%>
 												<a class="ModeratorContent" href="#">
-											    <div class="EmoticonsIcon $userSmile" >$forumModerator</div>
-										    </a>
+													<div class="EmoticonsIcon $userSmile" >$forumModerator</div>
+												</a>
 											<% } %>
 												<div style="clear: left;"><span></span></div>
 											</td>
@@ -259,16 +259,16 @@
 					</div>
 				</div>
 			</div>	
-		<%   } // End if private
-		   }// End for and End ForumCategory
+		<%	 } // End if private
+			 }// End for and End ForumCategory
 		 uicomponent.setIsgetForumList(false) ;
 		%>
 		</div>
 	<% } %>
 	</div>
-	<% //Begin RightClick Bookmark  %>
-	<div id="RightClickContainer"  style="display: none;">
-	  <div class="RightClickCustomItem" style="display: none;">Open</div>
+	<% //Begin RightClick Bookmark	%>
+	<div id="RightClickContainer"	style="display: none;">
+		<div class="RightClickCustomItem" style="display: none;">Open</div>
 	<%if(uicomponent.userProfile.getUserRole() < 3){%>
 		<div class="TopLeftRightClickPopupMenu">
 			<div class="TopRightRightClickPopupMenu">
@@ -293,13 +293,13 @@
 			</div>
 		</div>
 		<div class="BottomLeftRightClickPopupMenu">
-	    <div class="BottomRightRightClickPopupMenu">
-	      <div class="BottomCenterRightClickPopupMenu">
-	        <div class="FixHeight"><span></span></div>
-	      </div>
-	    </div>
-	  </div>
-	  <% } %>
+			<div class="BottomRightRightClickPopupMenu">
+				<div class="BottomCenterRightClickPopupMenu">
+					<div class="FixHeight"><span></span></div>
+				</div>
+			</div>
+		</div>
+		<% } %>
 	</div>
-	<% //End RightClick Bookmark  %>
+	<% //End RightClick Bookmark%>
 </div>

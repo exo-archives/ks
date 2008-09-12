@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,8 +36,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 	/**
 	 * Created by The eXo Platform SAS
 	 * Author : Vu Duy Tu
-	 *          tu.duy@exoplatform.com
-	 * May 13, 2008 - 8:34:57 AM  
+	 *					tu.duy@exoplatform.com
+	 * May 13, 2008 - 8:34:57 AM	
 	 */
 	@ComponentConfig(
 			lifecycle = UIFormLifecycle.class,
@@ -48,27 +48,27 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UIAddMultiValueForm.CancelActionListener.class,phase = Phase.DECODE)
 			}
 	)
-	public class UIAddMultiValueForm  extends UIForm	implements UIPopupComponent, UISelectComponent {
+	public class UIAddMultiValueForm	extends UIForm	implements UIPopupComponent, UISelectComponent {
 		final static public String EMAIL_ADDRESS = "emails" ;
 		private UIComponent uiComponent ;
-	  private String returnFieldName = null ;
+		private String returnFieldName = null ;
 
 		private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(EMAIL_ADDRESS,EMAIL_ADDRESS) ;
 		public UIAddMultiValueForm() throws Exception {
-	  }
+		}
 		
 		public void setComponent(UIComponent uicomponent, String[] initParams) {
-	    uiComponent = uicomponent ;
-	    if(initParams == null || initParams.length <= 0) return ;
-	    for(int i = 0; i < initParams.length; i ++) {
-	      if(initParams[i].indexOf("returnField") > -1) {
-	        String[] array = initParams[i].split("=") ;
-	        returnFieldName = array[1] ;
-	        break ;
-	      }
-	      returnFieldName = initParams[0] ;
-	    }
-	  }
+			uiComponent = uicomponent ;
+			if(initParams == null || initParams.length <= 0) return ;
+			for(int i = 0; i < initParams.length; i ++) {
+				if(initParams[i].indexOf("returnField") > -1) {
+					String[] array = initParams[i].split("=") ;
+					returnFieldName = array[1] ;
+					break ;
+				}
+				returnFieldName = initParams[0] ;
+			}
+		}
 		
 		public void activate() throws Exception {
 			List<String> list = new ArrayList<String>() ;
@@ -89,7 +89,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		
 		static	public class SaveActionListener extends EventListener<UIAddMultiValueForm> {
 			@SuppressWarnings("unchecked")
-	    public void execute(Event<UIAddMultiValueForm> event) throws Exception {
+			public void execute(Event<UIAddMultiValueForm> event) throws Exception {
 				UIAddMultiValueForm uiForm = event.getSource() ;
 				List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
 				List<String> values_ = new ArrayList<String>();
@@ -99,9 +99,9 @@ import org.exoplatform.webui.form.UIFormStringInput;
 					values_.add(value) ;
 					for (String string : values) {
 						if(values_.contains(string)) continue ;
-	          values_.add(string) ;
-	          value = value + "," +string;
-          }
+						values_.add(string) ;
+						value = value + "," +string;
+					}
 					isEmail = ForumUtils.isValidEmailAddresses(value) ;
 					if(isEmail) {
 						((UISelector)uiForm.uiComponent).updateSelect(uiForm.returnFieldName, value) ;
@@ -115,9 +115,9 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				UIPopupContainer uiPopupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction uiPopup = uiPopupContainer.getChild(UIPopupAction.class) ;
 				if(isEmail) {
-		      uiPopup.deActivate() ;
-		      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
-		      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer.getAncestorOfType(UIPopupAction.class)) ;
+					uiPopup.deActivate() ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer.getAncestorOfType(UIPopupAction.class)) ;
 				} else {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
 				}
@@ -125,8 +125,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 		
 		static	public class RefreshActionListener extends EventListener<UIAddMultiValueForm> {
-	    public void execute(Event<UIAddMultiValueForm> event) throws Exception {
-	    	UIAddMultiValueForm uiForm = event.getSource() ;
+			public void execute(Event<UIAddMultiValueForm> event) throws Exception {
+				UIAddMultiValueForm uiForm = event.getSource() ;
 				List<String> list = new ArrayList<String>() ;
 				list.add("");
 				uiForm.initMultiValuesField(list);
@@ -134,13 +134,12 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 		
 		static	public class CancelActionListener extends EventListener<UIAddMultiValueForm> {
-	    public void execute(Event<UIAddMultiValueForm> event) throws Exception {
-	    	UIAddMultiValueForm uiForm = event.getSource() ;
-	    	UIPopupContainer uiPopupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-	      UIPopupAction uiPopup = uiPopupContainer.getChild(UIPopupAction.class) ;
-	      uiPopup.deActivate() ;
-	      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
+			public void execute(Event<UIAddMultiValueForm> event) throws Exception {
+				UIAddMultiValueForm uiForm = event.getSource() ;
+				UIPopupContainer uiPopupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+				UIPopupAction uiPopup = uiPopupContainer.getChild(UIPopupAction.class) ;
+				uiPopup.deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
 			}
 		}
-		
 	}

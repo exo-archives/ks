@@ -13,7 +13,7 @@
 %>
 <div class="UIPageListPostByUser" id="$uicomponent.id">
 	<div class="UITopicContainer">
-   	<div class="UIForumContainer">
+	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
 					<div style="overflow:auto; margin: 2px 0px;">

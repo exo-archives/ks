@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -42,7 +42,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
  *					tu.duy@exoplatform.com
- *  Mar 3, 2008 2:12:29 PM
+ *	Mar 3, 2008 2:12:29 PM
  */
 @ComponentConfig(
 	lifecycle = UIFormLifecycle.class,
@@ -70,7 +70,7 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 		if(uiForumLinks != null) {
 			this.forumLinks = uiForumLinks.getForumLinks();
 		}
-		if(this.forumLinks ==  null || this.forumLinks.size() <= 0) {
+		if(this.forumLinks ==	null || this.forumLinks.size() <= 0) {
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider(), "", "");
 		}
@@ -131,7 +131,7 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
-            listIdSelected.add(uiForm.getNameForumLinkData(child.getName()) +"("+ child.getName());
+						listIdSelected.add(uiForm.getNameForumLinkData(child.getName()) +"("+ child.getName());
 					}
 				}
 			}

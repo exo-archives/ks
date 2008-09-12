@@ -382,11 +382,11 @@ public class UITopicDetail extends UIForm {
 //		} catch (NullPointerException e) {
 //			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //		}
-	  if (contact.getAvatarUrl() == null ) {
-	    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-	  } else {
-	    return contact.getAvatarUrl();
-	  }
+		if (contact.getAvatarUrl() == null ) {
+			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+		} else {
+			return contact.getAvatarUrl();
+		}
 	}
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
@@ -557,7 +557,7 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	@SuppressWarnings("unchecked")
-  private List<Post> getPostsSelected() throws Exception{
+	private List<Post> getPostsSelected() throws Exception{
 		List<Post> posts = new ArrayList<Post>();
 		List<UIComponent> children = this.getChildren() ;
 		for(UIComponent child : children) {
@@ -634,13 +634,13 @@ public class UITopicDetail extends UIForm {
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
 				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
 				for (int i = 0; i < special.length(); i++) {
-		      char c = special.charAt(i);
-		      if(text.indexOf(c) >= 0) {
-		      	UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					char c = special.charAt(i);
+					if(text.indexOf(c) >= 0) {
+						UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 						return ;
-		      }
-	      }
+					}
+				}
 				StringBuffer type = new StringBuffer();
 				if(topicDetail.isMod){ 
 					type.append("true,").append(Utils.POST);
@@ -1268,14 +1268,14 @@ public class UITopicDetail extends UIForm {
 				}
 				
 			// set link
-	      PortalRequestContext portalContext = Util.getPortalRequestContext();
-	      String url = portalContext.getRequest().getRequestURL().toString();
+				PortalRequestContext portalContext = Util.getPortalRequestContext();
+				String url = portalContext.getRequest().getRequestURL().toString();
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				String link = topicDetail.getLink();
 				link = ForumSessionUtils.getBreadcumbUrl(link, topicDetail.getId(), "ViewThreadByUser");				
-			  link = link.replaceFirst("pathId", (topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId)) ;
+				link = link.replaceFirst("pathId", (topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId)) ;
 				link = url + link;
 				//
 				String userName = topicDetail.userProfile.getUserId() ;

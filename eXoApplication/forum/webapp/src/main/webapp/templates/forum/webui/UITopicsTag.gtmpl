@@ -1,4 +1,4 @@
-<%  
+<%	
 	import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.webui.UITopicsTag ;
 	import org.exoplatform.forum.service.Tag ;
@@ -8,7 +8,7 @@
 	import org.exoplatform.forum.service.UserProfile ;
 %>
 <% uiform.begin() %>
-<%  
+<%
 	List topics = uicomponent.getTopicsTag() ; 
 	Tag tag_ = uicomponent.getTagById() ;
 	String tagName_ = tag_.getName() ;

@@ -1,110 +1,110 @@
-<%  
+<%	
 	import org.exoplatform.forum.ForumSessionUtils ;
 	import org.exoplatform.services.organization.User;
-	import org.exoplatform.web.application.JavascriptManager;  
+	import org.exoplatform.web.application.JavascriptManager;	
 	def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
-  //jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('Viewer','Postable');");
-  //jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('Postable','Topicable');");
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	//jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('Viewer','Postable');");
+	//jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('Postable','Topicable');");
 %>
 <div class="UIForumForm">	
-  <% uiform.begin() %>  
-  <div class="UIForm AddForumInCategpry">
-    <div class="HorizontalLayout">
-      <table class="UIFormGrid">
-        <tbody>
-          <tr>
-            <td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</td>
-            <td class="FieldComponent">
-              <% uiform.renderChild(uiform.FIELD_CATEGORY_SELECTBOX) %>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  
-  <div class="UIFormTabPane">
-    <div class="UITabPane">
-      <div class="TabPaneContent">
-        
-        <div class="WorkingArea">
-           <div class="UIHorizontalTabs">
-             <div class="LeftHorizontalTabs">
-               <div class="RightHorizontalTabs">
-                 <div class="CenterHorizontalTabs">
-                  <div class="TabsContainer">
-                    <%String classCss = "SelectedTab" ; 
-                    int i = 0;
-                  	for(tabconten in uiform.getChildren()){ 
-                  		if(tabconten.id.equals("Category")) continue ;
-                  		String link = "javascript:void(0);";
-                  		if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
-                  		else {
-                  			classCss = "NormalTab" ;
-                  			link = uicomponent.event("SelectTab",""+i) ;
-                  		}
-                  	%>  
-                    <div class="UITab NormalTabStyle">
-                      <div class="$classCss">
-                        <div class="LeftTab">
-                          <div class="RightTab">
-                          <a href="$link">
-                            <div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
-                          </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                	<%   ++i;
-                		} %>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+	<% uiform.begin() %>	
+	<div class="UIForm AddForumInCategpry">
+		<div class="HorizontalLayout">
+			<table class="UIFormGrid">
+				<tbody>
+					<tr>
+						<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</td>
+						<td class="FieldComponent">
+							<% uiform.renderChild(uiform.FIELD_CATEGORY_SELECTBOX) %>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<div class="UIFormTabPane">
+		<div class="UITabPane">
+			<div class="TabPaneContent">
+				
+				<div class="WorkingArea">
+					 <div class="UIHorizontalTabs">
+						 <div class="LeftHorizontalTabs">
+							 <div class="RightHorizontalTabs">
+								 <div class="CenterHorizontalTabs">
+									<div class="TabsContainer">
+										<%String classCss = "SelectedTab" ; 
+										int i = 0;
+										for(tabconten in uiform.getChildren()){ 
+											if(tabconten.id.equals("Category")) continue ;
+											String link = "javascript:void(0);";
+											if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
+											else {
+												classCss = "NormalTab" ;
+												link = uicomponent.event("SelectTab",""+i) ;
+											}
+										%>	
+										<div class="UITab NormalTabStyle">
+											<div class="$classCss">
+												<div class="LeftTab">
+													<div class="RightTab">
+													<a href="$link">
+														<div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+													</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									<%	 ++i;
+										} %>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="UIForm">
-            <div class="HorizontalLayout">
-              <div class="UITabContentContainer">
-                <% 
-                	String display =  "block";
-                	int j = 0;
-                	for(tabconten in uiform.getChildren()){
-                		if(tabconten.id.equals("Category")) continue ;
-                		if(uiform.getIsSelected(j))display =  "block";
-                  	else display = "none";
-                %>
-                <div style="display: $display;" id="UITabContent" class="UITabContent">
-                  <% uiform.renderChild(tabconten.id) ; %>
-                </div>
-            	<% ++j;} %>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-      </div>  
-    </div>  
-  </div>
-  <div class="UIAction"> 
-	  <table class="ActionContainer" align="center">
+						<div class="HorizontalLayout">
+							<div class="UITabContentContainer">
+								<% 
+									String display =	"block";
+									int j = 0;
+									for(tabconten in uiform.getChildren()){
+										if(tabconten.id.equals("Category")) continue ;
+										if(uiform.getIsSelected(j))display =	"block";
+										else display = "none";
+								%>
+								<div style="display: $display;" id="UITabContent" class="UITabContent">
+									<% uiform.renderChild(tabconten.id) ; %>
+								</div>
+							<% ++j;} %>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>	
+		</div>	
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
 			<tr>
 				<td align="center">
-        <% for(action in uicomponent.getActions()) { 
-        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-           String link = uicomponent.event(action) ;
-        %>
-        		<a href="$link" class="ActionButton LightBlueStyle">
-	      	  	<div class="ButtonLeft">
-	        	  	<div class="ButtonRight">
-	          	  	<div class="ButtonMiddle"> $actionLabel </div>
-	            	</div>
-	          	</div>
-	        	</a>
-          <%}%>
-      	</td>
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<a href="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"> $actionLabel </div>
+								</div>
+							</div>
+						</a>
+					<%}%>
+				</td>
 			</tr>
-	  </table> 
-  </div>
-  <%uiform.end()%>
+		</table> 
+	</div>
+	<%uiform.end()%>
 </div>

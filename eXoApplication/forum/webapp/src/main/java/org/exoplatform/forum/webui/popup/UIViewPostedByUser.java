@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -27,32 +27,32 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
- *          exo@exoplatform.com
- * Apr 4, 2008  
+ *					exo@exoplatform.com
+ * Apr 4, 2008	
  */
 @ComponentConfig(
-    lifecycle = UIFormLifecycle.class,
-    template = "app:/templates/forum/webui/popup/UIViewListPostOrThreadByUser.gtmpl",
-    events = {
-      @EventConfig(listeners = UIViewPostedByUser.CloseActionListener.class)
-    }
+		lifecycle = UIFormLifecycle.class,
+		template = "app:/templates/forum/webui/popup/UIViewListPostOrThreadByUser.gtmpl",
+		events = {
+			@EventConfig(listeners = UIViewPostedByUser.CloseActionListener.class)
+		}
 )
 public class UIViewPostedByUser extends UIForm implements UIPopupComponent {
 	public UIViewPostedByUser() throws Exception {
 		addChild(UIPageListPostByUser.class, null, "UIPageListPostByUser") ;
 	}
 
-  public void activate() throws Exception {}
-  public void deActivate() throws Exception {}
-  
-  public void setUserProfile(String userId) {
-    this.getChild(UIPageListPostByUser.class).setUserName(userId) ;
-  }
-  
-  static public class CloseActionListener extends EventListener<UIViewPostedByUser> {
-    public void execute(Event<UIViewPostedByUser> event) throws Exception {
-      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-      forumPortlet.cancelAction() ;
-    }
-  }
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
+	
+	public void setUserProfile(String userId) {
+		this.getChild(UIPageListPostByUser.class).setUserName(userId) ;
+	}
+	
+	static public class CloseActionListener extends EventListener<UIViewPostedByUser> {
+		public void execute(Event<UIViewPostedByUser> event) throws Exception {
+			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.cancelAction() ;
+		}
+	}
 }

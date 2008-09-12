@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -62,7 +62,7 @@ public class UIForumPortlet extends UIPortletApplication {
 //	public void processDecode(WebuiRequestContext context) throws Exception {
 //		String objId = context.getRequestParameter(OBJECTID) ; 
 ////		System.out.println("\n\n"+objId);
-//	  super.processDecode(context);
+//		super.processDecode(context);
 //	}
 	
 	public void updateIsRendered(String selected) throws Exception {
@@ -96,7 +96,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean  getIsJumpRendered() {
+	private boolean	getIsJumpRendered() {
 		return isJumpRendered ;
 	}
 
@@ -116,25 +116,25 @@ public class UIForumPortlet extends UIPortletApplication {
 	
 	public UserProfile getUserProfile() throws Exception {
 		if(this.userProfile == null) setUserProfile() ;
-	  return this.userProfile ;
-  }
-  @SuppressWarnings("deprecation")
+		return this.userProfile ;
+	}
+	@SuppressWarnings("deprecation")
 	public void setUserProfile() throws Exception {
-  	String userId = "" ;
-  	try {
-  		userId = ForumSessionUtils.getCurrentUser() ;
-    } catch (Exception e) {
-    	e.printStackTrace() ;
-    }
-    Date date = null ;
-    if(this.userProfile != null) {
-    	date = this.userProfile.getLastLoginDate() ;
-    }
-  	this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userId, true, true, isLogin) ;
-  	this.isLogin = false;
-  	this.userProfile.setIsOnline(true) ;
-  	if(date != null)
-  		this.userProfile.setLastLoginDate(date) ;
-  	this.isJumpRendered = this.userProfile.getIsShowForumJump() ;
-  }
+		String userId = "" ;
+		try {
+			userId = ForumSessionUtils.getCurrentUser() ;
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+		Date date = null ;
+		if(this.userProfile != null) {
+			date = this.userProfile.getLastLoginDate() ;
+		}
+		this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userId, true, true, isLogin) ;
+		this.isLogin = false;
+		this.userProfile.setIsOnline(true) ;
+		if(date != null)
+			this.userProfile.setLastLoginDate(date) ;
+		this.isJumpRendered = this.userProfile.getIsShowForumJump() ;
+	}
 }

@@ -1,17 +1,17 @@
-<% 
+<%
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumTransformHTML;
-  UserProfile userProfile = uicomponent.getUserProfile() ;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + " " + userProfile.getTimeFormat() ;
-  List topics = uicomponent.getTopicsOld() ;
+	List topics = uicomponent.getTopicsOld() ;
 %>
 <div class="$uicomponent.id" id="$uicomponent.id">
 	<div class="UITopicContainer">
-   	<div class="UIForumContainer">
+	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
 					<div style="overflow:auto; margin: 2px 0px;">

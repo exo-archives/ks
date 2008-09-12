@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -39,7 +39,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
- *	  tu.duy@exoplatform.com
+ *		tu.duy@exoplatform.com
  * 14 Apr 2008, 02:57:05	
  */
 @ComponentConfig(
@@ -60,7 +60,7 @@ public class UIQuickSearchForm extends UIForm {
 
 	
 	static	public class SearchActionListener extends EventListener<UIQuickSearchForm> {
-    public void execute(Event<UIQuickSearchForm> event) throws Exception {
+		public void execute(Event<UIQuickSearchForm> event) throws Exception {
 			UIQuickSearchForm uiForm = event.getSource() ;
 			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
 			String text = formStringInput.getValue() ;

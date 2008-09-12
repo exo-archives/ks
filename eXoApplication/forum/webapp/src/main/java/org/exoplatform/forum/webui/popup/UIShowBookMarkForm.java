@@ -224,10 +224,10 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	}
 
 	public boolean getIsOpen() {
-  	return isOpen;
-  }
+		return isOpen;
+	}
 
 	public void setIsOpen(boolean isOpen) {
-  	this.isOpen = isOpen;
-  }
+		this.isOpen = isOpen;
+	}
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -16,12 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.io.InputStream;
-
-import org.exoplatform.contact.service.Contact;
-import org.exoplatform.contact.service.ContactAttachment;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
@@ -60,26 +55,26 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		if(contact == null) {
 			contact = getPersonalContact(userId) ;
 		}
-  	return contact;
-  }
+		return contact;
+	}
 
 	public void setContact(ForumContact contact) {
-  	this.contact = contact;
-  }
+		this.contact = contact;
+	}
 
 	public UIViewUserProfile() {
 		
 	}
 
 	@SuppressWarnings("unused")
-  private boolean isOnline(String userId) throws Exception {
+	private boolean isOnline(String userId) throws Exception {
 		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		return forumService.isOnline(userId) ;
 	}
 	
 	public void setUserProfile(UserProfile userProfile) {
-	  this.userProfile = userProfile ;
-  }
+		this.userProfile = userProfile ;
+	}
 	
 	public UserProfile getUserProfile() {
 		return this.userProfile ;
@@ -102,25 +97,30 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-  private String getAvatarUrl(Contact contact) throws Exception {
-		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		try {
-			ContactAttachment attachment = contact.getAttachment() ; 
-    	InputStream input = attachment.getInputStream() ;
-    	String fileName = attachment.getFileName() ;
-    	return ForumSessionUtils.getFileSource(input, fileName, dservice);
-    } catch (NullPointerException e) {
-	    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-    }
+	private String getAvatarUrl(ForumContact contact) throws Exception {
+//	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+//	try {
+//		ContactAttachment attachment = contact.getAttachment() ; 
+//		InputStream input = attachment.getInputStream() ;
+//		String fileName = attachment.getFileName() ;
+//		return ForumSessionUtils.getFileSource(input, fileName, dservice);
+//	} catch (NullPointerException e) {
+//		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+//	}
+	if (contact.getAvatarUrl() == null ) {
+		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+	} else {
+		return contact.getAvatarUrl();
+	}
 	}
 	
 	@SuppressWarnings("unused")
-  private String[] getLabelProfile() {
+	private String[] getLabelProfile() {
 		return new String[]{"userName", "firstName", "lastName", "birthDay", "gender", 
 				"email", "jobTitle", "location", "workPhone", "mobilePhone" , "website"};
 	}
 	@SuppressWarnings("unused")
-  private User getUser() {
+	private User getUser() {
 		User user = this.userProfile.getUser() ;
 		return user;
 	}
@@ -128,21 +128,17 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	static  public class CloseActionListener extends EventListener<UIViewUserProfile> {
-    public void execute(Event<UIViewUserProfile> event) throws Exception {
-    	UIViewUserProfile uiForm = event.getSource() ;
-    	UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-      if(popupContainer == null) {
-        UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-        forumPortlet.cancelAction() ;
-      } else {
-        popupContainer.getChild(UIPopupAction.class).deActivate() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-      }
-    }
-  }
-	
-	
-	
-	
+	static	public class CloseActionListener extends EventListener<UIViewUserProfile> {
+		public void execute(Event<UIViewUserProfile> event) throws Exception {
+			UIViewUserProfile uiForm = event.getSource() ;
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			if(popupContainer == null) {
+				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+			} else {
+				popupContainer.getChild(UIPopupAction.class).deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			}
+		}
+	}
 }

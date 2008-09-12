@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -45,8 +45,8 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 9, 2008 - 8:19:24 AM  
+ *					tu.duy@exoplatform.com
+ * May 9, 2008 - 8:19:24 AM	
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
@@ -97,41 +97,41 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 		addUIFormInput(sendMessageTab) ;
 		addChild(UIListInBoxPrivateMessage.class, null, null) ;
 		addChild(UIListSentPrivateMessage.class, null, null) ;
-  }
+	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
 	public void setUserProfile(UserProfile userProfile){
-	  this.userProfile = userProfile ;
-	  this.userName = userProfile.getUserId() ;
-  }
+		this.userProfile = userProfile ;
+		this.userName = userProfile.getUserId() ;
+	}
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		return this.userProfile;
 	}
 
 	public void setSendtoField(String str) {
 		this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA).setValue(str) ;
-  }
+	}
 	
-  public void updateSelect(String selectField, String value ) throws Exception {
-    UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField) ;
-    String values = fieldInput.getValue() ;
-    if(!ForumUtils.isEmpty(values)) {
-    	values = ForumUtils.removeSpaceInString(values);
-      if(!ForumUtils.isStringInStrings(values.split(","), value)){
-        if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
-        values = values + value ;
-      } 
-    } else values = value ;
-    fieldInput.setValue(values) ;
-  }
-  
-  @SuppressWarnings("unused")
-  private int getIsSelected() {
-  	return this.id ;
-  }
-  
+	public void updateSelect(String selectField, String value ) throws Exception {
+		UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField) ;
+		String values = fieldInput.getValue() ;
+		if(!ForumUtils.isEmpty(values)) {
+			values = ForumUtils.removeSpaceInString(values);
+			if(!ForumUtils.isStringInStrings(values.split(","), value)){
+				if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
+				values = values + value ;
+			} 
+		} else values = value ;
+		fieldInput.setValue(values) ;
+	}
+	
+	@SuppressWarnings("unused")
+	private int getIsSelected() {
+		return this.id ;
+	}
+	
 	static	public class SelectTabActionListener extends EventListener<UIPrivateMessageForm> {
 		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
@@ -142,104 +142,104 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	}
 	
 	static	public class SendPrivateMessageActionListener extends EventListener<UIPrivateMessageForm> {
-    public void execute(Event<UIPrivateMessageForm> event) throws Exception {
-    	UIPrivateMessageForm messageForm = event.getSource() ; 
-    	UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
-    	UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
-    	UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
-    	String sendTo = areaInput.getValue() ;
-    	sendTo = ForumUtils.removeSpaceInString(sendTo) ;
-    	sendTo = ForumUtils.removeStringResemble(sendTo) ;
-    	String erroUser = ForumSessionUtils.checkValueUser(sendTo) ;
-    	if(!ForumUtils.isEmpty(erroUser)) {
-    		Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser };
-    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-    		return ;
-    	}
-    	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
-    	String mailTitle = stringInput.getValue() ;
-    	int maxText = 80 ;
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIPrivateMessageForm messageForm = event.getSource() ; 
+			UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
+			UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
+			UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
+			String sendTo = areaInput.getValue() ;
+			sendTo = ForumUtils.removeSpaceInString(sendTo) ;
+			sendTo = ForumUtils.removeStringResemble(sendTo) ;
+			String erroUser = ForumSessionUtils.checkValueUser(sendTo) ;
+			if(!ForumUtils.isEmpty(erroUser)) {
+				Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
+			String mailTitle = stringInput.getValue() ;
+			int maxText = 80 ;
 			if(mailTitle.length() > maxText) {
 				Object[] args = { messageForm.getLabel(FIELD_MAILTITLE_INPUT), String.valueOf(maxText) };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-    	UIFormWYSIWYGInput formWYSIWYGInput = MessageTab.getChild(UIFormWYSIWYGInput.class) ;
-    	String message = formWYSIWYGInput.getValue();
-    	if(!ForumUtils.isEmpty(message)) {
-	    	ForumPrivateMessage privateMessage = new ForumPrivateMessage() ;
-	    	privateMessage.setFrom(messageForm.userName) ;
-	    	privateMessage.setSendTo(sendTo) ;
-	    	privateMessage.setName(mailTitle) ;
-	    	privateMessage.setMessage(message) ;
-	    	messageForm.forumService.savePrivateMessage(ForumSessionUtils.getSystemProvider(), privateMessage) ;
-	    	areaInput.setValue("") ;
-	    	stringInput.setValue("") ;
-	    	formWYSIWYGInput.setValue("") ;
-	    	Object[] args = { "" };
+			UIFormWYSIWYGInput formWYSIWYGInput = MessageTab.getChild(UIFormWYSIWYGInput.class) ;
+			String message = formWYSIWYGInput.getValue();
+			if(!ForumUtils.isEmpty(message)) {
+				ForumPrivateMessage privateMessage = new ForumPrivateMessage() ;
+				privateMessage.setFrom(messageForm.userName) ;
+				privateMessage.setSendTo(sendTo) ;
+				privateMessage.setName(mailTitle) ;
+				privateMessage.setMessage(message) ;
+				messageForm.forumService.savePrivateMessage(ForumSessionUtils.getSystemProvider(), privateMessage) ;
+				areaInput.setValue("") ;
+				stringInput.setValue("") ;
+				formWYSIWYGInput.setValue("") ;
+				Object[] args = { "" };
 				uiApp.addMessage(new ApplicationMessage("UIPrivateMessageForm.msg.sent-successfully", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-	    	if(messageForm.fullMessage){
-	    		messageForm.id = 1;
-	    		event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent()) ;
-	    	} else {
-	    		UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-	    		forumPortlet.cancelAction() ;
-	    	}
-    	} else {
-    		Object[] args = { messageForm.getLabel(FIELD_MAILMESSAGE_INPUT) };
-  			uiApp.addMessage(new ApplicationMessage("NameValidator.msg.empty-input", args, ApplicationMessage.WARNING)) ;
-  			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-    	}
+				if(messageForm.fullMessage){
+					messageForm.id = 1;
+					event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent()) ;
+				} else {
+					UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.cancelAction() ;
+				}
+			} else {
+				Object[] args = { messageForm.getLabel(FIELD_MAILMESSAGE_INPUT) };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.empty-input", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			}
 		}
 	}
 	
-	static  public class AddValuesUserActionListener extends EventListener<UIPrivateMessageForm> {
-    public void execute(Event<UIPrivateMessageForm> event) throws Exception {
-    	UIPrivateMessageForm messageForm = event.getSource() ;
-      String type = event.getRequestContext().getRequestParameter(OBJECTID)	;
-      if(!ForumUtils.isEmpty(type)) {
-        UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
-        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-        UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
-        if(type.equals("0")) uiGroupSelector.setId("UIUserSelector");
+	static	public class AddValuesUserActionListener extends EventListener<UIPrivateMessageForm> {
+		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
+			UIPrivateMessageForm messageForm = event.getSource() ;
+			String type = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(!ForumUtils.isEmpty(type)) {
+				UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
+				if(type.equals("0")) uiGroupSelector.setId("UIUserSelector");
 				else if(type.equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
-        uiGroupSelector.setType(type) ;
-        uiGroupSelector.setSelectedGroups(null) ;
-        uiGroupSelector.setComponent(messageForm, new String[]{FIELD_SENDTO_TEXTAREA}) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-      }
-    }
-  }
+				uiGroupSelector.setType(type) ;
+				uiGroupSelector.setSelectedGroups(null) ;
+				uiGroupSelector.setComponent(messageForm, new String[]{FIELD_SENDTO_TEXTAREA}) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			}
+		}
+	}
 	
 	public void setUpdate(ForumPrivateMessage privateMessage, boolean isReply) throws Exception {
 		UIFormInputWithActions MessageTab = this.getChildById(FIELD_SENDMESSAGE_TAB);
-  	UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
-  	UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
-  	String content = privateMessage.getMessage() ;
-  	String label = this.getLabel(FIELD_REPLY_LABEL) ;
-  	String title = privateMessage.getName() ;
-  	if(isReply) {
-  		UIFormTextAreaInput areaInput = this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
-	  	areaInput.setValue(privateMessage.getFrom()) ;
-	  	if(title.indexOf(label) < 0) {
-	  		title = label + ": " + title ;
-	  	} 
-	  	stringInput.setValue(title) ;
-	  	content = "<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">" + content + "</div>" ;
-	  	message.setValue(content) ;
-  	} else {
-  		label = this.getLabel(FIELD_FORWARD_LABEL) ;
-  		if(title.indexOf(label) < 0) {
-  			title = label + ": " + title ;
-	  	} 
-	  	stringInput.setValue(title) ;
-  	}
-  	message.setValue(content) ;
-  	this.id = 2;
-  }
+		UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
+		UIFormWYSIWYGInput message = MessageTab.getChild(UIFormWYSIWYGInput.class);
+		String content = privateMessage.getMessage() ;
+		String label = this.getLabel(FIELD_REPLY_LABEL) ;
+		String title = privateMessage.getName() ;
+		if(isReply) {
+			UIFormTextAreaInput areaInput = this.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
+			areaInput.setValue(privateMessage.getFrom()) ;
+			if(title.indexOf(label) < 0) {
+				title = label + ": " + title ;
+			} 
+			stringInput.setValue(title) ;
+			content = "<br/><br/><br/><div style=\"padding: 5px; border-left:solid 2px blue;\">" + content + "</div>" ;
+			message.setValue(content) ;
+		} else {
+			label = this.getLabel(FIELD_FORWARD_LABEL) ;
+			if(title.indexOf(label) < 0) {
+				title = label + ": " + title ;
+			} 
+			stringInput.setValue(title) ;
+		}
+		message.setValue(content) ;
+		this.id = 2;
+	}
 	
 	static	public class CloseActionListener extends EventListener<UIPrivateMessageForm> {
 		public void execute(Event<UIPrivateMessageForm> event) throws Exception {
@@ -249,10 +249,9 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	}
 
 	public boolean isFullMessage() {
-  	return fullMessage;
-  }
+		return fullMessage;
+	}
 	public void setFullMessage(boolean fullMessage) {
-  	this.fullMessage = fullMessage;
-  }
-	
+		this.fullMessage = fullMessage;
+	}
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -97,10 +97,10 @@ public class UISearchForm extends UIForm implements UISelector {
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 		try {
 			this.userProfile = userProfile ;
-    } catch (Exception e) {
-    	this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-    }
-  }
+		} catch (Exception e) {
+			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		}
+	}
 	private boolean getIsAdmin() {
 		if(this.userProfile != null) {
 			if(this.userProfile.getUserRole() < 2) return true ;
@@ -189,25 +189,25 @@ public class UISearchForm extends UIForm implements UISelector {
 	}
 	
 	public void setSelectType(String type) {
-	  this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type) ;
-  }
+		this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type) ;
+	}
 	
 	public void setValueOnchange(boolean isLastDate, boolean islock, boolean isClose, boolean isTopicCount, boolean isPostCount, boolean isViewCount, boolean isModerator){
 		UIForumInputWithActions inputSearchForm = this.getChildById(FIELD_INPUTSEARCH_FORM);
 		UIFormDateTimeInput fromDateCreatedLastPost = inputSearchForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setRendered(isLastDate) ;
-		UIFormDateTimeInput toDateCreatedLastPost   = inputSearchForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(isLastDate) ;
-		UIFormSelectBox isLock   = inputSearchForm.getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setRendered(islock);
+		UIFormDateTimeInput toDateCreatedLastPost	 = inputSearchForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(isLastDate) ;
+		UIFormSelectBox isLock	 = inputSearchForm.getUIFormSelectBox(FIELD_ISLOCK_SELECTBOX).setRendered(islock);
 		if(isClose) {
 			isClose = getIsAdmin();
 		}
 		UIFormSelectBox isClosed = inputSearchForm.getUIFormSelectBox(FIELD_ISCLOSED_SELECTBOX).setRendered(isClose);
 		UIFormStringInput topicCountMin = inputSearchForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).setRendered(isTopicCount);
 		UIFormStringInput topicCountMax = inputSearchForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setRendered(isTopicCount);
-		UIFormStringInput postCountMax  = inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(isPostCount);
-		UIFormStringInput postCountMin  = inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).setRendered(isPostCount);
-		UIFormStringInput viewCountMax  = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).setRendered(isViewCount);
-		UIFormStringInput viewCountMin  = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).setRendered(isViewCount);
-		UIFormStringInput moderator     = inputSearchForm.getUIStringInput(FIELD_MODERATOR_INPUT).setRendered(isModerator);
+		UIFormStringInput postCountMax	= inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(isPostCount);
+		UIFormStringInput postCountMin	= inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).setRendered(isPostCount);
+		UIFormStringInput viewCountMax	= inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).setRendered(isViewCount);
+		UIFormStringInput viewCountMin	= inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).setRendered(isViewCount);
+		UIFormStringInput moderator		 = inputSearchForm.getUIStringInput(FIELD_MODERATOR_INPUT).setRendered(isModerator);
 		inputSearchForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue("") ;
 		inputSearchForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).setValue("entire");
 		inputSearchForm.getUIFormDateTimeInput(FROMDATECREATED).setValue("") ;
@@ -227,67 +227,67 @@ public class UISearchForm extends UIForm implements UISelector {
 	}
 	
 	public String getLabel(ResourceBundle res, String id) throws Exception {
-    String label = getId() + ".label." + id;    
-    try {
-    	return res.getString(label);
-    } catch (Exception e) {
+		String label = getId() + ".label." + id;		
+		try {
+			return res.getString(label);
+		} catch (Exception e) {
 			return id ;
 		}
-  }
-  
+	}
+	
 	private String checkValue(String input) throws Exception {
 		if(!ForumUtils.isEmpty(input)){
 			try {
 				Integer.parseInt(input.trim()) ;
 				return input.trim() ;
-	    } catch (NumberFormatException e) {
-		    return null;
-	    }
+			} catch (NumberFormatException e) {
+				return null;
+			}
 		} else return null;
 	}
 	
-  public String[] getActions() {
-    return new String[]{"Search","Onchange", "Cancel"} ;
-  }
-  
-  public void updateSelect(String selectField, String value) throws Exception {
-    UIFormStringInput fieldInput = getUIStringInput(selectField) ;
-    String values = fieldInput.getValue() ;
-    if(!ForumUtils.isEmpty(values)) {
-      if(!ForumUtils.isStringInStrings(values.split(","), value)){
-        if(values.trim().lastIndexOf(",") != (values.length() - 1)) values = values.trim() + ",";
-        values = values + value ;
-      }
-    } else values = value ;
-    fieldInput.setValue(values) ;
-  }
-  
-  private Calendar getCalendar(UIFormDateTimeInput dateTimeInput, String faled) throws Exception{
-  	Calendar calendar = dateTimeInput.getCalendar();
-  	if(!ForumUtils.isEmpty(dateTimeInput.getValue())){
-  		if(calendar == null){
-  			Object[] args = {faled};
+	public String[] getActions() {
+		return new String[]{"Search","Onchange", "Cancel"} ;
+	}
+	
+	public void updateSelect(String selectField, String value) throws Exception {
+		UIFormStringInput fieldInput = getUIStringInput(selectField) ;
+		String values = fieldInput.getValue() ;
+		if(!ForumUtils.isEmpty(values)) {
+			if(!ForumUtils.isStringInStrings(values.split(","), value)){
+				if(values.trim().lastIndexOf(",") != (values.length() - 1)) values = values.trim() + ",";
+				values = values + value ;
+			}
+		} else values = value ;
+		fieldInput.setValue(values) ;
+	}
+	
+	private Calendar getCalendar(UIFormDateTimeInput dateTimeInput, String faled) throws Exception{
+		Calendar calendar = dateTimeInput.getCalendar();
+		if(!ForumUtils.isEmpty(dateTimeInput.getValue())){
+			if(calendar == null){
+				Object[] args = {faled};
 				throw new MessageException(new ApplicationMessage("NameValidator.msg.erro-format-date", args, ApplicationMessage.WARNING)) ;
-  		}
-  	}
-  	return calendar;
-  }
-  
+			}
+		}
+		return calendar;
+	}
+	
 	static	public class SearchActionListener extends EventListener<UISearchForm> {
-    public void execute(Event<UISearchForm> event) throws Exception {
+		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
 			UIForumInputWithActions inputSearchForm = uiForm.getChildById(FIELD_INPUTSEARCH_FORM);
 			String keyValue = inputSearchForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
 			if(!ForumUtils.isEmpty(keyValue)) {
 				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
 				for (int i = 0; i < special.length(); i++) {
-		      char c = special.charAt(i);
-		      if(keyValue.indexOf(c) >= 0) {
-		      	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					char c = special.charAt(i);
+					if(keyValue.indexOf(c) >= 0) {
+						UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 						return ;
-		      }
-	      }
+					}
+				}
 			}
 			String type = inputSearchForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
 			String valueIn = inputSearchForm.getUIFormSelectBox(FIELD_SEARCHVALUEIN_SELECTBOX).getValue() ;
@@ -404,26 +404,18 @@ public class UISearchForm extends UIForm implements UISelector {
 	}
 
 	static	public class AddValuesUserActionListener extends EventListener<UISearchForm> {
-    public void execute(Event<UISearchForm> event) throws Exception {
-    	UISearchForm searchForm = event.getSource() ;
+		public void execute(Event<UISearchForm> event) throws Exception {
+			UISearchForm searchForm = event.getSource() ;
 				UIForumPortlet forumPortlet = searchForm.getAncestorOfType(UIForumPortlet.class) ;
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true) ;
 				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
 				uiGroupSelector.setId("UIUserSelector");
-	      uiGroupSelector.setType(UISelectComponent.TYPE_USER) ;
-	      uiGroupSelector.setSelectedGroups(null) ;
-	      uiGroupSelector.setComponent(searchForm, new String[]{FIELD_SEARCHUSER_INPUT}) ;
-	      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				uiGroupSelector.setType(UISelectComponent.TYPE_USER) ;
+				uiGroupSelector.setSelectedGroups(null) ;
+				uiGroupSelector.setComponent(searchForm, new String[]{FIELD_SEARCHUSER_INPUT}) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
-
-
-
-
-
-
-
-
 }
 
 

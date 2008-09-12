@@ -60,5 +60,4 @@ public class UIForumDescription extends UIContainer	{
       return this.forum ;
     }
 	}
-	
 }

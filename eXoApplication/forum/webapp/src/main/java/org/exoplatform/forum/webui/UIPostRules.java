@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -31,37 +31,37 @@ import org.exoplatform.webui.core.UIContainer;
 		template =	"app:/templates/forum/webui/UIPostRules.gtmpl"
 )
 public class UIPostRules extends UIContainer	{
-  private UserProfile userProfile ;
-  private boolean canCreateNewThread = false;
-  private boolean canAddPost = false;
-  
+	private UserProfile userProfile ;
+	private boolean canCreateNewThread = false;
+	private boolean canAddPost = false;
+	
 	public boolean isCanCreateNewThread() {
-  	return canCreateNewThread;
-  }
+		return canCreateNewThread;
+	}
 
 	public boolean isCanAddPost() {
-  	return canAddPost;
-  }
+		return canAddPost;
+	}
 
 	public UIPostRules() throws Exception {		
 	}	
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		if(this.userProfile == null) {
 			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		}
 		return this.userProfile ;
 	}
-  
+	
 	public void setUserProfile(UserProfile userProfile ) {
 		this.userProfile = userProfile ;
 	}
 	
-  public void setLock(boolean isLock) {
-    canCreateNewThread = !isLock;
-    canAddPost = !isLock;
-  }
+	public void setLock(boolean isLock) {
+		canCreateNewThread = !isLock;
+		canAddPost = !isLock;
+	}
 	
 	public void setCanAddPost(boolean canAddPost){
 		this.canAddPost = canAddPost;

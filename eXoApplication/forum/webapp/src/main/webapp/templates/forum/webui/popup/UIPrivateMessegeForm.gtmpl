@@ -1,4 +1,4 @@
-<%  
+<%	
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.service.ForumPrivateMessage;
 	import org.exoplatform.forum.service.UserProfile;
@@ -7,7 +7,7 @@
 %>
 <div class="UIFormForum UIPrivateMessageForm">
 	<% uiform.begin() %> 
-	<%  
+	<%	
 		if(uiform.isFullMessage()) {
 			UserProfile userProfile = uiform.getUserProfile();
 			String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
@@ -25,30 +25,30 @@
 								<div class="CenterHorizontalTabs">
 									<div class="TabsContainer">
 										 <%String classCss = "SelectedTab" ; 
-                    int i = 0;
-                    String[] tabcontens = ["inbox","send","sendMessage"];
-                  	for(tabconten in tabcontens){ 
-                  		String link = "javascript:void(0);";
-                  		if(index == i) classCss = "SelectedTab" ;
-                  		else {
-                  			classCss = "NormalTab" ;
-                  			link = uicomponent.event("SelectTab",String.valueOf(i)) ;
-                  		}
-                  		tabconten = _ctx.appRes(uiform.id + ".label." + tabconten);
-                  	%>  
-                    <div class="UITab NormalTabStyle">
-                      <div class="$classCss">
-                        <div class="LeftTab">
-                          <div class="RightTab">
-                          <a href="$link">
-                            <div class="MiddleTab"><%=tabconten;%></div>
-                          </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                	<%   ++i;
-                		} %>
+										int i = 0;
+										String[] tabcontens = ["inbox","send","sendMessage"];
+										for(tabconten in tabcontens){ 
+											String link = "javascript:void(0);";
+											if(index == i) classCss = "SelectedTab" ;
+											else {
+												classCss = "NormalTab" ;
+												link = uicomponent.event("SelectTab",String.valueOf(i)) ;
+											}
+											tabconten = _ctx.appRes(uiform.id + ".label." + tabconten);
+										%>	
+										<div class="UITab NormalTabStyle">
+											<div class="$classCss">
+												<div class="LeftTab">
+													<div class="RightTab">
+													<a href="$link">
+														<div class="MiddleTab"><%=tabconten;%></div>
+													</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									<%	 ++i;
+										} %>
 										
 									</div>
 								</div>
@@ -156,9 +156,9 @@
 			<tbody>
 				<tr>
 					<td align="center">
-					<%  
+					<%
 							if(!uiform.isFullMessage()) {
-						%>
+					%>
 						<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("SendPrivateMessage")%>">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">

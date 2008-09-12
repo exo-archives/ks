@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -22,21 +22,21 @@ import org.exoplatform.webui.core.UIContainer;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
- *          hung.nguyen@exoplatform.com
+ *					hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
 
 @ComponentConfig(
-    template =  "app:/templates/forum/webui/UITopicDetailContainer.gtmpl" 
+		template =	"app:/templates/forum/webui/UITopicDetailContainer.gtmpl" 
 )
-public class UITopicDetailContainer extends UIContainer  {
-  private boolean isRender = false ;
-  public UITopicDetailContainer() throws Exception {
-    addChild(UITopicPoll.class, null, null).setRendered(isRender) ;
-    addChild(UITopicDetail.class, null, null) ;
-  }
-  
-  public void setRederPoll(boolean isRender) throws Exception {
-   this.isRender = isRender ;
-  }
+public class UITopicDetailContainer extends UIContainer	{
+	private boolean isRender = false ;
+	public UITopicDetailContainer() throws Exception {
+		addChild(UITopicPoll.class, null, null).setRendered(isRender) ;
+		addChild(UITopicDetail.class, null, null) ;
+	}
+	
+	public void setRederPoll(boolean isRender) throws Exception {
+	 this.isRender = isRender ;
+	}
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,8 +36,8 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 27-08-2008 - 04:36:33  
+ *					tu.duy@exoplatform.com
+ * 27-08-2008 - 04:36:33	
  */
 
 @ComponentConfig(
@@ -87,8 +87,8 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 			int j = 0;
 			for (int i = 0; i < uiForm.emails.length; i++) {
 				if(uiForm.emails[i].equals(email)) continue ;
-	      strings[j] = uiForm.emails[i]; ++j;
-      }
+				strings[j] = uiForm.emails[i]; ++j;
+			}
 			uiForm.emails = strings ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

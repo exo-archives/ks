@@ -33,55 +33,54 @@ public class ForumPrivateMessage {
 	private boolean isUnread;
 	
 	public ForumPrivateMessage() {
-	  isUnread = false; 
-  }
+		isUnread = false; 
+	}
 	public String getFrom() {
-  	return from;
-  }
+		return from;
+	}
 	public void setFrom(String from) {
-  	this.from = from;
-  }
+		this.from = from;
+	}
 	public String getName() {
-  	return name;
-  }
+		return name;
+	}
 	public void setName(String name) {
-  	this.name = name;
-  }
+		this.name = name;
+	}
 	public String getMessage() {
-  	return message;
-  }
+		return message;
+	}
 	public void setMessage(String message) {
-  	this.message = message;
-  }
+		this.message = message;
+	}
 	public Date getReceivedDate() {
-  	return receivedDate;
-  }
+		return receivedDate;
+	}
 	public void setReceivedDate(Date receivedDate) {
-  	this.receivedDate = receivedDate;
-  }
+		this.receivedDate = receivedDate;
+	}
 	public boolean getIsUnread() {
-  	return isUnread;
-  }
+		return isUnread;
+	}
 	public void setIsUnread(boolean isUnread) {
-  	this.isUnread = isUnread;
-  }
+		this.isUnread = isUnread;
+	}
 	public String getSendTo() {
-  	return sendTo;
-  }
+		return sendTo;
+	}
 	public void setSendTo(String sendTo) {
-  	this.sendTo = sendTo;
-  }
+		this.sendTo = sendTo;
+	}
 	public String getId() {
-  	return id;
-  }
+		return id;
+	}
 	public void setId(String id) {
-  	this.id = id;
-  }
+		this.id = id;
+	}
 	public String getType() {
-  	return type;
-  }
+		return type;
+	}
 	public void setType(String type) {
-  	this.type = type;
-  }
-	
+		this.type = type;
+	}
 }

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -46,7 +45,7 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
- *	  tu.duy@exoplatform.com
+ *		tu.duy@exoplatform.com
  * 14 Apr 2008, 08:22:52	
  */
 @ComponentConfig(
@@ -71,118 +70,118 @@ public class UIForumListSearch extends UIContainer {
 		pageIterator = this.getAncestorOfType(UICategories.class).getChildById(SEARCH_ITERATOR);
 		pageIterator.updatePageList(pageList);
 		try {
-	    if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
-  }
+			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@SuppressWarnings("unchecked")
-  public List<ForumSearch> getListEvent() {
+	public List<ForumSearch> getListEvent() {
 		long pageSelect = pageIterator.getPageSelected() ;
-    list = new ArrayList<ForumSearch>();
-    try {
-    	list.addAll(this.pageList.getPageSearch(pageSelect, this.listEvent)) ;
-      if(list.isEmpty()){
-        while(list.isEmpty() && pageSelect > 1) {
-          list.addAll(this.pageList.getPageSearch(--pageSelect, this.listEvent)) ;
-          pageIterator.setSelectPage(pageSelect) ;
-        }
-      }
-    } catch (Exception e) {
-    }
-	  return list ;
-  }
+		list = new ArrayList<ForumSearch>();
+		try {
+			list.addAll(this.pageList.getPageSearch(pageSelect, this.listEvent)) ;
+			if(list.isEmpty()){
+				while(list.isEmpty() && pageSelect > 1) {
+					list.addAll(this.pageList.getPageSearch(--pageSelect, this.listEvent)) ;
+					pageIterator.setSelectPage(pageSelect) ;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return list ;
+	}
 	
 	private ForumSearch getForumSearch(String id) {
 		for (ForumSearch forumSearch : this.listEvent) {
-	    if(forumSearch.getId().equals(id)) return forumSearch ;
-    }
+			if(forumSearch.getId().equals(id)) return forumSearch ;
+		}
 		return null;
 	}
 	
 	static	public class OpentContentActionListener extends EventListener<UIForumListSearch> {
-    public void execute(Event<UIForumListSearch> event) throws Exception {
+		public void execute(Event<UIForumListSearch> event) throws Exception {
 			UIForumListSearch uiForm = event.getSource() ;
-    	String objId = event.getRequestContext().getRequestParameter(OBJECTID);
-    	ForumSearch forumSearch = uiForm.getForumSearch(objId) ;
-    	String path = forumSearch.getPath();
-    	String type = forumSearch.getType() ;
-    	boolean isErro = false ;
-    	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-    	UserProfile userProfile = forumPortlet.getUserProfile();
-    	String userName = userProfile.getUserId();
+			String objId = event.getRequestContext().getRequestParameter(OBJECTID);
+			ForumSearch forumSearch = uiForm.getForumSearch(objId) ;
+			String path = forumSearch.getPath();
+			String type = forumSearch.getType() ;
+			boolean isErro = false ;
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			UserProfile userProfile = forumPortlet.getUserProfile();
+			String userName = userProfile.getUserId();
 			boolean isRead = true;
-    	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-    	if(type.equals(Utils.CATEGORY)) {
-    		String categoryId = forumSearch.getId() ;
-    		Category category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), categoryId) ;
-    		if(category != null) {
-	    		String[] privateUser = category.getUserPrivate() ;
+			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			if(type.equals(Utils.CATEGORY)) {
+				String categoryId = forumSearch.getId() ;
+				Category category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), categoryId) ;
+				if(category != null) {
+					String[] privateUser = category.getUserPrivate() ;
 					if(privateUser.length > 0) {
 						isRead = ForumUtils.isStringInStrings(privateUser, userName);
 					}
 					if(!isRead && userProfile.getUserRole() == 0) isRead = true; 
 					if(isRead){
-		    		UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 						categoryContainer.getChild(UICategory.class).update(category, null);
 						categoryContainer.updateIsRender(false) ;
 						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(categoryId);
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}
-    		} else isErro = true ;
-    	} else if(type.equals(Utils.FORUM)) {
-    		String []id = path.split("/") ;
-    		int length = id.length ;
-    		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;
-    		if(forum != null) {
-    			isRead = !forum.getIsClosed();
-  				if(!isRead && userProfile.getUserRole() == 0 || Arrays.asList(forum.getModerators()).contains(userProfile.getUserId())) isRead = true; 
-  				if(isRead) {
-		  			forumPortlet.updateIsRendered(ForumUtils.FORUM);
-		  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-		  			uiForumContainer.setIsRenderChild(true) ;
-		  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-		  			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-		  			uiTopicContainer.setUpdateForum(id[length-2], forum) ;
-		  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-2]+"/"+id[length-1]));
-		  			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-  				}
-    		} else isErro = true ;
-    	} else if(type.equals(Utils.TOPIC)){
-    		String []id = path.split("/") ;
-    		int length = id.length ;
-    		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
-    		if(topic != null) {
-	    		forumPortlet.updateIsRendered(ForumUtils.FORUM);
-	    		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-3] , id[length-2] ) ;
-	  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-	  			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-	  			uiForumContainer.setIsRenderChild(false) ;
-	  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-	  			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-	  			uiTopicDetail.setTopicFromCate(id[length-3], id[length-2] , topic, true) ;
-	  			uiTopicDetail.setUpdateForum(forum) ;
-	  			uiTopicDetail.setIdPostView("false") ;
-	  			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
-	  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
-	  			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-    		} else isErro = true ;
-    	} else {
+				} else isErro = true ;
+			} else if(type.equals(Utils.FORUM)) {
 				String []id = path.split("/") ;
-    		int length = id.length ;
-    		Post post = forumService.getPost(ForumSessionUtils.getSystemProvider(), id[length-4] , id[length-3],id[length-2] , id[length-1]) ;
-    		if(post != null) {
-	    		UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true)	;
-	    		UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
+				int length = id.length ;
+				Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;
+				if(forum != null) {
+					//isRead = !forum.getIsClosed();
+					//if(!isRead && userProfile.getUserRole() == 0 || Arrays.asList(forum.getModerators()).contains(userProfile.getUserId())) isRead = true; 
+					if(isRead) {
+						forumPortlet.updateIsRendered(ForumUtils.FORUM);
+						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+						uiForumContainer.setIsRenderChild(true) ;
+						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
+						uiTopicContainer.setUpdateForum(id[length-2], forum) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-2]+"/"+id[length-1]));
+						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+					}
+				} else isErro = true ;
+			} else if(type.equals(Utils.TOPIC)){
+				String []id = path.split("/") ;
+				int length = id.length ;
+				Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
+				if(topic != null) {
+					forumPortlet.updateIsRendered(ForumUtils.FORUM);
+					Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-3] , id[length-2] ) ;
+					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+					UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+					uiForumContainer.setIsRenderChild(false) ;
+					uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+					UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+					uiTopicDetail.setTopicFromCate(id[length-3], id[length-2] , topic, true) ;
+					uiTopicDetail.setUpdateForum(forum) ;
+					uiTopicDetail.setIdPostView("false") ;
+					uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
+					forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				} else isErro = true ;
+			} else {
+				String []id = path.split("/") ;
+				int length = id.length ;
+				Post post = forumService.getPost(ForumSessionUtils.getSystemProvider(), id[length-4] , id[length-3],id[length-2] , id[length-1]) ;
+				if(post != null) {
+					UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true)	;
+					UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
 					viewPost.setPostView(post) ;
 					viewPost.setViewUserInfo(false) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    		} else isErro = true ;
-    	}
-    	if(isErro) {
-    		Object[] args = { };
+				} else isErro = true ;
+			}
+			if(isErro) {
+				Object[] args = { };
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", args, ApplicationMessage.WARNING)) ;
 				/*UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -195,9 +194,9 @@ public class UIForumListSearch extends UIContainer {
 						return;
 					}
 				}
-    	}
-    	if(!isRead) {
-    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+			}
+			if(!isRead) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				String[] s = new String[]{};
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 				return;

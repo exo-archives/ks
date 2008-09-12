@@ -10,16 +10,16 @@
 	import org.exoplatform.forum.ForumSessionUtils; 
 	import java.util.GregorianCalendar;
 	import java.util.Date ; 
-  UserProfile userProfile = uicomponent.getUserProfile() ;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
-  List topics = uicomponent.getTopicsByUser() ;
-  boolean isAdmin = false;
+	List topics = uicomponent.getTopicsByUser() ;
+	boolean isAdmin = false;
 	if(userProfile.getUserRole() == 0)isAdmin = true;
 %>
 <div class="$uicomponent.id" id="$uicomponent.id">
 	<div class="UITopicContainer">
-   	<div class="UIForumContainer">
+	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
 					<div style="overflow:auto; margin: 2px 0px;">

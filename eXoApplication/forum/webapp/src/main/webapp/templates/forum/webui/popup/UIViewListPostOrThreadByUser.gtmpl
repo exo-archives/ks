@@ -1,9 +1,7 @@
 <div class="UIFormForum">
 	<% uiform.begin() 
-	
 		uicomponent.renderChildren();
 	%>
-		
 		<div class="UIAction"> 
 			<table class="ActionContainer" align="center">
 				<tr>

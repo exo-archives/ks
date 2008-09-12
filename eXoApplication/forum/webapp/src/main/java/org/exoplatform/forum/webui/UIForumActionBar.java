@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -58,14 +58,14 @@ public class UIForumActionBar extends UIContainer	{
 	} 
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
 	public void setHasCategory(boolean hasCategory) {
-	  this.hasCategory = hasCategory ;
-  }
+		this.hasCategory = hasCategory ;
+	}
 	static public class AddCategoryActionListener extends EventListener<UIForumActionBar> {
-    public void execute(Event<UIForumActionBar> event) throws Exception {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
 			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -101,7 +101,7 @@ public class UIForumActionBar extends UIContainer	{
 	} 
 	
 	static public class ManageModeratorActionListener extends EventListener<UIForumActionBar> {
-    public void execute(Event<UIForumActionBar> event) throws Exception {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
 				UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;

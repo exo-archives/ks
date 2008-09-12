@@ -20,8 +20,8 @@ package org.exoplatform.forum.service;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 28-08-2008 - 02:45:31  
+ *					tu.duy@exoplatform.com
+ * 28-08-2008 - 02:45:31	
  */
 public class JobWattingForModerator {
 	private JCRPageList topicUnApproved;
@@ -30,37 +30,37 @@ public class JobWattingForModerator {
 	private JCRPageList postsUnApproved;
 	
 	public JCRPageList getTopicUnApproved() {
-  	return topicUnApproved;
-  }
+		return topicUnApproved;
+	}
 
 	public void setTopicUnApproved(JCRPageList topicUnApproved) {
-  	this.topicUnApproved = topicUnApproved;
-  }
+		this.topicUnApproved = topicUnApproved;
+	}
 
 	public JCRPageList getTopicWaiting() {
-  	return topicWaiting;
-  }
+		return topicWaiting;
+	}
 
 	public void setTopicWaiting(JCRPageList topicWaiting) {
-  	this.topicWaiting = topicWaiting;
-  }
+		this.topicWaiting = topicWaiting;
+	}
 
 	public JCRPageList getPostsHidden() {
-  	return postsHidden;
-  }
+		return postsHidden;
+	}
 
 	public void setPostsHidden(JCRPageList postsHidden) {
-  	this.postsHidden = postsHidden;
-  }
+		this.postsHidden = postsHidden;
+	}
 
 	public JCRPageList getPostsUnApproved() {
-  	return postsUnApproved;
-  }
+		return postsUnApproved;
+	}
 
 	public void setPostsUnApproved(JCRPageList postsUnApproved) {
-  	this.postsUnApproved = postsUnApproved;
-  }
+		this.postsUnApproved = postsUnApproved;
+	}
 
 	public JobWattingForModerator() {
-  }
+	}
 }

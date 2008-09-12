@@ -19,7 +19,7 @@ package org.exoplatform.forum.service;
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
- *	  tu.duy@exoplatform.com
+ *		tu.duy@exoplatform.com
  * 14 Apr 2008, 07:09:02	
  */
 public class ForumSearch {
@@ -33,41 +33,41 @@ public class ForumSearch {
 	public ForumSearch() {}
 	
 	public String getId() {
-  	return id;
-  }
+		return id;
+	}
 	public void setId(String id) {
-  	this.id = id;
-  }
+		this.id = id;
+	}
 	public String getPath() {
-  	return path;
-  }
+		return path;
+	}
 	public void setPath(String path) {
-  	this.path = path;
-  }
+		this.path = path;
+	}
 	public String getType() {
-  	return type;
-  }
+		return type;
+	}
 	public void setType(String type) {
-  	this.type = type;
-  }
+		this.type = type;
+	}
 	public String getName() {
-  	return name;
-  }
+		return name;
+	}
 	public void setName(String name) {
-  	this.name = name;
-  }
+		this.name = name;
+	}
 	public String getContent() {
-  	return content;
-  }
+		return content;
+	}
 	public void setContent(String content) {
-  	this.content = content;
-  }
+		this.content = content;
+	}
 
 	public String getIcon() {
-  	return icon;
-  }
+		return icon;
+	}
 
 	public void setIcon(String icon) {
-  	this.icon = icon;
-  }
+		this.icon = icon;
+	}
 }

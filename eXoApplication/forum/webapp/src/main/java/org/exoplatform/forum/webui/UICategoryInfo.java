@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -53,17 +53,17 @@ public class UICategoryInfo extends UIContainer	{
 		setPageListUserProfile();
 	} 
 	
-  @SuppressWarnings("unchecked")
-  public List<UserProfile> setPageListUserProfile() throws Exception {
+	@SuppressWarnings("unchecked")
+	public List<UserProfile> setPageListUserProfile() throws Exception {
 		if(userProfiles == null || userProfiles.size() == 0) {
-	    JCRPageList pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
-	    userProfiles = pageList.getPage(0) ;
+			JCRPageList pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
+			userProfiles = pageList.getPage(0) ;
 		}
-    return userProfiles;
-  }
+		return userProfiles;
+	}
 	
 	@SuppressWarnings("unused")
-  private long getUserActive() throws Exception {
+	private long getUserActive() throws Exception {
 		Date date = null;
 		long newTime = getInstanceTempCalendar().getTimeInMillis(), oldTime;
 		numberActive = 0;
@@ -81,28 +81,27 @@ public class UICategoryInfo extends UIContainer	{
 					}
 				}
 			}
-    }
+		}
 		if(numberActive <= 0) numberActive = 1;
 		return numberActive;
 	}
 	@SuppressWarnings("unused")
-  private List<String> getUserOnline() throws Exception {
+	private List<String> getUserOnline() throws Exception {
 		List<String> list = this.forumService.getOnlineUsers() ;
 		this.mostUserOnline_ = list.size() ;
-		return  list;
+		return	list;
 	}
 
-  public Calendar getInstanceTempCalendar() { 
-    Calendar  calendar = GregorianCalendar.getInstance() ;
-    calendar.setLenient(false) ;
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() + gmtoffset) ; 
-    return  calendar;
-  }
+	public Calendar getInstanceTempCalendar() { 
+		Calendar	calendar = GregorianCalendar.getInstance() ;
+		calendar.setLenient(false) ;
+		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+		calendar.setTimeInMillis(System.currentTimeMillis() + gmtoffset) ; 
+		return	calendar;
+	}
 	
 	public ForumStatistic getForumStatistic() throws Exception {
 		ForumStatistic forumStatistic = forumService.getForumStatistic(ForumSessionUtils.getSystemProvider()) ;
-		
 		List<User> userList = ForumSessionUtils.getAllUser();
 		long size = (long)userList.size() ;
 		boolean isSave = false ;
@@ -115,7 +114,7 @@ public class UICategoryInfo extends UIContainer	{
 					max = temp; i = j ;
 				}
 				j++;
-	    }
+			}
 			forumStatistic.setMembersCount(size) ;
 			forumStatistic.setNewMembers(userList.get(i).getUserName()) ;
 			isSave = true ;
@@ -138,6 +137,6 @@ public class UICategoryInfo extends UIContainer	{
 		if(isSave) {
 			this.forumService.saveForumStatistic(ForumSessionUtils.getSystemProvider(), forumStatistic) ;
 		}
-	  return forumStatistic ;
-  }
+		return forumStatistic ;
+	}
 }

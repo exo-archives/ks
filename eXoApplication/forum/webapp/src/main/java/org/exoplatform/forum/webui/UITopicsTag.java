@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -81,16 +81,16 @@ public class UITopicsTag extends UIForm {
 		this.tagId = tagId ;
 		this.isUpdateTag = true ;
 		this.isUpdateTopicTag = true ;
-		this.userProfile  = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-  }
+		this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() {
+	private UserProfile getUserProfile() {
 		return userProfile ;
 	}
 	
 	@SuppressWarnings("unused")
-  private void getListTopicTag() throws Exception {
+	private void getListTopicTag() throws Exception {
 		this.listTopic = forumService.getTopicsByTag(ForumSessionUtils.getSystemProvider(), this.tagId) ;
 		long maxTopic = this.userProfile.getMaxTopicInPage() ;
 		if(maxTopic > 0) this.maxTopic = maxTopic;
@@ -104,7 +104,7 @@ public class UITopicsTag extends UIForm {
 	
 	private TreeMap<String, JCRPageList> mapPostPage = new TreeMap<String, JCRPageList>();
 	@SuppressWarnings("unused")
-  private long getMaxPagePost(String Id) throws Exception {
+	private long getMaxPagePost(String Id) throws Exception {
 		String Ids[] = Id.split("/") ;
 		String isApprove = "" ;
 		String isHidden = "" ;
@@ -130,12 +130,12 @@ public class UITopicsTag extends UIForm {
 	}
 
 	@SuppressWarnings("unused")
-  private JCRPageList getPagePost(String topicId) {
+	private JCRPageList getPagePost(String topicId) {
 		return this.mapPostPage.get(topicId) ;
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-  private List<Topic> getTopicsTag() throws Exception {
+	private List<Topic> getTopicsTag() throws Exception {
 		getListTopicTag() ;
 		this.page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
 		this.topics = this.listTopic.getPage(this.page);
@@ -150,7 +150,7 @@ public class UITopicsTag extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private Tag getTagById() throws Exception {
+	private Tag getTagById() throws Exception {
 		if(this.isUpdateTag) {
 			this.tag = forumService.getTag(ForumSessionUtils.getSystemProvider(), this.tagId) ;
 			this.isUpdateTag = false ;
@@ -169,11 +169,11 @@ public class UITopicsTag extends UIForm {
 		String []ids = new String[tagIds.length-1] ; 
 		int t = 0;
 		for (String string : tagIds) {
-	    if(!string.equals(this.tagId)){
-	    	ids[t] = string ;
-	    	++t;
-	    }
-    }
+			if(!string.equals(this.tagId)){
+				ids[t] = string ;
+				++t;
+			}
+		}
 		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), ids);
 	}
 	
@@ -190,7 +190,7 @@ public class UITopicsTag extends UIForm {
 	}
 	
 	static public class OpenTopicActionListener extends EventListener<UITopicsTag> {
-    public void execute(Event<UITopicsTag> event) throws Exception {
+		public void execute(Event<UITopicsTag> event) throws Exception {
 			UITopicsTag uiTopicsTag = event.getSource();
 			String idAndNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String []id = idAndNumber.split(",") ;
@@ -217,7 +217,7 @@ public class UITopicsTag extends UIForm {
 	}
 	
 	static public class OpenTopicsTagActionListener extends EventListener<UITopicsTag> {
-    public void execute(Event<UITopicsTag> event) throws Exception {
+		public void execute(Event<UITopicsTag> event) throws Exception {
 			UITopicsTag topicsTag = event.getSource() ;
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = topicsTag.getParent() ;
@@ -228,21 +228,21 @@ public class UITopicsTag extends UIForm {
 	}
 	
 	static public class EditTagActionListener extends EventListener<UITopicsTag> {
-    public void execute(Event<UITopicsTag> event) throws Exception {
+		public void execute(Event<UITopicsTag> event) throws Exception {
 			UITopicsTag topicsTag = event.getSource() ;
 			UIForumPortlet forumPortlet = topicsTag.getParent() ;
-      UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-      UIAddTagForm addTagForm = popupAction.createUIComponent(UIAddTagForm.class, null, null) ;
-      addTagForm.setUpdateTag(topicsTag.tag);
-      addTagForm.setIsTopicTag(true) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIAddTagForm addTagForm = popupAction.createUIComponent(UIAddTagForm.class, null, null) ;
+			addTagForm.setUpdateTag(topicsTag.tag);
+			addTagForm.setIsTopicTag(true) ;
 			popupAction.activate(addTagForm, 410, 263) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
 	static public class RemoveTopicActionListener extends EventListener<UITopicsTag> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UITopicsTag> event) throws Exception {
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UITopicsTag> event) throws Exception {
 			UITopicsTag topicsTag = event.getSource() ;
 			List<UIComponent> children = topicsTag.getChildren() ;
 			boolean hasCheck = false ;
@@ -270,7 +270,7 @@ public class UITopicsTag extends UIForm {
 	}
 	
 	static public class RemoveTagActionListener extends EventListener<UITopicsTag> {
-    public void execute(Event<UITopicsTag> event) throws Exception {
+		public void execute(Event<UITopicsTag> event) throws Exception {
 			UITopicsTag topicsTag = event.getSource() ;
 			UIForumPortlet forumPortlet = topicsTag.getParent() ;
 			topicsTag.forumService.removeTag(ForumSessionUtils.getSystemProvider(), topicsTag.tagId) ;
