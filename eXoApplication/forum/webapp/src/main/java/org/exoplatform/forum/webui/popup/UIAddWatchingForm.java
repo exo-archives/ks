@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -41,8 +41,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 12, 2008 - 10:15:49 AM  
+ *					tu.duy@exoplatform.com
+ * May 12, 2008 - 10:15:49 AM	
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
@@ -53,17 +53,17 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIAddWatchingForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
+public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 	final static public String EMAIL_ADDRESS = "emails" ;
 	public static final String USER_NAME = "userName" ; 
 	private String path = "";
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(EMAIL_ADDRESS,EMAIL_ADDRESS) ;
 	public UIAddWatchingForm() throws Exception {
-  	UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
-  	addUIFormInput(userName);
-  }
+		UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
+		addUIFormInput(userName);
+	}
 	
-	public void initForm() throws Exception  {
+	public void initForm() throws Exception	{
 		List<String> list = new ArrayList<String>() ;
 		String userId = ForumSessionUtils.getCurrentUser() ;
 		if(!ForumUtils.isEmpty(userId)) {
@@ -83,8 +83,8 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 	public void deActivate() throws Exception {}
 	
 	public void setPathNode(String path) {
-	  this.path = path ;
-  }
+		this.path = path ;
+	}
 	private void initMultiValuesField(List<String> list) throws Exception {
 		if( uiFormMultiValue != null ) removeChildById(EMAIL_ADDRESS);
 		uiFormMultiValue = createUIComponent(UIFormMultiValueInputSet.class, null, null) ;
@@ -105,7 +105,7 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 	
 	static	public class SaveActionListener extends EventListener<UIAddWatchingForm> {
 		@SuppressWarnings("unchecked")
-    public void execute(Event<UIAddWatchingForm> event) throws Exception {
+		public void execute(Event<UIAddWatchingForm> event) throws Exception {
 			UIAddWatchingForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String path = uiForm.path;
@@ -118,9 +118,9 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 				values_.add(value) ;
 				for (String string : values) {
 					if(values_.contains(string)) continue ;
-          values_.add(string) ;
-          value = value + "," +string;
-        }
+					values_.add(string) ;
+					value = value + "," +string;
+				}
 				isEmail = ForumUtils.isValidEmailAddresses(value) ;
 				if(isEmail) {
 				} else {
@@ -144,18 +144,17 @@ public class UIAddWatchingForm  extends UIForm	implements UIPopupComponent {
 	}
 	
 	static	public class RefreshActionListener extends EventListener<UIAddWatchingForm> {
-    public void execute(Event<UIAddWatchingForm> event) throws Exception {
-    	UIAddWatchingForm uiForm = event.getSource() ;
+		public void execute(Event<UIAddWatchingForm> event) throws Exception {
+			UIAddWatchingForm uiForm = event.getSource() ;
 			uiForm.initForm() ;
 		}
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIAddWatchingForm> {
-    public void execute(Event<UIAddWatchingForm> event) throws Exception {
-    	UIAddWatchingForm uiForm = event.getSource() ;
+		public void execute(Event<UIAddWatchingForm> event) throws Exception {
+			UIAddWatchingForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
 	}
-	
 }

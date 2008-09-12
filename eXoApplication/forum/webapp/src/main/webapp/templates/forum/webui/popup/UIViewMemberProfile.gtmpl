@@ -30,8 +30,8 @@
 	String fullName = userName;
 	User user = uiform.getUser() ;
 	if(user != null){ 
-	  createdDate = ForumUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
-	  fullName = user.getFullName();
+		createdDate = ForumUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
+		fullName = user.getFullName();
 	}
 	long totalPost = userProfile.getTotalPost();
 	shortDateFormat = shortDateFormat +	", " + userProfileLogin.getTimeFormat();

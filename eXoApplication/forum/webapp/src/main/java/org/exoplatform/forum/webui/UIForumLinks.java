@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -68,26 +68,26 @@ public class UIForumLinks extends UIForm {
 			if(t == 0) strQueryCate.append("@exo:").append(property).append("='").append(string).append("'");
 			else strQueryCate.append(" or @exo:").append(property).append("='").append(string).append("'");
 			++t;
-    }
+		}
 		return strQueryCate.toString();
 	}
 	
-  public void setUpdateForumLinks() throws Exception {
-  	
-  	String strQueryCate = "";
-  	String strQueryForum = "";
-  	List<String>listUser = ForumSessionUtils.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
-  	if(this.userProfile.getUserRole() > 0) {
-  		strQueryCate = getStrQuery(listUser, "userPrivate");
-  		if(!ForumUtils.isEmpty(strQueryCate)) strQueryCate = "[@exo:userPrivate=' ' or "+strQueryCate+"]";
-  		strQueryForum = getStrQuery(listUser, "moderators") ;
-  		if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "[@exo:isClosed='false' or "+strQueryForum+"]";
-  	}
-  	
+	public void setUpdateForumLinks() throws Exception {
+		
+		String strQueryCate = "";
+		String strQueryForum = "";
+		List<String>listUser = ForumSessionUtils.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
+		if(this.userProfile.getUserRole() > 0) {
+			strQueryCate = getStrQuery(listUser, "userPrivate");
+			if(!ForumUtils.isEmpty(strQueryCate)) strQueryCate = "[@exo:userPrivate=' ' or "+strQueryCate+"]";
+			strQueryForum = getStrQuery(listUser, "moderators") ;
+			if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "[@exo:isClosed='false' or "+strQueryForum+"]";
+		}
+		
 		this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider(), strQueryCate, strQueryForum);
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL)+"/" + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE)) ;
-		String space = "&nbsp; &nbsp; ",  type = "/categoryLink"; 
+		String space = "&nbsp; &nbsp; ",	type = "/categoryLink"; 
 		for(ForumLinkData linkData : forumLinks) {
 			if(linkData.getType().equals(Utils.FORUM)) {
 				type = "/" + FIELD_FORUMLINK_SELECTBOX; 
@@ -116,22 +116,22 @@ public class UIForumLinks extends UIForm {
 	}
 	
 	@SuppressWarnings("unused")
-  private void setForumLinks() throws Exception {
+	private void setForumLinks() throws Exception {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
 	}
 	
 	public List<ForumLinkData> getForumLinks() throws Exception {
-	  return this.forumLinks ;
-  }
+		return this.forumLinks ;
+	}
 	
 	public void setValueOption(String path) throws Exception {
 		this.path = path ;
 	}
 	
 	static	public class SelectActionListener extends EventListener<UIForumLinks> {
-    public void execute(Event<UIForumLinks> event) throws Exception {
+		public void execute(Event<UIForumLinks> event) throws Exception {
 			UIForumLinks uiForm = event.getSource() ;
 			UIFormSelectBoxForum selectBoxForum = uiForm.getUIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX) ;
 			String path = selectBoxForum.getValue();

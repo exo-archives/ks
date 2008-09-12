@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -120,20 +120,20 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	}
 
 	public void updateSelect(String selectField, String value) throws Exception {
-    UIFormStringInput fieldInput = getUIStringInput(selectField) ;
-    String values = fieldInput.getValue() ;
-    if(!ForumUtils.isEmpty(values)) {
-    	values = ForumUtils.removeSpaceInString(values);
-      if(!ForumUtils.isStringInStrings(values.split(","), value)){
-        if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
-        values = values + value ;
-      } 
-    } else values = value ;
-    fieldInput.setValue(values) ;
-  }
+		UIFormStringInput fieldInput = getUIStringInput(selectField) ;
+		String values = fieldInput.getValue() ;
+		if(!ForumUtils.isEmpty(values)) {
+			values = ForumUtils.removeSpaceInString(values);
+			if(!ForumUtils.isStringInStrings(values.split(","), value)){
+				if(values.lastIndexOf(",") != (values.length() - 1)) values = values + ",";
+				values = values + value ;
+			} 
+		} else values = value ;
+		fieldInput.setValue(values) ;
+	}
 	
 	static	public class SaveActionListener extends EventListener<UICategoryForm> {
-    public void execute(Event<UICategoryForm> event) throws Exception {
+		public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiForm = event.getSource() ;
 			String categoryTitle = uiForm.getUIStringInput(FIELD_CATEGORYTITLE_INPUT).getValue();
 			int maxText = ForumUtils.MAXTITLE ;
@@ -163,29 +163,29 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				return ;
 			}
 			String userPrivate = uiForm.getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).getValue();
-      userPrivate = ForumUtils.removeSpaceInString(userPrivate) ;
-      userPrivate = ForumUtils.removeStringResemble(userPrivate) ;
-      String []userPrivates = ForumUtils.splitForForum(userPrivate);
-      if(!ForumUtils.isEmpty(userPrivate)) {
-      	String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
-	    	if(!ForumUtils.isEmpty(erroUser)) {
-	    		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-	    		Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
-	    		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-	    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-	    		return ;
-	    	}
-      } else {userPrivates = new String[]{" "};}
-    	String userName = ForumSessionUtils.getCurrentUser();
-    	Category cat = new Category();
-    	cat.setOwner(userName) ;
-    	cat.setCategoryName(categoryTitle.trim()) ;
-    	cat.setCategoryOrder(Long.parseLong(categoryOrder)) ;
-    	cat.setCreatedDate(new Date()) ;
-    	cat.setDescription(description) ;
-    	cat.setModifiedBy(userName) ;
-    	cat.setModifiedDate(new Date()) ;
-      cat.setUserPrivate(userPrivates) ;
+			userPrivate = ForumUtils.removeSpaceInString(userPrivate) ;
+			userPrivate = ForumUtils.removeStringResemble(userPrivate) ;
+			String []userPrivates = ForumUtils.splitForForum(userPrivate);
+			if(!ForumUtils.isEmpty(userPrivate)) {
+				String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
+				if(!ForumUtils.isEmpty(erroUser)) {
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
+					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return ;
+				}
+			} else {userPrivates = new String[]{" "};}
+			String userName = ForumSessionUtils.getCurrentUser();
+			Category cat = new Category();
+			cat.setOwner(userName) ;
+			cat.setCategoryName(categoryTitle.trim()) ;
+			cat.setCategoryOrder(Long.parseLong(categoryOrder)) ;
+			cat.setCreatedDate(new Date()) ;
+			cat.setDescription(description) ;
+			cat.setModifiedBy(userName) ;
+			cat.setModifiedDate(new Date()) ;
+			cat.setUserPrivate(userPrivates) ;
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -209,18 +209,18 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	}
 	
 	static	public class AddPrivateActionListener extends EventListener<UICategoryForm> {
-    public void execute(Event<UICategoryForm> event) throws Exception {
-    	UICategoryForm categoryForm = event.getSource() ;
-    	String type = event.getRequestContext().getRequestParameter(OBJECTID)	;
+		public void execute(Event<UICategoryForm> event) throws Exception {
+			UICategoryForm categoryForm = event.getSource() ;
+			String type = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 600) ;
 			if(type.equals("0")) uiGroupSelector.setId("UIUserSelector");
 			else if(type.equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
-      uiGroupSelector.setType(type) ;
-      uiGroupSelector.setSelectedGroups(null) ;
-      uiGroupSelector.setComponent(categoryForm, new String[]{UICategoryForm.FIELD_USERPRIVATE_MULTIVALUE}) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			uiGroupSelector.setType(type) ;
+			uiGroupSelector.setSelectedGroups(null) ;
+			uiGroupSelector.setComponent(categoryForm, new String[]{UICategoryForm.FIELD_USERPRIVATE_MULTIVALUE}) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 

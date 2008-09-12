@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -46,12 +46,12 @@ public class UIUserTitleManagerForm extends UIForm {
 	}
 	
 	static	public class SaveActionListener extends EventListener<UIUserTitleManagerForm> {
-    public void execute(Event<UIUserTitleManagerForm> event) throws Exception {
+		public void execute(Event<UIUserTitleManagerForm> event) throws Exception {
 //			UIUserTitleManagerForm uiForm = event.getSource() ;
 		}
 	}
 	static	public class CancelActionListener extends EventListener<UIUserTitleManagerForm> {
-    public void execute(Event<UIUserTitleManagerForm> event) throws Exception {
+		public void execute(Event<UIUserTitleManagerForm> event) throws Exception {
 //			UIUserTitleManagerForm uiForm = event.getSource() ;
 		}
 	}

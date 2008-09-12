@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -131,17 +131,17 @@ public class UIBreadcumbs extends UIContainer {
 	}
 	
 	@SuppressWarnings("unused")
-  private int getTotalJobWattingForModerator() throws Exception {
+	private int getTotalJobWattingForModerator() throws Exception {
 		return forumService.getTotalJobWattingForModerator(ForumSessionUtils.getSystemProvider(), this.userProfile.getUserId());
 	}
 	
 	public boolean isOpen() {
-  	return isOpen;
-  }
+		return isOpen;
+	}
 
 	public void setOpen(boolean isOpen) {
-  	this.isOpen = isOpen;
-  }
+		this.isOpen = isOpen;
+	}
 	
 //	
 //	public String[] getPath() {
@@ -150,20 +150,20 @@ public class UIBreadcumbs extends UIContainer {
 //				path = this.userProfile.getModerateForums() ;
 //			} 
 //		}
-//  	return path;
-//  }
+//		return path;
+//	}
 //
 //	public void setPath(String[] path) {
-//  	this.path = path;
-//  }
+//		this.path = path;
+//	}
 //	@SuppressWarnings("unused")
-//  private JobWattingForModerator getJobWattingForModerator() throws Exception {
+//	private JobWattingForModerator getJobWattingForModerator() throws Exception {
 //		wattingForModerator = forumService.getJobWattingForModerator(ForumSessionUtils.getSystemProvider(), this.getPath()) ;
 //		return wattingForModerator;
 //	}
 //	
 //	@SuppressWarnings("unused")
-//  private long getTopicUACount() throws Exception{ 
+//	private long getTopicUACount() throws Exception{ 
 //		return wattingForModerator.getTopicUnApproved().getAvailable();
 //	}
 //	@SuppressWarnings("unused")
@@ -181,7 +181,7 @@ public class UIBreadcumbs extends UIContainer {
 //	
 	
 	@SuppressWarnings("unused")
-  private boolean isLink() {return this.isLink;}
+	private boolean isLink() {return this.isLink;}
 	@SuppressWarnings("unused")
 	private String getPath(int index) {
 		return this.path_.get(index) ;
@@ -198,7 +198,7 @@ public class UIBreadcumbs extends UIContainer {
 	}
 	
 	@SuppressWarnings("unused")
-  private long getNewMessage() throws Exception {
+	private long getNewMessage() throws Exception {
 		if(!userProfile.getIsBanned()){
 			return this.userProfile.getNewMessage() ;
 		} else {
@@ -210,7 +210,7 @@ public class UIBreadcumbs extends UIContainer {
 	
 	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
-    public void execute(Event<UIBreadcumbs> event) throws Exception {
+		public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs uiBreadcums = event.getSource() ;
 			if(uiBreadcums.isOpen()) {
 				String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
@@ -227,22 +227,22 @@ public class UIBreadcumbs extends UIContainer {
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 				}else	if(path.lastIndexOf(Utils.TOPIC) > 0) {
 					String []id = path.split("/") ;
-	    		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-	    		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
-	    		if(topic != null) {
-		    		forumPortlet.updateIsRendered(ForumUtils.FORUM);
-		    		Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
-		  			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-		  			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-		  			uiForumContainer.setIsRenderChild(false) ;
-		  			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-		  			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-		  			uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
-		  			uiTopicDetail.setUpdateForum(forum) ;
-		  			uiTopicDetail.setIdPostView("false") ;
-		  			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
-		  			forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
-	    		}
+					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+					Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
+					if(topic != null) {
+						forumPortlet.updateIsRendered(ForumUtils.FORUM);
+						Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+						UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+						uiForumContainer.setIsRenderChild(false) ;
+						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+						uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
+						uiTopicDetail.setUpdateForum(forum) ;
+						uiTopicDetail.setIdPostView("false") ;
+						uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+					}
 				}else	if(path.lastIndexOf(Utils.FORUM) > 0) {
 					String id[] = path.split("/");
 					forumPortlet.updateIsRendered(ForumUtils.FORUM);
@@ -267,8 +267,8 @@ public class UIBreadcumbs extends UIContainer {
 	}	
 	
 	static public class PrivateMessageActionListener extends EventListener<UIBreadcumbs> {
-    public void execute(Event<UIBreadcumbs> event) throws Exception {
-    	UIBreadcumbs breadcumbs = event.getSource() ;
+		public void execute(Event<UIBreadcumbs> event) throws Exception {
+			UIBreadcumbs breadcumbs = event.getSource() ;
 			UIForumPortlet forumPortlet = breadcumbs.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;

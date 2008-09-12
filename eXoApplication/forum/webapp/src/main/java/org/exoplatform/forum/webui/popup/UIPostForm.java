@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -85,10 +85,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	final static public String FIELD_FROM_INPUT = "FromInput" ;
 	final static public String FIELD_MESSAGECONTENT = "MessageContent" ;
 	final static public String FIELD_ORIGINALLY = "Originally" ;
-  
-  public static final String FIELD_THREADCONTEN_TAB = "ThreadContent" ;
-  public static final String FIELD_THREADICON_TAB = "IconAndSmiley" ;
-  private int tabId = 0 ;
+	
+	public static final String FIELD_THREADCONTEN_TAB = "ThreadContent" ;
+	public static final String FIELD_THREADICON_TAB = "IconAndSmiley" ;
+	private int tabId = 0 ;
 	
 	private List<ForumAttachment> attachments_ = new ArrayList<ForumAttachment>() ;
 	private String categoryId; 
@@ -102,40 +102,40 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private boolean isMP = false ;
 	private String link = "";
 	public UIPostForm() throws Exception {
-    UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
-    postTitle.addValidator(MandatoryValidator.class);
-    UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
-    editReason.setRendered(false);
-    UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB) ;
-    UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true) ;
-    formWYSIWYGInput.addValidator(MandatoryValidator.class);
-    threadContent.addChild(postTitle) ;
-    threadContent.addChild(editReason) ;
-    threadContent.addChild(formWYSIWYGInput) ;
-    threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
-    threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
-    UIFormInputIconSelector inputIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
-    inputIconSelector.setSelectedIcon("IconsView") ;
-    
-    addUIFormInput(threadContent) ;
-    addUIFormInput(inputIconSelector) ;
-    this.setActions(new String[] {"PreviewPost", "SubmitPost", "Attachment", "Cancel"}) ;
+		UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
+		postTitle.addValidator(MandatoryValidator.class);
+		UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
+		editReason.setRendered(false);
+		UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB) ;
+		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true) ;
+		formWYSIWYGInput.addValidator(MandatoryValidator.class);
+		threadContent.addChild(postTitle) ;
+		threadContent.addChild(editReason) ;
+		threadContent.addChild(formWYSIWYGInput) ;
+		threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
+		threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
+		UIFormInputIconSelector inputIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
+		inputIconSelector.setSelectedIcon("IconsView") ;
+		
+		addUIFormInput(threadContent) ;
+		addUIFormInput(inputIconSelector) ;
+		this.setActions(new String[] {"PreviewPost", "SubmitPost", "Attachment", "Cancel"}) ;
 	}
 	
 	public String getLink() {return link;}
 	public void setLink(String link) {this.link = link;}
-  @SuppressWarnings("unused")
-  private boolean tabIsSelected(int tabId) {
-    if(this.tabId == tabId) return true ;
-    else return false ;
-  }
-  
-  @SuppressWarnings("unused")
-  private String[] getTabName(){
-    String[] tab = {"UIPostForm.tittle.threadContent", "UIPostForm.tittle.iconAndSmiley"};
-    return tab ;
-  }
-  
+	@SuppressWarnings("unused")
+	private boolean tabIsSelected(int tabId) {
+		if(this.tabId == tabId) return true ;
+		else return false ;
+	}
+	
+	@SuppressWarnings("unused")
+	private String[] getTabName(){
+		String[] tab = {"UIPostForm.tittle.threadContent", "UIPostForm.tittle.iconAndSmiley"};
+		return tab ;
+	}
+	
 	public void setPostIds(String categoryId, String forumId, String topicId, Topic topic) {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
@@ -166,7 +166,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	}
 	public void refreshUploadFileList() throws Exception {
 		UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
-    threadContent.setActionField(FIELD_ATTACHMENTS, getUploadFileList()) ;
+		threadContent.setActionField(FIELD_ATTACHMENTS, getUploadFileList()) ;
 	}
 	public void addToUploadFileList(ForumAttachment attachfile) {
 		attachments_.add(attachfile) ;
@@ -195,9 +195,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String title = "" ;
 				if(post.getName().indexOf(": ") > 0) title = post.getName() ;
 				else title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getName() ;
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
+				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
 				String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
-        threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
+				threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			} else if(isMP){
@@ -206,18 +206,18 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			} else{//edit
 				editReason.setRendered(true);
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName()) ;
+				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName()) ;
 				if(post.getAttachments() != null && post.getAttachments().size() > 0) {
 					this.attachments_ = post.getAttachments();
 					this.refreshUploadFileList();
 				}
-        threadContent.getChild(UIFormWYSIWYGInput.class).setValue(message);
-        getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
+				threadContent.getChild(UIFormWYSIWYGInput.class).setValue(message);
+				getChild(UIFormInputIconSelector.class).setSelectedIcon(post.getIcon());
 			}
 		} else {
 			if(!isQuote) {//reply
 				String title = this.topic.getTopicName() ;
-        threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
+				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			}
 		}
@@ -227,7 +227,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	public void deActivate() throws Exception {}
 	
 	static	public class PreviewPostActionListener extends EventListener<UIPostForm> {
-    public void execute(Event<UIPostForm> event) throws Exception {
+		public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
 			UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
@@ -272,7 +272,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class SubmitPostActionListener extends EventListener<UIPostForm> {
-    public void execute(Event<UIPostForm> event) throws Exception {
+		public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
 			UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
@@ -325,17 +325,17 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					return ;
 				}
 				// set link
-	      PortalRequestContext portalContext = Util.getPortalRequestContext();
-	      String url = portalContext.getRequest().getRequestURL().toString();
+				PortalRequestContext portalContext = Util.getPortalRequestContext();
+				String url = portalContext.getRequest().getRequestURL().toString();
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				String link = uiForm.getLink();
 				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewPost");	
-			  link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
+				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
 				link = url + link;
 				//
-        Post post = new Post();
+				Post post = new Post();
 				post.setName(postTitle.trim()) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
@@ -361,9 +361,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						post.setRemoteAddr(remoteAddr) ;
 						try {
 							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
-            } catch (PathNotFoundException e) {
-	            isParentDelete = true;
-            }
+						} catch (PathNotFoundException e) {
+							isParentDelete = true;
+						}
 						topicDetail.setIdPostView("true");
 						topicDetail.setUpdatePostPageList(true);
 					} else{
@@ -385,8 +385,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					} catch (PathNotFoundException e) {
 						isParentDelete = true;
 					}
-          topicDetail.setIdPostView("true");
-          topicDetail.setUpdatePostPageList(true);
+					topicDetail.setIdPostView("true");
+					topicDetail.setUpdatePostPageList(true);
 				}
 				uiForm.isMP = uiForm.isQuote = false;
 				if(isParentDelete){
@@ -398,7 +398,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				}
 				forumPortlet.cancelAction() ;
 				if(isOffend || hasTopicMod) {
-          topicDetail.setIdPostView("normal");
+					topicDetail.setIdPostView("normal");
 					Object[] args = { "" };
 					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
 					else {
@@ -423,7 +423,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static public class AttachmentActionListener extends EventListener<UIPostForm> {
-    public void execute(Event<UIPostForm> event) throws Exception {
+		public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
@@ -433,22 +433,22 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		}
 	}
 	static public class SelectTabActionListener extends EventListener<UIPostForm> {
-	  public void execute(Event<UIPostForm> event) throws Exception {
-      String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      UIPostForm postForm = event.getSource();
-      postForm.tabId = Integer.parseInt(id);
-      event.getRequestContext().addUIComponentToUpdateByAjax(postForm.getParent()) ;
-	  }
+		public void execute(Event<UIPostForm> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIPostForm postForm = event.getSource();
+			postForm.tabId = Integer.parseInt(id);
+			event.getRequestContext().addUIComponentToUpdateByAjax(postForm.getParent()) ;
+		}
 	}
 	
 	static public class RemoveAttachmentActionListener extends EventListener<UIPostForm> {
-    public void execute(Event<UIPostForm> event) throws Exception {
+		public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiPostForm = event.getSource() ;
 			String attFileId = event.getRequestContext().getRequestParameter(OBJECTID);
 			for (ForumAttachment att : uiPostForm.attachments_) {
 				if (att.getId().equals(attFileId)) {
 					uiPostForm.removeFromUploadFileList(att);
-          uiPostForm.attachments_.remove(att) ;
+					uiPostForm.attachments_.remove(att) ;
 					break;
 				}
 			}
@@ -469,7 +469,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIPostForm> {
-    public void execute(Event<UIPostForm> event) throws Exception {
+		public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
@@ -479,10 +479,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	}
 
 	public boolean isMod() {
-  	return isMod;
-  }
+		return isMod;
+	}
 
 	public void setMod(boolean isMod) {
-  	this.isMod = isMod;
-  }	
+		this.isMod = isMod;
+	}	
 }

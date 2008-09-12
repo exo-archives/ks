@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -50,8 +50,8 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 05-03-2008  
+ *					tu.duy@exoplatform.com
+ * 05-03-2008	
  */
 
 @ComponentConfig(
@@ -63,28 +63,28 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIPageListTopicByUser extends UIContainer{
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-  private List<Topic> topics = new ArrayList<Topic>() ;
-  private UserProfile userProfile ;
-  private String userName = new String() ;
+	private List<Topic> topics = new ArrayList<Topic>() ;
+	private UserProfile userProfile ;
+	private String userName = new String() ;
 	public UIPageListTopicByUser() throws Exception {
 		addChild(UIForumPageIterator.class, null, "PageListTopicByUser") ;
-  }
+	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		return this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
 	
-  public void setUserName(String userName) {
-    this.userName = userName ;
-  }
-  
+	public void setUserName(String userName) {
+		this.userName = userName ;
+	}
+	
 	@SuppressWarnings({ "unchecked", "unused" })
-  private List<Topic> getTopicsByUser() throws Exception {
+	private List<Topic> getTopicsByUser() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		boolean isMod = false;
 		if(this.userProfile.getUserRole() == 0) isMod = true;
-		JCRPageList pageList  = forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), this.userName, isMod) ;
+		JCRPageList pageList	= forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), this.userName, isMod) ;
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null)pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
@@ -93,16 +93,16 @@ public class UIPageListTopicByUser extends UIContainer{
 			topics = pageList.getPage(page) ;
 			if(topics == null) page--;
 		}
-    this.topics = topics ;
+		this.topics = topics ;
 		return topics ;
 	}
-  
-  public Topic getTopicById(String topicId) {
-    for(Topic topic : this.topics) {
-      if(topic.getId().equals(topicId)) return topic ;
-    }
-    return null ;
-  }
+	
+	public Topic getTopicById(String topicId) {
+		for(Topic topic : this.topics) {
+			if(topic.getId().equals(topicId)) return topic ;
+		}
+		return null ;
+	}
 	
 	@SuppressWarnings("unused")
 	private String[] getStarNumber(Topic topic) throws Exception {
@@ -111,7 +111,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	}
 
 	@SuppressWarnings("unused")
-  private JCRPageList getPageListPost(String topicPath) throws Exception {
+	private JCRPageList getPageListPost(String topicPath) throws Exception {
 		String []id = topicPath.split("/") ;
 		int i = id.length ;
 		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2], id[i-1], "", "", "", "")	; 
@@ -121,27 +121,27 @@ public class UIPageListTopicByUser extends UIContainer{
 	}
 	
 	static	public class DeleteTopicActionListener extends EventListener<UIPageListTopicByUser> {
-    public void execute(Event<UIPageListTopicByUser> event) throws Exception {
+		public void execute(Event<UIPageListTopicByUser> event) throws Exception {
 			UIPageListTopicByUser uiForm = event.getSource() ;
-      String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      Topic topic = uiForm.getTopicById(topicId);
-      String[] path = topic.getPath().split("/");
-      int i = path.length ;
-      String categoryId = path[i-3];
-      String forumId = path[i-2] ;
-      uiForm.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			Topic topic = uiForm.getTopicById(topicId);
+			String[] path = topic.getPath().split("/");
+			int i = path.length ;
+			String categoryId = path[i-3];
+			String forumId = path[i-2] ;
+			uiForm.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId);
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	
 	static	public class OpenTopicActionListener extends EventListener<UIPageListTopicByUser> {
-    public void execute(Event<UIPageListTopicByUser> event) throws Exception {
+		public void execute(Event<UIPageListTopicByUser> event) throws Exception {
 			UIPageListTopicByUser uiForm = event.getSource() ;
-      String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      Topic topic = uiForm.getTopicById(topicId) ;
-      UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-      String path =  topic.getPath().replaceFirst("/exo:applications/ForumService/", "");
-      String []id = path.split("/") ;
+			String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			Topic topic = uiForm.getTopicById(topicId) ;
+			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+			String path =	topic.getPath().replaceFirst("/exo:applications/ForumService/", "");
+			String []id = path.split("/") ;
 			boolean isRead = true;
 			Category category = uiForm.forumService.getCategory(ForumSessionUtils.getSystemProvider(), id[0]);
 			if(category == null) {
@@ -197,40 +197,40 @@ public class UIPageListTopicByUser extends UIContainer{
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 				return;
 			}
-      
-      if(((UIComponent)uiForm.getParent()).getId().equals("UIModeratorManagementForm")) {
-      	UIModeratorManagementForm parentComponent = uiForm.getParent();
+			
+			if(((UIComponent)uiForm.getParent()).getId().equals("UIModeratorManagementForm")) {
+				UIModeratorManagementForm parentComponent = uiForm.getParent();
 				UIPopupContainer popupContainer = parentComponent.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
 				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
 				viewTopic.setTopic(topic) ;
 				//event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-      } else {
-	      UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-	      id = topic.getPath().split("/") ;
-	      int i = id.length ;
-	      String categoryId = id[i-3];
-	      String forumId = id[i-2] ;
-	      //id[i-1] ; 
-	      Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2]) ;
-	      forumPortlet.updateIsRendered(ForumUtils.FORUM);
-	      UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-	      UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-	      uiForumContainer.setIsRenderChild(false) ;
-	      uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-	      UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-	      
-	      uiTopicDetail.setUpdateContainer(categoryId, forumId, topic, 1) ;
-	      
-	      uiTopicDetail.setUpdatePageList(uiForm.getPageListPost(topic.getPath())) ;
-	      uiTopicDetail.setUpdateForum(forum) ;
-	      uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
-	      forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));
-	      uiTopicDetail.setIdPostView("normal") ;
-	      forumPortlet.cancelAction() ;
-	      event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-      }
+			} else {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				id = topic.getPath().split("/") ;
+				int i = id.length ;
+				String categoryId = id[i-3];
+				String forumId = id[i-2] ;
+				//id[i-1] ; 
+				Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2]) ;
+				forumPortlet.updateIsRendered(ForumUtils.FORUM);
+				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+				uiForumContainer.setIsRenderChild(false) ;
+				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+				
+				uiTopicDetail.setUpdateContainer(categoryId, forumId, topic, 1) ;
+				
+				uiTopicDetail.setUpdatePageList(uiForm.getPageListPost(topic.getPath())) ;
+				uiTopicDetail.setUpdateForum(forum) ;
+				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
+				forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));
+				uiTopicDetail.setIdPostView("normal") ;
+				forumPortlet.cancelAction() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			}
 		}
 	}
 }

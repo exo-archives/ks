@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -39,8 +39,8 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 25, 2008 - 2:55:24 AM  
+ *					tu.duy@exoplatform.com
+ * May 25, 2008 - 2:55:24 AM	
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
@@ -64,11 +64,11 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	public Topic getTopic() { return topic;}
 	public void setTopic(Topic topic) {this.topic = topic;}
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		return this.userProfile ;
 	}
 	@SuppressWarnings("unused")
-  private void initPage() throws Exception {
+	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		String userLogin = this.userProfile.getUserId();
 		Topic topic = this.topic ;
@@ -83,7 +83,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings({ "unused", "unchecked" })
-  private List<Post> getPostPageList() throws Exception {
+	private List<Post> getPostPageList() throws Exception {
 		if(this.pageList == null) return null ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		this.pageSelect = forumPageIterator.getPageSelected() ;
@@ -97,14 +97,14 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean getIsRenderIter() {
+	private boolean getIsRenderIter() {
 		long availablePage = this.pageList.getAvailablePage() ;
 		if(availablePage > 1) return true;
 		return false ;
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserInfo(String userName) throws Exception {
+	private UserProfile getUserInfo(String userName) throws Exception {
 		return this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
 	}
 	@SuppressWarnings("unused")
@@ -117,30 +117,30 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-  private String getAvatarUrl(ForumContact contact) throws Exception {
-//  DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-//  try {
-//    ContactAttachment attachment = contact.getAttachment() ; 
-//    InputStream input = attachment.getInputStream() ;
-//    String fileName = attachment.getFileName() ;
-//    return ForumSessionUtils.getFileSource(input, fileName, dservice);
-//  } catch (NullPointerException e) {
-//    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-//  }
-  if (contact.getAvatarUrl() == null ) {
-    return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-  } else {
-    return contact.getAvatarUrl();
-  }
+	private String getAvatarUrl(ForumContact contact) throws Exception {
+//	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+//	try {
+//		ContactAttachment attachment = contact.getAttachment() ; 
+//		InputStream input = attachment.getInputStream() ;
+//		String fileName = attachment.getFileName() ;
+//		return ForumSessionUtils.getFileSource(input, fileName, dservice);
+//	} catch (NullPointerException e) {
+//		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+//	}
+	if (contact.getAvatarUrl() == null ) {
+		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+	} else {
+		return contact.getAvatarUrl();
+	}
 	}
 	@SuppressWarnings("unused")
-  private boolean isOnline(String userId) throws Exception {
+	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;
 	}
 	static	public class CloseActionListener extends EventListener<UIViewTopic> {
-    public void execute(Event<UIViewTopic> event) throws Exception {
-    	UIViewTopic uiForm = event.getSource() ;
-    	UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+		public void execute(Event<UIViewTopic> event) throws Exception {
+			UIViewTopic uiForm = event.getSource() ;
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
 				popupAction.deActivate() ;
@@ -151,7 +151,4 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			}
 		}
 	}
-
-
-
 }

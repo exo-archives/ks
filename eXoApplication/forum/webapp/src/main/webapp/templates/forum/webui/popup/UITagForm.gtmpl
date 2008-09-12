@@ -1,4 +1,4 @@
-<%  
+<%	
 	import org.exoplatform.forum.service.Tag ;
 %>
 <div class="UITagForm">
@@ -9,51 +9,51 @@
 			<div style="overflow: auto;">
 				<div class="TagTitle">Tags</div>
 				<% if(tags.size() > 0) { %>
-				<a  class="TagIcon" href="<%=uicomponent.event("Delete");%>"><div class="DustBin16x16Icon" title="Delete selected Tag"><span></span></div></a>
-				<a  class="TagIcon" href="<%=uicomponent.event("EditTag");%>"><div class="EditIcon" title="Edit selected Tag"><span></span></div></a>
+				<a	class="TagIcon" href="<%=uicomponent.event("Delete");%>"><div class="DustBin16x16Icon" title="Delete selected Tag"><span></span></div></a>
+				<a	class="TagIcon" href="<%=uicomponent.event("EditTag");%>"><div class="EditIcon" title="Edit selected Tag"><span></span></div></a>
 				<% } else {%>
 				<div class="TagIcon DustBin16x16Icon DisableLabel"><span></span></div>
 				<div class="TagIcon	EditIcon DisableLabel"><span></span></div>
 				<% } %>
 				<a class="TagIcon" href="<%=uicomponent.event("AddTag");%>"><div class="AddNewNodeIcon" title="Add new Tag"><span></span></div></a>
-		  	<div style="clear: both"><span></span></div>
-		  </div>
+				<div style="clear: both"><span></span></div>
+			</div>
 		</div>
 		<div class="TagsList">
 		<%
 			for(tag in tags) {
-			  String tagName = tag.getName() ;
-			  String color = tag.getColor() ;
-			  String description = tag.getDescription() ;
-			  String tagId = tag.getId() ;
-			  String classCss = "Normal";
-			  if(uicomponent.getSelected(tagId)) classCss = "Selected";
+				String tagName = tag.getName() ;
+				String color = tag.getColor() ;
+				String description = tag.getDescription() ;
+				String tagId = tag.getId() ;
+				String classCss = "Normal";
+				if(uicomponent.getSelected(tagId)) classCss = "Selected";
 		%>
 			<a href="<%=uicomponent.event("Selected",tagId);%>" class="IconHolder $classCss ${color}TagIcon" title="$description">$tagName</a>
 		<% } %>
 		</div>
 	</div>
 	<div class="UIAction"> 
-		  <table class="ActionContainer" align="center">
-				<tr>
-					<td align="center">
-	        <% String []Actions = ["Save","Cancel"] ; 
-	         for(action in Actions) { 
-	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-	           String link = uicomponent.event(action) ;
-	           actionLabel.trim();
-	        %>
-        		<a href="$link" class="ActionButton LightBlueStyle">
-	      	  	<div class="ButtonLeft">
-	        	  	<div class="ButtonRight">
-	          	  	<div class="ButtonMiddle">$actionLabel</div>
-	            	</div>
-	          	</div>
-	        	</a>
-          <%}%>
-          </td>
-				</tr>
-	 	  </table> 
-    </div>
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+				<% String []Actions = ["Save","Cancel"] ; 
+				 for(action in Actions) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+					 actionLabel.trim();
+				%>
+					<a href="$link" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">$actionLabel</div>
+							</div>
+						</div>
+					</a>
+				<%}%>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
 	<%uiform.end()%>
 </div>

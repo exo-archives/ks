@@ -146,8 +146,8 @@ public class UITopicContainer extends UIForm {
 	}
 	
 	public void setIdUpdate(boolean isUpdate) {
-	  this.isUpdate = isUpdate;
-  }
+		this.isUpdate = isUpdate;
+	}
 	
 	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs) throws Exception {
 		this.forumId = forumId ;
@@ -192,7 +192,7 @@ public class UITopicContainer extends UIForm {
 		isModerator = false ;
 		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
 		else {
-			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'  and (@exo:owner='").append(userId).append("' or @exo:canView=' '") ;
+			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'	and (@exo:owner='").append(userId).append("' or @exo:canView=' '") ;
 			for (String string : ForumSessionUtils.getAllGroupAndMembershipOfUser(userId)) {
 				strQuery.append(" or @exo:canView='"+string+"'") ;
 			}
@@ -301,13 +301,13 @@ public class UITopicContainer extends UIForm {
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
 				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
 				for (int i = 0; i < special.length(); i++) {
-		      char c = special.charAt(i);
-		      if(text.indexOf(c) >= 0) {
-		      	UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+					char c = special.charAt(i);
+					if(text.indexOf(c) >= 0) {
+						UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
 						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 						return ;
-		      }
-	      }
+					}
+				}
 				StringBuffer type = new StringBuffer();
 				if(uiTopicContainer.isModerator){ 
 					type.append("true,").append(Utils.TOPIC).append("/").append(Utils.POST);
@@ -579,7 +579,7 @@ public class UITopicContainer extends UIForm {
 	//----------------------------------MenuThread---------------------------------
 	static public class ApproveTopicsActionListener extends EventListener<UITopicContainer> {
 		@SuppressWarnings("unchecked")
-    public void execute(Event<UITopicContainer> event) throws Exception {
+		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();

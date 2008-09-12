@@ -9,8 +9,8 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.web.application.JavascriptManager;
-  def rcontext = _ctx.getRequestContext() ;
-  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	Category category = uicomponent.getCategory();
 	if(category == null) return ; 
 %>
@@ -314,10 +314,10 @@
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 													<div action="$actionBookmark" class="ClickPopupContent"></div>
 												</div>
-										  </div>
+											</div>
 										</div>
 										<div style="clear: left;"><span></span></div>
-										  <% ++rCNB; %>
+											<% ++rCNB; %>
 										<div class="ForumDescription">$forumDescription</div>
 									</td>
 						 <% if(topicNewPost != null) { 
@@ -335,9 +335,9 @@
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 													<div action="$actionBookmark" class="ClickPopupContent"></div>
 												</div>
-										  </div>
+											</div>
 										</div>
-										  <% ++rCNB; %>
+											<% ++rCNB; %>
 										<div style="clear: left;"><span></span></div>
 										<div class="LastPostInfos">by&nbsp;<a style="color: #058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
 								<%} else { %>	
@@ -355,8 +355,8 @@
 										else userSmile = "OfflineIcon";
 									%>
 										<a class="ModeratorContent" href="#">
-									    <div class="EmoticonsIcon $userSmile" >$forumModerator</div>
-								    </a>
+											<div class="EmoticonsIcon $userSmile" >$forumModerator</div>
+										</a>
 									<% } %>
 										<div style="clear: left;"><span></span></div>
 									</td>
@@ -372,7 +372,7 @@
 			
 		</div>
 	</div>
-	<% //Begin RightClick Bookmark  %>
+	<% //Begin RightClick Bookmark	%>
 	<div id="RightClickContainer" style="display: none;">
 		<%if(uicomponent.userProfile.getUserRole() < 3){%>
 		<div class="TopLeftRightClickPopupMenu">
@@ -398,14 +398,14 @@
 			</div>
 		</div>
 		<div class="BottomLeftRightClickPopupMenu">
-	    <div class="BottomRightRightClickPopupMenu">
-	      <div class="BottomCenterRightClickPopupMenu">
-	        <div class="FixHeight"><span></span></div>
-	      </div>
-	    </div>
-	  </div>
+			<div class="BottomRightRightClickPopupMenu">
+				<div class="BottomCenterRightClickPopupMenu">
+					<div class="FixHeight"><span></span></div>
+				</div>
+			</div>
+		</div>
 	 <% } %>
 	</div>
-	<% //End RightClick Bookmark  %>
+	<% //End RightClick Bookmark%>
 <%uiform.end()%>
 </div>

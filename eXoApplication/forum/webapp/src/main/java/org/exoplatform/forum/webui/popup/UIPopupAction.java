@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,7 +36,7 @@ public class UIPopupAction extends UIContainer {
 	}
 
 	@Override
-  public void processRender(WebuiRequestContext context) throws Exception {
+	public void processRender(WebuiRequestContext context) throws Exception {
 		context.getWriter().append("<span class=\"").append(getId()).append("\" id=\"").append(getId()).append("\">");
 		renderChildren(context) ;
 		context.getWriter().append("</span>");

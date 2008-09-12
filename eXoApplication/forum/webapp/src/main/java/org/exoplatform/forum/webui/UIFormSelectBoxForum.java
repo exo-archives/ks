@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -67,7 +67,7 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
 	}
 	
 	@Override
-  public UIFormSelectBoxForum setValue(String value) {
+	public UIFormSelectBoxForum setValue(String value) {
 		value_ = value ;
 		for(SelectItemOption<String> option : options_) {
 			if(option.getValue().equals(value_)) option.setSelected(true) ;
@@ -121,7 +121,7 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
 	}
 	
 	@Override
-  @SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	public void decode(Object input, WebuiRequestContext context) throws Exception {
 		String[] values = context.getRequestParameterValues(getId()) ;
 		if(values == null) {
@@ -147,7 +147,7 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
 	}
 	
 	@Override
-  public void processRender(WebuiRequestContext context) throws Exception {
+	public void processRender(WebuiRequestContext context) throws Exception {
 		ResourceBundle res = context.getApplicationResourceBundle() ;
 		UIForm uiForm = getAncestorOfType(UIForm.class) ;
 		String formId =	null ;

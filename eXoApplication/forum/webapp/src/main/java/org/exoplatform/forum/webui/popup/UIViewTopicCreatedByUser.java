@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -28,35 +28,34 @@ import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
- *          exo@exoplatform.com
- * Apr 4, 2008  
+ *					exo@exoplatform.com
+ * Apr 4, 2008	
  */
 
 @ComponentConfig(
-    lifecycle = UIFormLifecycle.class,
-    template = "app:/templates/forum/webui/popup/UIViewListPostOrThreadByUser.gtmpl",
-    events = {
-      @EventConfig(listeners = UIViewTopicCreatedByUser.CloseActionListener.class, phase=Phase.DECODE)
-    }
+		lifecycle = UIFormLifecycle.class,
+		template = "app:/templates/forum/webui/popup/UIViewListPostOrThreadByUser.gtmpl",
+		events = {
+			@EventConfig(listeners = UIViewTopicCreatedByUser.CloseActionListener.class, phase=Phase.DECODE)
+		}
 )
-public class UIViewTopicCreatedByUser extends UIForm implements UIPopupComponent  {
-  public void activate() throws Exception { }
+public class UIViewTopicCreatedByUser extends UIForm implements UIPopupComponent	{
+	public void activate() throws Exception { }
 
-  public void deActivate() throws Exception { }
-  
-  public void setUserId(String userId){
-    this.getChild(UIPageListTopicByUser.class).setUserName(userId);
-  }
-  
-  public UIViewTopicCreatedByUser() throws Exception{
-    addChild(UIPageListTopicByUser.class, null, "UIPageListTopicByUser") ;
-  }
-  
-  static public class CloseActionListener extends EventListener<UIViewTopicCreatedByUser> {
-    public void execute(Event<UIViewTopicCreatedByUser> event) throws Exception {
-      UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-      forumPortlet.cancelAction() ;
-    }
-  }
-
+	public void deActivate() throws Exception { }
+	
+	public void setUserId(String userId){
+		this.getChild(UIPageListTopicByUser.class).setUserName(userId);
+	}
+	
+	public UIViewTopicCreatedByUser() throws Exception{
+		addChild(UIPageListTopicByUser.class, null, "UIPageListTopicByUser") ;
+	}
+	
+	static public class CloseActionListener extends EventListener<UIViewTopicCreatedByUser> {
+		public void execute(Event<UIViewTopicCreatedByUser> event) throws Exception {
+			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.cancelAction() ;
+		}
+	}
 }

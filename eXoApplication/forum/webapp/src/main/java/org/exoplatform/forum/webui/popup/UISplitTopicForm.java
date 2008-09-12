@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -45,7 +45,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
+ *					tu.duy@exoplatform.com
  * 11-03-2008, 09:13:50
  */
 
@@ -64,18 +64,18 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_SPLITTHREAD_INPUT = "SplitThread" ;
 	public UISplitTopicForm() {
 		addUIFormInput(new UIFormStringInput(FIELD_SPLITTHREAD_INPUT,FIELD_SPLITTHREAD_INPUT, null));
-  }
+	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
 	private Post getPostById(String postId) throws Exception {
 		for (Post post : this.posts) {
-	    if(post.getId().equals(postId)) return post ;
-    }
+			if(post.getId().equals(postId)) return post ;
+		}
 		return new Post() ;
 	}
 	@SuppressWarnings({ "unused", "unchecked" })
-  private List<Post> getListPost() throws Exception {
+	private List<Post> getListPost() throws Exception {
 		String postId = this.topic.getId().replaceFirst(Utils.TOPIC, Utils.POST) ;
 		this.posts.remove(this.getPostById(postId));
 		for (Post post : this.posts) {
@@ -84,24 +84,24 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 			}else {
 				addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false) );
 			}
-    }
+		}
 		return this.posts ; 
 	}
 	public void setListPost(List<Post> posts) {this.posts = posts ;}
 	@SuppressWarnings("unused")
-  private Topic getTopic() {return this.topic ;}
+	private Topic getTopic() {return this.topic ;}
 	public void setTopic(Topic topic) { this.topic = topic; }
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() {return this.userProfile ;}
+	private UserProfile getUserProfile() {return this.userProfile ;}
 	public void setUserProfile(UserProfile userProfile) { this.userProfile = userProfile; }
 	
 	static	public class SaveActionListener extends EventListener<UISplitTopicForm> {
-    @SuppressWarnings("unchecked")
-    public void execute(Event<UISplitTopicForm> event) throws Exception {
-    	UISplitTopicForm uiForm = event.getSource() ;
-      String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue() ;
-      if(!ForumUtils.isEmpty(newTopicTitle)) {
-	    	List<UIComponent> children = uiForm.getChildren() ;
+		@SuppressWarnings("unchecked")
+		public void execute(Event<UISplitTopicForm> event) throws Exception {
+			UISplitTopicForm uiForm = event.getSource() ;
+			String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue() ;
+			if(!ForumUtils.isEmpty(newTopicTitle)) {
+				List<UIComponent> children = uiForm.getChildren() ;
 				List<Post> posts = new ArrayList<Post>() ;
 				for(UIComponent child : children) {
 					if(child instanceof UIFormCheckBoxInput) {
@@ -129,24 +129,24 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 					String forumId = string[string.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 					try {
-            forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic, true, true) ;
-            String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
-            forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath, true);
-          } catch (Exception e) {
-          	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-          	UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-          	event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-          	Object[] args = { };
-          	throw new MessageException(new ApplicationMessage("UISplitTopicForm.msg.forum-deleted", args, ApplicationMessage.WARNING)) ;
-          }          
+						forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic, true, true) ;
+						String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
+						forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath, true);
+					} catch (Exception e) {
+						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+						Object[] args = { };
+						throw new MessageException(new ApplicationMessage("UISplitTopicForm.msg.forum-deleted", args, ApplicationMessage.WARNING)) ;
+					}					
 				}else {
 					Object[] args = { };
 					throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", args, ApplicationMessage.WARNING)) ;
 				}
-      } else {
-      	Object[] args = {uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
+			} else {
+				Object[] args = {uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
 				throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-      }
+			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;

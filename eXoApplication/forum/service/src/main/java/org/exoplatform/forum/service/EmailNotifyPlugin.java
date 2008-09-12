@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -31,18 +31,17 @@ import org.exoplatform.container.xml.PropertiesParam;
  */
 public class EmailNotifyPlugin extends BaseComponentPlugin {
 
-  private Map<String,String> serverConfiguration_ = new HashMap<String, String>();
+	private Map<String,String> serverConfiguration_ = new HashMap<String, String>();
 
-  @SuppressWarnings("unchecked")
-  public EmailNotifyPlugin(InitParams params) {
-    PropertiesParam param = params.getPropertiesParam("email.configuration.info");
-    if (param != null) {
-      serverConfiguration_ = param.getProperties();
-    }
-  }
+	@SuppressWarnings("unchecked")
+	public EmailNotifyPlugin(InitParams params) {
+		PropertiesParam param = params.getPropertiesParam("email.configuration.info");
+		if (param != null) {
+			serverConfiguration_ = param.getProperties();
+		}
+	}
 
-  public Map<String, String> getServerConfiguration() {
-    return serverConfiguration_;
-  }
-  
+	public Map<String, String> getServerConfiguration() {
+		return serverConfiguration_;
+	}
 }

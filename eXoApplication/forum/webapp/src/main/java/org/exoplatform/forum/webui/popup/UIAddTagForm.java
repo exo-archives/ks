@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -67,7 +67,7 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	private String colors[] = new String[] {"Blue", "DarkGoldenRod", "Green", "Yellow", "BlueViolet", "Orange","DarkBlue", "IndianRed", "DarkCyan", "LawnGreen", "Violet", "Red"} ;
 	private boolean isUpdate = false ;
 	private String tagId = "" ;
-	private boolean isTopicTag  = false ;
+	private boolean isTopicTag	= false ;
 	public UIAddTagForm() throws Exception {
 		UIFormStringInput tagName = new UIFormStringInput(FIELD_TAGNAME_INPUT, FIELD_TAGNAME_INPUT, null);
 		tagName.addValidator(MandatoryValidator.class);
@@ -89,10 +89,10 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	public void setUpdateTag(Tag tag) {
 		this.isUpdate = true ;
 		this.tagId = tag.getId() ;
-	  getUIStringInput(FIELD_TAGNAME_INPUT).setValue(tag.getName()) ;
-	  getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).setValue(tag.getDescription()) ;
-	  getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).setValue(tag.getColor()) ;
-  }
+		getUIStringInput(FIELD_TAGNAME_INPUT).setValue(tag.getName()) ;
+		getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).setValue(tag.getDescription()) ;
+		getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).setValue(tag.getColor()) ;
+	}
 	
 	
 	private Map<String, String> getColorName() throws Exception {
@@ -118,13 +118,13 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class SaveActionListener extends EventListener<UIAddTagForm> {
-    public void execute(Event<UIAddTagForm> event) throws Exception {
+		public void execute(Event<UIAddTagForm> event) throws Exception {
 			UIAddTagForm uiForm = event.getSource() ;
 			UIFormStringInput tagNameInput = uiForm.getUIStringInput(FIELD_TAGNAME_INPUT) ;
 			String tagName = tagNameInput.getValue() ;
 			int maxText = 50 ;
 			if(ForumUtils.isEmpty(tagName)) {
-			  throw new MessageException(new ApplicationMessage("UIAddTagForm.ms.tagnameisnull", null, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UIAddTagForm.ms.tagnameisnull", null, ApplicationMessage.WARNING)) ;
 			}else if(tagName.length() > maxText){
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_TAGNAME_INPUT), String.valueOf(maxText) };
@@ -166,7 +166,7 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIAddTagForm> {
-    public void execute(Event<UIAddTagForm> event) throws Exception {
+		public void execute(Event<UIAddTagForm> event) throws Exception {
 			UIAddTagForm uiForm = event.getSource() ;
 			if(uiForm.isTopicTag) {
 				uiForm.getAncestorOfType(UIForumPortlet.class).cancelAction() ;

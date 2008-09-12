@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -36,8 +36,8 @@ import org.exoplatform.webui.event.EventListener;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 16, 2008 - 5:02:24 AM  
+ *					tu.duy@exoplatform.com
+ * May 16, 2008 - 5:02:24 AM	
  */
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/popup/UIListTopicOldForm.gtmpl" ,
@@ -69,7 +69,7 @@ public class UIListTopicOld extends UIContainer {
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		if(userProfile == null) {
 			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
 		}
@@ -81,7 +81,7 @@ public class UIListTopicOld extends UIContainer {
 	}
 	
 	@SuppressWarnings({ "unused", "unchecked" })
-  private List<Topic> getTopicsOld() throws Exception {
+	private List<Topic> getTopicsOld() throws Exception {
 		if(topics == null || topics.size() == 0 || isUpdate) {
 			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date);
 			if(pageList != null) {
@@ -101,11 +101,11 @@ public class UIListTopicOld extends UIContainer {
 	}
 	
 	public Topic getTopicById(String topicId) {
-    for(Topic topic : this.topics) {
-      if(topic.getId().equals(topicId)) return topic ;
-    }
-    return null ;
-  }
+		for(Topic topic : this.topics) {
+			if(topic.getId().equals(topicId)) return topic ;
+		}
+		return null ;
+	}
 	
 	static	public class ActiveTopicActionListener extends EventListener<UIListTopicOld> {
 		public void execute(Event<UIListTopicOld> event) throws Exception {

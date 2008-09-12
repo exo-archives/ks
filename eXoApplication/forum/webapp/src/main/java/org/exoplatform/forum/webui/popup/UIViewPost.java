@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -49,26 +49,26 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIViewPost extends UIForm implements UIPopupComponent {
 	private Post post;
-  private boolean isViewUserInfo = true ;
+	private boolean isViewUserInfo = true ;
 	public UIViewPost() {
 	}
 	
 	@SuppressWarnings("unused")
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
-  
-  @SuppressWarnings("unused")
-  private String getFileSource(ForumAttachment attachment) throws Exception {
-    DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-    try {
-    	InputStream input = attachment.getInputStream() ;
-    	String fileName = attachment.getName() ;
-    	return ForumSessionUtils.getFileSource(input, fileName, dservice);
-    } catch (PathNotFoundException e) {
-	    return null;
-    }
-  }
+	
+	@SuppressWarnings("unused")
+	private String getFileSource(ForumAttachment attachment) throws Exception {
+		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		try {
+			InputStream input = attachment.getInputStream() ;
+			String fileName = attachment.getName() ;
+			return ForumSessionUtils.getFileSource(input, fileName, dservice);
+		} catch (PathNotFoundException e) {
+			return null;
+		}
+	}
 	
 	public void setPostView(Post post) throws Exception {
 		this.post = post ;
@@ -82,11 +82,11 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-  public void setViewUserInfo(boolean isView){ this.isViewUserInfo = isView ;}
-  public boolean getIsViewUserInfo(){ return this.isViewUserInfo ;}
+	public void setViewUserInfo(boolean isView){ this.isViewUserInfo = isView ;}
+	public boolean getIsViewUserInfo(){ return this.isViewUserInfo ;}
 	
 	static	public class CloseActionListener extends EventListener<UIViewPost> {
-    public void execute(Event<UIViewPost> event) throws Exception {
+		public void execute(Event<UIViewPost> event) throws Exception {
 			UIViewPost uiForm = event.getSource() ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {

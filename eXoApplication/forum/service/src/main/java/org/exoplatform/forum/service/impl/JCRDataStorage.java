@@ -84,7 +84,7 @@ public class JCRDataStorage{
 
 	private NodeHierarchyCreator nodeHierarchyCreator_ ;
 	@SuppressWarnings("unused")
-  private Map<String, String> serverConfig_ = new HashMap<String, String>();
+	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, SendMessageInfo> messagesInfoMap_ = new HashMap<String, SendMessageInfo>() ;
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
@@ -1754,7 +1754,7 @@ public class JCRDataStorage{
 		Node destForumNode = (Node)destTopicNode.getParent() ;
 		long totalAtt = 0;
 		long totalpost = (long)posts.size() ;
-		int count  = 0;
+		int count	= 0;
 		for (Post post : posts) {
 			totalAtt = totalAtt + post.getNumberAttach() ;
 			String newPostPath = destTopicPath + "/" + post.getId();
@@ -2807,23 +2807,23 @@ public class JCRDataStorage{
 	
 	
 	@SuppressWarnings("unchecked")
-  private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
-    Calendar cal = new GregorianCalendar();
-    PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
-    String name = String.valueOf(cal.getTime().getTime()) ;
-    Class clazz = Class.forName("org.exoplatform.forum.service.SendMailJob");
-    JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
-    ExoContainer container = ExoContainerContext.getCurrentContainer();
-    JobSchedulerService schedulerService = 
-    	(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-    messagesInfoMap_.put(name, new SendMessageInfo(addresses, message)) ;
-    schedulerService.addPeriodJob(info, periodInfo);
-  }
+	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
+		Calendar cal = new GregorianCalendar();
+		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
+		String name = String.valueOf(cal.getTime().getTime()) ;
+		Class clazz = Class.forName("org.exoplatform.forum.service.SendMailJob");
+		JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
+		ExoContainer container = ExoContainerContext.getCurrentContainer();
+		JobSchedulerService schedulerService = 
+			(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+		messagesInfoMap_.put(name, new SendMessageInfo(addresses, message)) ;
+		schedulerService.addPeriodJob(info, periodInfo);
+	}
 
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
 		SendMessageInfo messageInfo = messagesInfoMap_.get(name) ;
 		messagesInfoMap_.remove(name) ;
-		return  messageInfo ;
+		return	messageInfo ;
 	}
 	
 	private String getPath(String index, String path) throws Exception {
@@ -2844,14 +2844,14 @@ public class JCRDataStorage{
 		String pathQuery = "";
 		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)");
 		StringBuffer buffer = new StringBuffer();
-		int l =  paths.length;
+		int l =	paths.length;
 		if(l > 0) {
 			buffer.append(" and (");
 			for (int i = 0; i < l; i++) {
 				if(i > 0) buffer.append(" or ");
 				String str = getPath(("/"+Utils.FORUM), paths[i]);
 				buffer.append("@exo:path='").append(str).append("'");
-	    }
+			}
 			buffer.append(")");
 		}
 
@@ -2892,7 +2892,7 @@ public class JCRDataStorage{
 		wattingForModerator.setPostsUnApproved(pagelist);
 		
 		return wattingForModerator;
-  }
+	}
 	
 	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider) ;
@@ -2909,14 +2909,14 @@ public class JCRDataStorage{
 			StringBuffer buffer = new StringBuffer();
 			if(t == 1){
 				String[] paths = ValuesToStrings(newProfileNode.getProperty("exo:moderateForums").getValues()) ;
-				int l =  paths.length;
+				int l =	paths.length;
 				if(l > 0) {
 					buffer.append(" and (");
 					for (int i = 0; i < l; i++) {
 						if(i > 0) buffer.append(" or ");
 						String str = getPath(("/"+Utils.FORUM), paths[i]);
 						buffer.append("@exo:path='").append(str).append("'");
-			    }
+					}
 					buffer.append(")");
 				}
 			}

@@ -1,4 +1,4 @@
-<%  
+<%	
 	import org.exoplatform.forum.service.ForumSearch ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.service.Utils ;
@@ -17,13 +17,13 @@
 							<th><%=_ctx.appRes("UIForumListSearch.label.Name");%></th>
 						</tr>
 					</thead>
-				  <tbody>
-				  <%
-			  	int i = 0;
-			  	String classRow = "OddRow" ;
-			  	if(searchEvents.size() > 0) {  
-				  	for(searchEvent in searchEvents) {
-				  		if(i%2 == 0) classRow = "whileRow";
+					<tbody>
+					<%
+					int i = 0;
+					String classRow = "OddRow" ;
+					if(searchEvents.size() > 0) {	
+						for(searchEvent in searchEvents) {
+							if(i%2 == 0) classRow = "whileRow";
 							else classRow = "OddRow";
 							String classIcon = searchEvent.getIcon();
 							String objId = searchEvent.getId();
@@ -32,23 +32,23 @@
 							else if(type.equals(Utils.TOPIC)) type = ForumUtils.THREAD;
 							else if(type.equals(Utils.POST)) type = ForumUtils.POST;
 							else type = ForumUtils.CATEGORY ;
-				  %>
-				  	<tr class="$classRow">
-				  		<td class="Tdbox"><div class="" title=""><%=type%></div></td>
+					%>
+						<tr class="$classRow">
+							<td class="Tdbox"><div class="" title=""><%=type%></div></td>
 							<td class="Tdbox $classIcon">&nbsp;</td>
 							<td class="Tdbox"><a class="" href="<%=uicomponent.event("OpentContent",objId);%>"><%=searchEvent.getName()%></a></td>
-				  	</tr>
-				  <% 
+						</tr>
+					<% 
 							i = i + 1;
-					  } 
+						} 
 					} else {%>
-				  	<tr class="$classRow">
+						<tr class="$classRow">
 							<td class="Tdbox" colspan="10"><div class="" ><%=_ctx.appRes("UIForumListSearch.label.NoMatches");%></div></td>
-				  	</tr>
+						</tr>
 					<% } %> 
-				  </tbody>
+					</tbody>
 				</table>
-	  	</div>
-	  </div>
+			</div>
+		</div>
 	</div>
 </div>

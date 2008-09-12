@@ -1,4 +1,4 @@
-<%  
+<%
 	import org.exoplatform.portal.webui.util.Util;
 	import org.exoplatform.forum.ForumSessionUtils;
 %>

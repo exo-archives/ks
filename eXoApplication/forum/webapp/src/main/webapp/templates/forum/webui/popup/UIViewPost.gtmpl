@@ -1,11 +1,11 @@
-<%  
+<%	
 	import org.exoplatform.forum.service.Post ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 %>
 <div class="UIViewPost">
-  <% uiform.begin() %>  
+	<% uiform.begin() %>
 	<% Post post = uicomponent.getPostView(); 
 		 String title = post.getName();	
 		 String messager = ForumTransformHTML.convertCodeHTML(post.getMessage());

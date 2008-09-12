@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -59,11 +59,11 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 
 	public UIAttachFileForm() throws Exception {
 		setMultiPart(true) ;
-    int i = 0 ;
-    while(i++ < maxField) {
-      UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i)) ;
-      addUIFormInput(uiInput) ;
-    }
+		int i = 0 ;
+		while(i++ < maxField) {
+			UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i)) ;
+			addUIFormInput(uiInput) ;
+		}
 	}
 
 	public void updateIsTopicForm(boolean isTopicForm) throws Exception {
@@ -74,58 +74,58 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 	public void deActivate() throws Exception {}
 
 	static	public class SaveActionListener extends EventListener<UIAttachFileForm> {
-    public void execute(Event<UIAttachFileForm> event) throws Exception {
+		public void execute(Event<UIAttachFileForm> event) throws Exception {
 			UIAttachFileForm uiForm = event.getSource();
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			List<BufferAttachment> files = new ArrayList<BufferAttachment>() ;
-      int i = 0 ; long size ;
-      BufferAttachment attachfile ;
-      UploadService uploadService = uiForm.getApplicationComponent(UploadService.class) ;
-      while(i++ < uiForm.maxField) {
-        UIFormUploadInput input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
-        UploadResource uploadResource = input.getUploadResource() ;
-        if(uploadResource == null) {
-        	continue ;
-        }
-        String fileName = uploadResource.getFileName() ;
-        if(fileName == null || fileName.equals("")) {
-        	continue ;
-        }
-        try {
-        	size = (long)uploadResource.getUploadedSize() ;
-        	if(size > uiForm.maxSize) {
-        		Object[] args = {String.valueOf(i)};
-        		uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-long", args, ApplicationMessage.WARNING));
-        		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        		return ;
-        	}
-        	attachfile = new BufferAttachment() ;
-        	attachfile.setId("ForumAttachment" + IdGenerator.generate());
-        	attachfile.setName(uploadResource.getFileName()) ;
-        	attachfile.setInputStream(input.getUploadDataAsStream()) ;
-        	attachfile.setMimeType(uploadResource.getMimeType()) ;
-        	attachfile.setSize((long)uploadResource.getUploadedSize());
-        	files.add(attachfile) ;
-        } catch (Exception e) {
-        	uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-error", null, ApplicationMessage.WARNING));
-        	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        	e.printStackTrace() ;
-        	return ;
-        }
-        uploadService.removeUpload(input.getUploadId()) ;
-      }
-      if(files.isEmpty()){
-      	uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-not-save", null, ApplicationMessage.WARNING));
-      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      	return ;
-      }
+			int i = 0 ; long size ;
+			BufferAttachment attachfile ;
+			UploadService uploadService = uiForm.getApplicationComponent(UploadService.class) ;
+			while(i++ < uiForm.maxField) {
+				UIFormUploadInput input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
+				UploadResource uploadResource = input.getUploadResource() ;
+				if(uploadResource == null) {
+					continue ;
+				}
+				String fileName = uploadResource.getFileName() ;
+				if(fileName == null || fileName.equals("")) {
+					continue ;
+				}
+				try {
+					size = (long)uploadResource.getUploadedSize() ;
+					if(size > uiForm.maxSize) {
+						Object[] args = {String.valueOf(i)};
+						uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-long", args, ApplicationMessage.WARNING));
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						return ;
+					}
+					attachfile = new BufferAttachment() ;
+					attachfile.setId("ForumAttachment" + IdGenerator.generate());
+					attachfile.setName(uploadResource.getFileName()) ;
+					attachfile.setInputStream(input.getUploadDataAsStream()) ;
+					attachfile.setMimeType(uploadResource.getMimeType()) ;
+					attachfile.setSize((long)uploadResource.getUploadedSize());
+					files.add(attachfile) ;
+				} catch (Exception e) {
+					uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-error", null, ApplicationMessage.WARNING));
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					e.printStackTrace() ;
+					return ;
+				}
+				uploadService.removeUpload(input.getUploadId()) ;
+			}
+			if(files.isEmpty()){
+				uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-not-save", null, ApplicationMessage.WARNING));
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
 			UIPostForm postForm = forumPortlet.findFirstComponentOfType(UIPostForm.class);
 			if(uiForm.isTopicForm) {
 				for (BufferAttachment file : files) {
 					topicForm.addToUploadFileList(file) ;
-        }
+				}
 				topicForm.refreshUploadFileList() ;
 			} else {
 				for (BufferAttachment file : files) {
@@ -140,7 +140,7 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 	}
 
 	static	public class CancelActionListener extends EventListener<UIAttachFileForm> {
-    public void execute(Event<UIAttachFileForm> event) throws Exception {
+		public void execute(Event<UIAttachFileForm> event) throws Exception {
 			UIAttachFileForm uiForm = event.getSource() ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;

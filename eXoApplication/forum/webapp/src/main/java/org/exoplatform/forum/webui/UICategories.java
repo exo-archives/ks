@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -67,8 +67,8 @@ public class UICategories extends UIContainer	{
 	public final String FORUM_LIST_SEARCH = "forumListSearch";
 	public final String SEARCH_ITERATOR = "forumSearchIterator";
 	private boolean isGetForumList = false ;
-  private boolean isRenderChild = false ;
-  private UserProfile userProfile ;
+	private boolean isRenderChild = false ;
+	private UserProfile userProfile ;
 	public UICategories() throws Exception {
 		addChild(UIForumListSearch.class, null, FORUM_LIST_SEARCH).setRendered(isRenderChild) ;
 		addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR).setRendered(isRenderChild);
@@ -76,20 +76,20 @@ public class UICategories extends UIContainer	{
 	
 	public void setIsRenderChild(boolean isRenderChild) {this.isRenderChild = isRenderChild ;}
 	@SuppressWarnings("unused")
-  private boolean getIsRendered() throws Exception {
+	private boolean getIsRendered() throws Exception {
 		this.getChild(UIForumListSearch.class).setRendered(isRenderChild) ;
 		this.getChild(UIForumPageIterator.class).setRendered(isRenderChild) ;
 		return isRenderChild ;
 	}
 	
 	@SuppressWarnings({ "deprecation", "unused" })
-  private UserProfile getUserProfile() throws Exception {
+	private UserProfile getUserProfile() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		return this.userProfile ;
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean isOnline(String userId) throws Exception {
+	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;
 	}
 	
@@ -98,17 +98,17 @@ public class UICategories extends UIContainer	{
 	public List<Category> getPrivateCategories() {
 		List<Category> list = new ArrayList<Category>() ;
 		for (Category cate : this.categoryList) {
-	    if(cate.getUserPrivate() != null && cate.getUserPrivate().length > 0) {
-	    	list.add(cate) ;
-	    }
-    }
+			if(cate.getUserPrivate() != null && cate.getUserPrivate().length > 0) {
+				list.add(cate) ;
+			}
+		}
 		return list;
 	}
 	public List<Forum> getForums(String categoryId) { return mapListForum.get(categoryId) ; }
 	public Map<String, Forum> getAllForum() { 
 		return AllForum ;
 	}
-	  
+		
 	
 	private List<Category> getCategoryList() throws Exception {
 		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
@@ -120,8 +120,8 @@ public class UICategories extends UIContainer	{
 		return this.categoryList;
 	}	
 	
-  public void setIsgetForumList(boolean isGetForumList) { this.isGetForumList = isGetForumList ; }
-  
+	public void setIsgetForumList(boolean isGetForumList) { this.isGetForumList = isGetForumList ; }
+	
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		List<Forum> forumList = null ;
 		String strQuery = "";
@@ -136,7 +136,7 @@ public class UICategories extends UIContainer	{
 			forumId = forum.getId() ;
 			if(AllForum.containsKey(forumId)) AllForum.remove(forumId) ;
 			AllForum.put(forumId, forum) ;
-    }
+		}
 		return forumList;
 	}
 	
@@ -157,10 +157,10 @@ public class UICategories extends UIContainer	{
 	private Topic getLastTopic(String topicPath) throws Exception {
 		Topic topicLast = new Topic() ;
 		topicLast = maptopicLast.get(topicLast.getId()) ;
-    if(topicLast == null) {
-    	topicLast = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
-    	if(topicLast != null)maptopicLast.put(topicLast.getId(), topicLast) ;
-    }
+		if(topicLast == null) {
+			topicLast = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
+			if(topicLast != null)maptopicLast.put(topicLast.getId(), topicLast) ;
+		}
 		return topicLast ;
 	}
 	
@@ -168,9 +168,9 @@ public class UICategories extends UIContainer	{
 		Topic topic = new Topic() ;
 		topic = this.maptopicLast.get(topicId) ;
 		if(topic == null) {
-    	String forumHomePath = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
-    	topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), forumHomePath + "/" + path, false) ;
-    }
+			String forumHomePath = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
+			topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), forumHomePath + "/" + path, false) ;
+		}
 		return topic ;
 	}
 	
@@ -182,7 +182,7 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean getIsPrivate(UserProfile userProfile, Category category) throws Exception {
+	private boolean getIsPrivate(UserProfile userProfile, Category category) throws Exception {
 		String userId = userProfile.getUserId() ;
 		if(userProfile.getUserRole() == 0) return true ;
 		if(category.getOwner().equals(userId)) return true ;
@@ -193,7 +193,7 @@ public class UICategories extends UIContainer	{
 	}
 
 	static public class OpenCategoryActionListener extends EventListener<UICategories> {
-    public void execute(Event<UICategories> event) throws Exception {
+		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiContainer = event.getSource();
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UICategoryContainer categoryContainer = uiContainer.getParent() ;
@@ -202,18 +202,18 @@ public class UICategories extends UIContainer	{
 				uiCategory.update(uiContainer.getCategory(categoryId), uiContainer.getForumList(categoryId)) ;
 				categoryContainer.updateIsRender(false) ;
 				((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
-      } catch (Exception e) {
-      	Object[] args = { "" };
+			} catch (Exception e) {
+				Object[] args = { "" };
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(categoryContainer) ;
-      }
-    }
+			}
+		}
 	}
 	
 	static public class OpenForumLinkActionListener extends EventListener<UICategories> {
-    public void execute(Event<UICategories> event) throws Exception {
+		public void execute(Event<UICategories> event) throws Exception {
 			UICategories categories = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
@@ -230,7 +230,7 @@ public class UICategories extends UIContainer	{
 	}
 	
 	static public class OpenLastTopicLinkActionListener extends EventListener<UICategories> {
-    public void execute(Event<UICategories> event) throws Exception {
+		public void execute(Event<UICategories> event) throws Exception {
 			UICategories categories = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");

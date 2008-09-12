@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -100,7 +100,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	
 
 	@SuppressWarnings("unused")
-  private String getDateAfter() throws Exception {
+	private String getDateAfter() throws Exception {
 		String date = ForumUtils.getFormatDate("MM-dd-yyyy", new Date()) ;;
 		if(poll != null && poll.getTimeOut() > 0) {
 			date = ForumUtils.getFormatDate("MM-dd-yyyy", poll.getModifiedDate()) ;
@@ -109,15 +109,15 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unchecked")
-  public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
+	public void setUpdatePoll(Poll poll, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			this.poll = poll ;
 			getUIStringInput(FIELD_QUESTION_INPUT).setValue(poll.getQuestion()) ;
 			getUIStringInput(FIELD_TIMEOUT_INPUT).setValue(String.valueOf(poll.getTimeOut())) ;
 			getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(poll.getIsAgainVote()) ;
-      UIFormCheckBoxInput multiVoteCheckInput = getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX) ;
-      multiVoteCheckInput.setChecked(poll.getIsMultiCheck());
-      multiVoteCheckInput.setEnable(false);
+			UIFormCheckBoxInput multiVoteCheckInput = getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX) ;
+			multiVoteCheckInput.setChecked(poll.getIsMultiCheck());
+			multiVoteCheckInput.setEnable(false);
 			this.isUpdate = isUpdate ;
 		}
 	}
@@ -140,7 +140,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class SaveActionListener extends EventListener<UIPollForm> {
-    @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public void execute(Event<UIPollForm> event) throws Exception {
 			UIPollForm uiForm = event.getSource() ;
 			UIFormStringInput questionInput = uiForm.getUIStringInput(FIELD_QUESTION_INPUT) ;
@@ -156,7 +156,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				timeOut = Long.parseLong(timeOutStr) ; 
 			}
 			boolean isAgainVote = uiForm.getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).isChecked() ;
-      boolean isMultiVote = uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).isChecked() ;
+			boolean isMultiVote = uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).isChecked() ;
 			String sms = "";
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
 			List<String> values_ = new ArrayList<String>();
@@ -198,48 +198,48 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				if(uiForm.isUpdate) {
 					String[] oldVote = uiForm.poll.getVote() ;
 					if(sizeOption < oldVote.length) {
-					  List<String> voteRemoved = new ArrayList<String>() ;
+						List<String> voteRemoved = new ArrayList<String>() ;
 						String[] oldUserVote = uiForm.poll.getUserVote() ; 
 						long temps = oldUserVote.length ;
 						double rmPecent = 0;
 						for(int j = sizeOption; j < oldVote.length; j++) {
 							rmPecent = rmPecent + Double.parseDouble(oldVote[j]) ;
-              voteRemoved.add(String.valueOf(j)) ;
+							voteRemoved.add(String.valueOf(j)) ;
 						}
 						rmPecent = 100 - rmPecent ;
 						for(int k = 0; k < sizeOption; ++k) {
 							double newVote = Double.parseDouble(oldVote[k]) ;
 							vote[k] = String.valueOf((newVote*100)/rmPecent) ;
 						}
-            if(!uiForm.poll.getIsMultiCheck()) {
-  						int newSize	= (int) Math.round((temps*rmPecent)/100) ;
-  						newUser = new String[newSize] ;
-  						int l = 0 ;
-  						for (String string : oldUserVote) {
-  							boolean check = true ; 
-  							for(int j = sizeOption; j < oldVote.length; j++) {
-  								String x = ":" + j ;
-  								if(string.indexOf(x) > 0) check = false ;
-  							}
-  							if(check) {newUser[l] = string ; 
-  							++l ;}
-  						}
-            } else {
-              List<String> newUserVote = new ArrayList<String>() ;
-              String userInfo = "" ;
-              for(String uv : oldUserVote) {
-                userInfo = "" ;
-                for(String string : uv.split(":")) {
-                  if(!voteRemoved.contains(string)) {
-                    if(userInfo.length() > 0) userInfo += ":" ;
-                    userInfo += string ;
-                  }
-                }
-                if(userInfo.split(":").length >= 2)
-                  newUserVote.add(userInfo) ;
-                newUser = newUserVote.toArray(new String[]{}) ;
-              }
-            }
+						if(!uiForm.poll.getIsMultiCheck()) {
+							int newSize	= (int) Math.round((temps*rmPecent)/100) ;
+							newUser = new String[newSize] ;
+							int l = 0 ;
+							for (String string : oldUserVote) {
+								boolean check = true ; 
+								for(int j = sizeOption; j < oldVote.length; j++) {
+									String x = ":" + j ;
+									if(string.indexOf(x) > 0) check = false ;
+								}
+								if(check) {newUser[l] = string ; 
+								++l ;}
+							}
+						} else {
+							List<String> newUserVote = new ArrayList<String>() ;
+							String userInfo = "" ;
+							for(String uv : oldUserVote) {
+								userInfo = "" ;
+								for(String string : uv.split(":")) {
+									if(!voteRemoved.contains(string)) {
+										if(userInfo.length() > 0) userInfo += ":" ;
+										userInfo += string ;
+									}
+								}
+								if(userInfo.split(":").length >= 2)
+									newUserVote.add(userInfo) ;
+								newUser = newUserVote.toArray(new String[]{}) ;
+							}
+						}
 					} else {
 						for(int j = 0; j < sizeOption; j++) {
 							if( j < oldVote.length) {
@@ -293,7 +293,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	}
 
 	static	public class RefreshActionListener extends EventListener<UIPollForm> {
-    public void execute(Event<UIPollForm> event) throws Exception {
+		public void execute(Event<UIPollForm> event) throws Exception {
 			UIPollForm uiForm = event.getSource() ;
 			List<String> list = new ArrayList<String>() ;
 			list.add("");
@@ -307,7 +307,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIPollForm> {
-    public void execute(Event<UIPollForm> event) throws Exception {
+		public void execute(Event<UIPollForm> event) throws Exception {
 			UIPollForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;

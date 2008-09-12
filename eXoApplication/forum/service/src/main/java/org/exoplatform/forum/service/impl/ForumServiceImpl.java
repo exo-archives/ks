@@ -232,12 +232,12 @@ public class ForumServiceImpl implements ForumService{
 	}
 
 	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
-	  return storage_.getUserProfile(sProvider, userName, isGetOption, isGetBan, isLogin);
-  }
+		return storage_.getUserProfile(sProvider, userName, isGetOption, isGetBan, isLogin);
+	}
 
 	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
 		storage_.saveUserProfile(sProvider, userProfile, isOption, isBan) ;
-  }
+	}
 	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception {
 		return storage_.getUserInfo(sProvider, userName);
 	}
@@ -247,60 +247,60 @@ public class ForumServiceImpl implements ForumService{
 	}
 	
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider)throws Exception {
-	  return storage_.getPageListUserProfile(sProvider);
-  }
+		return storage_.getPageListUserProfile(sProvider);
+	}
 
 	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
-	  return storage_.getPrivateMessage(sProvider, userName, type);
-  }
+		return storage_.getPrivateMessage(sProvider, userName, type);
+	}
 	
 	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
 		storage_.removePrivateMessage(sProvider, messageId, userName, type) ;
-  }
+	}
 
 	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
 		storage_.saveReadMessage(sProvider, messageId, userName, type) ;
-  }
+	}
 	
 	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
 		storage_.savePrivateMessage(sProvider, privateMessage) ;
-  }
+	}
 	
 	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception {
 		return storage_.getPageTopicOld(sProvider, date) ;
 	}
 	
 	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
-	  return storage_.getPageTopicByUser(sProvider, userName, isMod);
-  }
+		return storage_.getPageTopicByUser(sProvider, userName, isMod);
+	}
 
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception {
-	  return storage_.getPagePostByUser(sProvider, userName, userId, isMod);
-  }
+		return storage_.getPagePostByUser(sProvider, userName, userId, isMod);
+	}
 
 	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {
-	  return storage_.getForumStatistic(sProvider);
-  }
+		return storage_.getForumStatistic(sProvider);
+	}
 
 	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception {
 		storage_.saveForumStatistic(sProvider, forumStatistic) ;
-  }
+	}
 
 	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser) throws Exception {
-	  return storage_.getQuickSearch(sProvider, textQuery, type, pathQuery, currentUser);
-  }
+		return storage_.getQuickSearch(sProvider, textQuery, type, pathQuery, currentUser);
+	}
 
 	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider,ForumEventQuery eventQuery) throws Exception {
-	  return storage_.getAdvancedSearch(sProvider, eventQuery);
-  }
+		return storage_.getAdvancedSearch(sProvider, eventQuery);
+	}
 
 	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception {
-	  return storage_.getForumAdministration(sProvider);
-  }
+		return storage_.getForumAdministration(sProvider);
+	}
 
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
-	  storage_.saveForumAdministration(sProvider, forumAdministration) ;
-  }
+		storage_.saveForumAdministration(sProvider, forumAdministration) ;
+	}
 
 	public void addWatch(SessionProvider sProvider, int watchType, String path,List<String> values, String currentUser) throws Exception {
 		storage_.addWatch(sProvider, watchType, path, values, currentUser) ; 
@@ -324,24 +324,24 @@ public class ForumServiceImpl implements ForumService{
 	}
 
 	public void userLogout(String userId) throws Exception {
-		onlineUsers_.put(userId, false) ;	  
+		onlineUsers_.put(userId, false) ;		
 	}
 	
 	public boolean isOnline(String userId) throws Exception {
-    try{
-    	if(onlineUsers_.get(userId) != null) return onlineUsers_.get(userId) ;  		
-    }	catch (Exception e) {
-    	e.printStackTrace() ;
-    }
-    return false; 
+		try{
+			if(onlineUsers_.get(userId) != null) return onlineUsers_.get(userId) ;			
+		}	catch (Exception e) {
+			e.printStackTrace() ;
+		}
+		return false; 
 	}
 	
 	public List<String> getOnlineUsers() throws Exception {
 		List<String> users = new ArrayList<String>() ;
 		Set<String> keys = onlineUsers_.keySet() ;
-	  for(String key : keys) {
-	  	if(onlineUsers_.get(key)) users.add(key) ;
-	  }
+		for(String key : keys) {
+			if(onlineUsers_.get(key)) users.add(key) ;
+		}
 		return users ;
 	}
 	

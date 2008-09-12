@@ -1,4 +1,4 @@
-<%  
+<%	
 	import org.exoplatform.forum.service.UserProfile ;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	boolean isAdmin = false ;
@@ -18,7 +18,7 @@
 									} else {
 										actions = ["EditProfile","OpenBookMark"];
 									}
-									for(action in actions){  
+									for(action in actions){	
 								%>
 									<div class="DefaultStyle ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 										<a href="<%=uicomponent.event(action)%>">
@@ -37,7 +37,7 @@
 								<% }%>
 							</td>
 							<td>
-								<%  
+								<%
 									uicomponent.renderChildren() ;
 								%>
 							</td>

@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -37,13 +37,13 @@ import org.exoplatform.webui.core.UIContainer;
 )
 public class UIForumInfos extends UIContainer	{
 	private List<String> moderators = new ArrayList<String>();
-  private UserProfile userProfile ;
+	private UserProfile userProfile ;
 	public UIForumInfos() throws Exception { 
 		addChild(UIPostRules.class, null, null);
 	}
 
 	@SuppressWarnings("unused")
-  private List<String> getModeratorsForum() throws Exception {
+	private List<String> getModeratorsForum() throws Exception {
 		return moderators ;
 	}
 	
@@ -53,15 +53,14 @@ public class UIForumInfos extends UIContainer	{
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		boolean isLock = forum.getIsClosed() ;
 		if(!isLock) isLock = forum.getIsLock() ;
-    if(!isLock && userProfile.getUserRole()!=0) {
-      if(!this.moderators.contains(userProfile.getUserId())) {
-        String []listUser = forum.getCreateTopicRole() ;
-        if(listUser != null && listUser.length > 0)
-          isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
-      }
-    }
+		if(!isLock && userProfile.getUserRole()!=0) {
+			if(!this.moderators.contains(userProfile.getUserId())) {
+				String []listUser = forum.getCreateTopicRole() ;
+				if(listUser != null && listUser.length > 0)
+					isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
+			}
+		}
 		postRules.setLock(isLock) ;
 		postRules.setUserProfile(this.userProfile) ;
 	}
-  
 }

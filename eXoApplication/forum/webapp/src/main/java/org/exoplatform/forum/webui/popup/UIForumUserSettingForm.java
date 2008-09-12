@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -88,7 +88,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	public UIForumUserSettingForm() throws Exception {
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-    ResourceBundle res = context.getApplicationResourceBundle() ;
+		ResourceBundle res = context.getApplicationResourceBundle() ;
 		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), 
 																	res.getString("UIForumPortlet.label.PermissionModerator").toLowerCase(),
 																	res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase(),
@@ -96,14 +96,14 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
-  private void initForumOption() throws Exception {
+	private void initForumOption() throws Exception {
 		try {
 			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-    } catch (Exception e) {
-    	String userName = ForumSessionUtils.getCurrentUser() ;
-    	this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userName, true, false, false) ;
-    }
-    
+		} catch (Exception e) {
+			String userName = ForumSessionUtils.getCurrentUser() ;
+			this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userName, true, false, false) ;
+		}
+		
 		List<SelectItemOption<String>> list ;
 		String []timeZone1 = getLabel(FIELD_TIMEZONE).split("/") ;
 		list = new ArrayList<SelectItemOption<String>>() ;
@@ -127,8 +127,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		String []format = new String[] {"M-d-yyyy", "M-d-yy", "MM-dd-yy", "MM-dd-yyyy","yyyy-MM-dd", "yy-MM-dd", "dd-MM-yyyy", "dd-MM-yy",
 				"M/d/yyyy", "M/d/yy", "MM/dd/yy", "MM/dd/yyyy","yyyy/MM/dd", "yy/MM/dd", "dd/MM/yyyy", "dd/MM/yy"} ;
 		for (String frm : format) {
-			list.add(new SelectItemOption<String>((frm.toLowerCase() +" ("  + ForumUtils.getFormatDate(frm, date)+")"), frm)) ;
-    }
+			list.add(new SelectItemOption<String>((frm.toLowerCase() +" ("	+ ForumUtils.getFormatDate(frm, date)+")"), frm)) ;
+		}
 
 		UIFormSelectBox shortdateFormat = new UIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX, FIELD_SHORTDATEFORMAT_SELECTBOX, list) ;
 		shortdateFormat.setValue(userProfile.getShortDateFormat());
@@ -198,21 +198,21 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 
 		addUIFormInput(inputSetProfile);
 		addUIFormInput(inputSetOption);
-  }
+	}
 	
 	@SuppressWarnings("deprecation")
-  private Date getNewDate(double timeZoneOld) {
-		Calendar  calendar = GregorianCalendar.getInstance() ;
-    calendar.setLenient(false) ;
-    int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
-    calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset + (long)(timeZoneOld*3600000)) ; 
+	private Date getNewDate(double timeZoneOld) {
+		Calendar	calendar = GregorianCalendar.getInstance() ;
+		calendar.setLenient(false) ;
+		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+		calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset + (long)(timeZoneOld*3600000)) ; 
 		return calendar.getTime() ;
 	}
 	
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
 		return	findComponentById(name) ;
 	}
-  
+	
 	public void activate() throws Exception {
 		initForumOption() ;
 	}
@@ -220,7 +220,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class SaveActionListener extends EventListener<UIForumUserSettingForm> {
-    public void execute(Event<UIForumUserSettingForm> event) throws Exception {
+		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
 			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
@@ -241,9 +241,9 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-      boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
-    	Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;
-    	
+			boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
+			Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;
+			
 			UIFormInputWithActions inputSetOption = uiForm.getChildById(FIELD_USEROPTION_FORM) ;
 			long maxTopic = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX).getValue().substring(2)) ;
 			long maxPost = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXPOSTS_SELECTBOX).getValue().substring(2)) ;
@@ -273,7 +273,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIForumUserSettingForm> {
-    public void execute(Event<UIForumUserSettingForm> event) throws Exception {
+		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;

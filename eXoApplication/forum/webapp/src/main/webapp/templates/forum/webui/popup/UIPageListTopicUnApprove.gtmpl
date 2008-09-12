@@ -5,13 +5,13 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumTransformHTML;
-  UserProfile userProfile = uicomponent.getUserProfile() ;
-  List topics = uicomponent.getTopicsUnApprove() ;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	List topics = uicomponent.getTopicsUnApprove() ;
 %>
 <div class="$uicomponent.id">
-  <% uiform.begin() %>
+	<% uiform.begin() %>
 	<div class="UITopicContainer">
-   	<div class="UIForumContainer">
+	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
 					<div style="overflow:auto; margin: 2px 0px;">
@@ -90,27 +90,27 @@
 		</div>
 	</div>
 	<div class="UIAction"> 
-	  <table class="ActionContainer" align="center">
+		<table class="ActionContainer" align="center">
 			<tr>
 				<td align="center">
-        <% for(action in uicomponent.getActions()) { 
-        		 if(action.indexOf("Open") >= 0) continue ; 
-        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-           String link = uicomponent.event(action) ;
-        %>
-        		<a href="$link" class="ActionButton LightBlueStyle">
-	      	  	<div class="ButtonLeft">
-	        	  	<div class="ButtonRight">
-	          	  	<div class="ButtonMiddle">$actionLabel</div>
-	            	</div>
-	          	</div>
-	        	</a>
-          <%}%>
-      	</td>
+				<% for(action in uicomponent.getActions()) { 
+						 if(action.indexOf("Open") >= 0) continue ; 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<a href="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">$actionLabel</div>
+								</div>
+							</div>
+						</a>
+					<%}%>
+				</td>
 			</tr>
-	  </table> 
-  </div>
-  <%uiform.end()%>
+		</table> 
+	</div>
+	<%uiform.end()%>
 </div>
 
 

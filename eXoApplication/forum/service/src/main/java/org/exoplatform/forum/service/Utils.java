@@ -323,6 +323,8 @@ public class Utils {
 			s = s.replaceAll(
 					"[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
 			"<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
+			s = s.replaceAll("href=\" http://", "href=\"http://").replaceAll("href=\">http://", "href=\"http://")
+			 .replaceAll(">>http://", ">http://").replaceAll("> http://", ">http://");
     } catch (Exception e) {
     }
 		return s;

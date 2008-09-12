@@ -26,20 +26,20 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 
 public class ForumServiceUtils {
-  
-  
-  public static boolean hasPermission(String[] userGroupMembership, String userId) throws Exception {
-  	List<String> users = ForumServiceUtils.getUserPermission(userGroupMembership) ;
-  	if(users.contains(userId)) return true ;
-  	return false ;
-  }
+	
+	
+	public static boolean hasPermission(String[] userGroupMembership, String userId) throws Exception {
+		List<String> users = ForumServiceUtils.getUserPermission(userGroupMembership) ;
+		if(users.contains(userId)) return true ;
+		return false ;
+	}
 
-  @SuppressWarnings("unchecked")
-  public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
-  	List<String> users = new ArrayList<String> () ;
-  	if(userGroupMembership == null || userGroupMembership.length <= 0) return users ; 
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	for(String str : userGroupMembership) {
+	@SuppressWarnings("unchecked")
+	public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
+		List<String> users = new ArrayList<String> () ;
+		if(userGroupMembership == null || userGroupMembership.length <= 0) return users ; 
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		for(String str : userGroupMembership) {
 			if(str.indexOf("/") >= 0) {
 				if(str.indexOf(":") >= 0) { //membership
 					String[] array = str.split(":") ;
@@ -53,7 +53,7 @@ public class ForumServiceUtils {
 											users.add(user.getUserName()) ;
 										break ;
 									}
-								}  					
+								}						
 							}
 						}
 					} else {
@@ -79,7 +79,6 @@ public class ForumServiceUtils {
 				}
 			}
 		}
-  	return users ;
-  }
-
+		return users ;
+	}
 }

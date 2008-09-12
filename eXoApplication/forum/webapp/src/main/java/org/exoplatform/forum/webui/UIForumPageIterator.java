@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -110,8 +110,8 @@ public class UIForumPageIterator extends UIContainer {
 	}
 		
 	static public class GoPageActionListener extends EventListener<UIForumPageIterator> {
-    public void execute(Event<UIForumPageIterator> event) throws Exception {
-    	UIForumPageIterator forumPageIterator = event.getSource() ;
+		public void execute(Event<UIForumPageIterator> event) throws Exception {
+			UIForumPageIterator forumPageIterator = event.getSource() ;
 			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
 			long maxPage = forumPageIterator.pageList.getAvailablePage() ;
 			long presentPage	= forumPageIterator.page ;

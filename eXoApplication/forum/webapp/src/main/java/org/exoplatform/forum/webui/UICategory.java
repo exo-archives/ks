@@ -8,14 +8,14 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
 package org.exoplatform.forum.webui;
-
+	
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,7 +97,7 @@ public class UICategory extends UIForm	{
 	}
 	
 	@SuppressWarnings("unused")
-  private boolean isOnline(String userId) throws Exception {
+	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;
 	}
 	
@@ -133,7 +133,7 @@ public class UICategory extends UIForm	{
 			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
 			this.forums = forumService.getForums(ForumSessionUtils.getSystemProvider(), this.categoryId, strQuery);
 			this.isEditForum = false ;
-      this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
+			this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
 		}
 		for(Forum forum : this.forums) {
 			if(getUIFormCheckBoxInput(forum.getId()) != null) {
@@ -176,13 +176,13 @@ public class UICategory extends UIForm	{
 	
 	private Topic getTopic(String topicId) throws Exception {
 		if(this.MaptopicLast.containsKey(topicId)) {
-			return  this.MaptopicLast.get(topicId);
+			return	this.MaptopicLast.get(topicId);
 		}
 		return null ;
 	}
 	
 	static public class EditCategoryActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;			
 			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -197,7 +197,7 @@ public class UICategory extends UIForm	{
 	}
 
 	static public class DeleteCategoryActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;			
 			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -212,7 +212,7 @@ public class UICategory extends UIForm	{
 	
 	
 	static public class AddForumActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;
 			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -229,7 +229,7 @@ public class UICategory extends UIForm	{
 	}
 	
 	static public class EditForumActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;			
 			List<UIComponent> children = uiCategory.getChildren() ;
 			Forum forum = null ;
@@ -265,7 +265,7 @@ public class UICategory extends UIForm	{
 	}
 
 	static public class SetLockedActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
@@ -293,7 +293,7 @@ public class UICategory extends UIForm	{
 	}
 	
 	static public class SetUnLockActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
@@ -321,7 +321,7 @@ public class UICategory extends UIForm	{
 	}
 	
 	static public class SetOpenActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
@@ -347,7 +347,7 @@ public class UICategory extends UIForm	{
 	}
 
 	static public class SetCloseActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
@@ -373,7 +373,7 @@ public class UICategory extends UIForm	{
 	}
 
 	static public class MoveForumActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
@@ -401,7 +401,7 @@ public class UICategory extends UIForm	{
 	}
 	
 	static public class RemoveForumActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;
 			List<UIComponent> children = uiCategory.getChildren() ;
 			List<Forum> forums = new ArrayList<Forum>() ;
@@ -426,10 +426,10 @@ public class UICategory extends UIForm	{
 	}
 	
 	static public class OpenForumLinkActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource();
 			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-      Forum forum = uiCategory.getForum(forumId) ;
+			Forum forum = uiCategory.getForum(forumId) ;
 			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.FORUM);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
@@ -444,7 +444,7 @@ public class UICategory extends UIForm	{
 	
 	
 	static public class OpenLastTopicLinkActionListener extends EventListener<UICategory> {
-    public void execute(Event<UICategory> event) throws Exception {
+		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource();
 			String Id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = Id.trim().split("/");
@@ -474,13 +474,13 @@ public class UICategory extends UIForm	{
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
 				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
 				for (int i = 0; i < special.length(); i++) {
-		      char c = special.charAt(i);
-		      if(text.indexOf(c) >= 0) {
-		      	UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+					char c = special.charAt(i);
+					if(text.indexOf(c) >= 0) {
+						UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
 						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 						return ;
-		      }
-	      }
+					}
+				}
 				StringBuffer type = new StringBuffer();
 				if(uiCategory.getUserProfile().getUserRole() == 0){ 
 					type.append("true,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
@@ -504,7 +504,6 @@ public class UICategory extends UIForm	{
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIQuickSearchForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
 			}
-			
 		}
 	}
 	
@@ -547,5 +546,4 @@ public class UICategory extends UIForm	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-	
 }
