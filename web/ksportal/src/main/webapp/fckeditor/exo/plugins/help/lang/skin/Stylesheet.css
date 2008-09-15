@@ -1,126 +1,69 @@
-.UIAction {
-  padding: 8px 0px;
+@import url('/eXoResources/skin/DefaultSkin/webui/component/UIGrid/Stylesheet.css') ;
+@import url('ss/forum/skin/DefaultSkin/webui/Stylesheet.css');
+div {
+	padding:	0px ; margin: 0px ;
 }
 
-.UIAction .ActionContainer {
-	width: auto;
-	margin: auto;
-}	
-
-.UIAction .ActionButton {
-	display: block;
-	float: left;
-	margin: 0px 3px;
+table {
+  width: 100% ;
+	padding: 0px ; margin: 0px ;
+	border-spacing:	0px ;
+	border-collapse: collapse ;
+	font-size: 11px;
 }
 
-.UIAction a {
+th, td {
+	padding: 0px ; margin: 0px ;
+	vertical-align: top;
 }
 
-.UIAction a:hover {
-	color: #058ee6;
+img {
+	padding: 0px ; margin: 0px ; border: none ; vertical-align: bottom;
 }
 
-
-.UIAction .ActionButton .Icon {
-	padding-left: 20px;
-	width: auto;
-  height: auto;
-  background-position: left center;
-  background-repeat: no-repeat;
+html {
+	margin: 0px ; padding: 0px;
 }
 
-/*##############################-Normal ActionButton-################################*/
-.UIAction .NormalStyle {
+body {
+	margin: 0px ; padding: 0px;
+	font-family: Tahoma,Verdana, Arial, Helvetica, sans-serif ;
+	font-size: 11px;
+	height: 100%;
+}
+#MainBody {
+	overflow: hidden;
+	margin: 0px ; padding: 0px;
+}
+#language {
+	width: 100%;
+	border: none;
+	height: 100%;
+}
+.Content {
+	padding: 10px 25px;
+}
+.UIGrid .tcat {
+	background:#F9F9FD url(background/ForumToolBarCenter1x26.gif) repeat-x center top;
+	line-height: 24px;
+	border-top: none;
+	padding: 0px 15px;
+	font-weight: bold;
 }
 
-.UIAction .NormalStyle .ButtonLeft {
-  background: url('background/NormalStyle.gif') no-repeat left top;
-  padding: 0px 0px 0px 3px;
+.UIGrid .thead {
+	height: 19px;
+	padding: 0px 15px;
+	border-top: 1px solid #CCCCCC;
+	line-height: 16px;
+	background:#F9F9FD url(background/ForumTitleBar1x19.gif) repeat-x center top;
 }
-
-.UIAction .NormalStyle .ButtonRight {
-  background: url('background/NormalStyle.gif') no-repeat right top;
-  padding: 0px 3px 0px 0px ;
+.UIGrid .alt2 {
+	background: #E1E4FF;
 }
-
-.UIAction .NormalStyle .ButtonMiddle {
-  line-height: 22px;
-	background: url('background/NormalStyle.gif') repeat-x bottom;
-	padding: 0px 12px;	
-	display: table-cell;
-	white-space: nowrap;
+.UIGrid .alt1 {
+	padding: 6px;
 }
-
-/*##############################-Disabled ActionButton-################################*/
-
-.UIAction .DisabledStyle {
-}
-
-.UIAction .DisabledStyle .ButtonLeft {
-  background: url('background/DisabledStyle.gif') no-repeat left top;
-  padding: 0px 0px 0px 3px;
-}
-
-.UIAction .DisabledStyle .ButtonRight {
-  background: url('background/DisabledStyle.gif') no-repeat right top;
-  padding: 0px 3px 0px 0px ;
-}
-
-.UIAction .DisabledStyle .ButtonMiddle {
-	height: 22px; text-align: center; 
-	background: url('background/DisabledStyle.gif') repeat-x bottom;
-	padding: 0px 12px;
-	display: table-cell;
-}
-
-
-/*##############################-LightBlueStyle ActionButton-################################*/
-
-.UIAction .LightBlueStyle .ButtonLeft {
-  background: url('background/LightBlueStyle.gif') no-repeat left top;
-  padding: 0px 0px 0px 3px;
-}
-
-.UIAction .LightBlueStyle .ButtonRight {
-  background: url('background/LightBlueStyle.gif') no-repeat right top;
-  padding: 0px 3px 0px 0px ;
-}
-
-.UIAction .LightBlueStyle .ButtonMiddle {
- 	line-height: 22px; text-align: center; 
-	background: url('background/LightBlueStyle.gif') repeat-x bottom;
-	white-space: nowrap;
-	padding: 0px 12px;
-}
-
-/*##############################-SimpleStyle ActionButton-################################*/
-
-.UIAction .SimpleStyle {
-}
-
-.UIAction .SimpleStyle .ButtonLeft {
-  background: url('background/SimpleStyle.gif') no-repeat left top;
-  padding: 0px 0px 0px 10px;
-}
-
-.UIAction .SimpleStyle .ButtonRight {
-  background: url('background/SimpleStyle.gif') no-repeat right top;
-  padding: 0px 10px 0px 0px ;
-}
-
-.UIAction .SimpleStyle .ButtonMiddle {
-  line-height: 21px;
-	background: url('background/SimpleStyle.gif') repeat-x bottom;
-	text-align: center;	
-	padding: 0px 12px;
-	display: table-cell;	
-}
-
-.UIAction a.SimpleStyle {
-  color: #313131;
-  margin: 0px 6px; white-space: nowrap;
-}
-
-.UIAction a:hover.SimpleStyle {
-  color: #1273df;
+.highlight {
+	color: red;
 }

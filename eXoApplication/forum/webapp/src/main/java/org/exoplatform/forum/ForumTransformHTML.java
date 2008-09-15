@@ -40,8 +40,8 @@ public class ForumTransformHTML {
 		int tagIndex = 0;
 		// Lower Case bbc
 		String start, end;
-		String[] bbcs = new String[] { "B", "I", "[highlight]", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
-		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS" };
+		String[] bbcs = new String[] { "B", "I", "HIGHLIGHT", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
+		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
 			end = "[/" + bbc + "]";
@@ -192,6 +192,43 @@ public class ForumTransformHTML {
 				String src = b.substring(tagIndex + 5, clsIndex);
 				b = StringUtils.replace(b, "[url]" + src + "[/url]", "<a target='_blank' href=\"" + src.trim()
 				    + "\">" + src + "</a>");
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		// email=
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[email=", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/email]", tagIndex);
+				String urlStr = b.substring(tagIndex, clsIndex);
+				int fstb = urlStr.indexOf("=");
+				int clsUrl = urlStr.indexOf("]");
+				String href = urlStr.substring(fstb + 1, clsUrl);
+				String href_ = href;
+				if (href.indexOf("\"") >= 0)
+					href_ = href.replaceAll("\"", "");
+				String text = urlStr.substring(clsUrl + 1);
+				buffer = new StringBuffer();
+				buffer.append("<a href=\"mailto:").append(href_).append("\">").append(text)
+				.append("</a>");
+				b = StringUtils.replace(b, "[email=" + href + "]" + text + "[/email]", buffer.toString());
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		// url
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[email]", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/email]", tagIndex);
+				String src = b.substring(tagIndex + 5, clsIndex);
+				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()
+						+ "\">" + src + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
