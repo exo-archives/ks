@@ -190,13 +190,14 @@ public class JCRDataStorage {
         }
       }
     }
+    Boolean check = false ;
+    List<String> emailsList = new ArrayList<String>() ;
+    Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
     if(faqSetting.getDisplayMode().equals("approved")) {
 	    //Send notifycation when add new question in watching category
 	    if(isNew && question.isApproved()) {
 	    	List<String> emails = new ArrayList<String>() ;
-	    	List<String> emailsList = new ArrayList<String>() ;
 	    	try {
-	    		Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
 	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 	      		for(String email: emails) {
@@ -205,15 +206,7 @@ public class JCRDataStorage {
 	      				emailsList.add(string_) ;
 	      			}
 	      		}
-	      		if(emailsList != null && emailsList.size() > 0) {
-	      			Message message = new Message();
-	            message.setMimeType(MIMETYPE_TEXTHTML) ;
-	      			message.setSubject("FAQ Watching Category Notification! ");
-	      			message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
-	      																												 .replaceAll("&questionContent_", question.getQuestion())
-	      																												 .replaceAll("&questionLink_", question.getLink()));
-	      			sendEmailNotification(emailsList, message) ;
-	      		}
+	      		check = true ;
 	      	}
 	    	} catch(Exception e) {
 	    		e.printStackTrace() ;
@@ -222,10 +215,8 @@ public class JCRDataStorage {
 	    // Send notifycation when question response or edited or watching
 	  	if(!isNew && question.getResponses() != " " && question.isApproved() && question.isActivated()) {
 	  		List<String> emails = new ArrayList<String>() ;
-	  		List<String> emailsList = new ArrayList<String>() ;
 	  		emailsList.add(question.getEmail()) ;
 	  		try {
-	  			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
 	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 	      		for(String email: emails) {
@@ -235,15 +226,7 @@ public class JCRDataStorage {
 	      			}
 	      		}
 	      	}
-      		if(emailsList != null && emailsList.size() > 0) {
-						Message message = new Message();
-			      message.setMimeType(MIMETYPE_TEXTHTML) ;
-						message.setSubject("FAQ Watching Category Notification! ");
-						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
-																															 .replaceAll("&questionResponse_", question.getResponses())
-																															 .replaceAll("&questionLink_", question.getLink()));
-						sendEmailNotification(emailsList, message) ;
-      		}
+      		check = false ;
 	  		} catch(Exception e) {
 	  			e.printStackTrace() ;
 	  		}
@@ -252,9 +235,7 @@ public class JCRDataStorage {
     	 //Send notifycation when add new question in watching category
 	    if(isNew) {
 	    	List<String> emails = new ArrayList<String>() ;
-	    	List<String> emailsList = new ArrayList<String>() ;
 	    	try {
-	    		Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
 	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 	      		for(String email: emails) {
@@ -263,19 +244,7 @@ public class JCRDataStorage {
 	      				emailsList.add(string_) ;
 	      			}
 	      		}
-	      		if(emailsList != null && emailsList.size() > 0) {
-	      			Message message = new Message();
-	            message.setMimeType(MIMETYPE_TEXTHTML) ;
-	      			message.setSubject("FAQ Watching Category Notification! ");
-	      			message.setBody("<p>Hi you,</p>" 
-	      					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
-	      					+"<p>We would like to inform that Category '" + cate.getProperty("exo:name").getString() 
-	      					+"' has been added new Question with content below: </p>"
-	      					+"<p>"+question.getQuestion()+"<p>"
-	      					+"<p>Click "+"<a href =" + question.getLink()+">here</a> for more details!</p>"
-	      					+"Regards & thanks");
-	      			sendEmailNotification(emailsList, message) ;
-	      		}
+	      		check = true ;
 	      	}
 	    	} catch(Exception e) {
 	    		e.printStackTrace() ;
@@ -284,10 +253,8 @@ public class JCRDataStorage {
 	    // Send notifycation when question response or edited or watching
 	  	if(!isNew && question.getResponses() != " " && question.isActivated()) {
 	  		List<String> emails = new ArrayList<String>() ;
-	  		List<String> emailsList = new ArrayList<String>() ;
 	  		emailsList.add(question.getEmail()) ;
 	  		try {
-	  			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
 	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 	      		for(String email: emails) {
@@ -297,24 +264,30 @@ public class JCRDataStorage {
 	      			}
 	      		}
 	      	}
-      		if(emailsList != null && emailsList.size() > 0) {
-						Message message = new Message();
-			      message.setMimeType(MIMETYPE_TEXTHTML) ;
-						message.setSubject("FAQ Watching Category Notification! ");
-						message.setBody("<p>Hi you,</p>"
-      					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
-      					+"<p>We would like to inform that the question: '" + question.getQuestion()
-      					+"' has been edited or responded </p>"
-      					+"<p>"+question.getResponses()+"</p>"
-      					+"<p>Click "+"<a href =" + question.getLink()+">here</a> for more details!</p>"
-      					+"Regards & thanks");
-						sendEmailNotification(emailsList, message) ;
-      		}
+      		check = false ;
 	  		} catch(Exception e) {
 	  			e.printStackTrace() ;
 	  		}  		  		
 	  	}
     }
+    try {
+    	Message message = new Message();
+	    message.setMimeType(MIMETYPE_TEXTHTML) ;
+		  if(check == true) {
+				message.setSubject("FAQ Watching Category Notification! ");
+				message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
+																													 .replaceAll("&questionContent_", question.getQuestion())
+																													 .replaceAll("&questionLink_", question.getLink()));
+		  } else {
+				message.setSubject("FAQ Watching Category Notification! ");
+				message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
+																													 .replaceAll("&questionResponse_", question.getResponses())
+																													 .replaceAll("&questionLink_", question.getLink()));
+		  }
+		  if(emailsList != null && emailsList.size() > 0) sendEmailNotification(emailsList, message) ;
+    } catch(Exception e) {
+			e.printStackTrace() ;
+		}
   }
 
   
