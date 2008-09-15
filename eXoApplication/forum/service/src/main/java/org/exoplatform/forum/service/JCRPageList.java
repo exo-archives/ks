@@ -32,9 +32,14 @@ abstract public class JCRPageList {
 	protected long availablePage_	= 1;
 	protected long currentPage_ = 1 ;
 	protected List currentListPage_ ;
+	protected long pageSelected = 1;
 	
 	public JCRPageList(long pageSize) {
 		pageSize_ = pageSize ;
+	}
+	
+	public long getPageSelected(){
+		return this.pageSelected;
 	}
 	
 	public long getPageSize() { return pageSize_	; }
@@ -60,6 +65,13 @@ abstract public class JCRPageList {
 	public List getPage(long page) throws Exception	 {
 		checkAndSetPage(page) ;
 		populateCurrentPage(page) ;
+		return currentListPage_ ;
+	}
+	
+	abstract protected void populateCurrentPage(String valueString) throws Exception	 ;
+	
+	public List getpage(String valueSearch) throws Exception {
+		populateCurrentPage(valueSearch) ;
 		return currentListPage_ ;
 	}
 	

@@ -637,6 +637,8 @@ public interface ForumService {
 	public UserProfile getUserProfile(SessionProvider sProvider, String userName,
 	    boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception;
 
+	public JCRPageList searchUserProfile(SessionProvider sessionProvider, String userSearch) throws Exception;
+	
 	/**
 	 * Gets the user info.
 	 * 

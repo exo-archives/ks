@@ -1,0 +1,87 @@
+<%
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.service.ForumLinkData ;
+	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.ForumUtils ; 
+	import org.exoplatform.web.application.JavascriptManager;
+  def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript("eXo.forum.UIForumPortlet.setEnableInput();");
+
+%>
+<div class="UIViewResultSearchUser">
+<% uiform.begin() %>
+	<div style="padding: 5px 10px; margin: 5px; background: #F3F3F3; border:1px solid #B7B7B7;">
+		<div class="ModeratorsManagementContainer">
+			<div class="ManagementContent">
+			  <table cellspacing="0" borderspacing="0" id="PermissionInfo" class="UIGrid">
+				  <thead>
+				  	<tr>
+				      <th width="30%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>
+				      <th width="25%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserTitle");%></th>
+				      <th width="15%"><%=_ctx.appRes("UIModeratorManagementForm.label.UserRole");%></th>
+				      <th width="12%"><%=_ctx.appRes("UIModeratorManagementForm.label.IsBanned");%></th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  <% 
+				  	String classRowTable = "EvenRow";
+				  	List listUser = uiform.getListUserProfile() ;  
+				  	String userRole = "" ;
+				  	if(!listUser.isEmpty()){
+					  	for(user in listUser) {
+					  		userRole = uicomponent.permissionUser[(int)user.getUserRole()];
+					  %>
+					      <tr class="$classRowTable">
+								  <td class="text">
+								  	<a href="<%=uicomponent.event("ViewUser",user.getUserId());%>">
+								  		<%=user.getUserId();%>
+								  	</a>
+								  </td>
+									<td class="text"><%=user.getUserTitle();%></td>
+									<td class="text"><%=userRole;%></td>
+									<td class="text"><%=user.getIsBanned();%></td>
+						    </tr>
+					   <% 
+					   		if(classRowTable.equals("EvenRow")) classRowTable = "OddRow";
+					   		else classRowTable = "EvenRow"; 
+					   	} 
+				   	} else {%>
+				   		<tr class="$classRowTable">
+							  <td class="text"> &nbsp; </td>
+								<td class="text"> &nbsp; </td>
+								<td class="text"> &nbsp; </td>
+								<td class="text"> &nbsp; </td>
+					    </tr>
+				   <%}
+				   %>
+				  </tbody>
+				</table> 
+			</div>
+		</div>
+		<div><span></span></div>
+		<div>
+			<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+			<div style="clear: right;"><span></span></div>
+		</div>
+		<div><span></span></div>
+	</div>
+
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></div>
+							</div>
+						</div>
+					</a>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
+
+<%uiform.end()%>
+</div>
