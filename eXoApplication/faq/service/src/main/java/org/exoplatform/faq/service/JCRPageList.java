@@ -34,8 +34,11 @@ abstract public class JCRPageList {
   protected long availablePage_  = 1;
   protected long currentPage_ = 1 ;
   protected List<Question> currentListPage_ ;
+  protected List<Object> currentListObject_ ;
   protected List<Category> currentListCategory_;
   protected List<FAQFormSearch> currentListResultSearch_ ;
+  private String objectRepare_ = null;
+  private long pageJump_ = 0;
   
   /**
    * Constructor set pagesize for JCRPageList, pagesize is number of objects per page
@@ -47,7 +50,15 @@ abstract public class JCRPageList {
     pageSize_ = pageSize ;
   }
   
-  /**
+  public String getObjectRepare_() {
+  	return objectRepare_;
+  }
+
+	public void setObjectRepare_(String objectRepare_) {
+  	this.objectRepare_ = objectRepare_;
+  }
+
+	/**
    * Get page size, return number of quesitons per page
    * 
    * @return  number of object per page
@@ -155,6 +166,7 @@ abstract public class JCRPageList {
   	populateCurrentPageResultSearch(page, username) ;
   	return currentListResultSearch_ ;
   }
+  
   abstract protected void populateCurrentPageCategoriesSearch(long page, String username) throws Exception   ;
   
   public List<Category> getPageResultCategoriesSearch(long page, String username) throws Exception   {
@@ -162,12 +174,21 @@ abstract public class JCRPageList {
   	populateCurrentPageCategoriesSearch(page, username) ;
   	return  currentListCategory_;
   }
+  
   abstract protected void populateCurrentPageQuestionsSearch(long page, String username) throws Exception   ;
   
   public List<Question> getPageResultQuestionsSearch(long page, String username) throws Exception   {
   	checkAndSetPage(page) ;
   	populateCurrentPageQuestionsSearch(page, username) ;
   	return currentListPage_ ;
+  }
+  
+  abstract protected void populateCurrentPageCategoriesQuestionsSearch(long page, String username) throws Exception   ;
+  
+  public List<Object> getPageListCategoriesQuestions(long page, String username) throws Exception   {
+  	checkAndSetPage(page) ;
+  	populateCurrentPageCategoriesQuestionsSearch(page, username) ;
+  	return currentListObject_ ;
   }
   
   /**
@@ -217,6 +238,14 @@ abstract public class JCRPageList {
       availablePage_ = pages ;
       //currentPage_ =  1 ;
     }
+  }
+  
+  public void setPageJump(long pageJump){
+  	this.pageJump_ = pageJump;
+  }
+  
+  public long getPageJump(){
+  	return pageJump_;
   }
   
  

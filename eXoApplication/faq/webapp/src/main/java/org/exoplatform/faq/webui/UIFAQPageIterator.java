@@ -50,6 +50,9 @@ public class UIFAQPageIterator extends UIContainer {
   
   public void updatePageList(JCRPageList pageList ) {
     this.pageList = pageList ;
+    page = 1;
+    endTabPage = 0;
+    beginTabPage = 0;
   }
   
   @SuppressWarnings("unused")

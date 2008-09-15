@@ -115,7 +115,7 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
         return ;
 			}
 			uiQuestions.setCategories(categoryId) ;
-			uiQuestions.setListQuestion() ;
+			uiQuestions.setIsNotChangeLanguage() ;
       UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
       breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;

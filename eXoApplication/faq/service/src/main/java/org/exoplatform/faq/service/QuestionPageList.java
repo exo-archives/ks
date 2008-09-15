@@ -59,6 +59,12 @@ public class QuestionPageList extends JCRPageList {
   
   private List<Category> listCategories_ = null;
   
+  private String questionQuery_ = new String();
+  
+  private Node nodeCategory_ = null;
+  
+  private List<Object> listObject_ = new ArrayList<Object>();
+  
   /**
    * Sets the not yet answered. Set parameter is <code>true</code> if want get questions are not
    * yet answered opposite set is <code>false</code> or don't do (default value is <code>false</code>)
@@ -153,6 +159,14 @@ public class QuestionPageList extends JCRPageList {
   	super(10) ;
   	this.listQuestions_ = listQuestions;
   	setAvailablePage(size) ;    
+  }
+  
+  public QuestionPageList(Node categoryNode, String quesQuerry, List<Object> listObject) throws Exception{
+  	super(10) ;
+  	this.questionQuery_ = quesQuerry;
+  	this.nodeCategory_ = categoryNode;
+  	this.listObject_.addAll(listObject);
+  	setAvailablePage(listObject.size()) ;    
   }
 
   /**
@@ -262,6 +276,61 @@ public class QuestionPageList extends JCRPageList {
 	  	currentListPage_.add(listQuestions_.get(i));
 	  }
   }
+	
+	@Override
+  protected void populateCurrentPageCategoriesQuestionsSearch(long page, String username) throws Exception {
+		String idSearch = getObjectRepare_();
+		int posSearch = 0;
+		if(listObject_ == null || listObject_.isEmpty()){
+			listObject_ = new ArrayList<Object>();
+			Session session = getJCRSession() ;
+			QueryManager qm = session.getWorkspace().getQueryManager() ;
+      iter_ = nodeCategory_.getNodes();
+      while(iter_.hasNext()){
+      	listObject_.add(getCategory(iter_.nextNode()));
+      }
+      iter_ = null;
+      int size = listObject_.size();
+      
+      Query query = qm.createQuery(questionQuery_, Query.XPATH);
+      QueryResult result = query.execute();
+      iter_ = result.getNodes();
+      Question question = null;
+      while(iter_.hasNext()){
+      	question = getQuestion(iter_.nextNode());
+      	if(!question.getId().equals(idSearch)) size ++;
+      	else posSearch = size + 1;
+      	listObject_.add(question);
+      }
+      
+      if(getAvailablePage() < listObject_.size())
+      	setAvailablePage(listObject_.size());
+      iter_ = null;
+		}
+		
+		long pageSize = getPageSize();
+	  long position = 0;
+	  if(posSearch > 0){
+	  	posSearch =  posSearch/(int)pageSize;
+	  	int t = posSearch%(int)pageSize;
+	  	if(t > 0 || posSearch == 0){
+	  		posSearch ++;
+	  	}
+	  	page = posSearch;
+	  	setObjectRepare_(null);
+	  }
+	  setPageJump(page);
+	  if(page == 1) position = 0;
+	  else {
+	  	position = (page - 1) * pageSize;
+	  }
+	  pageSize *= page ;
+	  currentListObject_ = new ArrayList<Object>();
+	  for(int i = (int)position; i < pageSize && i < this.listObject_.size(); i ++){
+	  	currentListObject_.add(listObject_.get(i));
+	  }
+	  listObject_ = null;
+  }
   
   /**
    * Set values for all question's properties from question node which is got
@@ -313,6 +382,17 @@ public class QuestionPageList extends JCRPageList {
     }
     question.setAttachMent(attList) ;
     return question ;
+  }
+  
+  private Category getCategory(Node categoryNode) throws Exception {
+  	Category cat = new Category() ;
+  	cat.setId(categoryNode.getName()) ;
+  	if(categoryNode.hasProperty("exo:name")) cat.setName(categoryNode.getProperty("exo:name").getString()) ;
+  	if(categoryNode.hasProperty("exo:description")) cat.setDescription(categoryNode.getProperty("exo:description").getString()) ;
+  	if(categoryNode.hasProperty("exo:createdDate")) cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
+  	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
+  	if(categoryNode.hasProperty("exo:isModerateQuestions")) cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
+  	return cat;
   }
   
   /**
@@ -395,4 +475,5 @@ public class QuestionPageList extends JCRPageList {
       repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
     return sessionProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
   }
+
 }

@@ -101,7 +101,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			UIFAQPortlet faqPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			uiQuestions.setCategories(CategoryId) ;
-			uiQuestions.setListQuestion() ;
+			uiQuestions.setIsNotChangeLanguage() ;
 	    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;

@@ -19,9 +19,11 @@
 							String url = uicomponent.url("Setting", "OBJECTID") ;
 							uicomponent.setLink(url);
 							String cateId = uicomponent.getCategoryId() ;
+							List categories = uicomponent.getCategories() ; 
+							/*
 							if(cateId == null || cateId.trim().length() < 1) {
 								uicomponent.setIsModerators() ;
-							}
+							}*/
 							boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
 							String[] categoryAction = null ;
 							String[] moderatorAction = null ;
@@ -114,7 +116,7 @@
 							<div style="clear: left;"><span></span></div>
 						</div>
 						<div class="SearchForm">
-								<%uicomponent.renderChildren() ;%>
+								<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
 						</div>
 				
 						<div style="clear: both;"><span></span></div>
@@ -123,9 +125,6 @@
 		</div>
 	</div>
 <% /*View category*/ %>
-<% 
-	List categories = uicomponent.getCategories() ; 
-%>
 	<div class="FAQContainer" id="FAQViewContent">
 		<div class="FAQContent">
 		<%  
@@ -639,5 +638,10 @@
 		  }
 		%>
 	</div>
+	
+	<div>
+		<%uicomponent.renderChild(uicomponent.OBJECT_ITERATOR) ;%>
+	</div>
+	
 <% /* End View category*/ %>
 </div>

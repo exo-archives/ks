@@ -141,8 +141,9 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				String categoryId = question.getCategoryId() ;
 				UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				uiQuestions.pageList.setObjectRepare_(questionId);
 				uiQuestions.setCategories(categoryId) ;
-				uiQuestions.setListQuestion() ;
+				uiQuestions.setCategories();
 				uiQuestions.questionView_ = questionId ;
 	      int pos = 0 ;
 	      for(Question question2 : uiQuestions.listQuestion_) {
@@ -189,6 +190,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 		    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 		    faqPortlet.cancelAction() ;
 			} catch (Exception e) {
+				e.printStackTrace();
 				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

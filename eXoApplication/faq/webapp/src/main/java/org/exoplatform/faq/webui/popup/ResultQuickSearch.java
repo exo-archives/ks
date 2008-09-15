@@ -120,7 +120,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	        return ;
 				}
 				uiQuestions.setCategories(id) ;
-				uiQuestions.setListQuestion() ;
+				uiQuestions.setIsNotChangeLanguage() ;
 		    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 		    breadcumbs.setUpdataPath(null) ;
         String oldPath = "" ;
@@ -164,8 +164,9 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				String categoryId = question.getCategoryId() ;
 				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				uiQuestions.pageList.setObjectRepare_(id);
 				uiQuestions.setCategories(categoryId) ;
-				uiQuestions.setListQuestion() ;
+				uiQuestions.setIsNotChangeLanguage() ;
 				uiQuestions.questionView_ = id ;
 		    UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 		    breadcumbs.setUpdataPath(null) ;

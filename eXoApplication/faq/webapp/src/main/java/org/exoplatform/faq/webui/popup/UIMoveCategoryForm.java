@@ -187,7 +187,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
           faqService_.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, FAQUtils.getSystemProvider()) ;
         }
     	}
-			questions.setCategories() ;
+			//questions.setListObject() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			faqPortlet.cancelAction() ;
 			return ;

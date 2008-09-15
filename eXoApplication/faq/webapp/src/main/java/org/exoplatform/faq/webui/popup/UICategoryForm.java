@@ -282,11 +282,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
           		uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
                 ApplicationMessage.INFO)) ;
               event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        			questions.setCategories() ;
+        			//questions.setCategories() ;
         			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
               return ; 
   				}
-  				questions.setCategories() ;
+  				//questions.setCategories() ;
   				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
   				return ;
   			} 
