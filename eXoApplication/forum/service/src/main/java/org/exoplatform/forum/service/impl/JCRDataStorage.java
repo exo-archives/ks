@@ -2065,6 +2065,19 @@ public class JCRDataStorage{
 		return pageList ;
 	}
 	
+	public JCRPageList searchUserProfile(SessionProvider sessionProvider, String userSearch) throws Exception{
+		Node userProfileNode = getUserProfileNode(sessionProvider) ;
+		Node forumHomeNode = getForumHomeNode(sessionProvider) ;
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager() ;
+		StringBuffer stringBuffer = new StringBuffer();
+		stringBuffer.append("/jcr:root").append(userProfileNode.getPath()).append("//element(*,exo:userProfile)").append("[(jcr:contains(., '").append(userSearch).append("'))]");
+		Query query = qm.createQuery(stringBuffer.toString() , Query.XPATH) ;
+		QueryResult result = query.execute() ;
+		NodeIterator iter = result.getNodes(); 
+		JCRPageList pagelist = new ForumPageList(sessionProvider, iter, 10, stringBuffer.toString(), true) ;
+		return pagelist ;
+	}
+	
 	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if(userName == null || userName.length() <= 0) return userProfile ;

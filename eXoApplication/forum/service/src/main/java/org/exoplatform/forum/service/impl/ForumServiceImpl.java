@@ -353,4 +353,8 @@ public class ForumServiceImpl implements ForumService{
 		return storage_.getMessageInfo(name) ;
 	}
 
+	public JCRPageList searchUserProfile(SessionProvider sessionProvider, String userSearch) throws Exception {
+	  return storage_.searchUserProfile(sessionProvider, userSearch);
+  }
+
 }

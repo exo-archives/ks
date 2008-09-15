@@ -41,6 +41,7 @@ public class ForumPageList extends JCRPageList {
 	private SessionProvider sProvider_ ;
 	private NodeIterator iter_ = null;
 	
+	
 	public ForumPageList(long pageSize, int size) {
 		super(pageSize) ;
 		setAvailablePage(size);
@@ -100,6 +101,41 @@ public class ForumPageList extends JCRPageList {
 		//currentListPage_ = objects_.subList(getFrom(), getTo()) ;
 	}
 	
+	@SuppressWarnings("unchecked")
+  protected void populateCurrentPage(String valueString) throws Exception	{
+		NodeIterator nodeIterator = setQuery(sProvider_, isQuery_, value_) ;
+		if(iter_ == null) {
+			iter_ = setQuery(sProvider_, isQuery_, value_) ;
+		}
+		int pos = 0;
+		for(int i = 0; i < nodeIterator.getSize(); i ++){
+			if(getUserProfile(nodeIterator.nextNode()).getUserId().equals(valueString)){
+				pos = i + 1;
+				break;
+			}
+		}
+		long pageSize = getPageSize();
+		long page = 1;
+		if(pos < pageSize){
+			page = 1;
+		} else {
+			page = pos / pageSize;
+			if(pos % pageSize > 0){
+				page = page + 1;
+			}
+		}
+		this.pageSelected = page;
+		iter_.skip((page-1) * pageSize ) ;
+		currentListPage_ = new ArrayList<Object>() ;
+		for(int i = 0; i < pageSize; i ++) {
+			if(iter_.hasNext()){
+				currentListPage_.add(getUserProfile(iter_.nextNode())) ;
+			}else {
+				break ;
+			}
+		}
+		iter_ = null;
+	}
 
 	@SuppressWarnings("unchecked")
   @Override

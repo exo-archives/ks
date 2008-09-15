@@ -12,13 +12,22 @@
 <div class="UIModeratorManagementForm">
 	<% uiform.begin() %>
 	<div class="UIComponentModerator">
-	<div style="overflow: auto;">
-		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-		<div style="clear: right;"><span></span></div>
-	</div>
-	<div><span></span></div>
-	<div class="ModeratorsManagementContainer">
-		<div class="ManagementContent">			
+		<div class="ModeratorsManagementContainer">
+		
+			
+			<div class="ManagementContent">
+		
+				<div style="margin: 2px 0px ;float: right; padding: 0px 0px 0px 14px;">
+					<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"><span></span></a>
+					<div class="Input" style="float:right;">
+					<%	
+						uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
+					%>
+					</div>
+					<div class="Label" style="float:right;"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:&nbsp;</div>
+					<div style="clear: right;"><span></span></div>
+				</div>
+				<div><span></span></div>
 		 
 				<table cellspacing="0" borderspacing="0" id="PermissionInfo" class="UIGrid">
 					<thead>
@@ -65,87 +74,87 @@
 					</tbody>
 				</table> 
 			 
+			</div>
 		</div>
-	</div>
-	<div><span></span></div>
-	<div>
-		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-		<div style="clear: right;"><span></span></div>
-	</div>
-	<div><span></span></div>
-<% if(uiform.getIsEdit()) { %>
-	<div class="UIFormTabPane">
-		<div class="UITabPane">
-			<div class="TabPaneContent">
-				
-				<div class="WorkingArea">
-					<div class="UIHorizontalTabs">
-						<div class="LeftHorizontalTabs">
-							<div class="RightHorizontalTabs">
-								<div class="CenterHorizontalTabs">
-									<div class="TabsContainer">
-									<%String classCss = "SelectedTab" ; 
-										for(tabconten in uiform.getChildren()){ 
-											if(tabconten.id.equals("ForumUserPageIterator")) continue;
-										%>	
-										<div class="UITab NormalTabStyle">
-											<div class="$classCss">
-												<div class="LeftTab">
-													<div class="RightTab">
-														<div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+		<div><span></span></div>
+		<div>
+			<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+			<div style="clear: right;"><span></span></div>
+		</div>
+		<div><span></span></div>
+		<% if(uiform.getIsEdit()) { %>
+			<div class="UIFormTabPane">
+				<div class="UITabPane">
+					<div class="TabPaneContent">
+						
+						<div class="WorkingArea">
+							<div class="UIHorizontalTabs">
+								<div class="LeftHorizontalTabs">
+									<div class="RightHorizontalTabs">
+										<div class="CenterHorizontalTabs">
+											<div class="TabsContainer">
+											<%String classCss = "SelectedTab" ; 
+												for(tabconten in uiform.getChildren()){ 
+													if(tabconten.id.equals("ForumUserPageIterator")) continue;
+												%>	
+												<div class="UITab NormalTabStyle">
+													<div class="$classCss">
+														<div class="LeftTab">
+															<div class="RightTab">
+																<div onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)" class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+															</div>
+														</div>
 													</div>
 												</div>
+											<% classCss = "NormalTab" ;	
+											} %>
 											</div>
 										</div>
-									<% classCss = "NormalTab" ;	
-									} %>
+									</div>
+								</div>
+							</div>
+							<div class="UIForm">
+								<div class="HorizontalLayout">
+									<div class="UITabContentContainer">
+										<% 
+											String display =	"block";
+											for(tabconten in uiform.getChildren()){
+												if(tabconten.id.equals("ForumUserPageIterator")) continue;
+										%>
+										<div style="display: $display;" id="UITabContent" class="UITabContent">
+											<% uiform.renderChild(tabconten.id) ; %>
+										</div>
+										<% display = "none"; %>
+									<% } %>
+										<div class="UIAction"> 
+											<table class="ActionContainer" align="center">
+												<tr>
+										<% for(action in uiform.getActions()) { 
+												 if(action.equals("Cancel") || action.equals("Save")) {
+										%>
+													<td align="center">
+														<a href="<%=uicomponent.event(action);%>" class="ActionButton LightBlueStyle">
+															<div class="ButtonLeft">
+																<div class="ButtonRight">
+																	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></div>
+																</div>
+															</div>
+														</a>
+													</td>
+										<% 	 } 
+											 }%>
+												</tr>
+									 		</table> 
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="UIForm">
-						<div class="HorizontalLayout">
-							<div class="UITabContentContainer">
-								<% 
-									String display =	"block";
-									for(tabconten in uiform.getChildren()){
-										if(tabconten.id.equals("ForumUserPageIterator")) continue;
-								%>
-								<div style="display: $display;" id="UITabContent" class="UITabContent">
-									<% uiform.renderChild(tabconten.id) ; %>
-								</div>
-								<% display = "none"; %>
-							<% } %>
-								<div class="UIAction"> 
-									<table class="ActionContainer" align="center">
-										<tr>
-								<% for(action in uiform.getActions()) { 
-										 if(action.equals("Cancel") || action.equals("Save")) {
-								%>
-											<td align="center">
-												<a href="<%=uicomponent.event(action);%>" class="ActionButton LightBlueStyle">
-													<div class="ButtonLeft">
-														<div class="ButtonRight">
-															<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></div>
-														</div>
-													</div>
-												</a>
-											</td>
-								<% 	 } 
-									 }%>
-										</tr>
-							 		</table> 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-			</div>	
-		</div>	
-	</div>
-<% } %>
+						
+					</div>	
+				</div>	
+			</div>
+		<% } %>
 	</div>
 	<div class="UIAction"> 
 		<table class="ActionContainer" align="center">
