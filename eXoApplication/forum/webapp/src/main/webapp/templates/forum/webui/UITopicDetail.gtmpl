@@ -775,7 +775,7 @@
 											<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
 											<a class="AttachmentLabel" href="$urlFile">$fileName</a>
 											<div style="clear: left;"><span/></div>
-											<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>Size: ${size}</div>
+											<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
 										</div>
 									<% } %>
 									</div>
