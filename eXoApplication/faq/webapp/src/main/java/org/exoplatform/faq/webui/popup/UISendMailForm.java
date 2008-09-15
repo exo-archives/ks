@@ -93,12 +93,11 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   }
   
   public void addPlugin(ComponentPlugin plugin) throws Exception {
-		try{
+		try {
 			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
-		}catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace() ;
 		}
-		
 	}
   
 	public void setUpdateQuestion(String questionId, String language) throws Exception {
