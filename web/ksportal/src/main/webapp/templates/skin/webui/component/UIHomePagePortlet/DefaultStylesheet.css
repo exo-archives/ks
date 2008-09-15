@@ -36,7 +36,7 @@
 }
 
 .UIBannerPortlet .LoginContainer .FlagIcon {
-	background: url('DefaultSkin/background/FlagIcon22x13.gif') no-repeat right;
+	background: url('DefaultSkin/background/DefaultPortletIcon.gif') no-repeat right;
 	float: right;
 	width: 22px; height:13px;
 	margin: 6px 15px 0px 0px;

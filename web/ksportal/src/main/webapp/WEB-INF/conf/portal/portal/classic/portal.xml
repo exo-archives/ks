@@ -25,12 +25,12 @@
       <instance-id>portal#classic:/web/BannerPortlet/banner</instance-id>
       <show-info-bar>false</show-info-bar>
     </application>
-    <container template="system:/templates/groovy/webui/component/UITableColumnContainer.gtmpl">
-      <container template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+    <container id="KS" template="system:/templates/groovy/webui/component/UITableColumnContainer.gtmpl">
+      <container id="pagebody" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
         <page-body>
         </page-body>
       </container>
-      <container width="250px" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+      <container id="sidebar" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
         <application>
           <instance-id>portal#classic:/web/HomePagePortlet/sidebar</instance-id>
           <title>Sidebar</title>

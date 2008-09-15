@@ -1,10 +1,5 @@
 <div class="UIFooter" id="$uicomponent.id">
-  <<div class="UIBreadcumbs">
-		<div class="HomeIcon LeftBlock BCHome16x16Icon"><span></span></div>
-		<a class="Selected" href="javascript:ajaxGet('/portal/public/classic/?portal:componentId=breadcumbs&portal:type=action&portal:isSecure=false&uicomponent=UIBreadcumbs&op=SelectPath&objectId=home&ajaxRequest=true')">Home</a>
+	<div class="FooterInfoContainer">
+	    <div> <%=_ctx.appRes("UIPortalToolPanel.label.copyrightText")%><%=_ctx.appRes("UIPortalToolPanel.label.companyTitleText")%></div>
 	</div>
-        <div class="FooterInfoContainer">
-	        <div> <%=_ctx.appRes("UIPortalToolPanel.label.copyrightText")%><%=_ctx.appRes("UIPortalToolPanel.label.companyTitleText")%></div>
-	      </div>
-      
 </div>

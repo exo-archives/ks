@@ -22,12 +22,15 @@
 					<div class="FlagIcon"><span></span></div>
 					<div class="Dotline"><span></span></div>
 					<%if(prContext.getAccessPath() == PortalRequestContext.PRIVATE_ACCESS) {%>	
-					<a class="SignIn" href="$signOutAction">Sign out</a>
+						<a class="SignIn" href="$signOutAction">Sign out</a>
+						<div class="DotIcon"><span></span></div>
+					<div class="TextAcount">Welcome: <span style="font-weight: bold;"><%=Util.getPortalRequestContext().getRemoteUser()%></span></div>	
 					<% }else{ %>
-					<a class="SignIn" href="$signInAction">Sign in</a>
+						<a class="SignIn" href="$signInAction">Sign in</a>
+						<div class="DotIcon"><span></span></div>
+						<div class="TextAcount">Demo account: <span style="font-weight: bold;">demo/exo</span></div>	
 					<% } %>
-					<div class="DotIcon"><span></span></div>
-					<div class="TextAcount">Demo account: <span style="font-weight: bold;">demo/exo</span></div>	
+					
 					<div style="clear: right"><span></span></div>	   
 				</div>
 			</div>
