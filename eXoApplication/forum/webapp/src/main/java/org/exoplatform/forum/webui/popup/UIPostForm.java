@@ -348,6 +348,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String[]userPrivate = new String[]{"exoUserPri"};
 				if(uiForm.isMP){
 					userPrivate = new String[]{userName, uiForm.post_.getOwner()};
+					hasTopicMod = false;
 				}
 				post.setUserPrivate(userPrivate);
 				post.setIsApproved(!hasTopicMod) ;
