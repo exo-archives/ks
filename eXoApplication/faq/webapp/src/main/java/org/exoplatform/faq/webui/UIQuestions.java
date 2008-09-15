@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -32,8 +33,10 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
 import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
@@ -96,6 +99,7 @@ import org.exoplatform.webui.event.EventListener;
 public class UIQuestions extends UIContainer {
   private static String SEARCH_INPUT = "SearchInput" ;
   private static final String OBJECT_ITERATOR = "object_iter";
+  private static final String QUICK_SEARCH = "QuickSearch";
   
   private FAQSetting faqSetting_ = null;
 	private List<Category> categories_ = null ;
@@ -126,6 +130,10 @@ public class UIQuestions extends UIContainer {
   private String[] userActionQues_ = new String[]{"SendQuestion"} ;
   private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
   
+  public JCRPageList pageList ;
+  private UIFAQPageIterator pageIterator = null ;
+  long pageSelect = 0;
+  
 	public UIQuestions()throws Exception {
     backPath_ = null ;
 	  this.categoryId_ = new String() ;
@@ -135,9 +143,38 @@ public class UIQuestions extends UIContainer {
 		if(currentUser_ != null && currentUser_.trim().length() > 0){
 			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser_, faqSetting_);
 		}
-		addChild(UIQuickSearch.class, null, null) ;
-		//addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
-    setCategories() ;
+		addChild(UIQuickSearch.class, null, QUICK_SEARCH) ;
+		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
+		setListObject();
+	}
+	
+	public void setListObject(){
+		this.isChangeLanguage = false;
+		try {
+			if(currentUser_ != null && currentUser_.trim().length() > 0){
+				FAQServiceUtils serviceUtils = new FAQServiceUtils();
+				if(serviceUtils.isAdmin(currentUser_)){
+					faqSetting_.setCanEdit(true);
+				} else if(categoryId_ != null && categoryId_.trim().length() > 0 &&
+							Arrays.asList(faqService.getCategoryById(this.categoryId_, FAQUtils.getSystemProvider()).getModerators()).contains(currentUser_)){
+					faqSetting_.setCanEdit(true);
+				} else {
+					faqSetting_.setCanEdit(false);
+				}
+			}
+			String object = null;
+			if(pageList != null) object = pageList.getObjectRepare_();
+	    pageList = faqService.getListCatesAndQuesByCateId(this.categoryId_, FAQUtils.getSystemProvider(), this.faqSetting_);
+	    pageList.setPageSize(10);
+	    if(object != null && object.trim().length() > 0) pageList.setObjectRepare_(object);
+	    pageIterator = this.getChildById(OBJECT_ITERATOR);
+	    pageIterator.updatePageList(pageList);
+    } catch (Exception e) {
+    	this.pageList = null ;
+    	this.pageList.setPageSize(10);
+    	pageIterator.updatePageList(this.pageList) ;
+	    e.printStackTrace();
+    }
 	}
   
   public String[] getActionTollbar() {
@@ -196,14 +233,32 @@ public class UIQuestions extends UIContainer {
   }
   
   public void setCategories() throws Exception  {
-    if(categories_ != null)
-      categories_.clear() ;
-    if(this.categoryId_ == null || this.categoryId_.trim().length() < 1) {
-      categories_ = faqService.getSubCategories(null, FAQUtils.getSystemProvider(), this.faqSetting_) ;
-    } else {
-      categories_ = faqService.getSubCategories(this.categoryId_, FAQUtils.getSystemProvider(), this.faqSetting_) ;
-      setIsModerators() ;
+  	if(categories_ != null)
+  		categories_.clear() ;
+  	pageSelect = pageIterator.getPageSelected() ;
+    categories_ = new ArrayList<Category>();
+    listQuestion_ = new ArrayList<Question>();
+    List<Object> listObject = this.pageList.getPageListCategoriesQuestions(pageSelect, null);
+    for(Object obj : listObject){
+    	if(obj instanceof Category){
+    		categories_.add((Category)obj);
+    	} else {
+    		listQuestion_.add((Question)obj);
+    	}
     }
+    while(listObject.isEmpty() && pageSelect > 1) {
+      listObject = this.pageList.getPageListCategoriesQuestions(--pageSelect, null);
+      for(Object obj : listObject){
+      	if(obj instanceof Category){
+      		categories_.add((Category)obj);
+      	} else {
+      		listQuestion_.add((Question)obj);
+      	}
+      }
+      pageIterator.setSelectPage(pageSelect) ;
+    }
+    pageIterator.setSelectPage(pageList.getPageJump());
+    setIsModerators() ;
   }
   
   @SuppressWarnings("static-access")
@@ -282,9 +337,21 @@ public class UIQuestions extends UIContainer {
   
 	@SuppressWarnings("unused")
   private List<Category> getCategories() throws Exception {
+		if(isChangeLanguage && pageSelect != pageIterator.getPageSelected()) isChangeLanguage = false;
+		if(!isChangeLanguage){
+			setCategories();
+			//  order by and ascending or descending
+	    if(faqSetting_.getOrderBy().equals("created")) {
+	    	if(faqSetting_.getOrderType().equals("asc")) Collections.sort(categories_, new Utils.DatetimeComparatorASC()) ;
+	    	else Collections.sort(categories_, new Utils.DatetimeComparatorDESC()) ;
+	    } else {
+				if(faqSetting_.getOrderType().equals("asc")) Collections.sort(categories_, new Utils.NameComparatorASC()) ;
+				else Collections.sort(categories_, new Utils.NameComparatorDESC()) ;
+			}
+		}
 		return categories_ ;
 	}
-  //Need to make API to check this info, Do NOT do as now 
+
 	@SuppressWarnings("unused")
 	private long[] getCategoryInfo(String categoryId) {
     long[] result = new long[]{0, 0, 0, 0} ;
@@ -296,20 +363,8 @@ public class UIQuestions extends UIContainer {
     return result ;
 	}
 	
-  public void setListQuestion() {
+  public void setIsNotChangeLanguage() {
     isChangeLanguage = false;
-    try{
-      SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-      if(!canEditQuestion) {
-        this.listQuestion_ = faqService.getQuestionsByCatetory(categoryId_, sessionProvider, this.faqSetting_).getAll() ;
-      } else {
-        this.listQuestion_ = faqService.getAllQuestionsByCatetory(categoryId_, sessionProvider, this.faqSetting_).getAll() ;
-      }
-    } catch (FileNotFoundException fileNotFount) { 
-      fileNotFount.printStackTrace() ;
-    } catch(Exception e) {
-      e.printStackTrace() ;
-    }
   }
   
   public void setListQuestion(List<Question> listQuestion) {
@@ -411,8 +466,8 @@ public class UIQuestions extends UIContainer {
   
   public void setCategoryId(String categoryId)  throws Exception {
     this.categoryId_ = categoryId ;
-    this.isChangeLanguage = false ;
-    setCategories() ;
+    setListObject();
+    setIsNotChangeLanguage();
   }
   
   public String getQuestionRelationById(String questionId) {
@@ -530,14 +585,18 @@ public class UIQuestions extends UIContainer {
           } else {
             uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-            question.setCategories() ;
+            //question.setCategories() ;
+            /*question.setListObject();*/
+            question.setIsNotChangeLanguage();
             event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
             return ;
           }
         } catch (Exception e) {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          question.setCategories() ;
+          //question.setCategories() ;
+          /*question.setListObject();*/
+          question.setIsNotChangeLanguage();
           event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
           return ;
         }
@@ -587,11 +646,13 @@ public class UIQuestions extends UIContainer {
               }
               if(pathCate.indexOf("/") > 0) {
                 questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1)) ;
-                questions.setListQuestion() ;
+                event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
               } else {
                 questions.categoryId_ = null ;
-                questions.setCategories() ;
-                questions.setListQuestion() ;
+                //questions.setCategories() ;
+                questions.setListObject();
+                questions.setIsNotChangeLanguage() ;
+                event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
               }
               break ;
             }
@@ -625,6 +686,7 @@ public class UIQuestions extends UIContainer {
   static public class OpenCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
       UIQuestions questions = event.getSource() ;
+      questions.pageSelect = 0;
       questions.backPath_ = "" ;
       UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
@@ -634,12 +696,13 @@ public class UIQuestions extends UIContainer {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        questions.setCategories() ;
+        //questions.setCategories() ;
+        /*questions.setListObject();*/
+        questions.setIsNotChangeLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }
       questions.setCategoryId(categoryId) ;
-      questions.setListQuestion() ;
       UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
       String oldPath = breadcumbs.getPaths() ;
       if(oldPath != null && oldPath.trim().length() > 0) {
@@ -677,14 +740,18 @@ public class UIQuestions extends UIContainer {
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          question.setCategories() ;
+          //question.setCategories() ;
+          /*question.setListObject();*/
+          question.setIsNotChangeLanguage();
           event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
           return ;
         }
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setCategories() ;
+        //question.setCategories() ;
+        /*question.setListObject();*/
+        question.setIsNotChangeLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         return ;
       }
@@ -719,19 +786,25 @@ public class UIQuestions extends UIContainer {
             }
           }
           faqService.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
-    			question.setCategories() ;
+    			//question.setCategories() ;
+          /*question.setListObject();*/
+          question.setIsNotChangeLanguage();
     			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          question.setCategories() ;
+          //question.setCategories() ;
+          /*question.setListObject();*/
+          question.setIsNotChangeLanguage();
           event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
           return ;
         }
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setCategories() ;
+        //question.setCategories() ;
+        /*question.setListObject();*/
+        question.setIsNotChangeLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         return ;
       }
@@ -768,21 +841,27 @@ public class UIQuestions extends UIContainer {
         	} else {
         		uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.cannot-move-category", null, ApplicationMessage.WARNING)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-            question.setCategories() ;
+            //question.setCategories() ;
+            /*question.setListObject();*/
+            question.setIsNotChangeLanguage();
             event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
             return ;
         	}
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          question.setCategories() ;
+          //question.setCategories() ;
+          /*question.setListObject();*/
+          question.setIsNotChangeLanguage();
           event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
           return ;
         }
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setCategories() ;
+        //question.setCategories() ;
+        /*question.setListObject();*/
+        question.setIsNotChangeLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }
@@ -802,18 +881,21 @@ public class UIQuestions extends UIContainer {
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
         	question.moveDownUp(event, -1);
+        	question.isChangeLanguage = true;
     			event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          question.setCategories() ;
+          //question.setCategories() ;
+          /*question.setListObject();*/
           event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
           return ;
         }
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setCategories() ;
+        //question.setCategories() ;
+        /*question.setListObject();*/
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }
@@ -833,18 +915,22 @@ public class UIQuestions extends UIContainer {
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
         	question.moveDownUp(event, 1);
+        	question.isChangeLanguage = true;
     			event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          question.setCategories() ;
+          //question.setCategories() ;
+          /*question.setListObject();*/
           event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
           return ;
         }
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setCategories() ;
+        //question.setCategories() ;
+        /*question.setListObject();*/
+        question.setIsNotChangeLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }
@@ -878,7 +964,9 @@ public class UIQuestions extends UIContainer {
         UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setCategories() ;
+        //question.setCategories() ;
+        /*question.setListObject();*/
+        question.setIsNotChangeLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         return ;
       }
@@ -912,14 +1000,18 @@ public class UIQuestions extends UIContainer {
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          question.setCategories() ;
+          //question.setCategories() ;
+          /*question.setListObject();*/
+          question.setIsNotChangeLanguage();
           event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
           return ;
         }
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setCategories() ;
+        //question.setCategories() ;
+        /*question.setListObject();*/
+        question.setIsNotChangeLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }
@@ -953,21 +1045,27 @@ public class UIQuestions extends UIContainer {
         	} else {
         		uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-moved-action", null, ApplicationMessage.WARNING)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-            questions.setCategories() ;
+            //questions.setCategories() ;
+            /*questions.setListObject();*/
+            questions.setIsNotChangeLanguage();
             event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
             return ;
         	}
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          questions.setCategories() ;
+          //questions.setCategories() ;
+          /*questions.setListObject();*/
+          questions.setIsNotChangeLanguage();
           event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
           return ;
         }
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        questions.setCategories() ;
+        //questions.setCategories() ;
+        /*questions.setListObject();*/
+        questions.setIsNotChangeLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }
@@ -1041,10 +1139,10 @@ public class UIQuestions extends UIContainer {
 		        }
 				  }
 				  if (check) {
+				  	uiQuestions.pageList.setObjectRepare_(questionId);
 		        uiQuestions.setCategoryId(categoryId) ;
-		        uiQuestions.setListQuestion() ;
+		        uiQuestions.setIsNotChangeLanguage() ;
 		        uiQuestions.listCateId_.clear() ;
-		        uiQuestions.setIsModerators() ;
 		        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 		        breadcumbs.setUpdataPath(null) ;
 		        String oldPath = "" ;
@@ -1091,7 +1189,9 @@ public class UIQuestions extends UIContainer {
       } catch(javax.jcr.PathNotFoundException e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        uiQuestions.setListQuestion() ;
+        uiQuestions.setIsNotChangeLanguage() ;
+        /*uiQuestions.setListObject();
+        uiQuestions.setListQuestion();*/
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       } catch (Exception e) { 
@@ -1115,7 +1215,10 @@ public class UIQuestions extends UIContainer {
         UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setListQuestion() ;
+        question.setIsNotChangeLanguage() ;
+        /*question.setListObject();
+        question.setListQuestion();*/
+        event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
       } catch (Exception e) { 
@@ -1145,7 +1248,8 @@ public class UIQuestions extends UIContainer {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        questions.setListQuestion() ;
+        /*questions.setListObject();
+        questions.setListQuestion();*/
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
       } catch (Exception e) { 
@@ -1156,6 +1260,7 @@ public class UIQuestions extends UIContainer {
       questionForm.setFAQSetting(questions.faqSetting_);
       popupContainer.setId("EditQuestion") ;
       popupAction.activate(popupContainer, 600, 450) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
@@ -1175,7 +1280,9 @@ public class UIQuestions extends UIContainer {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        questions.setListQuestion() ;
+        questions.setIsNotChangeLanguage() ;
+        /*questions.setListObject();
+        questions.setListQuestion();*/
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
       } catch (Exception e) { 
@@ -1203,7 +1310,9 @@ public class UIQuestions extends UIContainer {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        questions.setListQuestion() ;
+        questions.setIsNotChangeLanguage() ;
+        /*questions.setListObject();
+        questions.setListQuestion();*/
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
       } catch (Exception e) { 
@@ -1215,6 +1324,7 @@ public class UIQuestions extends UIContainer {
       moveQuestionForm.setFAQSetting(questions.faqSetting_) ;
       popupAction.activate(popupContainer, 600, 400) ;
       moveQuestionForm.setListCate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
@@ -1233,7 +1343,10 @@ public class UIQuestions extends UIContainer {
         UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        uiQuestions.setListQuestion() ;
+        uiQuestions.setIsNotChangeLanguage() ;
+        /*uiQuestions.setListObject();
+        uiQuestions.setListQuestion()*/;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
         return ;
       }

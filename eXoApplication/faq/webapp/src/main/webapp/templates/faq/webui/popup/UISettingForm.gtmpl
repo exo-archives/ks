@@ -1,3 +1,6 @@
+<%
+if(!uicomponent.isEditPortlet_){
+%>
 <div class="UISettingForm $uicomponent.id">
 	<% uiform.begin() %>
  					<form class="UIForm">
@@ -53,4 +56,151 @@
 					</div>
 			
 	<%uiform.end()%>
+</div><%
+} else {
+%>
+<%
+  def rcontext = _ctx.getRequestContext() ;
+	rcontext.getJavascriptManager().importJavascript('eXo.webui.UIHorizontalTabs') ;
+%>
+<div class="$uicomponent.id" style="padding: 4px;">
+  <div class="UITabPane">
+		<div style="padding:2px;">
+	    <div class="WorkingArea">
+	    
+	     	<div class="UIHorizontalTabs" >
+	     	  <div class="LeftHorizontalTabs">
+	     	    <div class="RightHorizontalTabs">
+	     	      <div class="CenterHorizontalTabs">
+				        <div class="TabsContainer">
+			            <%
+			            	String selTabId = uicomponent.getSelectedTabId() ;
+			              for(inputSet in uicomponent.getChildren()) {
+			                if(!inputSet.isRendered()) continue ;
+					        		String className="NormalTab" ;
+					        		if(inputSet.getId().equals(selTabId)) className="SelectedTab" ;
+				              //String tabName = inputSet.getName() ; 
+				              String tabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + inputSet.name) ;
+                  %>
+				              <div class="UITab NormalTabStyle">
+				                <div class="$className">
+				                  <div class="LeftTab">
+				                    <div class="RightTab">
+						                  <div class="MiddleTab" onClick="eXo.webui.UIHorizontalTabs.changeTabForUIFormTabpane(this, '$uiform.id', '$inputSet.id')">$tabName</div>
+						                </div>
+				                  </div>
+				                </div>
+				              </div>
+			            <% }%>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+	      </div>
+       
+        <%uiform.begin()%>
+        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
+	    	<div style="background-color:#F3F3F3;">
+	    	
+	        <div class="UITabContentContainer">
+            <%
+              for(formInput in uicomponent.getChildren()) {
+                if(!formInput.isRendered()) continue ;
+                String display = "none" ;
+                if(formInput.getId().equals(selTabId)) display="block" ;
+            %>
+                <div class="UITabContent"  style="display: $display;">
+              	<%if(formInput.getId().equals(uicomponent.SET_DEFAULT_EMAIL_TAB)){%>
+	                  
+	              		<div>
+	                  	<!-- -------------------------------------------------------------------------------------------------------------------- -->
+	                  	<div class="UIHorizontalTabs" >
+								     	  <div class="LeftHorizontalTabs">
+								     	    <div class="RightHorizontalTabs">
+								     	      <div class="CenterHorizontalTabs">
+											        <div class="TabsContainer">
+										            <%
+										            	int count = 0;
+										              for(childInputSet in formInput.getChildren()) {
+										                if(!childInputSet.isRendered()) continue ;
+												        		String childClassName="NormalTab" ;
+												        		if(count == 0) childClassName="SelectedTab" ;
+												        		count ++;
+											              String childTabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + childInputSet.name) ;
+							                  %>
+											              <div class="UITab NormalTabStyle">
+											                <div class="$childClassName">
+											                  <div class="LeftTab">
+											                    <div class="RightTab">
+													                  <div class="MiddleTab" onClick="eXo.webui.UIHorizontalTabs.changeTabForUIFormTabpane(this, '$uiform.id', '$childInputSet.id')">$childTabName</div>
+													                </div>
+											                  </div>
+											                </div>
+											              </div>
+										            <% }%>
+											        </div>
+											      </div>
+											    </div>
+											  </div>
+								      </div>
+	                  	
+	                  	<!-- -------------------------------------------------------------------------------------------------------------------- -->
+	                  	<div style="background-color:#F3F3F3;">
+	                  		<div class="UITabContentContainer">
+							            <%
+							            	int i = 0;
+							              for(uiFormInput in formInput.getChildren()) {
+							                if(!uiFormInput.isRendered()) continue ;
+							                String displayChild = "none" ;
+							                if(i == 0) displayChild="block" ;
+							                i ++;
+							            %>
+							                <div class="UITabContent"  style="display: $displayChild; padding:5px;">
+							                  <%
+							                  	uicomponent.renderUIComponent(uiFormInput) ;
+							                  %>
+							                </div>
+							            <%}%>
+							          </div>
+	                  	</div>
+	                 	</div>
+	                 
+                 <%} else {
+                  	uicomponent.renderUIComponent(formInput) ;
+              		}
+                  %>
+                </div>
+            <%}%>
+          </div>
+		    </div>
+		    <div class="UIAction">
+		      <table class="ActionContainer" align="center">
+		      	<tr>
+		     	 		<td align="center">
+	          		<%for(action in uicomponent.getActions()) { 
+	          			if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
+						      String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
+						      String link = uicomponent.event(action) ;
+				        %>
+								<a href="$link" class="ActionButton LightBlueStyle">
+								  <div class="ButtonLeft">
+									  <div class="ButtonRight">
+									    <div class="ButtonMiddle">
+								       $actionLabel
+									    </div>
+								    </div>
+									</div>
+								</a>
+            		<%}%>
+       			</td>
+          	</tr>
+          </table>
+ 	        </div>
+        <%uiform.end()%>
+		  </div>
+		</div>  
+  </div>
 </div>
+<%
+}
+%>

@@ -562,5 +562,7 @@ public interface FAQService {
    */
   public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception ;
 
+  public QuestionPageList getListCatesAndQuesByCateId(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception;
+
   public NotifyInfo getMessageInfo(String name) throws Exception  ;
 }

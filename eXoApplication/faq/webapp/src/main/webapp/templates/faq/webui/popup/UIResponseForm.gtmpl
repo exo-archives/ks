@@ -16,10 +16,10 @@
 						<tr>
 							<%fieldName = uicomponent.getLabel(field.getName());
 								if(!fieldName.equals(uicomponent.getId())) { %>												
-								<td class="FieldLabel" width="80">
+								<td class="FieldLabel" width="14%">
 									<%=uicomponent.getLabel(field.getName()) %> : 
 								</td>
-								<td class="FieldComponent">
+								<td class="FieldComponent" width="86%">
 									<%if(field.getName().equals("QuestionRelation")){ 
 											String link = uicomponent.event("AddRelation") ;
 									%>
@@ -47,7 +47,26 @@
 													</div>
 									    <%}
 											}
-										} else {%>
+										}else if(field.getName().equals("QuestionContent")){
+											String display = "none";
+											if(uicomponent.isViewEditQuestion_){
+												display="block";
+											} else {
+												String isEditQuestion = uicomponent.event("ViewEditQuestion", "");
+											%>
+												<div style="float:left; width: 100%">
+													<div class="ViewQuestionNotApproved">
+														<%=uicomponent.labelContent_%>
+													</div>
+													<a href="$isEditQuestion">
+														<div class="EditQuestionContent"><span></span></div>
+													</a>
+												</div>
+										<%}%>
+											<div style="display:$display">
+												<% uiform.renderField(field) %>
+											</div>
+									<%} else {%>
 											<% uiform.renderField(field) %><br>
 									<%}%>
 								</td>

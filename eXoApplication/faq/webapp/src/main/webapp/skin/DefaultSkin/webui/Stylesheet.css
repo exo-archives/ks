@@ -607,6 +607,16 @@
   width: 150px ;
 }
 
+/****************************** UISettingForm ********************************************/
+.UIFAQPortlet .FAQPortletSetting #EmailAddNewQuestion___Frame{
+	height:250px;
+	width: 600px;
+}
+.UIFAQPortlet .FAQPortletSetting #EmailEditQuestion___Frame{
+	height:250px;
+	width: 600px;
+}
+
 /******************************  UIFAQPageIterator  ***************************************/
 .UIFAQPageIterator {    
   float:right;
