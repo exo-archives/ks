@@ -385,6 +385,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       question_.setLink(link) ;
       
       try{
+      	FAQUtils utils = new FAQUtils();
+      	utils.getEmailSetting(response.faqSetting_, false, false);
         questionNode = faqService.saveQuestion(question_, false, FAQUtils.getSystemProvider(),response.faqSetting_) ;
         MultiLanguages multiLanguages = new MultiLanguages() ;
         for(int i = 1; i < response.listQuestionLanguage.size(); i ++) {
@@ -406,7 +408,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       //cancel
       if(!response.isChildren_) {
-        questions.setListQuestion() ;
+        questions.setIsNotChangeLanguage() ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

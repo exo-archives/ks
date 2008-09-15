@@ -457,7 +457,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       question_.setLink(link) ;
       
       try{
-        if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) {
+        FAQUtils utils = new FAQUtils();
+        boolean isNew = true;
+        if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) isNew = false;
+        utils.getEmailSetting(questionForm.faqSetting_, isNew, false);
+        if(!isNew) {
           questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider(), questionForm.faqSetting_) ;
           multiLanguages.removeLanguage(questionNode, questionForm.LIST_LANGUAGE) ;
           if(questionForm.LIST_LANGUAGE.size() > 1) {
@@ -476,7 +480,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           		e.printStackTrace() ;
           	}
           }
-        } else if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1){
+        } else {
           questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider(),questionForm.faqSetting_) ;
           if(questionForm.LIST_LANGUAGE.size() > 1) {
           	try{
@@ -513,7 +517,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       
       if(!questionForm.isChildOfManager) {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-        questions.setListQuestion() ;
+        questions.setIsNotChangeLanguage() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

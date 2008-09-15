@@ -33,6 +33,16 @@
         <value>both</value> <!--approved/both -->
         <read-only>false</read-only>
       </preference>
+    	<preference>
+        <name>SendMailAddNewQuestion</name>
+        <value> </value>
+        <read-only>false</read-only>
+      </preference>
+    	<preference>
+        <name>SendMailEditResponseQuestion</name>
+        <value> </value>
+        <read-only>false</read-only>
+      </preference>
       <preference>
         <name>orderBy</name>
         <value>alphabet</value> <!--alphabet/created -->

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -296,13 +297,38 @@ public class FAQUtils {
     faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
   }
 	
-	public static void savePortletPreference(FAQSetting setting){
+	public static void getEmailSetting(FAQSetting faqSetting, boolean isNew, boolean isSettingForm) {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		String emailContent = "";
+		if(isNew){
+			emailContent = portletPref.getValue("SendMailAddNewQuestion", "");
+		} else {
+			emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
+		}
+		if(!isSettingForm){
+			if(emailContent == null || emailContent.trim().length() < 1){
+				WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+		    ResourceBundle res = context.getApplicationResourceBundle() ;
+		    if(isNew){
+		    	emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
+		    } else {
+		    	emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
+		    }
+			}
+		}
+		faqSetting.setEmailSettingContent(emailContent) ;
+	}
+	
+	public static void savePortletPreference(FAQSetting setting, String emailAddNewQuestion, String emailEditResponseQuestion){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
     PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
     try {
 	    portletPref.setValue("display", setting.getDisplayMode());
 	    portletPref.setValue("orderBy", setting.getOrderBy());
 	    portletPref.setValue("orderType", setting.getOrderType());
+	    portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
+	    portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
 	    portletPref.store();
     } catch (Exception e) {
 	    e.printStackTrace();

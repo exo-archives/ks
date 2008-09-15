@@ -26,8 +26,10 @@ package org.exoplatform.faq.service;
  */
 public class FAQSetting {
 	private String displayMode ;
+	private String emailSettingContent = null;
 	private String orderBy ;
 	private String orderType ;
+	private boolean canEdit = false;
 	
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
 	public static String DISPLAY_TYPE_POSTDATE = "created" ;
@@ -81,7 +83,36 @@ public class FAQSetting {
 	 */
 	public void setOrderType(String orderType) {
   	this.orderType = orderType;
-  } 
-	
+  }
+
+	public boolean isCanEdit() {
+  	return canEdit;
+  }
+
+	public void setCanEdit(boolean canEdit) {
+  	this.canEdit = canEdit;
+  }
+
+	/**
+	 * Get the content of email will be sent for user.
+	 * This email have two cases:
+	 * <p>The first: when add new question
+	 * <p>The second: when edit or answer for question
+	 * @return
+	 */
+	public String getEmailSettingContent() {
+  	return emailSettingContent;
+  }
+
+	/**
+	 * Registers content of email is sent to user, 
+	 * when set value for email, note: have two case
+	 * <p>The first: when add new question
+	 * <p>The second: when edit or answer for question
+	 * @param emailSettingContent	content of email
+	 */
+	public void setEmailSettingContent(String emailSettingContent) {
+  	this.emailSettingContent = emailSettingContent;
+  }
 	
 }

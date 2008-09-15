@@ -25,6 +25,8 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.portal.webui.application.UIItemThemeSelector.SetDefaultActionListener;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -35,7 +37,10 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
+import org.exoplatform.webui.form.UIFormTabPane;
+import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -52,7 +57,12 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
-public class UISettingForm extends UIForm implements UIPopupComponent	{
+public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
+	public final String	DISPLAY_TAB = "DisplayTab";
+	public final String	SET_DEFAULT_EMAIL_TAB = "DefaultEmail";
+	public final String	SET_DEFAULT_ADDNEW_QUESTION_TAB= "AddNewQuestionTab";
+	public final String	SET_DEFAULT_EDIT_QUESTION_TAB = "EditQuestionTab";
+	
 	private final String DISPLAY_MODE = "display-mode".intern();
 	public static final String ORDER_BY = "order-by".intern(); 
 	public static final String ORDER_TYPE = "order-type".intern(); 
@@ -62,11 +72,14 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String ITEM_ALPHABET= "alphabet".intern() ;
 	public static final String ASC= "asc".intern() ;
 	public static final String DESC= "desc".intern() ;
+	private static final String EMAIL_DEFAULT_ADD_QUESTION = "EmailAddNewQuestion";
+	private static final String EMAIL_DEFAULT_EDIT_QUESTION = "EmailEditQuestion";
 	
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private boolean isEditPortlet_ = false;
 	
 	public UISettingForm() throws Exception {
+		super("UISettingForm");
 		isEditPortlet_ = false;
 	}
 	
@@ -79,22 +92,56 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	
 	public void init() throws Exception {
 		if(isEditPortlet_){
+			UIFormInputWithActions DisplayTab = new UIFormInputWithActions(DISPLAY_TAB);
+			UIFormInputWithActions EmailTab = new UIFormInputWithActions(SET_DEFAULT_EMAIL_TAB);
+			UIFormInputWithActions EmailAddNewQuestion = new UIFormInputWithActions(SET_DEFAULT_ADDNEW_QUESTION_TAB);
+			UIFormInputWithActions EmailEditQuestion = new UIFormInputWithActions(SET_DEFAULT_EDIT_QUESTION_TAB);
+			
 			List<SelectItemOption<String>> displayMode = new ArrayList<SelectItemOption<String>>();
 			displayMode.add(new SelectItemOption<String>(DISPLAY_APPROVED, DISPLAY_APPROVED ));
 			displayMode.add(new SelectItemOption<String>(DISPLAY_BOTH, DISPLAY_BOTH ));
-			addUIFormInput(new UIFormSelectBox(DISPLAY_MODE, DISPLAY_MODE, displayMode));
+			
+			List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
+			orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
+			orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET, FAQSetting.DISPLAY_TYPE_ALPHABET ));
+			
+			List<SelectItemOption<String>> orderType = new ArrayList<SelectItemOption<String>>();
+			orderType.add(new SelectItemOption<String>(ASC, FAQSetting.ORDERBY_TYPE_ASC ));
+			orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC ));
+			
+			FAQUtils.getEmailSetting(faqSetting_, true, true);
+			EmailAddNewQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_DEFAULT_ADD_QUESTION, null, null, true))
+																															.setValue(faqSetting_.getEmailSettingContent()));
+			FAQUtils.getEmailSetting(faqSetting_, false, true);
+			EmailEditQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_DEFAULT_EDIT_QUESTION, null, null, true))
+																															.setValue(faqSetting_.getEmailSettingContent()));
+			
+			DisplayTab.addUIFormInput((new UIFormSelectBox(DISPLAY_MODE, DISPLAY_MODE, displayMode)).setValue(faqSetting_.getDisplayMode()));
+			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));;
+			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
+			EmailTab.addChild(EmailAddNewQuestion);
+			EmailTab.addChild(EmailEditQuestion);
+			
+			this.addChild(DisplayTab);
+			this.addChild(EmailTab);
+			
+			DisplayTab.setRendered(true);
+			EmailAddNewQuestion.setRendered(true);
+			EmailEditQuestion.setRendered(true);
+			EmailTab.setRendered(true);
+			this.setSelectedTab(DISPLAY_TAB);
+		} else {
+		
+			List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
+			orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
+			orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET, FAQSetting.DISPLAY_TYPE_ALPHABET ));
+			addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));
+			
+			List<SelectItemOption<String>> orderType = new ArrayList<SelectItemOption<String>>();
+			orderType.add(new SelectItemOption<String>(ASC, FAQSetting.ORDERBY_TYPE_ASC ));
+			orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC ));
+			addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
 		}
-		
-		List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
-		orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
-		orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET, FAQSetting.DISPLAY_TYPE_ALPHABET ));
-		addUIFormInput(new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy));
-		
-		List<SelectItemOption<String>> orderType = new ArrayList<SelectItemOption<String>>();
-		orderType.add(new SelectItemOption<String>(ASC, FAQSetting.ORDERBY_TYPE_ASC ));
-		orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC ));
-		addUIFormInput(new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType));
-		fillData() ;
 	}
 	
 	public FAQSetting getFaqSetting() {
@@ -103,16 +150,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 
 	public void setFaqSetting(FAQSetting faqSetting) {
   	this.faqSetting_ = faqSetting;
-  }
-
-	public void fillData() throws Exception {    
-    if (faqSetting_ != null) {
-    	if(isEditPortlet_){
-    		getUIFormSelectBox(DISPLAY_MODE).setValue(String.valueOf(faqSetting_.getDisplayMode()));
-    	}
-  		getUIFormSelectBox(ORDER_BY).setValue(String.valueOf(faqSetting_.getOrderBy()));
-  		getUIFormSelectBox(ORDER_TYPE).setValue(String.valueOf(faqSetting_.getOrderType()));
-    }
   }
   
   public String[] getActions() { return new String[]{"Save", "Cancel"}; }
@@ -127,21 +164,39 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQService service = FAQUtils.getFAQService() ;
 			FAQSetting faqSetting = settingForm.faqSetting_ ;
-			faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
-			faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
 			if(settingForm.isEditPortlet_){
-				faqSetting.setDisplayMode(settingForm.getUIFormSelectBox(settingForm.DISPLAY_MODE).getValue());
-				FAQUtils.savePortletPreference(faqSetting);
+				UIFormInputWithActions displayTab = settingForm.getChildById(settingForm.DISPLAY_TAB);
+				faqSetting.setDisplayMode(((UIFormSelectBox)displayTab.getChildById(settingForm.DISPLAY_MODE)).getValue());
+				faqSetting.setOrderBy(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_BY)).getValue())) ;
+				faqSetting.setOrderType(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_TYPE)).getValue())) ;
+				
+				UIFormInputWithActions emailTab = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
+				String defaultAddnewQuestion = ((UIFormWYSIWYGInput)((UIFormInputWithActions)emailTab.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB))
+																					.getChildById(EMAIL_DEFAULT_ADD_QUESTION)).getValue();
+				String defaultEditQuestion = ((UIFormWYSIWYGInput)((UIFormInputWithActions)emailTab.getChildById(settingForm.SET_DEFAULT_EDIT_QUESTION_TAB))
+																					.getChildById(EMAIL_DEFAULT_EDIT_QUESTION)).getValue();
+				
+				System.out.println("\n\n\n\n-------------->display mode: "+faqSetting.getDisplayMode());
+				System.out.println("\n\n\n\n-------------->order by: "+faqSetting.getOrderBy());
+				System.out.println("\n\n\n\n-------------->order ty: "+faqSetting.getOrderType());
+				System.out.println("\n\n\n\n-------------->email: \n"+defaultAddnewQuestion + "\n" + defaultEditQuestion);
+				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+				if(defaultAddnewQuestion == null || !validatorDataInput.fckContentIsNotEmpty(defaultAddnewQuestion)) defaultAddnewQuestion = " ";
+				if(defaultEditQuestion == null || !validatorDataInput.fckContentIsNotEmpty(defaultEditQuestion)) defaultEditQuestion = " ";
+				
+				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion, defaultEditQuestion);
 				UIApplication uiApplication = settingForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ;
 			} else {
+				faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
+				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
 				service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;
 				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				questions.setFAQSetting(faqSetting);
-				questions.setCategories() ;
-				questions.setListQuestion() ;
+				questions.setListObject() ;
+				//questions.setListQuestion() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 				UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 				uiPopupAction.deActivate() ;
