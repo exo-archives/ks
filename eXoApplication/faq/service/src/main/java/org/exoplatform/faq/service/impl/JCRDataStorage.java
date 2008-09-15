@@ -209,13 +209,9 @@ public class JCRDataStorage {
 	      			Message message = new Message();
 	            message.setMimeType(MIMETYPE_TEXTHTML) ;
 	      			message.setSubject("FAQ Watching Category Notification! ");
-	      			message.setBody("<p>Hi you,</p>" 
-	      					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
-	      					+"<p>We would like to inform that Category '" + cate.getProperty("exo:name").getString() 
-	      					+"' has been added new Question with content below: </p>"
-	      					+"<p>"+question.getQuestion()+"<p>"
-	      					+"<p>Click "+"<a href =" + question.getLink()+">here</a> for more details!</p>"
-	      					+"Regards & thanks");
+	      			message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
+	      																												 .replaceAll("&questionContent_", question.getQuestion())
+	      																												 .replaceAll("&questionLink_", question.getLink()));
 	      			sendEmailNotification(emailsList, message) ;
 	      		}
 	      	}
@@ -243,18 +239,14 @@ public class JCRDataStorage {
 						Message message = new Message();
 			      message.setMimeType(MIMETYPE_TEXTHTML) ;
 						message.setSubject("FAQ Watching Category Notification! ");
-						message.setBody("<p>Hi you,</p>"
-      					+"<p>You have received this email because you registered for FAQ Category Notification</p>"
-      					+"<p>We would like to inform that the question: '" + question.getQuestion()
-      					+"' has been edited or responded </p>"
-      					+"<p>"+question.getResponses()+"</p>"
-      					+"<p>Click "+"<a href =" + question.getLink()+">here</a> for more details!</p>"
-      					+"Regards & thanks");
+						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
+																															 .replaceAll("&questionResponse_", question.getResponses())
+																															 .replaceAll("&questionLink_", question.getLink()));
 						sendEmailNotification(emailsList, message) ;
       		}
 	  		} catch(Exception e) {
 	  			e.printStackTrace() ;
-	  		}  		  		
+	  		}
 	  	}
     } else {
     	 //Send notifycation when add new question in watching category
@@ -737,6 +729,44 @@ public class JCRDataStorage {
   		catList.add(getCategory(iter.nextNode())) ;
   	}
   	return catList ;
+  }
+  
+  public QuestionPageList getListCatesAndQuesByCateId(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
+  	Node categoryHome = getCategoryHome(sProvider, null) ;
+  	Node questionHome = getQuestionHome(sProvider, null) ;
+  	
+  	Node parentCategory ;
+  	if(categoryId != null && categoryId.trim().length() > 0) {
+  		parentCategory = getCategoryNodeById(categoryId, sProvider) ;
+  	}else {
+  		parentCategory = categoryHome ;
+  	}
+  	
+  	StringBuffer questionQuerry = new StringBuffer("/jcr:root" + questionHome.getPath() 
+	                                    + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
+  	//  order by and ascending or deascending
+  	if(faqSetting.getDisplayMode().equals("approved")){
+  		questionQuerry.append(" and (@exo:isApproved='true')");
+  	}
+  	if(!faqSetting.isCanEdit()){
+  		questionQuerry.append(" and (@exo:isActivated='true')");
+  	}
+  	questionQuerry.append("]");
+  	
+    if(faqSetting.getOrderBy().equals("created")){
+    	questionQuerry.append("order by @exo:createdDate ");
+    } else {
+    	questionQuerry.append("order by @exo:name ");
+    }
+    if(faqSetting.getOrderType().equals("asc")){
+    	questionQuerry.append("ascending");
+    } else {
+    	questionQuerry.append("descending");
+    }
+
+    List<Object> listObject = new ArrayList<Object>();
+    QuestionPageList pageList = new QuestionPageList(parentCategory, questionQuerry.toString(), listObject);
+    return pageList;
   }
   
   public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
