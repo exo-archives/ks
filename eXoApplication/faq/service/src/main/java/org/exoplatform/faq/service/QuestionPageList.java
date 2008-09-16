@@ -303,7 +303,7 @@ public class QuestionPageList extends JCRPageList {
 			}
       listObject_.addAll(listCategory);
       iter_ = null;
-      int size = listObject_.size();
+      int size = listObject_.size() - 1;
       
       Query query = qm.createQuery(questionQuery_, Query.XPATH);
       QueryResult result = query.execute();
