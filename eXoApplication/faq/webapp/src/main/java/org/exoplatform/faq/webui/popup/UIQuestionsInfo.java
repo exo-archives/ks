@@ -371,6 +371,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   			} else {
   				question.setActivated(!question.isActivated());
   			}
+  			FAQUtils.getEmailSetting(questionsInfo.faqSetting_, false, false);
   			faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(),questionsInfo.faqSetting_);
   		}catch (Exception e){
   			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;

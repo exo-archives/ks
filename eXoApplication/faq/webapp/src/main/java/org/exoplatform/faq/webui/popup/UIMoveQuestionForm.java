@@ -158,6 +158,7 @@ public UIMoveQuestionForm() throws Exception {}
           return ;
         }
         question.setCategoryId(cateId) ;
+        FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
         faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(),moveQuestionForm.faqSetting_) ;
       }catch (Exception e) {
         UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
