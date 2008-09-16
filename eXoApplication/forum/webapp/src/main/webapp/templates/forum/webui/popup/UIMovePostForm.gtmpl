@@ -96,7 +96,7 @@
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">Cancel
-									<%//=_ctx.appRes(uicomponent.getName() + ".action.Cancel")%>
+									<%=_ctx.appRes("UIMoveForumForm.action.Cancel");%>
 								</div>
 							</div>
 						</div>
