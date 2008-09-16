@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -64,6 +65,8 @@ public class QuestionPageList extends JCRPageList {
   private Node nodeCategory_ = null;
   
   private List<Object> listObject_ = new ArrayList<Object>();
+  
+  private FAQSetting faqSetting_ = null;
   
   /**
    * Sets the not yet answered. Set parameter is <code>true</code> if want get questions are not
@@ -161,11 +164,12 @@ public class QuestionPageList extends JCRPageList {
   	setAvailablePage(size) ;    
   }
   
-  public QuestionPageList(Node categoryNode, String quesQuerry, List<Object> listObject) throws Exception{
+  public QuestionPageList(Node categoryNode, String quesQuerry, List<Object> listObject, FAQSetting setting) throws Exception{
   	super(10) ;
   	this.questionQuery_ = quesQuerry;
   	this.nodeCategory_ = categoryNode;
   	this.listObject_.addAll(listObject);
+  	this.faqSetting_ = setting;
   	setAvailablePage(listObject.size()) ;    
   }
 
@@ -286,9 +290,18 @@ public class QuestionPageList extends JCRPageList {
 			Session session = getJCRSession() ;
 			QueryManager qm = session.getWorkspace().getQueryManager() ;
       iter_ = nodeCategory_.getNodes();
+      List<Category> listCategory = new ArrayList<Category>();
       while(iter_.hasNext()){
-      	listObject_.add(getCategory(iter_.nextNode()));
+      	listCategory.add(getCategory(iter_.nextNode()));
       }
+      if(faqSetting_.getOrderBy().equals("created")) {
+	    	if(faqSetting_.getOrderType().equals("asc")) Collections.sort(listCategory, new Utils.DatetimeComparatorASC()) ;
+	    	else Collections.sort(listCategory, new Utils.DatetimeComparatorDESC()) ;
+	    } else {
+				if(faqSetting_.getOrderType().equals("asc")) Collections.sort(listCategory, new Utils.NameComparatorASC()) ;
+				else Collections.sort(listCategory, new Utils.NameComparatorDESC()) ;
+			}
+      listObject_.addAll(listCategory);
       iter_ = null;
       int size = listObject_.size();
       
