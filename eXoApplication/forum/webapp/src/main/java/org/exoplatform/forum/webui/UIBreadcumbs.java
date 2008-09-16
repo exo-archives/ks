@@ -206,9 +206,6 @@ public class UIBreadcumbs extends UIContainer {
 		}
 	}
 	
-	
-	
-	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs uiBreadcums = event.getSource() ;
@@ -291,5 +288,4 @@ public class UIBreadcumbs extends UIContainer {
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}	
-	
 }

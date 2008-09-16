@@ -23,11 +23,11 @@
 						<thead>
 							<tr>
 								<th width="40px"></th>
-								<th>Post name</th>
-								<th width="120px">Created Date</th>
+								<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
+								<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
 								<%if(isAdmin){ %>
-									<th width="120px">IP Logging</th>
-									<th width="40px">Delete</th>
+									<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
+									<th width="40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
 								<%} %>
 							</tr>
 						</thead>
@@ -71,7 +71,7 @@
 						 		%>
 						 			<tr>
 						 				<td colspan="3" align="center">
-						 					<div style="margin: 5px 0px 10px 0px"><b>No Posts</b></div>
+						 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
 						 				</td>
 						 			</tr>
 						 		<%

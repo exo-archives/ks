@@ -35,10 +35,10 @@
 			<thead>
 				<tr>
 					<th width="30px"></th>
-					<th>Post Title</th>
-					<th width="120px">Created Date</th>
-					<th width="80px">Created By</th>
-					<th width="40px">Action</th>
+					<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
+					<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+					<th width="80px"><%=_ctx.appRes("UIForumPortlet.label.CreatedBy");%></th>
+					<th width="40px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 				</tr>
 			</thead>
 			<tbody>
