@@ -176,10 +176,6 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 				String defaultEditQuestion = ((UIFormWYSIWYGInput)((UIFormInputWithActions)emailTab.getChildById(settingForm.SET_DEFAULT_EDIT_QUESTION_TAB))
 																					.getChildById(EMAIL_DEFAULT_EDIT_QUESTION)).getValue();
 				
-				System.out.println("\n\n\n\n-------------->display mode: "+faqSetting.getDisplayMode());
-				System.out.println("\n\n\n\n-------------->order by: "+faqSetting.getOrderBy());
-				System.out.println("\n\n\n\n-------------->order ty: "+faqSetting.getOrderType());
-				System.out.println("\n\n\n\n-------------->email: \n"+defaultAddnewQuestion + "\n" + defaultEditQuestion);
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(defaultAddnewQuestion == null || !validatorDataInput.fckContentIsNotEmpty(defaultAddnewQuestion)) defaultAddnewQuestion = " ";
 				if(defaultEditQuestion == null || !validatorDataInput.fckContentIsNotEmpty(defaultEditQuestion)) defaultEditQuestion = " ";

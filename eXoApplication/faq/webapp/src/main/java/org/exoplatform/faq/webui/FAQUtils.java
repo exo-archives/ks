@@ -306,10 +306,10 @@ public class FAQUtils {
 		} else {
 			emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
 		}
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+		ResourceBundle res = context.getApplicationResourceBundle() ;
 		if(!isSettingForm){
 			if(emailContent == null || emailContent.trim().length() < 1){
-				WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-		    ResourceBundle res = context.getApplicationResourceBundle() ;
 		    if(isNew){
 		    	emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
 		    } else {
@@ -317,6 +317,7 @@ public class FAQUtils {
 		    }
 			}
 		}
+		faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
 		faqSetting.setEmailSettingContent(emailContent) ;
 	}
 	

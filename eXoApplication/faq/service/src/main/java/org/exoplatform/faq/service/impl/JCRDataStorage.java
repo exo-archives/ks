@@ -190,14 +190,13 @@ public class JCRDataStorage {
         }
       }
     }
-    Boolean check = false ;
-    List<String> emailsList = new ArrayList<String>() ;
-    Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
     if(faqSetting.getDisplayMode().equals("approved")) {
 	    //Send notifycation when add new question in watching category
 	    if(isNew && question.isApproved()) {
 	    	List<String> emails = new ArrayList<String>() ;
+	    	List<String> emailsList = new ArrayList<String>() ;
 	    	try {
+	    		Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
 	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 	      		for(String email: emails) {
@@ -206,7 +205,15 @@ public class JCRDataStorage {
 	      				emailsList.add(string_) ;
 	      			}
 	      		}
-	      		check = true ;
+	      		if(emailsList != null && emailsList.size() > 0) {
+	      			Message message = new Message();
+	            message.setMimeType(MIMETYPE_TEXTHTML) ;
+	      			message.setSubject(faqSetting.getEmailSettingSubject());
+	      			message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
+	      																												 .replaceAll("&questionContent_", question.getQuestion())
+	      																												 .replaceAll("&questionLink_", question.getLink()));
+	      			sendEmailNotification(emailsList, message) ;
+	      		}
 	      	}
 	    	} catch(Exception e) {
 	    		e.printStackTrace() ;
@@ -215,8 +222,10 @@ public class JCRDataStorage {
 	    // Send notifycation when question response or edited or watching
 	  	if(!isNew && question.getResponses() != " " && question.isApproved() && question.isActivated()) {
 	  		List<String> emails = new ArrayList<String>() ;
+	  		List<String> emailsList = new ArrayList<String>() ;
 	  		emailsList.add(question.getEmail()) ;
 	  		try {
+	  			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
 	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 	      		for(String email: emails) {
@@ -226,7 +235,15 @@ public class JCRDataStorage {
 	      			}
 	      		}
 	      	}
-      		check = false ;
+      		if(emailsList != null && emailsList.size() > 0) {
+						Message message = new Message();
+			      message.setMimeType(MIMETYPE_TEXTHTML) ;
+						message.setSubject(faqSetting.getEmailSettingSubject());
+						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
+																															 .replaceAll("&questionResponse_", question.getResponses())
+																															 .replaceAll("&questionLink_", question.getLink()));
+						sendEmailNotification(emailsList, message) ;
+      		}
 	  		} catch(Exception e) {
 	  			e.printStackTrace() ;
 	  		}
@@ -235,7 +252,9 @@ public class JCRDataStorage {
     	 //Send notifycation when add new question in watching category
 	    if(isNew) {
 	    	List<String> emails = new ArrayList<String>() ;
+	    	List<String> emailsList = new ArrayList<String>() ;
 	    	try {
+	    		Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
 	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 	      		for(String email: emails) {
@@ -244,7 +263,15 @@ public class JCRDataStorage {
 	      				emailsList.add(string_) ;
 	      			}
 	      		}
-	      		check = true ;
+	      		if(emailsList != null && emailsList.size() > 0) {
+	      			Message message = new Message();
+	            message.setMimeType(MIMETYPE_TEXTHTML) ;
+	      			message.setSubject(faqSetting.getEmailSettingSubject());
+	      			message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
+	      																												 .replaceAll("&questionContent_", question.getQuestion())
+	      																												 .replaceAll("&questionLink_", question.getLink()));
+	      			sendEmailNotification(emailsList, message) ;
+	      		}
 	      	}
 	    	} catch(Exception e) {
 	    		e.printStackTrace() ;
@@ -253,8 +280,10 @@ public class JCRDataStorage {
 	    // Send notifycation when question response or edited or watching
 	  	if(!isNew && question.getResponses() != " " && question.isActivated()) {
 	  		List<String> emails = new ArrayList<String>() ;
+	  		List<String> emailsList = new ArrayList<String>() ;
 	  		emailsList.add(question.getEmail()) ;
 	  		try {
+	  			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
 	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 	      		for(String email: emails) {
@@ -264,30 +293,20 @@ public class JCRDataStorage {
 	      			}
 	      		}
 	      	}
-      		check = false ;
+      		if(emailsList != null && emailsList.size() > 0) {
+      			Message message = new Message();
+			      message.setMimeType(MIMETYPE_TEXTHTML) ;
+						message.setSubject(faqSetting.getEmailSettingSubject());
+						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
+																															 .replaceAll("&questionResponse_", question.getResponses())
+																															 .replaceAll("&questionLink_", question.getLink()));
+						sendEmailNotification(emailsList, message) ;
+      		}
 	  		} catch(Exception e) {
 	  			e.printStackTrace() ;
 	  		}  		  		
 	  	}
     }
-    try {
-    	Message message = new Message();
-	    message.setMimeType(MIMETYPE_TEXTHTML) ;
-		  if(check == true) {
-				message.setSubject("FAQ Watching Category Notification! ");
-				message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
-																													 .replaceAll("&questionContent_", question.getQuestion())
-																													 .replaceAll("&questionLink_", question.getLink()));
-		  } else {
-				message.setSubject("FAQ Watching Category Notification! ");
-				message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
-																													 .replaceAll("&questionResponse_", question.getResponses())
-																													 .replaceAll("&questionLink_", question.getLink()));
-		  }
-		  if(emailsList != null && emailsList.size() > 0) sendEmailNotification(emailsList, message) ;
-    } catch(Exception e) {
-			e.printStackTrace() ;
-		}
   }
 
   
@@ -738,7 +757,7 @@ public class JCRDataStorage {
     }
 
     List<Object> listObject = new ArrayList<Object>();
-    QuestionPageList pageList = new QuestionPageList(parentCategory, questionQuerry.toString(), listObject);
+    QuestionPageList pageList = new QuestionPageList(parentCategory, questionQuerry.toString(), listObject, faqSetting);
     return pageList;
   }
   

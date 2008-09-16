@@ -27,6 +27,7 @@ package org.exoplatform.faq.service;
 public class FAQSetting {
 	private String displayMode ;
 	private String emailSettingContent = null;
+	private String emailSettingSubject = null;
 	private String orderBy ;
 	private String orderType ;
 	private boolean canEdit = false;
@@ -114,5 +115,12 @@ public class FAQSetting {
 	public void setEmailSettingContent(String emailSettingContent) {
   	this.emailSettingContent = emailSettingContent;
   }
-	
+
+	public String getEmailSettingSubject() {
+  	return emailSettingSubject;
+  }
+
+	public void setEmailSettingSubject(String emailSettingSubject) {
+  	this.emailSettingSubject = emailSettingSubject;
+  }
 }

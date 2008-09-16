@@ -340,14 +340,6 @@ public class UIQuestions extends UIContainer {
 		if(isChangeLanguage && pageSelect != pageIterator.getPageSelected()) isChangeLanguage = false;
 		if(!isChangeLanguage){
 			setCategories();
-			//  order by and ascending or descending
-	    if(faqSetting_.getOrderBy().equals("created")) {
-	    	if(faqSetting_.getOrderType().equals("asc")) Collections.sort(categories_, new Utils.DatetimeComparatorASC()) ;
-	    	else Collections.sort(categories_, new Utils.DatetimeComparatorDESC()) ;
-	    } else {
-				if(faqSetting_.getOrderType().equals("asc")) Collections.sort(categories_, new Utils.NameComparatorASC()) ;
-				else Collections.sort(categories_, new Utils.NameComparatorDESC()) ;
-			}
 		}
 		return categories_ ;
 	}
