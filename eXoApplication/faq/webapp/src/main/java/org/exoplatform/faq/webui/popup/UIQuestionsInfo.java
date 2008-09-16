@@ -87,6 +87,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
     FAQUtils.getPorletPreference(faqSetting_);
     faqService_.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
+    FAQUtils.getEmailSetting(faqSetting_, false, false);
     setListQuestion() ;
     setActions(new String[]{""}) ;
   }
@@ -234,6 +235,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       try{
         Question question = faqService_.getQuestionById(quesId, FAQUtils.getSystemProvider()) ;
         UIQuestionForm questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
+        questionForm.setFAQSetting(questionsInfo.faqSetting_);
         questionForm.setIsChildOfManager(true) ;
         questionForm.setQuestionId(question) ;
         questionManagerForm.isViewEditQuestion = true ;
@@ -265,6 +267,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       try{
         Question question = faqService_.getQuestionById(param[0], FAQUtils.getSystemProvider()) ;
         UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
+        responseForm.setFAQSetting(questionsInfo.faqSetting_);
         responseForm.setIsChildren(true) ;
         if(param.length == 1) responseForm.setQuestionId(question, "") ;
         else responseForm.setQuestionId(question, param[1]) ;
@@ -371,7 +374,6 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   			} else {
   				question.setActivated(!question.isActivated());
   			}
-  			FAQUtils.getEmailSetting(questionsInfo.faqSetting_, false, false);
   			faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(),questionsInfo.faqSetting_);
   		}catch (Exception e){
   			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
