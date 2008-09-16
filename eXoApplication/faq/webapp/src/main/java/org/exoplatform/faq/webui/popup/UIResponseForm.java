@@ -385,8 +385,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       question_.setLink(link) ;
       
       try{
-      	FAQUtils utils = new FAQUtils();
-      	utils.getEmailSetting(response.faqSetting_, false, false);
+      	FAQUtils.getEmailSetting(response.faqSetting_, false, false);
         questionNode = faqService.saveQuestion(question_, false, FAQUtils.getSystemProvider(),response.faqSetting_) ;
         MultiLanguages multiLanguages = new MultiLanguages() ;
         for(int i = 1; i < response.listQuestionLanguage.size(); i ++) {
