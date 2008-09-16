@@ -3,12 +3,12 @@
 	import org.exoplatform.portal.webui.util.Util;
 	def prContext = _ctx.getRequestContext().getParentAppRequestContext();
 	
-	String signInAction = "/portal/private/classic";//"if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ShowLoginForm', true));" ;
 	String changeLanguageAction = "if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ChangeLanguage', true));" ;
 	String portletId = uicomponent.getId() ;	
 	String portalName = Util.getUIPortal().getName() ;
   portalName = URLEncoder.encode(portalName, "UTF-8") ;
 	String signOutAction = prContext.getRequestContextPath() + "/public/" + portalName + "/" ;
+	String signInAction = prContext.getRequestContextPath() + "/private/" + portalName + "/" ;//"if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ShowLoginForm', true));" ;
 %>
 <div class="UIBannerPortlet UIApplication">
 	<div class="ApplicationMinWidth">
