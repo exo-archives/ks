@@ -95,25 +95,25 @@
 						} else {
 							newMessage = newMessage + "&nbsp;" ;
 						}
-						if(uicomponent.userProfile.getUserRole() <= 1) fl = "float: left;";
-					%>
-					<div class="SeparatorLine" style="height: 24px; $fl">
-						<a style="line-height: 24px;" href="<%=uicomponent.event("PrivateMessage");%>">
-							 $newMessage
-						</a>
-					</div>
-					<%	
 						if(uicomponent.userProfile.getUserRole() <= 1) {
+						  fl = "float: right;";
 							int total = uicomponent.getTotalJobWattingForModerator();
 					%>
 					<div class="SeparatorLine" style="$fl">
-						<div style="line-height: 24px;"><%//=_ctx.appRes("UIForumPortlet.label.ShareLink");%>Pending: ($total)</div>
+						<div style="line-height: 24px;"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>: ($total)</div>
 					</div>	
-					<div style="clear: left"><span></span></div>
+					<%}%>
+					<div class="SeparatorLine" style="$fl">
+						<div style="line-height: 24px; cursor: pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
+							 $newMessage
+						</div>
+					</div>
+					<% if(uicomponent.userProfile.getUserRole() <= 1){ %>
+						<div style="clear: right"><span></span></div>
 					<%}
 					} else {%>
 					<div class="SeparatorLine">
-						<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></div>
+						<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></div>
 					</div>	
 					<%}%>
 				</div>
