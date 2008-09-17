@@ -14,7 +14,7 @@
 							<td width="85%">
 								<%String[] actions = [""];
 									if(isAdmin) { 
-										actions = ["AddCategory","AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
+										actions = ["AddCategory","AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark", "TagManager"];
 									} else {
 										actions = ["EditProfile","OpenBookMark"];
 									}

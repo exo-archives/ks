@@ -47,6 +47,10 @@
 	background-color: #e8e8ef;
 }
 
+.UITagForm .TagsList .unSelected {
+	background-color: #fce7e7;
+}
+
 .UIForumPortlet .Color {
 	background: url('background/Color.gif') no-repeat;
 	line-height: 16px;

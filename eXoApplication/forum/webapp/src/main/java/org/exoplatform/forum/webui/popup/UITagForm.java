@@ -26,8 +26,10 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -86,8 +88,9 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private List<Tag> getAllTag() throws Exception {
+		List<Tag> tags = new ArrayList<Tag>();
 		if(this.isUpdateList) {
-			List<Tag> tags = forumService.getTags(ForumSessionUtils.getSystemProvider());
+			tags = forumService.getTags(ForumSessionUtils.getSystemProvider());
 			this.tags_.clear() ;
 			boolean isAdd = true ;
 			for (Tag tag : tags) {
@@ -104,6 +107,7 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 			if(this.tags_.size() > 0) this.IdSelected = tags_.get(0).getId() ;
 			else this.IdSelected = "" ;
 			this.isUpdateList = false ;
+			this.tags_ = tags;
 		}
 		return this.tags_ ;
 	}
@@ -113,11 +117,17 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 	}
 
 	private Tag getTagEdit() {
-		List<Tag> tags = this.tags_ ;
-		for (Tag tag : tags) {
+		for (Tag tag : this.tags_) {
 			if(tag.getId().equals(this.IdSelected)) return tag ;
 		}
 		return null ;
+	}
+	
+	private String getNameTagById(String id) throws Exception{
+		for (Tag tag : this.tags_) {
+			if(tag.getId().equals(id)) return tag.getName();
+		}
+		return "";
 	}
 	
 	static	public class AddTagActionListener extends EventListener<UITagForm> {
@@ -156,7 +166,18 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 	static	public class SelectedActionListener extends EventListener<UITagForm> {
 		public void execute(Event<UITagForm> event) throws Exception {
 			UITagForm uiForm = event.getSource() ;
-			uiForm.IdSelected = event.getRequestContext().getRequestParameter(OBJECTID);
+			String select = event.getRequestContext().getRequestParameter(OBJECTID);
+			String[] temp = uiForm.tagId;
+			for (int i = 0; i < temp.length; i++) {
+	      if(select.equals(temp[i])){
+	      	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+	      	Object[] args = { uiForm.getNameTagById(select) };
+					uiApp.addMessage(new ApplicationMessage("UITagForm.msg.erroSelected", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return ;
+	      }
+      }
+			uiForm.IdSelected = select;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getParent()) ;
 		}
 	}

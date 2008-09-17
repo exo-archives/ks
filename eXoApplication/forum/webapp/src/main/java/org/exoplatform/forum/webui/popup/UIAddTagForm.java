@@ -72,7 +72,6 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 		UIFormStringInput tagName = new UIFormStringInput(FIELD_TAGNAME_INPUT, FIELD_TAGNAME_INPUT, null);
 		tagName.addValidator(MandatoryValidator.class);
 		UIFormStringInput description = new UIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA, FIELD_TAGDESCRIPTION_TEXTAREA, null);
-		description.addValidator(MandatoryValidator.class);
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		Map <String, String> newMap = getColorName() ;
 		for(String string : this.colors) {
@@ -93,7 +92,6 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 		getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).setValue(tag.getDescription()) ;
 		getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).setValue(tag.getColor()) ;
 	}
-	
 	
 	private Map<String, String> getColorName() throws Exception {
 		String colorsName[] = new String[] {"Blue", "Dark Golden Rod", "Green", "Yellow", "Blue Violet", "Orange","Dark Blue", "Indian Red","Dark Cyan" ,"Lawn Green", "Violet", "Red"} ;
@@ -158,9 +156,14 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			}else {
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				popupContainer.getChild(UITagForm.class).setUpdateList(true) ;
-				popupContainer.getChild(UIPopupAction.class).deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				try {
+					popupContainer.getChild(UITagForm.class).setUpdateList(true) ;
+					popupContainer.getChild(UIPopupAction.class).deActivate() ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+        } catch (Exception e) {
+        	popupContainer.getChild(UIPopupAction.class).deActivate() ;
+        	event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+        }
 			}
 		}
 	}
