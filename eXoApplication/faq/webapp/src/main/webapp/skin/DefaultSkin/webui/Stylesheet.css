@@ -8,6 +8,15 @@
 
 /******************************************** UIBreadcumbs ****************************************/
 
+.UIFAQPortlet .UIBreadcumbs {
+  height: auto;
+}
+
+.UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar {
+  background: #F6F6F6;
+  border: 1px solid #B7B7B7;
+}
+
 .UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar .OpenIcon {
   float: left;
   background: url('background/FAQPortlet.gif') no-repeat left -243px;
