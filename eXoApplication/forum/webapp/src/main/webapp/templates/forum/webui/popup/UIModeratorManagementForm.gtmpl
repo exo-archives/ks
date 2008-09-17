@@ -95,7 +95,7 @@
 											<div class="TabsContainer">
 											<%String classCss = "SelectedTab" ; 
 												for(tabconten in uiform.getChildren()){ 
-													if(tabconten.id.equals("ForumUserPageIterator")) continue;
+													if(tabconten.id.equals("ForumUserPageIterator") || tabconten.id.equals(uiform.FIELD_SEARCH_USER)) continue;
 												%>	
 												<div class="UITab NormalTabStyle">
 													<div class="$classCss">
@@ -119,7 +119,7 @@
 										<% 
 											String display =	"block";
 											for(tabconten in uiform.getChildren()){
-												if(tabconten.id.equals("ForumUserPageIterator")) continue;
+												if(tabconten.id.equals("ForumUserPageIterator") || tabconten.id.equals(uiform.FIELD_SEARCH_USER)) continue;
 										%>
 										<div style="display: $display;" id="UITabContent" class="UITabContent">
 											<% uiform.renderChild(tabconten.id) ; %>

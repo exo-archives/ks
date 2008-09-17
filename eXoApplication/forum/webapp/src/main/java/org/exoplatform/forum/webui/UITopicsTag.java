@@ -84,6 +84,13 @@ public class UITopicsTag extends UIForm {
 		this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
 	
+	public void setTag(Tag tag) throws Exception {
+	  this.tag = tag;
+	  this.tagId = tag.getId();
+	  this.isUpdateTag = false;
+	  this.isUpdateTopicTag = true ;
+	  this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+  }
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() {
 		return userProfile ;
@@ -196,15 +203,17 @@ public class UITopicsTag extends UIForm {
 			String []id = idAndNumber.split(",") ;
 			Topic topic = uiTopicsTag.getTopic(id[0]);
 			String []temp = topic.getPath().split("/") ;
+			Forum forum = uiTopicsTag.getForum(temp[temp.length-3], temp[temp.length-2]) ;
 			UIForumPortlet forumPortlet = uiTopicsTag.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.FORUM);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 			UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 			uiForumContainer.setIsRenderChild(false) ;
+			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiTopicDetail.setUpdateContainer(temp[temp.length-3], temp[temp.length-2], topic, Long.parseLong(id[1])) ;
 			uiTopicDetail.setUpdatePageList(uiTopicsTag.getPagePost(id[0]));
-			uiTopicDetail.setUpdateForum(uiTopicsTag.getForum(temp[temp.length-3], temp[temp.length-2]));
+			uiTopicDetail.setUpdateForum(forum);
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(temp[temp.length-3], temp[temp.length-2], topic) ;
 			if(id[2].equals("true")) {
 				uiTopicDetail.setIdPostView("true") ;

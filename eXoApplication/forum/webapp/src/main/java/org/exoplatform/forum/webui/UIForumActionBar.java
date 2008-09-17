@@ -25,6 +25,7 @@ import org.exoplatform.forum.webui.popup.UIModeratorManagementForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
+import org.exoplatform.forum.webui.popup.UITagManagerForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -48,6 +49,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.EditProfileActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.TagManagerActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.OpenAdministrationActionListener.class)
 		}
 )
@@ -145,6 +147,20 @@ public class UIForumActionBar extends UIContainer	{
 			UIForumAdministrationForm administrationForm = popupContainer.addChild(UIForumAdministrationForm.class, null, null) ;
 			administrationForm.setInit();
 			popupContainer.setId("UIForumAdministration") ;
+			popupAction.activate(popupContainer, 630, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}	
+	
+	static public class TagManagerActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UITagManagerForm managerForm = popupContainer.addChild(UITagManagerForm.class, null, null) ;
+			managerForm.setUpdateTag(true);
+			popupContainer.setId("TagManagerForm") ;
 			popupAction.activate(popupContainer, 630, 360) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
