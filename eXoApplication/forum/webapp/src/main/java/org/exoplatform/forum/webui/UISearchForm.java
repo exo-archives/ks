@@ -311,6 +311,28 @@ public class UISearchForm extends UIForm implements UISelector {
 			String postCountMax = inputSearchForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
 			String viewCountMin = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).getValue();
 			String viewCountMax = inputSearchForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
+			try{
+				if(topicCountMax != null && topicCountMax.trim().length() > 0 && topicCountMin != null && topicCountMin.trim().length() > 0 && 
+									Integer.parseInt(topicCountMax) < Integer.parseInt(topicCountMin)){
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.MaxMinValueInvalid", null, ApplicationMessage.WARNING)) ;
+					return ;
+				} else if(postCountMax != null && postCountMax.trim().length() > 0 && postCountMin != null && postCountMin.trim().length() > 0 &&
+									Integer.parseInt(postCountMax) < Integer.parseInt(postCountMin)){
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.MaxMinValueInvalid", null, ApplicationMessage.WARNING)) ;
+					return ;
+				} else if(viewCountMax != null && viewCountMax.trim().length() > 0 && viewCountMin != null && viewCountMin.trim().length() > 0 && 
+									Integer.parseInt(viewCountMax) < Integer.parseInt(viewCountMin)){
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.MaxMinValueInvalid", null, ApplicationMessage.WARNING)) ;
+					return ;
+				}
+			} catch(Exception e){
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.ValueInvalid", null, ApplicationMessage.WARNING)) ;
+				return ;
+			}
 			String moderator = inputSearchForm.getUIStringInput(FIELD_MODERATOR_INPUT).getValue();
 			Calendar fromDateCreated = uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(FROMDATECREATED), FROMDATECREATED);
 			Calendar toDateCreated= uiForm.getCalendar(inputSearchForm.getUIFormDateTimeInput(TODATECREATED), TODATECREATED);
