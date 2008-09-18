@@ -27,6 +27,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UICategories;
@@ -550,13 +551,14 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	} else {
     		if(userRole >= 1) userRole = 2;
     	}
-			if(userTitle == null || userTitle.trim().length() < 1 || 
-					(!userTitle.equals(userProfile.getUserTitle()) && Arrays.asList(uiForm.permissionUser).contains(userTitle.toLowerCase()))) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.UserTitleInvalid", new Object[]{}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				return;
-			}
+    	if(userTitle == null || userTitle.trim().length() < 1){
+    		userTitle = userProfile.getUserTitle();
+    	} else if(!isAdmin) {
+    		int newPos = Arrays.asList(uiForm.permissionUser).indexOf(userTitle.toLowerCase());
+    		if(newPos >= 0 && newPos < userProfile.getUserRole()){
+    			userTitle = userProfile.getUserTitle();
+    		}
+    	}
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
     	Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;
