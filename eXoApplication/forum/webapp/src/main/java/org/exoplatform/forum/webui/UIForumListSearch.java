@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -100,6 +101,42 @@ public class UIForumListSearch extends UIContainer {
 		return null;
 	}
 	
+	private boolean canView(Category category, Forum forum, Topic topic, Post post, UserProfile userProfile) throws Exception{
+		boolean canView = true;
+		boolean isModerator = false;
+		if(category == null) return false;
+		String[] listUsers = category.getUserPrivate();
+		//check category is private:
+		if(listUsers.length > 0 && listUsers[0].trim().length() > 0 && !ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId())) 
+			return false;
+		else
+			canView = true;
+		
+		// check forum
+		if(forum != null){
+			listUsers = forum.getModerators();
+			if(userProfile.getUserRole() == 0 || (listUsers.length > 0 && listUsers[0].trim().length() > 0 && 
+					ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId()))) {
+				isModerator = true;
+				canView = true;
+			} else if(forum.getIsClosed() || forum.getIsLock()) return false;
+			else canView = true;
+			
+			// ckeck Topic:
+			if(topic != null){
+				if(isModerator) canView = true;
+				else if(!topic.getIsClosed() && !topic.getIsLock() && topic.getIsActive() && topic.getIsActiveByForum() && topic.getIsApproved() && 
+								!topic.getIsWaiting() &&((topic.getCanPost().length == 1 && topic.getCanPost()[0].trim().length() < 1) ||
+									ForumServiceUtils.hasPermission(topic.getCanPost(), userProfile.getUserId()) || 
+									(topic.getCanView().length == 1 && topic.getCanView()[0].trim().length() < 1) ||
+									ForumServiceUtils.hasPermission(topic.getCanView(), userProfile.getUserId()))) canView = true;
+				else canView = false;
+			}
+		}
+		
+		return canView;
+	}
+	
 	static	public class OpentContentActionListener extends EventListener<UIForumListSearch> {
 		public void execute(Event<UIForumListSearch> event) throws Exception {
 			UIForumListSearch uiForm = event.getSource() ;
@@ -110,18 +147,31 @@ public class UIForumListSearch extends UIContainer {
 			boolean isErro = false ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UserProfile userProfile = forumPortlet.getUserProfile();
-			String userName = userProfile.getUserId();
 			boolean isRead = true;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			
+			String []id = path.split("/") ;
+			Category category = null;
+			Forum forum = null;
+			Topic topic = null;
+			Post post = null;
+			
+			try{
+				String cateId =  id[3];
+				category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), cateId) ;
+				String forumId = id[4];
+				forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),cateId , forumId ) ;
+				String topicId = id[5];
+				topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), cateId, forumId, topicId, userProfile.getUserId());
+				String postId = id[6];
+				post = forumService.getPost(ForumSessionUtils.getSystemProvider(), cateId , forumId, topicId, postId) ;
+			} catch (Exception e) { }
+			
+			isRead = uiForm.canView(category, forum, topic, post, userProfile);
+			
 			if(type.equals(Utils.CATEGORY)) {
 				String categoryId = forumSearch.getId() ;
-				Category category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), categoryId) ;
 				if(category != null) {
-					String[] privateUser = category.getUserPrivate() ;
-					if(privateUser.length > 0) {
-						isRead = ForumUtils.isStringInStrings(privateUser, userName);
-					}
-					if(!isRead && userProfile.getUserRole() == 0) isRead = true; 
 					if(isRead){
 						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 						categoryContainer.getChild(UICategory.class).update(category, null);
@@ -132,12 +182,8 @@ public class UIForumListSearch extends UIContainer {
 					}
 				} else isErro = true ;
 			} else if(type.equals(Utils.FORUM)) {
-				String []id = path.split("/") ;
 				int length = id.length ;
-				Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-2] , id[length-1] ) ;
 				if(forum != null) {
-					//isRead = !forum.getIsClosed();
-					//if(!isRead && userProfile.getUserRole() == 0 || Arrays.asList(forum.getModerators()).contains(userProfile.getUserId())) isRead = true; 
 					if(isRead) {
 						forumPortlet.updateIsRendered(ForumUtils.FORUM);
 						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
@@ -150,34 +196,32 @@ public class UIForumListSearch extends UIContainer {
 					}
 				} else isErro = true ;
 			} else if(type.equals(Utils.TOPIC)){
-				String []id = path.split("/") ;
 				int length = id.length ;
-				Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
 				if(topic != null) {
-					forumPortlet.updateIsRendered(ForumUtils.FORUM);
-					Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[length-3] , id[length-2] ) ;
-					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-					UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-					uiForumContainer.setIsRenderChild(false) ;
-					uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-					UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-					uiTopicDetail.setTopicFromCate(id[length-3], id[length-2] , topic, true) ;
-					uiTopicDetail.setUpdateForum(forum) ;
-					uiTopicDetail.setIdPostView("false") ;
-					uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
-					forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
-					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+					if(isRead){
+						forumPortlet.updateIsRendered(ForumUtils.FORUM);
+						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+						UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+						uiForumContainer.setIsRenderChild(false) ;
+						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+						uiTopicDetail.setTopicFromCate(id[length-3], id[length-2] , topic, true) ;
+						uiTopicDetail.setUpdateForum(forum) ;
+						uiTopicDetail.setIdPostView("false") ;
+						uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
+						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+					}
 				} else isErro = true ;
 			} else {
-				String []id = path.split("/") ;
-				int length = id.length ;
-				Post post = forumService.getPost(ForumSessionUtils.getSystemProvider(), id[length-4] , id[length-3],id[length-2] , id[length-1]) ;
 				if(post != null) {
-					UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true)	;
-					UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
-					viewPost.setPostView(post) ;
-					viewPost.setViewUserInfo(false) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+					if(isRead){
+						UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true)	;
+						UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
+						viewPost.setPostView(post) ;
+						viewPost.setViewUserInfo(false) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+					}
 				} else isErro = true ;
 			}
 			if(isErro) {
