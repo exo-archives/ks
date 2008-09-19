@@ -56,6 +56,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	private UIFormStringInput userName ;
 	private boolean isUpdate = false ;
 	private static int order ;
+	private String listEmailOld_ = "" ;
 	public UIWatchForm() throws Exception {
 		List<String> list = new ArrayList<String>() ;
 		String user = FAQUtils.getCurrentUser() ;
@@ -105,10 +106,16 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   			String email = "";
 				for (String str : emails) {
 					str = str.trim() ;
-					if(emailsList.contains(str)) continue ;
-					emailsList.add(str) ;
-					if(email.equals("")) email = str ;
-					else email = email + "," + str ;
+					if(listEmailOld_.equals("")) {
+						if(emailsList.contains(str)) continue ;
+						emailsList.add(str) ;
+						if(email.equals("")) email = str ;
+						else email = email + "," + str ;
+					} else {
+						emailsList.add(str) ;
+						if(email.equals("")) email = str ;
+						else email = email + "," + str ;
+					}
 		    }
 				values = email ;
   		}
@@ -119,6 +126,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   @SuppressWarnings("static-access")
   public void setUpdateWatch(int order, String categoryId, String listEmail, boolean isUpdate) throws Exception {
 		if(isUpdate) {
+			this.listEmailOld_ = listEmail ;
 			List<String> list = Arrays.asList(listEmail.split(",")) ;
 			if(emailAddress != null) removeChildById(EMAIL_ADDRESS);
 			emailAddress = createUIComponent(UIFormMultiValueInputSet.class, null, null) ;
