@@ -25,6 +25,14 @@
       <instance-id>portal#classic:/web/BannerPortlet/banner</instance-id>
       <show-info-bar>false</show-info-bar>
     </application>
+    <application>
+      <instance-id>portal#classic:/web/NavigationPortlet/menu</instance-id>
+      <show-info-bar>false</show-info-bar>
+    </application>
+    <application>
+      <instance-id>portal#classic:/web/BreadcumbsPortlet/breadcumbs</instance-id>
+      <show-info-bar>false</show-info-bar>
+    </application>
     <container id="KS" template="system:/templates/groovy/webui/component/UITableColumnContainer.gtmpl">
       <container id="pagebody" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
         <page-body>
@@ -36,19 +44,10 @@
           <title>Sidebar</title>
           <show-info-bar>false</show-info-bar>
           <show-application-state>false</show-application-state>
-          <show-application-mode>false</show-application-mode>
-          
+          <show-application-mode>false</show-application-mode>          
         </application>
       </container>
     </container>   
-    <application>
-      <instance-id>portal#classic:/web/BreadcumbsPortlet/breadcumbs</instance-id>
-      <show-info-bar>false</show-info-bar>
-    </application>
-    <!--application>
-      <instance-id>portal#classic:/web/NavigationPortlet/menu</instance-id>
-      <show-info-bar>false</show-info-bar>
-    </application-->     
     <application>
       <instance-id>portal#classic:/web/FooterPortlet/footer</instance-id>
       <show-info-bar>false</show-info-bar>

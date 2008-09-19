@@ -16,71 +16,110 @@
 
 .UIBannerPortlet {
 	background: #fff url('DefaultSkin/background/BannerPortlet.gif') repeat-x top;
-	height: 84px; font-size: 11px; font-family: tahoma;
-}
-
-.UIBannerPortlet {
-	background: #fff url('DefaultSkin/background/BannerPortlet.gif') repeat-x top;
-	height: 84px; font-size: 11px; font-family: tahoma;
+	height: 84px;
 }
 
 .UIBannerPortlet .BannerTitle_{
 	float: left;
 	background: #fff url('DefaultSkin/background/BannerTitle.gif') no-repeat top left;
-	width: 336px; height: 84px;
+	width: 300px; height: 80px;
 }
 
 .UIBannerPortlet .MiddleBanner_ .LoginContainer{
-	float: right; width: 400px;
-	margin-top: 52px;
+	float: right; width: 240px;
 }
 
-.UIBannerPortlet .LoginContainer .FlagIcon {
-	background: url('DefaultSkin/background/DefaultPortletIcon.gif') no-repeat right;
-	float: right;
-	width: 22px; height:13px;
-	margin: 6px 15px 0px 0px;
+.UIBannerPortlet .MiddleBanner_ .LeftContainer{
+	background: url('DefaultSkin/background/LeftContainer.gif') no-repeat left;
+	padding-left: 10px;
 }
 
-.UIBannerPortlet .LoginContainer .Dotline {
-	background: url('DefaultSkin/background/DotLine2x24.gif') no-repeat right;
-	float: right;
-	width: 2px; height:24px;
-	margin: 0px 10px;
+.UIBannerPortlet .MiddleBanner_ .RightContainer{
+	background: url('DefaultSkin/background/RightContainer.gif') no-repeat right;
+	padding-right: 5px;
 }
 
-.UIBannerPortlet .LoginContainer .SignIn {
-	background: url('DefaultSkin/background/SignIn13x13.gif') no-repeat left;
-	float: right;
-	line-height:13px;
-	padding-left: 20px;
-	font-weight: bold;
-	color: gray;
-	margin:6px 0px 0px 10px;
-}
-
-.UIBannerPortlet .LoginContainer .DotIcon {
-	background: url('DefaultSkin/background/DotLine16x24.gif') no-repeat right;
-	float: right;
-	width: 16px; height:24px;
+.UIBannerPortlet .MiddleBanner_ .CenterContainer{
+	background: url('DefaultSkin/background/CenterContainer.gif') repeat-x ;
+	height: 53px;
 }
 
 .UIBannerPortlet .LoginContainer .TextAcount {
-	float: right;
 	line-height:24px;
 	color: gray;
+}
+
+.UIBannerPortlet .MiddleBanner_ .ActionButton{
+	float: right;
+	margin:0px 4px 0px 0px;
+}
+
+.UIBannerPortlet .MiddleBanner_ .ActionButton .LeftButton{
+	background: url('DefaultSkin/background/LeftButton.gif') no-repeat left;
+	padding-left: 10px;
+}
+
+.UIBannerPortlet .MiddleBanner_ .ActionButton .RightButton{
+	background: url('DefaultSkin/background/RightButton.gif') no-repeat right;
+	padding-right: 9px;
+}
+
+.UIBannerPortlet .MiddleBanner_ .ActionButton .CenterButton{
+	background: url('DefaultSkin/background/CenterButton.gif') repeat-x ;
+	line-height: 20px;
+	padding: 0px 8px;
+	color:#025193;
+	font-weight: bold;
 }
 
 /***************************************************************************************************/
 
 .UIHomePagePortlet {
-	border-right: 1px solid #b7b7b7;
-	background: white;
+	background: #ecedee;
+	padding: 8px;
+}
+
+.PortletDecoration {
+}
+
+.PortletDecoration .PortletDecorationTL {
+	background: url('DefaultSkin/background/PortletDecorationTL.gif') no-repeat left;
+	padding-left: 3px;
+}
+
+.PortletDecoration .PortletDecorationTR {
+	background: url('DefaultSkin/background/PortletDecorationTR.gif') no-repeat right;
+	padding-right: 3px;
+}
+
+.PortletDecoration .PortletDecorationTC {
+	background: white ;
+	height: 3px;
+}
+
+.PortletDecoration .HomePortletAdBackround {
+	background: white ;
+	padding: 8px;
+}
+
+.PortletDecoration .PortletDecorationBL {
+	background: url('DefaultSkin/background/PortletDecorationBL.gif') no-repeat left;
+	padding-left: 3px;
+}
+
+.PortletDecoration .PortletDecorationBR {
+	background: url('DefaultSkin/background/PortletDecorationBR.gif') no-repeat right;
+	padding-right: 3px;
+}
+
+.PortletDecoration .PortletDecorationBC {
+	background: url('DefaultSkin/background/PortletDecorationBC.gif') repeat-x ;
+	height: 5px;
 }
 
 .UIHomePagePortlet .HomeBackground {
 	background: url('DefaultSkin/background/HomeBackground.gif') repeat-x ;
-	height: 314px;
+	height: 244px;
 }
 
 .UIHomePagePortlet .CheckIcon {
@@ -91,57 +130,30 @@
 
 .UIHomePagePortlet .HomeBackground .HomeImage {
 	background: url('DefaultSkin/background/KSHomePage786x314.jpg') no-repeat right;
-	height: 314px;
+	height: 244px;
 }
 
 
-.UIHomePagePortlet .Decorator {
-	padding: 3px;
+.UIHomePagePortlet .Decorator .DecoratorML {
+	background: url('DefaultSkin/background/DecoratorML.gif') no-repeat left;
+	padding-left: 2px;
 }
 
-.UIHomePagePortlet .Decorator .DecoratorTL {
-	background: url('DefaultSkin/background/DecoratorTL.gif') no-repeat left;
-	padding-left: 7px;
-}
-
-.UIHomePagePortlet .Decorator .DecoratorTR {
-	background: url('DefaultSkin/background/DecoratorTR.gif') no-repeat right;
-	padding-right: 66px;
-}
-
-.UIHomePagePortlet .Decorator .DecoratorTC {
-	background: url('DefaultSkin/background/DecoratorTC.gif') repeat-x ;
-	height: 88px;
+.UIHomePagePortlet .Decorator .DecoratorMR {
+	background: url('DefaultSkin/background/DecoratorMR.gif') no-repeat right;
+	padding-right: 2px;
 }
 
 .UIHomePagePortlet .Decorator .DecoratorMC {
 	background: url('DefaultSkin/background/DecoratorMC.gif') repeat-x ;
-	height: 139px;
-	border-top: none;
-	border-left: 1px solid #cacaca;
-	border-right: 1px solid #cacaca;
-}
-
-.UIHomePagePortlet .Decorator .DecoratorBL {
-	background: url('DefaultSkin/background/DecoratorBL.gif') no-repeat left;
-	padding-left: 7px;
-}
-
-.UIHomePagePortlet .Decorator .DecoratorBR {
-	background: url('DefaultSkin/background/DecoratorBR.gif') no-repeat right;
-	padding-right: 7px;
-}
-
-.UIHomePagePortlet .Decorator .DecoratorBC {
-	background: url('DefaultSkin/background/DecoratorBC.gif') repeat-x ;
-	height: 7px;
+	height: 192px;
 }
 
 .UIHomePagePortlet .Decorator .ForumIcon {
 	float: left;
 	background: url('DefaultSkin/background/ForumIcon.gif') no-repeat left ;
-	width:102px; height: 79px;
-	margin:7px 10px 0px;
+	width:80px; height: 79px;
+	margin:18px 10px 0px;
 }
 
 .UIHomePagePortlet .Decorator .ForumLabel {
@@ -164,8 +176,8 @@
 .UIHomePagePortlet .Decorator .FAQIcon {
 	float: left;
 	background: url('DefaultSkin/background/FAQIcon.gif') no-repeat left ;
-	width:102px; height: 79px;
-	margin:7px 10px 0px;
+	width:80px; height: 79px;
+	margin:18px 10px 0px;
 }
 
 .UIHomePagePortlet .Decorator .FAQLabel {
@@ -187,39 +199,34 @@
 
 .UIHomePagePortlet .Decorator .Button {
 	background: url('DefaultSkin/background/Button.gif') no-repeat left ;
-	height: 30px; width: 160px;
+	height: 30px; width: 120px;
 	cursor: pointer;
-	float: right;
 }
 
 /***************************************************************************************************/
 
 .SideBar {
-	background: #f1f1f1 url('DefaultSkin/background/SideBarBG.gif') repeat-x top ;
+	background: #ECEDEE ;
 	float: right;
 	width: 220px;
+	padding: 8px;
 }
 
-.SideBar {
-	background: #f1f1f1 url('DefaultSkin/background/SideBarBG.gif') repeat-x top ;
-	float: right;
-	width: 220px;
-}
 
 .SideBar .DownloadButton{
 	background: #f1f1f1 url('DefaultSkin/background/DownloadButton.gif') no-repeat ;
-	width: 200px; height: 100px;
-	margin:18px 0px 0px 10px;
+	width: 192px; height: 89px;
+	margin:18px 0px 0px 6px;
 }
 
 .SideBar .ArowIcon{
-	background: #f1f1f1 url('DefaultSkin/background/ArowIcon.gif') no-repeat left ;
+	background: url('DefaultSkin/background/ArowIcon.gif') no-repeat left ;
 	padding-left: 20px;
 	margin: 2px 10px;
 }
 
 .SideBar .DotLine{
-	background: #f1f1f1 url('DefaultSkin/background/DotLine1x2.gif') repeat-x ;
+	background: url('DefaultSkin/background/DotLine1x2.gif') repeat-x ;
 	height: 2px;
 	margin: 10px;
 }
@@ -276,8 +283,8 @@
 
 .UIBreadcumbs {
   background: url('DefaultSkin/background/BreadcumbsPortletBG.gif') repeat-x ;
-	height: 29px;
-	line-height: 29px;
+	height: 19px;
+	line-height: 19px;
 }
 
 .UIBreadcumbs a {
@@ -285,12 +292,12 @@
 }
 
 .UIBreadcumbs a.Selected {
-	color: white ; 
+	color: #345c8d ; 
 }
 
 .UIBreadcumbs .HomeIcon {
 	float: left;
-  margin: 5px 5px 0px 3px ;
+  margin: 1px 5px 0px 3px ;
 }
 
 .UIBreadcumbs .LeftBreadcumbsBar {
@@ -306,13 +313,13 @@
 }
 
 .UIBreadcumbs .BreadcumbsInfoBar {
-  height: auto; line-height: 29px; 
+  height: auto; line-height: 19px; 
   background: none;
 }
 
 .UIBreadcumbs .RightBlackGridArrowIcon {
   float: left;
-  margin: 5px 0px 0px 0px;
+  margin: 1px 0px 0px 0px;
 }
 
 
@@ -331,4 +338,49 @@
 	font-family: tahoma;
 	font-weight: bold;
 	line-height: 28px;
+}
+
+/*********************************Navigation Portlet**********************************/
+
+.UINavigationPortlet .UINavigationBar .LeftNavigationBar  {
+	padding-left:0px;
+}
+
+.UINavigationPortlet .UINavigationBar .MiddleNavigationBar  {
+	background:transparent url(DefaultSkin/background/NavigationBar.gif) repeat-x scroll center top;
+	line-height:28px;
+	padding-left:3px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab {
+	line-height:21px;
+	margin:6px 0px 0px 1px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
+	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left ;
+	line-height:21px;
+	padding-left:2px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .RightTab {
+	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right ;
+	line-height:21px;
+	padding-right:2px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .MiddleTab {
+	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x ;
+	line-height:21px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .TabIcon {
+	color:white;
+	line-height:21px;
+	padding:0px 5px 0px 0px;
+}
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab {
+	line-height:21px;
+	margin:3px 0px 0px 1px;
 }
