@@ -20,10 +20,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIWatchContainer;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -79,6 +83,39 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   public String getCategoryID() { return categoryId_; }
   public void setCategoryID(String s) { categoryId_ = s ; }
   
+  public List<String> getListEmail() throws Exception {
+  	FAQService faqService =	FAQUtils.getFAQService() ;
+  	List<String> emailsList = new ArrayList<String>() ;
+    List<String> emails = faqService.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()) ;
+    for(String email: emails) {
+			String[] strings = Utils.splitForFAQ(email) ;
+			for(String string_ : strings ) {
+				emailsList.add(string_) ;
+			}
+		}
+    return emailsList ;
+  }
+  
+  public String checkValueEmail(String values) throws Exception {
+  	if(values != null && values.trim().length() > 0) {
+  		String[] emails = values.split(",");
+  		String string = emails[0] ;
+  		List<String> emailsList = getListEmail() ;
+  		if(emailsList != null) {
+  			String email = "";
+				for (String str : emails) {
+					str = str.trim() ;
+					if(emailsList.contains(str)) continue ;
+					emailsList.add(str) ;
+					if(email.equals("")) email = str ;
+					else email = email + "," + str ;
+		    }
+				values = email ;
+  		}
+  	}
+  	return values;
+  }
+  
   @SuppressWarnings("static-access")
   public void setUpdateWatch(int order, String categoryId, String listEmail, boolean isUpdate) throws Exception {
 		if(isUpdate) {
@@ -95,6 +132,21 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 			this.categoryId_ = categoryId ;
 		}
 	}
+  
+  public String filterItemInString(String string) throws Exception {
+  	if (string != null && string.trim().length() > 0) {
+	    String[] strings = FAQUtils.splitForFAQ(string) ;
+	    List<String>list = new ArrayList<String>() ;
+	    string = strings[0] ;
+	    list.add(string);
+    	for(String string_ : strings ) {
+    		if(list.contains(string_)) continue ;
+    		list.add(string_) ;
+    		string = string + "," + string_ ;
+    	}
+  	}
+  	return string ;
+  }
   
 	static public class SaveActionListener extends EventListener<UIWatchForm> {
     public void execute(Event<UIWatchForm> event) throws Exception {
@@ -115,8 +167,10 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
       }
+      listEmail = uiWatchForm.filterItemInString(listEmail)+",";
       String categoryId = uiWatchForm.getCategoryID() ;
-      if (categoryId != null) {
+      listEmail = uiWatchForm.checkValueEmail(listEmail)+",";
+      if (categoryId != null && !listEmail.equals(",")) {
       	FAQService faqService =	FAQUtils.getFAQService() ;
       	if(uiWatchForm.isUpdate) {
       		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), order) ;
