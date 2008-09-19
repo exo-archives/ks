@@ -736,12 +736,6 @@
 						<% } %>
 								<div style="padding-top: 8px" id="$idMessage">$message</div>
 							</div>
-								<%	
-									if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
-										String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
-								%>
-								<div class="Signature">__________________<br><%=signature;%></div>
-								<% } %>
 							<% if(hasAttachment) {%>
 							<div class="AttachmentContainer">
 								<div class="AttachmentTitle"><%=_ctx.appRes(uiformId + ".label.Attachments");%>:</div>
@@ -784,6 +778,11 @@
 								</div>
 							</div>
 							<% } %>
+							<%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
+									String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
+							%>
+									<div class="Signature">__________________<br><%=signature;%></div>
+							<%} %>
 						</div>
 							<div class="FootPost">
 								<div class="PostInfo">
