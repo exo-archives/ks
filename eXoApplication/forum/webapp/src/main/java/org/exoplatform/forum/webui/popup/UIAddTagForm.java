@@ -158,12 +158,11 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				try {
 					popupContainer.getChild(UITagForm.class).setUpdateList(true) ;
-					popupContainer.getChild(UIPopupAction.class).deActivate() ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
         } catch (Exception e) {
-        	popupContainer.getChild(UIPopupAction.class).deActivate() ;
-        	event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+        	popupContainer.getChild(UITagManagerForm.class).setUpdateTag(true);;
         }
+        popupContainer.getChild(UIPopupAction.class).deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}
 		}
 	}

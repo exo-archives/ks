@@ -67,6 +67,7 @@ public class UITagManagerForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
   private List<Tag> getListTags() throws Exception {
+		System.out.println("\n\ngetTag: "+ isGetTag);
 		if(isGetTag) {
 			tags = forumService.getTags(ForumSessionUtils.getSystemProvider());
 			isGetTag =false;
@@ -105,7 +106,6 @@ public class UITagManagerForm extends UIForm implements UIPopupComponent {
 			addTagForm.setUpdateTag(uiForm.getTagById(tagId));
 			addTagForm.setIsTopicTag(false) ;
 			uiChildPopup.activate(addTagForm, 410, 263) ;
-			uiForm.setUpdateTag(true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}

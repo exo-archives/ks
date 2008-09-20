@@ -67,7 +67,7 @@
 }
 
 .UIForumContainer .ContentContainer .StatusIcon {
-	margin: auto;
+	margin: auto; cursor: pointer;
 	width: 16px; height: 16px;
 }
 
@@ -115,13 +115,13 @@
 	padding-top: 5px;
 }
 
-.UIForumContainer .LeftStartsList {
-	margin: 0px 310px 0px 0px;
-}
-
 .UIForumContainer .LeftStartsList .ForumCategory {
 	width: 99%;
 }
+
+.UIForumContainer .LeftStartsList {
+	margin: 0px 310px 0px 0px;
+} 
 
 .UIForumContainer .RightStartsList {
 	float: right;
