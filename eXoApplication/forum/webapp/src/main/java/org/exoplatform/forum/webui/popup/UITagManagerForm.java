@@ -105,7 +105,6 @@ public class UITagManagerForm extends UIForm implements UIPopupComponent {
 			addTagForm.setUpdateTag(uiForm.getTagById(tagId));
 			addTagForm.setIsTopicTag(false) ;
 			uiChildPopup.activate(addTagForm, 410, 263) ;
-			uiForm.setUpdateTag(true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}

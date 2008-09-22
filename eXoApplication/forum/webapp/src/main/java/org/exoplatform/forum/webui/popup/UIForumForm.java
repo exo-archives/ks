@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -63,7 +64,6 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		events = {
 			@EventConfig(listeners = UIForumForm.SaveActionListener.class), 
 			@EventConfig(listeners = UIForumForm.AddValuesUserActionListener.class, phase=Phase.DECODE),
-//			@EventConfig(listeners = UIForumForm.AddValuesMailActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumForm.SelectTabActionListener.class, phase=Phase.DECODE)
 		}
@@ -129,8 +129,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormStringInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA, FIELD_DESCRIPTION_TEXTAREA, null);
 		UIFormTextAreaInput notifyWhenAddPost = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE, null);
 		UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
-//		notifyWhenAddPost.setEditable(false);
-//		notifyWhenAddTopic.setEditable(false) ;
 		
 		UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE, FIELD_MODERATOR_MULTIVALUE, null);
 		UIFormTextAreaInput viewer = new UIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE, FIELD_VIEWER_MULTIVALUE, null) ;
@@ -176,18 +174,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			}
 			forumPermission.setActionField(fieldPermission, actions);
 		}
-//		strings = new String[]{FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE} ;
-//		for(String string : strings) {
-//			actions = new ArrayList<ActionData>() ;
-//			ad = new ActionData() ;
-//			ad.setActionListener("AddValuesMail") ;
-//			ad.setActionParameter(string) ;
-//			ad.setCssIconClass("AddIcon16x16") ;
-//			ad.setActionName(string);
-//			actions.add(ad) ;
-//			moderationOptions.setActionField(string, actions);
-//		}
-//		
 		addUIFormInput(newForum);
 		addUIFormInput(moderationOptions);
 		addUIFormInput(forumPermission);
@@ -206,7 +192,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		if(isUpdate) {
 			forumId = forum.getId();
 			UIFormInputWithActions newForum = this.getChildById(FIELD_NEWFORUM_FORM);
-			newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(forum.getForumName());
+			newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(forum.getForumName()));
 			newForum.getUIStringInput(FIELD_FORUMORDER_INPUT).setValue(String.valueOf(forum.getForumOrder()));
 			String stat = "open";
 			if(forum.getIsClosed()) stat = "closed";
@@ -214,7 +200,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			if(forum.getIsLock()) stat = "locked";
 			else stat = "unlock";
 			newForum.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).setValue(stat);
-			newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).setDefaultValue(forum.getDescription());
+			newForum.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).setDefaultValue(ForumTransformHTML.unCodeHTML(forum.getDescription()));
 			
 			UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
 			moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).setDefaultValue(ForumUtils.unSplitForForum(forum.getNotifyWhenAddPost()));
@@ -281,6 +267,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
+			forumTitle = ForumTransformHTML.enCodeHTML(forumTitle) ;
 			String forumOrder = newForumForm.getUIStringInput(FIELD_FORUMORDER_INPUT).getValue();
 			if(ForumUtils.isEmpty(forumOrder)) forumOrder = "0";
 			forumOrder = ForumUtils.removeZeroFirstNumber(forumOrder) ;
@@ -294,7 +281,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String forumStatus = newForumForm.getUIFormSelectBox(FIELD_FORUMSTATUS_SELECTBOX).getValue();
 			String description = newForumForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA).getValue();
 			if(ForumUtils.isEmpty(description)) description = " " ;
-			
+			description = ForumTransformHTML.enCodeHTML(description) ;
 			UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
 			String notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).getValue() ;
 			String notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue() ;

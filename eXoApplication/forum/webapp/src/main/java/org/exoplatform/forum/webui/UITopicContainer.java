@@ -63,39 +63,39 @@ import org.exoplatform.webui.form.UIFormStringInput;
  */
 
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
-		template =	"app:/templates/forum/webui/UITopicContainer.gtmpl", 
-		events = {
-			@EventConfig(listeners = UITopicContainer.SearchFormActionListener.class ),	
-			@EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class ),	
-			@EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
-			@EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class ),
-			@EventConfig(listeners = UITopicContainer.ApproveTopicsActionListener.class ),//Menu Forum
-			@EventConfig(listeners = UITopicContainer.EditForumActionListener.class ),	
-			@EventConfig(listeners = UITopicContainer.SetLockedForumActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetUnLockForumActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetOpenForumActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetCloseForumActionListener.class),
-			@EventConfig(listeners = UITopicContainer.MoveForumActionListener.class),
-			@EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class,confirm="UITopicContainer.confirm.RemoveForum"),//Menu Topic
-			@EventConfig(listeners = UITopicContainer.WatchOptionActionListener.class),
-			
-			@EventConfig(listeners = UITopicContainer.EditTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetOpenTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetCloseTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetLockedTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetUnLockTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetStickTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
-			@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
-			@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
-			@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
-		}
+	lifecycle = UIFormLifecycle.class,
+	template =	"app:/templates/forum/webui/UITopicContainer.gtmpl", 
+	events = {
+		@EventConfig(listeners = UITopicContainer.SearchFormActionListener.class ),	
+		@EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class ),	
+		@EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),	
+		@EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
+		@EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class ),
+		@EventConfig(listeners = UITopicContainer.ApproveTopicsActionListener.class ),//Menu Forum
+		@EventConfig(listeners = UITopicContainer.EditForumActionListener.class ),	
+		@EventConfig(listeners = UITopicContainer.SetLockedForumActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetUnLockForumActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetOpenForumActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetCloseForumActionListener.class),
+		@EventConfig(listeners = UITopicContainer.MoveForumActionListener.class),
+		@EventConfig(listeners = UITopicContainer.RemoveForumActionListener.class,confirm="UITopicContainer.confirm.RemoveForum"),//Menu Topic
+		@EventConfig(listeners = UITopicContainer.WatchOptionActionListener.class),
+		
+		@EventConfig(listeners = UITopicContainer.EditTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetOpenTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetCloseTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetLockedTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetUnLockTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetStickTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
+		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
+		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
+	}
 )
 public class UITopicContainer extends UIForm {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -127,11 +127,8 @@ public class UITopicContainer extends UIForm {
 		addChild(UIForumPageIterator.class, null, "ForumPageIterator") ;
 		if(ForumSessionUtils.getCurrentUser() != null) isLogin = true;
 	}
-	
 	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() {
-		return userProfile ;
-	}
+	private UserProfile getUserProfile() { return userProfile ;}
 
 	public void setUpdateForum(String categoryId, Forum forum) throws Exception {
 		this.forum = forum ;
@@ -145,9 +142,7 @@ public class UITopicContainer extends UIForm {
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
 	}
 	
-	public void setIdUpdate(boolean isUpdate) {
-		this.isUpdate = isUpdate;
-	}
+	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
 	
 	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs) throws Exception {
 		this.forumId = forumId ;
@@ -163,9 +158,7 @@ public class UITopicContainer extends UIForm {
 		}
 	}
 
-	public boolean getCanAddNewThread(){
-		return this.canAddNewThread ;
-	}
+	public boolean getCanAddNewThread(){return this.canAddNewThread ; }
 	
 	private Forum getForum() throws Exception {
 		if(this.isUpdate) {
@@ -188,7 +181,6 @@ public class UITopicContainer extends UIForm {
 		String[] strings = this.forum.getCreateTopicRole() ;
 		if( strings != null && strings.length > 0)
 			this.canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
-
 		isModerator = false ;
 		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
 		else {

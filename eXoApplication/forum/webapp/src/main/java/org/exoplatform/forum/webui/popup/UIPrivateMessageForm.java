@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
@@ -166,6 +167,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
+			mailTitle = ForumTransformHTML.enCodeHTML(mailTitle);
 			UIFormWYSIWYGInput formWYSIWYGInput = MessageTab.getChild(UIFormWYSIWYGInput.class) ;
 			String message = formWYSIWYGInput.getValue();
 			if(!ForumUtils.isEmpty(message)) {

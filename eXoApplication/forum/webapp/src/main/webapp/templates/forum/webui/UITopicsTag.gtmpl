@@ -1,11 +1,18 @@
 <%	
 	import org.exoplatform.forum.service.Topic ;
-	import org.exoplatform.forum.webui.UITopicsTag ;
 	import org.exoplatform.forum.service.Tag ;
-	import org.exoplatform.forum.webui.UIForumPageIterator ;
-	import org.exoplatform.forum.ForumUtils ;
-	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.service.JCRPageList;
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumSessionUtils;
+	import org.exoplatform.forum.ForumTransformHTML;
+	import org.exoplatform.forum.webui.UITopicsTag ;
+	import org.exoplatform.forum.webui.UIForumPageIterator ;
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicsTag') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicsTag') ;") ;
 %>
 <% uiform.begin() %>
 <%
@@ -18,6 +25,10 @@
 	if(ForumUtils.isEmpty(description)) {
 		description = " ";
 	}
+	boolean canEdit = false;
+	boolean isShowMenu = false;
+	if(userProfile.getUserRole()==0) canEdit = true;
+	if(userProfile.getUserRole() < 3) isShowMenu = true;
 %>
 <div class="UIForumContainer">
 	<div class="UIForumDescription">
@@ -42,7 +53,7 @@
 						<div class="CenterBar">
 							<div class="Title"><span style="font-weight: normal;"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:</span>$tagName_</div>
 							<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-							<% if(userProfile.getUserRole()==0){ %>
+							<% if(canEdit){ %>
 							<div class="SeparatorLine" style="margin-right: 7px;"><span></span></div>
 							<div class="ToolbarActionsTag" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
@@ -102,40 +113,48 @@
 					</div>
 				</div>
 			</div>
-			<div class="ContentContainer">
+			
+			<div class="ContentContainer" id="UITopicContent">
 				<div class="UITopicList">
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 						<thead>
 							<tr>
-								<th style="width: 40px;"></th>
-								<th style="width: 40px;"></th>
-								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
+								<th style="width: 40px;">&nbsp;</th>
+								<th style="width: 40px;">&nbsp;</th>
+								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
-								<th style="width: 96px;"><%=_ctx.appRes("UITopicContainer.label.Rating");%></th>
+								<th style="width: 96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
 								<th style="width: 40px;"><%=_ctx.appRes("UITopicContainer.label.Tag");%></th>
-								<th style="width: 130px;"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></th>
-								<th style="width: 50px;"><%=_ctx.appRes("UITopicContainer.label.Replies");%></th>
-								<th style="width: 50px;"><%=_ctx.appRes("UITopicContainer.label.Views");%></th>
-								<th style="width: 30px;"><input type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+								<th style="width: 130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></a></th>
+								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
+								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
+								<% if(canEdit) { %>
+								<th style="width: 30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+								<% } %>
 							</tr>
 						</thead>
 						<tbody>
-							<% 
+							<%
+							int rCNB = 0;
+							if(!topics.isEmpty()) {
 								String classRow = "whileRow";
 								int i = 0;
-								 for(topic in topics){
+								String uiformId = uiform.id;
+								for(topic in topics){
+									boolean isLockTopic = topic.getIsLock() ;
+									if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
 									long max_page = uicomponent.getMaxPagePost(topic.getPath()) ;
 									String iconClassTopic = topic.getIcon();
-									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
+									if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
 									String postNewBy = topic.getLastPostBy() ;
-									Date postDate = topic.getLastPostDate();
+									Date postDate = topic.getLastPostDate() ;
 									postDate.setTime(postDate.getTime() - setTime);
-									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);	
+									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
 									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									int att = topic.getNumberAttachment() ;
@@ -143,13 +162,44 @@
 									String attachment = String.valueOf(att);
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
-									String titleTopicStatus = "Hot thread with new post" ;
-									String iconTopicStatus = "HotThreadNewPost" ;
-									if(topic.getIsLock()) {
-										iconTopicStatus = "HotThreadNewLockPost" ;
-										titleTopicStatus = "Hot thread with new post lock" ;
-									}
 									String number = "1";
+									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
+									String title = "TitleBold";
+									String newPost = "New";
+									String hot = ""; 
+									if(isReadTopic) {
+										title = "TitleNorman";
+										newPost = "NoNew"; 
+									} 
+									if(topic.getPostCount() > 30) hot = "Hot"; 
+									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
+									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
+									if(topic.getIsLock()) {
+										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
+										titleTopicStatus = hot+" Topic with "+newPost+" post lock" ;
+									}
+									if(topic.getIsClosed()) {
+										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
+										titleTopicStatus = hot+" Topic with "+newPost+" post close" ;
+									}
+									String approved = "" ;
+									if(canEdit){
+										if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)" ;
+										if(!topic.getIsApproved()) { 
+											if(approved.length() > 0) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending")+"</span>)" ;
+											else approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval")+"</span>)" ;
+										}
+									}
+									
+									String actionBookmark;
+									if(isShowMenu){
+										actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
+									}
+									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
+									String path = topic.getPath();
+									path = path.substring(path.indexOf(org.exoplatform.forum.service.Utils.CATEGORY));
+									String url = uicomponent.url("OpenTopic", path);
+									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" ); 
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
@@ -157,28 +207,38 @@
 									<td >
 										<div >
 										<% if(topic.getIsSticky()) {%>
-											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
+											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" title="$titlePost" class="Title">$topicTitle</a>
+											<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+												<a onclick="$link; return false;" href="$url" title="$titlePost" class="$title">$topicTitle</a>
+												<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
+													<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+														<div action="$actionBookmark" class="ClickPopupContent"></div>
+													</div>
+												</div>
+											</div>
+												<% ++rCNB; %>
 											<% if(max_page > 1) { %>
-											<span>(</span>	
+											<span>&nbsp;(</span>	
 											<%	int t = 1;
 												while(t <= max_page) {
 												if(t <= 5) { 
 													number = String.valueOf(t) ;
 											%>
-											<a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>">$number</a>
+											<a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url">$number</a>
 											<% }
 											t = t + 1 ;
 											}
 											if(max_page > 5) { 
 												number = String.valueOf(max_page) ;
 											%>
-											<span>... <a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
+											<span>... <a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
 											<%} else {%>
 											<span>)</span>
 											<%} 
 											} %>
+											$approved
+											<div style="clear: left;"><span></span></div>
 										</div>
 										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
@@ -203,13 +263,46 @@
 					 					</div>
 									</td>
 									<td class="Tdbox">
-									<% List tags = uicomponent.getTagsByTopic(topic.getTagId()); 
-										for(tag in tags) {
-											String color = tag.getColor() ;
-											String tagName = tag.getName();
-									%>
-										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$tagName"><span></span></div></a>
-									<% } %>
+									<% List tags = uicomponent.getTagsByTopic(topic.getTagId());%> 
+										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="Topic have <%=tags.size();%> Tag!">
+											<% /*Begin Popup Menu*/ %>
+											<div style="position: relative; left: 92px;">
+												<div class="UIPopupCategory" style="display: none; ">
+													<div class="UIRightClickPopupMenu" style="display: block;">
+														<div class="UIContextMenuContainer">
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																<%for(tag in tags) {
+																		String color = tag.getColor() ;
+																		String tagNameTitle = tag.getName() ;
+																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
+																%>
+																			<a class="classDisable" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
+																				<div class="ItemIcon TagIcon ${color}TagIcon">
+																					<span>$tagName</span>
+																				</div>
+																			</a>
+																<% } %>
+																	</div>
+																</div>
+															</div>
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<% /*End Popup Menu*/ %>
+										</div>
 									</td>
 								 	<td >
 								 		<div class="DateTime">$lastPostDate</div>
@@ -219,20 +312,75 @@
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">$postView</td>
-									<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);">
-										<%uicomponent.renderChild(topic.getId());%>
-									</td>
+									<% if(canEdit) { %>
+									<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><%uicomponent.renderChild(topicId)%></td>
+					 				<% } %>
 					 			</tr>
-						 	<% i = i + 1;} %>
+					 	<% 
+					 			i = i + 1;}
+						 		if(rCNB == 0){
+						 		%>
+					 				<tr>
+						 				<td colspan="10" align="center">
+						 					<div style="margin: 15px 0px 20px 0px"><strong><%=_ctx.appRes("UICategory.label.availableTheard");%></strong></div>
+						 				</td>
+						 			</tr>
+						 	 <%} 
+					 		} else {
+					 				%>
+					 				<tr>
+						 				<td colspan="10" align="center">
+						 					<div style="margin: 15px 0px 20px 0px"><strong><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></strong></div>
+						 				</td>
+						 			</tr>
+					 	<%}%>
 						</tbody>
-					</table>
+					</table>							
 				</div>
 			</div>
+			
+		
 		</div>
 	</div>
 	<div style="overflow:auto; padding-top: -2px;">
 	<% uiform.renderChild(UIForumPageIterator.class) ; %>
 	<div style="clear: right;"><span></span></div>
 	</div>
+	
+	<% //Begin RightClick Bookmark	%>
+	<div id="RightClickContainer" style="display: none;">
+		<%if(isShowMenu){%>
+		<div class="TopLeftRightClickPopupMenu">
+			<div class="TopRightRightClickPopupMenu">
+				<div class="TopCenterRightClickPopupMenu"><span></span></div>
+				<div class="RightClickCustomItem" style="display: none;">Open</div>
+			</div>
+		</div>
+		<div class="MiddleLeftRightClickPopupMenu">
+			<div class="MiddleRightRightClickPopupMenu">
+				<div class="UIRightPopupMenuContainer">
+					<a href="" class="MenuItem AddBookmark">
+						<div class="ItemIcon AddLinkToBookIcon">
+								<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
+						</div>
+					</a>
+					<a href="" class="MenuItem AddWatching">
+						<div class="ItemIcon AddWatchingIcon">
+							<span><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></span>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="BottomLeftRightClickPopupMenu">
+			<div class="BottomRightRightClickPopupMenu">
+				<div class="BottomCenterRightClickPopupMenu">
+					<div class="FixHeight"><span></span></div>
+				</div>
+			</div>
+		</div>
+	<% } %>
+	</div>
+	<% //End RightClick Bookmark %>
 </div>
 <%uiform.end()%>

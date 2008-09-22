@@ -255,8 +255,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			this.topicId = topic.getId() ;
 			UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
 			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
-			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(topic.getTopicName());
-			threadContent.getChild(UIFormWYSIWYGInput.class).setValue(topic.getDescription());
+			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(topic.getTopicName()));
+			threadContent.getChild(UIFormWYSIWYGInput.class).setValue(ForumTransformHTML.enCodeHTML(topic.getDescription()));
 			
 			UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);
 			String stat = "open";
@@ -298,6 +298,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
+			topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Post postNew = new Post();
@@ -358,10 +359,13 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				return ;
 			}
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
+			topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
+			editReason = ForumTransformHTML.enCodeHTML(editReason);
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {
 				ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 				boolean isOffend = false ; 

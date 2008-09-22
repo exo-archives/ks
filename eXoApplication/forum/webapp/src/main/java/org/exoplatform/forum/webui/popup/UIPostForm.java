@@ -190,23 +190,23 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		UIFormStringInput editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
 		editReason.setRendered(false) ;
 		if(!ForumUtils.isEmpty(this.postId)) {
-			String message = post.getMessage() ;
+			String message = ForumTransformHTML.enCodeHTML(post.getMessage()) ;
 			if(isQuote) {//quote
 				String title = "" ;
 				if(post.getName().indexOf(": ") > 0) title = post.getName() ;
 				else title = getLabel(FIELD_LABEL_QUOTE) + ": " + post.getName() ;
-				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(title) ;
+				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(title)) ;
 				String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
 				threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			} else if(isMP){
 				String title = this.topic.getTopicName() ;
-				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
+				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + ForumTransformHTML.unCodeHTML(title)) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			} else{//edit
 				editReason.setRendered(true);
-				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(post.getName()) ;
+				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(post.getName())) ;
 				if(post.getAttachments() != null && post.getAttachments().size() > 0) {
 					this.attachments_ = post.getAttachments();
 					this.refreshUploadFileList();
@@ -217,7 +217,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		} else {
 			if(!isQuote) {//reply
 				String title = this.topic.getTopicName() ;
-				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + title) ;
+				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + ForumTransformHTML.unCodeHTML(title)) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			}
 		}
@@ -238,6 +238,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(postTitle != null && postTitle.length() <= 3) {k = 0;}
+			postTitle = ForumTransformHTML.enCodeHTML(postTitle).trim() ;
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				Post post = new Post();
 				post.setName(postTitle) ;
@@ -293,15 +294,18 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
+			editReason = ForumTransformHTML.enCodeHTML(editReason).trim() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
+			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
 			PortletRequestImp request = event.getRequestContext().getRequest();
 			String remoteAddr = request.getRemoteAddr();
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.length() ;
 			if(postTitle.trim().length() <= 3) {k = 0;}
+			postTitle = ForumTransformHTML.enCodeHTML(postTitle).trim() ;
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				boolean isOffend = false ; 
 				boolean hasTopicMod = false ;

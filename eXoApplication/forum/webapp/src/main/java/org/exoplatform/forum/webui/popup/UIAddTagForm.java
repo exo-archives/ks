@@ -23,6 +23,7 @@ import java.util.TreeMap;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Tag;
@@ -71,7 +72,7 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	public UIAddTagForm() throws Exception {
 		UIFormStringInput tagName = new UIFormStringInput(FIELD_TAGNAME_INPUT, FIELD_TAGNAME_INPUT, null);
 		tagName.addValidator(MandatoryValidator.class);
-		UIFormStringInput description = new UIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA, FIELD_TAGDESCRIPTION_TEXTAREA, null);
+		UIFormTextAreaInput description = new UIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA, FIELD_TAGDESCRIPTION_TEXTAREA, null);
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		Map <String, String> newMap = getColorName() ;
 		for(String string : this.colors) {
@@ -88,8 +89,8 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	public void setUpdateTag(Tag tag) {
 		this.isUpdate = true ;
 		this.tagId = tag.getId() ;
-		getUIStringInput(FIELD_TAGNAME_INPUT).setValue(tag.getName()) ;
-		getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).setValue(tag.getDescription()) ;
+		getUIStringInput(FIELD_TAGNAME_INPUT).setValue(ForumTransformHTML.unCodeHTML(tag.getName())) ;
+		getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).setValue(ForumTransformHTML.unCodeHTML(tag.getDescription())) ;
 		getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).setValue(tag.getColor()) ;
 	}
 	
@@ -130,9 +131,10 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-			
+			tagName = ForumTransformHTML.enCodeHTML(tagName);
 			String color = uiForm.getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).getValue() ;
 			String descriptiom = uiForm.getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).getValue() ;
+			descriptiom = ForumTransformHTML.enCodeHTML(descriptiom);
 			Tag newTag = new Tag() ;
 			newTag.setName(tagName) ;
 			newTag.setColor(color);
@@ -158,12 +160,11 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				try {
 					popupContainer.getChild(UITagForm.class).setUpdateList(true) ;
-					popupContainer.getChild(UIPopupAction.class).deActivate() ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
         } catch (Exception e) {
-        	popupContainer.getChild(UIPopupAction.class).deActivate() ;
-        	event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+        	popupContainer.getChild(UITagManagerForm.class).setUpdateTag(true);;
         }
+        popupContainer.getChild(UIPopupAction.class).deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}
 		}
 	}

@@ -512,13 +512,46 @@
 					 					</div>
 									</td>
 									<td class="Tdbox">
-									<% List tags = uicomponent.getTagsByTopic(topic.getTagId()); 
-										for(tag in tags) {
-											String color = tag.getColor() ;
-											String tagName = tag.getName() ;
-									%>
-										<a href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><div class="StatusIcon ${color}TagIcon" title="$tagName"><span></span></div></a>
-									<% } %>
+									<% List tags = uicomponent.getTagsByTopic(topic.getTagId());%> 
+										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="Topic have <%=tags.size();%> Tag!">
+											<% /*Begin Popup Menu*/ %>
+											<div style="position: relative; left: 92px;">
+												<div class="UIPopupCategory" style="display: none; ">
+													<div class="UIRightClickPopupMenu" style="display: block;">
+														<div class="UIContextMenuContainer">
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																<%for(tag in tags) {
+																		String color = tag.getColor() ;
+																		String tagNameTitle = tag.getName() ;
+																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
+																%>
+																			<a class="classDisable" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
+																				<div class="ItemIcon TagIcon ${color}TagIcon">
+																					<span>$tagName</span>
+																				</div>
+																			</a>
+																<% } %>
+																	</div>
+																</div>
+															</div>
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<% /*End Popup Menu*/ %>
+										</div>
 									</td>
 								 	<td >
 								 		<div class="DateTime">$lastPostDate</div>

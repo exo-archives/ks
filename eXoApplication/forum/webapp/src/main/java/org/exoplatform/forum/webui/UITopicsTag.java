@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddTagForm;
+import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -57,7 +58,9 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 				@EventConfig(listeners = UITopicsTag.EditTagActionListener.class ),
 				@EventConfig(listeners = UITopicsTag.OpenTopicsTagActionListener.class ),
 				@EventConfig(listeners = UITopicsTag.RemoveTopicActionListener.class ),
-				@EventConfig(listeners = UITopicsTag.RemoveTagActionListener.class )
+				@EventConfig(listeners = UITopicsTag.RemoveTagActionListener.class ),
+				@EventConfig(listeners = UITopicsTag.AddWatchingActionListener.class),
+				@EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class)
 		}
 )
 
@@ -288,6 +291,49 @@ public class UITopicsTag extends UIForm {
 			categoryContainer.updateIsRender(true) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+	
+	static public class AddBookMarkActionListener extends EventListener<UITopicsTag> {
+		public void execute(Event<UITopicsTag> event) throws Exception {
+			UITopicsTag topicTag = event.getSource();
+			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(!ForumUtils.isEmpty(topicId)) {
+				try{
+					Topic topic = topicTag.getTopic(topicId);
+					String path = topic.getPath();
+					path = path.substring(path.indexOf(Utils.CATEGORY));
+					StringBuffer buffer = new StringBuffer();
+					buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(path) ;
+					String userName = topicTag.userProfile.getUserId() ;
+					topicTag.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, buffer.toString(), true) ;
+					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.setUserProfile() ;
+				} catch (Exception e) {
+				}
+			}
+		}
+	}
+	
+	static public class AddWatchingActionListener extends EventListener<UITopicsTag> {
+		public void execute(Event<UITopicsTag> event) throws Exception {
+			UITopicsTag topicTag = event.getSource();
+			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(!ForumUtils.isEmpty(topicId)) {
+				try{
+					Topic topic = topicTag.getTopic(topicId);
+					String path = topic.getPath();
+					path = path.substring(path.indexOf(Utils.CATEGORY));
+					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
+					UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+					UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
+					addWatchingForm.initForm() ;
+					addWatchingForm.setPathNode(path);
+					popupAction.activate(addWatchingForm, 425, 250) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				} catch (Exception e) {
+				}
+			}
 		}
 	}
 }

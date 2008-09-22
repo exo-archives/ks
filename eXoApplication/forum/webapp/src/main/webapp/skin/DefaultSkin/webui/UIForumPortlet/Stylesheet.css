@@ -303,6 +303,12 @@
 	color: #038ee6;
 }
 
+.UIForumPortlet .ContentContainer .UITopicList .TagIcon {
+	background-position: left center;
+	padding:5px 0 5px 22px;
+	white-space: nowrap;
+}
+
 .UIForumPortlet .SelectFileFrame {
 	white-space: normal;
 	width: 300px;
@@ -317,3 +323,4 @@
   overflow:auto;
   width:55px;
 }
+
