@@ -100,21 +100,29 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   public String checkValueEmail(String values) throws Exception {
   	if(values != null && values.trim().length() > 0) {
   		String[] emails = values.split(",");
+  		List<String> list = Arrays.asList(listEmailOld_.split(",")) ;
   		String string = emails[0] ;
   		List<String> emailsList = getListEmail() ;
   		if(emailsList != null) {
   			String email = "";
 				for (String str : emails) {
 					str = str.trim() ;
-					if(listEmailOld_.equals("")) {
+					if(listEmailOld_.equals("")) { // add watch
 						if(emailsList.contains(str)) continue ;
 						emailsList.add(str) ;
 						if(email.equals("")) email = str ;
 						else email = email + "," + str ;
-					} else {
-						emailsList.add(str) ;
-						if(email.equals("")) email = str ;
-						else email = email + "," + str ;
+					} else { // edit watch
+						if(list.contains(str)) {
+							emailsList.add(str) ;
+							if(email.equals("")) email = str ;
+							else email = email + "," + str ;
+						} else {
+							if(emailsList.contains(str)) continue ;
+							emailsList.add(str) ;
+							if(email.equals("")) email = str ;
+							else email = email + "," + str ;
+						}
 					}
 		    }
 				values = email ;
