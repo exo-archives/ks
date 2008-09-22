@@ -1116,3 +1116,7 @@
 .UIFAQPortlet .UIRightClickPopupMenu .ItemIcon {
 	line-height: 16px;
 }
+
+.UIMaskWorkspace .UIFAQPortlet  {
+  min-width: 600px;
+}
