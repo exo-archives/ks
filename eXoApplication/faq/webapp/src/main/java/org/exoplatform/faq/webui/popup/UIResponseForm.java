@@ -90,7 +90,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private static Question question_ = null ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   
-  private boolean isViewEditQuestion_ = false;
+  private boolean isViewEditQuestion_ = true;
   private String labelContent_ = new String();
   
   // form input :
@@ -566,7 +566,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           break ;
         }
       }
-      questionForm.isViewEditQuestion_ = false;
+      questionForm.isViewEditQuestion_ = true;
       event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
     }
   }
