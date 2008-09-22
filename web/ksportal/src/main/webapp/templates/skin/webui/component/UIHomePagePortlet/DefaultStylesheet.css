@@ -238,8 +238,8 @@
 }
 
 .SideBar .RightButton {
-	background: url('DefaultSkin/background/RightButton27x33.gif') no-repeat right;
-	padding-right: 27px;
+	background: url('DefaultSkin/background/RightButton17x33.gif') no-repeat right;
+	padding-right: 16px;
 }
 
 .SideBar .CenterButton {
@@ -325,8 +325,8 @@
 
 /***************************************************************************************************/
 .UIFooter {
-	background: white;
-	padding: 3px 5px;
+	background: url('DefaultSkin/background/FooterBG.gif') repeat-x;
+	padding:8px;
 }
 
 .UIFooter .FooterInfoContainer {
