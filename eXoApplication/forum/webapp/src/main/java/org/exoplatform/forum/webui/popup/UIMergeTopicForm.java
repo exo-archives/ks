@@ -23,6 +23,7 @@ import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -95,7 +96,7 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 			UIMergeTopicForm uiForm = event.getSource() ;
 			String topicMergeId = uiForm.getUIFormSelectBox("destination").getValue() ;
 			String topicMergeTitle = uiForm.getUIStringInput("title").getValue() ;
-			topicMergeTitle = topicMergeTitle.trim() ;
+			topicMergeTitle = ForumTransformHTML.enCodeHTML(topicMergeTitle).trim() ;
 			if(!ForumUtils.isEmpty(topicMergeTitle)) {
 				Topic topicMerge = new Topic() ;
 				for(Topic topic : uiForm.listTopic) {

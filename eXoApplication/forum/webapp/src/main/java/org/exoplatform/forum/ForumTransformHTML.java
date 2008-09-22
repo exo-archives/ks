@@ -470,22 +470,33 @@ public class ForumTransformHTML {
 		return s;
 	}
 	
-	public static String recontent(String s) {
+	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
-		int k =0;
-		while (true) {
-			int i = s.indexOf("src=") ;
-			if(i < 0) break;
-			int t =  s.indexOf(".JPG");
-			if(t < 0) t =  s.indexOf(".jpg");
-			if(t < 0) break;
-			String link = s.substring((i+5), (t+4)) ;
-			String link_ = link.replace("s72/", "");
-			buffer.append("<a href=\"").append(link_).append("\">anh ").append(k).append("</a><br/>");
-			s = s.substring(t+10) ;
+		if(s != null) {
+			for (int j = 0; j < s.trim().length(); j++) {
+				char c = s.charAt(j); 
+				if((int)c == 60){
+					buffer.append("&lt;") ;
+				} else if((int)c == 62){
+					buffer.append("&gt;") ;
+				} else if(c == '\''){
+					buffer.append("&#39") ;
+				} else {
+					buffer.append(c) ;
+				}
+			}
 		}
-	  return buffer.toString();
-  }
+		return buffer.toString();
+	}
+	
+	public static String unCodeHTML(String s) {
+		if(s != null && s.trim().length() > 0) {
+			s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#39", "'");
+		}
+		return s;
+	}
+	
+	
 	
 	
 	

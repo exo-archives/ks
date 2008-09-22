@@ -7,7 +7,8 @@ FCKConfig.ToolbarSets["eXoBar"] = [
 
 FCKConfig.ToolbarSets["eXoForum"] = [
 
-	['Source','DocProps','-','NewPage','Preview','-','Templates'],
+//	['Source','DocProps','-','NewPage','Preview','-','Templates'],
+	['NewPage','Preview','-','Templates'],
 	['Cut','Copy','Paste','PasteText','PasteWord','-','Print','SpellCheck'],['FitWindow','ShowBlocks'],
 	'/',
 	['Bold','Italic','Underline','StrikeThrough','-','Subscript','Superscript'],

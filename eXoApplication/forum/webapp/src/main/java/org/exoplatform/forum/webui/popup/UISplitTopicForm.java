@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -101,6 +102,7 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 			UISplitTopicForm uiForm = event.getSource() ;
 			String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue() ;
 			if(!ForumUtils.isEmpty(newTopicTitle)) {
+				newTopicTitle = ForumTransformHTML.enCodeHTML(newTopicTitle);
 				List<UIComponent> children = uiForm.getChildren() ;
 				List<Post> posts = new ArrayList<Post>() ;
 				for(UIComponent child : children) {

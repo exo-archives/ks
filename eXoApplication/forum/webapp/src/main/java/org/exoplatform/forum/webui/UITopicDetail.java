@@ -1238,12 +1238,10 @@ public class UITopicDetail extends UIForm {
 						buffer.append("&lt;") ;
 					} else if((int)c == 62){
 						buffer.append("&gt;") ;
-					} else if(c == '\''){
-						buffer.append("&#39") ;
 					} else {
 						buffer.append(c) ;
 					}
-				}
+				} 
 				
 			// set link
 				PortalRequestContext portalContext = Util.getPortalRequestContext();

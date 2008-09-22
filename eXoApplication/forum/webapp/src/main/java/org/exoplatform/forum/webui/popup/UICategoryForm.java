@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
@@ -111,9 +112,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	public void setCategoryValue(Category category, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			this.categoryId = category.getId() ;
-			getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(category.getCategoryName()) ;
+			getUIStringInput(FIELD_CATEGORYTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(category.getCategoryName())) ;
 			getUIStringInput(FIELD_CATEGORYORDER_INPUT).setValue(Long.toString(category.getCategoryOrder())) ;
-			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(category.getDescription()) ;
+			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(ForumTransformHTML.unCodeHTML(category.getDescription())) ;
 			String userPrivate = ForumUtils.unSplitForForum(category.getUserPrivate());
 			getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).setValue(userPrivate) ;
 		}
@@ -144,6 +145,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
+			categoryTitle = ForumTransformHTML.enCodeHTML(categoryTitle);
 			String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
 			if(!ForumUtils.isEmpty(description) && description.length() > maxText) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
@@ -152,6 +154,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
+			description = ForumTransformHTML.enCodeHTML(description);
 			String categoryOrder = uiForm.getUIStringInput(FIELD_CATEGORYORDER_INPUT).getValue();
 			if(ForumUtils.isEmpty(categoryOrder)) categoryOrder = "0";
 			categoryOrder = ForumUtils.removeZeroFirstNumber(categoryOrder) ;
