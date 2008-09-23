@@ -123,7 +123,6 @@ public class UIBreadcumbs extends UIContainer {
           return ;
 				}
 				uiQuestions.setCategories(cate) ;
-				//uiQuestions.setListQuestion() ;
 				uiQuestions.backPath_ = "" ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}

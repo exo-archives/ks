@@ -370,8 +370,8 @@ public class FAQServiceImpl implements FAQService{
    * @param	 order is location current of one watch with user want delete 
    * @throws Exception the exception
    */
-  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, int order) throws Exception {
-  	jcrData_.deleteMailInWatch(categoryId, sProvider, order);
+  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception {
+  	jcrData_.deleteMailInWatch(categoryId, sProvider, emails);
   }
   
   /**

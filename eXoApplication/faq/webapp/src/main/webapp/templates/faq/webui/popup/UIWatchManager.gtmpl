@@ -16,13 +16,11 @@
  							String categoryId = uicomponent.getCategoryID() ;
  							List emails = uicomponent.getListEmail() ;
  							String linkCurrent = uicomponent.event("Link", categoryId)
- 							int i = 0;
  							if(emails.size() > 0){
  								for(String email : emails ) {
- 									email = email.substring(0,email.length()-1)
- 									String linkEdit = uicomponent.event("EditEmail", email+"/"+i );
- 									String linkDelete = uicomponent.event("DeleteEmail", "$uicomponent.id", email+"/"+i );
- 									i++;
+ 									email = email.substring(0,email.length())
+ 									String linkEdit = uicomponent.event("EditEmail", email);
+ 									String linkDelete = uicomponent.event("DeleteEmail", "$uicomponent.id", email);
  							 %>
  								<tr>
  									<% if(email.length() > 90) {

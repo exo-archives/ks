@@ -83,13 +83,11 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   static	public class EditEmailActionListener extends EventListener<UIWatchManager> {
 		public void execute(Event<UIWatchManager> event) throws Exception {
 			UIWatchManager watchManager = event.getSource() ;
-			String list = event.getRequestContext().getRequestParameter(OBJECTID);
-			int order = Integer.parseInt(list.split("/")[1]);
-			String emailList = list.split("/")[0] ;
+			String emailList = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIWatchContainer watchContainer = watchManager.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 420) ;
-			watchForm.setUpdateWatch(order,categoryId_,emailList, true) ;
+			watchForm.setUpdateWatch(categoryId_,emailList, true) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -123,8 +121,9 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 		public void execute(Event<UIWatchManager> event) throws Exception {
 			UIWatchManager watchManager = event.getSource() ;
 			String emailList = event.getRequestContext().getRequestParameter(OBJECTID);
-			int order = Integer.parseInt(emailList.split("/")[1]);
-			faqService_.deleteMailInWatch(categoryId_, FAQUtils.getSystemProvider(), order) ;
+//			int order = Integer.parseInt(emailList.split("/")[1]);
+			String email = emailList.split("/")[0] ;
+			faqService_.deleteMailInWatch(categoryId_, FAQUtils.getSystemProvider(), email) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 		}
 	}

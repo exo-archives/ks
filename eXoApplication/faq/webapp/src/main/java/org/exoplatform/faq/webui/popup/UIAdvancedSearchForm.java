@@ -364,10 +364,10 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				return ;
 			}
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 700) ;
+			UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
 			if(type.equals("faqCategory")) {
 				resultContainer.setIsRenderedContainer(4) ;
-				UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 				advanced.setValue(true, true, true, false, false, false, false, false) ;
 				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
 				advanced.getUIStringInput(FIELD_TEXT).setValue(text) ;
@@ -382,7 +382,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				result.setListCategory(list) ;
 			} else if(type.equals("faqQuestion")){
 				resultContainer.setIsRenderedContainer(3) ;
-				UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 				advanced.setValue(false, false, false, true, true, true, true, true) ;
 				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
 				advanced.getUIStringInput(FIELD_TEXT).setValue(text) ;
@@ -401,7 +400,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
  				result.setListQuestion(listResult) ; 
 			} else {
 				resultContainer.setIsRenderedContainer(2) ;
-				UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 				advanced.setValue(false, false, false, false, false, false, false, false) ;
 				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
 				advanced.getUIStringInput(FIELD_TEXT).setValue(text) ;

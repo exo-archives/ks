@@ -891,7 +891,7 @@ public class JCRDataStorage {
     return listEmails;
   }
   
-  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, int order) throws Exception {
+  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception {
   	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
   	Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
 		List<String> vls = new ArrayList<String>() ;
@@ -899,7 +899,7 @@ public class JCRDataStorage {
 			for(Value vl : values) {
 				vls.add(vl.getString()) ;
 			}
-		vls.remove(order);
+		vls.remove(emails);
 		watchingNode.setProperty("exo:emailWatching", vls.toArray(new String[]{})) ;
 		}
 		watchingNode.save() ;
