@@ -29,8 +29,10 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -170,27 +172,32 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
     	UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
     	String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
     	String categoryId = moveCategory.getCategoryID() ;
-    	if(destCategoryId.equals("null")) {
-    		faqService_.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
-    	} else {
-    	  List<String> usersOfNewCateParent = Arrays.asList(faqService_.getCategoryById(destCategoryId, FAQUtils.getSystemProvider()).getModerators()) ;
-    	  faqService_.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
-        for(CateClass cateClass : moveCategory.getListObjCategory(destCategoryId)) {
-          List<String> newUserList = new ArrayList<String>() ;
-          newUserList.addAll(usersOfNewCateParent) ;
-          for(String user : cateClass.getCategory().getModerators()) {
-            if(!newUserList.contains(user)) {
-              newUserList.add(user) ;
-            }
-          }
-          cateClass.getCategory().setModerators(newUserList.toArray(new String[]{})) ;
-          faqService_.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, FAQUtils.getSystemProvider()) ;
-        }
-    	}
+    	try {
+		  	if(destCategoryId.equals("null")) {
+		  		faqService_.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
+		  	} else {
+		  	  List<String> usersOfNewCateParent = Arrays.asList(faqService_.getCategoryById(destCategoryId, FAQUtils.getSystemProvider()).getModerators()) ;
+		  	  faqService_.moveCategory(categoryId, destCategoryId, FAQUtils.getSystemProvider()) ;
+		      for(CateClass cateClass : moveCategory.getListObjCategory(destCategoryId)) {
+		        List<String> newUserList = new ArrayList<String>() ;
+		        newUserList.addAll(usersOfNewCateParent) ;
+		        for(String user : cateClass.getCategory().getModerators()) {
+		          if(!newUserList.contains(user)) {
+		            newUserList.add(user) ;
+		          }
+		        }
+		        cateClass.getCategory().setModerators(newUserList.toArray(new String[]{})) ;
+		        faqService_.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, FAQUtils.getSystemProvider()) ;
+		      }
+		  	}
+    	}catch (Exception e) {
+        UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      }
 			//questions.setListObject() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			faqPortlet.cancelAction() ;
-			return ;
 		}
 	}
 
