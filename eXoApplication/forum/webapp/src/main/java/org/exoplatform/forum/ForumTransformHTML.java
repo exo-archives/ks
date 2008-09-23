@@ -210,10 +210,11 @@ public class ForumTransformHTML {
 				String href_ = href;
 				if (href.indexOf("\"") >= 0)
 					href_ = href.replaceAll("\"", "");
+				System.out.println("\n\nhref_: " + href_);
 				String text = urlStr.substring(clsUrl + 1);
+				System.out.println("\n\ntext: " + text);
 				buffer = new StringBuffer();
-				buffer.append("<a href=\"mailto:").append(href_).append("\">").append(text)
-				.append("</a>");
+				buffer.append("<a href=\"mailto:").append(href_).append("\">").append(text).append("</a>");
 				b = StringUtils.replace(b, "[email=" + href + "]" + text + "[/email]", buffer.toString());
 			} catch (Exception e) {
 				continue;
@@ -226,9 +227,9 @@ public class ForumTransformHTML {
 			lastIndex = tagIndex + 1;
 			try {
 				int clsIndex = b.indexOf("[/email]", tagIndex);
-				String src = b.substring(tagIndex + 5, clsIndex);
-				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()
-						+ "\">" + src + "</a>");
+				String src = b.substring(tagIndex + 7, clsIndex);
+				System.out.println("\n\nsrc: " + src);
+				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()	+ "\">" + src.trim() + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -415,9 +416,9 @@ public class ForumTransformHTML {
 		s = s.replaceAll(
 		    "[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
 		    "<a target=\"blank_\" href=\"$0\">$0</a>");
-		s = s.replaceAll(
-		    "[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
-		    "<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
+//		s = s.replaceAll(
+//		    "[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
+//		    "<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
 		s = s.replaceAll("href=\" http://", "href=\"http://").replaceAll("href=\">http://", "href=\"http://")
 				 .replaceAll(">>http://", ">http://").replaceAll("> http://", ">http://");
 		return s;
