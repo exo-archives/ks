@@ -20,7 +20,7 @@ String toururi = Util.getPortalRequestContext().getPortalURI() + "tour";
 					<div class="ArowIcon" style="margin-bottom: 0px;">Do you need support? Learn about the </div>
 					<a href="http://www.exoplatform.com" class="ProVersion">professional version</a>
 					<div class="DotLine"><span></span></div>
-					<a href="/public/classic/register" class="SignUp">Sign up</a>
+					<a href="/portal/public/classic/register" class="SignUp">Sign up</a>
 					<div class="ArowIcon">Don't miss any feature. Create a demo account</div>
 					<div class="DotLine"><span></span></div>
 					<div class="LeftButton">
