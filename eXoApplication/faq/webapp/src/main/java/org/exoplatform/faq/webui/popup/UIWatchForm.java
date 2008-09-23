@@ -55,7 +55,6 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	private UIFormMultiValueInputSet emailAddress;
 	private UIFormStringInput userName ;
 	private boolean isUpdate = false ;
-	private static int order ;
 	private String listEmailOld_ = "" ;
 	public UIWatchForm() throws Exception {
 		List<String> list = new ArrayList<String>() ;
@@ -132,7 +131,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   }
   
   @SuppressWarnings("static-access")
-  public void setUpdateWatch(int order, String categoryId, String listEmail, boolean isUpdate) throws Exception {
+  public void setUpdateWatch(String categoryId, String listEmail, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			this.listEmailOld_ = listEmail ;
 			List<String> list = Arrays.asList(listEmail.split(",")) ;
@@ -143,7 +142,6 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 			emailAddress.setType(UIFormStringInput.class) ;
 			emailAddress.setValue(list) ;
 			addUIFormInput(emailAddress) ;
-			this.order = order ;
 			this.isUpdate = isUpdate ;
 			this.categoryId_ = categoryId ;
 		}
@@ -183,13 +181,14 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
       }
-      listEmail = uiWatchForm.filterItemInString(listEmail)+",";
+      listEmail = listEmail.substring(0, listEmail.length()-1) ;
+      listEmail = uiWatchForm.filterItemInString(listEmail);
       String categoryId = uiWatchForm.getCategoryID() ;
-      listEmail = uiWatchForm.checkValueEmail(listEmail)+",";
-      if (categoryId != null && !listEmail.equals(",")) {
+      listEmail = uiWatchForm.checkValueEmail(listEmail);
+      if (categoryId != null && !listEmail.equals("")) {
       	FAQService faqService =	FAQUtils.getFAQService() ;
       	if(uiWatchForm.isUpdate) {
-      		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), order) ;
+      		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), uiWatchForm.listEmailOld_) ;
       		faqService.addWatch(categoryId , listEmail, FAQUtils.getSystemProvider()) ;
       		UIWatchContainer watchContainer = uiWatchForm.getAncestorOfType(UIWatchContainer.class) ;
       		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 
