@@ -7,17 +7,14 @@ FCKConfig.ToolbarSets["eXoBar"] = [
 
 FCKConfig.ToolbarSets["eXoForum"] = [
 
-//	['Source','DocProps','-','NewPage','Preview','-','Templates'],
-	['NewPage','Preview','-','Templates'],
-	['Cut','Copy','Paste','PasteText','PasteWord','-','Print','SpellCheck'],['FitWindow','ShowBlocks'],
+	['NewPage','Preview','-','Templates'],['Cut','Copy','Paste','-','Print','FitWindow'],['Link','Unlink','Anchor'],
+	['Undo','Redo','-','SelectAll','RemoveFormat'],
 	'/',
 	['Bold','Italic','Underline','StrikeThrough','-','Subscript','Superscript'],
-	['Link','Unlink','Anchor'],
-	['Image','Flash','Table','Rule','SpecialChar','PageBreak'],
-	['TextColor','BGColor'],
-	['Style','FontFormat','FontName','FontSize']
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
-	['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat','-','Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
+	['Image','Flash','Table','Rule','SpecialChar','PageBreak'],
+	['TextColor','BGColor'],['FontName','FontSize'],
+	['-','Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
 
 ] ;
 
