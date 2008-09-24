@@ -17,10 +17,7 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
