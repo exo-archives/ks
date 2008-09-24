@@ -219,6 +219,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
         e.printStackTrace() ;
         return ;
       }
+      uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-success", null, ApplicationMessage.INFO)) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       UIFAQPortlet portlet = sendMailForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
