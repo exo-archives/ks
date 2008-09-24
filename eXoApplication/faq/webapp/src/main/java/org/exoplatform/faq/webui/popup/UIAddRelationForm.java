@@ -17,7 +17,10 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
@@ -127,7 +130,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   }
   
   private void setListCate() throws Exception {
-    List<Cate> listCate = new ArrayList<Cate>() ;
+    List<Cate> listCate = new ArrayList<Cate>();
     Cate parentCate = null ;
     Cate childCate = null ;
     
@@ -142,15 +145,16 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     
     while (!listCate.isEmpty()) {
       parentCate = new Cate() ;
-      parentCate = listCate.get(listCate.size() - 1) ;
-      listCate.remove(parentCate) ;
+      parentCate = listCate.get(0);
+      listCate.remove(0);
       this.listCate.add(parentCate) ;
+      int i = 0;
       for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_)){
         if(category != null) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;
           childCate.setDeft(parentCate.getDeft() + 1) ;
-          listCate.add(childCate) ;
+          listCate.add(i ++, childCate) ;
         }
       }
     }
