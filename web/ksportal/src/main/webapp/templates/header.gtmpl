@@ -6,30 +6,35 @@
 	String changeLanguageAction = "if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ChangeLanguage', true));" ;
 	String portletId = uicomponent.getId() ;	
 	String portalName = Util.getUIPortal().getName() ;
-  portalName = URLEncoder.encode(portalName, "UTF-8") ;
+	portalName = URLEncoder.encode(portalName, "UTF-8") ;
 	String signOutAction = prContext.getRequestContextPath() + "/public/" + portalName + "/" ;
-	String signInAction = prContext.getRequestContextPath() + "/private/" + portalName + "/" ;//"if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ShowLoginForm', true));" ;
+	String signInAction = "if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ShowLoginForm', true));" ;
+	boolean isLogin = false ;
+	if(prContext.getAccessPath() == PortalRequestContext.PRIVATE_ACCESS) isLogin = true;
+	String userLogin =	Util.getPortalRequestContext().getRemoteUser();
 %>
 <div class="UIBannerPortlet UIApplication">
 	<div class="ApplicationMinWidth">
 
 		<div class="MiddleBanner_">
-	       	<div class="BannerTitle_">
-	        		<span></span>
-	        </div>
+		 	<div class="BannerTitle_"><span></span></div>
 			<div class="LoginContainer">
 				<div class="LeftContainer">
 					<div class="RightContainer">
 						<div class="CenterContainer">
-							<div class="TextAcount">Demo account: <span style="font-weight: bold;">demo/exo</span></div>	
-							<a class="ActionButton" href="aaa">
+						<% if(isLogin){ %>
+							<div class="TextAcount">Welcome : <span style="font-weight: bold;">$userLogin</span></div>
+						<% }else { %>	
+							<div class="TextAcount">Demo account: <span style="font-weight: bold;">demo/exo</span></div>
+						<% } %>
+							<a class="ActionButton" onclick="$changeLanguageAction; return false;" href="#">
 								<div class="LeftButton">
 									<div class="RightButton">
 										<div class="CenterButton">Language Setting</div>
 									</div>
 								</div>
 							</a>
-							<%if(prContext.getAccessPath() == PortalRequestContext.PRIVATE_ACCESS) {%>	
+							<%if(isLogin) {%>	
 								<a class="ActionButton" href="$signOutAction">
 									<div class="LeftButton">
 										<div class="RightButton">
@@ -38,7 +43,7 @@
 									</div>
 								</a>
 							<% }else{ %>
-								<a class="ActionButton" href="$signInAction">
+								<a class="ActionButton" onclick="$signInAction; return false;" href="#">
 									<div class="LeftButton">
 										<div class="RightButton">
 											<div class="CenterButton">Sign in</div>
@@ -48,10 +53,10 @@
 							<% } %>
 						</div>
 					</div>
-					<div style="clear: right"><span></span></div>	   
+					<div style="clear: right"><span></span></div>		 
 				</div>
 			</div>
 	 	</div>
-    </div>
+	</div>
 </div>
 
