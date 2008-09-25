@@ -75,20 +75,19 @@
 /***************************************************************************************************/
 
 .UIHomePagePortlet {
-	background: #ecedee;
-	padding: 8px;
+	padding: 4px 0px 4px 4px;
 }
 
 .PortletDecoration {
 }
 
 .PortletDecoration .PortletDecorationTL {
-	background: url('DefaultSkin/background/PortletDecorationTL.gif') no-repeat left;
+	background: white url('DefaultSkin/background/PortletDecorationTL.gif') no-repeat left top;
 	padding-left: 3px;
 }
 
 .PortletDecoration .PortletDecorationTR {
-	background: url('DefaultSkin/background/PortletDecorationTR.gif') no-repeat right;
+	background: white url('DefaultSkin/background/PortletDecorationTR.gif') no-repeat right top;
 	padding-right: 3px;
 }
 
@@ -103,12 +102,12 @@
 }
 
 .PortletDecoration .PortletDecorationBL {
-	background: url('DefaultSkin/background/PortletDecorationBL.gif') no-repeat left;
+	background: url('DefaultSkin/background/PortletDecorationBL.gif') no-repeat left top;
 	padding-left: 3px;
 }
 
 .PortletDecoration .PortletDecorationBR {
-	background: url('DefaultSkin/background/PortletDecorationBR.gif') no-repeat right;
+	background: url('DefaultSkin/background/PortletDecorationBR.gif') no-repeat right top;
 	padding-right: 3px;
 }
 
@@ -206,9 +205,6 @@
 /***************************************************************************************************/
 
 .SideBar {
-	background: #ECEDEE ;
-	float: right;
-	width: 220px;
 	padding: 8px;
 }
 
