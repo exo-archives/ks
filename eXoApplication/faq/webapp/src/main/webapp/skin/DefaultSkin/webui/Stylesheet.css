@@ -617,12 +617,16 @@
 }
 
 /****************************** UISettingForm ********************************************/
+.UIFAQPortlet .FAQPortletSetting .UITabPane .UITabContentContainer .UITabContent{
+	height:auto;
+}
+
 .UIFAQPortlet .FAQPortletSetting #EmailAddNewQuestion___Frame{
-	height:250px;
+	height: 190px;
 	width: 600px;
 }
 .UIFAQPortlet .FAQPortletSetting #EmailEditQuestion___Frame{
-	height:250px;
+	height: 190px;
 	width: 600px;
 }
 
