@@ -1,8 +1,8 @@
 <%
 	import org.exoplatform.faq.webui.popup.UIPopupAction ;
 %>
-<div><div style="width: 950px;" ><span style="display: none;"></span></div></div>
-<div class="UIFAQPortlet" id="$uicomponent.id"  style="_width: expression(this.previousSibling.offsetWidth - 22 + 'px'); margin: auto;">
+
+<div class="UIFAQPortlet" id="$uicomponent.id"  >
 	<%
 		List children = uicomponent.getChildren() ;
     for(component in children) {
