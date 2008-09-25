@@ -274,6 +274,99 @@
 	overflow:auto;
 	padding-bottom:5px;
 }
+
+/******************************  Question Select  ***************************************/
+
+.UIFAQPortlet .QuestionSelect{
+  margin: 5px 0px;
+}
+
+.UIFAQPortlet .QuestionSelect .QuestionContainer {
+  padding: 0px 0px 8px 8px;
+  background: #DBE7F9;
+  margin: 0px;
+}
+
+.UIFAQPortlet .QuestionSelect .QuestionContainer .LeftQuestionContainer {
+  float: left;
+  width: 60%;
+}
+
+.UIFAQPortlet .QuestionSelect .QuestionContainer .RightQuestionContainer {
+  float: right;
+  width: 160px;
+}
+
+.UIFAQPortlet .QuestionSelect .QuestionContainer .SendToFriend {
+  float: right;
+  background: url('background/SendToFriend.gif') no-repeat left center;
+  width: 21px; height: 20px;
+  cursor: pointer;
+  margin: 0px 4px;
+}
+
+.UIFAQPortlet .QuestionSelect .QuestionContainer .PrintScrintFAQ {
+  float: right;
+  background: url('background/PrintScrintFAQ.gif') no-repeat left center;
+  width: 21px; height: 20px;
+  cursor: pointer;
+  margin: 0px 4px;
+}
+
+.UIFAQPortlet .QuestionSelect .QuestionContainer .LanguageSetting {
+  float: right;
+  line-height: 20px;
+  font-weight: bold;
+  color: #1e1f21;
+  margin: 0px 4px;
+}
+
+
+.UIFAQPortlet .QuestionSelect .DecoratorTL{
+  background: url('background/DecoratorTL.gif') no-repeat left;
+  padding-left: 11px;
+}
+
+.UIFAQPortlet .QuestionSelect .DecoratorTR{
+  background: url('background/DecoratorTR.gif') no-repeat right;
+  padding-right: 11px;
+}
+
+.UIFAQPortlet .QuestionSelect .DecoratorTC{
+  background: url('background/DecoratorTC.gif') repeat-x;
+  height: 11px;
+}
+
+.UIFAQPortlet .QuestionSelect .DecoratorML{
+  background: url('background/DecoratorML.gif') repeat-y left;
+  padding-left: 5px;
+}
+
+.UIFAQPortlet .QuestionSelect .DecoratorMR{
+  background: url('background/DecoratorMR.gif') repeat-y right;
+  padding-right: 5px;
+}
+
+.UIFAQPortlet .QuestionSelect .DecoratorMC{
+  background: white;
+}
+
+.UIFAQPortlet .QuestionSelect .DecoratorBL{
+  background: url('background/DecoratorBL.gif') no-repeat left ;
+  padding-left: 10px;
+}
+
+.UIFAQPortlet .QuestionSelect .DecoratorBR{
+  background: url('background/DecoratorBR.gif') no-repeat right;
+  padding-right: 10px;
+}
+
+.UIFAQPortlet .QuestionSelect .DecoratorBC{
+  background: url('background/DecoratorBC.gif') repeat-x;
+  height: 10px;
+}
+
+
 /******************************  UIFAQ Sup-Category  ***************************************/
 
 .UIFAQPortlet .UIFAQSupCategory{

@@ -360,6 +360,100 @@
 							response = question.getResponses();
 						}
 					%>
+					
+					
+					
+					
+					
+					
+					<div class="QuestionSelect">
+					
+					
+					
+						<div class="DecoratorTL">
+							<div class="DecoratorTR">
+								<div class="DecoratorTC"><span></span></div>
+							</div>
+						</div>
+						<div class="DecoratorML">
+							<div class="DecoratorMR">
+								<div class="DecoratorMC">
+					
+					
+						<div class="QuestionContainer">
+							<div class="LeftQuestionContainer">
+							<div class="NotResponse"><span/></div>
+							<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion0', '', null, null)" style="float: left; width: 95%;">
+								<!-- question content -->
+										<a href="javascript:ajaxGet('/portal/private/classic/faq?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=ViewQuestion&objectId=Question988ab745c0a80141008f6d64fc856ae8&ajaxRequest=true')" class="ViewQuestionNotApproved"> 
+													fhjkshfjksf fjsfsdfjk sfh skhfks hdkshdfkshd fksdfk sdf
+										</a>
+										<div style="clear: left;"><span/></div>
+							<!-- action of this question -->
+								<div style="display: none; left: 50px;" id="UIPopupQuestion0" class="UIFAQPopupCategory">
+									<div style="display: block;" class="UIRightClickPopupMenu UIContextMenuContainer">
+										<div class="UIContextMenuContainer">
+											<div class="TopLeftRightClickPopupMenu">
+												<div class="TopRightRightClickPopupMenu">
+													<div class="TopCenterRightClickPopupMenu"><span/></div>
+													<div style="display: none;" class="RightClickCustomItem">Open</div>
+												</div>
+											</div>
+											<div class="MiddleLeftRightClickPopupMenu">
+												<div class="MiddleRightRightClickPopupMenu">
+													<div class="UIRightPopupMenuContainer">
+																<a class="MenuItem" onmousedown="javascript:ajaxGet('/portal/private/classic/faq?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=ResponseQuestion&objectId=Question988ab745c0a80141008f6d64fc856ae8&ajaxRequest=true')" href="javascript:void(0) ;">
+																	<div style="padding: 3px 0px 5px 5px;" class="ItemIcon ResponseQuestion">
+																			<div style="padding-left: 20px;">Answer question</div>
+																	</div>
+																</a>
+																<a class="MenuItem" onmousedown="javascript:ajaxGet('/portal/private/classic/faq?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=EditQuestion&objectId=Question988ab745c0a80141008f6d64fc856ae8&ajaxRequest=true')" href="javascript:void(0) ;">
+																	<div style="padding: 3px 0px 5px 5px;" class="ItemIcon Edit">
+																			<div style="padding-left: 20px;">Edit</div>
+																	</div>
+																</a>
+																<a class="MenuItem" onmousedown="javascript:ajaxGet('/portal/private/classic/faq?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=DeleteQuestion&objectId=Question988ab745c0a80141008f6d64fc856ae8&ajaxRequest=true')" href="javascript:void(0) ;">
+																	<div style="padding: 3px 0px 5px 5px;" class="ItemIcon Delete">
+																			<div style="padding-left: 20px;">Delete</div>
+																	</div>
+																</a>
+																<a class="MenuItem" onmousedown="javascript:ajaxGet('/portal/private/classic/faq?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=MoveQuestion&objectId=Question988ab745c0a80141008f6d64fc856ae8&ajaxRequest=true')" href="javascript:void(0) ;">
+																	<div style="padding: 3px 0px 5px 5px;" class="ItemIcon MoveQuestion">
+																			<div style="padding-left: 20px;">Move to</div>
+																	</div>
+																</a>
+																<a class="MenuItem" onmousedown="javascript:ajaxGet('/portal/private/classic/faq?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=SendQuestion&objectId=Question988ab745c0a80141008f6d64fc856ae8&ajaxRequest=true')" href="javascript:void(0) ;">
+																	<div style="padding: 3px 0px 5px 5px;" class="ItemIcon Send">
+																			<div style="padding-left: 20px;">Send</div>
+																	</div>
+																</a>
+													</div>
+												</div>
+											</div>
+											<div class="BottomLeftRightClickPopupMenu">
+												<div class="BottomRightRightClickPopupMenu">
+													<div class="BottomCenterRightClickPopupMenu"><span/></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div style="clear: left;"><span/></div>
+						</div>
+						
+						
+						<div class="RightQuestionContainer">
+							<div class="SendToFriend"><span></span></div>
+							<div class="PrintScrintFAQ"><span></span></div>
+							<a href="#" class="LanguageSetting">Translations</a>
+						</div>
+						<div style="clear: both;"><span/></div>
+						
+						
+						</div>
+						
+						
 						<div class="ResponseContent">
 							<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b><br/>
 							<div class="Response">
@@ -596,6 +690,28 @@
 								<div style="clear: both;"><span></span></div>
 							</div>
 						</div>
+						
+						
+						
+									</div>
+								</div>
+							</div>
+							<div class="DecoratorBL">
+								<div class="DecoratorBR">
+									<div class="DecoratorBC"><span></span></div>
+								</div>
+							</div>
+									
+						
+						
+						
+					</div>
+					
+					
+					
+					
+					
+					
 					<%}%>
 		<%		questionId ++ ;
 				}
