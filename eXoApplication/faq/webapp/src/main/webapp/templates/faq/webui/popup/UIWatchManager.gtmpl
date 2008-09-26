@@ -53,7 +53,15 @@
 								<% } %>
  							</tbody>
  						</table>
- 						
+ 						<% 
+ 							long totalPages = uicomponent.getTotalpages("LIST_EMAILS_WATCH") ;
+					    if(totalPages > 1) {
+					   %>
+ 							<div style="overflow:auto;">
+								<% uicomponent.renderChild(uicomponent.LIST_EMAILS_WATCH) ; %>
+								<div style="clear: both;"><span></span></div>
+						</div>
+							<% } %>
  					</div>
  				</div>
  			</div>

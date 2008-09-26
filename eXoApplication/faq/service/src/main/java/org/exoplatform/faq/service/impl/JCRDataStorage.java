@@ -886,6 +886,7 @@ public class JCRDataStorage {
   			for(Value value: emails) {
   				listEmails.add(value.getString()) ;
   			}
+  			Collections.sort(listEmails, new Utils.NameComparator());
   		}
   	}
     return listEmails;

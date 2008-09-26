@@ -58,6 +58,8 @@ public class QuestionPageList extends JCRPageList {
   
   private List<FAQFormSearch> listFAQFormSearchS_ = null;
   
+  private List<String> listEmails_ = null;
+  
   private List<Category> listCategories_ = null;
   
   private String questionQuery_ = new String();
@@ -152,6 +154,12 @@ public class QuestionPageList extends JCRPageList {
   	setAvailablePage(faqFormSearchs.size()) ;    
   }
   
+  public QuestionPageList(List<String> listEmails, double page) throws Exception {
+  	super(10) ;
+  	this.listEmails_ = listEmails;
+  	setAvailablePage(listEmails.size()) ;    
+  }
+  
   public QuestionPageList(List<Category> listCategories) throws Exception {
   	super(10) ;
   	this.listCategories_ = listCategories;
@@ -234,6 +242,21 @@ public class QuestionPageList extends JCRPageList {
       }
     }
     iter_ = null ;    
+  }
+  
+  @Override
+  protected void populateCurrentPageEmail(long page, String username) throws Exception {
+	  long pageSize = getPageSize();
+	  long position = 0;
+	  if(page == 1) position = 0;
+	  else {
+	  	position = (page - 1) * pageSize;
+	  }
+	  pageSize *= page ;
+	  currentListEmail_ = new ArrayList<String>();
+	  for(int i = (int)position; i < pageSize && i < this.listEmails_.size(); i ++){
+	  	currentListEmail_.add(listEmails_.get(i));
+	  }
   }
   
   @Override

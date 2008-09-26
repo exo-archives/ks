@@ -956,6 +956,8 @@ public class UIQuestions extends UIContainer {
     			UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
     			popupContainer.setId("WatchManager") ;
     			watchManager.setCategoryID(cateId) ;
+    			List<String> emailList = faqService.getListMailInWatch(cateId, FAQUtils.getSystemProvider()) ;
+    			watchManager.setListEmail(emailList) ;
     			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
