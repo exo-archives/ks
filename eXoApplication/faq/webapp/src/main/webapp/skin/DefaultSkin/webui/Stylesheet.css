@@ -1,12 +1,9 @@
 @import url('UIMoveCategoryForm/Stylesheet.css') ;
 
-.UIWindow .UIFAQPortlet {
-  min-width: 940px;
-  border: 1px solid #b7b7b7;
-}
-
 .UIFAQPortlet {
   padding: 5px; height: 400px;
+  min-width: 940px;
+  border: 1px solid #b7b7b7;
 }
 
 /******************************************** UIBreadcumbs ****************************************/
@@ -205,7 +202,7 @@
 /******************************  FAQContent  ***************************************/
 
 .UIFAQPortlet .FAQContainer {
-	background: white;
+  background: white;
   border: 1px solid #c7c7c7;
   border-top: 0px;
   overflow: auto;
@@ -714,16 +711,12 @@
 }
 
 /****************************** UISettingForm ********************************************/
-.UIFAQPortlet .FAQPortletSetting .UITabPane .UITabContentContainer .UITabContent{
-	height:auto;
-}
-
 .UIFAQPortlet .FAQPortletSetting #EmailAddNewQuestion___Frame{
-	height: 190px;
+	height:250px;
 	width: 600px;
 }
 .UIFAQPortlet .FAQPortletSetting #EmailEditQuestion___Frame{
-	height: 190px;
+	height:250px;
 	width: 600px;
 }
 
@@ -1157,6 +1150,14 @@
 	width:17px;
 	margin: 0px 3px;
 	padding-top: 3px;
+}
+
+.UIFAQPortlet .DustBinIcon {
+	background: url(background/DustBin.gif) no-repeat scroll right;
+	height:16px;
+	width:16px;
+	margin: 0px 3px;
+	float:right;
 }
 
 .UIPrintPreview .AttachmentContent .LabelBox .Action{

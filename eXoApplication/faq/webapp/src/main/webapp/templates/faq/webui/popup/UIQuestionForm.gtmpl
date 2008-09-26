@@ -13,36 +13,39 @@
 								String action = uicomponent.getActions()[1] ;
 								String link = uicomponent.event(action) ;
 								String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-								int i = 0 ;
 								String[] listLanguage = uicomponent.getListLanguage() ;
 								String language = "" ;
-								for(fck in field.getChildren())  {
-									if(i == 0)
-										language = listLanguage[i++] + " ( default )" ;
-									else 
-										language = listLanguage[i++] ;
-						%>
-								  <tr>
-								    <td width="15%">&nbsp;</td>
-								    <td width="85%" style="padding-left: 4px;">
-								      <div class="LanguageQuestion" > 
-													<%=_ctx.appRes(uicomponent.getName() + ".label." + "Language")%>: $language 
-											</div>
-								    </td>
-								  </tr>
-								  <tr>
-								    <td align="right">
-								      <%=uicomponent.getLabel(field.getName()) %> : 
-								    </td>
-								    <td style="padding-left: 4px;white-space:nowrap;">
-								      <div>
-												<% uiform.renderField(fck) %>
-												<div>&nbsp;*</div>
-											</div>
-								    </td>
-								  </tr>
-						<%	}
-							} else {
+								int i = 0;
+					%>
+							  <tr>
+							    <td align="right">
+							      <%=uicomponent.getLabel(field.getName()) %> : 
+							    </td>
+							    <td style="padding-left: 4px; white-space:nowrap;">
+										<%
+										for(fck in field.getChildren())  {
+										%>
+									      <div style="margin:0 0 5px;">
+											<%if(i ++ > 0){%>
+													<% uiform.renderField(fck) %>
+													<div>&nbsp;*</div>
+											<%} else {
+													link = uicomponent.event("DeleteLanguage", "delete question");
+											%>
+													<div style="float:left;">
+														<div style="float: left;"><% uiform.renderField(fck) %></div>
+														<a href="javaScript: void(0);" onclick="$link">
+															<div class="DustBinIcon"><span></span></div>
+														</a>
+													</div>
+													<div style="clear: left;"><span></span></div>
+											<%}%>
+												</div>
+									<%}%>
+							    </td>
+							  </tr>
+							
+						<%} else {
 					%>
 							
 								<tr>
@@ -91,25 +94,25 @@
 			</div>
 		</div>
 		<div class="UIAction"> 
-				<table class="ActionContainer" align="center">
-					<tr>
-						<td align="center">
-		        <% for(action in uicomponent.getActions()) { 
-		        		 if(action.indexOf("Remove") >= 0) continue ; 
-		        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-		           String link = uicomponent.event(action) ;
-		        %>
-		        		<a href="$link" class="ActionButton LightBlueStyle">
-			      	  	<div class="ButtonLeft">
-			        	  	<div class="ButtonRight">
-			          	  	<div class="ButtonMiddle"> $actionLabel </div>
-			            	</div>
-			          	</div>
-			        	</a>
-		          <%}%>
-		      	</td>
-					</tr>
-			  </table> 
-			</div>
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+	        <% for(action in uicomponent.getActions()) { 
+	        		 if(action.indexOf("Remove") >= 0) continue ; 
+	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	           String link = uicomponent.event(action) ;
+	        %>
+	        		<a href="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle"> $actionLabel </div>
+		            	</div>
+		          	</div>
+		        	</a>
+	          <%}%>
+	      	</td>
+				</tr>
+		  </table> 
+		</div>
 	<%uiform.end()%>
 </div>

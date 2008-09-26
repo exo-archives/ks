@@ -42,6 +42,7 @@ public class ValidatorDataInput {
   }
   
   public boolean fckContentIsNotEmpty(String input) {
+  	if(input == null || input.trim().length() < 1) return false;
     input = input.replaceAll("<p>", "") ;
     input = input.replaceAll("</p>", "") ;
     input = input.replaceAll("&nbsp;", " ") ;
