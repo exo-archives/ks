@@ -111,10 +111,22 @@ public class UIPageListTopicByUser extends UIContainer{
 	}
 
 	@SuppressWarnings("unused")
-	private JCRPageList getPageListPost(String topicPath) throws Exception {
-		String []id = topicPath.split("/") ;
-		int i = id.length ;
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2], id[i-1], "", "", "", "")	; 
+	private JCRPageList getPageListPost(Forum forum, Topic topic, String categoryId) throws Exception {
+		System.out.println("\n\n Topic:" + topic.getTopicName());
+		String isApprove = "" ;
+		String isHidden = "" ;
+		String userLogin = this.userProfile.getUserId();
+		long role = this.userProfile.getUserRole() ;
+		if(role >=2){ isHidden = "false" ;}
+		if(role == 1) {
+			if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
+				isHidden = "false" ;
+			}
+		}
+		if(forum.getIsModeratePost() || topic.getIsModeratePost()) {
+			if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
+		}
+		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forum.getId(), topic.getId(), isApprove, isHidden, "", userLogin)	; 
 		long maxPost = this.userProfile.getMaxTopicInPage() ;
 		if(maxPost > 0)	pageListPost.setPageSize(maxPost) ;
 		return pageListPost;
@@ -140,10 +152,12 @@ public class UIPageListTopicByUser extends UIContainer{
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			Topic topic = uiForm.getTopicById(topicId) ;
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-			String path =	topic.getPath().replaceFirst("/exo:applications/ForumService/", "");
-			String []id = path.split("/") ;
+			String []id = topic.getPath().split("/") ;
+			int i = id.length ;
+			String categoryId = id[i-3];
+			String forumId = id[i-2] ;
 			boolean isRead = true;
-			Category category = uiForm.forumService.getCategory(ForumSessionUtils.getSystemProvider(), id[0]);
+			Category category = uiForm.forumService.getCategory(ForumSessionUtils.getSystemProvider(), categoryId);
 			if(category == null) {
 				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 				return ;
@@ -156,16 +170,16 @@ public class UIPageListTopicByUser extends UIContainer{
 					isRead = ForumServiceUtils.hasPermission(privateUser, uiForm.userProfile.getUserId());
 				}
 			}
+			Forum forum = new Forum();
 			if(isRead) {
-				Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+				forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(),categoryId , forumId) ;
 				if(forum == null ){
 					String[] s = new String[]{};
 					uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 					return;
 				}
 				
-				if(uiForm.userProfile.getUserRole() == 0 || 
-						(forum.getModerators() != null && forum.getModerators().length > 0 && 
+				if(uiForm.userProfile.getUserRole() == 0 || (forum.getModerators() != null && forum.getModerators().length > 0 && 
 								ForumServiceUtils.hasPermission(forum.getModerators(), uiForm.userProfile.getUserId()))) isRead = true;
 				else isRead = false;
 				
@@ -208,12 +222,7 @@ public class UIPageListTopicByUser extends UIContainer{
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				id = topic.getPath().split("/") ;
-				int i = id.length ;
-				String categoryId = id[i-3];
-				String forumId = id[i-2] ;
 				//id[i-1] ; 
-				Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[i-3], id[i-2]) ;
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
@@ -223,7 +232,7 @@ public class UIPageListTopicByUser extends UIContainer{
 				
 				uiTopicDetail.setUpdateContainer(categoryId, forumId, topic, 1) ;
 				
-				uiTopicDetail.setUpdatePageList(uiForm.getPageListPost(topic.getPath())) ;
+				uiTopicDetail.setUpdatePageList(uiForm.getPageListPost(forum, topic, categoryId)) ;
 				uiTopicDetail.setUpdateForum(forum) ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));
