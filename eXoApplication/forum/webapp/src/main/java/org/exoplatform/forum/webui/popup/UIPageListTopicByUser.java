@@ -112,7 +112,6 @@ public class UIPageListTopicByUser extends UIContainer{
 
 	@SuppressWarnings("unused")
 	private JCRPageList getPageListPost(Forum forum, Topic topic, String categoryId) throws Exception {
-		System.out.println("\n\n Topic:" + topic.getTopicName());
 		String isApprove = "" ;
 		String isHidden = "" ;
 		String userLogin = this.userProfile.getUserId();
@@ -192,7 +191,6 @@ public class UIPageListTopicByUser extends UIContainer{
 						listUserPermission.addAll(Arrays.asList(forum.getViewer()));
 					
 					if(ForumServiceUtils.hasPermission(listUserPermission.toArray(new String[]{}), uiForm.userProfile.getUserId())) isRead = true;
-					
 					// check for topic:
 					if(!isRead && topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && 
 							!topic.getIsLock() && !topic.getIsWaiting()){
@@ -211,18 +209,15 @@ public class UIPageListTopicByUser extends UIContainer{
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 				return;
 			}
-			
 			if(((UIComponent)uiForm.getParent()).getId().equals("UIModeratorManagementForm")) {
 				UIModeratorManagementForm parentComponent = uiForm.getParent();
 				UIPopupContainer popupContainer = parentComponent.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
 				UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
 				viewTopic.setTopic(topic) ;
-				//event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				//id[i-1] ; 
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
