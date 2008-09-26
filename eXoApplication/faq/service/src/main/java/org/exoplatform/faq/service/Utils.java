@@ -112,4 +112,12 @@ public class Utils {
 		}
 		return list;
 	}
+	
+	static public class NameComparator implements Comparator<Object> {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	String name1 = ((String) o1) ;
+      String name2  = ((String) o2);
+      return name1.compareToIgnoreCase(name2) ;
+    }
+  }
 }

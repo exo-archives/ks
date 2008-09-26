@@ -24,6 +24,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -53,6 +54,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	private UIFormStringInput userName ;
 	private boolean isUpdate = false ;
 	private String listEmailOld_ = "" ;
+	private long curentPage_ = 1 ;
 	public UIWatchForm() throws Exception {
 		List<String> list = new ArrayList<String>() ;
 		String user = FAQUtils.getCurrentUser() ;
@@ -128,7 +130,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   }
   
   @SuppressWarnings("static-access")
-  public void setUpdateWatch(String categoryId, String listEmail, boolean isUpdate) throws Exception {
+  public void setUpdateWatch(String categoryId, String listEmail, boolean isUpdate,long curentPage) throws Exception {
 		if(isUpdate) {
 			this.listEmailOld_ = listEmail ;
 			List<String> list = Arrays.asList(listEmail.split(",")) ;
@@ -141,6 +143,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 			addUIFormInput(emailAddress) ;
 			this.isUpdate = isUpdate ;
 			this.categoryId_ = categoryId ;
+			this.curentPage_ = curentPage ;
 		}
 	}
   
@@ -163,6 +166,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
     public void execute(Event<UIWatchForm> event) throws Exception {
 			UIWatchForm uiWatchForm = event.getSource() ;
 			UIApplication uiApp = uiWatchForm.getAncestorOfType(UIApplication.class) ;
+			UIFAQPortlet uiPortlet = uiWatchForm.getAncestorOfType(UIFAQPortlet.class);
       String name = uiWatchForm.getUIStringInput(UIWatchForm.USER_NAME).getValue() ;
       String listEmail = "";
       List<String> values = (List<String>) uiWatchForm.emailAddress.getValue();
@@ -187,21 +191,22 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       	if(uiWatchForm.isUpdate) {
       		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), uiWatchForm.listEmailOld_) ;
       		faqService.addWatch(categoryId , listEmail, FAQUtils.getSystemProvider()) ;
-      		UIWatchContainer watchContainer = uiWatchForm.getAncestorOfType(UIWatchContainer.class) ;
-      		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 
+      		UIWatchManager watchManager = uiPortlet.findFirstComponentOfType(UIWatchManager.class) ;
+      		watchManager.setCurentPage(uiWatchForm.curentPage_)  ;
+      		watchManager.setListEmail(faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider())) ;
+      		event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ; 
       	} else {
 	      	faqService.addWatch(categoryId , listEmail, FAQUtils.getSystemProvider()) ;
 	      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
 	      			ApplicationMessage.INFO)) ;
 	       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	       	 UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+	       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
       	}
       }
-      UIFAQPortlet uiPortlet = uiWatchForm.getAncestorOfType(UIFAQPortlet.class);
       UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ; 
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; 
-      return ;
 		}
 	}
 
