@@ -294,7 +294,7 @@
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .RightQuestionContainer {
   float: right;
-  width: 160px;
+  //width: 160px;
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .SendToFriend {
@@ -313,12 +313,20 @@
   margin: 0px 4px;
 }
 
-.UIFAQPortlet .QuestionSelect .QuestionContainer .LanguageSetting {
+.UIFAQPortlet .QuestionSelect .QuestionContainer .BackPageFAq {
   float: right;
+  background: url('background/BackPageIcon.gif') no-repeat left center;
+  width: 21px; height: 20px;
+  cursor: pointer;
+  margin: 0px 4px;
+}
+
+.UIFAQPortlet .QuestionSelect .QuestionContainer .LanguageSetting {
   line-height: 20px;
   font-weight: bold;
   color: #1e1f21;
   margin: 0px 4px;
+  float: right;
 }
 
 
@@ -1079,9 +1087,9 @@
 }
 
 .UIFAQPortlet .LanguageSelectIcon {
-  background: url('background/FAQPortlet.gif') no-repeat left -792px;
+  background: url('background/FAQPortlet.gif') no-repeat left -797px;
   line-height:16px;
-	padding-right:15px;;
+  padding-left: 16px;
 }
 
 .UIFAQPortlet .FalseIcon {
@@ -1157,6 +1165,14 @@
 	width:17px;
 	margin: 0px 3px;
 	padding-top: 3px;
+}
+
+.UIFAQPortlet .DustBinIcon {
+	background: url(background/DustBin.gif) no-repeat scroll right;
+	height:16px;
+	width:16px;
+	margin: 0px 3px;
+	float:right;
 }
 
 .UIPrintPreview .AttachmentContent .LabelBox .Action{
