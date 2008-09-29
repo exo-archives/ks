@@ -226,13 +226,14 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
 			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
 			UserProfile userProfile = uiForm.userProfile ;
-			if(ForumUtils.isEmpty(userTitle) || 
-					(!userTitle.equals(userProfile.getUserTitle()) && Arrays.asList(uiForm.permissionUser).contains(userTitle.toLowerCase()))) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.UserTitleInvalid", new Object[]{}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				return;
-			}
+			if(userTitle == null || userTitle.trim().length() < 1){
+    		userTitle = userProfile.getUserTitle();
+    	} else {
+    		int newPos = Arrays.asList(uiForm.permissionUser).indexOf(userTitle.toLowerCase());
+    		if(newPos >= 0 && newPos < userProfile.getUserRole()){
+    			userTitle = userProfile.getUserTitle();
+    		}
+    	}
 			int maxText = ForumUtils.MAXSIGNATURE ;
 			String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
 			if(!ForumUtils.isEmpty(signature) && signature.length() > maxText) {
