@@ -40,6 +40,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -668,10 +669,18 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   		UIModeratorManagementForm uiForm = event.getSource() ;
   		String userSearch = ((UIFormStringInput)uiForm.getChildById(FIELD_SEARCH_USER)).getValue();
   		if(userSearch != null && userSearch.trim().length() > 0){
+  			JCRPageList pageList = null;
+  			try{
+  				pageList = uiForm.forumService.searchUserProfile(ForumSessionUtils.getSystemProvider(), userSearch);
+  			} catch (Exception e){
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+					return ;
+  			}
   			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
   			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true);
   			UIViewResultSearchUser resultSearchUser = popupAction.activate(UIViewResultSearchUser.class, 600);
-	  		resultSearchUser.setPageListSearch(uiForm.forumService.searchUserProfile(ForumSessionUtils.getSystemProvider(), userSearch));
+	  		resultSearchUser.setPageListSearch(pageList);
 	  		event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
   		} else {
   			throw new MessageException(new ApplicationMessage("UIQuickSearchForm.msg.checkEmpty", null, ApplicationMessage.WARNING)) ;
