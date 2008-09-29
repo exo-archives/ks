@@ -542,6 +542,7 @@
 <!-- Start ContentContainer -->
 		<%
 		if(isClosed && !canEdit)	isShowPost = false ;
+		int nb = 0;
 		if(posts != null && posts.size() > 0 && isShowPost) {
 			int checked = (int)(uiform.getPageSelect()) - 1;
 			String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
@@ -729,7 +730,8 @@
 						<% 
 						boolean hasAttachment = false ;
 						if(attachments != null && attachments.size() > 0) hasAttachment = true;
-						if(isDisplayAvatar && !hasAttachment) { %>	
+						if(isDisplayAvatar && !hasAttachment) { 
+						%>	
 							<div class="PostContent">
 						<% } else { %>
 							<div class="PostContentNote">
@@ -747,10 +749,13 @@
 								 		 double sizeNumber = attachment.getSize() ;
 								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
+								 		 ++nb;
 								%>
 										<div class="AttachmentBox">
-										<% if(typeFile.indexOf("image") >= 0) {%>
-											<div class="Image"><img id="imgView${fileName}" src="$urlFile" height="100px;"/></div>
+										<% if(typeFile.indexOf("image") >= 0) {
+										 String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository()+attachment.getPath() ;
+										%>
+											<div class="Image"><img id="imgView${fileName}" src="$attLink" height="100px;"/></div> 
 						 					<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 						 						<a href="$urlFile" class="AttachmentLabel" title="$titleFile">$fileName</a>

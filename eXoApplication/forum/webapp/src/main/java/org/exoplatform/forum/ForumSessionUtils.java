@@ -189,8 +189,12 @@ public class ForumSessionUtils {
   }
   
   public static ForumContact getPersonalContact(String userId) throws Exception {
-    ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
-    return provider.getForumContact(userId);
+    try {
+    	ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
+    	return provider.getForumContact(userId);
+    } catch (Exception e) {
+	    return new ForumContact();
+    }
   }
   
   public static String getBreadcumbUrl(String link, String componentName, String actionName) throws Exception {

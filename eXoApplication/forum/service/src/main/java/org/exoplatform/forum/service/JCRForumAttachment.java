@@ -34,10 +34,6 @@ import org.exoplatform.services.jcr.RepositoryService;
  * TODO: wrong location, rename to JCRMessageAttachment
  */
 public class JCRForumAttachment extends ForumAttachment {
-	private String workspace ;
-	
-	public String getWorkspace() { return workspace ; }
-	public void setWorkspace(String ws) { workspace = ws ; }
 	
 	@Override
 	public InputStream getInputStream() throws Exception {
@@ -52,6 +48,6 @@ public class JCRForumAttachment extends ForumAttachment {
 	
 	private Session getSesison()throws Exception {
 		RepositoryService repoService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class) ;
-		return repoService.getDefaultRepository().getSystemSession(workspace) ;
+		return repoService.getDefaultRepository().getSystemSession(getWorkspace()) ;
 	}
 }

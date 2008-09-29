@@ -202,6 +202,7 @@ public class ForumPageList extends JCRPageList {
 						attachment.setName(node.getName());
 						attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
 						attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+						attachment.setPath("/" + attachment.getWorkspace() + node.getPath());
 						attachments.add(attachment);
 					}
 				}
@@ -257,14 +258,18 @@ public class ForumPageList extends JCRPageList {
 				if(FirstPostNode.getProperty("exo:numberAttachments").getLong() > 0) {
 					NodeIterator postAttachments = FirstPostNode.getNodes();
 					List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
+					Node nodeFile ;
 					while (postAttachments.hasNext()) {
 						Node node = postAttachments.nextNode();
 						if (node.isNodeType("nt:file")) {
 							JCRForumAttachment attachment = new JCRForumAttachment() ;
+							nodeFile = node.getNode("jcr:content") ;
 							attachment.setId(node.getPath());
 							attachment.setMimeType(node.getNode("jcr:content").getProperty("jcr:mimeType").getString());
 							attachment.setName(node.getName());
 							attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+							attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+							attachment.setPath("/" + attachment.getWorkspace() + node.getPath());
 							attachments.add(attachment);
 						}
 					}

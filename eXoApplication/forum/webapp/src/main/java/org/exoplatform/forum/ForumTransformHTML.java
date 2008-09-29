@@ -26,8 +26,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Created by The eXo Platform SAS Author : Vu Duy Tu tu.duy@exoplatform.com May
- * 22, 2008 - 2:58:53 AM
+ * Created by The eXo Platform SAS 
+ * Author : Vu Duy Tu 
+ * 					tu.duy@exoplatform.com 
+ * May 22, 2008 - 2:58:53 AM
  */
 
 public class ForumTransformHTML {
@@ -210,9 +212,7 @@ public class ForumTransformHTML {
 				String href_ = href;
 				if (href.indexOf("\"") >= 0)
 					href_ = href.replaceAll("\"", "");
-				System.out.println("\n\nhref_: " + href_);
 				String text = urlStr.substring(clsUrl + 1);
-				System.out.println("\n\ntext: " + text);
 				buffer = new StringBuffer();
 				buffer.append("<a href=\"mailto:").append(href_).append("\">").append(text).append("</a>");
 				b = StringUtils.replace(b, "[email=" + href + "]" + text + "[/email]", buffer.toString());
