@@ -19,6 +19,13 @@ package org.exoplatform.forum.service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.Session;
+
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.RepositoryService;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Ngyen Quang
@@ -36,9 +43,18 @@ public class BufferAttachment extends ForumAttachment {
 //		return inputStream ; 
 //	}
   public InputStream getInputStream() throws Exception { 
-    if(bytes != null) return new ByteArrayInputStream(bytes) ;
-    return null ;
+  	Node attachment ;
+		try{
+			attachment = (Node)getSesison().getItem(getId()) ;			
+		}catch (ItemNotFoundException e) {
+			return null ;
+		}
+		return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
   }
+	private Session getSesison()throws Exception {
+		RepositoryService repoService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class) ;
+		return repoService.getDefaultRepository().getSystemSession(getWorkspace()) ;
+	}
 //	public void setInputStream(InputStream is){ inputStream = is ; }
   public void setInputStream(InputStream input) throws Exception {
     if (input != null) {

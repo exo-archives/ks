@@ -826,6 +826,7 @@ public class JCRDataStorage{
 							attachment.setName(node.getName());
 							attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
 							attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+							attachment.setPath("/" + attachment.getWorkspace() + node.getPath());
 							attachments.add(attachment);
 						}
 					}
@@ -1296,6 +1297,7 @@ public class JCRDataStorage{
 						attachment.setName(node.getName());
 						attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
 						attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+						attachment.setPath("/" + attachment.getWorkspace() + node.getPath());
 						attachments.add(attachment);
 					}
 				}
@@ -1370,6 +1372,7 @@ public class JCRDataStorage{
 				try {
 					file = (BufferAttachment) it.next();
 					Node nodeFile = null;
+					System.out.println("\n\nattachment:=====>>>>>> ");
 					if (!postNode.hasNode(file.getName()))
 						nodeFile = postNode.addNode(file.getName(), "nt:file");
 					else

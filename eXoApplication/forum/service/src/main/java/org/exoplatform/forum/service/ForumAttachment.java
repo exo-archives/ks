@@ -28,19 +28,27 @@ abstract public class ForumAttachment {
 	private String id ;
 	private String name ;
 	private String mimeType ;
+	private String path ;
 	private long size ;
-	 
+	private String workspace ;
+
+	public String getWorkspace() { return workspace ; }
+	public void setWorkspace(String ws) { workspace = ws ; }
 	public String getId() { return id ; }
 	public void setId(String id) { this.id = id ; }
-	
+
 	public String getMimeType() { return mimeType ; }
 	public void setMimeType(String mimeType_) { this.mimeType = mimeType_ ; }
-	
+
 	public long getSize() { return size ; }
 	public void setSize(long size_) { this.size = size_ ; }
-	
+
 	public String getName() { return name ; }
 	public void setName(String name_) { this.name = name_ ; }
+
+	public String getPath() { return path; }
+	public void setPath(String path) { this.path = path; }
+
 	//TODO: should not have	Session in the api
 	public abstract InputStream getInputStream() throws Exception ;
 }
