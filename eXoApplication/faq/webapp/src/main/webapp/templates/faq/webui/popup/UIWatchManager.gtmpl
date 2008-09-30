@@ -14,22 +14,24 @@
  							<tbody>
  							<% 
  							String categoryId = uicomponent.getCategoryID() ;
- 							List emails = uicomponent.getListEmail() ;
+ 							List watchs = uicomponent.getListWatch() ;
  							String linkCurrent = uicomponent.event("Link", categoryId)
- 							if(emails.size() > 0){
- 								for(String email : emails ) {
- 									email = email.substring(0,email.length())
- 									String linkEdit = uicomponent.event("EditEmail", email);
+ 							if(watchs.size() > 0){
+ 								for(String watch : watchs ) {
+ 									user = watch.getUser() ;
+ 									email = watch.getEmails() ;
+ 									String total = user + " (" + email + ")" ;
+ 									String linkEdit = uicomponent.event("EditEmail", user+"/"+email);
  									String linkDelete = uicomponent.event("DeleteEmail", "$uicomponent.id", email);
  							 %>
  								<tr>
- 									<% if(email.length() > 90) {
- 											String title = email ;
- 											email = uicomponent.getSubString(email,90)
+ 									<% if(total.length() > 90) {
+ 											String title = total ;
+ 											total = uicomponent.getSubString(total,90)
  									 %>
- 										<td class="text" align="left"><a title="$title">$email</a></td>
+ 										<td class="text" align="left"><a title="$title">$total</a></td>
  									<% } else { %>
- 										<td class="text" align="left">$email</td>
+ 										<td class="text" align="left">$total</td>
  									<% } %>
  									<td style="width: 90px;" align="center">
  										<a href="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" style="float:left;">

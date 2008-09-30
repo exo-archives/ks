@@ -49,6 +49,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.notify.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
@@ -856,52 +857,76 @@ public class JCRDataStorage {
 		return Str;
 	}
   
-  public void addWatch(String id, String value, SessionProvider sProvider)throws Exception {
+  public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception {
   	Node watchingNode = null;
   	watchingNode = getCategoryNodeById(id, sProvider) ;
   	//add watching for node
   	if(watchingNode.isNodeType("exo:faqWatching")) {//get
-				Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
   			List<String> vls = new ArrayList<String>() ;
+				Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
+				List<String> listUsers = new ArrayList<String>() ;
+				Value[] users = watchingNode.getProperty("exo:userWatching").getValues() ;
   			for(Value vl : values) {
-  				vls.add(vl.getString()) ;
+  					vls.add(vl.getString()) ;
   			}
-  			vls.add(value) ;
+				for(Value user : users) {
+					listUsers.add(user.getString()) ;
+				}
+  			vls.add(watch.getEmails()) ;
+  			listUsers.add(watch.getUser());
   			watchingNode.setProperty("exo:emailWatching", vls.toArray(new String[]{})) ;
+  			watchingNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{})) ;
 			watchingNode.save() ;
 		}else {//add
 			watchingNode.addMixin("exo:faqWatching") ;
-			watchingNode.setProperty("exo:emailWatching", new String[]{value}) ;
+			watchingNode.setProperty("exo:emailWatching", new String[]{watch.getEmails()}) ;
+			watchingNode.setProperty("exo:userWatching", new String[]{watch.getUser()}) ;
 			watchingNode.save() ;
 		}
   	watchingNode.getSession().save();
   }
   
-  public List<String> getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
-  	Node cate = getCategoryNodeById(categoryId, sProvider) ;
-    List<String> listEmails = new ArrayList<String>() ;
-    if(cate.isNodeType("exo:faqWatching")){
-  		Value[] emails = cate.getProperty("exo:emailWatching").getValues() ;
+  public List<Watch> getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
+  	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
+  	List<Watch> listWatch = new ArrayList<Watch>() ;
+    if(watchingNode.isNodeType("exo:faqWatching")){
+  		Value[] emails = watchingNode.getProperty("exo:emailWatching").getValues() ;
+  		Value[] users = watchingNode.getProperty("exo:userWatching").getValues() ;
   		if(emails != null && emails.length > 0) {
-  			for(Value value: emails) {
-  				listEmails.add(value.getString()) ;
+  			int i = 0 ;
+  			for(Value email: emails) {
+  				Watch watch = new Watch() ;
+					watch.setEmails(email.getString()) ;
+					watch.setUser(users[i].getString());
+					listWatch.add(watch) ;
+					i++ ;
   			}
-  			Collections.sort(listEmails, new Utils.NameComparator());
+  			Collections.sort(listWatch, new Utils.NameComparator());
   		}
   	}
-    return listEmails;
+    return listWatch;
   }
   
   public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception {
   	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
   	Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
+  	Value[] users = watchingNode.getProperty("exo:userWatching").getValues() ;
 		List<String> vls = new ArrayList<String>() ;
+		List<String> listUser = new ArrayList<String>();
 		if(watchingNode.isNodeType("exo:faqWatching")) {
+			int j = 0,i = 0 ;
 			for(Value vl : values) {
 				vls.add(vl.getString()) ;
+				if(emails.equals(vl.getString())) j = i ;
+				i++ ;
+			}
+			for(Value user : users) {
+				listUser.add(user.getString()) ;
 			}
 		vls.remove(emails);
+		listUser.remove(j);
 		watchingNode.setProperty("exo:emailWatching", vls.toArray(new String[]{})) ;
+		watchingNode.setProperty("exo:userWatching", listUser.toArray(new String[]{})) ;
 		}
 		watchingNode.save() ;
 		watchingNode.getSession().save();

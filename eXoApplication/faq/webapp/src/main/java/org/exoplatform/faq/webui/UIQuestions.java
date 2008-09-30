@@ -34,6 +34,7 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
 import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
@@ -116,7 +117,7 @@ public class UIQuestions extends UIContainer {
   public List<String> listLanguage = new ArrayList<String>() ;
   public String backPath_ = "" ;
   private static String language_ = "" ;
-  private List<String> emailList_ = new ArrayList<String>() ;
+  private List<Watch> watchList_ = new ArrayList<Watch>() ;
   
   private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
   private String[] firstTollbar_ = new String[]{"AddCategory", "QuestionManagament"} ;
@@ -498,13 +499,13 @@ public class UIQuestions extends UIContainer {
     return this.backPath_ ;
   }
 	
-  public List<String> getListEmail(String categoryId) throws Exception {
+  public List<Watch> getListWatch(String categoryId) throws Exception {
   	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-    emailList_ = faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider()) ;
-    return emailList_ ;
+    watchList_ = faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider()) ;
+    return watchList_ ;
   }
   
-  public void setListEmail(List<String> list) { emailList_ = list ;}
+  public void setListWatch(List<Watch> list) { watchList_ = list ;}
   
   public void setPath(String s) { newPath_ = s ; }
 
@@ -956,8 +957,8 @@ public class UIQuestions extends UIContainer {
     			UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
     			popupContainer.setId("WatchManager") ;
     			watchManager.setCategoryID(cateId) ;
-    			List<String> emailList = faqService.getListMailInWatch(cateId, FAQUtils.getSystemProvider()) ;
-    			watchManager.setListEmail(emailList) ;
+    			List<Watch> emailWatch = faqService.getListMailInWatch(cateId, FAQUtils.getSystemProvider()) ;
+    			watchManager.setListWatch(emailWatch) ;
     			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         } else {
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
