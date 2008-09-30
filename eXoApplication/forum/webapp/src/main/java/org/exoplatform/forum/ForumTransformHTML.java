@@ -228,7 +228,6 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/email]", tagIndex);
 				String src = b.substring(tagIndex + 7, clsIndex);
-				System.out.println("\n\nsrc: " + src);
 				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()	+ "\">" + src.trim() + "</a>");
 			} catch (Exception e) {
 				continue;

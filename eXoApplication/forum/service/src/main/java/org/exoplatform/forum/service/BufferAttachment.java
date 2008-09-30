@@ -36,13 +36,8 @@ public class BufferAttachment extends ForumAttachment {
 	
 	private byte[] bytes ;
 	
-//	public InputStream getInputStream()throws Exception{
-//		/*DownloadService downloadService = (DownloadService)PortalContainer.getComponent(DownloadService.class) ;
-//		DownloadResource downloadResource = downloadService.getDownloadResource(getId()) ;
-//		downloadResource.getInputStream() ;*/
-//		return inputStream ; 
-//	}
   public InputStream getInputStream() throws Exception { 
+  	if(bytes != null )return new ByteArrayInputStream(bytes) ; 
   	Node attachment ;
 		try{
 			attachment = (Node)getSesison().getItem(getId()) ;			
@@ -51,12 +46,13 @@ public class BufferAttachment extends ForumAttachment {
 		}
 		return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
   }
+  
 	private Session getSesison()throws Exception {
 		RepositoryService repoService = (RepositoryService)PortalContainer.getInstance().getComponentInstanceOfType(RepositoryService.class) ;
 		return repoService.getDefaultRepository().getSystemSession(getWorkspace()) ;
 	}
-//	public void setInputStream(InputStream is){ inputStream = is ; }
-  public void setInputStream(InputStream input) throws Exception {
+
+	public void setInputStream(InputStream input) throws Exception {
     if (input != null) {
       bytes = new byte[input.available()] ; 
       input.read(bytes) ;
