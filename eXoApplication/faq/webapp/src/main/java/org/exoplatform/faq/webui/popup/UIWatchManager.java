@@ -23,6 +23,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.QuestionPageList;
+import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -55,10 +56,11 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	private static String categoryId_ = "";
-	private List<String> listEmails_ = new ArrayList<String>() ;
+	private List<Watch> listWatchs_ = new ArrayList<Watch>() ;
 	private String LIST_EMAILS_WATCH = "listEmailsWatch";
 	private UIFAQPageIterator pageIterator ;
 	private JCRPageList pageList ;
+	private Boolean check_ = false ;
 	public long curentPage_ = 1;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIWatchManager() throws Exception {
@@ -75,10 +77,10 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   
   public void setCurentPage(long page) {this.curentPage_ = page ;}
   
-  public void setListEmail(List<String> listEmails){
-    this.listEmails_ = listEmails;
+  public void setListWatch(List<Watch> listWatchs){
+    this.listWatchs_ = listWatchs;
     try {
-	    pageList = new QuestionPageList(listEmails_, 10);
+	    pageList = new QuestionPageList(listWatchs_, 10);
 	    pageList.setPageSize(10);
 	    pageIterator = this.getChildById(LIST_EMAILS_WATCH);
 	    pageIterator.updatePageList(pageList);
@@ -98,20 +100,30 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
     }
   }
 	
-  public List<String> getListEmail() throws Exception {
+  public List<Watch> getListWatch() throws Exception {
   	long pageSelected ;
-  	if(curentPage_ > 1){
-  		pageSelected = curentPage_ ;
-  		curentPage_ = 0;
-  	} else pageSelected = pageIterator.getPageSelected();
-  	listEmails_ = new ArrayList<String>();
+  	if(!check_) {
+			if(curentPage_ > 1){
+				pageSelected = curentPage_ ;
+				curentPage_ = 0;
+			} else pageSelected = pageIterator.getPageSelected();
+  	}	else pageSelected = pageIterator.getPageSelected();
+  	listWatchs_ = new ArrayList<Watch>();
   	try {
-  		listEmails_.addAll(pageList.getPageListEmail(pageSelected, FAQUtils.getCurrentUser()));
-  		pageIterator.setSelectPage(pageSelected) ;
+  		listWatchs_.addAll(pageList.getPageListWatch(pageSelected, FAQUtils.getCurrentUser()));
+  		if(listWatchs_.isEmpty()){
+        while(listWatchs_.isEmpty() && pageSelected > 1) {
+        	UIFAQPageIterator pageIterator = null ;
+          pageIterator = this.getChildById(LIST_EMAILS_WATCH) ;
+      		listWatchs_.addAll(pageList.getPageListWatch(pageSelected, FAQUtils.getCurrentUser()));
+          pageIterator.setSelectPage(pageSelected) ;
+        }
+      } else pageIterator.setSelectPage(pageSelected) ;
   	} catch (Exception e) {
   		 e.printStackTrace();
   	}
-  	return listEmails_ ;
+  	check_ = false ;
+  	return listWatchs_ ;
   }
   
   public static String getSubString(String str, int max) {
@@ -131,11 +143,13 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   static	public class EditEmailActionListener extends EventListener<UIWatchManager> {
 		public void execute(Event<UIWatchManager> event) throws Exception {
 			UIWatchManager watchManager = event.getSource() ;
-			String emailList = event.getRequestContext().getRequestParameter(OBJECTID);
+			String list = event.getRequestContext().getRequestParameter(OBJECTID);
+			String emailList = list.split("/")[1] ;
+			String user = list.split("/")[0] ;
 			UIWatchContainer watchContainer = watchManager.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 420) ;
-			watchForm.setUpdateWatch(categoryId_,emailList, true, watchManager.pageIterator.getPageSelected()) ;
+			watchForm.setUpdateWatch(categoryId_, user, emailList, true, watchManager.pageIterator.getPageSelected()) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -171,7 +185,8 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			String emailList = event.getRequestContext().getRequestParameter(OBJECTID);
 			watchManager.curentPage_ = watchManager.pageIterator.getPageSelected();
 			faqService_.deleteMailInWatch(categoryId_, FAQUtils.getSystemProvider(), emailList) ;
-			watchManager.setListEmail(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider())) ;
+			watchManager.check_ = true ;
+			watchManager.setListWatch(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider())) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 			if(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).size() < 1) {
 				UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);

@@ -173,7 +173,7 @@
 						$questionNotAnswer <%=_ctx.appRes(uicomponent.getName() + ".label.TotalQuestionsNotYetAnswered")%>, 
 						$questionNotApproved <%=_ctx.appRes(uicomponent.getName() + ".label.TotalQuestionsNotApproved")%>)
 						<% if(listCateModerator.get(i)) {
-									List emailWatch = uicomponent.getListEmail(categoryId) ;
+									List emailWatch = uicomponent.getListWatch(categoryId) ;
 									if(emailWatch.size() > 0) {
 						%>
 						<a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>

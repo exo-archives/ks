@@ -22,10 +22,10 @@ import java.util.List;
 
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -85,9 +85,9 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   public List<String> getListEmail() throws Exception {
   	FAQService faqService =	FAQUtils.getFAQService() ;
   	List<String> emailsList = new ArrayList<String>() ;
-    List<String> emails = faqService.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()) ;
-    for(String email: emails) {
-			String[] strings = Utils.splitForFAQ(email) ;
+    List<Watch> watchs = faqService.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()) ;
+    for(Watch wath: watchs) {
+			String[] strings = Utils.splitForFAQ(wath.getEmails()) ;
 			for(String string_ : strings ) {
 				emailsList.add(string_) ;
 			}
@@ -130,10 +130,12 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   }
   
   @SuppressWarnings("static-access")
-  public void setUpdateWatch(String categoryId, String listEmail, boolean isUpdate,long curentPage) throws Exception {
+  public void setUpdateWatch(String categoryId,String user, String listEmail, boolean isUpdate,long curentPage) throws Exception {
 		if(isUpdate) {
 			this.listEmailOld_ = listEmail ;
 			List<String> list = Arrays.asList(listEmail.split(",")) ;
+			userName.setValue(user) ;
+			userName.setEditable(false) ;
 			if(emailAddress != null) removeChildById(EMAIL_ADDRESS);
 			emailAddress = createUIComponent(UIFormMultiValueInputSet.class, null, null) ;
 			emailAddress.setId(EMAIL_ADDRESS) ;
@@ -167,11 +169,16 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 			UIWatchForm uiWatchForm = event.getSource() ;
 			UIApplication uiApp = uiWatchForm.getAncestorOfType(UIApplication.class) ;
 			UIFAQPortlet uiPortlet = uiWatchForm.getAncestorOfType(UIFAQPortlet.class);
-      String name = uiWatchForm.getUIStringInput(UIWatchForm.USER_NAME).getValue() ;
+      String name = uiWatchForm.getUIStringInput(USER_NAME).getValue() ;
       String listEmail = "";
       List<String> values = (List<String>) uiWatchForm.emailAddress.getValue();
 			for (String string : values) {
 				listEmail += string + "," ;
+      }
+			if (FAQUtils.isFieldEmpty(name)) {
+        uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.name-field-empty", null)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        return ;
       }
       if (FAQUtils.isFieldEmpty(listEmail)) {
         uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.to-field-empty", null)) ;
@@ -188,15 +195,18 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       listEmail = uiWatchForm.checkValueEmail(listEmail);
       if (categoryId != null && !listEmail.equals("")) {
       	FAQService faqService =	FAQUtils.getFAQService() ;
+      	Watch watch = new Watch() ;
+      	watch.setUser(name) ;
+      	watch.setEmails(listEmail);
       	if(uiWatchForm.isUpdate) {
       		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), uiWatchForm.listEmailOld_) ;
-      		faqService.addWatch(categoryId , listEmail, FAQUtils.getSystemProvider()) ;
+      		faqService.addWatch(categoryId , watch, FAQUtils.getSystemProvider()) ;
       		UIWatchManager watchManager = uiPortlet.findFirstComponentOfType(UIWatchManager.class) ;
       		watchManager.setCurentPage(uiWatchForm.curentPage_)  ;
-      		watchManager.setListEmail(faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider())) ;
+      		watchManager.setListWatch(faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider())) ;
       		event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ; 
       	} else {
-	      	faqService.addWatch(categoryId , listEmail, FAQUtils.getSystemProvider()) ;
+	      	faqService.addWatch(categoryId , watch, FAQUtils.getSystemProvider()) ;
 	      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
 	      			ApplicationMessage.INFO)) ;
 	       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;

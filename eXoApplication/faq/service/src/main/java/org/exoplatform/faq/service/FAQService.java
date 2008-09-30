@@ -352,7 +352,7 @@ public interface FAQService {
    * @throws Exception the exception
    *  
    */
-  public void addWatch(String id, String value, SessionProvider sProvider)throws Exception ;
+  public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception ;
   
   /**
    * This method will get list mail of one category. User see list this mails and 
@@ -364,7 +364,7 @@ public interface FAQService {
    * @see			list email where user manager	
    * @throws Exception the exception				
    */
-  public List<String> getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
+  public List<Watch> getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
   
   /**
    * This method will delete watch in one category 

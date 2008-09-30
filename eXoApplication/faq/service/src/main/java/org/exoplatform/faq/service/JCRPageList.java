@@ -37,7 +37,7 @@ abstract public class JCRPageList {
   protected List<Object> currentListObject_ ;
   protected List<Category> currentListCategory_;
   protected List<FAQFormSearch> currentListResultSearch_ ;
-  protected List<String> currentListEmail_ ;
+  protected List<Watch> currentListWatch_ ;
   private String objectRepare_ = null;
   private long pageJump_ = 0;
   
@@ -192,12 +192,12 @@ abstract public class JCRPageList {
   	return currentListObject_ ;
   }
   
-  abstract protected void populateCurrentPageEmail(long page, String username) throws Exception   ;
+  abstract protected void populateCurrentPageWatch(long page, String username) throws Exception   ;
   
-  public List<String> getPageListEmail(long page, String username) throws Exception   {
+  public List<Watch> getPageListWatch(long page, String username) throws Exception   {
   	checkAndSetPage(page) ;
-  	populateCurrentPageEmail(page, username) ;
-  	return currentListEmail_ ;
+  	populateCurrentPageWatch(page, username) ;
+  	return currentListWatch_ ;
   }
   /**
    * abstract function to get all question.

@@ -32,6 +32,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
+import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.notify.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
@@ -344,8 +345,8 @@ public class FAQServiceImpl implements FAQService{
    * @throws Exception the exception
    *  
    */
-  public void addWatch(String id, String value, SessionProvider sProvider)throws Exception {
-  	jcrData_.addWatch(id, value, sProvider) ;
+  public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception {
+  	jcrData_.addWatch(id, watch, sProvider) ;
   }
   
   /**
@@ -358,7 +359,7 @@ public class FAQServiceImpl implements FAQService{
    * @see			list email where user manager	
    * @throws Exception the exception				
    */
-  public List<String> getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
+  public List<Watch> getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
     return jcrData_.getListMailInWatch(categoryId, sProvider); 
   }
   
