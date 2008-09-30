@@ -69,8 +69,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	public void setFormSearchs(List<FAQFormSearch> formSearchs) throws Exception {
     this.formSearchs_ = formSearchs;
     try {
-	    pageList = new QuestionPageList(formSearchs_, 10);
-	    pageList.setPageSize(10);
+	    pageList = new QuestionPageList(formSearchs_, 5);
+	    pageList.setPageSize(5);
 	    pageIterator = this.getChildById(LIST_RESULT_SEARCH);
 	    pageIterator.updatePageList(pageList);
     } catch (Exception e) {
