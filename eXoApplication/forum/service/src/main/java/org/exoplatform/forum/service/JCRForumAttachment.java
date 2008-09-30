@@ -40,7 +40,7 @@ public class JCRForumAttachment extends ForumAttachment {
 		Node attachment ;
 		try{
 			attachment = (Node)getSesison().getItem(getId()) ;			
-		}catch (ItemNotFoundException e) {
+		}catch (Exception e) {
 			return null ;
 		}
 		return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
