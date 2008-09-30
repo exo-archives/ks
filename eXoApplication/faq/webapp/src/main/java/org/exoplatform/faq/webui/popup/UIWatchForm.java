@@ -192,9 +192,23 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       listEmail = listEmail.substring(0, listEmail.length()-1) ;
       listEmail = uiWatchForm.filterItemInString(listEmail);
       String categoryId = uiWatchForm.getCategoryID() ;
+      FAQService faqService =	FAQUtils.getFAQService() ;
+      try {
+      	faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+      } catch (Exception e) {
+        UIApplication uiApplication = uiWatchForm.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+        uiQuestions.setIsNotChangeLanguage();
+        UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
+        uiPopupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; 
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+        return ;
+      }
       listEmail = uiWatchForm.checkValueEmail(listEmail);
       if (categoryId != null && !listEmail.equals("")) {
-      	FAQService faqService =	FAQUtils.getFAQService() ;
       	Watch watch = new Watch() ;
       	watch.setUser(name) ;
       	watch.setEmails(listEmail);
