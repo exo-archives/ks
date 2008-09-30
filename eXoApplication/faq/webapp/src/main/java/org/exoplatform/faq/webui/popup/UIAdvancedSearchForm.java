@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.exoplatform.faq.service.Category;
@@ -29,12 +30,16 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuickSearch;
 import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.resources.LocaleConfig;
+import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -88,13 +93,18 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	final static private String ITEM_MODERATEQUESTION_TRUE="true" ;
 	final static private String ITEM_MODERATEQUESTION_FALSE="false" ;
 	
-	final static private String ITEM_LANGUAGE_ENGLISH = "English" ;
-	final static private String ITEM_LANGUAGE_VIETNAMESE = "Vietnamese" ;
-	final static private String ITEM_LANGUAGE_FRENCH = "French" ;
 	private FAQSetting faqSetting_ = new FAQSetting() ;
 	
 	public UIAdvancedSearchForm() throws Exception {
 		UIFormStringInput text = new UIFormStringInput(FIELD_TEXT, FIELD_TEXT, null) ;
+		List<String> listLanguage = new ArrayList<String>() ;
+    LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
+    for(Object object:configService.getLocalConfigs()) {      
+      LocaleConfig localeConfig = (LocaleConfig)object ;
+      Locale locale = localeConfig.getLocale() ;
+      String displayName = locale.getDisplayLanguage() ;
+      listLanguage.add(displayName) ;
+    }
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>(ITEM_EMPTY, "empty")) ;
 		list.add(new SelectItemOption<String>(ITEM_CATEGORY, "faqCategory")) ;
@@ -114,9 +124,11 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormStringInput author = new UIFormStringInput(FIELD_AUTHOR, FIELD_AUTHOR, null) ;
 		UIFormStringInput emailAdress = new UIFormStringInput(FIELD_EMAIL_ADDRESS, FIELD_EMAIL_ADDRESS, null) ;
 		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(ITEM_LANGUAGE_ENGLISH, "English")) ;
-		list.add(new SelectItemOption<String>(ITEM_LANGUAGE_VIETNAMESE, "Vietnamese")) ;
-		list.add(new SelectItemOption<String>(ITEM_LANGUAGE_FRENCH, "French")) ;
+		list.add(new SelectItemOption<String>("English", "English")) ;
+		for (String language: listLanguage) {
+			if(language.equals("English")) continue ;
+			list.add(new SelectItemOption<String>(language, language)) ;
+		}
 		UIFormSelectBox language = new UIFormSelectBox(FIELD_LANGUAGE, FIELD_LANGUAGE, list) ;
 		UIFormTextAreaInput question = new UIFormTextAreaInput(FIELD_QUESTION, FIELD_QUESTION, null) ;
 		UIFormTextAreaInput response = new UIFormTextAreaInput(FIELD_RESPONSE, FIELD_RESPONSE, null) ;

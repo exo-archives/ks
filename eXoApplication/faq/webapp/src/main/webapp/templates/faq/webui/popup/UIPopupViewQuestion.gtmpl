@@ -124,7 +124,7 @@
 										quesRelaCont = FAQUtils.getSubString(quesRelaCont, 50); 
 									}
 						%>
-									&nbsp; - <a title="$title" > $quesRelaCont<br></a>
+									&nbsp;  <div title="$title" >- $quesRelaCont<br></div>
 						<% 	}
 							}%>
 					</div>
