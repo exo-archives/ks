@@ -460,13 +460,13 @@
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Response {
-  background: url('background/DotLine.gif') repeat-x bottom;
+  /*background: url('background/DotLine.gif') repeat-x bottom;*/
   padding-bottom: 4px;
   padding-left: 10px ;
 }
 
 .UIFAQPortlet .ResponseContent .Response {
-  background: url('background/DotLine.gif') repeat-x bottom;
+  /*background: url('background/DotLine.gif') repeat-x bottom;*/
   padding-bottom: 4px;
   padding-left: 10px ;
 }
@@ -479,13 +479,13 @@
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent {
-  background: url('background/DotLine.gif') repeat-x bottom;
+  /*background: url('background/DotLine.gif') repeat-x bottom;*/
   padding-bottom: 4px;
   padding-left: 10px ;
 }
 
 .UIFAQPortlet .ResponseContent .RelatedQuestions {
-  background: url('background/DotLine.gif') repeat-x bottom;
+  /*background: url('background/DotLine.gif') repeat-x bottom;*/
   padding: 4px 0px;
   padding-left: 10px ;
 }
@@ -1180,7 +1180,7 @@
 }
 
 .UIFAQPortlet .ResponseContent .RelatedQuestionsView {
-  background: url('background/DotLine.gif') repeat-x bottom;
+  /*background: url('background/DotLine.gif') repeat-x bottom;*/
   padding: 4px 0px;
 }
 

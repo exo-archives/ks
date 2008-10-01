@@ -352,7 +352,10 @@
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							responseBy = question.getResponseBy() ;
-							date = question.getDateResponse() ;
+							
+							java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MM-dd-yyyy");
+							date = dateFormatter.format(question.getDateResponse());
+							
 							response = question.getResponses();
 						}
 					%>
@@ -369,7 +372,7 @@
 										<div class="QuestionContainer" id="$qId">
 											<div class="LeftQuestionContainer">
 												<div class="$questionIcon"><span/></div>
-												<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)" style="float: left; width: 95%;">
+												<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)" style="float: left; width: 90%;">
 													<!-- question content -->
 													<a href="$linkQuestion" class="ViewQuestionNotApproved"> 
 														$questionContent
@@ -494,8 +497,8 @@
 										<div class="ResponseContent">
 											<div class="Response" style="padding-left:0px;">
 												$response
-												<div>
-													<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :</b> $responseBy , $date
+												<div style="color: #8a8a89;">
+													<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :&nbsp; $responseBy on $date
 												</div>
 											</div>
 												
@@ -530,7 +533,8 @@
 																    	<div style="clear: left;"><span></span></div>
 													 						<div class="LabelBox">
 														 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-														 						<div class="Size AttachmentLabel">$fileName ( $size )</div>
+														 						<!--<div class="Size AttachmentLabel">$fileName( $size )</div>-->
+														 						<div style="line-height:20px;"><div class="Size AttachmentLabel">$fileName</div>&nbsp;( $size )</div>
 														 						<div style="clear: left;"><span></span></div>
 														 						<div class="Action" style="padding-top: 0px;">
 														 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">
@@ -543,15 +547,18 @@
 														 					</div>
 													 					</div>
 														    <%} else { %>
-														    		<div class="LabelBox" style="margin: 10px 0px 0px 5px;">
-																			<div class="AttachmentIcon FileAttachmentIcon" style="width: auto; height: auto;">
-																				<a class="AttachmentLabel" href="$linkImage">$fileName</a>
-																			</div>
-																			<div style="clear: left;"><span></span></div>
-																			<div class="Size">
-																				<%=_ctx.appRes(uicomponent.getName() + ".label." + "SizeFile")%>: $size
-																			</div>
+														    		<div class="LabelBox" style="margin: 10px 0px 0px 5px; line-height:20px;">
+																		<div class="AttachmentIcon FileAttachmentIcon" style="width: auto; height: auto;">
+																			<a class="AttachmentLabel" href="$linkImage">$fileName</a>
 																		</div>
+																		&nbsp;(&nbsp; $size &nbsp;)
+																		<div style="clear: left;"><span></span></div>
+																		<!--
+																		<div class="Size">
+																			<%=_ctx.appRes(uicomponent.getName() + ".label." + "SizeFile")%>: $size
+																		</div>
+																		-->
+																	</div>
 														    <%}
 													    	} else {
 													    	%>
@@ -594,7 +601,9 @@
 															}
 															if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
 												%>
-																&nbsp; - <a href="$linkRelaQues"> $quesRelaCont<br></a>
+																<div style="padding: 0px 0px 5px 10px;">
+																	<a href="$linkRelaQues" style="text-decoration:yes; color:#1555B5;"> $quesRelaCont<br></a>
+																</div>
 												<% 		}
 														}
 													} else {%>
