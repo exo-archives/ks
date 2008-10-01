@@ -57,7 +57,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	private List<Question> listQuestion_ = null ;
-	private static String language_ = "English" ;
+	private static String language_ = "" ;
 	public ResultSearchQuestion() throws Exception {
 		addChild(UIFAQPageIterator.class, null, LIST_RESULT_SEARCH) ;
 	}

@@ -104,7 +104,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	
   public List<Watch> getListWatch() throws Exception {
   	long pageSelected ;
-  	if(!check_) {
+  	if(check_ == false) {
 			if(curentPage_ > 1){
 				pageSelected = curentPage_ ;
 				curentPage_ = 0;
