@@ -165,7 +165,7 @@
 .UIForumPortlet .ForumToolbar .UIPopupCategory {
 	left: 0px;
 	position: absolute;
-	top: 24px;
+	top: auto;
 	width: auto;
 	z-index: 100;
 }

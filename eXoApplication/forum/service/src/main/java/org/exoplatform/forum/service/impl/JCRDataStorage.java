@@ -1368,15 +1368,15 @@ public class JCRDataStorage{
 			for (ForumAttachment attachment : attachments) {
 				++numberAttach;
 				BufferAttachment file = null;
-				listFileName.add(attachment.getName());
+				listFileName.add(attachment.getId());
 				try {
 					file = (BufferAttachment) it.next();
 					Node nodeFile = null;
 					System.out.println("\n\nattachment:=====>>>>>> ");
-					if (!postNode.hasNode(file.getName()))
-						nodeFile = postNode.addNode(file.getName(), "nt:file");
+					if (!postNode.hasNode(file.getId()))
+						nodeFile = postNode.addNode(file.getId(), "nt:file");
 					else
-						nodeFile = postNode.getNode(file.getName());
+						nodeFile = postNode.getNode(file.getId());
 					Node nodeContent = null;
 					if (!nodeFile.hasNode("jcr:content")) {
 						nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
@@ -2611,7 +2611,6 @@ public class JCRDataStorage{
 			{
 				queryString = new StringBuffer();
 				queryString.append("/jcr:root").append(cateNode.getPath()).append("//element(*,exo:forum)").append(strQueryForum).append(" order by @exo:forumOrder ascending,@exo:createdDate ascending");
-//				System.out.println("\n\nqueryString: " + queryString.toString() + "\n\n");
 				query = qm.createQuery(queryString.toString(), Query.XPATH) ;
 				result = query.execute() ;
 				NodeIterator iterForum = result.getNodes() ;
@@ -2622,6 +2621,8 @@ public class JCRDataStorage{
 					linkData.setName(forumNode.getProperty("exo:name").getString());
 					linkData.setType(Utils.FORUM);
 					linkData.setPath(cateNode.getName() + "/" + forumNode.getName());
+					linkData.setIsLock(forumNode.getProperty("exo:isLock").getBoolean());
+					linkData.setIsClosed(forumNode.getProperty("exo:isClosed").getBoolean());
 					forumLinks.add(linkData) ;
 					{
 						NodeIterator iterTopic = forumNode.getNodes() ;
@@ -2634,6 +2635,8 @@ public class JCRDataStorage{
 							else linkData.setName("null");
 							linkData.setType(Utils.TOPIC);
 							linkData.setPath(cateNode.getName() + "/" + forumNode.getName() + "/" + topicNode.getName());
+							linkData.setIsLock(topicNode.getProperty("exo:isLock").getBoolean());
+							linkData.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean());
 							forumLinks.add(linkData) ;
 						}
 					}

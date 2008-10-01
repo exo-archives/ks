@@ -223,7 +223,7 @@
 								</div>
 								<% /*Begin Popup Menu*/ %>
 								<div style="position: relative;">
-									<div class="UIPopupCategory" style="display: none; top: 2px;">
+									<div class="UIPopupCategory" style="display: none;">
 										<div class="UIRightClickPopupMenu" style="display: block; left: -70px;">
 											<div class="UIContextMenuContainer">
 												<div class="TopLeftRightClickPopupMenu">
@@ -749,6 +749,7 @@
 								 		 double sizeNumber = attachment.getSize() ;
 								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
+								 		 String pathAtt = urlFile.replaceAll("&","(omu)");
 								 		 ++nb;
 								%>
 										<div class="AttachmentBox">
@@ -763,7 +764,7 @@
 						 						<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
 						 						<div class="Action">
 						 							<div class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.openPicture(this,'imgView${fileName}')"><%=_ctx.appRes(uiformId + ".action.View");%></div>
-						 							<div class="Icon Download"><a href="$urlFile"><%=_ctx.appRes(uiformId + ".action.Download");%></a></div>
+						 							<div class="Icon Download"><a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes(uiformId + ".action.Download");%></a></div>
 						 						</div>
 						 					</div>
 							 				<div style="clear: left;"><span></span></div>

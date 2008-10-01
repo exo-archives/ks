@@ -310,7 +310,7 @@ UIForumPortlet.prototype.setEnableInput = function() {
 		var obj = eXo.core.DOMUtil.findFirstDescendantByClass(parend, "input", "checkbox") ;
 		if(obj) {
 			document.getElementById("BanCounter").disabled = "disabled" ;
-			document.getElementById("BanReasonSummary").disabled = "disabled" ;
+			document.getElementById("BanReasonSummary").readonly = "readonly" ;
 			document.getElementById("CreatedDateBan").disabled = "disabled" ;
 			if(!obj.checked) {
 				var selectbox = DOMUtil.findFirstDescendantByClass(parend, "select", "selectbox") ;

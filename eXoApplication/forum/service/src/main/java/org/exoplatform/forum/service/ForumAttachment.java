@@ -18,6 +18,8 @@ package org.exoplatform.forum.service;
 
 import java.io.InputStream;
 
+import org.exoplatform.services.jcr.util.IdGenerator;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
@@ -31,7 +33,10 @@ abstract public class ForumAttachment {
 	private String path ;
 	private long size ;
 	private String workspace ;
-
+	
+	public ForumAttachment() {
+	 id = "Attach" + IdGenerator.generate() ;;
+  }
 	public String getWorkspace() { return workspace ; }
 	public void setWorkspace(String ws) { workspace = ws ; }
 	public String getId() { return id ; }

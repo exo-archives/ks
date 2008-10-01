@@ -129,7 +129,8 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.ViewPublicUserInfoActionListener.class ) ,
 			@EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.WatchOptionActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class )
+			@EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class ),
+			@EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class )
 		}
 )
 public class UITopicDetail extends UIForm {
@@ -995,6 +996,13 @@ public class UITopicDetail extends UIForm {
 	//---------------------------------	Post Menu	 --------------------------------------//
 	static public class MergePostActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
+		}
+	}
+
+	static public class DownloadAttachActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
 
