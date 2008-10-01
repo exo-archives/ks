@@ -324,3 +324,6 @@
   width:55px;
 }
 
+.UIForumPortlet .Cursor {
+  cursor: pointer;
+}

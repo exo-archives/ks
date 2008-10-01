@@ -43,20 +43,20 @@
 				<% if(isShowMenu){ %>
 					<div class="SeparatorLine"><span></span></div>
 					<div class="ToolbarActionsContainer" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 3);">
-						<div style="position: relative;">
-							<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-								<div class="LeftOverButton">
-									<div class="RightOverButton">
-										<div class="CenterOverButton">
-											<div class="ManageCategoryButton">
-												<div class="DownArrow1Icon"><%= _ctx.appRes("UICategory.label.manageCategory"); %></div>
-											</div>
+						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+							<div class="LeftOverButton">
+								<div class="RightOverButton">
+									<div class="CenterOverButton">
+										<div class="ManageCategoryButton">
+											<div class="DownArrow1Icon"><%= _ctx.appRes("UICategory.label.manageCategory"); %></div>
 										</div>
 									</div>
 								</div>
 							</div>
+						</div>
+						<div style="position: relative;">
 						<% /*Begin Popup Menu*/ %>
-							<div class="UIPopupCategory" style="display: none;">
+							<div class="UIPopupCategory" style="display: none;top: auto">
 								<div class="PopupCategoryDecorator">
 							
 									<div class="UIRightClickPopupMenu" style="display: block;">
@@ -117,20 +117,20 @@
 					<% } %>
 					<div class="ContentAction" style="float:right; margin: 2px 0px 0px 0px; width: 155px;">
 						<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
-							<div style="position: relative;">
-								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-									<div class="LeftOverButton" title="Search in this Category">
-										<div class="RightOverButton">
-											<div class="CenterOverButton">
-												<div class="SearchIcon">
-													<div class="DownArrow1Icon">Search this Category</div>
-												</div>
+							<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+								<div class="LeftOverButton" title="Search in this Category">
+									<div class="RightOverButton">
+										<div class="CenterOverButton">
+											<div class="SearchIcon">
+												<div class="DownArrow1Icon">Search this Category</div>
 											</div>
 										</div>
 									</div>
 								</div>
+							</div>
+							<div style="position: relative;">
 							<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory" style="display: none; top: auto">
+								<div class="UIPopupCategory" style="display: none; top: auto;">
 									<div class="UIRightClickPopupMenu" style="display: block;">
 										<div class="UIContextMenuContainer">
 											<div class="TopLeftRightClickPopupMenu">

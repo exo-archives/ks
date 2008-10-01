@@ -10,19 +10,25 @@
 		<div class="TreeContainer ParentNode">
 		<% 
 			List categories = uicomponent.getForumLinks(); 
+			int t = 0;
 			for(category in categories) {
 			 if(category.getType().equals(Utils.CATEGORY)) {
-				String display = "display:none;" ;
-				String iconClass = "SmallGrayMinus" ;
+				String display = "display:block;" ;
+				String iconClass = "SmallGrayPlus" ;
 				String isShow = "true";
 				String categoryName = category.getName() ;
 				List forums =	uicomponent.getForums(category.getId());
 				if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
+				if(t > 0){
+				  display = "display:none;" ;
+				  iconClass = "SmallGrayMinus" ;
+				}
+				++t;
 		%>
 			<div class="Node $iconClass">
 			 	<div class="Icon CategoryNormalIcon"><span></span></div>	
 			 	<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
-			 		<div class="NodeSelected"><a>$categoryName</a></div> 
+			 		<div class="NodeSelected"><a class="Cursor">$categoryName</a></div> 
 				</div> 			
 				<div style="clear: left;"><span></span></div>
 				<div class="ChildNodeContainer ParentNode" style="$display">
@@ -32,10 +38,13 @@
 						iconClass = "SmallGrayMinus" ;
 						display = "display:none;" ;
 							iconClass = "SmallGrayPlus" ;
+						String classForumIcon = "ThreadsIcon";
+						if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
+						if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
 				%>
 					<div class="Node">
 						<div style="float:left"><%uicomponent.renderChild(forum.getPath())%></div>
-						<div class="Icon ThreadsIcon"><span></span></div>
+						<div class="Icon $classForumIcon"><span></span></div>
 						<div class="NodeLabel"> 
 							<div>$forumName</div>
 						</div>

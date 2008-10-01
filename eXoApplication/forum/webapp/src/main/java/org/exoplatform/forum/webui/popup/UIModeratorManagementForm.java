@@ -388,6 +388,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		banCounter.setValue(userProfile.getBanCounter() + "");
 		UIFormTextAreaInput banReasonSummary = new UIFormTextAreaInput(FIELD_BANREASONSUMMARY_MULTIVALUE, FIELD_BANREASONSUMMARY_MULTIVALUE, null);
 		banReasonSummary.setValue(ForumUtils.unSplitForForum(userProfile.getBanReasonSummary()));
+		banReasonSummary.setEditable(false);
 		UIFormStringInput createdDateBan = new UIFormStringInput(FIELD_CREATEDDATEBAN_INPUT, FIELD_CREATEDDATEBAN_INPUT, null) ;
 		if(isBan) {
 			banReason.setValue(userProfile.getBanReason());
