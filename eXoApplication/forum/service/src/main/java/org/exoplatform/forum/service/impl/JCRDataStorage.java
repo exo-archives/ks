@@ -977,7 +977,15 @@ public class JCRDataStorage{
 			
 			List<String> emailList = new ArrayList<String>() ;
 			//send watching notification and send notify
-			
+			Node forumAdminNode = null;
+			try{
+				forumAdminNode = forumHomeNode.getNode(Utils.FORUMADMINISTRATION) ;
+			} catch (Exception e) {
+			}
+			String content = "";
+			if(forumAdminNode != null) {
+				if(forumAdminNode.hasProperty("exo:notifyEmailContent"))content = forumAdminNode.getProperty("exo:notifyEmailContent").getString() ;
+			}
 			/*
 			 * check if topic is activated, is approved, is not closed, is not locked, is not wated 
 			 * and forum is activate then send email for users who add watching.
@@ -997,10 +1005,18 @@ public class JCRDataStorage{
 				message.setSubject("eXo Forum Watching Notification!");
 				StringBuffer body = new StringBuffer();
 				body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString() ).append("</b>' have just	added topic: <b>").append(topic.getTopicName()).append("</b><div>")
-				.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> You have goto this link and view it: <a target=\"_blank\" href=\"" + topic.getLink() 
-						+ "\">" + topic.getLink() + "</a><br/><br/><br/>");
-				//message.setMessageBody(body.toString());
-				message.setBody(body.toString());
+				.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> Please  <a target=\"_blank\" href=\"" + topic.getLink() 
+						+ "\"><b>click here</b></a> for more details<br/><br/><br/>");
+				if(content != null && content.length() > 0) {
+					String content_ = topicNode.getProperty("exo:name").getString();
+					content_ = content.replace("&objectName", content_);
+					content_ = content_.replaceAll("&objectWatch", "Forum");
+					content_ = content_.replaceAll("&content", Utils.convertCodeHTML(topic.getDescription()));
+					content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+					message.setBody(content_);
+				} else {
+					message.setBody(body.toString());
+				}
 				sendEmailNotification(emailList, message) ;					
 			}
 		} else {
@@ -1372,7 +1388,6 @@ public class JCRDataStorage{
 				try {
 					file = (BufferAttachment) it.next();
 					Node nodeFile = null;
-					System.out.println("\n\nattachment:=====>>>>>> ");
 					if (!postNode.hasNode(file.getId()))
 						nodeFile = postNode.addNode(file.getId(), "nt:file");
 					else
@@ -1491,14 +1506,14 @@ public class JCRDataStorage{
 						message.setSubject("eXo Thread Watching Notification!");
 						StringBuffer body = new StringBuffer();
 						body.append("The Topic '<b>").append(topicNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
-						.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: <a target=\"_blank\" href=\"" + post.getLink() 
-						+ "\">" + post.getLink() + "</a><br/><br/><br/>");
+						.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> Please  <a target=\"_blank\" href=\"" + post.getLink() 
+						+ "\"><b>click here</b></a> for more details.<br/><br/><br/>");
 						if(content != null && content.length() > 0) {
 							String content_ = topicNode.getProperty("exo:name").getString();
 							content_ = content.replace("&objectName", content_);
 							content_ = content_.replaceAll("&objectWatch", "Topic");
 							content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-							content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">" + post.getLink() + "</a><br/>");
+							content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 							message.setBody(content_);
 						} else {
 							message.setBody(body.toString());
@@ -1540,14 +1555,14 @@ public class JCRDataStorage{
 					message.setSubject("eXo Forum Watching Notification!");
 					StringBuffer body = new StringBuffer();
 					body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>")
-					.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> You have goto this link and view it: <a target=\"_blank\" href=\"" + post.getLink() 
-						+ "\">" + post.getLink() + "</a><br/><br/><br/>");
+					.append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> Please  <a target=\"_blank\" href=\"" + post.getLink() 
+						+ "\"><b>click here</b></a> for more details.<br/><br/><br/>");
 					
 					if(content != null && content.length() > 0) {
 						content = content.replaceAll("&objectWatch", "Forum");
 						content = content.replaceAll("&objectName", forumNode.getProperty("exo:name").getString());
 						content = content.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-						content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">" + post.getLink() + "</a><br/>");
+						content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 						message.setBody(content);
 					} else {
 						message.setBody(body.toString());
