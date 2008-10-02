@@ -353,7 +353,7 @@
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							responseBy = question.getResponseBy() ;
 							
-							java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MM-dd-yyyy");
+							java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
 							date = dateFormatter.format(question.getDateResponse());
 							
 							response = question.getResponses();
@@ -374,10 +374,20 @@
 												<div class="$questionIcon"><span/></div>
 												<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)" style="float: left; width: 90%;">
 													<!-- question content -->
-													<a href="$linkQuestion" class="ViewQuestionNotApproved"> 
-														$questionContent
-													</a>
+													<div class="ViewQuestionNotApproved">
+														<a href="$linkQuestion"> 
+															$questionContent
+														</a>
+														
+														<!-- view author's infor -->
+														<%
+														if(uicomponent.viewAuthorInfor){
+														%>
+															<div style="padding-top: 5px;">Author: <%=question.getAuthor()%> ( <%=question.getEmail()%> )</div>
+														<%}%>
+													</div>
 													<div style="clear: left;"><span/></div>
+													
 													<!-- action of this question -->
 													<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
@@ -497,12 +507,11 @@
 										<div class="ResponseContent">
 											<div class="Response" style="padding-left:0px;">
 												$response
-												<div style="color: #8a8a89;">
+												<div>
 													<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :&nbsp; $responseBy on $date
 												</div>
 											</div>
 												
-											<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "FileAttached")%>: </b>
 											<div class="AttachmentContent">
 												<%if(!question.getAttachMent().isEmpty()) {%>
 													<div style="margin-top: 5px; margin-bottom: 5px;">
@@ -528,14 +537,23 @@
 														    	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 															    if(validate.isImage(fileName)) {
 														    %>
-															    	<div style="float: left; margin: 10px 0px 0px 5px;" id="divId${fileName}">
-																    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile"></div>
+															    	<div style="float: left; margin: 10px 0px 0px 10px;" id="divId${fileName}">
+																    	<div class="Image">
+																    		<a href="javaScript:void(0);" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">
+																    			<img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile">
+																    		</a>
+																    	</div>
 																    	<div style="clear: left;"><span></span></div>
 													 						<div class="LabelBox">
 														 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-														 						<!--<div class="Size AttachmentLabel">$fileName( $size )</div>-->
-														 						<div style="line-height:20px;"><div class="Size AttachmentLabel">$fileName</div>&nbsp;( $size )</div>
+														 						<div style="line-height:20px;">
+															 						<div class="Size AttachmentLabel">
+															 							<a href="$linkImage">$fileName</a>
+															 						</div>
+															 						&nbsp;( $size )
+															 					</div>
 														 						<div style="clear: left;"><span></span></div>
+													 							<!-- 
 														 						<div class="Action" style="padding-top: 0px;">
 														 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">
 														 								<%=_ctx.appRes(uicomponent.getName() + ".action." + "ViewImage")%>
@@ -544,6 +562,7 @@
 														 								<a href="$linkImage"><%=_ctx.appRes(uicomponent.getName() + ".action." + "DownloadFile")%></a>
 													 								</div>
 														 						</div>
+												 							 	-->
 														 					</div>
 													 					</div>
 														    <%} else { %>
@@ -702,4 +721,3 @@
 	
 <% /* End View category*/ %>
 </div>
-

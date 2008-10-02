@@ -37,6 +37,7 @@ public class Category {
   private String name ;
   private String description ;
   private boolean isModerateQuestions = true ;
+  private boolean viewAuthorInfor = false;
   private String[] moderators ;
   private Date createdDate ;
   
@@ -148,4 +149,12 @@ public class Category {
 		}
   	return listUser.toArray(new String[]{});
   }
+
+	public boolean isViewAuthorInfor() {
+		return viewAuthorInfor;
+	}
+
+	public void setViewAuthorInfor(boolean viewAuthorInfor) {
+		this.viewAuthorInfor = viewAuthorInfor;
+	}
 }
