@@ -3,6 +3,10 @@
 	height: 24px;
 }
 
+.UIForumPortlet .CategoryIcon {
+	background: url('icons/CategoryIcon.gif') no-repeat;
+}
+
 .UIForumPortlet .ForumNewPostIcon {
 	background: url('icons/ForumNewPostIcon.gif') no-repeat;
 }

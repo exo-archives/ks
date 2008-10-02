@@ -2718,11 +2718,17 @@ public class JCRDataStorage{
 				forumSearch.setName(nodeObj.getProperty("exo:name").getString());
 				forumSearch.setType(type);
 				if(type.equals(Utils.FORUM)){
-					forumSearch.setIcon("ForumNormalIcon");
-				}else if(!type.equals(Utils.CATEGORY)){
-					forumSearch.setIcon(nodeObj.getProperty("exo:icon").getString());
+					if(nodeObj.getProperty("exo:isClosed").getBoolean()) forumSearch.setIcon("ForumCloseIcon"); 
+					else if(nodeObj.getProperty("exo:isLock").getBoolean()) forumSearch.setIcon("ForumLockedIcon");
+					else forumSearch.setIcon("ForumNormalIcon");
+				}else if(type.equals(Utils.TOPIC)){
+					if(nodeObj.getProperty("exo:isClosed").getBoolean()) forumSearch.setIcon("HotThreadNoNewClosePost"); 
+					else if(nodeObj.getProperty("exo:isLock").getBoolean()) forumSearch.setIcon("HotThreadNoNewLockPost");
+					else forumSearch.setIcon("HotThreadNoNewPost");
+				} else if(type.equals(Utils.CATEGORY)){
+					forumSearch.setIcon("CategoryIcon");
 				} else {
-					forumSearch.setIcon("icon");
+					forumSearch.setIcon(nodeObj.getProperty("exo:icon").getString());
 				}
 				forumSearch.setType(type);
 				forumSearch.setPath(nodeObj.getPath()) ;
@@ -2755,11 +2761,17 @@ public class JCRDataStorage{
 			forumSearch.setName(nodeObj.getProperty("exo:name").getString());
 			forumSearch.setType(type);
 			if(type.equals(Utils.FORUM)){
-				forumSearch.setIcon("ForumNormalIcon");
-			}else if(!type.equals(Utils.CATEGORY)){
-				forumSearch.setIcon(nodeObj.getProperty("exo:icon").getString());
+				if(nodeObj.getProperty("exo:isClosed").getBoolean()) forumSearch.setIcon("ForumCloseIcon"); 
+				else if(nodeObj.getProperty("exo:isLock").getBoolean()) forumSearch.setIcon("ForumLockedIcon");
+				else forumSearch.setIcon("ForumNormalIcon");
+			}else if(type.equals(Utils.TOPIC)){
+				if(nodeObj.getProperty("exo:isClosed").getBoolean()) forumSearch.setIcon("HotThreadNoNewClosePost"); 
+				else if(nodeObj.getProperty("exo:isLock").getBoolean()) forumSearch.setIcon("HotThreadNoNewLockPost");
+				else forumSearch.setIcon("HotThreadNoNewPost");
+			} else if(type.equals(Utils.CATEGORY)){
+				forumSearch.setIcon("CategoryIcon");
 			} else {
-				forumSearch.setIcon("icon");
+				forumSearch.setIcon(nodeObj.getProperty("exo:icon").getString());
 			}
 			forumSearch.setPath(nodeObj.getPath()) ;
 			listSearchEvent.add(forumSearch) ;
