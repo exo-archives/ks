@@ -25,19 +25,20 @@
 		</thead>
 		<tbody>
 		<%
-			String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
-			String classCssSend = "EvenRow";
-			i = 0;
-			for(mail in sendmails) {
-				if(i%2 == 0) classCssSend = "EvenRow";
-				else classCssSend = "OddRow";
-				++i;
-				String mailId = mail.getId();
-				String nameMail = mail.getName() ;
-				if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
-				String fromUser = mail.getSendTo().replaceAll(",",", ") ;
-				Date fromDate = mail.getReceivedDate() ;
-				String strFromDate = ForumUtils.getFormatDate(formatDate,fromDate);
+		  if(sendmails.size() > 0) {
+				String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+				String classCssSend = "EvenRow";
+				i = 0;
+				for(mail in sendmails) {
+					if(i%2 == 0) classCssSend = "EvenRow";
+					else classCssSend = "OddRow";
+					++i;
+					String mailId = mail.getId();
+					String nameMail = mail.getName() ;
+					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
+					String fromUser = mail.getSendTo().replaceAll(",",", ") ;
+					Date fromDate = mail.getReceivedDate() ;
+					String strFromDate = ForumUtils.getFormatDate(formatDate,fromDate);
 		%>
 			<tr class="$classCssSend">
 				<td class="text"><a href="<%=uicomponent.event("ViewMessage", mailId)%>">$nameMail</a></td>
@@ -55,6 +56,11 @@
 						</div>
 					</div>
 				</td>
+			</tr>
+		 <%  }
+		   } else {%>
+		  <tr>
+				<td colspan="3"><div align="center"><b><%=_ctx.appRes("UIPrivateMessageForm.label.NoMessages");%></b></div></td>
 			</tr>
 		 <% } %>
 		</tbody>
