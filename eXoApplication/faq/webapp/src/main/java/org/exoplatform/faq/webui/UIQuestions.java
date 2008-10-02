@@ -127,6 +127,7 @@ public class UIQuestions extends UIContainer {
   private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
   private String[] userActionQues_ = new String[]{"SendQuestion"} ;
   private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
+  private boolean viewAuthorInfor = false;
   
   public JCRPageList pageList ;
   private UIFAQPageIterator pageIterator = null ;
@@ -370,11 +371,11 @@ public class UIQuestions extends UIContainer {
       residual = size % 1024;
       size /= 1024;
     }
-    if(residual > 1000){
+    if(residual > 500){
       String str = residual + "";
-      result = size + "." + str.substring(0, 3) + " " + sizes_[i];
+      result = (size + 1) + " " + sizes_[i];
     }else{
-      result = size + "." + residual + " " + sizes_[i];
+      result = size + " " + sizes_[i];
     }
     return result;
   }
@@ -677,7 +678,7 @@ public class UIQuestions extends UIContainer {
       UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       try {
-        faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+        questions.viewAuthorInfor = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()).isViewAuthorInfor() ;
       } catch (Exception e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1094,6 +1095,7 @@ public class UIQuestions extends UIContainer {
 				  if (check) {
 				  	uiQuestions.pageList.setObjectRepare_(questionId);
 		        uiQuestions.setCategoryId(categoryId) ;
+		        uiQuestions.viewAuthorInfor = category.isViewAuthorInfor();
 		        uiQuestions.setIsNotChangeLanguage() ;
 		        uiQuestions.listCateId_.clear() ;
 		        UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
