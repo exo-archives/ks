@@ -12,23 +12,26 @@
 					<th><%=_ctx.appRes("UIShowBookMarkForm.label.linkName")%></th>
 					<th style="width: 40px;"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
 				</thead>
-				<body>
-					<% 
-						String linkName = "";
-						String linkPath = "";
-						String icon = "";
-						String linkBm = "";
-						int index = 0, lastIndex = 0;
-						for(links in uiform.getBookMark()){
-							index = links.indexOf("//") ;
-							icon = links.substring(0, index);
-							lastIndex = links.lastIndexOf("//") ;
-							linkName = links.substring(index+2,lastIndex);
-							linkPath = links.substring(lastIndex + 2);
-							links = "topicIcon//topicName//"+linkPath;
-							linkBm = uiform.url("OpenLink",linkPath);		
-							linkBm = ForumSessionUtils.getBreadcumbUrl(linkBm, uiform.id, "OpenLink");					
-							//window.location.href=this.href;						
+				<tbody>
+					<%
+					  String []bookMarks = uiform.getBookMark();
+					  if(bookMarks.length > 0) {
+							String linkName = "";
+							String linkPath = "";
+							String icon = "";
+							String linkBm = "";
+							int index = 0, lastIndex = 0;
+							for(int i = 0; i < bookMarks.length; ++i){
+							  String links = bookMarks[i]; 
+								index = links.indexOf("//") ;
+								icon = links.substring(0, index);
+								lastIndex = links.lastIndexOf("//") ;
+								linkName = links.substring(index+2,lastIndex);
+								linkPath = links.substring(lastIndex + 2);
+								links = "topicIcon//topicName//"+linkPath;
+								linkBm = uiform.url("OpenLink",linkPath);		
+								linkBm = ForumSessionUtils.getBreadcumbUrl(linkBm, uiform.id, "OpenLink");					
+								//window.location.href=this.href;						
 					%>
 					<tr>
 						<td><div class="$icon" style="width: 24px;height: 24px;"><span></span></div></td>
@@ -39,8 +42,13 @@
 							</a>
 						</td>
 					</tr>
-					<% }%>
-				</body>
+					<%   }
+					   } else {%>
+					<tr>
+						<td colspan="3"><div align="center"><b><%=_ctx.appRes("UIShowBookMarkForm.label.NoLinks");%></b></div></td>
+					</tr>
+					<% } %>
+				</tbody>
 			</table>
 		</div>
 		<div class="UIAction"> 
@@ -50,7 +58,7 @@
 						<a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel")%></div>
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel");%></div>
 								</div>
 							</div>
 						</a>

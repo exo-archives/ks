@@ -13,12 +13,13 @@
 						</thead>
 						<tbody>
 							<% 
-								String classRow = "whileRow";
-								int i = 0;
 								String []emails = uicomponent.getEmails();
-								 for(email in emails){
-									if(i%2 == 0) classRow = "whileRow";
-									else classRow = "OddRow";
+								if(emails.length > 0){
+									String classRow = "whileRow";
+								  for(int i = 0; i < emails.length; ++i){
+								    String email = emails[i];
+										if(i%2 == 0) classRow = "whileRow";
+										else classRow = "OddRow";
 							%>
 								<tr class="$classRow">
 									<td >
@@ -30,9 +31,12 @@
 										</a>
 									</td>
 					 			</tr>
-						 	<% i = i + 1;
-						 		}
-						 	 %>
+						 	<%  }
+						 		} else { %>
+						 	<tr>
+								<td colspan="3"><div align="center"><b><%=_ctx.appRes("UIWatchToolsForm.label.NoEmails");%></b></div></td>
+							</tr>
+						 <% } %>
 						</tbody>
 					</table>
 				</div>
