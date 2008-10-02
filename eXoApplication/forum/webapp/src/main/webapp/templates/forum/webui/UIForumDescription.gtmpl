@@ -4,7 +4,7 @@
   Forum forum = uicomponent.getForum();
 %>
 <% if(forum != null) {  %>
-<div class="UIForumDescription" id="uicomponent.id">
+<div class="UIForumDescription" id="$uicomponent.id">
 	<div class="LeftDescription">
 		<div class="RightDescription">
 			<div class="CenterDescription">

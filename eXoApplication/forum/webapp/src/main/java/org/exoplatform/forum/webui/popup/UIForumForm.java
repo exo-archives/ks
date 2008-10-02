@@ -30,6 +30,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
+import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -391,6 +392,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				}
 			} else {
 				UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
+				UIForumDescription forumDescription = forumPortlet.findFirstComponentOfType(UIForumDescription.class); 
+				forumDescription.setForum(newForum) ;
 				breadcumbs.setUpdataPath(categoryId + "/" + uiForm.forumId);
 				context.addUIComponentToUpdateByAjax(forumPortlet) ;
 			}
