@@ -628,6 +628,7 @@ public class JCRDataStorage {
   	categoryNode.setProperty("exo:createdDate", cal.getInstance()) ;
   	categoryNode.setProperty("exo:moderators", category.getModerators()) ;
   	categoryNode.setProperty("exo:isModerateQuestions", category.isModerateQuestions()) ;
+  	categoryNode.setProperty("exo:viewAuthorInfor", category.isViewAuthorInfor()) ;
   }
   
   public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
@@ -678,6 +679,7 @@ public class JCRDataStorage {
   	if(categoryNode.hasProperty("exo:createdDate")) cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
   	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
   	if(categoryNode.hasProperty("exo:isModerateQuestions")) cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
+  	if(categoryNode.hasProperty("exo:viewAuthorInfor")) cat.setViewAuthorInfor(categoryNode.getProperty("exo:viewAuthorInfor").getBoolean()) ;
   	return cat;
   }
   

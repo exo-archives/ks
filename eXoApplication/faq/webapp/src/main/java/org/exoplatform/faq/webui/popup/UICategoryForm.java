@@ -70,6 +70,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   final private static String FIELD_DESCRIPTION_INPUT = "description" ;
   final private static String FIELD_MODERATOR_INPUT = "moderator" ;
   final private static String FIELD_MODERATEQUESTIONS_CHECKBOX = "moderatequestions" ;
+  public static final String VIEW_AUTHOR_INFOR = "ViewAuthorInfor".intern();
   private static FAQService faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private static boolean isAddNew_ = true ;
   private String oldName_ = "";
@@ -82,6 +83,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false )) ;
+    inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(VIEW_AUTHOR_INFOR, VIEW_AUTHOR_INFOR, false )) ;
     UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
     inputset.addUIFormInput(moderator) ;
     List<ActionData> actionData = new ArrayList<ActionData>() ;
@@ -135,6 +137,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription()) ;
 			getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions()) ;
+			getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).setChecked(cat.isViewAuthorInfor()) ;
 			String moderator = "";
 	    for(String str : cat.getModerators()) {
 	    	if( moderator!= null && moderator.trim().length() >0 ) moderator += "," ;
@@ -221,6 +224,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
+      boolean viewAuthorInfor = uiCategory.getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
           ApplicationMessage.INFO)) ;
@@ -243,6 +247,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
+			cat.setViewAuthorInfor(viewAuthorInfor);
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentId() ;
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
