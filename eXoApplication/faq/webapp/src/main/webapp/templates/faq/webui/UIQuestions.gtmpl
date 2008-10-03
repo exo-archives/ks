@@ -256,6 +256,9 @@
 					} else {
 						questionIcon = "NotResponse" ;
 					}
+					
+					java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
+					
 					if(!uicomponent.getQuestionView().equals(qId)){
 			%>
 						<div class="QuestionContainer" id="$qId">
@@ -269,13 +272,13 @@
 											questionContent = FAQUtils.getSubString(questionContent, 140);
 										%>
 											<a class="ViewQuestionNotApproved" href="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
-												$questionContent
+												$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
 											</a>
 									<%} else {
 											titleQuestion = "";
 										%>
 											<a class="ViewQuestionNotApproved" href="$linkQuestion"> 
-														$questionContent
+														$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
 											</a>
 									<%}
 										if(!question.isApproved()) {%>
@@ -284,7 +287,7 @@
 											<div style="clear: left;"><span></span></div>
 										<% if(titleQuestion.trim().length() > 0) {%>
 											<div id="titleQuestion$questionId" class="questionTitle">
-												$titleQuestion
+												$titleQuestion &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
 											</div>
 									<%}%>
 									<!-- action of this question -->
@@ -352,10 +355,7 @@
 						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							responseBy = question.getResponseBy() ;
-							
-							java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
 							date = dateFormatter.format(question.getDateResponse());
-							
 							response = question.getResponses();
 						}
 					%>
@@ -376,7 +376,7 @@
 													<!-- question content -->
 													<div class="ViewQuestionNotApproved">
 														<a href="$linkQuestion"> 
-															$questionContent
+															$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
 														</a>
 														
 														<!-- view author's infor -->
@@ -507,10 +507,14 @@
 										<div class="ResponseContent">
 											<div class="Response" style="padding-left:0px;">
 												$response
-												<div>
-													<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
-													&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> $date
-												</div>
+												<%
+												if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+												%>
+													<div style="color:gray;">
+														<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
+														&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
+													</div>
+											<%}%>
 											</div>
 												
 											<div class="AttachmentContent">
@@ -546,24 +550,13 @@
 																    	</div>
 																    	<div style="clear: left;"><span></span></div>
 													 						<div class="LabelBox">
-														 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 														 						<div style="line-height:20px;">
 															 						<div class="Size AttachmentLabel">
-															 							<a href="$linkImage">$fileName</a>
+															 							<a href="$linkImage" style="color:#1052b5;">$fileName</a>
 															 						</div>
-															 						&nbsp;( $size )
+															 						&nbsp;- <font style="color:grey;">$size</font>
 															 					</div>
 														 						<div style="clear: left;"><span></span></div>
-													 							<!-- 
-														 						<div class="Action" style="padding-top: 0px;">
-														 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); ">
-														 								<%=_ctx.appRes(uicomponent.getName() + ".action." + "ViewImage")%>
-														 							</div>
-														 							<div class="Icon Download">
-														 								<a href="$linkImage"><%=_ctx.appRes(uicomponent.getName() + ".action." + "DownloadFile")%></a>
-													 								</div>
-														 						</div>
-												 							 	-->
 														 					</div>
 													 					</div>
 														    <%} else { %>
@@ -571,13 +564,8 @@
 																		<div class="AttachmentIcon FileAttachmentIcon" style="width: auto; height: auto;">
 																			<a class="AttachmentLabel" href="$linkImage">$fileName</a>
 																		</div>
-																		&nbsp;(&nbsp; $size &nbsp;)
+																		&nbsp;-&nbsp; <font style="color:gray;">$size</font> &nbsp;
 																		<div style="clear: left;"><span></span></div>
-																		<!--
-																		<div class="Size">
-																			<%=_ctx.appRes(uicomponent.getName() + ".label." + "SizeFile")%>: $size
-																		</div>
-																		-->
 																	</div>
 														    <%}
 													    	} else {
@@ -599,8 +587,7 @@
 										  	<%}%>
 										    <div style="clear: left;"><span></span></div>
 											</div>
-											<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</b><br>
-											<div>
+											
 												<%String questionRelationById = "" ;
 													String cateRelaId = "" ;
 													String quesRelaId = "" ;
@@ -608,6 +595,10 @@
 													String linkRelaQues = "" ;
 													List questionRelation = question.getRelations() ;
 													if(!questionRelation.isEmpty()) {
+												%>
+														<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</b><br>
+														<div>
+												<%
 														for(String relationId : questionRelation) { 
 															quesRelaCont = "" ;
 															questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
@@ -626,10 +617,9 @@
 																</div>
 												<% 		}
 														}
-													} else {%>
-														&nbsp;
+												%>
+														</div>
 												<%}%>
-											</div>
 											<style type="text/css">
 											@media print {
 												.UIFAQPortlet .UIAction {
