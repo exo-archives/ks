@@ -386,15 +386,6 @@
 															<div style="padding-top: 5px;">Author: <%=question.getAuthor()%> ( <%=question.getEmail()%> )</div>
 														<%}%>
 													</div>
-													
-													<!-- view author's infor -->
-													<%
-													if(uicomponent.viewAuthorInfor){
-													%>
-														<p style="color: #8a8a89;">
-															Author: <%=question.getAuthor()%> ( <%=question.getEmail()%> )
-														</p>
-													<%}%>
 													<div style="clear: left;"><span/></div>
 													
 													<!-- action of this question -->
