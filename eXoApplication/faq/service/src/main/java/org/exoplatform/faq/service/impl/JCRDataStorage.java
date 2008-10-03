@@ -507,11 +507,18 @@ public class JCRDataStorage {
     return pageList ;
   }
   
-  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
+  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-        + "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
+    StringBuffer queryString = null;
+    if(categoryId.equals("All")){
+    	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+    			+ "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
+    } else {
+    	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+    			+ "//element(*,exo:faqQuestion)[(@exo:categoryId='" + categoryId + "')]").append("order by @exo:createdDate ascending");
+    	
+    }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;

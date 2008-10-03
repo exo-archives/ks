@@ -389,7 +389,6 @@
 													
 													<!-- view author's infor -->
 													<%
-													System.out.println("\n\n\n\n------------------------> run view author infor:\n\n\n\n\n");
 													if(uicomponent.viewAuthorInfor){
 													%>
 														<p style="color: #8a8a89;">
@@ -518,7 +517,8 @@
 											<div class="Response" style="padding-left:0px;">
 												$response
 												<div>
-													<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :&nbsp; $responseBy on $date
+													<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
+													&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> $date
 												</div>
 											</div>
 												

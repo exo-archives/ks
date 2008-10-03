@@ -252,6 +252,13 @@
 						
 				</div>
 			</div>  
+    
+    <!-- View list categories -->
+    <div style="overflow:auto;float:right;padding-right:10px;">
+    	<%=_ctx.appRes(uicomponent.getName() + ".label.SelectCategory")%> &nbsp;:&nbsp;
+			<% uicomponent.renderChild("ListCategories") ; %>
+		</div>
+    
     </div>  
   </div>
 	

@@ -90,8 +90,8 @@ public class FAQServiceImpl implements FAQService{
 	 * @return	QuestionPageList
 	 * @throws Exception the exception
 	 */
-	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
-	  return jcrData_.getQuestionsNotYetAnswer(sProvider);
+	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId) throws Exception {
+	  return jcrData_.getQuestionsNotYetAnswer(sProvider, categoryId);
 	}
 	
 	/**

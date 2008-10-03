@@ -163,7 +163,7 @@ public class TestFAQService extends FAQServiceTestCase{
 
 //		get question 1
 		assertNotNull(faqService_.getQuestionById(question1.getId(), sProvider_)) ;
-		List<Question> listQuestion = faqService_.getQuestionsNotYetAnswer(sProvider_).getAll() ;
+		List<Question> listQuestion = faqService_.getQuestionsNotYetAnswer(sProvider_, "All").getAll() ;
 		assertEquals(listQuestion.size(), 1) ; 
 		
 //		update question 1

@@ -189,7 +189,7 @@ public interface FAQService {
    * 
    * @throws Exception  if lost attachment
    */
-  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception ;
+  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId) throws Exception ;
   
   /**
    * Get questions are activagted and approved in the category.
