@@ -290,7 +290,7 @@
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .RightQuestionContainer {
   float: right;
-  //width: 160px;
+  width: 30%;
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .SendToFriend {
