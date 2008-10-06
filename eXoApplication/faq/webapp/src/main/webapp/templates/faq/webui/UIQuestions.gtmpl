@@ -554,7 +554,7 @@
 															 						<div class="Size AttachmentLabel">
 															 							<a href="$linkImage" style="color:#1052b5;">$fileName</a>
 															 						</div>
-															 						&nbsp;- <font style="color:grey;">$size</font>
+															 						&nbsp;- <font style="color:gray;font-size:11px;">$size</font>
 															 					</div>
 														 						<div style="clear: left;"><span></span></div>
 														 					</div>
