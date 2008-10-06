@@ -287,7 +287,7 @@
 											<div style="clear: left;"><span></span></div>
 										<% if(titleQuestion.trim().length() > 0) {%>
 											<div id="titleQuestion$questionId" class="questionTitle">
-												$titleQuestion &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
+												$titleQuestion &nbsp;&nbsp;
 											</div>
 									<%}%>
 									<!-- action of this question -->
