@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.InternetAddress;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.EmailNotifyPlugin;
@@ -29,7 +31,9 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -54,6 +58,9 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 		template =	"app:/templates/faq/webui/popup/UISendMailForm.gtmpl",
 		events = {
 				@EventConfig(listeners = UISendMailForm.SendActionListener.class),
+				@EventConfig(listeners = UISendMailForm.ToActionListener.class),
+				@EventConfig(listeners = UISendMailForm.CcActionListener.class),
+				@EventConfig(listeners = UISendMailForm.BccActionListener.class),
 				@EventConfig(listeners = UISendMailForm.CancelActionListener.class),
 				@EventConfig(listeners = UISendMailForm.ChangeLanguageActionListener.class)
 		}
@@ -62,8 +69,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private static final String FILED_FROM_NAME = "FromName" ;
   private static final String FILED_FROM = "From" ;
   private static final String FILED_TO = "To" ;
-  private static final String ADD_CC = "AddCc" ;
-  private static final String ADD_BCC = "AddBcc" ;
+  private static final String FILED_ADD_CC = "AddCc" ;
+  private static final String FILED_ADD_BCC = "AddBcc" ;
   private static final String FILED_SUBJECT = "Subject" ;
   private static final String FILED_QUESTION_LANGUAGE = "Language" ;
   private static final String FILED_MESSAGE = "Message" ;
@@ -79,6 +86,10 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   @SuppressWarnings("unused")
   private String questionChanged_ = new String() ;
   private String link_ = "" ;
+  public List<User> toUsers = new ArrayList<User>();
+  public List<User> addCCUsers = new ArrayList<User>();
+  public List<User> addBCCUsers = new ArrayList<User>();
+  
 	public UISendMailForm() throws Exception { this.setActions(new String[]{"Send", "Cancel"}) ;}
 	
 	public void activate() throws Exception {}
@@ -87,6 +98,15 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   public String getLink() {return link_;}
 	public void setLink(String link) { this.link_ = link;}
   
+	public List<User> getToUsers() { return toUsers; }
+  public void setToUsers(List<User> userList) { toUsers = userList; }
+  
+  public List<User> getAddCCUsers() { return addCCUsers; }
+  public void setAddCCUsers(List<User> userList) { addCCUsers = userList; }
+  
+  public List<User> getAddBCCUsers() { return addBCCUsers; }
+  public void setAddBCCUsers(List<User> userList) { addBCCUsers = userList; }
+	
   @SuppressWarnings("unused")
   private List<SelectItemOption<String>> getListLanguageToSendFriend() {
     return listLanguageToReponse ;
@@ -133,8 +153,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, name)) ;
     addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email)) ;
     addChild(new UIFormStringInput(FILED_TO, FILED_TO, null)) ;
-    addChild(new UIFormStringInput(ADD_CC, ADD_CC, null)) ;
-    addChild(new UIFormStringInput(ADD_BCC, ADD_BCC, null)) ;
+    addChild(new UIFormStringInput(FILED_ADD_CC, FILED_ADD_CC, null)) ;
+    addChild(new UIFormStringInput(FILED_ADD_BCC, FILED_ADD_BCC, null)) ;
     UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, getListLanguageToSendFriend()) ;
     questionLanguages.setSelectedValues(new String[]{language}) ;
     questionLanguages.setOnChange("ChangeLanguage") ;
@@ -159,6 +179,15 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, null, content, true)) ;
 	}
 
+	public void setFieldToValue(String value) { getUIStringInput(FILED_TO).setValue(value) ;}
+	public String getFieldToValue(){return getUIStringInput(FILED_TO).getValue();}
+	
+	public void setFieldCCValue(String value) { getUIStringInput(FILED_ADD_CC).setValue(value) ;}
+	public String getFieldCCValue(){return getUIStringInput(FILED_ADD_CC).getValue();}
+	
+	public void setFieldBCCValue(String value) { getUIStringInput(FILED_ADD_BCC).setValue(value) ;}
+	public String getFieldBCCValue(){return getUIStringInput(FILED_ADD_BCC).getValue();}
+	
 	static public class SendActionListener extends EventListener<UISendMailForm> {
     public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;		
@@ -168,8 +197,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       String fullFrom = fromName +" (" + from +  ") <"+ serverConfig_.get("account")+">" ;
       String to = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
       String subject = ((UIFormStringInput)sendMailForm.getChildById(FILED_SUBJECT)).getValue() ;
-      String cc = ((UIFormStringInput)sendMailForm.getChildById(ADD_CC)).getValue() ;
-      String bcc = ((UIFormStringInput)sendMailForm.getChildById(ADD_BCC)).getValue() ;
+      String cc = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
+      String bcc = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_BCC)).getValue() ;
       String body = ((UIFormWYSIWYGInput)sendMailForm.getChildById(FILED_MESSAGE)).getValue() ;
       if (to != null && to.indexOf(";") > -1) to = to.replace(';', ',') ;
       if (cc != null && cc.indexOf(";") > -1) cc = cc.replace(';', ',') ;
@@ -227,7 +256,88 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
+	
+	static public class ToActionListener extends EventListener<UISendMailForm> {
+    public void execute(Event<UISendMailForm> event) throws Exception {
+    	UISendMailForm sendMailForm = event.getSource() ;
+			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
+			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
+			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
+			addressEmailsForm.setRecipientsType(FILED_TO);
+      String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
+      InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
+      List<String> emailList = new ArrayList<String>();
+      for (int i = 0 ; i < toAddresses.length; i++) {
+        if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
+      }
+      
+      List<User> toUser = sendMailForm.getToUsers() ;
+      if (toUser != null && toUser.size() > 0) {
+        List<User> userList = new ArrayList<User>();
+        for (User ct : toUser) {
+          if (emailList.contains(ct.getEmail())) userList.add(ct) ;
+        }
+        addressEmailsForm.setAlreadyCheckedUser(userList);
+      }
 
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
+  }
+	
+	static public class CcActionListener extends EventListener<UISendMailForm> {
+    public void execute(Event<UISendMailForm> event) throws Exception {
+    	UISendMailForm sendMailForm = event.getSource() ;
+			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
+			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
+			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
+			addressEmailsForm.setRecipientsType(FILED_ADD_CC);
+      String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
+      InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
+      List<String> emailList = new ArrayList<String>();
+      for (int i = 0 ; i < toAddresses.length; i++) {
+        if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
+      }
+      
+      List<User> toUser = sendMailForm.getAddCCUsers() ;
+      if (toUser != null && toUser.size() > 0) {
+        List<User> userList = new ArrayList<User>();
+        for (User ct : toUser) {
+          if (emailList.contains(ct.getEmail())) userList.add(ct) ;
+        }
+        addressEmailsForm.setAlreadyCheckedUser(userList);
+      }
+
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
+  }
+	
+	static public class BccActionListener extends EventListener<UISendMailForm> {
+    public void execute(Event<UISendMailForm> event) throws Exception {
+    	UISendMailForm sendMailForm = event.getSource() ;
+			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
+			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
+			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
+			addressEmailsForm.setRecipientsType(FILED_ADD_BCC);
+      String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_BCC)).getValue() ;
+      InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
+      List<String> emailList = new ArrayList<String>();
+      for (int i = 0 ; i < toAddresses.length; i++) {
+        if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
+      }
+      
+      List<User> toUser = sendMailForm.getAddBCCUsers() ;
+      if (toUser != null && toUser.size() > 0) {
+        List<User> userList = new ArrayList<User>();
+        for (User ct : toUser) {
+          if (emailList.contains(ct.getEmail())) userList.add(ct) ;
+        }
+        addressEmailsForm.setAlreadyCheckedUser(userList);
+      }
+
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
+  }
+	
 	static public class CancelActionListener extends EventListener<UISendMailForm> {
     public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;		

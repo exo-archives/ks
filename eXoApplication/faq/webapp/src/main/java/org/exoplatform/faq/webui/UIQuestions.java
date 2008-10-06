@@ -1294,8 +1294,8 @@ public class UIQuestions extends UIContainer {
         return ;
       }
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-      UISendMailForm sendMailForm = popupContainer.addChild(UISendMailForm.class, null, null) ;
+			UISendEmailsContainer watchContainer = popupAction.activate(UISendEmailsContainer.class, 700) ;
+			UISendMailForm sendMailForm = watchContainer.getChild(UISendMailForm.class) ;
       //link
       String link = uiQuestions.getLink().replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("Setting", "ChangePath").replaceAll("&amp;", "&");
       String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
@@ -1316,8 +1316,7 @@ public class UIQuestions extends UIContainer {
 			sendMailForm.setLink(link);
       if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "") ;
       else sendMailForm.setUpdateQuestion(questionId , language_) ;
-      popupContainer.setId("FAQSendMailForm") ;
-      popupAction.activate(popupContainer, 700, 1000) ;
+      watchContainer.setId("FAQSendMailForm") ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }

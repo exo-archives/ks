@@ -814,7 +814,58 @@
 .UIFAQPageIterator .DisableNextPageIcon {
   background: url('background/SingleNextArrow.gif') no-repeat ;
 }
+/******************************  UI Address Email Form  ***************************************/
 
+.UIFAQPortlet .UIAddressEmailsForm .UIInsertAddress {
+	background:#F3F3F3 none repeat scroll 0% 0%;
+}
+
+.UIFAQPortlet .UIAddressEmailsForm .UIInsertAddress .InsertAddressContainer {
+	border: 1px solid #C0C0C0;
+	padding: 10px;
+}
+
+.UIFAQPortlet .UIAddressEmailsForm .UISearch {
+	height: 39px;
+	line-height: 39px;
+	padding-bottom: 2px;
+}
+
+.UIFAQPortlet .UIAddressEmailsForm .UISearch .UISearchForm {
+	float: left;
+	width: 300px;
+}
+
+.UIFAQPortlet .UIAddressEmailsForm .UIInsertAddress .UISearchForm .SearchIcon {
+	background: transparent url(background/FAQPortlet.gif) no-repeat scroll left -210px;
+	cursor: pointer;
+	float: left;
+	height: 16px;
+	margin: 6px 3px 0px;
+	width: 16px;
+}
+
+.UIFAQPortlet .UIAddressEmailsForm .UIInsertAddress .AddressesGroup {
+	with: 300px;
+	float: right;
+}
+
+.UIFAQPortlet .UIAddressEmailsForm .UIInsertAddress .AddressesGroup .AddressLabel {
+	float: left;
+	padding: 0px 4px;
+	width: 60px;
+}
+
+.UIFAQPortlet .UIAddressEmailsForm .UIInsertAddress .AddressesGroup select {
+	font-size: 11px;
+	margin: 10px 0px 0px;
+	width: 160px;
+}
+
+.UIFAQPortlet .UIAddressEmailsForm .UIInsertAddress .ListAddress {
+	background: white none repeat scroll 0% 0%;
+	border: 1px solid #B7B7B7;
+}
 /******************************  UI AddNew/Edit Question  ***************************************/
 
 .UIFAQPortlet .UIQuestionForm textarea {
@@ -1228,4 +1279,8 @@
 
 .UIMaskWorkspace .UIFAQPortlet  {
   min-width: 600px;
+}
+
+.UIFAQPortlet .FAQUISendEMailForm .FieldLabel {
+	font-weight: bold;
 }

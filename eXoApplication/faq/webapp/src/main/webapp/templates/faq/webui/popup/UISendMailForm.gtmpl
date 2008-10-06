@@ -21,7 +21,43 @@
 								%>
 									<div id="div$name" style="display: $display; width: 100%;  float: left; margin: 5px 0px 5px 5px;">
 										<div class="FieldLabel" style="width: 100px; float: left;">
+											<%
+											if(!fieldName.equals(uicomponent.getId())) {
+												name = input.getName();
+												if(name.equals("To")){
+													String linkActionTo = uicomponent.event("To") ;
+												%>
+												<div style="float: right; margin-right: 5px; ">
+													<a href="$linkActionTo" style="text-decoration: underline;">
+														$fieldName 
+													</a>:
+												</div>
+											<%
+											} else if(name.equals("AddCc")){
+													String linkActionCc = uicomponent.event("Cc") ;
+												%>
+												<div style="float: right; margin-right: 5px; ">
+													<a href="$linkActionCc" style="text-decoration: underline;">
+														$fieldName 
+													</a>:
+												</div>
+											<%
+											} else if(name.equals("AddBcc")){
+													String linkActionBcc= uicomponent.event("Bcc") ;
+												%>
+												<div style="float: right; margin-right: 5px; ">
+													<a href="$linkActionBcc" style="text-decoration: underline;">
+														$fieldName 
+													</a>:
+												</div>
+											<%
+											} else {
+											%>
 											<div style="float: right; margin-right: 5px;">$fieldName : </div>
+											<%
+											} 
+										}
+											 %>
 										</div>
 										<div class="FieldComponent" style="width: auto; float: left;">
 											<div style="float: left">

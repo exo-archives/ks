@@ -34,6 +34,7 @@ import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -101,6 +102,16 @@ public class FAQUtils {
     return false ;
   }
 	
+	 public static InternetAddress[] getInternetAddress(String addressList) throws Exception {
+	    if (addressList == null || addressList == "") 
+	      return new InternetAddress[1];
+	    try {
+	      return InternetAddress.parse(addressList);
+	    } catch (Exception e) {
+	      return new InternetAddress[1];
+	    }
+	  }
+	
 	public static User getUserByUserId(String userId) throws Exception {
   	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   	return organizationService.getUserHandler().findUserByName(userId) ;
@@ -111,6 +122,20 @@ public class FAQUtils {
   	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
   	List<User>list = pageList.getAll() ;
+  	return list;
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static List<User> getUserByGroupId(String groupId) throws Exception {
+  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	return organizationService.getUserHandler().findUsersByGroup(groupId).getAll() ;
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static List<Group> getAllGroup() throws Exception {
+  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	PageList pageList = (PageList) organizationService.getGroupHandler().getAllGroups() ;
+  	List<Group> list = pageList.getAll() ;
   	return list;
   }
   
