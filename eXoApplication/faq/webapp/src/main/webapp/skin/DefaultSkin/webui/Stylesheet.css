@@ -352,7 +352,7 @@
 }
 
 .UIFAQPortlet .QuestionSelect .DecoratorMC{
-  background: white;
+  background: #DBE7F9;
 }
 
 .UIFAQPortlet .QuestionSelect .DecoratorBL{
@@ -452,13 +452,15 @@
 /******************************  Response  ***************************************/
 
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseContent {
-  padding: 0px 8px 8px 26px;
+  padding: 8px 8px 8px 26px;
+  background: white;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Response {
   /*background: url('background/DotLine.gif') repeat-x bottom;*/
   padding-bottom: 4px;
   padding-left: 10px ;
+  width: 90%;
 }
 
 .UIFAQPortlet .ResponseContent .Response {
