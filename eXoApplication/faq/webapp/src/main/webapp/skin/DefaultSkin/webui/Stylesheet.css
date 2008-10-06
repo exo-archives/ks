@@ -355,8 +355,8 @@
   padding-right: 5px;
 }
 
-.UIFAQPortlet .QuestionSelect .DecoratorMC{
-  background: white;
+.UIFAQPortlet .QuestionSelect .DecoratorMC {
+  background: #DBE7F9;
 }
 
 .UIFAQPortlet .QuestionSelect .DecoratorBL{
@@ -457,6 +457,7 @@
 
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseContent {
   padding: 0px 8px 8px 26px;
+  background: white;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Response {
