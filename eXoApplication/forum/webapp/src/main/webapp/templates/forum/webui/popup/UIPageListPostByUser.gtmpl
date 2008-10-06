@@ -70,7 +70,7 @@
 						 		} else {
 						 		%>
 						 			<tr>
-						 				<td colspan="3" align="center">
+						 				<td colspan="5" align="center">
 						 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
 						 				</td>
 						 			</tr>

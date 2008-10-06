@@ -391,7 +391,7 @@ public class JCRDataStorage {
 			if (!isNew)	oldModeratoForums = ValuesToStrings(forumNode.getProperty("exo:moderators").getValues());
 			String[] strModerators = forum.getModerators();
 			forumNode.setProperty("exo:moderators", strModerators);
-			if (strModerators != null && !strModerators[0].equals(" ")) {
+			if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
 				if (catNode.hasProperty("exo:userPrivate")) {
 					List<String> listPrivate = new ArrayList<String>();
 					listPrivate.addAll(ValuesToList(catNode.getProperty("exo:userPrivate").getValues()));
@@ -667,7 +667,7 @@ public class JCRDataStorage {
 			}
 			String[] strModerators = forum.getModerators();
 			forumNode.setProperty("exo:moderators", strModerators);
-			if (strModerators != null && !strModerators[0].equals(" ")) {
+			if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
 				if (newCatNode.hasProperty("exo:userPrivate")) {
 					List<String> listPrivate = new ArrayList<String>();
 					listPrivate.addAll(ValuesToList(newCatNode.getProperty("exo:userPrivate").getValues()));
@@ -1549,11 +1549,12 @@ public class JCRDataStorage {
 			for (ForumAttachment attachment : attachments) {
 				++numberAttach;
 				BufferAttachment file = null;
-				listFileName.add(attachment.getId());
+				listFileName.add(attachment.getName());
 				try {
 					file = (BufferAttachment) it.next();
+					System.out.println("\n\nFilename: " + file.getName() + "\nID: " + file.getName());
 					Node nodeFile = null;
-					if (!postNode.hasNode(file.getId()))
+					if (!postNode.hasNode(file.getName()))
 						nodeFile = postNode.addNode(file.getName(), "nt:file");
 					else
 						nodeFile = postNode.getNode(file.getName());
