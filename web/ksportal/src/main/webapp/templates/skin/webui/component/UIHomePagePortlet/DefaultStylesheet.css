@@ -87,6 +87,9 @@
 	background: url('DefaultSkin/background/CheckIcon.gif') no-repeat left ;
 	line-height: 18px;
 	padding-left: 20px;
+	overflow: hidden;
+	width: 80%;
+	white-space: nowrap;
 }
 
 .UIHomePagePortlet .HomeBackground .HomeImage {
