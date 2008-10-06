@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.faq.service.FAQService;
@@ -34,6 +36,7 @@ import org.quartz.JobExecutionException;
 
 public class NotifyJob extends Thread implements Job, Runnable  {
   private Thread thread ;
+  private static Log log = ExoLogger.getLogger("SetupServlet.class");
   
 	public NotifyJob() throws Exception {
 		setDaemon(true) ;	
@@ -80,7 +83,7 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 			  		sentMessages.add(address) ;
 		  		}
 		  	}
-		  	System.out.println("\n\n####  Notification messages of faq service has sent !!!");
+		  	log.info("\n\n####  Notification messages of faq service has sent !!!");
 		  }
 		  schedulerService.removeJob(info) ;		  
 
