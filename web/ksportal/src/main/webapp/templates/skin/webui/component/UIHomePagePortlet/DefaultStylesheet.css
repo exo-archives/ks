@@ -125,6 +125,9 @@
 	background: url('DefaultSkin/background/CheckIcon.gif') no-repeat left ;
 	line-height: 18px;
 	padding-left: 20px;
+	overflow: hidden;
+	width: 80%;
+	white-space: nowrap;
 }
 
 .UIHomePagePortlet .HomeBackground .HomeImage {
@@ -149,21 +152,21 @@
 }
 
 .UIHomePagePortlet .Decorator .ForumIcon {
-	float: left;
-	background: url('DefaultSkin/background/ForumIcon.gif') no-repeat left ;
-	width:80px; height: 79px;
-	margin:18px 10px 0px;
+	background:transparent url(DefaultSkin/background/ForumIcon.gif) no-repeat left bottom;
+	height:97px;
+	padding-left:85px;
 }
 
 .UIHomePagePortlet .Decorator .ForumLabel {
-	float: left;
 	padding: 10px 0px 0px 0px;
 	font-weight: bold;
 }
 
 .UIHomePagePortlet .Decorator .ForumLabel .Label {
 	line-height: 20px;
-	width:240px;
+	width: 90%;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .UIHomePagePortlet .Decorator .ForumLabel .Title {
@@ -173,21 +176,21 @@
 }
 
 .UIHomePagePortlet .Decorator .FAQIcon {
-	float: left;
-	background: url('DefaultSkin/background/FAQIcon.gif') no-repeat left ;
-	width:80px; height: 79px;
-	margin:18px 10px 0px;
+	background: url('DefaultSkin/background/FAQIcon.gif') no-repeat left bottom;
+	height:97px;
+	padding-left:85px;
 }
 
 .UIHomePagePortlet .Decorator .FAQLabel {
-	float: left;
 	padding: 10px 0px 0px 0px;
 	font-weight: bold;
 }
 
 .UIHomePagePortlet .Decorator .FAQLabel .Label {
 	line-height: 20px;
-	width:240px;
+	width: 90%;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .UIHomePagePortlet .Decorator .FAQLabel .Title {

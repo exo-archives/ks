@@ -30,12 +30,14 @@
 									<div class="DecoratorML">
 						    			<div class="DecoratorMR">
 						    				<div class="DecoratorMC">
-						    					<div class="ForumIcon"><span></span></div>
-					    						<div class="ForumLabel">
-							    					<div class="Title"><a href="$forumuri">Forum</a></div>
-							    					<div class="Label">It's time to open discussion with your portal audience!</div>
+						    					<div class="ForumIcon">
+						    						<div class="ForumLabel">
+								    					<div class="Title"><a href="$forumuri">Forum</a></div>
+								    					<div class="Label">It's time to open discussion with your </div>
+								    					<div class="Label">portal audience!</div>
+							    					</div>
 						    					</div>
-						    					<div style="clear: left;"><span></span></div>
+					    						
 						    					<a href="$forumuri" style="float: left; margin-top: 60px;">
 												  <div class="Button"><span></span></div>
 												</a>
@@ -60,12 +62,14 @@
 									<div class="DecoratorML">
 						    			<div class="DecoratorMR">
 						    				<div class="DecoratorMC">
-						    					<div class="FAQIcon"><span></span></div>
-						    					<div class="FAQLabel">
-							    					<div class="Title"><a href="$faquri">FAQ</a></div>
-							    					<div class="Label">Capture and manage key knowledge efficiently in FAQ.</div>
+						    					<div class="FAQIcon">
+							    					<div class="FAQLabel">
+								    					<div class="Title"><a href="$faquri">FAQ</a></div>
+								    					<div class="Label">Capture and manage key knowledge </div>
+								    					<div class="Label">efficiently in FAQ.</div>
+						    						</div>
 						    					</div>
-						    					<div style="clear: left;"><span></span></div>
+						    					
 						    					<a href="$faquri" style="float: left; margin-top: 60px;">
 												  <div class="Button"><span></span></div>
 												</a>
