@@ -456,7 +456,7 @@
 /******************************  Response  ***************************************/
 
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseContent {
-  padding: 0px 8px 8px 26px;
+  padding: 8px 8px 8px 26px;
   background: white;
 }
 
@@ -464,6 +464,7 @@
   /*background: url('background/DotLine.gif') repeat-x bottom;*/
   padding-bottom: 4px;
   padding-left: 10px ;
+  width: 90%;
 }
 
 .UIFAQPortlet .ResponseContent .Response {
