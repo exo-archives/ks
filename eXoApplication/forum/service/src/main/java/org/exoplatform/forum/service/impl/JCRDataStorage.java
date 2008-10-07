@@ -2868,8 +2868,8 @@ public class JCRDataStorage {
 					linkData.setName(forumNode.getProperty("exo:name").getString());
 					linkData.setType(Utils.FORUM);
 					linkData.setPath(cateNode.getName() + "/" + forumNode.getName());
-					linkData.setIsLock(forumNode.getProperty("exo:isLock").getBoolean());
-					linkData.setIsClosed(forumNode.getProperty("exo:isClosed").getBoolean());
+					if(forumNode.hasProperty("exo:isLock"))linkData.setIsLock(forumNode.getProperty("exo:isLock").getBoolean());
+					if(forumNode.hasProperty("exo:isClosed"))linkData.setIsClosed(forumNode.getProperty("exo:isClosed").getBoolean());
 					forumLinks.add(linkData);
 					{
 						NodeIterator iterTopic = forumNode.getNodes();
@@ -2883,8 +2883,8 @@ public class JCRDataStorage {
 								linkData.setName("null");
 							linkData.setType(Utils.TOPIC);
 							linkData.setPath(cateNode.getName() + "/" + forumNode.getName() + "/" + topicNode.getName());
-							linkData.setIsLock(topicNode.getProperty("exo:isLock").getBoolean());
-							linkData.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean());
+							if(topicNode.hasProperty("exo:isLock"))linkData.setIsLock(topicNode.getProperty("exo:isLock").getBoolean());
+							if(topicNode.hasProperty("exo:isClosed"))linkData.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean());
 							forumLinks.add(linkData);
 						}
 					}
