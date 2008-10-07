@@ -8,11 +8,10 @@ FCKConfig.ToolbarSets["eXoBar"] = [
 FCKConfig.ToolbarSets["eXoForum"] = [
 
 	['NewPage','Preview','-','Templates'],['Cut','Copy','Paste','-','Print','FitWindow'],['Link','Unlink','Anchor'],
-	['Undo','Redo','-','SelectAll','RemoveFormat'],
-	'/',
+	['Undo','Redo','-','SelectAll','RemoveFormat'],'/',
 	['Bold','Italic','Underline','StrikeThrough','-','Subscript','Superscript'],
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
-	['Image','Flash','Table','Rule','SpecialChar','PageBreak'],
+	['Image','Flash','Table','Rule','SpecialChar','PageBreak'],'/',
 	['TextColor','BGColor'],['FontName','FontSize'],
 	['-','Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
 

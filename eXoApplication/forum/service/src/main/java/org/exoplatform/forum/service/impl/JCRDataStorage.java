@@ -1140,15 +1140,13 @@ public class JCRDataStorage {
 			}
 			if (emailList.size() > 0) {
 				Message message = new Message();
-				// message.setContentType(org.exoplatform.mail.service.Utils.MIMETYPE_TEXTHTML)
-				// ;
 				message.setMimeType("text/html");
 				message.setSubject("eXo Forum Watching Notification!");
 				StringBuffer body = new StringBuffer();
 				body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString()).append("</b>' have just	added topic: <b>").append(topic.getTopicName()).append("</b><div>")
 					.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> Please  <a target=\"_blank\" href=\"" + topic.getLink() + "\"><b>click here</b></a> for more details<br/><br/><br/>");
 				if (content != null && content.length() > 0) {
-					String content_ = topicNode.getProperty("exo:name").getString();
+					String content_ = topic.getTopicName();
 					content_ = content.replace("&objectName", content_);
 					content_ = content_.replaceAll("&objectWatch", "Forum");
 					content_ = content_.replaceAll("&content", Utils.convertCodeHTML(topic.getDescription()));
