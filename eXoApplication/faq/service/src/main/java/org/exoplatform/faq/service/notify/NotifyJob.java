@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.faq.service.FAQService;
@@ -76,14 +74,16 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
 		  	List<String> sentMessages = new ArrayList<String>() ;
+		  	int countEmail = 0;
 		  	for(String address : emailAddresses) {
 		  		if(!sentMessages.contains(address)) {
 		  			message.setTo(address) ;
 			  		mailService.sendMessage(message) ;
 			  		sentMessages.add(address) ;
+			  		countEmail ++;
 		  		}
 		  	}
-		  	log.info("\n\n####  Notification messages of faq service has sent !!!");
+		  	log.debug("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
 		  }
 		  schedulerService.removeJob(info) ;		  
 
