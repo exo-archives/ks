@@ -22,8 +22,10 @@
 
 .UIForumCategory .ForumToolbar .ToolbarActionsContainer {
 	float: right;
-	width: 137px;
+	min-width: 137px;
+	*width: 145px;
 	margin: 2px 0px 0px 0px;
+	white-space: nowrap;
 }
 
 .UIForumCategory .ForumToolbar .ManageCategoryButton {
