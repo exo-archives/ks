@@ -186,6 +186,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		this.postId = postId ;
 		this.isQuote = isQuote ;
 		this.isMP = isMP ;
+		if(!isMP && post != null && post.getUserPrivate() != null && post.getUserPrivate().length > 0 && !post.getUserPrivate()[0].equals("exoUserPri") ) this.isMP = true;
 		UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
 		UIFormStringInput editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
 		editReason.setRendered(false) ;

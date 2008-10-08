@@ -191,18 +191,19 @@ public class ForumPageList extends JCRPageList {
 			if(numberAttach > 0) {
 				NodeIterator postAttachments = postNode.getNodes();
 				List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
-				Node nodeFile ;
+				Node nodeFile;
 				while (postAttachments.hasNext()) {
 					Node node = postAttachments.nextNode();
 					if (node.isNodeType("nt:file")) {
-						JCRForumAttachment attachment = new JCRForumAttachment() ;
-						nodeFile = node.getNode("jcr:content") ;
+						JCRForumAttachment attachment = new JCRForumAttachment();
+						nodeFile = node.getNode("jcr:content");
 						attachment.setId(node.getPath());
 						attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-						attachment.setName(node.getName());
-						attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+						attachment.setName(node.getProperty("exo:fileName").getString());
+						String workspace = node.getSession().getWorkspace().getName() ;
+						attachment.setWorkspace(workspace);
 						attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-						attachment.setPath("/" + attachment.getWorkspace() + node.getPath());
+						attachment.setPath("/" + workspace + node.getPath());
 						attachments.add(attachment);
 					}
 				}
@@ -258,18 +259,19 @@ public class ForumPageList extends JCRPageList {
 				if(FirstPostNode.getProperty("exo:numberAttachments").getLong() > 0) {
 					NodeIterator postAttachments = FirstPostNode.getNodes();
 					List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
-					Node nodeFile ;
+					Node nodeFile;
 					while (postAttachments.hasNext()) {
 						Node node = postAttachments.nextNode();
 						if (node.isNodeType("nt:file")) {
-							JCRForumAttachment attachment = new JCRForumAttachment() ;
-							nodeFile = node.getNode("jcr:content") ;
+							JCRForumAttachment attachment = new JCRForumAttachment();
+							nodeFile = node.getNode("jcr:content");
 							attachment.setId(node.getPath());
-							attachment.setMimeType(node.getNode("jcr:content").getProperty("jcr:mimeType").getString());
-							attachment.setName(node.getName());
-							attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+							attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+							attachment.setName(node.getProperty("exo:fileName").getString());
+							String workspace = node.getSession().getWorkspace().getName() ;
+							attachment.setWorkspace(workspace);
 							attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-							attachment.setPath("/" + attachment.getWorkspace() + node.getPath());
+							attachment.setPath("/" + workspace + node.getPath());
 							attachments.add(attachment);
 						}
 					}
