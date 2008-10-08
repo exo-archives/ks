@@ -19,7 +19,6 @@ package org.exoplatform.forum.service;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
@@ -41,7 +40,7 @@ public class BufferAttachment extends ForumAttachment {
   	Node attachment ;
 		try{
 			attachment = (Node)getSesison().getItem(getId()) ;			
-		}catch (ItemNotFoundException e) {
+		}catch (Exception e) {
 			return null ;
 		}
 		return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;

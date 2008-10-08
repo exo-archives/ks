@@ -18,7 +18,6 @@ package org.exoplatform.forum.service;
 
 import java.io.InputStream;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.Session;
 

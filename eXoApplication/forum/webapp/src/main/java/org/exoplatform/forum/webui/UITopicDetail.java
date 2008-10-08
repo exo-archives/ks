@@ -360,6 +360,7 @@ public class UITopicDetail extends UIForm {
 		try {
 			InputStream input = attachment.getInputStream() ;
 			String fileName = attachment.getName() ;
+			System.out.println("\n\nFile Name: " + fileName);
 			return ForumSessionUtils.getFileSource(input, fileName, dservice);
 		} catch (PathNotFoundException e) {
 			return null;

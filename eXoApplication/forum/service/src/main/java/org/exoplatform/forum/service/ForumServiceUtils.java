@@ -20,7 +20,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.jcr.Node;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.access.AccessControlEntry;
+import org.exoplatform.services.jcr.access.PermissionType;
+import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -80,5 +85,16 @@ public class ForumServiceUtils {
 			}
 		}
 		return users ;
+	}
+	
+	public static void reparePermissions(Node node, String owner) throws Exception {
+		ExtendedNode extNode = (ExtendedNode)node ;
+    if (extNode.canAddMixin("exo:privilegeable")) extNode.addMixin("exo:privilegeable");
+    String[] arrayPers = {PermissionType.READ, PermissionType.ADD_NODE, PermissionType.SET_PROPERTY, PermissionType.REMOVE} ;
+    extNode.setPermission(owner, arrayPers) ;
+    List<AccessControlEntry> permsList = extNode.getACL().getPermissionEntries() ;    
+    for(AccessControlEntry accessControlEntry : permsList) {
+      extNode.setPermission(accessControlEntry.getIdentity(), arrayPers) ;      
+    } 
 	}
 }
