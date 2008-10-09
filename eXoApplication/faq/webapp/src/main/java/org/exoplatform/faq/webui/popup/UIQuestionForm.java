@@ -476,7 +476,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         question_ = new Question() ;
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
-        question_.setResponses(" ") ;
+        question_.setResponses(new String[]{" "}) ;
         try{
           questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions() ;
         } catch(Exception exception){

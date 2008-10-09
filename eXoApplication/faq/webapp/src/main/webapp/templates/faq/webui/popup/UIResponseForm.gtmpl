@@ -27,6 +27,76 @@
 												<% uiform.renderField(field) %>
 											</div>
 											<a href="$link" style="float: left"><div class="Icon AddRelation"><span></span></div></a>
+									<%} else if (field.getName().equals("QuestionRespone")){
+											String link = "";
+									%>
+											<div style="float: left;width:94%;">
+												<% uiform.renderField(field) %>
+											</div>
+											<div class="ContentAction" style="float: left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+												<a href="javaScript:void(0);" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "MultiAnswer")%>"><div class="Icon MultiAnswerIcon"><span></span></div></a>
+												<!-- action of this question -->
+												<div style="position: relative;">
+													<div class="UIPopupCategory" style="display: none;top: -2px; ">
+														<div class="UIRightClickPopupMenu" style="display: block; height:auto; width:120px; z-index:10;">
+															<div class="UIContextMenuContainer">			
+																							
+																<div class="TopLeftRightClickPopupMenu">
+																	<div class="TopRightRightClickPopupMenu">
+																		<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																	</div>
+																</div>
+																
+																<div class="MiddleLeftRightClickPopupMenu">
+																	<div class="MiddleRightRightClickPopupMenu">
+																		<div class="UIRightPopupMenuContainer">
+																			<%
+																				int pos = 0;
+																				for(int i = 0; i < uicomponent.numberOfAnswer(); i ++) {
+																					link = uicomponent.event("AddNewAnswer", "" + i) ;
+																					pos ++;
+																					if(uicomponent.posOfResponse != i){
+																				%>
+																						<a href="javaScript:void(0)" onmousedown="$link">
+																							<div class="ItemIcon QuestionSearch" style="padding:3px 0px 5px 5px; margin-left:5px;">
+																									<div style="padding-left: 20px;">
+																										<%=_ctx.appRes(uicomponent.getName() + ".label." + "IndexOfAnswer")%> $pos
+																									</div>
+																							</div>
+																						</a>
+																			<%	} else {%>
+																						<div class="ItemIcon QuestionSearch" style="padding:3px 0px 5px 5px; margin-left:5px;">
+																								<div style="padding-left: 20px;color:darkred;">
+																									<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "IndexOfAnswer")%> $pos</b>
+																								</div>
+																						</div>
+																				<%}
+																				}
+																				link = uicomponent.event("AddNewAnswer", "New");
+																			%>
+																				<a href="javaScript: void(0);" onclick="$link" style="margin-left:20px;">
+																					<div class="ItemIcon AddRelation" style="margin-left:5px; padding:0px 0px 5px 25px;">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "AddNewAnswer")%>
+																					</div>
+																				</a>
+																			</div>
+																		</div>
+																</div>
+																	
+																<div class="BottomLeftRightClickPopupMenu">
+																	<div class="BottomRightRightClickPopupMenu">
+																		<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																	</div>
+																</div>
+																
+																</div>
+															</div>
+														</div>
+													</div>
+												<!-- finish action of this question -->
+												<div style="clear: left;"><span></span></div>					
+											</div>
+											
 									<%} else if(field.getName().equals("QuestionAttach")){
 											if(!uicomponent.getListFile().isEmpty()) {
 												String name = "" ;

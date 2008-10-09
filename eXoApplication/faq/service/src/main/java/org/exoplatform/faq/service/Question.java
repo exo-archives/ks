@@ -59,7 +59,7 @@ public class Question {
   private String categoryId ;
   
   /** The responses. */
-  private String responses = null;
+  private String[] responses = null;
   
   /** The relations. */
   private String[] relations ;
@@ -148,7 +148,14 @@ public class Question {
    * 
    * @return  the response of questions
    */
-	public String getResponses() {return responses;}
+	public String getResponses() {return responses[0];}
+	
+	/**
+	 * Get content of question's response.
+	 * 
+	 * @return  the response of questions
+	 */
+	public String[] getAllResponses() {return responses;}
   
   /**
    * Registers response for question, only admin or moderator can response for this quetsion.
@@ -156,7 +163,7 @@ public class Question {
    * @param responses the content of question's response which addmin or
    * morderator answer for this question
    */
-	public void setResponses(String responses) {this.responses = responses;}
+	public void setResponses(String[] responses) {this.responses = responses;}
 
   /**
    * Get list questions in system which are like, related or support for this question.

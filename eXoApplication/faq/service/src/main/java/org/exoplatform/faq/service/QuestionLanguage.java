@@ -38,7 +38,7 @@ public class QuestionLanguage {
   private String question = " " ;
   
   /** The response. */
-  private String response = " " ;
+  private String[] response = new String[]{" "} ;
   
   /** The answerer */
   private String responseBy = " ";
@@ -102,14 +102,14 @@ public class QuestionLanguage {
    * 
    * @return the response's content
    */
-  public String getResponse() { return response ; }
+  public String[] getResponse() { return response ; }
   
   /**
    * Registers content of reponse, this content is only written by admin or moderator.
    * 
    * @param res the respnose of question
    */
-  public void setResponse(String res) { this.response = res ; }
+  public void setResponse(String res[]) { this.response = res ; }
 
   /**
    * Get the date when question whith this language is answered

@@ -1144,6 +1144,13 @@
 	padding-right:15px;
 }
 
+.UIFAQPortlet .MultiAnswerIcon {
+  background: url('background/FAQPortlet.gif') no-repeat left -575px;
+	padding-right:18px;
+	margin-left:5px;
+	height:20px;
+}
+
 .UIPrintPreview {
 	background: white ;
 	height: 100% ;

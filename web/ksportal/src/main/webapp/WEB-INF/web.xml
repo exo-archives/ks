@@ -120,7 +120,7 @@
     <listener-class>org.exoplatform.forum.service.ForumSessionListener</listener-class>
   </listener>
   <listener>
-    <listener-class>org.exoplatform.portal.webui.skin.SkinListener</listener-class>
+    <listener-class>org.exoplatform.portal.webui.skin.SkinConfigListener</listener-class>
   </listener>    
   <listener>
     <listener-class>org.exoplatform.portal.webui.javascript.JavascriptListener</listener-class>

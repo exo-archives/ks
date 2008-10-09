@@ -156,7 +156,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	      uiQuestions.listLanguage.clear() ;
 	      QuestionLanguage questionLanguage = new QuestionLanguage() ;
 	      questionLanguage.setQuestion(question.getQuestion()) ;
-	      questionLanguage.setResponse(question.getResponses()) ;
+	      questionLanguage.setResponse(question.getAllResponses()) ;
 	      questionLanguage.setLanguage(question.getLanguage()) ;
 	      questionLanguage.setResponseBy(question.getResponseBy()) ;
 	      questionLanguage.setDateResponse(question.getDateResponse()) ;

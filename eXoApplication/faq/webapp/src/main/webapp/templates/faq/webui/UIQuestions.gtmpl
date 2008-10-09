@@ -351,12 +351,9 @@
 				<%} else {
 						String responseBy = "..." ;
 						String date = "..." ;
-						String response = "<center><b>" + _ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered") + "</center></b>" ;
-						
 						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 							responseBy = question.getResponseBy() ;
 							date = dateFormatter.format(question.getDateResponse());
-							response = question.getResponses();
 						}
 					%>
 						<div class="QuestionSelect">
@@ -506,14 +503,19 @@
 										
 										<div class="ResponseContent">
 											<div class="Response" style="padding-left:0px;">
-												$response
 												<%
 												if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+													for(String res in question.getAllResponses()) {
 												%>
-													<div style="color:gray;">
-														<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
-														&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
-													</div>
+														$res
+														<div style="color:gray;">
+															<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
+															&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
+														</div>
+											<%	}
+												} else {
+											%>
+													<center><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%></center></b>
 											<%}%>
 											</div>
 												
@@ -538,10 +540,7 @@
 															    String fileType = fileAttachment.getMimeType() ;
 															    String fileWorkSpace = fileAttachment.getWorkspace() ;
 															    ValidatorDataInput validate = new ValidatorDataInput() ;
-														    	//String linkImage = uicomponent.getFileSource(fileAttachment) ;
-														    	System.out.println("\n\n\n\n-------->uicomponent.getPortalName()" + uicomponent.getPortalName());
-														    	System.out.println("\n\n\n\n-------->uicomponent.getRepository()" + uicomponent.getRepository());
-														    	String linkImage = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository()+fileAttachment.getPath() ;
+														    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
 														    	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 															    if(validate.isImage(fileName)) {
 														    %>

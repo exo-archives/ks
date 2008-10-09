@@ -31,7 +31,7 @@
   		<propertyDefinition name="exo:createdDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition> 		  		
-  		<propertyDefinition name="exo:responses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  		<propertyDefinition name="exo:responses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
   		</propertyDefinition>
   		<propertyDefinition name="exo:dateResponse" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
