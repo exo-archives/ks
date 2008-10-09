@@ -31,12 +31,5 @@
       <artifactId>exo.jcr.component.ext</artifactId>
       <version>${org.exoplatform.jcr.version}</version>      
     </dependency> 
-    
-    <!--dependency>
-      <groupId>org.exoplatform.cs</groupId>
-      <artifactId>exo.cs.eXoApplication.mail.service</artifactId>
-      <version>${org.exoplatform.cs.version}</version>      
-    </dependency-->
-    
   </dependencies>
 </project>
