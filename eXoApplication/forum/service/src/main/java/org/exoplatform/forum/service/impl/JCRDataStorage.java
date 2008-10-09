@@ -1656,14 +1656,32 @@ public class JCRDataStorage {
 				 * mail
 				 */
 				if (topicNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
-					if (post.getUserPrivate() == null || post.getUserPrivate().length == 1) {
+					List<String> listCanViewInTopic = ValuesToList(topicNode.getProperty("exo:canView").getValues());
+					List<String> listUser = new ArrayList<String>();
+					if(post.getUserPrivate() != null || post.getUserPrivate().length > 1){
+						listUser.addAll(Arrays.asList(post.getUserPrivate()));
+					}
+					if(!listCanViewInTopic.isEmpty() && listCanViewInTopic.get(0).trim().length() > 0){
+						if(listUser.isEmpty()){
+							listUser = listCanViewInTopic;
+						} else {
+							for(int i = 0; i < listUser.size() && !listUser.isEmpty(); ){
+								if(!listCanViewInTopic.contains(listUser.get(i))){
+									listUser.remove(i);
+								} else {
+									i ++;
+								}
+							}
+						}
+					}
+					
+					if (listUser.isEmpty() || listUser.get(0).trim().length() < 1) {
 						emailList = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
-					} else if (post.getUserPrivate().length == 2) {
+					} else {
 						List<String> emails = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
-						List<String> usersList = Arrays.asList(post.getUserPrivate());
 						int i = 0;
 						for (String user : ValuesToList(topicNode.getProperty("exo:userWatching").getValues())) {
-							if (usersList.contains(user)) {
+							if (listUser.contains(user)) {
 								emailList.add(emails.get(i));
 							}
 							i++;
