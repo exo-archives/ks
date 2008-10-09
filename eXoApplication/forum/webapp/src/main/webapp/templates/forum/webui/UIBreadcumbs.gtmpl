@@ -33,12 +33,12 @@
 						namePath = namePath.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
 						if(t+1 < uicomponent.getMaxPath()) {
 				%>
-					<a href="$link" title="$namePath" onclick="$event; return false;" class="Selected">$name</a>
+					<a href="$link" title="$namePath" onmousedown="$event; return false;" class="Selected">$name</a>
 					<div class="RightArrowIcon"><span></span></div>
 				 <% } else {
 				 		 	if(uicomponent.isLink()) {
 				 %>
-					<a href="$link" title="$namePath" onclick="$event; return false;" class="Selected">$name</a>
+					<a href="$link" title="$namePath" onmousedown="$event; return false;" class="Selected">$name</a>
 					<% 	} else{ %>				 
 					<div title="$namePath" class="Selected">$name</div>
 				 <%		
