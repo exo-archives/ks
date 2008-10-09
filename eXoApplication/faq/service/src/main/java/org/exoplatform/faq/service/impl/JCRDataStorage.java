@@ -1079,6 +1079,30 @@ public class JCRDataStorage {
 		      if(nodeObj.hasProperty("exo:isApproved")) question.setApproved(nodeObj.getProperty("exo:isApproved").getBoolean()) ;
 		      if(nodeObj.hasProperty("exo:isActivated")) question.setActivated(nodeObj.getProperty("exo:isActivated").getBoolean()) ;
 		      if(nodeObj.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(nodeObj.getProperty("exo:responses").getValues())) ;
+		      List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
+		    	NodeIterator nodeIterator = nodeObj.getNodes() ;
+		      Node nodeFile ;
+		      Node node ;
+		      while(nodeIterator.hasNext()){
+		        node = nodeIterator.nextNode() ;
+		        if(node.isNodeType("nt:file")) {
+		          FileAttachment attachment = new FileAttachment() ;
+		          nodeFile = node.getNode("jcr:content") ;
+		          attachment.setPath(node.getPath()) ;
+		          attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+		          attachment.setName(node.getName());
+		          attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+		          try{
+		            if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+		            else attachment.setSize(0) ;
+		          } catch (Exception e) {
+		            attachment.setSize(0) ;
+		            e.printStackTrace() ;
+		          }
+		          listFile.add(attachment);
+		        }
+		      }
+		      question.setAttachMent(listFile) ;
 		      questionList.add(question) ;
 				}
 			}

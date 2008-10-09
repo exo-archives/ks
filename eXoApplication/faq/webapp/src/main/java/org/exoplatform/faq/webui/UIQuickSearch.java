@@ -163,7 +163,7 @@ public class UIQuickSearch  extends UIForm {
 			resultContainer.setIsRenderedContainer(1) ;
 			UIAdvancedSearchForm uiAdvancedSearchForm = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			resultContainer.setId("AdvanceSearchForm") ;
-			uiAdvancedSearchForm.setValue(false, false, false, false, false, false, false, false) ;
+			uiAdvancedSearchForm.setValue(false, false, false, false, false, false, false, false,false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
   }

@@ -62,6 +62,9 @@ public class FAQEventQuery {
 	/** The response. */
 	private String response ;
 	
+	/** The attachment. */
+	private String attachment ;
+	
 	/** The from date. */
 	private Calendar fromDate ;
 	
@@ -254,6 +257,24 @@ public class FAQEventQuery {
 	 */
 	public void setResponse(String response) {
 		this.response = response;
+	}
+	
+	/**
+	 * Gets the attachment.
+	 * 
+	 * @return the attachment
+	 */
+	public String getAttachment() {
+		return attachment;
+	}
+	
+	/**
+	 * Sets the attachment.
+	 * 
+	 * @param attachment the new attachment
+	 */
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
 	}
 	
 	/**

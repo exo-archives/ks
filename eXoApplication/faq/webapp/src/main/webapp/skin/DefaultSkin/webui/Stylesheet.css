@@ -1293,3 +1293,11 @@
 .UIFAQPortlet .FAQUISendEMailForm .FieldLabel {
 	font-weight: bold;
 }
+
+.UIFAQPortlet .UIAdvancedSearchForm .FieldLabel {
+	font-weight: bold;
+}
+
+.UIFAQPortlet .UIAdvancedSearchForm .FieldComponent .textarea {
+	height:50px;
+}
