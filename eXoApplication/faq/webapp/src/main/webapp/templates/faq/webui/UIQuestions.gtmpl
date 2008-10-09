@@ -143,11 +143,11 @@
 				categoryId = category.getId();
 				String link = uicomponent.event("OpenCategory", categoryId) ;
 				String linkWacth = uicomponent.event("WatchManager", categoryId)
-				long[] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
-				long numberOfSubCate = cateInfo[0] ;
-				long numberOfQuestion = cateInfo[1] ;
-				long questionNotAnswer = cateInfo[2] ;
-				long questionNotApproved = cateInfo[3] ;
+				//long[] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
+				//long numberOfSubCate = cateInfo[0] ;
+				//long numberOfQuestion = cateInfo[1] ;
+				//long questionNotAnswer = cateInfo[2] ;
+				//long questionNotApproved = cateInfo[3] ;
 	%>
 			<div class="FAQCategory">
 				<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupCategory$i', '', null, null)">
@@ -168,10 +168,7 @@
 								$categoryName
 							</a>
 						<% } %>
-						($numberOfSubCate <%=_ctx.appRes(uicomponent.getName() + ".label.TotalCategories")%>, 
-						$numberOfQuestion <%=_ctx.appRes(uicomponent.getName() + ".label.TotalQuestions")%>, 
-						$questionNotAnswer <%=_ctx.appRes(uicomponent.getName() + ".label.TotalQuestionsNotYetAnswered")%>, 
-						$questionNotApproved <%=_ctx.appRes(uicomponent.getName() + ".label.TotalQuestionsNotApproved")%>)
+						 
 						<% if(listCateModerator.get(i)) {
 									List emailWatch = uicomponent.getListWatch(categoryId) ;
 									if(emailWatch.size() > 0) {

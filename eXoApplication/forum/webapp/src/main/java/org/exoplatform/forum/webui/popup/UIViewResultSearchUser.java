@@ -37,6 +37,7 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
   private JCRPageList pageList ;
 	private static String FORUM_PAGE_ITERATOR="ForumUserPageIterator";
 	private String[] permissionUser = null;
+	private long totalPage = 0;
 	
 	public UIViewResultSearchUser() throws Exception {
 		addChild(UIForumPageIterator.class, null, FORUM_PAGE_ITERATOR) ;
@@ -55,10 +56,10 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
 		this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
 	}
 	
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "unchecked" })
   private List<UserProfile> getListUserProfile(){
 		long page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
-  	long maxPage = this.pageList.getAvailablePage() ;
+  	totalPage = this.pageList.getAvailablePage() ;
   	List<UserProfile> listUserProfile = new ArrayList<UserProfile>();
     try {
 	    listUserProfile = this.pageList.getPage(page);
