@@ -72,22 +72,23 @@ public class SendMailJob extends Thread implements Job, Runnable  {
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
 		  	List<String> sentMessages = new ArrayList<String>() ;
+		  	int countEmail = 0;
 		  	for(String address : emailAddresses) {
 		  		if(!sentMessages.contains(address)) {
 		  			message.setTo(address) ;
 			  		mailService.sendMessage(message) ;
 			  		sentMessages.add(address) ;
+			  		countEmail ++;
 		  		}
 		  	}
-		  	System.out.println("\n\n####  Notification messages of forum service has sent !!!");
+		  	if (log_.isDebugEnabled()) {
+		  		log_.debug("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
+		  	}
 		  }
 		  schedulerService.removeJob(info) ;		  
 
 	  } catch (Exception e) {
 		  e.printStackTrace();			
-	  }
-	  if (log_.isDebugEnabled()) {
-		log_.debug("Send Forum notification job done");
 	  }
   }
 }

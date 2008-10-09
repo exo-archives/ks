@@ -34,7 +34,6 @@ import org.quartz.JobExecutionException;
 
 public class NotifyJob extends Thread implements Job, Runnable  {
   private Thread thread ;
-  private static Log log = ExoLogger.getLogger("SetupServlet.class");
   
 	public NotifyJob() throws Exception {
 		setDaemon(true) ;	
@@ -83,15 +82,14 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 			  		countEmail ++;
 		  		}
 		  	}
-		  	log.debug("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
+		  	if (log_.isDebugEnabled()) {
+		  		log_.debug("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
+		  	}
 		  }
 		  schedulerService.removeJob(info) ;		  
 
 	  } catch (Exception e) {
 		  e.printStackTrace();			
-	  }
-	  if (log_.isDebugEnabled()) {
-		log_.debug("Send Forum notification job done");
 	  }
   }
 }
