@@ -48,10 +48,9 @@
 					   	} 
 				   	} else {%>
 				   		<tr class="$classRowTable">
-							  <td class="text"> &nbsp; </td>
-								<td class="text"> &nbsp; </td>
-								<td class="text"> &nbsp; </td>
-								<td class="text"> &nbsp; </td>
+							  <td class="text" colspan="4" align="center">
+							  	<%=_ctx.appRes("UIModeratorManagementForm.label.ResultSearchUserIsNull");%>
+							  </td>
 					    </tr>
 				   <%}
 				   %>
@@ -61,7 +60,9 @@
 		</div>
 		<div><span></span></div>
 		<div>
-			<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+			<%if(uicomponent.totalPage > 1){
+					uicomponent.renderChild(UIForumPageIterator.class) ; 
+				}%>
 			<div style="clear: right;"><span></span></div>
 		</div>
 		<div><span></span></div>
