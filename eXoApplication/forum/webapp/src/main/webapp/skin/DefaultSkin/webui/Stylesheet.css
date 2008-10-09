@@ -398,3 +398,7 @@
 	margin: 3px 5px 0px 0px;
 	cursor: pointer;
 }
+
+.UIForumPortlet .ViewTopicCreatedByUser .UIAction {
+	_margin: 14px 0px 0px 0px;
+}
