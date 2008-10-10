@@ -13,7 +13,7 @@
 
 .UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar {
   background: #EEF0F2;
-  border: 1px solid #B7B7B7;
+  /*border: 1px solid #B7B7B7;*/
 }
 
 .UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar .OpenIcon {
@@ -388,7 +388,7 @@
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Question {
-  background: url('background/questionIcon.PNG') no-repeat left 0px;
+  background: url('background/questionIcon.gif') no-repeat left 0px;
   height: 16px ; width: 28px;
   float: left;
 }

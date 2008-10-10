@@ -5,7 +5,7 @@
 	<div class="LeftBreadcumbsBar">
 		<div class="RightBreadcumbsBar"> 
 			<div class="CenterBreadcumbs">
-				<div class="BreadcumbsInfoBar">
+				<div class="BreadcumbsInfoBar" style="border: 1px solid #B7B7B7;">
 					<div class="OpenIcon"><span></span></div>
 				<% int t = 1 ;
 					for(namePath in uicomponent.getBreadcumbs()) {
