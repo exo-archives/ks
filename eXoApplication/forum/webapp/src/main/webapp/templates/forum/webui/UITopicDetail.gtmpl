@@ -676,7 +676,7 @@
 									if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
-								<img src="$avatarUrl" class="Img" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="125px"/>
+								<img src="$avatarUrl" class="ImgAvatar" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="125px"/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes(uiformId + ".label.JoinDate");%>: $joinDate</div>
@@ -755,7 +755,6 @@
 										<div class="AttachmentBox">
 										<% if(typeFile.indexOf("image") >= 0) {
 										   String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +attachment.getPath() ;
-										   System.out.println("\n\nattLink: " +attLink);
 										%>
 											<div class="Image"><img id="imgView${fileName}" src="$attLink" height="100px;"/></div> 
 						 					<div class="LabelBox">
