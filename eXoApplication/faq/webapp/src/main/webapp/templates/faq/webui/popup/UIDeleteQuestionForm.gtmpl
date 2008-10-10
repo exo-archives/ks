@@ -1,6 +1,6 @@
 <div class="FAQUIDeleteQuestionForm">
 	<% uiform.begin() %>
-		<div style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; border: 1px solid #E6F3F3">
+		<div style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; border: 1px solid #E6F3F3; _width:90%;">
 			<div style="margin: 5px 2px 10px 2px;">
 				<center><font size="2px">
 					<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "reallyDeleteQuestion")%></b>
