@@ -135,6 +135,7 @@ UIFAQPortlet.prototype.removeLink = function(rootNode){
   for(var i = 0 ;i < len ; i++){
     if(eXo.core.DOMUtil.hasClass(links[i], "ActionButton")) continue ;
     links[i].href = "javascript:void(0) ;"
+    if(links[i].onclick != null) links[i].removeAttribute("onclick");
   }
   return rootNode ;
 } ;
