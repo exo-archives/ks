@@ -63,6 +63,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -82,8 +83,8 @@ public class JCRDataStorage {
 
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
-
 	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
+	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator;
@@ -91,12 +92,21 @@ public class JCRDataStorage {
 
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try {
-			serverConfig_ = ((EmailNotifyPlugin) plugin).getServerConfiguration();
+			if(plugin instanceof EmailNotifyPlugin) {
+				serverConfig_ = ((EmailNotifyPlugin) plugin).getServerConfiguration();
+			}else if(plugin instanceof RoleRulesPlugin){
+				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public boolean isAdminRole(String userName) throws Exception {
+		
+		return false ;
+	}
+	
 	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
 		Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
 		try {
