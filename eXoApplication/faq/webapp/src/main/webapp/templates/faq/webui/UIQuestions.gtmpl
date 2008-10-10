@@ -154,9 +154,9 @@
 						<!-- category name -->
 						<%
 						 String titleCategorys = "" ;
-						 if(categoryName.length() > 80) {
+						 if(categoryName.length() > 150) {
 						 	titleCategorys = categoryName ;
-							categoryName = FAQUtils.getSubString(categoryName, 80);
+							categoryName = FAQUtils.getSubString(categoryName, 150);
 							%>
 							<a href="$link" onmousemove="eXo.faq.UIFAQPortlet.viewTitle('titleCategory$categoryId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleCategory$categoryId')">
 								$categoryName
