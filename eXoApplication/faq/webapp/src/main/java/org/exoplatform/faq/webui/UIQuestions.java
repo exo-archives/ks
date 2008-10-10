@@ -581,7 +581,7 @@ public class UIQuestions extends UIContainer {
           String currentUser = FAQUtils.getCurrentUser() ;
           FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
           if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
-          	uiPopupAction.activate(uiPopupContainer, 550, 300) ;
+          	uiPopupAction.activate(uiPopupContainer, 540, 320) ;
           	uiPopupContainer.setId("SubCategoryForm") ;
           	category.setParentId(categoryId) ;
           } else {
@@ -599,7 +599,7 @@ public class UIQuestions extends UIContainer {
           return ;
         }
       } else {
-      	uiPopupAction.activate(uiPopupContainer, 550, 300) ;
+      	uiPopupAction.activate(uiPopupContainer, 540, 320) ;
       	uiPopupContainer.setId("AddCategoryForm") ;
       }
       category.init(true) ;
@@ -727,7 +727,7 @@ public class UIQuestions extends UIContainer {
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
         if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
-        	UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,550) ;
+        	UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
     			uiPopupContainer.setId("EditCategoryForm") ;
           UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
     			uiCategoryForm.init(false);

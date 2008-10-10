@@ -57,7 +57,7 @@
   margin: 8px 0px;
   white-space: nowrap;
 }
-/**************************** UIForumPortlet ForumToolBar *********************************/
+/**************************** UIFAQPortlet FAQToolBar *********************************/
 .UIFAQPortlet .UIQuestions {
   margin-top: 5px;
 }
@@ -159,6 +159,16 @@
   margin:4px 5px 0px 5px;
   width:150px;
   height: 13px;
+}
+
+.UIFAQPortlet .UIGroupMembershipSelector .UIBreadcumbs .BreadcumbsInfoBar {
+	height: auto;
+	border: medium none;
+}
+
+.UIFAQPortlet .UIGroupMembershipSelector .UIBreadcumbs .LeftBlock {
+	line-height: 25px;
+	padding: 0px 2px;
 }
 
 /******************************  OverButton  ***************************************/
