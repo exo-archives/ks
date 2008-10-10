@@ -60,7 +60,7 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 		String user = FAQUtils.getCurrentUser() ;
 		userName = new UIFormStringInput(USER_NAME, USER_NAME, null) ;
 		if(!FAQUtils.isFieldEmpty(user)) {
-			userName.setValue(FAQUtils.getFullName(user)) ;
+			userName.setValue(user) ;
 			userName.setEditable(false) ;
 		  String email = FAQUtils.getEmailUser(user) ;
 		  if(!FAQUtils.isFieldEmpty(email)) {
