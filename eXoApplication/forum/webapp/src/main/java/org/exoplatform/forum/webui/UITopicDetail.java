@@ -678,6 +678,7 @@ public class UITopicDetail extends UIForm {
 			if(!ForumUtils.isEmpty(numberPage)) {
 				try {
 					long page = Long.parseLong(numberPage.trim()) ;
+					System.out.println("\n\nPage: " + page);
 					if(page < 0) {
 						Object[] args = { "go page" };
 						throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
