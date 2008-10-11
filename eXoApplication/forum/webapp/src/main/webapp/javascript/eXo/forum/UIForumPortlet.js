@@ -525,4 +525,35 @@ UIForumPortlet.prototype.closeShareLink = function(obj){
 	popup.style.display = "none" ;
 };
 
+UIForumPortlet.prototype.loadScroll = function(e) {
+	var uiNav = eXo.forum.UIForumPortlet ;
+  var container = document.getElementById("UIForumActionBar") ;
+  if(container) {
+    uiNav.scrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIForumActionBar") ;
+    uiNav.scrollMgr.initFunction = uiNav.initScroll ;
+    uiNav.scrollMgr.mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer") ;
+    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
+    uiNav.scrollMgr.loadElements("ControlButton", true) ;
+    
+    var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.scrollMgr.arrowsContainer, "div");
+    if(button.length >= 2) {    
+      uiNav.scrollMgr.initArrowButton(button[0],"left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton") ;
+      uiNav.scrollMgr.initArrowButton(button[1],"right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton") ;
+    }
+		
+    uiNav.scrollManagerLoaded = true;	
+    uiNav.initScroll() ;
+  }
+} ;
+
+UIForumPortlet.prototype.initScroll = function() {
+  var uiNav = eXo.forum.UIForumPortlet ;
+  if(!uiNav.scrollManagerLoaded) uiNav.loadScroll() ;
+  var elements = uiNav.scrollMgr.elements ;
+  uiNav.scrollMgr.init() ;
+	if(eXo.core.Browser.isIE6()) uiNav.scrollMgr.arrowsContainer.setAttribute("space",35);
+  uiNav.scrollMgr.checkAvailableSpace() ;
+  uiNav.scrollMgr.renderElements() ;
+} ;
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

@@ -1311,3 +1311,67 @@
 .UIFAQPortlet .UIAdvancedSearchForm .FieldComponent .textarea {
 	height:50px;
 }
+
+.UIFAQPortlet .FAQToolbar .ScrollButtons {
+	display:none;
+	float:right;
+	padding:5px 1px 5px 1px;
+}
+
+.UIFAQPortlet .FAQToolbar .DisableScrollLeftButton {
+	background: url('background/DisableScrollLeftButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 5px;
+	padding-left:12px;
+	width:13px;
+}
+
+.UIFAQPortlet .FAQToolbar .DisableScrollRightButton {
+	background: url('background/DisableScrollRightButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 2px;
+	width:13px;
+}
+
+.UIFAQPortlet .FAQToolbar .ScrollRightButton {
+	background: url('background/ScrollRightButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 2px;
+	width:13px;
+}
+
+.UIFAQPortlet .FAQToolbar .ScrollLeftButton {
+	background: url('background/ScrollLeftButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	padding-left:12px;
+	margin:0px 5px;
+	width:13px;
+}
+
+.UIFAQPortlet .FAQToolbar .HighlightScrollRightButton {
+	background: url('background/HighlightScrollRightButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 2px;
+
+	width:13px;
+}
+
+.UIFAQPortlet .FAQToolbar .HighlightScrollLeftButton {
+	background: url('background/HighlightScrollLeftButton.gif') no-repeat left;
+	cursor:pointer;
+	float:left;
+	height:15px;
+	margin:0px 5px;
+	padding-left:12px;
+	width:13px;
+}
