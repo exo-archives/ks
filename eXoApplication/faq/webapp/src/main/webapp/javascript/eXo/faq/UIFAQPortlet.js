@@ -46,20 +46,6 @@ UIFAQPortlet.prototype.hiddenTitle = function(id) {
 	obj.style.display = "none" ;
 };
 
-/*
-UIFAQPortlet.prototype.openPicture = function(obj,id) {
-	var img = document.getElementById(id) ;
-	if(img) {
-		if(img.offsetHeight <= 101) {
-			img.style.width = "100%" ;
-			img.className = "Icon MiniView" ;
-		} else {
-			img.style.height = "100px" ;
-			img.className = "Icon MaxView" ;
-		}
-	}
-};*/
-
 UIFAQPortlet.prototype.showPicture = function(src) {
   var containerNode = document.createElement('div') ;
   var imageNode = document.createElement('img') ;
@@ -108,8 +94,11 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	FAQContent.appendChild(printArea) ;
 	FAQContainer.appendChild(FAQContent) ;
 	dummyPortlet.appendChild(FAQContainer) ;
-	document.body.appendChild(this.removeLink(dummyPortlet)) ;
-	uiPortalApplication.style.display = "none" ;	
+	dummyPortlet = this.removeLink(dummyPortlet);
+	dummyPortlet.style.position ="absolute";
+	dummyPortlet.style.width ="100%";
+	document.body.insertBefore(this.removeLink(dummyPortlet),uiPortalApplication) ;
+	uiPortalApplication.style.visibility = "hidden" ;
 };
 
 UIFAQPortlet.prototype.printAll = function(obj) {
@@ -125,8 +114,10 @@ UIFAQPortlet.prototype.printAll = function(obj) {
   uiAction.style.display = "block" ;
   faqContainer.style.overflow = "visible" ;
   dummyPortlet.appendChild(this.removeLink(faqContainer)) ;
-  document.body.appendChild(dummyPortlet) ;
-  uiPortalApplication.style.display = "none" ;
+	dummyPortlet.style.position ="absolute";
+	dummyPortlet.style.width ="100%";
+  document.body.insertBefore(dummyPortlet,uiPortalApplication) ;
+  uiPortalApplication.style.visibility = "hidden" ;
 };
 
 UIFAQPortlet.prototype.removeLink = function(rootNode){
@@ -135,7 +126,7 @@ UIFAQPortlet.prototype.removeLink = function(rootNode){
   for(var i = 0 ;i < len ; i++){
     if(eXo.core.DOMUtil.hasClass(links[i], "ActionButton")) continue ;
     links[i].href = "javascript:void(0) ;"
-    if(links[i].onclick != null) links[i].removeAttribute("onclick");
+    if(links[i].onclick != null) links[i].onclick = "javascript:void(0);" ;
   }
   return rootNode ;
 } ;
@@ -144,8 +135,40 @@ UIFAQPortlet.prototype.closePrint = function() {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var uiPortalApplication = document.getElementById("UIPortalApplication");
 	uiPortalApplication.style.display = "block" ;	
+	uiPortalApplication.style.visibility = "visible" ;
 	for(var i = 0 ; i < document.body.childNodes.length ; i++) {
 		if(DOMUtil.hasClass(document.body.childNodes[i], "UIFAQPortlet")) DOMUtil.removeElement(document.body.childNodes[i]) ;		
 	}
 } ;
+
+UIFAQPortlet.prototype.loadScroll = function(e) {
+  var uiNav = eXo.faq.UIFAQPortlet ;
+  var container = document.getElementById("UIQuestions") ;
+  if(container) {
+    uiNav.scrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIQuestions") ;
+    uiNav.scrollMgr.initFunction = uiNav.initScroll ;
+    uiNav.scrollMgr.mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer") ;
+    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
+    uiNav.scrollMgr.loadElements("ControlButton", true) ;
+    
+    var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.scrollMgr.arrowsContainer, "div");
+		
+    if(button.length >= 2) {    
+      uiNav.scrollMgr.initArrowButton(button[0],"left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton") ;
+      uiNav.scrollMgr.initArrowButton(button[1],"right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton") ;
+    }
+
+    uiNav.scrollManagerLoaded = true;	
+    uiNav.initScroll() ;
+  }
+} ;
+
+UIFAQPortlet.prototype.initScroll = function() {
+  var uiNav = eXo.faq.UIFAQPortlet ;
+  if(!uiNav.scrollManagerLoaded) uiNav.loadScroll() ;
+  uiNav.scrollMgr.init() ;
+  uiNav.scrollMgr.checkAvailableSpace() ;
+  uiNav.scrollMgr.renderElements() ;
+} ;
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;

@@ -8,13 +8,17 @@
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
+	rcontext.getJavascriptManager().addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
 	<div class="FAQToolbar">
   	<div class="LeftBar">
   			<div class="RightBar">
   				<div class="CenterBar">
-  					<div class="ControlbarCotainer">
+  					<table>
+					<tbody>
+						<tr>
+							<td class="ControlButtonContainer">
 							<%
 							String url = uicomponent.url("Setting", "OBJECTID") ;
 							uicomponent.setLink(url);
@@ -46,7 +50,7 @@
 									linkAction = uicomponent.event(action, cateId) ;
 									String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
 							%>
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
 										<a href="$linkAction">
 											<div class="LeftOverButton">
 												<div class="RightOverButton">
@@ -59,13 +63,13 @@
 											</div>
 										</a>
 									</div>
-									<div class="SeparatorLine"><span></span></div>
+									<div class="SeparatorLine ControlButton"><span></span></div>
 							<%
 								}
 							} else if(cateId != null && cateId.trim().length() > 0) {
 								String linkAction =uicomponent.event("AddNewQuestion", cateId) ;
 							%>
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar">
+									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
 										<a href="$linkAction">
 											<div class="LeftOverButton">
 												<div class="RightOverButton">
@@ -78,12 +82,12 @@
 											</div>
 										</a>
 									</div>
-									<div class="SeparatorLine"><span></span></div>
+									<div class="SeparatorLine ControlButton"><span></span></div>
 						<%}%>
 						<% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
 								String actionSetting = uicomponent.event("Setting") ;
 						%>
-							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"   class="DefaultStyle FAQBar">
+							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"   class="DefaultStyle FAQBar ControlButton">
 									<a href="$actionSetting" >
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
@@ -96,9 +100,9 @@
 										</div>
 									</a>
 								</div>
-								<div class="SeparatorLine"><span></span></div>
+								<div class="SeparatorLine ControlButton"><span></span></div>
 							<% } %>
-							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"   class="DefaultStyle FAQBar">
+							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"   class="DefaultStyle FAQBar ControlButton">
 								<a href="javascript:void(0);" onclick="eXo.faq.UIFAQPortlet.printAll(this)">
 									<div class="LeftOverButton">
 										<div class="RightOverButton">
@@ -111,15 +115,24 @@
 									</div>
 								</a>
 							</div>
-							<div class="SeparatorLine"><span></span></div>
-						
-							<div style="clear: left;"><span></span></div>
-						</div>
+							<div class="SeparatorLine ControlButton"><span></span></div>
+						<div class="ScrollButtons" style="width:50px;">
+		      		<div title="Previous">
+		      			<div title="Next"><span></span></div>
+		      		</div>
+		      	</div>
+						<div style="clear: both;"><span></span></div>
+						</td>
+						<td style="padding: 0px;width:260px;">
 						<div class="SearchForm">
 								<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
 						</div>
 				
 						<div style="clear: both;"><span></span></div>
+						</td>
+							</tr>
+						</body>
+					</table>
   				</div>
   			</div>
 		</div>
