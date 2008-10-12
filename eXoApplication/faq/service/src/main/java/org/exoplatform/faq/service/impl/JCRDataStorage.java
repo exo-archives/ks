@@ -164,6 +164,7 @@ public class JCRDataStorage {
     if(!listFileAtt.isEmpty()) {
       for(FileAttachment att : listFileAtt) {
         listFileName.add(att.getName()) ;
+        System.out.println("==>nameAttachs:" + att.getName());
         try {
           Node nodeFile = null;
           if (questionNode.hasNode(att.getName())) nodeFile = questionNode.getNode(att.getName());
@@ -179,6 +180,7 @@ public class JCRDataStorage {
           e.printStackTrace() ;
         }
       }
+      questionNode.setProperty("exo:nameAttachs", listFileName.toArray(new String[]{})) ;
     }
     
     NodeIterator nodeIterator = questionNode.getNodes() ;
@@ -471,7 +473,8 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
     if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(questionNode.getProperty("exo:responseBy").getString()) ;  	
-    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ;  	
+    if(questionNode.hasProperty("exo:nameAttachs")) question.setNameAttachs(ValuesToStrings(questionNode.getProperty("exo:nameAttachs").getValues())) ;  	
+    
     List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
   	NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;

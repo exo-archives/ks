@@ -375,6 +375,11 @@ public String getPathQuery() {
 	    	stringBuffer.append("(jcr:contains(@exo:responses, '").append(response).append("'))") ;
 	    	isAnd = true ;
 	    }
+	    if(attachment != null && attachment.length() > 0) {
+	    	if(isAnd) stringBuffer.append(" and ");
+	    	stringBuffer.append("(jcr:contains(@exo:nameAttachs, '").append("*"+attachment + "*").append("'))") ;
+	    	isAnd = true ;
+	    }
     }
     String temp = setDateFromTo(fromDate, toDate, "createdDate") ;
     if(temp != null && temp.length() > 0) { 

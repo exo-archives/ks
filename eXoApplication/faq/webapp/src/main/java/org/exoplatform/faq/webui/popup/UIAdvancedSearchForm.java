@@ -429,11 +429,11 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
  				List<Question> list = faqService.getAdvancedSearchQuestion(FAQUtils.getSystemProvider(),eventQuery);
  				popupContainer.setId("ResultSearchQuestion") ;
  				List<Question> listResult = advancedSearch.getResultListQuestion(language, question, response, text, list) ;
- 				if(nameAttachment != null && nameAttachment.trim().length() > 0) {
- 					if(FAQUtils.isFieldEmpty(text) && FAQUtils.isFieldEmpty(question) && FAQUtils.isFieldEmpty(response) &&
- 							FAQUtils.isFieldEmpty(author) && FAQUtils.isFieldEmpty(emailAddress) && (fromDate == null) && (toDate == null)) listResult = advancedSearch.getResultListQuestionAttachment(nameAttachment,language, list) ;
- 					else listResult = advancedSearch.getResultListQuestionAttachment(nameAttachment, language, listResult) ;
- 				}
+// 				if(nameAttachment != null && nameAttachment.trim().length() > 0) {
+// 					if(FAQUtils.isFieldEmpty(text) && FAQUtils.isFieldEmpty(question) && FAQUtils.isFieldEmpty(response) &&
+// 							FAQUtils.isFieldEmpty(author) && FAQUtils.isFieldEmpty(emailAddress) && (fromDate == null) && (toDate == null)) listResult = advancedSearch.getResultListQuestionAttachment(nameAttachment,language, list) ;
+// 					else listResult = advancedSearch.getResultListQuestionAttachment(nameAttachment, language, listResult) ;
+// 				}
  				result.setListQuestion(listResult) ; 
 			} else {
 				resultContainer.setIsRenderedContainer(2) ;

@@ -76,6 +76,8 @@ public class Question {
   
   private String languagesNotYetAnswered = "";
   
+  private String[] nameAttachs ;
+  
   /**
    * Class constructor specifying id of object is created.
    */
@@ -321,7 +323,11 @@ public class Question {
   	this.languagesNotYetAnswered = languagesNotYetAnswered;
   	return this;
   }
-
+	
+	public String[] getNameAttachs() {return nameAttachs;}
+	public void setNameAttachs(String[] nameAttachs) { this.nameAttachs = nameAttachs;}
+	
 	public String getLink() {return link;}
 	public void setLink(String link) { this.link = link;}
+	
 }

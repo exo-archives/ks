@@ -42,7 +42,10 @@
 	  	</propertyDefinition>
   		<propertyDefinition name="exo:relatives" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
-  		</propertyDefinition> 		  		
+  		</propertyDefinition>
+  		<propertyDefinition name="exo:nameAttachs" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+  		</propertyDefinition>
   	</propertyDefinitions>
   	<childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="nt:file" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
