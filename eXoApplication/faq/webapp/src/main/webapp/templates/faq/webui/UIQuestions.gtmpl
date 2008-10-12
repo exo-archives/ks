@@ -606,8 +606,8 @@
 													List questionRelation = question.getRelations() ;
 													if(!questionRelation.isEmpty()) {
 												%>
+														<div class="RelationContent">
 														<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</b><br>
-														<div>
 												<%
 														for(String relationId : questionRelation) { 
 															quesRelaCont = "" ;
