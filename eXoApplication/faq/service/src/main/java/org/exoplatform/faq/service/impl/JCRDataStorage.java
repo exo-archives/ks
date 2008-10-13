@@ -163,12 +163,13 @@ public class JCRDataStorage {
     List<String> listFileName = new ArrayList<String>() ;
     if(!listFileAtt.isEmpty()) {
       for(FileAttachment att : listFileAtt) {
-        listFileName.add(att.getName()) ;
-        System.out.println("==>nameAttachs:" + att.getName());
+        listFileName.add(att.getId()) ;
+        System.out.println("==>nameAttachs:" + att.getId());
         try {
           Node nodeFile = null;
-          if (questionNode.hasNode(att.getName())) nodeFile = questionNode.getNode(att.getName());
-          else nodeFile = questionNode.addNode(att.getName(), "nt:file");
+          if (questionNode.hasNode(att.getId())) nodeFile = questionNode.getNode(att.getId());
+          else nodeFile = questionNode.addNode(att.getId(), "exo:faqAttachment");
+          nodeFile.setProperty("exo:fileName", att.getName()) ;
           Node nodeContent = null;
           if (nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.getNode("jcr:content");
           else  nodeContent = nodeFile.addNode("jcr:content", "nt:resource") ;
@@ -486,7 +487,7 @@ public class JCRDataStorage {
         nodeFile = node.getNode("jcr:content") ;
         attachment.setPath(node.getPath()) ;
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-        attachment.setName(node.getName());
+        attachment.setName(node.getProperty("exo:fileName").getString());
         attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
         try{
           if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());

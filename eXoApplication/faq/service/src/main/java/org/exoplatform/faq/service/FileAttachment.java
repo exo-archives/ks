@@ -26,6 +26,7 @@ import javax.jcr.Session;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
  * Created by The eXo Platform SARL
@@ -58,7 +59,9 @@ public class FileAttachment {
   /** The input. */
   private InputStream input ;
   
-  
+  public FileAttachment() {
+		id = "fileAttachment" + IdGenerator.generate() ;
+	}
   /**
    * Gets the file's id, each file have an unique id.
    * this id is used to edit question when upload file
