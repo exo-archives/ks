@@ -357,4 +357,8 @@ public class ForumServiceImpl implements ForumService{
 	  return storage_.searchUserProfile(sessionProvider, userSearch);
   }
 
+	public boolean isAdminRole(String userName) throws Exception {
+	  return storage_.isAdminRole(userName);
+  }
+
 }

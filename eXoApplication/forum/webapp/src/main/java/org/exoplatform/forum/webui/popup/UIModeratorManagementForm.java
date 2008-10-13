@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -168,6 +169,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   	this.userProfiles = new ArrayList<UserProfile>();
   	int i =0, j = 0;
   	for (UserProfile userProfile : listUserProfile) {
+  		if(this.forumService.isAdminRole(userProfile.getUserId())) userProfile.setUserRole((long)0);
   		if(userProfile.getUser() == null) {
 	  		for (User user : listUser) {
 		      if(user.getUserName().equals(userProfile.getUserId())) {
@@ -273,12 +275,16 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		userId.setEditable(false) ;
 		userId.setEnable(false) ;
 		UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
-		userTitle.setValue(this.userProfile.getUserTitle());
-		
+		String title = this.userProfile.getUserTitle();
 		boolean isAdmin = false ;
-		if(this.userProfile.getUserRole() == 0) isAdmin = true;
 		UIFormCheckBoxInput userRole = new UIFormCheckBoxInput<Boolean>(FIELD_USERROLE_CHECKBOX, FIELD_USERROLE_CHECKBOX, false) ;
+		if(this.forumService.isAdminRole(userProfile.getUserId())){
+			userRole.setEnable(false);
+			isAdmin = true;
+			if(title.equals(Utils.MODERATOR) || title.equals(Utils.USER)) title = Utils.ADMIN;
+		} else if(this.userProfile.getUserRole() == 0) isAdmin = true;
 		userRole.setValue(isAdmin);
+		userTitle.setValue(title);
 		
 		UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
 		signature.setValue(ForumTransformHTML.unCodeHTML(this.userProfile.getSignature()));
@@ -518,7 +524,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
     	long userRole = 3;
     	boolean isAdmin = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_USERROLE_CHECKBOX).getValue() ;
-    	if(isAdmin) userRole = 0;
+    	if(!uiForm.forumService.isAdminRole(userProfile.getUserId())) {
+    		if(isAdmin) userRole = 0;
+    	}else {
+    		if(userTitle.equals(Utils.ADMIN)) userTitle = userProfile.getUserTitle();
+    	}
     	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
       List<String> moderateForums = new ArrayList<String>() ;
     	if(!ForumUtils.isEmpty(moderateForum)) {

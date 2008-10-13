@@ -850,4 +850,5 @@ public interface ForumService {
 	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception ;
 	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception ;
 	public SendMessageInfo getMessageInfo(String name) throws Exception ;
+	public boolean isAdminRole(String userName) throws Exception ;
 }

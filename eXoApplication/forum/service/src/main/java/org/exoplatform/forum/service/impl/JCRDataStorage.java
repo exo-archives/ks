@@ -63,6 +63,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -82,21 +83,37 @@ public class JCRDataStorage {
 
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
-
 	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
+	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator;
 	}
-
+	public JCRDataStorage() {}
+	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try {
-			serverConfig_ = ((EmailNotifyPlugin) plugin).getServerConfiguration();
+			if(plugin instanceof EmailNotifyPlugin) {
+				serverConfig_ = ((EmailNotifyPlugin) plugin).getServerConfiguration();
+			}else if(plugin instanceof RoleRulesPlugin){
+				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public boolean isAdminRole(String userName) throws Exception {
+		try {
+			for(int i = 0; i < rulesPlugins_.size(); ++i) {
+				if(rulesPlugins_.get(i).getRules(Utils.ADMIN_ROLE).contains(userName)) return true;
+			}
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
+		return false ;
+	}
+	
 	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
 		Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
 		try {
@@ -2307,13 +2324,20 @@ public class JCRDataStorage {
 			return userProfile;
 		Node userProfileNode = getUserProfileNode(sProvider);
 		Node newProfileNode;
+		String title = "";
 		try {
 			newProfileNode = userProfileNode.getNode(userName);
 			userProfile.setUserId(userName);
 			if (newProfileNode.hasProperty("exo:userTitle"))
-				userProfile.setUserTitle(newProfileNode.getProperty("exo:userTitle").getString());
-			if (newProfileNode.hasProperty("exo:userRole"))
-				userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
+				title = newProfileNode.getProperty("exo:userTitle").getString();
+			if(isAdminRole(userName)) {
+				userProfile.setUserRole((long)0);
+				if(title.equals(Utils.MODERATOR) || title.equals(Utils.USER)) title = Utils.ADMIN;
+			} else {
+				if (newProfileNode.hasProperty("exo:userRole"))
+					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
+			}
+			userProfile.setUserTitle(title);
 			if (newProfileNode.hasProperty("exo:signature"))
 				userProfile.setSignature(newProfileNode.getProperty("exo:signature").getString());
 			if (newProfileNode.hasProperty("exo:totalPost"))
@@ -2382,13 +2406,13 @@ public class JCRDataStorage {
 			return userProfile;
 		} catch (PathNotFoundException e) {
 			userProfile.setUserId(userName);
+			userProfile.setUserTitle(Utils.USER);
+			saveUserProfile(sProvider, userProfile, false, false);
 			// default Administration
-			if (userName.equals(Utils.DEFAULT_USER_ADMIN_ID)) {
+			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long) 0);
 				userProfile.setUserTitle(Utils.ADMIN);
-			} else
-				userProfile.setUserTitle(Utils.USER);
-			saveUserProfile(sProvider, userProfile, false, false);
+			}
 			return userProfile;
 		}
 	}
@@ -2399,13 +2423,20 @@ public class JCRDataStorage {
 			return userProfile;
 		Node userProfileNode = getUserProfileNode(sProvider);
 		Node newProfileNode;
+		String title = "";
 		try {
 			newProfileNode = userProfileNode.getNode(userName);
 			userProfile.setUserId(userName);
 			if (newProfileNode.hasProperty("exo:userTitle"))
-				userProfile.setUserTitle(newProfileNode.getProperty("exo:userTitle").getString());
-			if (newProfileNode.hasProperty("exo:userRole"))
-				userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
+				title = newProfileNode.getProperty("exo:userTitle").getString();
+			if(isAdminRole(userName)) {
+				userProfile.setUserRole((long)0);
+				if(title.equals(Utils.MODERATOR) || title.equals(Utils.USER)) title = Utils.ADMIN;
+			} else {
+				if (newProfileNode.hasProperty("exo:userRole"))
+					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
+			}
+			userProfile.setUserTitle(title);
 			if (newProfileNode.hasProperty("exo:signature"))
 				userProfile.setSignature(newProfileNode.getProperty("exo:signature").getString());
 			if (newProfileNode.hasProperty("exo:totalPost"))
@@ -2427,13 +2458,13 @@ public class JCRDataStorage {
 			return userProfile;
 		} catch (PathNotFoundException e) {
 			userProfile.setUserId(userName);
+			userProfile.setUserTitle(Utils.USER);
+			saveUserProfile(sProvider, userProfile, false, false);
 			// default Administration
-			if (userName.equals(Utils.DEFAULT_USER_ADMIN_ID)) {
+			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long) 0);
 				userProfile.setUserTitle(Utils.ADMIN);
-			} else
-				userProfile.setUserTitle(Utils.USER);
-			saveUserProfile(sProvider, userProfile, false, false);
+			}
 			return userProfile;
 		}
 	}
@@ -2452,8 +2483,14 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:totalTopic", 0);
 				newProfileNode.setProperty("exo:readTopic", new String[] {});
 			}
-			if (newUserProfile.getUserRole() >= 2) {
-				newUserProfile.setUserRole((long) 2);
+			if(Utils.DEFAULT_USER_ADMIN_ID.equals(userName) && newUserProfile.getUserRole() > 0) {
+				newUserProfile.setUserRole((long)0);
+				if(newUserProfile.getUserTitle().equals(Utils.USER) || newUserProfile.getUserTitle().equals(Utils.MODERATOR))
+					newUserProfile.setUserTitle(Utils.ADMIN);
+			} else {
+				if (newUserProfile.getUserRole() >= 2) {
+					newUserProfile.setUserRole((long) 2);
+				}
 			}
 			newProfileNode.setProperty("exo:userRole", newUserProfile.getUserRole());
 			newProfileNode.setProperty("exo:userTitle", newUserProfile.getUserTitle());
