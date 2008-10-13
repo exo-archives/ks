@@ -45,8 +45,9 @@ public class UIBreadcumbs extends UIContainer {
 	public List<String> paths_ = new ArrayList<String>();
 	private String path_ = "FAQService" ;
 	public static final String FIELD_FAQHOME_BREADCUMBS = "faqHome" ;
+	public static final String FIELD_EXOFAQ_LABEL = "eXoFAQ".intern();
 	public UIBreadcumbs()throws Exception {
-		breadcumbs_.add("eXo FAQ") ;
+		breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
 		paths_.add("FAQService") ;
 	}
 	
@@ -58,7 +59,7 @@ public class UIBreadcumbs extends UIContainer {
 			breadcumbs_.clear() ;
 			paths_.add("FAQService") ;
 			String oldPath = "FAQService" ;
-			breadcumbs_.add("eXo FAQ") ;
+			breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
 				for (String string : temp) {
 					if(string.equals("FAQService")) continue ;
 					oldPath = oldPath + "/" + string;
@@ -71,7 +72,7 @@ public class UIBreadcumbs extends UIContainer {
 			paths_.clear() ;
 			breadcumbs_.clear() ;
 			paths_.add("FAQService") ;
-			breadcumbs_.add("eXo FAQ") ;
+			breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
 		}
 	}
 	

@@ -12,6 +12,9 @@
 						String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
 						String url = uicomponent.url("ChangePath", uicomponent.getPath(t-1)) ;
 						String title = "" ;
+						if(namePath.equals(uicomponent.FIELD_EXOFAQ_LABEL)){
+							namePath = _ctx.appRes("UIBreadcumbs.label.eXoFAQ") ;
+						}
 						if(t < uicomponent.getMaxPath()) {
 							if(namePath.length() > 30) {
 								title = namePath ;
