@@ -19,7 +19,7 @@
         <configuration>
           <webResources>            
             <resource>
-              <directory>${exo.projects.directory.src}/portal/branches/2.2.1/web/portal/src/main/webapp</directory>
+              <directory>${exo.projects.directory.src}/portal/tags/2.2.1/web/portal/src/main/webapp</directory>
               <excludes>              	
               	<exclude>index.jsp</exclude>
                 <exclude>WEB-INF/web.xml</exclude>                     
@@ -31,7 +31,7 @@
               </excludes>
             </resource>
             <resource>
-              <directory>${exo.projects.directory.src}/portal/branches/2.2.1/web/portal/target/exo.portal.web.portal-${org.exoplatform.portal.version}</directory>
+              <directory>${exo.projects.directory.src}/portal/tags/2.2.1/web/portal/target/exo.portal.web.portal-${org.exoplatform.portal.version}</directory>
               <includes>
                 <include>WEB-INF/classes/locale/portal/</include>
 								<include>WEB-INF/conf/uiconf/</include>
