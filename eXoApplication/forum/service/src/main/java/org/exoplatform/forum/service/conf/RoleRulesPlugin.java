@@ -13,6 +13,7 @@ public class RoleRulesPlugin extends BaseComponentPlugin {
 
   private Map<String, List<String>> rules_ = new LinkedHashMap<String, List<String>>();
 
+  @SuppressWarnings("unchecked")
   public RoleRulesPlugin(InitParams params) throws Exception {
   	ValueParam vlParam = params.getValueParam("role") ;
   	ValuesParam vlsParam = params.getValuesParam("rules") ;     
