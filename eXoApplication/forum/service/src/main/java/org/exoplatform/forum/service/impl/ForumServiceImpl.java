@@ -63,6 +63,10 @@ public class ForumServiceImpl implements ForumService{
 		storage_.addPlugin(plugin) ;
 	}
 	
+	public void addRolePlugin(ComponentPlugin plugin) throws Exception {
+		storage_.addRolePlugin(plugin) ;
+	}
+	
 	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
 		storage_.saveCategory(sProvider, category, isNew);
 	}

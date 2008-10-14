@@ -577,4 +577,9 @@ UIForumPortlet.prototype.initScroll = function() {
   uiNav.scrollMgr.renderElements() ;
 } ;
 
+UIForumPortlet.prototype.executeLink = function(link) {
+	eval(link);
+	return false ;
+} ;
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

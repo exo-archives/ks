@@ -95,7 +95,15 @@ public class JCRDataStorage {
 		try {
 			if(plugin instanceof EmailNotifyPlugin) {
 				serverConfig_ = ((EmailNotifyPlugin) plugin).getServerConfiguration();
-			}else if(plugin instanceof RoleRulesPlugin){
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addRolePlugin(ComponentPlugin plugin) throws Exception {
+		try {
+			if(plugin instanceof RoleRulesPlugin){
 				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
 			}
 		} catch (Exception e) {
@@ -105,8 +113,13 @@ public class JCRDataStorage {
 	
 	public boolean isAdminRole(String userName) throws Exception {
 		try {
+			String []strings = new String[]{};
 			for(int i = 0; i < rulesPlugins_.size(); ++i) {
-				if(rulesPlugins_.get(i).getRules(Utils.ADMIN_ROLE).contains(userName)) return true;
+				List<String> list = new ArrayList<String>();
+				list.addAll(rulesPlugins_.get(i).getRules(Utils.ADMIN_ROLE));
+				if(list.contains(userName)) return true;
+				strings = getStringsInList(list);
+				if(ForumServiceUtils.hasPermission(strings, userName))return true;
 			}
     } catch (Exception e) {
 	    e.printStackTrace();

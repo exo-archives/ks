@@ -36,6 +36,15 @@ public interface ForumService {
 	 */
 	public void addPlugin(ComponentPlugin plugin) throws Exception;
 	
+ /**
+  * Adds the plugin.
+	* 
+	* @param plugin the plugin
+	* 
+	* @throws Exception the exception
+	*/
+	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
+	
 	/**
 	 * Gets the categories.
 	 * 
