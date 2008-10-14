@@ -18,6 +18,7 @@ package org.exoplatform.forum.service.impl;
 
 import java.util.List;
 
+import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -119,5 +120,7 @@ public interface DataStorage {
 	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String>values)throws Exception;
 	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception ;
 	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception ;
+	public void addPlugin(ComponentPlugin plugin) throws Exception;
+	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
 	public boolean isAdminRole(String userName) throws Exception ;
 }
