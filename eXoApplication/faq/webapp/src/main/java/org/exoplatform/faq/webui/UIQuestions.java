@@ -70,6 +70,7 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(
 		template =	"app:/templates/faq/webui/UIQuestions.gtmpl" ,
 		events = {
+			@EventConfig(listeners = UIQuestions.DownloadAttachActionListener.class),
 			@EventConfig(listeners = UIQuestions.AddCategoryActionListener.class),
 	    @EventConfig(listeners = UIQuestions.AddNewQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.OpenCategoryActionListener.class),
@@ -427,8 +428,7 @@ public class UIQuestions extends UIContainer {
       imageBytes = new byte[input.available()];
       input.read(imageBytes);
       ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
-      InputStreamDownloadResource dresource = new InputStreamDownloadResource(
-          byteImage, "image");
+      InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
       dresource.setDownloadName(fileName);
       return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
     }
@@ -553,6 +553,13 @@ public class UIQuestions extends UIContainer {
     }
     return listResult ;
   }
+  
+  static public class DownloadAttachActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions question = event.getSource() ; 
+			event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
+		}
+	}
   
 	static  public class AddCategoryActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {
@@ -1162,8 +1169,9 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       Question question2 = null ;
+      String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
       try{
-        question2 = faqService.getQuestionById(event.getRequestContext().getRequestParameter(OBJECTID), FAQUtils.getSystemProvider());
+        question2 = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider());
       } catch(javax.jcr.PathNotFoundException e) {
         UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1176,7 +1184,11 @@ public class UIQuestions extends UIContainer {
         e.printStackTrace() ;
       } 
       UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
-      responseForm.setQuestionId(question2, language_) ;
+      if(questionId.equals(question.questionView_)){
+      	responseForm.setQuestionId(question2, language_) ;
+      } else {
+      	responseForm.setQuestionId(question2, "") ;
+      }
       responseForm.setFAQSetting(question.faqSetting_);
       popupContainer.setId("FAQResponseQuestion") ;
       popupAction.activate(popupContainer, 720, 1000) ;
