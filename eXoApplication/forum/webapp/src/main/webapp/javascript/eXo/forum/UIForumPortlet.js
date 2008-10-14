@@ -439,12 +439,33 @@ UIForumPortlet.prototype.reSizeAvatar = function(imgElm) {
 	}
 };
 
+UIForumPortlet.prototype.controlWorkSpace = function() {
+	var slidebar = document.getElementById('ControlWorkspaceSlidebar');
+	if(slidebar) {
+		var slidebarButton = eXo.core.DOMUtil.findFirstDescendantByClass(slidebar, "div", "SlidebarButton") ;
+		if(slidebarButton){
+			slidebarButton.onclick = eXo.forum.UIForumPortlet.onClickSlidebarButton;
+			setTimeout(eXo.forum.UIForumPortlet.reSizeImages, 2000);
+		}
+	}
+};
+UIForumPortlet.prototype.onClickSlidebarButton = function() {
+	var workspaceContainer =  document.getElementById('UIWorkspaceContainer');
+	if(workspaceContainer){
+		if(workspaceContainer.style.display === 'none') {
+			eXo.forum.UIForumPortlet.setSizeImages(475);
+		}
+	}
+};
 UIForumPortlet.prototype.reSizeImages = function() {
+	eXo.forum.UIForumPortlet.setSizeImages(225);
+};
+UIForumPortlet.prototype.setSizeImages = function(delta) {
 	var topicDetailContainer = document.getElementById('UITopicDetailContainer');
 	if(topicDetailContainer) {
 		var isDesktop = document.getElementById('UIPageDesktop') ;
 		if(!isDesktop){
-	    var max_width = topicDetailContainer.offsetWidth - 225 ;
+	    var max_width = topicDetailContainer.offsetWidth - delta ;
 	    var images_ =  topicDetailContainer.getElementsByTagName("img");
 	    for(var i=0; i<images_.length; i++){
 	      var img = images_[i];

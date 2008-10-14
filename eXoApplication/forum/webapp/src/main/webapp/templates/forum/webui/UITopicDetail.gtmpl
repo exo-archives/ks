@@ -15,8 +15,8 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.reSizeImages();");
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.controlWorkSpace();");
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
 
 	String uiformId = uicomponent.getName() ;
