@@ -459,7 +459,7 @@
 											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
 											<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-												<a onmousedown="$link; return false;" href="$url" title="$titlePost" class="$title">$topicTitle</a>
+												<a onclick="$link; return false;" href="$url" title="$titlePost" class="$title">$topicTitle</a>
 												<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 													<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 														<div action="$actionBookmark" class="ClickPopupContent"></div>
@@ -474,14 +474,14 @@
 												if(t <= 5) { 
 													number = String.valueOf(t) ;
 											%>
-											<a onmousedown="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url">$number</a>
+											<a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url">$number</a>
 											<% }
 											t = t + 1 ;
 											}
 											if(max_page > 5) { 
 												number = String.valueOf(max_page) ;
 											%>
-											<span>... <a onmousedown="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
+											<span>... <a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
 											<%} else {%>
 											<span>)</span>
 											<%} 
