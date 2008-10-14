@@ -65,7 +65,7 @@
 	  </component-plugin>	   
 	  <component-plugin>
 			<name>add.role.rules.plugin</name>
-			<set-method>addPlugin</set-method>
+			<set-method>addRolePlugin</set-method>
 			<type>org.exoplatform.forum.service.conf.RoleRulesPlugin</type>
 			<description>add role rules</description>
       <init-params>
@@ -79,6 +79,8 @@
 	        <description>rules of the role</description>
 	        <value>root</value>
 	        <value>john</value>
+	        <!--value>/platform/administrators</value-->
+			    <!--value>manager:/platform/users</value-->
 	        <!--value>*:/somegroup/somesubgroup</value-->
 	        <!--value>manager:/somegroup/someothergroup</value-->
 	      </values-param>
