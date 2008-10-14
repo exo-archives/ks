@@ -13,6 +13,7 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UICategories') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UICategories') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"') ;") ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	String userLogin = userProfile.getUserId() ;
 	boolean isAdmin = false ;
@@ -52,7 +53,6 @@
 					link = uicomponent.event("OpenCategory", categoryId) ;
 					url = uicomponent.url("OpenCategory", categoryId);
 					url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory" );
-					link = 'return eXo.forum.UIForumPortlet.executeLink("'+link+'");';
 		 %>
 			<div class="UIForumCategory">
 				<div class="ForumToolbar">
@@ -61,7 +61,7 @@
 							<div class="CenterBar">
 								<div class="Title" title="$title">
 									<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-										<a onclick="$link;" href="$url">$title</a>
+										<a actions="$link;" href="$url" class="UICategoryTitle">$title</a>
 										<div style="position: relative;">
 											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block; font-weight:normal;">

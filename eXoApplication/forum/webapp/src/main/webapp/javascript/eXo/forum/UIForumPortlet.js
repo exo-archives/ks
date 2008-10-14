@@ -577,9 +577,20 @@ UIForumPortlet.prototype.initScroll = function() {
   uiNav.scrollMgr.renderElements() ;
 } ;
 
-UIForumPortlet.prototype.executeLink = function(link) {
-	eval(link);
-	return false ;
+UIForumPortlet.prototype.executeLink = function() {
+  var onclickAction = String(this.getAttribute("actions")) ;
+	eval(onclickAction) ;
+	return false;
+} ;
+
+UIForumPortlet.prototype.createLink = function(cpId) {
+  var comp = document.getElementById(cpId);
+	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a","UICategoryTitle");
+	var i = uiCategoryTitle.length;
+	if(!i || (i <=0)) return ;
+	while(i--){
+		uiCategoryTitle[i].onclick = this.executeLink ;
+	}
 } ;
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
