@@ -82,6 +82,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	final static private String ITEM_EMPTY= "empty" ;
 	final static private String ITEM_CATEGORY="faqCategory" ;
 	final static private String ITEM_QUESTION="faqQuestion" ;
+//	final static private String ITEM_ATTACHMENT="faqAttachment" ;
 	
 	final static private String ITEM_MODERATEQUESTION_EMPTY2= "empty2" ;
 	final static private String ITEM_MODERATEQUESTION_TRUE="true" ;
@@ -104,6 +105,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		list.add(new SelectItemOption<String>(ITEM_EMPTY, "empty")) ;
 		list.add(new SelectItemOption<String>(ITEM_CATEGORY, "faqCategory")) ;
 		list.add(new SelectItemOption<String>(ITEM_QUESTION, "faqQuestion")) ;
+//		list.add(new SelectItemOption<String>(ITEM_ATTACHMENT, "faqAttachment")) ;
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX, FIELD_SEARCHOBJECT_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
 		UIFormStringInput categoryName = new UIFormStringInput(FIELD_CATEGORY_NAME, FIELD_CATEGORY_NAME, null) ;
@@ -426,14 +428,16 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				advanced.getUIFormTextAreaInput(FIELD_RESPONSE).setValue(response) ;
 				advanced.getUIStringInput(FIELD_ATTACHMENT).setValue(nameAttachment);
 				result.setLanguage(language) ;
- 				List<Question> list = faqService.getAdvancedSearchQuestion(FAQUtils.getSystemProvider(),eventQuery);
+				List<Question> list = new ArrayList<Question>() ;
+				if(nameAttachment != null && nameAttachment.trim().length() > 0) {
+					if(FAQUtils.isFieldEmpty(text) && FAQUtils.isFieldEmpty(question) && FAQUtils.isFieldEmpty(response) &&
+							FAQUtils.isFieldEmpty(author) && FAQUtils.isFieldEmpty(emailAddress) && (fromDate == null) && (toDate == null)) {
+						eventQuery.setType("faqAttachment") ;
+						list = faqService.searchQuestionWithNameAttach(FAQUtils.getSystemProvider(),eventQuery);
+					} else list = faqService.getAdvancedSearchQuestion(FAQUtils.getSystemProvider(),eventQuery);
+				} else list = faqService.getAdvancedSearchQuestion(FAQUtils.getSystemProvider(),eventQuery);
  				popupContainer.setId("ResultSearchQuestion") ;
  				List<Question> listResult = advancedSearch.getResultListQuestion(language, question, response, text, list) ;
-// 				if(nameAttachment != null && nameAttachment.trim().length() > 0) {
-// 					if(FAQUtils.isFieldEmpty(text) && FAQUtils.isFieldEmpty(question) && FAQUtils.isFieldEmpty(response) &&
-// 							FAQUtils.isFieldEmpty(author) && FAQUtils.isFieldEmpty(emailAddress) && (fromDate == null) && (toDate == null)) listResult = advancedSearch.getResultListQuestionAttachment(nameAttachment,language, list) ;
-// 					else listResult = advancedSearch.getResultListQuestionAttachment(nameAttachment, language, listResult) ;
-// 				}
  				result.setListQuestion(listResult) ; 
 			} else {
 				resultContainer.setIsRenderedContainer(2) ;

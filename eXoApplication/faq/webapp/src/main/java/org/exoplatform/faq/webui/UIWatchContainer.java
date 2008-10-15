@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui;
 
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupComponent;
+import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -35,7 +36,8 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 )
 public class UIWatchContainer  extends UIContainer implements UIPopupComponent{
 	public UIWatchContainer() throws Exception {
-		addChild(UIWatchManager.class, null, null) ;
+		addChild(UIWatchManager.class, null, null).setRendered(true) ;
+		addChild(UISettingForm.class, null, null).setRendered(false) ;
 		UIPopupAction childPopup =	addChild(UIPopupAction.class, null, null) ;
 		childPopup.setId("FAQChildWatchPoupupAction") ;
 		childPopup.getChild(UIPopupWindow.class).setId("FAQChildWatchPopupWindow") ;
@@ -43,5 +45,18 @@ public class UIWatchContainer  extends UIContainer implements UIPopupComponent{
 
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+	
+	public void setIsRenderedContainer(int index) {
+		boolean isWatchManager = false, isSettingForm = false ;
+		if(index == 1){	
+			isWatchManager = false ;
+			isSettingForm = true ;
+		}  else {
+			isWatchManager = true ;
+			isSettingForm = false ;
+		}
+		getChild(UIWatchManager.class).setRendered(isWatchManager) ;
+		getChild(UISettingForm.class).setRendered(isSettingForm) ;
+	}
 }
 

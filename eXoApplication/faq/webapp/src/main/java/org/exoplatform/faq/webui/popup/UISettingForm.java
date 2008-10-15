@@ -19,11 +19,15 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.faq.webui.UIResultContainer;
+import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -51,6 +55,7 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 		template =	"app:/templates/faq/webui/popup/UISettingForm.gtmpl",
 		events = {
 				@EventConfig(listeners = UISettingForm.SaveActionListener.class),
+				@EventConfig(listeners = UISettingForm.UserWatchManagerActionListener.class),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
@@ -154,6 +159,24 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
   public void activate() throws Exception { }
 
   public void deActivate() throws Exception { }
+  
+  public List<Category> getCategoryAddWatch() throws Exception {
+  	FAQService faqService = FAQUtils.getFAQService() ;
+  	List<Category> listCate = new ArrayList<Category>() ;
+  	List<Category> listAll = faqService.getAllCategories(FAQUtils.getSystemProvider()) ;
+  	for(Category cate : listAll) {
+  		String categoryId = cate.getId() ;
+  		List<Watch> listWatch = faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider()) ;
+  		if(listWatch.size()>0) {
+  			List<String> users = new ArrayList<String>() ;
+  			for(Watch watch : listWatch) {
+  				users.add(watch.getUser());
+  			}
+  			if(users.contains(FAQUtils.getCurrentUser())) listCate.add(cate) ;
+  		}
+  	}
+  	return listCate ;
+  }
 	
 	static public class SaveActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
@@ -197,7 +220,20 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			}
 		}
 	}
-
+	
+	static public class UserWatchManagerActionListener extends EventListener<UISettingForm> {
+		public void execute(Event<UISettingForm> event) throws Exception {
+			UISettingForm settingForm = event.getSource() ;
+			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIWatchContainer watchContainer = settingForm.getParent() ;
+			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
+			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 500) ;
+			watchForm.setListCategory(settingForm.getCategoryAddWatch()) ;
+		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+     
+		}
+	}
+	
 	static public class CancelActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;			
@@ -206,7 +242,6 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
-	
-	
+
 	
 }

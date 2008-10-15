@@ -28,6 +28,11 @@ if(!uicomponent.isEditPortlet_){
 												<%uicomponent.renderField(uicomponent.ORDER_TYPE)%>
 											</td>
 										</tr>
+										<tr>
+											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.user-watch-manager"); %></td>
+											<% String linkWacth =uicomponent.event("UserWatchManager") ; %>
+											<a href="$linkWacth" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager"); %>" class="WatchManager">&nbsp;</a>
+										</tr>
 									</tbody>
 								</table>
 				 		</div>

@@ -371,10 +371,20 @@ public interface FAQService {
    * 
    * @param	 categoryId is id of current category
    * @param	 sProvider the session provider
-   * @param	 order is location current of one watch with user want delete 
+   * @param	 emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
   public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception ;
+  
+  /**
+   * This method will un watch in one category 
+   * 
+   * @param	 categoryId is id of current category
+   * @param	 sProvider the session provider
+   * @param	 userCurrent is user current then you un watch
+   * @throws Exception the exception
+   */
+  public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception ;
   
   /**
    * This method will return list object FAQFormSearch
@@ -414,6 +424,18 @@ public interface FAQService {
    * @throws Exception the exception
    */
   public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  
+  /**
+   * This method should lookup all the categories node 
+   * so find category have user in moderators
+   * and convert to category object and return list of category object
+   * 
+   * @param  user is name when user login
+   * @param	 sProvider the session provider 
+   * @return Category list
+   * @throws Exception the exception
+   */
+  public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   
   /**
    * This method return path of category identify

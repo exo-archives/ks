@@ -368,11 +368,23 @@ public class FAQServiceImpl implements FAQService{
    * 
    * @param	 categoryId is id of current category
    * @param	 sProvider
-   * @param	 order is location current of one watch with user want delete 
+   * @param	 emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
   public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception {
   	jcrData_.deleteMailInWatch(categoryId, sProvider, emails);
+  }
+  
+  /**
+   * This function will un watch in one category 
+   * 
+   * @param	 categoryId is id of current category
+   * @param	 sProvider
+   * @param	 emails is location current of one watch with user want delete 
+   * @throws Exception the exception
+   */
+  public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception {
+  	jcrData_.deleteMailInWatch(categoryId, sProvider, userCurrent);
   }
   
   /**
@@ -433,6 +445,21 @@ public class FAQServiceImpl implements FAQService{
    */
   public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.getAdvancedSearchQuestion(sProvider, eventQuery) ;
+  }
+  
+  /**
+   * This method will return list question when user input value search
+   * <p>
+   * With many questions , it's difficult to find a question which user want to see.
+   * So to support to users can find their questions more quickly and accurate,
+   *  user can use 'Search Question' function
+   * 
+   * @param	 sProvider
+   * @param	 eventQuery is object save value in form advanced search 
+   * @throws Exception the exception
+   */
+  public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  	return jcrData_.searchQuestionWithNameAttach(sProvider, eventQuery) ;
   }
   
   /**

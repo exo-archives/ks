@@ -1,0 +1,74 @@
+<% 
+	import org.exoplatform.faq.service.Category;
+	String compId = uicomponent.getId() ; 
+  def rcontext = _ctx.getRequestContext() ;	
+ %>
+<div class="UIUserWatchManager $uicomponent.id" style="padding: 8px;">
+		<% uiform.begin() %>
+		<div class="UIForm">
+ 			<div class="UIHorizontalLayout">
+ 				<div class="UIPermissionManager">
+ 					<div class="UIPermissionInfo">
+ 						<table class="UIGrid" cellspacing="0" borderspacing="0">
+ 							<thead>
+ 								<tr>
+ 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
+ 								<th><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+ 								</tr>
+ 							</thead>
+ 							<tbody>
+ 							<% 
+ 							List<Category> listCate = uicomponent.getListCategory() ;
+ 							if(listCate.size() > 0){
+ 								for(String cate : listCate ) {
+ 									categoryId = cate.getId() ;
+ 									path = uicomponent.getPathService(categoryId)
+ 									String unWatch = uicomponent.event("UnWatch", categoryId);
+ 									String link = uicomponent.event("Link",categoryId);
+ 							 %>
+ 								<tr>
+ 									<% if(path.length() > 90) {
+ 											String title = path ;
+ 											path = uicomponent.getSubString(path,90)
+ 									 %>
+ 										<td class="text" align="left"><a title="$title" href="$link">$path</a></td>
+ 									<% } else { %>
+ 										<td class="text" align="left"><a href="$link">$path</a></td>
+ 									<% } %>
+ 									<td style="width: 40px;" align="center">
+ 										<a href="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left;">
+ 											<div class="DeleteWatchIcon" ></div>
+ 										</a>
+ 									</td>
+ 								</tr>
+ 								<% 
+ 									}
+ 								} else {
+ 									   %>
+ 										 <tr class="EvenRow">
+												<td class="Tdbox" colspan="10" align="center"><div class="" ><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %> </div></td>
+			  						</tr>
+								<% } %>
+ 							</tbody>
+ 						</table>
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+		<div class="UIAction">
+    	<table class="ActionContainer" align="center">
+			  <tr>
+				  <td align="center">
+		    		<a href="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+			  	  	<div class="ButtonLeft">
+			    	  	<div class="ButtonRight">
+			      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></div>
+			        	</div>
+			      	</div>
+		    		</a>
+	      	</td>
+				</tr>
+ 	  </table>
+	</div>
+		<%uiform.end()%>
+</div>

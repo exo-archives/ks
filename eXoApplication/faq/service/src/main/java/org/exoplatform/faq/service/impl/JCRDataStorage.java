@@ -18,6 +18,7 @@
 package org.exoplatform.faq.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -165,10 +166,8 @@ public class JCRDataStorage {
     
     List<String> listNodeNames = new ArrayList<String>() ;
     if(!listFileAtt.isEmpty()) {
-    	System.out.println("\n\n\n\n---------------> jcrdatastore~~> list file attachment: " + listFileAtt.size());
       for(FileAttachment att : listFileAtt) {
         listNodeNames.add(att.getName()) ;
-        System.out.println("----------> file name:'" + att.getName() + "'");
         try {
           Node nodeFile = null;
           if (questionNode.hasNode(att.getName())) nodeFile = questionNode.getNode(att.getName());
@@ -964,6 +963,33 @@ public class JCRDataStorage {
 		watchingNode.getSession().save();
   }
   
+  public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception {
+  	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
+  	System.out.println("=======vao day roi ==============:" +watchingNode.isNodeType("exo:faqWatching"));
+  	Value[] emails = watchingNode.getProperty("exo:emailWatching").getValues() ;
+  	Value[] users = watchingNode.getProperty("exo:userWatching").getValues() ;
+		List<String> userAll = new ArrayList<String>();
+		List<String> emailAll = new ArrayList<String>() ;
+		if(watchingNode.isNodeType("exo:faqWatching")) {
+			int i = 0 ;
+			for(Value user : users) {
+				if(!userCurrent.equals(user.getString())) {
+					userAll.add(user.getString()) ;
+					emailAll.add(emails[i+1].getString());
+				} 
+				i++ ;
+			}
+			System.out.println("===>userAll1:" + userAll);
+			System.out.println("===>emailAll1:" + emailAll);
+		watchingNode.setProperty("exo:userWatching", userAll.toArray(new String[]{})) ;
+		watchingNode.setProperty("exo:emailWatching", emailAll.toArray(new String[]{})) ;
+		}
+		System.out.println("===>userAll2:" + userAll);
+		System.out.println("===>emailAll2:" + emailAll);
+		watchingNode.save() ;
+		watchingNode.getSession().save();
+  }
+  
   private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
 		StringBuffer queryString = new StringBuffer() ;
 		if(fromDate != null && toDate != null) {
@@ -1083,48 +1109,62 @@ public class JCRDataStorage {
 			NodeIterator iter = result.getNodes() ;
 			while (iter.hasNext()) {
 				if(type.equals("faqQuestion")) {
-					Question question = new Question() ;
 					Node nodeObj = (Node) iter.nextNode();
-					question.setId(nodeObj.getName());
-		    	if(nodeObj.hasProperty("exo:name")) question.setQuestion(nodeObj.getProperty("exo:name").getString()) ;
-		      if(nodeObj.hasProperty("exo:author")) question.setAuthor(nodeObj.getProperty("exo:author").getString()) ;
-		      if(nodeObj.hasProperty("exo:email")) question.setEmail(nodeObj.getProperty("exo:email").getString()) ;
-		      if(nodeObj.hasProperty("exo:createdDate")) question.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
-		      if(nodeObj.hasProperty("exo:categoryId")) question.setCategoryId(nodeObj.getProperty("exo:categoryId").getString()) ;
-		      if(nodeObj.hasProperty("exo:isApproved")) question.setApproved(nodeObj.getProperty("exo:isApproved").getBoolean()) ;
-		      if(nodeObj.hasProperty("exo:isActivated")) question.setActivated(nodeObj.getProperty("exo:isActivated").getBoolean()) ;
-		      if(nodeObj.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(nodeObj.getProperty("exo:responses").getValues())) ;
-		      List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
-		    	NodeIterator nodeIterator = nodeObj.getNodes() ;
-		      Node nodeFile ;
-		      Node node ;
-		      while(nodeIterator.hasNext()){
-		        node = nodeIterator.nextNode() ;
-		        if(node.isNodeType("nt:file")) {
-		          FileAttachment attachment = new FileAttachment() ;
-		          nodeFile = node.getNode("jcr:content") ;
-		          attachment.setPath(node.getPath()) ;
-		          attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-		          attachment.setName(node.getName());
-		          attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
-		          try{
-		            if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-		            else attachment.setSize(0) ;
-		          } catch (Exception e) {
-		            attachment.setSize(0) ;
-		            e.printStackTrace() ;
-		          }
-		          listFile.add(attachment);
-		        }
-		      }
-		      question.setAttachMent(listFile) ;
+					Question question = getQuestion(nodeObj) ;
 		      questionList.add(question) ;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
+		if(eventQuery.getAttachment() !=null && eventQuery.getAttachment().trim().length() > 0) {
+			List<Question> listQuestionAttachment = new ArrayList<Question>();
+			Map<String, Question> newMap = new HashMap<String, Question>();
+			for(Question question : questionList) {
+				if(!question.getAttachMent().isEmpty()) {
+					for(FileAttachment fileAttachment : question.getAttachMent()){
+				    String fileName = fileAttachment.getName().toUpperCase() ;
+				    if(fileName.contains(eventQuery.getAttachment().toUpperCase())) {
+				    	newMap.put(question.getId(), question);
+				    } 
+					}
+				} 
+			}
+			listQuestionAttachment.addAll(Arrays.asList(newMap.values().toArray(new Question[]{})));
+			return listQuestionAttachment;
+		}
 	  return questionList;
+  }
+  
+  public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  	Node faqServiceHome = getFAQServiceHome(sProvider) ;
+		List<Question> questionList = new ArrayList<Question>() ;
+		Map<String, Question> newMap = new HashMap<String, Question>();
+		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
+		String path = eventQuery.getPath() ;
+		if(path == null || path.length() <= 0) {
+			path = faqServiceHome.getPath() ;
+		}
+		eventQuery.setPath(path) ;
+		String type = eventQuery.getType() ;
+		String queryString = eventQuery.getPathQuery() ;
+		try {
+			Query query = qm.createQuery(queryString, Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes() ;
+			while (iter.hasNext()) {
+				if(type.equals("faqAttachment")) {
+					Node nodeObj = (Node) iter.nextNode();
+					nodeObj = (Node) nodeObj.getParent() ;
+					Question question = getQuestion(nodeObj) ;
+					newMap.put(question.getId(), question);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+	  questionList.addAll(Arrays.asList(newMap.values().toArray(new Question[]{})));
+	  return questionList ;
   }
   
   public List<String> getCategoryPath(SessionProvider sProvider,  String categoryId) throws Exception {

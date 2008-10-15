@@ -354,7 +354,7 @@ public String getPathQuery() {
 				stringBuffer.append("(jcr:contains(@exo:moderators, '").append(moderator).append("'))") ;
 		  	isAnd = true ;
 			}
-    } else if(type.equals("faqQuestion")){
+    } else if(type.equals("faqQuestion")) {
 	    if(author != null && author.length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");
 	    	stringBuffer.append("(jcr:contains(@exo:author, '").append(author).append("'))") ;
@@ -374,10 +374,11 @@ public String getPathQuery() {
 	    	if(isAnd) stringBuffer.append(" and ");
 	    	stringBuffer.append("(jcr:contains(@exo:responses, '").append(response).append("'))") ;
 	    	isAnd = true ;
-	    }
-	    if(attachment != null && attachment.length() > 0) {
+	    } 
+    } else if(type.equals("faqAttachment")) {
+    	if(attachment != null && attachment.length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");
-	    	stringBuffer.append("(jcr:contains(@exo:nameAttachs, '").append("*"+attachment + "*").append("'))") ;
+	    	stringBuffer.append("(jcr:contains(@exo:fileName, '").append(attachment).append("'))") ;
 	    	isAnd = true ;
 	    }
     }
@@ -387,7 +388,6 @@ public String getPathQuery() {
     }
     stringBuffer.append("]");
     if(isAnd) queryString.append(stringBuffer.toString()) ;
-//    System.out.println("\n\n--->>PathQR:  " + queryString.toString() + "\n\n");
 	  return queryString.toString();
   }
 	

@@ -923,14 +923,21 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
     	UIQuestions question = event.getSource() ; 
     	String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
-			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
-			UISettingForm uiSetting = popupAction.activate(UISettingForm.class, 400) ;
-			popupContainer.setId("CategorySettingForm") ;
+    	UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
+    	UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+    	UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 400) ;
+			watchContainer.setIsRenderedContainer(1) ;
+			UISettingForm uiSetting = watchContainer.getChild(UISettingForm.class) ;
 			uiSetting.setFaqSetting(question.faqSetting_);
-      uiSetting.init() ;
+			popupContainer.setId("CategorySettingForm") ;
+			uiSetting.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			
+//			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
+//			UISettingForm uiSetting = popupAction.activate(UISettingForm.class, 400) ;
+//      uiSetting.init() ;
+//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
   
