@@ -384,5 +384,4 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
        event.getRequestContext().addUIComponentToUpdateByAjax(sendMailForm) ;
   	 }
    }
-	
 }

@@ -425,7 +425,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       java.util.Date date = new java.util.Date();
       String dateStr = dateFormat.format(date) ;
       date = dateFormat.parse(dateStr) ;
-      
       String author = questionForm.getUIStringInput(AUTHOR).getValue() ;
       String emailAddress = questionForm.getUIStringInput(EMAIL_ADDRESS).getValue() ;
       if(author == null || author.trim().length() < 1) {
@@ -509,6 +508,12 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       }
       question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
+      
+      System.out.println("\n\n\n\n---------------------->file attachment: " + questionForm.listFileAttach_.size());
+      for(FileAttachment attachment : questionForm.listFileAttach_){
+      	System.out.println("--------> file name:'" + attachment.getName() + "'");
+      }
+      
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
       //link
@@ -538,6 +543,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) isNew = false;
         utils.getEmailSetting(questionForm.faqSetting_, isNew, false);
         if(!isNew) {
+        	if(question_ == null) System.out.println("---------->uiquestionform:quetion_ is null");
+        	if(FAQUtils.getSystemProvider() == null) System.out.println("---------->uiquestionform:FAQUtils.getSystemProvider() is null");
+        	if(questionForm.faqSetting_ == null) System.out.println("---------->uiquestionform:questionForm.faqSetting_ is null");
+        	if(question_.getDateResponse()== null) System.out.println("---------->uiquestionform:question_.getDateResponse() is null");
           questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider(), questionForm.faqSetting_) ;
           multiLanguages.removeLanguage(questionNode, questionForm.listLanguages) ;
           if(questionForm.listLanguages.size() > 1) {
@@ -679,3 +688,5 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     }
   }
 }
+
+

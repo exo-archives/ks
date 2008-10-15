@@ -209,4 +209,3 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 		}
 	}
 }
-

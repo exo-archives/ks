@@ -294,8 +294,8 @@
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .LeftQuestionContainer {
-  float: left;
-  width: 60%;
+  /*float: left;
+  width: 60%;*/
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .RightQuestionContainer {

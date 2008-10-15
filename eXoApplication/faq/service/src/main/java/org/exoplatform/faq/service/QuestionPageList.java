@@ -92,7 +92,7 @@ public class QuestionPageList extends JCRPageList {
    */
   private void setTotalQuestion(){
   	listQuestions_ = new ArrayList<Question>();
-  	String response = "";
+  	String[] response = new String[]{""};
   	NodeIterator nodeIterator = iter_;
   	NodeIterator languageIter = null;
   	Node questionNode = null;
@@ -103,8 +103,8 @@ public class QuestionPageList extends JCRPageList {
   		languages = new String();
   		questionNode = nodeIterator.nextNode();
   		try {
-        response = questionNode.getProperty("exo:responses").getValue().getString();
-        if(response == null || response.trim().length() < 1){
+        response = this.ValuesToStrings(questionNode.getProperty("exo:responses").getValues());
+        if(response[0] == null || response[0].trim().length() < 1){
         	languages = questionNode.getProperty("exo:language").getValue().getString();
         }
       	if(questionNode.hasNode("languages")){
@@ -112,8 +112,8 @@ public class QuestionPageList extends JCRPageList {
       		languageIter = languageNode.getNodes();
       		while(languageIter.hasNext()){
       			language = languageIter.nextNode();
-      			response = language.getProperty("exo:responses").getValue().getString();
-      			if(response == null || response.trim().length() < 1) {
+      			response = this.ValuesToStrings(language.getProperty("exo:responses").getValues());
+      			if(response[0] == null || response[0].trim().length() < 1) {
       				if(languages != null && languages.trim().length() > 0) languages += ",";
       				languages += language.getName();
       			}
@@ -397,21 +397,25 @@ public class QuestionPageList extends JCRPageList {
     NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
     Node node ;
+    FileAttachment attachment =  null;
+    String workspace = "";
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
-        FileAttachment attachment = new FileAttachment() ;
+        attachment = new FileAttachment() ;
         nodeFile = node.getNode("jcr:content") ;
-        attachment.setPath(node.getPath()) ;
+        attachment.setId(node.getPath());
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
         attachment.setName(node.getProperty("exo:fileName").getString());
-        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+        workspace = node.getSession().getWorkspace().getName() ;
+        attachment.setWorkspace(workspace) ;
+        attachment.setPath("/" + workspace + node.getPath()) ;
         try{
           if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-          else attachment.setSize(0);
+          else attachment.setSize(0) ;
         } catch (Exception e) {
-          attachment.setSize(0);
-          e.printStackTrace();
+          attachment.setSize(0) ;
+          e.printStackTrace() ;
         }
         attList.add(attachment);
       }

@@ -358,13 +358,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       
       
-      String user = FAQUtils.getCurrentUser() ;
+      String user = FAQUtils.getFullName(FAQUtils.getCurrentUser()) ;
       java.util.Date date = new java.util.Date();
       
       if(question_.getLanguage().equals(responseForm.languageIsResponsed)) {
         question_.setQuestion(questionContent) ;
         if(!responseForm.compareTowArraies(question_.getAllResponses(), responseForm.listResponse.toArray(new String[]{}))){
-        	question_.setResponseBy(FAQUtils.getFullName(user)) ;
+        	question_.setResponseBy(user);
         	question_.setResponses(responseForm.listResponse.toArray(new String[]{}));
         	question_.setDateResponse(date) ;
         }
@@ -635,7 +635,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           	}
           	if(questionLanguage.getResponse() == null || 
           			!responseForm.compareTowArraies(questionLanguage.getResponse(),responseForm.listResponse.toArray(new String[]{}))) {
-          		questionLanguage.setResponseBy(FAQUtils.getCurrentUser());
+          		questionLanguage.setResponseBy(FAQUtils.getFullName(FAQUtils.getCurrentUser()));
           		questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
           		java.util.Date date = new java.util.Date();
           		questionLanguage.setDateResponse(date);
@@ -670,3 +670,5 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     }
   }
 }
+
+

@@ -302,5 +302,4 @@ public class TestFAQService extends FAQServiceTestCase{
 		List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
 		assertEquals(listSearchAdvanceQuestion.size(), 2) ;
 	}
-	
 }

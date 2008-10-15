@@ -1365,5 +1365,4 @@ public class UIQuestions extends UIContainer {
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
     }
   }
-
 }

@@ -43,6 +43,7 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.EmailNotifyPlugin;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
@@ -155,20 +156,26 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:responses", question.getAllResponses()) ;
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
     questionNode.setProperty("exo:responseBy", question.getResponseBy()) ;
-    java.util.Calendar calendar = new GregorianCalendar();
-    calendar.setTime(question.getDateResponse());
-    questionNode.setProperty("exo:dateResponse", calendar) ;
+    if(question.getDateResponse() != null){
+	    java.util.Calendar calendar = new GregorianCalendar();
+	    calendar.setTime(question.getDateResponse());
+	    questionNode.setProperty("exo:dateResponse", calendar) ;
+    }
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
-    List<String> listFileName = new ArrayList<String>() ;
+    List<String> listNodeNames = new ArrayList<String>() ;
     if(!listFileAtt.isEmpty()) {
+    	System.out.println("\n\n\n\n---------------> jcrdatastore~~> list file attachment: " + listFileAtt.size());
       for(FileAttachment att : listFileAtt) {
-        listFileName.add(att.getId()) ;
-        System.out.println("==>nameAttachs:" + att.getId());
+        listNodeNames.add(att.getName()) ;
+        System.out.println("----------> file name:'" + att.getName() + "'");
         try {
           Node nodeFile = null;
-          if (questionNode.hasNode(att.getId())) nodeFile = questionNode.getNode(att.getId());
-          else nodeFile = questionNode.addNode(att.getId(), "exo:faqAttachment");
+          if (questionNode.hasNode(att.getName())) nodeFile = questionNode.getNode(att.getName());
+          else nodeFile = questionNode.addNode(att.getName(), "exo:faqAttachment");
+          // fix permission to download file in ie 6:
+          FAQServiceUtils.reparePermissions(nodeFile, "any");
+          
           nodeFile.setProperty("exo:fileName", att.getName()) ;
           Node nodeContent = null;
           if (nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.getNode("jcr:content");
@@ -181,7 +188,6 @@ public class JCRDataStorage {
           e.printStackTrace() ;
         }
       }
-      questionNode.setProperty("exo:nameAttachs", listFileName.toArray(new String[]{})) ;
     }
     
     NodeIterator nodeIterator = questionNode.getNodes() ;
@@ -189,7 +195,7 @@ public class JCRDataStorage {
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
-        if(!listFileName.contains(node.getName())) {
+        if(!listNodeNames.contains(node.getName())) {
           node.remove() ;
         }
       }
@@ -468,6 +474,7 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
+    if(questionNode.hasProperty("exo:dateResponse")) question.setCreatedDate(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
     if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
     if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
@@ -480,15 +487,19 @@ public class JCRDataStorage {
   	NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
     Node node ;
+    FileAttachment attachment =  null;
+    String workspace = "";
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
       if(node.isNodeType("nt:file")) {
-        FileAttachment attachment = new FileAttachment() ;
+        attachment = new FileAttachment() ;
         nodeFile = node.getNode("jcr:content") ;
-        attachment.setPath(node.getPath()) ;
+        attachment.setId(node.getPath());
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
         attachment.setName(node.getProperty("exo:fileName").getString());
-        attachment.setWorkspace(node.getSession().getWorkspace().getName()) ;
+        workspace = node.getSession().getWorkspace().getName() ;
+        attachment.setWorkspace(workspace) ;
+        attachment.setPath("/" + workspace + node.getPath()) ;
         try{
           if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
           else attachment.setSize(0) ;
