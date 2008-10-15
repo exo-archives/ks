@@ -298,8 +298,8 @@
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .LeftQuestionContainer {
-  float: left;
-  width: 60%;
+  /*float: left;
+  width: 60%;*/
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .RightQuestionContainer {
@@ -1115,6 +1115,13 @@
   line-height:16px;
 	margin-left:15px;
 	padding-right:15px;
+}
+
+.UIFAQPortlet .MultiAnswerIcon {
+  background: url('background/FAQPortlet.gif') no-repeat left -575px;
+	padding-right:18px;
+	margin-left:5px;
+	height:20px;
 }
 
 .UIPrintPreview {
