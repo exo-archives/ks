@@ -30,6 +30,7 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -79,6 +80,11 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   @SuppressWarnings("unused")
   private String questionChanged_ = new String() ;
   private String link_ = "" ;
+  public List<User> toUsers = new ArrayList<User>();
+  public List<User> addCCUsers = new ArrayList<User>();
+  public List<User> addBCCUsers = new ArrayList<User>();
+  private int posOfResponse = 0;
+  
 	public UISendMailForm() throws Exception { this.setActions(new String[]{"Send", "Cancel"}) ;}
 	
 	public void activate() throws Exception {}
@@ -116,7 +122,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     QuestionLanguage questionLanguage = new QuestionLanguage() ;
     questionLanguage.setLanguage(question.getLanguage()) ;
     questionLanguage.setQuestion(quest) ;
-    questionLanguage.setResponse(question.getResponses()) ;
+    questionLanguage.setResponse(question.getAllResponses()) ;
     
     listQuestionLanguage.add(questionLanguage) ;
     for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) {
@@ -144,15 +150,21 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     for(QuestionLanguage questionLangua : listQuestionLanguage) {
       if(questionLangua.getLanguage().equals(language)) {
        contenQuestion =  questionLangua.getQuestion() ;
-     	 String response = questionLangua.getResponse() ;
-        if(response.equals(" ")) content =this.getLabel("change-content1") + this.getLabel("change-content2")
+     	 String[] response = questionLangua.getResponse() ;
+        if(response[posOfResponse].equals(" ")) content =this.getLabel("change-content1") + this.getLabel("change-content2")
         														+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
         														+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>" ;
-        else 
-        	content =this.getLabel("change-content1") + this.getLabel("change-content2")
-        								+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>" 
-        								+"<p><b>" + this.getLabel( "Response") + "</b> " + response + "</p>"
-        								+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>";
+        else {
+        	StringBuffer stringBuffer = new StringBuffer();
+        	stringBuffer.append(this.getLabel("change-content1")).append(this.getLabel("change-content2"))
+        							.append("<p><b>").append(this.getLabel( "Question")).append("</b> "+ contenQuestion + "</p>")
+        							.append("<p><b>" + this.getLabel( "Response") + "</b> ");
+        	for(String res : response){
+        		stringBuffer.append(res + "</p>");
+        	}
+        	stringBuffer.append("<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>");
+        	content =stringBuffer.toString();
+        }
       }
     }
     addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " "+ contenQuestion.replaceAll("<br>", " "))) ;
@@ -249,16 +261,16 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
          if(questionLanguage.getLanguage().equals(language)) {
         	 sendMailForm.languageIsResponsed = language ;
         	 contenQuestion =  questionLanguage.getQuestion() ;
-        	 String response = questionLanguage.getResponse() ;
+        	 String response[] = questionLanguage.getResponse() ;
            @SuppressWarnings("unused")
           String content = "" ;
-           if(response.equals(" ")) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
+           if(response[sendMailForm.posOfResponse].equals(" ")) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
           	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
           	 													+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
            else 
            	content =sendMailForm.getLabel("change-content1")+ sendMailForm.getLabel("change-content2")
            			+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
-           			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response + "</p>"
+           			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response[sendMailForm.posOfResponse] + "</p>"
            			+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
            body.setValue(content) ;
            subject.setValue(sendMailForm.getLabel("change-title")+contenQuestion) ;
@@ -267,5 +279,4 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
        event.getRequestContext().addUIComponentToUpdateByAjax(sendMailForm) ;
   	 }
    }
-	
 }

@@ -50,6 +50,7 @@ import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -147,6 +148,16 @@ public class UIQuestions extends UIContainer {
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
 		setListObject();
 	}
+	
+	public String getPortalName() {
+    PortalContainer pcontainer =  PortalContainer.getInstance() ;
+    return pcontainer.getPortalContainerInfo().getContainerName() ;  
+  }
+	
+	public String getRepository() throws Exception {
+    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
+    return rService.getCurrentRepository().getConfiguration().getName() ;
+  }
 	
 	public void setListObject(){
 		this.isChangeLanguage = false;
@@ -404,7 +415,7 @@ public class UIQuestions extends UIContainer {
         QuestionLanguage quesLanguage = new QuestionLanguage() ;
         quesLanguage.setLanguage(question.getLanguage()) ;
         quesLanguage.setQuestion(question.getQuestion()) ;
-        quesLanguage.setResponse(question.getResponses()) ;
+        quesLanguage.setResponse(question.getAllResponses()) ;
         quesLanguage.setResponseBy(question.getResponseBy());
         quesLanguage.setDateResponse(question.getDateResponse());
         listQuestionLanguage.add(quesLanguage) ;
@@ -1355,5 +1366,4 @@ public class UIQuestions extends UIContainer {
       event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
     }
   }
-
 }
