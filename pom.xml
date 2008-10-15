@@ -15,11 +15,13 @@
 
   <modules>
     <module>web/ksportal</module>
+    <module>web/webservice</module>
     <module>eXoApplication/faq/webapp</module>
     <module>eXoApplication/faq/service</module>
     
     <module>eXoApplication/forum/webapp</module>
     <module>eXoApplication/forum/service</module>
+   
     
     <!--module>eXoApplication/content/webapp</module>
     <module>eXoApplication/content/service</module-->
