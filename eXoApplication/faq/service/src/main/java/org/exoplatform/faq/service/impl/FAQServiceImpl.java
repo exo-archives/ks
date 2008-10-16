@@ -384,7 +384,7 @@ public class FAQServiceImpl implements FAQService{
    * @throws Exception the exception
    */
   public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception {
-  	jcrData_.deleteMailInWatch(categoryId, sProvider, userCurrent);
+  	jcrData_.UnWatch(categoryId, sProvider, userCurrent);
   }
   
   /**

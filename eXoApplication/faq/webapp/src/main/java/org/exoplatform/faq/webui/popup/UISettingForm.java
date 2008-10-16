@@ -227,7 +227,7 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			UIWatchContainer watchContainer = settingForm.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
-			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 500) ;
+			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 600) ;
 			watchForm.setListCategory(settingForm.getCategoryAddWatch()) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
      

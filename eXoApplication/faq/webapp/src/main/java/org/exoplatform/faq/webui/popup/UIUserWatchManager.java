@@ -68,13 +68,12 @@ public class UIUserWatchManager  extends UIForm	implements UIPopupComponent{
   public String getPathService(String categoryId) throws Exception {
   	String oldPath = "";
 		List<String> listPath = FAQUtils.getFAQService().getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
-    for(int i = listPath.size() -1 ; i >= 0; i --) {
-    	oldPath = oldPath + " > " + listPath.get(i);
+		for(int i = listPath.size() -1 ; i >= 0; i --) {
+    	Category category = FAQUtils.getFAQService().getCategoryById(listPath.get(i), FAQUtils.getSystemProvider());
+    	if(oldPath.equals("")) oldPath = category.getName();
+    	else oldPath = oldPath + " > " + category.getName();
     }
-    String path = this.getLabel("eXoFAQ")+ oldPath ;
-    oldPath = path.substring(0, path.lastIndexOf(" > ")) ;
-    Category category = FAQUtils.getFAQService().getCategoryById(categoryId, FAQUtils.getSystemProvider());
-    return oldPath + " > " + category.getName();
+    return oldPath ;
   }  
   
   public static String getSubString(String str, int max) {
@@ -134,7 +133,6 @@ public class UIUserWatchManager  extends UIForm	implements UIPopupComponent{
 		public void execute(Event<UIUserWatchManager> event) throws Exception {
 			UIUserWatchManager watchManager = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			System.out.println("==>categoryId:" + categoryId);
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
 			try {
 				faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
@@ -150,9 +148,9 @@ public class UIUserWatchManager  extends UIForm	implements UIPopupComponent{
         event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         return ;
       }
-//			faqService_.UnWatch(categoryId, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser()) ;
-//			UISettingForm settingForm = uiPortlet.findFirstComponentOfType(UISettingForm.class) ;
-//			if(settingForm.getCategoryAddWatch().size()>0) watchManager.setListCategory(settingForm.getCategoryAddWatch()) ;
+			faqService_.UnWatch(categoryId, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser()) ;
+			UISettingForm settingForm = uiPortlet.findFirstComponentOfType(UISettingForm.class) ;
+			if(settingForm.getCategoryAddWatch().size()>0) watchManager.setListCategory(settingForm.getCategoryAddWatch()) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 		}
 	}

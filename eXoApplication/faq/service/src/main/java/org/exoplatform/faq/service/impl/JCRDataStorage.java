@@ -32,7 +32,6 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Value;
-import javax.jcr.ValueFactory;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -57,7 +56,6 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.notify.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
-import org.exoplatform.services.jcr.impl.core.value.ValueFactoryImpl;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -983,7 +981,6 @@ public class JCRDataStorage {
   
   public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception {
   	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
-  	System.out.println("=======vao day roi ==============:" +watchingNode.isNodeType("exo:faqWatching"));
   	Value[] emails = watchingNode.getProperty("exo:emailWatching").getValues() ;
   	Value[] users = watchingNode.getProperty("exo:userWatching").getValues() ;
 		List<String> userAll = new ArrayList<String>();
@@ -993,17 +990,13 @@ public class JCRDataStorage {
 			for(Value user : users) {
 				if(!userCurrent.equals(user.getString())) {
 					userAll.add(user.getString()) ;
-					emailAll.add(emails[i+1].getString());
+					emailAll.add(emails[i].getString());
 				} 
 				i++ ;
 			}
-			System.out.println("===>userAll1:" + userAll);
-			System.out.println("===>emailAll1:" + emailAll);
 		watchingNode.setProperty("exo:userWatching", userAll.toArray(new String[]{})) ;
 		watchingNode.setProperty("exo:emailWatching", emailAll.toArray(new String[]{})) ;
 		}
-		System.out.println("===>userAll2:" + userAll);
-		System.out.println("===>emailAll2:" + emailAll);
 		watchingNode.save() ;
 		watchingNode.getSession().save();
   }

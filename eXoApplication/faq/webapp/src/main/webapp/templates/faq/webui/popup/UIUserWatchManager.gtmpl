@@ -27,9 +27,9 @@
  									String link = uicomponent.event("Link",categoryId);
  							 %>
  								<tr>
- 									<% if(path.length() > 90) {
+ 									<% if(path.length() > 120) {
  											String title = path ;
- 											path = uicomponent.getSubString(path,90)
+ 											path = uicomponent.getSubString(path,120)
  									 %>
  										<td class="text" align="left"><a title="$title" href="$link">$path</a></td>
  									<% } else { %>

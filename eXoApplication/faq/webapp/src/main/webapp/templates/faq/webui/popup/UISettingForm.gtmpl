@@ -31,7 +31,7 @@ if(!uicomponent.isEditPortlet_){
 										<tr>
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.user-watch-manager"); %></td>
 											<% String linkWacth =uicomponent.event("UserWatchManager") ; %>
-											<a href="$linkWacth" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager"); %>" class="WatchManager">&nbsp;</a>
+											<a href="$linkWacth" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager"); %>" class="WatchUserManager">&nbsp;</a>
 										</tr>
 									</tbody>
 								</table>

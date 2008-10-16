@@ -1256,6 +1256,11 @@
   padding: 4px 0px;
 }
 
+
+.UIFAQPortlet .WatchUserManager {
+	background: url('background/FAQYey.gif') no-repeat right bottom;
+	padding: 10px 14px 9px 4px;
+}
 /******************************  Icon in search result  ***************************************/
 
 .UIFAQPortlet .NotResponseSearch {
