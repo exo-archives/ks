@@ -117,7 +117,7 @@
 }
 
 .UIHomePagePortlet .HomeBackground {
-	background: url('DefaultSkin/background/HomeBackground.gif') repeat-x ;
+	background: url('DefaultSkin/background/HomeBackground.gif') repeat-x center;
 	height: 244px;
 }
 
