@@ -470,13 +470,13 @@
   /*background: url('background/DotLine.gif') repeat-x bottom;*/
   padding-bottom: 4px;
   padding-left: 10px ;
-  width: 90%;
+  width: 98%;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .RelationContent {
   padding-bottom: 4px;
   padding-left: 10px ;
-  width: 90%;
+  width: 98%;
 }
 
 .UIFAQPortlet .ResponseContent .Response {
@@ -636,10 +636,14 @@
 .UIFAQPortlet .UISettingForm {
   padding:8px;
 }
+.UIResultContainer .PopupContent {
+  max-height: 450px;
+}
 
 .UIFAQPortlet .UIPopupViewQuestion {
 	padding: 8px;
 	background-color: #EFEFEF;
+	max-height: 
 }
 
 .UIFAQPortlet .UIPopupViewQuestion .ViewQuestion {

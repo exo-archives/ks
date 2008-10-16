@@ -1,4 +1,5 @@
 <% 
+  import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
@@ -6,9 +7,12 @@
 	import org.exoplatform.faq.service.FileAttachment;
 	
 	String compId = uicomponent.getId() ; 
-  def rcontext = _ctx.getRequestContext() ;	
-  rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
-	rcontext.getJavascriptManager().addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
+  def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
+  jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
+	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
 	<div class="FAQToolbar">
@@ -524,7 +528,7 @@
 										</div>
 										
 										<div class="ResponseContent">
-											<div class="Response" style="padding-left:0px;">
+											<div class="Response" id="SetWidthContent" style="padding-left:0px;">
 												<%
 												if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 													for(String res in question.getAllResponses()) {

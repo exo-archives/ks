@@ -2,12 +2,17 @@
 	import java.text.Format;
 	import java.text.SimpleDateFormat;
 	import java.util.Date;
+	import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.service.FileAttachment;
 	import org.exoplatform.faq.webui.FAQUtils;
+	def rcontext = _ctx.getRequestContext() ;
+  JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
  %>
-<div class="UIPopupViewQuestion $uicomponent.id" >
+<div class="UIPopupViewQuestion" >
 	<div><% uiform.begin() %></div>
 	<%uicomponent.renderChildren() ;%>
 	<div class= "ViewQuestion" >
@@ -32,7 +37,7 @@
 					<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b></div>
 					<div class="Response" style="width: 97%;">$content</div>
 					<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
-					<div class="Response" style="width: 97%;">$response</div>
+					<div class="Response" id="SetWidthContent" style="width: 97%;">$response</div>
 					<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
 					<div class="AttachmentContent">
 					<%
