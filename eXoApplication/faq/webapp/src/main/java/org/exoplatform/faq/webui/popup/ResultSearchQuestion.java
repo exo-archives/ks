@@ -123,7 +123,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			}
 		  UIResultContainer uiResultContainer = resultSearch.getParent() ;
 			UIPopupAction popupAction = uiResultContainer.getChild(UIPopupAction.class) ;
-			UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 600) ;
+			UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 700) ;
 			viewQuestion.setQuestion(questionId) ;
 		  viewQuestion.setLanguage(language_) ;
 			viewQuestion.setId("UIPopupViewQuestion") ;
