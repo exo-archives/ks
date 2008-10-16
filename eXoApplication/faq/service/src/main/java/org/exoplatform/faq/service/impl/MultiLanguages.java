@@ -240,14 +240,14 @@ public class MultiLanguages {
     langNode.setProperty("exo:responses", language.getResponse()) ;
     langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
     if(language.getDateResponse() != null) {
-    	java.util.Calendar calendar = new GregorianCalendar() ;
-    	List<Calendar> listCalendars = new ArrayList<Calendar>();
+    	java.util.Calendar calendar = null ;
+    	List<Value> listCalendars = new ArrayList<Value>();
     	for(Date date : language.getDateResponse()){
-	    	calendar = new GregorianCalendar() ;
+	    	calendar = GregorianCalendar.getInstance() ;
 	    	calendar.setTime(date) ;
-	    	listCalendars.add(calendar);
+	    	listCalendars.add(langNode.getSession().getValueFactory().createValue(calendar));
     	}
-    	langNode.setProperty("exo:dateResponse", (Value[]) listCalendars.toArray(new Calendar[]{})) ;
+    	langNode.setProperty("exo:dateResponse", (listCalendars.toArray(new Value[]{}))) ;
     }
     questionNode.save() ;
   }
