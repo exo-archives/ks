@@ -171,4 +171,62 @@ UIFAQPortlet.prototype.initScroll = function() {
   uiNav.scrollMgr.renderElements() ;
 } ;
 
+
+UIFAQPortlet.prototype.controlWorkSpace = function() {
+	var slidebar = document.getElementById('ControlWorkspaceSlidebar');
+	if(slidebar) {
+		var slidebarButton = eXo.core.DOMUtil.findFirstDescendantByClass(slidebar, "div", "SlidebarButton") ;
+		if(slidebarButton){
+			slidebarButton.onclick = eXo.faq.UIFAQPortlet.onClickSlidebarButton;
+		}
+	}
+	setTimeout(eXo.faq.UIFAQPortlet.reSizeImages, 1000);
+};
+UIFAQPortlet.prototype.onClickSlidebarButton = function() {
+	var workspaceContainer =  document.getElementById('UIWorkspaceContainer');
+	if(workspaceContainer){
+		if(workspaceContainer.style.display === 'none') {
+			setTimeout(eXo.faq.UIFAQPortlet.reSizeImages, 500);
+		}
+	}
+};
+UIFAQPortlet.prototype.reSizeImages = function() {
+	eXo.faq.UIFAQPortlet.setSizeImages(10);
+};
+UIFAQPortlet.prototype.setSizeImages = function(delta) { 
+	var widthContent = document.getElementById('SetWidthContent');
+	if(widthContent) {
+		widthContent.style.border="red";
+		var isDesktop = document.getElementById('UIPageDesktop') ;
+		if(!isDesktop){
+	    var max_width = widthContent.offsetWidth - delta ;
+	    var max = max_width;
+	    if(max_width > 600) max = 600;
+	    var images_ =  widthContent.getElementsByTagName("img");
+	    for(var i=0; i<images_.length; i++){
+	      var img = images_[i];
+	      if(img.className === "AttachmentFile") continue ;
+	      img.src = img.src;
+			  if(img.width > max) {
+					img.style.width= max + "px" ;
+					img.style.height = "auto" ;
+			  } else {
+					img.style.width = "auto" ;
+			  	if(img.width > max) {
+						img.style.width= max + "px" ;
+						img.style.height = "auto" ;
+			  	}
+			  }
+			  if(max_width > 600) {
+	      	img.onclick = eXo.faq.UIFAQPortlet.showImage;
+	      }
+	    }
+		}
+	}
+};
+
+UIFAQPortlet.prototype.showImage = function() {
+	eXo.faq.UIFAQPortlet.showPicture(this.src) ;
+} ;
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;
