@@ -188,7 +188,7 @@ UIFAQPortlet.prototype.controlWorkSpace = function() {
 			slidebarButton.onclick = eXo.faq.UIFAQPortlet.onClickSlidebarButton;
 		}
 	}
-	setTimeout(eXo.faq.UIFAQPortlet.reSizeImages, 1000);
+	setTimeout(eXo.faq.UIFAQPortlet.reSizeImages, 1500);
 };
 UIFAQPortlet.prototype.onClickSlidebarButton = function() {
 	var workspaceContainer =  document.getElementById('UIWorkspaceContainer');
@@ -204,7 +204,6 @@ UIFAQPortlet.prototype.reSizeImages = function() {
 UIFAQPortlet.prototype.setSizeImages = function(delta) { 
 	var widthContent = document.getElementById('SetWidthContent');
 	if(widthContent) {
-		widthContent.style.border="red";
 		var isDesktop = document.getElementById('UIPageDesktop') ;
 		if(!isDesktop){
 	    var max_width = widthContent.offsetWidth - delta ;
@@ -220,12 +219,12 @@ UIFAQPortlet.prototype.setSizeImages = function(delta) {
 					images_[i].style.height = "auto" ;
 			  } else {
 					images_[i].style.width = "auto" ;
-			  	if(img.width > max) {
+			  	if(images_[i].width > max) {
 						images_[i].style.width= max + "px" ;
 						images_[i].style.height = "auto" ;
 			  	}
 			  }
-			  if(max_width > 600) {
+			  if(img.width > 600) {
 	      	images_[i].onclick = eXo.faq.UIFAQPortlet.showImage;
 	      }
 	    }
