@@ -351,7 +351,7 @@ UIForumPortlet.prototype.showPicture = function(src) {
   maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
   maskNode.setAttribute('style', 'width: 100%; height: 100%; -moz-opacity: 0.3;');
   eXo.forum.UIForumPortlet.finterImage(maskNode, true);
-  eXo.core.Bowser.addOnScrollCallback('MaskLayerControl', this.scrollHandler) ;
+ // eXo.core.Bowser.addOnScrollCallback('MaskLayerControl', this.scrollHandler) ;
 };
 
 UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
