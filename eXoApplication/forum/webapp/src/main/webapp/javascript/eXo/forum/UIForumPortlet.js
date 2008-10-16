@@ -331,17 +331,27 @@ UIForumPortlet.prototype.setEnableInput = function() {
 	}
 } ;
 
-UIForumPortlet.prototype.openPicture = function(obj,id) {
-	var img = document.getElementById(id) ;
-	if(img) {
-		if(img.offsetHeight <= 101) {
-			img.style.height = "300px" ;
-			img.className = "Icon MiniView" ;
-		} else {
-			img.style.height = "100px" ;
-			img.className = "Icon MaxView" ;
-		}
-	}
+
+UIForumPortlet.prototype.hidePicture = function() {
+  eXo.core.Browser.onScrollCallback.remove('MaskLayerControl') ;
+  var maskContent = eXo.core.UIMaskLayer.object ;
+  var maskNode = document.getElementById("MaskLayer") || document.getElementById("subMaskLayer") ;
+  if (maskContent) maskContent.parentNode.removeChild(maskContent) ;
+  if (maskNode) maskNode.parentNode.removeChild(maskNode) ;
+} ;
+
+UIForumPortlet.prototype.showPicture = function(src) {
+  var containerNode = document.createElement('div') ;
+  var imageNode = document.createElement('img') ;
+  imageNode.src = src ;
+  imageNode.setAttribute('alt', src) ;
+  containerNode.appendChild(imageNode) ;
+  containerNode.setAttribute('title', 'Click to close') ;
+  containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
+  maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
+  maskNode.setAttribute('style', 'width: 100%; height: 100%; -moz-opacity: 0.3;');
+  eXo.forum.UIForumPortlet.finterImage(maskNode, true);
+ // eXo.core.Bowser.addOnScrollCallback('MaskLayerControl', this.scrollHandler) ;
 };
 
 UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
@@ -390,8 +400,8 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 UIForumPortlet.prototype.finterImage = function(elm_, isFT) {
 	var isIE = document.all?true:false;
 	if(isFT){
-		if(!isIE) elm_.style.MozOpacity = "0.5";
-		else elm_.filters[0].opacity = "50";
+		if(!isIE) elm_.style.MozOpacity = "0.3";
+		else elm_.filters[0].opacity = "30";
 	} else {
 		if(!isIE) elm_.style.MozOpacity = "1";
 		else elm_.filters[0].opacity = "100";
@@ -445,15 +455,15 @@ UIForumPortlet.prototype.controlWorkSpace = function() {
 		var slidebarButton = eXo.core.DOMUtil.findFirstDescendantByClass(slidebar, "div", "SlidebarButton") ;
 		if(slidebarButton){
 			slidebarButton.onclick = eXo.forum.UIForumPortlet.onClickSlidebarButton;
-			setTimeout(eXo.forum.UIForumPortlet.reSizeImages, 2000);
 		}
 	}
+	setTimeout(eXo.forum.UIForumPortlet.reSizeImages, 1500);
 };
 UIForumPortlet.prototype.onClickSlidebarButton = function() {
 	var workspaceContainer =  document.getElementById('UIWorkspaceContainer');
 	if(workspaceContainer){
 		if(workspaceContainer.style.display === 'none') {
-			eXo.forum.UIForumPortlet.setSizeImages(475);
+			setTimeout(eXo.forum.UIForumPortlet.reSizeImages, 500);
 		}
 	}
 };
@@ -466,24 +476,35 @@ UIForumPortlet.prototype.setSizeImages = function(delta) {
 		var isDesktop = document.getElementById('UIPageDesktop') ;
 		if(!isDesktop){
 	    var max_width = topicDetailContainer.offsetWidth - delta ;
+	    var max = max_width;
+	    if(max_width > 600) max = 600;
 	    var images_ =  topicDetailContainer.getElementsByTagName("img");
 	    for(var i=0; i<images_.length; i++){
-	      var img = images_[i];
-	      if(img.className === "ImgAvatar") continue ;
-			  if(img.width > max_width) {
-					img.style.width= max_width + "px" ;
-					img.style.height = "auto" ;
+	    	var img =  new Image();
+	      img.src = images_[i].src;
+	      if(images_[i].className === "ImgAvatar") continue ;
+	      if(images_[i].className === "AttachImage") continue ;
+			  if(img.width > max) {
+					images_[i].style.width= max + "px" ;
+					images_[i].style.height = "auto" ;
 			  } else {
-					img.style.width = "auto" ;
-			  	if(img.width > max_width) {
-						img.style.width= max_width + "px" ;
-						img.style.height = "auto" ;
+					images_[i].style.width = "auto" ;
+			  	if(images_[i].width > max) {
+						images_[i].style.width= max + "px" ;
+						images_[i].style.height = "auto" ;
 			  	}
 			  }
+			  if(img.width > 600) {
+	      	images_[i].onclick = eXo.forum.UIForumPortlet.showImage;
+	      }
 	    }
 		}
 	}
 };
+
+UIForumPortlet.prototype.showImage = function() {
+	eXo.forum.UIForumPortlet.showPicture(this.src) ;
+} ;
 
 UIForumPortlet.prototype.resetFielForm = function(idElm) {
 	var elm = document.getElementById(idElm) ;
