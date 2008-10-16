@@ -365,10 +365,9 @@
 				<%} else {
 						String responseBy = "..." ;
 						String date = "..." ;
-						if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
-							responseBy = question.getResponseBy() ;
-							date = dateFormatter.format(question.getDateResponse());
-						}
+						//if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+						//	responseBy = question.getResponseBy() ;
+						//}
 					%>
 						<div class="QuestionSelect">
 							<div class="DecoratorTL">
@@ -531,14 +530,18 @@
 											<div class="Response" id="SetWidthContent" style="padding-left:0px;">
 												<%
 												if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+													int countResponse = 0;
 													for(String res in question.getAllResponses()) {
+														date = dateFormatter.format(question.getDateResponse()[countResponse]);
+														responseBy = question.getResponseBy()[countResponse] ;
 												%>
 														$res
 														<div style="color:gray;">
 															<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
 															&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
 														</div>
-											<%	}
+											<%		countResponse ++;
+													}
 												} else {
 											%>
 													<center><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%></center></b>

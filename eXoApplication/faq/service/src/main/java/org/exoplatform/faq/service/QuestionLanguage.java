@@ -41,10 +41,10 @@ public class QuestionLanguage {
   private String[] response = new String[]{" "} ;
   
   /** The answerer */
-  private String responseBy = " ";
+  private String[] responseBy = new String[]{" "};
   
   /** The date response. */
-  private Date dateResponse ;
+  private Date[] dateResponse ;
   
   /**
    * class constructor.
@@ -56,7 +56,7 @@ public class QuestionLanguage {
    * 
    * @return	the name of answerer
    */
-  public String getResponseBy() {
+  public String[] getResponseBy() {
   	return responseBy;
   }
   
@@ -65,7 +65,7 @@ public class QuestionLanguage {
    * 
    * @param author	the name of person who answer question
    */
-	public void setResponseBy(String responseBy) {
+	public void setResponseBy(String[] responseBy) {
   	this.responseBy = responseBy;
   }
 
@@ -115,7 +115,7 @@ public class QuestionLanguage {
    * Get the date when question whith this language is answered
    * @return	date when question is responsed
    */
-	public Date getDateResponse() {
+	public Date[] getDateResponse() {
   	return dateResponse;
   }
 
@@ -123,7 +123,7 @@ public class QuestionLanguage {
 	 * Registers date when response question
 	 * @param dateResponse	the date when question is responsed
 	 */
-	public void setDateResponse(Date dateResponse) {
+	public void setDateResponse(Date[] dateResponse) {
   	this.dateResponse = dateResponse;
   }	
   

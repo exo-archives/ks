@@ -65,10 +65,10 @@ public class Question {
   private String[] relations ;
   
   /** The response by. */
-  private String responseBy = null ;
+  private String[] responseBy = null ;
   
   /** The date response. */
-  private Date dateResponse ;
+  private Date[] dateResponse ;
   
   private String link = "";
   /** The list attachments. */
@@ -280,7 +280,7 @@ public class Question {
    * 
    * @return  the date time when question is response
    */
-  public Date getDateResponse() { return dateResponse; }
+  public Date[] getDateResponse() { return dateResponse; }
   
   /**
    * Registers date time for question object when addmin or moderator response for this question,
@@ -288,14 +288,14 @@ public class Question {
    * 
    * @param dateResponse the date time when question is responsed
    */
-  public void setDateResponse(Date dateResponse) { this.dateResponse = dateResponse; }
+  public void setDateResponse(Date dateResponse[]) { this.dateResponse = dateResponse; }
 
   /**
    * Get name of admin or moderator who responsed this question.
    * 
    * @return    the name of admin or moderator
    */
-  public String getResponseBy() { return responseBy; }
+  public String[] getResponseBy() { return responseBy; }
   
   /**
    * Registers name of person who response for this question, system auto set this
@@ -303,7 +303,7 @@ public class Question {
    * 
    * @param responseBy  the name of admin or moderator
    */
-  public void setResponseBy(String responseBy) { this.responseBy = responseBy; }
+  public void setResponseBy(String[] responseBy) { this.responseBy = responseBy; }
 
   /**
    * Get list languages of question which are not yet answered

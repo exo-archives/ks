@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -421,7 +422,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           return;
         }
         question_.setApproved(questionIsApproved) ;
-        question_.setDateResponse(date) ;
+        question_.setDateResponse(null) ;
       } else {
         question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
         question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;
@@ -462,10 +463,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) isNew = false;
         utils.getEmailSetting(questionForm.faqSetting_, isNew, false);
         if(!isNew) {
-        	if(question_ == null) System.out.println("---------->uiquestionform:quetion_ is null");
-        	if(FAQUtils.getSystemProvider() == null) System.out.println("---------->uiquestionform:FAQUtils.getSystemProvider() is null");
-        	if(questionForm.faqSetting_ == null) System.out.println("---------->uiquestionform:questionForm.faqSetting_ is null");
-        	if(question_.getDateResponse()== null) System.out.println("---------->uiquestionform:question_.getDateResponse() is null");
           questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider(), questionForm.faqSetting_) ;
           multiLanguages.removeLanguage(questionNode, questionForm.LIST_LANGUAGE) ;
           if(questionForm.LIST_LANGUAGE.size() > 1) {

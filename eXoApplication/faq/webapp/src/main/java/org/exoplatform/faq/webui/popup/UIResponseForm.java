@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -120,6 +121,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private boolean isChildren_ = false ;
   private FAQSetting faqSetting_;
   private List<String> listResponse = new ArrayList<String>();
+  private List<String> listUserResponse = new ArrayList<String>();
+  private List<Date> listDateResponse = new ArrayList<Date>();
   private int posOfResponse = 0;
   
   public void activate() throws Exception { }
@@ -152,6 +155,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       question_ = question ;
       listResponse.addAll(Arrays.asList(question.getAllResponses()));
+      if(listResponse.size() == 1 && listResponse.get(0).trim().length() < 1){
+      	listUserResponse.add(FAQUtils.getFullName(FAQUtils.getCurrentUser()));
+      	listDateResponse.add(new java.util.Date());
+      } else {
+	      listUserResponse.addAll(Arrays.asList(question.getResponseBy()));
+	      listDateResponse.addAll(Arrays.asList(question.getDateResponse()));
+      }
       posOfResponse = 0;
       if(languageViewed != null && languageViewed.trim().length() > 0) {
         languageIsResponsed = languageViewed ;
@@ -326,8 +336,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
       UIResponseForm responseForm = event.getSource() ;
       
-      System.out.println("-------------------> action save question~~~~> size of list response: " + responseForm.listResponse.size());
-      
       String questionContent = ((UIFormTextAreaInput)responseForm.getChildById(QUESTION_CONTENT)).getValue() ;
       if(questionContent == null || questionContent.trim().length() < 1) {
         UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
@@ -341,12 +349,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       String responseQuestionContent = formWYSIWYGInput.getValue() ;
       if(responseQuestionContent != null && responseQuestionContent.trim().length() >0 && validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
         if(!responseForm.listResponse.contains(responseQuestionContent)){
-        	responseForm.listResponse.remove(responseForm.posOfResponse);
-	        try{
-  					responseForm.listResponse.set(responseForm.posOfResponse, responseQuestionContent);
-  				} catch (Exception e){
-  					responseForm.listResponse.add(responseQuestionContent);
-  				}
+					responseForm.listResponse.set(responseForm.posOfResponse, responseQuestionContent);
         }
       } else if(responseForm.listResponse.isEmpty()){
       	UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
@@ -363,16 +366,16 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       if(question_.getLanguage().equals(responseForm.languageIsResponsed)) {
         question_.setQuestion(questionContent) ;
         if(!responseForm.compareTowArraies(question_.getAllResponses(), responseForm.listResponse.toArray(new String[]{}))){
-        	question_.setResponseBy(user);
+        	question_.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
         	question_.setResponses(responseForm.listResponse.toArray(new String[]{}));
-        	question_.setDateResponse(date) ;
+        	question_.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
         }
       } else {
         question_.setQuestion(responseForm.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
         if(!responseForm.compareTowArraies(question_.getAllResponses(), responseForm.listQuestionLanguage.get(0).getResponse())){
-        	question_.setResponseBy(user) ;
+        	question_.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
         	question_.setResponses(responseForm.listQuestionLanguage.get(0).getResponse()) ;
-        	question_.setDateResponse(date) ;
+        	question_.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
         }
       }
       
@@ -381,9 +384,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           questionLanguage.setQuestion(questionContent) ;
           if(questionLanguage.getResponse() == null || 
           		!responseForm.compareTowArraies(questionLanguage.getResponse(), responseForm.listResponse.toArray(new String[]{}))){
-          	questionLanguage.setResponseBy(user);
-          	questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
-          	questionLanguage.setDateResponse(date);
+          	questionLanguage.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
+          	questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{}));
+          	questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
           }
           break;
         }
@@ -561,23 +564,36 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   		String pos = event.getRequestContext().getRequestParameter(OBJECTID);
   		UIFormWYSIWYGInput formWYSIWYGInput = responseForm.getChildById(RESPONSE_CONTENT);
   		String responseContent = formWYSIWYGInput.getValue();
+  		java.util.Date date = new java.util.Date();
+      String user = FAQUtils.getFullName(FAQUtils.getCurrentUser());
   		if(pos.equals("New")){
   			ValidatorDataInput validatorDataInput = new ValidatorDataInput();
   			if(responseContent != null && validatorDataInput.fckContentIsNotEmpty(responseContent)){
   				if(!responseForm.listResponse.contains(responseContent)){
 						if(responseForm.listResponse.isEmpty()){
 							responseForm.listResponse.add(responseContent);
+							responseForm.listDateResponse.add(date);
+        			responseForm.listUserResponse.add(user);
 						} else {
 		  					responseForm.listResponse.set(responseForm.posOfResponse, responseContent);
+		  					responseForm.listDateResponse.set(responseForm.posOfResponse, date);
 						}
   				}
   				responseForm.posOfResponse = responseForm.listResponse.size();
   				responseForm.listResponse.add(" ");
+  				responseForm.listDateResponse.add(date);
+    			responseForm.listUserResponse.add(user);
   				formWYSIWYGInput.setValue("");
   			} else if(!responseForm.listResponse.isEmpty() || responseForm.listResponse.size() != responseForm.posOfResponse + 1){
   				responseForm.listResponse.remove(responseForm.posOfResponse);
+  				responseForm.listUserResponse.remove(responseForm.posOfResponse);
+  				responseForm.listDateResponse.remove(responseForm.posOfResponse);
+  				
   				responseForm.posOfResponse = responseForm.listResponse.size();
   				responseForm.listResponse.add(" ");
+  				responseForm.listDateResponse.add(date);
+    			responseForm.listUserResponse.add(user);
+    			
   				formWYSIWYGInput.setValue("");
   			}
   		} else {
@@ -586,9 +602,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   			ValidatorDataInput validatorDataInput = new ValidatorDataInput();
   			if(responseContent == null || !validatorDataInput.fckContentIsNotEmpty(responseContent)){
   				responseForm.listResponse.remove(responseForm.posOfResponse);
+  				responseForm.listUserResponse.remove(responseForm.posOfResponse);
+  				responseForm.listDateResponse.remove(responseForm.posOfResponse);
+  				
   				if(responseForm.posOfResponse < newPosResponse) newPosResponse--;
   			} else if(!responseContent.equals(responseForm.listResponse.get(responseForm.posOfResponse))){
 					responseForm.listResponse.set(responseForm.posOfResponse, responseContent);
+					responseForm.listDateResponse.set(responseForm.posOfResponse, date);
   			}
   			formWYSIWYGInput.setValue(responseForm.listResponse.get(newPosResponse));
   			responseForm.posOfResponse = newPosResponse;
@@ -621,28 +641,43 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         return ;
       }
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+      java.util.Date date = new java.util.Date();
+      String user = FAQUtils.getFullName(FAQUtils.getCurrentUser());
       for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(responseForm.languageIsResponsed)) {
           String content = responseContent.getValue();
           if(content!= null && validatorDataInput.fckContentIsNotEmpty(content)) {
           	if(!responseForm.listResponse.contains(content)){
-          		if(responseForm.listResponse.isEmpty()) responseForm.listResponse.add(content);
-          		else responseForm.listResponse.set(responseForm.posOfResponse, content);
+          		if(responseForm.listResponse.isEmpty()){
+          			responseForm.listResponse.add(content);
+          			responseForm.listDateResponse.add(date);
+          			responseForm.listUserResponse.add(user);
+          		} else {
+          			responseForm.listResponse.set(responseForm.posOfResponse, content);
+          			responseForm.listDateResponse.set(responseForm.posOfResponse, date);
+          		}
           	}
           	if(questionLanguage.getResponse() == null || 
           			!responseForm.compareTowArraies(questionLanguage.getResponse(),responseForm.listResponse.toArray(new String[]{}))) {
-          		questionLanguage.setResponseBy(FAQUtils.getFullName(FAQUtils.getCurrentUser()));
+          		//questionLanguage.setResponseBy(FAQUtils.getFullName(FAQUtils.getCurrentUser()));
+          		questionLanguage.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
           		questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
-          		java.util.Date date = new java.util.Date();
-          		questionLanguage.setDateResponse(date);
+          		questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
           	}
           } else {
-        		if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() > responseForm.posOfResponse)
+        		if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() > responseForm.posOfResponse){
         			responseForm.listResponse.remove(responseForm.posOfResponse);
+        			responseForm.listDateResponse.remove(responseForm.posOfResponse);
+        			responseForm.listUserResponse.remove(responseForm.posOfResponse);
+        		}
         		if(responseForm.listResponse.isEmpty()){
         			questionLanguage.setResponse(new String[]{" "});
+        			questionLanguage.setDateResponse(null);
+        			questionLanguage.setResponseBy(null);
         		} else {
-        			questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
+        			questionLanguage.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
+          		questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
+          		questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
         		}
           }
           questionLanguage.setQuestion(questionContent.getValue().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
