@@ -46,6 +46,14 @@ UIFAQPortlet.prototype.hiddenTitle = function(id) {
 	obj.style.display = "none" ;
 };
 
+UIFAQPortlet.prototype.hidePicture = function() {
+  eXo.core.Browser.onScrollCallback.remove('MaskLayerControl') ;
+  var maskContent = eXo.core.UIMaskLayer.object ;
+  var maskNode = document.getElementById("MaskLayer") || document.getElementById("subMaskLayer") ;
+  if (maskContent) maskContent.parentNode.removeChild(maskContent) ;
+  if (maskNode) maskNode.parentNode.removeChild(maskNode) ;
+} ;
+
 UIFAQPortlet.prototype.showPicture = function(src) {
   var containerNode = document.createElement('div') ;
   var imageNode = document.createElement('img') ;
@@ -53,7 +61,7 @@ UIFAQPortlet.prototype.showPicture = function(src) {
   imageNode.setAttribute('alt', src) ;
   containerNode.appendChild(imageNode) ;
   containerNode.setAttribute('title', 'Click to close') ;
-  containerNode.onclick = eXo.cs.MaskLayerControl.hidePicture ;
+  containerNode.onclick = eXo.faq.UIFAQPortlet.hidePicture ;
   maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
   eXo.core.Browser.addOnScrollCallback('MaskLayerControl', this.scrollHandler) ;
 };
@@ -204,21 +212,21 @@ UIFAQPortlet.prototype.setSizeImages = function(delta) {
 	    if(max_width > 600) max = 600;
 	    var images_ =  widthContent.getElementsByTagName("img");
 	    for(var i=0; i<images_.length; i++){
-	      var img = images_[i];
-	      if(img.className === "AttachmentFile") continue ;
-	      img.src = img.src;
+	      var img =  new Image();
+	      img.src = images_[i].src;
+	      if(images_[i].className === "AttachmentFile") continue ;
 			  if(img.width > max) {
-					img.style.width= max + "px" ;
-					img.style.height = "auto" ;
+					images_[i].style.width= max + "px" ;
+					images_[i].style.height = "auto" ;
 			  } else {
-					img.style.width = "auto" ;
+					images_[i].style.width = "auto" ;
 			  	if(img.width > max) {
-						img.style.width= max + "px" ;
-						img.style.height = "auto" ;
+						images_[i].style.width= max + "px" ;
+						images_[i].style.height = "auto" ;
 			  	}
 			  }
 			  if(max_width > 600) {
-	      	img.onclick = eXo.faq.UIFAQPortlet.showImage;
+	      	images_[i].onclick = eXo.faq.UIFAQPortlet.showImage;
 	      }
 	    }
 		}
