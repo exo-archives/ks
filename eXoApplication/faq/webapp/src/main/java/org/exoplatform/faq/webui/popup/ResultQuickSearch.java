@@ -146,7 +146,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				}
 				UIResultContainer uiResultContainer = resultQuickSearch.getParent() ;
 				UIPopupAction popupAction = uiResultContainer.getChild(UIPopupAction.class) ;
-				UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 650) ;
+				UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 700) ;
 			  viewQuestion.setQuestion(id) ;
 				viewQuestion.setId("UIPopupViewQuestion") ;
 			  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
