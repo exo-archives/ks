@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Value;
+import javax.jcr.ValueFactory;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -55,6 +57,7 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.notify.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.jcr.impl.core.value.ValueFactoryImpl;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -158,9 +161,15 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
     questionNode.setProperty("exo:responseBy", question.getResponseBy()) ;
     if(question.getDateResponse() != null){
-	    java.util.Calendar calendar = new GregorianCalendar();
-	    calendar.setTime(question.getDateResponse());
-	    questionNode.setProperty("exo:dateResponse", calendar) ;
+    	int n = question.getDateResponse().length;
+	    Value[] values = new Value[n] ; 
+    	java.util.Calendar calendar = null ;
+    	for(int i = 0 ; i < n; i++){
+	    	calendar = GregorianCalendar.getInstance();
+	    	calendar.setTime(question.getDateResponse()[i]);
+	    	values[i] = questionNode.getSession().getValueFactory().createValue(calendar) ;
+	    }
+	    questionNode.setProperty("exo:dateResponse", values);
     }
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
@@ -339,8 +348,8 @@ public class JCRDataStorage {
         questionLanguage.setLanguage(node.getName()) ;
         if(node.hasProperty("exo:name")) questionLanguage.setQuestion(node.getProperty("exo:name").getValue().getString());
         if(node.hasProperty("exo:responses")) questionLanguage.setResponse(ValuesToStrings(node.getProperty("exo:responses").getValues()));
-        if(node.hasProperty("exo:responseBy")) questionLanguage.setResponseBy(node.getProperty("exo:responseBy").getValue().getString());
-        if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(node.getProperty("exo:dateResponse").getDate().getTime());
+        if(node.hasProperty("exo:responseBy")) questionLanguage.setResponseBy(ValuesToStrings(node.getProperty("exo:responseBy").getValues()));
+        if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(ValuesToDate(node.getProperty("exo:dateResponse").getValues()));
         
         listQuestionLanguage.add(questionLanguage) ;
       }
@@ -473,13 +482,13 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
-    if(questionNode.hasProperty("exo:dateResponse")) question.setCreatedDate(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ;
+    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(ValuesToDate(questionNode.getProperty("exo:dateResponse").getValues())) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
     if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
     if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
     if(questionNode.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
-    if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(questionNode.getProperty("exo:responseBy").getString()) ;  	
+    if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(ValuesToStrings(questionNode.getProperty("exo:responseBy").getValues())) ;  	
     if(questionNode.hasProperty("exo:nameAttachs")) question.setNameAttachs(ValuesToStrings(questionNode.getProperty("exo:nameAttachs").getValues())) ;  	
     
     List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
@@ -887,6 +896,15 @@ public class JCRDataStorage {
 		}
 		return Str;
 	}
+  
+  private Date[] ValuesToDate(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new Date[]{} ;
+  	Date[] dates = new Date[Val.length] ;
+  	for(int i = 0; i < Val.length; ++i) {
+  		dates[i] = Val[i].getDate().getTime() ;
+  	}
+  	return dates;
+  }
   
   public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception {
   	Node watchingNode = null;

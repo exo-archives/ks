@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -490,7 +491,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           return;
         }
         question_.setApproved(questionIsApproved) ;
-        question_.setDateResponse(date) ;
+        question_.setDateResponse(null) ;
       } else {
         question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
         question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;
@@ -508,11 +509,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       }
       question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
-      
-      System.out.println("\n\n\n\n---------------------->file attachment: " + questionForm.listFileAttach_.size());
-      for(FileAttachment attachment : questionForm.listFileAttach_){
-      	System.out.println("--------> file name:'" + attachment.getName() + "'");
-      }
       
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;

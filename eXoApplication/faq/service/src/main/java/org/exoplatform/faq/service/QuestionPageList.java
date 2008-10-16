@@ -18,6 +18,7 @@ package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -391,8 +392,8 @@ public class QuestionPageList extends JCRPageList {
     if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
     if(questionNode.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;
-    if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(questionNode.getProperty("exo:responseBy").getString()) ;   
-    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(questionNode.getProperty("exo:dateResponse").getDate().getTime()) ; 
+    if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(ValuesToStrings(questionNode.getProperty("exo:responseBy").getValues())) ;   
+    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(ValuesToDate(questionNode.getProperty("exo:dateResponse").getValues())) ; 
     List<FileAttachment> attList = new ArrayList<FileAttachment>() ;
     NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
@@ -453,6 +454,15 @@ public class QuestionPageList extends JCRPageList {
 		  Str[i] = Val[i].getString();
 		}
 		return Str;
+  }
+  
+  private Date[] ValuesToDate(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new Date[]{} ;
+  	Date[] dates = new Date[Val.length] ;
+  	for(int i = 0; i < Val.length; ++i) {
+  		dates[i] = Val[i].getDate().getTime() ;
+  	}
+  	return dates;
   }
   
   /**

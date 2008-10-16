@@ -19,6 +19,8 @@ package org.exoplatform.faq.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
@@ -234,14 +236,19 @@ public class MultiLanguages {
     }catch(Exception e) {
     	langNode = languagesNode.addNode(language.getLanguage(), NTUNSTRUCTURED) ;
     }
-    
-    java.util.Calendar calendar = new GregorianCalendar() ;
-    if(language.getDateResponse() != null)	calendar.setTime(language.getDateResponse()) ;
-    
     langNode.setProperty("exo:name", language.getQuestion()) ;
     langNode.setProperty("exo:responses", language.getResponse()) ;
     langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
-    langNode.setProperty("exo:dateResponse", calendar) ;
+    if(language.getDateResponse() != null) {
+    	java.util.Calendar calendar = new GregorianCalendar() ;
+    	List<Calendar> listCalendars = new ArrayList<Calendar>();
+    	for(Date date : language.getDateResponse()){
+	    	calendar = new GregorianCalendar() ;
+	    	calendar.setTime(date) ;
+	    	listCalendars.add(calendar);
+    	}
+    	langNode.setProperty("exo:dateResponse", (Value[]) listCalendars.toArray(new Calendar[]{})) ;
+    }
     questionNode.save() ;
   }
   
