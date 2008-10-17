@@ -586,7 +586,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   				responseForm.listDateResponse.add(date);
     			responseForm.listUserResponse.add(user);
   				formWYSIWYGInput.setValue("");
-  			} else if(!responseForm.listResponse.isEmpty() || responseForm.listResponse.size() != responseForm.posOfResponse + 1){
+  			} else if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() != responseForm.posOfResponse + 1){
   				responseForm.listResponse.remove(responseForm.posOfResponse);
   				responseForm.listUserResponse.remove(responseForm.posOfResponse);
   				responseForm.listDateResponse.remove(responseForm.posOfResponse);

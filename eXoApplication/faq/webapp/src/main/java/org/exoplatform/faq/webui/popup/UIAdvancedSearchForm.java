@@ -147,6 +147,10 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		addUIFormInput(toDate) ;
 	}
 	
+	public void setFAQSetting(FAQSetting faqSetting){
+		this.faqSetting_ = faqSetting;
+	}
+	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
@@ -206,17 +210,13 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   private List<Question> getResultListQuestion(String language,String question,String response,String text,List<Question> listResultQuesiton) throws Exception {
   	FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
   	FAQService faqService = FAQUtils.getFAQService() ;
-  	FAQUtils.getPorletPreference(faqSetting_);
   	String currentUser = FAQUtils.getCurrentUser() ;
-  	if(currentUser != null && currentUser.trim().length() > 0){
-			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser, faqSetting_);
-		}
   	SessionProvider sProvider = FAQUtils.getSystemProvider() ;
   	
   	if(language.equals(defaultLanguage_)) {
   		List<Question> listQuestionSearch = new ArrayList<Question>();
   		if(faqSetting_.getDisplayMode().equals("both")) {
-			  if(serviceUtils.isAdmin(currentUser)) {
+			  if(faqSetting_.getIsAdmin().equals("TRUE")) {
 			  	return listResultQuesiton ;
 				} else {
 					for(Question quest: listResultQuesiton) {
@@ -238,7 +238,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   				String categoryId = quest.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
 				  String[] moderator = category.getModeratorsCategory() ;
-				  if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+				  if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
 				  	if(quest.isApproved()) listQuestionSearch.add(quest) ;
 					} else {
 						if(quest.isApproved()&& quest.isActivated()) listQuestionSearch.add(quest) ;
@@ -260,7 +260,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   			listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestionSearchByLanguageTemp, language, question, response, sProvider) ;
   		}
   		if(faqSetting_.getDisplayMode().equals("both")) {
-	  		if(serviceUtils.isAdmin(currentUser)) {
+	  		if(faqSetting_.isAdmin()) {
 			  	return listQuestionSearchByLanguage ;
 				} else {
 					for(Question quest: listQuestionSearchByLanguage) {
@@ -282,7 +282,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   				String categoryId = quest.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryId, sProvider) ;
 				  String[] moderator = category.getModeratorsCategory() ;
-				  if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+				  if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
 				  	if(quest.isApproved()) listQuestionLanguage.add(quest) ;
 					} else {
 						if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;

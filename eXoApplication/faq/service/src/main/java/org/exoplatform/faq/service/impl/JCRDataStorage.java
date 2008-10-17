@@ -54,10 +54,13 @@ import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.notify.NotifyInfo;
+import org.exoplatform.faq.service.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.organization.Membership;
+import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
@@ -82,9 +85,14 @@ public class JCRDataStorage {
   private Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
   private NodeHierarchyCreator nodeHierarchyCreator_ ;
   private boolean isOwner = false ;
+  private final String ADMIN_="ADMIN".intern();
+  private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
+  
   public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
     nodeHierarchyCreator_ = nodeHierarchyCreator ;
   }  
+  
+  public JCRDataStorage() {}
   
   public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try{
@@ -93,6 +101,56 @@ public class JCRDataStorage {
 			e.printStackTrace() ;
 		}
 		
+	}
+  
+  public void addRolePlugin(ComponentPlugin plugin) throws Exception {
+		try {
+			if(plugin instanceof RoleRulesPlugin){
+				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+  
+  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+  	List<String> listOfUser = new ArrayList<String>();
+		listOfUser.add(userId);
+		String value = "";
+		String id = "";
+		Membership membership = null;
+		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
+			id = object.toString();
+			id = id.replace("Membership[", "").replace("]", "");
+			membership = organizationService_.getMembershipHandler().findMembership(id);
+			value = membership.getGroupId();
+			listOfUser.add(value);
+			value = membership.getMembershipType() + ":" + value;
+			listOfUser.add(value);
+		}
+		return listOfUser;
+  }
+  
+  private boolean hasPermission(List<String> listPlugin, List<String> listOfUser){
+  	for(String str : listPlugin){
+  		if(listOfUser.contains(str)) return true;
+  	}
+  	return false;
+  }
+	
+	public boolean isAdminRole(String userName) throws Exception {
+		try {
+			for(int i = 0; i < rulesPlugins_.size(); ++i) {
+				List<String> list = new ArrayList<String>();
+				list.addAll(rulesPlugins_.get(i).getRules(this.ADMIN_));
+				if(list.contains(userName)) return true;
+				return this.hasPermission(list, getAllGroupAndMembershipOfUser(userName));
+			}
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
+		return false ;
 	}
   
   public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception{

@@ -105,13 +105,12 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
-  public UIQuestionsInfo() throws Exception {
+  public UIQuestionsInfo(FAQSetting faqSetting) throws Exception {
     isEditTab_ = true ;
     isResponseTab_ = false ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_INTERATOR) ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
-    FAQUtils.getPorletPreference(faqSetting_);
-    faqService_.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
+    faqSetting_ = faqSetting;
     FAQUtils.getEmailSetting(faqSetting_, false, false);
     setListQuestion() ;
     setActions(new String[]{""}) ;
@@ -151,7 +150,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     String dept = "";
     
     FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-    boolean isAdmin = serviceUtils.isAdmin(FAQUtils.getCurrentUser());
+    boolean isAdmin = faqSetting_.isAdmin();
     List<String> listGroup = serviceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
     
     while (!listCate.isEmpty()) {
@@ -212,14 +211,13 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   }
   
   public void setListQuestion() throws Exception {
-    FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
     listQuestion_.clear() ;
     listQuestionNotYetAnswered_.clear() ;
     String user = FAQUtils.getCurrentUser() ;
     pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
     pageQuesNotAnswerIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
     SessionProvider sProvider = FAQUtils.getSystemProvider() ;
-    if(!serviceUtils.isAdmin(user)) {
+    if(!faqSetting_.isAdmin()) {
       List<String> listCateId = new ArrayList<String>() ;
       if(cateId.equals("All")){
 	      listCateId.addAll(faqService_.getListCateIdByModerator(user, sProvider)) ;

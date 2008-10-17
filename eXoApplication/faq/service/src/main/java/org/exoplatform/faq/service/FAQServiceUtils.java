@@ -37,32 +37,7 @@ import org.exoplatform.services.organization.User;
  * May 10, 2008, 4:26:37 PM
  */
 public class FAQServiceUtils {
-  String admin = "/platform/administrators" ;
-  String orgManager = "/organization/management/executive-board" ;
   private static OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  
-  /**
-   * Check user is administrator or is not administrator. The first, 
-   * get all addmins from groups addmin and organization management.
-   * Then check if current user is contained in these groups then return 
-   * <code>true</code> else return <code>false</code>
-   * 
-   * @param userName
-   * @return true if this user is administrator else false
-   */
-  @SuppressWarnings("unchecked")
-  public boolean isAdmin(String userName) {
-    try {
-      List<User> userList = organizationService_.getUserHandler().findUsersByGroup(admin).getAll() ;
-      userList.addAll(organizationService_.getUserHandler().findUsersByGroup(orgManager).getAll()) ;
-      for(User user : userList) {
-        if(user.getUserName().equals(userName)) return true ;
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return false ;
-  }
   
   /**
    * Get moderator in user,group,membership become list user

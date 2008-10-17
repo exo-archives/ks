@@ -114,7 +114,7 @@ public class UIQuestions extends UIContainer {
   public static String newPath_ = "" ;
   private String currentUser_ = "";
   private String link_ ="";
-	private static	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
   public boolean isChangeLanguage = false ;
   public List<String> listLanguage = new ArrayList<String>() ;
@@ -143,7 +143,13 @@ public class UIQuestions extends UIContainer {
     faqSetting_ = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting_);
 		if(currentUser_ != null && currentUser_.trim().length() > 0){
-			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser_, faqSetting_);
+			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
+				if(faqService_.isAdminRole(currentUser_)) faqSetting_.setIsAdmin("TRUE");
+				else faqSetting_.setIsAdmin("FALSE");
+			}
+			faqService_.getUserSetting(FAQUtils.getSystemProvider(), currentUser_, faqSetting_);
+		} else {
+			faqSetting_.setIsAdmin("FALSE");
 		}
 		addChild(UIQuickSearch.class, null, QUICK_SEARCH) ;
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
@@ -165,10 +171,10 @@ public class UIQuestions extends UIContainer {
 		try {
 			if(currentUser_ != null && currentUser_.trim().length() > 0){
 				FAQServiceUtils serviceUtils = new FAQServiceUtils();
-				if(serviceUtils.isAdmin(currentUser_)){
+				if(faqSetting_.getIsAdmin().equals("TRUE")){
 					faqSetting_.setCanEdit(true);
 				} else if(categoryId_ != null && categoryId_.trim().length() > 0 &&
-							Arrays.asList(faqService.getCategoryById(this.categoryId_, FAQUtils.getSystemProvider()).getModerators()).contains(currentUser_)){
+							Arrays.asList(faqService_.getCategoryById(this.categoryId_, FAQUtils.getSystemProvider()).getModerators()).contains(currentUser_)){
 					faqSetting_.setCanEdit(true);
 				} else {
 					faqSetting_.setCanEdit(false);
@@ -176,7 +182,7 @@ public class UIQuestions extends UIContainer {
 			}
 			String object = null;
 			if(pageList != null) object = pageList.getObjectRepare_();
-	    pageList = faqService.getListCatesAndQuesByCateId(this.categoryId_, FAQUtils.getSystemProvider(), this.faqSetting_);
+	    pageList = faqService_.getListCatesAndQuesByCateId(this.categoryId_, FAQUtils.getSystemProvider(), this.faqSetting_);
 	    pageList.setPageSize(10);
 	    if(object != null && object.trim().length() > 0) pageList.setObjectRepare_(object);
 	    pageIterator = this.getChildById(OBJECT_ITERATOR);
@@ -285,7 +291,7 @@ public class UIQuestions extends UIContainer {
   private void setIsModerators() {
     categoryModerators.clear() ;
     FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-    if(serviceUtils.isAdmin(currentUser_)) {
+    if(faqSetting_.getIsAdmin().equals("TRUE")) {
       canEditQuestion = true ;
       for(int i = 0 ; i < this.categories_.size(); i ++) {
         this.categoryModerators.add(true);
@@ -307,7 +313,7 @@ public class UIQuestions extends UIContainer {
       if(listCateId_.size() > 0){
         for(String cateIdProcess : listCateId_) {
           try {
-            if(Arrays.asList(faqService.getCategoryById(cateIdProcess, FAQUtils.getSystemProvider()).getModeratorsCategory()).contains(currentUser_)){
+            if(Arrays.asList(faqService_.getCategoryById(cateIdProcess, FAQUtils.getSystemProvider()).getModeratorsCategory()).contains(currentUser_)){
               for(int j = 0 ; j < categories_.size(); j ++) {
                 categoryModerators.add(true) ;
               }
@@ -360,7 +366,7 @@ public class UIQuestions extends UIContainer {
 	private long[] getCategoryInfo(String categoryId) {
     long[] result = new long[]{0, 0, 0, 0} ;
 	  try {
-      result = faqService.getCategoryInfo(categoryId, FAQUtils.getSystemProvider()) ;
+      result = faqService_.getCategoryInfo(categoryId, FAQUtils.getSystemProvider()) ;
 	  } catch (Exception e) {
       e.printStackTrace() ;
     }
@@ -421,7 +427,7 @@ public class UIQuestions extends UIContainer {
         quesLanguage.setDateResponse(question.getDateResponse());
         listQuestionLanguage.add(quesLanguage) ;
         
-        listQuestionLanguage.addAll(faqService.getQuestionLanguages(question.getId(), FAQUtils.getSystemProvider())) ;
+        listQuestionLanguage.addAll(faqService_.getQuestionLanguages(question.getId(), FAQUtils.getSystemProvider())) ;
         for(QuestionLanguage questionLanguage : listQuestionLanguage) {
           listLanguage.add(questionLanguage.getLanguage()) ;
         }
@@ -476,7 +482,7 @@ public class UIQuestions extends UIContainer {
   public String getQuestionRelationById(String questionId) {
     Question question = new Question();
     try {
-      question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider());
+      question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider());
       if(question != null) {
         return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
       } else {
@@ -524,7 +530,7 @@ public class UIQuestions extends UIContainer {
 
   public String getPathService(String categoryId) throws Exception {
   	String oldPath = "";
-		List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+		List<String> listPath = faqService_.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
     for(int i = listPath.size() -1 ; i >= 0; i --) {
     	oldPath = oldPath + "/" + listPath.get(i);
     }
@@ -552,14 +558,14 @@ public class UIQuestions extends UIContainer {
     Stack<Category> stackCate = new Stack<Category>() ;
     SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
     Category cate = null ;
-    listResult.add(faqService.getCategoryById(categoryId, sessionProvider)) ;
-    for(Category category : faqService.getSubCategories(categoryId, sessionProvider, this.faqSetting_)) {
+    listResult.add(faqService_.getCategoryById(categoryId, sessionProvider)) ;
+    for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_)) {
       stackCate.push(category) ;
     }
     while(!stackCate.isEmpty()) {
       cate = stackCate.pop() ;
       listResult.add(cate) ;
-      for(Category category : faqService.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_)) {
+      for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_)) {
         stackCate.push(category) ;
       }
     }
@@ -598,11 +604,11 @@ public class UIQuestions extends UIContainer {
 			UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
       if(!FAQUtils.isFieldEmpty(categoryId)) {
       	try {
-      		Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+      		Category cate = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
           String moderator[] = cate.getModeratorsCategory() ;
           String currentUser = FAQUtils.getCurrentUser() ;
           FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-          if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+          if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
           	uiPopupAction.activate(uiPopupContainer, 540, 320) ;
           	uiPopupContainer.setId("SubCategoryForm") ;
           	category.setParentId(categoryId) ;
@@ -638,7 +644,7 @@ public class UIQuestions extends UIContainer {
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       try {
-        faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider());
+        faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider());
       } catch (Exception e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -655,7 +661,7 @@ public class UIQuestions extends UIContainer {
               continue ;
             }
             try {
-              faqService.getCategoryById(path, FAQUtils.getSystemProvider());
+              faqService_.getCategoryById(path, FAQUtils.getSystemProvider());
               if(pathCate.trim().length() > 0) pathCate += "/" ;
               pathCate += path ;
             } catch (Exception pathExc) {
@@ -711,7 +717,7 @@ public class UIQuestions extends UIContainer {
       UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       try {
-        questions.viewAuthorInfor = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()).isViewAuthorInfor() ;
+        questions.viewAuthorInfor = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()).isViewAuthorInfor() ;
       } catch (Exception e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -744,11 +750,11 @@ public class UIQuestions extends UIContainer {
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			try {
-        Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+        Category cate = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-        if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+        if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
         	UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
     			uiPopupContainer.setId("EditCategoryForm") ;
           UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
@@ -781,11 +787,11 @@ public class UIQuestions extends UIContainer {
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			try {
 				SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-				Category cate = faqService.getCategoryById(categoryId, sessionProvider) ;
+				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-        if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+        if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
           List<Category> listCate = question.getAllSubCategory(categoryId) ;
           FAQSetting faqSetting = new FAQSetting();
           faqSetting.setDisplayMode(FAQUtils.DISPLAYBOTH);
@@ -793,13 +799,13 @@ public class UIQuestions extends UIContainer {
           faqSetting.setOrderType("asc");
         	for(Category category : listCate) {
           	String id = category.getId() ;
-          	List<Question> listQuestion = faqService.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider(), faqSetting).getAll() ;
+          	List<Question> listQuestion = faqService_.getAllQuestionsByCatetory(id, FAQUtils.getSystemProvider(), faqSetting).getAll() ;
           	for(Question ques: listQuestion) {
             	String questionId = ques.getId() ;
-            	faqService.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;
+            	faqService_.removeQuestion(questionId, FAQUtils.getSystemProvider()) ;
             }
           }
-          faqService.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
+          faqService_.removeCategory(categoryId, FAQUtils.getSystemProvider()) ;
           question.setIsNotChangeLanguage();
     			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         } else {
@@ -828,12 +834,12 @@ public class UIQuestions extends UIContainer {
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			try {
-				Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+				Category cate = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-        if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
-        	List<Category> listCate = faqService.getSubCategories(null, FAQUtils.getSystemProvider(), question.faqSetting_) ;
+        if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
+        	List<Category> listCate = faqService_.getSubCategories(null, FAQUtils.getSystemProvider(), question.faqSetting_) ;
         	String cateId = null ;
         	if(listCate.size() == 1 ) {
 		      	for(Category cat: listCate) { cateId = cat.getId(); }
@@ -877,11 +883,11 @@ public class UIQuestions extends UIContainer {
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       try {
-      	Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+      	Category cate = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-        if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+        if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
         	question.moveDownUp(event, -1);
         	question.isChangeLanguage = true;
     			event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
@@ -909,11 +915,11 @@ public class UIQuestions extends UIContainer {
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
       String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       try {
-      	Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+      	Category cate = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-        if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+        if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
         	question.moveDownUp(event, 1);
         	question.isChangeLanguage = true;
     			event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
@@ -963,7 +969,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
       try {
-        faqService.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
+        faqService_.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
       } catch (Exception e) {
         UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -988,17 +994,17 @@ public class UIQuestions extends UIContainer {
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			try {
-				Category cate = faqService.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
+				Category cate = faqService_.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-        if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+        if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
         	UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
     			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
     			UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
     			popupContainer.setId("WatchManager") ;
     			watchManager.setCategoryID(cateId) ;
-    			List<Watch> emailWatch = faqService.getListMailInWatch(cateId, FAQUtils.getSystemProvider()) ;
+    			List<Watch> emailWatch = faqService_.getListMailInWatch(cateId, FAQUtils.getSystemProvider()) ;
     			watchManager.setListWatch(emailWatch) ;
     			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         } else {
@@ -1049,11 +1055,11 @@ public class UIQuestions extends UIContainer {
 			try {
 				String newPath = questions.cutCaret(newPath_) ;
 				String pathService = questions.cutCaret(questions.getPathService(categoryId)) ;
-				Category cate = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+				Category cate = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
         String moderator[] = cate.getModeratorsCategory() ;
         String currentUser = FAQUtils.getCurrentUser() ;
         FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-        if(Arrays.asList(moderator).contains(currentUser) || serviceUtils.isAdmin(currentUser)) {
+        if(Arrays.asList(moderator).contains(currentUser) || questions.faqSetting_.isAdmin()) {
         	if (newPath.equals(pathService)) {
 		      	UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,550) ;  
 		        uiPopupContainer.setId("EditSubCategoryForm") ;
@@ -1117,7 +1123,7 @@ public class UIQuestions extends UIContainer {
       try{
         if(strId.indexOf("/") < 0) {
           questionId = strId ;
-          question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+          question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
           uiQuestions.backPath_ = "" ;
           for(int i = 0; i < uiQuestions.listQuestion_.size(); i ++) {
             if(uiQuestions.listQuestion_.get(i).getId().equals(uiQuestions.questionView_)) {
@@ -1135,20 +1141,20 @@ public class UIQuestions extends UIContainer {
             uiQuestions.backPath_ = uiQuestions.categoryId_ + "/" + uiQuestions.questionView_ ;
           }
           questionId = strId.split("/")[1] ;
-          question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+          question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
           String categoryId = question.getCategoryId();
           FAQSetting faqSetting = uiQuestions.faqSetting_ ;
           String currentUser = FAQUtils.getCurrentUser() ;
           FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-          Category category = faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+          Category category = faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
 				  String[] moderator = category.getModeratorsCategory() ;
 				  Boolean check = false ;
 				  if(faqSetting.getDisplayMode().equals("both")) {
-				  	if(serviceUtils.isAdmin(currentUser) || Arrays.asList(moderator).contains(currentUser) || question.isActivated()) {
+				  	if(uiQuestions.faqSetting_.isAdmin() || Arrays.asList(moderator).contains(currentUser) || question.isActivated()) {
 				  		check = true ;
 				  	}
 				  } else {
-				  	if(serviceUtils.isAdmin(currentUser)&&question.isApproved() || Arrays.asList(moderator).contains(currentUser)&&question.isApproved()
+				  	if(uiQuestions.faqSetting_.isAdmin() && question.isApproved() || Arrays.asList(moderator).contains(currentUser)&&question.isApproved()
 				  			|| question.isActivated()&&question.isApproved()) {
 				  		check = true ;
 		        }
@@ -1182,13 +1188,13 @@ public class UIQuestions extends UIContainer {
         List<String> listRelaId = new ArrayList<String>() ;
         for(String quesRelaId : question.getRelations()) {
           try {
-            faqService.getQuestionById(quesRelaId, FAQUtils.getSystemProvider()) ;
+            faqService_.getQuestionById(quesRelaId, FAQUtils.getSystemProvider()) ;
             listRelaId.add(quesRelaId) ;
           } catch (Exception e) { }
         }
         if(listRelaId.size() < question.getRelations().length) {
           question.setRelations(listRelaId.toArray(new String[]{})) ;
-          faqService.saveQuestion(question, false, FAQUtils.getSystemProvider(),uiQuestions.faqSetting_) ;
+          faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(),uiQuestions.faqSetting_) ;
           for(int i = 0 ; i < uiQuestions.getListQuestion().size() ; i ++) {
             if(uiQuestions.getListQuestion().get(i).getId().equals(questionId)) {
               uiQuestions.getListQuestion().set(i, question) ;
@@ -1225,7 +1231,7 @@ public class UIQuestions extends UIContainer {
       Question question2 = null ;
       String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
       try{
-        question2 = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider());
+        question2 = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider());
       } catch(javax.jcr.PathNotFoundException e) {
         UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1260,7 +1266,7 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       Question question = null ;
       try{
-        question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+        question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
       } catch(javax.jcr.PathNotFoundException e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1289,7 +1295,7 @@ public class UIQuestions extends UIContainer {
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       Question question = null ;
       try{
-        question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+        question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
       } catch (javax.jcr.PathNotFoundException e) {
         e.printStackTrace() ;
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -1318,7 +1324,7 @@ public class UIQuestions extends UIContainer {
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
       try {
-        faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+        faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
       } catch (javax.jcr.PathNotFoundException e) {
         UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1348,7 +1354,7 @@ public class UIQuestions extends UIContainer {
       Question question = null ;
       String categoryId = null ;
       try{
-        question = faqService.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+        question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
         categoryId = question.getCategoryId() ;
       } catch (Exception e) {
         UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;

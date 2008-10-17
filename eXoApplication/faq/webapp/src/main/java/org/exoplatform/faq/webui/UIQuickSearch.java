@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.popup.ResultQuickSearch;
@@ -61,20 +61,28 @@ public class UIQuickSearch  extends UIForm {
 	
 	public UIQuickSearch() throws Exception {
 		addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
+		FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		faqSetting_ = new FAQSetting();
+		String currentUser = FAQUtils.getCurrentUser() ;
+		FAQUtils.getPorletPreference(faqSetting_);
+		if(currentUser != null && currentUser.trim().length() > 0){
+			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
+				if(faqService_.isAdminRole(currentUser)) faqSetting_.setIsAdmin("TRUE");
+				else faqSetting_.setIsAdmin("FALSE");
+			}
+			faqService_.getUserSetting(FAQUtils.getSystemProvider(), currentUser, faqSetting_);
+		} else {
+			faqSetting_.setIsAdmin("FALSE");
+		}
 		this.setSubmitAction(this.event("Search")) ;
 	}
 	
 	public List<FAQFormSearch> getResultListQuickSearch(List<FAQFormSearch> formSearchs) throws Exception {
 		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
-		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-  	FAQService faqService = FAQUtils.getFAQService() ;
-  	FAQUtils.getPorletPreference(faqSetting_);
-  	String currentUser = FAQUtils.getCurrentUser() ;
-  	if(currentUser != null && currentUser.trim().length() > 0){
-			faqService.getUserSetting(FAQUtils.getSystemProvider(), currentUser, faqSetting_);
-		}
+		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		String currentUser = FAQUtils.getCurrentUser() ;
   	if(faqSetting_.getDisplayMode().equals("both")) {
-		  if(serviceUtils.isAdmin(currentUser)) {
+		  if(faqSetting_.isAdmin()) {
 		  	return formSearchs;
 		  } else {
 				for(FAQFormSearch faqSearch : formSearchs) {
@@ -107,7 +115,7 @@ public class UIQuickSearch  extends UIForm {
 				  String categoryIdOfQuestion = question.getCategoryId() ;
 				  Category category = faqService.getCategoryById(categoryIdOfQuestion, FAQUtils.getSystemProvider()) ;
 				  String[] moderator = category.getModeratorsCategory() ;
-				  if(Arrays.asList(moderator).contains(currentUser)|| serviceUtils.isAdmin(currentUser)) {
+				  if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
 				  	if(question.isApproved()) listQuickSearch.add(faqSearch) ;
 					} else {
 						if(question.isApproved()&& question.isActivated()) listQuickSearch.add(faqSearch) ;
@@ -163,6 +171,7 @@ public class UIQuickSearch  extends UIForm {
 			resultContainer.setIsRenderedContainer(1) ;
 			UIAdvancedSearchForm uiAdvancedSearchForm = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			resultContainer.setId("AdvanceSearchForm") ;
+			uiAdvancedSearchForm.setFAQSetting(uiForm.faqSetting_);
 			uiAdvancedSearchForm.setValue(false, false, false, false, false, false, false, false,false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

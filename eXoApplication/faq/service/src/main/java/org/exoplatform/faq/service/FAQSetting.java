@@ -31,6 +31,7 @@ public class FAQSetting {
 	private String orderBy ;
 	private String orderType ;
 	private boolean canEdit = false;
+	private String isAdmin = null;
 	
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
 	public static String DISPLAY_TYPE_POSTDATE = "created" ;
@@ -123,4 +124,18 @@ public class FAQSetting {
 	public void setEmailSettingSubject(String emailSettingSubject) {
   	this.emailSettingSubject = emailSettingSubject;
   }
+
+	public String getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(String isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+	
+	public boolean isAdmin(){
+		if(this.isAdmin.equals("TRUE")) return true;
+		else return false;
+	}
+	
 }
