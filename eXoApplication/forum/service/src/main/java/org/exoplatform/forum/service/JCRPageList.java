@@ -82,7 +82,16 @@ abstract public class JCRPageList {
 		populateCurrentPageSearch(page, list) ;
 		return currentListPage_ ;
 	}
-		
+
+	abstract protected void populateCurrentPageList(long page, List<String> list) throws Exception	 ;
+	public List getPageList(long page, List<String> list) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageList(page, list) ;
+		return currentListPage_ ;
+	}
+	
+	
+	
 	protected void checkAndSetPage(long page) throws Exception	{
 		if(page < 0 || page > availablePage_) {
 			Object[] args = { Long.toString(page), Long.toString(availablePage_) } ;
