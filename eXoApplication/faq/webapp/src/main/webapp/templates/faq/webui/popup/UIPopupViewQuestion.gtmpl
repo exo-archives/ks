@@ -19,25 +19,32 @@
 		<table class="UIFormGridTableForm">
 			<tbody>	
 				<% 
-		 						Question question = uicomponent.getViewQuestion() ; 
-								String qId = question.getId();
-								String content = question.getQuestion() ;
-								String responseBy = "..." ;
-								String date = "..." ;
-								String response = "<center><b>" + _ctx.appRes("UIPopupViewQuestion.title.not-answer")+ "</center></b>" ;
-								
-								if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
-									responseBy = question.getResponseBy() ;
-									Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
-								 	date = formatter.format(question.getDateResponse());
-									response = question.getResponses();
-								}
-							%>
+ 						Question question = uicomponent.getViewQuestion() ; 
+						String qId = question.getId();
+						String content = question.getQuestion() ;
+						String responseBy = "..." ;
+						String date = "..." ;
+						String response = "<center><b>" + _ctx.appRes("UIPopupViewQuestion.title.not-answer")+ "</center></b>" ;
+				%>
 				<div class="ResponseContent">
 					<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b></div>
 					<div class="Response" style="width: 97%;">$content</div>
-					<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
-					<div class="Response" id="SetWidthContent" style="width: 97%;">$response</div>
+					<% 
+					if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+							int countResponse = 0;
+							for(String res in question.getAllResponses()) {
+								responseBy = question.getResponseBy()[countResponse] ;
+								Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
+							 	date = formatter.format(question.getDateResponse()[countResponse]);
+								response = question.getResponses();
+								%> 
+								<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
+								<div class="Response" id="SetWidthContent" style="width: 97%;">$response</div>
+								<%
+								countResponse ++;
+							}
+						}
+					 %>
 					<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
 					<div class="AttachmentContent">
 					<%
@@ -65,17 +72,25 @@
 							    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
 							    	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 								    if(validate.isImage(fileName)) {
+								      String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath() ;
 							    %>
 							    	<div  style="float: left; margin-left: 5px;" id="divId${fileName}">
-								    	<div class="Image"><img id="imgView${fileName}" src="$linkImage" width="100" height="100" class="AttachmentFile"></div>
+								    	<div class="Image"><img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile"></div>
 					 						<div style="clear: left;"><span></span></div>
 					 						<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 						 						<div class="Size AttachmentLabel">$fileName ( $size )</div>
 						 						<div style="clear: left;"><span></span></div>
 						 						<div class="Action" style="padding-top: 0px;">
-						 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$linkImage'); "><%= _ctx.appRes("UIPopupViewQuestion.label.view"); %></div>
-						 							<div class="Icon Download"><a href="$linkImage"><%= _ctx.appRes("UIPopupViewQuestion.label.download"); %></a></div>
+						 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$attLink'); "><%= _ctx.appRes("UIPopupViewQuestion.label.view"); %></div>
+						 							<%
+														downloadAtt = uicomponent.event("DownloadAttach");
+													%>
+						 							<div class="Icon Download">
+						 								<a onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+							 							  <%= _ctx.appRes("UIPopupViewQuestion.label.download"); %>
+							 							</a>
+						 							</div>
 						 						</div>
 						 					</div>
 					 					</div>
