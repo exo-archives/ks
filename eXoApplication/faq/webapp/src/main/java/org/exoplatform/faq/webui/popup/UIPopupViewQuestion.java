@@ -29,6 +29,7 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupWindow;
@@ -47,6 +48,7 @@ import org.exoplatform.webui.form.UIForm;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/faq/webui/popup/UIPopupViewQuestion.gtmpl",
 		events = {
+			@EventConfig(listeners = UIPopupViewQuestion.DownloadAttachActionListener.class),
 			@EventConfig(listeners = UIPopupViewQuestion.CloseActionListener.class)
 		}
 )
@@ -87,6 +89,16 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
 	    e.printStackTrace();
     }
   	return question;
+  }
+  
+  public String getPortalName() {
+    PortalContainer pcontainer =  PortalContainer.getInstance() ;
+    return pcontainer.getPortalContainerInfo().getContainerName() ;  
+  }
+	
+	public String getRepository() throws Exception {
+    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
+    return rService.getCurrentRepository().getConfiguration().getName() ;
   }
   
   public String getQuestionRelationById(String questionId) {
@@ -153,6 +165,13 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+	
+	static public class DownloadAttachActionListener extends EventListener<UIPopupViewQuestion> {
+		public void execute(Event<UIPopupViewQuestion> event) throws Exception {
+			UIPopupViewQuestion uiViewQuestion = event.getSource() ; 
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiViewQuestion) ;
+		}
+	}
 	
 	static	public class CloseActionListener extends EventListener<UIPopupViewQuestion> {
 		public void execute(Event<UIPopupViewQuestion> event) throws Exception {
