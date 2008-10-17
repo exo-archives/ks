@@ -347,21 +347,23 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       UIFormWYSIWYGInput formWYSIWYGInput = responseForm.getChildById(RESPONSE_CONTENT) ;
       String responseQuestionContent = formWYSIWYGInput.getValue() ;
+      java.util.Date date = new java.util.Date();
       if(responseQuestionContent != null && responseQuestionContent.trim().length() >0 && validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
         if(!responseForm.listResponse.contains(responseQuestionContent)){
-					responseForm.listResponse.set(responseForm.posOfResponse, responseQuestionContent);
+        	responseForm.listResponse.set(responseForm.posOfResponse, responseQuestionContent);
+        	responseForm.listDateResponse.set(responseForm.posOfResponse, date);
         }
-      } else if(responseForm.listResponse.isEmpty()){
-      	UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ; 
       } else {
-    			responseForm.listResponse.remove(responseForm.posOfResponse);
+    	  responseForm.listResponse.remove(responseForm.posOfResponse);
+    	  responseForm.listDateResponse.remove(responseForm.posOfResponse);
       }
       
-      String user = FAQUtils.getFullName(FAQUtils.getCurrentUser()) ;
-      java.util.Date date = new java.util.Date();
+      if(responseForm.listResponse.isEmpty()){
+    	  UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          return ;
+      }
       
       if(question_.getLanguage().equals(responseForm.languageIsResponsed)) {
         question_.setQuestion(questionContent) ;
@@ -412,15 +414,15 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		    if(link.indexOf(portalName + "/" + selectedNode) < 0){
 		      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
 		    }									
-			}	
+      }	
       PortalRequestContext portalContext = Util.getPortalRequestContext();
       String url = portalContext.getRequest().getRequestURL().toString();
-			url = url.replaceFirst("http://", "") ;
-			url = url.substring(0, url.indexOf("/")) ;
-			url = "http://" + url;
-			String path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
-			link = link.replaceFirst("OBJECTID", path);
-			link = url + link;
+		url = url.replaceFirst("http://", "") ;
+		url = url.substring(0, url.indexOf("/")) ;
+		url = "http://" + url;
+		String path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
+		link = link.replaceFirst("OBJECTID", path);
+		link = url + link;
       question_.setLink(link) ;
       
       try{
