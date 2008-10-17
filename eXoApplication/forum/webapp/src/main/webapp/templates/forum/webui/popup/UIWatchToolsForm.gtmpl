@@ -4,6 +4,12 @@
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
+					<div style="overflow: auto; padding-bottom: 2px;">
+					<% 
+					  uiform.renderChild(uiform.WATCHTOOLS_ITERATOR);
+					%>
+					<div style="clear: right;"><span></span></div>
+					</div>
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 						<thead>
 							<tr>
