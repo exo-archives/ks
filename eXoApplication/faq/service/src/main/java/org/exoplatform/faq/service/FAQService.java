@@ -565,4 +565,15 @@ public interface FAQService {
   public QuestionPageList getListCatesAndQuesByCateId(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception;
 
   public NotifyInfo getMessageInfo(String name) throws Exception  ;
+  
+  public boolean isAdminRole(String userName) throws Exception ;
+  
+  /**
+   * Adds the plugin.
+ 	* 
+ 	* @param plugin the plugin
+ 	* 
+ 	* @throws Exception the exception
+ 	*/
+ 	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
 }

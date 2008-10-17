@@ -20,6 +20,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.web.application.RequestContext;
@@ -75,9 +76,10 @@ public class UIFAQPortlet extends UIPortletApplication {
         questions.setFAQSetting(faqSetting);
     	}*/
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+    	UIQuestions questions = getChild(UIFAQContainer.class).getChild(UIQuestions.class);
+  		FAQSetting faqSetting = questions.getFAQSetting();
     	if(getChild(UISettingForm.class) == null) {
-    		FAQServiceUtils serviceUtils = new FAQServiceUtils();
-    		if(serviceUtils.isAdmin(FAQUtils.getCurrentUser())){
+    		if(faqSetting.isAdmin()){
 	    		removeChild(UIFAQContainer.class);
 	    		removeChild(UIPopupAction.class);
 		    	UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");

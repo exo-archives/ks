@@ -85,13 +85,71 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     isResponseTab_ = false ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_INTERATOR) ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
-    FAQUtils.getPorletPreference(faqSetting_);
-    faqService_.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
-    FAQUtils.getEmailSetting(faqSetting_, false, false);
-    setListQuestion() ;
     setActions(new String[]{""}) ;
   }
   
+  public void setFAQSetting(FAQSetting setting) throws Exception{
+	  this.faqSetting_ = setting;
+	  FAQUtils.getEmailSetting(faqSetting_, false, false);
+	  setListQuestion() ;
+  }
+  
+  /*
+  //------------------------- these method will be used in version 1.1 :-----------------------------
+  
+  private boolean hasInGroup(List<String> listGroup, String[] listPermission){
+  	for(String per : listPermission){
+  		if(per!= null && per.trim().length() > 0 && listGroup.contains(per)) return true;
+  	}
+  	return false;
+  }
+  private void setListCate() throws Exception {
+  	WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+    ResourceBundle res = context.getApplicationResourceBundle() ;
+  	this.listCategories.add(new SelectItemOption<String>(res.getString("UIQuestionsInfo.label.All"), "All")) ;
+  	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  	SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+  	
+    List<Cate> listCate = new ArrayList<Cate>();
+    Cate parentCate = new Cate() ;
+    Cate childCate = new Cate() ;
+    
+    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_)) {
+      if(category != null) {
+        Cate cate = new Cate() ;
+        cate.setCategory(category) ;
+        cate.setDeft(0) ;
+        listCate.add(cate) ;
+      }
+    }
+    
+    String dept = "";
+    
+    FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+    boolean isAdmin = faqSetting_.isAdmin();
+    List<String> listGroup = serviceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
+    
+    while (!listCate.isEmpty()) {
+      parentCate = new Cate();
+      parentCate = listCate.get(0);
+      listCate.remove(0);
+      for(int i = 0; i < parentCate.getDeft(); i ++){
+      	dept += "  ";
+      }
+      if(isAdmin || hasInGroup(listGroup, parentCate.getCategory().getModerators()))
+      	this.listCategories.add(new SelectItemOption<String>(dept + parentCate.getCategory().getName(), parentCate.getCategory().getId())) ;
+      int i = 0;
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_)){
+        if(category != null) {
+          childCate = new Cate() ;
+          childCate.setCategory(category) ;
+          childCate.setDeft(parentCate.getDeft() + 1) ;
+          listCate.add(i ++, childCate) ;
+        }
+      }
+    }
+  }
+  */
   @SuppressWarnings("unused")
   private String[] getQuestionActions(){
     return new String[]{"AddLanguage", "Attachment", "Save", "Close"} ;
@@ -129,14 +187,13 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   }
   
   public void setListQuestion() throws Exception {
-    FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
     listQuestion_.clear() ;
     listQuestionNotYetAnswered_.clear() ;
     String user = FAQUtils.getCurrentUser() ;
     pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
     pageQuesNotAnswerIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
     SessionProvider sProvider = FAQUtils.getSystemProvider() ;
-    if(!serviceUtils.isAdmin(user)) {
+    if(!faqSetting_.isAdmin()) {
       List<String> listCateId = new ArrayList<String>() ;
       listCateId.addAll(faqService_.getListCateIdByModerator(user, sProvider)) ;
       int i = 0 ;

@@ -62,6 +62,10 @@ public class FAQServiceImpl implements FAQService{
 		jcrData_.addPlugin(plugin) ;
 	}
 	
+	public void addRolePlugin(ComponentPlugin plugin) throws Exception {
+		jcrData_.addRolePlugin(plugin) ;
+	}
+	
 	/**
 	 * This method get all the category
 	 * @param	 sProvider is session provider
@@ -580,4 +584,8 @@ public class FAQServiceImpl implements FAQService{
 	public NotifyInfo getMessageInfo(String name) throws Exception {
 		return jcrData_.getMessageInfo(name) ;
 	}
+	
+	public boolean isAdminRole(String userName) throws Exception {
+	  return jcrData_.isAdminRole(userName);
+  }
 }
