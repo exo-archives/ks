@@ -105,16 +105,19 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
-  public UIQuestionsInfo(FAQSetting faqSetting) throws Exception {
+  public UIQuestionsInfo() throws Exception {
     isEditTab_ = true ;
     isResponseTab_ = false ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_INTERATOR) ;
     addChild(UIFAQPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
-    faqSetting_ = faqSetting;
-    FAQUtils.getEmailSetting(faqSetting_, false, false);
-    setListQuestion() ;
     setActions(new String[]{""}) ;
-    setListCate();
+  }
+  
+  public void setFAQSetting(FAQSetting setting) throws Exception{
+	  this.faqSetting_ = setting;
+	  FAQUtils.getEmailSetting(faqSetting_, false, false);
+	  setListQuestion() ;
+	  setListCate();
     UIFormSelectBox selectCategory = new UIFormSelectBox(LIST_CATEGORIES, LIST_CATEGORIES, listCategories);
     selectCategory.setOnChange("ChangeCategory");
     this.addUIFormInput(selectCategory);

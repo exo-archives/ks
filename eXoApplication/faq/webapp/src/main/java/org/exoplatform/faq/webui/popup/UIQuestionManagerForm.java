@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -64,7 +65,10 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     setActions(new String[]{"Cancel"}) ;
   }
   
-  
+  public void setFAQSetting(FAQSetting setting) throws Exception{
+	  UIQuestionsInfo questionsInfo = this.getChildById(UI_QUESTION_INFO);
+	  questionsInfo.setFAQSetting(setting);
+  }
   
   @SuppressWarnings("unused")
   private boolean getIsEdit() {
