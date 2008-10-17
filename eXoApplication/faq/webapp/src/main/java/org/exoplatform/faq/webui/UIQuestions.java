@@ -574,7 +574,7 @@ public class UIQuestions extends UIContainer {
   
   public Boolean checkUserWatch(String categoryId) throws Exception {
   	if(!FAQUtils.isFieldEmpty(FAQUtils.getCurrentUser())){
-			List<Watch> listWatch = faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider()) ;
+			List<Watch> listWatch = faqService_.getListMailInWatch(categoryId, FAQUtils.getSystemProvider()) ;
 			if(listWatch.size()>0) {
 				List<String> users = new ArrayList<String>() ;
 				for(Watch watch : listWatch) {
@@ -946,19 +946,13 @@ public class UIQuestions extends UIContainer {
     	String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
     	UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
     	UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-    	UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 400) ;
 			watchContainer.setIsRenderedContainer(1) ;
 			UISettingForm uiSetting = watchContainer.getChild(UISettingForm.class) ;
 			uiSetting.setFaqSetting(question.faqSetting_);
-			popupContainer.setId("CategorySettingForm") ;
+			watchContainer.setId("CategorySettingForm") ;
 			uiSetting.init() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			
-//			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
-//			UISettingForm uiSetting = popupAction.activate(UISettingForm.class, 400) ;
-//      uiSetting.init() ;
-//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
   
@@ -1032,7 +1026,7 @@ public class UIQuestions extends UIContainer {
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			try {
-				Category cate = faqService.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
+				Category cate = faqService_.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
       } catch (Exception e) {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1040,7 +1034,7 @@ public class UIQuestions extends UIContainer {
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }
-      faqService.UnWatch(cateId, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser()) ;
+      faqService_.UnWatch(cateId, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser()) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 		}
 	}
