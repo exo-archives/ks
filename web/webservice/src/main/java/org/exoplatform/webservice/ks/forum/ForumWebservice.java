@@ -12,6 +12,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.MessageListBean;
 import org.exoplatform.forum.service.MessageBean ;
+import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.rest.CacheControl;
@@ -31,24 +32,25 @@ public class ForumWebservice implements ResourceContainer {
 
   protected final static String JSON_CONTENT_TYPE = "application/json";
 
-  private int max_count  = 5;
   public ForumWebservice() {}
   @HTTPMethod(HTTPMethods.GET)
-  @URITemplate("/ks/forum/getmessage/{username}/")
+  @URITemplate("/ks/forum/getmessage/{maxcount}/")
   @OutputTransformer(Bean2JsonOutputTransformer.class)
-  public Response getMessage(@URIParam("username") String userName) throws Exception {
+  public Response getMessage(@URIParam("maxcount") String maxcount) throws Exception {
+    int counter = 0 ;
+    try {
+      counter = Integer.parseInt(maxcount);
+    } catch (Exception e) {
+    }
     CacheControl cacheControl = new CacheControl();
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
-    JCRPageList pageList = forumService.getPrivateMessage(SessionProviderFactory.createSystemProvider(), userName, Utils.AGREEMESSAGE) ;
+    List<Post> list = forumService.getNewPosts(counter) ;
     List<MessageBean> lastMessages = new ArrayList<MessageBean>() ;
-    if(pageList != null) {
-      int count = 1 ;
-      for(Object obj : pageList.getPage(1)) {
-        if(count > max_count) break ;
-        lastMessages.add(new MessageBean((ForumPrivateMessage)obj)) ;
-        count ++ ;
+    if(!list.isEmpty()) {
+      for(Post post : list) {
+        lastMessages.add(new MessageBean(post)) ;
       }
     }
     return Response.Builder.ok(new MessageListBean(lastMessages), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();

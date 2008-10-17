@@ -860,4 +860,12 @@ public interface ForumService {
 	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception ;
 	public SendMessageInfo getMessageInfo(String name) throws Exception ;
 	public boolean isAdminRole(String userName) throws Exception ;
+  
+  /**
+   * Select number of lasted public post. 
+   * 
+   * @param in number number of post 
+   * @throws Exception the exception
+   */
+  public List<Post> getNewPosts(int number) throws Exception ;
 }
