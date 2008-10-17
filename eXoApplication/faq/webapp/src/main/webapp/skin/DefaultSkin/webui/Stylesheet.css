@@ -1231,6 +1231,11 @@
 	margin: 0px 3px;
 }
 
+.UIFAQPortlet .UnWatch {
+	background: url('background/DeleteWatch.gif') no-repeat left center;
+	padding: 10px 14px 9px 4px;
+}
+
 .UIFAQPortlet .LinkWatchIcon {
 	background: url(background/FAQPortlet.gif) no-repeat scroll left -466px;
 	height:17px;

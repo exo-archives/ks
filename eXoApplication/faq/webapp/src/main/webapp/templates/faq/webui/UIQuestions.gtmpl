@@ -159,7 +159,8 @@
 				
 				categoryId = category.getId();
 				String link = uicomponent.event("OpenCategory", categoryId) ;
-				String linkWacth = uicomponent.event("WatchManager", categoryId)
+				String linkWacth = uicomponent.event("WatchManager", categoryId);
+				String unWatch = uicomponent.event("UnWatch", categoryId);
 				//long[] cateInfo = uicomponent.getCategoryInfo(categoryId) ;
 				//long numberOfSubCate = cateInfo[0] ;
 				//long numberOfQuestion = cateInfo[1] ;
@@ -184,18 +185,21 @@
 							<a href="$link">
 								$categoryName
 							</a>
-						<% } %>
-						 
-						<% if(listCateModerator.get(i)) {
+						<% } 
+						 if(listCateModerator.get(i)) {
 									List emailWatch = uicomponent.getListWatch(categoryId) ;
 									if(emailWatch.size() > 0) {
 						%>
-						<a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
+							<a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
 						<%
-							} 
+							}
 						}
-						 %>
-						 <%if(titleCategorys.trim().length() > 0) {%>
+						if(uicomponent.checkUserWatch(categoryId)) {
+						%>
+							<a href="$unWatch" title="<%= _ctx.appRes("UIQuestions.title.un-watch"); %>" class="UnWatch">&nbsp;</a>
+						<%
+						}
+						if(titleCategorys.trim().length() > 0) {%>
 								<div style="clear: left"><span></span></div>
 								<div id="titleCategory$categoryId" class="categoryTitle">
 									$titleCategorys
