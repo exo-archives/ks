@@ -1459,7 +1459,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	private Post getPost(Node postNode) throws Exception {
+	protected Post getPost(Node postNode) throws Exception {
 		Post postNew = new Post();
 		postNew.setId(postNode.getName());
 		postNew.setPath(postNode.getPath());
