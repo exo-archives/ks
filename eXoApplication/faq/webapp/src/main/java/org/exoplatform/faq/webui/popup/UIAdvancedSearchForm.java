@@ -225,7 +225,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   	
   	if(language.equals(defaultLanguage_)) {
   		List<Question> listQuestionSearch = new ArrayList<Question>();
-  		System.out.println("===>:" + faqSetting_.getDisplayMode());
   		if(faqSetting_.getDisplayMode().equals("both")) {
 			  if(faqSetting_.getIsAdmin().equals("TRUE")) {
 			  	return listResultQuesiton ;
