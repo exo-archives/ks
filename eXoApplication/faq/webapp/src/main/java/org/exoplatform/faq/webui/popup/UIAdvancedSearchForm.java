@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
@@ -96,6 +97,19 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	private FAQSetting faqSetting_ = new FAQSetting() ;
 	private String defaultLanguage_ = new String() ;
 	public UIAdvancedSearchForm() throws Exception {
+		FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		faqSetting_ = new FAQSetting();
+		String currentUser = FAQUtils.getCurrentUser() ;
+		FAQUtils.getPorletPreference(faqSetting_);
+		if(currentUser != null && currentUser.trim().length() > 0){
+			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
+				if(faqService_.isAdminRole(currentUser)) faqSetting_.setIsAdmin("TRUE");
+				else faqSetting_.setIsAdmin("FALSE");
+			}
+			faqService_.getUserSetting(FAQUtils.getSystemProvider(), currentUser, faqSetting_);
+		} else {
+			faqSetting_.setIsAdmin("FALSE");
+		}
 		UIFormStringInput text = new UIFormStringInput(FIELD_TEXT, FIELD_TEXT, null) ;
 		List<String> listLanguage = new ArrayList<String>() ;
     LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
@@ -147,10 +161,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		addUIFormInput(response) ;
 		addUIFormInput(fromDate) ;
 		addUIFormInput(toDate) ;
-	}
-	
-	public void setFAQSetting(FAQSetting faqSetting){
-		this.faqSetting_ = faqSetting;
 	}
 	
 	public void activate() throws Exception {}
@@ -215,6 +225,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
   	
   	if(language.equals(defaultLanguage_)) {
   		List<Question> listQuestionSearch = new ArrayList<Question>();
+  		System.out.println("===>:" + faqSetting_.getDisplayMode());
   		if(faqSetting_.getDisplayMode().equals("both")) {
 			  if(faqSetting_.getIsAdmin().equals("TRUE")) {
 			  	return listResultQuesiton ;
@@ -376,7 +387,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 700) ;
+			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 750) ;
 			UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
 			if(type.equals("faqCategory")) {
