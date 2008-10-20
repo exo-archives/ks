@@ -147,7 +147,7 @@ public class UIQuickSearch  extends UIForm {
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearch.msg.failure", null, ApplicationMessage.WARNING)) ;
 					return ;
 				}
-				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 700) ;
+				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 750) ;
 				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
 				popupContainer.setId("ResultQuickSearch") ;
 				List<FAQFormSearch> listQuickSearch = uiQuickSearch.getResultListQuickSearch(list) ;
@@ -171,7 +171,6 @@ public class UIQuickSearch  extends UIForm {
 			resultContainer.setIsRenderedContainer(1) ;
 			UIAdvancedSearchForm uiAdvancedSearchForm = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			resultContainer.setId("AdvanceSearchForm") ;
-			uiAdvancedSearchForm.setFAQSetting(uiForm.faqSetting_);
 			uiAdvancedSearchForm.setValue(false, false, false, false, false, false, false, false,false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
