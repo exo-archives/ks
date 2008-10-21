@@ -527,7 +527,7 @@
 										</div>
 										
 										<div class="ResponseContent">
-											<div class="Response" id="SetWidthContent" style="padding-left:0px;">
+											<div class="Response" id="SetWidthContent" style="padding-left:0px; _width: 98%;" >
 												<%
 												if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 													int countResponse = 0;
