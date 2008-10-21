@@ -62,13 +62,9 @@ UIFAQPortlet.prototype.showPicture = function(src) {
   containerNode.appendChild(imageNode) ;
   containerNode.setAttribute('title', 'Click to close') ;
   containerNode.onclick = eXo.faq.UIFAQPortlet.hidePicture ;
-  maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
-  eXo.core.Browser.addOnScrollCallback('MaskLayerControl', this.scrollHandler) ;
+  var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
+  eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
 };
-
-UIFAQPortlet.prototype.scrollHandler = function(){
-  eXo.core.UIMaskLayer.object.style.top = document.body.scrollTop + 'px' ;
-} ;
 
 UIFAQPortlet.prototype.showMenu = function(obj, evt){
   var menu = eXo.core.DOMUtil.findFirstDescendantByClass(obj, "div", "UIRightClickPopupMenu") ;
