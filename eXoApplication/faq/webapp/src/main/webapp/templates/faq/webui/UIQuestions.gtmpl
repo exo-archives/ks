@@ -580,7 +580,7 @@
 														    %>
 															    	<div style="float: left; margin: 10px 0px 0px 10px;" id="divId${fileName}">
 																    	<div class="Image">
-																    		<a href="javaScript:void(0);" onclick="eXo.faq.UIFAQPortlet.showPicture('$attLink'); ">
+																    		<a href="javaScript:void(0);" onclick="eXo.faq.UIFAQPortlet.showPicture(this); ">
 																    			<img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile">
 																    		</a>
 																    	</div>
