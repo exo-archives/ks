@@ -288,9 +288,13 @@ public class UITopicDetail extends UIForm {
 	
 	@SuppressWarnings("unused")
 	private String getIdPostView() {
-		if(this.IdPostView.equals("true")){
+		if(this.IdPostView.equals("lastpost")){
 			this.IdPostView = "normal" ;
 			return this.IdLastPost ;
+		}
+		if(this.IdPostView.equals("top")){
+			this.IdPostView = "normal" ;
+			return "top" ;
 		}
 		String temp = this.IdPostView ;
 		this.IdPostView = "normal" ;
@@ -425,7 +429,7 @@ public class UITopicDetail extends UIForm {
 			pageList.setPageSize(this.maxPost);
 			UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
 			forumPageIterator.updatePageList(this.pageList);
-			if (IdPostView.equals("true")) {
+			if (IdPostView.equals("lastpost")) {
 				forumPageIterator.setSelectPage(pageList.getAvailablePage());
 			}
 			this.isModeratePost = this.topic.getIsModeratePost();
@@ -1301,9 +1305,9 @@ public class UITopicDetail extends UIForm {
 						uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING)) ;
 					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					topicDetail.IdPostView = "false";
+					topicDetail.IdPostView = "normal";
 				} else {
-					topicDetail.IdPostView = "true";
+					topicDetail.IdPostView = "lastpost";
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			}else {

@@ -412,9 +412,9 @@ public class UITopicContainer extends UIForm {
 					uiTopicDetail.setGetTopic(true) ;
 				}
 				if(temp[2].equals("true")) {
-					uiTopicDetail.setIdPostView("true") ;
+					uiTopicDetail.setIdPostView("lastpost") ;
 				} else {
-					uiTopicDetail.setIdPostView("false") ;
+					uiTopicDetail.setIdPostView("top") ;
 				}
 				JCRPageList pageList = uiTopicContainer.getPageListPost(temp[0]) ;
 				long page = Long.parseLong(temp[1]) ;

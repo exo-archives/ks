@@ -231,7 +231,7 @@ public class UIPageListTopicByUser extends UIContainer{
 				uiTopicDetail.setUpdateForum(forum) ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));
-				uiTopicDetail.setIdPostView("normal") ;
+				uiTopicDetail.setIdPostView("top") ;
 				forumPortlet.cancelAction() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			}

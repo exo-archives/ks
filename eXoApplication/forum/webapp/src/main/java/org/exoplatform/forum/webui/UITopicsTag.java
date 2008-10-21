@@ -219,9 +219,9 @@ public class UITopicsTag extends UIForm {
 			uiTopicDetail.setUpdateForum(forum);
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(temp[temp.length-3], temp[temp.length-2], topic) ;
 			if(id[2].equals("true")) {
-				uiTopicDetail.setIdPostView("true") ;
+				uiTopicDetail.setIdPostView("lastpost") ;
 			} else {
-				uiTopicDetail.setIdPostView("false") ;
+				uiTopicDetail.setIdPostView("top") ;
 			}
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(temp[temp.length-3] + "/" + temp[temp.length-2] + "");
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;

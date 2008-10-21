@@ -23,6 +23,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.webui.popup.UIListTopicOld;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -112,6 +113,10 @@ public class UIForumPageIterator extends UIContainer {
 	static public class GoPageActionListener extends EventListener<UIForumPageIterator> {
 		public void execute(Event<UIForumPageIterator> event) throws Exception {
 			UIForumPageIterator forumPageIterator = event.getSource() ;
+			if((UIComponent)forumPageIterator.getParent() instanceof UITopicDetail) {
+				UITopicDetail topicDetail = forumPageIterator.getParent();
+				topicDetail.setIdPostView("top") ;
+			}
 			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
 			long maxPage = forumPageIterator.pageList.getAvailablePage() ;
 			long presentPage	= forumPageIterator.page ;
