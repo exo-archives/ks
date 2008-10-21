@@ -467,18 +467,25 @@ UIForumPortlet.prototype.onClickSlidebarButton = function() {
 		}
 	}
 };
-UIForumPortlet.prototype.reSizeImages = function() {
-	eXo.forum.UIForumPortlet.setSizeImages(225);
+UIForumPortlet.prototype.reSizeImgViewPost = function() {
+	setTimeout('eXo.forum.UIForumPortlet.setSizeImages(10, "SizeImage")', 1000);
 };
-UIForumPortlet.prototype.setSizeImages = function(delta) {
-	var topicDetailContainer = document.getElementById('UITopicDetailContainer');
-	if(topicDetailContainer) {
+UIForumPortlet.prototype.reSizeImgViewTopic = function() {
+	setTimeout('eXo.forum.UIForumPortlet.setSizeImages(225, "SizeImage")', 1000);
+};
+UIForumPortlet.prototype.reSizeImages = function() {
+	setTimeout('eXo.forum.UIForumPortlet.setSizeImages(225, "UITopicDetail")', 500);
+};
+UIForumPortlet.prototype.setSizeImages = function(delta, classParant) {
+	var parent_ = document.getElementById(classParant);
+	var imageContentContainer = eXo.core.DOMUtil.findFirstDescendantByClass(parent_, "div", "ImageContentContainer");
+	if(imageContentContainer) {
 		var isDesktop = document.getElementById('UIPageDesktop') ;
 		if(!isDesktop){
-	    var max_width = topicDetailContainer.offsetWidth - delta ;
+	    var max_width = imageContentContainer.offsetWidth - delta ;
 	    var max = max_width;
 	    if(max_width > 600) max = 600;
-	    var images_ =  topicDetailContainer.getElementsByTagName("img");
+	    var images_ =  imageContentContainer.getElementsByTagName("img");
 	    for(var i=0; i<images_.length; i++){
 	    	var img =  new Image();
 	      img.src = images_[i].src;

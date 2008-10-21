@@ -54,8 +54,8 @@
 
 .UIViewPost .AttachmentContainer .AttachmentBox {
 	float: left;
-	padding: 15px;
-	width: 40%;
+	padding: 10px 0px 10px 5px;
+	width: 45%;
 }
 
 .UIViewPost .AttachmentContainer .LabelBox {

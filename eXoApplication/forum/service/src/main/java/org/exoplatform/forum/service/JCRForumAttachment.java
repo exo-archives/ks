@@ -38,7 +38,7 @@ public class JCRForumAttachment extends ForumAttachment {
 	public InputStream getInputStream() throws Exception {
 		Node attachment ;
 		try{
-			attachment = (Node)getSesison().getItem(getId()) ;			
+			attachment = (Node)getSesison().getItem(getPathNode()) ;			
 		}catch (Exception e) {
 			return null ;
 		}

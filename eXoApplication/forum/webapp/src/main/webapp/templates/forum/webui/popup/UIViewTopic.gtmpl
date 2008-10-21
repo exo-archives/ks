@@ -1,19 +1,29 @@
 <%
+  import org.exoplatform.web.application.JavascriptManager;
+	import org.exoplatform.services.organization.User;
+	import org.exoplatform.forum.service.UserProfile;
+  import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.webui.UIForumPageIterator;	
 	import org.exoplatform.forum.service.Post;
 	import org.exoplatform.forum.service.user.ForumContact;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.ForumSessionUtils;
-	import org.exoplatform.forum.service.UserProfile;
-	import org.exoplatform.services.organization.User;
+	
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
+	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImgViewTopic');
+	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.reSizeImgViewTopic');
 %>
-<div class="UIViewTopic UITopicDetail">
+<div class="UIViewTopic UITopicDetail" id="SizeImage">
 	<% uiform.begin() %>
 <%	
 	uicomponent.initPage() ;
+	Topic topic = uicomponent.getTopic();
 	List posts = uicomponent.getPostPageList();
 	UserProfile userProfile = uicomponent.getUserProfile() ;
+	boolean isModeratePost = topic.getIsModeratePost() ;
 %>
 	<div class="ViewTopicContainer">
 		<div class="ViewTopicPageIterator">
@@ -24,6 +34,7 @@
 				<div style="clear: right;"><span></span></div>
 			<%} %>
 		</div>
+	  <div class="ImageContentContainer">
 	<%	
 		String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 		String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
@@ -58,16 +69,32 @@
 			
 			String idMessage = "Id" + post.getId().substring(15);
 			User user = ForumSessionUtils.getUserByUserId(owner) ; 
-			Date userCreated = user.getCreatedDate() ;
-			String joinDate = ForumUtils.getFormatDate("DDD yyyy", userCreated) ;
-			String isHedden = "" ;
+			//User user = userInfo.getUser() ;
+			String joinDate = ""; 
+			if(user != null){
+				Date userCreated = user.getCreatedDate() ;
+				joinDate = ForumUtils.getFormatDate(shortDateFormat, userCreated) ;
+			}
+			String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
+			boolean isAnd = false ;
 			if(post.getIsHidden()) {
-				isHedden = "(<span style='color:#f77617;'>This post is hidden!</span>)" ;
+				alert = alert + _ctx.appRes("UITopicDetail.label.PostHidden");
+				isAnd = true;
 			}
-			String privatePost = "";
 			if(post.getUserPrivate().length > 1){
-				privatePost = "(<span style='color:blue;font-weight:normal;'>This post is Private !</span>)" ;
+				if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPrivate");
+				else alert = alert + _ctx.appRes("UITopicDetail.label.PostPrivate");
+				isAnd = true;
 			}
+			if(isModeratePost) {
+				if(!post.getIsApproved()) {
+					if(isAnd) alert = alert + _ctx.appRes("UITopicDetail.label.AndPendingApproval");
+					else alert = alert + _ctx.appRes("UITopicDetail.label.PostPendingApproval");
+					isAnd = true;
+				}
+			}
+			if(isAnd) alert = alert + "!</span>) "
+			else alert = " " ;
 	%>
 		<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
 			<table class="TablePost" cellspacing="0" borderspacing="0">
@@ -92,29 +119,30 @@
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
+									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
-								<img src="$avatarUrl" class="Img" onload ="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+								<img src="$avatarUrl" class="ImgAvatar" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="125px"/>
 								<% } %>
 								<div class="InfoMember">
-									<div>Join Date: $joinDate</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
 											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat,lastPostOfUser) ;
 									%>
-									<div>Posts: $totalPost</div>
-									<div>Last Post: $lastPostDateOfUser</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
 									<% } else {%>
-									<div><strong>$owner</strong> has no post!</div>
+									<div><strong>$owner</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
 									<% } 
 									 if(!ForumUtils.isEmpty(location)) {
 									%>
-									<div>Location: location</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
 									<%} 
 										String lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, userInfo.getLastLoginDate()) ;
 									%>
-									<div>Last Login: $lastLoginUser</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
 								</div>
 							</div>
 						</td>
@@ -125,7 +153,7 @@
 							
 							<div class="PostViewHeader">
 								<div class="PostViewTitle">
-									<div class="PostViewIcon $classIconPost">$namePost $isHedden $privatePost</div>
+									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
 									<div class="PostTime">Posted: $createdDate</div>
 								</div>
 							</div>
@@ -163,6 +191,7 @@
 			</table>
 		</div>
 		<% } %>
+	</div>
 		<div class="ViewTopicPageIterator">
 			<% 
 			if(uicomponent.getIsRenderIter()) {

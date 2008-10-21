@@ -982,7 +982,8 @@ public class JCRDataStorage {
 						if (node.isNodeType("nt:file")) {
 							JCRForumAttachment attachment = new JCRForumAttachment();
 							nodeFile = node.getNode("jcr:content");
-							attachment.setId(node.getPath());
+							attachment.setId(node.getName());
+							attachment.setPathNode(node.getPath());
 							attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
 							attachment.setName(node.getProperty("exo:fileName").getString());
 							String workspace = node.getSession().getWorkspace().getName() ;
@@ -1115,6 +1116,7 @@ public class JCRDataStorage {
 			topicNode = forumNode.addNode(topic.getId(), "exo:topic");
 			topicNode.setProperty("exo:id", topic.getId());
 			topicNode.setProperty("exo:path", forumId);
+			topicNode.setProperty("exo:owner", topic.getOwner());
 			topicNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			topicNode.setProperty("exo:lastPostBy", topic.getLastPostBy());
 			topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
@@ -1191,7 +1193,6 @@ public class JCRDataStorage {
 		} else {
 			topicNode = forumNode.getNode(topic.getId());
 		}
-		topicNode.setProperty("exo:owner", topic.getOwner());
 		topicNode.setProperty("exo:name", topic.getTopicName());
 		topicNode.setProperty("exo:modifiedBy", topic.getModifiedBy());
 		topicNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
@@ -1502,7 +1503,8 @@ public class JCRDataStorage {
 					if (node.isNodeType("nt:file")) {
 						JCRForumAttachment attachment = new JCRForumAttachment();
 						nodeFile = node.getNode("jcr:content");
-						attachment.setId(node.getPath());
+						attachment.setId(node.getName());
+						attachment.setPathNode(node.getPath());
 						attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
 						attachment.setName(node.getProperty("exo:fileName").getString());
 						String workspace = node.getSession().getWorkspace().getName() ;
@@ -1603,8 +1605,7 @@ public class JCRDataStorage {
 		Node postAttachmentNode = null;
 		while (postAttachments.hasNext()) {
 			postAttachmentNode = postAttachments.nextNode();
-			if (listFileName.contains(postAttachmentNode.getName()))
-				continue;
+			if (listFileName.contains(postAttachmentNode.getName()))continue;
 			postAttachmentNode.remove();
 		}
 		if (isNew) {
