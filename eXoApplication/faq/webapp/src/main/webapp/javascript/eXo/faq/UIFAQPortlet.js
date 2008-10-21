@@ -50,20 +50,22 @@ UIFAQPortlet.prototype.hidePicture = function() {
   eXo.core.Browser.onScrollCallback.remove('MaskLayerControl') ;
   var maskContent = eXo.core.UIMaskLayer.object ;
   var maskNode = document.getElementById("MaskLayer") || document.getElementById("subMaskLayer") ;
-  if (maskContent) maskContent.parentNode.removeChild(maskContent) ;
-  if (maskNode) maskNode.parentNode.removeChild(maskNode) ;
+  if (maskContent) eXo.core.DOMUtil.removeElement(maskContent) ;
+  if (maskNode) eXo.core.DOMUtil.removeElement(maskNode) ;
 } ;
 
-UIFAQPortlet.prototype.showPicture = function(src) {
+UIFAQPortlet.prototype.showPicture = function(obj) {
   var containerNode = document.createElement('div') ;
-  var imageNode = document.createElement('img') ;
-  imageNode.src = src ;
-  imageNode.setAttribute('alt', src) ;
+	var imageNode = eXo.core.DOMUtil.findFirstDescendantByClass(obj,"img","AttachmentFile") ;
+	imageNodeSrc = imageNode.cloneNode(true);
+	imageNode.style.width = "auto" ;
+	imageNode.style.height = "100%" ;
   containerNode.appendChild(imageNode) ;
   containerNode.setAttribute('title', 'Click to close') ;
   containerNode.onclick = eXo.faq.UIFAQPortlet.hidePicture ;
   var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
   eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
+	obj.appendChild(imageNodeSrc);
 };
 
 UIFAQPortlet.prototype.showMenu = function(obj, evt){

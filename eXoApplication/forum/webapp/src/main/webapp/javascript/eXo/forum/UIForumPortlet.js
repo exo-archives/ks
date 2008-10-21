@@ -336,8 +336,8 @@ UIForumPortlet.prototype.hidePicture = function() {
   eXo.core.Browser.onScrollCallback.remove('MaskLayerControl') ;
   var maskContent = eXo.core.UIMaskLayer.object ;
   var maskNode = document.getElementById("MaskLayer") || document.getElementById("subMaskLayer") ;
-  if (maskContent) maskContent.parentNode.removeChild(maskContent) ;
-  if (maskNode) maskNode.parentNode.removeChild(maskNode) ;
+  if (maskContent) eXo.core.DOMUtil.removeElement(maskContent) ;
+  if (maskNode) eXo.core.DOMUtil.removeElement(maskNode) ;
 } ;
 
 UIForumPortlet.prototype.showPicture = function(src) {
