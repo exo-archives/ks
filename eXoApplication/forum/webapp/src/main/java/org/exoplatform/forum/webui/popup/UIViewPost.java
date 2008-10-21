@@ -20,12 +20,14 @@ import java.io.InputStream;
 
 import javax.jcr.PathNotFoundException;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -44,7 +46,8 @@ import org.exoplatform.webui.form.UIForm;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/forum/webui/popup/UIViewPost.gtmpl",
 		events = {
-			@EventConfig(listeners = UIViewPost.CloseActionListener.class, phase = Phase.DECODE)
+			@EventConfig(listeners = UIViewPost.CloseActionListener.class, phase = Phase.DECODE),
+			@EventConfig(listeners = UIViewPost.DownloadAttachActionListener.class, phase = Phase.DECODE)
 		}
 )
 public class UIViewPost extends UIForm implements UIPopupComponent {
@@ -58,6 +61,14 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
 	
+	public String getPortalName() {
+    PortalContainer pcontainer =  PortalContainer.getInstance() ;
+    return pcontainer.getPortalContainerInfo().getContainerName() ;  
+  }
+  public String getRepository() throws Exception {
+    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
+    return rService.getCurrentRepository().getConfiguration().getName() ;
+  }
 	@SuppressWarnings("unused")
 	private String getFileSource(ForumAttachment attachment) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
@@ -69,7 +80,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			return null;
 		}
 	}
-	
+
 	public void setPostView(Post post) throws Exception {
 		this.post = post ;
 	}
@@ -84,6 +95,13 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	
 	public void setViewUserInfo(boolean isView){ this.isViewUserInfo = isView ;}
 	public boolean getIsViewUserInfo(){ return this.isViewUserInfo ;}
+	
+	static public class DownloadAttachActionListener extends EventListener<UIViewPost> {
+		public void execute(Event<UIViewPost> event) throws Exception {
+			UIViewPost viewPost = event.getSource() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(viewPost) ;
+		}
+	}
 	
 	static	public class CloseActionListener extends EventListener<UIViewPost> {
 		public void execute(Event<UIViewPost> event) throws Exception {

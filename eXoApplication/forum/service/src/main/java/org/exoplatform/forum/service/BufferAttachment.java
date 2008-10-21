@@ -39,7 +39,7 @@ public class BufferAttachment extends ForumAttachment {
   	if(bytes != null )return new ByteArrayInputStream(bytes) ; 
   	Node attachment ;
 		try{
-			attachment = (Node)getSesison().getItem(getId()) ;			
+			attachment = (Node)getSesison().getItem(getPathNode()) ;			
 		}catch (Exception e) {
 			return null ;
 		}

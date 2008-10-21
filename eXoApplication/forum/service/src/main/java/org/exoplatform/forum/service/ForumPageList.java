@@ -211,7 +211,8 @@ public class ForumPageList extends JCRPageList {
 					if (node.isNodeType("nt:file")) {
 						JCRForumAttachment attachment = new JCRForumAttachment();
 						nodeFile = node.getNode("jcr:content");
-						attachment.setId(node.getPath());
+						attachment.setId(node.getName());
+						attachment.setPathNode(node.getPath());
 						attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
 						attachment.setName(node.getProperty("exo:fileName").getString());
 						String workspace = node.getSession().getWorkspace().getName() ;
@@ -279,7 +280,8 @@ public class ForumPageList extends JCRPageList {
 						if (node.isNodeType("nt:file")) {
 							JCRForumAttachment attachment = new JCRForumAttachment();
 							nodeFile = node.getNode("jcr:content");
-							attachment.setId(node.getPath());
+							attachment.setId(node.getName());
+							attachment.setPathNode(node.getPath());
 							attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
 							attachment.setName(node.getProperty("exo:fileName").getString());
 							String workspace = node.getSession().getWorkspace().getName() ;

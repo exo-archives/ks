@@ -15,7 +15,9 @@
 					String link = "";
 					String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 					String portalName = "/" + Util.getUIPortal().getName() ;
+					String checkPath = "";
 					for(namePath in uicomponent.getBreadcumbs()) {
+					  checkPath = namePath;
 						link = uicomponent.url("ChangePath", uicomponent.getPath(t)) ;
 						if(link.indexOf(portalName) > 0) {
 							if(link.indexOf(portalName + "/" + selectedNode) < 0){
@@ -112,7 +114,7 @@
 					<% if(uicomponent.userProfile.getUserRole() <= 1){ %>
 						<div style="clear: right"><span></span></div>
 					<%}
-					} else {%>
+					} else if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)){%>
 					<div class="SeparatorLine">
 						<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></div>
 					</div>	

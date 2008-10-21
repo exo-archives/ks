@@ -30,6 +30,7 @@ abstract public class ForumAttachment {
 	private String id ;
 	private String name ;
 	private String mimeType ;
+	private String pathNode ;
 	private String path ;
 	private long size ;
 	private String workspace ;
@@ -53,6 +54,9 @@ abstract public class ForumAttachment {
 
 	public String getPath() { return path; }
 	public void setPath(String path) { this.path = path; }
+
+	public String getPathNode() { return pathNode; }
+	public void setPathNode(String pathNode) { this.pathNode = pathNode; }
 
 	//TODO: should not have	Session in the api
 	public abstract InputStream getInputStream() throws Exception ;

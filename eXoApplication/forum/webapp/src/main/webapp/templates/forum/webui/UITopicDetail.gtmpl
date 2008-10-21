@@ -202,7 +202,7 @@
 		<div style="clear: left;"><span></span></div>
 	</div>
 <!-- Start PostsInThreadContainer -->	
-	<div class="PostsInThreadContainer">
+	<div class="PostsInThreadContainer ImageContentContainer">
 		<div class="ForumToolbar">
 			<div class="LeftBar">
 				<div class="RightBar">
