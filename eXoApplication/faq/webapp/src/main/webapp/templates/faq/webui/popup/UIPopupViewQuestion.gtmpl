@@ -9,8 +9,8 @@
 	import org.exoplatform.faq.webui.FAQUtils;
 	def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
-	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
+	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImagesView');
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.reSizeImagesView();");
  %>
 <div class="UIPopupViewQuestion" >
 	<div><% uiform.begin() %></div>
@@ -39,7 +39,7 @@
 								response = question.getResponses();
 								%> 
 								<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
-								<div class="Response" id="SetWidthContent" style="width: 97%;">$response</div>
+								<div class="Response" id="SetWidthImageContent" style="width: 97%;">$response</div>
 								<%
 								countResponse ++;
 							}

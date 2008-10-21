@@ -198,11 +198,14 @@ UIFAQPortlet.prototype.onClickSlidebarButton = function() {
 		}
 	}
 };
-UIFAQPortlet.prototype.reSizeImages = function() {
-	eXo.faq.UIFAQPortlet.setSizeImages(10);
+UIFAQPortlet.prototype.reSizeImagesView = function() {
+	setTimeout('eXo.faq.UIFAQPortlet.setSizeImages(10, "SetWidthImageContent")', 1000);
 };
-UIFAQPortlet.prototype.setSizeImages = function(delta) { 
-	var widthContent = document.getElementById('SetWidthContent');
+UIFAQPortlet.prototype.reSizeImages = function() {
+	eXo.faq.UIFAQPortlet.setSizeImages(10, 'SetWidthContent');
+};
+UIFAQPortlet.prototype.setSizeImages = function(delta, classParant) { 
+	var widthContent = document.getElementById(classParant);
 	if(widthContent) {
 		var isDesktop = document.getElementById('UIPageDesktop') ;
 		if(!isDesktop){
