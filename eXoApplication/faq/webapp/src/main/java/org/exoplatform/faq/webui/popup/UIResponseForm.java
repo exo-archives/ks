@@ -350,10 +350,15 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       java.util.Date date = new java.util.Date();
       if(responseQuestionContent != null && responseQuestionContent.trim().length() >0 && validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
         if(!responseForm.listResponse.contains(responseQuestionContent)){
-        	responseForm.listResponse.set(responseForm.posOfResponse, responseQuestionContent);
-        	responseForm.listDateResponse.set(responseForm.posOfResponse, date);
-        }
-      } else {
+        	if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() > 0){
+        		responseForm.listResponse.set(responseForm.posOfResponse, responseQuestionContent);
+        		responseForm.listDateResponse.set(responseForm.posOfResponse, date);
+        	} else {
+          	responseForm.listResponse.add(responseQuestionContent);
+          	responseForm.listDateResponse.add(date);
+          }
+        } 
+      } else if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() > 0){
     	  responseForm.listResponse.remove(responseForm.posOfResponse);
     	  responseForm.listDateResponse.remove(responseForm.posOfResponse);
       }

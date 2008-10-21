@@ -194,7 +194,7 @@
 																%>
 																	<tr>
 																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
-																		<td class="text" align="left" style="margin-right: 4px;">
+																		<td class="text" align="left" style="margin-right: 4px;white-space:nowrap;">
 																		<%
 																			String linkResponseByLanguage = "";
 																			for(String language : question.getLanguagesNotYetAnswered().split(",")){
