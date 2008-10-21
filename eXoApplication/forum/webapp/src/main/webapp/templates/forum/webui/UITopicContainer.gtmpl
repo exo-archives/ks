@@ -435,10 +435,10 @@
 									}
 									String approved = "" ;
 									if(canEdit){
-										if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)" ;
+										if(topic.getIsWaiting()) approved = "<span style='white-space: nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)</span>" ;
 										if(isApproveTopic && !topic.getIsApproved()) { 
-											if(approved.length() > 0) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending")+"</span>)" ;
-											else approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval")+"</span>)" ;
+											if(approved.length() > 0) approved = "<span style='white-space: nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending")+"</span>)</span>" ;
+											else approved = "<span style='white-space: nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval")+"</span>)</span>" ;
 										}
 									}
 									
