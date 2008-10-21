@@ -370,7 +370,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						} catch (PathNotFoundException e) {
 							isParentDelete = true;
 						}
-						topicDetail.setIdPostView("true");
+						topicDetail.setIdPostView("lastpost");
 						topicDetail.setUpdatePostPageList(true);
 					} else{
 						post.setId(uiForm.postId) ;
@@ -391,7 +391,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					} catch (PathNotFoundException e) {
 						isParentDelete = true;
 					}
-					topicDetail.setIdPostView("true");
+					topicDetail.setIdPostView("lastpost");
 					topicDetail.setUpdatePostPageList(true);
 				}
 				uiForm.isMP = uiForm.isQuote = false;

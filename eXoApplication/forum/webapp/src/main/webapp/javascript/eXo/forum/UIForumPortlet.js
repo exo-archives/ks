@@ -292,7 +292,7 @@ UIForumPortlet.prototype.cancel = function(evt) {
 UIForumPortlet.prototype.goLastPost = function(idLastPost) {
 	var isDesktop = document.getElementById('UIPageDesktop') ;
 	if(isDesktop === null){
-		if(idLastPost === "false") {
+		if(idLastPost === "top") {
 			script:scroll(0,0);
 			var viewPage = document.getElementById('UIForumPortlet') ;
 			if(viewPage)viewPage.scrollIntoView(true) ;

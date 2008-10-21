@@ -250,7 +250,7 @@ public class UICategories extends UIContainer	{
 				uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
 				uiTopicDetail.setTopicFromCate(id[0], id[1], topic, true) ;
 				uiTopicDetail.setUpdateForum(categories.getForumById(id[0], id[1])) ;
-				uiTopicDetail.setIdPostView("true") ;
+				uiTopicDetail.setIdPostView("lastpost") ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1], topic) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
 				categories.maptopicLast.clear() ;
