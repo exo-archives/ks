@@ -33,3 +33,8 @@
 .UIForumPortlet .UIPrivateMessageForm .MessageContainer {
 	border-top: solid 1px #aeaeae;
 }
+
+.UIForumPortlet .UIForm .HorizontalLayout .ForumUserProfile {
+  padding: 0px;
+  padding-bottom: 10px;
+}

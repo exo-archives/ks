@@ -16,10 +16,15 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.io.InputStream;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
@@ -28,6 +33,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -114,6 +120,26 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			contact = new ForumContact() ;
 		}
 		return contact ;
+	}
+	
+	public String getPortalName() {
+    PortalContainer pcontainer =  PortalContainer.getInstance() ;
+    return pcontainer.getPortalContainerInfo().getContainerName() ;  
+  }
+  public String getRepository() throws Exception {
+    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
+    return rService.getCurrentRepository().getConfiguration().getName() ;
+  }
+	@SuppressWarnings("unused")
+	private String getFileSource(ForumAttachment attachment) throws Exception {
+		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		try {
+			InputStream input = attachment.getInputStream() ;
+			String fileName = attachment.getName() ;
+			return ForumSessionUtils.getFileSource(input, fileName, dservice);
+		} catch (PathNotFoundException e) {
+			return null;
+		}
 	}
 	
 	@SuppressWarnings("unused")
