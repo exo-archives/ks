@@ -148,6 +148,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   }
   
   public void setQuestionId(Question question, String languageViewed){
+	listResponse = new ArrayList<String>();
+	listUserResponse = new ArrayList<String>();
+	listDateResponse = new ArrayList<Date>();
     try{
       if(listQuestIdRela!= null && !listQuestIdRela.isEmpty()) {
         listRelationQuestion.clear() ;
