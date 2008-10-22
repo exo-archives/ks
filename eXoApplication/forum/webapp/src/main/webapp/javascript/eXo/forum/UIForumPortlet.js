@@ -553,7 +553,7 @@ UIForumPortlet.prototype.ReloadImage = function() {
 		for (var i = 0; i < length; ++ i) {
 			aImage[i].src = aImage[i].src; 
 		}
-		setTimeout(eXo.forum.UIForumPortlet.ReloadImage, 2000);
+		setTimeout(eXo.forum.UIForumPortlet.ReloadImage, 10000);
 	}
 } 
 

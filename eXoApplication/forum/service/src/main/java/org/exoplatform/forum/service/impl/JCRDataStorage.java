@@ -2421,6 +2421,7 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			userProfile.setUserId(userName);
 			userProfile.setUserTitle(Utils.USER);
+			userProfile.setUserRole((long)2);
 			saveUserProfile(sProvider, userProfile, false, false);
 			// default Administration
 			if(isAdminRole(userName)) {
@@ -2473,6 +2474,7 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			userProfile.setUserId(userName);
 			userProfile.setUserTitle(Utils.USER);
+			userProfile.setUserRole((long)2);
 			saveUserProfile(sProvider, userProfile, false, false);
 			// default Administration
 			if(isAdminRole(userName)) {

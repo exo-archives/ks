@@ -466,3 +466,11 @@
 	padding-left:12px;
 	width:13px;
 }
+.UIForumPortlet .FixLeftPopup {
+  left: 92px;
+  *left: 30px;
+}
+
+*html .UIForumPortlet .FixLeftPopup {
+  left: 28px;
+}

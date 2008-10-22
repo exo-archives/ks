@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -23,8 +25,10 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
+import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIBreadcumbs;
@@ -33,6 +37,7 @@ import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
+import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -67,19 +72,46 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private UserProfile userProfile ;
 	private boolean isOpen = true;
-	
+	public final String BOOKMARK_ITERATOR = "BookmarkPageIterator";
+	private JCRPageList pageList ;
+	UIForumPageIterator pageIterator ;
+	private List<String> bookMarks = new ArrayList<String>();
 	private String []bookMark = new String[]{}; 
-	public UIShowBookMarkForm() {
+	public UIShowBookMarkForm() throws Exception {
+		pageIterator = addChild(UIForumPageIterator.class, null, BOOKMARK_ITERATOR);
 	}
 	
 	public void activate() throws Exception {	}
 	public void deActivate() throws Exception {	}
 	
-	@SuppressWarnings("unused")
-	private String[] getBookMark() throws Exception {
+	@SuppressWarnings({ "unused", "unchecked" })
+	private List<String> getBookMark() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		bookMark = this.userProfile.getBookmark() ;
-		return bookMark ;
+		bookMarks.clear();
+		bookMarks.addAll(Arrays.asList(bookMark));
+		pageList = new ForumPageList(6, bookMarks.size());
+		pageList.setPageSize(6);
+		pageIterator = this.getChild(UIForumPageIterator.class);
+		pageIterator.updatePageList(pageList);
+		List<String>list = new ArrayList<String>();
+		long pageSelect = pageIterator.getPageSelected() ;
+		try {
+			list.addAll(this.pageList.getPageList(pageSelect, this.bookMarks)) ;
+			if(list.isEmpty()){
+				while(list.isEmpty() && pageSelect > 1) {
+					list.addAll(this.pageList.getPageList(--pageSelect, this.bookMarks)) ;
+					pageIterator.setSelectPage(pageSelect) ;
+				}
+			}
+		} catch (Exception e) {
+		}
+		try {
+			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list ;
 	} 
 	
 	private String getBookMarkId(String id) throws Exception {
@@ -134,12 +166,10 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 					return ;
 				}
 				if(forum != null && forum.getIsClosed()) isRead = false;
-				System.out.println("\n\n tttttt1:" + isRead) ;
 				if(role > 0){
 					if(isRead && topic.getCanView() != null && topic.getCanView().length > 0 && !topic.getCanView()[0].equals(" ")){
 						isRead = ForumServiceUtils.hasPermission(topic.getCanView(), userName);
 					}
-					System.out.println("\n\n tttttt2:" + isRead) ;
 					if(!isRead && forum.getModerators() != null && forum.getModerators().length > 0 && !forum.getModerators()[0].equals(" ")) {
 						isRead = ForumServiceUtils.hasPermission(forum.getModerators(), userName);
 					}
