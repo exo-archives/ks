@@ -1,11 +1,18 @@
 <%
 	import org.exoplatform.portal.webui.util.Util;
 	import org.exoplatform.forum.ForumSessionUtils;
+  List bookMarks = uiform.getBookMark();
 %>
 
 <div class="UIShowBookMarkForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout" style="_width: 88%;">
+		  <div style="overflow: auto; padding-bottom: 2px;">
+				<% 
+				  uiform.renderChild(uiform.BOOKMARK_ITERATOR);
+				%>
+				<div style="clear: right;"><span></span></div>
+			</div>
 			<table class="UIGrid">
 				<thead>
 					<th style="width: 35px;"></th>
@@ -14,15 +21,13 @@
 				</thead>
 				<tbody>
 					<%
-					  String []bookMarks = uiform.getBookMark();
-					  if(bookMarks.length > 0) {
+					  if(bookMarks.size() > 0) {
 							String linkName = "";
 							String linkPath = "";
 							String icon = "";
 							String linkBm = "";
 							int index = 0, lastIndex = 0;
-							for(int i = 0; i < bookMarks.length; ++i){
-							  String links = bookMarks[i]; 
+							for(links in bookMarks){
 								index = links.indexOf("//") ;
 								icon = links.substring(0, index);
 								lastIndex = links.lastIndexOf("//") ;
