@@ -80,6 +80,7 @@ public class UIFAQPortlet extends UIPortletApplication {
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
     	try{
     		if(isFirstTime){
+    			isFirstTime = false;
 		    	UIQuestions questions = getChild(UIFAQContainer.class).getChild(UIQuestions.class);
 		  		FAQSetting faqSetting = questions.getFAQSetting();
 		    	if(getChild(UISettingForm.class) == null) {
@@ -92,7 +93,6 @@ public class UIFAQPortlet extends UIPortletApplication {
 				    	settingForm.init();
 			    	}
 		    	}
-		    	isFirstTime = false;
     		}
     	} catch (Exception e) { }
     }
