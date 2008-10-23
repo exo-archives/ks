@@ -213,19 +213,35 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:categoryId", question.getCategoryId()) ;
   	questionNode.setProperty("exo:isActivated", question.isActivated()) ;
   	questionNode.setProperty("exo:isApproved", question.isApproved()) ;
-  	questionNode.setProperty("exo:responses", question.getAllResponses()) ;
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
+  	questionNode.setProperty("exo:responses", question.getAllResponses()) ;
     questionNode.setProperty("exo:responseBy", question.getResponseBy()) ;
+    questionNode.setProperty("exo:comments", question.getComments()) ;
+    questionNode.setProperty("exo:commentBy", question.getCommentBy()) ;
+    questionNode.setProperty("exo:usersVote", question.getUsersVote()) ;
+    questionNode.setProperty("exo:markVote", question.getMarkVote()) ;
+    Value[] values = null ; 
+    java.util.Calendar calendar = null ;
     if(question.getDateResponse() != null){
     	int n = question.getDateResponse().length;
-	    Value[] values = new Value[n] ; 
-    	java.util.Calendar calendar = null ;
+    	values = new Value[n] ;
     	for(int i = 0 ; i < n; i++){
 	    	calendar = GregorianCalendar.getInstance();
 	    	calendar.setTime(question.getDateResponse()[i]);
 	    	values[i] = questionNode.getSession().getValueFactory().createValue(calendar) ;
 	    }
 	    questionNode.setProperty("exo:dateResponse", values);
+    }
+    if(question.getDateComment() != null){
+    	int n = question.getDateComment().length;
+    	values = new Value[n] ; 
+    	calendar = null ;
+    	for(int i = 0 ; i < n; i++){
+    		calendar = GregorianCalendar.getInstance();
+    		calendar.setTime(question.getDateComment()[i]);
+    		values[i] = questionNode.getSession().getValueFactory().createValue(calendar) ;
+    	}
+    	questionNode.setProperty("exo:dateComment", values);
     }
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
@@ -538,14 +554,19 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
-    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(ValuesToDate(questionNode.getProperty("exo:dateResponse").getValues())) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
     if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
     if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
-    if(questionNode.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
     if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToStrings(questionNode.getProperty("exo:relatives").getValues())) ;  	
+    if(questionNode.hasProperty("exo:responses")) question.setResponses(ValuesToStrings(questionNode.getProperty("exo:responses").getValues())) ;
     if(questionNode.hasProperty("exo:responseBy")) question.setResponseBy(ValuesToStrings(questionNode.getProperty("exo:responseBy").getValues())) ;  	
+    if(questionNode.hasProperty("exo:dateResponse")) question.setDateResponse(ValuesToDate(questionNode.getProperty("exo:dateResponse").getValues())) ;
+    if(questionNode.hasProperty("exo:comments")) question.setComments(ValuesToStrings(questionNode.getProperty("exo:comments").getValues())) ;
+    if(questionNode.hasProperty("exo:commentBy")) question.setCommentBy(ValuesToStrings(questionNode.getProperty("exo:commentBy").getValues())) ;  	
+    if(questionNode.hasProperty("exo:dateComment")) question.setDateComment(ValuesToDate(questionNode.getProperty("exo:dateComment").getValues())) ;
     if(questionNode.hasProperty("exo:nameAttachs")) question.setNameAttachs(ValuesToStrings(questionNode.getProperty("exo:nameAttachs").getValues())) ;  	
+    if(questionNode.hasProperty("exo:usersVote")) question.setUsersVote(ValuesToStrings(questionNode.getProperty("exo:usersVote").getValues())) ;  	
+    if(questionNode.hasProperty("exo:markVote")) question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble()) ;
     
     List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
   	NodeIterator nodeIterator = questionNode.getNodes() ;

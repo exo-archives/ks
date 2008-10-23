@@ -159,7 +159,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       question_ = question ;
       listResponse.addAll(Arrays.asList(question.getAllResponses()));
       if(listResponse.size() == 1 && listResponse.get(0).trim().length() < 1){
-      	listUserResponse.add(FAQUtils.getFullName(FAQUtils.getCurrentUser()));
+      	listUserResponse.add(FAQUtils.getCurrentUser());
       	listDateResponse.add(new java.util.Date());
       } else {
 	      listUserResponse.addAll(Arrays.asList(question.getResponseBy()));
@@ -575,7 +575,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   		UIFormWYSIWYGInput formWYSIWYGInput = responseForm.getChildById(RESPONSE_CONTENT);
   		String responseContent = formWYSIWYGInput.getValue();
   		java.util.Date date = new java.util.Date();
-      String user = FAQUtils.getFullName(FAQUtils.getCurrentUser());
+      String user = FAQUtils.getCurrentUser();
   		if(pos.equals("New")){
   			ValidatorDataInput validatorDataInput = new ValidatorDataInput();
   			if(responseContent != null && validatorDataInput.fckContentIsNotEmpty(responseContent)){
@@ -652,7 +652,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
       java.util.Date date = new java.util.Date();
-      String user = FAQUtils.getFullName(FAQUtils.getCurrentUser());
+      String user = FAQUtils.getCurrentUser();
       for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(responseForm.languageIsResponsed)) {
           String content = responseContent.getValue();

@@ -327,6 +327,14 @@
   margin: 0px 4px;
 }
 
+.UIFAQPortlet .QuestionSelect .QuestionContainer .VoteFAQ {
+  float: right;
+  background: url('background/VoteIcon.gif') no-repeat left center;
+  width: 21px; height: 20px;
+  cursor: pointer;
+  margin: 0px 4px;
+}
+
 .UIFAQPortlet .QuestionSelect .QuestionContainer .LanguageSetting {
   line-height: 20px;
   font-weight: bold;
@@ -1069,6 +1077,12 @@
   background: url('background/FAQPortlet.gif') no-repeat left -638px;
 }
 
+.UIFAQPortlet .CommentToAnswer {
+  background: url('background/CommentToAnswer.gif') no-repeat left;
+  width: 16px;
+  height: 16px;
+}
+
 .UIFAQPortlet .Print {
   background: url('background/FAQPortlet.gif') no-repeat left -682px;
 }
@@ -1126,6 +1140,11 @@
 .UIFAQPortlet .Send {
   background: url('background/FAQPortlet.gif') no-repeat left -706px;
 }
+
+.UIFAQPortlet .Comment {
+  background: url('background/Comment.gif') no-repeat left center;
+}
+
 .AddRelation {
   background: url('background/AddIcon.gif') no-repeat left top;
   height:16px;
@@ -1169,6 +1188,48 @@
 	padding-right:18px;
 	margin-left:5px;
 	height:20px;
+}
+
+.UIFAQPortlet .RatedVote {
+	float: left ;
+	background: url('background/SmallGreyStar.gif') no-repeat center;
+	height: 22px;	width: 22px;
+	cursor: pointer;
+}
+
+.UIFAQPortlet .UIRatingForm {
+	padding: 8px 10px;
+}
+
+.UIFAQPortlet .UIRatingForm .VoteFormContainer {
+	border: solid 1px #e1e1e1 ;
+	background: #f4f4f4 ;
+	padding-top: 10px;
+}
+
+.UIFAQPortlet .UIRatingForm .VoteFormContainer .RatingInfoContainer {
+	border: solid 1px #e1e1e1 ;
+	width: 130px;
+	margin: auto;
+}
+
+.UIFAQPortlet .UIRatingForm .VoteFormContainer .OptionsContainer {
+	border: solid 1px #ffffff ;
+	padding-left: 7px;
+}
+
+.UIFAQPortlet .OverVote {
+	float: left ;
+	background: url('background/SmallYellowStar.gif') no-repeat center;
+	height: 22px;	width: 22px;
+	cursor: pointer;
+}
+
+.UIFAQPortlet .HaftVote {
+	float: left ;
+	background: url('background/SmallHalfStar.gif') no-repeat center;
+	height: 22px;	width: 22px;
+	cursor: pointer;
 }
 
 .UIPrintPreview {

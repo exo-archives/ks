@@ -78,6 +78,13 @@ public class Question {
   
   private String[] nameAttachs ;
   
+  private String[] comments;
+  private String[] commentBy;
+  private Date[] dateComment;
+  
+  private String[] usersVote;
+  private double markVote = 0;
+  
   /**
    * Class constructor specifying id of object is created.
    */
@@ -329,7 +336,46 @@ public class Question {
 	
 	public String getLink() {return link;}
 	public void setLink(String link) { this.link = link;}
-	
+
+	public String[] getComments() {
+		return comments;
+	}
+
+	public void setComments(String[] comments) {
+		this.comments = comments;
+	}
+
+	public String[] getCommentBy() {
+		return commentBy;
+	}
+
+	public void setCommentBy(String[] commentBy) {
+		this.commentBy = commentBy;
+	}
+
+	public Date[] getDateComment() {
+		return dateComment;
+	}
+
+	public void setDateComment(Date[] dateComment) {
+		this.dateComment = dateComment;
+	}
+
+	public String[] getUsersVote() {
+		return usersVote;
+	}
+
+	public void setUsersVote(String[] usersVote) {
+		this.usersVote = usersVote;
+	}
+
+	public double getMarkVote() {
+		return markVote;
+	}
+
+	public void setMarkVote(double markVote) {
+		this.markVote = markVote;
+	}
 }
 
 

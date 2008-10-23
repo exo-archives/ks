@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Stack;
 
@@ -36,6 +37,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
+import org.exoplatform.faq.webui.popup.UICommentForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
 import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
 import org.exoplatform.faq.webui.popup.UIMoveQuestionForm;
@@ -46,6 +48,7 @@ import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
+import org.exoplatform.faq.webui.popup.UIVoteQuestion;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -93,6 +96,10 @@ import org.exoplatform.webui.event.EventListener;
 	    @EventConfig(listeners = UIQuestions.DeleteQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.MoveQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.SendQuestionActionListener.class),
+	    @EventConfig(listeners = UIQuestions.CommentQuestionActionListener.class),
+	    @EventConfig(listeners = UIQuestions.DeleteCommentActionListener.class, confirm= "UIQuestions.msg.confirm-delete-comment"),
+	    @EventConfig(listeners = UIQuestions.CommentToAnswerActionListener.class),
+	    @EventConfig(listeners = UIQuestions.VoteQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.ChangeQuestionActionListener.class)
       
 		}
@@ -127,8 +134,8 @@ public class UIQuestions extends UIContainer {
   private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
   private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
   private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
-  private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
-  private String[] userActionQues_ = new String[]{"SendQuestion"} ;
+  private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "CommentQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
+  private String[] userActionQues_ = new String[]{"SendQuestion", "CommentQuestion"} ;
   private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
   private boolean viewAuthorInfor = false;
   
@@ -237,8 +244,7 @@ public class UIQuestions extends UIContainer {
   
   @SuppressWarnings("unused")
   private String[] getActionQuestionWithUser(){
-    String[] action = new String[]{"SendQuestion"} ;
-    return action ;
+    return userActionQues_ ;
   }
   
   @SuppressWarnings("unused")
@@ -343,6 +349,14 @@ public class UIQuestions extends UIContainer {
       }
       
     }
+  }
+  
+  private boolean canVote(Question question){
+  	if(question.getUsersVote() != null)
+	  	for(String user : question.getUsersVote()){
+	  		if(user.equals(currentUser_)) return false;
+	  	}
+  	return true;
   }
   
   private List<Boolean> getIsModerator() {
@@ -1204,6 +1218,7 @@ public class UIQuestions extends UIContainer {
           uiQuestions.questionView_ = "" ;
         }
       } catch(javax.jcr.PathNotFoundException e) {
+      	e.printStackTrace();
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         uiQuestions.setIsNotChangeLanguage() ;
@@ -1309,6 +1324,207 @@ public class UIQuestions extends UIContainer {
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
+  }
+  
+  static  public class DeleteCommentActionListener extends EventListener<UIQuestions> {
+  	public void execute(Event<UIQuestions> event) throws Exception {
+  		UIQuestions questions = event.getSource() ; 
+  		String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+  		UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+  		Question question = null ;
+  		try{
+  			String[] arr = questionId.split("/");
+  			questionId = arr[0];
+  			int pos = Integer.parseInt(arr[1]);
+  			List<String> listComments = new ArrayList<String>();
+  			List<String> listUSers = new ArrayList<String>();
+  			List<Date> listDates = new ArrayList<Date>();
+  			question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+  			for(int i = 0; i < questions.listQuestion_.size(); i ++){
+  				if(questions.listQuestion_.get(i).getId().equals(questionId)){
+  					question = questions.listQuestion_.get(i);
+  					break;
+  				}
+  			}
+  			listComments.addAll(Arrays.asList(question.getComments()));
+  			listUSers.addAll(Arrays.asList(question.getCommentBy()));
+  			listDates.addAll(Arrays.asList(question.getDateComment()));
+  			
+  			listComments.remove(pos);
+  			listUSers.remove(pos);
+  			listDates.remove(pos);
+  			
+  			question.setComments(listComments.toArray(new String[]{}));
+  			question.setCommentBy(listUSers.toArray(new String[]{}));
+  			question.setDateComment(listDates.toArray(new Date[]{}));
+  			
+  			FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
+  			faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(), questions.faqSetting_);
+  		} catch (javax.jcr.PathNotFoundException e) {
+  			e.printStackTrace() ;
+  			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+  			uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+  			questions.setIsNotChangeLanguage() ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+  			return ;
+  		} catch (Exception e) { 
+  			e.printStackTrace() ;
+  		} 
+  		event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+  	}
+  }
+  
+  static  public class CommentToAnswerActionListener extends EventListener<UIQuestions> {
+  	public void execute(Event<UIQuestions> event) throws Exception {
+  		UIQuestions questions = event.getSource() ; 
+  		String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+  		UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+  		Question question = null ;
+  		try{
+  			String[] arr = questionId.split("/");
+  			questionId = arr[0];
+  			int pos = Integer.parseInt(arr[1]);
+  			List<String> listComments = new ArrayList<String>();
+  			List<String> listUSers = new ArrayList<String>();
+  			List<Date> listDates = new ArrayList<Date>();
+  			question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+  			for(int i = 0; i < questions.listQuestion_.size(); i ++){
+  				if(questions.listQuestion_.get(i).getId().equals(questionId)){
+  					question = questions.listQuestion_.get(i);
+  					break;
+  				}
+  			}
+  			
+  			/*
+  			 * remove comment form list comment of this question
+  			 */ 
+  			listComments.addAll(Arrays.asList(question.getComments()));
+  			listUSers.addAll(Arrays.asList(question.getCommentBy()));
+  			listDates.addAll(Arrays.asList(question.getDateComment()));
+  			
+  			String newAnswer = listComments.remove(pos);
+  			String newUser = listUSers.remove(pos);
+  			Date newDate = listDates.remove(pos);
+  			
+  			question.setComments(listComments.toArray(new String[]{}));
+  			question.setCommentBy(listUSers.toArray(new String[]{}));
+  			question.setDateComment(listDates.toArray(new Date[]{}));
+  			
+  			/*
+  			 * add new answer from comment
+  			 */ 
+  			listComments = new ArrayList<String>();
+  			listUSers = new ArrayList<String>();
+  			listDates = new ArrayList<Date>();
+  			if(question.getAllResponses()[0].trim().length() > 0){
+	  			listComments.addAll(Arrays.asList(question.getAllResponses()));
+	  			listUSers.addAll(Arrays.asList(question.getResponseBy()));
+	  			listDates.addAll(Arrays.asList(question.getDateResponse()));
+  			}
+  			
+  			listComments.add(newAnswer);
+  			listUSers.add(newUser);
+  			listDates.add(newDate);
+  			
+  			question.setResponses(listComments.toArray(new String[]{}));
+  			question.setResponseBy(listUSers.toArray(new String[]{}));
+  			question.setDateResponse(listDates.toArray(new Date[]{}));
+  			
+  			
+  			FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
+  			faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(), questions.faqSetting_);
+  		} catch (javax.jcr.PathNotFoundException e) {
+  			e.printStackTrace() ;
+  			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+  			uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+  			questions.setIsNotChangeLanguage() ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+  			return ;
+  		} catch (Exception e) { 
+  			e.printStackTrace() ;
+  		} 
+  		event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+  	}
+  }
+  
+  static  public class CommentQuestionActionListener extends EventListener<UIQuestions> {
+  	public void execute(Event<UIQuestions> event) throws Exception {
+  		UIQuestions questions = event.getSource() ; 
+  		String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+  		int pos = 0;
+  		UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+  		UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+  		UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+  		Question question = null ;
+  		if(questionId.indexOf("/") >= 0){
+  			String[] arr = questionId.split("/");
+  			pos = Integer.parseInt(arr[1]);
+  			questionId = arr[0];
+  		} else {
+  			pos = -1;
+  		}
+  		try{
+  			question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+  		} catch (javax.jcr.PathNotFoundException e) {
+  			e.printStackTrace() ;
+  			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+  			uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+  			questions.setIsNotChangeLanguage() ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+  			return ;
+  		} catch (Exception e) { 
+  			e.printStackTrace() ;
+  		} 
+  		UICommentForm commentForm = popupContainer.addChild(UICommentForm.class, null, null) ;
+  		commentForm.setInfor(question, pos, questions.faqSetting_) ;
+  		popupContainer.setId("FAQDeleteQuestion") ;
+  		popupAction.activate(popupContainer, 720, 1000) ;
+  		event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+  		event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+  	}
+  }
+  
+  static  public class VoteQuestionActionListener extends EventListener<UIQuestions> {
+  	public void execute(Event<UIQuestions> event) throws Exception {
+  		UIQuestions questions = event.getSource() ; 
+  		String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+  		String language = "";
+  		int pos = 0;
+  		UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+  		UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+  		UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+  		Question question = null ;
+  		if(questionId.indexOf("/") >= 0){
+  			String[] arr = questionId.split("/");
+  			language = arr[1];
+  			pos = Integer.parseInt(arr[2]);
+  			questionId = arr[0];
+  		} else {
+  			pos = -1;
+  		}
+  		try{
+  			question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+  		} catch (javax.jcr.PathNotFoundException e) {
+  			e.printStackTrace() ;
+  			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+  			uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+  			questions.setIsNotChangeLanguage() ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+  			return ;
+  		} catch (Exception e) { 
+  			e.printStackTrace() ;
+  		} 
+  		UIVoteQuestion voteQuestion = popupContainer.addChild(UIVoteQuestion.class, null, null) ;
+  		voteQuestion.setInfor(question, language, pos, questions.faqSetting_);
+  		popupContainer.setId("FAQDeleteQuestion") ;
+  		popupAction.activate(popupContainer, 300, 200) ;
+  		event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+  		event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+  	}
   }
   
   static  public class MoveQuestionActionListener extends EventListener<UIQuestions> {

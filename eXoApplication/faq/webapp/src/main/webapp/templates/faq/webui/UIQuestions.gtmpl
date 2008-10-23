@@ -470,61 +470,117 @@
 														</div>
 																
 													</td>
-													<!-- action translation question -->
-								        	<td style="white-space: nowrap;font-weight:bold;text-align:right;padding-left:5px;">
-														<%
-															List listQuestLanguage = uicomponent.getQuestionLangauges(question) ;
-															int countLanguage = 1;
-															for(String quesLanguage in listQuestLanguage) {
-																String linkView = uicomponent.event("ChangeQuestion", questionId + "/" + quesLanguage) ;
-																String color = "";
-																if(quesLanguage.equals(question.getLanguage())){
-																	linkView = "javaScript:void(0)";
-																	color = "#914ab6";
-																}
-														%>
-																<a style="line-height:20px;color:$color;" href="$linkView" > $quesLanguage </a>
-														<%  if(countLanguage < listQuestLanguage.size()){%>
-																	 |
-															<%} else {%>
-																	&nbsp;
-															<%}
-																countLanguage ++;
-															}
-														%>
-													</td>
-													<!-- Action back page -->
-													<%
-													if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
-														String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath()) ;
-													%>
-														<td width="25" style="margin-left: 10px;">
-															<a href="$link" title="<%=_ctx.appRes("UIQuestions.action.Back")%>">
-																<div class="BackPageFAq"><span></span></div>
-									        		</a>
-														</td>
-								        	<%}%>
-													<!-- action print question -->
-								        	<td width="25">
-														<a onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
-																title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>">
-															<div class="PrintScrintFAQ"><span></span></div>
-														</a>
-													</td>
-													<!-- action send mail for frend -->
-													<td width="25">
-														<%
-														link = uicomponent.event("SendQuestion",qId) ;
-														String lockFunction = "";
-														if((!question.isApproved() || !question.isActivated())){
-															link = "javaScript: alert('" + _ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-															lockFunction = "LockFunction" ;
-														}
-														%>
-														<a href="$link" class="$lockFunction"
-																title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>">
-															<div class="SendToFriend"><span></span></div>
-														</a>
+													<td>
+														<!-- Action -->
+														<table>
+															<tr>
+																<!-- action translation question -->
+											        	<td style="white-space: nowrap;font-weight:bold;text-align:right;padding-left:5px;">
+																	<%
+																		List listQuestLanguage = uicomponent.getQuestionLangauges(question) ;
+																		int countLanguage = 1;
+																		for(String quesLanguage in listQuestLanguage) {
+																			String linkView = uicomponent.event("ChangeQuestion", questionId + "/" + quesLanguage) ;
+																			String color = "";
+																			if(quesLanguage.equals(question.getLanguage())){
+																				linkView = "javaScript:void(0)";
+																				color = "#914ab6";
+																			}
+																	%>
+																			<a style="line-height:20px;color:$color;" href="$linkView" > $quesLanguage </a>
+																	<%  if(countLanguage < listQuestLanguage.size()){%>
+																				 |
+																		<%} else {%>
+																				&nbsp;
+																		<%}
+																			countLanguage ++;
+																		}
+																	%>
+																</td>
+																<!-- Action back page -->
+																<%
+																if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
+																	String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath()) ;
+																%>
+																	<td width="25" style="margin-left: 10px;">
+																		<a href="$link" title="<%=_ctx.appRes("UIQuestions.action.Back")%>">
+																			<div class="BackPageFAq"><span></span></div>
+												        		</a>
+																	</td>
+											        	<%}%>
+											        	<!-- action vote question -->
+											        	<% 
+											        	if(uicomponent.canVote(question)){
+										        	 %>
+												        	<td width="25">
+																		<a onclick="<%=uicomponent.event("VoteQuestion",question.getId())%>"
+																				title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+																			<div class="VoteFAQ"><span></span></div>
+																		</a>
+																	</td>
+															<%}%>
+																<!-- action print question -->
+											        	<td width="25">
+																	<a onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
+																			title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>">
+																		<div class="PrintScrintFAQ"><span></span></div>
+																	</a>
+																</td>
+																<!-- action send mail for frend -->
+																<td width="25">
+																	<%
+																	link = uicomponent.event("SendQuestion",qId) ;
+																	String lockFunction = "";
+																	if((!question.isApproved() || !question.isActivated())){
+																		link = "javaScript: alert('" + _ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
+																		lockFunction = "LockFunction" ;
+																	}
+																	%>
+																	<a href="$link" class="$lockFunction"
+																			title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>">
+																		<div class="SendToFriend"><span></span></div>
+																	</a>
+																</td>
+															
+															</tr>
+														</table>
+														<div style="clear:left;"><span></span></div>
+														<!-- Vote result -->
+														<table align="left" style="width:120px;float: right;">
+															<tr>
+																<td>
+																	<% 
+																	int markVote =(Integer) question.getMarkVote();
+																	double sodu = question.getMarkVote() - markVote;
+																	%>
+																	<div class="RatingInfoContainer">
+																		<div class="OptionsContainer">
+																		<%
+																		for(int mark = 0; mark < markVote; mark ++){
+																		%>
+																			<div class="OverVote"><span></span></div>
+																		<%
+																		} 
+																		if(sodu > 0.2){
+																			if(sodu < 0.7){%>
+																				<div class="HaftVote"><span></span></div>
+																		<%} else {%>
+																				<div class="OverVote"><span></span></div>
+																		<%}
+																		} else {%>
+																				<div class="RatedVote"><span></span></div>
+																	<%}
+																		markVote ++;
+																		while(markVote < 5){%>
+																			<div class="RatedVote"><span></span></div>
+																	<%	markVote ++;
+																		}%>
+																		</div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+														<div style="clear:right;"><span></span></div>
 													</td>
 												</tr>
 											</table>
@@ -537,13 +593,17 @@
 													int countResponse = 0;
 													for(String res in question.getAllResponses()) {
 														date = dateFormatter.format(question.getDateResponse()[countResponse]);
-														responseBy = question.getResponseBy()[countResponse] ;
+														responseBy = FAQUtils.getFullName(question.getResponseBy()[countResponse]) ;
 												%>
 														$res
 														<div style="color:gray;">
 															<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
 															&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
 														</div>
+														<a onclick="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + countResponse)%>"
+																title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+															<div class="VoteFAQ"><span></span></div>
+														</a>
 											<%		countResponse ++;
 													}
 												} else {
@@ -551,6 +611,75 @@
 													<center><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%></center></b>
 											<%}%>
 											</div>
+											
+											<%
+											if(question.getComments() != null){
+												boolean canEditComment = false;
+											%>
+												<div class="Response">
+											<%
+												for(int commentCount = 0; commentCount < question.getComments().length; commentCount ++){
+													if(uicomponent.currentUser_.equals(question.getCommentBy()[commentCount])) canEditComment = true;
+													else canEditComment = false;
+											%>
+												<div style="background:#F0F0F0; padding: 5px 0px 5px 5px; padding: 5px; margin-bottom:5px;">
+													<table width="100%">
+														<tr>
+															<td>
+																<%=question.getComments()[commentCount]%>
+																<div style="color:gray;">
+																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionCommentBy")%> :
+																	&nbsp; <%=question.getCommentBy()[commentCount]%> <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> 
+																	<font style="color:#721d95"><%=dateFormatter.format(question.getDateComment()[commentCount]);%></font>
+																</div>
+															</td>
+															<%
+															if(canEditComment){
+																if (uicomponent.faqSetting_.isCanEdit()){%>
+																	<td width="20" align="center">
+																		<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("CommentToAnswer", question.getId() + "/" + commentCount)%>">
+																			<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
+																					<span></span>
+																			</div>
+																		</a>
+																	</td>
+															<%}%>
+																<td width="20" align="center">
+																	<a title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>" href="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + commentCount)%>">
+																		<div class="ItemIcon Edit" style="height:24px;width:16px;">
+																				<span></span>
+																		</div>
+																	</a>
+																</td>
+																<td width="20" align="center">
+																	<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DeleteComment", question.getId() + "/" + commentCount)%>">
+																		<div class="ItemIcon Delete" style="height:24px;width:16px;">
+																				<span></span>
+																		</div>
+																	</a>
+																</td>
+														<%} else if (uicomponent.faqSetting_.isCanEdit()){%>
+																<td width="20" align="center">
+																	<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("CommentToAnswer", question.getId() + "/" + commentCount)%>">
+																		<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
+																				<span></span>
+																		</div>
+																	</a>
+																</td>
+																<td width="20" align="center">
+																	<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DeleteComment", question.getId() + "/" + commentCount)%>">
+																		<div class="ItemIcon Delete" style="height:24px;width:16px;">
+																				<span></span>
+																		</div>
+																	</a>
+																</td>
+														<%}%>
+														</tr>
+													</table>
+												</div>
+											<%}%>
+												</div>
+										<%}%>
 												
 											<div class="AttachmentContent">
 												<%if(!question.getAttachMent().isEmpty()) {%>

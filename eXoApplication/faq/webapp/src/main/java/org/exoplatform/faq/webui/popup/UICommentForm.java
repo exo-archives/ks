@@ -1,0 +1,149 @@
+/*
+ * Copyright (C) 2003-2008 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ */
+package org.exoplatform.faq.webui.popup;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIFAQContainer;
+import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormWYSIWYGInput;
+
+/**
+ * Created by The eXo Platform SARL
+ * Author : Ha Mai
+ *					mai.ha@exoplatform.com
+ * Oct 20, 2008, 3:12:37 PM
+ */
+
+@ComponentConfig(
+    lifecycle = UIFormLifecycle.class ,
+    template =  "app:/templates/faq/webui/popup/UICommentForm.gtmpl",
+    events = {
+      @EventConfig(listeners = UICommentForm.SaveActionListener.class),
+      @EventConfig(listeners = UICommentForm.CancelActionListener.class)
+    }
+)
+
+public class UICommentForm extends UIForm implements UIPopupComponent {
+	
+	private Question question_ = new Question();
+	private String currentUser_ = "";
+	private final String TITLE_USERNAME = "UserName";
+	private final String COMMENT_CONTENT = "CommentContent";
+	private List<String> listComments_ = new ArrayList<String>();
+	private List<String> listUserNames_ = new ArrayList<String>();
+	private List<Date> listDates_ = new ArrayList<Date>();
+	private int pos = 0;
+	private FAQSetting faqSetting_ = null;
+	private Date date_ = new java.util.Date();
+
+	public void activate() throws Exception { }
+	public void deActivate() throws Exception { }
+	
+	public UICommentForm() throws Exception{
+		currentUser_ = FAQUtils.getCurrentUser();
+		this.addChild((new UIFormStringInput(TITLE_USERNAME, TITLE_USERNAME, currentUser_)).setEditable(false));
+		this.addChild(new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, null, true));
+	}
+	
+	public void setInfor(Question question, int posCommentEdit, FAQSetting faqSetting){
+		listComments_ = new ArrayList<String>();
+		listUserNames_ = new ArrayList<String>();
+		listDates_ = new ArrayList<Date>();
+		
+		this.question_ = question;
+		this.faqSetting_ = faqSetting;
+		FAQUtils.getEmailSetting(faqSetting_, false, false);
+		if(question_.getComments() != null){
+			listComments_.addAll(Arrays.asList(question_.getComments()));
+			listUserNames_.addAll(Arrays.asList(question_.getCommentBy()));
+			listDates_.addAll(Arrays.asList(question_.getDateComment()));
+		}
+		
+		if(posCommentEdit >= 0){
+			pos = posCommentEdit;
+			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(question_.getComments()[posCommentEdit]);
+		} else {
+			listComments_.add(" ");
+			listUserNames_.add(currentUser_);
+			listDates_.add(date_);
+			pos = listComments_.size() - 1;
+		}
+	}
+
+	static public class CancelActionListener extends EventListener<UICommentForm> {
+    public void execute(Event<UICommentForm> event) throws Exception {
+    	UICommentForm commentForm = event.getSource() ;
+    	UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
+  }
+	
+	static public class SaveActionListener extends EventListener<UICommentForm> {
+		public void execute(Event<UICommentForm> event) throws Exception {
+			UICommentForm commentForm = event.getSource() ;
+			String comment = ((UIFormWYSIWYGInput)commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
+			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+			try{
+				commentForm.question_ = faqService_.getQuestionById(commentForm.question_.getId(), FAQUtils.getSystemProvider());
+				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+				if(comment != null && comment.trim().length() > 0 && validatorDataInput.fckContentIsNotEmpty(comment)){
+					commentForm.listComments_.set(commentForm.pos, comment);
+					commentForm.question_.setComments(commentForm.listComments_.toArray(new String[]{}));
+					commentForm.question_.setCommentBy(commentForm.listUserNames_.toArray(new String[]{}));
+					commentForm.question_.setDateComment(commentForm.listDates_.toArray(new Date[]{}));
+					faqService_.saveQuestion(commentForm.question_, false, FAQUtils.getSystemProvider(), commentForm.faqSetting_);
+				} else {
+					System.out.println("\n\n\n\n-----------> comment is null\n\n\n\n");
+				}
+			} catch(Exception e){
+				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+			}
+			UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+      questions.setIsNotChangeLanguage() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+}
