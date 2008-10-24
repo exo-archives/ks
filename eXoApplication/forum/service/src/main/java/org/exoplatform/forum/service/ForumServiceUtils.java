@@ -26,6 +26,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -97,4 +98,8 @@ public class ForumServiceUtils {
       extNode.setPermission(accessControlEntry.getIdentity(), arrayPers) ;      
     } 
 	}
+
+	public static SessionProvider getSessionProvider() {
+		return SessionProvider.createSystemProvider();
+  }
 }

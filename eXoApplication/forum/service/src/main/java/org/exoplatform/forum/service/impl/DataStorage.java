@@ -122,5 +122,6 @@ public interface DataStorage {
 	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception ;
 	public void addPlugin(ComponentPlugin plugin) throws Exception;
 	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
+	public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
 	public boolean isAdminRole(String userName) throws Exception ;
 }

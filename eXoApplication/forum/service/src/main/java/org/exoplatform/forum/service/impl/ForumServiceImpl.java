@@ -73,6 +73,10 @@ public class ForumServiceImpl implements ForumService{
     storage_.addRolePlugin(plugin) ;
   }
 
+  public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
+  	storage_.addInitialDataPlugin(plugin) ;
+  }
+
   public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
     storage_.saveCategory(sProvider, category, isNew);
   }
@@ -330,6 +334,7 @@ public class ForumServiceImpl implements ForumService{
 
   public synchronized void userLogin(String userId) throws Exception {
     lastLogin_ = userId ;
+    System.out.println("\n\n------->>>UserLogin: " + userId + "\n\n");
     onlineUsers_.put(userId, true) ;		
   }
 

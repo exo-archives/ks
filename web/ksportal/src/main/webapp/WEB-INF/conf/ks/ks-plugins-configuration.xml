@@ -1,119 +1,185 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration>
 
-  <!-- Uncomment the following block to use CS contact for forum user profile -->
-  <!--component>
-    <key>org.exoplatform.forum.service.user.ContactProvider</key>
-    <type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
-  </componen-->   
+	<!-- Uncomment the following block to use CS contact for forum user profile -->
+	<!--component>
+		<key>org.exoplatform.forum.service.user.ContactProvider</key>
+		<type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
+	</componen-->	 
 	
 	<component>
-    <key>org.exoplatform.services.mail.MailService</key>
-    <type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
-      <init-params>
-        <properties-param>
-          <name>config</name>
-          <property name="mail.smtp.auth.username" value="exoservice@gmail.com" />
-          <property name="mail.smtp.auth.password" value="exoadmin" />
-          <property name="mail.smtp.host" value="smtp.gmail.com" />
-          <property name="mail.smtp.port" value="465" />
-     			<property name="mail.smtp.starttls.enable" value="true" />
-          <property name="mail.smtp.auth" value="true" />
-          <property name="mail.smtp.debug" value="false" />
-          <property name="mail.smtp.socketFactory.port" value="465" />
-          <property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory" />
-          <property name="mail.smtp.socketFactory.fallback" value="false" />
-        </properties-param>
-      </init-params>
-  </component>
-  
+		<key>org.exoplatform.services.mail.MailService</key>
+		<type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
+			<init-params>
+				<properties-param>
+					<name>config</name>
+					<property name="mail.smtp.auth.username" value="exoservice@gmail.com" />
+					<property name="mail.smtp.auth.password" value="exoadmin" />
+					<property name="mail.smtp.host" value="smtp.gmail.com" />
+					<property name="mail.smtp.port" value="465" />
+		 			<property name="mail.smtp.starttls.enable" value="true" />
+					<property name="mail.smtp.auth" value="true" />
+					<property name="mail.smtp.debug" value="false" />
+					<property name="mail.smtp.socketFactory.port" value="465" />
+					<property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory" />
+					<property name="mail.smtp.socketFactory.fallback" value="false" />
+				</properties-param>
+			</init-params>
+	</component>
+	
 	<external-component-plugins>
-  	<target-component>org.exoplatform.faq.service.FAQService</target-component>  	
-	  <component-plugin>
-	    <name>email.configuration</name>
-	    <set-method>addPlugin</set-method>
-	    <type>org.exoplatform.faq.service.EmailNotifyPlugin</type>
-	    <description>description</description>
-	    <init-params>
-	      <properties-param>
-	        <name>email.configuration.info</name>
-	        <property name="account" value="exoservice@gmail.com"/>          
-          <property name="password" value="exoadmin"/>          
-          <property name="outgoing" value="smtp.gmail.com"/>          
-          <property name="port" value="465"/>
-	      </properties-param>
-	    </init-params>
-	  </component-plugin>	 
-	    
-	  <component-plugin>
+		<target-component>org.exoplatform.faq.service.FAQService</target-component>		
+		<component-plugin>
+			<name>email.configuration</name>
+			<set-method>addPlugin</set-method>
+			<type>org.exoplatform.faq.service.EmailNotifyPlugin</type>
+			<description>description</description>
+			<init-params>
+				<properties-param>
+					<name>email.configuration.info</name>
+					<property name="account" value="exoservice@gmail.com"/>					
+					<property name="password" value="exoadmin"/>					
+					<property name="outgoing" value="smtp.gmail.com"/>					
+					<property name="port" value="465"/>
+				</properties-param>
+			</init-params>
+		</component-plugin>	 
+			
+		<component-plugin>
 			<name>add.role.rules.plugin</name>
 			<set-method>addRolePlugin</set-method>
 			<type>org.exoplatform.faq.service.conf.RoleRulesPlugin</type>
 			<description>add role rules</description>
-      <init-params>
-	      <value-param>
-	        <name>role</name>
-	        <description>name of the role</description>
-	        <value>ADMIN</value>
-	      </value-param>
-	      <values-param>
-	        <name>rules</name>
-	        <description>rules of the role</description>
-	        <value>root</value>
-	        <value>john</value>
-	        <value>marry</value>
-	        <!--value>/platform/administrators</value-->
-			    <!--value>manager:/platform/users</value-->
-	        <!--value>*:/somegroup/somesubgroup</value-->
-	        <!--value>manager:/somegroup/someothergroup</value-->
-	      </values-param>
-	    </init-params>
-    </component-plugin>
-    
-  </external-component-plugins>   
-  
-  <external-component-plugins>
-  	<target-component>org.exoplatform.forum.service.ForumService</target-component>  	
-	  <component-plugin>
-	    <name>email.configuration</name>
-	    <set-method>addPlugin</set-method>
-	    <type>org.exoplatform.forum.service.EmailNotifyPlugin</type>
-	    <description>description</description>
-	    <init-params>
-	      <properties-param>
-	        <name>email.configuration.info</name>
-	        <property name="account" value="exoservice@gmail.com"/>          
-          <property name="password" value="exoadmin"/>          
-          <property name="outgoing" value="smtp.gmail.com"/>          
-          <property name="port" value="465"/>
-	      </properties-param>
-	    </init-params>
-	  </component-plugin>	   
-	  <component-plugin>
+			<init-params>
+				<value-param>
+					<name>role</name>
+					<description>name of the role</description>
+					<value>ADMIN</value>
+				</value-param>
+				<values-param>
+					<name>rules</name>
+					<description>rules of the role</description>
+					<value>root</value>
+					<value>john</value>
+					<value>marry</value>
+					<!--value>/platform/administrators</value-->
+					<!--value>manager:/platform/users</value-->
+					<!--value>*:/somegroup/somesubgroup</value-->
+					<!--value>manager:/somegroup/someothergroup</value-->
+				</values-param>
+			</init-params>
+		</component-plugin>
+		
+	</external-component-plugins>	 
+	
+	<external-component-plugins>
+		<target-component>org.exoplatform.forum.service.ForumService</target-component>		
+		<component-plugin>
+			<name>email.configuration</name>
+			<set-method>addPlugin</set-method>
+			<type>org.exoplatform.forum.service.EmailNotifyPlugin</type>
+			<description>description</description>
+			<init-params>
+				<properties-param>
+					<name>email.configuration.info</name>
+					<property name="account" value="exoservice@gmail.com"/>					
+					<property name="password" value="exoadmin"/>					
+					<property name="outgoing" value="smtp.gmail.com"/>					
+					<property name="port" value="465"/>
+				</properties-param>
+			</init-params>
+		</component-plugin>		 
+		
+		<component-plugin>
 			<name>add.role.rules.plugin</name>
 			<set-method>addRolePlugin</set-method>
 			<type>org.exoplatform.forum.service.conf.RoleRulesPlugin</type>
 			<description>add role rules</description>
-      <init-params>
-	      <value-param>
-	        <name>role</name>
-	        <description>name of the role</description>
-	        <value>ADMIN</value>
-	      </value-param>
-	      <values-param>
-	        <name>rules</name>
-	        <description>rules of the role</description>
-	        <value>root</value>
-	        <value>john</value>
-	        <!--value>/platform/administrators</value-->
-			    <!--value>manager:/platform/users</value-->
-	        <!--value>*:/somegroup/somesubgroup</value-->
-	        <!--value>manager:/somegroup/someothergroup</value-->
-	      </values-param>
-	    </init-params>
-    </component-plugin>
-  </external-component-plugins>
-  
-
-  
+			<init-params>
+				<value-param>
+					<name>role</name>
+					<description>name of the role</description>
+					<value>ADMIN</value>
+				</value-param>
+				<values-param>
+					<name>rules</name>
+					<description>rules of the role</description>
+					<value>root</value>
+					<value>john</value>
+					<!--value>/platform/administrators</value-->
+					<!--value>manager:/platform/users</value-->
+					<!--value>*:/somegroup/somesubgroup</value-->
+					<!--value>manager:/somegroup/someothergroup</value-->
+				</values-param>
+			</init-params>
+		</component-plugin>
+	  
+	  <component-plugin>
+			<name>default.data</name>
+			<set-method>addInitialDataPlugin</set-method>
+			<type>org.exoplatform.forum.service.conf.InitializeForumPlugin</type>
+			<description>description</description>
+			<init-params>
+				<object-param>
+					<name>livedemo.default.configuration</name>
+					<description>initial data for live demo</description>
+					<object type="org.exoplatform.forum.service.conf.ForumInitialData">
+						<field name="categories">
+							<collection type="java.util.ArrayList">
+								<value>
+									<object type="org.exoplatform.forum.service.conf.CategoryData">
+										<field name="owner">
+											<string>root</string>
+										</field>
+										<field name="name">
+											<string>Knowledge Suite</string>
+										</field>
+										<field name="description">
+											<string>All about eXo KS</string>
+										</field>
+										<field name="forums">
+											<collection type="java.util.ArrayList">
+												<value>
+													<object type="org.exoplatform.forum.service.conf.ForumData">
+														<field name="owner"><string>root</string></field>
+														<field name="name"><string>Live demo</string></field>
+														<field name="description"><string>Questions about this demo</string></field>
+														<field name="topics">
+															<collection type="java.util.ArrayList">
+																<value>
+																	<object type="org.exoplatform.forum.service.conf.TopicData">
+																		<field name="name"><string>Demo data policy</string></field>
+																		<field name="icon"><string>Tux</string></field>
+																		<field name="owner"><string>root</string></field>
+																		<field name="content"><string>Welcome to eXo Forum live demo. This demo was meant to demonstrate the features of eXo KS.In order to allow you to try a maximum number of features we didn't enforce any security restriction.\nAnybody can become an admin or a moderator of anything.\nAs a consequence, the data for this forum is not meant to stay. We may reinitialise it at anytime.</string></field>
+																		<field name="posts">
+																			<collection type="java.util.ArrayList">
+																				<value>
+																					<object type="org.exoplatform.forum.service.conf.PostData">
+																						<field name="name"><string>Reply: Demo data policy</string></field>
+																						<field name="icon"><string>IconsView</string></field>
+																						<field name="owner"><string>root</string></field>
+																						<field name="content"><string>Enjoy and don't forget to send feedback at ks@exoplatform.com</string></field>
+																					</object>
+																				</value>
+																			</collection>
+																		</field>
+																	</object>
+																</value>
+															</collection>
+														</field>
+													</object>
+												</value>
+											</collection>
+										</field>
+									</object>
+								</value>
+							</collection>
+						</field>
+					</object>
+				</object-param>
+			</init-params>
+		</component-plugin>
+	</external-component-plugins>
+	
 </configuration>
