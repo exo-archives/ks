@@ -75,23 +75,25 @@
 								      String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath() ;
 							    %>
 							    	<div  style="float: left; margin-left: 5px;" id="divId${fileName}">
-								    	<div class="Image"><img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile"></div>
+								    	<div class="Image">
+								    		<a href="javaScript:void(0);" onclick="eXo.faq.UIFAQPortlet.showPicture(this); ">
+													<img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile">
+												</a>
+								    	</div>
 					 						<div style="clear: left;"><span></span></div>
 					 						<div class="LabelBox">
-						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-						 						<div class="Size AttachmentLabel">$fileName ( $size )</div>
-						 						<div style="clear: left;"><span></span></div>
-						 						<div class="Action" style="padding-top: 0px;">
-						 							<div class="Icon MaxView" onclick="eXo.faq.UIFAQPortlet.showPicture('$attLink'); "><%= _ctx.appRes("UIPopupViewQuestion.label.view"); %></div>
-						 							<%
-														downloadAtt = uicomponent.event("DownloadAttach");
-													%>
-						 							<div class="Icon Download">
-						 								<a onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-							 							  <%= _ctx.appRes("UIPopupViewQuestion.label.download"); %>
+						 						<div style="line-height:20px;">
+							 						<div class="Size AttachmentLabel" style="color:#1052b5;" >
+							 							<%
+							 								downloadAtt = uicomponent.event("DownloadAttach");
+							 							%>
+ 																<a onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+							 								$fileName
 							 							</a>
-						 							</div>
-						 						</div>
+							 						</div>
+							 						&nbsp;- <font style="color:gray;font-size:11px;">$size</font>
+							 					</div>
+						 						<div style="clear: left;"><span></span></div>
 						 					</div>
 					 					</div>
 						    <%} else {
