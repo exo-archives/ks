@@ -1,6 +1,7 @@
 <%
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.service.ForumLinkData ;
+  import org.exoplatform.forum.service.Utils;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ; 
 	import org.exoplatform.web.application.JavascriptManager;
@@ -44,12 +45,15 @@
 						String classRowTable = "EvenRow";
 						List listUser = uiform.getListProFileUser() ;	
 						String userRole = "" ;
+						String userTitle = "";
 						for(user in listUser) {
 							userRole = uicomponent.permissionUser[(int)user.getUserRole()];
+							userTitle = user.getUserTitle();
+							if(user.getUserRole() == 0 && (userTitle.equalsIgnoreCase(Utils.MODERATOR) || userTitle.equalsIgnoreCase(Utils.USER) || userTitle.equalsIgnoreCase(Utils.GUEST))) userTitle = Utils.ADMIN;
 					%>
 						<tr class="$classRowTable">
 							<td class="text"><%=user.getUserId();%></td>
-							<td class="text"><%=user.getUserTitle();%></td>
+							<td class="text">$userTitle</td>
 							<td class="text"><%=userRole;%></td>
 							<td class="text"><%=user.getIsBanned();%></td>
 							<td>				 

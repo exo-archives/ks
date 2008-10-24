@@ -63,7 +63,13 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.conf.CategoryData;
+import org.exoplatform.forum.service.conf.ForumData;
+import org.exoplatform.forum.service.conf.ForumInitialData;
+import org.exoplatform.forum.service.conf.InitializeForumPlugin;
+import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.RoleRulesPlugin;
+import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -85,7 +91,7 @@ public class JCRDataStorage {
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
-
+	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator;
 	}
@@ -110,6 +116,17 @@ public class JCRDataStorage {
 			e.printStackTrace();
 		}
 	}
+
+	public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
+		try {
+			if(plugin instanceof InitializeForumPlugin){
+				ForumInitialData forumInitial = ((InitializeForumPlugin)plugin).getForumInitialData();
+				setDefaulDateForum(forumInitial);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public boolean isAdminRole(String userName) throws Exception {
 		try {
@@ -126,7 +143,7 @@ public class JCRDataStorage {
     }
 		return false ;
 	}
-	
+
 	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
 		Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
 		try {
@@ -192,6 +209,67 @@ public class JCRDataStorage {
 		}
 	}
 
+	public void setDefaulDateForum(ForumInitialData forumInitial) throws Exception {
+		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+		Node forumHomeNode = getForumHomeNode(sProvider);
+		List<CategoryData> categories = new ArrayList<CategoryData>();
+  	categories = forumInitial.getCategories();
+		CategoryData categoryData = categories.get(0);
+		String categoryId = "";
+		NodeIterator iter = forumHomeNode.getNodes();
+		boolean isAdd = true;
+		while (iter.hasNext()) {
+			Node cateNode = iter.nextNode();
+			if(cateNode.isNodeType("exo:forumCategory")){
+				isAdd = false;
+				break;
+			}
+		}
+		if(isAdd) {
+    	UserProfile userProfile = new UserProfile();
+    	userProfile.setUserId(categoryData.getOwner());
+    	this.saveUserProfile(sProvider, userProfile, false, false);
+	    Category category = new Category();
+	    category.setCategoryName(categoryData.getName());
+	    category.setDescription(categoryData.getDescription());
+	    category.setOwner(categoryData.getOwner());
+	    this.saveCategory(sProvider, category, true);
+	    categoryId = category.getId() ;
+	    List<ForumData> forums = categoryData.getForums();
+	    String forumId = "";
+	    for (ForumData forumData : forums) {
+	      Forum forum = new Forum();
+	      forum.setForumName(forumData.getName());
+	      forum.setDescription(forumData.getDescription());
+	      forum.setOwner(forumData.getOwner());
+	      this.saveForum(sProvider, categoryId, forum, true);
+	      forumId = forum.getId();
+      }
+	    ForumData forum = forums.get(0) ;
+	  	List<TopicData> topics = forum.getTopics();
+	    String topicId = "";
+	    for (TopicData topicData : topics) {
+	      Topic topic = new Topic();
+	      topic.setTopicName(topicData.getName());
+	      topic.setDescription(topicData.getContent());
+	      topic.setOwner(topicData.getOwner());
+	      topic.setIcon(topicData.getIcon());
+	      this.saveTopic(sProvider, categoryId, forumId, topic, true, false);
+	      topicId = topic.getId();
+      }
+	    TopicData topic = topics.get(0) ;
+	  	List<PostData> posts = topic.getPosts();
+	    for (PostData postData : posts) {
+	    	Post post = new Post();
+	    	post.setName(postData.getName());
+	    	post.setMessage(postData.getContent());
+	    	post.setOwner(postData.getOwner());
+	    	post.setIcon(postData.getIcon());
+	    	this.savePost(sProvider, categoryId, forumId, topicId, post, true);
+	    }
+    }
+  }
+	
 	public List<Category> getCategories(SessionProvider sProvider) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
@@ -1127,10 +1205,16 @@ public class JCRDataStorage {
 			// setTopicCount for Forum
 			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1;
 			forumNode.setProperty("exo:topicCount", newTopicCount);
-
-			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-			long topicCount = forumStatistic.getProperty("exo:topicCount").getLong();
-			forumStatistic.setProperty("exo:topicCount", topicCount + 1);
+			Node forumStatisticNode ;
+			try {
+				forumStatisticNode = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
+      } catch (Exception e) {
+      	forumStatisticNode = forumHomeNode.addNode(Utils.FORUM_STATISTIC, "exo:forumStatistic");
+      	forumStatisticNode.setProperty("exo:postCount", 0);
+      	forumStatisticNode.setProperty("exo:topicCount", 0);
+      }
+			long topicCount = forumStatisticNode.getProperty("exo:topicCount").getLong();
+			forumStatisticNode.setProperty("exo:topicCount", topicCount + 1);
 			Node userProfileNode = getUserProfileNode(sProvider);
 			Node newProfileNode;
 			try {
@@ -2501,7 +2585,8 @@ public class JCRDataStorage {
 			}
 			if(Utils.DEFAULT_USER_ADMIN_ID.equals(userName) && newUserProfile.getUserRole() > 0) {
 				newUserProfile.setUserRole((long)0);
-				if(newUserProfile.getUserTitle().equals(Utils.USER) || newUserProfile.getUserTitle().equals(Utils.MODERATOR))
+				String title = newUserProfile.getUserTitle();
+				if(title.equalsIgnoreCase(Utils.USER) || title.equalsIgnoreCase(Utils.MODERATOR) || title.equalsIgnoreCase(Utils.GUEST))
 					newUserProfile.setUserTitle(Utils.ADMIN);
 			} else {
 				if (newUserProfile.getUserRole() >= 2) {
@@ -3270,7 +3355,12 @@ public class JCRDataStorage {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node userProfileNode = getUserProfileNode(sProvider);
 		Node newProfileNode = userProfileNode.getNode(userId);
-		long t = newProfileNode.getProperty("exo:userRole").getLong();
+		long t = 3;
+		if(isAdminRole(userId)) {
+			t = 0;
+		} else {
+		  t = newProfileNode.getProperty("exo:userRole").getLong();
+		}
 		int totalJob = 0;
 		if (t < 2) {
 			String string = forumHomeNode.getPath();

@@ -45,7 +45,7 @@ public class Utils {
 	public static final String ADMIN = "Administrator".intern() ;
 	public static final String MODERATOR = "Moderator".intern() ;
 	public static final String USER = "User".intern() ;
-	public static final String GUEST = "guest".intern() ;
+	public static final String GUEST = "Guest".intern() ;
 	
 	public static final String DEFAULT_USER_ADMIN_ID = "root".intern() ;
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;

@@ -46,6 +46,15 @@ public interface ForumService {
 	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
 	
 	/**
+	* Adds the plugin.
+	* 
+	* @param plugin the plugin
+	* 
+	* @throws Exception the exception
+	*/
+	public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
+	
+	/**
 	 * Gets the categories.
 	 * 
 	 * @param sProvider is the SessionProvider
