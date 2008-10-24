@@ -653,6 +653,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
       java.util.Date date = new java.util.Date();
       String user = FAQUtils.getFullName(FAQUtils.getCurrentUser());
+      
+      // check for answer have just added
       for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(responseForm.languageIsResponsed)) {
           String content = responseContent.getValue();
@@ -677,8 +679,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           } else {
         		if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() > responseForm.posOfResponse){
         			responseForm.listResponse.remove(responseForm.posOfResponse);
-        			responseForm.listDateResponse.remove(responseForm.posOfResponse);
-        			responseForm.listUserResponse.remove(responseForm.posOfResponse);
+    				responseForm.listDateResponse.remove(responseForm.posOfResponse);
+    				responseForm.listUserResponse.remove(responseForm.posOfResponse);
         		}
         		if(responseForm.listResponse.isEmpty()){
         			questionLanguage.setResponse(new String[]{" "});
@@ -686,14 +688,16 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         			questionLanguage.setResponseBy(null);
         		} else {
         			questionLanguage.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
-          		questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
-          		questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
+        			questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
+        			questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
         		}
           }
           questionLanguage.setQuestion(questionContent.getValue().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           break ;
         }
       }
+      
+      // change to new language
       for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(language)) {
           responseForm.languageIsResponsed = language ;
@@ -701,8 +705,19 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           responseForm.labelContent_ = questionLanguage.getQuestion();
           responseContent.setValue(questionLanguage.getResponse()[0]) ;
           responseForm.posOfResponse = 0;
+          
           responseForm.listResponse.clear();
+          responseForm.listUserResponse.clear();
+          responseForm.listDateResponse.clear();
+          
           responseForm.listResponse.addAll(Arrays.asList(questionLanguage.getResponse()));
+          if(responseForm.listResponse.size() == 1 && responseForm.listResponse.get(0).trim().length() < 1){
+        	  responseForm.listUserResponse.add(user);
+        	  responseForm.listDateResponse.add(date);
+          } else {
+        	  responseForm.listUserResponse.addAll(Arrays.asList(questionLanguage.getResponseBy()));
+        	  responseForm.listDateResponse.addAll(Arrays.asList(questionLanguage.getDateResponse()));
+          }
           break ;
         }
       }
