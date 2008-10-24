@@ -40,7 +40,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.popup.UIMovePostForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
@@ -59,6 +58,7 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -77,7 +77,6 @@ import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -158,7 +157,7 @@ public class UITopicDetail extends UIForm {
 	private boolean isModeratePost = false ;
 	private boolean isMod = false ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
-	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
+	private Map<String, CommonContact> mapContact = new HashMap<String, CommonContact>();
 //replace when portal fix bug show image
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
@@ -371,8 +370,8 @@ public class UITopicDetail extends UIForm {
 	}
 
 		@SuppressWarnings("unused")
-	private ForumContact getPersonalContact(String userId) throws Exception {
-			ForumContact contact ;
+	private CommonContact getPersonalContact(String userId) throws Exception {
+			CommonContact contact ;
 		if(mapContact.containsKey(userId)){
 			contact = mapContact.get(userId) ;
 		} else {
@@ -380,13 +379,13 @@ public class UITopicDetail extends UIForm {
 			mapContact.put(userId, contact) ;
 		}
 		if(contact == null) {
-			contact = new ForumContact() ;
+			contact = new CommonContact() ;
 		}
 		return contact ;
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(ForumContact contact) throws Exception {
+	private String getAvatarUrl(CommonContact contact) throws Exception {
 //		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 //		try {
 //			ContactAttachment attachment = contact.getAttachment() ; 
@@ -1163,7 +1162,7 @@ public class UITopicDetail extends UIForm {
 			}
 			viewUserProfile.setUserProfile(userProfile) ;
 			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
-			ForumContact contact = null ;
+			CommonContact contact = null ;
 			if(topicDetail.mapContact.containsKey(userId)) {
 				contact = topicDetail.mapContact.get(userId) ;
 			}

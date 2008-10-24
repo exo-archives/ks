@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.forum.ForumUtils;
-	import org.exoplatform.forum.service.user.ForumContact;
+	import org.exoplatform.ks.common.CommonContact;
 %>
 <div class="UIViewMemberProfile">
 <% uiform.begin() %>
@@ -10,7 +10,7 @@
 	UserProfile userProfile = uiform.getUserProfile() ;
 	UserProfile userProfileLogin = uiform.getUserProfileLogin() ;
 	String userName = userProfile.getUserId() ;
-	ForumContact contact = uiform.getContact(userName) ;
+	CommonContact contact = uiform.getContact(userName) ;
 	String avatarUrl = "";
 	String birthDay = "" ;
 	String location = "" ;

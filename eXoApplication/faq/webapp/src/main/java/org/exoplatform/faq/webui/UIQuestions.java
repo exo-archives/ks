@@ -21,7 +21,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.exoplatform.container.PortalContainer;
@@ -48,9 +50,11 @@ import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
+import org.exoplatform.faq.webui.popup.UIViewUserProfile;
 import org.exoplatform.faq.webui.popup.UIVoteQuestion;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
+import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -91,6 +95,7 @@ import org.exoplatform.webui.event.EventListener;
       // action of question:
 	    @EventConfig(listeners = UIQuestions.QuestionManagamentActionListener.class),
 	    @EventConfig(listeners = UIQuestions.ViewQuestionActionListener.class),
+	    @EventConfig(listeners = UIQuestions.ViewUserProfileActionListener.class),
 	    @EventConfig(listeners = UIQuestions.ResponseQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.EditQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.DeleteQuestionActionListener.class),
@@ -128,6 +133,7 @@ public class UIQuestions extends UIContainer {
   public String backPath_ = "" ;
   private static String language_ = "" ;
   private List<Watch> watchList_ = new ArrayList<Watch>() ;
+  private Map<String, CommonContact> mapContact = new HashMap<String, CommonContact>();
   
   private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
   private String[] firstTollbar_ = new String[]{"AddCategory", "QuestionManagament"} ;
@@ -1265,6 +1271,27 @@ public class UIQuestions extends UIContainer {
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
+  
+  static  public class ViewUserProfileActionListener extends EventListener<UIQuestions> {
+    public void execute(Event<UIQuestions> event) throws Exception {
+      UIQuestions question = event.getSource() ; 
+      String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+      UIFAQPortlet portlet = question.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+      UIViewUserProfile viewUserProfile = popupContainer.addChild(UIViewUserProfile.class, null, null) ;
+      popupContainer.setId("ViewUserProfile") ;
+      CommonContact contact = null ;
+			if(question.mapContact.containsKey(userId)) {
+				contact = question.mapContact.get(userId) ;
+			}
+			viewUserProfile.setContact(contact) ;
+      viewUserProfile.setUser(FAQUtils.getUserByUserId(userId)) ;
+      popupAction.activate(popupContainer, 600, 420) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
+  }
+  
   
   static  public class EditQuestionActionListener extends EventListener<UIQuestions> {
     public void execute(Event<UIQuestions> event) throws Exception {

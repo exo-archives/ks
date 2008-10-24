@@ -16,6 +16,9 @@
   <modules>
     <module>web/ksportal</module>
     <module>web/webservice</module>
+	
+	<module>eXoApplication/common</module>
+	
     <module>eXoApplication/faq/webapp</module>
     <module>eXoApplication/faq/service</module>
     

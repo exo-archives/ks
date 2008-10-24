@@ -16,6 +16,8 @@
  */
 package org.exoplatform.faq.webui;
 
+import org.exoplatform.webui.core.model.SelectItemCategory;
+
 
 
 /**

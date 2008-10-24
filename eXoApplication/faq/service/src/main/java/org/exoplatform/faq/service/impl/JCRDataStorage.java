@@ -65,7 +65,6 @@ import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
 
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
@@ -1274,6 +1273,9 @@ public class JCRDataStorage {
   
   @SuppressWarnings("unchecked")
 	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
+//  	Common common = new Common() ;
+//  	String groupName= "KnowledgeSuite-faq" ;
+//  	common.sendEmailNotification(addresses, message, groupName) ;
     Calendar cal = new GregorianCalendar();
     PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
     String name = String.valueOf(cal.getTime().getTime()) ;

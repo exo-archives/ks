@@ -10,7 +10,7 @@
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
-	import org.exoplatform.forum.service.user.ForumContact;
+	import org.exoplatform.ks.common.CommonContact;
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
@@ -550,7 +550,7 @@
 			String shortDateFormat = userProfile.getShortDateFormat() ;
 			for(post in posts) {
 				String owner = post.getOwner() ;
-				ForumContact contact = uiform.getPersonalContact(owner) ;
+				CommonContact contact = uiform.getPersonalContact(owner) ;
 				String avatarUrl = "" ;
 				String location = "" ;
 				boolean isCity = false;

@@ -1,0 +1,116 @@
+<%	
+	import org.exoplatform.services.organization.User ;
+	import org.exoplatform.faq.webui.FAQUtils;
+	import org.exoplatform.ks.common.CommonContact;
+%>
+<div class="UIViewUserProfile $uicomponent.id">
+<% uiform.begin() %>
+<%	
+	User user = uiform.getUser() ;
+	String userName = user.getUserName() ;
+	CommonContact contact = uiform.getContact(userName) ;
+	String avatarUrl = "";
+	String birthDay = "" ;
+	String location = "" ;
+	Date birthDayDate =	null;
+	boolean isCity = false;
+	if(contact != null) {
+		birthDayDate = contact.getBirthday() ;
+		if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
+		if(contact.getCountry() != null) {
+			if(isCity) location = location + ", ";
+			location = location + contact.getCountry() ;
+		}
+	}
+	String createdDate = "";
+	String fullName = userName;
+	if(user != null){ 
+		createdDate = user.getCreatedDate();
+		fullName = user.getFullName();
+	}
+%>
+	<div class="ViewUserProfileContainer">
+		<div class="TitleBar">
+			<div class="TitleIcon">
+				<%=_ctx.appRes("UIViewUserProfile.label.ViewUserProfileOf");%>: <span class="UserLabel " >$fullName</span>
+			</div>
+		</div>
+		<div class="ViewContainer">
+			<table class="TablePost" cellspacing="0" borderspacing="0">
+				<tbody>
+					<tr>
+						<td class="UserContainer">
+							<div class="UserContent">
+								<%	
+									avatarUrl = uiform.getAvatarUrl(contact) ;
+								%>
+								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);"/>
+								<div class="Rank"><%=user.getFullName();%></div>
+								<div class="InfoUser">
+									<div>Join Date: $createdDate</div>
+								</div>
+							</div>
+						</td>
+						<td class="ProfileContainer">
+							<table class="TablePost" cellspacing="0" borderspacing="0">
+								<tbody>
+								<% 
+									String firstName = "";
+									String lastName = "";
+									String email = "";
+									String gender = "";
+									String jobTitle = "";
+									String workPhone = "";
+									String mobile = "";
+									String siteOfUser = "";
+									if(user != null){
+										userName = user.getUserName();
+										firstName = user.getFirstName();
+										lastName	= user.getLastName() ;
+										email		 = "<a target=\"_blank\" href=\"mailto:"+user.getEmail()+"\">"+user.getEmail()+"</a>" ;
+									}
+									if(!FAQUtils.isFieldEmpty(siteOfUser)) {
+										siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
+									}
+									String []labels = uiform.getLabelProfile();	
+									String []contents = [userName, firstName, lastName, birthDay, gender, email,
+										jobTitle, location, workPhone, mobile, siteOfUser]; 
+									int i = 0 ;
+									for(label in labels) {
+										String content = "";
+										content = contents[i];
+										if(content == null) content = "";
+										label = _ctx.appRes(uicomponent.getName() + ".label." + label) ;
+										++i ;
+								%>
+									<tr>
+										<td class="Label">$label:</td>
+										<td class="LabelProfile"><span>$content</span></td>
+									</tr>
+								<%} %>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<div class="UIAction">
+    	<table class="ActionContainer" align="center">
+			  <tr>
+				  <td align="center">
+		    		<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+			  	  	<div class="ButtonLeft">
+			    	  	<div class="ButtonRight">
+			      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></div>
+			        	</div>
+			      	</div>
+		    		</a>
+	      	</td>
+				</tr>
+ 	  </table>
+	</div>
+<%uiform.end()%>
+</div>

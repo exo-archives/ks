@@ -39,6 +39,12 @@
     </dependency>
     
     <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.common</artifactId>
+      <version>${org.exoplatform.ks.version}</version>
+    </dependency>
+    
+    <dependency>
       <groupId>org.exoplatform.cs</groupId>
       <artifactId>exo.cs.eXoApplication.mail.service</artifactId>
       <version>${org.exoplatform.cs.version}</version>     

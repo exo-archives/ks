@@ -30,9 +30,9 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -114,10 +114,10 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		return this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
 	}
 	@SuppressWarnings("unused")
-	private ForumContact getPersonalContact(String userId) throws Exception {
-		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
+	private CommonContact getPersonalContact(String userId) throws Exception {
+		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new ForumContact() ;
+			contact = new CommonContact() ;
 		}
 		return contact ;
 	}
@@ -143,7 +143,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(ForumContact contact) throws Exception {
+	private String getAvatarUrl(CommonContact contact) throws Exception {
 //	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 //	try {
 //		ContactAttachment attachment = contact.getAttachment() ; 
@@ -153,6 +153,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 //	} catch (NullPointerException e) {
 //		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //	}
+		CommonContact common = new CommonContact() ;
 	if (contact.getAvatarUrl() == null ) {
 		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 	} else {

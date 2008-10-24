@@ -595,11 +595,13 @@
 													for(String res in question.getAllResponses()) {
 														date = dateFormatter.format(question.getDateResponse()[countResponse]);
 														responseBy = FAQUtils.getFullName(question.getResponseBy()[countResponse]) ;
+														String userProfile = uicomponent.event("ViewUserProfile", question.getResponseBy()[countResponse]) ;
 												%>
 														$res
 														<div style="color:gray;">
-															<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
-															&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
+															<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> : &nbsp; 
+															<a href="$userProfile"> $responseBy </a> 
+															<%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
 														</div>
 														<a onclick="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + countResponse)%>"
 																title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
