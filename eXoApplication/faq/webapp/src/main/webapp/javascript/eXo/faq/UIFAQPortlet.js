@@ -127,6 +127,9 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	//uiPortalApplication.style.visibility = "hidden" ;
 	uiPortalApplication.style.display = "none" ;
 	
+	uiPortalApplication.style.height =  dummyPortlet.offsetHeight + "px";
+	uiPortalApplication.style.overflow =  "hidden";
+	window.scroll(0,0) ;
 };
 
 UIFAQPortlet.prototype.printAll = function(obj) {
@@ -147,6 +150,9 @@ UIFAQPortlet.prototype.printAll = function(obj) {
   document.body.insertBefore(dummyPortlet,uiPortalApplication) ;
   //uiPortalApplication.style.visibility = "hidden" ;
   uiPortalApplication.style.display = "none" ;
+	uiPortalApplication.style.height =  dummyPortlet.offsetHeight + "px";
+	uiPortalApplication.style.overflow =  "hidden";
+	window.scroll(0,0) ;
 };
 
 UIFAQPortlet.prototype.removeLink = function(rootNode){
@@ -163,13 +169,17 @@ UIFAQPortlet.prototype.removeLink = function(rootNode){
 UIFAQPortlet.prototype.closePrint = function() {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var uiPortalApplication = document.getElementById("UIPortalApplication");
-	uiPortalApplication.style.display = "block" ;	
+	uiPortalApplication.style.display = "block" ;
+	uiPortalApplication.style.height =  "auto";
+	uiPortalApplication.style.overflow =  "auto";
 	//uiPortalApplication.style.visibility = "visible" ;
 	for(var i = 0 ; i < document.body.childNodes.length ; i++) {
 		if(DOMUtil.hasClass(document.body.childNodes[i], "UIFAQPortlet")) {
 			DOMUtil.removeElement(document.body.childNodes[i]) ;
 		}			
 	}
+	
+	window.scroll(0,0);
 } ;
 
 UIFAQPortlet.prototype.loadScroll = function(e) {
