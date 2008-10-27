@@ -35,6 +35,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -248,10 +249,13 @@ public class JCRDataStorage {
 	    ForumData forum = forums.get(0) ;
 	  	List<TopicData> topics = forum.getTopics();
 	    String topicId = "";
+	    String ct = "";
 	    for (TopicData topicData : topics) {
 	      Topic topic = new Topic();
 	      topic.setTopicName(topicData.getName());
-	      topic.setDescription(topicData.getContent());
+	      ct = topicData.getContent();
+	      ct = StringUtils.replace(ct, "\\n","<br/>");
+	      topic.setDescription(ct);
 	      topic.setOwner(topicData.getOwner());
 	      topic.setIcon(topicData.getIcon());
 	      this.saveTopic(sProvider, categoryId, forumId, topic, true, false);
@@ -262,7 +266,9 @@ public class JCRDataStorage {
 	    for (PostData postData : posts) {
 	    	Post post = new Post();
 	    	post.setName(postData.getName());
-	    	post.setMessage(postData.getContent());
+	    	ct = postData.getContent();
+	    	ct = StringUtils.replace(ct, "\\n","<br/>");
+	    	post.setMessage(ct);
 	    	post.setOwner(postData.getOwner());
 	    	post.setIcon(postData.getIcon());
 	    	this.savePost(sProvider, categoryId, forumId, topicId, post, true);
