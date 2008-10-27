@@ -1203,6 +1203,13 @@
 	margin: 0px 3px;
 	float:right;
 }
+.UIFAQPortlet .refreshMail {
+	background: url(background/refresh.png) no-repeat scroll right;
+	height:16px;
+	width:16px;
+	margin: 0px 3px;
+	float:left;
+}
 
 .UIPrintPreview .AttachmentContent .LabelBox .Action{
   display:none;

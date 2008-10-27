@@ -18,6 +18,9 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.portlet.PortletPreferences;
 
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -27,6 +30,8 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -50,6 +55,7 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/faq/webui/popup/UISettingForm.gtmpl",
 		events = {
+				@EventConfig(listeners = UISettingForm.ResetMailContentActionListener.class),
 				@EventConfig(listeners = UISettingForm.SaveActionListener.class),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
@@ -75,9 +81,13 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private boolean isEditPortlet_ = false;
 	
+	private boolean isResetMail = false;
+	private int indexOfTab = 0;
+	
 	public UISettingForm() throws Exception {
 		super("UISettingForm");
 		isEditPortlet_ = false;
+		this.setActions(new String[]{"Save", "Cancel"});
 	}
 	
 	public void setIsEditPortlet(boolean isEditPortLet){
@@ -108,10 +118,10 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			
 			FAQUtils.getEmailSetting(faqSetting_, true, true);
 			EmailAddNewQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_DEFAULT_ADD_QUESTION, null, null, true))
-																															.setValue(faqSetting_.getEmailSettingContent()));
+													.setValue(faqSetting_.getEmailSettingContent()));
 			FAQUtils.getEmailSetting(faqSetting_, false, true);
 			EmailEditQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_DEFAULT_EDIT_QUESTION, null, null, true))
-																															.setValue(faqSetting_.getEmailSettingContent()));
+													.setValue(faqSetting_.getEmailSettingContent()));
 			
 			DisplayTab.addUIFormInput((new UIFormSelectBox(DISPLAY_MODE, DISPLAY_MODE, displayMode)).setValue(faqSetting_.getDisplayMode()));
 			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));;
@@ -179,9 +189,9 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 				
 				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion, defaultEditQuestion);
 				UIApplication uiApplication = settingForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ;
+				uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				return ;
 			} else {
 				faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
@@ -198,6 +208,38 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 		}
 	}
 
+	static public class ResetMailContentActionListener extends EventListener<UISettingForm> {
+		public void execute(Event<UISettingForm> event) throws Exception {
+			UISettingForm settingForm = event.getSource() ;
+			String id = event.getRequestContext().getRequestParameter(OBJECTID);
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+			PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+			String emailContent = "";
+			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+			ResourceBundle res = context.getApplicationResourceBundle() ;
+			UIFormInputWithActions formInputWithActions = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
+			UIFormWYSIWYGInput input = null;
+			if(id.equals("0")){
+				emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
+				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
+											formInputWithActions.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB))
+											.getChildById(EMAIL_DEFAULT_ADD_QUESTION);
+				input.setValue(emailContent);
+			} else {
+				emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
+				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
+											formInputWithActions.getChildById(settingForm.SET_DEFAULT_EDIT_QUESTION_TAB))
+											.getChildById(EMAIL_DEFAULT_EDIT_QUESTION);
+				input.setValue(emailContent);
+			}
+			
+			settingForm.isResetMail = true;
+			settingForm.indexOfTab = Integer.parseInt(id);
+			
+			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
+		}
+	}
+	
 	static public class CancelActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;			

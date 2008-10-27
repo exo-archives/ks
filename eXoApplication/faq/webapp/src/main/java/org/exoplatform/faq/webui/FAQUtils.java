@@ -301,21 +301,21 @@ public class FAQUtils {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 		String emailContent = "";
-		if(isNew){
-			emailContent = portletPref.getValue("SendMailAddNewQuestion", "");
-		} else {
-			emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
-		}
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
-		if(!isSettingForm){
-			if(emailContent == null || emailContent.trim().length() < 1){
+		if(isSettingForm){
+			if(isNew){
+				emailContent = portletPref.getValue("SendMailAddNewQuestion", "");
+			} else {
+				emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
+			}
+		}
+		if(emailContent == null || emailContent.trim().length() < 1){
 		    if(isNew){
 		    	emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
 		    } else {
 		    	emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
 		    }
-			}
 		}
 		faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
 		faqSetting.setEmailSettingContent(emailContent) ;
