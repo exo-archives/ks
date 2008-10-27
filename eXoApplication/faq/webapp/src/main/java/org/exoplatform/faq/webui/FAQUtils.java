@@ -303,12 +303,10 @@ public class FAQUtils {
 		String emailContent = "";
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
-		if(isSettingForm){
-			if(isNew){
-				emailContent = portletPref.getValue("SendMailAddNewQuestion", "");
-			} else {
-				emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
-			}
+		if(isNew){
+			emailContent = portletPref.getValue("SendMailAddNewQuestion", "");
+		} else {
+			emailContent = portletPref.getValue("SendMailEditResponseQuestion", "");
 		}
 		if(emailContent == null || emailContent.trim().length() < 1){
 		    if(isNew){
