@@ -87,6 +87,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
             fileAttachment.setSize(fileSize) ;
             java.util.Date date = new java.util.Date();
             fileAttachment.setId("file" + date.getTime()) ;
+            fileAttachment.setNodeName("FAQFile" + date.getTime() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
             listFileAttachment.add(fileAttachment) ;
           } else {
             UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;

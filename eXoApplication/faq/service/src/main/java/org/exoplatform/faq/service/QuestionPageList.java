@@ -407,7 +407,8 @@ public class QuestionPageList extends JCRPageList {
         nodeFile = node.getNode("jcr:content") ;
         attachment.setId(node.getPath());
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-        attachment.setName(node.getName());
+        attachment.setNodeName(node.getName());
+        attachment.setName(node.getProperty("exo:fileName").getValue().getString());
         workspace = node.getSession().getWorkspace().getName() ;
         attachment.setWorkspace(workspace) ;
         attachment.setPath("/" + workspace + node.getPath()) ;

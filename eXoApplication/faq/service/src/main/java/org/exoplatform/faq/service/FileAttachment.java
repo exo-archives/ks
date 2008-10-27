@@ -55,6 +55,8 @@ public class FileAttachment {
   /** The input. */
   private InputStream input ;
   
+  private String nodeName;
+  
   
   /**
    * Gets the file's id, each file have an unique id.
@@ -169,6 +171,14 @@ public class FileAttachment {
    */
   public void setInputStream(InputStream in) throws Exception {input = in ; }
   
+  public String getNodeName() {
+	return nodeName;
+  }
+
+  public void setNodeName(String nodeName) {
+	this.nodeName = nodeName;
+  }
+
   /**
    * Gets the sesison.
    * 
