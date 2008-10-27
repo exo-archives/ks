@@ -522,8 +522,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+        String pathParentCategoryId = questions.getPathService(question_.getCategoryId()) ;
+        String parentCategoryId = null ;
+        if(pathParentCategoryId.lastIndexOf("/") > 0) parentCategoryId = pathParentCategoryId.substring(pathParentCategoryId.lastIndexOf("/")+1, pathParentCategoryId.length()) ;
         if(questionNode!= null && questions.getCategoryId() != null && questions.getCategoryId().trim().length() > 0 &&
-            !questions.getCategoryId().equals(question_.getCategoryId())) {
+            !questions.getCategoryId().equals(question_.getCategoryId()) && !questions.getCategoryId().equals(parentCategoryId)) {
           UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
           Category category = fAQService_.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()) ;
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
