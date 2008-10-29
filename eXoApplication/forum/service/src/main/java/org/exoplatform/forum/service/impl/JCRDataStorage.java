@@ -509,7 +509,7 @@ public class JCRDataStorage {
 				if (catNode.hasProperty("exo:userPrivate")) {
 					List<String> listPrivate = new ArrayList<String>();
 					listPrivate.addAll(ValuesToList(catNode.getProperty("exo:userPrivate").getValues()));
-					if (!listPrivate.get(0).equals(" ")) {
+					if (listPrivate.size() > 0 && !listPrivate.get(0).equals(" ")) {
 						for (int i = 0; i < strModerators.length; i++) {
 							if (!listPrivate.contains(strModerators[i])) {
 								listPrivate.add(strModerators[i]);
