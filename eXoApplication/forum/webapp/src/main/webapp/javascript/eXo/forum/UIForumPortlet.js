@@ -58,7 +58,7 @@ UIForumPortlet.prototype.OneChecked = function(formName) {
 	return false;
 } ;
 
-UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, multiAns1, multiAns2, onlyAns) {
+UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, multiAns1, multiAns2, onlyAns, notChecked) {
 	var form = document.forms[formName];
 	var total = 0;
 	if(form) {
@@ -74,8 +74,11 @@ UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, mult
 	}
 	if(total > 1){
 		return confirm(multiAns1 + " " + total + " " + multiAns2);
-	} else {
+	} else if(total == 1) {
 		return confirm(onlyAns);
+	} else {
+		alert(notChecked);
+		return false;
 	}
 } ;
 
