@@ -403,6 +403,10 @@
 	_margin: 14px 0px 0px 0px;
 }
 
+.UIForumPortlet .ViewPostedByUser .UIAction {
+	_margin: 14px 0px 0px 0px;
+}
+
 .UIForumPortlet .UIForumActionBar .ScrollButtons {
 	display:none;
 	float:right;
