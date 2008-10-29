@@ -19,6 +19,7 @@ package org.exoplatform.forum.service;
 import java.util.List;
 
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 // TODO: Auto-generated Javadoc
@@ -867,7 +868,7 @@ public interface ForumService {
 	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String> values) throws Exception;
 	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception ;
 	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception ;
-	public SendMessageInfo getMessageInfo(String name) throws Exception ;
+	public NotifyInfo getMessageInfo(String name) throws Exception ;
 	public boolean isAdminRole(String userName) throws Exception ;
   
   /**

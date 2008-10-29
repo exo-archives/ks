@@ -32,7 +32,7 @@
 		<component-plugin>
 			<name>email.configuration</name>
 			<set-method>addPlugin</set-method>
-			<type>org.exoplatform.faq.service.EmailNotifyPlugin</type>
+			<type>org.exoplatform.ks.common.EmailNotifyPlugin</type>
 			<description>description</description>
 			<init-params>
 				<properties-param>
@@ -48,7 +48,7 @@
 		<component-plugin>
 			<name>add.role.rules.plugin</name>
 			<set-method>addRolePlugin</set-method>
-			<type>org.exoplatform.faq.service.conf.RoleRulesPlugin</type>
+			<type>org.exoplatform.ks.common.conf.RoleRulesPlugin</type>
 			<description>add role rules</description>
 			<init-params>
 				<value-param>
@@ -77,7 +77,7 @@
 		<component-plugin>
 			<name>email.configuration</name>
 			<set-method>addPlugin</set-method>
-			<type>org.exoplatform.forum.service.EmailNotifyPlugin</type>
+			<type>org.exoplatform.ks.common.EmailNotifyPlugin</type>
 			<description>description</description>
 			<init-params>
 				<properties-param>
@@ -93,7 +93,7 @@
 		<component-plugin>
 			<name>add.role.rules.plugin</name>
 			<set-method>addRolePlugin</set-method>
-			<type>org.exoplatform.forum.service.conf.RoleRulesPlugin</type>
+			<type>org.exoplatform.ks.common.conf.RoleRulesPlugin</type>
 			<description>add role rules</description>
 			<init-params>
 				<value-param>

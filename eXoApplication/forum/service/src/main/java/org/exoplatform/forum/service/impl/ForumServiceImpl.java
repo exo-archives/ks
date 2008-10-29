@@ -42,11 +42,11 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
@@ -364,7 +364,7 @@ public class ForumServiceImpl implements ForumService{
     return lastLogin_ ;
   }
 
-  public SendMessageInfo getMessageInfo(String name) throws Exception {
+  public NotifyInfo getMessageInfo(String name) throws Exception {
     return storage_.getMessageInfo(name) ;
   }
 

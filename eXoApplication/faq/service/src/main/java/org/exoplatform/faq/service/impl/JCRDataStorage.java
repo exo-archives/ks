@@ -42,7 +42,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Category;
-import org.exoplatform.faq.service.EmailNotifyPlugin;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQServiceUtils;
@@ -53,8 +52,9 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
-import org.exoplatform.faq.service.conf.RoleRulesPlugin;
-import org.exoplatform.faq.service.notify.NotifyInfo;
+import org.exoplatform.ks.common.EmailNotifyPlugin;
+import org.exoplatform.ks.common.NotifyInfo;
+import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.mail.MailService;
@@ -1274,8 +1274,8 @@ public class JCRDataStorage {
   @SuppressWarnings("unchecked")
 	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
 //  	Common common = new Common() ;
-//  	String groupName= "KnowledgeSuite-faq" ;
-//  	common.sendEmailNotification(addresses, message, groupName) ;
+//  	String gruopName = "KnowledgeSuite-faq" ;
+//  	common.sendEmailNotification(addresses, message, gruopName) ;
     Calendar cal = new GregorianCalendar();
     PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
     String name = String.valueOf(cal.getTime().getTime()) ;

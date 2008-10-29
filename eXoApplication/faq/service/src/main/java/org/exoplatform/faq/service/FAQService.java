@@ -24,7 +24,7 @@ import javax.jcr.Node;
 import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.faq.service.notify.NotifyInfo;
+import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.mail.Message;
 

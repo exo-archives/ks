@@ -35,16 +35,12 @@ import org.quartz.JobExecutionException;
 
 public class NotifyJob extends Thread implements Job, Runnable  {
   private Thread thread ;
-  private NotifyInfo messageInfo ;
-  private String groupName ;
+  @SuppressWarnings("unused")
+	private NotifyInfo notify_ ;
 	public NotifyJob() throws Exception {
 		setDaemon(true) ;	
 		start() ;
 		
-	}
-	public void setContent(NotifyInfo notifyInfo, String group) {
-		this.messageInfo = notifyInfo ;
-		this.groupName = group ;
 	}
 	public void start() { 
 		if ( thread == null ) { 
@@ -59,24 +55,27 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 		thread = null ;
 	} 
 	
+	public void setMessageInfo(NotifyInfo notifyInfo) {
+		this.notify_ = notifyInfo ;
+	}
+	
 	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
 	
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
-//		, NotifyInfo messageInfo, String groupName
 	  try {
+//	  	RootContainer rootContainer = RootContainer.getInstance() ;
+//	    MailService mailService = (MailService)RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(MailService.class) ;
 	  	RootContainer rootContainer = RootContainer.getInstance() ;
-	    MailService mailService = (MailService)rootContainer.getComponentInstanceOfType(MailService.class) ;
-	    Common common = (Common)rootContainer.getComponentInstanceOfType(Common.class) ;
+	    PortalContainer portalContainer = rootContainer.getPortalContainer("portal") ;
+	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
 	    String name = context.getJobDetail().getName();
-	    
+	    Common common = new Common() ;
+	    System.out.println("\n\n===>common:" + common);
 	    NotifyInfo messageInfo = common.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
-	    System.out.println("\n\n===>" + emailAddresses);
 	    Message message = messageInfo.getMessage() ;
-	    
-		  JobSchedulerService schedulerService = (JobSchedulerService)rootContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
-		  		  
+		  JobSchedulerService schedulerService = (JobSchedulerService)portalContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
 		  	List<String> sentMessages = new ArrayList<String>() ;

@@ -42,7 +42,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -58,7 +57,6 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
@@ -69,8 +67,10 @@ import org.exoplatform.forum.service.conf.ForumData;
 import org.exoplatform.forum.service.conf.ForumInitialData;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.PostData;
-import org.exoplatform.forum.service.conf.RoleRulesPlugin;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.ks.common.EmailNotifyPlugin;
+import org.exoplatform.ks.common.NotifyInfo;
+import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -78,7 +78,6 @@ import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
-
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
  * hung.nguyen@exoplatform.com Jul 10, 2007 Edited by Vu Duy Tu
@@ -90,7 +89,7 @@ public class JCRDataStorage {
 
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
-	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
+	private Map<String, NotifyInfo>	messagesInfoMap_	= new HashMap<String, NotifyInfo>();
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
@@ -100,9 +99,7 @@ public class JCRDataStorage {
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try {
-			if(plugin instanceof EmailNotifyPlugin) {
-				serverConfig_ = ((EmailNotifyPlugin) plugin).getServerConfiguration();
-			}
+			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3278,12 +3275,12 @@ public class JCRDataStorage {
 		JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
 		ExoContainer container = ExoContainerContext.getCurrentContainer();
 		JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-		messagesInfoMap_.put(name, new SendMessageInfo(addresses, message));
+		messagesInfoMap_.put(name, new NotifyInfo(addresses, message));
 		schedulerService.addPeriodJob(info, periodInfo);
 	}
 
-	public SendMessageInfo getMessageInfo(String name) throws Exception {
-		SendMessageInfo messageInfo = messagesInfoMap_.get(name);
+	public NotifyInfo getMessageInfo(String name) throws Exception {
+		NotifyInfo messageInfo = messagesInfoMap_.get(name);
 		messagesInfoMap_.remove(name);
 		return messageInfo;
 	}

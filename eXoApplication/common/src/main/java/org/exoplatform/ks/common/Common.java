@@ -37,16 +37,17 @@ import org.exoplatform.services.scheduler.PeriodInfo;
  */
 public class Common {
 	
-	private Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
+	public Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
+  
 	public Common (){}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-	public void sendEmailNotification(List<String> addresses, Message message ,String groupName) throws Exception {
+	public void sendEmailNotification(List<String> addresses, Message message, String gruopName) throws Exception {
     Calendar cal = new GregorianCalendar();
     PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
     String name = String.valueOf(cal.getTime().getTime()) ;
-    Class clazz = Class.forName("org.exoplatform.common.notify.NotifyJob");
-    JobInfo info = new JobInfo(name, groupName, clazz);
+    Class clazz = Class.forName("org.exoplatform.ks.common.notify.NotifyJob");
+    JobInfo info = new JobInfo(name, gruopName, clazz);
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     JobSchedulerService schedulerService = 
     	(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);

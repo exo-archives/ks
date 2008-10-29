@@ -27,9 +27,9 @@ import org.exoplatform.container.xml.ValuesParam;
 
 /**
  * Created by The eXo Platform SARL
- * Author : Ha Mai
- *					ha.mai@exoplatform.com
- * Oct 16, 2008, 4:25:54 PM
+ * Author : Truong Nguyen
+ *					truong.nguyen@exoplatform.com
+ * Oct 28, 2008, 4:25:54 PM
  */
 public class RoleRulesPlugin extends BaseComponentPlugin {
 	private Map<String, List<String>> rules_ = new LinkedHashMap<String, List<String>>();

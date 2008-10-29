@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
+import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
@@ -63,7 +64,7 @@ public class SendMailJob extends Thread implements Job, Runnable  {
 	    ForumService forumService = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
 	    String name = context.getJobDetail().getName();
 	    
-	    SendMessageInfo messageInfo = forumService.getMessageInfo(name) ;
+	    NotifyInfo messageInfo = forumService.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
 	    
