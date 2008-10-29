@@ -37,7 +37,7 @@ public class Category {
 	 private long forumCount = 0;
 	 public Category(){
 		 id = Utils.CATEGORY + IdGenerator.generate() ;
-		 userPrivate = new String[] {};
+		 userPrivate = new String[] {" "};
 	 }
 
 	 public String getId(){return id;}
