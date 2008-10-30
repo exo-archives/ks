@@ -2019,7 +2019,7 @@ public class JCRDataStorage {
 				} catch (PathNotFoundException e) {
 				}
 				postNode.remove();
-				// setPostCount for Topic
+				//update information: setPostCount, lastpost for Topic
 				long topicPostCount = topicNode.getProperty("exo:postCount").getLong();
 				if (topicPostCount > 0)
 					topicPostCount = topicPostCount - 1;
@@ -2032,6 +2032,16 @@ public class JCRDataStorage {
 				else
 					newNumberAttachs = 0;
 				topicNode.setProperty("exo:numberAttachments", newNumberAttachs);
+				
+				NodeIterator nodeIterator = topicNode.getNodes();
+				long last = nodeIterator.getSize() - 1;
+				nodeIterator.skip(last);
+				while(nodeIterator.hasNext()){
+					postNode = nodeIterator.nextNode();
+				}
+				topicNode.setProperty("exo:lastPostBy", postNode.getProperty("exo:owner").getValue().getString());
+				topicNode.setProperty("exo:lastPostDate", postNode.getProperty("exo:createdDate").getValue().getDate());
+				
 				// setPostCount for Forum
 				long forumPostCount = forumNode.getProperty("exo:postCount").getLong();
 				if (forumPostCount > 0)
