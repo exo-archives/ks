@@ -1,7 +1,7 @@
 <%	
 	import org.exoplatform.forum.webui.UIPostRules ;
 	import org.exoplatform.forum.webui.UIForumLinks ;
-	import org.exoplatform.forum.webui.UIForumPageIterator ;
+	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
 	import org.exoplatform.forum.service.Post ;
 	import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.service.Forum ;
@@ -198,7 +198,7 @@
 			</div>
 			<% /*End Popup Menu*/ %>
 		</div>
-		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 		<div style="clear: left;"><span></span></div>
 	</div>
 <!-- Start PostsInThreadContainer -->	
@@ -543,12 +543,16 @@
 		<%
 		if(isClosed && !canEdit)	isShowPost = false ;
 		int nb = 0;
+		List checkeds = uicomponent.getListChecked(uicomponent.page);
+		if(checkeds == null) checkeds = new ArrayList<String>();
+		
 		if(posts != null && posts.size() > 0 && isShowPost) {
 			int checked = (int)(uiform.getPageSelect()) - 1;
 			String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String shortDateFormat = userProfile.getShortDateFormat() ;
 			for(post in posts) {
+			  String postId = post.getId();
 				String owner = post.getOwner() ;
 				CommonContact contact = uiform.getPersonalContact(owner) ;
 				String avatarUrl = "" ;
@@ -578,7 +582,7 @@
 					editDate = ForumUtils.getFormatDate(longDateFormat,modifileDate);
 				}
 				List attachments = post.getAttachments() ;
-				String idMessage = "Id" + post.getId().substring(15);
+				String idMessage = "Id" + postId.substring(15);
 				User user = userInfo.getUser() ;
 				String joinDate = ""; 
 				if(user != null){
@@ -606,7 +610,7 @@
 				if(isAnd) alert = alert + "!</span>) "
 				else alert = " " ;
 		%>
-		<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
+		<div class="ContentContainer" id="$postId" style="margin: 2px 0px 0px 0px;">
 			<table class="TablePost" cellspacing="0" borderspacing="0">
 				<tbody>
 					<tr>
@@ -714,7 +718,13 @@
 								<div class="CheckPost" style="float: right;">
 									<div class="IPIcon" title="IP: <%=post.getRemoteAddr();%>"><span></span></div>
 									<div style="float:left">
-										<% uiform.renderChild(post.getId()) %>
+										<%//uiform.renderChild(postId)
+										  String isChecked = "";
+											if(checkeds.contains(postId)){
+										    isChecked = "checked=\"checked\"";
+										  } 
+										%>
+										<input type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
 									</div>
 									<div style="clear: left;"><span></span></div>
 								</div>
@@ -822,7 +832,7 @@
 												if(action.equals("Edit")||action.equals("Delete"))continue ;
 											}
 											if(isLock&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
-											String actionLink = uicomponent.event(action,uiformId,post.getId());
+											String actionLink = uicomponent.event(action,uiformId,postId);
 									%>
 										<div class="ActionButton">
 											<div class="NormalStyle">
@@ -936,7 +946,7 @@
 			</div>
 			<% /*End Popup Menu*/ %>
 		</div>
-		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 		<div style="clear: left;"><span></span></div>
 	</div>
 <% if(!isNotReply){ %>

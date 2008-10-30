@@ -65,20 +65,17 @@ public class UICategories extends UIContainer	{
 	private List<Category> categoryList = new ArrayList<Category>() ;
 	private Map<String, Forum> AllForum = new HashMap<String, Forum>() ;
 	public final String FORUM_LIST_SEARCH = "forumListSearch";
-	public final String SEARCH_ITERATOR = "forumSearchIterator";
 	private boolean isGetForumList = false ;
 	private boolean isRenderChild = false ;
 	private UserProfile userProfile ;
 	public UICategories() throws Exception {
-		addChild(UIForumListSearch.class, null, FORUM_LIST_SEARCH).setRendered(isRenderChild) ;
-		addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR).setRendered(isRenderChild);
+		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
 	}
 	
 	public void setIsRenderChild(boolean isRenderChild) {this.isRenderChild = isRenderChild ;}
 	@SuppressWarnings("unused")
 	private boolean getIsRendered() throws Exception {
 		this.getChild(UIForumListSearch.class).setRendered(isRenderChild) ;
-		this.getChild(UIForumPageIterator.class).setRendered(isRenderChild) ;
 		return isRenderChild ;
 	}
 	

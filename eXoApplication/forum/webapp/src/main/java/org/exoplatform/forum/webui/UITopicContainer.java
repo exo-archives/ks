@@ -51,7 +51,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 
@@ -94,10 +93,11 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 		@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
-		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class)
+		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
+		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 	}
 )
-public class UITopicContainer extends UIForm {
+public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String forumId = "";
 	private String categoryId = "";
@@ -110,13 +110,14 @@ public class UITopicContainer extends UIForm {
 	private boolean isModerator = false ;
 	private long maxTopic = 10 ;
 	private long maxPost = 10 ;
+	private long maxPage = 1 ;
 	@SuppressWarnings("unused")
 	private boolean canAddNewThread = true ;
 	@SuppressWarnings("unused")
 	private UserProfile userProfile = null;
 	private String strOrderBy = "" ;
 	private boolean isLogin = false;
-	
+
 	public boolean isLogin() {return isLogin;}
 	public void setLogin(boolean isLogin) {this.isLogin = isLogin;}
 
@@ -124,7 +125,6 @@ public class UITopicContainer extends UIForm {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
-		addChild(UIForumPageIterator.class, null, "ForumPageIterator") ;
 		if(ForumSessionUtils.getCurrentUser() != null) isLogin = true;
 	}
 	@SuppressWarnings("unused")
@@ -136,7 +136,7 @@ public class UITopicContainer extends UIForm {
 		this.categoryId = categoryId ;
 		this.page = 1;
 		this.isGoPage = true ;
-		getChild(UIForumPageIterator.class).setSelectPage(this.page) ;
+		this.setSelectPage(this.page) ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.userProfile = forumPortlet.getUserProfile() ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
@@ -150,7 +150,7 @@ public class UITopicContainer extends UIForm {
 		this.isUpdate = true ;
 		this.page = 1;
 		this.isGoPage = true ;
-		getChild(UIForumPageIterator.class).setSelectPage(this.page) ;
+		this.setSelectPage(this.page) ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.userProfile = forumPortlet.getUserProfile() ;
 		if(!isBreadcumbs) {
@@ -202,7 +202,7 @@ public class UITopicContainer extends UIForm {
 		}catch (NullPointerException e) {
 			e.printStackTrace();
 		}
-		this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
+		this.updatePageList(this.pageList);
 	}
 	
 	@SuppressWarnings("unused")
@@ -223,27 +223,29 @@ public class UITopicContainer extends UIForm {
 		return actions;
 	}
 	
-	@SuppressWarnings({ "unused", "unchecked" })
-	private List<Topic> getTopicPageLits() throws Exception {
+	@SuppressWarnings({ "unchecked", "unused" })
+  private List<Topic> getTopicPageLits() throws Exception {
 		if(!this.isGoPage) {
-			this.page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
+			this.page = this.getPageSelected() ;
 		}
-		long maxPage = this.pageList.getAvailablePage() ;
+		maxPage = this.pageList.getAvailablePage() ;
 		if(this.page > maxPage)this.page = maxPage ;
 		this.topicList = this.pageList.getPage(this.page);
 		for(Topic topic : this.topicList) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
 				getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;
 			}else {
-				addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false) );
+				UIFormCheckBoxInput<Boolean> checkItem = new UIFormCheckBoxInput<Boolean>(topic.getId(), topic.getId(), false);
+				addChild(checkItem);
 			}
 		}
 		this.isGoPage = false ;
 		return this.topicList ;
 	}
 	
-	private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.topicList ;
+	@SuppressWarnings("unchecked")
+  private Topic getTopic(String topicId) throws Exception {
+		List<Topic> listTopic = this.pageList.getPage(0) ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
@@ -282,6 +284,24 @@ public class UITopicContainer extends UIForm {
 	@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
 		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), tagIds);	
+	}
+	
+	@SuppressWarnings("unchecked")
+  private List<String> getIdSelected() throws Exception{
+		List<UIComponent> children = this.getChildren() ;
+		List<String> ids = new ArrayList<String>() ;
+		for (int i = 0; i <= this.maxPage; i++) {
+			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
+		}
+		for(UIComponent child : children) {
+			if(child instanceof UIFormCheckBoxInput) {
+				if(((UIFormCheckBoxInput)child).isChecked()) {
+					if(!ids.contains(child.getName()))ids.add(child.getName());
+				}
+			}
+		}
+		this.cleanCheckedList();
+		return ids;
 	}
 	
 	static public class SearchFormActionListener extends EventListener<UITopicContainer> {
@@ -353,7 +373,7 @@ public class UITopicContainer extends UIForm {
 						}
 						topicContainer.page = page ;
 						topicContainer.isGoPage = true ;
-						topicContainer.getChild(UIForumPageIterator.class).setSelectPage(page) ;
+						topicContainer.setSelectPage(page) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 					}
 				} catch (NumberFormatException e) {
@@ -570,22 +590,17 @@ public class UITopicContainer extends UIForm {
 	
 	//----------------------------------MenuThread---------------------------------
 	static public class ApproveTopicsActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			List <Topic> topics = new ArrayList<Topic>();
 			Topic topic ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic = uiTopicContainer.getTopic(child.getName());
-						if(topic != null) {
-							if(topic.getIsApproved()) continue ;
-							topic.setIsApproved(true);
-							topics.add(topic);
-						}
-					}
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					if(topic.getIsApproved()) continue ;
+					topic.setIsApproved(true);
+					topics.add(topic);
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -603,19 +618,16 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class EditTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic = null ;
 			boolean checked = false ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic = uiTopicContainer.getTopic(child.getName());
-						checked = true ;
-						break ;
-					}
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					checked = true ;
+					break;
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -637,22 +649,17 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetOpenTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			List <Topic> topics = new ArrayList<Topic>();
 			Topic topic ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic = uiTopicContainer.getTopic(child.getName());
-						if(topic != null) {
-							if(!topic.getIsClosed()) continue ;
-							topic.setIsClosed(false) ;
-							topics.add(topic);
-						}
-					}
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					if(!topic.getIsClosed()) continue ;
+					topic.setIsClosed(false);
+					topics.add(topic);
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -668,22 +675,17 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class SetCloseTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
 			List <Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic = uiTopicContainer.getTopic(child.getName());
-						if(topic != null) {
-							if(topic.getIsClosed()) continue ;
-							topic.setIsClosed(true) ;
-							topics.add(topic);
-						}
-					}
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					if(topic.getIsClosed()) continue ;
+					topic.setIsClosed(true);
+					topics.add(topic);
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -699,22 +701,17 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetLockedTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
-			List <Topic> topics = new ArrayList<Topic>();
+			List<Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic = uiTopicContainer.getTopic(child.getName());
-						if(topic != null) {
-							if(topic.getIsLock()) continue ;
-							topic.setIsLock(true) ;
-							topics.add(topic);
-						}
-					}
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					if(topic.getIsLock()) continue ;
+					topic.setIsLock(true);
+					topics.add(topic);
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -730,7 +727,6 @@ public class UITopicContainer extends UIForm {
 	}
 	
 	static public class SetUnLockTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
 			try{
@@ -744,19 +740,15 @@ public class UITopicContainer extends UIForm {
 				e.printStackTrace();
 				return;
 			}
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
-			List <Topic> topics = new ArrayList<Topic>();
+			List<Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic = uiTopicContainer.getTopic(child.getName());
-						if(topic != null) {
-							if(!topic.getIsLock()) continue ;
-							topic.setIsLock(false) ;
-							topics.add(topic);
-						}
-					}
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					if(!topic.getIsLock()) continue ;
+					topic.setIsLock(false);
+					topics.add(topic);
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -772,18 +764,15 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class SetUnStickTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
-			List <Topic> topics = new ArrayList<Topic>();
-			Topic topic_ ; 
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic_ = uiTopicContainer.getTopic(child.getName()) ;
-						if(topic_.getIsSticky()){ topic_.setIsSticky(false) ; topics.add(topic_); } 
-					}
+			List<Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
+			Topic topic ;
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					if(topic.getIsSticky()){ topic.setIsSticky(false); topics.add(topic); }
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -798,18 +787,15 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetStickTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
-			List <Topic> topics = new ArrayList<Topic>();
-			Topic topic_ ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic_ = uiTopicContainer.getTopic(child.getName()) ;
-						if(!topic_.getIsSticky()){ topic_.setIsSticky(true) ;topics.add(topic_); } 
-					}
+			List<Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
+			Topic topic ;
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					if(!topic.getIsSticky()){ topic.setIsSticky(true); topics.add(topic); }
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -824,16 +810,15 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetMoveTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
-			List <Topic> topics = new ArrayList<Topic>();
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-					}
+			List<Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
+			Topic topic ;
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					topics.add(topic);
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -854,16 +839,15 @@ public class UITopicContainer extends UIForm {
 	}	
 
 	static public class MergeTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
-			List <Topic> topics = new ArrayList<Topic>();
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-					}
+			List<Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
+			Topic topic ;
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					topics.add(topic);
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -883,23 +867,22 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetDeleteTopicActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
-			List <Topic> topics = new ArrayList<Topic>();
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topics.add(uiTopicContainer.getTopic(child.getName()));
-					}
+			List<Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
+			Topic topic ;
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					topics.add(topic);
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(topics.size() > 0) {
-				for(Topic topic : topics) {
+				for(Topic topic_ : topics) {
 					try{
-						uiTopicContainer.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic.getId()) ;
+						uiTopicContainer.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), uiTopicContainer.categoryId, uiTopicContainer.forumId, topic_.getId()) ;
 					}catch(Exception e){
 						e.printStackTrace();
 					}
@@ -913,18 +896,15 @@ public class UITopicContainer extends UIForm {
 	}	
 	
 	static public class SetUnWaitingActionListener extends EventListener<UITopicContainer> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			List<UIComponent> children = uiTopicContainer.getChildren() ;
-			List <Topic> topics = new ArrayList<Topic>();
-			Topic topic_ ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topic_ = uiTopicContainer.getTopic(child.getName()) ;
-						if(topic_.getIsWaiting()){ topic_.setIsWaiting(false) ;topics.add(topic_); } 
-					}
+			List<Topic> topics = new ArrayList<Topic>();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
+			Topic topic ;
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopic(topicId);
+				if(topic != null) {
+					if(topic.getIsWaiting()){ topic.setIsWaiting(false) ;topics.add(topic); } 
 				}
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -994,4 +974,5 @@ public class UITopicContainer extends UIForm {
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
+	
 }

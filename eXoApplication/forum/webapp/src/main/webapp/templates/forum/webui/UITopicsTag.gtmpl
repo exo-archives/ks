@@ -7,7 +7,7 @@
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.webui.UITopicsTag ;
-	import org.exoplatform.forum.webui.UIForumPageIterator ;
+	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -42,7 +42,7 @@
 		</div>
 	</div>
 	<div style="overflow:auto; padding-bottom: 2px;">
-	<% uiform.renderChild(UIForumPageIterator.class) ; %>
+	<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 	<div style="clear: right;"><span></span></div>
 	</div>
 	<div class="ForumContainer">
@@ -343,7 +343,7 @@
 		</div>
 	</div>
 	<div style="overflow:auto; padding-top: -2px;">
-	<% uiform.renderChild(UIForumPageIterator.class) ; %>
+	<%_ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 	<div style="clear: right;"><span></span></div>
 	</div>
 	

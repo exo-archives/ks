@@ -8,6 +8,7 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.webui.UIForumListSearch;
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -28,12 +29,7 @@
 	<div class="UIForumWorkingWorkspace">
 	<%	
 		if(uicomponent.getIsRendered()) {
-			uicomponent.renderChild(uicomponent.FORUM_LIST_SEARCH);
-	%>
-			<div style="padding-bottom: 20px;">
-			<%uicomponent.renderChild(uicomponent.SEARCH_ITERATOR);%>
-			</div>
-	<%
+			uicomponent.renderChild(UIForumListSearch.class);
 		} else {
 	%>
 	

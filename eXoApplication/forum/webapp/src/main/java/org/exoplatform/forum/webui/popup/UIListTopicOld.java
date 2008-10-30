@@ -55,8 +55,6 @@ public class UIListTopicOld extends UIContainer {
 	private boolean isUpdate = false ;
 	public UIListTopicOld() throws Exception {
 		addChild(UIForumPageIterator.class, null, "PageListTopicTopicOld") ;
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
-		forumPageIterator.setUpdateListTopicOld(true);
 	}
 	
 	public long getDate() { return date;}

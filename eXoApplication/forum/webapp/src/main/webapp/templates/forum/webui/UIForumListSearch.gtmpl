@@ -1,12 +1,13 @@
 <%	
 	import org.exoplatform.forum.service.ForumSearch ;
-	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.service.Utils ;
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 	List searchEvents = uicomponent.getListEvent() ;
 %>
 <div class="UIForumListSearch">
-	<!--<div class="ContentContainer" id="UITopicContent">-->
-	<div class="ContentContainer" id="UITopicContent">
+<% uiform.begin() %>
+	<div class="ContentContainer">
 		<div class="UITopicList">
 			<div>
 				<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
@@ -51,4 +52,11 @@
 			</div>
 		</div>
 	</div>
+<% if(uiform.getIsShowIter()){ %>
+<div style="overflow: auto;">
+  <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
+	<div style="clear: left;"><span></span></div>
+</div>
+<% } %>
+<%uiform.end()%>
 </div>
