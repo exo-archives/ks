@@ -8,6 +8,7 @@
 
   <modules>
     <module>web/ksportal</module>
+	<module>web/ksResources</module>
 <!--    
     <module>eXoApplication/blog/webapp</module>
     <module>eXoApplication/blog/service</module>
