@@ -41,7 +41,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -60,11 +59,12 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 				@EventConfig(listeners = UITopicsTag.RemoveTopicActionListener.class ),
 				@EventConfig(listeners = UITopicsTag.RemoveTagActionListener.class ),
 				@EventConfig(listeners = UITopicsTag.AddWatchingActionListener.class),
-				@EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class)
+				@EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class),
+				@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 		}
 )
 
-public class UITopicsTag extends UIForm {
+public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String tagId = "" ;
 	private JCRPageList listTopic ;
@@ -77,7 +77,6 @@ public class UITopicsTag extends UIForm {
 	private boolean isUpdateTopicTag = true ;
 	private UserProfile userProfile = null;
 	public UITopicsTag() throws Exception {
-		addChild(UIForumPageIterator.class, null, "TagPageIterator") ;
 	}
 	
 	public void setIdTag(String tagId) throws Exception {
@@ -105,9 +104,9 @@ public class UITopicsTag extends UIForm {
 		long maxTopic = this.userProfile.getMaxTopicInPage() ;
 		if(maxTopic > 0) this.maxTopic = maxTopic;
 		this.listTopic.setPageSize(this.maxTopic) ;
-		this.getChild(UIForumPageIterator.class).updatePageList(this.listTopic) ;
+		this.updatePageList(this.listTopic) ;
 		if(this.isUpdateTopicTag) { 
-			this.getChild(UIForumPageIterator.class).setSelectPage(1);
+			this.setSelectPage(1);
 			this.isUpdateTopicTag = false ;
 		}
 	}
@@ -147,7 +146,7 @@ public class UITopicsTag extends UIForm {
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsTag() throws Exception {
 		getListTopicTag() ;
-		this.page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
+		this.page = this.getPageSelected() ;
 		this.topics = this.listTopic.getPage(this.page);
 		for(Topic topic : this.topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {

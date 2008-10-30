@@ -3,13 +3,13 @@
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.ForumTransformHTML; 
-	import org.exoplatform.forum.webui.UITopicContainer ;	
-	import org.exoplatform.forum.webui.UICategory ;
-	import org.exoplatform.forum.webui.UIForumPageIterator ;
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.service.JCRPageList ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.webui.UICategory ;
+	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
+	import org.exoplatform.forum.webui.UITopicContainer ;	
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -139,7 +139,9 @@
 			</div>
 			<% /*End Popup Menu*/ %>
 		</div>
-		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+		<% 
+		  _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
+		%>
 		<div style="clear: left;"><span></span></div>
 
 	</div>
@@ -386,6 +388,8 @@
 							<%
 							int rCNB = 0;
 							List topics = uicomponent.getTopicPageLits() ;
+							List checkeds = uicomponent.getListChecked(uicomponent.page);
+							if(checkeds == null) checkeds = new ArrayList<String>();
 							if(!topics.isEmpty()) {
 								String classRow = "whileRow";
 								int i = 0;
@@ -448,9 +452,13 @@
 									}
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
 									String url = uicomponent.url("OpenTopic", (uicomponent.categoryId+"/"+uicomponent.forumId+"/"+topicId));
-									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" ); 
+									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" );
+								  String classSelec = "";
+								  if(checkeds.contains(topicId)){
+								    classSelec = "SelectedItem";
+								  } 
 							%>
-								<tr class="$classRow">
+								<tr class="$classRow $classSelec">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
 									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
 									<td >
@@ -561,8 +569,14 @@
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">$postView</td>
-									<% if(canEdit) { %>
-									<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><%uicomponent.renderChild(topicId)%></td>
+									<% if(canEdit) { 
+									  String checked = "";
+									  if(checkeds.contains(topicId)){
+									    checked = "checked=\"checked\"";
+									  }
+									%>
+									<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
+									  <%//uicomponent.renderChild(topicId)%>
 					 				<% } %>
 					 			</tr>
 					 	<% 
@@ -661,7 +675,9 @@
 			</div>
 			<% /*End Popup Menu*/ %>
 		</div>
-		<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+		<%
+		  _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
+		 %>
 		<div style="clear: left;"><span></span></div>
 	</div>
 	<% //Begin RightClick Bookmark	%>
@@ -699,5 +715,17 @@
 	<% } %>
 	</div>
 	<% //End RightClick Bookmark %>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<%uiform.end()%>
 </div>
+

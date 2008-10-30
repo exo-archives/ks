@@ -75,7 +75,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -132,10 +131,11 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.ViewThreadByUserActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.WatchOptionActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class ),
-			@EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class )
+			@EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class ),
+			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 		}
 )
-public class UITopicDetail extends UIForm {
+public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String categoryId ;
 	private String forumId ; 
@@ -145,7 +145,7 @@ public class UITopicDetail extends UIForm {
 	private Forum forum;
 	private Topic topic = new Topic();
 	private JCRPageList pageList ;
-	private long pageSelect	= 1 ;
+	private long page	= 1 ;
 	private boolean isGopage = false ;
 	private boolean isEditTopic = false ;
 	private boolean isUpdatePageList = false ;
@@ -155,20 +155,19 @@ public class UITopicDetail extends UIForm {
 	private List<Post>	posts ;
 	private boolean isEdit = false ;
 	private long maxPost = 10 ;
+	private long maxPage = 1 ;
 	private UserProfile userProfile = null;
 	private String userName = " " ;
 	private boolean isModeratePost = false ;
 	private boolean isMod = false ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
-//replace when portal fix bug show image
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 		addUIFormInput( new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA,null)) ;
-		addChild(UIForumPageIterator.class, null, "TopicPageIterator") ;
 		addChild(UIPostRules.class, null, null);
 		this.setSubmitAction("GoNumberPage") ;
 		this.setActions(new String[]{"PreviewReply","QuickReply"} );
@@ -237,7 +236,7 @@ public class UITopicDetail extends UIForm {
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
 		this.viewTopic = false ;
-		this.pageSelect = numberPage ;
+		this.page = numberPage ;
 		this.isGopage = true ;
 		this.isEditTopic = false ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
@@ -260,7 +259,7 @@ public class UITopicDetail extends UIForm {
 		} else {
 			this.topic = topic ;
 		}
-		this.getChild(UIForumPageIterator.class).setSelectPage(numberPage) ;
+		this.setSelectPage(numberPage) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 	}
 	
@@ -429,10 +428,10 @@ public class UITopicDetail extends UIForm {
 			if (maxPost > 0)
 				this.maxPost = maxPost;
 			pageList.setPageSize(this.maxPost);
-			UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class);
-			forumPageIterator.updatePageList(this.pageList);
+			this.updatePageList(this.pageList);
+			maxPage = pageList.getAvailablePage();
 			if (IdPostView.equals("lastpost")) {
-				forumPageIterator.setSelectPage(pageList.getAvailablePage());
+				this.setSelectPage(maxPage);
 			}
 			this.isModeratePost = this.topic.getIsModeratePost();
 		} catch (Exception e) {
@@ -446,27 +445,26 @@ public class UITopicDetail extends UIForm {
 		this.isUpdatePageList = isUpdatePageList;
 	}
 	@SuppressWarnings("unused")
-	private long getPageSelect() {return this.pageSelect ;}
+	private long getPageSelect() {return this.page ;}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
 		if(this.pageList == null) return null ;
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		if(!this.isGopage) {
-			this.pageSelect = forumPageIterator.getPageSelected() ;
+			this.page = this.getPageSelected() ;
 			long availablePage = this.pageList.getAvailablePage() ;
-			if(this.pageSelect > availablePage) {
-				this.pageSelect = availablePage ;
-				forumPageIterator.setSelectPage(availablePage);
+			if(this.page > availablePage) {
+				this.page = availablePage ;
+				this.setSelectPage(availablePage);
 			}
 		}
-		if(this.pageSelect < 1) return null ;
+		if(this.page < 1) return null ;
 		try {
-			this.posts = this.pageList.getPage(this.pageSelect) ;
+			this.posts = this.pageList.getPage(this.page) ;
 		} catch (Exception e) {
 			long availablePage = this.pageList.getAvailablePage() ;
-			this.pageSelect = availablePage ;
-			forumPageIterator.setSelectPage(availablePage);
+			this.page = availablePage ;
+			this.setSelectPage(availablePage);
 			this.posts = this.pageList.getPage(availablePage) ;
 		}
 		if(this.posts.size() > 0 && this.posts != null) {
@@ -487,7 +485,7 @@ public class UITopicDetail extends UIForm {
 	public List<Post> getAllPost() throws Exception {return this.pageList.getPage(0) ;}
 	
 	private Post getPost(String postId) throws Exception {
-		for(Post post : this.posts) {
+		for(Post post : getAllPost()) {
 			if(post.getId().equals(postId)) return post;
 		}
 		return null ;
@@ -551,17 +549,21 @@ public class UITopicDetail extends UIForm {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<Post> getPostsSelected() throws Exception{
-		List<Post> posts = new ArrayList<Post>();
+  private List<String> getIdSelected() throws Exception{
 		List<UIComponent> children = this.getChildren() ;
+		List<String> ids = new ArrayList<String>() ;
+		for (int i = 0; i <= this.maxPage; i++) {
+			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
+		}
 		for(UIComponent child : children) {
 			if(child instanceof UIFormCheckBoxInput) {
 				if(((UIFormCheckBoxInput)child).isChecked()) {
-					posts.add(getPost(((UIFormCheckBoxInput)child).getName())) ;
+					if(!ids.contains(child.getName()))ids.add(child.getName());
 				}
 			}
 		}
-		return posts;
+		this.cleanCheckedList();
+		return ids;
 	}
 	
 	static public class AddPostActionListener extends EventListener<UITopicDetail> {
@@ -694,8 +696,8 @@ public class UITopicDetail extends UIForm {
 							page = topicDetail.pageList.getAvailablePage() ;
 						}
 						topicDetail.isGopage = true ;
-						topicDetail.pageSelect = page ;
-						topicDetail.getChild(UIForumPageIterator.class).setSelectPage(page) ;
+						topicDetail.page = page ;
+						topicDetail.setSelectPage(page) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 					}
 				} catch (NumberFormatException e) {
@@ -1017,15 +1019,11 @@ public class UITopicDetail extends UIForm {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
-			List<UIComponent> children = topicDetail.getChildren() ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						posts.add(topicDetail.getPost(((UIFormCheckBoxInput)child).getName()));
-					}
-				}
-			}
+			for (String postId : postIds) {
+				posts.add(topicDetail.getPost(postId));
+      }
 			if(posts.size() > 0) {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIMovePostForm movePostForm = popupAction.createUIComponent(UIMovePostForm.class, null, null) ;
@@ -1043,7 +1041,11 @@ public class UITopicDetail extends UIForm {
 	static public class SetApprovePostActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			List<Post> posts = topicDetail.getPostsSelected();
+			List<String> postIds = topicDetail.getIdSelected(); 
+			List<Post> posts = new ArrayList<Post>();
+			for (String postId : postIds) {
+				posts.add(topicDetail.getPost(postId));
+      }
 			if(posts.isEmpty()){
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -1076,17 +1078,15 @@ public class UITopicDetail extends UIForm {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Post post = new Post() ;
+			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
-			List<UIComponent> children = topicDetail.getChildren() ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						post = topicDetail.getPost(((UIFormCheckBoxInput)child).getName());
-						post.setIsHidden(true) ;
-						posts.add(post) ;
-					}
+			for (String postId : postIds) {
+				post = topicDetail.getPost(postId);
+				if(!post.getIsHidden()){
+					post.setIsHidden(true) ;
+					posts.add(post) ;
 				}
-			}
+      }
 			topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
@@ -1095,7 +1095,11 @@ public class UITopicDetail extends UIForm {
 	static public class SetUnHiddenPostActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			List<Post> posts = topicDetail.getPostsSelected();
+			List<String> postIds = topicDetail.getIdSelected(); 
+			List<Post> posts = new ArrayList<Post>();
+			for (String postId : postIds) {
+				posts.add(topicDetail.getPost(postId));
+      }
 			if(posts.isEmpty()){
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -1132,15 +1136,11 @@ public class UITopicDetail extends UIForm {
 		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			List<UIComponent> children = topicDetail.getChildren() ;
-			List<Post> posts = new ArrayList<Post>() ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						posts.add(topicDetail.getPost(((UIFormCheckBoxInput)child).getName()));
-					}
-				}
-			}
+			List<String> postIds = topicDetail.getIdSelected(); 
+			List<Post> posts = new ArrayList<Post>();
+			for (String postId : postIds) {
+				posts.add(topicDetail.getPost(postId));
+      }
 			for(Post post : posts) {
 				topicDetail.forumService.removePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;

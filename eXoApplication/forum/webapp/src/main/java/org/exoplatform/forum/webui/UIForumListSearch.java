@@ -39,7 +39,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -50,43 +50,48 @@ import org.exoplatform.webui.event.EventListener;
  * 14 Apr 2008, 08:22:52	
  */
 @ComponentConfig(
+		lifecycle = UIFormLifecycle.class,
 		template =	"app:/templates/forum/webui/UIForumListSearch.gtmpl",
 		events = {
 			@EventConfig(listeners = UIForumListSearch.OpentContentActionListener.class),
-			@EventConfig(listeners = UIForumListSearch.CloseActionListener.class)			
+			@EventConfig(listeners = UIForumListSearch.CloseActionListener.class),
+			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 		}
 )
-public class UIForumListSearch extends UIContainer {
+public class UIForumListSearch extends UIForumKeepStickPageIterator {
 	private List<ForumSearch> listEvent = null ;
-	public final String SEARCH_ITERATOR = "forumSearchIterator";
 	private JCRPageList pageList ;
-	private UIForumPageIterator pageIterator ;
-	List<ForumSearch> list = null;
+	private List<ForumSearch> list = null;
+	private boolean isShowIter = true;
 	public UIForumListSearch() throws Exception {}
 	
 	public void setListSearchEvent(List<ForumSearch> listEvent) {
 		this.listEvent = listEvent ;
 		pageList = new ForumPageList(10, listEvent.size());
 		pageList.setPageSize(10);
-		pageIterator = this.getAncestorOfType(UICategories.class).getChildById(SEARCH_ITERATOR);
-		pageIterator.updatePageList(pageList);
+		this.updatePageList(pageList);
+		isShowIter = true;
 		try {
-			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+			if(this.getInfoPage().get(3) <= 1) isShowIter = false;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	public boolean getIsShowIter() {
+	  return isShowIter ;
+  }
+	
 	@SuppressWarnings("unchecked")
 	public List<ForumSearch> getListEvent() {
-		long pageSelect = pageIterator.getPageSelected() ;
+		long pageSelect = this.getPageSelected() ;
 		list = new ArrayList<ForumSearch>();
 		try {
 			list.addAll(this.pageList.getPageSearch(pageSelect, this.listEvent)) ;
 			if(list.isEmpty()){
 				while(list.isEmpty() && pageSelect > 1) {
 					list.addAll(this.pageList.getPageSearch(--pageSelect, this.listEvent)) ;
-					pageIterator.setSelectPage(pageSelect) ;
+					this.setSelectPage(pageSelect) ;
 				}
 			}
 		} catch (Exception e) {

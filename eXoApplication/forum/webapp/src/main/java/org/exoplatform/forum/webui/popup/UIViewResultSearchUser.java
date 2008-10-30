@@ -36,7 +36,7 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
   private JCRPageList pageList ;
 	private static String FORUM_PAGE_ITERATOR="ForumUserPageIterator";
-	private String[] permissionUser = null;
+  private String[] permissionUser = null;
 	private long totalPage = 0;
 	
 	public UIViewResultSearchUser() throws Exception {
@@ -97,5 +97,21 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
       popupContainer.getChild(UIPopupAction.class).deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
+  }
+
+	public String[] getPermissionUser() {
+  	return permissionUser;
+  }
+
+	public void setPermissionUser(String[] permissionUser) {
+  	this.permissionUser = permissionUser;
+  }
+
+	public long getTotalPage() {
+  	return totalPage;
+  }
+
+	public void setTotalPage(long totalPage) {
+  	this.totalPage = totalPage;
   }
 }
