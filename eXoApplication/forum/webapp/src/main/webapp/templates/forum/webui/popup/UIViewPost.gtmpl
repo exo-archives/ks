@@ -77,7 +77,7 @@
 											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;"/></div>
 						 					<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
-						 						<a href="$urlFile" class="AttachmentLabel" title="$titleFile">$fileName</a>
+						 						<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
 						 						<div style="clear: left;"><span></span></div>
 						 						<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 						 						<div class="Action">
