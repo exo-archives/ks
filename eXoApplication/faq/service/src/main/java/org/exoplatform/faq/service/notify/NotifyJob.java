@@ -20,7 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.ks.common.NotifyInfo;
@@ -33,43 +34,25 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class NotifyJob extends Thread implements Job, Runnable  {
-  private Thread thread ;
+public class NotifyJob implements Job{
+  private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
   
-	public NotifyJob() throws Exception {
-		setDaemon(true) ;	
-		start() ;
-		
-	}
-	public void start() { 
-		if ( thread == null ) { 
-    	thread = new Thread(this); 
-    	thread.start(); 
-    }
-	} 
-	
-	@SuppressWarnings("deprecation")
-  public void destroy() {
-		thread.stop() ;
-		thread = null ;
-	} 
-	
-	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
-	
-	@SuppressWarnings("deprecation")
+  public NotifyJob() throws Exception {}
+  @SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-	  	RootContainer rootContainer = RootContainer.getInstance() ;
-	    PortalContainer portalContainer = rootContainer.getPortalContainer("portal") ;
-	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
-	    FAQService faqService = (FAQService)portalContainer.getComponentInstanceOfType(FAQService.class) ;
+	  	//RootContainer rootContainer = RootContainer.getInstance() ;
+		ExoContainer container = ExoContainerContext.getCurrentContainer();
+	  	
+	    MailService mailService = (MailService)container.getComponentInstanceOfType(MailService.class) ;
+	    FAQService faqService = (FAQService)container.getComponentInstanceOfType(FAQService.class) ;
 	    String name = context.getJobDetail().getName();
 	    
 	    NotifyInfo messageInfo = faqService.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
 	    
-		  JobSchedulerService schedulerService = (JobSchedulerService)portalContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
+		  JobSchedulerService schedulerService = (JobSchedulerService)container.getComponentInstanceOfType(JobSchedulerService.class) ;
 		  		  
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
