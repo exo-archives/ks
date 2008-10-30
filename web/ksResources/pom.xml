@@ -1,0 +1,16 @@
+<project>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>config</artifactId>
+    <version>trunk</version>
+  </parent> 
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>exo.ks.web.ksResources</artifactId>
+  <packaging>war</packaging> 
+  <version>${org.exoplatform.ks.version}</version>
+  <name>eXo KS web resources module</name>
+  <build>
+    <finalName>ksResources</finalName>
+  </build>  
+</project>
