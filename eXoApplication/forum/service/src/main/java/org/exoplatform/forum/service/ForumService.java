@@ -309,7 +309,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception;
+	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception;
 	
 	/**
 	 * Removes the topic.
@@ -400,7 +400,7 @@ public interface ForumService {
 	 * @throws Exception the exception
 	 */
 	public void savePost(SessionProvider sProvider, String categoryId, String forumId,
-	    String topicId, Post post, boolean isNew) throws Exception;
+	    String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception;
 	
 	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception;
 	/**

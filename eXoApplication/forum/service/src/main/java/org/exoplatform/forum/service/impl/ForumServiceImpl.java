@@ -124,8 +124,8 @@ public class ForumServiceImpl implements ForumService{
     storage_.modifyTopic(sProvider, topics, type) ;
   }
 
-  public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception {
-    storage_.saveTopic(sProvider, categoryId, forumId, topic, isNew, isMove);
+  public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
+    storage_.saveTopic(sProvider, categoryId, forumId, topic, isNew, isMove, defaultEmailContent);
   }
 
   public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception {
@@ -165,8 +165,8 @@ public class ForumServiceImpl implements ForumService{
     return storage_.getPosts(sProvider, categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
   }
 
-  public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew) throws Exception {
-    storage_.savePost(sProvider, categoryId, forumId, topicId, post, isNew);
+  public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
+    storage_.savePost(sProvider, categoryId, forumId, topicId, post, isNew, defaultEmailContent);
   }
 
   public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {

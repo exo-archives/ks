@@ -27,9 +27,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
+import org.exoplatform.webui.application.WebuiRequestContext;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -306,6 +309,12 @@ public class ForumUtils {
 	public static String[] getColor() {
 		return new String[] {"blue", "DarkGoldenRod", "green", "yellow", "BlueViolet", "orange",
 				"darkBlue", "IndianRed","DarkCyan" ,"lawnGreen"} ; 
+	}
+	
+	public static String getDefaultMail(){
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+		ResourceBundle res = context.getApplicationResourceBundle() ;
+		return res.getString("UIForumAdministrationForm.label.notifyEmailContentDefault");
 	}
 	
 }
