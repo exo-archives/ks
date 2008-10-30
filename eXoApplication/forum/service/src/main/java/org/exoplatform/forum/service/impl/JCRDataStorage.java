@@ -247,6 +247,10 @@ public class JCRDataStorage {
 	  	List<TopicData> topics = forum.getTopics();
 	    String topicId = "";
 	    String ct = "";
+	    String contentMail = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
+							"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
+							"has been added new Post with content below: <div> &content </div> For more detail, you can " +
+							"view at link : &link";
 	    for (TopicData topicData : topics) {
 	      Topic topic = new Topic();
 	      topic.setTopicName(topicData.getName());
@@ -255,7 +259,7 @@ public class JCRDataStorage {
 	      topic.setDescription(ct);
 	      topic.setOwner(topicData.getOwner());
 	      topic.setIcon(topicData.getIcon());
-	      this.saveTopic(sProvider, categoryId, forumId, topic, true, false);
+	      this.saveTopic(sProvider, categoryId, forumId, topic, true, false, contentMail);
 	      topicId = topic.getId();
       }
 	    TopicData topic = topics.get(0) ;
@@ -268,7 +272,7 @@ public class JCRDataStorage {
 	    	post.setMessage(ct);
 	    	post.setOwner(postData.getOwner());
 	    	post.setIcon(postData.getIcon());
-	    	this.savePost(sProvider, categoryId, forumId, topicId, post, true);
+	    	this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
 	    }
     }
   }
@@ -1188,7 +1192,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove) throws Exception {
+	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node CategoryNode = forumHomeNode.getNode(categoryId);
 		Node forumNode = CategoryNode.getNode(forumId);
@@ -1262,19 +1266,15 @@ public class JCRDataStorage {
 				Message message = new Message();
 				message.setMimeType("text/html");
 				message.setSubject("eXo Forum Watching Notification!");
-				StringBuffer body = new StringBuffer();
-				body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString()).append("</b>' have just	added topic: <b>").append(topic.getTopicName()).append("</b><div>")
-					.append(Utils.convertCodeHTML(topic.getDescription())).append("</div> <br/> Please  <a target=\"_blank\" href=\"" + topic.getLink() + "\"><b>click here</b></a> for more details<br/><br/><br/>");
-				if (content != null && content.length() > 0) {
-					String content_ = topic.getTopicName();
-					content_ = content.replace("&objectName", content_);
-					content_ = content_.replaceAll("&objectWatch", "Forum");
-					content_ = content_.replaceAll("&content", Utils.convertCodeHTML(topic.getDescription()));
-					content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
-					message.setBody(content_);
-				} else {
-					message.setBody(body.toString());
+				if (content == null || content.trim().length() < 1) {
+					content = defaultEmailContent;
 				}
+				String content_ = topic.getTopicName();
+				content_ = content.replace("&objectName", content_);
+				content_ = content_.replaceAll("&objectWatch", "Forum");
+				content_ = content_.replaceAll("&content", Utils.convertCodeHTML(topic.getDescription()));
+				content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+				message.setBody(content_);
 				sendEmailNotification(emailList, message);
 			}
 		} else {
@@ -1317,7 +1317,7 @@ public class JCRDataStorage {
 				post.setAttachments(topic.getAttachments());
 				post.setUserPrivate(new String[] { "exoUserPri" });
 				post.setLink(topic.getLink());
-				savePost(sProvider, categoryId, forumId, topic.getId(), post, true);
+				savePost(sProvider, categoryId, forumId, topic.getId(), post, true, defaultEmailContent);
 			} else {
 				String id = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 				if (topicNode.hasNode(id)) {
@@ -1330,7 +1330,7 @@ public class JCRDataStorage {
 					post.setMessage(topic.getDescription());
 					post.setIcon(topic.getIcon());
 					post.setAttachments(topic.getAttachments());
-					savePost(sProvider, categoryId, forumId, topic.getId(), post, false);
+					savePost(sProvider, categoryId, forumId, topic.getId(), post, false, defaultEmailContent);
 				}
 			}
 		}
@@ -1607,7 +1607,7 @@ public class JCRDataStorage {
 		return postNew;
 	}
 
-	public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew) throws Exception {
+	public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node CategoryNode = forumHomeNode.getNode(categoryId);
 		Node forumNode = CategoryNode.getNode(forumId);
@@ -1810,18 +1810,15 @@ public class JCRDataStorage {
 						message.setMimeType("text/html");
 						// message.setMessageTo(question.getEmail());
 						message.setSubject("eXo Thread Watching Notification!");
-						StringBuffer body = new StringBuffer();
-						body.append("The Topic '<b>").append(topicNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>").append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> Please  <a target=\"_blank\" href=\"" + post.getLink() + "\"><b>click here</b></a> for more details.<br/><br/><br/>");
-						if (content != null && content.length() > 0) {
-							String content_ = topicNode.getProperty("exo:name").getString();
-							content_ = content.replace("&objectName", content_);
-							content_ = content_.replaceAll("&objectWatch", "Topic");
-							content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-							content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-							message.setBody(content_);
-						} else {
-							message.setBody(body.toString());
-						}
+						if (content == null || content.trim().length() < 1) {
+							content = defaultEmailContent;
+						} 
+						String content_ = topicNode.getProperty("exo:name").getString();
+						content_ = content.replace("&objectName", content_);
+						content_ = content_.replaceAll("&objectWatch", "Topic");
+						content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
+						content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+						message.setBody(content_);
 						sendEmailNotification(emailList, message);
 					}
 				}
@@ -1859,18 +1856,14 @@ public class JCRDataStorage {
 					message.setMimeType("text/html");
 					// message.setMessageTo(question.getEmail());
 					message.setSubject("eXo Forum Watching Notification!");
-					StringBuffer body = new StringBuffer();
-					body.append("The Forum '<b>").append(forumNode.getProperty("exo:name").getString()).append("</b>' have just	added post:<div>").append(Utils.convertCodeHTML(post.getMessage())).append("</div> <br/> Please  <a target=\"_blank\" href=\"" + post.getLink() + "\"><b>click here</b></a> for more details.<br/><br/><br/>");
-
-					if (content != null && content.length() > 0) {
-						content = content.replaceAll("&objectWatch", "Forum");
-						content = content.replaceAll("&objectName", forumNode.getProperty("exo:name").getString());
-						content = content.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-						content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-						message.setBody(content);
-					} else {
-						message.setBody(body.toString());
+					if (content == null || content.trim().length() < 1) {
+						content = defaultEmailContent;
 					}
+					content = content.replaceAll("&objectWatch", "Forum");
+					content = content.replaceAll("&objectName", forumNode.getProperty("exo:name").getString());
+					content = content.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
+					content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					message.setBody(content);
 					sendEmailNotification(emailList, message);
 				}
 			}

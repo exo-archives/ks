@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.jcr.PathNotFoundException;
 
@@ -39,6 +40,7 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -366,7 +368,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					if(uiForm.isQuote || uiForm.isMP) {
 						post.setRemoteAddr(remoteAddr) ;
 						try {
-							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
+							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 						} catch (PathNotFoundException e) {
 							isParentDelete = true;
 						}
@@ -378,7 +380,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						post.setModifiedDate(new Date()) ;
 						post.setEditReason(editReason) ;
 						try {
-							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false) ;
+							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
 						} catch (PathNotFoundException e) {
 							isParentDelete = true;
 						}
@@ -387,7 +389,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				} else {
 					post.setRemoteAddr(remoteAddr) ;
 					try {
-						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true) ;
+						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 					} catch (PathNotFoundException e) {
 						isParentDelete = true;
 					}

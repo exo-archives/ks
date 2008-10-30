@@ -16,14 +16,18 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ResourceBundle;
+
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -88,7 +92,7 @@ public class UIRatingForm extends UIForm implements UIPopupComponent {
 			topic.setUserVoteRating(temp) ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			try {
-				forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topic, false, true) ;
+				forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topic, false, true, ForumUtils.getDefaultMail()) ;
 			} catch (PathNotFoundException e) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIRatingForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
