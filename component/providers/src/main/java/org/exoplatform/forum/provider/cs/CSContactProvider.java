@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
- */
+ *
 package org.exoplatform.forum.provider.cs;
 
 import java.io.ByteArrayInputStream;
@@ -35,7 +35,7 @@ import org.exoplatform.services.log.ExoLogger;
  * <br>
  * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com 
  * Aug 21, 2008
- */
+ *
 public class CSContactProvider implements ContactProvider {
 
   private ContactService  contactService  = null;
@@ -56,6 +56,8 @@ public class CSContactProvider implements ContactProvider {
    * Populates workphone1, homeCountry and homeCity. The avatar url is the
    * contact portrait
    */
+   
+   /*
   public ForumContact getForumContact(String userId) {
     ForumContact contact = new ForumContact();
     try {
@@ -106,3 +108,4 @@ public class CSContactProvider implements ContactProvider {
   }
 
 }
+*/
