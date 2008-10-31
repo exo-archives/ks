@@ -104,16 +104,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private Forum forum;
 	private JCRPageList pageList ;
 	private List <Topic> topicList ;
-	private long page = 1 ;
-	private boolean isGoPage = false;
 	private boolean isUpdate = false;
 	private boolean isModerator = false ;
 	private long maxTopic = 10 ;
 	private long maxPost = 10 ;
-	private long maxPage = 1 ;
-	@SuppressWarnings("unused")
 	private boolean canAddNewThread = true ;
-	@SuppressWarnings("unused")
 	private UserProfile userProfile = null;
 	private String strOrderBy = "" ;
 	private boolean isLogin = false;
@@ -134,9 +129,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.forum = forum ;
 		this.forumId = forum.getId() ;
 		this.categoryId = categoryId ;
-		this.page = 1;
-		this.isGoPage = true ;
-		this.setSelectPage(this.page) ;
+		this.pageSelect = 1 ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.userProfile = forumPortlet.getUserProfile() ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
@@ -148,9 +141,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.categoryId = categoryId ;
 		this.isUpdate = true ;
-		this.page = 1;
-		this.isGoPage = true ;
-		this.setSelectPage(this.page) ;
+		this.pageSelect = 1 ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.userProfile = forumPortlet.getUserProfile() ;
 		if(!isBreadcumbs) {
@@ -225,12 +216,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings({ "unchecked", "unused" })
   private List<Topic> getTopicPageLits() throws Exception {
-		if(!this.isGoPage) {
-			this.page = this.getPageSelected() ;
-		}
 		maxPage = this.pageList.getAvailablePage() ;
-		if(this.page > maxPage)this.page = maxPage ;
-		this.topicList = this.pageList.getPage(this.page);
+		if(this.pageSelect > maxPage)this.pageSelect = maxPage ;
+		this.topicList = this.pageList.getPage(this.pageSelect);
 		for(Topic topic : this.topicList) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
 				getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;
@@ -239,7 +227,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				addChild(checkItem);
 			}
 		}
-		this.isGoPage = false ;
 		return this.topicList ;
 	}
 	
@@ -371,9 +358,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 						} else if(page > topicContainer.pageList.getAvailablePage()){
 							page = topicContainer.pageList.getAvailablePage() ;
 						}
-						topicContainer.page = page ;
-						topicContainer.isGoPage = true ;
-						topicContainer.setSelectPage(page) ;
+						topicContainer.pageSelect = page ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 					}
 				} catch (NumberFormatException e) {

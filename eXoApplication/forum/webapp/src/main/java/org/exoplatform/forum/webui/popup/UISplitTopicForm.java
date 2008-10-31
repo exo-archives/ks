@@ -18,21 +18,22 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -41,7 +42,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 
@@ -57,15 +57,19 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		template = "app:/templates/forum/webui/popup/UISplitTopicForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UISplitTopicForm.SaveActionListener.class), 
-			@EventConfig(listeners = UISplitTopicForm.CancelActionListener.class,phase = Phase.DECODE)
+			@EventConfig(listeners = UISplitTopicForm.CancelActionListener.class,phase = Phase.DECODE),
+			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 		}
 )
-public class UISplitTopicForm extends UIForm implements UIPopupComponent {
+public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UIPopupComponent {
 	private List<Post> posts = new ArrayList<Post>() ;
 	private Topic topic = new Topic() ;
 	private UserProfile userProfile = null;
+	private JCRPageList pageList ;
+	private List<String> listPostId = new ArrayList<String>();
+	private boolean isRender = true;
 	public static final String FIELD_SPLITTHREAD_INPUT = "SplitThread" ;
-	public UISplitTopicForm() {
+	public UISplitTopicForm() throws Exception {
 		addUIFormInput(new UIFormStringInput(FIELD_SPLITTHREAD_INPUT,FIELD_SPLITTHREAD_INPUT, null));
 	}
 	public void activate() throws Exception {}
@@ -77,19 +81,42 @@ public class UISplitTopicForm extends UIForm implements UIPopupComponent {
 		}
 		return new Post() ;
 	}
-	@SuppressWarnings({ "unused", "unchecked" })
-	private List<Post> getListPost() throws Exception {
+	public boolean getIdRender() {
+	  return this.isRender;
+  }
+	@SuppressWarnings({ "unchecked", "unused" })
+  private List<String> getListPost() throws Exception {
 		String postId = this.topic.getId().replaceFirst(Utils.TOPIC, Utils.POST) ;
 		this.posts.remove(this.getPostById(postId));
+		listPostId.clear();
 		for (Post post : this.posts) {
+			listPostId.add(post.getId());
 			if(getUIFormCheckBoxInput(post.getId()) != null) {
 				getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
 			}else {
 				addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false) );
 			}
 		}
-		return this.posts ; 
+		pageList = new ForumPageList(6, listPostId.size());
+		pageList.setPageSize(6);
+		List<String>list = new ArrayList<String>();
+		try {
+			list.addAll(this.pageList.getPageList(pageSelect, this.listPostId)) ;
+			if(list.isEmpty()){
+				while(list.isEmpty() && pageSelect > 1) {
+					list.addAll(this.pageList.getPageList(--pageSelect, this.listPostId)) ;
+				}
+			}
+		} catch (Exception e) {
+		}
+		try {
+			if(this.getInfoPage().get(3) <= 1) isRender =  false ;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list ; 
 	}
+	
 	public void setListPost(List<Post> posts) {this.posts = posts ;}
 	@SuppressWarnings("unused")
 	private Topic getTopic() {return this.topic ;}

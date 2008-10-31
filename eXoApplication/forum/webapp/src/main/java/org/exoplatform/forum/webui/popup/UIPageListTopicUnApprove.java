@@ -25,7 +25,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.webui.UIForumPageIterator;
+import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -37,7 +37,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -53,15 +52,16 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		events = {
 				@EventConfig(listeners = UIPageListTopicUnApprove.OpenTopicActionListener.class ),
 				@EventConfig(listeners = UIPageListTopicUnApprove.ApproveTopicActionListener.class ),
+				@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
 				@EventConfig(listeners = UIPageListTopicUnApprove.CancelActionListener.class,phase = Phase.DECODE )
 		}
 )
-public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent {
+public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator implements UIPopupComponent {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String categoryId, forumId ;
 	private List<Topic> topics ;
 	public UIPageListTopicUnApprove() throws Exception {
-		addChild(UIForumPageIterator.class, null, "PageListTopicUnApprove") ;
+		this.setActions(new String[]{"ApproveTopic","Cancel"});
 	}
 	public void activate() throws Exception {	}
 	public void deActivate() throws Exception {	}
@@ -77,12 +77,10 @@ public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsUnApprove() throws Exception {
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		JCRPageList pageList	= forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
-		forumPageIterator.updatePageList(pageList) ;
+		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
-		long page = forumPageIterator.getPageSelected() ;
-		List<Topic> topics = pageList.getPage(page) ;
+		List<Topic> topics = pageList.getPage(this.pageSelect) ;
 		for (Topic topic : topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
 				getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;
@@ -108,21 +106,33 @@ public class UIPageListTopicUnApprove extends UIForm implements UIPopupComponent
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+  private List<String> getIdSelected() throws Exception{
+		List<UIComponent> children = this.getChildren() ;
+		List<String> ids = new ArrayList<String>() ;
+		for (int i = 0; i <= this.maxPage; i++) {
+			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
+		}
+		for(UIComponent child : children) {
+			if(child instanceof UIFormCheckBoxInput) {
+				if(((UIFormCheckBoxInput)child).isChecked()) {
+					if(!ids.contains(child.getName()))ids.add(child.getName());
+				}
+			}
+		}
+		this.cleanCheckedList();
+		return ids;
+	}
+	
 	static	public class ApproveTopicActionListener extends EventListener<UIPageListTopicUnApprove> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
 			UIPageListTopicUnApprove topicUnApprove = event.getSource() ;
-			List<UIComponent> listChild = topicUnApprove.getChildren() ;
 			List<Topic> listTopic = new ArrayList<Topic>() ;
-			for(UIComponent child : listChild) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						Topic topic = topicUnApprove.getTopic(child.getName()) ;
-						if (topic != null) {
-							topic.setIsApproved(true);
-							listTopic.add(topic) ;
-						}
-					}
+			for(String topicId : topicUnApprove.getIdSelected()) {
+				Topic topic = topicUnApprove.getTopic(topicId) ;
+				if (topic != null) {
+					topic.setIsApproved(true);
+					listTopic.add(topic) ;
 				}
 			}
 			if(!listTopic.isEmpty()) {

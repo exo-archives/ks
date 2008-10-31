@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -34,10 +35,14 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
  *          tu.duy@exoplatform.com
  * 30-10-2008 - 10:35:05  
  */
+@ComponentConfig(
+)
+
 public class UIForumKeepStickPageIterator extends UIForm {
 
+	public long pageSelect = 1 ;
+	public long maxPage = 1;
 	private JCRPageList pageList ;
-	private long page = 1 ;
 	private int endTabPage = 0;
 	private int beginTabPage = 0;
 	private Map<Long, List<String>> pageCheckedList = new HashMap<Long, List<String>>();
@@ -58,8 +63,8 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	
 	public List<String> getTotalpage() throws	Exception {
 		int max_Page = (int)pageList.getAvailablePage() ;
-		if(this.page > max_Page) this.page = max_Page ;
-		long page = this.page ;
+		if(this.pageSelect > max_Page) this.pageSelect = max_Page ;
+		long page = this.pageSelect ;
 		if(page <= 3) {
 			beginTabPage = 1 ;
 			if(max_Page <= 7)
@@ -84,19 +89,20 @@ public class UIForumKeepStickPageIterator extends UIForm {
 
 	public List<Long> getInfoPage() throws	Exception {
 		List<Long> temp = new ArrayList<Long>() ;
+		maxPage = pageList.getAvailablePage(); // so trang toi da
 		temp.add(pageList.getPageSize()) ;//so item/trang
 		temp.add(pageList.getCurrentPage()) ;//so trang hien tai
 		temp.add(pageList.getAvailable()) ;//tong so item
-		temp.add(pageList.getAvailablePage()) ;// so trang toi da
+		temp.add(maxPage) ;
 		return temp ;
 	} 
 	
-	public void setSelectPage(long page) {
-		this.page = page;
+	public void setPageSelect(long page) {
+		this.pageSelect = page;
 	}
 	
-	public long getPageSelected() {
-		return this.page ;
+	public long getPageSelect() {
+		return this.pageSelect ;
 	}
 		
 	static public class GoPageActionListener extends EventListener<UIForumKeepStickPageIterator> {
@@ -123,27 +129,27 @@ public class UIForumKeepStickPageIterator extends UIForm {
 			}
 			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
 			long maxPage = keepStickPageIter.pageList.getAvailablePage() ;
-			long presentPage	= keepStickPageIter.page ;
+			long presentPage	= keepStickPageIter.pageSelect ;
 			if(stateClick.equalsIgnoreCase("next")) {
 				if(presentPage < maxPage){
-					keepStickPageIter.page = presentPage + 1 ;
+					keepStickPageIter.pageSelect = presentPage + 1 ;
 				}
 			} else if(stateClick.equalsIgnoreCase("previous")){
 				if(presentPage > 1){
-					keepStickPageIter.page = presentPage - 1 ;
+					keepStickPageIter.pageSelect = presentPage - 1 ;
 				}
 			} else if(stateClick.equalsIgnoreCase("last")) {
 				if(presentPage != maxPage) {
-					keepStickPageIter.page = maxPage ;
+					keepStickPageIter.pageSelect = maxPage ;
 				}
 			} else if(stateClick.equalsIgnoreCase("first")) {
 				if(presentPage != 1) {
-					keepStickPageIter.page = 1 ;
+					keepStickPageIter.pageSelect = 1 ;
 				}
 			} else {
 				long temp = Long.parseLong(stateClick) ;
 				if(temp > 0 && temp <= maxPage && temp != presentPage) {
-					keepStickPageIter.page = temp ;
+					keepStickPageIter.pageSelect = temp ;
 				}
 			}
 			keepStickPageIter.pageCheckedList.put(presentPage, checkedList);

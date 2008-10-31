@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -69,10 +70,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private String tagId = "" ;
 	private JCRPageList listTopic ;
 	private List<Topic> topics ;
-	private long page = 1 ;
 	private Tag tag ;
 	private long maxPost = 10 ;
 	private long maxTopic = 10 ;
+	private long maxPage = 1 ;
 	private boolean isUpdateTag = true ;
 	private boolean isUpdateTopicTag = true ;
 	private UserProfile userProfile = null;
@@ -106,7 +107,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		this.listTopic.setPageSize(this.maxTopic) ;
 		this.updatePageList(this.listTopic) ;
 		if(this.isUpdateTopicTag) { 
-			this.setSelectPage(1);
+			this.pageSelect = 1;
 			this.isUpdateTopicTag = false ;
 		}
 	}
@@ -146,8 +147,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsTag() throws Exception {
 		getListTopicTag() ;
-		this.page = this.getPageSelected() ;
-		this.topics = this.listTopic.getPage(this.page);
+		this.maxPage = this.listTopic.getAvailablePage();
+		if(this.pageSelect > this.maxPage) this.pageSelect = this.maxPage;
+		this.topics = this.listTopic.getPage(this.pageSelect);
 		for(Topic topic : this.topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
 				getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;
@@ -186,8 +188,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), ids);
 	}
 	
-	private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.topics ;
+	@SuppressWarnings("unchecked")
+  private Topic getTopic(String topicId) throws Exception {
+		List<Topic> listTopic = this.listTopic.getPage((long)0) ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
@@ -196,6 +199,24 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	private Forum getForum(String categoryId, String forumId) throws Exception {
 		return this.forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
+	}
+	
+	@SuppressWarnings("unchecked")
+  private List<String> getIdSelected() throws Exception{
+		List<UIComponent> children = this.getChildren() ;
+		List<String> ids = new ArrayList<String>() ;
+		for (int i = 0; i <= this.maxPage; i++) {
+			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
+		}
+		for(UIComponent child : children) {
+			if(child instanceof UIFormCheckBoxInput) {
+				if(((UIFormCheckBoxInput)child).isChecked()) {
+					if(!ids.contains(child.getName()))ids.add(child.getName());
+				}
+			}
+		}
+		this.cleanCheckedList();
+		return ids;
 	}
 	
 	static public class OpenTopicActionListener extends EventListener<UITopicsTag> {
@@ -252,26 +273,21 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	}
 	
 	static public class RemoveTopicActionListener extends EventListener<UITopicsTag> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UITopicsTag> event) throws Exception {
 			UITopicsTag topicsTag = event.getSource() ;
-			List<UIComponent> children = topicsTag.getChildren() ;
 			boolean hasCheck = false ;
 			String topicPath = "" ;
-			for(UIComponent child : children) {
-				if(child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						topicPath = topicsTag.getTopic(child.getName()).getPath() ;
-						topicsTag.forumService.removeTopicInTag(ForumSessionUtils.getSystemProvider(), 
-								topicsTag.tagId,topicPath ) ;
-						hasCheck = true ;
-					}
+			for(String  topicId : topicsTag.getIdSelected()) {
+				topicPath = topicsTag.getTopic(topicId).getPath() ;
+				try {
+					topicsTag.forumService.removeTopicInTag(ForumSessionUtils.getSystemProvider(), topicsTag.tagId,topicPath ) ;
+				} catch (Exception e) {
 				}
+				hasCheck = true ;
 			}
 			if(!hasCheck) {
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", 
-						args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", args, ApplicationMessage.WARNING)) ;
 			}else {
 				topicsTag.isUpdateTag = true ;
 			}

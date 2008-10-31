@@ -543,11 +543,11 @@
 		<%
 		if(isClosed && !canEdit)	isShowPost = false ;
 		int nb = 0;
-		List checkeds = uicomponent.getListChecked(uicomponent.page);
+		List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 		if(checkeds == null) checkeds = new ArrayList<String>();
 		
 		if(posts != null && posts.size() > 0 && isShowPost) {
-			int checked = (int)(uiform.getPageSelect()) - 1;
+			int checked = (int)(uiform.pageSelect) - 1;
 			String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String shortDateFormat = userProfile.getShortDateFormat() ;

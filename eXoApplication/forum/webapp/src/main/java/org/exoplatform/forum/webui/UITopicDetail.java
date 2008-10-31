@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.jcr.PathNotFoundException;
 
@@ -66,7 +65,6 @@ import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -145,8 +143,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private Forum forum;
 	private Topic topic = new Topic();
 	private JCRPageList pageList ;
-	private long page	= 1 ;
-	private boolean isGopage = false ;
 	private boolean isEditTopic = false ;
 	private boolean isUpdatePageList = false ;
 	private boolean isGetTopic = false ;
@@ -155,7 +151,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private List<Post>	posts ;
 	private boolean isEdit = false ;
 	private long maxPost = 10 ;
-	private long maxPage = 1 ;
 	private UserProfile userProfile = null;
 	private String userName = " " ;
 	private boolean isModeratePost = false ;
@@ -236,8 +231,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
 		this.viewTopic = false ;
-		this.page = numberPage ;
-		this.isGopage = true ;
+		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
@@ -259,7 +253,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		} else {
 			this.topic = topic ;
 		}
-		this.setSelectPage(numberPage) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 	}
 	
@@ -431,7 +424,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			this.updatePageList(this.pageList);
 			maxPage = pageList.getAvailablePage();
 			if (IdPostView.equals("lastpost")) {
-				this.setSelectPage(maxPage);
+				this.pageSelect = maxPage;
 			}
 			this.isModeratePost = this.topic.getIsModeratePost();
 		} catch (Exception e) {
@@ -444,27 +437,17 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	public void setUpdatePostPageList(boolean isUpdatePageList) {
 		this.isUpdatePageList = isUpdatePageList;
 	}
-	@SuppressWarnings("unused")
-	private long getPageSelect() {return this.page ;}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
 		if(this.pageList == null) return null ;
-		if(!this.isGopage) {
-			this.page = this.getPageSelected() ;
-			long availablePage = this.pageList.getAvailablePage() ;
-			if(this.page > availablePage) {
-				this.page = availablePage ;
-				this.setSelectPage(availablePage);
-			}
+		long availablePage = this.pageList.getAvailablePage() ;
+		if(this.pageSelect > availablePage) {
+			this.pageSelect = availablePage ;
 		}
-		if(this.page < 1) return null ;
 		try {
-			this.posts = this.pageList.getPage(this.page) ;
+			this.posts = this.pageList.getPage(this.pageSelect) ;
 		} catch (Exception e) {
-			long availablePage = this.pageList.getAvailablePage() ;
-			this.page = availablePage ;
-			this.setSelectPage(availablePage);
 			this.posts = this.pageList.getPage(availablePage) ;
 		}
 		if(this.posts.size() > 0 && this.posts != null) {
@@ -477,7 +460,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				this.IdLastPost = post.getId() ;
 			}
 		}
-		this.isGopage = false ;
 		return this.posts ;
 	}
 	
@@ -695,9 +677,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 						} else if(page > topicDetail.pageList.getAvailablePage()){
 							page = topicDetail.pageList.getAvailablePage() ;
 						}
-						topicDetail.isGopage = true ;
-						topicDetail.page = page ;
-						topicDetail.setSelectPage(page) ;
+						topicDetail.pageSelect = page ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 					}
 				} catch (NumberFormatException e) {
@@ -1082,7 +1062,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
 				post = topicDetail.getPost(postId);
-				if(!post.getIsHidden()){
+				if(post != null && !post.getIsHidden()){
 					post.setIsHidden(true) ;
 					posts.add(post) ;
 				}
@@ -1098,7 +1078,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
-				posts.add(topicDetail.getPost(postId));
+				Post post = topicDetail.getPost(postId);
+				if(post != null) {
+					posts.add(post);
+				}
       }
 			if(posts.isEmpty()){
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;

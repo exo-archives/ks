@@ -18,7 +18,7 @@
 			<div class="ContentContainer">
 				<div class="UITopicList">
 					<div style="overflow:auto; margin: 2px 0px;">
-						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 					</div>
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 						<thead>
@@ -33,10 +33,13 @@
 							<% 
 								if(posts != null && posts.size() > 0) {
 								String classRow = "whileRow";
+								List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+							  if(checkeds == null) checkeds = new ArrayList<String>();
 								int i = 0;
 								 for(post in posts){
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
+									String postId = post.getId();
 									String postTitle = post.getName() ;
 									String message = ForumTransformHTML.getTitleInHTMLCode(post.getMessage()) ;
 									String titlePost = ForumUtils.getSubString(message, 100);
@@ -55,7 +58,13 @@
 									<td class="Tdbox">
 										<div class="RatingInfoContainer">$createdDate</div>
 									</td>
-									<td class="Tdbox" align="center"><% uicomponent.renderChild(post.getId()); %></td>
+									<%
+									  String checked = "";
+									  if(checkeds.contains(postId)){
+									    checked = "checked=\"checked\"";
+									  }
+									%>
+									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" name="$postId" $checked/></td>
 					 			</tr>
 						 	<% i = i + 1;
 						 		}
@@ -70,7 +79,7 @@
 						</tbody>
 					</table>
 					<div style="overflow:auto;">
-						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 					</div>						
 				</div>
 			</div>
@@ -81,7 +90,6 @@
 			<tr>
 				<td align="center">
 				<% for(action in uicomponent.getActions()) { 
-						 if(action.indexOf("Open") >= 0) continue ; 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
