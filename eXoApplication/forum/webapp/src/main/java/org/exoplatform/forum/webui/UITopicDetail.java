@@ -438,6 +438,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.isUpdatePageList = isUpdatePageList;
 	}
 	
+	@SuppressWarnings("unchecked")
+  private List<Post> setPosts(long t) throws Exception {
+		try {
+			return this.pageList.getPage(t) ;
+    } catch (Exception e) {
+    	if(t >= 1) return setPosts(--t) ;
+    	else {
+    		List<Post> list = new ArrayList<Post>();
+    		return list;
+			} 
+    }
+	}
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
 		if(this.pageList == null) return null ;
@@ -446,9 +458,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			this.pageSelect = availablePage ;
 		}
 		try {
-			this.posts = this.pageList.getPage(this.pageSelect) ;
+			this.posts = setPosts(this.pageSelect) ;
 		} catch (Exception e) {
-			this.posts = this.pageList.getPage(availablePage) ;
+			this.posts = this.pageList.getPage(1) ;
 		}
 		if(this.posts.size() > 0 && this.posts != null) {
 			for (Post post : this.posts) {

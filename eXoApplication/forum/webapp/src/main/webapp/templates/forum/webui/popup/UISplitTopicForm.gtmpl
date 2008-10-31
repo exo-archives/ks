@@ -45,7 +45,9 @@
 				</tr>
 			</thead>
 			<tbody>
-			<%	
+			<%
+			  List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+				if(checkeds == null) checkeds = new ArrayList<String>();
 				for(postId in postIds) {
 				  Post post = uiform.getPostById(postId);
 					Date createdPostDate = post.getCreatedDate() ;
@@ -60,7 +62,15 @@
 		 			 <td class="text"><%=post.getName();%></td>
 		 			 <td class="text">$createdDate</td>
 		 			 <td class="text"><%=post.getOwner();%></td>
-		 			 <td class="text"><div><%uiform.renderChild(post.getId());%></div></td>
+		 			 <td class="text">
+		 			 <% 
+						  String checked = "";
+						  if(checkeds.contains(postId)){
+						    checked = "checked=\"checked\"";
+						  }
+					 %>
+					 <div><input type="checkbox" class="checkbox" value="false" name="$postId" $checked/></div>
+		 			 </td>
 				</tr>
 			<%} %>
 			</tbody>
