@@ -625,3 +625,41 @@ UIForumPortlet.prototype.createLink = function(cpId) {
 } ;
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
+
+eXo.forum.CheckBox = {
+	init : function(cont){
+		if(typeof(cont) == "string") cont = document.getElementById(cont) ;
+		var checkboxes = eXo.core.DOMUtil.findDescendantsByClass(cont, "input", "checkbox") ;
+		if(checkboxes.length <=0) return ;
+		checkboxes[0].onclick = this.checkAll ;
+		var len = checkboxes.length ;
+		for(var i = 1 ; i < len ; i ++) {
+			checkboxes[i].onclick = this.check ;
+			eXo.cs.CheckBox.checkItem(checkboxes[i]);
+		}
+	},
+	
+	check : function(){
+		eXo.cs.CheckBox.checkItem(this);
+		var row = eXo.core.DOMUtil.findAncestorByTagName(this,"tr");
+		if(this.checked) eXo.core.DOMUtil.addClass(row,"SelectedItem");
+		else eXo.core.DOMUtil.replaceClass(row,"SelectedItem","");
+	},
+	
+	checkAll : function(){
+		eXo.cs.CheckBox.checkAllItem(this);
+		var table = eXo.core.DOMUtil.findAncestorByTagName(this,"table");
+		table = eXo.core.DOMUtil.getChildrenByTagName(table,"tbody")[0];
+		var rows = eXo.core.DOMUtil.findDescendantsByTagName(table,"tr");
+		var i = rows.length ;
+		if(this.checked){
+			while(i--) {
+				eXo.core.DOMUtil.addClass(rows[i],"SelectedItem");				
+			}
+		} else{
+			while(i--){
+				eXo.core.DOMUtil.replaceClass(rows[i],"SelectedItem","");				
+			}
+		}
+	}
+} ;
