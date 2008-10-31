@@ -1033,7 +1033,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;
 			}
 		}
 	}
