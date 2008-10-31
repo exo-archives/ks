@@ -140,6 +140,8 @@
 								String classRow = "whileRow";
 								int i = 0;
 								String uiformId = uiform.id;
+								List checkeds = uicomponent.getListChecked(uicomponent.page);
+							  if(checkeds == null) checkeds = new ArrayList<String>();
 								for(topic in topics){
 									boolean isLockTopic = topic.getIsLock() ;
 									if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
@@ -199,9 +201,13 @@
 									String path = topic.getPath();
 									path = path.substring(path.indexOf(org.exoplatform.forum.service.Utils.CATEGORY));
 									String url = uicomponent.url("OpenTopic", path);
-									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" ); 
+									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" );
+									String classSelect = "";
+								  if(checkeds.contains(topicId)){
+								    classSelect = "SelectedItem";
+								  }  
 							%>
-								<tr class="$classRow">
+								<tr class="$classRow $classSelect">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
 									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
 									<td >
@@ -312,8 +318,13 @@
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">$postView</td>
-									<% if(canEdit) { %>
-									<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><%uicomponent.renderChild(topicId)%></td>
+									<% if(canEdit) { 
+									  String checked = "";
+									  if(checkeds.contains(topicId)){
+									    checked = "checked=\"checked\"";
+									  }
+									%>
+									<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
 					 				<% } %>
 					 			</tr>
 					 	<% 
