@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -85,9 +86,8 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
             fileAttachment.setMimeType(uploadResource.getMimeType()) ;
             fileSize = (long)uploadResource.getUploadedSize() ;
             fileAttachment.setSize(fileSize) ;
-            java.util.Date date = new java.util.Date();
-            fileAttachment.setId("file" + date.getTime()) ;
-            fileAttachment.setNodeName("FAQFile" + date.getTime() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
+            fileAttachment.setId("file" + IdGenerator.generate()) ;
+            fileAttachment.setNodeName(IdGenerator.generate() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
             listFileAttachment.add(fileAttachment) ;
           } else {
             UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
