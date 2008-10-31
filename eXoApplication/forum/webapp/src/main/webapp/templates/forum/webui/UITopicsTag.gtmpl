@@ -13,6 +13,7 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicsTag') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicsTag') ;") ;
+	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
 %>
 <% uiform.begin() %>
 <%
@@ -129,7 +130,7 @@
 								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
 								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
 								<% if(canEdit) { %>
-								<th style="width: 30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+								<th style="width: 30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4"/></th>
 								<% } %>
 							</tr>
 						</thead>
@@ -324,7 +325,7 @@
 									    checked = "checked=\"checked\"";
 									  }
 									%>
-									<td class="Tdbox" align="center" onClick="eXo.forum.UIForumPortlet.selectItem(this.firstChild);"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
+									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
 					 				<% } %>
 					 			</tr>
 					 	<% 
