@@ -140,8 +140,8 @@ public class UIQuestions extends UIContainer {
   private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
   private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
   private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
-  private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "CommentQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
-  private String[] userActionQues_ = new String[]{"SendQuestion", "CommentQuestion"} ;
+  private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "CommentQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion", "Watch"} ;
+  private String[] userActionQues_ = new String[]{"SendQuestion", "CommentQuestion", "Watch"} ;
   private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
   private boolean viewAuthorInfor = false;
   
@@ -477,7 +477,8 @@ public class UIQuestions extends UIContainer {
     DownloadService dservice = getApplicationComponent(DownloadService.class) ;
     try {
       InputStream input = attachment.getInputStream() ;
-      String fileName = attachment.getName() ;
+      //String fileName = attachment.getName() ;
+      String fileName = attachment.getNodeName() ;
       return getFileSource(input, fileName, dservice);
     } catch (Exception e) {
       e.printStackTrace() ;
@@ -979,23 +980,40 @@ public class UIQuestions extends UIContainer {
 	static	public class WatchActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
     	UIQuestions question = event.getSource() ;
-    	String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
+    	String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-      try {
-        faqService_.getCategoryById(cateId, FAQUtils.getSystemProvider()) ;
-      } catch (Exception e) {
-        UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        question.setIsNotChangeLanguage();
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-        return ;
+      if(objectId.indexOf("Question") < 0){
+				try {
+	        faqService_.getCategoryById(objectId, FAQUtils.getSystemProvider()) ;
+	      } catch (Exception e) {
+	        UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        question.setIsNotChangeLanguage();
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+	        return ;
+	      }
+				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+				UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
+				popupContainer.setId("CategoryWatchForm") ;
+				uiWatchForm.setCategoryID(objectId) ;
+      } else {
+      	try {
+	        faqService_.getCategoryById(objectId, FAQUtils.getSystemProvider()) ;
+	      } catch (Exception e) {
+	        UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        question.setIsNotChangeLanguage();
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+	        return ;
+	      }
+				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+				UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
+				popupContainer.setId("CategoryWatchForm") ;
+				uiWatchForm.setQuestionID(objectId) ;
       }
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
-			popupContainer.setId("CategoryWatchForm") ;
-			uiWatchForm.setCategoryID(cateId) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

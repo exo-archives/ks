@@ -246,28 +246,28 @@ public class JCRDataStorage {
     
     List<String> listNodeNames = new ArrayList<String>() ;
     if(!listFileAtt.isEmpty()) {
-      for(FileAttachment att : listFileAtt) {
-        listNodeNames.add(att.getName()) ;
-        try {
-          Node nodeFile = null;
-          if (questionNode.hasNode(att.getName())) nodeFile = questionNode.getNode(att.getName());
-          else nodeFile = questionNode.addNode(att.getName(), "exo:faqAttachment");
-          // fix permission to download file in ie 6:
-          FAQServiceUtils.reparePermissions(nodeFile, "any");
-          
-          nodeFile.setProperty("exo:fileName", att.getName()) ;
-          Node nodeContent = null;
-          if (nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.getNode("jcr:content");
-          else  nodeContent = nodeFile.addNode("jcr:content", "nt:resource") ;
-          
-          nodeContent.setProperty("jcr:mimeType", att.getMimeType());
-          nodeContent.setProperty("jcr:data", att.getInputStream());
-          nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
-        } catch (Exception e) {
-          e.printStackTrace() ;
+        for(FileAttachment att : listFileAtt) {
+          listNodeNames.add(att.getNodeName()) ;
+          try {
+            Node nodeFile = null;
+            if (questionNode.hasNode(att.getNodeName())) nodeFile = questionNode.getNode(att.getNodeName());
+            else nodeFile = questionNode.addNode(att.getNodeName(), "exo:faqAttachment");
+            // fix permission to download file in ie 6:
+            FAQServiceUtils.reparePermissions(nodeFile, "any");
+            
+            nodeFile.setProperty("exo:fileName", att.getName()) ;
+            Node nodeContent = null;
+            if (nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.getNode("jcr:content");
+            else  nodeContent = nodeFile.addNode("jcr:content", "nt:resource") ;
+            
+            nodeContent.setProperty("jcr:mimeType", att.getMimeType());
+            nodeContent.setProperty("jcr:data", att.getInputStream());
+            nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+          } catch (Exception e) {
+            e.printStackTrace() ;
+          }
         }
       }
-    }
     
     NodeIterator nodeIterator = questionNode.getNodes() ;
     Node node = null ;
@@ -580,7 +580,8 @@ public class JCRDataStorage {
         nodeFile = node.getNode("jcr:content") ;
         attachment.setId(node.getPath());
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-        attachment.setName(node.getProperty("exo:fileName").getString());
+        attachment.setNodeName(node.getName());
+        attachment.setName(node.getProperty("exo:fileName").getValue().getString());
         workspace = node.getSession().getWorkspace().getName() ;
         attachment.setWorkspace(workspace) ;
         attachment.setPath("/" + workspace + node.getPath()) ;
