@@ -2,7 +2,7 @@
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.UserProfile;
-	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumTransformHTML;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
@@ -15,7 +15,7 @@
 			<div class="ContentContainer">
 				<div class="UITopicList">
 					<div style="overflow:auto; margin: 2px 0px;">
-						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 					</div>
 					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 						<thead>
@@ -31,6 +31,8 @@
 							<% 
 								String classRow = "whileRow";
 								if(topics != null && topics.size() > 0) {
+								List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+							  if(checkeds == null) checkeds = new ArrayList<String>();
 								int i = 0;
 								 for(topic in topics){
 									if(i%2 == 0) classRow = "whileRow";
@@ -69,7 +71,13 @@
 										</div>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postView</div></td>
-									<td class="Tdbox" align="center"><% uicomponent.renderChild(topic.getId()); %></td>
+									<%
+									  String checked = "";
+									  if(checkeds.contains(topicId)){
+									    checked = "checked=\"checked\"";
+									  }
+									%>
+									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
 					 			</tr>
 						 	<% i = i + 1;} 
 						 	} else {
@@ -83,7 +91,7 @@
 						</tbody>
 					</table>
 					<div style="overflow:auto;">
-						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 					</div>						
 				</div>
 			</div>
@@ -94,7 +102,6 @@
 			<tr>
 				<td align="center">
 				<% for(action in uicomponent.getActions()) { 
-						 if(action.indexOf("Open") >= 0) continue ; 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>

@@ -141,7 +141,7 @@
 								String classRow = "whileRow";
 								int i = 0;
 								String uiformId = uiform.id;
-								List checkeds = uicomponent.getListChecked(uicomponent.page);
+								List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 							  if(checkeds == null) checkeds = new ArrayList<String>();
 								for(topic in topics){
 									boolean isLockTopic = topic.getIsLock() ;

@@ -240,6 +240,7 @@ public class JCRDataStorage {
 	      forum.setForumName(forumData.getName());
 	      forum.setDescription(forumData.getDescription());
 	      forum.setOwner(forumData.getOwner());
+	      forum.setIsModerateTopic(true);
 	      this.saveForum(sProvider, categoryId, forum, true);
 	      forumId = forum.getId();
       }
@@ -251,29 +252,36 @@ public class JCRDataStorage {
 							"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
 							"has been added new Post with content below: <div> &content </div> For more detail, you can " +
 							"view at link : &link";
+//	    for (int i = 0; i < 30; i++) {
 	    for (TopicData topicData : topics) {
 	      Topic topic = new Topic();
 	      topic.setTopicName(topicData.getName());
 	      ct = topicData.getContent();
 	      ct = StringUtils.replace(ct, "\\n","<br/>");
 	      topic.setDescription(ct);
-	      topic.setOwner(topicData.getOwner());
+	      topic.setOwner("demo");
+	      topic.setIsApproved(false);
+	      topic.setIsModeratePost(true);
 	      topic.setIcon(topicData.getIcon());
 	      this.saveTopic(sProvider, categoryId, forumId, topic, true, false, contentMail);
 	      topicId = topic.getId();
       }
+//	    }
 	    TopicData topic = topics.get(0) ;
 	  	List<PostData> posts = topic.getPosts();
+//	  	for (int i = 0; i < 30; i++) {
 	    for (PostData postData : posts) {
 	    	Post post = new Post();
 	    	post.setName(postData.getName());
 	    	ct = postData.getContent();
 	    	ct = StringUtils.replace(ct, "\\n","<br/>");
 	    	post.setMessage(ct);
-	    	post.setOwner(postData.getOwner());
+	    	post.setOwner("demo");
+	    	post.setIsApproved(false);
 	    	post.setIcon(postData.getIcon());
 	    	this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
 	    }
+//	  	}
     }
   }
 	
@@ -3300,7 +3308,6 @@ public class JCRDataStorage {
 		JobWattingForModerator wattingForModerator = new JobWattingForModerator();
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		String string = forumHomeNode.getPath();
-
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
 		StringBuffer stringBuffer = new StringBuffer();
 		String pathQuery = "";
@@ -3317,18 +3324,14 @@ public class JCRDataStorage {
 			}
 			buffer.append(")");
 		}
-
-		pathQuery = stringBuffer.toString() + "[@exo:isApproved='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
-		// System.out.println("\n\npathQuery1: " + pathQuery);
-
+		pathQuery = stringBuffer.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending").toString();
 		Query query = qm.createQuery(pathQuery, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
 		JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
 		wattingForModerator.setTopicUnApproved(pagelist);
-
-		pathQuery = stringBuffer.toString() + "[@exo:isWaiting='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
-		// System.out.println("\n\npathQuery2: " + pathQuery);
+		
+		pathQuery = stringBuffer.append("[@exo:isWaiting='false'").append(buffer).append("] order by @exo:modifiedDate descending").toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
 		iter = result.getNodes();
@@ -3337,23 +3340,19 @@ public class JCRDataStorage {
 
 		stringBuffer = new StringBuffer();
 		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)");
-
-		pathQuery = stringBuffer.toString() + "[@exo:isApproved='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
-		// System.out.println("\n\npathQuery3: " + pathQuery);
+		pathQuery = stringBuffer.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending").toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
 		iter = result.getNodes();
 		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
 		wattingForModerator.setPostsUnApproved(pagelist);
 
-		pathQuery = stringBuffer.toString() + "[@exo:isHidden='false'" + buffer.toString() + "] order by @exo:modifiedDate descending";
-		// System.out.println("\n\npathQuery4: " + pathQuery + "\n\n");
+		pathQuery = stringBuffer.append("[@exo:isHidden='false'").append(buffer).append("] order by @exo:modifiedDate descending").toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
 		iter = result.getNodes();
 		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
 		wattingForModerator.setPostsUnApproved(pagelist);
-
 		return wattingForModerator;
 	}
 
@@ -3389,8 +3388,7 @@ public class JCRDataStorage {
 					buffer.append(")");
 				}
 			}
-			pathQuery = stringBuffer.toString() + "[(@exo:isApproved='false' or @exo:isWaiting='true')" + buffer.toString() + "] order by @exo:modifiedDate descending";
-			// System.out.println("\n\npathQueryTopic: " + pathQuery);
+			pathQuery = stringBuffer.append("[(@exo:isApproved='false' or @exo:isWaiting='true')").append(buffer).append("] order by @exo:modifiedDate descending").toString();
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -3398,8 +3396,7 @@ public class JCRDataStorage {
 
 			stringBuffer = new StringBuffer();
 			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)");
-			pathQuery = stringBuffer.toString() + "[(@exo:isApproved='false' or @exo:isHidden='true')" + buffer.toString() + "] order by @exo:modifiedDate descending";
-			//			System.out.println("\n\npathQueryPost: " + pathQuery);
+			pathQuery = stringBuffer.append("[(@exo:isApproved='false' or @exo:isHidden='true')").append(buffer).append("] order by @exo:modifiedDate descending").toString();
 			query = qm.createQuery(pathQuery, Query.XPATH);
 			result = query.execute();
 			iter = result.getNodes();

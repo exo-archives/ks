@@ -389,7 +389,7 @@
 							<%
 							int rCNB = 0;
 							List topics = uicomponent.getTopicPageLits() ;
-							List checkeds = uicomponent.getListChecked(uicomponent.page);
+							List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 							if(checkeds == null) checkeds = new ArrayList<String>();
 							if(!topics.isEmpty()) {
 								String classRow = "whileRow";
@@ -454,12 +454,12 @@
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
 									String url = uicomponent.url("OpenTopic", (uicomponent.categoryId+"/"+uicomponent.forumId+"/"+topicId));
 									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" );
-								  String classSelec = "";
+								  String classSelect = "";
 								  if(checkeds.contains(topicId)){
-								    classSelec = "SelectedItem";
+								    classSelect = "SelectedItem";
 								  } 
 							%>
-								<tr class="$classRow $classSelec">
+								<tr class="$classRow $classSelect">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
 									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
 									<td >
@@ -577,8 +577,7 @@
 									  }
 									%>
 									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
-									  <%//uicomponent.renderChild(topicId)%>
-					 				<% } %>
+									<% } %>
 					 			</tr>
 					 	<% 
 					 			i = i + 1;}
@@ -716,16 +715,6 @@
 	<% } %>
 	</div>
 	<% //End RightClick Bookmark %>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	<%uiform.end()%>
 </div>

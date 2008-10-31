@@ -6,7 +6,7 @@
 %>
 <%	
 	Topic topic = uicomponent.getTopic() ;
-	List posts = uicomponent.getListPost();
+	List postIds = uicomponent.getListPost();
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 %>
@@ -31,6 +31,9 @@
 		</tr>
  	</table> 
 	<div class="ListPost">
+	  <div style="overflow:auto; margin: 2px 0px;">
+			<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+		</div>
 		<table class="UIGrid" borderspacing="0" cellspacing="0">
 			<thead>
 				<tr>
@@ -43,7 +46,8 @@
 			</thead>
 			<tbody>
 			<%	
-				for(post in posts) {
+				for(postId in postIds) {
+				  Post post = uiform.getPostById(postId);
 					Date createdPostDate = post.getCreatedDate() ;
 					createdPostDate.setTime(createdPostDate.getTime() - setTime);
 					String createdDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);

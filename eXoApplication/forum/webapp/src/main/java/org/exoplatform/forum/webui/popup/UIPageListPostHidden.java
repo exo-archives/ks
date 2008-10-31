@@ -25,7 +25,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.webui.UIForumPageIterator;
+import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -37,7 +37,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -52,16 +51,17 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		events = {
 			@EventConfig(listeners = UIPageListPostHidden.OpenPostLinkActionListener.class),
 			@EventConfig(listeners = UIPageListPostHidden.UnHiddenActionListener.class),
+			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
 			@EventConfig(listeners = UIPageListPostHidden.CancelActionListener.class,phase = Phase.DECODE )
 		}
 )
-public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
+public class UIPageListPostHidden extends UIForumKeepStickPageIterator implements UIPopupComponent {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private String categoryId, forumId, topicId ;
-	private List<Post> listPost = new ArrayList<Post>() ;
+	private List<Post> listAllPost = new ArrayList<Post>() ;
 	
 	public UIPageListPostHidden() throws Exception {
-		addChild(UIForumPageIterator.class, null, "PageIteratorPostHidden") ;
+		this.setActions(new String[]{"UnHidden","Cancel"});
 	}
 
 	public void activate() throws Exception {}
@@ -78,12 +78,10 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPosts() throws Exception {
-		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		JCRPageList pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "", "");
-		forumPageIterator.updatePageList(pageList) ;
+		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
-		long page = forumPageIterator.getPageSelected() ;
-		List<Post> posts = pageList.getPage(page) ;
+		List<Post> posts = pageList.getPage(pageSelect) ;
 		if(!posts.isEmpty()) {
 			for (Post post : posts) {
 				if(getUIFormCheckBoxInput(post.getId()) != null) {
@@ -93,17 +91,34 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
 				}
 			}
 		}
-		this.listPost = posts ;
+		this.listAllPost = pageList.getPage(0) ;
 		return posts ;
 	}
 	
 	private Post getPost(String postId) {
-		for (Post post : this.listPost) {
+		for (Post post : this.listAllPost) {
 			if(post.getId().equals(postId)) return post ;
 		}
 		return null ;
 	}
 	
+	@SuppressWarnings("unchecked")
+  private List<String> getIdSelected() throws Exception{
+		List<UIComponent> children = this.getChildren() ;
+		List<String> ids = new ArrayList<String>() ;
+		for (int i = 0; i <= this.maxPage; i++) {
+			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
+		}
+		for(UIComponent child : children) {
+			if(child instanceof UIFormCheckBoxInput) {
+				if(((UIFormCheckBoxInput)child).isChecked()) {
+					if(!ids.contains(child.getName()))ids.add(child.getName());
+				}
+			}
+		}
+		this.cleanCheckedList();
+		return ids;
+	}
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostHidden> {
 		public void execute(Event<UIPageListPostHidden> event) throws Exception {
 			UIPageListPostHidden uiForm = event.getSource() ;
@@ -118,33 +133,29 @@ public class UIPageListPostHidden extends UIForm implements UIPopupComponent {
 		}
 	}
 
-	static	public class UnHiddenActionListener extends EventListener<UIPageListPostHidden> {
-		@SuppressWarnings("unchecked")
+	static public class UnHiddenActionListener extends EventListener<UIPageListPostHidden> {
 		public void execute(Event<UIPageListPostHidden> event) throws Exception {
-			UIPageListPostHidden postHidden = event.getSource() ;
-			List<UIComponent>listChild = postHidden.getChildren() ;
-			Post post = new Post() ;
+			UIPageListPostHidden postHidden = event.getSource();
+			Post post = new Post();
 			List<Post> posts = new ArrayList<Post>();
-			boolean haveCheck = false ;
-			for (UIComponent child : listChild) {
-				if (child instanceof UIFormCheckBoxInput) {
-					if(((UIFormCheckBoxInput)child).isChecked()) {
-						haveCheck = true ;
-						post = postHidden.getPost(child.getName()) ;
-						post.setIsHidden(false) ;
-						posts.add(post) ;
-					}
+			boolean haveCheck = false;
+			for (String postId : postHidden.getIdSelected()) {
+				haveCheck = true;
+				post = postHidden.getPost(postId);
+				if (post != null) {
+					post.setIsHidden(false);
+					posts.add(post);
 				}
 			}
-			if(!haveCheck) {
-				throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null)) ;
+			if (!haveCheck) {
+				throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null));
 			} else {
-				postHidden.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
+				postHidden.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2);
 			}
-			UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);
+			forumPortlet.cancelAction();
+			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
 		}
 	}
 	

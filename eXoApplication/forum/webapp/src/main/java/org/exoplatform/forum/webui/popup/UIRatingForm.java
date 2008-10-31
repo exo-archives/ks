@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.util.ResourceBundle;
-
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
@@ -27,7 +25,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;

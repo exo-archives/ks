@@ -1,9 +1,8 @@
 <%
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
-	import org.exoplatform.forum.service.JCRPageList ;
 	 
 	List totals = uicomponent.getInfoPage() ; 
-	long pageSelected = uicomponent.getPageSelected() ;
+	long pageSelected = uicomponent.getPageSelect() ;
 	long max_page = totals.get(3) ;
 	String selected = "" + pageSelected ;
 %>

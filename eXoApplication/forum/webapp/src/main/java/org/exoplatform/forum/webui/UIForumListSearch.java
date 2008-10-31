@@ -84,14 +84,12 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unchecked")
 	public List<ForumSearch> getListEvent() {
-		long pageSelect = this.getPageSelected() ;
 		list = new ArrayList<ForumSearch>();
 		try {
 			list.addAll(this.pageList.getPageSearch(pageSelect, this.listEvent)) ;
 			if(list.isEmpty()){
 				while(list.isEmpty() && pageSelect > 1) {
 					list.addAll(this.pageList.getPageSearch(--pageSelect, this.listEvent)) ;
-					this.setSelectPage(pageSelect) ;
 				}
 			}
 		} catch (Exception e) {

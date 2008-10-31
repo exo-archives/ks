@@ -85,10 +85,14 @@ public class UIPageListPostByUser extends UIContainer{
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null) pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
-		List<Post> posts = null;
-		while(posts == null && page >= 1){
-			posts = pageList.getPage(page) ;
-			if(posts == null) page--;
+		List<Post> posts = new ArrayList<Post>();
+		try {
+			while(posts == null && page >= 1){
+				posts = pageList.getPage(page) ;
+				if(posts == null) page--;
+				else break;
+			}
+		} catch (Exception e) {
 		}
 		this.posts = posts ;
 		return posts ;
