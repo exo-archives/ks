@@ -71,6 +71,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	public static final String FIELD_SPLITTHREAD_INPUT = "SplitThread" ;
 	public UISplitTopicForm() throws Exception {
 		addUIFormInput(new UIFormStringInput(FIELD_SPLITTHREAD_INPUT,FIELD_SPLITTHREAD_INPUT, null));
+		this.setActions(new String []{"Save", "Cancel"});
 	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
@@ -99,6 +100,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 		}
 		pageList = new ForumPageList(6, listPostId.size());
 		pageList.setPageSize(6);
+		this.updatePageList(pageList);
 		List<String>list = new ArrayList<String>();
 		try {
 			list.addAll(this.pageList.getPageList(pageSelect, this.listPostId)) ;
@@ -110,7 +112,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 		} catch (Exception e) {
 		}
 		try {
-			if(this.getInfoPage().get(3) <= 1) isRender =  false ;
+			if(maxPage <= 1) isRender =  false ;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -125,6 +127,24 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	private UserProfile getUserProfile() {return this.userProfile ;}
 	public void setUserProfile(UserProfile userProfile) { this.userProfile = userProfile; }
 	
+	@SuppressWarnings("unchecked")
+  private List<String> getIdSelected() throws Exception{
+		List<UIComponent> children = this.getChildren() ;
+		List<String> ids = new ArrayList<String>() ;
+		for (int i = 0; i <= this.maxPage; i++) {
+			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
+		}
+		for(UIComponent child : children) {
+			if(child instanceof UIFormCheckBoxInput) {
+				if(((UIFormCheckBoxInput)child).isChecked()) {
+					if(!ids.contains(child.getName()))ids.add(child.getName());
+				}
+			}
+		}
+		this.cleanCheckedList();
+		return ids;
+	}
+	
 	static	public class SaveActionListener extends EventListener<UISplitTopicForm> {
 		@SuppressWarnings("unchecked")
 		public void execute(Event<UISplitTopicForm> event) throws Exception {
@@ -132,13 +152,11 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 			String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue() ;
 			if(!ForumUtils.isEmpty(newTopicTitle)) {
 				newTopicTitle = ForumTransformHTML.enCodeHTML(newTopicTitle);
-				List<UIComponent> children = uiForm.getChildren() ;
 				List<Post> posts = new ArrayList<Post>() ;
-				for(UIComponent child : children) {
-					if(child instanceof UIFormCheckBoxInput) {
-						if(((UIFormCheckBoxInput)child).isChecked()) {
-							posts.add(uiForm.getPostById(((UIFormCheckBoxInput)child).getName()));
-						}
+				for(String child : uiForm.getIdSelected()) {
+					Post post = uiForm.getPostById(child);
+					if(post !=  null) {
+							posts.add(post);
 					}
 				}
 				if(posts.size() > 0) {
@@ -181,6 +199,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+			topicDetail.setUpdatePostPageList(true);
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
