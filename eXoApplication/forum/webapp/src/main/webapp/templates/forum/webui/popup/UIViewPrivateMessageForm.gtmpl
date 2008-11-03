@@ -12,7 +12,7 @@
 	String message = privateMessage.getMessage() ;
 	message = ForumTransformHTML.convertCodeHTML(message);
 %>
-	<div class="ViewMemberProfileContainer">
+	<div class="ViewMemberProfileContainer ImageContentContainer">
 		<div class="MessageContent">
 			<div class="PlainTextMessage">
 				<div class="TitleBar">Title: <span class="UserLabel">$title</span></div>
@@ -41,5 +41,9 @@
 			</tr>
  		</table> 
 	</div>
+<%
+	def rcontext = _ctx.getRequestContext() ;
+	rcontext.getJavascriptManager().addJavascript("eXo.forum.UIForumPortlet.reSizeImagesInMessageForm();");
+%>
 <%uiform.end()%>
 </div>

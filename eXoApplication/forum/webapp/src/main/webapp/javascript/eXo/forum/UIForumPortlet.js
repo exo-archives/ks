@@ -479,6 +479,11 @@ UIForumPortlet.prototype.reSizeImgViewTopic = function() {
 UIForumPortlet.prototype.reSizeImages = function() {
 	setTimeout('eXo.forum.UIForumPortlet.setSizeImages(225, "UITopicDetail")', 500);
 };
+
+UIForumPortlet.prototype.reSizeImagesInMessageForm = function() {
+	setTimeout('eXo.forum.UIForumPortlet.setSizeImages(150, "UIViewPrivateMessageForm")', 500);
+}
+
 UIForumPortlet.prototype.setSizeImages = function(delta, classParant) {
 	var parent_ = document.getElementById(classParant);
 	var imageContentContainer = eXo.core.DOMUtil.findFirstDescendantByClass(parent_, "div", "ImageContentContainer");
