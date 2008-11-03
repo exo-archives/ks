@@ -29,13 +29,13 @@ import org.exoplatform.services.security.Identity;
 public class AuthenticationLoginListener extends Listener<Object, Identity> {
 
 	public AuthenticationLoginListener() throws Exception {
-		System.out.println("\n\n ============> AuthenticationLoginListener  \n\n");
+	
 	}
 
 	@Override
 	public void onEvent(Event<Object, Identity> event) throws Exception {
-		System.out.println("\n\n ============ onEvent ========== \n\n");
-  	ForumService fservice = (ForumService) RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(ForumService.class) ;
+		//System.out.println("ListenerUser =====> " + event.getData().getUserId());
+  	ForumService fservice = (ForumService) RootContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
   	fservice.userLogin(event.getData().getUserId()) ;
 	}	
 }

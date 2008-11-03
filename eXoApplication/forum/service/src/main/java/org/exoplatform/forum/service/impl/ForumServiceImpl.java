@@ -42,13 +42,14 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.SendMessageInfo;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.picocontainer.Startable;
 
 /**
  * Created by The eXo Platform SARL
@@ -56,7 +57,7 @@ import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
  *					hung.nguyen@exoplatform.com
  * Jul 10, 2007	
  */
-public class ForumServiceImpl implements ForumService{
+public class ForumServiceImpl implements ForumService, Startable{
   private JCRDataStorage storage_ ;
   private final Map<String, Boolean> onlineUsers_ = new HashMap<String, Boolean>() ;
   private String lastLogin_ = "";
@@ -76,7 +77,17 @@ public class ForumServiceImpl implements ForumService{
   public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
   	storage_.addInitialDataPlugin(plugin) ;
   }
+  
+  public void start() {
+  	try{
+  		storage_.initDefaultData() ;
+  	}catch(Exception e) {
+  		e.printStackTrace() ;
+  	}  	
+	}
 
+	public void stop() {}
+	
   public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
     storage_.saveCategory(sProvider, category, isNew);
   }
@@ -333,6 +344,7 @@ public class ForumServiceImpl implements ForumService{
   }
 
   public synchronized void userLogin(String userId) throws Exception {
+  	System.out.println("User =====> " + userId);
     lastLogin_ = userId ;
     System.out.println("\n\n------->>>UserLogin: " + userId + "\n\n");
     onlineUsers_.put(userId, true) ;		
@@ -394,4 +406,8 @@ public class ForumServiceImpl implements ForumService{
     }
     return list;
   }
+  
+  public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception {
+  	return storage_.search(queryString, sessionProvider) ;
+  }	
 }
