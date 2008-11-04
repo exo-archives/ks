@@ -153,7 +153,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		addUIFormInput(forumSortTab) ;
 		addUIFormInput(forumCensorTab) ;
 		addUIFormInput(notifyEmailTab) ;
-		addUIFormInput(activeTopicTab) ;
+		//addUIFormInput(activeTopicTab) ;
 	}
 	
 	public boolean isRenderListTopic() {
