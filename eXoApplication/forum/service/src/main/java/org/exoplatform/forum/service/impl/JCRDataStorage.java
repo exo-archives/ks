@@ -207,82 +207,84 @@ public class JCRDataStorage {
 		}
 	}
 
-	public void setDefaulDateForum(ForumInitialData forumInitial) throws Exception {
+	public void initDefaultData() throws Exception {
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		List<CategoryData> categories = new ArrayList<CategoryData>();
-  	categories = forumInitial.getCategories();
-		CategoryData categoryData = categories.get(0);
-		String categoryId = "";
-		NodeIterator iter = forumHomeNode.getNodes();
-		boolean isAdd = true;
-		while (iter.hasNext()) {
-			Node cateNode = iter.nextNode();
-			if(cateNode.isNodeType("exo:forumCategory")){
-				isAdd = false;
-				break;
+		List<CategoryData> categories; 
+		for(InitializeForumPlugin pln : defaultPlugins_) {
+			categories = pln.getForumInitialData().getCategories();
+			for(CategoryData categoryData : categories) {
+				String categoryId = "";
+				NodeIterator iter = forumHomeNode.getNodes();
+				boolean isAdd = true;
+				while (iter.hasNext()) {
+					if(iter.nextNode().isNodeType("exo:forumCategory")){
+						isAdd = false;
+						break;
+					}
+				}
+				if(isAdd) {
+		    	UserProfile userProfile = new UserProfile();
+		    	userProfile.setUserId(categoryData.getOwner());
+		    	this.saveUserProfile(sProvider, userProfile, false, false);
+			    Category category = new Category();
+			    category.setCategoryName(categoryData.getName());
+			    category.setDescription(categoryData.getDescription());
+			    category.setOwner(categoryData.getOwner());
+			    this.saveCategory(sProvider, category, true);
+			    categoryId = category.getId() ;
+			    List<ForumData> forums = categoryData.getForums();
+			    String forumId = "";
+			    for (ForumData forumData : forums) {
+			      Forum forum = new Forum();
+			      forum.setForumName(forumData.getName());
+			      forum.setDescription(forumData.getDescription());
+			      forum.setOwner(forumData.getOwner());
+			      forum.setIsModerateTopic(true);
+			      this.saveForum(sProvider, categoryId, forum, true);
+			      forumId = forum.getId();
+		      }
+			    ForumData forum = forums.get(0) ;
+			  	List<TopicData> topics = forum.getTopics();
+			    String topicId = "";
+			    String ct = "";
+			    String contentMail = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
+									"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
+									"has been added new Post with content below: <div> &content </div> For more detail, you can " +
+									"view at link : &link";
+//			    for (int i = 0; i < 30; i++) {
+			    for (TopicData topicData : topics) {
+			      Topic topic = new Topic();
+			      topic.setTopicName(topicData.getName());
+			      ct = topicData.getContent();
+			      ct = StringUtils.replace(ct, "\\n","<br/>");
+			      topic.setDescription(ct);
+			      topic.setOwner(topicData.getOwner());
+			      topic.setIsApproved(false);
+			      topic.setIsModeratePost(true);
+			      topic.setIcon(topicData.getIcon());
+			      this.saveTopic(sProvider, categoryId, forumId, topic, true, false, contentMail);
+			      topicId = topic.getId();
+		      }
+//			    }
+			    TopicData topic = topics.get(0) ;
+			  	List<PostData> posts = topic.getPosts();
+//			  	for (int i = 0; i < 30; i++) {
+			    for (PostData postData : posts) {
+			    	Post post = new Post();
+			    	post.setName(postData.getName());
+			    	ct = postData.getContent();
+			    	ct = StringUtils.replace(ct, "\\n","<br/>");
+			    	post.setMessage(ct);
+			    	post.setOwner(postData.getOwner());
+			    	post.setIsApproved(false);
+			    	post.setIcon(postData.getIcon());
+			    	this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
+			    }
+//			  	}
+		    }
 			}
 		}
-		if(isAdd) {
-    	UserProfile userProfile = new UserProfile();
-    	userProfile.setUserId(categoryData.getOwner());
-    	this.saveUserProfile(sProvider, userProfile, false, false);
-	    Category category = new Category();
-	    category.setCategoryName(categoryData.getName());
-	    category.setDescription(categoryData.getDescription());
-	    category.setOwner(categoryData.getOwner());
-	    this.saveCategory(sProvider, category, true);
-	    categoryId = category.getId() ;
-	    List<ForumData> forums = categoryData.getForums();
-	    String forumId = "";
-	    for (ForumData forumData : forums) {
-	      Forum forum = new Forum();
-	      forum.setForumName(forumData.getName());
-	      forum.setDescription(forumData.getDescription());
-	      forum.setOwner(forumData.getOwner());
-	      forum.setIsModerateTopic(true);
-	      this.saveForum(sProvider, categoryId, forum, true);
-	      forumId = forum.getId();
-      }
-	    ForumData forum = forums.get(0) ;
-	  	List<TopicData> topics = forum.getTopics();
-	    String topicId = "";
-	    String ct = "";
-	    String contentMail = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
-							"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
-							"has been added new Post with content below: <div> &content </div> For more detail, you can " +
-							"view at link : &link";
-//	    for (int i = 0; i < 30; i++) {
-	    for (TopicData topicData : topics) {
-	      Topic topic = new Topic();
-	      topic.setTopicName(topicData.getName());
-	      ct = topicData.getContent();
-	      ct = StringUtils.replace(ct, "\\n","<br/>");
-	      topic.setDescription(ct);
-	      topic.setOwner("demo");
-	      topic.setIsApproved(false);
-	      topic.setIsModeratePost(true);
-	      topic.setIcon(topicData.getIcon());
-	      this.saveTopic(sProvider, categoryId, forumId, topic, true, false, contentMail);
-	      topicId = topic.getId();
-      }
-//	    }
-	    TopicData topic = topics.get(0) ;
-	  	List<PostData> posts = topic.getPosts();
-//	  	for (int i = 0; i < 30; i++) {
-	    for (PostData postData : posts) {
-	    	Post post = new Post();
-	    	post.setName(postData.getName());
-	    	ct = postData.getContent();
-	    	ct = StringUtils.replace(ct, "\\n","<br/>");
-	    	post.setMessage(ct);
-	    	post.setOwner("demo");
-	    	post.setIsApproved(false);
-	    	post.setIcon(postData.getIcon());
-	    	this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
-	    }
-//	  	}
-    }
   }
 	
 	public List<Category> getCategories(SessionProvider sProvider) throws Exception {
