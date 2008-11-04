@@ -181,5 +181,32 @@
 			</init-params>
 		</component-plugin>
 	</external-component-plugins>
-	
+	<external-component-plugins>
+    <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
+		<component-plugin>
+      <name>ForumDeactiveJob</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.forum.service.conf.DeactivePeriodJob</type>
+      <description>add a Deactive job to the JobSchedulerService</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>save the monitor data  periodically</description>
+          <property name="jobName" value="DeactiveJob"/>
+          <property name="groupName" value="KnowlegedSuite"/>
+          <property name="job" value="org.exoplatform.forum.service.conf.DeactiveJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="7200000"/> <!-- 2 hours-->    
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>               
+        </properties-param>
+        <properties-param>
+          <name>deactive.info</name>
+          <description></description>
+          <property name="inactiveDays" value="15"/>          
+          <property name="forumName" value="Live demo"/>          
+        </properties-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
 </configuration>

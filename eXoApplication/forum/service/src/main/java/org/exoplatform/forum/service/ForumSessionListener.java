@@ -38,6 +38,15 @@ public class ForumSessionListener implements HttpSessionListener {
   }
   
   public void sessionCreated(HttpSessionEvent event) {
+  	/*if(ConversationState.getCurrent() != null ){
+  		try{
+    		System.out.println("\n\n ===========> sessionCreated " + ConversationState.getCurrent().getIdentity().getUserId() + "\n\n");
+    	}catch(Exception e) {
+    		e.printStackTrace() ;
+    	}    	
+  	}*/
+  	
+  	
   }
 
   /**
@@ -64,6 +73,7 @@ public class ForumSessionListener implements HttpSessionListener {
   	    PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
   	    ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
   	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
+  	    //System.out.println("\n\n ===========> sessionDestroyed "+ConversationState.getCurrent().getIdentity().getUserId()+"\n\n");
   	  }
       
       /*RootContainer rootContainer = RootContainer.getInstance() ;

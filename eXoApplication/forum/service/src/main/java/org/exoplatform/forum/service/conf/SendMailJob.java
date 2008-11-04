@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  **/
-package org.exoplatform.forum.service;
+package org.exoplatform.forum.service.conf;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
-import org.exoplatform.ks.common.NotifyInfo;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
@@ -32,43 +32,24 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class SendMailJob extends Thread implements Job, Runnable  {
-  private Thread thread ;
-  
-	public SendMailJob() throws Exception {
-		setDaemon(true) ;	
-		start() ;
-		
-	}
-	public void start() { 
-		if ( thread == null ) { 
-    	thread = new Thread(this); 
-    	thread.start(); 
-    }
-	} 
-	
-	@SuppressWarnings("deprecation")
-  public void destroy() {
-		thread.stop() ;
-		thread = null ;
-	} 
-	
+public class SendMailJob implements Job {
 	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
+  public SendMailJob() throws Exception {}
+		
 	
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-	  	RootContainer rootContainer = RootContainer.getInstance() ;
-	    PortalContainer portalContainer = rootContainer.getPortalContainer("portal") ;
-	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
-	    ForumService forumService = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
+	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
+	    MailService mailService = (MailService)container.getComponentInstanceOfType(MailService.class) ;
+	    ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
 	    String name = context.getJobDetail().getName();
 	    
-	    NotifyInfo messageInfo = forumService.getMessageInfo(name) ;
+	    SendMessageInfo messageInfo = forumService.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
 	    
-		  JobSchedulerService schedulerService = (JobSchedulerService)portalContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
+		  JobSchedulerService schedulerService = (JobSchedulerService)container.getComponentInstanceOfType(JobSchedulerService.class) ;
 		  		  
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {

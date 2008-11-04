@@ -18,8 +18,10 @@ package org.exoplatform.forum.service;
 
 import java.util.List;
 
+import javax.jcr.NodeIterator;
+
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.ks.common.NotifyInfo;
+import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 // TODO: Auto-generated Javadoc
@@ -878,4 +880,6 @@ public interface ForumService {
    * @throws Exception the exception
    */
   public List<Post> getNewPosts(int number) throws Exception ;
+  
+  public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception ;
 }
