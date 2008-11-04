@@ -264,7 +264,7 @@ public class JCRDataStorage {
 			      ct = topicData.getContent();
 			      ct = StringUtils.replace(ct, "\\n","<br/>");
 			      topic.setDescription(ct);
-			      topic.setOwner("demo"); // why ?
+			      topic.setOwner(topicData.getOwner());
 			      topic.setIsApproved(false);
 			      topic.setIsModeratePost(true);
 			      topic.setIcon(topicData.getIcon());
@@ -281,7 +281,7 @@ public class JCRDataStorage {
 			    	ct = postData.getContent();
 			    	ct = StringUtils.replace(ct, "\\n","<br/>");
 			    	post.setMessage(ct);
-			    	post.setOwner("demo"); // why ?
+			    	post.setOwner(postData.getOwner());
 			    	post.setIsApproved(false);
 			    	post.setIcon(postData.getIcon());
 			    	this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
@@ -290,10 +290,6 @@ public class JCRDataStorage {
 		    }
 			}
 		}
-		
-  	
-		
-		
   }
 	
 	public List<Category> getCategories(SessionProvider sProvider) throws Exception {
