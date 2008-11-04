@@ -56,6 +56,7 @@
 								<div style="display: $display;" id="UITabContent" class="UITabContent">
 									<%	uiform.renderChild(tabconten.id) ; 
 											if(tabconten.id.equals("activeTopicTab")){
+											continue;
 									%>	
 											<table class="UIFormGrid">
 												<tbody>						
