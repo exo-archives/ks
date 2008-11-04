@@ -47,6 +47,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
+//import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.picocontainer.Startable;
@@ -375,8 +376,12 @@ public class ForumServiceImpl implements ForumService, Startable{
   public String getLastLogin() throws Exception {
     return lastLogin_ ;
   }
+ // nguyen van truong
+ // public NotifyInfo getMessageInfo(String name) throws Exception {
+ //   return storage_.getMessageInfo(name) ;
+ // }
 
-  public NotifyInfo getMessageInfo(String name) throws Exception {
+  public SendMessageInfo getMessageInfo(String name) throws Exception {
     return storage_.getMessageInfo(name) ;
   }
 

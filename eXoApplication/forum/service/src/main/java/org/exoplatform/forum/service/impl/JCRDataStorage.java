@@ -42,6 +42,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -66,11 +67,12 @@ import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.ForumData;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.PostData;
+import org.exoplatform.forum.service.conf.RoleRulesPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.TopicData;
-import org.exoplatform.ks.common.EmailNotifyPlugin;
-import org.exoplatform.ks.common.NotifyInfo;
-import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+//import org.exoplatform.ks.common.EmailNotifyPlugin;
+//import org.exoplatform.ks.common.NotifyInfo;
+//import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -87,9 +89,14 @@ public class JCRDataStorage {
 
 	private NodeHierarchyCreator nodeHierarchyCreator_;
 
+	// Nguyen Van Truong 
+	//private Map<String, String> serverConfig_ = new HashMap<String, String>();
+	//private Map<String, NotifyInfo>	messagesInfoMap_	= new HashMap<String, NotifyInfo>();
+	//private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
+	//private List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
-	private Map<String, NotifyInfo>	messagesInfoMap_	= new HashMap<String, NotifyInfo>();
+	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	private List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
 	
@@ -3299,6 +3306,25 @@ public class JCRDataStorage {
 		JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
 		ExoContainer container = ExoContainerContext.getCurrentContainer();
 		JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+		messagesInfoMap_.put(name, new SendMessageInfo(addresses, message));
+		schedulerService.addPeriodJob(info, periodInfo);
+	}
+
+	public SendMessageInfo getMessageInfo(String name) throws Exception {
+		SendMessageInfo messageInfo = messagesInfoMap_.get(name);
+		messagesInfoMap_.remove(name);
+		return messageInfo;
+	}
+	/** Nguyen Van Truong
+	@SuppressWarnings("unchecked")
+	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
+		Calendar cal = new GregorianCalendar();
+		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
+		String name = String.valueOf(cal.getTime().getTime());
+		Class clazz = Class.forName("org.exoplatform.forum.service.conf.SendMailJob");
+		JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
+		ExoContainer container = ExoContainerContext.getCurrentContainer();
+		JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
 		messagesInfoMap_.put(name, new NotifyInfo(addresses, message));
 		schedulerService.addPeriodJob(info, periodInfo);
 	}
@@ -3308,7 +3334,7 @@ public class JCRDataStorage {
 		messagesInfoMap_.remove(name);
 		return messageInfo;
 	}
-
+	*/
 	private String getPath(String index, String path) throws Exception {
 		int t = path.indexOf(index);
 		if (t > 0) {
