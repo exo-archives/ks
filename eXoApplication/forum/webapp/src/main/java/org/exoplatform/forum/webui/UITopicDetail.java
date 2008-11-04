@@ -333,12 +333,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			Topic topic = this.getTopic() ;
 			listUser.addAll(ForumServiceUtils.getUserPermission(topic.getCanView())) ;
 			if(!listUser.isEmpty() && listUser.size() > 0 && !listUser.get(0).equals(" ")){
+				if(listUser.contains(userName)) return true;
 				Forum forum = this.getForum() ;
-				listUser.addAll(ForumServiceUtils.getUserPermission(forum.getViewer())) ;
+				if(forum.getPoster() != null && ForumServiceUtils.getUserPermission(forum.getPoster()).contains(userName)) return true;
+				if(forum.getViewer() != null && ForumServiceUtils.getUserPermission(forum.getViewer()).contains(userName)) return true;
 			}
-			if(listUser.isEmpty()|| listUser.size() == 0 || listUser.get(0).equals(" ") || listUser.contains(this.getUserProfile().getUserId())) return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false ;
 		}
 		return false ;

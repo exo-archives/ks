@@ -65,7 +65,6 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.ForumData;
-import org.exoplatform.forum.service.conf.ForumInitialData;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.RoleRulesPlugin;
@@ -257,7 +256,7 @@ public class JCRDataStorage {
 									"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
 									"has been added new Post with content below: <div> &content </div> For more detail, you can " +
 									"view at link : &link";
-//			    for (int i = 0; i < 30; i++) {
+			    for (int i = 0; i < 30; i++) {
 			    for (TopicData topicData : topics) {
 			      Topic topic = new Topic();
 			      topic.setTopicName(topicData.getName());
@@ -271,10 +270,10 @@ public class JCRDataStorage {
 			      this.saveTopic(sProvider, categoryId, forumId, topic, true, false, contentMail);
 			      topicId = topic.getId();
 		      }
-//			    }
+			    }
 			    TopicData topic = topics.get(0) ;
 			  	List<PostData> posts = topic.getPosts();
-//			  	for (int i = 0; i < 30; i++) {
+			  	for (int i = 0; i < 30; i++) {
 			    for (PostData postData : posts) {
 			    	Post post = new Post();
 			    	post.setName(postData.getName());
@@ -286,7 +285,7 @@ public class JCRDataStorage {
 			    	post.setIcon(postData.getIcon());
 			    	this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
 			    }
-//			  	}
+			  	}
 		    }
 			}
 		}

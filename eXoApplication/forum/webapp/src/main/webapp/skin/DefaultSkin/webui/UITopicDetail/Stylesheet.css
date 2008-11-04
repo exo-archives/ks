@@ -157,6 +157,10 @@
 	overflow-x: auto;
 }
 
+.UITopicDetail .PostViewContainer .PostContent table {
+	border-collapse:separate;
+}
+
 .UITopicDetail .PostViewContainer a {
 	color: blue;
 }
