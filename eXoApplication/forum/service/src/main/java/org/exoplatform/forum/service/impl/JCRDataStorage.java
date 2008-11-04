@@ -2094,12 +2094,13 @@ public class JCRDataStorage {
 		long totalAtt = 0;
 		long totalpost = (long) posts.size();
 		int count = 0;
+		Node postNode = null;
 		for (Post post : posts) {
 			totalAtt = totalAtt + post.getNumberAttach();
 			String newPostPath = destTopicPath + "/" + post.getId();
 			forumHomeNode.getSession().getWorkspace().move(post.getPath(), newPostPath);
 			// Node Post move
-			Node postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
+			postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
 			postNode.setProperty("exo:path", newPostPath);
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			if (isCreatNewTopic && count == 0) {
@@ -2109,6 +2110,15 @@ public class JCRDataStorage {
 				postNode.setProperty("exo:isFirstPost", false);
 			}
 		}
+		
+		// set destTopicNode
+		destTopicNode.setProperty("exo:postCount", destTopicNode.getProperty("exo:postCount").getLong() + totalpost);
+		destTopicNode.setProperty("exo:numberAttachments", destTopicNode.getProperty("exo:numberAttachments").getLong() + totalAtt);
+		destForumNode.setProperty("exo:postCount", destForumNode.getProperty("exo:postCount").getLong() + totalpost);
+		// update last post for destTopicNode
+		destTopicNode.setProperty("exo:lastPostBy", postNode.getProperty("exo:owner").getValue().getString());
+		destTopicNode.setProperty("exo:lastPostDate", postNode.getProperty("exo:createdDate").getValue().getDate());
+		
 		// set srcTopicNode
 		long temp = srcTopicNode.getProperty("exo:postCount").getLong();
 		temp = temp - totalpost;
@@ -2120,17 +2130,20 @@ public class JCRDataStorage {
 		if (temp < 0)
 			temp = 0;
 		srcTopicNode.setProperty("exo:numberAttachments", temp);
+		// update lastpost for srcTopicNode
+		NodeIterator nodeIterator = srcTopicNode.getNodes();
+		long posLast = nodeIterator.getSize() - 1;
+		nodeIterator.skip(posLast);
+		while(nodeIterator.hasNext()) postNode = nodeIterator.nextNode();
+		srcTopicNode.setProperty("exo:lastPostBy", postNode.getProperty("exo:owner").getValue().getString());
+		srcTopicNode.setProperty("exo:lastPostDate", postNode.getProperty("exo:createdDate").getValue().getDate());
 		// set srcForumNode
 		temp = srcForumNode.getProperty("exo:postCount").getLong();
 		temp = temp - totalpost;
 		if (temp < 0)
 			temp = 0;
 		srcForumNode.setProperty("exo:postCount", temp);
-		// set destTopicNode
-		destTopicNode.setProperty("exo:postCount", destTopicNode.getProperty("exo:postCount").getLong() + totalpost);
-		destTopicNode.setProperty("exo:numberAttachments", destTopicNode.getProperty("exo:numberAttachments").getLong() + totalAtt);
-		destForumNode.setProperty("exo:postCount", destForumNode.getProperty("exo:postCount").getLong() + totalpost);
-
+		
 		forumHomeNode.save();
 		forumHomeNode.getSession().save();
 	}
