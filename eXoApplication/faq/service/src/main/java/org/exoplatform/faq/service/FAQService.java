@@ -387,6 +387,16 @@ public interface FAQService {
   public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception ;
   
   /**
+   * This method will un watch in one question 
+   * 
+   * @param	 questionId is id of current category
+   * @param	 sProvider the session provider
+   * @param	 userCurrent is user current then you un watch
+   * @throws Exception the exception
+   */
+  public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception;
+  
+  /**
    * This method will return list object FAQFormSearch
    * <p>
    * In instance system filter categories and questions coherent value with user need search
@@ -598,4 +608,10 @@ public interface FAQService {
  	* @throws Exception the exception
  	*/
  	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
+ 	
+ 	public void addWatchQuestion(String questionId, Watch watch, SessionProvider sessionProvider) throws Exception;
+ 	
+ 	public List<Watch> getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception;
+ 	
+ 	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception;
 }

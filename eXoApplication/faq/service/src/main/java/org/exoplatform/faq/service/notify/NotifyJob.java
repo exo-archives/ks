@@ -42,7 +42,7 @@ public class NotifyJob implements Job{
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
 	  	//RootContainer rootContainer = RootContainer.getInstance() ;
-		ExoContainer container = ExoContainerContext.getCurrentContainer();
+	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
 	  	
 	    MailService mailService = (MailService)container.getComponentInstanceOfType(MailService.class) ;
 	    FAQService faqService = (FAQService)container.getComponentInstanceOfType(FAQService.class) ;

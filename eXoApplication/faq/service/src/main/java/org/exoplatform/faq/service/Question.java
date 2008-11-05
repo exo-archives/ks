@@ -85,6 +85,9 @@ public class Question {
   private String[] usersVote;
   private double markVote = 0;
   
+  private String[] usersWatch = null;
+  private String[] emailsWatch = null;
+  
   /**
    * Class constructor specifying id of object is created.
    */
@@ -375,6 +378,22 @@ public class Question {
 
 	public void setMarkVote(double markVote) {
 		this.markVote = markVote;
+	}
+
+	public String[] getUsersWatch() {
+		return usersWatch;
+	}
+
+	public void setUsersWatch(String[] usersWatch) {
+		this.usersWatch = usersWatch;
+	}
+
+	public String[] getEmailsWatch() {
+		return emailsWatch;
+	}
+
+	public void setEmailsWatch(String[] emailsWatch) {
+		this.emailsWatch = emailsWatch;
 	}
 }
 

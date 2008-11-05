@@ -327,9 +327,17 @@
   margin: 0px 4px;
 }
 
-.UIFAQPortlet .QuestionSelect .QuestionContainer .VoteFAQ {
+.UIFAQPortlet .VoteFAQ {
   float: right;
   background: url('background/VoteIcon.gif') no-repeat left center;
+  width: 21px; height: 20px;
+  cursor: pointer;
+  margin: 0px 4px;
+}
+
+.UIFAQPortlet .SortAnswer {
+  float: right;
+  background: url('background/SortByVote.gif') no-repeat left center;
   width: 21px; height: 20px;
   cursor: pointer;
   margin: 0px 4px;
@@ -1221,6 +1229,10 @@
   background: url('background/Comment.gif') no-repeat left center;
 }
 
+.UIFAQPortlet .WatchQuestionManager {
+	background: url('background/FAQYey.gif') no-repeat left center;
+}
+
 .AddRelation {
   background: url('background/AddIcon.gif') no-repeat left top;
   height:16px;
@@ -1387,6 +1399,13 @@
 	width:16px;
 	margin: 0px 3px;
 	float:right;
+}
+.UIFAQPortlet .refreshMail {
+	background: url(background/refresh.png) no-repeat scroll right;
+	height:16px;
+	width:16px;
+	margin: 0px 3px;
+	float:left;
 }
 
 .UIPrintPreview .AttachmentContent .LabelBox .Action{

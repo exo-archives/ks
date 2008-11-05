@@ -10,9 +10,12 @@
 			<div class="OptionsContainer">
 				<div onmouseout="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('-1')">
 				<%	
+				String action = "Vote";
+				if(uicomponent.pos_ >= 0) action = "VoteAnswer";
+				System.out.println(action);
 				for(int i = 0; i < 5; i ++) {
 					String number = String.valueOf(i+1) ;
-					String onclick = uicomponent.event("Vote", number);
+					String onclick = uicomponent.event(action, number);
 				%>
 					<div id="FAQStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('$i')" onclick="$onclick" title=""><span></span></div>
 		 <%}%>

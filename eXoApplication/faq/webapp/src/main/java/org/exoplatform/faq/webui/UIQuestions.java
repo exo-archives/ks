@@ -93,6 +93,7 @@ import org.exoplatform.webui.event.EventListener;
 	    @EventConfig(listeners = UIQuestions.WatchManagerActionListener.class),
 	    @EventConfig(listeners = UIQuestions.UnWatchActionListener.class), //confirm= "UIQuestions.msg.confirm-un-watch"),
       // action of question:
+	    @EventConfig(listeners = UIQuestions.UnWatchQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.QuestionManagamentActionListener.class),
 	    @EventConfig(listeners = UIQuestions.ViewQuestionActionListener.class),
 	    @EventConfig(listeners = UIQuestions.ViewUserProfileActionListener.class),
@@ -607,6 +608,20 @@ public class UIQuestions extends UIContainer {
   	return false ;
   }
   
+  public Boolean checkUserWatchQuestion(String questionId) throws Exception {
+  	if(!FAQUtils.isFieldEmpty(FAQUtils.getCurrentUser())){
+			List<Watch> listWatch = faqService_.getListMailInWatchQuestion(questionId, FAQUtils.getSystemProvider()) ;
+			if(listWatch.size()>0) {
+				List<String> users = new ArrayList<String>() ;
+				for(Watch watch : listWatch) {
+					users.add(watch.getUser());
+				}
+				if(users.contains(FAQUtils.getCurrentUser())) return true;
+			}
+  	}
+  	return false ;
+  }
+  
   static public class DownloadAttachActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
@@ -1000,7 +1015,7 @@ public class UIQuestions extends UIContainer {
 				uiWatchForm.setCategoryID(objectId) ;
       } else {
       	try {
-	        faqService_.getCategoryById(objectId, FAQUtils.getSystemProvider()) ;
+	        faqService_.getQuestionById(objectId, FAQUtils.getSystemProvider()) ;
 	      } catch (Exception e) {
 	        UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1053,6 +1068,27 @@ public class UIQuestions extends UIContainer {
         event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
         return ;
       }
+		}
+	}
+	
+	static	public class UnWatchQuestionActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions uiQuestions = event.getSource() ;
+			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
+			UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class);
+			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
+			UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
+			try {
+				Question question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+			} catch (Exception e) {
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				uiQuestions.setIsNotChangeLanguage();
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+				return ;
+			}
+			faqService_.UnWatchQuestion(questionId, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser()) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 		}
 	}
 	

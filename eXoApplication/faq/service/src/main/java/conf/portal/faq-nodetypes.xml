@@ -15,28 +15,28 @@
   		</propertyDefinition>
   		<propertyDefinition name="exo:author" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-  		</propertyDefinition>	
+  		</propertyDefinition>
   		<propertyDefinition name="exo:email" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-	  	</propertyDefinition>	
+	  	</propertyDefinition>
 	  	<propertyDefinition name="exo:isActivated" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-  		</propertyDefinition>	
+  		</propertyDefinition>
   		<propertyDefinition name="exo:isApproved" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
 	  	</propertyDefinition>
 			<propertyDefinition name="exo:categoryId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-  		</propertyDefinition> 		  		
+  		</propertyDefinition>
   		<propertyDefinition name="exo:createdDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-  		</propertyDefinition> 		  		
+  		</propertyDefinition>
   		<propertyDefinition name="exo:responses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
   		</propertyDefinition>
   		<propertyDefinition name="exo:dateResponse" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
-  		</propertyDefinition> 
+  		</propertyDefinition>
   		<propertyDefinition name="exo:responseBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
 	  	</propertyDefinition>
@@ -45,7 +45,7 @@
   		</propertyDefinition>
   		<propertyDefinition name="exo:dateComment" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
-  		</propertyDefinition> 
+  		</propertyDefinition>
   		<propertyDefinition name="exo:commentBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
 	  	</propertyDefinition>

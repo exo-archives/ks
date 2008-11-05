@@ -399,6 +399,8 @@ public class QuestionPageList extends JCRPageList {
     if(questionNode.hasProperty("exo:dateComment")) question.setDateComment(ValuesToDate(questionNode.getProperty("exo:dateComment").getValues())) ;
     if(questionNode.hasProperty("exo:usersVote")) question.setUsersVote(ValuesToStrings(questionNode.getProperty("exo:usersVote").getValues())) ;  	
     if(questionNode.hasProperty("exo:markVote")) question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble()) ;
+    if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) ;
+    if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
     
     List<FileAttachment> attList = new ArrayList<FileAttachment>() ;
     NodeIterator nodeIterator = questionNode.getNodes() ;

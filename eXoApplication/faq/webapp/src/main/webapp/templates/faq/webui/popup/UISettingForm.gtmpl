@@ -29,6 +29,12 @@ if(!uicomponent.isEditPortlet_){
 											</td>
 										</tr>
 										<tr>
+											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.option.vote"); %></td>
+											<td class="FieldComponent">
+												<%uicomponent.renderField(uicomponent.ITEM_VOTE)%>
+											</td>
+										</tr>
+										<tr>
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.user-watch-manager"); %></td>
 											<% String linkWacth =uicomponent.event("UserWatchManager") ; %>
 											<a href="$linkWacth" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager"); %>" class="WatchUserManager">&nbsp;</a>
@@ -80,6 +86,10 @@ if(!uicomponent.isEditPortlet_){
 				        <div class="TabsContainer">
 			            <%
 			            	String selTabId = uicomponent.getSelectedTabId() ;
+			            	if(uicomponent.isResetMail){
+			            		uicomponent.isResetMail = false;
+			            		selTabId = uicomponent.SET_DEFAULT_EMAIL_TAB;
+			            	}
 			              for(inputSet in uicomponent.getChildren()) {
 			                if(!inputSet.isRendered()) continue ;
 					        		String className="NormalTab" ;
@@ -129,7 +139,7 @@ if(!uicomponent.isEditPortlet_){
 										              for(childInputSet in formInput.getChildren()) {
 										                if(!childInputSet.isRendered()) continue ;
 												        		String childClassName="NormalTab" ;
-												        		if(count == 0) childClassName="SelectedTab" ;
+												        		if(count == uicomponent.indexOfTab) childClassName="SelectedTab" ;
 												        		count ++;
 											              String childTabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + childInputSet.name) ;
 							                  %>
@@ -155,15 +165,32 @@ if(!uicomponent.isEditPortlet_){
 							            <%
 							            	int i = 0;
 							              for(uiFormInput in formInput.getChildren()) {
+							              	String actionReset = uicomponent.event("ResetMailContent", "" + i);
 							                if(!uiFormInput.isRendered()) continue ;
 							                String displayChild = "none" ;
-							                if(i == 0) displayChild="block" ;
+							                if(i == uicomponent.indexOfTab) displayChild="block" ;
+							                else displayChild = "none" ;
 							                i ++;
 							            %>
 							                <div class="UITabContent"  style="display: $displayChild; padding:5px;">
-							                  <%
-							                  	uicomponent.renderUIComponent(uiFormInput) ;
-							                  %>
+							                	<table>
+				                				<%//uicomponent.renderUIComponent(uiFormInput);
+							                  	for(childForm in uiFormInput.getChildren()) {%>
+							                  		<tr>
+							                  			<td>
+							                  				<%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%>
+							                  			</td>
+							                  			<td>
+							                  				<div style="float:left;">
+							                  					<%uicomponent.renderUIComponent(childForm);%>
+							                  				</div>
+							                  				<a href="$actionReset" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
+								                					<div class="refreshMail"><span></span></div>
+								                				</a>
+							                  			</td>
+							                  		</tr>
+							                  <%}%>
+							                  </table>
 							                </div>
 							            <%}%>
 							          </div>
@@ -178,6 +205,8 @@ if(!uicomponent.isEditPortlet_){
             <%}%>
           </div>
 		    </div>
+		    
+		    
 		    <div class="UIAction">
 		      <table class="ActionContainer" align="center">
 		      	<tr>

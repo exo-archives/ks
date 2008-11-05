@@ -37,6 +37,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormTabPane;
@@ -63,6 +64,7 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 	public final String	SET_DEFAULT_EMAIL_TAB = "DefaultEmail";
 	public final String	SET_DEFAULT_ADDNEW_QUESTION_TAB= "AddNewQuestionTab";
 	public final String	SET_DEFAULT_EDIT_QUESTION_TAB = "EditQuestionTab";
+	public final String	ITEM_VOTE = "vote";
 	
 	private final String DISPLAY_MODE = "display-mode".intern();
 	public static final String ORDER_BY = "order-by".intern(); 
@@ -142,6 +144,8 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			orderType.add(new SelectItemOption<String>(ASC, FAQSetting.ORDERBY_TYPE_ASC ));
 			orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC ));
 			addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
+			
+			addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
 		}
 	}
 	
@@ -199,7 +203,7 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 				if(defaultAddnewQuestion == null || !validatorDataInput.fckContentIsNotEmpty(defaultAddnewQuestion)) defaultAddnewQuestion = " ";
 				if(defaultEditQuestion == null || !validatorDataInput.fckContentIsNotEmpty(defaultEditQuestion)) defaultEditQuestion = " ";
 				
-				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion, defaultEditQuestion);
+				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
 				UIApplication uiApplication = settingForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -207,6 +211,7 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			} else {
 				faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
+				faqSetting.setSortQuestionByVote(settingForm.getUIFormCheckBoxInput(settingForm.ITEM_VOTE).isChecked());
 				service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;
 				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				questions.setFAQSetting(faqSetting);
@@ -227,6 +232,7 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			UIWatchContainer watchContainer = settingForm.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 600) ;
+			watchForm.setFAQSetting(settingForm.faqSetting_);
 			watchForm.setListCategory(settingForm.getCategoryAddWatch()) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
      
@@ -235,10 +241,14 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 	
 	static public class CancelActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
-			UISettingForm settingForm = event.getSource() ;			
-      UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
-      uiPopupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
+			UISettingForm settingForm = event.getSource() ;		
+			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			uiQuestions.setIsNotChangeLanguage();
+			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
+			uiPopupAction.deActivate() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
 

@@ -392,6 +392,18 @@ public class FAQServiceImpl implements FAQService{
   }
   
   /**
+   * This function will un watch in one category 
+   * 
+   * @param	 categoryId is id of current category
+   * @param	 sProvider
+   * @param	 emails is location current of one watch with user want delete 
+   * @throws Exception the exception
+   */
+  public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception {
+  	jcrData_.UnWatchQuestion(questionID, sProvider, userCurrent);
+  }
+  
+  /**
    * This method will return list object FAQFormSearch
    * <p>
    * In instance system filter categories and questions coherent value with user need search
@@ -615,4 +627,16 @@ public class FAQServiceImpl implements FAQService{
 	public boolean isAdminRole(String userName) throws Exception {
 	  return jcrData_.isAdminRole(userName);
   }
+	
+	public void addWatchQuestion(String questionId, Watch watch, SessionProvider sessionProvider) throws Exception{
+		jcrData_.addWatchQuestion(questionId, watch, sessionProvider);
+	}
+	
+	public List<Watch> getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getListMailInWatchQuestion(questionId, sProvider);
+	}
+	
+	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception {
+		return jcrData_.getListQuestionsWatch(faqSetting, currentUser, sProvider);
+	}
 }

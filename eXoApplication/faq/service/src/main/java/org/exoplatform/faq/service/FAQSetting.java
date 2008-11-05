@@ -30,6 +30,7 @@ public class FAQSetting {
 	private String emailSettingSubject = null;
 	private String orderBy ;
 	private String orderType ;
+	private boolean sortQuestionByVote = false;
 	private boolean canEdit = false;
 	private String isAdmin = null;
 	
@@ -136,6 +137,14 @@ public class FAQSetting {
 	public boolean isAdmin(){
 		if(this.isAdmin.equals("TRUE")) return true;
 		else return false;
+	}
+
+	public boolean isSortQuestionByVote() {
+		return sortQuestionByVote;
+	}
+
+	public void setSortQuestionByVote(boolean sortAnswerByVote) {
+		this.sortQuestionByVote = sortAnswerByVote;
 	}
 	
 }

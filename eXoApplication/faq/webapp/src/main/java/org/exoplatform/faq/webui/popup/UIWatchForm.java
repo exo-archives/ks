@@ -55,6 +55,9 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 	private boolean isUpdate = false ;
 	private String listEmailOld_ = "" ;
 	private long curentPage_ = 1 ;
+	private String questionId_ = null;
+	private boolean isWatchQuestion = false;
+	
 	public UIWatchForm() throws Exception {
 		List<String> list = new ArrayList<String>() ;
 		String user = FAQUtils.getCurrentUser() ;
@@ -82,10 +85,19 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   public String getCategoryID() { return categoryId_; }
   public void setCategoryID(String s) { categoryId_ = s ; }
   
+  public void setQuestionID(String questionId){
+  	this.questionId_ = questionId;
+  	isWatchQuestion = true;
+  }
+  
   public List<String> getListEmail() throws Exception {
   	FAQService faqService =	FAQUtils.getFAQService() ;
   	List<String> emailsList = new ArrayList<String>() ;
-    List<Watch> watchs = faqService.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()) ;
+  	List<Watch> watchs = null;
+  	if(!isWatchQuestion)
+  		watchs = faqService.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()) ;
+  	else
+  		watchs = faqService.getListMailInWatchQuestion(questionId_, FAQUtils.getSystemProvider());
     for(Watch wath: watchs) {
 			String[] strings = Utils.splitForFAQ(wath.getEmails()) ;
 			for(String string_ : strings ) {
@@ -193,40 +205,72 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       listEmail = uiWatchForm.filterItemInString(listEmail);
       String categoryId = uiWatchForm.getCategoryID() ;
       FAQService faqService =	FAQUtils.getFAQService() ;
-      try {
-      	faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
-      } catch (Exception e) {
-        UIApplication uiApplication = uiWatchForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-        uiQuestions.setIsNotChangeLanguage();
-        UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
-        uiPopupAction.deActivate() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; 
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-        return ;
-      }
-      listEmail = uiWatchForm.checkValueEmail(listEmail);
-      if (categoryId != null && !listEmail.equals("")) {
-      	Watch watch = new Watch() ;
-      	watch.setUser(name) ;
-      	watch.setEmails(listEmail);
-      	if(uiWatchForm.isUpdate) {
-      		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), uiWatchForm.listEmailOld_) ;
-      		faqService.addWatch(categoryId , watch, FAQUtils.getSystemProvider()) ;
-      		UIWatchManager watchManager = uiPortlet.findFirstComponentOfType(UIWatchManager.class) ;
-      		watchManager.setCurentPage(uiWatchForm.curentPage_)  ;
-      		watchManager.setListWatch(faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider())) ;
-      		event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ; 
-      	} else {
-	      	faqService.addWatch(categoryId , watch, FAQUtils.getSystemProvider()) ;
+      // add watch for category
+      if(!uiWatchForm.isWatchQuestion){
+	      try {
+	      	faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+	      } catch (Exception e) {
+	        UIApplication uiApplication = uiWatchForm.getAncestorOfType(UIApplication.class) ;
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+	        uiQuestions.setIsNotChangeLanguage();
+	        UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
+	        uiPopupAction.deActivate() ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; 
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+	        return ;
+	      }
+	      listEmail = uiWatchForm.checkValueEmail(listEmail);
+	      if (categoryId != null && !listEmail.equals("")) {
+	      	Watch watch = new Watch() ;
+	      	watch.setUser(name) ;
+	      	watch.setEmails(listEmail);
+	      	if(uiWatchForm.isUpdate) {
+	      		faqService.deleteMailInWatch(categoryId, FAQUtils.getSystemProvider(), uiWatchForm.listEmailOld_) ;
+	      		faqService.addWatch(categoryId , watch, FAQUtils.getSystemProvider()) ;
+	      		UIWatchManager watchManager = uiPortlet.findFirstComponentOfType(UIWatchManager.class) ;
+	      		watchManager.setCurentPage(uiWatchForm.curentPage_)  ;
+	      		watchManager.setListWatch(faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider())) ;
+	      		event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ; 
+	      	} else {
+		      	faqService.addWatch(categoryId , watch, FAQUtils.getSystemProvider()) ;
+		      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
+		      			ApplicationMessage.INFO)) ;
+		       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+		       	 UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+		       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+	      	}
+	      }
+	      
+	    // add watch for question
+      } else {
+      	try {
+	      	faqService.getQuestionById(uiWatchForm.questionId_, FAQUtils.getSystemProvider()) ;
+	      } catch (Exception e) {
+	        UIApplication uiApplication = uiWatchForm.getAncestorOfType(UIApplication.class) ;
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+	        uiQuestions.setIsNotChangeLanguage();
+	        UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
+	        uiPopupAction.deActivate() ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; 
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+	        return ;
+	      }
+	      listEmail = uiWatchForm.checkValueEmail(listEmail);
+	      if (categoryId != null && !listEmail.equals("")) {
+	      	Watch watch = new Watch() ;
+	      	watch.setUser(name) ;
+	      	watch.setEmails(listEmail);
+	      	faqService.addWatchQuestion(uiWatchForm.questionId_ , watch, FAQUtils.getSystemProvider()) ;
 	      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,
 	      			ApplicationMessage.INFO)) ;
 	       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 	       	 UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 	       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
-      	}
+	      }
       }
       UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
       uiPopupAction.deActivate() ;

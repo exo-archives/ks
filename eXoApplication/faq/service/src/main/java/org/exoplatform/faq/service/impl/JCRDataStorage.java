@@ -158,11 +158,13 @@ public class JCRDataStorage {
   		Node userSettingNode = userNode.getNode(FAQ_APP).getNode(USER_SETTING);
   		if(userSettingNode.hasProperty("exo:ordeBy")) faqSetting.setOrderBy(userSettingNode.getProperty("exo:ordeBy").getValue().getString());
   		if(userSettingNode.hasProperty("exo:ordeType")) faqSetting.setOrderType(userSettingNode.getProperty("exo:ordeType").getValue().getString());
+  		if(userSettingNode.hasProperty("exo:sortQuestionByVote")) faqSetting.setSortQuestionByVote(userSettingNode.getProperty("exo:sortQuestionByVote").getValue().getBoolean());
   	} else {
   		Node appNode = userNode.addNode(FAQ_APP);
   		Node UserSettingNode = appNode.addNode(USER_SETTING);
   		UserSettingNode.setProperty("exo:ordeBy", faqSetting.getOrderBy());
   		UserSettingNode.setProperty("exo:ordeType", faqSetting.getOrderType());
+  		UserSettingNode.setProperty("exo:sortQuestionByVote", false);
   		userNode.getSession().save();
   	}
   }
@@ -310,20 +312,26 @@ public class JCRDataStorage {
 	    }
 	    // Send notifycation when question response or edited or watching
 	  	if(!isNew && question.getResponses() != " " && question.isApproved() && question.isActivated()) {
-	  		List<String> emails = new ArrayList<String>() ;
 	  		List<String> emailsList = new ArrayList<String>() ;
 	  		emailsList.add(question.getEmail()) ;
 	  		try {
 	  			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
-	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
-	      		for(String email: emails) {
-	      			String[] strings = Utils.splitForFAQ(email) ;
-	      			for(String string_ : strings ) {
+	      		for(String email: Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues())) {
+	      			for(String string_ : Utils.splitForFAQ(email) ) {
 	      				emailsList.add(string_) ;
 	      			}
 	      		}
 	      	}
+	      	
+	      	if(questionNode.isNodeType("exo:faqWatching")){
+	      		for(String email: ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) {
+	      			for(String string_ : Utils.splitForFAQ(email) ) {
+	      				emailsList.add(string_) ;
+	      			}
+	      		}
+	      	}
+	      	
       		if(emailsList != null && emailsList.size() > 0) {
 						Message message = new Message();
 			      message.setMimeType(MIMETYPE_TEXTHTML) ;
@@ -368,16 +376,20 @@ public class JCRDataStorage {
 	    }
 	    // Send notifycation when question response or edited or watching
 	  	if(!isNew && question.getResponses() != " " && question.isActivated()) {
-	  		List<String> emails = new ArrayList<String>() ;
 	  		List<String> emailsList = new ArrayList<String>() ;
 	  		emailsList.add(question.getEmail()) ;
 	  		try {
 	  			Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
 	      	if(cate.isNodeType("exo:faqWatching")){
-	      		emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
-	      		for(String email: emails) {
-	      			String[] strings = Utils.splitForFAQ(email) ;
-	      			for(String string_ : strings ) {
+	      		for(String email: Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues())) {
+	      			for(String string_ : Utils.splitForFAQ(email) ) {
+	      				emailsList.add(string_) ;
+	      			}
+	      		}
+	      	}
+	      	if(questionNode.isNodeType("exo:faqWatching")){
+	      		for(String email: ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) {
+	      			for(String string_ : Utils.splitForFAQ(email) ) {
 	      				emailsList.add(string_) ;
 	      			}
 	      		}
@@ -566,7 +578,8 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:nameAttachs")) question.setNameAttachs(ValuesToStrings(questionNode.getProperty("exo:nameAttachs").getValues())) ;  	
     if(questionNode.hasProperty("exo:usersVote")) question.setUsersVote(ValuesToStrings(questionNode.getProperty("exo:usersVote").getValues())) ;  	
     if(questionNode.hasProperty("exo:markVote")) question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble()) ;
-    
+    if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) ;
+    if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
     List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
   	NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
@@ -607,8 +620,8 @@ public class JCRDataStorage {
   public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
   	Node questionHome = getQuestionHome(sProvider, null) ;
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-                                                + "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+                                   append("//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
@@ -620,11 +633,11 @@ public class JCRDataStorage {
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = null;
     if(categoryId.equals("All")){
-    	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-    			+ "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
+    	queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+    										append("//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
     } else {
-    	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-    			+ "//element(*,exo:faqQuestion)[(@exo:categoryId='" + categoryId + "')]").append("order by @exo:createdDate ascending");
+    	queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+    										append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')]").append("order by @exo:createdDate ascending");
     	
     }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
@@ -639,21 +652,28 @@ public class JCRDataStorage {
   	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = null;
     if(faqSetting.getDisplayMode().equals("approved")) {
-	    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-	                                    + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+	    queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+	    									append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
 	                                    append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
 	                                    append("]");
     } else {
-    	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-          + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-          append(" and (@exo:isActivated='true')").
-          append("]");
+    	queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+          							append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+          							append(" and (@exo:isActivated='true')").
+          							append("]");
     }
+    
+    queryString.append("order by ");
+    
+    if(faqSetting.isSortQuestionByVote()){
+    	queryString.append("@exo:markVote descending, ");
+    }
+    
     // order by and ascending or deascending
     if(faqSetting.getOrderBy().equals("created")){
-    	queryString.append("order by @exo:createdDate ");
+    	queryString.append("@exo:createdDate ");
     } else {
-    	queryString.append("order by @exo:name ");
+    	queryString.append("@exo:name ");
     }
     if(faqSetting.getOrderType().equals("asc")){
     	queryString.append("ascending");
@@ -673,20 +693,27 @@ public class JCRDataStorage {
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
     StringBuffer queryString = null;
     if(faqSetting.getDisplayMode().equals("approved")){
-	    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-	        + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-	        append(" and (@exo:isApproved='true')").
-	        append("]");
+	    queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+	        							append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+	        							append(" and (@exo:isApproved='true')").
+	        							append("]");
     } else {
-    	queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-	        + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
-	        append("]");
+    	queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+	        							append("//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
+	        							append("]");
     }
+    
+    queryString.append("order by ");
+    
+    if(faqSetting.isSortQuestionByVote()){
+    	queryString.append("@exo:markVote descending, ");
+    }
+    
     //  order by and ascending or deascending
     if(faqSetting.getOrderBy().equals("created")){
-    	queryString.append("order by @exo:createdDate ");
+    	queryString.append("@exo:createdDate ");
     } else {
-    	queryString.append("order by @exo:name ");
+    	queryString.append("@exo:name ");
     }
     if(faqSetting.getOrderType().equals("asc")){
     	queryString.append("ascending");
@@ -703,7 +730,7 @@ public class JCRDataStorage {
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() + "//element(*,exo:faqQuestion)[(");
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).append("//element(*,exo:faqQuestion)[(");
     
     int i = 0 ;
     for(String categoryId : listCategoryId) {
@@ -750,8 +777,8 @@ public class JCRDataStorage {
   	Node categoryHome = getCategoryHome(sProvider, null) ;
   	if(parentId != null && parentId.length() > 0) {	
     	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-                                                  + "//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
+      StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+                                     append("//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
       Query query = qm.createQuery(queryString.toString(), Query.XPATH);
       QueryResult result = query.execute();
       Node parentCategory = result.getNodes().nextNode() ;
@@ -777,8 +804,8 @@ public class JCRDataStorage {
   	Node categoryHome = getCategoryHome(sProvider, null) ;
   	  		
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-                                                + "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+                                   append("//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     Node categoryNode = result.getNodes().nextNode() ;
@@ -801,8 +828,8 @@ public class JCRDataStorage {
   private Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
   	Node categoryHome = getCategoryHome(sProvider, null) ;	
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-                                                + "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+                                   append("//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
   	return result.getNodes().nextNode() ;
@@ -815,8 +842,8 @@ public class JCRDataStorage {
   public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception {
     Node categoryHome = getCategoryHome(sProvider, null) ;
     QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-        + "//element(*,exo:faqCategory)[@exo:moderators='").append(user).append("']") ;
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+        													 append("//element(*,exo:faqCategory)[@exo:moderators='").append(user).append("']") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     NodeIterator iter = result.getNodes() ;
@@ -830,7 +857,7 @@ public class JCRDataStorage {
   public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {
   	Node categoryHome = getCategoryHome(sProvider, null) ;
   	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() + "//element(*,exo:faqCategory)") ;
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:faqCategory)") ;
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
   	NodeIterator iter = result.getNodes() ;
@@ -852,8 +879,8 @@ public class JCRDataStorage {
   		parentCategory = categoryHome ;
   	}
   	
-  	StringBuffer questionQuerry = new StringBuffer("/jcr:root" + questionHome.getPath() 
-	                                    + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
+  	StringBuffer questionQuerry = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+	                                    append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
   	//  order by and ascending or deascending
   	if(faqSetting.getDisplayMode().equals("approved")){
   		questionQuerry.append(" and (@exo:isApproved='true')");
@@ -863,10 +890,16 @@ public class JCRDataStorage {
   	}
   	questionQuerry.append("]");
   	
+  	questionQuerry.append("order by ");
+    
+    if(faqSetting.isSortQuestionByVote()){
+    	questionQuerry.append("@exo:markVote descending, ");
+    }
+    
     if(faqSetting.getOrderBy().equals("created")){
-    	questionQuerry.append("order by @exo:createdDate ");
+    	questionQuerry.append("@exo:createdDate ");
     } else {
-    	questionQuerry.append("order by @exo:name ");
+    	questionQuerry.append("@exo:name ");
     }
     if(faqSetting.getOrderType().equals("asc")){
     	questionQuerry.append("ascending");
@@ -913,17 +946,17 @@ public class JCRDataStorage {
     
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-        + "//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
-        append("]").append("order by @exo:createdDate ascending");
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+        													append("//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
+        													append("]").append("order by @exo:createdDate ascending");
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     NodeIterator nodeIterator = result.getNodes() ;
     cateInfo[1] = nodeIterator.getSize() ;
     
-    queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-        + "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-        append(" and (@exo:responses=' ')]").append("order by @exo:createdDate ascending");
+    queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+        							append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+        							append(" and (@exo:responses=' ')]").append("order by @exo:createdDate ascending");
     query = qm.createQuery(queryString.toString(), Query.XPATH);
     result = query.execute();
     cateInfo[2] = result.getNodes().getSize() ;
@@ -961,6 +994,7 @@ public class JCRDataStorage {
   	Node userSettingNode = userNode.getNode(FAQ_APP).getNode(USER_SETTING);
   	userSettingNode .setProperty("exo:ordeBy", faqSetting.getOrderBy());
   	userSettingNode .setProperty("exo:ordeType", faqSetting.getOrderType());
+  	userSettingNode .setProperty("exo:sortQuestionByVote", faqSetting.isSortQuestionByVote());
   	userNode.save() ;
   }
 
@@ -1033,6 +1067,93 @@ public class JCRDataStorage {
     return listWatch;
   }
   
+  public void addWatchQuestion(String questionId, Watch watch, SessionProvider sessionProvider) throws Exception{
+  	Node questionHome = getQuestionHome(sessionProvider, null);
+  	Node questionNode = questionHome.getNode(questionId);
+  	if(questionNode.isNodeType("exo:faqWatching")){
+  		List<String> vls = new ArrayList<String>() ;
+  		List<String> listUsers = new ArrayList<String>() ;
+			Value[] values = questionNode.getProperty("exo:emailWatching").getValues() ;
+			Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
+			for(Value vl : values) {
+					vls.add(vl.getString()) ;
+			}
+			for(Value user : users) {
+				listUsers.add(user.getString()) ;
+			}
+			vls.add(watch.getEmails()) ;
+			listUsers.add(watch.getUser());
+			questionNode.setProperty("exo:emailWatching", vls.toArray(new String[]{})) ;
+			questionNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{})) ;
+			questionNode.save() ;
+  	} else {
+  		questionNode.addMixin("exo:faqWatching");
+  		questionNode.setProperty("exo:emailWatching", new String[]{watch.getEmails()}) ;
+  		questionNode.setProperty("exo:userWatching", new String[]{watch.getUser()}) ;
+  		questionNode.save() ;
+  	}
+  	questionHome.save();
+  }
+  
+  public List<Watch> getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
+  	Node questionHome = getQuestionHome(sProvider, null);
+  	Node questionNode = questionHome.getNode(questionId);
+  	List<Watch> listWatch = new ArrayList<Watch>() ;
+  	if(questionNode.hasProperty("exo:userWatching")){
+  		Value[] emails = questionNode.getProperty("exo:emailWatching").getValues() ;
+  		Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
+  		if(emails != null && emails.length > 0) {
+  			int i = 0 ;
+  			for(Value email: emails) {
+  				Watch watch = new Watch() ;
+  				watch.setEmails(email.getString()) ;
+  				watch.setUser(users[i].getString());
+  				listWatch.add(watch) ;
+  				i++ ;
+  			}
+  			Collections.sort(listWatch, new Utils.NameComparator());
+  		}
+  	}
+  	return listWatch;
+  }
+  
+  public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception {
+  	Node questionHome = getQuestionHome(sProvider, null) ;
+  	QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+    StringBuffer queryString = null;
+    queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).
+											append("//element(*,exo:faqQuestion)[(@exo:userWatching='").append(currentUser).append("')");
+    if(faqSetting.getDisplayMode().equals("approved")) {
+	    queryString.append(" and (@exo:isApproved='true')");
+    }
+    if(!faqSetting.isAdmin()) queryString.append(" and (@exo:isActivated='true')");
+    queryString.append("]");
+    
+    queryString.append("order by ");
+    
+    if(faqSetting.isSortQuestionByVote()){
+    	queryString.append("@exo:markVote descending, ");
+    }
+    
+    // order by and ascending or deascending
+    if(faqSetting.getOrderBy().equals("created")){
+    	queryString.append("@exo:createdDate ");
+    } else {
+    	queryString.append("@exo:name ");
+    }
+    if(faqSetting.getOrderType().equals("asc")){
+    	queryString.append("ascending");
+    } else {
+    	queryString.append("descending");
+    }
+    
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    
+		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+    return pageList ;
+  }
+  
   public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception {
   	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
   	Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
@@ -1080,6 +1201,29 @@ public class JCRDataStorage {
 		watchingNode.getSession().save();
   }
   
+  public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception {
+  	Node questionHome = getQuestionHome(sProvider, null);
+  	Node questionNode = questionHome.getNode(questionID) ;
+  	Value[] emails = questionNode.getProperty("exo:emailWatching").getValues() ;
+  	Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
+  	List<String> userAll = new ArrayList<String>();
+  	List<String> emailAll = new ArrayList<String>() ;
+  	if(questionNode.isNodeType("exo:faqWatching")) {
+  		int i = 0 ;
+  		for(Value user : users) {
+  			if(!userCurrent.equals(user.getString())) {
+  				userAll.add(user.getString()) ;
+  				emailAll.add(emails[i].getString());
+  			} 
+  			i++ ;
+  		}
+  		questionNode.setProperty("exo:userWatching", userAll.toArray(new String[]{})) ;
+  		questionNode.setProperty("exo:emailWatching", emailAll.toArray(new String[]{})) ;
+  		
+  		questionHome.save() ;
+  	}
+  }
+  
   private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
 		StringBuffer queryString = new StringBuffer() ;
 		if(fromDate != null && toDate != null) {
@@ -1105,7 +1249,7 @@ public class JCRDataStorage {
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
 		List<FAQFormSearch>FormSearchs = new ArrayList<FAQFormSearch>() ;
 		for (String type : types) {
-			StringBuffer queryString = new StringBuffer("/jcr:root" + faqServiceHome.getPath() + "//element(*,exo:").append(type).append(")");
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(faqServiceHome.getPath()).append("//element(*,exo:").append(type).append(")");
 			StringBuffer stringBuffer = new StringBuffer() ;
 			isOwner = false ;
 	    stringBuffer.append("[");

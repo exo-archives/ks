@@ -22,6 +22,8 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -35,6 +37,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormTabPane;
 
 /**
  * Created by The eXo Platform SARL
@@ -51,10 +54,13 @@ import org.exoplatform.webui.form.UIForm;
 				@EventConfig(listeners = UIUserWatchManager.CancelActionListener.class)
 		}
 )
-public class UIUserWatchManager  extends UIForm	implements UIPopupComponent{
+public class UIUserWatchManager  extends UIFormTabPane implements UIPopupComponent{
+	private FAQSetting faqSetting_ = null;
+	private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
 	private List<Category> listCategory_ = new ArrayList<Category>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIUserWatchManager() throws Exception {
+		super("UIUswerWatchManager");
 		this.setActions(new String[]{"Cancel"}) ;
 	}
 	
@@ -90,6 +96,19 @@ public class UIUserWatchManager  extends UIForm	implements UIPopupComponent{
 	  return str ;
   }
   
+  public void setFAQSetting(FAQSetting setting){
+  	this.faqSetting_ = setting;
+  }
+  
+  @SuppressWarnings("unused")
+	private List<Question> getListQuestionsWatch(){
+  	try{
+  		return faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser(), FAQUtils.getSystemProvider()).getAll();
+  	}catch (Exception e){
+  		e.printStackTrace();
+  		return null;
+  	}
+  }
   
 	static	public class LinkActionListener extends EventListener<UIUserWatchManager> {
 		public void execute(Event<UIUserWatchManager> event) throws Exception {
@@ -132,25 +151,43 @@ public class UIUserWatchManager  extends UIForm	implements UIPopupComponent{
 	static	public class UnWatchActionListener extends EventListener<UIUserWatchManager> {
 		public void execute(Event<UIUserWatchManager> event) throws Exception {
 			UIUserWatchManager watchManager = event.getSource() ;
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+			String objectID = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
-			try {
-				faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
-      } catch (Exception e) {
-        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-        uiQuestions.setIsNotChangeLanguage();
-        UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
-        popupAction.deActivate() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-        return ;
-      }
-			faqService_.UnWatch(categoryId, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser()) ;
-			UISettingForm settingForm = uiPortlet.findFirstComponentOfType(UISettingForm.class) ;
-			if(settingForm.getCategoryAddWatch().size()>0) watchManager.setListCategory(settingForm.getCategoryAddWatch()) ;
+			if(objectID.indexOf("Question") < 0){
+				try {
+					faqService_.getCategoryById(objectID, FAQUtils.getSystemProvider()) ;
+	      } catch (Exception e) {
+	        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+	        uiQuestions.setIsNotChangeLanguage();
+	        UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
+	        popupAction.deActivate() ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+	        return ;
+	      }
+				faqService_.UnWatch(objectID, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser()) ;
+				UISettingForm settingForm = uiPortlet.findFirstComponentOfType(UISettingForm.class) ;
+				if(settingForm.getCategoryAddWatch().size()>0) watchManager.setListCategory(settingForm.getCategoryAddWatch()) ;
+			} else {
+				try {
+					faqService_.getQuestionById(objectID, FAQUtils.getSystemProvider()) ;
+	      } catch (Exception e) {
+	        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+	        uiQuestions.setIsNotChangeLanguage();
+	        UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
+	        popupAction.deActivate() ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+	        return ;
+	      }
+				faqService_.UnWatchQuestion(objectID, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser());
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 		}
 	}
