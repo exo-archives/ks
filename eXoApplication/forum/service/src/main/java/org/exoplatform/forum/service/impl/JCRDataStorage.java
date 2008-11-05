@@ -140,9 +140,9 @@ public class JCRDataStorage {
 				strings = getStringsInList(list);
 				if(ForumServiceUtils.hasPermission(strings, userName))return true;
 			}
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return false ;
 	}
 
@@ -228,68 +228,64 @@ public class JCRDataStorage {
 					}
 				}
 				if(isAdd) {
-		    	UserProfile userProfile = new UserProfile();
-		    	userProfile.setUserId(categoryData.getOwner());
-		    	this.saveUserProfile(sProvider, userProfile, false, false);
-			    Category category = new Category();
-			    category.setCategoryName(categoryData.getName());
-			    category.setDescription(categoryData.getDescription());
-			    category.setOwner(categoryData.getOwner());
-			    this.saveCategory(sProvider, category, true);
-			    categoryId = category.getId() ;
-			    List<ForumData> forums = categoryData.getForums();
-			    String forumId = "";
-			    for (ForumData forumData : forums) {
-			      Forum forum = new Forum();
-			      forum.setForumName(forumData.getName());
-			      forum.setDescription(forumData.getDescription());
-			      forum.setOwner(forumData.getOwner());
-			      forum.setIsModerateTopic(true);
-			      this.saveForum(sProvider, categoryId, forum, true);
-			      forumId = forum.getId();
-		      }
-			    ForumData forum = forums.get(0) ;
-			  	List<TopicData> topics = forum.getTopics();
-			    String topicId = "";
-			    String ct = "";
-			    String contentMail = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
+					UserProfile userProfile = new UserProfile();
+					userProfile.setUserId(categoryData.getOwner());
+					this.saveUserProfile(sProvider, userProfile, false, false);
+					Category category = new Category();
+					category.setCategoryName(categoryData.getName());
+					category.setDescription(categoryData.getDescription());
+					category.setOwner(categoryData.getOwner());
+					this.saveCategory(sProvider, category, true);
+					categoryId = category.getId() ;
+					List<ForumData> forums = categoryData.getForums();
+					String forumId = "";
+					for (ForumData forumData : forums) {
+						Forum forum = new Forum();
+						forum.setForumName(forumData.getName());
+						forum.setDescription(forumData.getDescription());
+						forum.setOwner(forumData.getOwner());
+						forum.setIsModerateTopic(true);
+						this.saveForum(sProvider, categoryId, forum, true);
+						forumId = forum.getId();
+					}
+					ForumData forum = forums.get(0) ;
+					List<TopicData> topics = forum.getTopics();
+					String topicId = "";
+					String ct = "";
+					String contentMail = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
 									"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
 									"has been added new Post with content below: <div> &content </div> For more detail, you can " +
 									"view at link : &link";
-			    for (int i = 0; i < 30; i++) {
-			    for (TopicData topicData : topics) {
-			      Topic topic = new Topic();
-			      topic.setTopicName(topicData.getName());
-			      ct = topicData.getContent();
-			      ct = StringUtils.replace(ct, "\\n","<br/>");
-			      topic.setDescription(ct);
-			      topic.setOwner(topicData.getOwner());
-			      topic.setIsApproved(false);
-			      topic.setIsModeratePost(true);
-			      topic.setIcon(topicData.getIcon());
-			      this.saveTopic(sProvider, categoryId, forumId, topic, true, false, contentMail);
-			      topicId = topic.getId();
-		      }
-			    }
-			    TopicData topic = topics.get(0) ;
-			  	List<PostData> posts = topic.getPosts();
-			  	for (int i = 0; i < 30; i++) {
-			    for (PostData postData : posts) {
-			    	Post post = new Post();
-			    	post.setName(postData.getName());
-			    	ct = postData.getContent();
-			    	ct = StringUtils.replace(ct, "\\n","<br/>");
-			    	post.setMessage(ct);
-			    	post.setOwner(postData.getOwner());
-			    	post.setIsApproved(false);
-			    	post.setIcon(postData.getIcon());
-			    	this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
-			    }
-			  	}
-		    }
+					for (TopicData topicData : topics) {
+						Topic topic = new Topic();
+						topic.setTopicName(topicData.getName());
+						ct = topicData.getContent();
+						ct = StringUtils.replace(ct, "\\n","<br/>");
+						topic.setDescription(ct);
+						topic.setOwner(topicData.getOwner());
+						topic.setIsApproved(false);
+						topic.setIsModeratePost(true);
+						topic.setIcon(topicData.getIcon());
+						this.saveTopic(sProvider, categoryId, forumId, topic, true, false, contentMail);
+						topicId = topic.getId();
+					}
+					TopicData topic = topics.get(0) ;
+					List<PostData> posts = topic.getPosts();
+					for (PostData postData : posts) {
+						Post post = new Post();
+						post.setName(postData.getName());
+						ct = postData.getContent();
+						ct = StringUtils.replace(ct, "\\n","<br/>");
+						post.setMessage(ct);
+						post.setOwner(postData.getOwner());
+						post.setIsApproved(false);
+						post.setIcon(postData.getIcon());
+						this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
+					}
+				}
 			}
 		}
-  }
+	}
 	
 	public List<Category> getCategories(SessionProvider sProvider) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
@@ -1229,11 +1225,11 @@ public class JCRDataStorage {
 			Node forumStatisticNode ;
 			try {
 				forumStatisticNode = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-      } catch (Exception e) {
-      	forumStatisticNode = forumHomeNode.addNode(Utils.FORUM_STATISTIC, "exo:forumStatistic");
-      	forumStatisticNode.setProperty("exo:postCount", 0);
-      	forumStatisticNode.setProperty("exo:topicCount", 0);
-      }
+			} catch (Exception e) {
+				forumStatisticNode = forumHomeNode.addNode(Utils.FORUM_STATISTIC, "exo:forumStatistic");
+				forumStatisticNode.setProperty("exo:postCount", 0);
+				forumStatisticNode.setProperty("exo:topicCount", 0);
+			}
 			long topicCount = forumStatisticNode.getProperty("exo:topicCount").getLong();
 			forumStatisticNode.setProperty("exo:topicCount", topicCount + 1);
 			Node userProfileNode = getUserProfileNode(sProvider);
@@ -1688,7 +1684,7 @@ public class JCRDataStorage {
 					Node nodeFile = null;
 					if (!postNode.hasNode(file.getId())) nodeFile = postNode.addNode(file.getId(), "exo:forumAttachment");
 					else nodeFile = postNode.getNode(file.getId());
-				  //Fix permission node
+					//Fix permission node
 					ForumServiceUtils.reparePermissions(nodeFile, "any");
 					nodeFile.setProperty("exo:fileName", file.getName());
 					Node nodeContent = null;
@@ -3383,7 +3379,7 @@ public class JCRDataStorage {
 		if(isAdminRole(userId)) {
 			t = 0;
 		} else {
-		  t = newProfileNode.getProperty("exo:userRole").getLong();
+			t = newProfileNode.getProperty("exo:userRole").getLong();
 		}
 		int totalJob = 0;
 		if (t < 2) {
