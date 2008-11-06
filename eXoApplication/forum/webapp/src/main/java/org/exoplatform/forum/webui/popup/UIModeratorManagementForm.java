@@ -562,12 +562,16 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	} else {
     		if(userRole >= 1) userRole = 2;
     	}
+    	
     	if(userTitle == null || userTitle.trim().length() < 1){
     		userTitle = userProfile.getUserTitle();
     	} else if(!isAdmin) {
     		int newPos = Arrays.asList(uiForm.permissionUser).indexOf(userTitle.toLowerCase());
-    		if(newPos >= 0 && newPos < userProfile.getUserRole()){
-    			userTitle = userProfile.getUserTitle();
+    		if(newPos >= 0 && newPos < userRole){
+    			if(Arrays.asList(uiForm.permissionUser).indexOf(userProfile.getUserTitle().toLowerCase()) < 0)
+    				userTitle = userProfile.getUserTitle();
+    			else 
+    				userTitle = uiForm.permissionUser[(int)userRole];
     		}
     	}
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
