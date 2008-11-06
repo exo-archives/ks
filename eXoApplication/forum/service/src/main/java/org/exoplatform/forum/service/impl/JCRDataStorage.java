@@ -249,7 +249,6 @@ public class JCRDataStorage {
 						forum.setForumName(forumData.getName());
 						forum.setDescription(forumData.getDescription());
 						forum.setOwner(forumData.getOwner());
-						forum.setIsModerateTopic(true);
 						this.saveForum(sProvider, categoryId, forum, true);
 						forumId = forum.getId();
 					}
@@ -264,8 +263,6 @@ public class JCRDataStorage {
 						ct = StringUtils.replace(ct, "\\n","<br/>");
 						topic.setDescription(ct);
 						topic.setOwner(topicData.getOwner());
-						topic.setIsApproved(false);
-						topic.setIsModeratePost(true);
 						topic.setIcon(topicData.getIcon());
 						this.saveTopic(sProvider, categoryId, forumId, topic, true, false, "");
 						topicId = topic.getId();
@@ -279,7 +276,6 @@ public class JCRDataStorage {
 						ct = StringUtils.replace(ct, "\\n","<br/>");
 						post.setMessage(ct);
 						post.setOwner(postData.getOwner());
-						post.setIsApproved(false);
 						post.setIcon(postData.getIcon());
 						this.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
 					}
@@ -1027,6 +1023,8 @@ public class JCRDataStorage {
 			topicNew.setNumberAttachment(topicNode.getProperty("exo:numberAttachments").getLong());
 		if (topicNode.hasProperty("exo:icon"))
 			topicNew.setIcon(topicNode.getProperty("exo:icon").getString());
+		if (topicNode.hasProperty("exo:link"))
+			topicNew.setLink(topicNode.getProperty("exo:link").getString());
 
 		if (topicNode.hasProperty("exo:isNotifyWhenAddPost"))
 			topicNew.setIsNotifyWhenAddPost(topicNode.getProperty("exo:isNotifyWhenAddPost").getString());
@@ -1165,7 +1163,7 @@ public class JCRDataStorage {
 				}
 				case 3: {
 					topicNode.setProperty("exo:isApproved", topic.getIsApproved());
-					sendNotification(forumHomeNode, topicNode.getParent(), topic, null, "");
+					sendNotification(forumHomeNode, topicNode.getParent(), topic, null, "", true);
 					setActivePostByTopic(sProvider, topicNode, topic.getIsApproved());
 					break;
 				}
@@ -1174,8 +1172,12 @@ public class JCRDataStorage {
 					break;
 				}
 				case 5: {
-					topicNode.setProperty("exo:isWaiting", topic.getIsWaiting());
-					setActivePostByTopic(sProvider, topicNode, !(topic.getIsWaiting()));
+					boolean isWaiting = topic.getIsWaiting();
+					topicNode.setProperty("exo:isWaiting", isWaiting);
+					setActivePostByTopic(sProvider, topicNode, !(isWaiting));
+					if(!isWaiting){
+						sendNotification(forumHomeNode, topicNode.getParent(), topic, null, "", true);
+					}
 					break;
 				}
 				case 6: {
@@ -1221,6 +1223,7 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:viewCount", 0);
 			topicNode.setProperty("exo:tagId", topic.getTagId());
 			topicNode.setProperty("exo:isActiveByForum", true);
+			topicNode.setProperty("exo:link", topic.getLink());
 			// setTopicCount for Forum
 			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1;
 			forumNode.setProperty("exo:topicCount", newTopicCount);
@@ -1249,7 +1252,7 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:totalTopic", 1);
 			}
 			userProfileNode.getSession().save();
-			sendNotification(forumHomeNode, forumNode, topic, null, defaultEmailContent);
+			sendNotification(forumHomeNode, forumNode, topic, null, defaultEmailContent, true);
 		} else {
 			topicNode = forumNode.getNode(topic.getId());
 		}
@@ -1543,6 +1546,8 @@ public class JCRDataStorage {
 			postNew.setRemoteAddr(postNode.getProperty("exo:remoteAddr").getString());
 		if (postNode.hasProperty("exo:icon"))
 			postNew.setIcon(postNode.getProperty("exo:icon").getString());
+		if (postNode.hasProperty("exo:link"))
+			postNew.setLink(postNode.getProperty("exo:link").getString());
 		if (postNode.hasProperty("exo:isApproved"))
 			postNew.setIsApproved(postNode.getProperty("exo:isApproved").getBoolean());
 		if (postNode.hasProperty("exo:isHidden"))
@@ -1594,6 +1599,7 @@ public class JCRDataStorage {
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			postNode.setProperty("exo:userPrivate", post.getUserPrivate());
 			postNode.setProperty("exo:isActiveByTopic", true);
+			postNode.setProperty("exo:link", post.getLink());
 			if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 				postNode.setProperty("exo:isFirstPost", true);
 			} else {
@@ -1728,7 +1734,7 @@ public class JCRDataStorage {
 			} else {
 				postNode.setProperty("exo:isActiveByTopic", false);
 			}
-			sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent);
+			sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
 		} else {
 			long temp = topicNode.getProperty("exo:numberAttachments").getLong() - postNode.getProperty("exo:numberAttach").getLong();
 			topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
@@ -1738,7 +1744,7 @@ public class JCRDataStorage {
 		forumHomeNode.getSession().save();
 	}
 
-	private void sendNotification(Node forumHomeNode, Node node, Topic topic, Post post, String defaultEmailContent) throws Exception {
+	private void sendNotification(Node forumHomeNode, Node node, Topic topic, Post post, String defaultEmailContent, boolean isApprovePost) throws Exception {
 		Node forumAdminNode = null;
 		try {
 			forumAdminNode = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
@@ -1819,10 +1825,13 @@ public class JCRDataStorage {
 					}
 				}
 				emailList = new ArrayList<String>();
-				String ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
-				if (ownerTopicEmail.trim().length() > 0) emailList.add(ownerTopicEmail);
-				if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
-					emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+				//Owner Notify
+				if(isApprovePost) {
+					String ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
+					if (ownerTopicEmail.trim().length() > 0) emailList.add(ownerTopicEmail);
+					if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
+						emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+					}
 				}
 				/*
 				 * check is approved, is activate by topic and is not hidden before send mail
@@ -1883,12 +1892,14 @@ public class JCRDataStorage {
 				switch (type) {
 				case 1: {
 					postNode.setProperty("exo:isApproved", true);
-					sendNotification(forumHomeNode, topicNode, null, post, "");
+					post.setIsApproved(true);
+					sendNotification(forumHomeNode, topicNode, null, post, "", false);
 					break;
 				}
 				case 2: {
 					if (post.getIsHidden()) {
 						postNode.setProperty("exo:isHidden", true);
+						sendNotification(forumHomeNode, topicNode, null, post, "", false);
 						Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
 						if (postLastNode != null) {
 							topicNode.setProperty("exo:lastPostDate", postLastNode.getProperty("exo:createdDate").getDate());
