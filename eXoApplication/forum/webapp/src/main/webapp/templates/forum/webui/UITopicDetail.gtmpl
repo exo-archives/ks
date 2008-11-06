@@ -783,9 +783,11 @@
 									%>
 										<div class="LabelBox">
 											<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
-											<a class="AttachmentLabel" href="$urlFile">$fileName</a>
-											<div style="clear: left;"><span/></div>
-											<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
+												<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
+													$fileName
+												</a>
+												<div style="clear: left;"><span/></div>
+												<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
 										</div>
 									<% } %>
 									</div>

@@ -183,19 +183,19 @@ public class UIQuestions extends UIContainer {
 	public void setListObject(){
 		this.isChangeLanguage = false;
 		try {
-			if(currentUser_ != null && currentUser_.trim().length() > 0){
-				FAQServiceUtils serviceUtils = new FAQServiceUtils();
-				if(faqSetting_.getIsAdmin().equals("TRUE")){
-					faqSetting_.setCanEdit(true);
-				} else if(categoryId_ != null && categoryId_.trim().length() > 0 &&
-							Arrays.asList(faqService_.getCategoryById(this.categoryId_, FAQUtils.getSystemProvider()).getModerators()).contains(currentUser_)){
-					faqSetting_.setCanEdit(true);
-				} else {
-					faqSetting_.setCanEdit(false);
-				}
+		if(currentUser_ != null && currentUser_.trim().length() > 0){
+			FAQServiceUtils serviceUtils = new FAQServiceUtils();
+			if(faqSetting_.getIsAdmin().equals("TRUE")){
+				faqSetting_.setCanEdit(true);
+			} else if(categoryId_ != null && categoryId_.trim().length() > 0 &&
+						Arrays.asList(faqService_.getCategoryById(this.categoryId_, FAQUtils.getSystemProvider()).getModerators()).contains(currentUser_)){
+				faqSetting_.setCanEdit(true);
+			} else {
+				faqSetting_.setCanEdit(false);
 			}
-			String object = null;
-			if(pageList != null) object = pageList.getObjectRepare_();
+		}
+		String object = null;
+		if(pageList != null) object = pageList.getObjectRepare_();
 	    pageList = faqService_.getListCatesAndQuesByCateId(this.categoryId_, FAQUtils.getSystemProvider(), this.faqSetting_);
 	    pageList.setPageSize(10);
 	    if(object != null && object.trim().length() > 0) pageList.setObjectRepare_(object);

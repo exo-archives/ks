@@ -100,7 +100,9 @@
 						    %>
 						    		<div class="LabelBox">
 											<div class="AttachmentIcon FileAttachmentIcon" style="width: auto; height: auto;">
-												<a class="AttachmentLabel" href="$linkImage">$fileName</a>
+												<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+													$fileName
+												</a>
 											</div>
 											<div style="clear: left;"><span></span></div>
 											<div class="Size"><%= _ctx.appRes("UIPopupViewQuestion.label.size"); %> $size</div>
