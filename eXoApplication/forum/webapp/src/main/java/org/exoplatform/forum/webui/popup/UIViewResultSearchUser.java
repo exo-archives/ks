@@ -60,12 +60,16 @@ public class UIViewResultSearchUser extends UIForm implements UIPopupComponent {
   private List<UserProfile> getListUserProfile(){
 		long page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
   	totalPage = this.pageList.getAvailablePage() ;
-  	List<UserProfile> listUserProfile = new ArrayList<UserProfile>();
-    try {
-	    listUserProfile = this.pageList.getPage(page);
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
+  	List<UserProfile> listUserProfile = null;
+  	while (listUserProfile == null && page >= 1){
+	    try {
+		    listUserProfile = this.pageList.getPage(page);
+	    } catch (Exception e) {
+	    	listUserProfile = null;
+	    	--page;
+	    }
+  	}
+    if(listUserProfile == null)listUserProfile = new ArrayList<UserProfile>();
   	this.userProfiles = new ArrayList<UserProfile>();
   	int i =0, j = 0;
   	for (UserProfile userProfile : listUserProfile) {

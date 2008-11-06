@@ -90,9 +90,14 @@ public class UIPageListTopicByUser extends UIContainer{
 		long page = forumPageIterator.getPageSelected() ;
 		List<Topic> topics = null;
 		while(topics == null && page >= 1){
-			topics = pageList.getPage(page) ;
-			if(topics == null) page--;
+			try {
+				topics = pageList.getPage(page) ;
+      } catch (Exception e) {
+      	topics = null; 
+      	--page;
+      }
 		}
+		if(topics == null) topics = new ArrayList<Topic>(); 
 		this.topics = topics ;
 		return topics ;
 	}

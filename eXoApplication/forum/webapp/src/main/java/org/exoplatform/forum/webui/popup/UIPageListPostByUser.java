@@ -53,7 +53,7 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UIPageListPostByUser.DeletePostLinkActionListener.class, confirm="UITopicContainer.confirm.SetDeleteOnePost")
 		}
 )
-public class UIPageListPostByUser extends UIContainer{
+public class UIPageListPostByUser extends UIContainer {
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private UserProfile userProfile = new UserProfile() ;
 	private String userName = new String() ;
@@ -85,15 +85,16 @@ public class UIPageListPostByUser extends UIContainer{
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null) pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
-		List<Post> posts = new ArrayList<Post>();
-		try {
-			while(posts == null && page >= 1){
+		List<Post> posts = null;
+		while(posts == null && page >= 1){
+			try {
 				posts = pageList.getPage(page) ;
-				if(posts == null) page--;
-				else break;
+			} catch (Exception e) {
+				--page;
+				posts = null ;
 			}
-		} catch (Exception e) {
 		}
+		if(posts == null) posts = new ArrayList<Post>();
 		this.posts = posts ;
 		return posts ;
 	}

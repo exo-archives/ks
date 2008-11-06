@@ -80,7 +80,17 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		JCRPageList pageList	= forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
 		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
-		List<Topic> topics = pageList.getPage(this.pageSelect) ;
+		long page = this.pageSelect ;
+		List<Topic> topics = null;
+		while(topics == null && page >= 1){
+			try {
+				topics = pageList.getPage(page) ;
+      } catch (Exception e) {
+      	topics = null; 
+      	--page;
+      }
+		}
+		if(topics == null) topics = new ArrayList<Topic>(); 
 		for (Topic topic : topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
 				getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;
@@ -88,7 +98,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false) );
 			}
 		}
-		this.topics = topics ;
+		this.topics = pageList.getPage(0) ;
 		return topics ;
 	}
 	

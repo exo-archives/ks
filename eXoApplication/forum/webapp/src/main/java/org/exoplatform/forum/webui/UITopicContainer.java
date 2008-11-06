@@ -218,11 +218,17 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private List<Topic> getTopicPageLits() throws Exception {
 		maxPage = this.pageList.getAvailablePage() ;
 		if(this.pageSelect > maxPage)this.pageSelect = maxPage ;
-		try {
-			this.topicList = this.pageList.getPage(this.pageSelect);
-    } catch (Exception e) {
-    	this.topicList = this.pageList.getPage(1);
-    }
+		List<Topic> topics = null;
+		while(topics == null && pageSelect >= 1){
+			try {
+				topics = pageList.getPage(pageSelect) ;
+      } catch (Exception e) {
+      	topics = null; 
+      	--pageSelect;
+      }
+		}
+		if(topics == null) topics = new ArrayList<Topic>(); 
+		this.topicList = topics;
 		for(Topic topic : this.topicList) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
 				getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;

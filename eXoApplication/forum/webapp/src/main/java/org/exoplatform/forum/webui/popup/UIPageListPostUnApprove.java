@@ -81,7 +81,17 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 		JCRPageList pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "false", "", "", "");
 		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
-		List<Post> posts = pageList.getPage(this.pageSelect) ;
+		long page = pageSelect ;
+		List<Post> posts = null;
+		while(posts == null && page >= 1){
+			try {
+				posts = pageList.getPage(page) ;
+			} catch (Exception e) {
+				--page;
+				posts = null ;
+			}
+		}
+		if(posts == null) posts = new ArrayList<Post>();
 		if(!posts.isEmpty()) {
 			for (Post post : posts) {
 				if(getUIFormCheckBoxInput(post.getId()) != null) {

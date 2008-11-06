@@ -87,7 +87,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		this.administration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider());
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
 		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
-		UIFormInputWithActions activeTopicTab = new UIFormInputWithActions(FIELD_ACTIVETOPIC_TAB);
+//		UIFormInputWithActions activeTopicTab = new UIFormInputWithActions(FIELD_ACTIVETOPIC_TAB);
 		UIFormInputWithActions notifyEmailTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_TAB);
 		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
 																"modifiedDate",	"topicCount", "postCount"}; 
