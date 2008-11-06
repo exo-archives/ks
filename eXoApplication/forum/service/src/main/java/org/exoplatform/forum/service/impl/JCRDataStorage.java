@@ -145,9 +145,9 @@ public class JCRDataStorage {
 				strings = getStringsInList(list);
 				if(ForumServiceUtils.hasPermission(strings, userName))return true;
 			}
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return false ;
 	}
 
@@ -1230,11 +1230,11 @@ public class JCRDataStorage {
 			Node forumStatisticNode ;
 			try {
 				forumStatisticNode = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-      } catch (Exception e) {
-      	forumStatisticNode = forumHomeNode.addNode(Utils.FORUM_STATISTIC, "exo:forumStatistic");
-      	forumStatisticNode.setProperty("exo:postCount", 0);
-      	forumStatisticNode.setProperty("exo:topicCount", 0);
-      }
+			} catch (Exception e) {
+				forumStatisticNode = forumHomeNode.addNode(Utils.FORUM_STATISTIC, "exo:forumStatistic");
+				forumStatisticNode.setProperty("exo:postCount", 0);
+				forumStatisticNode.setProperty("exo:topicCount", 0);
+			}
 			long topicCount = forumStatisticNode.getProperty("exo:topicCount").getLong();
 			forumStatisticNode.setProperty("exo:topicCount", topicCount + 1);
 			Node userProfileNode = getUserProfileNode(sProvider);
@@ -1689,7 +1689,7 @@ public class JCRDataStorage {
 					Node nodeFile = null;
 					if (!postNode.hasNode(file.getId())) nodeFile = postNode.addNode(file.getId(), "exo:forumAttachment");
 					else nodeFile = postNode.getNode(file.getId());
-				  //Fix permission node
+					//Fix permission node
 					ForumServiceUtils.reparePermissions(nodeFile, "any");
 					nodeFile.setProperty("exo:fileName", file.getName());
 					Node nodeContent = null;
@@ -3403,7 +3403,7 @@ public class JCRDataStorage {
 		if(isAdminRole(userId)) {
 			t = 0;
 		} else {
-		  t = newProfileNode.getProperty("exo:userRole").getLong();
+			t = newProfileNode.getProperty("exo:userRole").getLong();
 		}
 		int totalJob = 0;
 		if (t < 2) {

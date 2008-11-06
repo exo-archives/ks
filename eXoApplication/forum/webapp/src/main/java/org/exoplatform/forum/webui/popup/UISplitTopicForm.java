@@ -190,7 +190,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					}					
 				}else {
 					Object[] args = { };
-					throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheck", args, ApplicationMessage.WARNING)) ;
+					throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;
 				}
 			} else {
 				Object[] args = {uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
