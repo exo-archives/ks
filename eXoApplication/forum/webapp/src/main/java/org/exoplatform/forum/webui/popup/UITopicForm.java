@@ -432,6 +432,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				if(whenNewPost){
 					ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
 					topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
+					System.out.println("\n\n" + contact.getEmailAddress());
 				} else {
 					topicNew.setIsNotifyWhenAddPost("");
 				}
