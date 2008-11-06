@@ -242,10 +242,14 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 	
 	static public class CancelActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
-			UISettingForm settingForm = event.getSource() ;			
-      UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
-      uiPopupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
+			UISettingForm settingForm = event.getSource() ;		
+			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			uiQuestions.setIsNotChangeLanguage();
+			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
+			uiPopupAction.deActivate() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
 	
