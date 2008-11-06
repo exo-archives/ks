@@ -257,10 +257,6 @@ public class JCRDataStorage {
 					List<TopicData> topics = forum.getTopics();
 					String topicId = "";
 					String ct = "";
-					String contentMail = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
-									"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
-									"has been added new Post with content below: <div> &content </div> For more detail, you can " +
-									"view at link : &link";
 					for (TopicData topicData : topics) {
 						Topic topic = new Topic();
 						topic.setTopicName(topicData.getName());
@@ -271,7 +267,7 @@ public class JCRDataStorage {
 						topic.setIsApproved(false);
 						topic.setIsModeratePost(true);
 						topic.setIcon(topicData.getIcon());
-						this.saveTopic(sProvider, categoryId, forumId, topic, true, false, contentMail);
+						this.saveTopic(sProvider, categoryId, forumId, topic, true, false, "");
 						topicId = topic.getId();
 					}
 					TopicData topic = topics.get(0) ;
@@ -285,7 +281,7 @@ public class JCRDataStorage {
 						post.setOwner(postData.getOwner());
 						post.setIsApproved(false);
 						post.setIcon(postData.getIcon());
-						this.savePost(sProvider, categoryId, forumId, topicId, post, true, contentMail);
+						this.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
 					}
 				}
 			}
@@ -1169,6 +1165,7 @@ public class JCRDataStorage {
 				}
 				case 3: {
 					topicNode.setProperty("exo:isApproved", topic.getIsApproved());
+					sendNotification(forumHomeNode, topicNode.getParent(), topic, null, "");
 					setActivePostByTopic(sProvider, topicNode, topic.getIsApproved());
 					break;
 				}
@@ -1252,46 +1249,7 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:totalTopic", 1);
 			}
 			userProfileNode.getSession().save();
-
-			List<String> emailList = new ArrayList<String>();
-			// send watching notification and send notify
-			Node forumAdminNode = null;
-			try {
-				forumAdminNode = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
-			} catch (Exception e) {
-			}
-			String content = "";
-			if (forumAdminNode != null) {
-				if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
-					content = forumAdminNode.getProperty("exo:notifyEmailContent").getString();
-			}
-			/*
-			 * check if topic is activated, is approved, is not closed, is not locked,
-			 * is not wated and forum is activate then send email for users who add
-			 * watching.
-			 */
-			if (forumNode.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
-				emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
-			}
-
-			if (forumNode.hasProperty("exo:notifyWhenAddTopic")) {
-				emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddTopic").getValues()));
-			}
-			if (emailList.size() > 0) {
-				Message message = new Message();
-				message.setMimeType("text/html");
-				message.setSubject("eXo Forum Watching Notification!");
-				if (content == null || content.trim().length() < 1) {
-					content = defaultEmailContent;
-				}
-				String content_ = topic.getTopicName();
-				content_ = content.replace("&objectName", content_);
-				content_ = content_.replaceAll("&objectWatch", "Forum");
-				content_ = content_.replaceAll("&content", Utils.convertCodeHTML(topic.getDescription()));
-				content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
-				message.setBody(content_);
-				sendEmailNotification(emailList, message);
-			}
+			sendNotification(forumHomeNode, forumNode, topic, null, defaultEmailContent);
 		} else {
 			topicNode = forumNode.getNode(topic.getId());
 		}
@@ -1770,118 +1728,7 @@ public class JCRDataStorage {
 			} else {
 				postNode.setProperty("exo:isActiveByTopic", false);
 			}
-			List<String> emailList = new ArrayList<String>();
-			// Send notify for watching users
-			Node forumAdminNode = null;
-			try {
-				forumAdminNode = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
-			} catch (Exception e) {
-			}
-			String content = "";
-			if (forumAdminNode != null) {
-				if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
-					content = forumAdminNode.getProperty("exo:notifyEmailContent").getString();
-			}
-			if (!topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-
-				/*
-				 * check is approved, is activate by topic and is not hidden before send
-				 * mail
-				 */
-				if (topicNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
-					List<String> listCanViewInTopic = ValuesToList(topicNode.getProperty("exo:canView").getValues());
-					List<String> listUser = new ArrayList<String>();
-					if(post.getUserPrivate() != null || post.getUserPrivate().length > 1){
-						listUser.addAll(Arrays.asList(post.getUserPrivate()));
-					}
-					if(!listCanViewInTopic.isEmpty() && listCanViewInTopic.get(0).trim().length() > 0){
-						if(listUser.isEmpty()){
-							listUser = listCanViewInTopic;
-						} else {
-							for(int i = 0; i < listUser.size() && !listUser.isEmpty(); ){
-								if(!listCanViewInTopic.contains(listUser.get(i))){
-									listUser.remove(i);
-								} else {
-									i ++;
-								}
-							}
-						}
-					}
-					
-					if (listUser.isEmpty() || listUser.get(0).trim().length() < 1) {
-						emailList = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
-					} else {
-						List<String> emails = ValuesToList(topicNode.getProperty("exo:emailWatching").getValues());
-						int i = 0;
-						for (String user : ValuesToList(topicNode.getProperty("exo:userWatching").getValues())) {
-							if (listUser.contains(user)) {
-								emailList.add(emails.get(i));
-							}
-							i++;
-						}
-					}
-					if (emailList.size() > 0) {
-						Message message = new Message();
-						message.setMimeType("text/html");
-						// message.setMessageTo(question.getEmail());
-						message.setSubject("eXo Thread Watching Notification!");
-						if (content == null || content.trim().length() < 1) {
-							content = defaultEmailContent;
-						} 
-						String content_ = topicNode.getProperty("exo:name").getString();
-						content_ = content.replace("&objectName", content_);
-						content_ = content_.replaceAll("&objectWatch", "Topic");
-						content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-						content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-						message.setBody(content_);
-						sendEmailNotification(emailList, message);
-					}
-				}
-
-				emailList = new ArrayList<String>();
-				String ownerTopicEmail = topicNode.getProperty("exo:isNotifyWhenAddPost").getString();
-				if (ownerTopicEmail.trim().length() > 0)
-					emailList.add(ownerTopicEmail);
-				if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
-					emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
-				}
-
-				/*
-				 * check is approved, is activate by topic and is not hidden before send
-				 * mail
-				 */
-				if (forumNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
-					if ((post.getUserPrivate() == null || post.getUserPrivate().length == 1)) {
-						emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
-					} else if (post.getUserPrivate().length == 2) {
-						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
-						List<String> usersList = Arrays.asList(post.getUserPrivate());
-						int i = 0;
-						for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
-							if (usersList.contains(user)) {
-								emailList.add(emails.get(i));
-							}
-							i++;
-						}
-					}
-				}
-
-				if (emailList.size() > 0) {
-					Message message = new Message();
-					message.setMimeType("text/html");
-					// message.setMessageTo(question.getEmail());
-					message.setSubject("eXo Forum Watching Notification!");
-					if (content == null || content.trim().length() < 1) {
-						content = defaultEmailContent;
-					}
-					content = content.replaceAll("&objectWatch", "Forum");
-					content = content.replaceAll("&objectName", forumNode.getProperty("exo:name").getString());
-					content = content.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-					content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-					message.setBody(content);
-					sendEmailNotification(emailList, message);
-				}
-			}
+			sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent);
 		} else {
 			long temp = topicNode.getProperty("exo:numberAttachments").getLong() - postNode.getProperty("exo:numberAttach").getLong();
 			topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
@@ -1891,6 +1738,125 @@ public class JCRDataStorage {
 		forumHomeNode.getSession().save();
 	}
 
+	private void sendNotification(Node forumHomeNode, Node node, Topic topic, Post post, String defaultEmailContent) throws Exception {
+		Node forumAdminNode = null;
+		try {
+			forumAdminNode = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
+		} catch (Exception e) {
+		}
+		String content = "";
+		if (forumAdminNode != null) {
+			if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
+				content = forumAdminNode.getProperty("exo:notifyEmailContent").getString();
+		} else if(defaultEmailContent != null && defaultEmailContent.length() > 0) {
+			content = defaultEmailContent;
+		} else {
+			content = Utils.DEFAULT_EMAIL_CONTENT ;
+		}
+		List<String> emailList = new ArrayList<String>();
+		if(post == null) {
+			if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
+				emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+			}
+			if (node.hasProperty("exo:notifyWhenAddTopic")) {
+				emailList.addAll(ValuesToList(node.getProperty("exo:notifyWhenAddTopic").getValues()));
+			}
+			if (emailList.size() > 0) {
+				Message message = new Message();
+				message.setMimeType("text/html");
+				message.setSubject("eXo Forum Watching Notification!");
+				String content_ = topic.getTopicName();
+				content_ = content.replace("&objectName", content_);
+				content_ = content_.replaceAll("&objectWatch", "Forum");
+				content_ = content_.replaceAll("&content", Utils.convertCodeHTML(topic.getDescription()));
+				content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+				message.setBody(content_);
+				sendEmailNotification(emailList, message);
+			}
+		} else {
+			if (!node.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+				/*
+				 * check is approved, is activate by topic and is not hidden before send mail
+				 */
+				Node forumNode = node.getParent();
+				if (node.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+					List<String> listCanViewInTopic = new ArrayList<String>(); 
+					listCanViewInTopic.addAll(ValuesToList(node.getProperty("exo:canView").getValues()));
+					List<String> listUser = new ArrayList<String>();
+					if(post.getUserPrivate() != null && post.getUserPrivate().length > 1){
+						listUser.addAll(Arrays.asList(post.getUserPrivate()));
+					}
+					if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
+						listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:poster").getValues()));
+						listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:viewer").getValues()));
+						if(listUser.isEmpty() || listUser.size() == 1){
+							listUser = listCanViewInTopic;
+						} 
+					}
+					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPris") && !listUser.get(0).equals(" ")) {
+						List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+						int i = 0;
+						for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
+							if (listUser.contains(user)) {
+								emailList.add(emails.get(i));
+							}
+							i++;
+						}
+					} else {
+						emailList = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+					}
+					if (emailList.size() > 0) {
+						Message message = new Message();
+						message.setMimeType("text/html");
+						message.setSubject("eXo Thread Watching Notification!");
+						String content_ = node.getProperty("exo:name").getString();
+						content_ = content.replace("&objectName", content_);
+						content_ = content_.replaceAll("&objectWatch", "Topic");
+						content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
+						content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+						message.setBody(content_);
+						sendEmailNotification(emailList, message);
+					}
+				}
+				emailList = new ArrayList<String>();
+				String ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
+				if (ownerTopicEmail.trim().length() > 0) emailList.add(ownerTopicEmail);
+				if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
+					emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+				}
+				/*
+				 * check is approved, is activate by topic and is not hidden before send mail
+				 */
+				if (forumNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+					if (post.getUserPrivate() == null && post.getUserPrivate().length == 2) {
+						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
+						List<String> usersList = Arrays.asList(post.getUserPrivate());
+						int i = 0;
+						for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
+							if (usersList.contains(user)) {
+								emailList.add(emails.get(i));
+							}
+							i++;
+						}
+					} else {
+						emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
+					}
+				}
+				if (emailList.size() > 0) {
+					Message message = new Message();
+					message.setMimeType("text/html");
+					message.setSubject("eXo Forum Watching Notification!");
+					content = content.replaceAll("&objectWatch", "Forum");
+					content = content.replaceAll("&objectName", forumNode.getProperty("exo:name").getString());
+					content = content.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
+					content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					message.setBody(content);
+					sendEmailNotification(emailList, message);
+				}
+			}
+		}
+	}
+	
 	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node userProfileNode = getUserProfileNode(sProvider);
@@ -1917,6 +1883,7 @@ public class JCRDataStorage {
 				switch (type) {
 				case 1: {
 					postNode.setProperty("exo:isApproved", true);
+					sendNotification(forumHomeNode, topicNode, null, post, "");
 					break;
 				}
 				case 2: {

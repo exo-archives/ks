@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
@@ -98,8 +99,18 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			this.pageSelect = availablePage ;
 			forumPageIterator.setSelectPage(availablePage);
 		}
-		if(this.pageSelect < 1) return null ;
-		return this.pageList.getPage(this.pageSelect) ;
+		if(this.pageSelect < 1) this.pageSelect = 1 ;
+		List<Post> posts = null;
+		while(posts == null && pageSelect >= 1){
+			try {
+				posts = pageList.getPage(pageSelect) ;
+			} catch (Exception e) {
+				--pageSelect;
+				posts = null ;
+			}
+		}
+		if(posts == null) posts = new ArrayList<Post>();
+		return posts ;
 	}
 	
 	@SuppressWarnings("unused")

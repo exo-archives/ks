@@ -326,21 +326,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean userCanView() {
-		try {
-			List<String> listUser = new ArrayList<String>() ;
-			Topic topic = this.getTopic() ;
-			listUser.addAll(ForumServiceUtils.getUserPermission(topic.getCanView())) ;
-			if(!listUser.isEmpty() && listUser.size() > 0 && !listUser.get(0).equals(" ")){
-				if(listUser.contains(userName)) return true;
-				Forum forum = this.getForum() ;
-				if(forum.getPoster() != null && ForumServiceUtils.getUserPermission(forum.getPoster()).contains(userName)) return true;
-				if(forum.getViewer() != null && ForumServiceUtils.getUserPermission(forum.getViewer()).contains(userName)) return true;
-			}
-		} catch (Exception e) {
+	private boolean userCanView() throws Exception {
+		List<String> listUser = new ArrayList<String>() ;
+		Topic topic = this.getTopic() ;
+		listUser.addAll(ForumServiceUtils.getUserPermission(topic.getCanView())) ;
+		if(!listUser.isEmpty() && !listUser.get(0).equals(" ")){
+			if(listUser.contains(userName)) return true;
+			Forum forum = this.getForum() ;
+			if(forum.getPoster() != null && ForumServiceUtils.getUserPermission(forum.getPoster()).contains(userName)) return true;
+			if(forum.getViewer() != null && ForumServiceUtils.getUserPermission(forum.getViewer()).contains(userName)) return true;
 			return false ;
 		}
-		return false ;
+		return true ;
 	}
 	
 	public String getPortalName() {
@@ -412,8 +409,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					if (!isMod && !(this.topic.getOwner().equals(userLogin)))
 						isApprove = "true";
 				}
-				this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(),
-						this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
+				this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
 				this.isUpdatePageList = false;
 			}
 			long maxPost = this.userProfile.getMaxPostInPage();
@@ -437,39 +433,29 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.isUpdatePageList = isUpdatePageList;
 	}
 	
-	@SuppressWarnings("unchecked")
-  private List<Post> setPosts(long t) throws Exception {
-		try {
-			return this.pageList.getPage(t) ;
-    } catch (Exception e) {
-    	if(t >= 1) return setPosts(--t) ;
-    	else {
-    		List<Post> list = new ArrayList<Post>();
-    		return list;
-			} 
-    }
-	}
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
-		if(this.pageList == null) return null ;
-		long availablePage = this.pageList.getAvailablePage() ;
-		if(this.pageSelect > availablePage) {
-			this.pageSelect = availablePage ;
+		if(this.pageList == null) {
+			posts = new ArrayList<Post>(); 
+			return posts ;
 		}
-		try {
-			this.posts = setPosts(this.pageSelect) ;
-		} catch (Exception e) {
-			this.posts = this.pageList.getPage(1) ;
-		}
-		if(this.posts.size() > 0 && this.posts != null) {
-			for (Post post : this.posts) {
-				if(getUIFormCheckBoxInput(post.getId()) != null) {
-					getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
-				}else {
-					addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false) );
-				}
-				this.IdLastPost = post.getId() ;
+		posts = null;
+		while (posts ==  null && pageSelect >= 1) {
+			try {
+				this.posts = this.pageList.getPage(this.pageSelect) ;
+			} catch (Exception e) {
+				this.posts = null ;
+				--this.pageSelect;
 			}
+    }
+		if(this.posts == null) posts = new ArrayList<Post>(); 
+		for (Post post : this.posts) {
+			if(getUIFormCheckBoxInput(post.getId()) != null) {
+				getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
+			}else {
+				addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false) );
+			}
+			this.IdLastPost = post.getId() ;
 		}
 		return this.posts ;
 	}

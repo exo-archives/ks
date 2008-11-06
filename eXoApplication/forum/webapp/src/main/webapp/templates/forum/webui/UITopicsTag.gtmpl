@@ -19,6 +19,7 @@
 <%
 	List topics = uicomponent.getTopicsTag() ; 
 	Tag tag_ = uicomponent.getTagById() ;
+	String tagId = tag_.getId();
 	String tagName_ = tag_.getName() ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
@@ -289,13 +290,21 @@
 																		String color = tag.getColor() ;
 																		String tagNameTitle = tag.getName() ;
 																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
+																		if(tagId.equals(tag.getId())){
 																%>
+																			<div class="classDisable" title="$tagNameTitle">	 
+																				<div class="ItemIcon TagIcon ${color}TagIcon  DisableMenuItem">
+																					<span>$tagName</span>
+																				</div>
+																			</div>
+																<%  } else{ %>
 																			<a class="classDisable" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
 																				<div class="ItemIcon TagIcon ${color}TagIcon">
 																					<span>$tagName</span>
 																				</div>
 																			</a>
-																<% } %>
+																<%  } 
+																  }%>
 																	</div>
 																</div>
 															</div>

@@ -148,8 +148,16 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private List<Topic> getTopicsTag() throws Exception {
 		getListTopicTag() ;
 		this.maxPage = this.listTopic.getAvailablePage();
-		if(this.pageSelect > this.maxPage) this.pageSelect = this.maxPage;
-		this.topics = this.listTopic.getPage(this.pageSelect);
+		this.topics = null;
+		while(topics == null && pageSelect >= 1){
+			try {
+				topics = listTopic.getPage(pageSelect) ;
+      } catch (Exception e) {
+      	topics = null; 
+      	--pageSelect;
+      }
+		}
+		if(topics == null) topics = new ArrayList<Topic>(); 
 		for(Topic topic : this.topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
 				getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;
@@ -177,15 +185,15 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 
 	@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-		String []ids = new String[tagIds.length-1] ; 
-		int t = 0;
-		for (String string : tagIds) {
-			if(!string.equals(this.tagId)){
-				ids[t] = string ;
-				++t;
-			}
-		}
-		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), ids);
+//		String []ids = new String[tagIds.length-1] ; 
+//		int t = 0;
+//		for (String string : tagIds) {
+//			if(!string.equals(this.tagId)){
+//				ids[t] = string ;
+//				++t;
+//			}
+//		}
+		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), tagIds);
 	}
 	
 	@SuppressWarnings("unchecked")

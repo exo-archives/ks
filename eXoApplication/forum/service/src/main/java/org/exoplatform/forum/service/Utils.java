@@ -49,6 +49,13 @@ public class Utils {
 	
 	public static final String DEFAULT_USER_ADMIN_ID = "root".intern() ;
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
+
+	public static final String DEFAULT_EMAIL_CONTENT = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
+	"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
+	"has been added new Post with content below: <div> &content </div> For more detail, you can " +
+	"view at link : &link".intern();
+	
+	
 	
 	public static String transform(String bbcode) {
 		String b = bbcode.substring(0, bbcode.length());

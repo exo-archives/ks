@@ -81,7 +81,17 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 		JCRPageList pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "", "");
 		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
-		List<Post> posts = pageList.getPage(pageSelect) ;
+		long page = pageSelect ;
+		List<Post> posts = null;
+		while(posts == null && page >= 1){
+			try {
+				posts = pageList.getPage(page) ;
+			} catch (Exception e) {
+				--page;
+				posts = null ;
+			}
+		}
+		if(posts == null) posts = new ArrayList<Post>();
 		if(!posts.isEmpty()) {
 			for (Post post : posts) {
 				if(getUIFormCheckBoxInput(post.getId()) != null) {
