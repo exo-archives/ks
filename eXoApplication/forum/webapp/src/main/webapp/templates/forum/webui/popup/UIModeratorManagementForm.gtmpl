@@ -49,7 +49,7 @@
 						for(user in listUser) {
 							userRole = uicomponent.permissionUser[(int)user.getUserRole()];
 							userTitle = user.getUserTitle();
-							//if(user.getUserRole() == 0 && (userTitle.equalsIgnoreCase(Utils.MODERATOR) || userTitle.equalsIgnoreCase(Utils.USER) || userTitle.equalsIgnoreCase(Utils.GUEST))) userTitle = Utils.ADMIN;
+							if(user.getUserRole() == 0 && userTitle.equalsIgnoreCase(Utils.GUEST)) userTitle = Utils.ADMIN;
 					%>
 						<tr class="$classRowTable">
 							<td class="text"><%=user.getUserId();%></td>
