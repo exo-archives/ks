@@ -112,7 +112,8 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     this.questionId_ = questionId ;
   }
   
-  private void initPage() throws Exception {
+  @SuppressWarnings("unchecked")
+private void initPage() throws Exception {
     listQuestion = faqService.getAllQuestions(FAQUtils.getSystemProvider()).getAll() ;
     UIFormCheckBoxInput checkQuestion ;
     for(Question question : listQuestion) {

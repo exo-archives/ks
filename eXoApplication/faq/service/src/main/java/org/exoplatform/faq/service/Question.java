@@ -70,10 +70,13 @@ public class Question {
   /** The date response. */
   private Date[] dateResponse ;
   
+  /** link to question */
   private String link = "";
+  
   /** The list attachments. */
   private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
   
+  /** language of question which is not yet answer */
   private String languagesNotYetAnswered = "";
   
   /**
@@ -321,8 +324,19 @@ public class Question {
   	this.languagesNotYetAnswered = languagesNotYetAnswered;
   	return this;
   }
-
+	
+	/**
+	 * Get link to question, this link is used to send mail notify,
+	 * when user click in to this link, will be jump to FAQ and view this question 
+	 * @return link to question
+	 */
 	public String getLink() {return link;}
+	
+	/**
+	 * Register link to question, this link is used to send mail notify,
+	 * when user click in to this link, will be jump to FAQ and view this question 
+	 * @param link
+	 */
 	public void setLink(String link) { this.link = link;}
 }
 

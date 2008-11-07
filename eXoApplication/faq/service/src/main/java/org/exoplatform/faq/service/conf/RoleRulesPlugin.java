@@ -28,7 +28,7 @@ import org.exoplatform.container.xml.ValuesParam;
 /**
  * Created by The eXo Platform SARL
  * Author : Ha Mai
- *					ha.mai@exoplatform.com
+ *			ha.mai@exoplatform.com
  * Oct 16, 2008, 4:25:54 PM
  */
 public class RoleRulesPlugin extends BaseComponentPlugin {

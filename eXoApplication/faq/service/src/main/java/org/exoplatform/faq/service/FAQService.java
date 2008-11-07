@@ -562,10 +562,24 @@ public interface FAQService {
    */
   public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception ;
 
+  /**
+   * Get all categories and questions in category is defined     
+   * @param categoryId	id of category
+   * @param sProvider	system provider
+   * @param faqSetting	the setting of user
+   * @return	return QuestionPagList, a list of sub categories and question
+   * @throws Exception
+   */
   public QuestionPageList getListCatesAndQuesByCateId(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception;
 
   public NotifyInfo getMessageInfo(String name) throws Exception  ;
   
+  /**
+   * Check permission of user
+   * @param userName	id or user name of user who is checked permission
+   * @return	return <code>true</code> if user is addmin and <code>false</code> if opposite
+   * @throws Exception
+   */
   public boolean isAdminRole(String userName) throws Exception ;
   
   /**

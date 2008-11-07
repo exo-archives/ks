@@ -91,6 +91,12 @@ public class FAQServiceUtils {
   	return users ;
   }
   
+  /**
+   * Repare permission of node
+   * @param node	Node which is repared permission
+   * @param owner	permission will be added for this node
+   * @throws Exception
+   */
   public static void reparePermissions(Node node, String owner) throws Exception {
 		ExtendedNode extNode = (ExtendedNode)node ;
     if (extNode.canAddMixin("exo:privilegeable")) extNode.addMixin("exo:privilegeable");

@@ -55,6 +55,7 @@ public class FileAttachment {
   /** The input. */
   private InputStream input ;
   
+  /** the name of node file */
   private String nodeName;
   
   
@@ -171,10 +172,18 @@ public class FileAttachment {
    */
   public void setInputStream(InputStream in) throws Exception {input = in ; }
   
+  /**
+   * Get the name of Node file
+   * @return	name of node
+   */
   public String getNodeName() {
 	return nodeName;
   }
 
+  /**
+   * Registers name for node which is used to store file attachment
+   * @param nodeName
+   */
   public void setNodeName(String nodeName) {
 	this.nodeName = nodeName;
   }

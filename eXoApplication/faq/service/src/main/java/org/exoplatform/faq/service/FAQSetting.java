@@ -15,31 +15,53 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.faq.service;
+
 /**
  * Created by The eXo Platform SARL
  * 
  * This Object is used to set some properties of FAQ.
- *  
+ * 
  * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ * truong.nguyen@exoplatform.com
  * Apr 10, 2008, 2:07:25 PM
  */
 public class FAQSetting {
+	
+	/** display mode of faq. */
 	private String displayMode ;
+	
+	/** content of email will be sent to user who add watch or owner of question or morderator. */
 	private String emailSettingContent = null;
+	
+	/** subject of email. */
 	private String emailSettingSubject = null;
+	
+	/** The order by. */
 	private String orderBy ;
+	
+	/** The order type. */
 	private String orderType ;
+	
+	/** The can edit. */
 	private boolean canEdit = false;
+	
+	/** The is admin. */
 	private String isAdmin = null;
 	
+	/** The DISPLA y_ typ e_ alphabet. */
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
+	
+	/** The DISPLA y_ typ e_ postdate. */
 	public static String DISPLAY_TYPE_POSTDATE = "created" ;
+	
+	/** The ORDERB y_ typ e_ asc. */
 	public static String ORDERBY_TYPE_ASC = "asc" ;
+	
+	/** The ORDERB y_ typ e_ desc. */
 	public static String ORDERBY_TYPE_DESC = "desc" ;
 	
 	/**
-	 * This method get one value is Alphabet or Post Date
+	 * This method get one value is Alphabet or Post Date.
 	 * 
 	 * @return displayType
 	 */
@@ -49,30 +71,32 @@ public class FAQSetting {
 	 * All categories/questions can be displayed in some types depending on users.
 	 * This is a combobox with two values: Alphabet or Post Date
 	 * 
-	 * @param dis  the string to display is Alphabet or Post Date
+	 * @param displayMode the display mode
 	 */
 	public void setDisplayMode(String displayMode) { this.displayMode = displayMode ;}
 
 	/**
-	 * Get field is ordered of datas are get from FAQ system, value is returned : alphabet or created date
-	 * @return	order of categories and questions
+	 * Get field is ordered of datas are get from FAQ system, value is returned : alphabet or created date.
+	 * 
+	 * @return order of categories and questions
 	 */
 	public String getOrderBy() {
   	return orderBy;
   }
 
 	/**
-	 * Registers field which is ordered when get them from database
+	 * Registers field which is ordered when get them from database.
 	 * 
-	 * @param orderBy	only one of two case: alphabet or created
+	 * @param orderBy only one of two case: alphabet or created
 	 */
 	public void setOrderBy(String orderBy) {
   	this.orderBy = orderBy;
   }
 
 	/**
-	 * Get how to order when get data, have two values: ascending and descending
-	 * @return	ascending or descending
+	 * Get how to order when get data, have two values: ascending and descending.
+	 * 
+	 * @return ascending or descending
 	 */
 	public String getOrderType() {
   	return orderType;
@@ -80,17 +104,30 @@ public class FAQSetting {
 
 	/**
 	 * Registers order of the field which is chosen when get data,
-	 * input one of tow values: <code>ascending</code> and <code>descending</code>
-	 * @param orderType	ascending or descending
+	 * input one of tow values: <code>ascending</code> and <code>descending</code>.
+	 * 
+	 * @param orderType ascending or descending
 	 */
 	public void setOrderType(String orderType) {
   	this.orderType = orderType;
   }
 
+	/**
+	 * Checks if is can edit. Return <code>true</code> if user is admin or moderator or
+	 * this category and return <code>false</code> if opposite
+	 * 
+	 * @return true, if is can edit
+	 */
 	public boolean isCanEdit() {
   	return canEdit;
   }
 
+	/**
+	 * Sets the can edit.
+	 * input a boolean value, <code>true</code> if user is addmin of FAQ or moderator 
+	 * of this category and <code>false</code> if opposite 
+	 * @param canEdit the new can edit
+	 */
 	public void setCanEdit(boolean canEdit) {
   	this.canEdit = canEdit;
   }
@@ -100,39 +137,67 @@ public class FAQSetting {
 	 * This email have two cases:
 	 * <p>The first: when add new question
 	 * <p>The second: when edit or answer for question
-	 * @return
+	 * 
+	 * @return the email setting content
 	 */
 	public String getEmailSettingContent() {
   	return emailSettingContent;
   }
 
 	/**
-	 * Registers content of email is sent to user, 
+	 * Registers content of email is sent to user,
 	 * when set value for email, note: have two case
 	 * <p>The first: when add new question
-	 * <p>The second: when edit or answer for question
-	 * @param emailSettingContent	content of email
+	 * <p>The second: when edit or answer for question.
+	 * 
+	 * @param emailSettingContent content of email
 	 */
 	public void setEmailSettingContent(String emailSettingContent) {
   	this.emailSettingContent = emailSettingContent;
   }
 
+	/**
+	 * Gets the subject of email which is sent to user.
+	 * 
+	 * @return the email setting subject
+	 */
 	public String getEmailSettingSubject() {
   	return emailSettingSubject;
   }
 
+	/**
+	 * Sets the subject of email will be sent to user.
+	 * 
+	 * @param emailSettingSubject the new email setting subject
+	 */
 	public void setEmailSettingSubject(String emailSettingSubject) {
   	this.emailSettingSubject = emailSettingSubject;
   }
 
+	/**
+	 * Gets the checks if is admin.
+	 * Return a String "True" if user is addmin and "False" if is not addmin
+	 * @return the checks if is admin
+	 */
 	public String getIsAdmin() {
 		return isAdmin;
 	}
 
+	/**
+	 * Sets the checks if is admin.
+	 * Input "True" if user is addmin and "False" if not
+	 * @param isAdmin the new checks if is admin
+	 */
 	public void setIsAdmin(String isAdmin) {
 		this.isAdmin = isAdmin;
 	}
 	
+	/**
+	 * Checks user is admin or not. This function retrun <code>true</code>
+	 * if user is addmin and <code>false</code> if not
+	 * 
+	 * @return true, if is admin
+	 */
 	public boolean isAdmin(){
 		if(this.isAdmin == null || this.isAdmin.equals("TRUE")) return true;
 		else return false;
