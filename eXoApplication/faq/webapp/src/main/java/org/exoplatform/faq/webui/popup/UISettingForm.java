@@ -57,6 +57,7 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 		events = {
 				@EventConfig(listeners = UISettingForm.ResetMailContentActionListener.class),
 				@EventConfig(listeners = UISettingForm.SaveActionListener.class),
+				@EventConfig(listeners = UISettingForm.ChildTabChangeActionListener.class),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
@@ -234,8 +235,17 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			}
 			
 			settingForm.isResetMail = true;
+			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
+		}
+	}
+	
+	
+	static public class ChildTabChangeActionListener extends EventListener<UISettingForm> {
+		public void execute(Event<UISettingForm> event) throws Exception {
+			UISettingForm settingForm = event.getSource() ;		
+			String id = event.getRequestContext().getRequestParameter(OBJECTID);
 			settingForm.indexOfTab = Integer.parseInt(id);
-			
+			settingForm.isResetMail = true;
 			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
 		}
 	}

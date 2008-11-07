@@ -1240,7 +1240,6 @@ public class UIQuestions extends UIContainer {
       questionForm.setFAQSetting(questions.faqSetting_);
       popupContainer.setId("EditQuestion") ;
       popupAction.activate(popupContainer, 600, 450) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }

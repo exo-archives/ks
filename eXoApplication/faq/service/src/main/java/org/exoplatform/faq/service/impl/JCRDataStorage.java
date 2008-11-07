@@ -206,9 +206,11 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:name", question.getQuestion()) ;
   	questionNode.setProperty("exo:author", question.getAuthor()) ;
   	questionNode.setProperty("exo:email", question.getEmail()) ;
-  	GregorianCalendar cal = new GregorianCalendar() ;
-  	cal.setTime(question.getCreatedDate()) ;
-  	questionNode.setProperty("exo:createdDate", cal.getInstance()) ;
+  	if(isNew){
+	  	GregorianCalendar cal = new GregorianCalendar() ;
+	  	cal.setTime(question.getCreatedDate()) ;
+	  	questionNode.setProperty("exo:createdDate", cal.getInstance()) ;
+  	}
   	questionNode.setProperty("exo:categoryId", question.getCategoryId()) ;
   	questionNode.setProperty("exo:isActivated", question.isActivated()) ;
   	questionNode.setProperty("exo:isApproved", question.isApproved()) ;

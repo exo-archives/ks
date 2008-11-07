@@ -420,6 +420,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
           return;
         }
+        System.out.println("\n\n\n\n--------------> run set created date"); 
+        question_.setCreatedDate(date) ;
         question_.setApproved(questionIsApproved) ;
         question_.setDateResponse(null) ;
       } else {
@@ -430,7 +432,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       question_.setAuthor(author) ;
       question_.setEmail(emailAddress) ;
       question_.setQuestion(listQuestionContent.get(0).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
-      question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
       
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
