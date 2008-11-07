@@ -301,7 +301,7 @@ public class ForumEventQuery {
     // add to search for user and moderator:
     if(type.equals("topic") && userPermission > 1){
 			if(isAnd) stringBuffer.append(" and ");
-			stringBuffer.append("(@exo:isApproved='true' and @exo:isActive='true' and @isWaiting='false' and @isActiveByForum='true')");
+			stringBuffer.append("(@exo:isApproved='true' and @exo:isActive='true' and @exo:isWaiting='false' and @exo:isActiveByForum='true')");
 			
 			/*stringBuffer.append(" and (").append("@exo:canPost=' '");
 			for(String str : listOfUser){
@@ -321,7 +321,7 @@ public class ForumEventQuery {
 			}
 			stringBuffer.append(") and (@exo:isFirstPost='false')");
 			if(userPermission > 1){
-				stringBuffer.append(" and (@isApproved='true' and @isActiveByTopic='true' and @isHidden='false')");
+				stringBuffer.append(" and (@exo:isApproved='true' and @exo:isActiveByTopic='true' and @exo:isHidden='false')");
 			}
     }
     stringBuffer.append("]");
