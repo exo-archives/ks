@@ -113,7 +113,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 	}
 
 	@SuppressWarnings("unchecked")
-  private List<String> getIdSelected() throws Exception{
+	private List<String> getIdSelected() throws Exception{
 		List<UIComponent> children = this.getChildren() ;
 		List<String> ids = new ArrayList<String>() ;
 		for (int i = 0; i <= this.maxPage; i++) {

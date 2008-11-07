@@ -168,7 +168,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   	this.userProfiles = new ArrayList<UserProfile>();
   	int i =0, j = 0;
   	for (UserProfile userProfile : listUserProfile) {
-  		if(this.forumService.isAdminRole(userProfile.getUserId())) userProfile.setUserRole((long)0);
+  		boolean isDefaulAdmin = this.forumService.isAdminRole(userProfile.getUserId()) ;
+  		if(isDefaulAdmin) userProfile.setUserRole((long)0);
+  		if(isDefaulAdmin && userProfile.getUserTitle().equals(Utils.GUEST)) userProfile.setUserTitle(Utils.ADMIN);
   		if(userProfile.getUser() == null) {
 	  		for (User user : listUser) {
 		      if(user.getUserName().equals(userProfile.getUserId())) {
@@ -280,7 +282,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		if(this.forumService.isAdminRole(userProfile.getUserId())){
 			userRole.setEnable(false);
 			isAdmin = true;
-			if(title.equals(Utils.MODERATOR) || title.equals(Utils.USER)) title = Utils.ADMIN;
+			if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
 		} else if(this.userProfile.getUserRole() == 0) isAdmin = true;
 		userRole.setValue(isAdmin);
 		userTitle.setValue(title);

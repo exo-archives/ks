@@ -1249,6 +1249,9 @@ public class JCRDataStorage {
 				newProfileNode = userProfileNode.addNode(topic.getOwner(), "exo:userProfile");
 				newProfileNode.setProperty("exo:userId", topic.getOwner());
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
+				if(isAdminRole(topic.getOwner())) {
+					newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+				}
 				newProfileNode.setProperty("exo:totalTopic", 1);
 			}
 			userProfileNode.getSession().save();
@@ -1621,6 +1624,9 @@ public class JCRDataStorage {
 				newProfileNode = userProfileNode.addNode(post.getOwner(), "exo:userProfile");
 				newProfileNode.setProperty("exo:userId", post.getOwner());
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
+				if(isAdminRole(post.getOwner())) {
+					newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+				}
 				newProfileNode.setProperty("exo:totalPost", 1);
 			}
 			newProfileNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
@@ -1883,11 +1889,6 @@ public class JCRDataStorage {
 				long topicPostCount = topicNode.getProperty("exo:postCount").getLong();
 				long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong();
 				long forumPostCount = forumNode.getProperty("exo:postCount").getLong();
-				// Node userNode = null;
-				// try {
-				// userNode = userProfileNode.getNode(post.getOwner()) ;
-				// } catch (PathNotFoundException e) {
-				// }
 
 				switch (type) {
 				case 1: {
@@ -1906,10 +1907,6 @@ public class JCRDataStorage {
 							topicNode.setProperty("exo:lastPostBy", postLastNode.getProperty("exo:owner").getString());
 							isGetLastPost = true;
 						}
-						// if(userNode.hasProperty("exo:totalPost")) {
-						// userNode.setProperty("exo:totalPost",
-						// userNode.getProperty("exo:totalPost").getLong() - 1 );
-						// }
 						newNumberAttach = newNumberAttach - postNode.getProperty("exo:numberAttach").getLong();
 						if (newNumberAttach < 0)
 							newNumberAttach = 0;
@@ -1925,10 +1922,6 @@ public class JCRDataStorage {
 					break;
 				}
 				if (!post.getIsHidden() && post.getIsApproved()) {
-					// if(userNode.hasProperty("exo:totalPost")) {
-					// userNode.setProperty("exo:totalPost",
-					// userNode.getProperty("exo:totalPost").getLong() +1 );
-					// }
 					if (postDate.getTimeInMillis() > lastPostDate.getTimeInMillis()) {
 						topicNode.setProperty("exo:lastPostDate", postDate);
 						topicNode.setProperty("exo:lastPostBy", post.getOwner());
@@ -2442,7 +2435,7 @@ public class JCRDataStorage {
 				title = newProfileNode.getProperty("exo:userTitle").getString();
 			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long)0);
-				if(title.equals(Utils.MODERATOR) || title.equals(Utils.USER)) title = Utils.ADMIN;
+				if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
 			} else {
 				if (newProfileNode.hasProperty("exo:userRole"))
 					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
@@ -2542,7 +2535,7 @@ public class JCRDataStorage {
 				title = newProfileNode.getProperty("exo:userTitle").getString();
 			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long)0);
-				if(title.equals(Utils.MODERATOR) || title.equals(Utils.USER)) title = Utils.ADMIN;
+				if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
 			} else {
 				if (newProfileNode.hasProperty("exo:userRole"))
 					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
@@ -2594,15 +2587,18 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:totalPost", 0);
 				newProfileNode.setProperty("exo:totalTopic", 0);
 				newProfileNode.setProperty("exo:readTopic", new String[] {});
-			}
-			if(Utils.DEFAULT_USER_ADMIN_ID.equals(userName) && newUserProfile.getUserRole() > 0) {
-				newUserProfile.setUserRole((long)0);
-				String title = newUserProfile.getUserTitle();
-				if(title.equalsIgnoreCase(Utils.USER) || title.equalsIgnoreCase(Utils.MODERATOR) || title.equalsIgnoreCase(Utils.GUEST))
-					newUserProfile.setUserTitle(Utils.ADMIN);
-			} else {
-				if (newUserProfile.getUserRole() >= 2) {
-					newUserProfile.setUserRole((long) 2);
+				if(Utils.DEFAULT_USER_ADMIN_ID.equals(userName) && newUserProfile.getUserRole() > 0) {
+					newUserProfile.setUserRole((long)0);
+					String title = newUserProfile.getUserTitle();
+					if(title.equalsIgnoreCase(Utils.USER) || title.equalsIgnoreCase(Utils.MODERATOR) || title.equalsIgnoreCase(Utils.GUEST))
+						newUserProfile.setUserTitle(Utils.ADMIN);
+				} else {
+					if (newUserProfile.getUserRole() >= 2) {
+						newUserProfile.setUserRole((long) 2);
+					}
+				}
+				if(isAdminRole(userName)) {
+					newUserProfile.setUserTitle(Utils.GUEST);
 				}
 			}
 			newProfileNode.setProperty("exo:userRole", newUserProfile.getUserRole());
@@ -2682,6 +2678,9 @@ public class JCRDataStorage {
 			newProfileNode = userProfileNode.addNode(userName, "exo:userProfile");
 			newProfileNode.setProperty("exo:userId", userName);
 			newProfileNode.setProperty("exo:userTitle", Utils.USER);
+			if(isAdminRole(userName)) {
+				newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+			}
 			newProfileNode.setProperty("exo:userRole", 2);
 			newProfileNode.setProperty("exo:bookmark", new String[] { bookMark });
 			userProfileNode.getSession().save();
@@ -2710,6 +2709,9 @@ public class JCRDataStorage {
 				newProfileNode = userProfileNode.addNode(userName, "exo:userProfile");
 				newProfileNode.setProperty("exo:userId", userName);
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
+				if(isAdminRole(userName)) {
+					newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+				}
 				newProfileNode.setProperty("exo:userRole", 2);
 				newProfileNode.setProperty("exo:readTopic", new String[] { topicId });
 				userProfileNode.getSession().save();
@@ -2852,6 +2854,9 @@ public class JCRDataStorage {
 		Node profileNode = userProfileNode.addNode(userName, "exo:userProfile");
 		profileNode.setProperty("exo:userId", userName);
 		profileNode.setProperty("exo:userTitle", Utils.USER);
+		if(isAdminRole(userName)) {
+			profileNode.setProperty("exo:userTitle",Utils.GUEST);
+		}
 		profileNode.setProperty("exo:userRole", 2);
 		userProfileNode.save();
 		userProfileNode.getSession().save();
