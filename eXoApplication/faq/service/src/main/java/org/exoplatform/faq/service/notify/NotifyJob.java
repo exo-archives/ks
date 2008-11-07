@@ -22,7 +22,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.log.ExoLogger;

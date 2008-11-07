@@ -50,7 +50,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
+ *			truong.nguyen@exoplatform.com
  * Apr 14, 2008, 2:56:30 PM
  */
 public class FAQUtils {
