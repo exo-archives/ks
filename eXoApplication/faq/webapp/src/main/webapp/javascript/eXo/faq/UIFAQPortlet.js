@@ -135,12 +135,27 @@ UIFAQPortlet.prototype.printAll = function(obj) {
 UIFAQPortlet.prototype.removeLink = function(rootNode){
   var links = eXo.core.DOMUtil.findDescendantsByTagName(rootNode, "a") ;
   var len = links.length ;
+	var contextAnchors = this.findDescendantsByAttribute(rootNode,"div","onmousedown");
   for(var i = 0 ;i < len ; i++){
     if(eXo.core.DOMUtil.hasClass(links[i], "ActionButton")) continue ;
     links[i].href = "javascript:void(0) ;"
     if(links[i].onclick != null) links[i].onclick = "javascript:void(0);" ;
   }
+	i = contextAnchors.length ;
+	while(i--){
+		contextAnchors[i].removeAttribute("onmousedown");
+	}
   return rootNode ;
+} ;
+
+UIFAQPortlet.prototype.findDescendantsByAttribute = function(rootNode,tagName,attrName){
+	var nodes = eXo.core.DOMUtil.findDescendantsByTagName(rootNode,tagName);
+	var i = nodes.length ;
+	var list = [];
+	while(i--){
+		if(nodes[i].getAttribute(attrName)) list.push(nodes[i]);
+	}
+	return list;
 } ;
 
 UIFAQPortlet.prototype.closePrint = function() {
