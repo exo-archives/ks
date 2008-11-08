@@ -213,11 +213,17 @@ public class ForumUtils {
 	
 	public static String removeSpaceInString(String str) throws Exception {
 		if(!isEmpty(str)) {
-			str = str.replaceAll(" ", "");
-			str = str.replaceAll(";", ",");
-			str = str.replaceAll(",,", ",");
+			String strs[] = new String[]{";", ".", ", ", " ,", ",,"};
+			for (int i = 0; i < strs.length; i++) {
+				while (str.indexOf(strs[i]) >= 0) {
+	        str = str.replaceAll(strs[i], ",");
+        }
+      }
 			if(str.lastIndexOf(",") == str.length() - 1) {
 				str = str.substring(0, str.length() - 1) ;
+			}
+			if(str.indexOf(",") == 0) {
+				str = str.substring(1, str.length()) ;
 			}
 			return str;
 		} else return "";

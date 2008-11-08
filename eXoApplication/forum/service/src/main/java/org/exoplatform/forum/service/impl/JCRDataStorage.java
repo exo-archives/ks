@@ -1777,7 +1777,7 @@ public class JCRDataStorage {
 				Message message = new Message();
 				message.setMimeType("text/html");
 				message.setSubject("eXo Forum Watching Notification!");
-				String content_ = topic.getTopicName();
+				String content_ = node.getProperty("exo:name").getString();
 				content_ = content.replace("&objectName", content_);
 				content_ = content_.replaceAll("&objectWatch", "Forum");
 				content_ = content_.replaceAll("&content", Utils.convertCodeHTML(topic.getDescription()));
@@ -1817,26 +1817,14 @@ public class JCRDataStorage {
 					} else {
 						emailList = ValuesToList(node.getProperty("exo:emailWatching").getValues());
 					}
-					if (emailList.size() > 0) {
-						Message message = new Message();
-						message.setMimeType("text/html");
-						message.setSubject("eXo Thread Watching Notification!");
-						String content_ = node.getProperty("exo:name").getString();
-						content_ = content.replace("&objectName", content_);
-						content_ = content_.replaceAll("&objectWatch", "Topic");
-						content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-						content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-						message.setBody(content_);
-						sendEmailNotification(emailList, message);
-					}
 				}
-				emailList = new ArrayList<String>();
+				List<String>emailListForum = new ArrayList<String>();
 				//Owner Notify
 				if(isApprovePost) {
 					String ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
 					if (ownerTopicEmail.trim().length() > 0) emailList.add(ownerTopicEmail);
 					if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
-						emailList.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+						emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
 					}
 				}
 				/*
@@ -1849,15 +1837,27 @@ public class JCRDataStorage {
 						int i = 0;
 						for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
 							if (usersList.contains(user)) {
-								emailList.add(emails.get(i));
+								emailListForum.add(emails.get(i));
 							}
 							i++;
 						}
 					} else {
-						emailList.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
+						emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
 					}
 				}
 				if (emailList.size() > 0) {
+					Message message = new Message();
+					message.setMimeType("text/html");
+					message.setSubject("eXo Thread Watching Notification!");
+					String content_ = node.getProperty("exo:name").getString();
+					content_ = content.replace("&objectName", content_);
+					content_ = content_.replaceAll("&objectWatch", "Topic");
+					content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
+					content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					message.setBody(content_);
+					sendEmailNotification(emailList, message);
+				}
+				if (emailListForum.size() > 0) {
 					Message message = new Message();
 					message.setMimeType("text/html");
 					message.setSubject("eXo Forum Watching Notification!");
@@ -1866,7 +1866,7 @@ public class JCRDataStorage {
 					content = content.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
 					content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					message.setBody(content);
-					sendEmailNotification(emailList, message);
+					sendEmailNotification(emailListForum, message);
 				}
 			}
 		}
@@ -1900,7 +1900,6 @@ public class JCRDataStorage {
 				case 2: {
 					if (post.getIsHidden()) {
 						postNode.setProperty("exo:isHidden", true);
-						sendNotification(forumHomeNode, topicNode, null, post, "", false);
 						Node postLastNode = getLastDatePost(forumHomeNode, topicNode, postNode);
 						if (postLastNode != null) {
 							topicNode.setProperty("exo:lastPostDate", postLastNode.getProperty("exo:createdDate").getDate());
@@ -1915,6 +1914,7 @@ public class JCRDataStorage {
 						forumNode.setProperty("exo:postCount", forumPostCount - 1);
 					} else {
 						postNode.setProperty("exo:isHidden", false);
+						sendNotification(forumHomeNode, topicNode, null, post, "", false);
 					}
 					break;
 				}
@@ -3282,15 +3282,18 @@ public class JCRDataStorage {
 
 	@SuppressWarnings("unchecked")
 	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
-		Calendar cal = new GregorianCalendar();
-		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
-		String name = String.valueOf(cal.getTime().getTime());
-		Class clazz = Class.forName("org.exoplatform.forum.service.conf.SendMailJob");
-		JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
-		ExoContainer container = ExoContainerContext.getCurrentContainer();
-		JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-		messagesInfoMap_.put(name, new SendMessageInfo(addresses, message));
-		schedulerService.addPeriodJob(info, periodInfo);
+		try {
+			Calendar cal = new GregorianCalendar();
+			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
+			String name = String.valueOf(cal.getTime().getTime());
+			Class clazz = Class.forName("org.exoplatform.forum.service.conf.SendMailJob");
+			JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
+			ExoContainer container = ExoContainerContext.getCurrentContainer();
+			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+			messagesInfoMap_.put(name, new SendMessageInfo(addresses, message));
+			schedulerService.addPeriodJob(info, periodInfo);
+		} catch (Exception e) {
+		}
 	}
 
 	public SendMessageInfo getMessageInfo(String name) throws Exception {

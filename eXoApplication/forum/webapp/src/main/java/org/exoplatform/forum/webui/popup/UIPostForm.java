@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -279,7 +280,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
 			String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
-				//uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			int maxText = ForumUtils.MAXTITLE ;
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(postTitle.length() > maxText) {
@@ -305,8 +305,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.length() ;
+			postTitle = postTitle.trim();
 			if(postTitle.trim().length() <= 3) {k = 0;}
-			postTitle = ForumTransformHTML.enCodeHTML(postTitle).trim() ;
+			postTitle = ForumTransformHTML.enCodeHTML(postTitle) ;
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				boolean isOffend = false ; 
 				boolean hasTopicMod = false ;
@@ -341,7 +342,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				link = url + link;
 				//
 				Post post = new Post();
-				post.setName(postTitle.trim()) ;
+				post.setName(postTitle) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
 				post.setCreatedDate(new Date()) ;

@@ -634,13 +634,15 @@ eXo.forum.UIForumPortlet = new UIForumPortlet() ;
 eXo.forum.CheckBox = {
 	init : function(cont){
 		if(typeof(cont) == "string") cont = document.getElementById(cont) ;
-		var checkboxes = eXo.core.DOMUtil.findDescendantsByClass(cont, "input", "checkbox") ;
-		if(checkboxes.length <=0) return ;
-		checkboxes[0].onclick = this.checkAll ;
-		var len = checkboxes.length ;
-		for(var i = 1 ; i < len ; i ++) {
-			checkboxes[i].onclick = this.check ;
-			eXo.cs.CheckBox.checkItem(checkboxes[i]);
+		if(cont){
+			var checkboxes = eXo.core.DOMUtil.findDescendantsByClass(cont, "input", "checkbox") ;
+			if(checkboxes.length <=0) return ;
+			checkboxes[0].onclick = this.checkAll ;
+			var len = checkboxes.length ;
+			for(var i = 1 ; i < len ; i ++) {
+				checkboxes[i].onclick = this.check ;
+				eXo.cs.CheckBox.checkItem(checkboxes[i]);
+			}
 		}
 	},
 	

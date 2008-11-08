@@ -33,6 +33,7 @@
 	<div class="ListPost">
 	  <div style="overflow:auto; margin: 2px 0px;">
 			<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+			<div style="clear: right; height: 0px;"><span></span></div>
 		</div>
 		<table class="UIGrid" borderspacing="0" cellspacing="0">
 			<thead>
