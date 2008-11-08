@@ -424,7 +424,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			}
 			this.isModeratePost = this.topic.getIsModeratePost();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -724,6 +723,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
 			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 			postForm.updatePost(postId, true, false, topicDetail.getPost(postId)) ;
+			postForm.setMod(topicDetail.isMod);
 			topicDetail.viewTopic = false ;
 			popupContainer.setId("UIQuoteContainer") ;
 			popupAction.activate(popupContainer, 700, 460) ;
@@ -926,7 +926,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				splitTopicForm.setListPost(list) ;
 				splitTopicForm.setTopic(topicDetail.topic) ;
 				splitTopicForm.setUserProfile(topicDetail.userProfile) ;
-				popupAction.activate(splitTopicForm, 700, 550) ;
+				popupAction.activate(splitTopicForm, 700, 400) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };

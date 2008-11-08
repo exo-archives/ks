@@ -55,7 +55,7 @@
 <% if(uiform.getIsShowIter()){ %>
 <div style="overflow: auto;">
   <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
-	<div style="clear: left;"><span></span></div>
+	<div style="clear: right; height: 0px;"><span></span></div>
 </div>
 <% } %>
 <%uiform.end()%>

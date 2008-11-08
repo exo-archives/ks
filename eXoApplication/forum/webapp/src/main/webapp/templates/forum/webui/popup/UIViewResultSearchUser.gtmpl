@@ -62,8 +62,9 @@
 		<div>
 			<%if(uicomponent.totalPage > 1){
 					uicomponent.renderChild(UIForumPageIterator.class) ; 
-				}%>
-			<div style="clear: right;"><span></span></div>
+			%>
+			<div style="clear: right; height: 0px;"><span></span></div>
+			<%} %>
 		</div>
 		<div><span></span></div>
 	</div>
