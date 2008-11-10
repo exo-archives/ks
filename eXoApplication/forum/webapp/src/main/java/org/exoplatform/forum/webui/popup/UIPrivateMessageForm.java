@@ -181,7 +181,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 				stringInput.setValue("") ;
 				formWYSIWYGInput.setValue("") ;
 				Object[] args = { "" };
-				uiApp.addMessage(new ApplicationMessage("UIPrivateMessageForm.msg.sent-successfully", args, ApplicationMessage.WARNING)) ;
+				uiApp.addMessage(new ApplicationMessage("UIPrivateMessageForm.msg.sent-successfully", args, ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				if(messageForm.fullMessage){
 					messageForm.id = 1;

@@ -352,8 +352,7 @@ UIForumPortlet.prototype.showPicture = function(src) {
   containerNode.setAttribute('title', 'Click to close') ;
   containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
   var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
-  //maskNode.setAttribute('style', 'width: 100%; height: 100%; -moz-opacity: 0.3;');
-  //eXo.forum.UIForumPortlet.finterImage(maskNode, true);
+  var width = document.getElementsByTagName('html')[0].offsetWidth;
 	eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
 };
 
