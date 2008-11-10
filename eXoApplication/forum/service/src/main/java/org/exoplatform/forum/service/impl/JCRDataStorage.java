@@ -1821,7 +1821,7 @@ public class JCRDataStorage {
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
 				if (forumNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
-					if (post.getUserPrivate() == null && post.getUserPrivate().length == 2) {
+					if (post.getUserPrivate() != null && post.getUserPrivate().length == 2) {
 						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
 						List<String> usersList = Arrays.asList(post.getUserPrivate());
 						int i = 0;
