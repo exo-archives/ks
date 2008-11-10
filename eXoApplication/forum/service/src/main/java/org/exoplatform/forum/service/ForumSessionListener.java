@@ -38,15 +38,6 @@ public class ForumSessionListener implements HttpSessionListener {
   }
   
   public void sessionCreated(HttpSessionEvent event) {
-  	/*if(ConversationState.getCurrent() != null ){
-  		try{
-    		System.out.println("\n\n ===========> sessionCreated " + ConversationState.getCurrent().getIdentity().getUserId() + "\n\n");
-    	}catch(Exception e) {
-    		e.printStackTrace() ;
-    	}    	
-  	}*/
-  	
-  	
   }
 
   /**
@@ -72,18 +63,8 @@ public class ForumSessionListener implements HttpSessionListener {
   	  	RootContainer rootContainer = RootContainer.getInstance() ;
   	    PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
   	    ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
-  	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
-  	    //System.out.println("\n\n ===========> sessionDestroyed "+ConversationState.getCurrent().getIdentity().getUserId()+"\n\n");
+  	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;  	    
   	  }
-      
-      /*RootContainer rootContainer = RootContainer.getInstance() ;
-	    PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
-	    ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
-	    AuthenticationService authenService = (AuthenticationService)portalContainer.getComponentInstanceOfType(AuthenticationService.class) ;
-      System.out.println("\n\n ===========> sessionDestroyed \n\n");
-	    if(authenService.getCurrentIdentity() != null) {
-      	fservice.userLogout(authenService.getCurrentIdentity().getUserId()) ;
-      }*/
     } catch(Exception ex) {
       log.error("Error while destroying a portal session",ex);
     } finally {

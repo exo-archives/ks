@@ -114,25 +114,15 @@ public class JCRDataStorage {
 	}
 	
 	public void addRolePlugin(ComponentPlugin plugin) throws Exception {
-		try {
-			if(plugin instanceof RoleRulesPlugin){
-				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(plugin instanceof RoleRulesPlugin){
+			rulesPlugins_.add((RoleRulesPlugin)plugin) ;
 		}
 	}
 
 	public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
-		defaultPlugins_.add((InitializeForumPlugin)plugin) ;
-		/*try {
-			if(plugin instanceof InitializeForumPlugin){
-				ForumInitialData forumInitial = ((InitializeForumPlugin)plugin).getForumInitialData();
-				setDefaulDateForum(forumInitial);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
+		if(plugin instanceof InitializeForumPlugin) {
+			defaultPlugins_.add((InitializeForumPlugin)plugin) ;
+		}		
 	}
 	
 	public boolean isAdminRole(String userName) throws Exception {
