@@ -43,7 +43,7 @@
       <artifactId>exo.ks.eXoApplication.common</artifactId>
       <version>${org.exoplatform.ks.version}</version>
     </dependency>
-    
+    <!-- 
     <dependency>
       <groupId>org.exoplatform.cs</groupId>
       <artifactId>exo.cs.eXoApplication.mail.service</artifactId>
@@ -55,5 +55,7 @@
          </exclusion>
        </exclusions>
     </dependency>
+    -->
   </dependencies>
+
 </project>
