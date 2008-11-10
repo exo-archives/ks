@@ -170,16 +170,22 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		long role = this.userProfile.getUserRole() ;
 		String userId = this.userProfile.getUserId() ;
 		String[] strings = this.forum.getCreateTopicRole() ;
-		if( strings != null && strings.length > 0)
+		if( strings != null && strings.length > 0){
 			this.canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
+		}
 		isModerator = false ;
 		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
 		else {
-			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'	and (@exo:owner='").append(userId).append("' or @exo:canView=' '") ;
-			for (String string : ForumSessionUtils.getAllGroupAndMembershipOfUser(userId)) {
-				strQuery.append(" or @exo:canView='"+string+"'") ;
+			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'");
+			boolean isView = ForumServiceUtils.hasPermission(forum.getPoster(), userId) ;
+			if(!isView) ForumServiceUtils.hasPermission(forum.getViewer(), userId) ;
+			if(!isView) {
+				strQuery.append(" and (@exo:owner='").append(userId).append("' or @exo:canView=' ' or @exo:canPost=' '") ;
+				for (String string : ForumSessionUtils.getAllGroupAndMembershipOfUser(userId)) {
+					strQuery.append(" or @exo:canView='"+string+"' or @exo:canPost='"+string+"'") ;
+				}
+				strQuery.append(")");
 			}
-			strQuery.append(")");
 		}
 		if(!isModerator && this.forum.getIsModerateTopic()) {
 			if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;

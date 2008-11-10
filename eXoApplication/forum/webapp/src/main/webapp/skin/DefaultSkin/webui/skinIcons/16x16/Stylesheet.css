@@ -418,5 +418,7 @@
 .UIForumPortlet .TagManager {
 	background: url('icons/TagManager.gif') no-repeat left center;
 }
-
+.UIForumPortlet .View {
+	background: url('icons/ViewIcon.gif') no-repeat left center;
+}
 
