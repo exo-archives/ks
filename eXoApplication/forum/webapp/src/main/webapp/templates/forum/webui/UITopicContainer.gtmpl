@@ -339,7 +339,7 @@
 														 			classDisable = "DisableMenuItem" ;
 														 		}
 														 %>
-																<a class="$classDisable" href="$link">	 
+																<a class="MenuItem $classDisable " href="$link">	 
 																	<div class="ItemIcon $classIcon">
 																		$itemLabel
 																	</div>
@@ -545,7 +545,7 @@
 																		String tagNameTitle = tag.getName() ;
 																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
 																%>
-																			<a class="classDisable" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
+																			<a class="MenuItem" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
 																				<div class="ItemIcon TagIcon ${color}TagIcon">
 																					<span>$tagName</span>
 																				</div>

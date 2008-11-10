@@ -35,6 +35,10 @@
 	display: block;
 }
 
+.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
+	min-width: 60px;
+}
+
 .Vista .UIForumPortlet .UIRightClickPopupMenu {
 	width: 180px;
 }
