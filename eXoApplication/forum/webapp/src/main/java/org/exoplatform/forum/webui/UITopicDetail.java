@@ -1057,6 +1057,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UITopicDetail topicDetail = event.getSource() ;
 			Post post = new Post() ;
 			List<String> postIds = topicDetail.getIdSelected(); 
+			if(postIds == null || postIds.isEmpty()){
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;
+			}
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
 				post = topicDetail.getPost(postId);
