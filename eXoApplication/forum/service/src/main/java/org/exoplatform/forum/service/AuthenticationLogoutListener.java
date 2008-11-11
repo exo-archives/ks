@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
 import org.exoplatform.services.security.ConversationRegistry;
@@ -28,16 +29,19 @@ import org.exoplatform.services.security.ConversationState;
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
  * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
  */
-public class AuthenticationLoginListener extends Listener<ConversationRegistry, ConversationState> {
+public class AuthenticationLogoutListener extends Listener<ConversationRegistry, ConversationState> {
 
-	public AuthenticationLoginListener() throws Exception {
-	
+	public AuthenticationLogoutListener() throws Exception {	
 	}
 
 	@Override
 	public void onEvent(Event<ConversationRegistry, ConversationState> event) throws Exception {
 		ExoContainer container = ExoContainerContext.getCurrentContainer();
+    if (container instanceof RootContainer) {
+      container = RootContainer.getInstance().getPortalContainer("portal");
+    }
   	ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-  	fservice.userLogin(event.getData().getIdentity().getUserId()) ;  	
+  	fservice.userLogout(event.getData().getIdentity().getUserId()) ;
+  	
 	}	
 }

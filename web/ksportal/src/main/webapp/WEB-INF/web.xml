@@ -126,7 +126,7 @@
     <listener-class>org.exoplatform.portal.application.PortalSessionListener</listener-class>
   </listener>
   <listener>
-    <listener-class>org.exoplatform.forum.service.ForumSessionListener</listener-class>
+    <listener-class>org.exoplatform.services.security.web.JAASConversationStateListener</listener-class>
   </listener>
   <listener>
     <listener-class>org.exoplatform.portal.webui.skin.SkinConfigListener</listener-class>

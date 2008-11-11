@@ -344,10 +344,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public synchronized void userLogin(String userId) throws Exception {
-  	System.out.println("User =====> " + userId);
-    lastLogin_ = userId ;
-    System.out.println("\n\n------->>>UserLogin: " + userId + "\n\n");
-    onlineUsers_.put(userId, true) ;		
+  	lastLogin_ = userId ;
+    onlineUsers_.put(userId, true) ;
   }
 
   public void userLogout(String userId) throws Exception {
