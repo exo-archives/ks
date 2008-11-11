@@ -4,12 +4,6 @@
  **************************************************************************/
 package org.exoplatform.forum.test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumStatistic;
 
 

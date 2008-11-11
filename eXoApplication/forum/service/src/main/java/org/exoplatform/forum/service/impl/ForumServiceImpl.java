@@ -47,7 +47,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
-//import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.picocontainer.Startable;
@@ -345,10 +344,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public synchronized void userLogin(String userId) throws Exception {
-  	System.out.println("User =====> " + userId);
-    lastLogin_ = userId ;
-    System.out.println("\n\n------->>>UserLogin: " + userId + "\n\n");
-    onlineUsers_.put(userId, true) ;		
+  	lastLogin_ = userId ;
+    onlineUsers_.put(userId, true) ;
   }
 
   public void userLogout(String userId) throws Exception {

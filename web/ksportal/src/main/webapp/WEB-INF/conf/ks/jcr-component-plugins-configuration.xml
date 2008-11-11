@@ -222,6 +222,12 @@
 	    <type>org.exoplatform.forum.service.AuthenticationLoginListener</type>
 	    <description>description</description>	    
 	  </component-plugin>	  	  
-  </external-component-plugins>  
+    <component-plugin>
+	    <name>exo.core.security.ConversationRegistry.unregister</name>
+	    <set-method>addListener</set-method>
+	    <type>org.exoplatform.forum.service.AuthenticationLogoutListener</type>
+	    <description>description</description>	    
+	  </component-plugin>	  	  
+  </external-component-plugins>
    
 </configuration>

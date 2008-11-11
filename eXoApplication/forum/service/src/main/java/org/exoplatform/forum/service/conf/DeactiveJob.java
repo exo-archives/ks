@@ -22,7 +22,6 @@ import java.util.GregorianCalendar;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
-
 import org.apache.commons.logging.Log;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;

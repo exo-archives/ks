@@ -20,10 +20,13 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import org.apache.commons.logging.Log;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Authenticator;
 
 /**
  * Created by The eXo Platform SAS        
@@ -58,14 +61,15 @@ public class ForumSessionListener implements HttpSessionListener {
    */
   public void sessionDestroyed(HttpSessionEvent event) {
   	try {
-      String portalContainerName = event.getSession().getServletContext().getServletContextName() ;
+      //String portalContainerName = event.getSession().getServletContext().getServletContextName() ;
       if(ConversationState.getCurrent() != null ){
-  	  	RootContainer rootContainer = RootContainer.getInstance() ;
-  	    PortalContainer portalContainer = rootContainer.getPortalContainer(portalContainerName) ;
-  	    ForumService fservice = (ForumService)portalContainer.getComponentInstanceOfType(ForumService.class) ;
-  	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;  	    
+      	ExoContainer container = ExoContainerContext.getCurrentContainer();
+  	    //PortalContainer portalContainer = container.getPortalContainer(portalContainerName) ;
+  	    ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
+  	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
   	  }
     } catch(Exception ex) {
+    	ex.printStackTrace() ;
       log.error("Error while destroying a portal session",ex);
     } finally {
       PortalContainer.setInstance(null) ;

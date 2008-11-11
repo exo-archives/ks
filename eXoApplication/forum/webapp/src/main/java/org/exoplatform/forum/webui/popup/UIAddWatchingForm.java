@@ -70,7 +70,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			UIFormStringInput userName = getUIStringInput(USER_NAME) ;
 			userName.setEditable(false) ;
 			userName.setValue(userId) ;
-			org.exoplatform.ks.common.CommonContact contact = this.getPersonalContact(userId) ;
+			CommonContact contact = this.getPersonalContact(userId) ;
 			String email = contact.getEmailAddress() ;
 			if(!ForumUtils.isEmpty(email))
 				list.add(email);
@@ -110,7 +110,6 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String path = uiForm.path;
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
-			System.out.println("");
 			boolean isEmail = true;
 			List<String> values_ = new ArrayList<String>();
 			if(values.size() > 0) {
