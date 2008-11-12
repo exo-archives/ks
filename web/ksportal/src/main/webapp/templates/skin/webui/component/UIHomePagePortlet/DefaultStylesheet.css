@@ -98,7 +98,7 @@
 
 .PortletDecoration .HomePortletAdBackround {
 	background: white ;
-	padding: 4px;
+	padding: 8px;
 }
 
 .PortletDecoration .PortletDecorationBL {
@@ -384,7 +384,6 @@
 	margin:3px 0px 0px 1px;
 }
 
-
 /*========================KS Guided Tour===========================*/
 .UIKSGuidedTour {
 	background:transparent url(DefaultSkin/background/LeftKSGuidedTour.gif) repeat-y left ;
@@ -533,24 +532,24 @@
 
 .UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarMC {
 	background: #78B3E2 url(DefaultSkin/background/TitleBarMC.jpg) repeat-x ;
-	line-height:31px;
 	border-left: 1px solid #33669A;
 	border-Right: 1px solid #33669A;
 	font-weight: bold;
 	font-size: 12px;
 	color: white;
 	text-align: center;
+	padding: 8px 0px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .ShowImageFAQ {
 	background:transparent url(DefaultSkin/background/ShowImageFAQ.gif) no-repeat left;
-	height: 243px;
+	height: 243px; width: 452px;
 	margin: 4px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .ShowImageForum {
 	background:transparent url(DefaultSkin/background/ShowImageForum.gif) no-repeat left;
-	height: 349px;
+	height: 349px; width: 485px;
 	margin: 4px;
 }
 
@@ -560,18 +559,18 @@
 
 .UIKSGuidedTour .RightKSGuidedTour .H1 {
 	background:transparent url(DefaultSkin/background/H1.gif) no-repeat left;
-	height: 192px;
+	height: 192px; width: 490px;
 	margin: 4px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .H2 {
 	background:transparent url(DefaultSkin/background/H2.gif) no-repeat left;
-	height: 192px;
+	height: 192px;width: 478px;
 	margin: 4px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .H3 {
 	background:transparent url(DefaultSkin/background/H3.gif) no-repeat left;
-	height: 192px;
+	height: 192px;width: 490px;
 	margin: 4px;
 }
