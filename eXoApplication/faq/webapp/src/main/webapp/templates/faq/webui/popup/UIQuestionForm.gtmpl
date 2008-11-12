@@ -9,82 +9,69 @@
 					uicomponent.setLink(url);
 					for(field in uiform.getChildren()) { 
 						if(field.isRendered()) {
-					    if(field.getName().equals("ListQuestion")){
-								String action = uicomponent.getActions()[1] ;
-								String link = uicomponent.event(action) ;
-								String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
-								String[] listLanguage = uicomponent.getListLanguage() ;
-								String language = "" ;
-								int i = 0;
+					    if(field.getName().equals( uicomponent.QUESTION_DETAIL)){
 					%>
 							  <tr>
 							    <td align="right">
 							      <%=uicomponent.getLabel(field.getName()) %> : 
 							    </td>
 							    <td style="padding-left: 4px; white-space:nowrap;">
-										<%
-										for(fck in field.getChildren())  {
-										%>
-									      <div style="margin:0 0 5px;">
-											<%if(i ++ > 0){%>
-													<% uiform.renderField(fck) %>
-													<div>&nbsp;*</div>
-											<%} else {
-													link = uicomponent.event("DeleteLanguage", "delete question");
-											%>
-													<div style="float:left;">
-														<div style="float: left;"><% uiform.renderField(fck) %></div>
-														<a href="javaScript: void(0);" onclick="$link">
-															<div class="DustBinIcon"><span></span></div>
-														</a>
-													</div>
-													<div style="clear: left;"><span></span></div>
-											<%}%>
-												</div>
-									<%}%>
+										<% uiform.renderField(field) %>
 							    </td>
 							  </tr>
 							
-						<%} else {
-					%>
-							
+						<%} else if(field.getName().equals( uicomponent.ALL_LANGUAGES)){
+								String link = uicomponent.event("DeleteLanguage", "delete question");
+						%>
+								<tr>
+									<td align="right"><%=uicomponent.getLabel(field.getName()) %> : </td>
+									<td style="padding-left: 4px; white-space:nowrap;">
+										<div style="float:left;">
+											<div style="float: left;"><% uiform.renderField(field) %></div>
+											<a href="javaScript: void(0);" onclick="$link">
+												<div class="DustBinIcon"><span></span></div>
+											</a>
+										</div>
+										<div style="clear: left;"><span></span></div>
+									</td>
+								</tr>
+						<%} else {%>
 								<tr>
 									<%fieldName = uicomponent.getLabel(field.getName());
 										if(!fieldName.equals(uicomponent.getId())) { %>												
-										<td class="FieldLabel" width="15%">
-											<%=uicomponent.getLabel(field.getName()) %> : 
-										</td>
-										<td class="FieldComponent" style="white-space:normal;" width="85%">
-											<%if(field.getName().equals("Attachment")){
-													if(!uicomponent.getListFile().isEmpty()) {
-														String name = "" ;
-														String link = "" ;
-														for(attachment in uicomponent.getListFile()) {
-												      name = attachment.getName() ;
-												      if(attachment.getId() != null) {
-												      	link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
-												      } else {
-												      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
-												      }
-												     %>
-											     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon" style="white-space:normal;">
-											     			$name &nbsp;&nbsp;&nbsp;
-																[<a href="$link"><font color="#058EE6" font-size="12px">
-																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
-																</font></a>]
-															</div>
-											    <%}
-													}
-												} else {%>
-													<% uiform.renderField(field) %>
-													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress")) {%> * <%}%><br>
-											<%}%>
-										</td>
+											<td class="FieldLabel" width="15%">
+												<%=uicomponent.getLabel(field.getName()) %> : 
+											</td>
+											<td class="FieldComponent" style="white-space:normal;" width="85%">
+												<%if(field.getName().equals("Attachment")){
+														if(!uicomponent.getListFile().isEmpty()) {
+															String name = "" ;
+															String link = "" ;
+															for(attachment in uicomponent.getListFile()) {
+													      name = attachment.getName() ;
+													      if(attachment.getId() != null) {
+													      	link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
+													      } else {
+													      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
+													      }
+													     %>
+												     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon" style="white-space:normal;">
+												     			$name &nbsp;&nbsp;&nbsp;
+																	[<a href="$link"><font color="#058EE6" font-size="12px">
+																		<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
+																	</font></a>]
+																</div>
+												    <%}
+														}
+													} else {%>
+														<% uiform.renderField(field) %>
+														<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress") || field.getName().equals("QuestionTitle")) {%> * <%}%><br>
+												<%}%>
+											</td>
 									<%} else {%>
-										<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+											<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
 									<%}%>
 								</tr>
-							
 					<%  }
 					  }
 					}
@@ -93,6 +80,7 @@
 				</table>
 			</div>
 		</div>
+		
 		<div class="UIAction"> 
 			<table class="ActionContainer" align="center">
 				<tr>

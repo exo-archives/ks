@@ -79,7 +79,7 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
 	    listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider())) ;
 	    for(QuestionLanguage questionLanguage : listQuestionLanguage) {
 	    	if(questionLanguage.getLanguage().equals(language_)) {
-	    		question.setQuestion(questionLanguage.getQuestion()) ;
+	    		question.setDetail(questionLanguage.getDetail()) ;
 	    		question.setResponses(questionLanguage.getResponse()) ;
 	    		question.setResponseBy(questionLanguage.getResponseBy()) ;
 	    		question.setDateResponse(questionLanguage.getDateResponse());
@@ -106,7 +106,7 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
     try {
       question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider());
       if(question != null) {
-        return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+        return question.getCategoryId() + "/" + question.getId() + "/" + question.getDetail();
       } else {
         return "" ;
       }

@@ -245,7 +245,7 @@ private void initPage() throws Exception {
       boolean someQuestionIsDeleted = false;
       for(String id : listQuestionId) {
       	try{
-      		String contentQue = faqService.getQuestionById(id, FAQUtils.getSystemProvider()).getQuestion() ;
+      		String contentQue = faqService.getQuestionById(id, FAQUtils.getSystemProvider()).getDetail() ;
       		listOption.add(contentQue) ;
       	} catch(Exception e){
       		e.printStackTrace();

@@ -18,6 +18,9 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.portlet.PortletPreferences;
 
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -30,6 +33,8 @@ import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -56,6 +61,7 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 		events = {
 				@EventConfig(listeners = UISettingForm.SaveActionListener.class),
 				@EventConfig(listeners = UISettingForm.UserWatchManagerActionListener.class),
+				@EventConfig(listeners = UISettingForm.ChildTabChangeActionListener.class),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
@@ -80,6 +86,9 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 	
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private boolean isEditPortlet_ = false;
+	
+	private boolean isResetMail = false;
+	private int indexOfTab = 0;
 	
 	public UISettingForm() throws Exception {
 		super("UISettingForm");
@@ -169,7 +178,7 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
   	List<Category> listAll = faqService.getAllCategories(FAQUtils.getSystemProvider()) ;
   	for(Category cate : listAll) {
   		String categoryId = cate.getId() ;
-  		List<Watch> listWatch = faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider()) ;
+  		List<Watch> listWatch = faqService.getListMailInWatch(categoryId, FAQUtils.getSystemProvider()).getAllWatch() ;
   		if(listWatch.size()>0) {
   			List<String> users = new ArrayList<String>() ;
   			for(Watch watch : listWatch) {
@@ -235,7 +244,49 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			watchForm.setFAQSetting(settingForm.faqSetting_);
 			watchForm.setListCategory(settingForm.getCategoryAddWatch()) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-     
+		}
+	}
+	
+	static public class ResetMailContentActionListener extends EventListener<UISettingForm> {
+		public void execute(Event<UISettingForm> event) throws Exception {
+			UISettingForm settingForm = event.getSource() ;
+			String id = event.getRequestContext().getRequestParameter(OBJECTID);
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+			PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+			String emailContent = "";
+			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+			ResourceBundle res = context.getApplicationResourceBundle() ;
+			UIFormInputWithActions formInputWithActions = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
+			UIFormWYSIWYGInput input = null;
+			if(id.equals("0")){
+				emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
+				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
+											formInputWithActions.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB))
+											.getChildById(EMAIL_DEFAULT_ADD_QUESTION);
+				input.setValue(emailContent);
+			} else {
+				emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
+				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
+											formInputWithActions.getChildById(settingForm.SET_DEFAULT_EDIT_QUESTION_TAB))
+											.getChildById(EMAIL_DEFAULT_EDIT_QUESTION);
+				input.setValue(emailContent);
+			}
+			
+			settingForm.isResetMail = true;
+			settingForm.indexOfTab = Integer.parseInt(id);
+			
+			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
+		}
+	}
+	
+	
+	static public class ChildTabChangeActionListener extends EventListener<UISettingForm> {
+		public void execute(Event<UISettingForm> event) throws Exception {
+			UISettingForm settingForm = event.getSource() ;		
+			String id = event.getRequestContext().getRequestParameter(OBJECTID);
+			settingForm.indexOfTab = Integer.parseInt(id);
+			settingForm.isResetMail = true;
+			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
 		}
 	}
 	

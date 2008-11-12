@@ -364,7 +364,7 @@ public interface FAQService {
    * @see			list email where user manager	
    * @throws Exception the exception				
    */
-  public List<Watch> getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
+  public QuestionPageList getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
   
   /**
    * This method will delete watch in one category 
@@ -623,9 +623,9 @@ public interface FAQService {
  	*/
  	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
  	
- 	public void addWatchQuestion(String questionId, Watch watch, SessionProvider sessionProvider) throws Exception;
+ 	public void addWatchQuestion(String questionId, Watch watch, boolean isNew, SessionProvider sessionProvider) throws Exception;
  	
- 	public List<Watch> getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception;
+ 	public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception;
  	
  	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception;
 }

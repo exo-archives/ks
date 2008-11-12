@@ -53,6 +53,7 @@ import org.exoplatform.webui.form.UIForm;
 				@EventConfig(listeners = UIWatchManager.LinkActionListener.class),
 				@EventConfig(listeners = UIWatchManager.EditEmailActionListener.class),
 				@EventConfig(listeners = UIWatchManager.DeleteEmailActionListener.class, confirm= "UIWatchManager.msg.confirm-delete-watch"),
+				@EventConfig(listeners = UIWatchManager.DeleteWatchQuesitonActionListener.class, confirm= "UIWatchManager.msg.confirm-delete-watch"),
 				@EventConfig(listeners = UIWatchManager.CancelActionListener.class)
 		}
 )
@@ -64,6 +65,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	private JCRPageList pageList ;
 	private Boolean check_ = false ;
 	public long curentPage_ = 1;
+	private String questionID_ = null;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIWatchManager() throws Exception {
 		addChild(UIFAQPageIterator.class, null, LIST_EMAILS_WATCH) ;
@@ -75,21 +77,33 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	
 	public String getCategoryID() { return categoryId_; }
   @SuppressWarnings("static-access")
-  public void setCategoryID(String s) throws Exception {this.categoryId_ = s ; }
-  
-  public void setCurentPage(long page) {this.curentPage_ = page ;}
-  
-  public void setListWatch(List<Watch> listWatchs){
-    this.listWatchs_ = listWatchs;
+  public void setCategoryID(String s) throws Exception {
+  	this.categoryId_ = s ;
+  	
+  	this.listWatchs_ = new ArrayList<Watch>();
     try {
-	    pageList = new QuestionPageList(listWatchs_, 10);
-	    pageList.setPageSize(10);
+	    pageList = faqService_.getListMailInWatch(this.categoryId_, FAQUtils.getSystemProvider());
+	    pageList.setPageSize(5);
 	    pageIterator = this.getChildById(LIST_EMAILS_WATCH);
 	    pageIterator.updatePageList(pageList);
     } catch (Exception e) {
     	 e.printStackTrace();
     }
   }
+  
+  public void setQuestionID(String questionId){
+  	this.questionID_ = questionId;
+  	try {
+  		pageList = faqService_.getListMailInWatchQuestion(this.questionID_, FAQUtils.getSystemProvider());
+  		pageList.setPageSize(5);
+  		pageIterator = this.getChildById(LIST_EMAILS_WATCH);
+	    pageIterator.updatePageList(pageList);
+		} catch (Exception e) {
+			this.listWatchs_ = new ArrayList<Watch>();
+		}
+  }
+  
+  public void setCurentPage(long page) {this.curentPage_ = page ;}
   
   public List<String> getListMails(List<Watch> listWatchs) {
   	List<String> listEmails = new ArrayList<String>() ;
@@ -122,11 +136,11 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   	try {
   		listWatchs_.addAll(pageList.getPageListWatch(pageSelected, FAQUtils.getCurrentUser()));
   		if(listWatchs_.isEmpty()){
+  			UIFAQPageIterator pageIterator = null ;
         while(listWatchs_.isEmpty() && pageSelected > 1) {
-        	UIFAQPageIterator pageIterator = null ;
           pageIterator = this.getChildById(LIST_EMAILS_WATCH) ;
       		listWatchs_.addAll(pageList.getPageListWatch(pageSelected, FAQUtils.getCurrentUser()));
-          pageIterator.setSelectPage(pageSelected) ;
+          pageIterator.setSelectPage(--pageSelected) ;
         }
       } else pageIterator.setSelectPage(pageSelected) ;
   	} catch (Exception e) {
@@ -155,43 +169,59 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			UIWatchManager watchManager = event.getSource() ;
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
 			String list = event.getRequestContext().getRequestParameter(OBJECTID);
-			String emailList = list.split("/")[1] ;
-			String user = list.split("/")[0] ;
-			try {
-				faqService_.getCategoryById(categoryId_, FAQUtils.getSystemProvider()) ;
-				List<Watch> listWatchs = faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()) ;
-				List<String> listMails = watchManager.getListMails(listWatchs) ;
-				if(listMails.size() > 0 && listMails.contains(emailList)) {
+			
+			// edit watch for category
+			if(list.indexOf("/") > 0){
+				String emailList = list.split("/")[1] ;
+				String user = list.split("/")[0] ;
+				try {
+					faqService_.getCategoryById(categoryId_, FAQUtils.getSystemProvider()) ;
+					List<Watch> listWatchs = faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).getAllWatch() ;
+					List<String> listMails = watchManager.getListMails(listWatchs) ;
+					if(listMails.size() > 0 && listMails.contains(emailList)) {
+						UIWatchContainer watchContainer = watchManager.getParent() ;
+						UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
+						UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 420) ;
+						watchForm.setUpdateWatch(categoryId_, user, emailList, true, watchManager.pageIterator.getPageSelected()) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+					} else {
+						UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
+						uiApplication.addMessage(new ApplicationMessage("UIWatchManager.msg.watch-id-deleted", null, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						watchManager.check_ = true ;
+						//watchManager.setListWatch(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).getAllWatch()) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
+						if(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).getAllWatch().size() < 1) {
+							UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+						}
+						return ;
+					}
+				} catch (Exception e) {
+					UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+					uiQuestions.setIsNotChangeLanguage();
+					UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
+					popupAction.deActivate() ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+					return ;
+				}
+				
+			// edit watch for question
+			} else {
+				try{
+					faqService_.getQuestionById(watchManager.questionID_, FAQUtils.getSystemProvider());
 					UIWatchContainer watchContainer = watchManager.getParent() ;
 					UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 					UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 420) ;
-					watchForm.setUpdateWatch(categoryId_, user, emailList, true, watchManager.pageIterator.getPageSelected()) ;
+					watchForm.setUpdateWatchQuestion(watchManager.questionID_, list);
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				} else {
-					UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIWatchManager.msg.watch-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					watchManager.check_ = true ;
-					watchManager.setListWatch(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider())) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
-					if(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).size() < 1) {
-						UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-		       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
-					}
-					return ;
-					
+				} catch (Exception e){
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-				uiQuestions.setIsNotChangeLanguage();
-				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
-				popupAction.deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-				return ;
 			}
 		}
 	}
@@ -241,15 +271,15 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
 			try {
 				faqService_.getCategoryById(categoryId_, FAQUtils.getSystemProvider()) ;
-				List<Watch> listWatchs = faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()) ;
+				List<Watch> listWatchs = faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).getAllWatch() ;
 				List<String> listMails = watchManager.getListMails(listWatchs) ;
 				if(listMails.size() > 0 && listMails.contains(emailList)) {
 					watchManager.curentPage_ = watchManager.pageIterator.getPageSelected();
 					faqService_.deleteMailInWatch(categoryId_, FAQUtils.getSystemProvider(), emailList) ;
 					watchManager.check_ = true ;
-					watchManager.setListWatch(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider())) ;
+					//watchManager.setListWatch(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).getAllWatch()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
-					if(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).size() < 1) {
+					if(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).getAllWatch().size() < 1) {
 						UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 		       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 					}
@@ -258,9 +288,9 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 					uiApplication.addMessage(new ApplicationMessage("UIWatchManager.msg.watch-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					watchManager.check_ = true ;
-					watchManager.setListWatch(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider())) ;
+					//watchManager.setListWatch(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).getAllWatch()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
-					if(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).size() < 1) {
+					if(faqService_.getListMailInWatch(categoryId_, FAQUtils.getSystemProvider()).getAllWatch().size() < 1) {
 						UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 		       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 					}
@@ -278,6 +308,31 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
         event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         return ;
       }
+		}
+	}
+	
+	static	public class DeleteWatchQuesitonActionListener extends EventListener<UIWatchManager> {
+		public void execute(Event<UIWatchManager> event) throws Exception {
+			UIWatchManager watchManager = event.getSource() ;
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID);
+			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
+			try {
+				faqService_.getQuestionById(watchManager.questionID_, FAQUtils.getSystemProvider());
+				faqService_.UnWatchQuestion(watchManager.questionID_, FAQUtils.getSystemProvider(), userId);
+				//watchManager.setListWatch(faqService_.getListMailInWatchQuestion(watchManager.questionID_, FAQUtils.getSystemProvider()).getAllWatch());
+				event.getRequestContext().addUIComponentToUpdateByAjax(watchManager);
+			} catch (Exception e) {
+				UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				uiQuestions.setIsNotChangeLanguage();
+				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
+				popupAction.deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+				return ;
+			}
 		}
 	}
 	

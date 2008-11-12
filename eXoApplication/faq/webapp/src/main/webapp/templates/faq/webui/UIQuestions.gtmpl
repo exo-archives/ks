@@ -142,7 +142,7 @@
   			</div>
 		</div>
 	</div>
-<% /*View category*/ %>
+<!-- ===================================================== View category ======================================================  -->
 	<div class="FAQContainer" id="FAQViewContent">
 		<div class="FAQContent">
 		<%  
@@ -252,6 +252,7 @@
 		<%i ++ ;
 			}
 		%>
+<!-- ===================================================== View question ======================================================  -->
 			<%
 			if(cateId != null && cateId.trim().length() > 0 ){
 				String[] questionActions = null ;
@@ -345,9 +346,7 @@
 																				<div style="padding-left: 20px;">$itemLabelView</div>
 																		</div>
 																	</a>
-															<%
-																}
-															%>
+															<%}%>
 															<!-- action unwatch question -->
 															<%if(uicomponent.checkUserWatchQuestion(question.getId())) {%>
 																	<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("UnWatchQuestion", qId)%>" class="MenuItem">
@@ -359,7 +358,7 @@
 															
 															<!-- action manager watch question -->
 															<%if(uicomponent.canEditQuestion) {
-																	if(question.getUsersWatch().length > 0) {
+																	if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
 															%>
 																		<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>" >
 																			<div class="ItemIcon WatchQuestionManager" style="padding:3px 0px 5px 5px;">
@@ -418,6 +417,10 @@
 																		<a href="$linkQuestion"> 
 																			$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
 																		</a>
+																		<%if(question.getDetail() != null && question.getDetail().trim().length() > 0){%>
+																			<br/>
+																			<%=question.getDetail()%>
+																		<%}%>
 																		
 																		<!-- view author's infor -->
 																		<%
@@ -475,6 +478,18 @@
 																										</div>
 																									</a>
 																							<%}%>
+																							
+																							<!-- action manager watch question -->
+																							<%if(uicomponent.canEditQuestion) {
+																									if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
+																							%>
+																										<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>" >
+																											<div class="ItemIcon WatchQuestionManager" style="padding:3px 0px 5px 5px;">
+																												<div style="padding-left: 20px;white-space:nowrap;"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></div>
+																											</div>
+																										</a>
+																							<%	}
+																								}%>
 																							
 																						</div>
 																					</div>
@@ -638,19 +653,19 @@
 																	</div>
 																</td>
 																<%
-																if(uicomponent.canVoteAnswer(question.getUsersVoteForResponses())){
+																if(uicomponent.canVoteAnswer(question.getUsersVoteAnswer())){
 																%>
-																<td width="50px" align="left">
-																	<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse])%>"
-																			title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
-																		<div class="VoteFAQ"><span></span></div>
-																	</a>
-																</td>
+																	<td width="50px" align="left">
+																		<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse])%>"
+																				title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+																			<div class="VoteFAQ"><span></span></div>
+																		</a>
+																	</td>
 																<%
 																}
 																%>
 																<% 
-																markVote =(Integer) question.getResponseMark()[countResponse];
+																markVote =(Integer) question.getMarksVoteAnswer()[countResponse];
 																%>
 																<td width="100%">
 																	<div class="RatingInfoContainer">

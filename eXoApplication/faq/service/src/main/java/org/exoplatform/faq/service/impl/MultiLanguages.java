@@ -235,7 +235,8 @@ public class MultiLanguages {
     }catch(Exception e) {
     	langNode = languagesNode.addNode(language.getLanguage(), NTUNSTRUCTURED) ;
     }
-    langNode.setProperty("exo:name", language.getQuestion()) ;
+    langNode.setProperty("exo:name", language.getDetail()) ;
+    langNode.setProperty("exo:title", language.getQuestion()) ;
     langNode.setProperty("exo:responses", language.getResponse()) ;
     langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
     if(language.getDateResponse() != null) {

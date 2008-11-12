@@ -23,10 +23,12 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UIFAQContainer;
+import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -36,7 +38,6 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormTabPane;
 
 /**
@@ -51,16 +52,30 @@ import org.exoplatform.webui.form.UIFormTabPane;
 		events = {
 				@EventConfig(listeners = UIUserWatchManager.LinkActionListener.class),
 				@EventConfig(listeners = UIUserWatchManager.UnWatchActionListener.class),
+				@EventConfig(listeners = UIUserWatchManager.ChangeTabActionListener.class),
 				@EventConfig(listeners = UIUserWatchManager.CancelActionListener.class)
 		}
 )
 public class UIUserWatchManager  extends UIFormTabPane implements UIPopupComponent{
 	private FAQSetting faqSetting_ = null;
+	@SuppressWarnings("unused")
+	private UIFAQPageIterator pageIteratorCate ;
+	@SuppressWarnings("unused")
+	private JCRPageList pageListCate ;
+	private UIFAQPageIterator pageIteratorQues ;
+	private JCRPageList pageListQues ;
+	private String LIST_QUESTIONS_WATCHED = "listQuestionsWatch";
+	private String LIST_CATES_WATCHED = "listCatesWatch";
+	private int tabSelect = 0;
+	
+	@SuppressWarnings("unused")
 	private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
 	private List<Category> listCategory_ = new ArrayList<Category>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIUserWatchManager() throws Exception {
 		super("UIUswerWatchManager");
+		 addChild(UIFAQPageIterator.class, null, LIST_QUESTIONS_WATCHED) ;
+	    addChild(UIFAQPageIterator.class, null, LIST_CATES_WATCHED) ;
 		this.setActions(new String[]{"Cancel"}) ;
 	}
 	
@@ -103,11 +118,45 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   @SuppressWarnings("unused")
 	private List<Question> getListQuestionsWatch(){
   	try{
-  		return faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser(), FAQUtils.getSystemProvider()).getAll();
+  		if(pageListQues == null){
+	  		pageListQues = faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser(), FAQUtils.getSystemProvider());
+	  		pageListQues.setPageSize(3);
+	  		pageIteratorQues = this.getChildById(LIST_QUESTIONS_WATCHED);
+	  		pageIteratorQues.updatePageList(pageListQues);
+  		}
+  		
+  		long pageSelect = pageIteratorQues.getPageSelected() ;
+      List<Question> listQuestion_ = new ArrayList<Question>();
+      try {
+        listQuestion_.addAll(this.pageListQues.getPage(pageSelect, null)) ;
+        if(listQuestion_.isEmpty()){
+	        UIFAQPageIterator pageIterator = null ;
+	        while(listQuestion_.isEmpty() && pageSelect > 1) {
+	          pageIterator = this.getChildById(LIST_QUESTIONS_WATCHED) ;
+	          listQuestion_.addAll(this.pageListQues.getPage(--pageSelect, null)) ;
+	          pageIterator.setSelectPage(pageSelect) ;
+	        }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+  		
+  		return listQuestion_;
   	}catch (Exception e){
   		e.printStackTrace();
   		return null;
   	}
+  }
+  
+  @SuppressWarnings("unused")
+  private long getTotalpages(String pageInteratorId) {
+    UIFAQPageIterator pageIterator = this.getChildById(pageInteratorId) ;
+    try {
+      return pageIterator.getInfoPage().get(3) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return 1 ;
+    }
   }
   
 	static	public class LinkActionListener extends EventListener<UIUserWatchManager> {
@@ -188,6 +237,15 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	      }
 				faqService_.UnWatchQuestion(objectID, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser());
 			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
+		}
+	}
+	
+	static	public class ChangeTabActionListener extends EventListener<UIUserWatchManager> {
+		public void execute(Event<UIUserWatchManager> event) throws Exception {
+			UIUserWatchManager watchManager = event.getSource() ;
+			int id = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID));
+			watchManager.tabSelect = id;
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 		}
 	}

@@ -363,7 +363,7 @@ public class FAQServiceImpl implements FAQService{
    * @see			list email where user manager	
    * @throws Exception the exception				
    */
-  public List<Watch> getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
+  public QuestionPageList getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
     return jcrData_.getListMailInWatch(categoryId, sProvider); 
   }
   
@@ -628,11 +628,11 @@ public class FAQServiceImpl implements FAQService{
 	  return jcrData_.isAdminRole(userName);
   }
 	
-	public void addWatchQuestion(String questionId, Watch watch, SessionProvider sessionProvider) throws Exception{
-		jcrData_.addWatchQuestion(questionId, watch, sessionProvider);
+	public void addWatchQuestion(String questionId, Watch watch, boolean isNew, SessionProvider sessionProvider) throws Exception{
+		jcrData_.addWatchQuestion(questionId, watch, isNew, sessionProvider);
 	}
 	
-	public List<Watch> getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
+	public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getListMailInWatchQuestion(questionId, sProvider);
 	}
 	

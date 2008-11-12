@@ -137,22 +137,23 @@ if(!uicomponent.isEditPortlet_){
 										            <%
 										            	int count = 0;
 										              for(childInputSet in formInput.getChildren()) {
+										              	String actionChangeTab =  uicomponent.event("ChildTabChange", "" + count);
 										                if(!childInputSet.isRendered()) continue ;
 												        		String childClassName="NormalTab" ;
 												        		if(count == uicomponent.indexOfTab) childClassName="SelectedTab" ;
-												        		count ++;
 											              String childTabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + childInputSet.name) ;
 							                  %>
 											              <div class="UITab NormalTabStyle">
 											                <div class="$childClassName">
 											                  <div class="LeftTab">
 											                    <div class="RightTab">
-													                  <div class="MiddleTab" onClick="eXo.webui.UIHorizontalTabs.changeTabForUIFormTabpane(this, '$uiform.id', '$childInputSet.id')">$childTabName</div>
+													                  <div class="MiddleTab" onmousedown="$actionChangeTab">$childTabName</div>
 													                </div>
 											                  </div>
 											                </div>
 											              </div>
-										            <% }%>
+										            <%	count ++; 
+										            }%>
 											        </div>
 											      </div>
 											    </div>

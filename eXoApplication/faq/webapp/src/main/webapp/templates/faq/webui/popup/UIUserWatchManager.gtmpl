@@ -18,6 +18,7 @@
 				            <%
 				            	String selTabId = uicomponent.getSelectedTabId() ;
 				            	if(selTabId == null || selTabId.trim().length() < 1) selTabId = "watchCategoryTab";
+				            	int count = 0;
 				              for(inputSet in uicomponent.tabs) {
 						        		String className="NormalTab" ;
 						        		if(inputSet.equals(selTabId)) className="SelectedTab" ;
@@ -27,12 +28,13 @@
 					                <div class="$className">
 					                  <div class="LeftTab">
 					                    <div class="RightTab">
-							                  <div class="MiddleTab" onClick="eXo.webui.UIHorizontalTabs.changeTabForUIFormTabpane(this, '$uiform.id', '$inputSet')">$tabName</div>
+							                  <div class="MiddleTab" onClick="eXo.webui.UIHorizontalTabs.changeTabForUIFormTabpane(this, '$uiform.id', '$inputSet');<%=uicomponent.event("ChangeTab", "" + count);%>">$tabName</div>
 							                </div>
 					                  </div>
 					                </div>
 					              </div>
-				            <% }%>
+				            <%	count ++; 
+				            	}%>
 					        </div>
 					      </div>
 					    </div>
@@ -46,7 +48,7 @@
 	        		<%
 	            String display1 = "none" ;
 	            String display2 = "none" ;
-	            if(uicomponent.tabs[0].equals(selTabId)){
+	            if(uicomponent.tabSelect == 0){
 	            	display1="block" ;
 	            	display2 = "none" ;
 	            } else {
@@ -158,6 +160,14 @@
 						 						</table>
 						 					</div>
 						 				</div>
+						 				<%
+										long totalPages = uicomponent.getTotalpages(uicomponent.LIST_QUESTIONS_WATCHED) ;
+					          if(totalPages > 1) {
+					          %>
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild(uicomponent.LIST_QUESTIONS_WATCHED) ; %>
+											</div>
+									<%}%>
 						 			</div>
 					 			</div>
  							</div>

@@ -83,7 +83,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   private boolean isEditTab_ = true ;
   private boolean isResponseTab_ = false ;
   private boolean isChangeTab_ = false;
-  private String cateId = "All";
+  private String cateId_ = "All";
   
   public class Cate{
     private Category category;
@@ -222,7 +222,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     SessionProvider sProvider = FAQUtils.getSystemProvider() ;
     if(!faqSetting_.isAdmin()) {
       List<String> listCateId = new ArrayList<String>() ;
-      if(cateId.equals("All")){
+      if(cateId_.equals("All")){
 	      listCateId.addAll(faqService_.getListCateIdByModerator(user, sProvider)) ;
 	      int i = 0 ;
 	      while(i < listCateId.size()) {
@@ -234,7 +234,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
 	        i ++ ;
 	      }
       } else {
-      	listCateId.add(this.cateId);
+      	listCateId.add(this.cateId_);
       }
       if(!listCateId.isEmpty() && listCateId.size() > 0) {
         this.pageList = faqService_.getQuestionsByListCatetory(listCateId, false, sProvider) ;
@@ -254,12 +254,12 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         pageQuesNotAnswerIterator.updatePageList(this.pageListNotAnswer) ;
       }
     } else {
-    	if(this.cateId.equals("All")){
+    	if(this.cateId_.equals("All")){
     		this.pageList = faqService_.getAllQuestions(sProvider) ;
     		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(sProvider, "All") ;
     	} else {
-    		this.pageList = faqService_.getAllQuestionsByCatetory(this.cateId, sProvider, this.faqSetting_);
-    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(sProvider, this.cateId) ;
+    		this.pageList = faqService_.getAllQuestionsByCatetory(this.cateId_, sProvider, this.faqSetting_);
+    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(sProvider, this.cateId_) ;
     	}
       this.pageList.setPageSize(5);
       pageIterator.updatePageList(this.pageList) ;
@@ -424,10 +424,10 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   }
   
   static public class ChangeCategoryActionListener extends EventListener<UIQuestionsInfo> {
-  	public void execute(Event<UIQuestionsInfo> event) throws Exception {
+		public void execute(Event<UIQuestionsInfo> event) throws Exception {
   		UIQuestionsInfo questionsInfo = event.getSource() ;
-      String cateId = ((UIFormSelectBox)questionsInfo.getChildById(questionsInfo.LIST_CATEGORIES)).getValue();
-      questionsInfo.cateId = cateId;
+      String cateId = ((UIFormSelectBox)questionsInfo.getChildById(LIST_CATEGORIES)).getValue();
+      questionsInfo.cateId_ = cateId;
       questionsInfo.setListQuestion();
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
       questionManagerForm.isResponseQuestion = false ;

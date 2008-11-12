@@ -205,12 +205,15 @@ public class JCRDataStorage {
   @SuppressWarnings("static-access")
   private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
     questionNode.setProperty("exo:language", question.getLanguage()) ;
-  	questionNode.setProperty("exo:name", question.getQuestion()) ;
+  	questionNode.setProperty("exo:name", question.getDetail()) ;
   	questionNode.setProperty("exo:author", question.getAuthor()) ;
   	questionNode.setProperty("exo:email", question.getEmail()) ;
-  	GregorianCalendar cal = new GregorianCalendar() ;
-  	cal.setTime(question.getCreatedDate()) ;
-  	questionNode.setProperty("exo:createdDate", cal.getInstance()) ;
+  	questionNode.setProperty("exo:title", question.getQuestion()) ;
+  	if(isNew){
+	  	GregorianCalendar cal = new GregorianCalendar() ;
+	  	cal.setTime(question.getCreatedDate()) ;
+	  	questionNode.setProperty("exo:createdDate", cal.getInstance()) ;
+  	}
   	questionNode.setProperty("exo:categoryId", question.getCategoryId()) ;
   	questionNode.setProperty("exo:isActivated", question.isActivated()) ;
   	questionNode.setProperty("exo:isApproved", question.isApproved()) ;
@@ -301,7 +304,7 @@ public class JCRDataStorage {
 	            message.setMimeType(MIMETYPE_TEXTHTML) ;
 	      			message.setSubject(faqSetting.getEmailSettingSubject());
 	      			message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
-	      																												 .replaceAll("&questionContent_", question.getQuestion())
+	      																												 .replaceAll("&questionContent_", question.getDetail())
 	      																												 .replaceAll("&questionLink_", question.getLink()));
 	      			sendEmailNotification(emailsList, message) ;
 	      		}
@@ -336,7 +339,7 @@ public class JCRDataStorage {
 						Message message = new Message();
 			      message.setMimeType(MIMETYPE_TEXTHTML) ;
 						message.setSubject(faqSetting.getEmailSettingSubject());
-						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
+						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
 																															 .replaceAll("&questionResponse_", question.getResponses())
 																															 .replaceAll("&questionLink_", question.getLink()));
 						sendEmailNotification(emailsList, message) ;
@@ -365,7 +368,7 @@ public class JCRDataStorage {
 	            message.setMimeType(MIMETYPE_TEXTHTML) ;
 	      			message.setSubject(faqSetting.getEmailSettingSubject());
 	      			message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
-	      																												 .replaceAll("&questionContent_", question.getQuestion())
+	      																												 .replaceAll("&questionContent_", question.getDetail())
 	      																												 .replaceAll("&questionLink_", question.getLink()));
 	      			sendEmailNotification(emailsList, message) ;
 	      		}
@@ -398,7 +401,7 @@ public class JCRDataStorage {
       			Message message = new Message();
 			      message.setMimeType(MIMETYPE_TEXTHTML) ;
 						message.setSubject(faqSetting.getEmailSettingSubject());
-						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
+						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
 																															 .replaceAll("&questionResponse_", question.getResponses())
 																															 .replaceAll("&questionLink_", question.getLink()));
 						sendEmailNotification(emailsList, message) ;
@@ -429,7 +432,8 @@ public class JCRDataStorage {
         QuestionLanguage questionLanguage = new QuestionLanguage() ;
         
         questionLanguage.setLanguage(node.getName()) ;
-        if(node.hasProperty("exo:name")) questionLanguage.setQuestion(node.getProperty("exo:name").getValue().getString());
+        if(node.hasProperty("exo:name")) questionLanguage.setDetail(node.getProperty("exo:name").getValue().getString());
+        if(node.hasProperty("exo:title")) questionLanguage.setQuestion(node.getProperty("exo:title").getValue().getString());
         if(node.hasProperty("exo:responses")) questionLanguage.setResponse(ValuesToStrings(node.getProperty("exo:responses").getValues()));
         if(node.hasProperty("exo:responseBy")) questionLanguage.setResponseBy(ValuesToStrings(node.getProperty("exo:responseBy").getValues()));
         if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(ValuesToDate(node.getProperty("exo:dateResponse").getValues()));
@@ -479,7 +483,7 @@ public class JCRDataStorage {
           	question.setAuthor(authorContent) ;
           	question.setEmail(emailContent) ;
             question.setLanguage(languageSearch) ;
-            question.setQuestion(questionContent) ;
+            question.setDetail(questionContent) ;
             question.setResponses(responseContent) ;
             listResult.add(question) ;
           }
@@ -523,7 +527,7 @@ public class JCRDataStorage {
           }
           if(isAdd) {
             question.setLanguage(languageSearch) ;
-            question.setQuestion(questionContent) ;
+            question.setDetail(questionContent) ;
             question.setResponses(responseContent) ;
             listResult.add(question) ;
           }
@@ -561,9 +565,10 @@ public class JCRDataStorage {
   	Question question = new Question() ;
   	question.setId(questionNode.getName()) ;
   	if(questionNode.hasProperty("exo:language")) question.setLanguage(questionNode.getProperty("exo:language").getString()) ;
-  	if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
+  	if(questionNode.hasProperty("exo:name")) question.setDetail(questionNode.getProperty("exo:name").getString()) ;
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
+    if(questionNode.hasProperty("exo:title")) question.setQuestion(questionNode.getProperty("exo:title").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
     if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
@@ -1046,75 +1051,77 @@ public class JCRDataStorage {
   	watchingNode.getSession().save();
   }
   
-  public List<Watch> getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
-  	Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
-  	List<Watch> listWatch = new ArrayList<Watch>() ;
-    if(watchingNode.isNodeType("exo:faqWatching")){
-  		Value[] emails = watchingNode.getProperty("exo:emailWatching").getValues() ;
-  		Value[] users = watchingNode.getProperty("exo:userWatching").getValues() ;
-  		if(emails != null && emails.length > 0) {
-  			int i = 0 ;
-  			for(Value email: emails) {
-  				Watch watch = new Watch() ;
-					watch.setEmails(email.getString()) ;
-					watch.setUser(users[i].getString());
-					listWatch.add(watch) ;
-					i++ ;
-  			}
-  			Collections.sort(listWatch, new Utils.NameComparator());
-  		}
-  	}
-    return listWatch;
+  public QuestionPageList getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
+  	Node categoryHome = getCategoryHome(sProvider, null) ;	
+  	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+                                   append("//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 5, queryString.toString(), true) ;
+    return pageList;
   }
   
-  public void addWatchQuestion(String questionId, Watch watch, SessionProvider sessionProvider) throws Exception{
+  public void addWatchQuestion(String questionId, Watch watch, boolean isNew, SessionProvider sessionProvider) throws Exception{
   	Node questionHome = getQuestionHome(sessionProvider, null);
   	Node questionNode = questionHome.getNode(questionId);
-  	if(questionNode.isNodeType("exo:faqWatching")){
-  		List<String> vls = new ArrayList<String>() ;
+  	// add new watch quesiton
+  	if(isNew){
+	  	if(questionNode.isNodeType("exo:faqWatching")){
+	  		List<String> emails = new ArrayList<String>() ;
+	  		List<String> listUsers = new ArrayList<String>() ;
+				Value[] values = questionNode.getProperty("exo:emailWatching").getValues() ;
+				Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
+				for(Value vl : values) {
+						emails.add(vl.getString()) ;
+				}
+				for(Value user : users) {
+					listUsers.add(user.getString()) ;
+				}
+				if(!listUsers.contains(watch.getUser())){
+					emails.add(watch.getEmails()) ;
+					listUsers.add(watch.getUser());
+				} else {
+					int pos = listUsers.indexOf(watch.getUser());
+					emails.set(pos, emails.get(pos) + "," + watch.getEmails());
+				}
+				questionNode.setProperty("exo:emailWatching", emails.toArray(new String[]{})) ;
+				questionNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{})) ;
+				questionNode.save() ;
+	  	} else {
+	  		questionNode.addMixin("exo:faqWatching");
+	  		questionNode.setProperty("exo:emailWatching", new String[]{watch.getEmails()}) ;
+	  		questionNode.setProperty("exo:userWatching", new String[]{watch.getUser()}) ;
+	  		questionNode.save() ;
+	  	}
+	  // update for watch question
+  	} else {
+  		List<String> emails = new ArrayList<String>() ;
   		List<String> listUsers = new ArrayList<String>() ;
-			Value[] values = questionNode.getProperty("exo:emailWatching").getValues() ;
-			Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
-			for(Value vl : values) {
-					vls.add(vl.getString()) ;
+			for(Value vl : questionNode.getProperty("exo:emailWatching").getValues()) {
+					emails.add(vl.getString()) ;
 			}
-			for(Value user : users) {
+			for(Value user : questionNode.getProperty("exo:userWatching").getValues()) {
 				listUsers.add(user.getString()) ;
 			}
-			vls.add(watch.getEmails()) ;
-			listUsers.add(watch.getUser());
-			questionNode.setProperty("exo:emailWatching", vls.toArray(new String[]{})) ;
+			int pos = listUsers.indexOf(watch.getUser());
+			emails.set(pos, watch.getEmails());
+			questionNode.setProperty("exo:emailWatching", emails.toArray(new String[]{})) ;
 			questionNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{})) ;
 			questionNode.save() ;
-  	} else {
-  		questionNode.addMixin("exo:faqWatching");
-  		questionNode.setProperty("exo:emailWatching", new String[]{watch.getEmails()}) ;
-  		questionNode.setProperty("exo:userWatching", new String[]{watch.getUser()}) ;
-  		questionNode.save() ;
   	}
   	questionHome.save();
   }
   
-  public List<Watch> getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
+  public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
   	Node questionHome = getQuestionHome(sProvider, null);
-  	Node questionNode = questionHome.getNode(questionId);
-  	List<Watch> listWatch = new ArrayList<Watch>() ;
-  	if(questionNode.hasProperty("exo:userWatching")){
-  		Value[] emails = questionNode.getProperty("exo:emailWatching").getValues() ;
-  		Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
-  		if(emails != null && emails.length > 0) {
-  			int i = 0 ;
-  			for(Value email: emails) {
-  				Watch watch = new Watch() ;
-  				watch.setEmails(email.getString()) ;
-  				watch.setUser(users[i].getString());
-  				listWatch.add(watch) ;
-  				i++ ;
-  			}
-  			Collections.sort(listWatch, new Utils.NameComparator());
-  		}
-  	}
-  	return listWatch;
+  	StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+												append("//element(*,exo:faqQuestion)[fn:name() = '").append(questionId).append("']");
+		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    QuestionPageList pageList = new QuestionPageList(result.getNodes(), 5, queryString.toString(), true) ;
+    return pageList;
   }
   
   public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception {

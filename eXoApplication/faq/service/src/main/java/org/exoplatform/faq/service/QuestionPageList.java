@@ -55,28 +55,36 @@ public class QuestionPageList extends JCRPageList {
   /** The is not yet answered. */
   private boolean isNotYetAnswered = false;
   
+  /** The list questions_. */
   private List<Question> listQuestions_ = null;
   
+  /** The list faq form search s_. */
   private List<FAQFormSearch> listFAQFormSearchS_ = null;
   
+  /** The list watchs_. */
   private List<Watch> listWatchs_ = null;
   
+  /** The list categories_. */
   private List<Category> listCategories_ = null;
   
+  /** The question query_. */
   private String questionQuery_ = new String();
   
+  /** The node category_. */
   private Node nodeCategory_ = null;
   
+  /** The list object_. */
   private List<Object> listObject_ = new ArrayList<Object>();
   
+  /** The faq setting_. */
   private FAQSetting faqSetting_ = null;
   
   /**
    * Sets the not yet answered. Set parameter is <code>true</code> if want get questions are not
    * yet answered opposite set is <code>false</code> or don't do (default value is <code>false</code>)
    * 
-   * @param isNotYetAnswered  the new not yet answered, is <code>true</code> if want get 
-   *                          questoins not yet answered and is <code>false</code> if opposite
+   * @param isNotYetAnswered  the new not yet answered, is <code>true</code> if want get
+   * questoins not yet answered and is <code>false</code> if opposite
    */
   public void setNotYetAnswered(boolean isNotYetAnswered) {
     this.isNotYetAnswered = isNotYetAnswered;
@@ -85,11 +93,10 @@ public class QuestionPageList extends JCRPageList {
   
   /**
    * get total questions are not yet ansewered. The first, get all questions in faq system
-   * then each questions check if property <code>response</code> in default language 
-   * is <code>null</code> then put this question into the <code>List</code> 
-   * else get all children nodes of this question (if it have) and check if one of them is 
+   * then each questions check if property <code>response</code> in default language
+   * is <code>null</code> then put this question into the <code>List</code>
+   * else get all children nodes of this question (if it have) and check if one of them is
    * not yet ansewred then put this question into the <code>List</code>
-   * 
    */
   private void setTotalQuestion(){
   	listQuestions_ = new ArrayList<Question>();
@@ -136,8 +143,7 @@ public class QuestionPageList extends JCRPageList {
    * @param pageSize    this param is used to set number of question per page
    * @param value       query string is used to get question node
    * @param isQuery     is <code>true</code> is param value is query string
-   *                    and is <code>false</code> if opposite
-   * @param sort        how to sort all questions are getted
+   * and is <code>false</code> if opposite
    * 
    * @throws Exception  if repository occur exception
    */
@@ -146,33 +152,74 @@ public class QuestionPageList extends JCRPageList {
     iter_ = iter ;
     value_ = value ;
     isQuery_ = isQuery ;
-    setAvailablePage(iter.getSize()) ;    
+    setAvailablePage(iter.getSize()) ;   
   }
   
+  /**
+   * Instantiates a new question page list.
+   * 
+   * @param faqFormSearchs the faq form searchs
+   * @param pageSize the page size
+   * 
+   * @throws Exception the exception
+   */
   public QuestionPageList(List<FAQFormSearch> faqFormSearchs, long pageSize) throws Exception {
   	super(pageSize) ;
   	this.listFAQFormSearchS_ = faqFormSearchs;
   	setAvailablePage(faqFormSearchs.size()) ;    
   }
   
+  /**
+   * Instantiates a new question page list.
+   * 
+   * @param listWatch the list watch
+   * @param page the page
+   * 
+   * @throws Exception the exception
+   */
   public QuestionPageList(List<Watch> listWatch, double page) throws Exception {
   	super(10) ;
   	this.listWatchs_ = listWatch;
   	setAvailablePage(listWatch.size()) ;    
   }
   
+  /**
+   * Instantiates a new question page list.
+   * 
+   * @param listCategories the list categories
+   * 
+   * @throws Exception the exception
+   */
   public QuestionPageList(List<Category> listCategories) throws Exception {
   	super(10) ;
   	this.listCategories_ = listCategories;
   	setAvailablePage(listCategories.size()) ;    
   }
   
+  /**
+   * Instantiates a new question page list.
+   * 
+   * @param listQuestions the list questions
+   * @param size the size
+   * 
+   * @throws Exception the exception
+   */
   public QuestionPageList(List<Question> listQuestions, int size) throws Exception{
   	super(10) ;
   	this.listQuestions_ = listQuestions;
   	setAvailablePage(size) ;    
   }
   
+  /**
+   * Instantiates a new question page list.
+   * 
+   * @param categoryNode the category node
+   * @param quesQuerry the ques querry
+   * @param listObject the list object
+   * @param setting the setting
+   * 
+   * @throws Exception the exception
+   */
   public QuestionPageList(Node categoryNode, String quesQuerry, List<Object> listObject, FAQSetting setting) throws Exception{
   	super(10) ;
   	this.questionQuery_ = quesQuerry;
@@ -185,11 +232,14 @@ public class QuestionPageList extends JCRPageList {
   /**
    * Get questions to view in page. Base on total questions, number of question per page,
    * current page, this function get right questions. For example: have 100 questions,
-   * view 10 quesitons per page, and current page is 1, this function will get questions 
+   * view 10 questions per page, and current page is 1, this function will get questions
    * form first question to tenth question and put them into a list which is viewed.
    * 
    * @param username  the name of current user
    * @param page      number of current page
+   * 
+   * @throws Exception the exception
+   * 
    * @see             org.exoplatform.faq.service.JCRPageList#populateCurrentPage(long, java.lang.String)
    */
   protected void populateCurrentPage(long page, String username) throws Exception  {
@@ -245,21 +295,39 @@ public class QuestionPageList extends JCRPageList {
     iter_ = null ;    
   }
   
+  /* (non-Javadoc)
+   * @see org.exoplatform.faq.service.JCRPageList#populateCurrentPageWatch(long, java.lang.String)
+   */
   @Override
   protected void populateCurrentPageWatch(long page, String username) throws Exception {
-	  long pageSize = getPageSize();
-	  long position = 0;
-	  if(page == 1) position = 0;
-	  else {
-	  	position = (page - 1) * pageSize;
-	  }
-	  pageSize *= page ;
-	  currentListWatch_ = new ArrayList<Watch>();
-	  for(int i = (int)position; i < pageSize && i < this.listWatchs_.size(); i ++){
-	  	currentListWatch_.add(listWatchs_.get(i));
-	  }
+  	if(iter_ == null || !iter_.hasNext()) {
+      Session session = getJCRSession() ;
+      QueryManager qm = session.getWorkspace().getQueryManager() ;
+      Query query = qm.createQuery(value_, Query.XPATH);
+      QueryResult result = query.execute();
+      iter_ = result.getNodes();
+      session.logout() ;
+    }
+    long pageSize = getPageSize() ;
+    long position = 0 ;
+    if(page <= 1) position = 0;
+    else {
+      position = (page - 1) * pageSize ;
+    }
+    currentListWatch_ = new ArrayList<Watch>();
+    Node watchNode = null;
+    int count = 0;
+    while (iter_.hasNext()) {
+    	count ++;
+      watchNode = iter_.nextNode();
+      currentListWatch_.addAll(getWatchs(watchNode, false, (int)position, (int)pageSize));
+    }
+    iter_ = null ;  
   }
   
+  /* (non-Javadoc)
+   * @see org.exoplatform.faq.service.JCRPageList#populateCurrentPageResultSearch(long, java.lang.String)
+   */
   @Override
   protected void populateCurrentPageResultSearch(long page, String username) throws Exception {
 	  long pageSize = getPageSize();
@@ -275,6 +343,9 @@ public class QuestionPageList extends JCRPageList {
 	  }
   }
   
+  /* (non-Javadoc)
+   * @see org.exoplatform.faq.service.JCRPageList#populateCurrentPageCategoriesSearch(long, java.lang.String)
+   */
   @Override
   protected void populateCurrentPageCategoriesSearch(long page, String username) throws Exception {
   	long pageSize = getPageSize();
@@ -290,6 +361,9 @@ public class QuestionPageList extends JCRPageList {
 	  }
   }
 
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.JCRPageList#populateCurrentPageQuestionsSearch(long, java.lang.String)
+	 */
 	@Override
   protected void populateCurrentPageQuestionsSearch(long page, String username) throws Exception {
 		long pageSize = getPageSize();
@@ -305,6 +379,9 @@ public class QuestionPageList extends JCRPageList {
 	  }
   }
 	
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.JCRPageList#populateCurrentPageCategoriesQuestionsSearch(long, java.lang.String)
+	 */
 	@Override
   protected void populateCurrentPageCategoriesQuestionsSearch(long page, String username) throws Exception {
 		String idSearch = getObjectRepare_();
@@ -383,9 +460,10 @@ public class QuestionPageList extends JCRPageList {
     Question question = new Question() ;
     question.setId(questionNode.getName()) ;
     if(questionNode.hasProperty("exo:language")) question.setLanguage(questionNode.getProperty("exo:language").getString()) ;
-    if(questionNode.hasProperty("exo:name")) question.setQuestion(questionNode.getProperty("exo:name").getString()) ;
+    if(questionNode.hasProperty("exo:name")) question.setDetail(questionNode.getProperty("exo:name").getString()) ;
     if(questionNode.hasProperty("exo:author")) question.setAuthor(questionNode.getProperty("exo:author").getString()) ;
     if(questionNode.hasProperty("exo:email")) question.setEmail(questionNode.getProperty("exo:email").getString()) ;
+    if(questionNode.hasProperty("exo:title")) question.setQuestion(questionNode.getProperty("exo:title").getString()) ;
     if(questionNode.hasProperty("exo:createdDate")) question.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
     if(questionNode.hasProperty("exo:categoryId")) question.setCategoryId(questionNode.getProperty("exo:categoryId").getString()) ;
     if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
@@ -434,6 +512,15 @@ public class QuestionPageList extends JCRPageList {
     return question ;
   }
   
+  /**
+   * Gets the category.
+   * 
+   * @param categoryNode the category node
+   * 
+   * @return the category
+   * 
+   * @throws Exception the exception
+   */
   private Category getCategory(Node categoryNode) throws Exception {
   	Category cat = new Category() ;
   	cat.setId(categoryNode.getName()) ;
@@ -443,6 +530,32 @@ public class QuestionPageList extends JCRPageList {
   	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
   	if(categoryNode.hasProperty("exo:isModerateQuestions")) cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
   	return cat;
+  }
+  
+  private List<Watch> getWatchs(Node watchNode, boolean isGetAll, int start, int max) throws Exception {
+  	Watch watch = new Watch();
+  	List<Watch> listWatches = new ArrayList<Watch>();
+  	String[] userWatch = null;
+		String[] emails = null;
+		String[] RSS = null;
+  	if(watchNode.hasProperty("exo:emailWatching")) emails = ValuesToStrings(watchNode.getProperty("exo:emailWatching").getValues());
+  	if(watchNode.hasProperty("exo:userWatching")) userWatch = ValuesToStrings(watchNode.getProperty("exo:userWatching").getValues());
+  	if(watchNode.hasProperty("exo:rssWatching")) RSS = ValuesToStrings(watchNode.getProperty("exo:rssWatching").getValues());
+  	if(userWatch != null)
+  		if(isGetAll) {
+  			start = 0;
+  			max = userWatch.length;
+  		} else {
+  			max += start;
+  			setAvailablePage(userWatch.length) ;
+  		}
+	  	for(int i = start; i < max && i < userWatch.length; i ++){
+	  		watch = new Watch();
+	  		watch.setEmails(emails[i]);
+	  		watch.setUser(userWatch[i]);
+	  		listWatches.add(watch);
+	  	}
+  	return listWatches;
   }
   
   /**
@@ -465,6 +578,15 @@ public class QuestionPageList extends JCRPageList {
 		return Str;
   }
   
+  /**
+   * Values to date.
+   * 
+   * @param Val the val
+   * 
+   * @return the date[]
+   * 
+   * @throws Exception the exception
+   */
   private Date[] ValuesToDate(Value[] Val) throws Exception {
   	if(Val.length < 1) return new Date[]{} ;
   	Date[] dates = new Date[Val.length] ;
@@ -476,12 +598,13 @@ public class QuestionPageList extends JCRPageList {
   
   /**
    * Get all nodes is stored in a NodeIterator and sort them by FAQSetting,
-   * with each node, system get all values of this node and set them into 
+   * with each node, system get all values of this node and set them into
    * a question object, an this question object is push into a list questions.
    * 
    * @return              list questions
    * 
    * @throws  Exception   if query or repository or path of node is occur Exception
+   * @throws Exception the exception
    * 
    * @see                 Question
    * @see                 List
@@ -509,6 +632,30 @@ public class QuestionPageList extends JCRPageList {
     }
     return questions; 
   }
+	
+	public List<Watch> getAllWatch() throws Exception {
+		List<Watch> listWatches = new ArrayList<Watch>();
+		if(iter_ == null) {
+      Session session = getJCRSession() ;
+      if(isQuery_) {
+        QueryManager qm = session.getWorkspace().getQueryManager() ;
+        Query query = qm.createQuery(value_, Query.XPATH);
+        QueryResult result = query.execute();
+        iter_ = result.getNodes();
+      } else {
+        Node node = (Node)session.getItem(value_) ;
+        iter_ = node.getNodes() ;
+      }
+      iter_ = null;
+      session.logout() ;
+    }
+		Node watchNode = null;
+    while (iter_.hasNext()) {
+      watchNode = iter_.nextNode();
+      listWatches.addAll(getWatchs(watchNode, true, 0, 0));
+    }
+		return listWatches;
+	}
 	
   /* (non-Javadoc)
    * @see org.exoplatform.faq.service.JCRPageList#setList(java.util.List)

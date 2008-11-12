@@ -22,8 +22,9 @@ import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 
+// TODO: Auto-generated Javadoc
 /**
- * Data of question node is stored in question object which is used in processings: 
+ * Data of question node is stored in question object which is used in processings:
  * add new question, edit question and reponse question.
  * 
  * @author : Hung Nguyen Quang
@@ -37,8 +38,10 @@ public class Question {
   /** The language. */
   private String language ;
   
+  private String question;
+  
   /** The question. */
-  private String question ;
+  private String detail ;
   
   /** The author. */
   private String author ;
@@ -70,26 +73,47 @@ public class Question {
   /** The date response. */
   private Date[] dateResponse ;
   
-  /** link to question */
+  /** link to question. */
   private String link = "";
   
   /** The list attachments. */
   private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
   
-  /** language of question which is not yet answer */
+  /** language of question which is not yet answer. */
   private String languagesNotYetAnswered = "";
   
+  /** The name attachs. */
   private String[] nameAttachs ;
   
+  /** The comments. */
   private String[] comments;
+  
+  /** The comment by. */
   private String[] commentBy;
+  
+  /** The date comment. */
   private Date[] dateComment;
   
+  /** The users vote. */
   private String[] usersVote;
+  
+  /** The mark vote. */
   private double markVote = 0;
   
+  /** The users watch. */
   private String[] usersWatch = null;
+  
+  /** The emails watch. */
   private String[] emailsWatch = null;
+  
+  /** The users vote answer. */
+  private String[] usersVoteAnswer;
+  
+  /** The marks vote answer. */
+  private double[] marksVoteAnswer;
+  
+  /** The pos. */
+  private int pos[];
   
   /**
    * Class constructor specifying id of object is created.
@@ -117,14 +141,14 @@ public class Question {
    * 
    * @return  the content of question
    */
-  public String getQuestion() { return question ; }
+  public String getDetail() { return detail ; }
   
   /**
    * Set content for Question object.
    * 
    * @param name  the content of question which is wanted answer
    */
-  public void setQuestion(String name) { this.question = name ; }
+  public void setDetail(String name) { this.detail = name ; }
 
   /**
    * Set language for question, a language may be have multi languages but
@@ -321,93 +345,242 @@ public class Question {
   public void setResponseBy(String[] responseBy) { this.responseBy = responseBy; }
 
   /**
-   * Get list languages of question which are not yet answered
-   * @return	list languages
+   * Get list languages of question which are not yet answered.
+   * 
+   * @return list languages
    */
 	public String getLanguagesNotYetAnswered() {
   	return languagesNotYetAnswered;
   }
 
 	/**
-	 * Registers language is not yet answered
-	 * @param languagesNotYetAnswered
+	 * Registers language is not yet answered.
+	 * 
+	 * @param languagesNotYetAnswered the languages not yet answered
+	 * 
+	 * @return the question
 	 */
 	public Question setLanguagesNotYetAnswered(String languagesNotYetAnswered) {
   	this.languagesNotYetAnswered = languagesNotYetAnswered;
   	return this;
   }
 	
+	/**
+	 * Gets the name attachs.
+	 * 
+	 * @return the name attachs
+	 */
 	public String[] getNameAttachs() {return nameAttachs;}
+	
+	/**
+	 * Sets the name attachs.
+	 * 
+	 * @param nameAttachs the new name attachs
+	 */
 	public void setNameAttachs(String[] nameAttachs) { this.nameAttachs = nameAttachs;}
 	
 	/**
 	 * Get link to question, this link is used to send mail notify,
-	 * when user click in to this link, will be jump to FAQ and view this question 
+	 * when user click in to this link, will be jump to FAQ and view this question.
+	 * 
 	 * @return link to question
 	 */
 	public String getLink() {return link;}
 	
 	/**
 	 * Register link to question, this link is used to send mail notify,
-	 * when user click in to this link, will be jump to FAQ and view this question 
-	 * @param link
+	 * when user click in to this link, will be jump to FAQ and view this question.
+	 * 
+	 * @param link the link
 	 */
 	public void setLink(String link) { this.link = link;}
 
+	/**
+	 * Gets the comments.
+	 * 
+	 * @return the comments
+	 */
 	public String[] getComments() {
 		return comments;
 	}
 
+	/**
+	 * Sets the comments.
+	 * 
+	 * @param comments the new comments
+	 */
 	public void setComments(String[] comments) {
 		this.comments = comments;
 	}
 
+	/**
+	 * Gets the comment by.
+	 * 
+	 * @return the comment by
+	 */
 	public String[] getCommentBy() {
 		return commentBy;
 	}
 
+	/**
+	 * Sets the comment by.
+	 * 
+	 * @param commentBy the new comment by
+	 */
 	public void setCommentBy(String[] commentBy) {
 		this.commentBy = commentBy;
 	}
 
+	/**
+	 * Gets the date comment.
+	 * 
+	 * @return the date comment
+	 */
 	public Date[] getDateComment() {
 		return dateComment;
 	}
 
+	/**
+	 * Sets the date comment.
+	 * 
+	 * @param dateComment the new date comment
+	 */
 	public void setDateComment(Date[] dateComment) {
 		this.dateComment = dateComment;
 	}
 
+	/**
+	 * Gets the users vote.
+	 * 
+	 * @return the users vote
+	 */
 	public String[] getUsersVote() {
 		return usersVote;
 	}
 
+	/**
+	 * Sets the users vote.
+	 * 
+	 * @param usersVote the new users vote
+	 */
 	public void setUsersVote(String[] usersVote) {
 		this.usersVote = usersVote;
 	}
 
+	/**
+	 * Gets the mark vote.
+	 * 
+	 * @return the mark vote
+	 */
 	public double getMarkVote() {
 		return markVote;
 	}
 
+	/**
+	 * Sets the mark vote.
+	 * 
+	 * @param markVote the new mark vote
+	 */
 	public void setMarkVote(double markVote) {
 		this.markVote = markVote;
 	}
 
+	/**
+	 * Gets the users watch.
+	 * 
+	 * @return the users watch
+	 */
 	public String[] getUsersWatch() {
 		return usersWatch;
 	}
 
+	/**
+	 * Sets the users watch.
+	 * 
+	 * @param usersWatch the new users watch
+	 */
 	public void setUsersWatch(String[] usersWatch) {
 		this.usersWatch = usersWatch;
 	}
 
+	/**
+	 * Gets the emails watch.
+	 * 
+	 * @return the emails watch
+	 */
 	public String[] getEmailsWatch() {
 		return emailsWatch;
 	}
 
+	/**
+	 * Sets the emails watch.
+	 * 
+	 * @param emailsWatch the new emails watch
+	 */
 	public void setEmailsWatch(String[] emailsWatch) {
 		this.emailsWatch = emailsWatch;
+	}
+
+	/**
+	 * Gets the users vote answer.
+	 * 
+	 * @return the users vote answer
+	 */
+	public String[] getUsersVoteAnswer() {
+		return usersVoteAnswer;
+	}
+
+	/**
+	 * Sets the users vote answer.
+	 * 
+	 * @param usersVoteAnswer the new users vote answer
+	 */
+	public void setUsersVoteAnswer(String[] usersVoteAnswer) {
+		this.usersVoteAnswer = usersVoteAnswer;
+	}
+
+	/**
+	 * Gets the marks vote answer.
+	 * 
+	 * @return the marks vote answer
+	 */
+	public double[] getMarksVoteAnswer() {
+		return marksVoteAnswer;
+	}
+
+	/**
+	 * Sets the marks vote answer.
+	 * 
+	 * @param marksVoteAnswer the new marks vote answer
+	 */
+	public void setMarksVoteAnswer(double[] marksVoteAnswer) {
+		this.marksVoteAnswer = marksVoteAnswer;
+	}
+
+	/**
+	 * Gets the pos.
+	 * 
+	 * @return the pos
+	 */
+	public int[] getPos() {
+		return pos;
+	}
+
+	/**
+	 * Sets the pos.
+	 * 
+	 * @param pos the new pos
+	 */
+	public void setPos(int[] pos) {
+		this.pos = pos;
+	}
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String title) {
+		this.question = title;
 	}
 }
 

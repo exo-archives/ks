@@ -151,7 +151,7 @@ public class TestFAQService extends FAQServiceTestCase{
     question.setLanguage("English") ;
     question.setAuthor("Nguyen van truong") ;
     question.setEmail("truongtb1984@gmail.com") ;
-    question.setQuestion("Add new question 1") ;
+    question.setDetail("Add new question 1") ;
     question.setCreatedDate(new Date()) ;
     question.setAttachMent(listAttachments) ;
 		return question ;
@@ -167,10 +167,10 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals(listQuestion.size(), 1) ; 
 		
 //		update question 1
-		question1.setQuestion("Nguyen van truong test question 11111111 ?") ;
+		question1.setDetail("Nguyen van truong test question 11111111 ?") ;
 		faqService_.saveQuestion(question1, false, sProvider_,faqSetting_) ;
 		assertNotNull(question1) ;
-		assertEquals("Nguyen van truong test question 11111111 ?", question1.getQuestion());
+		assertEquals("Nguyen van truong test question 11111111 ?", question1.getDetail());
 		
 //		Add question 2
 		Question question2 = createQuestion() ;
@@ -182,7 +182,7 @@ public class TestFAQService extends FAQServiceTestCase{
     question2.setLanguage("English") ;
     question2.setAuthor("Mai Van Ha") ;
     question2.setEmail("truong_tb1984@yahoo.com") ;
-    question2.setQuestion("Nguyen van truong test question 2222222 ?") ;
+    question2.setDetail("Nguyen van truong test question 2222222 ?") ;
     question2.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question2, true, sProvider_,faqSetting_) ;
     
@@ -202,7 +202,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question3.setLanguage("English") ;
 		question3.setAuthor("Phung Hai Nam") ;
 		question3.setEmail("phunghainam@yahoo.com") ;
-		question3.setQuestion("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
+		question3.setDetail("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
 		question3.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question3, true, sProvider_,faqSetting_) ;
 		
@@ -216,7 +216,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question4.setLanguage("English") ;
 		question4.setAuthor("Pham Dinh Tan") ;
 		question4.setEmail("phamdinhtan@yahoo.com") ;
-		question4.setQuestion("Nguyen van truong test question nguyenvantruong ?") ;
+		question4.setDetail("Nguyen van truong test question nguyenvantruong ?") ;
 		question4.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question4, true, sProvider_,faqSetting_) ;
     
@@ -230,7 +230,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question5.setLanguage("English") ;
 		question5.setAuthor("Ly Dinh Quang") ;
 		question5.setEmail("lydinhquang@yahoo.com") ;
-		question5.setQuestion("Nguyen van truong test question 55555555555 ?") ;
+		question5.setDetail("Nguyen van truong test question 55555555555 ?") ;
 		question5.setCreatedDate(new Date()) ;
     faqService_.saveQuestion(question5, true, sProvider_,faqSetting_) ;
     

@@ -82,9 +82,9 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   public static final String AUTHOR = "Author" ;
   public static final String EMAIL_ADDRESS = "EmailAddress" ;
+  public static final String QUESTION_CONTENT = "QuestionTitle";
   public static final String ALL_LANGUAGES = "AllLanguages";
-  public static final String WYSIWYG_INPUT = "Question" ;
-  public static final String LIST_WYSIWYG_INPUT = "ListQuestion" ;
+  public static final String QUESTION_DETAIL = "Question" ;
   public static final String ATTACHMENTS = "Attachment" ;
   public static final String FILE_ATTACHMENTS = "FileAttach" ;
   public static final String REMOVE_FILE_ATTACH = "RemoveFile" ;
@@ -93,8 +93,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   
   private UIFormStringInput inputAuthor = null ;
   private UIFormStringInput inputEmailAddress = null ;
+  private UIFormStringInput inputQuestionContent = null ;
+  private UIFormTextAreaInput inputQuestionDetail = null ;
   private UIFormSelectBox selectLanguage = null;
-  private static UIFormInputWithActions listFormWYSIWYGInput = null ;
   private UIFormCheckBoxInput<Boolean> inputIsApproved = null ;
   private UIFormCheckBoxInput<Boolean> inputIsActivated = null ;
   private UIFormInputWithActions inputAttachcment = null ;
@@ -105,6 +106,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private Map<String, List<ActionData>> actionField_ ;
   
   private List<SelectItemOption<String>> listSystemLanguages = new ArrayList<SelectItemOption<String>>() ;
+  private Map<String, String> listQuestionDetail = new HashMap<String, String>() ;
   private Map<String, String> listQuestionContent = new HashMap<String, String>() ;
   private List<String> listLanguages = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
@@ -130,6 +132,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	public void setFAQSetting(FAQSetting faqSetting) {this.faqSetting_ = faqSetting;}
   @SuppressWarnings("static-access")
   public UIQuestionForm() throws Exception {
+  	listQuestionDetail.clear();
   	listQuestionContent.clear();
     isChildOfManager = false ;
     listLanguages.clear() ;
@@ -171,6 +174,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     }
     inputAuthor = new UIFormStringInput(AUTHOR, AUTHOR, author_) ;
     inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_) ;
+    inputQuestionContent = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null);
     selectLanguage = new UIFormSelectBox(ALL_LANGUAGES, ALL_LANGUAGES, listSystemLanguages);
     if(defaultLanguage_ != null || defaultLanguage_.trim().length() > 0) selectLanguage.setSelectedValues(new String[]{defaultLanguage_});
     selectLanguage.setOnChange("SelectLanguage");
@@ -184,22 +188,21 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       e.printStackTrace() ;
     }
     
-    listFormWYSIWYGInput = new UIFormInputWithActions(LIST_WYSIWYG_INPUT) ;
-    listFormWYSIWYGInput.addChild(selectLanguage);
-    UIFormTextAreaInput textAreaInput = new UIFormTextAreaInput(WYSIWYG_INPUT, WYSIWYG_INPUT, null) ;
-    textAreaInput.setColumns(80) ;
+    inputQuestionDetail = new UIFormTextAreaInput(QUESTION_DETAIL, QUESTION_DETAIL, null) ;
+    inputQuestionDetail.setColumns(80) ;
     if(!questionContents_.isEmpty()){
       String input = questionContents_.get(0) ;
       if(input!= null && input.indexOf("<p>") >=0 && input.indexOf("</p>") >= 0) {
         input = input.replace("<p>", "") ;
         input = input.substring(0, input.lastIndexOf("</p>") - 1) ;
       }
-      textAreaInput.setValue(input) ;
+      inputQuestionDetail.setValue(input) ;
     }
-    listFormWYSIWYGInput.addUIFormInput(textAreaInput );
     addChild(inputAuthor) ;
     addChild(inputEmailAddress) ;
-    addChild(listFormWYSIWYGInput) ;
+    addChild(selectLanguage);
+    addChild(inputQuestionContent);
+    addChild(inputQuestionDetail);
     if(questionId_ != null && questionId_.trim().length() > 0) {
       addChild(inputIsApproved.setChecked(isApproved_)) ;
       addChild(inputIsActivated.setChecked(isActivated_)) ;
@@ -219,7 +222,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     isChildOfManager = isChild ;
     this.removeChildById(AUTHOR);
     this.removeChildById(EMAIL_ADDRESS);
-    this.removeChildById(LIST_WYSIWYG_INPUT);
+    this.removeChildById(QUESTION_CONTENT);
+    this.removeChildById(QUESTION_DETAIL);
     this.removeChildById(ATTACHMENTS);
     this.removeChildById(IS_APPROVED) ;
     this.removeChildById(IS_ACTIVATED) ;
@@ -238,10 +242,12 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       lastLanguage_ = defaultLanguage_;
       listLanguages.clear() ;
       listLanguages.add(defaultLanguage_) ;
+      listQuestionDetail.put(question_.getLanguage(), question_.getDetail());
       listQuestionContent.put(question_.getLanguage(), question_.getQuestion());
       questionLanguages = fAQService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider()) ;
       for(QuestionLanguage questionLanguage : questionLanguages) {
       	mapLanguageNode_.put(questionLanguage.getLanguage(), questionLanguage);
+      	listQuestionDetail.put(questionLanguage.getLanguage(), questionLanguage.getDetail());
       	listQuestionContent.put(questionLanguage.getLanguage(), questionLanguage.getQuestion());
         listLanguages.add(questionLanguage.getLanguage());
       }
@@ -252,8 +258,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       authorQ.setValue(question_.getAuthor()) ;
       UIFormStringInput emailQ = this.getChildById(EMAIL_ADDRESS);
       emailQ.setValue(question_.getEmail()) ;
-      
-      ((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(1)).setValue(question_.getQuestion()) ;
+      inputQuestionContent.setValue(question.getQuestion());
+      inputQuestionDetail.setValue(question_.getDetail()) ;
       /*int i = 1 ;
       for(QuestionLanguage questionLanguage : questionLanguages) {
         ((UIFormTextAreaInput)listFormWYSIWYGInput.getChild(i++)).setValue(questionLanguage.getQuestion()) ;
@@ -382,25 +388,35 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   static public class SelectLanguageActionListener extends EventListener<UIQuestionForm> {
     public void execute(Event<UIQuestionForm> event) throws Exception {
       UIQuestionForm questionForm = event.getSource() ;
-      UIFormInputWithActions formInputWithActions = questionForm.getChildById(LIST_WYSIWYG_INPUT);
-      String language = ((UIFormSelectBox)formInputWithActions.getChildById(ALL_LANGUAGES)).getValue() ;
-      UIFormTextAreaInput formTextAreaInput = formInputWithActions.getChildById(WYSIWYG_INPUT);
-      String question = formTextAreaInput.getValue();
+      String language = questionForm.selectLanguage.getValue() ;
+      String detail = questionForm.inputQuestionDetail.getValue();
+      String question = questionForm.inputQuestionContent.getValue();
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+      
+      if(!validatorDataInput.fckContentIsNotEmpty(detail)) detail = " ";
       if(validatorDataInput.fckContentIsNotEmpty(question)){
-      	if(questionForm.listQuestionContent.containsKey(questionForm.lastLanguage_)) 
+      	if(questionForm.listQuestionDetail.containsKey(questionForm.lastLanguage_)) {
+      		questionForm.listQuestionDetail.remove(questionForm.lastLanguage_);
       		questionForm.listQuestionContent.remove(questionForm.lastLanguage_);
+      	}
+      	questionForm.listQuestionDetail.put(questionForm.lastLanguage_, detail);
       	questionForm.listQuestionContent.put(questionForm.lastLanguage_, question);
       	if(!questionForm.listLanguages.contains(language)) questionForm.listLanguages.add(language);
       } else {
       	if(questionForm.listLanguages.contains(questionForm.lastLanguage_)){
       		questionForm.listLanguages.remove(questionForm.lastLanguage_);
+      		questionForm.listQuestionDetail.remove(questionForm.lastLanguage_);
       		questionForm.listQuestionContent.remove(questionForm.lastLanguage_);
       	}
       }
       questionForm.lastLanguage_ = language;
-      if(questionForm.listQuestionContent.containsKey(language)) formTextAreaInput.setValue(questionForm.listQuestionContent.get(language));
-      else formTextAreaInput.setValue("");
+      if(questionForm.listQuestionContent.containsKey(language)){
+      	questionForm.inputQuestionDetail.setValue(questionForm.listQuestionDetail.get(language));
+      	questionForm.inputQuestionContent.setValue(questionForm.listQuestionContent.get(language));
+      } else {
+      	questionForm.inputQuestionDetail.setValue("");
+      	questionForm.inputQuestionContent.setValue("");
+      }
       event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
     }
   }
@@ -408,9 +424,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   static public class DeleteLanguageActionListener extends EventListener<UIQuestionForm> {
   	public void execute(Event<UIQuestionForm> event) throws Exception {
   		UIQuestionForm questionForm = event.getSource() ;
-  		UIFormInputWithActions formInputWithActions = questionForm.getChildById(LIST_WYSIWYG_INPUT);
-  		UIFormTextAreaInput formTextAreaInput = formInputWithActions.getChildById(WYSIWYG_INPUT);
-  		formTextAreaInput.setValue("");
+  		questionForm.inputQuestionDetail.setValue("");
+  		questionForm.inputQuestionContent.setValue("");
   		event.getRequestContext().addUIComponentToUpdateByAjax(questionForm) ;
   	}
   }
@@ -425,8 +440,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       java.util.Date date = new java.util.Date();
       String dateStr = dateFormat.format(date) ;
       date = dateFormat.parse(dateStr) ;
-      String author = questionForm.getUIStringInput(AUTHOR).getValue() ;
-      String emailAddress = questionForm.getUIStringInput(EMAIL_ADDRESS).getValue() ;
+      String author = questionForm.inputAuthor.getValue() ;
+      String emailAddress = questionForm.inputEmailAddress.getValue() ;
+      String questionContent = questionForm.inputQuestionContent.getValue();
       if(author == null || author.trim().length() < 1) {
       	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
       	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.author-is-null", null, ApplicationMessage.WARNING)) ;
@@ -440,18 +456,26 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         return ;
       }
       
+      if(questionContent == null || questionContent.trim().length() < 1) {
+      	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+      	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-null", null, ApplicationMessage.WARNING)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      	return ;
+      }
+      
       MultiLanguages multiLanguages = new MultiLanguages() ;
       
-      UIFormInputWithActions formInputWithActions = questionForm.getChildById(LIST_WYSIWYG_INPUT);
-      UIFormTextAreaInput formTextAreaInput = formInputWithActions.getChildById(WYSIWYG_INPUT);
-      String question = formTextAreaInput.getValue();
+      String questionDetail = questionForm.inputQuestionDetail.getValue();
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
-      if(validatorDataInput.fckContentIsNotEmpty(question)){
-      	questionForm.listQuestionContent.put(questionForm.lastLanguage_, question);
+      if(!validatorDataInput.fckContentIsNotEmpty(questionDetail)) questionDetail = " ";
+      if(validatorDataInput.fckContentIsNotEmpty(questionContent)){
+      	questionForm.listQuestionDetail.put(questionForm.lastLanguage_, questionDetail);
+      	questionForm.listQuestionContent.put(questionForm.lastLanguage_, questionContent);
       	if(!questionForm.listLanguages.contains(questionForm.lastLanguage_)) questionForm.listLanguages.add(questionForm.lastLanguage_);
       } else {
       	if(questionForm.listLanguages.contains(questionForm.lastLanguage_)){
       		questionForm.listLanguages.remove(questionForm.lastLanguage_);
+      		questionForm.listQuestionDetail.remove(questionForm.lastLanguage_);
       		questionForm.listQuestionContent.remove(questionForm.lastLanguage_);
       	}
       }
@@ -489,6 +513,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
           return;
         }
+        question_.setCreatedDate(date) ;
         question_.setApproved(questionIsApproved) ;
         question_.setDateResponse(null) ;
       } else {
@@ -498,7 +523,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       question_.setLanguage(questionForm.getDefaultLanguage()) ;
       question_.setAuthor(author) ;
       question_.setEmail(emailAddress) ;
+      question_.setQuestion(questionForm.inputQuestionContent.getValue());
       try{
+      	question_.setDetail(questionForm.listQuestionDetail.get(questionForm.defaultLanguage_).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
       	question_.setQuestion(questionForm.listQuestionContent.get(questionForm.defaultLanguage_).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
       } catch(Exception e){
       	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
@@ -506,7 +533,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ;
       }
-      question_.setCreatedDate(date) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;
       
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
@@ -538,10 +564,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) isNew = false;
         utils.getEmailSetting(questionForm.faqSetting_, isNew, false);
         if(!isNew) {
-        	if(question_ == null) System.out.println("---------->uiquestionform:quetion_ is null");
-        	if(FAQUtils.getSystemProvider() == null) System.out.println("---------->uiquestionform:FAQUtils.getSystemProvider() is null");
-        	if(questionForm.faqSetting_ == null) System.out.println("---------->uiquestionform:questionForm.faqSetting_ is null");
-        	if(question_.getDateResponse()== null) System.out.println("---------->uiquestionform:question_.getDateResponse() is null");
           questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider(), questionForm.faqSetting_) ;
           multiLanguages.removeLanguage(questionNode, questionForm.listLanguages) ;
           if(questionForm.listLanguages.size() > 1) {
@@ -553,6 +575,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           				questionLanguage = new QuestionLanguage();
           				questionLanguage.setLanguage(questionForm.listLanguages.get(i));
           			}
+          			questionLanguage.setDetail(questionForm.listQuestionDetail.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           			questionLanguage.setQuestion(questionForm.listQuestionContent.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           			multiLanguages.addLanguage(questionNode, questionLanguage) ;
           		}
@@ -567,6 +590,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           		QuestionLanguage questionLanguage = new QuestionLanguage() ;
           		for(int i = 1; i < questionForm.listLanguages.size() ; i ++) {
           			questionLanguage.setLanguage(questionForm.listLanguages.get(i)) ;
+          			questionLanguage.setDetail(questionForm.listQuestionDetail.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           			questionLanguage.setQuestion(questionForm.listQuestionContent.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           			multiLanguages.addLanguage(questionNode, questionLanguage) ;
           		}

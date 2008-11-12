@@ -35,7 +35,9 @@ public class QuestionLanguage {
   private String language = " " ;
   
   /** The question. */
-  private String question = " " ;
+  private String detail = " " ;
+  
+  private String question = " ";
   
   /** The response. */
   private String[] response = new String[]{" "} ;
@@ -88,14 +90,14 @@ public class QuestionLanguage {
    * 
    * @return  content of question in this language
    */
-  public String getQuestion() { return question ; }
+  public String getDetail() { return detail ; }
   
   /**
    * Registers question content for this language node.
    * 
    * @param q the content of question
    */
-  public void setQuestion(String q) { this.question = q ; }
+  public void setDetail(String q) { this.detail = q ; }
 
   /**
    * Gets the response of question in this Language node.
@@ -125,8 +127,15 @@ public class QuestionLanguage {
 	 */
 	public void setDateResponse(Date[] dateResponse) {
   	this.dateResponse = dateResponse;
-  }	
-  
+  }
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
 }
 
 

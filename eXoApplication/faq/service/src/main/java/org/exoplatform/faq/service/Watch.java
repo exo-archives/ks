@@ -7,6 +7,8 @@ public class Watch {
 	/** email of user which is use to get email of FAQ system */
 	private String emails ;
 	
+	private String RSS=" ";
+	
 	/**
 	 * get user name of user who added watch into question or category
 	 * @return user name of user
@@ -30,4 +32,12 @@ public class Watch {
 	 * @param emails
 	 */
 	public void setEmails(String emails) {this.emails = emails;}
+
+	public String getRSS() {
+		return RSS;
+	}
+
+	public void setRSS(String rss) {
+		RSS = rss;
+	}
 }

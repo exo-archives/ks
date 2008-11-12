@@ -13,6 +13,9 @@
   		<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>
+  		<propertyDefinition name="exo:title" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>
   		<propertyDefinition name="exo:author" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>
@@ -56,6 +59,12 @@
   			<valueConstraints/>
 	  	</propertyDefinition>
 	  	<propertyDefinition name="exo:markVote" requiredType="Double" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+	  	</propertyDefinition>
+  		<propertyDefinition name="exo:usersVoteAnswer" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+	  	</propertyDefinition>
+	  	<propertyDefinition name="exo:marksVoteAnswer" requiredType="Double" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
 	  	</propertyDefinition>
   		<propertyDefinition name="exo:nameAttachs" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">

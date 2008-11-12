@@ -1011,10 +1011,18 @@
 	white-space:normal; 
 }
 
+.UIFAQPortlet .UIQuestionForm #QuestionTitle{
+  width: 400px ;
+}
+
 /******************************  UIResponseQuestion  ***************************************/
 .UIFAQPortlet .UIResponseForm textarea {
 	font-size:11px;
 	height:150px;
+	width:530px;
+}
+
+.UIFAQPortlet .UIResponseForm #QuestionTitle {
 	width:530px;
 }
 
@@ -1026,13 +1034,6 @@
 	max-height: 400px;
 	overflow: auto;
 	_height: 400px;
-}
-
-/******************************  UIQuestinoManager  ***************************************/
-.UIFAQPortlet .ResponseForm textarea {
-	font-size:11px;
-	height:150px;
-	width:530px;
 }
 
 /******************************  UIQuestionsInfo  ***************************************/

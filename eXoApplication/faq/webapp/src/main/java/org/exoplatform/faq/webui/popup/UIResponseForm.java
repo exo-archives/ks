@@ -81,7 +81,8 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 )
 
 public class UIResponseForm extends UIForm implements UIPopupComponent {
-  private static final String QUESTION_CONTENT = "QuestionContent" ;
+	private static final String QUESTION_CONTENT = "QuestionTitle" ;
+  private static final String QUESTION_DETAIL = "QuestionContent" ;
   private static final String QUESTION_LANGUAGE = "Language" ;
   private static final String RESPONSE_CONTENT = "QuestionRespone" ;
   private static final String ATTATCH_MENTS = "QuestionAttach" ;
@@ -97,6 +98,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   
   // form input :
   private UIFormStringInput questionContent_ ;
+  private UIFormStringInput questionDetail_ ;
   private UIFormSelectBox questionLanguages_ ;
   private UIFormWYSIWYGInput responseQuestion_ ; 
   private UIFormInputWithActions inputAttachment_ ; 
@@ -133,8 +135,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	public void setFAQSetting(FAQSetting faqSetting) {this.faqSetting_= faqSetting;}
   public UIResponseForm() throws Exception {
     isChildren_ = false ;
-    questionContent_ = new UIFormTextAreaInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
+    questionContent_ = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
+    questionDetail_ = new UIFormTextAreaInput(QUESTION_DETAIL, QUESTION_DETAIL, null) ;
     responseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, null, null , true) ;
+    
     checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, false) ;
     isApproved_ = new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false) ;
     inputAttachment_ = new UIFormInputWithActions(ATTATCH_MENTS) ;
@@ -173,7 +177,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       QuestionLanguage questionLanguage = new QuestionLanguage() ;
       questionLanguage.setLanguage(question.getLanguage()) ;
-      questionLanguage.setQuestion(question.getQuestion()) ;
+      questionLanguage.setDetail(question.getDetail()) ;
       
       if(question.getAllResponses() != null && question.getAllResponses().length > 0) {
         questionLanguage.setResponse(question.getAllResponses()) ;
@@ -187,9 +191,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       for(QuestionLanguage language : listQuestionLanguage) {
         listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage())) ;
         if(language.getLanguage().equals(languageIsResponsed)) {
-          questionChanged_ = language.getQuestion() ;
-          questionContent_.setValue(language.getQuestion()) ;
-          labelContent_ = language.getQuestion();
+          questionChanged_ = language.getDetail() ;
+          questionDetail_.setValue(language.getDetail()) ;
+          questionContent_.setValue(language.getQuestion());
+          labelContent_ = language.getDetail();
           responseQuestion_.setValue(language.getResponse()[0]) ;
         }
       }
@@ -210,8 +215,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
     questionLanguages_.setSelectedValues(new String[]{languageIsResponsed}) ;
     questionLanguages_.setOnChange("ChangeQuestion") ;
+    questionContent_.setValue(question.getQuestion());
     
     addChild(questionContent_) ;
+    addChild(questionDetail_) ;
     addChild(questionLanguages_) ;
     addChild(responseQuestion_) ;
     addChild(isApproved_) ;
@@ -273,7 +280,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     this.setListIdQuesRela(Arrays.asList(relations)) ;
     if(relations != null && relations.length > 0)
       for(String relation : relations) {
-        listRelationQuestion.add(faqService.getQuestionById(relation, FAQUtils.getSystemProvider()).getQuestion()) ;
+        listRelationQuestion.add(faqService.getQuestionById(relation, FAQUtils.getSystemProvider()).getDetail()) ;
       }
   }
   public List<String> getListRelation() {
@@ -309,6 +316,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void setIsChildren(boolean isChildren) {
     this.isChildren_ = isChildren ;
     this.removeChildById(QUESTION_CONTENT) ; 
+    this.removeChildById(QUESTION_DETAIL) ; 
     this.removeChildById(QUESTION_LANGUAGE) ;
     this.removeChildById(RESPONSE_CONTENT) ; 
     this.removeChildById(ATTATCH_MENTS) ; 
@@ -339,7 +347,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
       UIResponseForm responseForm = event.getSource() ;
       
-      String questionContent = ((UIFormTextAreaInput)responseForm.getChildById(QUESTION_CONTENT)).getValue() ;
+      String questionContent = ((UIFormTextAreaInput)responseForm.getChildById(QUESTION_DETAIL)).getValue() ;
       if(questionContent == null || questionContent.trim().length() < 1) {
         UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.question-null", null, ApplicationMessage.WARNING)) ;
@@ -374,14 +382,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       
       if(question_.getLanguage().equals(responseForm.languageIsResponsed)) {
-        question_.setQuestion(questionContent) ;
+        question_.setDetail(questionContent) ;
         if(!responseForm.compareTowArraies(question_.getAllResponses(), responseForm.listResponse.toArray(new String[]{}))){
         	question_.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
         	question_.setResponses(responseForm.listResponse.toArray(new String[]{}));
         	question_.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
         }
       } else {
-        question_.setQuestion(responseForm.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+        question_.setDetail(responseForm.listQuestionLanguage.get(0).getDetail().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
         if(!responseForm.compareTowArraies(question_.getAllResponses(), responseForm.listQuestionLanguage.get(0).getResponse())){
         	question_.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
         	question_.setResponses(responseForm.listQuestionLanguage.get(0).getResponse()) ;
@@ -391,7 +399,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       
       for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(responseForm.languageIsResponsed) && !question_.getLanguage().equals(responseForm.languageIsResponsed)) {
-          questionLanguage.setQuestion(questionContent) ;
+          questionLanguage.setDetail(questionContent) ;
           if(questionLanguage.getResponse() == null || 
           		!responseForm.compareTowArraies(questionLanguage.getResponse(), responseForm.listResponse.toArray(new String[]{}))){
           	questionLanguage.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
@@ -401,6 +409,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           break;
         }
       }
+      // set title for question
+      question_.setQuestion(responseForm.questionContent_.getValue());
+      
       // set relateion of question:
       question_.setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
       
@@ -642,28 +653,29 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       UIFormSelectBox formSelectBox = responseForm.getChildById(QUESTION_LANGUAGE) ;
       String language = formSelectBox.getValue() ;
       if(responseForm.languageIsResponsed != null && language.equals(responseForm.languageIsResponsed)) return ;
-      UIFormWYSIWYGInput responseContent = responseForm.getChildById(RESPONSE_CONTENT) ;
-      UIFormTextAreaInput questionContent = responseForm.getChildById(QUESTION_CONTENT) ;
-      if(questionContent.getValue() == null || questionContent.getValue().trim().length() < 1) {
+      String responseContent = responseForm.responseQuestion_.getValue() ;
+      String questionDetail = responseForm.questionDetail_.getValue() ;
+      String questionContent = responseForm.questionContent_.getValue();
+      if(questionContent == null || questionContent.trim().length() < 1) {
         UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.question-null", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return ;
       }
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+      if(!validatorDataInput.fckContentIsNotEmpty(questionDetail)) questionDetail = " ";
       java.util.Date date = new java.util.Date();
       String user = FAQUtils.getCurrentUser();
       for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(responseForm.languageIsResponsed)) {
-          String content = responseContent.getValue();
-          if(content!= null && validatorDataInput.fckContentIsNotEmpty(content)) {
-          	if(!responseForm.listResponse.contains(content)){
+          if(responseContent!= null && validatorDataInput.fckContentIsNotEmpty(responseContent)) {
+          	if(!responseForm.listResponse.contains(responseContent)){
           		if(responseForm.listResponse.isEmpty()){
-          			responseForm.listResponse.add(content);
+          			responseForm.listResponse.add(responseContent);
           			responseForm.listDateResponse.add(date);
           			responseForm.listUserResponse.add(user);
           		} else {
-          			responseForm.listResponse.set(responseForm.posOfResponse, content);
+          			responseForm.listResponse.set(responseForm.posOfResponse, responseContent);
           			responseForm.listDateResponse.set(responseForm.posOfResponse, date);
           		}
           	}
@@ -690,19 +702,32 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
           		questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
         		}
           }
-          questionLanguage.setQuestion(questionContent.getValue().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          questionLanguage.setDetail(questionDetail.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          questionLanguage.setQuestion(questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           break ;
         }
       }
       for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
         if(questionLanguage.getLanguage().equals(language)) {
           responseForm.languageIsResponsed = language ;
-          questionContent.setValue(questionLanguage.getQuestion()) ;
-          responseForm.labelContent_ = questionLanguage.getQuestion();
-          responseContent.setValue(questionLanguage.getResponse()[0]) ;
+          responseForm.questionDetail_.setValue(questionLanguage.getDetail()) ;
+          responseForm.questionContent_.setValue(questionLanguage.getQuestion()) ;
+          responseForm.labelContent_ = questionLanguage.getDetail();
+          responseForm.responseQuestion_.setValue(questionLanguage.getResponse()[0]) ;
           responseForm.posOfResponse = 0;
+          
           responseForm.listResponse.clear();
+          responseForm.listDateResponse.clear();
+          responseForm.listUserResponse.clear();
+          
           responseForm.listResponse.addAll(Arrays.asList(questionLanguage.getResponse()));
+          if(responseForm.listResponse.get(0).trim().length() > 0){
+	          responseForm.listUserResponse.addAll(Arrays.asList(questionLanguage.getResponseBy()));
+	          responseForm.listDateResponse.addAll(Arrays.asList(questionLanguage.getDateResponse()));
+          } else {
+          	responseForm.listUserResponse.add(FAQUtils.getCurrentUser());
+          	responseForm.listDateResponse.add(date);
+          }
           break ;
         }
       }
