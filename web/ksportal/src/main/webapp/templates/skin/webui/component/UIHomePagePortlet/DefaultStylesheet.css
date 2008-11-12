@@ -357,19 +357,19 @@
 }
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
-	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left ;
+	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left bottom;
 	line-height:21px;
 	padding-left:2px;
 }
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab .RightTab {
-	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right ;
+	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right bottom;
 	line-height:21px;
 	padding-right:2px;
 }
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab .MiddleTab {
-	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x ;
+	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x bottom;
 	line-height:21px;
 }
 
@@ -380,19 +380,19 @@
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .LeftTab {
-	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left ;
+	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left bottom;
 	line-height:21px;
 	padding-left:2px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .RightTab {
-	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right ;
+	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right bottom;
 	line-height:21px;
 	padding-right:2px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .MiddleTab {
-	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x ;
+	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x bottom;
 	line-height:21px;
 }
 
