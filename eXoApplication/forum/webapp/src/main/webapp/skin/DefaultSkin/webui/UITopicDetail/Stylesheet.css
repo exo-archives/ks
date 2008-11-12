@@ -69,6 +69,7 @@
 .UITopicDetail .TablePost {
 	border-collapse: separate;
 	border: 1px solid #c4c4c4;
+	table-layout:fixed;
 }
 
 .UITopicDetail .MemberContainer {
@@ -246,17 +247,6 @@
 }
 
 /***************************************** Quote ****************************************/
-.UITopicDetail .PostViewContainer .QuoteContent {
-	padding: 10px;
-}
-
-.UITopicDetail .PostViewContainer .Classquote {
-	background: #ededf7;
-	border: 1px solid #d8d8d8;
-	padding: 6px 6px 6px 15px;
-	margin: 2px 0px;
-}
-
 .UIForumPortlet .UIRatingForm {
 	padding: 8px 10px;
 }

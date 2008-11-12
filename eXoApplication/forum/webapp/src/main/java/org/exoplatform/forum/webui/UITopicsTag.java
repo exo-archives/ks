@@ -54,11 +54,11 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		lifecycle = UIFormLifecycle.class,
 		template =	"app:/templates/forum/webui/UITopicsTag.gtmpl",
 		events = {
-				@EventConfig(listeners = UITopicsTag.OpenTopicActionListener.class ),
-				@EventConfig(listeners = UITopicsTag.EditTagActionListener.class ),
-				@EventConfig(listeners = UITopicsTag.OpenTopicsTagActionListener.class ),
-				@EventConfig(listeners = UITopicsTag.RemoveTopicActionListener.class ),
-				@EventConfig(listeners = UITopicsTag.RemoveTagActionListener.class ),
+				@EventConfig(listeners = UITopicsTag.OpenTopicActionListener.class),
+				@EventConfig(listeners = UITopicsTag.EditTagActionListener.class),
+				@EventConfig(listeners = UITopicsTag.OpenTopicsTagActionListener.class),
+				@EventConfig(listeners = UITopicsTag.RemoveTopicActionListener.class),
+				@EventConfig(listeners = UITopicsTag.RemoveTagActionListener.class),
 				@EventConfig(listeners = UITopicsTag.AddWatchingActionListener.class),
 				@EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class),
 				@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)

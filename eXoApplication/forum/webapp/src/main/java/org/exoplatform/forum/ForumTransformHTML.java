@@ -43,7 +43,7 @@ public class ForumTransformHTML {
 		// Lower Case bbc
 		String start, end;
 		String[] bbcs = new String[] { "B", "I", "HIGHLIGHT", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
-		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL" };
+		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL", "CODE" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
 			end = "[/" + bbc + "]";
@@ -71,8 +71,6 @@ public class ForumTransformHTML {
 		b = StringUtils.replace(b, "[/b]", "</b>");
 		b = StringUtils.replace(b, "[i]", "<i>");
 		b = StringUtils.replace(b, "[/i]", "</i>");
-		b = StringUtils.replace(b, "[CODE]", "<code>");
-		b = StringUtils.replace(b, "[/CODE]", "</code>");
 		b = StringUtils.replace(b, "[link]", "[url]");
 		b = StringUtils.replace(b, "[/link]", "[/url]");
 		b = StringUtils.replace(b, "&quot;", "\"");
@@ -311,25 +309,25 @@ public class ForumTransformHTML {
 				continue;
 			}
 		}
-
-		// while ((tagIndex = b.indexOf("[CODE]", lastIndex )) != -1) {
-		// lastIndex = tagIndex+1;
-		// try {
-		// int clsIndex = b.indexOf("[/CODE]", tagIndex);
-		// String text = b.substring(tagIndex + 7, clsIndex);
-		// String text_ = text.replaceAll("&lt;","<").replaceAll("&gt;",
-		// ">").replaceAll("&nbsp;", "&#32");
-		// buffer = new StringBuffer();
-		// buffer.append("<div>Code:</div><div class=\"Classquote\">") ;
-		// buffer.append("<div><xmp>").append(text_).append("</xmp></div></div>") ;
-		// b = StringUtils.replace(b, "[CODE]" + text + "[/CODE]",
-		// buffer.toString());
-		// } catch (Exception e) {
-		// System.out.println("Error in BBcodeSmall near char: " + tagIndex );
-		// e.printStackTrace();
-		// continue;
-		// }
-		// }
+		// Code
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[code]", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/code]", tagIndex);
+				String text = b.substring(tagIndex + 6, clsIndex);
+				String text_ = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&nbsp;", "&#32");
+				buffer = new StringBuffer();
+				buffer.append("<div>Code:</div><div class=\"ClassCode\">");
+				buffer.append("<pre>").append(text_).append("</pre></div>");
+				b = StringUtils.replace(b, "[code]" + text + "[/code]", buffer.toString());
+			} catch (Exception e) {
+				System.out.println("Error in BBcodeSmall near char: " + tagIndex);
+				e.printStackTrace();
+				continue;
+			}
+		}
 
 		// Goto
 		tagIndex = 0;
