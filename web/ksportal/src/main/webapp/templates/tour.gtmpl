@@ -1,3 +1,254 @@
-<h1>KS guided tour</h1>
-<h2>An overview of eXo Knowledge Suite</h2>
-<h2>...</h2>
+<div class="UIKSGuidedTour">
+	<div class="LeftKSGuidedTour">
+		<div class="Header"><span></span></div>
+		<div class="HightLineButton">
+			<div class="HightLineButtonL">
+				<div class="HightLineButtonR">
+					<div class="HightLineButtonC">
+						An overview of KS
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="NormalButton">
+			<div class="NormalButtonL">
+				<div class="NormalButtonR">
+					<div class="NormalButtonC">
+						Publish expertise
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="NormalButton">
+			<div class="NormalButtonL">
+				<div class="NormalButtonR">
+					<div class="NormalButtonC">
+						Fogre knowledge together
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="SignUpButton">
+			Sign up Now
+		</div>
+	</div>
+	<div class="RightKSGuidedTour">
+		<div class="KSGuidedTour1">
+			<div class="HeadTitle">
+				<div class="HeadTitleL">
+					<div class="HeadTitleR">
+						<div class="HeadTitleC">
+							Enterpriser Knowledge made easy
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="CheckTitleIcon">eXo KS intends help you to collect and organize your entreprise knowledge.</div>
+			<div class="CheckTitleIcon">This overview will show you some of the hilights. But there is nothing better than. <span style="color:#D74201;text-decoration:underline;">Trying yourself</span></div>
+			<div class="ShowImageKS">
+				<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+			</div>
+			<div class="TitleBar">
+				<div class="TitleBarTL">
+					<div class="TitleBarTR">
+						<div class="TitleBarTC"><span></span></div>
+					</div>
+				</div>
+				<div class="TitleBarML">
+					<div class="TitleBarMR">
+						<div class="TitleBarMC">
+							eXo KS composed of a forum and a FAQ application
+						</div>
+					</div>
+				</div>
+				<div class="TitleBarBL">
+					<div class="TitleBarBR">
+						<div class="TitleBarBC"><span></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--<div class="KSGuidedTour2">
+			<div class="HeadTitle">
+				<div class="HeadTitleL">
+					<div class="HeadTitleR">
+						<div class="HeadTitleC">
+							Best answers are in FAQs
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="CheckTitleIcon">eXo FAQ is simple antive application for generating Frequently Asked Questions.</div>
+			<div class="CheckTitleIcon">FAQs are a very valuable tool to cleanly expose state of the art knowledge inside the enterprise.<span style="color:#D74201;text-decoration:underline;">Trying yourself</span></div>
+			<table>
+				<tr>
+					<td>
+						<div class="ShowImageFAQ">
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+						</div>
+					</td>
+					<td>
+						<div class="TitleBar">
+							<div class="TitleBarTL">
+								<div class="TitleBarTR">
+									<div class="TitleBarTC"><span></span></div>
+								</div>
+							</div>
+							<div class="TitleBarML">
+								<div class="TitleBarMR">
+									<div class="TitleBarMC">
+										<div style="width: 80%;margin: auto;">
+											Domain experts can moderate and oranize the knowledge
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="TitleBarBL">
+								<div class="TitleBarBR">
+									<div class="TitleBarBC"><span></span></div>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="TitleBar">
+							<div class="TitleBarTL">
+								<div class="TitleBarTR">
+									<div class="TitleBarTC"><span></span></div>
+								</div>
+							</div>
+							<div class="TitleBarML">
+								<div class="TitleBarMR">
+									<div class="TitleBarMC">
+										<div style="width: 80%;margin: auto;">
+											Search, send by email and notifications make knowledge easy to find
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="TitleBarBL">
+								<div class="TitleBarBR">
+									<div class="TitleBarBC"><span></span></div>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div class="ShowImageForum">
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>-->
+		<!--<div class="KSGuidedTour3">
+			<div class="HeadTitle">
+				<div class="HeadTitleL">
+					<div class="HeadTitleR">
+						<div class="HeadTitleC">
+							Improve by exchange
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="CheckTitleIcon">eXo Forum is a full featureed message boards application.</div>
+			<div class="CheckTitleIcon">Support, feedback, brainstorming. There are so many possiblities to imporove all together!.<span style="color:#D74201;text-decoration:underline;">Trying yourself</span></div>
+			<table>
+				<tr>
+					<td>
+						<div class="H1">
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+						</div>
+					</td>
+					<td>
+						<div class="TitleBar">
+							<div class="TitleBarTL">
+								<div class="TitleBarTR">
+									<div class="TitleBarTC"><span></span></div>
+								</div>
+							</div>
+							<div class="TitleBarML">
+								<div class="TitleBarMR">
+									<div class="TitleBarMC">
+										<div style="width: 80%;margin: auto;">
+											It is easy to use with rich text editor, quick reply, preview and edit post
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="TitleBarBL">
+								<div class="TitleBarBR">
+									<div class="TitleBarBC"><span></span></div>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="TitleBar">
+							<div class="TitleBarTL">
+								<div class="TitleBarTR">
+									<div class="TitleBarTC"><span></span></div>
+								</div>
+							</div>
+							<div class="TitleBarML">
+								<div class="TitleBarMR">
+									<div class="TitleBarMC">
+										<div style="width: 80%;margin: auto;">
+											Encourage involvement with integrated poll and thread ratings
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="TitleBarBL">
+								<div class="TitleBarBR">
+									<div class="TitleBarBC"><span></span></div>
+								</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div class="H2">
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="H3">
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+						</div>
+					</td>
+					<td>
+						<div class="TitleBar">
+							<div class="TitleBarTL">
+								<div class="TitleBarTR">
+									<div class="TitleBarTC"><span></span></div>
+								</div>
+							</div>
+							<div class="TitleBarML">
+								<div class="TitleBarMR">
+									<div class="TitleBarMC">
+										<div style="width: 80%;margin: auto;">
+											It is easy to find anything with categoryes, bookmarks, watch, search, 
+notifications and tags
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="TitleBarBL">
+								<div class="TitleBarBR">
+									<div class="TitleBarBC"><span></span></div>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>-->
+	</div>
+	<div style="clear: left;"><span></span></div>
+</div>
