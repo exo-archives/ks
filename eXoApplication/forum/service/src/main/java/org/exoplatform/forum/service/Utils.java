@@ -47,7 +47,7 @@ public class Utils {
 	public static final String USER = "User".intern() ;
 	public static final String GUEST = "guest".intern() ;
 	
-	public static final String DEFAULT_USER_ADMIN_ID = "root".intern() ;
+	public static final String DEFAULT_USER_ADMIN_ID = "huudung.kieu".intern() ;
 	
 	public static String transform(String bbcode) {
 		String b = bbcode.substring(0, bbcode.length());
