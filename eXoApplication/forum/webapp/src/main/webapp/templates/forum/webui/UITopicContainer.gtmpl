@@ -101,7 +101,7 @@
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative;">
 				<div class="UIPopupCategory" style="display: none; ">
-					<div class="UIRightClickPopupMenu" style="display: block; left: -70px;">
+					<div class="UIRightClickPopupMenu" style="display: block; left: -75px;">
 						<div class="UIContextMenuContainer">
 							<div class="TopLeftRightClickPopupMenu">
 								<div class="TopRightRightClickPopupMenu">
@@ -248,7 +248,7 @@
 												</div>
 												<div class="MiddleLeftRightClickPopupMenu">
 													<div class="MiddleRightRightClickPopupMenu">
-														<div class="UIRightPopupMenuContainer">
+														<div class="UIRightPopupMenuContainer" style="min-width: 170px;">
 															<div class="InputPage" style="float:left;">
 																<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 															</div>
@@ -640,7 +640,7 @@
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative;">
 				<div class="UIPopupCategory" style="display: none; ">
-					<div class="UIRightClickPopupMenu" style="display: block; left: -70px;">
+					<div class="UIRightClickPopupMenu" style="display: block; left: -75px;">
 						<div class="UIContextMenuContainer">
 							<div class="TopLeftRightClickPopupMenu">
 								<div class="TopRightRightClickPopupMenu">

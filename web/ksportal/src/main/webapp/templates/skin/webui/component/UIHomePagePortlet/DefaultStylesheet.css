@@ -379,6 +379,23 @@
 	padding:0px 5px 0px 0px;
 }
 
+.UIHorizontalTabs .UITab .HighlightNavigationTab .LeftTab {
+	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left ;
+	line-height:21px;
+	padding-left:2px;
+}
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab .RightTab {
+	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right ;
+	line-height:21px;
+	padding-right:2px;
+}
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab .MiddleTab {
+	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x ;
+	line-height:21px;
+}
+
 .UIHorizontalTabs .UITab .HighlightNavigationTab {
 	line-height:21px;
 	margin:3px 0px 0px 1px;
