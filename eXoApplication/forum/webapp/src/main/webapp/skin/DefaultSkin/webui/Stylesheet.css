@@ -33,6 +33,7 @@
 
 .UIForumPortlet .UIRightClickPopupMenu .MenuItem {
 	display: block;
+	text-align: left;
 }
 
 .Vista .UIForumPortlet .UIRightClickPopupMenu {

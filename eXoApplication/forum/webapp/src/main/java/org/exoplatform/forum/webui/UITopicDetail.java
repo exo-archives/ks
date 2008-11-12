@@ -708,6 +708,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			topicDetail.forumService.removePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, postId) ;
 			topicDetail.isUpdatePageList = true ;
+			topicDetail.IdPostView = "top";
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 		}
 	}

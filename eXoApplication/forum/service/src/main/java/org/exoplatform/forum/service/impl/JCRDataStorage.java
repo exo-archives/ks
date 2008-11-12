@@ -3084,29 +3084,35 @@ public class JCRDataStorage {
 			}
 			if (!isAdmin) {
 				if (type.equals(Utils.FORUM)) {
-					if (isAnd)
-						queryString.append(" and ");
+					if (isAnd) queryString.append(" and ");
 					queryString.append("(@exo:isClosed='false'");
 					for (String currentUser : currentUserInfo) {
 						queryString.append(" or @exo:moderators='").append(currentUser).append("'");
 					}
 					queryString.append(")");
 				} else if (type.equals(Utils.TOPIC)) {
-					if (isAnd)
-						queryString.append(" and ");
+					if (isAnd) queryString.append(" and ");
 					queryString.append("@exo:isClosed='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true'");
 				} else if (type.equals(Utils.POST)) {
-					if (isAnd)
-						queryString.append(" and ");
+					if (isAnd) queryString.append(" and ");
 					queryString.append("(@exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true'").append(" and (@exo:userPrivate='exoUserPri'");
 					for (String currentUser : currentUserInfo) {
 						queryString.append(" or @exo:userPrivate='").append(currentUser).append("'");
 					}
 					queryString.append(") and @exo:isFirstPost='false')");
 				}
+			} else {
+				if (type.equals(Utils.POST)) {
+					if (isAnd) queryString.append(" and ");
+					queryString.append("(@exo:userPrivate='exoUserPri'");
+					for (String currentUser : currentUserInfo) {
+						queryString.append(" or @exo:userPrivate='").append(currentUser).append("'");
+					}
+					queryString.append(") and @exo:isFirstPost='false'");
+				}
 			}
 			queryString.append("]");
-			// System.out.println("\n\npath: " + queryString.toString());
+//			System.out.println("\n\npath: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();

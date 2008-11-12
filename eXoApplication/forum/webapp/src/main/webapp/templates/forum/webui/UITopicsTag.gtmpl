@@ -77,7 +77,7 @@
 													<div class="TopLeftRightClickPopupMenu">
 														<div class="TopRightRightClickPopupMenu">
 															<div class="TopCenterRightClickPopupMenu"><span></span></div>
-														</div>
+											 			</div>
 													</div>
 													<div class="MiddleLeftRightClickPopupMenu">
 														<div class="MiddleRightRightClickPopupMenu">
@@ -85,13 +85,14 @@
 																<a class="MenuItem" href="<%=uicomponent.event("EditTag");%>">	 
 																	<div class="ItemIcon EditTopicIcon "><%=_ctx.appRes("UITopicsTag.label.EditTag");%></div>
 																</a>
-																<a class="MenuItem" href="<%=uicomponent.event("RemoveTag");%>">	 
+																<a class="MenuItem" href="javaScript:if(confirm('<%=_ctx.appRes("UITopicsTag.confirm.RemoveTag");%>')){<%=uicomponent.event("RemoveTag");%>}">	 
 																	<div class="ItemIcon SetDeleteIcon"><%=_ctx.appRes("UITopicsTag.label.RemoveTag");%></div>
 																</a>
 															</div>
 															<div class="UIRightPopupMenuContainer">
 																<div class="RightClickCustomItem"><span></span></div>
-																<a class="MenuItem" href="<%= uicomponent.event("RemoveTopic");%>">	 
+																<a class="MenuItem"  href="javaScript: void(0)"
+														 			onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicsTag', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicsTag.confirm.YouWantToRemove")%>', '<%=_ctx.appRes("UITopicsTag.confirm.RemoveTopicsTag")%>', '<%=_ctx.appRes("UITopicsTag.confirm.RemoveTopicTag")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){<%=uicomponent.event("RemoveTopic");%>}"> 
 																	<div class="ItemIcon classIconItem"><%=_ctx.appRes("UITopicsTag.label.RemoveTopicsTag");%></div>
 																</a>
 															</div>
