@@ -167,12 +167,17 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				}
 				if(forum != null && forum.getIsClosed()) isRead = false;
 				if(role > 0){
-					if(isRead && topic.getCanView() != null && topic.getCanView().length > 0 && !topic.getCanView()[0].equals(" ")){
-						isRead = ForumServiceUtils.hasPermission(topic.getCanView(), userName);
-					}
+					boolean isMode = false;
 					if(!isRead && forum.getModerators() != null && forum.getModerators().length > 0 && !forum.getModerators()[0].equals(" ")) {
-						isRead = ForumServiceUtils.hasPermission(forum.getModerators(), userName);
-					}
+						isMode = ForumServiceUtils.hasPermission(forum.getModerators(), userName);
+					}  
+					if(!isMode){
+						if(isRead && topic.getCanView() != null && topic.getCanView().length > 0 && !topic.getCanView()[0].equals(" ")){
+							isRead = ForumServiceUtils.hasPermission(topic.getCanView(), userName);
+							if(!isRead)isRead = ForumServiceUtils.hasPermission(forum.getPoster(), userName);
+							if(!isRead)isRead = ForumServiceUtils.hasPermission(forum.getViewer(), userName);
+						}
+					} else isRead = true;
 				} else isRead = true; 
 				if(isRead){
 					forumPortlet.updateIsRendered(ForumUtils.FORUM);

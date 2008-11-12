@@ -36,6 +36,14 @@
 	text-align: left;
 }
 
+.UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
+	min-width: 130px;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
+	min-width: 60px;
+}
+
 .Vista .UIForumPortlet .UIRightClickPopupMenu {
 	width: 180px;
 }

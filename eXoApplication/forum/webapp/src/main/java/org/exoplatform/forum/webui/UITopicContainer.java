@@ -178,7 +178,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		else {
 			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'");
 			boolean isView = ForumServiceUtils.hasPermission(forum.getPoster(), userId) ;
-			if(!isView) ForumServiceUtils.hasPermission(forum.getViewer(), userId) ;
+			if(!isView) isView = ForumServiceUtils.hasPermission(forum.getViewer(), userId) ;
 			if(!isView) {
 				strQuery.append(" and (@exo:owner='").append(userId).append("' or @exo:canView=' ' or @exo:canPost=' '") ;
 				for (String string : ForumSessionUtils.getAllGroupAndMembershipOfUser(userId)) {

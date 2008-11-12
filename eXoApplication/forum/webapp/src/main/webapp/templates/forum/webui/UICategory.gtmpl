@@ -140,7 +140,7 @@
 											</div>
 											<div class="MiddleLeftRightClickPopupMenu">
 												<div class="MiddleRightRightClickPopupMenu">
-													<div class="UIRightPopupMenuContainer">
+													<div class="UIRightPopupMenuContainer" style="min-width: 170px;">
 														<div class="InputPage" style="float:left;">
 															<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 														</div>
