@@ -383,3 +383,195 @@
 	line-height:21px;
 	margin:3px 0px 0px 1px;
 }
+
+
+/*========================KS Guided Tour===========================*/
+.UIKSGuidedTour {
+	background:transparent url(DefaultSkin/background/LeftKSGuidedTour.gif) repeat-y left ;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour {
+	float: left;
+	width: 226px; 
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .Header {
+	width: 226px;
+	background:transparent url(DefaultSkin/background/Header.gif) no-repeat left ;
+	height: 33px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton {
+	margin-top: 2px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .NormalButton {
+	margin-top: 2px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .HightLineButtonL {
+	background:transparent url(DefaultSkin/background/HightLineButtonL.gif) no-repeat scroll left ;
+	padding-left:8px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .HightLineButtonR {
+	background:transparent url(DefaultSkin/background/HightLineButtonR.gif) no-repeat scroll right ;
+	padding-right:8px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .HightLineButtonC {
+	background:transparent url(DefaultSkin/background/HightLineButtonC.gif) repeat-x ;
+	line-height:38px;
+	font-weight: bold;
+	font-size: 12px;
+	padding-left: 12px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .NormalButtonL {
+	background:transparent url(DefaultSkin/background/NormalButtonL.gif) no-repeat scroll left ;
+	padding-left:2px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .NormalButtonR {
+	background:transparent url(DefaultSkin/background/NormalButtonR.gif) no-repeat scroll right ;
+	padding-right:2px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .NormalButtonC {
+	background:transparent url(DefaultSkin/background/NormalButtonC.gif) repeat-x ;
+	line-height:38px;
+	font-weight: bold;
+	font-size: 12px;
+	padding-left: 12px;
+}
+
+
+.UIKSGuidedTour .LeftKSGuidedTour .SignUpButton {
+	background:transparent url(DefaultSkin/background/SignUpButton.gif) no-repeat ;
+	line-height:50px;
+	width:185px; height: 81px;
+	font-weight: bold;
+	font-size: 18px;
+	text-align: center;
+	color: white;
+	margin: 12px auto;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour {
+	margin-left: 227px;
+	padding: 8px;
+	background: white;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .HeadTitle {
+	margin: 8px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .HeadTitle .HeadTitleL {
+	background:transparent url(DefaultSkin/background/HeadTitleL.gif) no-repeat scroll left ;
+	padding-left:5px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .HeadTitle .HeadTitleR {
+	background:transparent url(DefaultSkin/background/HeadTitleR.gif) no-repeat scroll right ;
+	padding-right:5px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .HeadTitle .HeadTitleC {
+	background:transparent url(DefaultSkin/background/HeadTitleC.gif) repeat-x ;
+	line-height:41px;
+	font-weight: bold;
+	font-size: 18px;
+	text-align: center;
+	color: #427EB8;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .CheckTitleIcon {
+	background:transparent url(DefaultSkin/background/CheckTitleIcon.gif) no-repeat left;
+	line-height:30px;
+	font-weight: bold;
+	font-size: 12px;
+	padding-left: 24px;
+	margin-left: 8px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .ShowImageKS {
+	background:transparent url(DefaultSkin/background/ShowImageKS.gif) no-repeat left;
+	height: 520px;
+	margin: 4px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarTL {
+	background:transparent url(DefaultSkin/background/TitleBarTL.gif) no-repeat scroll left ;
+	padding-left:5px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarTR {
+	background:transparent url(DefaultSkin/background/TitleBarTR.gif) no-repeat scroll right ;
+	padding-right:5px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarTC {
+	background:transparent url(DefaultSkin/background/TitleBarTC.gif) repeat-x ;
+	height:5px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarBL {
+	background:transparent url(DefaultSkin/background/TitleBarBL.gif) no-repeat scroll left ;
+	padding-left:5px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarBR {
+	background:transparent url(DefaultSkin/background/TitleBarBR.gif) no-repeat scroll right ;
+	padding-right:5px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarBC {
+	background:transparent url(DefaultSkin/background/TitleBarBC.gif) repeat-x ;
+	height:5px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarMC {
+	background: #78B3E2 url(DefaultSkin/background/TitleBarMC.jpg) repeat-x ;
+	line-height:31px;
+	border-left: 1px solid #33669A;
+	border-Right: 1px solid #33669A;
+	font-weight: bold;
+	font-size: 12px;
+	color: white;
+	text-align: center;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .ShowImageFAQ {
+	background:transparent url(DefaultSkin/background/ShowImageFAQ.gif) no-repeat left;
+	height: 243px;
+	margin: 4px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .ShowImageForum {
+	background:transparent url(DefaultSkin/background/ShowImageForum.gif) no-repeat left;
+	height: 349px;
+	margin: 4px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .KSGuidedTour2 .TitleBar{
+	margin-top: 20px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .H1 {
+	background:transparent url(DefaultSkin/background/H1.gif) no-repeat left;
+	height: 192px;
+	margin: 4px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .H2 {
+	background:transparent url(DefaultSkin/background/H2.gif) no-repeat left;
+	height: 192px;
+	margin: 4px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .H3 {
+	background:transparent url(DefaultSkin/background/H3.gif) no-repeat left;
+	height: 192px;
+	margin: 4px;
+}
