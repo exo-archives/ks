@@ -457,6 +457,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				String temp = "" ;
 				if(!ForumUtils.isEmpty(canPost)) {
 					temp = ForumUtils.unSplitForForum(uiForm.forum.getPoster());
+					temp = temp + "," + userName;
 				}
 				if(ForumUtils.isEmpty(temp)) temp = canPost;
 				String[]canPosts = ForumUtils.addStringToString(canPost, temp);
