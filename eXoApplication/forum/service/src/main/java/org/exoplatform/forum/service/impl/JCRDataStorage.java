@@ -205,69 +205,73 @@ public class JCRDataStorage {
 
 	public void initDefaultData() throws Exception {
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
-		Node forumHomeNode = getForumHomeNode(sProvider);
-		List<CategoryData> categories; 
-		for(InitializeForumPlugin pln : defaultPlugins_) {
-			categories = pln.getForumInitialData().getCategories();
-			for(CategoryData categoryData : categories) {
-				String categoryId = "";
-				NodeIterator iter = forumHomeNode.getNodes();
-				boolean isAdd = true;
-				while (iter.hasNext()) {
-					if(iter.nextNode().isNodeType("exo:forumCategory")){
-						isAdd = false;
-						break;
+		try {
+			Node forumHomeNode = getForumHomeNode(sProvider);
+			List<CategoryData> categories; 
+			for(InitializeForumPlugin pln : defaultPlugins_) {
+				categories = pln.getForumInitialData().getCategories();
+				for(CategoryData categoryData : categories) {
+					String categoryId = "";
+					NodeIterator iter = forumHomeNode.getNodes();
+					boolean isAdd = true;
+					while (iter.hasNext()) {
+						if(iter.nextNode().isNodeType("exo:forumCategory")){
+							isAdd = false;
+							break;
+						}
 					}
-				}
-				if(isAdd) {
-					UserProfile userProfile = new UserProfile();
-					userProfile.setUserId(categoryData.getOwner());
-					this.saveUserProfile(sProvider, userProfile, false, false);
-					Category category = new Category();
-					category.setCategoryName(categoryData.getName());
-					category.setDescription(categoryData.getDescription());
-					category.setOwner(categoryData.getOwner());
-					this.saveCategory(sProvider, category, true);
-					categoryId = category.getId() ;
-					List<ForumData> forums = categoryData.getForums();
-					String forumId = "";
-					for (ForumData forumData : forums) {
-						Forum forum = new Forum();
-						forum.setForumName(forumData.getName());
-						forum.setDescription(forumData.getDescription());
-						forum.setOwner(forumData.getOwner());
-						this.saveForum(sProvider, categoryId, forum, true);
-						forumId = forum.getId();
-					}
-					ForumData forum = forums.get(0) ;
-					List<TopicData> topics = forum.getTopics();
-					String topicId = "";
-					String ct = "";
-					for (TopicData topicData : topics) {
-						Topic topic = new Topic();
-						topic.setTopicName(topicData.getName());
-						ct = topicData.getContent();
-						ct = StringUtils.replace(ct, "\\n","<br/>");
-						topic.setDescription(ct);
-						topic.setOwner(topicData.getOwner());
-						topic.setIcon(topicData.getIcon());
-						this.saveTopic(sProvider, categoryId, forumId, topic, true, false, "");
-						topicId = topic.getId();
-					}
-					TopicData topic = topics.get(0) ;
-					List<PostData> posts = topic.getPosts();
-					for (PostData postData : posts) {
-						Post post = new Post();
-						post.setName(postData.getName());
-						ct = postData.getContent();
-						ct = StringUtils.replace(ct, "\\n","<br/>");
-						post.setMessage(ct);
-						post.setOwner(postData.getOwner());
-						post.setIcon(postData.getIcon());
-						this.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
+					if(isAdd) {
+						UserProfile userProfile = new UserProfile();
+						userProfile.setUserId(categoryData.getOwner());
+						this.saveUserProfile(sProvider, userProfile, false, false);
+						Category category = new Category();
+						category.setCategoryName(categoryData.getName());
+						category.setDescription(categoryData.getDescription());
+						category.setOwner(categoryData.getOwner());
+						this.saveCategory(sProvider, category, true);
+						categoryId = category.getId() ;
+						List<ForumData> forums = categoryData.getForums();
+						String forumId = "";
+						for (ForumData forumData : forums) {
+							Forum forum = new Forum();
+							forum.setForumName(forumData.getName());
+							forum.setDescription(forumData.getDescription());
+							forum.setOwner(forumData.getOwner());
+							this.saveForum(sProvider, categoryId, forum, true);
+							forumId = forum.getId();
+						}
+						ForumData forum = forums.get(0) ;
+						List<TopicData> topics = forum.getTopics();
+						String topicId = "";
+						String ct = "";
+						for (TopicData topicData : topics) {
+							Topic topic = new Topic();
+							topic.setTopicName(topicData.getName());
+							ct = topicData.getContent();
+							ct = StringUtils.replace(ct, "\\n","<br/>");
+							topic.setDescription(ct);
+							topic.setOwner(topicData.getOwner());
+							topic.setIcon(topicData.getIcon());
+							this.saveTopic(sProvider, categoryId, forumId, topic, true, false, "");
+							topicId = topic.getId();
+						}
+						TopicData topic = topics.get(0) ;
+						List<PostData> posts = topic.getPosts();
+						for (PostData postData : posts) {
+							Post post = new Post();
+							post.setName(postData.getName());
+							ct = postData.getContent();
+							ct = StringUtils.replace(ct, "\\n","<br/>");
+							post.setMessage(ct);
+							post.setOwner(postData.getOwner());
+							post.setIcon(postData.getIcon());
+							this.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
+						}
 					}
 				}
 			}
+		}finally {
+			sProvider.close();
 		}
 	}
 	
@@ -1778,21 +1782,21 @@ public class JCRDataStorage {
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
 				Node forumNode = node.getParent();
-				if (node.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+				List<String> listUser = new ArrayList<String>();
+				if(post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
 					List<String> listCanViewInTopic = new ArrayList<String>(); 
 					listCanViewInTopic.addAll(ValuesToList(node.getProperty("exo:canView").getValues()));
-					List<String> listUser = new ArrayList<String>();
 					if(post.getUserPrivate() != null && post.getUserPrivate().length > 1){
 						listUser.addAll(Arrays.asList(post.getUserPrivate()));
 					}
-					if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
+					if((listUser.isEmpty() || listUser.size() == 1) && !listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
 						listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:poster").getValues()));
 						listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:viewer").getValues()));
-						if(listUser.isEmpty() || listUser.size() == 1){
-							listUser = listCanViewInTopic;
-						} 
+						listUser = listCanViewInTopic;
 					}
-					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPris") && !listUser.get(0).equals(" ")) {
+				}
+				if (node.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
 						List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
 						int i = 0;
 						for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
@@ -1818,12 +1822,24 @@ public class JCRDataStorage {
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
 				if (forumNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
-					if (post.getUserPrivate() != null && post.getUserPrivate().length == 2) {
+//					if (post.getUserPrivate() != null && post.getUserPrivate().length == 2) {
+//						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
+//						List<String> usersList = Arrays.asList(post.getUserPrivate());
+//						int i = 0;
+//						for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
+//							if (usersList.contains(user)) {
+//								emailListForum.add(emails.get(i));
+//							}
+//							i++;
+//						}
+//					} else {
+//						emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
+//					}
+					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
 						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
-						List<String> usersList = Arrays.asList(post.getUserPrivate());
 						int i = 0;
 						for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
-							if (usersList.contains(user)) {
+							if (listUser.contains(user)) {
 								emailListForum.add(emails.get(i));
 							}
 							i++;
