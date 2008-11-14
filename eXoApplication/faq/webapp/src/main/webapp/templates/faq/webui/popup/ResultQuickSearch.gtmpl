@@ -25,7 +25,7 @@
  										<tbody>
  										<% 
  										List formSearchs = uicomponent.getFormSearchs() ; 
- 										if(formSearchs.size() > 0){
+ 										if(formSearchs != null && formSearchs.size() > 0){
  											for(formSearch in formSearchs) {
 												String Id = formSearch.getId();
 												String name = formSearch.getName() ;

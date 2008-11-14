@@ -39,6 +39,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormTabPane;
@@ -61,7 +62,7 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
-public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
+public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public final String	DISPLAY_TAB = "DisplayTab";
 	public final String	SET_DEFAULT_EMAIL_TAB = "DefaultEmail";
 	public final String	SET_DEFAULT_ADDNEW_QUESTION_TAB= "AddNewQuestionTab";
@@ -85,8 +86,9 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 	private boolean isResetMail = false;
 	private int indexOfTab = 0;
 	
+	private String tabSelected = DISPLAY_TAB;
+	
 	public UISettingForm() throws Exception {
-		super("UISettingForm");
 		isEditPortlet_ = false;
 		this.setActions(new String[]{"Save", "Cancel"});
 	}
@@ -137,7 +139,6 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 			EmailAddNewQuestion.setRendered(true);
 			EmailEditQuestion.setRendered(true);
 			EmailTab.setRendered(true);
-			this.setSelectedTab(DISPLAY_TAB);
 		} else {
 		
 			List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
@@ -165,6 +166,10 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
   public void activate() throws Exception { }
 
   public void deActivate() throws Exception { }
+  
+  private String getSelectedTab(){
+	  return tabSelected;
+  }
 	
 	static public class SaveActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
@@ -243,9 +248,18 @@ public class UISettingForm extends UIFormTabPane implements UIPopupComponent	{
 	static public class ChildTabChangeActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;		
-			String id = event.getRequestContext().getRequestParameter(OBJECTID);
-			settingForm.indexOfTab = Integer.parseInt(id);
-			settingForm.isResetMail = true;
+			String[] tabId = event.getRequestContext().getRequestParameter(OBJECTID).split("/");
+			String tab = tabId[0];
+			int id = Integer.parseInt(tabId[1]);
+			
+			if(tab.equals("parent")){
+				settingForm.isResetMail = false;
+				if(id == 1) settingForm.tabSelected = settingForm.SET_DEFAULT_EMAIL_TAB;
+				else settingForm.tabSelected = settingForm.DISPLAY_TAB;
+			} else {
+				settingForm.indexOfTab = id;
+				settingForm.isResetMail = true;
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
 		}
 	}

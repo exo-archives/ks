@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -50,7 +51,7 @@ public class UIBreadcumbs extends UIContainer {
 		breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
 		paths_.add("FAQService") ;
 	}
-	
+
 	public void setUpdataPath(String path) throws Exception {
 		if(path != null && path.length() > 0 ) {
 			String temp[] = path.split("/") ;
@@ -60,14 +61,16 @@ public class UIBreadcumbs extends UIContainer {
 			paths_.add("FAQService") ;
 			String oldPath = "FAQService" ;
 			breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
-				for (String string : temp) {
-					if(string.equals("FAQService")) continue ;
-					oldPath = oldPath + "/" + string;
-					Category category = FAQUtils.getFAQService().getCategoryById(string, FAQUtils.getSystemProvider()) ;
-					String categoryName = category.getName() ;
-					breadcumbs_.add(categoryName) ;
-					paths_.add(oldPath) ;
-				}
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			for (String string : temp) {
+				if(string.equals("FAQService")) continue ;
+				oldPath = oldPath + "/" + string;
+				Category category = FAQUtils.getFAQService().getCategoryById(string, sessionProvider) ;
+				String categoryName = category.getName() ;
+				breadcumbs_.add(categoryName) ;
+				paths_.add(oldPath) ;
+			}
+			sessionProvider.close();
 		} else {
 			paths_.clear() ;
 			breadcumbs_.clear() ;
@@ -75,27 +78,27 @@ public class UIBreadcumbs extends UIContainer {
 			breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private String getPath(int index) {
 		return this.paths_.get(index) ;
 	}
-	
+
 	public String getPaths() {
-	  return this.path_;
-  }
+		return this.path_;
+	}
 	@SuppressWarnings("unused")
 	private int getMaxPath() {
 		return breadcumbs_.size() ;
 	}
-	
+
 	@SuppressWarnings("unused")
 	private List<String> getBreadcumbs() throws Exception {
 		return breadcumbs_ ;
 	}
-	
+
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
-    public void execute(Event<UIBreadcumbs> event) throws Exception {
+		public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs uiBreadcums = event.getSource() ;			
 			String paths = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet faqPortlet = uiBreadcums.getAncestorOfType(UIFAQPortlet.class) ;
@@ -114,14 +117,14 @@ public class UIBreadcumbs extends UIContainer {
 					uiQuestions.setCategories(cate) ;
 				} catch (Exception e) {
 					UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class) ;
-          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-          UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
-  				uiContainer.updateIsRender(true) ;
-  				uiQuestions.setCategories(null) ;
-  				uiBreadcums.setUpdataPath("FAQService");
-          event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-          return ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
+					uiContainer.updateIsRender(true) ;
+					uiQuestions.setCategories(null) ;
+					uiBreadcums.setUpdataPath("FAQService");
+					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+					return ;
 				}
 				uiQuestions.setCategories(cate) ;
 				uiQuestions.backPath_ = "" ;

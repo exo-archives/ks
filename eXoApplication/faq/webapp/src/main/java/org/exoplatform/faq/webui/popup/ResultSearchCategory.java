@@ -29,6 +29,7 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -60,79 +61,82 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 	public ResultSearchCategory() throws Exception {
 		addChild(UIFAQPageIterator.class, null, LIST_RESULT_SEARCH) ;
 	}
-	
-  @SuppressWarnings("unused")
-  private List<Category> getListCategory(){
-  	long pageSelected = pageIterator.getPageSelected();
-  	listCategory_ = new ArrayList<Category>();
-  	try {
-	    listCategory_.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
-    return listCategory_ ;
-  }
-  
-  public void setListCategory(List<Category> listCategory) {
-    this.listCategory_ = listCategory ;
-    try {
-	    pageList = new QuestionPageList(listCategory);
-	    pageList.setPageSize(5);
-	    pageIterator = this.getChildById(LIST_RESULT_SEARCH);
-	    pageIterator.updatePageList(pageList);
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
-  }
-  
-  @SuppressWarnings("unused")
-  private long getTotalpages(String pageInteratorId) {
-    UIFAQPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH) ;
-    try {
-      return pageIterator.getInfoPage().get(3) ;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return 1 ;
-    }
-  }
-  
-  public void activate() throws Exception {}
+
+	@SuppressWarnings("unused")
+	private List<Category> getListCategory(){
+		long pageSelected = pageIterator.getPageSelected();
+		listCategory_ = new ArrayList<Category>();
+		try {
+			listCategory_.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listCategory_ ;
+	}
+
+	public void setListCategory(List<Category> listCategory) {
+		this.listCategory_ = listCategory ;
+		try {
+			pageList = new QuestionPageList(listCategory);
+			pageList.setPageSize(5);
+			pageIterator = this.getChildById(LIST_RESULT_SEARCH);
+			pageIterator.updatePageList(pageList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private long getTotalpages(String pageInteratorId) {
+		UIFAQPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH) ;
+		try {
+			return pageIterator.getInfoPage().get(3) ;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 1 ;
+		}
+	}
+
+	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
-  
+
 	static	public class LinkActionListener extends EventListener<ResultSearchCategory> {
 		public void execute(Event<ResultSearchCategory> event) throws Exception {
 			ResultSearchCategory resultSearch = event.getSource() ;
 			UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      FAQService faqService = FAQUtils.getFAQService() ;
-      UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-      try {
-				faqService.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+			FAQService faqService = FAQUtils.getFAQService() ;
+			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			try {
+				faqService.getCategoryById(categoryId, sessionProvider) ;
 			} catch (Exception e) {
 				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				sessionProvider.close();
+				return ;
 			}
 			uiQuestions.setCategories(categoryId) ;
 			uiQuestions.setIsNotChangeLanguage() ;
-      UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-      breadcumbs.setUpdataPath(null) ;
-      String oldPath = "" ;
-      List<String> listPath = faqService.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
-      for(int i = listPath.size() -1 ; i >= 0; i --) {
-      	oldPath = oldPath + "/" + listPath.get(i);
-      }
-      String newPath ="FAQService"+oldPath ;
-      uiQuestions.setPath(newPath) ;
-      breadcumbs.setUpdataPath(newPath);
+			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+			breadcumbs.setUpdataPath(null) ;
+			String oldPath = "" ;
+			List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
+			for(int i = listPath.size() -1 ; i >= 0; i --) {
+				oldPath = oldPath + "/" + listPath.get(i);
+			}
+			String newPath ="FAQService"+oldPath ;
+			uiQuestions.setPath(newPath) ;
+			breadcumbs.setUpdataPath(newPath);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-      UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
-      faqPortlet.cancelAction() ;
+			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+			faqPortlet.cancelAction() ;
+			sessionProvider.close();
 		}
 	}
-	
+
 	static	public class CloseActionListener extends EventListener<ResultSearchCategory> {
 		public void execute(Event<ResultSearchCategory> event) throws Exception {
 			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;

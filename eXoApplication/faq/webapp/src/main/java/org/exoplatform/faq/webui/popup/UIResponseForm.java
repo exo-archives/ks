@@ -39,6 +39,7 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -183,7 +184,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         questionLanguage.setResponse(new String[]{""}) ;
       }
       listQuestionLanguage.add(questionLanguage) ;
-      listQuestionLanguage.addAll(faqService.getQuestionLanguages(question_.getId(), FAQUtils.getSystemProvider())) ;
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+      listQuestionLanguage.addAll(faqService.getQuestionLanguages(question_.getId(), sessionProvider)) ;
+      sessionProvider.close();
       for(QuestionLanguage language : listQuestionLanguage) {
         listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage())) ;
         if(language.getLanguage().equals(languageIsResponsed)) {
@@ -271,10 +274,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   private void setListRelation() throws Exception {
     String[] relations = question_.getRelations() ;
     this.setListIdQuesRela(Arrays.asList(relations)) ;
-    if(relations != null && relations.length > 0)
+    if(relations != null && relations.length > 0){
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       for(String relation : relations) {
-        listRelationQuestion.add(faqService.getQuestionById(relation, FAQUtils.getSystemProvider()).getQuestion()) ;
+        listRelationQuestion.add(faqService.getQuestionById(relation, sessionProvider).getQuestion()) ;
       }
+      sessionProvider.close();
+    }
   }
   public List<String> getListRelation() {
    return listRelationQuestion ; 
@@ -432,10 +438,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		link = link.replaceFirst("OBJECTID", path);
 		link = url + link;
       question_.setLink(link) ;
-      
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       try{
       	FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
-        questionNode = faqService.saveQuestion(question_, false, FAQUtils.getSystemProvider(),responseForm.faqSetting_) ;
+        questionNode = faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;
         MultiLanguages multiLanguages = new MultiLanguages() ;
         for(int i = 1; i < responseForm.listQuestionLanguage.size(); i ++) {
           multiLanguages.addLanguage(questionNode, responseForm.listQuestionLanguage.get(i)) ;
@@ -463,7 +469,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
         if(questionNode!= null && !questions.getCategoryId().equals(question_.getCategoryId())) {
           UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-          Category category = faqService.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()) ;
+          Category category = faqService.getCategoryById(question_.getCategoryId(), sessionProvider) ;
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         }
@@ -478,6 +484,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         UIPopupContainer popupContainer = questionManagerForm.getParent() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
+      sessionProvider.close();
     }
   }
 
