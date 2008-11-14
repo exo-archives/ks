@@ -1756,10 +1756,27 @@ public class JCRDataStorage {
 		} else {
 			content = Utils.DEFAULT_EMAIL_CONTENT ;
 		}
+		List<String> listUser = new ArrayList<String>();
 		List<String> emailList = new ArrayList<String>();
 		if(post == null) {
 			if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
-				emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+				// set Category Private
+				Node categoryNode = node.getParent() ;
+				if(categoryNode.hasProperty("exo:userPrivate"))
+					listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
+				
+				if (!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
+					List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+					int i = 0;
+					for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
+						if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
+							emailList.add(emails.get(i));
+						}
+						i++;
+					}
+				} else {
+					emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+				}
 			}
 			if (node.hasProperty("exo:notifyWhenAddTopic")) {
 				emailList.addAll(ValuesToList(node.getProperty("exo:notifyWhenAddTopic").getValues()));
@@ -1782,27 +1799,39 @@ public class JCRDataStorage {
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
 				Node forumNode = node.getParent();
-				List<String> listUser = new ArrayList<String>();
+				boolean isSend = false;
 				if(post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+					isSend = true;
 					List<String> listCanViewInTopic = new ArrayList<String>(); 
 					listCanViewInTopic.addAll(ValuesToList(node.getProperty("exo:canView").getValues()));
 					if(post.getUserPrivate() != null && post.getUserPrivate().length > 1){
 						listUser.addAll(Arrays.asList(post.getUserPrivate()));
 					}
-					if((listUser.isEmpty() || listUser.size() == 1) && !listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
-						listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:poster").getValues()));
-						listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:viewer").getValues()));
-						listUser = listCanViewInTopic;
+					if((listUser.isEmpty() || listUser.size() == 1)){
+						if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")) {
+							listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:poster").getValues()));
+							listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:viewer").getValues()));
+						}
+						// set Category Private
+						Node categoryNode = forumNode.getParent() ;
+						if(categoryNode.hasProperty("exo:userPrivate"))
+							listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
+						if(!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
+							if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
+								listUser = combineListToList(listUser, listCanViewInTopic);
+								if(listUser.isEmpty() || listUser.get(0).equals(" ")) isSend = false;
+							}
+						} else listUser = listCanViewInTopic;
 					}
 				}
-				if (node.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+				if (node.isNodeType("exo:forumWatching") && isSend) {
 					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
 						List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
 						int i = 0;
 						for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
-							if (listUser.contains(user)) {
+							if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
 								emailList.add(emails.get(i));
-							}
+							} 
 							i++;
 						}
 					} else {
@@ -1821,27 +1850,14 @@ public class JCRDataStorage {
 				/*
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
-				if (forumNode.isNodeType("exo:forumWatching") && post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
-//					if (post.getUserPrivate() != null && post.getUserPrivate().length == 2) {
-//						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
-//						List<String> usersList = Arrays.asList(post.getUserPrivate());
-//						int i = 0;
-//						for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
-//							if (usersList.contains(user)) {
-//								emailListForum.add(emails.get(i));
-//							}
-//							i++;
-//						}
-//					} else {
-//						emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
-//					}
+				if (forumNode.isNodeType("exo:forumWatching") && isSend) {
 					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
 						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
 						int i = 0;
 						for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
-							if (listUser.contains(user)) {
+							if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
 								emailListForum.add(emails.get(i));
-							}
+							} 
 							i++;
 						}
 					} else {
@@ -2909,7 +2925,7 @@ public class JCRDataStorage {
 			forumStatistic.setNewMembers(forumStatisticNode.getProperty("exo:newMembers").getString());
 			forumStatistic.setMostUsersOnline(forumStatisticNode.getProperty("exo:mostUsersOnline").getString());
 		} catch (Exception e) {
-			saveForumStatistic(sProvider, forumStatistic);
+//			saveForumStatistic(sProvider, forumStatistic);
 		}
 		return forumStatistic;
 	}
@@ -2963,6 +2979,14 @@ public class JCRDataStorage {
 
 	private static String[] getStringsInList(List<String> list) throws Exception {
 		return list.toArray(new String[] {});
+	}
+	
+	private static List<String> combineListToList(List<String>pList, List<String> cList) throws Exception {
+		List<String>list = new ArrayList<String>();
+		for (String string : pList) {
+	    if(cList.contains(string)) list.add(string);
+    }
+		return list;
 	}
 
 	@SuppressWarnings("deprecation")
