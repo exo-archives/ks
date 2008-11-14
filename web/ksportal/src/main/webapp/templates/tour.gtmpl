@@ -1,39 +1,39 @@
-<div class="UIKSGuidedTour">
+<div class="UIKSGuidedTour" id="UIKSGuidedTour">
 	<div class="LeftKSGuidedTour">
 		<div class="Header"><span></span></div>
-		<div class="HightLineButton">
-			<div class="HightLineButtonL">
-				<div class="HightLineButtonR">
-					<div class="HightLineButtonC">
+		<div class="Button HightLineButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+			<div class="ButtonL">
+				<div class="ButtonR">
+					<div class="ButtonC">
 						An overview of KS
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="NormalButton">
-			<div class="NormalButtonL">
-				<div class="NormalButtonR">
-					<div class="NormalButtonC">
+		<div class="Button NormalButton"  onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+			<div class="ButtonL">
+				<div class="ButtonR">
+					<div class="ButtonC">
 						Publish expertise
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="NormalButton">
-			<div class="NormalButtonL">
-				<div class="NormalButtonR">
-					<div class="NormalButtonC">
+		<div class="Button NormalButton"  onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+			<div class="ButtonL">
+				<div class="ButtonR">
+					<div class="ButtonC">
 						Fogre knowledge together
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="SignUpButton">
-			Sign up Now
+			<a href="/portal/public/classic/register">Sign up Now</a>
 		</div>
 	</div>
 	<div class="RightKSGuidedTour">
-		<div class="KSGuidedTour1" style="display:block;">
+		<div class="ContentTour KSGuidedTour1" style="display:block;">
 			<div class="HeadTitle">
 				<div class="HeadTitleL">
 					<div class="HeadTitleR">
@@ -44,7 +44,7 @@
 				</div>
 			</div>
 			<div class="CheckTitleIcon">eXo KS intends help you to collect and organize your entreprise knowledge.</div>
-			<div class="CheckTitleIcon">This overview will show you some of the hilights. But there is nothing better than. <span style="color:#D74201;text-decoration:underline;">Trying yourself</span></div>
+			<div class="CheckTitleIcon">This overview will show you some of the hilights. But there is nothing better than. <a target="_blank" href="http://forge.objectweb.org/projects/exoplatform" style="color:#D74201;text-decoration:underline;">Trying yourself</a></div>
 			<div class="ShowImageKS">
 				<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 			</div>
@@ -68,7 +68,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="KSGuidedTour2" style="display:none;">
+		<div class="ContentTour KSGuidedTour2" style="display:none;">
 			<div class="HeadTitle">
 				<div class="HeadTitleL">
 					<div class="HeadTitleR">
@@ -79,7 +79,7 @@
 				</div>
 			</div>
 			<div class="CheckTitleIcon">eXo FAQ is simple antive application for generating Frequently Asked Questions.</div>
-			<div class="CheckTitleIcon">FAQs are a very valuable tool to cleanly expose state of the art knowledge inside the enterprise.<span style="color:#D74201;text-decoration:underline;">Trying yourself</span></div>
+			<div class="CheckTitleIcon">FAQs are a very valuable tool to cleanly expose state of the art knowledge inside the enterprise.<a target="_blank" href="http://forge.objectweb.org/projects/exoplatform" style="color:#D74201;text-decoration:underline;">Trying yourself</a></div>
 			<table>
 				<tr>
 					<td>
@@ -145,7 +145,7 @@
 				</tr>
 			</table>
 		</div>
-		<div class="KSGuidedTour3" style="display:none;">
+		<div class="ContentTour KSGuidedTour3" style="display:none;">
 			<div class="HeadTitle">
 				<div class="HeadTitleL">
 					<div class="HeadTitleR">
@@ -156,7 +156,7 @@
 				</div>
 			</div>
 			<div class="CheckTitleIcon">eXo Forum is a full featureed message boards application.</div>
-			<div class="CheckTitleIcon">Support, feedback, brainstorming. There are so many possiblities to imporove all together!.<span style="color:#D74201;text-decoration:underline;">Trying yourself</span></div>
+			<div class="CheckTitleIcon">Support, feedback, brainstorming. There are so many possiblities to imporove all together!.<a target="_blank" href="http://forge.objectweb.org/projects/exoplatform" style="color:#D74201;text-decoration:underline;">Trying yourself</a></div>
 			<table>
 				<tr>
 					<td>
@@ -258,3 +258,42 @@ notifications and tags
 	</div>
 	<div style="clear: left;"><span></span></div>
 </div>
+<script type="text/javascript">
+ 	var parent_ = document.getElementById('UIKSGuidedTour');
+	var childBts = eXo.core.DOMUtil.findDescendantsByClass(parent_, 'div', 'Button');
+ 	var t = 0;
+  function showContent(obj) {
+ 		var childContents = eXo.core.DOMUtil.findDescendantsByClass(parent_, 'div', 'ContentTour');
+ 		for(var i=0; i<childBts.length; i++) {
+ 			var child = childBts[i];
+ 			if(child === obj) {
+ 				child.className = "Button HightLineButton";
+ 				childContents[i].style.display = "block";
+ 				t = i;
+ 			} else {
+ 				child.className = "Button NormalButton";
+ 				childContents[i].style.display = "none";
+ 			}
+ 		}
+  }
+  function onMouseOverButton(obj) {
+    for(var i=0; i<childBts.length; i++) {
+ 			var child = childBts[i];
+ 			if(child.className != "Button HightLineButton"){
+	 			if(child === obj) {
+	 				child.className = "Button OverButton";
+	 			} else if(i != t){
+	 				child.className = "Button NormalButton";
+	 			}
+ 			}
+ 		}
+  }
+  function onMouseOutButton(obj) {
+    for(var i=0; i<childBts.length; i++) {
+ 			var child = childBts[i];
+ 			if(child.className != "Button HightLineButton" && i != t){
+ 				child.className = "Button NormalButton";
+ 			}
+ 		}
+  }
+</script>

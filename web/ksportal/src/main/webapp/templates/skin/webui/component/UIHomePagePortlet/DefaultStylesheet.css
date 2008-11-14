@@ -419,23 +419,29 @@
 
 .UIKSGuidedTour .LeftKSGuidedTour .HightLineButton {
 	margin-top: 2px;
+	cursor: pointer;
 }
 
 .UIKSGuidedTour .LeftKSGuidedTour .NormalButton {
 	margin-top: 2px;
+	cursor: pointer;
+}
+.UIKSGuidedTour .LeftKSGuidedTour .OverButton {
+	margin-top: 2px;
+	cursor: pointer;
 }
 
-.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .HightLineButtonL {
+.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .ButtonL {
 	background:transparent url(DefaultSkin/background/HightLineButtonL.gif) no-repeat scroll left ;
 	padding-left:8px;
 }
 
-.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .HightLineButtonR {
+.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .ButtonR {
 	background:transparent url(DefaultSkin/background/HightLineButtonR.gif) no-repeat scroll right ;
 	padding-right:8px;
 }
 
-.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .HightLineButtonC {
+.UIKSGuidedTour .LeftKSGuidedTour .HightLineButton .ButtonC {
 	background:transparent url(DefaultSkin/background/HightLineButtonC.gif) repeat-x ;
 	line-height:38px;
 	font-weight: bold;
@@ -443,24 +449,41 @@
 	padding-left: 12px;
 }
 
-.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .NormalButtonL {
-	background:transparent url(DefaultSkin/background/NormalButtonL.gif) no-repeat scroll left ;
-	padding-left:2px;
+.UIKSGuidedTour .LeftKSGuidedTour .OverButton .ButtonL {
+	background:transparent url(DefaultSkin/background/OverButtonL.gif) no-repeat scroll left ;
+	padding-left:8px;
 }
 
-.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .NormalButtonR {
-	background:transparent url(DefaultSkin/background/NormalButtonR.gif) no-repeat scroll right ;
-	padding-right:2px;
+.UIKSGuidedTour .LeftKSGuidedTour .OverButton .ButtonR {
+	background:transparent url(DefaultSkin/background/OverButtonR.gif) no-repeat scroll right ;
+	padding-right:8px;
 }
 
-.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .NormalButtonC {
-	background:transparent url(DefaultSkin/background/NormalButtonC.gif) repeat-x ;
+.UIKSGuidedTour .LeftKSGuidedTour .OverButton .ButtonC {
+	background:transparent url(DefaultSkin/background/OverButtonC.gif) repeat-x ;
 	line-height:38px;
 	font-weight: bold;
 	font-size: 12px;
 	padding-left: 12px;
 }
 
+.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .ButtonL {
+	background:transparent url(DefaultSkin/background/NormalButtonL.gif) no-repeat scroll left ;
+	padding-left:2px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .ButtonR {
+	background:transparent url(DefaultSkin/background/NormalButtonR.gif) no-repeat scroll right ;
+	padding-right:2px;
+}
+
+.UIKSGuidedTour .LeftKSGuidedTour .NormalButton .ButtonC {
+	background:transparent url(DefaultSkin/background/NormalButtonC.gif) repeat-x ;
+	line-height:38px;
+	font-weight: bold;
+	font-size: 12px;
+	padding-left: 18px;
+}
 
 .UIKSGuidedTour .LeftKSGuidedTour .SignUpButton {
 	background:transparent url(DefaultSkin/background/SignUpButton.gif) no-repeat ;
