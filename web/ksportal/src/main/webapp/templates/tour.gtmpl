@@ -5,7 +5,7 @@
 			<div class="ButtonL">
 				<div class="ButtonR">
 					<div class="ButtonC">
-						An overview of KS
+						Quick Overview
 					</div>
 				</div>
 			</div>
@@ -14,7 +14,7 @@
 			<div class="ButtonL">
 				<div class="ButtonR">
 					<div class="ButtonC">
-						Publish expertise
+						Publish Expertise
 					</div>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 			<div class="ButtonL">
 				<div class="ButtonR">
 					<div class="ButtonC">
-						Fogre knowledge together
+						Forge Knowledge
 					</div>
 				</div>
 			</div>
@@ -38,13 +38,14 @@
 				<div class="HeadTitleL">
 					<div class="HeadTitleR">
 						<div class="HeadTitleC">
-							Enterpriser Knowledge made easy
+							Enterprise Knowledge made easy
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="CheckTitleIcon">eXo KS intends help you to collect and organize your entreprise knowledge.</div>
-			<div class="CheckTitleIcon">This overview will show you some of the hilights. But there is nothing better than. <a target="_blank" href="http://forge.objectweb.org/projects/exoplatform" style="color:#D74201;text-decoration:underline;">Trying yourself</a></div>
+			<div class="CheckTitleIcon">eXo Knowledge Suite intends to help you to collect and organize your enterprise knowledge. 
+			This overview will show you some of the hilights.
+			</div>
 			<div class="ShowImageKS">
 				<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 			</div>
@@ -57,7 +58,7 @@
 				<div class="TitleBarML">
 					<div class="TitleBarMR">
 						<div class="TitleBarMC">
-							eXo KS composed of a forum and a FAQ application
+							eXo Knowledge Suite is composed of a forum and a FAQ application
 						</div>
 					</div>
 				</div>
@@ -78,8 +79,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="CheckTitleIcon">eXo FAQ is simple antive application for generating Frequently Asked Questions.</div>
-			<div class="CheckTitleIcon">FAQs are a very valuable tool to cleanly expose state of the art knowledge inside the enterprise.<a target="_blank" href="http://forge.objectweb.org/projects/exoplatform" style="color:#D74201;text-decoration:underline;">Trying yourself</a></div>
+			<div class="CheckTitleIcon">eXo FAQ is simple and intuitive application for generating Frequently Asked Questions. 
+			It is a very valuable tool to expose state of the art knowledge among the enterprise.</div>
 			<table>
 				<tr>
 					<td>
@@ -98,7 +99,7 @@
 								<div class="TitleBarMR">
 									<div class="TitleBarMC">
 										<div style="width: 80%;margin: auto;">
-											Domain experts can moderate and oranize the knowledge
+											Domain experts can <strong>moderate</strong> and <strong>organize</strong> the knowledge
 										</div>
 									</div>
 								</div>
@@ -125,7 +126,7 @@
 								<div class="TitleBarMR">
 									<div class="TitleBarMC">
 										<div style="width: 80%;margin: auto;">
-											Search, send by email and notifications make knowledge easy to find
+											Search, send by email and notifications make knowledge <strong>easy to find</strong>
 										</div>
 									</div>
 								</div>
@@ -155,8 +156,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="CheckTitleIcon">eXo Forum is a full featureed message boards application.</div>
-			<div class="CheckTitleIcon">Support, feedback, brainstorming. There are so many possiblities to imporove all together!.<a target="_blank" href="http://forge.objectweb.org/projects/exoplatform" style="color:#D74201;text-decoration:underline;">Trying yourself</a></div>
+			<div class="CheckTitleIcon">eXo Forum is a full featured message boards application. Support, feedback, brainstorming. There are so many possiblities to improve all together!
+			</div>
 			<table>
 				<tr>
 					<td>
@@ -175,7 +176,7 @@
 								<div class="TitleBarMR">
 									<div class="TitleBarMC">
 										<div style="width: 80%;margin: auto;">
-											It is easy to use with rich text editor, quick reply, preview and edit post
+											It is <strong>easy to use</strong> with rich text editor, quick reply, preview and edit post
 										</div>
 									</div>
 								</div>
@@ -202,7 +203,7 @@
 								<div class="TitleBarMR">
 									<div class="TitleBarMC">
 										<div style="width: 80%;margin: auto;">
-											Encourage involvement with integrated poll and thread ratings
+											<strong>Encourage involvement</strong> with integrated polls and thread ratings
 										</div>
 									</div>
 								</div>
@@ -239,8 +240,7 @@
 								<div class="TitleBarMR">
 									<div class="TitleBarMC">
 										<div style="width: 80%;margin: auto;">
-											It is easy to find anything with categoryes, bookmarks, watch, search, 
-notifications and tags
+											It is <strong>easy to find</strong> anything with categories, bookmarks, watch, search, notifications and tags
 										</div>
 									</div>
 								</div>
