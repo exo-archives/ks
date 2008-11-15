@@ -10,7 +10,9 @@
     <application>
       <instance-id>group#platform/guests:/exoadmin/AccountPortlet/Account</instance-id>
       <title>Create my account</title>
-      <show-info-bar>true</show-info-bar>
+      <show-info-bar>false</show-info-bar>
+      <show-application-state>false</show-application-state>
+      <show-application-mode>false</show-application-mode>
     </application>  
   </page>
   
