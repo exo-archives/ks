@@ -27,13 +27,21 @@
 						<% }else { %>	
 							<div class="TextAcount">Demo account: <span style="font-weight: bold;">demo/exo</span></div>
 						<% } %>
+								<a class="ActionButton"  href="/portal/public/classic/register">
+								<div class="LeftButton">
+									<div class="RightButton">
+										<div class="CenterButton">Your account</div>
+									</div>
+								</div>
+								</a>
+						<!--
 							<a class="ActionButton" onclick="$changeLanguageAction; return false;" href="#">
 								<div class="LeftButton">
 									<div class="RightButton">
-										<div class="CenterButton">Language Setting</div>
+										<div class="CenterButton">Change Language</div>
 									</div>
 								</div>
-							</a>
+							</a>-->
 							<%if(isLogin) {%>	
 								<a class="ActionButton" href="$signOutAction">
 									<div class="LeftButton">
