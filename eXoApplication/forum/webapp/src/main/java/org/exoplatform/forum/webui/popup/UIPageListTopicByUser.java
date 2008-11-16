@@ -38,6 +38,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -145,7 +146,12 @@ public class UIPageListTopicByUser extends UIContainer{
 			int i = path.length ;
 			String categoryId = path[i-3];
 			String forumId = path[i-2] ;
-			uiForm.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				uiForm.forumService.removeTopic(sProvider, categoryId, forumId, topicId);
+			}finally {
+				sProvider.close();
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}

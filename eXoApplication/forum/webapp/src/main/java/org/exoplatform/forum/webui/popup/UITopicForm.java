@@ -42,6 +42,7 @@ import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -471,16 +472,18 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setCanView(canViews);
 				topicNew.setCanPost(canPosts);
 				topicNew.setIsApproved(!hasForumMod) ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				if(!ForumUtils.isEmpty(uiForm.topicId)) {
 					topicNew.setId(uiForm.topicId);
 					topicNew.setEditReason(editReason) ;
 					try {
-						forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
+						forumService.saveTopic(sProvider, uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
 						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						topicDetail.setIsEditTopic(true) ;
 					} catch (PathNotFoundException e) {
 						// hung.hoang add
+						sProvider.close();
 						uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 						return ;						
@@ -489,9 +492,9 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					topicNew.setVoteRating(0.0) ;
 					topicNew.setUserVoteRating(new String[] {}) ;
 					try {
-						forumService.saveTopic(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
+						forumService.saveTopic(sProvider, uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
 					} catch (PathNotFoundException e) {
-						e.printStackTrace();
+						sProvider.close();
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 						categoryContainer.updateIsRender(true) ;

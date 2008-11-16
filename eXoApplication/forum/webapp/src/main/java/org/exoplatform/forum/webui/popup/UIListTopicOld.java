@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -121,8 +122,13 @@ public class UIListTopicOld extends UIContainer {
 			topic.setIsActive(!isActive) ;
 			List<Topic> topics = new ArrayList<Topic>();
 			topics.add(topic);
-			administration.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 6) ;
-			administration.isUpdate = true ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				administration.forumService.modifyTopic(sProvider, topics, 6) ;
+				administration.isUpdate = true ;
+			} finally {
+				sProvider.close();
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(administration);
 		}
 	}
@@ -133,7 +139,12 @@ public class UIListTopicOld extends UIContainer {
 			String ids = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = ids.split("/") ;
 			int l = id.length ;
-			listTopicOld.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2],id[l-1]) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				listTopicOld.forumService.removeTopic(sProvider, id[l-3], id[l-2],id[l-1]) ;
+			} finally {
+				sProvider.close();
+			}
 			listTopicOld.isUpdate = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(listTopicOld.getAncestorOfType(UIForumPortlet.class));
 		}

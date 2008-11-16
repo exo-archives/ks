@@ -28,6 +28,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -99,15 +100,20 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
 			if(!ForumUtils.isEmpty(objctId)) {
-				uicontainer.forumService.saveReadMessage(ForumSessionUtils.getSystemProvider(), objctId, uicontainer.userName, Utils.AGREEMESSAGE);
-				ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
-				UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-				UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 600) ;
-				privateMessageForm.setPrivateMessage(privateMessage);
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.getUserProfile() ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					uicontainer.forumService.saveReadMessage(sProvider, objctId, uicontainer.userName, Utils.AGREEMESSAGE);
+					ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
+					UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
+					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+					UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 600) ;
+					privateMessageForm.setPrivateMessage(privateMessage);
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+					forumPortlet.getUserProfile() ;
+				} finally {
+					sProvider.close();
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 			}
 		}
@@ -118,7 +124,12 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			if(!ForumUtils.isEmpty(objctId)) {
-				uicontainer.forumService.removePrivateMessage(ForumSessionUtils.getSystemProvider(), objctId, uicontainer.userName, Utils.AGREEMESSAGE);
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					uicontainer.forumService.removePrivateMessage(sProvider, objctId, uicontainer.userName, Utils.AGREEMESSAGE);
+				} finally {
+					sProvider.close();
+				}
 				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.getUserProfile() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

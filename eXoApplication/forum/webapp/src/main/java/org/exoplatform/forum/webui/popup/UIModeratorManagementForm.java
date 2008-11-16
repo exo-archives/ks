@@ -35,6 +35,7 @@ import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -540,6 +541,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	List<String> OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums())) ;
     	List<String> DeleteModerateForums = new ArrayList<String> ();
     	boolean isSetGetNewListForum = false ;
+    	SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
     	if(NewModerates.isEmpty()){
     		DeleteModerateForums = OldModerateForums;
     	} else {
@@ -550,11 +552,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     				DeleteModerateForums.add(string) ;
     			}
     		}
-    		uiForm.forumService.saveModerateOfForums(ForumSessionUtils.getSystemProvider(), NewModerates, userProfile.getUserId(), false);
+    		uiForm.forumService.saveModerateOfForums(sProvider, NewModerates, userProfile.getUserId(), false);
     		isSetGetNewListForum = true ;
     	}
     	if(DeleteModerateForums.size() > 0) {
-    		uiForm.forumService.saveModerateOfForums(ForumSessionUtils.getSystemProvider(), DeleteModerateForums, userProfile.getUserId(), true);
+    		uiForm.forumService.saveModerateOfForums(sProvider, DeleteModerateForums, userProfile.getUserId(), true);
     		isSetGetNewListForum = true ;
     	}
     	if(isSetGetNewListForum)forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
@@ -648,10 +650,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	userProfile.setBanCounter(banCounter);
     	userProfile.setBanReasonSummary(banReasonSummaries);
     	try {
-    		uiForm.forumService.saveUserProfile(ForumSessionUtils.getSystemProvider(), userProfile, true, true) ;
+    		uiForm.forumService.saveUserProfile(sProvider, userProfile, true, true) ;
       } catch (Exception e) {
       	e.printStackTrace() ;
-      }
+      } finally {
+				sProvider.close();
+			}
       if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
       	forumPortlet.setUserProfile() ;
       }

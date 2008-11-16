@@ -30,6 +30,7 @@ import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -103,8 +104,9 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
 			String categoryPath = event.getRequestContext().getRequestParameter(OBJECTID);
 			List<Forum> forums = uiForm.forums_ ;
 			String categoryId = categoryPath.substring((categoryPath.lastIndexOf("/")+1))	;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				forumService.moveForum(ForumSessionUtils.getSystemProvider(), forums, categoryPath) ;
+				forumService.moveForum(sProvider, forums, categoryPath) ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
 				if(uiForm.isForumUpdate) {
@@ -120,6 +122,7 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
 				}
       } catch (Exception e) {
+      	sProvider.close();
       	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
       	uiApp.addMessage(new ApplicationMessage("UIMoveForumForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
       	return;

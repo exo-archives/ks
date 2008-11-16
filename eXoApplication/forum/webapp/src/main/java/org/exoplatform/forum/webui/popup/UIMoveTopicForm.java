@@ -32,6 +32,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -140,8 +141,9 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 			UIMoveTopicForm uiForm = event.getSource() ;
 			String forumPath = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			if(!ForumUtils.isEmpty(forumPath)) {
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uiForm.forumService.moveTopic(ForumSessionUtils.getSystemProvider(), uiForm.topics , forumPath) ;
+					uiForm.forumService.moveTopic(sProvider , uiForm.topics , forumPath) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
 					if(uiForm.isFormTopic) {
@@ -156,9 +158,12 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 					}
         } catch (Exception e) {
+        	sProvider.close();
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIMoveTopicForm.msg.parent-deleted", null, ApplicationMessage.WARNING)) ;
         	return;
+        } finally {
+        	sProvider.close();
         }
 			}
 		}

@@ -33,6 +33,7 @@ import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -370,11 +371,18 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			newForum.setViewer(setViewer);
 			
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			if(!ForumUtils.isEmpty(uiForm.forumId))	{
-				newForum.setId(uiForm.forumId);
-				forumService.saveForum(ForumSessionUtils.getSystemProvider(), categoryId, newForum, false);
-			} else {
-				forumService.saveForum(ForumSessionUtils.getSystemProvider(), categoryId, newForum, true);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				if(!ForumUtils.isEmpty(uiForm.forumId))	{
+					newForum.setId(uiForm.forumId);
+					forumService.saveForum(sProvider, categoryId, newForum, false);
+				} else {
+					forumService.saveForum(sProvider, categoryId, newForum, true);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				sProvider.close();
 			}
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			

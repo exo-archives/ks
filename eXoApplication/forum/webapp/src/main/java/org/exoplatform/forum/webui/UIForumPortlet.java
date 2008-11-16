@@ -24,6 +24,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -130,7 +131,12 @@ public class UIForumPortlet extends UIPortletApplication {
 		if(this.userProfile != null) {
 			date = this.userProfile.getLastLoginDate() ;
 		}
-		this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userId, true, true, isLogin) ;
+		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+		try{
+			this.userProfile = forumService.getUserProfile(sProvider, userId, true, true, isLogin) ;
+		}finally {
+			sProvider.close();
+		}
 		this.isLogin = false;
 		this.userProfile.setIsOnline(true) ;
 		if(date != null)

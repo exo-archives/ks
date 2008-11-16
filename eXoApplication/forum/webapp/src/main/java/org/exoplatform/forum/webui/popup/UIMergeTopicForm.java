@@ -30,6 +30,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -109,27 +110,34 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					String categoryId = temp[temp.length - 3] ;
 					String forumId = temp[temp.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-					for(Topic topic : uiForm.listTopic) {
-						if(topicMergeId.equals(topic.getId())) {continue ;}
-						try {
-							JCRPageList pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), "", "", "", "") ;
-							List<Post> posts = pageList.getPage(0) ;
-							forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath, false) ;
-							forumService.removeTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId()) ;
-	          } catch (Exception e) {
-		          isMerge = false;
-		          break;
-	          }
-					}
-					if(isMerge){
-						topicMerge.setTopicName(topicMergeTitle) ;
-		        try {
-		        	List<Topic>list = new ArrayList<Topic>();
-		        	list.add(topicMerge) ;
-		          forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), list, 7) ;
-		        } catch (PathNotFoundException e) {
-		          isMerge = false;
-		        }
+					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+					try {
+						for(Topic topic : uiForm.listTopic) {
+							if(topicMergeId.equals(topic.getId())) {continue ;}
+							try {
+								JCRPageList pageList = forumService.getPosts(sProvider, categoryId, forumId, topic.getId(), "", "", "", "") ;
+								List<Post> posts = pageList.getPage(0) ;
+								forumService.movePost(sProvider, posts, destTopicPath, false) ;
+								forumService.removeTopic(sProvider, categoryId, forumId, topic.getId()) ;
+		          } catch (Exception e) {
+			          isMerge = false;
+			          sProvider.close();
+			          break;
+		          }
+						}
+						if(isMerge){
+							topicMerge.setTopicName(topicMergeTitle) ;
+			        try {
+			        	List<Topic>list = new ArrayList<Topic>();
+			        	list.add(topicMerge) ;
+			          forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), list, 7) ;
+			        } catch (PathNotFoundException e) {
+			          isMerge = false;
+			          sProvider.close();
+			        }
+						}
+					} finally {
+						sProvider.close();
 					}
 				} else {
 					isMerge = false;

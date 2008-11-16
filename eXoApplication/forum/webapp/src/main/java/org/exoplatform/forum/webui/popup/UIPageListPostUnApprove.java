@@ -28,6 +28,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -160,7 +161,12 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 			if(!haveCheck) {
 				throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null)) ;
 			} else {
-				postUnApprove.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 1) ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					postUnApprove.forumService.modifyPost(sProvider, posts, 1) ;
+				}finally {
+					sProvider.close();
+				}
 			}
 			UIForumPortlet forumPortlet = postUnApprove.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;

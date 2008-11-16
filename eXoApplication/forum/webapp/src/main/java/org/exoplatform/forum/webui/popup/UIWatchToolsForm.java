@@ -29,6 +29,7 @@ import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -116,21 +117,26 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 			emails.add(email) ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			forumService.removeWatch(ForumSessionUtils.getSystemProvider(), 1, uiForm.getPath(), emails) ;
-			if(uiForm.getIsTopic()){
-				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-				topicDetail.setIsEditTopic(true) ;
-			} else {
-				UITopicContainer topicContainer= forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-				topicContainer.setIdUpdate(true);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				forumService.removeWatch(sProvider, 1, uiForm.getPath(), emails) ;
+				if(uiForm.getIsTopic()){
+					UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+					topicDetail.setIsEditTopic(true) ;
+				} else {
+					UITopicContainer topicContainer= forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+					topicContainer.setIdUpdate(true);
+				}
+				String []strings = new String[(uiForm.listEmail.size()-1)];
+				int j = 0;
+				for (String string : uiForm.listEmail) {
+					if(string.equals(email)) continue ;
+					strings[j] = string; ++j;
+	      }
+				uiForm.setEmails(strings) ;
+			} finally {
+				sProvider.close();
 			}
-			String []strings = new String[(uiForm.listEmail.size()-1)];
-			int j = 0;
-			for (String string : uiForm.listEmail) {
-				if(string.equals(email)) continue ;
-				strings[j] = string; ++j;
-      }
-			uiForm.setEmails(strings) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

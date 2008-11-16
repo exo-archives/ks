@@ -29,6 +29,7 @@ import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicsTag;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -113,12 +114,15 @@ public class UITagManagerForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UITagManagerForm> event) throws Exception {
 			UITagManagerForm uiForm = event.getSource() ;
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				uiForm.forumService.removeTag(ForumSessionUtils.getSystemProvider(), tagId);
+				uiForm.forumService.removeTag(sProvider, tagId);
 				uiForm.setUpdateTag(true) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getParent()) ;
       } catch (Exception e) {
 	      e.printStackTrace();
+      } finally {
+      	sProvider.close();
       }
 		}
 	}
