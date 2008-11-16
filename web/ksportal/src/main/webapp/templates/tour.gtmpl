@@ -10,7 +10,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="Button NormalButton"  onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+		<div class="Button NormalButton"	onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
 			<div class="ButtonL">
 				<div class="ButtonR">
 					<div class="ButtonC">
@@ -19,7 +19,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="Button NormalButton"  onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+		<div class="Button NormalButton"	onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
 			<div class="ButtonL">
 				<div class="ButtonR">
 					<div class="ButtonC">
@@ -28,9 +28,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="SignUpButton">
-			<a href="/portal/public/classic/register">Sign up Now</a>
-		</div>
+		<a href="/portal/public/classic/register">
+			<div class="SignUpButton">
+				<div>Sign up Now</div>
+			</div>
+		</a>
 	</div>
 	<div class="RightKSGuidedTour">
 		<div class="ContentTour KSGuidedTour1" style="display:block;">
@@ -262,7 +264,7 @@
  	var parent_ = document.getElementById('UIKSGuidedTour');
 	var childBts = eXo.core.DOMUtil.findDescendantsByClass(parent_, 'div', 'Button');
  	var t = 0;
-  function showContent(obj) {
+	function showContent(obj) {
  		var childContents = eXo.core.DOMUtil.findDescendantsByClass(parent_, 'div', 'ContentTour');
  		for(var i=0; i<childBts.length; i++) {
  			var child = childBts[i];
@@ -275,9 +277,9 @@
  				childContents[i].style.display = "none";
  			}
  		}
-  }
-  function onMouseOverButton(obj) {
-    for(var i=0; i<childBts.length; i++) {
+	}
+	function onMouseOverButton(obj) {
+		for(var i=0; i<childBts.length; i++) {
  			var child = childBts[i];
  			if(child.className != "Button HightLineButton"){
 	 			if(child === obj) {
@@ -287,13 +289,13 @@
 	 			}
  			}
  		}
-  }
-  function onMouseOutButton(obj) {
-    for(var i=0; i<childBts.length; i++) {
+	}
+	function onMouseOutButton(obj) {
+		for(var i=0; i<childBts.length; i++) {
  			var child = childBts[i];
  			if(child.className != "Button HightLineButton" && i != t){
  				child.className = "Button NormalButton";
  			}
  		}
-  }
+	}
 </script>
