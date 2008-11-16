@@ -37,6 +37,7 @@ import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -203,7 +204,12 @@ public class UICategory extends UIForm	{
 			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 			categoryContainer.updateIsRender(true) ;
 			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-			uiCategory.forumService.removeCategory(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				uiCategory.forumService.removeCategory(sProvider, uiCategory.categoryId) ;
+			} finally {
+				sProvider.close();
+			}
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
@@ -277,12 +283,17 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if(forums.size() > 0) {
-				for (Forum forum : forums) {
-					if(forum.getIsLock()) continue ;
-					forum.setIsLock(true) ;
-					uiCategory.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 2);
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					for (Forum forum : forums) {
+						if(forum.getIsLock()) continue ;
+						forum.setIsLock(true) ;
+						uiCategory.forumService.modifyForum(sProvider, forum, 2);
+					}
+					uiCategory.isEditForum = true ;
+				} finally {
+					sProvider.close();
 				}
-				uiCategory.isEditForum = true ;
 			} else {
 				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UICategory.msg.notCheck", null, ApplicationMessage.WARNING)) ;
@@ -305,12 +316,17 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if(forums.size() > 0) {
-				for (Forum forum : forums) {
-					if(!forum.getIsLock()) continue ;
-					forum.setIsLock(false) ;
-					uiCategory.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 2);
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					for (Forum forum : forums) {
+						if(!forum.getIsLock()) continue ;
+						forum.setIsLock(false) ;
+						uiCategory.forumService.modifyForum(sProvider, forum, 2);
+					}
+					uiCategory.isEditForum = true ;
+				} finally {
+					sProvider.close();
 				}
-				uiCategory.isEditForum = true ;
 			} else {
 				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UICategory.msg.notCheck", null, ApplicationMessage.WARNING)) ;
@@ -333,11 +349,16 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if(forums.size() > 0) {
-				for (Forum forum : forums) {
-					forum.setIsClosed(false) ;
-					uiCategory.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 1);
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					for (Forum forum : forums) {
+						forum.setIsClosed(false) ;
+						uiCategory.forumService.modifyForum(sProvider, forum, 1);
+					}
+					uiCategory.isEditForum = true ;
+				} finally {
+					sProvider.close();
 				}
-				uiCategory.isEditForum = true ;
 			} 
 			if(forums.size() == 0) {
 				Object[] args = { };
@@ -359,11 +380,16 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if(forums.size() > 0) {
-				for (Forum forum : forums) {
-					forum.setIsClosed(true) ;
-					uiCategory.forumService.modifyForum(ForumSessionUtils.getSystemProvider(), forum, 1);
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					for (Forum forum : forums) {
+						forum.setIsClosed(true) ;
+						uiCategory.forumService.modifyForum(sProvider, forum, 1);
+					}
+					uiCategory.isEditForum = true ;
+				} finally {
+					sProvider.close();
 				}
-				uiCategory.isEditForum = true ;
 			} 
 			if(forums.size() <= 0) {
 				Object[] args = { };
@@ -413,11 +439,16 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if((forums.size() > 0)) {
-				for (Forum forum : forums) {
-					uiCategory.forumService.removeForum(ForumSessionUtils.getSystemProvider(), uiCategory.categoryId, forum.getId()) ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					for (Forum forum : forums) {
+						uiCategory.forumService.removeForum(sProvider, uiCategory.categoryId, forum.getId()) ;
+					}
+					uiCategory.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setUpdateForumLinks() ;
+					uiCategory.isEditForum = true ;
+				} finally {
+					sProvider.close();
 				}
-				uiCategory.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				uiCategory.isEditForum = true ;
 			} else {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UICategory.msg.notCheck", args, ApplicationMessage.WARNING)) ;
@@ -526,7 +557,12 @@ public class UICategory extends UIForm	{
 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
 				}
 				String userName = uiContainer.userProfile.getUserId() ;
-				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					uiContainer.forumService.saveUserBookmark(sProvider, userName, path, true) ;
+				} finally {
+					sProvider.close();
+				}
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;
 			}

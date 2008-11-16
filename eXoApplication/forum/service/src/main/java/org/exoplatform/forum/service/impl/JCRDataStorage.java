@@ -270,6 +270,9 @@ public class JCRDataStorage {
 					}
 				}
 			}
+		} catch (Exception e) {
+			sProvider.close();
+			throw e;
 		}finally {
 			sProvider.close();
 		}

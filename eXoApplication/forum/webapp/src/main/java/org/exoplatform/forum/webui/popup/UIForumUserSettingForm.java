@@ -32,6 +32,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -268,7 +269,12 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setMaxPostInPage(maxPost);
 			userProfile.setMaxTopicInPage(maxTopic);
 			userProfile.setIsShowForumJump(isJump);
-			uiForm.forumService.saveUserProfile(ForumSessionUtils.getSystemProvider(), userProfile, true, false);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				uiForm.forumService.saveUserProfile(sProvider, userProfile, true, false);
+			} finally {
+				sProvider.close();
+			}
 			forumPortlet.setUserProfile() ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

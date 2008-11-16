@@ -32,6 +32,7 @@ import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -192,20 +193,27 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			
-			if(!ForumUtils.isEmpty(uiForm.categoryId)) {
-				cat.setId(uiForm.categoryId) ;
-				forumService.saveCategory(ForumSessionUtils.getSystemProvider(), cat, false);
-				forumPortlet.cancelAction() ;
-				UICategory uiCategory = forumPortlet.getChild(UICategoryContainer.class).getChild(UICategory.class) ;
-				WebuiRequestContext context = event.getRequestContext() ;
-				context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class)) ;
-				context.addUIComponentToUpdateByAjax(uiCategory) ;
-			} else {
-				forumService.saveCategory(ForumSessionUtils.getSystemProvider(), cat, true);
-				forumPortlet.cancelAction() ;
-				UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				if(!ForumUtils.isEmpty(uiForm.categoryId)) {
+					cat.setId(uiForm.categoryId) ;
+					forumService.saveCategory(sProvider, cat, false);
+					forumPortlet.cancelAction() ;
+					UICategory uiCategory = forumPortlet.getChild(UICategoryContainer.class).getChild(UICategory.class) ;
+					WebuiRequestContext context = event.getRequestContext() ;
+					context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class)) ;
+					context.addUIComponentToUpdateByAjax(uiCategory) ;
+				} else {
+					forumService.saveCategory(sProvider, cat, true);
+					forumPortlet.cancelAction() ;
+					UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories) ;
+				}
+			} catch (Exception e) {
+				sProvider.close();
+				throw e;
+			}finally {
+				sProvider.close();
 			}
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 		}

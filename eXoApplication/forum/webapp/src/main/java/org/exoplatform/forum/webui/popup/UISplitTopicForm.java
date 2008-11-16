@@ -33,6 +33,7 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -177,17 +178,21 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					String categoryId = string[string.length - 3] ;
 					String forumId = string[string.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 					try {
-						forumService.saveTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail()) ;
+						forumService.saveTopic(sProvider, categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail()) ;
 						String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
-						forumService.movePost(ForumSessionUtils.getSystemProvider(), posts, destTopicPath, true);
+						forumService.movePost(sProvider, posts, destTopicPath, true);
 					} catch (Exception e) {
+						sProvider.close();
 						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 						Object[] args = { };
 						throw new MessageException(new ApplicationMessage("UISplitTopicForm.msg.forum-deleted", args, ApplicationMessage.WARNING)) ;
-					}					
+					} finally {
+						sProvider.close();
+					}			
 				}else {
 					Object[] args = { };
 					throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;

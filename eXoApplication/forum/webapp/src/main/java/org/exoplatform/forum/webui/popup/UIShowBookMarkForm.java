@@ -43,6 +43,7 @@ import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -132,106 +133,111 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 			String userName = bookMark.userProfile.getUserId();
 			long role = bookMark.userProfile.getUserRole();
 			boolean isRead = true;
-			Category category = bookMark.forumService.getCategory(ForumSessionUtils.getSystemProvider(), id[0]);
-			if(category == null) {
-				breadcumbs.setOpen(false) ;
-				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-				path = bookMark.getBookMarkId(path) ;
-				if(!ForumUtils.isEmpty(path)) {
-					bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
-					forumPortlet.setUserProfile() ;
-				}
-				return ;
-			}
-			String[] privateUser = category.getUserPrivate() ;
-			if(role > 0 && privateUser.length > 0 && !privateUser[0].equals(" ")) {
-				isRead = ForumServiceUtils.hasPermission(privateUser, userName);
-			}
-			if(!isRead){
-				length = 0;
-			}
-			if(length == 3) {
-				String path_ = "" ;
-				Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
-				if(forum != null)path_ = forum.getPath()+"/"+id[2] ;
-				Topic topic = bookMark.forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path_, false) ;
-				if(forum == null || topic == null) {
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				Category category = bookMark.forumService.getCategory(sProvider, id[0]);
+				if(category == null) {
 					breadcumbs.setOpen(false) ;
 					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 					path = bookMark.getBookMarkId(path) ;
 					if(!ForumUtils.isEmpty(path)) {
-						bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
+						bookMark.forumService.saveUserBookmark(sProvider, bookMark.userProfile.getUserId(), path, false) ;
 						forumPortlet.setUserProfile() ;
 					}
 					return ;
 				}
-				if(forum != null && forum.getIsClosed()) isRead = false;
-				if(role > 0){
-					boolean isMode = false;
-					if(!isRead && forum.getModerators() != null && forum.getModerators().length > 0 && !forum.getModerators()[0].equals(" ")) {
-						isMode = ForumServiceUtils.hasPermission(forum.getModerators(), userName);
-					}  
-					if(!isMode){
-						if(isRead && topic.getCanView() != null && topic.getCanView().length > 0 && !topic.getCanView()[0].equals(" ")){
-							isRead = ForumServiceUtils.hasPermission(topic.getCanView(), userName);
-							if(!isRead)isRead = ForumServiceUtils.hasPermission(forum.getPoster(), userName);
-							if(!isRead)isRead = ForumServiceUtils.hasPermission(forum.getViewer(), userName);
+				String[] privateUser = category.getUserPrivate() ;
+				if(role > 0 && privateUser.length > 0 && !privateUser[0].equals(" ")) {
+					isRead = ForumServiceUtils.hasPermission(privateUser, userName);
+				}
+				if(!isRead){
+					length = 0;
+				}
+				if(length == 3) {
+					String path_ = "" ;
+					Forum forum = bookMark.forumService.getForum(sProvider,id[0] , id[1] ) ;
+					if(forum != null)path_ = forum.getPath()+"/"+id[2] ;
+					Topic topic = bookMark.forumService.getTopicByPath(sProvider, path_, false) ;
+					if(forum == null || topic == null) {
+						breadcumbs.setOpen(false) ;
+						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+						path = bookMark.getBookMarkId(path) ;
+						if(!ForumUtils.isEmpty(path)) {
+							bookMark.forumService.saveUserBookmark(sProvider, bookMark.userProfile.getUserId(), path, false) ;
+							forumPortlet.setUserProfile() ;
 						}
-					} else isRead = true;
-				} else isRead = true; 
-				if(isRead){
-					forumPortlet.updateIsRendered(ForumUtils.FORUM);
-					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-					UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-					uiForumContainer.setIsRenderChild(false) ;
-					UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-					uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-					uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
-					uiTopicDetail.setUpdateForum(forum) ;
-					uiTopicDetail.setIdPostView("top") ;
-					uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
-					forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
-				}
-			} else if(length == 2){
-				Forum forum = bookMark.forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
-				if(forum == null) {
-					breadcumbs.setOpen(false) ;
-					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-					path = bookMark.getBookMarkId(path) ;
-					if(!ForumUtils.isEmpty(path)) {
-						bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
-						forumPortlet.setUserProfile() ;
+						return ;
 					}
-					return ;
-				}
-				if(forum.getIsClosed()) {
+					if(forum != null && forum.getIsClosed()) isRead = false;
 					if(role > 0){
-						if(forum.getModerators() != null && forum.getModerators().length > 0) {
-							isRead = ForumServiceUtils.hasPermission(forum.getModerators(), userName);
-						}else {
-							isRead = false;
+						boolean isMode = false;
+						if(!isRead && forum.getModerators() != null && forum.getModerators().length > 0 && !forum.getModerators()[0].equals(" ")) {
+							isMode = ForumServiceUtils.hasPermission(forum.getModerators(), userName);
+						}  
+						if(!isMode){
+							if(isRead && topic.getCanView() != null && topic.getCanView().length > 0 && !topic.getCanView()[0].equals(" ")){
+								isRead = ForumServiceUtils.hasPermission(topic.getCanView(), userName);
+								if(!isRead)isRead = ForumServiceUtils.hasPermission(forum.getPoster(), userName);
+								if(!isRead)isRead = ForumServiceUtils.hasPermission(forum.getViewer(), userName);
+							}
+						} else isRead = true;
+					} else isRead = true; 
+					if(isRead){
+						forumPortlet.updateIsRendered(ForumUtils.FORUM);
+						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+						UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+						uiForumContainer.setIsRenderChild(false) ;
+						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+						uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
+						uiTopicDetail.setUpdateForum(forum) ;
+						uiTopicDetail.setIdPostView("top") ;
+						uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+					}
+				} else if(length == 2){
+					Forum forum = bookMark.forumService.getForum(sProvider, id[0] , id[1] ) ;
+					if(forum == null) {
+						breadcumbs.setOpen(false) ;
+						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+						path = bookMark.getBookMarkId(path) ;
+						if(!ForumUtils.isEmpty(path)) {
+							bookMark.forumService.saveUserBookmark(sProvider, bookMark.userProfile.getUserId(), path, false) ;
+							forumPortlet.setUserProfile() ;
+						}
+						return ;
+					}
+					if(forum.getIsClosed()) {
+						if(role > 0){
+							if(forum.getModerators() != null && forum.getModerators().length > 0) {
+								isRead = ForumServiceUtils.hasPermission(forum.getModerators(), userName);
+							}else {
+								isRead = false;
+							}
 						}
 					}
+					if(isRead) {
+						forumPortlet.updateIsRendered(ForumUtils.FORUM);
+						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+						uiForumContainer.setIsRenderChild(true) ;
+						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
+						uiTopicContainer.setUpdateForum(id[0], forum) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
+					}
+				} else if(length == 1){
+					if(!isRead && role == 0) isRead = true;
+					if(isRead){
+						List<Forum> list = bookMark.forumService.getForums(sProvider, path, "");
+						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+						categoryContainer.getChild(UICategory.class).update(category, list);
+						categoryContainer.updateIsRender(false) ;
+						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path);
+						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+					}
 				}
-				if(isRead) {
-					forumPortlet.updateIsRendered(ForumUtils.FORUM);
-					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-					uiForumContainer.setIsRenderChild(true) ;
-					uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-					UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-					uiTopicContainer.setUpdateForum(id[0], forum) ;
-					forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
-				}
-			} else if(length == 1){
-				if(!isRead && role == 0) isRead = true;
-				if(isRead){
-					List<Forum> list = bookMark.forumService.getForums(ForumSessionUtils.getSystemProvider(), path, "");
-					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-					categoryContainer.getChild(UICategory.class).update(category, list);
-					categoryContainer.updateIsRender(false) ;
-					forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path);
-					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				}
+			} finally {
+				sProvider.close();
 			}
 			if(!isRead) {
 				breadcumbs.setOpen(false) ;

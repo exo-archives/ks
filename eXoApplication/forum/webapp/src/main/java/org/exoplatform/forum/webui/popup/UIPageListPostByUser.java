@@ -32,6 +32,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -194,7 +195,12 @@ public class UIPageListPostByUser extends UIContainer {
 			String topicId = path[length - 2];
 			String forumId = path[length - 3];
 			String categoryId = path[length - 4];
-			uiForm.forumService.removePost(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, postId);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				uiForm.forumService.removePost(sProvider, categoryId, forumId, topicId, postId);
+			}finally {
+				sProvider.close();
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}

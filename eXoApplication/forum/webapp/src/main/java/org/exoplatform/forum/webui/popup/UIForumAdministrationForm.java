@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -195,7 +196,12 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			forumAdministration.setTopicSortByType(topicSortByType) ;
 			forumAdministration.setCensoredKeyword(censoredKeyword) ;
 			forumAdministration.setNotifyEmailContent(notifyEmail) ;
-			administrationForm.forumService.saveForumAdministration(ForumSessionUtils.getSystemProvider(), forumAdministration) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				administrationForm.forumService.saveForumAdministration(sProvider, forumAdministration) ;
+			} finally {
+				sProvider.close();
+			}
 			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;

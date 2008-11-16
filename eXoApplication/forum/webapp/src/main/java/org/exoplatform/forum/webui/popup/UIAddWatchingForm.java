@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.CommonContact;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -129,7 +130,12 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			} 
 			if(values_.size() > 0 && !ForumUtils.isEmpty(path)) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				forumService.addWatch(ForumSessionUtils.getSystemProvider(), 1, path, values_, ForumSessionUtils.getCurrentUser()) ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					forumService.addWatch(sProvider, 1, path, values_, ForumSessionUtils.getCurrentUser()) ;
+				} finally {
+					sProvider.close();
+				}
 			}
 			uiForm.path = "";
 			uiForm.initForm() ;

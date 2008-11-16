@@ -31,6 +31,7 @@ import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicsTag;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -140,13 +141,18 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 			newTag.setColor(color);
 			newTag.setDescription(descriptiom) ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			if(uiForm.isUpdate) {
-				newTag.setId(uiForm.tagId); 
-				forumService.saveTag(ForumSessionUtils.getSystemProvider(), newTag, false);
-			} else {
-				String userName = ForumSessionUtils.getCurrentUser() ;
-				newTag.setOwner(userName) ;
-				forumService.saveTag(ForumSessionUtils.getSystemProvider(), newTag, true);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				if(uiForm.isUpdate) {
+					newTag.setId(uiForm.tagId); 
+					forumService.saveTag(sProvider, newTag, false);
+				} else {
+					String userName = ForumSessionUtils.getCurrentUser() ;
+					newTag.setOwner(userName) ;
+					forumService.saveTag(sProvider, newTag, true);
+				}
+			} finally {
+				sProvider.close();
 			}
 			if(uiForm.isTopicTag) {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);

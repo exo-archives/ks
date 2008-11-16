@@ -30,6 +30,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -271,12 +272,17 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				poll.setIsClosed(uiForm.poll.getIsClosed());
 				String[] id = uiForm.TopicPath.trim().split("/") ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				if(uiForm.isUpdate) {
-					poll.setId(uiForm.getId()) ;
-					if(newUser.length > 0) poll.setUserVote(newUser) ;
-					forumService.savePoll(ForumSessionUtils.getSystemProvider(), id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, false, false) ;
-				} else {
-					forumService.savePoll(ForumSessionUtils.getSystemProvider(), id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, true, false) ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					if(uiForm.isUpdate) {
+						poll.setId(uiForm.getId()) ;
+						if(newUser.length > 0) poll.setUserVote(newUser) ;
+						forumService.savePoll(sProvider, id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, false, false) ;
+					} else {
+						forumService.savePoll(sProvider, id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, true, false) ;
+					}
+				} finally {
+					sProvider.close();
 				}
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;

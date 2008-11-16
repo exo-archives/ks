@@ -37,6 +37,7 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -362,37 +363,42 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
 				boolean isParentDelete = false;
-				if(!ForumUtils.isEmpty(uiForm.postId)) {
-					if(uiForm.isQuote || uiForm.isMP) {
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					if(!ForumUtils.isEmpty(uiForm.postId)) {
+						if(uiForm.isQuote || uiForm.isMP) {
+							post.setRemoteAddr(remoteAddr) ;
+							try {
+								uiForm.forumService.savePost(sProvider, uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
+							} catch (PathNotFoundException e) {
+								isParentDelete = true;
+							}
+							topicDetail.setIdPostView("lastpost");
+							topicDetail.setUpdatePostPageList(true);
+						} else{
+							post.setId(uiForm.postId) ;
+							post.setModifiedBy(userName) ;
+							post.setModifiedDate(new Date()) ;
+							post.setEditReason(editReason) ;
+							try {
+								uiForm.forumService.savePost(sProvider, uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
+							} catch (PathNotFoundException e) {
+								isParentDelete = true;
+							}
+							topicDetail.setIdPostView(uiForm.postId);
+						}
+					} else {
 						post.setRemoteAddr(remoteAddr) ;
 						try {
-							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
+							uiForm.forumService.savePost(sProvider, uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 						} catch (PathNotFoundException e) {
 							isParentDelete = true;
 						}
 						topicDetail.setIdPostView("lastpost");
 						topicDetail.setUpdatePostPageList(true);
-					} else{
-						post.setId(uiForm.postId) ;
-						post.setModifiedBy(userName) ;
-						post.setModifiedDate(new Date()) ;
-						post.setEditReason(editReason) ;
-						try {
-							uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
-						} catch (PathNotFoundException e) {
-							isParentDelete = true;
-						}
-						topicDetail.setIdPostView(uiForm.postId);
 					}
-				} else {
-					post.setRemoteAddr(remoteAddr) ;
-					try {
-						uiForm.forumService.savePost(ForumSessionUtils.getSystemProvider(), uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
-					} catch (PathNotFoundException e) {
-						isParentDelete = true;
-					}
-					topicDetail.setIdPostView("lastpost");
-					topicDetail.setUpdatePostPageList(true);
+				} finally {
+					sProvider.close();
 				}
 				uiForm.isMP = uiForm.isQuote = false;
 				if(isParentDelete){

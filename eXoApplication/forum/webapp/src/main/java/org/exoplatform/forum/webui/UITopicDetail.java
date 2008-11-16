@@ -62,6 +62,7 @@ import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -313,13 +314,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private Topic getTopic() throws Exception {
+		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try {
 			if(this.isEditTopic || this.topic == null) {
-				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, Utils.GUEST) ;
+				this.topic = forumService.getTopic(sProvider, categoryId, forumId, topicId, Utils.GUEST) ;
 				this.isEditTopic = false ;
 			}
 			return this.topic ;
 		} catch (Exception e) {
+			sProvider.close();
 			e.printStackTrace();
 			return null ;
 		}
@@ -398,6 +401,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		isMod = false;
 		if(this.userProfile.getUserRole() == 0) isMod = true;
 		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin) ;
+		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try {
 			if (this.isUpdatePageList) {
 				String isApprove = "";
@@ -409,7 +413,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					if (!isMod && !(this.topic.getOwner().equals(userLogin)))
 						isApprove = "true";
 				}
-				this.pageList = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
+				this.pageList = this.forumService.getPosts(sProvider, this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
 				this.isUpdatePageList = false;
 			}
 			long maxPost = this.userProfile.getMaxPostInPage();
@@ -423,6 +427,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			}
 			this.isModeratePost = this.topic.getIsModeratePost();
 		} catch (Exception e) {
+			sProvider.close();
 		}
 	}
 	
@@ -627,8 +632,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				categoryContainer.updateIsRender(true) ;
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(topicDetail.getUserProfile().getUserId()));
+				List<ForumSearch> list = topicDetail.forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(topicDetail.getUserProfile().getUserId()));
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
@@ -706,9 +710,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			topicDetail.forumService.removePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, postId) ;
-			topicDetail.isUpdatePageList = true ;
-			topicDetail.IdPostView = "top";
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				topicDetail.forumService.removePost(sProvider, topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, postId) ;
+				topicDetail.isUpdatePageList = true ;
+				topicDetail.IdPostView = "top";
+			} finally {
+				sProvider.close();
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 		}
 	}
@@ -793,9 +802,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				topic.setIsClosed(false) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 1) ;
-				topicDetail.viewTopic = false ;
-				topicDetail.isEditTopic = true ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					topicDetail.forumService.modifyTopic(sProvider, topics, 1) ;
+					topicDetail.viewTopic = false ;
+					topicDetail.isEditTopic = true ;
+				} finally {
+					sProvider.close();
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
@@ -812,9 +826,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				topic.setIsClosed(true) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 1) ;
-				topicDetail.viewTopic = false ;
-				topicDetail.isEditTopic = true ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					topicDetail.forumService.modifyTopic(sProvider, topics, 1) ;
+					topicDetail.viewTopic = false ;
+					topicDetail.isEditTopic = true ;
+				} finally {
+					sProvider.close();
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
@@ -831,9 +850,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				topic.setIsLock(true) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 2) ;
-				topicDetail.viewTopic = false ;
-				topicDetail.isEditTopic = true ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					topicDetail.forumService.modifyTopic(sProvider, topics, 2) ;
+					topicDetail.viewTopic = false ;
+					topicDetail.isEditTopic = true ;
+				} finally {
+					sProvider.close();
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
@@ -850,9 +874,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				topic.setIsLock(false) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 2) ;
-				topicDetail.viewTopic = false ;
-				topicDetail.isEditTopic = true ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					topicDetail.forumService.modifyTopic(sProvider, topics, 2) ;
+					topicDetail.viewTopic = false ;
+					topicDetail.isEditTopic = true ;
+				} finally {
+					sProvider.close();
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
@@ -885,9 +914,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				topic.setIsSticky(true) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 4) ;
-				topicDetail.viewTopic = false ;
-				topicDetail.isEditTopic = true ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					topicDetail.forumService.modifyTopic(sProvider, topics, 4) ;
+					topicDetail.viewTopic = false ;
+					topicDetail.isEditTopic = true ;
+				} finally {
+					sProvider.close();
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
@@ -904,9 +938,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				topic.setIsSticky(false) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
-				topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 4) ;
-				topicDetail.viewTopic = false ;
-				topicDetail.isEditTopic = true ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					topicDetail.forumService.modifyTopic(sProvider, topics, 4) ;
+					topicDetail.viewTopic = false ;
+					topicDetail.isEditTopic = true ;
+				} finally {
+					sProvider.close();
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			} else {
 				Object[] args = { topic.getTopicName() };
@@ -942,9 +981,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			topic.setIsApproved(true) ;
 			List<Topic>topics = new ArrayList<Topic>();
 			topics.add(topic);
-			topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 3) ;
-			topicDetail.viewTopic = false ;
-			topicDetail.isEditTopic = true ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				topicDetail.forumService.modifyTopic(sProvider, topics, 3) ;
+				topicDetail.viewTopic = false ;
+				topicDetail.isEditTopic = true ;
+			} finally {
+				sProvider.close();
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
@@ -956,9 +1000,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			topic.setIsApproved(false) ;
 			List<Topic>topics = new ArrayList<Topic>();
 			topics.add(topic);
-			topicDetail.forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), topics, 3) ;
-			topicDetail.viewTopic = false ;
-			topicDetail.isEditTopic = true ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				topicDetail.forumService.modifyTopic(sProvider, topics, 3) ;
+				topicDetail.viewTopic = false ;
+				topicDetail.isEditTopic = true ;
+			} finally {
+				sProvider.close();
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
@@ -967,15 +1016,20 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			Topic topic = topicDetail.topic ;
-			topicDetail.forumService.removeTopic(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topic.getId()) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-			uiForumContainer.setIsRenderChild(true) ;
-			UITopicContainer topicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-			topicContainer.setUpdateForum(topicDetail.categoryId, topicDetail.forum) ;
-			UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				topicDetail.forumService.removeTopic(sProvider, topicDetail.categoryId, topicDetail.forumId, topic.getId()) ;
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+				uiForumContainer.setIsRenderChild(true) ;
+				UITopicContainer topicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
+				topicContainer.setUpdateForum(topicDetail.categoryId, topicDetail.forum) ;
+				UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+			} finally {
+				sProvider.close();
+			}
 		}
 	}
 
@@ -1044,7 +1098,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					}
 				}
 				if(posts.size() > 0){
-					topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 1) ;
+					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+					try {
+						topicDetail.forumService.modifyPost(sProvider, posts, 1) ;
+					} finally {
+						sProvider.close();
+					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 				}
 			}
@@ -1069,7 +1128,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					posts.add(post) ;
 				}
       }
-			topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				topicDetail.forumService.modifyPost(sProvider, posts, 2) ;
+			} finally {
+				sProvider.close();
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
@@ -1105,7 +1169,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					}
 				}
 				if(posts.size() > 0){
-					topicDetail.forumService.modifyPost(ForumSessionUtils.getSystemProvider(), posts, 2) ;
+					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+					try {
+						topicDetail.forumService.modifyPost(sProvider, posts, 2) ;
+					} finally {
+						sProvider.close();
+					}
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 				}
 			}
@@ -1127,7 +1196,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				posts.add(topicDetail.getPost(postId));
       }
 			for(Post post : posts) {
-				topicDetail.forumService.removePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					topicDetail.forumService.removePost(sProvider, topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
+				} finally {
+					sProvider.close();
+				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 			}
 		}
@@ -1275,9 +1349,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				post.setIsHidden(isOffend) ;
 				post.setIsApproved(!hasTopicMod) ;
 				post.setLink(link);
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					topicDetail.forumService.savePost(ForumSessionUtils.getSystemProvider(), topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, ForumUtils.getDefaultMail()) ;
+					topicDetail.forumService.savePost(sProvider, topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, ForumUtils.getDefaultMail()) ;
 				} catch (PathNotFoundException e) {
+					sProvider.close();
 					String[] args = new String[] { } ;
 					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
 				}

@@ -26,6 +26,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -186,7 +187,12 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UITagForm> event) throws Exception {
 			UITagForm uiForm = event.getSource() ;
 			if(!ForumUtils.isEmpty(uiForm.IdSelected) && !ForumUtils.isEmpty(uiForm.topicPath)) {
-				uiForm.forumService.addTopicInTag(ForumSessionUtils.getSystemProvider(), uiForm.IdSelected, uiForm.topicPath);
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					uiForm.forumService.addTopicInTag(sProvider, uiForm.IdSelected, uiForm.topicPath);
+				} finally {
+					sProvider.close();
+				}
 			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.findFirstComponentOfType(UITopicDetail.class).setIsEditTopic(true) ;

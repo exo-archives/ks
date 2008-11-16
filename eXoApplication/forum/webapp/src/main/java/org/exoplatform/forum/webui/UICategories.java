@@ -33,6 +33,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -165,8 +166,9 @@ public class UICategories extends UIContainer	{
 		Topic topic = new Topic() ;
 		topic = this.maptopicLast.get(topicId) ;
 		if(topic == null) {
-			String forumHomePath = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
-			topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), forumHomePath + "/" + path, false) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			String forumHomePath = forumService.getForumHomePath(sProvider) ;
+			topic = forumService.getTopicByPath(sProvider, forumHomePath + "/" + path, false) ;
 		}
 		return topic ;
 	}
@@ -279,7 +281,12 @@ public class UICategories extends UIContainer	{
 					Topic topic = uiContainer.getTopic(id[2], path) ;
 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
 				}
-				uiContainer.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, path, true) ;
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					uiContainer.forumService.saveUserBookmark(sProvider, userName, path, true) ;
+				}finally {
+					sProvider.close();
+				}
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.setUserProfile() ;
 			}
