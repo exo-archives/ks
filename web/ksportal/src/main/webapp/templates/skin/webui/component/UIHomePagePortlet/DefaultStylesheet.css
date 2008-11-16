@@ -351,6 +351,11 @@
 	padding-left:3px;
 }
 
+.UINavigationPortlet .MiddleTab .TabLabel {
+	display:block;
+	padding:0 0 0 0px;
+}
+
 .UIHorizontalTabs .UITab .SelectedNavigationTab {
 	line-height:21px;
 	margin:6px 0px 0px 1px;
