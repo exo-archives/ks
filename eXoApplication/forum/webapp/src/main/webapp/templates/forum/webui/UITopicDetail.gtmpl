@@ -250,7 +250,7 @@
 																		isView = false ;
 																	}
 																}
-																if(posts.size() <= 1)isView = false ;
+																if(posts.size() <= 1 && uicomponent.pageSelect <= 1)isView = false ;
 																if(isView) {
 																	if(action.equals("DeletePost")){
 																%>
