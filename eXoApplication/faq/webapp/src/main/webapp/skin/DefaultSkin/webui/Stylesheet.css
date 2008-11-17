@@ -430,7 +430,7 @@
   float: left;
   line-height:18px;
   padding-right: 5px ;
-  white-space:normal;
+  white-space: nowrap;
   max-width: 95%;
 }
 
