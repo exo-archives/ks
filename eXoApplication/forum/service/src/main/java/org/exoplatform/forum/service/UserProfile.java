@@ -26,6 +26,7 @@ public class UserProfile {
 	public static final long MODERATOR = 1 ;
 	public static final long USER = 2 ;
 	public static final long GUEST = 3 ;
+	public static final String USER_GUEST = "user_gest_uoom";
 	
 	private String userId ;
 	private String userTitle ; //Rank of user
@@ -64,7 +65,7 @@ public class UserProfile {
 	
 	@SuppressWarnings("deprecation")
   public UserProfile() {
-		userId = "user_gest";
+		userId = USER_GUEST;
 		userTitle = "Guest";
 		userRole = GUEST ;
 		moderateForums = new String[] {} ;
