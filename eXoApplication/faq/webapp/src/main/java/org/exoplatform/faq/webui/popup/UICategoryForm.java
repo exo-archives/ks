@@ -261,7 +261,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 					faqService_.saveCategory(parentCate, cat, isAddNew_, sessionProvider);
 					faqPortlet.cancelAction() ;
 				} catch(RuntimeException exception){
-					System.out.println("\n\n\n\n--------------> edit category --> exception: @exo:id");
 					throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
 				} catch (Exception e) {
 					e.printStackTrace();
