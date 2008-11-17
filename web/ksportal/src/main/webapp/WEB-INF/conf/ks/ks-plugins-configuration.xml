@@ -59,9 +59,9 @@
 				<values-param>
 					<name>rules</name>
 					<description>rules of the role</description>
+					<value>member:/demo</value>
 					<value>root</value>
-					<value>john</value>
-					<value>marry</value>
+					<value>admin</value>
 					<!--value>/platform/administrators</value-->
 					<!--value>manager:/platform/users</value-->
 					<!--value>*:/somegroup/somesubgroup</value-->
@@ -104,8 +104,9 @@
 				<values-param>
 					<name>rules</name>
 					<description>rules of the role</description>
+					<value>member:/demo</value>
 					<value>root</value>
-					<value>john</value>
+					<value>admin</value>
 					<!--value>/platform/administrators</value-->
 					<!--value>manager:/platform/users</value-->
 					<!--value>*:/somegroup/somesubgroup</value-->
@@ -149,21 +150,18 @@
 																<value>
 																	<object type="org.exoplatform.forum.service.conf.TopicData">
 																		<field name="name"><string>Demo data policy</string></field>
-																		<field name="icon"><string>Tux</string></field>
+																		<field name="icon"><string>Shield</string></field>
 																		<field name="owner"><string>root</string></field>
-																		<field name="content"><string>Welcome to eXo Forum live demo. This demo was meant to demonstrate the features of eXo KS.In order to allow you to try a maximum number of features we didn't enforce any security restriction.\nAnybody can become an admin or a moderator of anything.\nAs a consequence, the data for this forum is not meant to stay. We may reinitialise it at anytime.</string></field>
-																		<field name="posts">
-																			<collection type="java.util.ArrayList">
-																				<value>
-																					<object type="org.exoplatform.forum.service.conf.PostData">
-																						<field name="name"><string>Reply: Demo data policy</string></field>
-																						<field name="icon"><string>IconsView</string></field>
-																						<field name="owner"><string>root</string></field>
-																						<field name="content"><string>Enjoy and don't forget to send feedback at ks@exoplatform.com</string></field>
-																					</object>
-																				</value>
-																			</collection>
-																		</field>
+																		<field name="content"><string>
+																		Welcome to eXo Knowledge Suite live demo!\n\n\n 
+
+																		We hope you enjoy discovering eXo Forum and FAQ applications features. 
+																		You don't need to be logged in to see the applications in action. But the power of KS lies in the rich set of admin/moderation features.\n\n
+																		We didn't want you to miss them so, when you [b][url="/portal/public/classic/register"]create a demo account[/url][/b], you will be granted full permissions.
+																		Anybody can become an administrator or a moderator and play in the sandbox!\n
+																		As a consequence, the data for this forum (including the accounts) is not meant to stay.\n\n
+																		[b][center]WE MAY RESET FORUMS AND FAQS ANYTIME[/center][/b]\n\n
+																		Enjoy and don't forget to send feedback at [email]ks@exoplatform.com[/email]</string></field>
 																	</object>
 																</value>
 															</collection>
