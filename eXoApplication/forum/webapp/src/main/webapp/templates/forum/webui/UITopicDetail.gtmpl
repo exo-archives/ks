@@ -865,7 +865,7 @@
 		</div>
 		<% }//end for
 			String idLastPost = uicomponent.getIdPostView() ;
-			jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 500)");
+			jsmanager.addJavascript("setTimeout(\"eXo.forum.UIForumPortlet.goLastPost('"+idLastPost+"')\", 500);");
 		 } else {
 		 if(canEdit){
 		%>
