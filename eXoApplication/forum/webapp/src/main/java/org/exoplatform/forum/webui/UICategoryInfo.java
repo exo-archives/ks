@@ -48,6 +48,7 @@ public class UICategoryInfo extends UIContainer	{
 	private long mostUserOnline_ = 0;
 	private long numberActive = 0;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
+	private boolean isGet = true;
 	
 	public UICategoryInfo() throws Exception { 
 		setPageListUserProfile();
@@ -55,9 +56,10 @@ public class UICategoryInfo extends UIContainer	{
 	
 	@SuppressWarnings("unchecked")
 	public List<UserProfile> setPageListUserProfile() throws Exception {
-		if(userProfiles == null || userProfiles.size() == 0) {
+		if(userProfiles == null || userProfiles.size() == 0 || isGet) {
 			JCRPageList pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
 			userProfiles = pageList.getPage(0) ;
+			isGet = false;
 		}
 		return userProfiles;
 	}
@@ -136,6 +138,7 @@ public class UICategoryInfo extends UIContainer	{
 		} 
 		if(isSave) {
 			this.forumService.saveForumStatistic(ForumSessionUtils.getSystemProvider(), forumStatistic) ;
+			this.isGet = true;
 		}
 		return forumStatistic ;
 	}
