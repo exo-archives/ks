@@ -612,9 +612,10 @@ UIForumPortlet.prototype.initScroll = function() {
   uiNav.scrollMgr.renderElements() ;
 } ;
 
-UIForumPortlet.prototype.executeLink = function() {
+UIForumPortlet.prototype.executeLink = function(evt) {
   var onclickAction = String(this.getAttribute("actions")) ;
 	eval(onclickAction) ;
+	eXo.core.EventManager.cancelEvent(evt);
 	return false;
 } ;
 
