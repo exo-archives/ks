@@ -30,6 +30,7 @@
 				  	String userRole = "" ;
 				  	if(!listUser.isEmpty()){
 					  	for(user in listUser) {
+					  	  if(user.getUserId().equals(user.USER_GUEST)) continue;
 					  		userRole = uicomponent.permissionUser[(int)user.getUserRole()];
 					  %>
 					      <tr class="$classRowTable">
