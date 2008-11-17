@@ -1845,9 +1845,23 @@ public class JCRDataStorage {
 				//Owner Notify
 				if(isApprovePost) {
 					String ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
-					if (ownerTopicEmail.trim().length() > 0) emailList.add(ownerTopicEmail);
-					if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
-						emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+					String []users = post.getUserPrivate();
+					if(users != null && users.length == 2) {
+						String owner = node.getProperty("exo:owner").getString();
+						if (ownerTopicEmail.trim().length() > 0 && (users[0].equals(owner) || users[1].equals(owner))) { 
+							emailList.add(ownerTopicEmail);
+						}
+						owner = forumNode.getProperty("exo:owner").getString();
+						if (forumNode.hasProperty("exo:notifyWhenAddPost") && (users[0].equals(owner) || users[1].equals(owner))) { 
+							emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+						}
+					} else {
+						if (ownerTopicEmail.trim().length() > 0) { 
+							emailList.add(ownerTopicEmail);
+						}
+						if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
+							emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+						}
 					}
 				}
 				/*
