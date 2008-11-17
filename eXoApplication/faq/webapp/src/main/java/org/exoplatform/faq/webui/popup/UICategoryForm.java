@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -190,31 +191,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		return str;
 	}
 
-	public void checkSameName (String name) throws Exception {
-		Category category = new Category() ;
-		String nameUpperCase = cutWhiteSpace(name).toUpperCase() ;
-		Boolean check = false ;
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		List<Category> listAllCategory = faqService_.getAllCategories(sessionProvider) ;
-		sessionProvider.close();
-		for(Category cate: listAllCategory) {
-			String nameCate = cutWhiteSpace(cate.getName()).toUpperCase() ;
-			if(!oldName_.equals("")) {
-				if(nameUpperCase.equals(cutWhiteSpace(oldName_).toUpperCase())) continue ;
-				else
-					check = true ;
-			} else {
-				check = true ;
-			}
-			if(check == true) {
-				if(nameCate.equals(nameUpperCase)) {
-					throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
-				}
-				else continue;
-			}
-		}
-	}  
-
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
 		public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;
@@ -222,7 +198,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue() ;
 			if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
 			if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
-			uiCategory.checkSameName(name) ;
+			//uiCategory.checkSameName(name) ;
 			String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
 			String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
 			Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
@@ -284,7 +260,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 					}
 					faqService_.saveCategory(parentCate, cat, isAddNew_, sessionProvider);
 					faqPortlet.cancelAction() ;
+				} catch(RuntimeException exception){
+					System.out.println("\n\n\n\n--------------> edit category --> exception: @exo:id");
+					throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
 				} catch (Exception e) {
+					e.printStackTrace();
 					uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
 							ApplicationMessage.INFO)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -308,7 +288,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				faqService_.saveCategory(null, cat, isAddNew_, sessionProvider);
 				faqPortlet.cancelAction() ;
 
+			}catch(RuntimeException exception){
+				throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
 			} catch (Exception e) {
+				System.out.println("\n\n\n\n----------->exception e: \n\n\n\n");
+				e.printStackTrace();
 				uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
 						ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;

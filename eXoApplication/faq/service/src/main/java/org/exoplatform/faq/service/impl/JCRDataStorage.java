@@ -17,6 +17,8 @@
 
 package org.exoplatform.faq.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -729,8 +731,34 @@ public class JCRDataStorage {
 		categoryNode.setProperty("exo:moderators", category.getModerators()) ;
 		categoryNode.setProperty("exo:isModerateQuestions", category.isModerateQuestions()) ;
 	}
+	
+	private boolean getCategoryNodeByName(Category category, boolean isAddNew, SessionProvider sProvider) throws Exception {
+		Node categoryHome = getCategoryHome(sProvider, null) ;	
+		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+				+ "//element(*,exo:faqCategory)[@exo:name='").append(category.getName()).append("']") ;
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		if(isAddNew){
+			if(result.getNodes().hasNext())
+				return true;
+			else
+				return false;
+		} else {
+			NodeIterator iterator = result.getNodes();
+			Node nodeCate = null;
+			while(iterator.hasNext()){
+				nodeCate = iterator.nextNode();
+				if(!nodeCate.getName().equals(category.getId())) return true;
+			}
+			return false;
+		}
+	}
 
 	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
+		if(getCategoryNodeByName(cat,isAddNew, sProvider)){
+			throw new RuntimeException();
+		}
 		Node categoryHome = getCategoryHome(sProvider, null) ;
 		if(parentId != null && parentId.length() > 0) {	
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();

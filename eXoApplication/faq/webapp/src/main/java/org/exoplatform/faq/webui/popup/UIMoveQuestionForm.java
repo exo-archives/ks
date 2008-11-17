@@ -154,8 +154,8 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIMoveQuestionForm> event) throws Exception {
 			UIMoveQuestionForm moveQuestionForm = event.getSource() ;
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
-				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 				faqService_.getCategoryById(cateId, sessionProvider);
 				try {
 					Question question = faqService_.getQuestionById(moveQuestionForm.questionId_, sessionProvider) ;
@@ -163,6 +163,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 						UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
 						uiApplication.addMessage(new ApplicationMessage("UIMoveQuestionForm.msg.choice-orther", null, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						sessionProvider.close();
 						return ;
 					}
 					question.setCategoryId(cateId) ;
@@ -180,6 +181,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
+			sessionProvider.close();
 			UIFAQPortlet portlet = moveQuestionForm.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;

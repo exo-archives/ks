@@ -139,15 +139,16 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			sessionProvider.close();
 			return listQues;
 		} catch (Exception e) {
+			sessionProvider.close();
 			e.printStackTrace();
 			return null ;
 		}
 	}
 
 	public List<CateClass> getListObjCategory (String newParentId) {
+		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		try {
 			List<CateClass> listCate = new ArrayList<CateClass>() ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			CateClass cateClass = new CateClass() ;
 			cateClass.setCategory(faqService_.getCategoryById(this.categoryId_, sessionProvider)) ;
 			cateClass.setCateParentId(newParentId) ;
@@ -167,6 +168,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		sessionProvider.close();
 		return null ;
 	}
 

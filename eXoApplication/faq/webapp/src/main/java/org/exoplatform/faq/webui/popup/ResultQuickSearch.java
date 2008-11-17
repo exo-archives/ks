@@ -117,8 +117,6 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					sessionProvider.close();
 					return ;
-				} finally{
-					sessionProvider.close();
 				}
 				uiQuestions.setCategories(id) ;
 				uiQuestions.setIsNotChangeLanguage() ;
@@ -145,8 +143,6 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					sessionProvider.close();
 					return ;
-				} finally {
-					sessionProvider.close();
 				}
 				UIResultContainer uiResultContainer = resultQuickSearch.getParent() ;
 				UIPopupAction popupAction = uiResultContainer.getChild(UIPopupAction.class) ;
@@ -155,6 +151,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				viewQuestion.setId("UIPopupViewQuestion") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
+			sessionProvider.close();
 		}
 	}
 

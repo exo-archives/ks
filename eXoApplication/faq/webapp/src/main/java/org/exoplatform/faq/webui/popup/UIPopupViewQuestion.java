@@ -110,6 +110,7 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
     try {
       question = faqService_.getQuestionById(questionId, sessionProvider);
       if(question != null) {
+		  sessionProvider.close();
         return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
       } else {
         return "" ;

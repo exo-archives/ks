@@ -315,9 +315,9 @@ public class UIQuestions extends UIContainer {
 			}
 			boolean isContinue = true ;
 			if(listCateId_.size() > 0){
+				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 				for(String cateIdProcess : listCateId_) {
 					try {
-						SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 						if(Arrays.asList(faqService_.getCategoryById(cateIdProcess, sessionProvider).getModeratorsCategory()).contains(currentUser_)){
 							for(int j = 0 ; j < categories_.size(); j ++) {
 								categoryModerators.add(true) ;
@@ -326,11 +326,11 @@ public class UIQuestions extends UIContainer {
 							canEditQuestion = true ;
 							break ;
 						}
-						sessionProvider.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
+				sessionProvider.close();
 			}
 
 			if(isContinue) {
