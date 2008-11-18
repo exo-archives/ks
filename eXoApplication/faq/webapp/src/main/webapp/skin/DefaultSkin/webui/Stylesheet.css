@@ -315,6 +315,14 @@
   margin: 0px 4px;
 }
 
+.UIFAQPortlet .QuestionSelect .QuestionContainer .LockSendToFriend {
+  float: right;
+  background: url('background/LockSendToFriend.gif') no-repeat left center;
+  width: 21px; height: 20px;
+  cursor: pointer;
+  margin: 0px 4px;
+}
+
 .UIFAQPortlet .QuestionSelect .QuestionContainer .PrintScrintFAQ {
   float: right;
   background: url('background/PrintScrintFAQ.gif') no-repeat left center;
@@ -430,7 +438,7 @@
   float: left;
   line-height:18px;
   padding-right: 5px ;
-  white-space: nowrap;
+  /*white-space: nowrap;*/
   max-width: 95%;
 }
 
