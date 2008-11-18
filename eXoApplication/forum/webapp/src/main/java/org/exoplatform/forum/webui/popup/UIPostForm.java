@@ -191,7 +191,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
 		UIFormStringInput editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
 		editReason.setRendered(false) ;
-		if(!ForumUtils.isEmpty(this.postId)) {
+		if(!ForumUtils.isEmpty(this.postId) && post != null) {
 			String message = ForumTransformHTML.enCodeHTML(post.getMessage()) ;
 			if(isQuote) {//quote
 				String title = "" ;
