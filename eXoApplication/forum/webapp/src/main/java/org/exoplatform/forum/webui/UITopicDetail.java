@@ -692,17 +692,23 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
-			postForm.updatePost(postId, false, false, topicDetail.getPost(postId)) ;
-			postForm.setMod(topicDetail.isMod) ;
-			topicDetail.viewTopic = false ;
-			popupContainer.setId("UIEditPostContainer") ;
-			popupAction.activate(popupContainer, 700, 460) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			Post post = topicDetail.getPost(postId);
+			if(post !=  null) {
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+				UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+				postForm.updatePost(postId, false, false, post) ;
+				postForm.setMod(topicDetail.isMod) ;
+				topicDetail.viewTopic = false ;
+				popupContainer.setId("UIEditPostContainer") ;
+				popupAction.activate(popupContainer, 700, 460) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+			}
 		}
 	}
 	
@@ -726,17 +732,23 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
-			postForm.updatePost(postId, true, false, topicDetail.getPost(postId)) ;
-			postForm.setMod(topicDetail.isMod);
-			topicDetail.viewTopic = false ;
-			popupContainer.setId("UIQuoteContainer") ;
-			popupAction.activate(popupContainer, 700, 460) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			Post post = topicDetail.getPost(postId);
+			if(post !=  null) {
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+				UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+				postForm.updatePost(postId, true, false, post) ;
+				postForm.setMod(topicDetail.isMod);
+				topicDetail.viewTopic = false ;
+				popupContainer.setId("UIQuoteContainer") ;
+				popupAction.activate(popupContainer, 700, 460) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+			}
 		}
 	}
 
@@ -744,17 +756,23 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-			postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
-			postForm.updatePost(postId, false, true, topicDetail.getPost(postId)) ;
-			postForm.setMod(topicDetail.isMod) ;
-			topicDetail.viewTopic = false ;
-			popupContainer.setId("UIPrivatePostContainer") ;
-			popupAction.activate(popupContainer, 700, 460) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			Post post = topicDetail.getPost(postId);
+			if(post !=  null) {
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+				UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
+				postForm.updatePost(postId, false, true, post) ;
+				postForm.setMod(topicDetail.isMod) ;
+				topicDetail.viewTopic = false ;
+				popupContainer.setId("UIPrivatePostContainer") ;
+				popupAction.activate(popupContainer, 700, 460) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			} else {
+				Object[] args = { };
+				throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+			}
 		}
 	}
 //--------------------------------	 Topic Menu		-------------------------------------------//

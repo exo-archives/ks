@@ -146,7 +146,7 @@ public class UIPageListPostByUser extends UIContainer {
 								ForumServiceUtils.hasPermission(forum.getModerators(), uiForm.userProfile.getUserId()))) isRead = true;
 				else isRead = false;
 				
-				if(!isRead && !forum.getIsClosed() && !forum.getIsLock()){
+				if(!isRead && !forum.getIsClosed()){
 					List<String> listUserPermission = new ArrayList<String>();
 					if (forum.getCreateTopicRole() != null && forum.getCreateTopicRole().length > 0) 
 						listUserPermission.addAll(Arrays.asList(forum.getCreateTopicRole()));
@@ -158,7 +158,7 @@ public class UIPageListPostByUser extends UIContainer {
 					
 					// check for topic:
 					if(!isRead && post.getIsActiveByTopic() && post.getIsApproved() && !post.getIsHidden() && topic.getIsActive() &&
-							topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()){
+							topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
 						
 						if((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || 
 								ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||

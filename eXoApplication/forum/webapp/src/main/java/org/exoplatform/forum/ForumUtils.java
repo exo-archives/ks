@@ -213,7 +213,7 @@ public class ForumUtils {
 	
 	public static String removeSpaceInString(String str) throws Exception {
 		if(!isEmpty(str)) {
-			String strs[] = new String[]{";", ".", ", ", " ,", ",,"};
+			String strs[] = new String[]{";", ", ", " ,", ",,"};
 			for (int i = 0; i < strs.length; i++) {
 				while (str.indexOf(strs[i]) >= 0) {
 	        str = str.replaceAll(strs[i], ",");
@@ -246,13 +246,12 @@ public class ForumUtils {
 		List<String> list = new ArrayList<String>();
 		if(!isEmpty(s)) {
 			String temp[] = splitForForum(s) ;
-			s = ""; int i=0, l = temp.length;
-			for (String string : temp) {
-				++i;
-				if(list.contains(string) || string.length() == 0) continue ;
-				list.add(string) ;
-				if(i == l)s += string;
-				else s += string + ",";
+			s = ""; int l = temp.length;
+			for (int i = 0; i < l; ++i) {
+				if(list.contains(temp[i]) || temp[i].trim().length() == 0) continue ;
+				list.add(temp[i]) ;
+				if(i == (l-1))s += temp[i];
+				else s += temp[i] + ",";
 			}
 			return s;
 		} else return "";

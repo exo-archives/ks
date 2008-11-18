@@ -394,6 +394,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				UIForumInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
 				String canPost = threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue() ;
 				String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
+				canPost = ForumUtils.removeSpaceInString(canPost);
+				canPost = ForumUtils.removeStringResemble(canPost);
+				canView = ForumUtils.removeSpaceInString(canView);
+				canView = ForumUtils.removeStringResemble(canView);
 				String erroUser = ForumSessionUtils.checkValueUser(canPost) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
 					Object[] args = { uiForm.getLabel(FIELD_CANPOST_INPUT), erroUser };

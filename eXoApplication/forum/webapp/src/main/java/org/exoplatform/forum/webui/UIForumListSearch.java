@@ -122,13 +122,13 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 					ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId()))) {
 				isModerator = true;
 				canView = true;
-			} else if(forum.getIsClosed() || forum.getIsLock()) return false;
+			} else if(forum.getIsClosed()) return false;
 			else canView = true;
 			
 			// ckeck Topic:
 			if(topic != null){
 				if(isModerator) canView = true;
-				else if(!topic.getIsClosed() && !topic.getIsLock() && topic.getIsActive() && topic.getIsActiveByForum() && topic.getIsApproved() && 
+				else if(!topic.getIsClosed() && topic.getIsActive() && topic.getIsActiveByForum() && topic.getIsApproved() && 
 								!topic.getIsWaiting() &&((topic.getCanView().length == 1 && topic.getCanView()[0].trim().length() < 1) ||
 								ForumServiceUtils.hasPermission(topic.getCanView(), userProfile.getUserId()) ||
 								ForumServiceUtils.hasPermission(forum.getViewer(), userProfile.getUserId()) ||
