@@ -130,11 +130,30 @@
 	white-space: nowrap;
 }
 
-.UIHomePagePortlet .HomeBackground .HomeImage {
-	background: url('DefaultSkin/background/KSHomePage786x314.jpg') no-repeat right;
+.UIHomePagePortlet .HomeBackground .HomeImageLeft {
+	background: url('DefaultSkin/background/KSHomePageLeft.gif') no-repeat left;
+	height: 244px;
+	width: 520px;
+}
+
+.UIHomePagePortlet .HomeBackground .HomeImageRight {
+	background: url('DefaultSkin/background/KSHomePageRight.gif') no-repeat right;
 	height: 244px;
 }
 
+.UIHomePagePortlet .HomeBackground .Label1 {
+	color:#858FAA;
+	font-size:22px;
+	padding:130px 130px 0px 0px;
+	text-align:right;
+}
+
+.UIHomePagePortlet .HomeBackground .Label2 {
+	color:#3C74C8;
+	font-family:times New Roman;
+	text-align:right;
+	font-size: 41px;
+}
 
 .UIHomePagePortlet .Decorator .DecoratorML {
 	background: url('DefaultSkin/background/DecoratorML.gif') no-repeat left;
@@ -341,70 +360,6 @@
 
 /*********************************Navigation Portlet**********************************/
 
-.UINavigationPortlet .UINavigationBar .LeftNavigationBar  {
-	padding-left:0px;
-}
-
-.UINavigationPortlet .UINavigationBar .MiddleNavigationBar  {
-	background:transparent url(DefaultSkin/background/NavigationBar.gif) repeat-x scroll center top;
-	line-height:28px;
-	padding-left:3px;
-}
-
-.UINavigationPortlet .MiddleTab .TabLabel {
-	display:block;
-	padding:0 0 0 0px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab {
-	line-height:21px;
-	margin:6px 0px 0px 1px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
-	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left bottom;
-	line-height:21px;
-	padding-left:2px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .RightTab {
-	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right bottom;
-	line-height:21px;
-	padding-right:2px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .MiddleTab {
-	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x bottom;
-	line-height:21px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .TabIcon {
-	color:white;
-	line-height:21px;
-	padding:0px 5px 0px 0px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab .LeftTab {
-	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left bottom;
-	line-height:21px;
-	padding-left:2px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab .RightTab {
-	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right bottom;
-	line-height:21px;
-	padding-right:2px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab .MiddleTab {
-	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x bottom;
-	line-height:21px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab {
-	line-height:21px;
-	margin:3px 0px 0px 1px;
-}
 
 /*========================KS Guided Tour===========================*/
 .UIKSGuidedTour {
@@ -535,12 +490,30 @@
 	font-size: 12px;
 	padding-left: 24px;
 	margin-left: 8px;
+	font-weight: bold;
+	background:transparent url(DefaultSkin/background/CheckTitleIcon.gif) no-repeat left 5px;
 }
 
-.UIKSGuidedTour .RightKSGuidedTour .ShowImageKS {
-	background:transparent url(DefaultSkin/background/ShowImageKS.gif) no-repeat left;
-	height: 520px;
+.UIKSGuidedTour .RightKSGuidedTour .ShowImageKS1 {
+	background:transparent url(DefaultSkin/background/ShowImageKS1.gif) no-repeat left;
+	height: 420px;
 	margin: 4px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .ShowImageKS2 {
+	background:transparent url(DefaultSkin/background/ShowImageKS2.png) no-repeat right;
+	height: 420px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .ShowImageKS3 {
+	background:transparent url(DefaultSkin/background/ShowImageKS3.gif) no-repeat right;
+	height: 420px;
+	margin: 4px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .ShowImageKS4 {
+	background:transparent url(DefaultSkin/background/ShowImageKS4.png) no-repeat left;
+	height: 420px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .TitleBar .TitleBarTL {
@@ -583,36 +556,40 @@
 	padding: 8px 0px;
 }
 
-.UIKSGuidedTour .RightKSGuidedTour .ShowImageFAQ {
-	background:transparent url(DefaultSkin/background/ShowImageFAQ.gif) no-repeat left;
-	height: 243px; width: 452px;
+.UIKSGuidedTour .RightKSGuidedTour .H4 {
+	background:transparent url(DefaultSkin/background/H4.gif) no-repeat left;
+	height: 347px; width: 592px;
 	margin: 4px;
 }
 
-.UIKSGuidedTour .RightKSGuidedTour .ShowImageForum {
-	background:transparent url(DefaultSkin/background/ShowImageForum.gif) no-repeat left;
-	height: 349px; width: 485px;
+.UIKSGuidedTour .RightKSGuidedTour .H5 {
+	background:transparent url(DefaultSkin/background/H5.gif) no-repeat left;
+	height: 386px; width: 513px;
 	margin: 4px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .KSGuidedTour2 .TitleBar{
-	margin-top: 20px;
+	margin-top: 90px;
+}
+
+.UIKSGuidedTour .RightKSGuidedTour .KSGuidedTour3 .TitleBar{
+	margin-top: 90px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .H1 {
 	background:transparent url(DefaultSkin/background/H1.gif) no-repeat left;
-	height: 192px; width: 490px;
+	height: 318px; width: 470px;
 	margin: 4px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .H2 {
 	background:transparent url(DefaultSkin/background/H2.gif) no-repeat left;
-	height: 192px;width: 478px;
+	height: 237px;width: 506px;
 	margin: 4px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .H3 {
 	background:transparent url(DefaultSkin/background/H3.gif) no-repeat left;
-	height: 192px;width: 490px;
+	height: 315px;width: 477px;
 	margin: 4px;
 }

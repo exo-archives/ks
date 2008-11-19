@@ -48,8 +48,11 @@
 			<div class="CheckTitleIcon">eXo Knowledge Suite intends to help you to collect and organize your enterprise knowledge. 
 			This overview will show you some of the hilights.
 			</div>
-			<div class="ShowImageKS">
-				<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+			<div class="ShowImageKS1">
+				<div class="ShowImageKS2"><span></span></div>
+			</div>
+			<div class="ShowImageKS3">
+				<div class="ShowImageKS4"><span></span></div>
 			</div>
 			<div class="TitleBar">
 				<div class="TitleBarTL">
@@ -83,10 +86,10 @@
 			</div>
 			<div class="CheckTitleIcon">eXo FAQ is simple and intuitive application for generating Frequently Asked Questions. 
 			It is a very valuable tool to expose state of the art knowledge among the enterprise.</div>
-			<table>
+			<table style="border-bottom: 1px solid #b7b7b7;">
 				<tr>
 					<td>
-						<div class="ShowImageFAQ">
+						<div class="H4">
 							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 						</div>
 					</td>
@@ -115,7 +118,7 @@
 					</td>
 				</tr>
 			</table>
-			<table>
+			<table style="border-bottom: 1px solid #b7b7b7;">
 				<tr>
 					<td>
 						<div class="TitleBar">
@@ -141,7 +144,7 @@
 						</div>
 					</td>
 					<td>
-						<div class="ShowImageForum">
+						<div class="H5">
 							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 						</div>
 					</td>
@@ -160,7 +163,7 @@
 			</div>
 			<div class="CheckTitleIcon">eXo Forum is a full featured message boards application. Support, feedback, brainstorming. There are so many possiblities to improve all together!
 			</div>
-			<table>
+			<table style="border-bottom: 1px solid #b7b7b7;">
 				<tr>
 					<td>
 						<div class="H1">
@@ -192,7 +195,7 @@
 					</td>
 				</tr>
 			</table>
-			<table>
+			<table style="border-bottom: 1px solid #b7b7b7;">
 				<tr>
 					<td>
 						<div class="TitleBar">
@@ -224,7 +227,7 @@
 					</td>
 				</tr>
 			</table>
-			<table>
+			<table style="border-bottom: 1px solid #b7b7b7;">
 				<tr>
 					<td>
 						<div class="H3">
