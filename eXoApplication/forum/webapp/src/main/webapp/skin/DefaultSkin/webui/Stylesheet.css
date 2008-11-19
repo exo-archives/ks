@@ -26,9 +26,18 @@
 	width: 870px;
 }
 
+
 .UIForumPortlet .UIRightClickPopupMenu .FixHeight {
 	height: 0px;
 	width: 0px;
+}
+
+*html .UIForumPortlet  .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
+	width: 170px;
+}
+
+.UIForumPortlet  .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
+	min-width: 170px;
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .MenuItem {
@@ -37,11 +46,19 @@
 }
 
 .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
-	min-width: 130px;
+	min-width: 110px;
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
 	min-width: 60px;
+}
+
+*html .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
+	width: 110px;
+}
+
+*html .UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
+	width: 60px;
 }
 
 .Vista .UIForumPortlet .UIRightClickPopupMenu {

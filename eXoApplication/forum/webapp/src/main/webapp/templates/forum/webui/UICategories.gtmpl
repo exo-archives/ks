@@ -277,7 +277,7 @@
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
 					<a href="" class="MenuItem AddBookmark">
-						<div class="ItemIcon AddLinkToBookIcon">
+						<div class="ItemIcon AddLinkToBookIcon" style="min-width: 62px;">
 								<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
 						</div>
 					</a>

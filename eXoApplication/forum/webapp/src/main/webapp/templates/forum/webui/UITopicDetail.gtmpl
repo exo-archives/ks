@@ -224,7 +224,7 @@
 								<% /*Begin Popup Menu*/ %>
 								<div style="position: relative;">
 									<div class="UIPopupCategory" style="display: none;">
-										<div class="UIRightClickPopupMenu" style="display: block; left: -70px;">
+										<div class="UIRightClickPopupMenu" style="display: block; left: -48px;">
 											<div class="UIContextMenuContainer">
 												<div class="TopLeftRightClickPopupMenu">
 													<div class="TopRightRightClickPopupMenu">
@@ -345,7 +345,7 @@
 										</div>
 									<% /*Begin Popup Menu*/ %>
 									<div style="position: relative;">
-										<div class="UIPopupCategory" style="display: none; ">
+										<div class="UIPopupCategory SearchPopup" style="display: none; ">
 											<div class="UIRightClickPopupMenu" style="display: block;">
 												<div class="UIContextMenuContainer">
 													<div class="TopLeftRightClickPopupMenu">
@@ -355,7 +355,7 @@
 													</div>
 													<div class="MiddleLeftRightClickPopupMenu">
 														<div class="MiddleRightRightClickPopupMenu">
-															<div class="UIRightPopupMenuContainer" style="min-width: 170px;">
+															<div class="UIRightPopupMenuContainer">
 																<div class="InputPage" style="float:left;">
 																	<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 																</div>
@@ -364,7 +364,7 @@
 																		<div class="ButtonLeft">
 																			<div class="ButtonRight">
 																				<div class="ButtonMiddle">
-																				 <a href="<%=uicomponent.event("SearchForm")%>">&nbsp;<%=_ctx.appRes(uiformId + ".label.Search");%>&nbsp;</a>
+																				 <a href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 																				</div>
 																			</div>
 																		</div>
