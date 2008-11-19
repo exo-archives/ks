@@ -240,7 +240,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			if(!ForumUtils.isEmpty(signature) && signature.length() > maxText) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_SIGNATURE_TEXTAREA), String.valueOf(maxText) };
-				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.UserTitleInvalid", args, ApplicationMessage.WARNING)) ;
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
