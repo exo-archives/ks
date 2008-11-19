@@ -53,7 +53,7 @@ eXo.core.UIMaskLayer.createMask = function(blockContainerId, object, opacity, po
 	}catch(err) {
 		//alert(err) ;
 	}
-	if(eXo.core.UIMaskLayer.object)eXo.core.UIMaskLayer.objectTop = eXo.core.UIMaskLayer.object.offsetTop - document.documentElement.scrollTop;
+	if(object) eXo.core.UIMaskLayer.objectTop = eXo.core.UIMaskLayer.object.offsetTop - document.documentElement.scrollTop;
 	return maskLayer ;
 };
 
