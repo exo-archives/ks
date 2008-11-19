@@ -51,9 +51,9 @@ eXo.core.UIMaskLayer.createMask = function(blockContainerId, object, opacity, po
 			eXo.core.UIMaskLayer.enablePageDesktop(false);
 	  }
 	}catch(err) {
-		alert(err) ;
+		//alert(err) ;
 	}
-	eXo.core.UIMaskLayer.objectTop = eXo.core.UIMaskLayer.object.offsetTop - document.documentElement.scrollTop;
+	if(eXo.core.UIMaskLayer.object)eXo.core.UIMaskLayer.objectTop = eXo.core.UIMaskLayer.object.offsetTop - document.documentElement.scrollTop;
 	return maskLayer ;
 };
 
