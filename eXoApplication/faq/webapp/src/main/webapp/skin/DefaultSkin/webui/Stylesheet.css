@@ -302,6 +302,10 @@
 	width: 60%;*/
 }
 
+.UIFAQPortlet .QuestionSelect .LeftQuestionContainer .NotResponse .ViewQuestionNotApproved {
+  float: none;
+}
+
 .UIFAQPortlet .QuestionSelect .QuestionContainer .RightQuestionContainer {
 	float: right;
 	width: 30%;

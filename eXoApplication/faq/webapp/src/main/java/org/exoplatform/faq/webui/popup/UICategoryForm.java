@@ -199,6 +199,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
 			if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
 			//uiCategory.checkSameName(name) ;
+			if(name.indexOf("'") >=0 ){
+		      	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-invalid", null, ApplicationMessage.WARNING)) ;
+		    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+		    		return ;
+		      }
 			String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
 			String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
 			Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
