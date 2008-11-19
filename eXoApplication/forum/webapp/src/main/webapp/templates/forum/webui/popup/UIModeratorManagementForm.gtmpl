@@ -1,7 +1,7 @@
 <%
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.service.ForumLinkData ;
-  import org.exoplatform.forum.service.Utils;
+	import org.exoplatform.forum.service.Utils;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ; 
 	import org.exoplatform.web.application.JavascriptManager;
@@ -17,15 +17,18 @@
 		
 			
 			<div class="ManagementContent">
-		
-				<div style="margin: 2px 0px ;float: right; padding: 0px 0px 0px 14px;">
-					<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"><span></span></a>
-					<div class="Input" style="float:right;">
-					<%	
-						uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
-					%>
+			
+				<div style="overflow: auto;">
+					<div style="margin: 2px 0px ;float: right; padding: 0px 0px 0px 14px;">
+						<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"><span></span></a>
+						<div class="Input" style="float:right;">
+						<%	
+							uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
+						%>
+						</div>
+						<div class="Label" style="float:right; line-height: 20px;"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:&nbsp;</div>
+						<div style="clear: right;"><span></span></div>
 					</div>
-					<div class="Label" style="float:right;"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:&nbsp;</div>
 					<div style="clear: right;"><span></span></div>
 				</div>
 				<div><span></span></div>

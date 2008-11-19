@@ -516,6 +516,7 @@
 	text-align: center;
 	color: white;
 	margin: 12px auto;
+	cursor: pointer;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour {
