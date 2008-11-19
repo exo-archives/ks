@@ -12,12 +12,14 @@
       <label>#{platform.guests.register}</label>
       <page-reference>group::platform/guests::register</page-reference>
     </node>
+    <!-- 
 	  <node>
 	    <uri>sitemap</uri>
 	    <name>sitemap</name>
 	    <label>#{platform.guests.sitemap}</label>
 	    <page-reference>group::platform/guests::sitemap</page-reference>	    
-	  </node>	  	  
+	  </node>
+	  -->	  	  
   </page-nodes>
   
 </node-navigation>

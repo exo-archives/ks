@@ -24,11 +24,11 @@
       <value-param>
         <name>portal.creator.groups</name>
         <description>groups with membership type have permission to manage portal</description>
-        <value>*:/platform/administrations,*:/organization/management/executive-board</value>	    
+        <value>*:/platform/administrators,*:/organization/management/executive-board</value>	    
       </value-param>
       
       <value-param>
-        <name>navigation.cretor.membership.type</name>
+        <name>navigation.creator.membership.type</name>
         <description>specific membership type have full permission with group navigation</description>
         <value>manager</value>	    
       </value-param>
@@ -36,7 +36,12 @@
         <name>guests.group</name>
         <description>guests group</description>
         <value>/platform/guests</value>	    
-      </value-param>          
+      </value-param>    
+      <value-param>
+        <name>access.control.workspace</name>
+        <description>groups with memberships that have the right to access the User Control Workspace</description>
+        <value>member:/demo</value>	    
+      </value-param>             
 	  </init-params>   
   </component>
   
@@ -62,7 +67,6 @@
 	            <field  name="predefinedOwner">
 	              <collection type="java.util.HashSet">                
 	                <value><string>classic</string></value>
-	                <value><string>webos</string></value>
 	              </collection>
 	            </field>
 	            <field  name="ownerType"><string>portal</string></field>
@@ -100,6 +104,16 @@
 	            <field  name="ownerType"><string>user</string></field>
 	            <field  name="templateLocation"><string>war:/conf/portal</string></field> 
 	          </object>
+	        </object-param>
+	        <object-param>
+	        	<name>page.templates</name>
+	        	<description>List of page templates</description>
+	        	<object type="org.exoplatform.portal.config.PageTemplateConfig">
+	        		<field name="templates">
+	        			<collection type="java.util.ArrayList"></collection>
+	        		</field>
+	        		<field name="location"><string>war:/conf/portal/template/pages</string></field>
+	        	</object>
 	        </object-param>
 	      </init-params>
 	    </component-plugin>

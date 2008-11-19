@@ -118,11 +118,11 @@
 					<div class="ContentAction" style="float:right; margin: 2px 0px 0px 0px; width: 155px;">
 						<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
 							<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-								<div class="LeftOverButton" title="Search in this Category">
+								<div class="LeftOverButton" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>">
 									<div class="RightOverButton">
 										<div class="CenterOverButton">
 											<div class="SearchIcon">
-												<div class="DownArrow1Icon">Search this Category</div>
+												<div class="DownArrow1Icon"><%=_ctx.appRes("UICategory.label.SearchThisCategory");%></div>
 											</div>
 										</div>
 									</div>
@@ -130,7 +130,7 @@
 							</div>
 							<div style="position: relative;">
 							<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory" style="display: none; top: auto;">
+								<div class="UIPopupCategory SearchPopup" style="display: none; top: auto;">
 									<div class="UIRightClickPopupMenu" style="display: block;">
 										<div class="UIContextMenuContainer">
 											<div class="TopLeftRightClickPopupMenu">
@@ -140,7 +140,7 @@
 											</div>
 											<div class="MiddleLeftRightClickPopupMenu">
 												<div class="MiddleRightRightClickPopupMenu">
-													<div class="UIRightPopupMenuContainer" style="min-width: 170px;">
+													<div class="UIRightPopupMenuContainer">
 														<div class="InputPage" style="float:left;">
 															<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 														</div>
@@ -149,7 +149,7 @@
 																<div class="ButtonLeft">
 																	<div class="ButtonRight">
 																		<div class="ButtonMiddle">
-																		 <a href="<%=uicomponent.event("SearchForm")%>">&nbsp;Search&nbsp;</a>
+																		 <a href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 																		</div>
 																	</div>
 																</div>

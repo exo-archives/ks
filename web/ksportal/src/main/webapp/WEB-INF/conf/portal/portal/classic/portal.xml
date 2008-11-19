@@ -6,7 +6,6 @@
   <access-permissions>Everyone</access-permissions>
   <edit-permission>*:/platform/administrators</edit-permission>
   <creator>root</creator>
-  
   <widget-layout>
     <container>
       <application>
@@ -21,30 +20,37 @@
       </application>
     </container>
   </widget-layout>
-  
- 	<portal-layout> 		
-		<application>
-	    <instance-id>portal#classic:/web/BannerPortlet/banner</instance-id>
-	    <show-info-bar>false</show-info-bar>
-	  </application>
-
-	  <application>
-	  	<instance-id>portal#classic:/web/NavigationPortlet/toolbar</instance-id>
-	    <show-info-bar>false</show-info-bar>
-	  </application>
-		
-	  <application>
-	    <instance-id>portal#classic:/web/BreadcumbsPortlet/breadcumbs</instance-id>
-	    <show-info-bar>false</show-info-bar>
-	  </application>
-	  
-	
-	  <page-body> </page-body>
-	  
-	  <application>
-	    <instance-id>portal#classic:/web/FooterPortlet/footer</instance-id>
-	    <show-info-bar>false</show-info-bar>
-	  </application>
+  <portal-layout>
+    <application>
+      <instance-id>portal#classic:/web/BannerPortlet/banner</instance-id>
+      <show-info-bar>false</show-info-bar>
+    </application>
+    <application>
+      <instance-id>portal#classic:/web/NavigationPortlet/menu</instance-id>
+      <show-info-bar>false</show-info-bar>
+    </application>
+    <application>
+      <instance-id>portal#classic:/web/BreadcumbsPortlet/breadcumbs</instance-id>
+      <show-info-bar>false</show-info-bar>
+    </application>
+    <container id="KS" template="system:/templates/groovy/webui/component/UITableColumnContainer.gtmpl">
+      <container id="pagebody" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+        <page-body>
+        </page-body>
+      </container>
+      <container id="sidebar" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
+        <application>
+          <instance-id>portal#classic:/web/HomePagePortlet/sidebar</instance-id>
+          <title>Sidebar</title>
+          <show-info-bar>false</show-info-bar>
+          <show-application-state>false</show-application-state>
+          <show-application-mode>false</show-application-mode>          
+        </application>
+      </container>
+    </container>   
+    <application>
+      <instance-id>portal#classic:/web/FooterPortlet/footer</instance-id>
+      <show-info-bar>false</show-info-bar>
+    </application>
   </portal-layout>
-  
 </portal-config>

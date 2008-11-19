@@ -18,7 +18,12 @@
 						<div class="AdImage__">
 	
 					<div class="HomeBackground">
-						<div class="HomeImage"><span></span></div>
+						<div class="HomeImageRight">
+							<div class="HomeImageLeft">
+								<div class="Label1">Welcome to</div>
+								<div class="Label2">KS Live Demo</div>
+							</div>
+						</div>
 					</div>
 					
 					<table style="table-layout: fixed; width: 100%; _width: auto;">
