@@ -359,8 +359,70 @@
 }
 
 /*********************************Navigation Portlet**********************************/
+.UINavigationPortlet .UINavigationBar .LeftNavigationBar  {
+	padding-left:0px;
+}
 
+.UINavigationPortlet .UINavigationBar .MiddleNavigationBar  {
+	background:transparent url(DefaultSkin/background/NavigationBar.gif) repeat-x scroll center top;
+	line-height:28px;
+	padding-left:3px;
+}
 
+.UINavigationPortlet .MiddleTab .TabLabel {
+	display:block;
+	padding:0 0 0 0px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab {
+	line-height:21px;
+	margin:6px 0px 0px 1px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
+	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left bottom;
+	line-height:21px;
+	padding-left:2px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .RightTab {
+	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right bottom;
+	line-height:21px;
+	padding-right:2px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .MiddleTab {
+	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x bottom;
+	line-height:21px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .TabIcon {
+	color:white;
+	line-height:21px;
+	padding:0px 5px 0px 0px;
+}
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab .LeftTab {
+	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left bottom;
+	line-height:21px;
+	padding-left:2px;
+}
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab .RightTab {
+	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right bottom;
+	line-height:21px;
+	padding-right:2px;
+}
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab .MiddleTab {
+	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x bottom;
+	line-height:21px;
+}
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab {
+	line-height:21px;
+	margin:3px 0px 0px 1px;
+}
 /*========================KS Guided Tour===========================*/
 .UIKSGuidedTour {
 	background:transparent url(DefaultSkin/background/LeftKSGuidedTour.gif) repeat-y left ;
@@ -590,6 +652,6 @@
 
 .UIKSGuidedTour .RightKSGuidedTour .H3 {
 	background:transparent url(DefaultSkin/background/H3.gif) no-repeat left;
-	height: 315px;width: 477px;
+	height: 315px;width: 491px;
 	margin: 4px;
 }
