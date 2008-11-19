@@ -1,0 +1,127 @@
+<%
+  import org.exoplatform.web.application.JavascriptManager;
+	import org.exoplatform.forum.service.Post ;
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.ForumTransformHTML;
+	import org.exoplatform.forum.service.UserProfile ;
+
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
+	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImgViewPost');
+	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.reSizeImgViewPost');
+	Post post = uicomponent.getPostView(); 
+	String title = post.getName();	
+	String messager = ForumTransformHTML.convertCodeHTML(post.getMessage());
+	String classIcon = post.getIcon() ;
+	UserProfile userProfile = uicomponent.getUserProfile();
+	String postCreatedDate = ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),post.getCreatedDate());	
+	List attachments = post.getAttachments() ;
+%>
+<div class="UIViewPost" id="SizeImage">
+	<% uiform.begin() %>
+	<div class="ViewContainer ImageContentContainer">
+		<div class="ViewTopicContent">
+			<div class="PostViewTitle">
+				<div class="PostViewIcon $classIcon">$title</div>
+				<div class="PostTime">$postCreatedDate</div>
+			</div>
+			
+			<div class="PostContentContainer">
+				<div class="PostContent">
+					<br/><div>$messager</div><br/>
+				</div>
+			<% if(attachments != null && attachments.size() > 0) {
+					if(uicomponent.getIsViewUserInfo()) {
+			%>			
+						<div class="AttachmentContainer">
+							<div class="AttachmentTitle"><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</div>
+							<div class="AttachmentContent">
+							<% for(attachment in attachments) {
+							 		 String titleFile = attachment.getName();
+							 		 String fileName = ForumUtils.getSubString(titleFile, 30);
+							 		 long sizeNumber = attachment.getSize() ;
+							 		 String size =ForumUtils.getSizeFile(sizeNumber) ;
+							%>
+								<div class="AttachmentBox">
+									<div class="AttachmentIcon WordIcon"><span/></div>
+									<a class="AttachmentLabel" title="$titleFile" href="#">$fileName</a>
+									<div style="clear: left;"><span/></div>
+									<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
+								</div>
+							<% } %>
+								<div style="clear: left;"><span/></div>
+							</div>
+						</div>
+				<% 
+					} else {
+				%>
+							<div class="AttachmentContainer">
+								<div class="AttachmentTitle"><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</div>
+								<div class="AttachmentContent">
+								
+								<%
+									for(attachment in attachments) {
+										 String urlFile = uicomponent.getFileSource(attachment) ;
+								 		 String titleFile = attachment.getName();
+							 		 	 String fileName = ForumUtils.getSubString(titleFile, 30);
+								 		 String unit = "Bytes" ;
+								 		 double sizeNumber = attachment.getSize() ;
+								 		 String size = ForumUtils.getSizeFile(sizeNumber);
+								 		 String typeFile = attachment.mimeType ;
+								%>
+										<div class="AttachmentBox">
+										<% if(typeFile.indexOf("image") >= 0) {
+										  String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +attachment.getPath() ;
+										%>
+											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;"/></div>
+						 					<div class="LabelBox">
+						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
+						 						<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
+						 						<div style="clear: left;"><span></span></div>
+						 						<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
+						 						<div class="Action">
+						 							<div class="Icon View" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></div>
+						 							<div class="Icon Download"><a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a></div>
+						 						</div>
+						 					</div>
+							 				<div style="clear: left;"><span></span></div>
+									<% } else {
+												String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
+									%>
+										<div class="LabelBox">
+											<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
+											<a class="AttachmentLabel" href="$urlFile">$fileName</a>
+											<div style="clear: left;"><span/></div>
+											<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
+										</div>
+									<% }%>
+									</div>
+								<% } %>
+									<div style="clear: left;"><span/></div>
+								</div>
+							</div>
+				<%
+					}
+				} %>
+			</div>
+		</div>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+							</div>
+						</div>
+					</a>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
+	<%uiform.end()%>
+</div>
+

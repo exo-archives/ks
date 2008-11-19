@@ -1,0 +1,49 @@
+<%	
+	import org.exoplatform.forum.service.ForumPrivateMessage ;
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML;
+%>
+<div class="UIViewPrivateMessageForm UIViewMemberProfile">
+<% uiform.begin() %>
+<%	
+	ForumPrivateMessage privateMessage = uicomponent.getPrivateMessage() ;
+	String title = privateMessage.getName() ;
+	String message = privateMessage.getMessage() ;
+	message = ForumTransformHTML.convertCodeHTML(message);
+%>
+	<div class="ViewMemberProfileContainer ImageContentContainer">
+		<div class="MessageContent">
+			<div class="PlainTextMessage">
+				<div class="TitleBar">Title: <span class="UserLabel">$title</span></div>
+				<div class="MessageContent">
+					<div class="Content" style="padding:5px 30px;">$message</div>
+					<div class="line"><span></span></div>
+					<div class="MessageInfo"></div>
+				</div>
+			</div>
+		</div>
+ 	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+					<div style="width: 100px; margin: auto;">
+						<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+								</div>
+							</div>
+						</a>
+					</div>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
+<%
+	def rcontext = _ctx.getRequestContext() ;
+	rcontext.getJavascriptManager().addJavascript("eXo.forum.UIForumPortlet.reSizeImagesInMessageForm();");
+%>
+<%uiform.end()%>
+</div>

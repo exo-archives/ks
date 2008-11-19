@@ -1,0 +1,10 @@
+<%
+  import org.exoplatform.faq.webui.UIBreadcumbs ;
+	import org.exoplatform.faq.webui.UIQuestions ;
+	
+%>
+<div class="UIFAQContainer" id="<%=uicomponent.getId()%>">
+		<% uicomponent.renderChildren()%>
+	  <%uicomponent.renderPopupMessages()%>
+</div>
+

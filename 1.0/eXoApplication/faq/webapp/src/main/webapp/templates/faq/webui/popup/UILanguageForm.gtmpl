@@ -1,0 +1,63 @@
+<div class="UISelectLanguageForm">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout" style="margin: 10px 10px 10px 10px;background-color:#F3F3F3;">
+			<table style="margin: 10px 0px 10px 0px;">
+				<%
+				List selectedList = uicomponent.getListSelected() ;
+				String[] localedLanguage = uicomponent.getLocaledLanguage() ;
+				int i = 0 ;
+				for(String language : uicomponent.getListLanguage()) {
+					String localed = localedLanguage[i] ;
+				%>
+					<tr width="25px">
+						<td width="10%">
+							<div style="float:right ; vertical-align:bottom;">
+							<% if(selectedList.contains(language)) { %>
+								<div class="Langguage"><span></span></div>
+							<% } else { %>
+								<div><span></span></div>
+							<% } %>
+							</div>
+						</td>
+						<td width="45%">
+							<div style="float:left; margin-left: 5px; height: 20px;">
+								<a title="$language" href="<%=uicomponent.event("SelectedLanguage",language);%>">
+									$language
+								</a>
+							</div>
+						</td>
+						<td width="45%">
+							<div style="float:right; margin-right: 10px;">
+								$localed
+							</div>
+						</td>
+					</tr>
+				<%
+					i ++ ;
+				}
+				%>
+			</table>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+	        <% for(action in uicomponent.getActions()) { 
+	        		 if(action.indexOf("Language") > 0) continue ; 
+	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	           String link = uicomponent.event(action) ;
+	        %>
+	        		<a href="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle"> $actionLabel </div>
+		            	</div>
+		          	</div>
+		        	</a>
+          <%}%>
+	      	</td>
+				</tr>
+		  </table> 
+		</div>
+	<%uiform.end()%>
+</div>

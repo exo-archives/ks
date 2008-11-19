@@ -1,0 +1,53 @@
+<div class="UIAdvancedSearchForm $uicomponent.id">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<table class="UIFormGrid">
+					<tbody>						
+				<% 
+					for(field in uiform.getChildren()) {
+						if(field.isRendered()) {
+				%>
+							<tr>
+								<%fieldName = uicomponent.getLabel(field.getName());%>
+								<%if(!fieldName.equals(uicomponent.getId()) && fieldName != null && fieldName.length() > 0) { %>												
+									<td class="FieldLabel">
+											<%=fieldName%>
+									</td>
+									<td class="FieldComponent">
+											<% uiform.renderField(field) %>
+									</td>
+								<%} else {%>
+									<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
+								<%}%>
+							</tr>
+				<%
+						}
+					}
+				%>						
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<a href="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"> $actionLabel </div>
+								</div>
+							</div>
+						</a>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
+</div>

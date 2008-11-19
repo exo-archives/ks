@@ -1,0 +1,16 @@
+<%  
+	import org.exoplatform.forum.webui.UIForumDescription ;
+	import org.exoplatform.forum.webui.UITopicContainer ;
+	import org.exoplatform.forum.webui.UITopicDetailContainer ;
+	import org.exoplatform.forum.webui.UIForumSummary ;
+%>
+<div class="UIForumContainer" id="$uicomponent.id">
+	<% 
+		List children = uicomponent.getChildren() ;
+    for(component in children) {
+      if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ;      
+      }
+    }
+	%>
+</div>

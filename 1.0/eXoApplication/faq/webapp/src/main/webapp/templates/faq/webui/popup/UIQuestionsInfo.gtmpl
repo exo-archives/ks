@@ -1,0 +1,259 @@
+<%
+	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.webui.UIFAQPageIterator ; 
+	import org.exoplatform.webui.form.UIFormInputWithActions;
+%>
+
+<div class="FAQUIQuestionInfo $uicomponent.id" >
+	<% uiform.begin() %>
+  <div class="UIFormTabPane">
+    <div class="UITabPane">
+      <div class="TabPaneContent">
+					<div class="WorkingArea">
+						
+	          <div class="UIHorizontalTabs">
+	     				<div class="LeftHorizontalTabs">
+	           		<div class="RightHorizontalTabs">
+	             		<div class="CenterHorizontalTabs">
+	              		<div class="TabsContainer">
+	                  	<%int i = 0 ; 
+	                  		String classCss = "SelectedTab";
+	                  		String classLastCss = "NormalTab" ;
+	                  		String displayEdit = "block" ;
+	                  		String displayResponse = "none" ;
+	                  		if(uicomponent.getIsEdit()) {
+	                  			classCss = "SelectedTab";
+	                  			classLastCss = "NormalTab" ;
+	                  			displayEdit = "block" ;
+	                  			displayResponse = "none" ;
+	                  		} else if(uicomponent.getIsResponse()) {
+	                  			classCss = "NormalTab";
+	                  			classLastCss = "SelectedTab" ;
+	                  			displayEdit = "none" ;
+	                  			displayResponse = "block" ;
+	                  		}
+		                  	for(tabcontent in uicomponent.getTab()){ 
+	                  			String link = "" ;
+		                  	%>  
+			                    <div class="UITab NormalTabStyle">
+			                      <div class="$classCss">
+			                        <div class="LeftTab">
+			                          <div class="RightTab" onclick="eXo.webui.UIHorizontalTabs.displayTabContent(this)">
+		                          	<%if(i ++ == 0) {
+		                          			link = uicomponent.event("ChangeTab", "0") ;
+		                          	%>
+		                          		<a href="$link">
+				                            <div class="MiddleTab">
+				                            	 <%=_ctx.appRes(uicomponent.getName() + ".label." + "TabQuestionManagement")%> 
+				                            </div>
+			                            </a>
+		                            <%} else {
+		                            		link = uicomponent.event("ChangeTab", "1") ;
+		                            %>
+		                            	<a href="$link">
+			                            	<div class="MiddleTab">
+			                            		<%=_ctx.appRes(uicomponent.getName() + ".label." + "TabQuestionNotYetAnswered")%>
+				                            </div>
+			                            </a>
+		                            <%}%>
+			                          </div>
+			                        </div>
+			                      </div>
+			                    </div>
+		                		<%classCss = classLastCss ;  
+		                		} %>
+		                  </div>
+		                </div>
+	              	</div>
+	            	</div>
+	          	</div>
+						
+						<div class="UIForm">
+            	<div class="HorizontalLayout">
+            
+              	<div class="UITabContentContainer">
+	              
+	              	<div class="UITabContent UIIETabContent" style="display: $displayEdit;" id="UITabContent"> 
+					          <div style="display: block;">
+
+											<div class="HorizontalLayout">
+													<div class="UIFormInput">
+														<table class="UIGrid">
+															<tr>
+																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th width="100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsApproved")%></b></th>
+																<th width="100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsActivated")%></b></th>
+																<th width="60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
+															</tr>
+															<%
+															List questionList = uicomponent.getListQuestion() ;
+															if(!questionList.isEmpty()) {
+																String linkDelete = "" ;
+																String linkEdit = "" ;
+																String actionChangeStatus = "";
+																for(Question question in questionList) {
+																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
+																	linkEdit = uicomponent.event("EditQuestion", question.getId()) ;
+																	actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "approved" + "/" + question.getId()) ;
+																%>
+																	<tr>
+																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "") ;%></td>
+																		<td class="text" align="center">
+																		<%if(question.isApproved()) {%>
+																				<div class="TrueIcon">
+																					<a href="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "UnApprove")%>">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsApproved")%>
+																					</a>
+																				</div>
+																		<%} else {%>
+																				<div class="FalseIcon">
+																					<a href="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "Approve")%>">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotApproved")%>
+																					</a>
+																				</div>
+																		<%}%>
+																		</td>
+																		<td class="text" align="center">
+																		<%
+																		actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "activate" + "/" + question.getId()) ;
+																		if(question.isActivated()) {%>
+																				<div class="TrueIcon">
+																					<a href="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "UnActivated")%>">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsActivated")%>
+																					</a>
+																				</div>
+																		<%} else {%>
+																				<div class="FalseIcon">
+																					<a href="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "Activate")%>">
+																						<%=_ctx.appRes(uicomponent.getName() + ".label." + "IsNotActivated")%>
+																					</a>
+																				</div>
+																		<%}%>
+																		</td>
+																		<td align="center">
+																				<a href="$linkEdit" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "EditQuestion")%>" >
+																					<div class="ItemIcon Edit">
+																							<div style="padding-left: 20px;"><span></span></div>
+																					</div>
+																				</a>
+																				
+																				<a href="$linkDelete" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "DeleteQuestion")%>">
+																					<div class="ItemIcon Delete">
+																							<div style="padding-left: 20px;"><span></span></div>
+																					</div>
+																				</a>
+																		</td>
+																	</tr>
+															<%}
+															} else {%>
+																<tr>
+																	<td colspan="4" align="center">
+																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "ListQuestionIsEmpty")%></b>
+																	</td>
+																</tr>
+														<%}%>
+														</table>
+													</div>
+												</div>
+											
+										<%
+										long totalPages = uicomponent.getTotalpages("FAQUserPageIteratorTab1") ;
+					          if(totalPages > 1) {
+					          %>
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild("FAQUserPageIteratorTab1") ; %>
+											</div>
+									<%}%>	
+										</div>
+
+	              	</div>
+	              	
+	              	<div class="UITabContent UIIETabContent" style="display: $displayResponse" id="UITabContent">
+					          <div style="display: block;"  >
+									
+											<div class="HorizontalLayout">
+													<div class="UIFormInput">
+														<table class="UIGrid">
+															<tr>
+																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th>
+																	<div style="padding-right: 4px;">
+																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Languages")%></b>
+																	</div>
+																</th>
+																<th width="60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
+															</tr>
+															<%
+															List questionNotAnswered = uicomponent.getListQuestionNotAnswered() ;
+															if(!questionNotAnswered.isEmpty()) {
+																String linkDelete = "" ;
+																String linkEdit = "" ;
+																for(Question question in questionNotAnswered) {
+																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
+																	linkResponse = uicomponent.event("ResponseQuestion", question.getId()) ;
+																%>
+																	<tr>
+																		<td class="text" align="left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
+																		<td class="text" align="left" style="margin-right: 4px;white-space:nowrap;">
+																		<%
+																			String linkResponseByLanguage = "";
+																			for(String language : question.getLanguagesNotYetAnswered().split(",")){
+																				linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getId() + "/" + language ) ;
+																		%>
+																			<a href="$linkResponseByLanguage" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>" >
+																				<div style="padding: 0px 4px 4px 0px;">- &nbsp;$language</div>
+																			</a>
+																		<%}%>
+																		</td>
+																		<td align="center">
+																			<div style="float: left">
+																				<a href="$linkResponse" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>" >
+																					<div class="ItemIcon ResponseQuestion">
+																							<div style="padding-left: 20px;"><span></span></div>
+																					</div>
+																				</a>
+																				
+																				<a href="$linkDelete" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "DeleteQuestion")%>">
+																					<div class="ItemIcon Delete">
+																							<div style="padding-left: 20px;"><span></span></div>
+																					</div>
+																				</a>
+																			</div>
+																		</td>
+																	</tr>
+															<%}
+															} else {%>
+																<tr>
+																	<td colspan="2" align="center">
+																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "ListQuestionIsEmpty")%></b>
+																	</td>
+																</tr>
+														<%}%>
+														</table>
+													</div>
+												</div>
+											
+										<%
+										totalPages = uicomponent.getTotalpages("FAQUserPageIteratorTab2") ;
+					          if(totalPages > 1) {
+					          %>
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild("FAQUserPageIteratorTab2") ; %>
+											</div>
+									<%}%>
+										</div>
+
+									</div>
+								
+								</div>
+							
+							</div>
+						</div>
+						
+				</div>
+			</div>  
+    </div>  
+  </div>
+	
+	<%uiform.end()%>
+</div>

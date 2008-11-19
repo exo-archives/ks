@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration>    
+  <component>
+      <key>org.exoplatform.application.registry.ApplicationRegistryService</key>
+      <type>org.exoplatform.application.registry.jcr.ApplicationRegistryServiceImpl</type>
+  	<component-plugins>      
+	    <component-plugin>
+	      <name>new.portal.portlets.registry</name>
+	      <set-method>initListener</set-method>
+	      <type>org.exoplatform.application.registry.ApplicationCategoriesPlugins</type>
+	      <description>this listener init the portlets are registered in PortletRegister</description>
+	      <init-params>
+	        <object-param>
+	          <name>exoadmin</name>
+	          <description>description</description>
+	          <object type="org.exoplatform.application.registry.ApplicationCategory">
+	            <field  name="name"><string>exoadmin</string></field>
+	            <field  name="displayName"><string>exoadmin</string></field> 
+	            <field  name="description"><string>exoadminPortlets</string></field> 
+	            <field  name="applications">
+		            <collection type="java.util.ArrayList">
+									<value>                 
+	                  <object type="org.exoplatform.application.registry.Application">                     
+	                    <field  name="categoryName"><string>exoadmin</string></field>
+									    <field name="applicationName"><string>PortletRegistryPortlet</string></field>
+						          <field name="displayName"><string>PortletRegistryPortlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>exoadmin</string></field>       
+		                </object>
+	                </value>
+					        <value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>exoadmin</string></field>
+		                  <field name="applicationName"><string>OrganizationPortlet</string></field>
+	                    <field name="displayName"><string>OrganizationPortlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>exoadmin</string></field>                
+		                </object>
+	                </value>
+					        <value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>exoadmin</string></field>
+		                  <field name="applicationName"><string>AccountPortlet</string></field>
+						          <field name="displayName"><string>AccountPortlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>exoadmin</string></field>                
+		                </object>
+	                </value>
+		            </collection>                               
+	            </field> 
+	          </object>        
+	        </object-param> 
+			
+			    <object-param>
+	          <name>web</name>
+	          <description>description</description>
+	          <object type="org.exoplatform.application.registry.ApplicationCategory">
+	            <field  name="name"><string>web</string></field>
+	            <field  name="displayName"><string>web</string></field> 
+	            <field  name="description"><string>BasicPortlets</string></field> 
+	            <field  name="applications">
+		            <collection type="java.util.ArrayList">
+	                <value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>web</string></field>
+		                  <field name="applicationName"><string>IFramePortlet</string></field>
+						          <field name="displayName"><string>IFramePortlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>web</string></field>                
+		                </object>
+	                </value>
+					        <value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>web</string></field>
+		                  <field name="applicationName"><string>SiteMapPortlet</string></field>
+						          <field name="displayName"><string>SiteMapPortlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>web</string></field>                
+		                </object>
+	                </value>
+		            </collection>                               
+	            </field> 
+	          </object>        
+	        </object-param> 
+	      </init-params>
+	    </component-plugin>
+	  </component-plugins>      
+ </component>       
+</configuration>

@@ -1,0 +1,70 @@
+<%
+	import org.exoplatform.portal.application.PortalRequestContext;
+	import org.exoplatform.portal.webui.util.Util;
+	def prContext = _ctx.getRequestContext().getParentAppRequestContext();
+	
+	String changeLanguageAction = "if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ChangeLanguage', true));" ;
+	String portletId = uicomponent.getId() ;	
+	String portalName = Util.getUIPortal().getName() ;
+	portalName = URLEncoder.encode(portalName, "UTF-8") ;
+	String signOutAction = prContext.getRequestContextPath() + "/public/" + portalName + "/" ;
+	String signInAction = "if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ShowLoginForm', true));" ;
+	boolean isLogin = false ;
+	if(prContext.getAccessPath() == PortalRequestContext.PRIVATE_ACCESS) isLogin = true;
+	String userLogin =	Util.getPortalRequestContext().getRemoteUser();
+%>
+<div class="UIBannerPortlet UIApplication">
+	<div class="ApplicationMinWidth">
+
+		<div class="MiddleBanner_">
+		 	<div class="BannerTitle_"><span></span></div>
+			<div class="LoginContainer">
+				<div class="LeftContainer">
+					<div class="RightContainer">
+						<div class="CenterContainer">
+						<% if(isLogin){ %>
+							<div class="TextAcount">Welcome : <span style="font-weight: bold;">$userLogin</span></div>
+						<% }else { %>	
+							<div class="TextAcount">Demo accounts: <span style="font-weight: bold;">demo/exo, admin/exo</span></div>
+						<% } %>
+								<a class="ActionButton"  href="/portal/public/classic/register">
+								<div class="LeftButton">
+									<div class="RightButton">
+										<div class="CenterButton">Your account</div>
+									</div>
+								</div>
+								</a>
+						<!--
+							<a class="ActionButton" onclick="$changeLanguageAction; return false;" href="#">
+								<div class="LeftButton">
+									<div class="RightButton">
+										<div class="CenterButton">Change Language</div>
+									</div>
+								</div>
+							</a>-->
+							<%if(isLogin) {%>	
+								<a class="ActionButton" href="$signOutAction">
+									<div class="LeftButton">
+										<div class="RightButton">
+											<div class="CenterButton">Sign out</div>
+										</div>
+									</div>
+								</a>
+							<% }else{ %>
+								<a class="ActionButton" onclick="$signInAction; return false;" href="#">
+									<div class="LeftButton">
+										<div class="RightButton">
+											<div class="CenterButton">Sign in</div>
+										</div>
+									</div>
+								</a>
+							<% } %>
+						</div>
+					</div>
+					<div style="clear: right"><span></span></div>		 
+				</div>
+			</div>
+	 	</div>
+	</div>
+</div>
+

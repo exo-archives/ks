@@ -1,0 +1,55 @@
+<div class="UIFormForum $uicomponent.id">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<table class="UIFormGrid">
+					<tbody>
+						<tr>						
+							<td class="FieldLabel"><%=uiform.getLabel("SearchValue");%>:</td>
+							<td class="FieldComponent"><%uiform.renderField("SearchValue");%></td>
+							<td class="FieldComponent textIn"><%uiform.renderField("textIn");%></td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uiform.getLabel(uiform.FIELD_SEARCHUSER_INPUT);%>:</td>
+							<td class="FieldComponent" colspan="3"><%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT);%></td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uiform.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX);%>:</td>
+							<td class="FieldComponent" colspan="3"><%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX);%></td>
+						</tr>
+						<tr>
+							<td class="FieldLabel" colspan="4">Created Date: </td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uiform.getLabel(uiform.FROM);%>:</td>
+							<td class="FieldComponent"><%uiform.renderField(uiform.FROMDATECREATED);%></td>
+							<td class="FieldLabelDate"><%=uiform.getLabel(uiform.TO);%>:</td>
+							<td class="FieldComponent"><%uiform.renderField(uiform.TODATECREATED);%></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<a href="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">$actionLabel</div>
+								</div>
+							</div>
+						</a>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
+</div>

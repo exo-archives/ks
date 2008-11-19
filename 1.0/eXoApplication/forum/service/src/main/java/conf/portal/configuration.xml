@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration>
+	
+ <component>
+    <key>org.exoplatform.forum.service.ForumService</key>
+    <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
+  </component>    
+
+ <!--
+   Choose a provider for contact information of forum users.
+   Common options are: 
+    - org.exoplatform.forum.service.user.DefaultContactProvider : takes a mix of attributes in profile of portal user
+    - org.exoplatform.forum.service.user.BusinessProfileContactProvider : uses business profile of portal user
+    - org.exoplatform.forum.service.user.PersonalProfileContactProvider : uses business profile of portal user
+    - org.exoplatform.forum.provider.cs.CSContactProvider (only with eXo CS) : uses CS contact information instead of portal profile
+  -->
+ <component>
+    <key>org.exoplatform.forum.service.user.ContactProvider</key>
+    <type>org.exoplatform.forum.service.user.DefaultContactProvider</type>
+  </component>    
+  
+  <external-component-plugins>
+	  <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      
+	  <component-plugin> 
+	    <name>add.forum.nodeType</name>
+	    <set-method>addPlugin</set-method>
+	    <type>org.exoplatform.services.jcr.impl.AddNodeTypePlugin</type>
+	    <init-params>
+	      <values-param>
+	        <name>autoCreatedInNewRepository</name>
+	        <description>Node types configuration file</description>
+	        <value>jar:/conf/portal/forum-nodetypes.xml</value>
+	      </values-param>
+	    </init-params>
+	  </component-plugin>
+	</external-component-plugins>
+		
+</configuration>

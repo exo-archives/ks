@@ -1,0 +1,111 @@
+<% 
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Post; 
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML;
+	
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	List posts = uicomponent.getPosts() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() ;
+%>
+<div>
+	<% uiform.begin() %>
+	<div class="UITopicContainer">
+	 	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+						<div style="clear: right; height: 0px;"><span></span></div>
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th style="width: 40px;"></th>
+								<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
+								<th style="width: 120px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+								<th width="40px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+								if(posts != null && posts.size() > 0) {
+								String classRow = "whileRow";
+								List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+							  if(checkeds == null) checkeds = new ArrayList<String>();
+								int i = 0;
+								 for(post in posts){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String postId = post.getId();
+									String postTitle = post.getName() ;
+									String message = ForumTransformHTML.getTitleInHTMLCode(post.getMessage()) ;
+									String titlePost = ForumUtils.getSubString(message, 100);
+									String iconPost = post.getIcon() ;
+									Date postDate = post.getCreatedDate() ;
+									postDate.setTime(postDate.getTime() - setTime) ;
+									String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
+									<td >
+										<div >
+											<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$titlePost" class="title">$postTitle</a>
+										</div>
+									</td>
+									<td class="Tdbox">
+										<div class="RatingInfoContainer">$createdDate</div>
+									</td>
+									<%
+									  String checked = "";
+									  if(checkeds.contains(postId)){
+									    checked = "checked=\"checked\"";
+									  }
+									%>
+									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" name="$postId" $checked/></td>
+					 			</tr>
+						 	<% i = i + 1;
+						 		}
+						 	} else {
+						 	 %>
+						 	 	<tr>
+					 				<td colspan="5" align="center">
+					 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
+					 				</td>
+					 			</tr>
+						 	 <% } %>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+						<div style="clear: right; height: 0px;"><span></span></div>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<a href="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"> $actionLabel </div>
+								</div>
+							</div>
+						</a>
+					<%}%>
+				</td>
+			</tr>
+		</table> 
+	</div>
+	<%uiform.end()%>
+</div>

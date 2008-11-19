@@ -1,0 +1,15 @@
+<div class="UIQuickSeach">
+  <% uiform.begin() %>  
+  <div class="UISearchForm">
+		<a class="AdvancedSearch" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" href="<%=uicomponent.event("AdvancedSearch");%>"><span></span></a>
+		<a class="SearchIcon" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" href="<%=uicomponent.event("Search");%>"><span></span></a>
+		<div class="Input">
+		<%  
+			uiform.renderChildren() ;
+		%>
+		</div>
+		<div style="float: right;margin-top: 6px;"><%= _ctx.appRes("UIQuickSeach.label.search"); %></div>
+		<div style="clear: right;"><span></span></div>
+	</div>
+  <%uiform.end()%>
+</div>

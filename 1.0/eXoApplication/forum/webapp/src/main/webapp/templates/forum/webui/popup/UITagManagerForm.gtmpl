@@ -1,0 +1,62 @@
+<%
+  import org.exoplatform.forum.service.Tag;  
+  List tags = uiform.getListTags();	
+%>	
+<div class="UITagManagerForm UIForumContainer">
+	<% uiform.begin(); %>
+	<div class="ContentContainer">
+  	<div class="HorizontalLayout" style="_width: 88%;">
+			<table class="UIGrid">
+				<thead>
+					<th style="width: 35px;">Color</th>
+					<th >Tag Name</th>
+					<th style="width: 100px;"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
+				</thead>
+				<body>
+					<% 
+						String color = "";
+						String tagId = "";
+						String icon = "";
+						String classRow = "whileRow";
+						int i = 0;
+						for(tag in tags){
+						  if(i%2 == 0) classRow = "whileRow";
+							else classRow = "OddRow";
+						  color = tag.getColor() ;
+						  tagId = tag.getId();
+					%>
+					<tr class="$classRow">
+						<td><div class="StatusIcon ${color}TagIcon"><span></span></div></td>
+						<td><a href="<%=uiform.event("OpenTag",tagId);%>" title="<%=tag.getDescription();%>"><%=tag.getName();%></a></td>
+						<td>
+							<a style="float: left; margin: 0px 10px 0px 15px;" href="<%=uiform.event("DeleteTag",tagId);%>">
+								<div class="DeleteIcon"><span></span></div>
+							</a>
+							<a style="float: left; margin: 0px 15px 0px 10px;" href="<%=uiform.event("EditTag",tagId);%>">
+								<div class="EditIcon"><span></span></div>
+							</a>
+							<div style="clear: left;"><span></span></div>
+						</td>
+					</tr>
+					<% ++i;}%>
+				</body>
+			</table>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer" align="center">
+				<tr>
+					<td align="center">
+						<a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel")%></div>
+								</div>
+							</div>
+						</a>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	</div>
+  <%uiform.end();%>
+</div>
