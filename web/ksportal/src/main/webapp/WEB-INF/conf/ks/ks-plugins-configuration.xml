@@ -106,7 +106,7 @@
 					<description>rules of the role</description>
 					<value>root</value>
 					<value>john</value>
-					<!--value>member:/demo</value-->
+					<value>member:/demo</value>
 					<!--value>/platform/administrators</value-->
 					<!--value>manager:/platform/users</value-->
 					<!--value>*:/somegroup/somesubgroup</value-->
