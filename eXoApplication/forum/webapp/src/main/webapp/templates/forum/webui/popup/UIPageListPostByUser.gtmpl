@@ -1,0 +1,91 @@
+<% 
+	import org.exoplatform.forum.webui.UIForumPageIterator ;
+	import org.exoplatform.forum.service.Post ; 
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.ForumTransformHTML;
+	import org.exoplatform.forum.service.UserProfile ;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	List posts = uicomponent.getPostsByUser() ;
+	boolean isAdmin = false;
+	if(userProfile.getUserRole() == 0)isAdmin = true;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+%>
+<div class="UIPageListPostByUser" id="$uicomponent.id">
+	<div class="UITopicContainer">
+	 	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+						<div style="clear: right; height: 0px;"><span></span></div>
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th width="40px"></th>
+								<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
+								<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+								<%if(isAdmin){ %>
+									<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
+									<th width="40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+								<%} %>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+							if(!posts.isEmpty()) {
+								String classRow = "whileRow";
+								int i = 0;
+								 for(post in posts){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String postTitle = post.getName() ;
+									String message = ForumTransformHTML.getTitleInHTMLCode(post.getMessage()) ;
+									String titlePost = ForumUtils.getSubString(message, 100);
+									String iconPost = post.getIcon() ;
+									Date postDate = post.getCreatedDate() ;
+									postDate.setTime(postDate.getTime() - setTime) ;
+									String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
+									<td >
+										<div >
+											<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$titlePost" class="title">$postTitle</a>
+										</div>
+									</td>
+									<td class="Tdbox">
+										<div class="RatingInfoContainer">$createdDate</div>
+									</td>
+									<%if(isAdmin){ %>
+										<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
+										<td class="Tdbox" align="center" style="padding-left:5px;">
+											<a href="<%=uicomponent.event("DeletePostLink", post.getId());%>">
+												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
+											</a>
+										</td>
+									<%} %>
+					 			</tr>
+						 	<% i = i + 1;}
+						 		} else {
+						 		%>
+						 			<tr>
+						 				<td colspan="5" align="center">
+						 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
+						 				</td>
+						 			</tr>
+						 		<%
+						 		}
+						 	 %>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+						<div style="clear: right; height: 0px;"><span></span></div>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

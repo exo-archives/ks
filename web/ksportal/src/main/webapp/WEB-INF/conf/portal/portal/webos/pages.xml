@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<page-set>
+  <page>
+  	<page-id>portal::webos::home</page-id>
+  	<owner-type>portal</owner-type>
+		<owner-id>webos</owner-id>
+    <name>home</name>		
+    <factory-id>Desktop</factory-id>
+	  <access-permissions>Everyone</access-permissions>
+	  <edit-permission>*:/platform/administrators</edit-permission>
+    <show-max-window>true</show-max-window>
+    
+    <application>
+	    <instance-id>admin:/eXoWidgetWeb/WelcomeWidget/WelcomeWidget</instance-id>
+	    <application-type>eXoWidget</application-type>
+	    <title>Welcome Widget</title>
+	  </application>
+
+    <application>
+      <instance-id>portal#webos:/web/SiteMapPortlet/SitemapPortlet/SiteMap</instance-id>    
+      <title>Site Map</title>
+    </application>
+    
+    <application>
+      <instance-id>portal#webos:/web/BrowserPortlet/WebExplorer</instance-id>    
+      <title>Web Explorer</title>
+    </application>
+    
+    <application>
+      <instance-id>portal#webos:/exoadmin/AccountPortlet/Account</instance-id>    
+      <title>Register</title>
+    </application>    
+  </page>
+  
+  <page>
+  	<page-id>portal::webos::livedesktop</page-id>
+  	<owner-type>portal</owner-type>
+		<owner-id>webos</owner-id>
+    <name>livedesktop</name>		
+    <factory-id>Desktop</factory-id>
+	  <access-permissions>Everyone</access-permissions>
+	  <edit-permission>*:/platform/administrators</edit-permission>
+    <show-max-window>true</show-max-window>
+    
+    <application>
+	    <instance-id>admin:/eXoWidgetWeb/WelcomeWidget/WelcomeWidget</instance-id>
+	    <application-type>eXoWidget</application-type>
+	    <title>Welcome Widget</title>
+	  </application>
+	  
+	  <application>
+	    <instance-id>admin:/eXoWidgetWeb/CalendarWidget/CalendarWidget</instance-id>
+	    <application-type>eXoWidget</application-type>
+	    <title>Calendar Widget</title>
+	  </application>
+	  
+    <application>
+      <instance-id>portal#webos:/web/SiteMapPortlet/SitemapPortlet/SiteMap</instance-id>    
+      <title>Site Map</title>
+    </application>
+    
+    <application>
+      <instance-id>portal#webos:/web/BrowserPortlet/Web Explorer</instance-id>    
+      <title>Web Explorer</title>
+    </application>
+                
+    <application>
+      <instance-id>portal#webos:/web/IFramePortlet/IFrame</instance-id>    
+      <title>IFrame</title>
+    </application>                
+  </page>  
+   
+</page-set>

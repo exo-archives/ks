@@ -1,0 +1,24 @@
+<%	
+	import org.exoplatform.forum.webui.UITopicPoll ;
+	import org.exoplatform.forum.webui.UITopicDetail ;
+	import org.exoplatform.forum.service.Topic ;
+	import org.exoplatform.forum.service.Forum ;
+%>
+<div class="UITopicDetailContainer" id="$uicomponent.id">
+	<% 
+		List children = uicomponent.getChildren() ;
+		UITopicDetail uiTopicDetail = uicomponent.getChild(UITopicDetail.class) ;
+		Topic topic = uiTopicDetail.getTopic() ;
+		if(topic != null) {
+			UITopicPoll uiTopicPoll = uicomponent.getChild(UITopicPoll.class) ;
+			boolean isPoll = topic.getIsPoll() ;
+			uiTopicPoll.setRendered(isPoll) ;
+			if(isPoll) uiTopicPoll.setForum(uiTopicDetail.getForum()) ;
+		}
+		for(component in children) {
+			if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ;			
+			}
+		}
+	%>
+</div>

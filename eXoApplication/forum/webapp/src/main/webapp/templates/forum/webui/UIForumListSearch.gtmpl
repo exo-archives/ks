@@ -1,0 +1,62 @@
+<%	
+	import org.exoplatform.forum.service.ForumSearch ;
+	import org.exoplatform.forum.service.Utils ;
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
+	List searchEvents = uicomponent.getListEvent() ;
+%>
+<div class="UIForumListSearch">
+<% uiform.begin() %>
+	<div class="ContentContainer">
+		<div class="UITopicList">
+			<div>
+				<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+					<thead>
+						<tr>
+							<th style="width: 80px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
+							<th style="width: 40px;">&nbsp;</th>
+							<th><%=_ctx.appRes("UIForumListSearch.label.Name");%></th>
+						</tr>
+					</thead>
+					<tbody>
+					<%
+					int i = 0;
+					String classRow = "OddRow" ;
+					if(searchEvents.size() > 0) {	
+						for(searchEvent in searchEvents) {
+							if(i%2 == 0) classRow = "whileRow";
+							else classRow = "OddRow";
+							String classIcon = searchEvent.getIcon();
+							String objId = searchEvent.getId();
+							String type = searchEvent.getType() ;
+							if(type.equals(Utils.FORUM)) type = ForumUtils.FORUM;
+							else if(type.equals(Utils.TOPIC)) type = ForumUtils.THREAD;
+							else if(type.equals(Utils.POST)) type = ForumUtils.POST;
+							else type = ForumUtils.CATEGORY ;
+					%>
+						<tr class="$classRow">
+							<td class="Tdbox"><div class="" title=""><%=type%></div></td>
+							<td class="Tdbox $classIcon">&nbsp;</td>
+							<td class="Tdbox"><a class="" href="<%=uicomponent.event("OpentContent",objId);%>"><%=searchEvent.getName()%></a></td>
+						</tr>
+					<% 
+							i = i + 1;
+						} 
+					} else {%>
+						<tr class="$classRow">
+							<td class="Tdbox" colspan="10"><div class="" ><%=_ctx.appRes("UIForumListSearch.label.NoMatches");%></div></td>
+						</tr>
+					<% } %> 
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+<% if(uiform.getIsShowIter()){ %>
+<div style="overflow: auto;">
+  <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
+	<div style="clear: right; height: 0px;"><span></span></div>
+</div>
+<% } %>
+<%uiform.end()%>
+</div>

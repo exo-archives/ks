@@ -1,0 +1,46 @@
+<%	
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumSessionUtils ;
+	UserProfile userProfile = uicomponent.getUserProfile();
+	boolean isBan = userProfile.getIsBanned() ;
+	boolean isNotLogin= ForumSessionUtils.isAnonim();
+	String canCreatThread = "";
+	String canPost = "";
+	String you = _ctx.appRes("UIPostRules.label.You") ;
+	String can = _ctx.appRes("UIPostRules.label.can") ;
+	String not = _ctx.appRes("UIPostRules.label.not") ;
+	if(isBan || isNotLogin) {
+		canCreatThread = not;
+		canPost = not;
+	} else{
+		if(!uicomponent.isCanCreateNewThread()) {
+			canCreatThread = not;
+		}
+		if(!uicomponent.isCanAddPost()){
+			canPost = not;
+		}
+	}
+%>
+<div id="$uicomponent.id" class="UIPostRules">
+	<div class="ForumCategory">
+		<div class="ForumToolbar">
+			<div class="LeftBar">
+				<div class="RightBar">
+					<div class="CenterBar">
+						<div class="Title"><%=_ctx.appRes("UIPostRules.label.PostRules")%></div>
+						<div class="CollapseButton" title="Collapse"	onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+						<div style="clear: both;"><span></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ContentContainer">
+			<div class="ForumList">
+				<div class="text">$you <span class="BoldTitle">$can $canCreatThread</span> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></div>
+				<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></div>
+				<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></div>
+				<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></div>
+			</div>
+		</div>
+	</div>
+</div>

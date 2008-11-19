@@ -1,0 +1,40 @@
+<div class="FAQUIQuestionManagerForm $uicomponent.id" >
+	<div>
+		<div id="FAQViewTabContent" style="float: left; width: 870px;">
+			<% uicomponent.renderChild("QuestionInfo") ; %>
+		</div>
+		<div id="FAQViewFormContent" style="float: left; padding-top: 10px; width: 870px;">
+			<%
+			if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
+				 uicomponent.renderChild(uicomponent.UI_QUESTION_FORM) ;
+			}
+			if(uicomponent.isViewResponseQuestion && uicomponent.isResponseQuestion){
+				 uicomponent.renderChild(uicomponent.UI_RESPONSE_FORM) ;
+			}
+			%>
+		</div>
+		<div style="clear:left"><span></span></div>
+	</div>
+	<% uiform.begin() %>
+	<div class="UIAction">
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+        <% for(action in uicomponent.getActions()) { 
+        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
+        		<a href="$link" class="ActionButton LightBlueStyle">
+	      	  	<div class="ButtonLeft">
+	        	  	<div class="ButtonRight">
+	          	  	<div class="ButtonMiddle"> $actionLabel </div>
+	            	</div>
+	          	</div>
+	        	</a>
+          <%}%>
+      	</td>
+			</tr>
+	  </table> 
+	</div>
+	<%uiform.end()%>
+</div>

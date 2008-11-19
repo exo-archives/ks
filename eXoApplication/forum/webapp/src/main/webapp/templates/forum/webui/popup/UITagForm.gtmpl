@@ -1,0 +1,54 @@
+<%	
+	import org.exoplatform.forum.service.Tag ;
+	import org.exoplatform.forum.ForumUtils ;
+%>
+<div class="UITagForm">
+	<% uiform.begin() %>
+	<% List tags = uicomponent.getAllTag(); %>
+	<div class="TagContent">
+		<div class="TagControlBar">
+			<div style="overflow: auto;">
+				<div class="TagTitle">Tags</div>
+				<a class="TagIcon" href="<%=uicomponent.event("AddTag");%>"><div class="AddNewNodeIcon" title="Add new Tag"><span></span></div></a>
+				<div style="clear: both"><span></span></div>
+			</div>
+		</div>
+		<div class="TagsList">
+		<%
+			for(tag in tags) {
+				String tagName = tag.getName() ;
+				String color = tag.getColor() ;
+				String description = tag.getDescription() ;
+				String tagId = tag.getId() ;
+				String classCss = "Normal";
+				if(uicomponent.getSelected(tagId)) classCss = "Selected";
+				if(ForumUtils.isStringInStrings(uiform.tagId, tagId)) classCss = "unSelected";
+		%>
+			<a href="<%=uicomponent.event("Selected",tagId);%>" class="IconHolder $classCss ${color}TagIcon" title="$description">$tagName</a>
+		<% } %>
+		</div>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+				<% String []Actions = ["Save","Cancel"] ; 
+				 for(action in Actions) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+					 actionLabel.trim();
+				%>
+					<a href="$link" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">$actionLabel</div>
+							</div>
+						</div>
+					</a>
+				<%}%>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
+	<%uiform.end()%>
+</div>

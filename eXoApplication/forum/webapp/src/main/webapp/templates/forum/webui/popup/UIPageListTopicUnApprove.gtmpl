@@ -1,0 +1,125 @@
+<% 
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Topic; 
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ; 
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML;
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	List topics = uicomponent.getTopicsUnApprove() ;
+%>
+<div class="$uicomponent.id">
+	<% uiform.begin() %>
+	<div class="UITopicContainer">
+	 	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+						<div style="clear: right; height: 0px;"><span></span></div>
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th style="width: 40px;"></th>
+								<th style="width: 40px;"></th>
+								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
+								<th style="width: 50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Views");%></th>
+								<th style="width: 50px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+								String classRow = "whileRow";
+								if(topics != null && topics.size() > 0) {
+								List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+							  if(checkeds == null) checkeds = new ArrayList<String>();
+								int i = 0;
+								 for(topic in topics){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String topicId = topic.getId();
+									String iconClassTopic = topic.getIcon();
+									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
+									String topicTitle = topic.getTopicName();
+									String topicBy = topic.getOwner();
+									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
+									titlePost = ForumUtils.getSubString(titlePost, 100);
+									String postView = String.valueOf(topic.getViewCount());
+									String titleTopicStatus = "Hot thread with new post" ;
+									String iconTopicStatus = "HotThreadNewPost" ;
+									if(topic.getIsLock()) {
+										iconTopicStatus = "HotThreadNewLockPost" ;
+										titleTopicStatus = "Hot thread with new post lock" ;
+									}
+									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
+									String title = "";
+									if(isReadTopic) {
+										title = "TitleNorman";
+									} else {
+										title = "TitleBold";
+									}
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
+									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
+									<td >
+										<div >
+										<% if(topic.getIsSticky()) {%>
+											<span class="Text StickyIcon">Sticky:</span>
+										<% } %>
+											<a href="<%=uicomponent.event("OpenTopic", (topicId+",false"))%>" title="$titlePost" class="$title">$topicTitle</a>
+										</div>
+									</td>
+								 	<td class="Tdbox" align="center"><div>$postView</div></td>
+									<%
+									  String checked = "";
+									  if(checkeds.contains(topicId)){
+									    checked = "checked=\"checked\"";
+									  }
+									%>
+									<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" name="$topicId" $checked/></td>
+					 			</tr>
+						 	<% i = i + 1;} 
+						 	} else {
+					 		%>
+					 			<tr>
+					 				<td colspan="5" align="center">
+					 					<div class="ContentNotPost1"><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></div>
+					 				</td>
+					 			</tr>
+					 		<%}%>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
+						<div style="clear: right; height: 0px;"><span></span></div>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<a href="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">$actionLabel</div>
+								</div>
+							</div>
+						</a>
+					<%}%>
+				</td>
+			</tr>
+		</table> 
+	</div>
+	<%uiform.end()%>
+</div>
+
+

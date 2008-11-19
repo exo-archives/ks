@@ -1,0 +1,48 @@
+<% 
+	import org.exoplatform.faq.webui.FAQUtils;
+%>
+<div class="UIBreadcumbs" id="$uicomponent.id">
+	<div class="LeftBreadcumbsBar">
+		<div class="RightBreadcumbsBar"> 
+			<div class="CenterBreadcumbs">
+				<div class="BreadcumbsInfoBar" style="border: 1px solid #B7B7B7;">
+					<div class="OpenIcon"><span></span></div>
+				<% int t = 1 ;
+					for(namePath in uicomponent.getBreadcumbs()) {
+						String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
+						String url = uicomponent.url("ChangePath", uicomponent.getPath(t-1)) ;
+						String title = "" ;
+						if(namePath.equals(uicomponent.FIELD_EXOFAQ_LABEL)){
+							namePath = _ctx.appRes("UIBreadcumbs.label.eXoFAQ") ;
+						}
+						if(t < uicomponent.getMaxPath()) {
+							if(namePath.length() > 30) {
+								title = namePath ;
+								title = FAQUtils.getTitle(title) ; 
+								namePath = FAQUtils.getSubString(namePath,30);
+				%>
+								<a href="$url" onclick="$link; return false;" class="Selected" title="$title">$namePath</a>
+							<% } else { %>
+								<a href="$url" onclick="$link; return false;" class="Selected" >$namePath</a>
+							<% } %>
+							<div class="RightArrowIcon"><span></span></div>
+				 <% } else {
+				 			if(namePath.length() > 30) {
+								title = namePath ;
+								title = FAQUtils.getTitle(title) ; 
+								namePath = FAQUtils.getSubString(namePath,30);
+				%>
+								<div class="Selected" title="$title">$namePath </div>
+							<% } else { %>
+								<div class="Selected" >$namePath</div>
+							<% } 
+						} %>
+			  <% t = t + 1 ;
+			  } %>
+			  	<div style="clear: left"><span></span></div>
+				</div>
+				<div style="clear: both"><span></span></div>
+			</div>
+		</div>
+	</div>
+</div>
