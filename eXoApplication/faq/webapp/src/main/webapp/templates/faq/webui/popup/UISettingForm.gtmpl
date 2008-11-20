@@ -70,11 +70,7 @@ if(!uicomponent.isEditPortlet_){
 </div><%
 } else {
 %>
-<%
-  def rcontext = _ctx.getRequestContext() ;
-	rcontext.getJavascriptManager().importJavascript('eXo.webui.UIHorizontalTabs') ;
-%>
-<div class="$uicomponent.id" style="padding: 4px;">
+<div class="UISettingForm $uicomponent.id" style="padding: 4px;">
   <div class="UITabPane">
 		<div style="padding:2px;">
 	    <div class="WorkingArea">
@@ -85,23 +81,27 @@ if(!uicomponent.isEditPortlet_){
 	     	      <div class="CenterHorizontalTabs">
 				        <div class="TabsContainer">
 			            <%
-			            	String selTabId = uicomponent.getSelectedTabId() ;
+			            	String selTabId = uicomponent.getSelectedTab() ;
 			            	if(uicomponent.isResetMail){
 			            		uicomponent.isResetMail = false;
 			            		selTabId = uicomponent.SET_DEFAULT_EMAIL_TAB;
 			            	}
+			            	String actionChangeTab =  "";
+			            	int count = 0;
 			              for(inputSet in uicomponent.getChildren()) {
 			                if(!inputSet.isRendered()) continue ;
+			                actionChangeTab =  uicomponent.event("ChildTabChange", "parent/" + count);
 					        		String className="NormalTab" ;
 					        		if(inputSet.getId().equals(selTabId)) className="SelectedTab" ;
 				              //String tabName = inputSet.getName() ; 
 				              String tabName = _ctx.appRes(uicomponent.getName() + ".tab.label." + inputSet.name) ;
+				              count ++;
                   %>
 				              <div class="UITab NormalTabStyle">
 				                <div class="$className">
 				                  <div class="LeftTab">
 				                    <div class="RightTab">
-						                  <div class="MiddleTab" onClick="eXo.webui.UIHorizontalTabs.changeTabForUIFormTabpane(this, '$uiform.id', '$inputSet.id')">$tabName</div>
+						                  <div class="MiddleTab" onmousedown="$actionChangeTab">$tabName</div>
 						                </div>
 				                  </div>
 				                </div>
@@ -114,7 +114,6 @@ if(!uicomponent.isEditPortlet_){
 	      </div>
        
         <%uiform.begin()%>
-        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
 	    	<div style="background-color:#F3F3F3;">
 	    	
 	        <div class="UITabContentContainer">
@@ -135,9 +134,9 @@ if(!uicomponent.isEditPortlet_){
 								     	      <div class="CenterHorizontalTabs">
 											        <div class="TabsContainer">
 										            <%
-										            	int count = 0;
+										            	count = 0;
 										              for(childInputSet in formInput.getChildren()) {
-										              	String actionChangeTab =  uicomponent.event("ChildTabChange", "" + count);
+										              	actionChangeTab =  uicomponent.event("ChildTabChange", "child/" + count);
 										                if(!childInputSet.isRendered()) continue ;
 												        		String childClassName="NormalTab" ;
 												        		if(count == uicomponent.indexOfTab) childClassName="SelectedTab" ;

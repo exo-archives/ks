@@ -275,6 +275,8 @@ public interface FAQService {
    */
   public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
   
+  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, SessionProvider sProvider) throws Exception;
+  
   /**
    * This method should lookup languageNode of question
    * so find child node of language node is searched

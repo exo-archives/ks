@@ -32,6 +32,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -92,11 +93,11 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   private int posOfResponse = 0;
   
 	public UISendMailForm() throws Exception { this.setActions(new String[]{"Send", "Cancel"}) ;}
-	
+
 	public void activate() throws Exception {}
-  public void deActivate() throws Exception {}
-	
-  public String getLink() {return link_;}
+	public void deActivate() throws Exception {}
+
+	public String getLink() {return link_;}
 	public void setLink(String link) { this.link_ = link;}
   
 	public List<User> getToUsers() { return toUsers; }
@@ -120,9 +121,10 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			e.printStackTrace() ;
 		}
 	}
-  
+
 	public void setUpdateQuestion(String questionId, String language) throws Exception {
-    Question question = FAQUtils.getFAQService().getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+    Question question = FAQUtils.getFAQService().getQuestionById(questionId, sessionProvider) ;
     if(language.equals("")) language = question.getLanguage() ;
     @SuppressWarnings("unused")
     String email = "" ;
@@ -140,7 +142,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     questionLanguage.setResponse(question.getAllResponses()) ;
     
     listQuestionLanguage.add(questionLanguage) ;
-    for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionId, FAQUtils.getSystemProvider())) {
+    for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionId, sessionProvider)) {
     	String quest2 = questionLanguage2.getDetail().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
     	questionLanguage2.setDetail(quest2) ;
       listQuestionLanguage.add(questionLanguage2) ;
@@ -150,6 +152,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     for(QuestionLanguage quesLanguage : listQuestionLanguage) {
       listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
     }
+    
+    sessionProvider.close();
     
     addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, name)) ;
     addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email)) ;
@@ -196,7 +200,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 	public String getFieldBCCValue(){return getUIStringInput(FILED_ADD_BCC).getValue();}
 	
 	static public class SendActionListener extends EventListener<UISendMailForm> {
-    public void execute(Event<UISendMailForm> event) throws Exception {
+		public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;		
 			UIApplication uiApp = sendMailForm.getAncestorOfType(UIApplication.class) ;
       String fromName = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM_NAME)).getValue() ;
@@ -346,12 +350,12 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   }
 	
 	static public class CancelActionListener extends EventListener<UISendMailForm> {
-    public void execute(Event<UISendMailForm> event) throws Exception {
+		public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;		
-      UIFAQPortlet portlet = sendMailForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			UIFAQPortlet portlet = sendMailForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			popupAction.deActivate() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
    static public class ChangeLanguageActionListener extends EventListener<UISendMailForm> {

@@ -239,6 +239,15 @@ public class MultiLanguages {
     langNode.setProperty("exo:title", language.getQuestion()) ;
     langNode.setProperty("exo:responses", language.getResponse()) ;
     langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
+    langNode.setProperty("exo:usersVoteAnswer", language.getUsersVoteAnswer()) ;
+    Value[] values = null;
+    if(language.getMarksVoteAnswer() != null) {
+    	values = new Value[language.getMarksVoteAnswer().length];
+	    for(int i = 0; i < values.length; i ++){
+	    	values[i] = langNode.getSession().getValueFactory().createValue(language.getMarksVoteAnswer()[i]);
+	    }
+    }
+    langNode.setProperty("exo:marksVoteAnswer", values) ;
     if(language.getDateResponse() != null) {
     	java.util.Calendar calendar = null ;
     	List<Value> listCalendars = new ArrayList<Value>();

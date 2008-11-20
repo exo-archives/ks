@@ -247,6 +247,15 @@ public class JCRDataStorage {
     	}
     	questionNode.setProperty("exo:dateComment", values);
     }
+    
+    questionNode.setProperty("exo:usersVoteAnswer", question.getUsersVoteAnswer()) ;
+    values = new Value[question.getMarksVoteAnswer().length];
+    int i = 0;
+    for(double d : question.getMarksVoteAnswer()){
+    	values[i++] = questionNode.getSession().getValueFactory().createValue(d);
+    }
+    questionNode.setProperty("exo:marksVoteAnswer", values);
+    
     List<FileAttachment> listFileAtt = question.getAttachMent() ;
     
     List<String> listNodeNames = new ArrayList<String>() ;
@@ -437,11 +446,46 @@ public class JCRDataStorage {
         if(node.hasProperty("exo:responses")) questionLanguage.setResponse(ValuesToStrings(node.getProperty("exo:responses").getValues()));
         if(node.hasProperty("exo:responseBy")) questionLanguage.setResponseBy(ValuesToStrings(node.getProperty("exo:responseBy").getValues()));
         if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(ValuesToDate(node.getProperty("exo:dateResponse").getValues()));
-        
+        if(node.hasProperty("exo:usersVoteAnswer")) questionLanguage.setUsersVoteAnswer(ValuesToStrings(node.getProperty("exo:usersVoteAnswer").getValues())) ;
+        if(node.hasProperty("exo:marksVoteAnswer")) questionLanguage.setMarksVoteAnswer(ValuesToDouble(node.getProperty("exo:marksVoteAnswer").getValues())) ;
+        questionLanguage.setPos();
         listQuestionLanguage.add(questionLanguage) ;
       }
     }
     return listQuestionLanguage ;
+  }
+  
+  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, SessionProvider sProvider) throws Exception {
+  	Node questionHome = getQuestionHome(sProvider, null);
+  	StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+												append("//element(*,exo:faqQuestion)[fn:name() = '").append(questionId).append("']");
+		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    NodeIterator iterator = result.getNodes();
+    Node questionNode = null;
+    Node languages = null;
+    Node questionLanguageNode = null;
+    while(iterator.hasNext()){
+    	questionNode = iterator.nextNode();
+    }
+    languages = questionNode.getNode("languages");
+    iterator = languages.getNodes();
+    while(iterator.hasNext()){
+    	questionLanguageNode = iterator.nextNode();
+    	if(questionLanguageNode.getName().equals(questionLanguage.getLanguage())) break;
+    }
+    questionLanguageNode.setProperty("exo:usersVoteAnswer", questionLanguage.getUsersVoteAnswer()) ;
+    Value[] values = null;
+    if(questionLanguage.getMarksVoteAnswer() != null) {
+    	values = new Value[questionLanguage.getMarksVoteAnswer().length];
+	    for(int i = 0; i < values.length; i ++){
+	    	values[i] = questionLanguageNode.getSession().getValueFactory().createValue(questionLanguage.getMarksVoteAnswer()[i]);
+	    }
+    }
+    questionLanguageNode.setProperty("exo:marksVoteAnswer", values) ;
+    questionNode.save();
+    questionHome.save();
   }
   
   private boolean ArrayContentValue(String[] array, String value){
@@ -585,6 +629,9 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:markVote")) question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble()) ;
     if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) ;
     if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
+    if(questionNode.hasProperty("exo:usersVoteAnswer")) question.setUsersVoteAnswer(ValuesToStrings(questionNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+    if(questionNode.hasProperty("exo:marksVoteAnswer")) question.setMarksVoteAnswer(ValuesToDouble(questionNode.getProperty("exo:marksVoteAnswer").getValues())) ;
+    question.setPos();
     List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
   	NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
@@ -778,7 +825,33 @@ public class JCRDataStorage {
   	categoryNode.setProperty("exo:viewAuthorInfor", category.isViewAuthorInfor()) ;
   }
   
+  private boolean getCategoryNodeByName(Category category, boolean isAddNew, SessionProvider sProvider) throws Exception {
+		Node categoryHome = getCategoryHome(sProvider, null) ;	
+		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+				+ "//element(*,exo:faqCategory)[@exo:name='").append(category.getName().replaceAll("'", "/'")).append("']") ;
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		if(isAddNew){
+			if(result.getNodes().hasNext())
+				return true;
+			else
+				return false;
+		} else {
+			NodeIterator iterator = result.getNodes();
+			Node nodeCate = null;
+			while(iterator.hasNext()){
+				nodeCate = iterator.nextNode();
+				if(!nodeCate.getName().equals(category.getId())) return true;
+			}
+			return false;
+		}
+	}
+  
   public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
+  	if(getCategoryNodeByName(cat,isAddNew, sProvider)){
+			throw new RuntimeException();
+		}
   	Node categoryHome = getCategoryHome(sProvider, null) ;
   	if(parentId != null && parentId.length() > 0) {	
     	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -945,33 +1018,38 @@ public class JCRDataStorage {
   public long[] getCategoryInfo( String categoryId, SessionProvider sProvider) throws Exception  {
     long[] cateInfo = new long[]{0, 0, 0, 0};
     Node parentCategory ;
-    parentCategory = getCategoryNodeById(categoryId, sProvider) ;
+    if(categoryId != null)
+    	parentCategory = getCategoryNodeById(categoryId, sProvider) ;
+    else 
+    	parentCategory = getCategoryHome(sProvider, null);
+    
     NodeIterator iter = parentCategory.getNodes() ;
     cateInfo[0] = iter.getSize() ;
-    
-    Node questionHome = getQuestionHome(sProvider, null) ;
-    QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-        													append("//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
-        													append("]").append("order by @exo:createdDate ascending");
-    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-    QueryResult result = query.execute();
-    NodeIterator nodeIterator = result.getNodes() ;
-    cateInfo[1] = nodeIterator.getSize() ;
-    
-    queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-        							append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-        							append(" and (@exo:responses=' ')]").append("order by @exo:createdDate ascending");
-    query = qm.createQuery(queryString.toString(), Query.XPATH);
-    result = query.execute();
-    cateInfo[2] = result.getNodes().getSize() ;
-    
-    Node questionNode = null;
-    while(nodeIterator.hasNext()) {
-      questionNode = nodeIterator.nextNode() ;
-      if(questionNode.hasProperty("exo:isApproved") && !questionNode.getProperty("exo:isApproved").getBoolean()) {
-        cateInfo[3] ++ ;
-      }
+    if(categoryId != null){
+	    Node questionHome = getQuestionHome(sProvider, null) ;
+	    QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+	    StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+	        													append("//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
+	        													append("]").append("order by @exo:createdDate ascending");
+	    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+	    QueryResult result = query.execute();
+	    NodeIterator nodeIterator = result.getNodes() ;
+	    cateInfo[1] = nodeIterator.getSize() ;
+	    
+	    queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+	        							append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+	        							append(" and (@exo:responses=' ')]").append("order by @exo:createdDate ascending");
+	    query = qm.createQuery(queryString.toString(), Query.XPATH);
+	    result = query.execute();
+	    cateInfo[2] = result.getNodes().getSize() ;
+	    
+	    Node questionNode = null;
+	    while(nodeIterator.hasNext()) {
+	      questionNode = nodeIterator.nextNode() ;
+	      if(questionNode.hasProperty("exo:isApproved") && !questionNode.getProperty("exo:isApproved").getBoolean()) {
+	        cateInfo[3] ++ ;
+	      }
+	    }
     }
     
     return cateInfo ;
@@ -1012,6 +1090,15 @@ public class JCRDataStorage {
 		}
 		return Str;
 	}
+  
+  private double [] ValuesToDouble(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new double[]{0} ;
+  	double[] d = new double[Val.length] ;
+  	for(int i = 0; i < Val.length; ++i) {
+  		d[i] = Val[i].getDouble() ;
+  	}
+  	return d;
+  }
   
   private Date[] ValuesToDate(Value[] Val) throws Exception {
   	if(Val.length < 1) return new Date[]{} ;

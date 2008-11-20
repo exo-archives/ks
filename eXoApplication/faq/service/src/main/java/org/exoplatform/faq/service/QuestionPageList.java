@@ -479,7 +479,9 @@ public class QuestionPageList extends JCRPageList {
     if(questionNode.hasProperty("exo:markVote")) question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble()) ;
     if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) ;
     if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
-    
+    if(questionNode.hasProperty("exo:usersVoteAnswer")) question.setUsersVoteAnswer(ValuesToStrings(questionNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+    if(questionNode.hasProperty("exo:marksVoteAnswer")) question.setMarksVoteAnswer(ValuesToDoubles(questionNode.getProperty("exo:marksVoteAnswer").getValues())) ;
+    question.setPos();
     List<FileAttachment> attList = new ArrayList<FileAttachment>() ;
     NodeIterator nodeIterator = questionNode.getNodes() ;
     Node nodeFile ;
@@ -576,6 +578,16 @@ public class QuestionPageList extends JCRPageList {
 		  Str[i] = Val[i].getString();
 		}
 		return Str;
+  }
+  
+  private double [] ValuesToDoubles(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new double[]{} ;
+  	if(Val.length == 1) return new double[]{Val[0].getDouble()} ;
+  	double[] d = new double[Val.length] ;
+  	for(int i = 0; i < Val.length; ++i) {
+  		d[i] = Val[i].getDouble() ;
+  	}
+  	return d;
   }
   
   /**

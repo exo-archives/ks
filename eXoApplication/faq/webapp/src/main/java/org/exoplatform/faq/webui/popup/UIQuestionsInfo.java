@@ -267,6 +267,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       pageListNotAnswer.setPageSize(5);
       pageQuesNotAnswerIterator.updatePageList(pageListNotAnswer) ;
     }
+    sProvider.close();
   }
   
   @SuppressWarnings("unused")
@@ -325,8 +326,9 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       try{
-        Question question = faqService_.getQuestionById(quesId, FAQUtils.getSystemProvider()) ;
+        Question question = faqService_.getQuestionById(quesId, sessionProvider) ;
         UIQuestionForm questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
         questionForm.setFAQSetting(questionsInfo.faqSetting_);
         questionForm.setIsChildOfManager(true) ;
@@ -345,6 +347,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
           }
         }
       }
+      sessionProvider.close();
       UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
@@ -357,8 +360,9 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       String[] param = event.getRequestContext().getRequestParameter(OBJECTID).split("/");
       
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       try{
-        Question question = faqService_.getQuestionById(param[0], FAQUtils.getSystemProvider()) ;
+        Question question = faqService_.getQuestionById(param[0], sessionProvider) ;
         UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
         responseForm.setFAQSetting(questionsInfo.faqSetting_);
         responseForm.setIsChildren(true) ;
@@ -378,6 +382,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
           }
         }
       }
+      sessionProvider.close();
       UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
@@ -389,8 +394,9 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIPopupContainer popupContainer = questionsInfo.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       try {
-        Question question = faqService_.getQuestionById(questionId, FAQUtils.getSystemProvider()) ;
+        Question question = faqService_.getQuestionById(questionId, sessionProvider) ;
         UIDeleteQuestion deleteQuestion = popupAction.activate(UIDeleteQuestion.class, 500) ;
         deleteQuestion.setQuestionId(question) ;
         deleteQuestion.setIsManagement(true) ;
@@ -419,6 +425,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
           }
         }
       }
+      sessionProvider.close();
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
     }
   }
@@ -474,20 +481,22 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   	public void execute(Event<UIQuestionsInfo> event) throws Exception {
   		UIQuestionsInfo questionsInfo = event.getSource() ;
   		String[] objectId = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
+  		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
   		try{
-  			Question question = faqService_.getQuestionById(objectId[1],FAQUtils.getSystemProvider());
+  			Question question = faqService_.getQuestionById(objectId[1],sessionProvider);
   			if(objectId[0].equals("approved")){
   				question.setApproved(!question.isApproved());
   			} else {
   				question.setActivated(!question.isActivated());
   			}
   			FAQUtils.getEmailSetting(questionsInfo.faqSetting_, false, false);
-  			faqService_.saveQuestion(question, false, FAQUtils.getSystemProvider(),questionsInfo.faqSetting_);
+  			faqService_.saveQuestion(question, false, sessionProvider,questionsInfo.faqSetting_);
   		}catch (Exception e){
   			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
   		}
+  		sessionProvider.close();
   		UIPopupContainer popupContainer = questionsInfo.getAncestorOfType(UIPopupContainer.class);
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
   	}

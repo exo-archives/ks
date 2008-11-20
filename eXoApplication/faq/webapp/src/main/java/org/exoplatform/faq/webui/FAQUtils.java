@@ -57,54 +57,54 @@ public class FAQUtils {
 	public static String DISPLAYAPPROVED = "approved";
 	public static String DISPLAYBOTH = "both";
 	private static String AKONG = "@" ;
-  public static String[] specialString = {"!", "#", "$", "%", "^", "&"
-                                            , ":", ">", "<", "~", "`", "]", "'", "/"} ;
-  
-  public static FAQService getFAQService() throws Exception {
-    return (FAQService)PortalContainer.getComponent(FAQService.class) ;
-  }
-	
+	public static String[] specialString = {"!", "#", "$", "%", "^", "&"
+		, ":", ">", "<", "~", "`", "]", "'", "/"} ;
+
+	public static FAQService getFAQService() throws Exception {
+		return (FAQService)PortalContainer.getComponent(FAQService.class) ;
+	}
+
 	public static String filterString(String text, boolean isEmail) {
-	  for (String str : specialString) {
-	    text = text.replaceAll(str, "") ;
-	  }
-	  if (!isEmail) text = text.replaceAll(AKONG, "") ;
-	  int i = 0 ;
-	  while (i < text.length()) {
-	    if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|'
-	      || text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\' || text.charAt(i) == '+'
-	      || text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$'
-	      || text.charAt(i) == '"'  ) {
-	      text = text.replace((text.charAt(i)) + "", "") ;
-	    } else {
-	      i ++ ;
-	    }
-	  }
-    return text ;
-  }
-	
+		for (String str : specialString) {
+			text = text.replaceAll(str, "") ;
+		}
+		if (!isEmail) text = text.replaceAll(AKONG, "") ;
+		int i = 0 ;
+		while (i < text.length()) {
+			if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|'
+				|| text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\' || text.charAt(i) == '+'
+					|| text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$'
+						|| text.charAt(i) == '"'  ) {
+				text = text.replace((text.charAt(i)) + "", "") ;
+			} else {
+				i ++ ;
+			}
+		}
+		return text ;
+	}
+
 	public static boolean CheckSpecial(String text) {
 		Boolean check = false ;
 		if(text != null && text.trim().length() > 0) {
-		  int i = 0 ;
-		  while (i < text.length()) {
-		    if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|'
-		      || text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\' || text.charAt(i) == '+'
-		      || text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$'
-		      || text.charAt(i) == '"' || text.charAt(i) == '!' || text.charAt(i) == '#' || text.charAt(i) == '%'
-		      || text.charAt(i) == ':' || text.charAt(i) == '&' || text.charAt(i) == '>' || text.charAt(i) == '<'
-		      || text.charAt(i) == '~' || text.charAt(i) == '`' || text.charAt(i) == ']' || text.charAt(i) == '/'	) {
-		      text = text.replace((text.charAt(i)) + "", "") ;
-		      check = true ;
-		    } else {
-		      i ++ ;
-		    }
-		  }
-		  return check ;
+			int i = 0 ;
+			while (i < text.length()) {
+				if (text.charAt(i) == '?' || text.charAt(i) == '[' || text.charAt(i) == '(' || text.charAt(i) == '|'
+					|| text.charAt(i) == ')' || text.charAt(i) == '*' || text.charAt(i) == '\\' || text.charAt(i) == '+'
+						|| text.charAt(i) == '}' || text.charAt(i) == '{' || text.charAt(i) == '^' || text.charAt(i) == '$'
+							|| text.charAt(i) == '"' || text.charAt(i) == '!' || text.charAt(i) == '#' || text.charAt(i) == '%'
+								|| text.charAt(i) == ':' || text.charAt(i) == '&' || text.charAt(i) == '>' || text.charAt(i) == '<'
+									|| text.charAt(i) == '~' || text.charAt(i) == '`' || text.charAt(i) == ']' || text.charAt(i) == '/'	) {
+					text = text.replace((text.charAt(i)) + "", "") ;
+					check = true ;
+				} else {
+					i ++ ;
+				}
+			}
+			return check ;
 		}
-    return false ;
-  }
-	
+		return false ;
+	}
+
 	 public static InternetAddress[] getInternetAddress(String addressList) throws Exception {
 	    if (addressList == null || addressList == "") 
 	      return new InternetAddress[1];
@@ -165,135 +165,135 @@ public class FAQUtils {
 				return false ;
 			}
 		}
-    return true ;
-  }
-  
-  public static String checkValueUser(String values) throws Exception {
-  	String erroUser = null;
-  	if(values != null && values.trim().length() > 0) {
-  		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  		String[] userIds = values.split(",");
-  		boolean isUser = false ;
-  		List<User> users = FAQUtils.getAllUser() ;
-  		for (String str : userIds) {
-  			str = str.trim() ;
-  			if(str.indexOf("/") >= 0) {
+		return true ;
+	}
+
+	public static String checkValueUser(String values) throws Exception {
+		String erroUser = null;
+		if(values != null && values.trim().length() > 0) {
+			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+			String[] userIds = values.split(",");
+			boolean isUser = false ;
+			List<User> users = FAQUtils.getAllUser() ;
+			for (String str : userIds) {
+				str = str.trim() ;
+				if(str.indexOf("/") >= 0) {
 					if(!hasGroupIdAndMembershipId(str, organizationService)){
 						if(erroUser == null) erroUser = str ;
 						else erroUser = erroUser + ", " + str;
-  				}
-  			} else {//user
-  				isUser = false ;
-  				for (User user : users) {
-	          if(user.getUserName().equals(str)) {
-	          	isUser = true ;
-	          	break;
-	          }
-          }
-  				if(!isUser) {
-  					if(erroUser == null) erroUser = str ;
-  					else erroUser = erroUser + ", " + str;
-  				}
-  			}
-      }
-  	}
-  	return erroUser;
-  }
-	
+					}
+				} else {//user
+					isUser = false ;
+					for (User user : users) {
+						if(user.getUserName().equals(str)) {
+							isUser = true ;
+							break;
+						}
+					}
+					if(!isUser) {
+						if(erroUser == null) erroUser = str ;
+						else erroUser = erroUser + ", " + str;
+					}
+				}
+			}
+		}
+		return erroUser;
+	}
+
 	public static String[] splitForFAQ (String str) throws Exception {
 		if(str != null && str.length() > 0) {
 			if(str.contains(",")) return str.trim().split(",") ;
 			else return str.trim().split(";") ;
 		} else return new String[] {} ;
 	}
-	
-	 public static SessionProvider getSystemProvider() {
-	    return SessionProviderFactory.createSystemProvider();
-	  }
-	
-  static public String getCurrentUser() throws Exception {
-    return Util.getPortalRequestContext().getRemoteUser();
-  }
-  
-  static public String getEmailUser(String userName) throws Exception {
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	User user = organizationService.getUserHandler().findUserByName(userName) ;
-  	String email = user.getEmail() ;
-    return email;
-  }
-  
-  static public String getFullName(String userName) throws Exception {
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	User user = organizationService.getUserHandler().findUserByName(userName) ;
-  	String fullName = user.getFullName() ;
-    return fullName ;
-  }
-  
-  public static boolean isFieldEmpty(String s) {
-    if (s == null || s.length() == 0) return true ;
-    return false ;    
-  }
-  
-  public static boolean isValidEmailAddresses(String addressList) throws Exception {
-    if (isFieldEmpty(addressList))  return true ;
-    boolean isInvalid = true ;
-    try {
-      InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
-      String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
-      for (int i = 0 ; i < iAdds.length; i ++) {
-        if(!iAdds[i].getAddress().toString().matches(emailRegex)) isInvalid = false;
-      }
-    } catch(AddressException e) {
-      return false ;
-    }
-    return isInvalid ;
-  }
-  
-  public static String[] getQuestionLanguages() {
-    
-    return null ;
-  }
-  
+
+	public static SessionProvider getSystemProvider() {
+		return SessionProviderFactory.createSystemProvider();
+	}
+
+	static public String getCurrentUser() throws Exception {
+		return Util.getPortalRequestContext().getRemoteUser();
+	}
+
+	static public String getEmailUser(String userName) throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		User user = organizationService.getUserHandler().findUserByName(userName) ;
+		String email = user.getEmail() ;
+		return email;
+	}
+
+	static public String getFullName(String userName) throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		User user = organizationService.getUserHandler().findUserByName(userName) ;
+		String fullName = user.getFullName() ;
+		return fullName ;
+	}
+
+	public static boolean isFieldEmpty(String s) {
+		if (s == null || s.length() == 0) return true ;
+		return false ;    
+	}
+
+	public static boolean isValidEmailAddresses(String addressList) throws Exception {
+		if (isFieldEmpty(addressList))  return true ;
+		boolean isInvalid = true ;
+		try {
+			InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
+			String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
+			for (int i = 0 ; i < iAdds.length; i ++) {
+				if(!iAdds[i].getAddress().toString().matches(emailRegex)) isInvalid = false;
+			}
+		} catch(AddressException e) {
+			return false ;
+		}
+		return isInvalid ;
+	}
+
+	public static String[] getQuestionLanguages() {
+
+		return null ;
+	}
+
 	@SuppressWarnings("unchecked")
 	public static Map prepareMap(List inputs, Map properties) throws Exception {
-    Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
-    HashMap<String, JcrInputProperty> hasMap = new HashMap<String, JcrInputProperty>() ;
-    for (int i = 0; i < inputs.size(); i++) {
-      JcrInputProperty property = null;
-      if(inputs.get(i) instanceof UIFormMultiValueInputSet) {        
-        String inputName = ((UIFormMultiValueInputSet)inputs.get(i)).getName() ;        
-        if(!hasMap.containsKey(inputName)) {
-          List<String> values = (List<String>) ((UIFormMultiValueInputSet)inputs.get(i)).getValue() ;
-          property = (JcrInputProperty) properties.get(inputName);        
-          if(property != null){          
-            property.setValue(values.toArray(new String[values.size()])) ;
-          }
-        }
-        hasMap.put(inputName, property) ;
-      } else {
-        UIFormInputBase input = (UIFormInputBase) inputs.get(i);
-        property = (JcrInputProperty) properties.get(input.getName());
-        if(property != null) {
-          if (input instanceof UIFormUploadInput) {
-            byte[] content = ((UIFormUploadInput) input).getUploadData() ; 
-            property.setValue(content);
-          } else if(input instanceof UIFormDateTimeInput) {
-            property.setValue(((UIFormDateTimeInput)input).getCalendar()) ;
-          } else {
-            property.setValue(input.getValue()) ;
-          }
-        }
-      }
-    }
-    Iterator iter = properties.values().iterator() ;
-    JcrInputProperty property ;
-    while (iter.hasNext()) {
-      property = (JcrInputProperty) iter.next() ;
-      rawinputs.put(property.getJcrPath(), property) ;
-    }
-    return rawinputs;
-  }
-  
+		Map<String, JcrInputProperty> rawinputs = new HashMap<String, JcrInputProperty>();
+		HashMap<String, JcrInputProperty> hasMap = new HashMap<String, JcrInputProperty>() ;
+		for (int i = 0; i < inputs.size(); i++) {
+			JcrInputProperty property = null;
+			if(inputs.get(i) instanceof UIFormMultiValueInputSet) {        
+				String inputName = ((UIFormMultiValueInputSet)inputs.get(i)).getName() ;        
+				if(!hasMap.containsKey(inputName)) {
+					List<String> values = (List<String>) ((UIFormMultiValueInputSet)inputs.get(i)).getValue() ;
+					property = (JcrInputProperty) properties.get(inputName);        
+					if(property != null){          
+						property.setValue(values.toArray(new String[values.size()])) ;
+					}
+				}
+				hasMap.put(inputName, property) ;
+			} else {
+				UIFormInputBase input = (UIFormInputBase) inputs.get(i);
+				property = (JcrInputProperty) properties.get(input.getName());
+				if(property != null) {
+					if (input instanceof UIFormUploadInput) {
+						byte[] content = ((UIFormUploadInput) input).getUploadData() ; 
+						property.setValue(content);
+					} else if(input instanceof UIFormDateTimeInput) {
+						property.setValue(((UIFormDateTimeInput)input).getCalendar()) ;
+					} else {
+						property.setValue(input.getValue()) ;
+					}
+				}
+			}
+		}
+		Iterator iter = properties.values().iterator() ;
+		JcrInputProperty property ;
+		while (iter.hasNext()) {
+			property = (JcrInputProperty) iter.next() ;
+			rawinputs.put(property.getJcrPath(), property) ;
+		}
+		return rawinputs;
+	}
+
 	public static String getSubString(String str, int max) {
 		if(!isFieldEmpty(str)) {
 			int l = str.length() ;
@@ -305,26 +305,26 @@ public class FAQUtils {
 				else str = str + "..." ;
 			}
 		}
-	  return str ;
-  }
-	
+		return str ;
+	}
+
 	public static String getTitle(String text) {
 		int i = 0 ;
-	  while (i < text.length()) {
-	    if (text.charAt(i) == '"'  ) text = text.replace((text.charAt(i)) + "", "&quot;") ;
-	    else i ++ ;
-	  }
-    return text ;
+		while (i < text.length()) {
+			if (text.charAt(i) == '"'  ) text = text.replace((text.charAt(i)) + "", "&quot;") ;
+			else i ++ ;
+		}
+		return text ;
 	}
-	
+
 	public static void getPorletPreference(FAQSetting faqSetting) {
-    PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-    faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
-    faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
-    faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
-  }
-	
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
+		faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
+		faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
+	}
+
 	public static void getEmailSetting(FAQSetting faqSetting, boolean isNew, boolean isSettingForm) {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
@@ -338,30 +338,30 @@ public class FAQUtils {
 		ResourceBundle res = context.getApplicationResourceBundle() ;
 		if(!isSettingForm){
 			if(emailContent == null || emailContent.trim().length() < 1){
-		    if(isNew){
-		    	emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
-		    } else {
-		    	emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
-		    }
+			if(isNew){
+				emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
+			} else {
+				emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
+			}
 			}
 		}
 		faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
 		faqSetting.setEmailSettingContent(emailContent) ;
 	}
-	
+
 	public static void savePortletPreference(FAQSetting setting, String emailAddNewQuestion, String emailEditResponseQuestion){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-    try {
-	    portletPref.setValue("display", setting.getDisplayMode());
-	    portletPref.setValue("orderBy", setting.getOrderBy());
-	    portletPref.setValue("orderType", setting.getOrderType());
-	    portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
-	    portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
-	    portletPref.store();
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		try {
+			portletPref.setValue("display", setting.getDisplayMode());
+			portletPref.setValue("orderBy", setting.getOrderBy());
+			portletPref.setValue("orderType", setting.getOrderType());
+			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
+			portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
+			portletPref.store();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@SuppressWarnings("deprecation")

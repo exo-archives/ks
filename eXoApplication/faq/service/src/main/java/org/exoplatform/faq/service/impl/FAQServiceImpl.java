@@ -188,6 +188,10 @@ public class FAQServiceImpl implements FAQService{
     return jcrData_.getQuestionLanguages(questionId, sProvider) ;
   }
   
+  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, SessionProvider sProvider) throws Exception {
+  	jcrData_.voteQuestionLanguage(questionId, questionLanguage, sProvider);
+  }
+  
   /**
    * This method should lookup languageNode of question
    * so find child node of language node is searched

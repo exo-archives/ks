@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
+import org.hibernate.usertype.UserVersionType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -573,6 +574,20 @@ public class Question {
 	 */
 	public void setPos(int[] pos) {
 		this.pos = pos;
+	}
+	
+	/**
+	 * Sets the pos.
+	 * 
+	 * @param pos the new pos
+	 */
+	public void setPos() {
+		if(marksVoteAnswer != null) {
+			pos = new int[marksVoteAnswer.length];
+			for(int i = 0; i < marksVoteAnswer.length; i ++){
+				pos[i] = i;
+			}
+		}
 	}
 
 	public String getQuestion() {

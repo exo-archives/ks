@@ -48,6 +48,15 @@ public class QuestionLanguage {
   /** The date response. */
   private Date[] dateResponse ;
   
+  /** The users vote answer. */
+  private String[] usersVoteAnswer;
+  
+  /** The marks vote answer. */
+  private double[] marksVoteAnswer;
+  
+  /** The pos. */
+  private int pos[];
+  
   /**
    * class constructor.
    */
@@ -135,6 +144,74 @@ public class QuestionLanguage {
 
 	public void setQuestion(String question) {
 		this.question = question;
+	}
+	
+	/**
+	 * Gets the users vote answer.
+	 * 
+	 * @return the users vote answer
+	 */
+	public String[] getUsersVoteAnswer() {
+		return usersVoteAnswer;
+	}
+
+	/**
+	 * Sets the users vote answer.
+	 * 
+	 * @param usersVoteAnswer the new users vote answer
+	 */
+	public void setUsersVoteAnswer(String[] usersVoteAnswer) {
+		this.usersVoteAnswer = usersVoteAnswer;
+	}
+
+	/**
+	 * Gets the marks vote answer.
+	 * 
+	 * @return the marks vote answer
+	 */
+	public double[] getMarksVoteAnswer() {
+		return marksVoteAnswer;
+	}
+
+	/**
+	 * Sets the marks vote answer.
+	 * 
+	 * @param marksVoteAnswer the new marks vote answer
+	 */
+	public void setMarksVoteAnswer(double[] marksVoteAnswer) {
+		this.marksVoteAnswer = marksVoteAnswer;
+	}
+
+	/**
+	 * Gets the pos.
+	 * 
+	 * @return the pos
+	 */
+	public int[] getPos() {
+		return pos;
+	}
+
+	/**
+	 * Sets the pos.
+	 * 
+	 * @param pos the new pos
+	 */
+	public void setPos(int[] pos) {
+		this.pos = pos;
+	}
+	
+	/**
+	 * Sets the pos.
+	 * 
+	 * @param pos the new pos
+	 */
+	public void setPos() {
+		if(marksVoteAnswer != null) {
+			pos = new int[marksVoteAnswer.length];
+			for(int i = 0; i < marksVoteAnswer.length; i ++){
+				pos[i] = i;
+			}
+		}
 	}
 }
 

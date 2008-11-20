@@ -323,6 +323,29 @@
 	margin: 0px 4px;
 }
 
+.UIFAQPortlet .QuestionSelect .QuestionContainer .VoteFAQ {
+	float: right;
+	background: url('background/VoteIcon.gif') no-repeat left center;
+	width: 21px; height: 20px;
+	cursor: pointer;
+	margin: 0px 4px;
+}
+.UIFAQPortlet .QuestionSelect .QuestionContainer .SortAnswer {
+	float: right;
+	background: url('background/SortByVote.gif') no-repeat left center;
+	width: 21px; height: 20px;
+	cursor: pointer;
+	margin: 0px 4px;
+}
+
+.UIFAQPortlet .QuestionSelect .QuestionContainer .LockSendToFriend {
+	float: right;
+	background: url('background/LockSendToFriend.gif') no-repeat left center;
+	width: 21px; height: 20px;
+	cursor: pointer;
+	margin: 0px 4px;
+}
+
 .UIFAQPortlet .QuestionSelect .QuestionContainer .PrintScrintFAQ {
 	float: right;
 	background: url('background/PrintScrintFAQ.gif') no-repeat left center;

@@ -42,6 +42,7 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -149,8 +150,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   }
   
 	public void refresh() throws Exception {    
-    listFileAttach_.clear() ;
-  }
+		listFileAttach_.clear() ;
+	}
 	
 	private void setListSystemLanguages() throws Exception{
 		listSystemLanguages.clear();
@@ -236,6 +237,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   	List<QuestionLanguage> questionLanguages = new ArrayList<QuestionLanguage>();
     questionId_ = question.getId() ;
     categoryId_ = null ;
+    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     try {
       question_ = question ;
       defaultLanguage_ = question_.getLanguage() ;
@@ -244,7 +246,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       listLanguages.add(defaultLanguage_) ;
       listQuestionDetail.put(question_.getLanguage(), question_.getDetail());
       listQuestionContent.put(question_.getLanguage(), question_.getQuestion());
-      questionLanguages = fAQService_.getQuestionLanguages(questionId_, FAQUtils.getSystemProvider()) ;
+      questionLanguages = fAQService_.getQuestionLanguages(questionId_, sessionProvider) ;
       for(QuestionLanguage questionLanguage : questionLanguages) {
       	mapLanguageNode_.put(questionLanguage.getLanguage(), questionLanguage);
       	listQuestionDetail.put(questionLanguage.getLanguage(), questionLanguage.getDetail());
@@ -267,6 +269,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     } catch (Exception e) {
       e.printStackTrace();
       initPage(false) ;
+    } finally {
+    	sessionProvider.close();
     }
   }
   
@@ -495,13 +499,16 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           }
         }
       }
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
         question_ = new Question() ;
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
         question_.setResponses(new String[]{" "}) ;
+        question_.setMarksVoteAnswer(new double[]{0}) ;
+        question_.setUsersVoteAnswer(new String[]{" "});
         try{
-          questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, FAQUtils.getSystemProvider()).isModerateQuestions() ;
+          questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, sessionProvider).isModerateQuestions() ;
         } catch(Exception exception){
           UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
@@ -546,8 +553,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 		      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
 		    }									
 			}	
-      PortalRequestContext portalContext = Util.getPortalRequestContext();
-      String url = portalContext.getRequest().getRequestURL().toString();
+			PortalRequestContext portalContext = Util.getPortalRequestContext();
+			String url = portalContext.getRequest().getRequestURL().toString();
 			url = url.replaceFirst("http://", "") ;
 			url = url.substring(0, url.indexOf("/")) ;
 			url = "http://" + url;
@@ -564,7 +571,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) isNew = false;
         utils.getEmailSetting(questionForm.faqSetting_, isNew, false);
         if(!isNew) {
-          questionNode = fAQService_.saveQuestion(question_, false, FAQUtils.getSystemProvider(), questionForm.faqSetting_) ;
+          questionNode = fAQService_.saveQuestion(question_, false, sessionProvider, questionForm.faqSetting_) ;
           multiLanguages.removeLanguage(questionNode, questionForm.listLanguages) ;
           if(questionForm.listLanguages.size() > 1) {
           	try{
@@ -584,7 +591,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           	}
           }
         } else {
-          questionNode = fAQService_.saveQuestion(question_, true, FAQUtils.getSystemProvider(),questionForm.faqSetting_) ;
+          questionNode = fAQService_.saveQuestion(question_, true, sessionProvider, questionForm.faqSetting_) ;
           if(questionForm.listLanguages.size() > 1) {
           	try{
           		QuestionLanguage questionLanguage = new QuestionLanguage() ;
@@ -631,7 +638,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         if(questionNode!= null && questions.getCategoryId() != null && questions.getCategoryId().trim().length() > 0 &&
             !questions.getCategoryId().equals(question_.getCategoryId()) && !questions.getCategoryId().equals(parentCategoryId)) {
           UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-          Category category = fAQService_.getCategoryById(question_.getCategoryId(), FAQUtils.getSystemProvider()) ;
+          Category category = fAQService_.getCategoryById(question_.getCategoryId(), sessionProvider) ;
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         }
@@ -646,6 +653,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         UIPopupContainer popupContainer = questionManagerForm.getParent() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
+      
+      sessionProvider.close();
     }
   }
   

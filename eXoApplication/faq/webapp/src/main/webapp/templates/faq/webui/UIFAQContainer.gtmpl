@@ -1,10 +1,13 @@
-<%
-  import org.exoplatform.faq.webui.UIBreadcumbs ;
-	import org.exoplatform.faq.webui.UIQuestions ;
-	
-%>
-<div class="UIFAQContainer" id="<%=uicomponent.getId()%>">
-		<% uicomponent.renderChildren()%>
-	  <%uicomponent.renderPopupMessages()%>
+<div id="<%=uicomponent.getId()%>">
+	<%List children = uicomponent.getChildren() ;%>
+	<table width="100%">
+		<tr>
+			<td width="200"><%uicomponent.renderChild(children.get(2).getClass());%></td>
+			<td>
+				<%uicomponent.renderChild(children.get(0).getClass()); %>
+				<%uicomponent.renderChild(children.get(1).getClass()); %>
+			</td>
+		</tr>
+	</table>
 </div>
 

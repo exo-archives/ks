@@ -53,8 +53,8 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 )
 
 public class UIAddRelationForm extends UIForm implements UIPopupComponent {
-  private static List<Question> listQuestion = new ArrayList<Question>() ;
-  private static List<String> quesIdsSelect = new ArrayList<String>() ;
+  private List<Question> listQuestion = new ArrayList<Question>() ;
+  private List<String> quesIdsSelect = new ArrayList<String>() ;
   private String questionId_ ;
   private FAQSetting faqSetting_ = new FAQSetting();
   public void activate() throws Exception { }
@@ -81,7 +81,6 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   private static List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCate = new ArrayList<Cate>() ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  private SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
   
   @SuppressWarnings("unused")
   private List<Cate> getListCate(){
@@ -91,7 +90,9 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     FAQUtils.getPorletPreference(faqSetting_);
-    faqService.getUserSetting(FAQUtils.getSystemProvider(), FAQUtils.getCurrentUser(), faqSetting_);
+    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+    faqService.getUserSetting(sessionProvider, FAQUtils.getCurrentUser(), faqSetting_);
+    sessionProvider.close();
     setListCate() ;
   }
   
@@ -114,7 +115,8 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   
   @SuppressWarnings("unchecked")
 private void initPage() throws Exception {
-    listQuestion = faqService.getAllQuestions(FAQUtils.getSystemProvider()).getAll() ;
+    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+    listQuestion = faqService.getAllQuestions(sessionProvider).getAll() ;
     UIFormCheckBoxInput checkQuestion ;
     for(Question question : listQuestion) {
       if(quesIdsSelect.contains(question.getId())) {
@@ -125,13 +127,14 @@ private void initPage() throws Exception {
       if(question.getId().equals(questionId_)) checkQuestion.setEnable(false) ;
       addChild(checkQuestion) ;
     }
+    sessionProvider.close();
   }
   
   private void setListCate() throws Exception {
     List<Cate> listCate = new ArrayList<Cate>();
     Cate parentCate = null ;
     Cate childCate = null ;
-    
+    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_)) {
       if(category != null) {
         Cate cate = new Cate() ;
@@ -156,6 +159,7 @@ private void initPage() throws Exception {
         }
       }
     }
+    sessionProvider.close();
   }
   
 /*  private String renderBox() {
@@ -213,10 +217,14 @@ private void initPage() throws Exception {
   
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {
+	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     try {
-      return faqService.getQuestionsByCatetory(cateId, FAQUtils.getSystemProvider(), faqSetting_).getAll() ;
+      List<Question> listQues = faqService.getQuestionsByCatetory(cateId, sessionProvider, faqSetting_).getAll() ;
+      sessionProvider.close();
+      return listQues;
     } catch (Exception e) {
       e.printStackTrace();
+      sessionProvider.close();
       return null ;
     }
   }
@@ -242,16 +250,18 @@ private void initPage() throws Exception {
       responseForm.setListIdQuesRela(listQuestionId) ;
       
       List<String> listOption = new ArrayList<String>() ;
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       boolean someQuestionIsDeleted = false;
       for(String id : listQuestionId) {
       	try{
-      		String contentQue = faqService.getQuestionById(id, FAQUtils.getSystemProvider()).getDetail() ;
+      		String contentQue = faqService.getQuestionById(id, sessionProvider).getQuestion() ;
       		listOption.add(contentQue) ;
       	} catch(Exception e){
       		e.printStackTrace();
       		someQuestionIsDeleted = true;
       	}
       }
+      sessionProvider.close();
       responseForm.setListRelationQuestion(listOption) ;
       //((UIFormSelectBox)responseForm.getChildById(responseForm.RELATIONS)).setOptions(listOption) ;
       if(someQuestionIsDeleted){

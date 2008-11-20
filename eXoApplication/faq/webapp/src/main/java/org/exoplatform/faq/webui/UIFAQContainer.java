@@ -28,15 +28,16 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
  */
 
 @ComponentConfig(
-		lifecycle=UIContainerLifecycle.class
+		template = "app:/templates/faq/webui/UIFAQContainer.gtmpl"
 )
 public class UIFAQContainer extends UIContainer  {
-  
   public UIFAQContainer() throws Exception {
     addChild(UIBreadcumbs.class, null, null).setRendered(true) ; 
     addChild(UIQuestions.class, null, null).setRendered(true) ;    
+    addChild(UICategories.class, null, null).setRendered(true);
   } 
   public void updateIsRender(boolean isRender) throws Exception {
+  	getChild(UICategories.class).setRendered(isRender) ;
 		getChild(UIBreadcumbs.class).setRendered(isRender) ;
 		getChild(UIQuestions.class).setRendered(isRender) ;	
 	}

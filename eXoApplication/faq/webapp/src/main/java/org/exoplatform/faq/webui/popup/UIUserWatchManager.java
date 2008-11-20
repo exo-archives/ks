@@ -31,6 +31,7 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -88,12 +89,14 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	
   public String getPathService(String categoryId) throws Exception {
   	String oldPath = "";
-		List<String> listPath = FAQUtils.getFAQService().getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+  	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+		List<String> listPath = FAQUtils.getFAQService().getCategoryPath(sessionProvider, categoryId) ;
 		for(int i = listPath.size() -1 ; i >= 0; i --) {
-    	Category category = FAQUtils.getFAQService().getCategoryById(listPath.get(i), FAQUtils.getSystemProvider());
+    	Category category = FAQUtils.getFAQService().getCategoryById(listPath.get(i), sessionProvider);
     	if(oldPath.equals("")) oldPath = category.getName();
     	else oldPath = oldPath + " > " + category.getName();
     }
+		sessionProvider.close();
     return oldPath ;
   }  
   
@@ -117,9 +120,10 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   
   @SuppressWarnings("unused")
 	private List<Question> getListQuestionsWatch(){
+  	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
   	try{
   		if(pageListQues == null){
-	  		pageListQues = faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser(), FAQUtils.getSystemProvider());
+	  		pageListQues = faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser(), sessionProvider);
 	  		pageListQues.setPageSize(3);
 	  		pageIteratorQues = this.getChildById(LIST_QUESTIONS_WATCHED);
 	  		pageIteratorQues.updatePageList(pageListQues);
@@ -165,8 +169,9 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
 			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				faqService_.getCategoryById(categoryId, FAQUtils.getSystemProvider()) ;
+				faqService_.getCategoryById(categoryId, sessionProvider) ;
       } catch (Exception e) {
         UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -183,7 +188,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	    UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;
-	    List<String> listPath = faqService_.getCategoryPath(FAQUtils.getSystemProvider(), categoryId) ;
+	    List<String> listPath = faqService_.getCategoryPath(sessionProvider, categoryId) ;
 	    for(int i = listPath.size() -1 ; i >= 0; i --) {
 	    	oldPath = oldPath + "/" + listPath.get(i);
 	    }
@@ -194,6 +199,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 	    uiPortlet.cancelAction() ;
+	    sessionProvider.close();
 		}
 	}
 	
@@ -202,9 +208,10 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 			UIUserWatchManager watchManager = event.getSource() ;
 			String objectID = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			if(objectID.indexOf("Question") < 0){
 				try {
-					faqService_.getCategoryById(objectID, FAQUtils.getSystemProvider()) ;
+					faqService_.getCategoryById(objectID, sessionProvider) ;
 	      } catch (Exception e) {
 	        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
 	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -217,12 +224,12 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 	        return ;
 	      }
-				faqService_.UnWatch(objectID, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser()) ;
+				faqService_.UnWatch(objectID, sessionProvider,FAQUtils.getCurrentUser()) ;
 				UISettingForm settingForm = uiPortlet.findFirstComponentOfType(UISettingForm.class) ;
 				if(settingForm.getCategoryAddWatch().size()>0) watchManager.setListCategory(settingForm.getCategoryAddWatch()) ;
 			} else {
 				try {
-					faqService_.getQuestionById(objectID, FAQUtils.getSystemProvider()) ;
+					faqService_.getQuestionById(objectID, sessionProvider) ;
 	      } catch (Exception e) {
 	        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
 	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -235,8 +242,11 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 	        return ;
 	      }
-				faqService_.UnWatchQuestion(objectID, FAQUtils.getSystemProvider(),FAQUtils.getCurrentUser());
+				faqService_.UnWatchQuestion(objectID, sessionProvider,FAQUtils.getCurrentUser());
 			}
+			
+			sessionProvider.close();
+			
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 		}
 	}

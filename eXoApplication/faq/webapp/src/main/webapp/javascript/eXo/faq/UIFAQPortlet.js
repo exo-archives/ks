@@ -49,10 +49,12 @@ UIFAQPortlet.prototype.viewDivById = function(id) {
 
 UIFAQPortlet.prototype.treeView = function(id) {
 	var obj = document.getElementById(id) ;
-	if(obj.style.display === "none") {
-		obj.style.display = "block" ;
-	} else {
-		obj.style.display = "none" ;
+	if(obj){
+		if(obj.style.display === "none") {
+			obj.style.display = "block" ;
+		} else {
+			obj.style.display = "none" ;
+		}
 	}
 };
 
@@ -296,5 +298,14 @@ UIFAQPortlet.prototype.reSizeAvatar = function(imgElm) {
 		imgElm.style.height = "150px" ;
 	}
 };
+
+UIFAQPortlet.prototype.FAQChangeHeightToAuto = function() {
+	var object = document.getElementById("UIFAQPopupWindow");
+	if(object){
+		var popupWindow = eXo.core.DOMUtil.findFirstDescendantByClass(object, "div", "PopupContent") ;
+		popupWindow.style.height = "auto";
+		popupWindow.style.maxHeight = "500px";
+	}
+} ;
 
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;
