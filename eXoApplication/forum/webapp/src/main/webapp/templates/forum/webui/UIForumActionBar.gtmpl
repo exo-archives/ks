@@ -4,7 +4,7 @@
 	boolean isAdmin = false ;
 	if(userProfile.getUserRole() == 0) isAdmin = true ;
 	def rcontext = _ctx.getRequestContext() ;
-	rcontext.getJavascriptManager().addOnLoadJavascript('eXo.forum.UIForumPortlet.loadScroll') ;
+	rcontext.getJavascriptManager().addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 2000);") ;
 %>
 <div class="UIForumActionBar" style="height: auto" id="UIForumActionBar">
 	<div class="LeftForumActionBar">
