@@ -510,15 +510,14 @@
 													<td width="25">
 														<%
 														link = uicomponent.event("SendQuestion",qId) ;
-														String lockFunction = "";
+														String SendToFriend = "SendToFriend";
 														if((!question.isApproved() || !question.isActivated())){
 															link = "javaScript: alert('" + _ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-															lockFunction = "LockFunction" ;
+															SendToFriend = "LockSendToFriend" ;
 														}
 														%>
-														<a href="$link" class="$lockFunction"
-																title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>">
-															<div class="SendToFriend"><span></span></div>
+														<a href="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>">
+															<div class="$SendToFriend"><span></span></div>
 														</a>
 													</td>
 												</tr>
