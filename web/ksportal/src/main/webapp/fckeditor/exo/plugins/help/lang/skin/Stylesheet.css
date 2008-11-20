@@ -67,3 +67,9 @@ body {
 .highlight {
 	color: red;
 }
+.ClassCode {
+  background: #ededed;
+	border: 1px inset #7b7b7b;
+	margin: 5px;
+	overflow: auto;
+}
