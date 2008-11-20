@@ -219,7 +219,7 @@
 }
 
 .UIHomePagePortlet .Decorator .Button {
-	background: url('DefaultSkin/background/Button.gif') no-repeat left ;
+	background: url('DefaultSkin/background/Button2.gif') no-repeat left ;
 	height: 30px; width: 120px;
 	cursor: pointer;
 }
@@ -293,136 +293,513 @@
 	font-size: 12px;
 }
 
-/***************************************************************************************************/
-
-.UIBreadcumbsPortlet {
-	margin: 0px;
-}
-
-.UIBreadcumbs {
-  background: url('DefaultSkin/background/BreadcumbsPortletBG.gif') repeat-x ;
-	height: 19px;
-	line-height: 19px;
-}
-
-.UIBreadcumbs a {
-	float: left ;
-}
-
-.UIBreadcumbs a.Selected {
-	color: #345c8d ; 
-}
-
-.UIBreadcumbs .HomeIcon {
-	float: left;
-  margin: 1px 5px 0px 3px ;
-}
-
-.UIBreadcumbs .LeftBreadcumbsBar {
-  padding-left: 0px ;
-  background: none;
-  height: auto;
-}
-
-.UIBreadcumbs .RightBreadcumbsBar {
-  padding-right: 0px;
-  background: none;
-  height: auto;
-}
-
-.UIBreadcumbs .BreadcumbsInfoBar {
-  height: auto; line-height: 19px; 
-  background: none;
-}
-
-.UIBreadcumbs .RightBlackGridArrowIcon {
-  float: left;
-  margin: 1px 0px 0px 0px;
-}
-
-
-/***************************************************************************************************/
-.UIFooter {
-	background: url('DefaultSkin/background/FooterBG.gif') repeat-x;
-	padding:8px;
-}
-
-.UIFooter .FooterInfoContainer {
-	color: #b7b7b7;
-	padding-left: 77px;
-	background: url('DefaultSkin/background/Logo.gif') no-repeat left;
-	height: 28px;
-	font-size: 10px;
-	font-family: tahoma;
-	font-weight: bold;
-	line-height: 28px;
-}
-
 /*********************************Navigation Portlet**********************************/
-.UINavigationPortlet .UINavigationBar .LeftNavigationBar  {
-	padding-left:0px;
+
+
+.UINavigationPortlet {
+  !position: relative;
 }
 
-.UINavigationPortlet .UINavigationBar .MiddleNavigationBar  {
-	background:transparent url(DefaultSkin/background/NavigationBar.gif) repeat-x scroll center top;
-	line-height:28px;
-	padding-left:3px;
+.UINavigationPortlet .UINavigationBar {
+  height: 33px;
 }
 
-.UINavigationPortlet .MiddleTab .TabLabel {
-	display:block;
-	padding:0 0 0 0px;
+.UINavigationPortlet .UINavigationBar .UIHorizontalTabs {
+  height: 33px;
 }
 
-.UIHorizontalTabs .UITab .SelectedNavigationTab {
-	line-height:21px;
-	margin:6px 0px 0px 1px;
+.UINavigationPortlet .UINavigationBar .UIHorizontalTabs .TabsContainer {
+  float: none;
 }
 
-.UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
-	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left bottom;
-	line-height:21px;
-	padding-left:2px;
+.UINavigationPortlet .UINavigationBar .RightNavigationBar {
+	background:none;
 }
 
-.UIHorizontalTabs .UITab .SelectedNavigationTab .RightTab {
-	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right bottom;
-	line-height:21px;
-	padding-right:2px;
+.UINavigationPortlet .UINavigationBar .MiddleNavigationBar {
+	background:none;
 }
 
-.UIHorizontalTabs .UITab .SelectedNavigationTab .MiddleTab {
-	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x bottom;
-	line-height:21px;
+.UINavigationPortlet .UINavigationBar .LeftNavigationBar {
+  line-height: 33px;
+  background: url('DefaultSkin/background/Navigation.gif') repeat-x top center;
+  padding-left: 3px; 
 }
 
-.UIHorizontalTabs .UITab .SelectedNavigationTab .TabIcon {
-	color:white;
-	line-height:21px;
-	padding:0px 5px 0px 0px;
+.UINavigationPortlet .UITab a.TabLabel {
+	display: block;
+	padding: 0px 0 0px 20px; 
+}
+
+.UINavigationPortlet .MenuItemContainer {
+	white-space: nowrap;
+	border: solid #b7b7b7 1px;
+	background: #f3f3f3;
+	text-align: left; 
+}
+
+.UINavigationPortlet .MenuItemContainer .MenuItemDecorator {
+  border: 1px solid #fcfcfc;
+  background: #f3f3f3;
+  padding-bottom: 6px;
+}
+
+.UINavigationPortlet .MenuItemContainer .MenuItem {
+  border-bottom: 1px solid #fff;
+	cursor: pointer;
+	line-height: 24px;
+	height: 24px; width: auto;
+	display: block;
+	white-space: nowrap;
+	font-weight: normal;
+	padding-left: 5px;
+}
+
+.UINavigationPortlet .MenuItemContainer .MenuItem a {
+	padding: 0px 20px 0px 25px; 
+	display: block;
+}
+
+.UINavigationPortlet .MenuItemContainer .MenuItem a:hover {
+	color: #3e8df0;
+	background: url('DefaultSkin/background/HoverItem.gif') repeat-x bottom;
+}
+
+.UINavigationPortlet .MenuItemContainer .SelectedItem {
+	line-height: 24px;
+	width: auto; 
+	background: url('DefaultSkin/background/HoverItem.gif') repeat-x bottom;
+}
+
+.UINavigationPortlet .MenuItemContainer .SelectedItem a {
+	color: #3e8df0;
+}
+
+.UINavigationPortlet .MenuItemContainer .ItemIcon {
+  height: 24px; width: auto;
+}
+
+.UINavigationPortlet .MenuItemContainer .MenuItem .ArrowIcon {
+  height: 24px; 
+  width: auto;
+  background: url('DefaultSkin/background/Button.gif') no-repeat right -48px;
+}	
+
+/*============ Scroll Buttons =====================*/
+
+.UINavigationPortlet .ScrollButtons {
+	float: right; 
+	padding-top: 10px;
+	display: none;
+}
+
+.UINavigationPortlet .ScrollLeftButton {
+  cursor: pointer;
+  background: url('DefaultSkin/background/Button.gif') no-repeat left -15px; 
+  padding-left: 18px; 
+  margin: 0px 5px;
+}
+
+.UINavigationPortlet .ScrollRightButton {
+  cursor: pointer;
+  background: url('DefaultSkin/background/Button.gif') no-repeat right -15px; 
+  width: 15px;
+  height: 15px;
+}
+
+.UINavigationPortlet .DisableScrollLeftButton {
+  cursor: pointer;
+  background: url('DefaultSkin/background/Button.gif') no-repeat left -30px; 
+  padding-left: 18px; 
+  margin: 0px 5px;
+}
+
+.UINavigationPortlet .DisableScrollRightButton { 
+  cursor: pointer;
+  background: url('DefaultSkin/background/Button.gif') no-repeat right -30px; 
+  width: 15px;
+  height: 15px;
+}
+
+.UINavigationPortlet .HighlightScrollLeftButton {
+  cursor: pointer;
+  background: url('DefaultSkin/background/Button.gif') no-repeat left top; 
+  padding-left: 18px;
+  margin: 0px 5px;
+}
+
+.UINavigationPortlet .HighlightScrollRightButton {
+  cursor: pointer;
+  background: url('DefaultSkin/background/Button.gif') no-repeat right top;
+  width: 15px;
+  height: 15px;
+}
+
+/*###########################--UINavigation Tab--############################*/
+
+.UIHorizontalTabs {
+}
+
+.UIHorizontalTabs .CenterHorizontalTabs {
+  overflow-y: hidden;
+  background: url('DefaultSkin/background/NormalTabStyle.gif') repeat-x center top;
+  padding: 0px 6px;
+}
+
+.UIHorizontalTabs .TabsContainer {
+ 	height: 24px;
+}
+
+.UIHorizontalTabs .UITab {
+  float: left; 
+  font-weight: bold;
+  text-align: center;
+  width: auto;
+}
+
+/*###########################--NavigationTabTab--############################*/
+.UIHorizontalTabs .UITab .NormalNavigationTab {
+  line-height: 33px; 
+  margin-left: 1px;
+}
+
+.UIHorizontalTabs .UITab .NormalNavigationTab .LeftTab {
+  line-height: 33px;
+  padding-left: 2px;
+}
+
+.UIHorizontalTabs .UITab .NormalNavigationTab .RightTab {
+  line-height: 33px; 
+  padding-right: 2px;
+}
+
+.UIHorizontalTabs .UITab .NormalNavigationTab .MiddleTab {
+  line-height: 33px;
+  text-align: center;
+  padding: 2px 8px 0;
+}
+
+.UIHorizontalTabs .UITab .NormalNavigationTab .TabIcon {
+  color: #fff;
+  line-height: 31px;
+}
+
+.UIHorizontalTabs .UITab .NormalNavigationTab a {
+  color: #fff;
+}
+
+.UIHorizontalTabs .UITab .NormalNavigationTab .DropDownArrowIcon {
+  padding-right: 20px;
+  background: url(background/NavDownArrow.gif) no-repeat right; 
+  cursor: pointer;
+}
+
+/*###############-Hightlight Navigation Tab  -################*/
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab {
+  line-height: 22px; 
+  margin-left: 1px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .LeftTab {
-	background:transparent url(DefaultSkin/background/LeftTab.gif) no-repeat scroll left bottom;
-	line-height:21px;
-	padding-left:2px;
+  line-height: 33px; 
+  background: none;
+  padding-left: 2px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .RightTab {
-	background:transparent url(DefaultSkin/background/RightTab.gif) no-repeat scroll right bottom;
-	line-height:21px;
-	padding-right:2px;
+  line-height: 33px; 
+  padding-right: 2px;
+  background: none;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .MiddleTab {
-	background:transparent url(DefaultSkin/background/MiddleTab.gif) repeat-x bottom;
-	line-height:21px;
+  line-height: 33px; 
+  text-align: center;
+  padding: 2px 8px 0;
+  background: none;
 }
 
-.UIHorizontalTabs .UITab .HighlightNavigationTab {
-	line-height:21px;
-	margin:3px 0px 0px 1px;
+.UIHorizontalTabs .UITab .HighlightNavigationTab .TabIcon {
+  color: #fff;
+  line-height: 31px;
 }
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab a {
+  color: #fff;
+}
+
+.UIHorizontalTabs .UITab .HighlightNavigationTab .DropDownArrowIcon {
+  padding-right: 20px; 
+  background: url(DefaultSkin/background/NavDownArrow.gif) no-repeat right; 
+  cursor: pointer;
+}
+
+/*###############-Selected Navigation Tab-################*/
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab {
+  line-height: 33px; 
+  margin-left: 1px; 
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
+  line-height: 33px; 
+  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat left top;
+  padding-left: 4px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .RightTab {
+  line-height: 33px; 
+  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat right top;
+  padding-right: 4px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .MiddleTab {
+  line-height: 33px;
+  background: url('DefaultSkin/background/NavigationTab.gif') repeat-x left -33px;
+  text-align: center;
+  padding: 0 8px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .TabIcon {
+  color: #f57a00;
+  line-height: 33px;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab a {
+  color: #f57a00;
+}
+
+.UIHorizontalTabs .UITab .SelectedNavigationTab .DropDownArrowIcon {
+  padding-right: 20px; 
+  background: transparent url(DefaultSkin/background/NavDownArrow.gif) no-repeat scroll right center;  
+  cursor: pointer;
+}
+
+/*###########################-- NormalTabStyle --############################*/
+
+.UIHorizontalTabs .NormalTabStyle .NormalTab {
+  line-height: 24px; 
+  margin-right: 1px; 
+  color: #202020; 
+  font-weight: normal;
+}
+
+.UIHorizontalTabs .NormalTabStyle .NormalTab a {
+	line-height: 24px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .NormalTab .LeftTab {
+  padding-left: 12px; 
+  line-height: 24px;
+  background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat left -24px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .NormalTab .RightTab {
+  line-height: 24px;
+  padding-right: 3px;
+  background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat right -24px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .NormalTab .MiddleTab {
+  line-height: 24px;
+  background: url('DefaultSkin/background/NormalTabStyle.gif') repeat-x center -48px;
+  cursor: pointer;
+  padding: 0px 4px 0px 4px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .HighlightTab {
+  line-height: 24px;
+  margin-right: 1px;
+  color: #0666d2; font-weight: normal;
+}
+
+.UIHorizontalTabs .NormalTabStyle .HighlightTab .LeftTab {
+  line-height: 24px;
+  padding-left: 12px;
+  background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat left -72px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .HighlightTab .RightTab {
+  line-height: 24px;
+  padding-right: 3px;
+  background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat right -72px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .HighlightTab .MiddleTab {
+  line-height: 24px;
+  background: url('DefaultSkin/background/NormalTabStyle.gif') repeat-x center -96px;
+  cursor: pointer;
+  padding: 0px 4px 0px 4px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .SelectedTab {
+  line-height: 24px;
+  margin-right: 1px;
+  color: #307dcc; 
+}
+
+.UIHorizontalTabs .NormalTabStyle .SelectedTab .LeftTab {
+  line-height: 24px;
+  padding-left: 15px; 
+  background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat left -120px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .SelectedTab .RightTab {
+  line-height: 24px;
+  padding-right: 3px; 
+  background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat right -120px;
+}
+
+.UIHorizontalTabs .NormalTabStyle .SelectedTab .MiddleTab {
+  line-height: 24px;
+  background: url('DefaultSkin/background/NormalTabStyle.gif') repeat-x center -144px;
+  cursor: pointer;
+  font-weight: normal;
+  padding: 0px 4px 0px 4px;
+}
+
+/*###########################-- MessageTabDialog --############################*/
+
+/*==============================NormalTab for MessageTab=====================*/
+.UIHorizontalTabs .MessageTabDialog .NormalTab {
+  line-height: 27px;
+  margin-right: 1px;
+  color: #202020; font-weight: normal;
+}
+
+.UIHorizontalTabs .MessageTabDialog .NormalTab .LeftTab {
+  padding-left: 2px;
+  line-height: 27px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .NormalTab .RightTab {
+  line-height: 27px;
+  padding-right: 7px;
+  background: url('DefaultSkin/background/MessageTabDialog.gif') repeat-y right -182px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .NormalTab .MiddleTab {
+  line-height: 27px;
+  cursor: pointer;
+  padding: 0px 8px 0px 4px;
+  color: black; font-weight: normal;
+}
+
+.UIHorizontalTabs .MessageTabDialog .NormalTab div:hover{
+  color: orange;
+}
+
+.UIHorizontalTabs .MessageTabDialog .NormalTab .TabIcon {
+  float: left;
+  width: 32px; height: 21px;
+  margin-top: 4px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .NormalTab .InfoIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center -105px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .NormalTab .ErrorIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center -21px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .NormalTab .WarningIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center -63px;
+}
+
+/*==============================Disable Tab for MessageTab=====================*/
+
+.UIHorizontalTabs .MessageTabDialog .DisabledTab {
+  line-height: 27px;
+  margin-right: 2px;
+  color: #202020; font-weight: normal;
+}
+
+.UIHorizontalTabs .MessageTabDialog .DisabledTab .LeftTab {
+  padding-left: 2px;
+  line-height: 27px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .DisabledTab .RightTab {
+  line-height: 27px;
+  padding-right: 7px;
+  background: url('DefaultSkin/background/MessageTabDialog.gif') repeat-y right -182px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .DisabledTab .MiddleTab {
+  line-height: 27px;
+  cursor: pointer;
+  padding: 0px 8px 0px 4px;
+  color: gray;  font-weight: normal;
+}
+
+.UIHorizontalTabs .MessageTabDialog .DisabledTab .TabIcon {
+  float: left;
+  width: 32px; height: 21px;
+  margin-top: 4px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .DisabledTab .InfoIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center -84px ;
+}
+
+.UIHorizontalTabs .MessageTabDialog .DisabledTab .ErrorIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center top ;
+}
+
+.UIHorizontalTabs .MessageTabDialog .DisabledTab .WarningIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center -42px;
+}
+/*==============================Selected Tab for MessageTab=====================*/
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab {
+  line-height: 27px;
+  color: #058ee6;
+}
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab .LeftTab {
+  line-height: 27px;
+  padding-left: 2px;
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat left -126px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab .RightTab {
+  line-height: 27px;
+  padding-right: 7px;
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat right -126px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab .MiddleTab {
+  line-height: 27px;
+  background: url('DefaultSkin/background/MessageTabDialog.gif') repeat-x center -155px;
+  cursor: pointer;
+  padding: 0px 8px 0px 4px;
+  color: #058ee6;  font-weight: normal;
+}
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab  div:hover{
+  color: orange;
+}
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab .TabIcon {
+  float: left;
+  width: 32px; height: 21px;
+  margin-top: 4px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab .InfoIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center -105px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab .ErrorIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center -21px;
+}
+
+.UIHorizontalTabs .MessageTabDialog .SelectedTab .WarningIcon {
+  background: url('DefaultSkin/background/MessageTabDialog.gif') no-repeat center -63px;
+}
+
 /*========================KS Guided Tour===========================*/
 .UIKSGuidedTour {
 	background:transparent url(DefaultSkin/background/LeftKSGuidedTour.gif) repeat-y left ;
@@ -655,4 +1032,85 @@
 	background:transparent url(DefaultSkin/background/H3.gif) no-repeat left;
 	height: 315px;width: 491px;
 	margin: 4px;
+}
+
+/*=======================Breadcumbs=========================*/
+
+.UIWindow .UIBreadcumbsPortlet {
+  margin: 0px;
+}
+
+.UIBreadcumbsPortlet {
+  margin: 0 0 3px 0;
+}
+
+.UIBreadcumbs {
+  line-height: 25px ;
+}
+
+.UIBreadcumbs a {
+  float: left ; 
+  color: #6d7fa1 ; 
+}
+
+.UIBreadcumbs a.Selected {
+  color: black;
+}
+
+.UIBreadcumbs .HomeIcon {
+  float: left; 
+  margin: 4px 5px 0 0 ; 
+}
+
+.UIBreadcumbs .LeftBreadcumbsBar {
+  background: url('DefaultSkin/background/BreadcumbBG.gif') repeat-x left top;
+  height: 25px;
+}
+
+.UIBreadcumbs .RightBreadcumbsBar {
+  height: 25px;
+  background: none;
+}
+
+.UIBreadcumbs .BreadcumbsInfoBar {
+  height: 25px; 
+  line-height: 25px;
+  padding-left: 10px; 
+  background: none;
+}
+
+.UIBreadcumbs .RightBlackGridArrowIcon {
+  float: left;
+  margin: 5px 0px 0px 0px;
+}
+/*==========================UIFooterPortlet===========================*/
+.UIFooterPortletKS {
+  background: url('DefaultSkin/background/FooterBG.gif') repeat-x top left; 
+  margin: 0;
+  padding: 14px 0 0 20px; 
+}
+
+.UIFooterPortletKS .LeftFooter{
+  background: none; 
+}
+
+.UIFooterPortletKS .RightFooter{
+  background: none; 
+}
+
+.UIFooterPortletKS .RepeatFooter {
+  padding: 0px;
+  margin: 0px;
+}
+
+.UIFooterPortletKS .FooterInfoContainer {
+  line-height: 25px ;
+}
+
+.UIFooterPortletKS .CopyrightInfo {
+  background: url('DefaultSkin/background/FooterLogo.gif') no-repeat top left;
+  text-align: left; 
+  color: #395c88;
+  padding-left: 80px; 
+  line-height: 30px;
 }
