@@ -262,4 +262,13 @@ UIFAQPortlet.prototype.showImage = function() {
 	eXo.faq.UIFAQPortlet.showPicture(this.src) ;
 } ;
 
+UIFAQPortlet.prototype.FAQChangeHeightToAuto = function() {
+	var object = document.getElementById("UIFAQPopupWindow");
+	if(object){
+		var popupWindow = eXo.core.DOMUtil.findFirstDescendantByClass(object, "div", "PopupContent") ;
+		popupWindow.style.height = "auto";
+		popupWindow.style.maxHeight = "500px";
+	}
+} ;
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;

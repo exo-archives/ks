@@ -1,9 +1,18 @@
-<div class="FAQUIQuestionManagerForm $uicomponent.id" >
+<%
+	import org.exoplatform.web.application.JavascriptManager;
+	
+	
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.FAQChangeHeightToAuto');
+%>
+
+<div class="FAQUIQuestionManagerForm $uicomponent.id" style="height: auto;" id="$uicomponent.id">
 	<div>
-		<div id="FAQViewTabContent" style="float: left; width: 870px;">
+		<div id="FAQViewTabContent" style="float: left; width: 100%; min-width: 625px;">
 			<% uicomponent.renderChild("QuestionInfo") ; %>
 		</div>
-		<div id="FAQViewFormContent" style="float: left; padding-top: 10px; width: 870px;">
+		<div id="FAQViewFormContent" style="float: left; padding-top: 10px; width: 100%; min-width: 625px;">
 			<%
 			if(uicomponent.isViewEditQuestion && uicomponent.isEditQuestion) {
 				 uicomponent.renderChild(uicomponent.UI_QUESTION_FORM) ;
