@@ -466,8 +466,7 @@ public class UIQuestions extends UIContainer {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		try {
 			InputStream input = attachment.getInputStream() ;
-			//String fileName = attachment.getName() ;
-			String fileName = attachment.getNodeName() ;
+			String fileName = attachment.getName() ;
 			return getFileSource(input, fileName, dservice);
 		} catch (Exception e) {
 			e.printStackTrace() ;
