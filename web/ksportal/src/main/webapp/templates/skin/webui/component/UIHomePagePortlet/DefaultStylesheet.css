@@ -302,6 +302,7 @@
 
 .UINavigationPortlet .UINavigationBar {
   height: 33px;
+  background: url('DefaultSkin/background/Navigation.gif') repeat-x top center;
 }
 
 .UINavigationPortlet .UINavigationBar .UIHorizontalTabs {
@@ -322,7 +323,7 @@
 
 .UINavigationPortlet .UINavigationBar .LeftNavigationBar {
   line-height: 33px;
-  background: url('DefaultSkin/background/Navigation.gif') repeat-x top center;
+  background:none;
   padding-left: 3px; 
 }
 
@@ -1085,22 +1086,22 @@
 }
 /*==========================UIFooterPortlet===========================*/
 .UIFooterPortletKS {
-  background: url('DefaultSkin/background/FooterBG.gif') repeat-x top left; 
+  background: url('DefaultSkin/background/FooterBG.gif') repeat-x top; 
   margin: 0;
-  padding: 14px 0 0 20px; 
 }
 
 .UIFooterPortletKS .LeftFooter{
-  background: none; 
+  background: url('DefaultSkin/background/FooterBG.gif') repeat-x top; 
 }
 
 .UIFooterPortletKS .RightFooter{
-  background: none; 
+   background: url('DefaultSkin/background/FooterBG.gif') repeat-x top; 
 }
 
 .UIFooterPortletKS .RepeatFooter {
   padding: 0px;
   margin: 0px;
+  padding: 14px 0 0 20px; 
 }
 
 .UIFooterPortletKS .FooterInfoContainer {
