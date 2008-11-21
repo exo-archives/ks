@@ -12,7 +12,7 @@
 /******************************************** UIBreadcumbs ****************************************/
 
 .UIFAQPortlet .UIBreadcumbs {
-	height: auto;
+	height: 25px;
 }
 
 .UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar {
