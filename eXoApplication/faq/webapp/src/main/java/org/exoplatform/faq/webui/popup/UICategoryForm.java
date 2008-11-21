@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -176,19 +175,22 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		return string ;
 	}
 
-	public String cutWhiteSpace(String str) {
-		if(!FAQUtils.isFieldEmpty(str)) {
-			str = str.replaceAll(" ", "");
-			str = str.replaceAll(";", ",");
-			while (true) {
-				if(str.indexOf(",,") < 0) break ;
-				str = StringUtils.replace(str, ",,", ",");
-			}
+	private String removeSpaceInString(String str) throws Exception {
+		if(str != null && str.trim().length() > 0) {
+			String strs[] = new String[]{";", ", ", " ,", ",,"};
+			for (int i = 0; i < strs.length; i++) {
+				while (str.indexOf(strs[i]) >= 0) {
+	        str = str.replaceAll(strs[i], ",");
+        }
+      }
 			if(str.lastIndexOf(",") == str.length() - 1) {
 				str = str.substring(0, str.length() - 1) ;
 			}
-		}
-		return str;
+			if(str.indexOf(",") == 0) {
+				str = str.substring(1, str.length()) ;
+			}
+			return str;
+		} else return "";
 	}
 
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
@@ -213,7 +215,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ; 
 			}
-			moderator = uiCategory.cutWhiteSpace(moderator) ;
+			moderator = uiCategory.removeSpaceInString(moderator) ;
 			moderator = uiCategory.filterItemInString(moderator) ;
 			String erroUser = FAQUtils.checkValueUser(moderator) ;
 			if(!FAQUtils.isFieldEmpty(erroUser)) {
