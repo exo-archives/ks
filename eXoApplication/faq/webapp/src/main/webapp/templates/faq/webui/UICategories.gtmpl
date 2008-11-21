@@ -1,0 +1,115 @@
+<% 
+	import org.exoplatform.faq.service.Category;
+	import org.exoplatform.faq.service.Question;
+	String compId = uicomponent.getId() ; 
+  def rcontext = _ctx.getRequestContext() ;	
+%>
+<div id="$uicomponent.id" style="padding: 0px 5px 0px 5px;line-height:28px;">
+	<div>
+		<div class="FAQToolbar">
+	  	<div class="LeftBar">
+	  		<div class="RightBar">
+	  			<div class="CenterBar" style="padding-left: 10px;">
+						<b>Category's information</b>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="FAQContainer" style="height: auto; padding-left:5px; margin-bottom: 5px;">
+			<%
+			long[] cateInfo = uicomponent.getCategoryInfo() ;
+			long numberOfSubCate = cateInfo[0] ;
+			long numberOfQuestion = cateInfo[1] ;
+			long questionNotAnswer = cateInfo[2] ;
+			long questionNotApproved = cateInfo[3] ;
+			%>
+			SubCategories: $numberOfSubCate
+		<%if(uicomponent.categoryId_ != null){%>
+				Questions: $numberOfQuestion
+				Questions not answer: $questionNotAnswer
+				Questions not approved: $questionNotApproved
+		<%}%>
+		</div>
+	</div>
+	
+	<div>
+		<div class="FAQToolbar">
+	  	<div class="LeftBar">
+	  		<div class="RightBar">
+	  			<div class="CenterBar" style="padding-left: 10px;">
+							<b>Categories</b>
+						</div>
+				</div>
+			</div>
+		</div>
+		<div class="FAQContainer"  style="height: 200px; margin-bottom: 5px; overflow:auto;">
+			<div>
+			<%
+			uicomponent.setListCate();
+			List listCate = uicomponent.getListCate() ;
+			Stack<String> stackCateid = new Stack<String>() ;
+	    StringBuffer stringBuffer = new StringBuffer() ;
+	    int n = listCate.size() ;
+	    int i = 0 ;
+	    int id = 0 ;
+	    if(!listCate.isEmpty()){
+		    for(cate in listCate) {
+		    	id ++ ;
+		      if(i == 0) {%>
+						<div class="FAQCategoryTreeView" id="FAQCate$i">
+							<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('UICategoryId$id')"><%= cate.getCategory().getName();%></a>
+						</div>
+		  	<%
+		      } else if(i > 0) {
+		        int sub = cate.getDeft() - listCate.get(i - 1).getDeft() ;
+		        if(sub == 0) {%>
+							<div class="FAQCategoryTreeView">
+									<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('UICategoryId$id')"><%= cate.getCategory().getName();%></a>
+							</div>
+		    <%
+		        } else if(sub > 0) {%>
+						  <div style=" display: none; padding-left: 20px ;" id="UICategoryId$i">
+								<div class="FAQCategoryTreeView">
+						    	<div id="FAQCate$i" style=" white-space:nowrap;">
+						    		<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('UICategoryId$id')"><%= cate.getCategory().getName();%></a>
+						    	</div>
+						    </div>
+		    <%
+		        } else {%>
+	         <%for(int j = 0 ; j < (-1*sub); j ++) {%>
+		    				</div>
+	     		<%}%>
+						 <div class="Icon FAQCategoryTreeView">
+							 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('UICategoryId$id')"><%= cate.getCategory().getName();%></a>
+						 </div>
+		     		<%
+		        }
+		      }
+		      stackCateid.push(cate.getCategory().getId()) ;
+		      i ++ ;
+		    }%>
+	     <%
+		    for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
+		    	</div>
+		  	<%
+		    }
+	   	}
+			%>
+		</div>
+	</div>
+	
+	<div>
+		<div class="FAQToolbar">
+	  	<div class="LeftBar">
+	  		<div class="RightBar">
+	  			<div class="CenterBar" style="padding-left: 10px;">
+						<b>Tags</b>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="FAQContainer" style="height: auto; padding-left:5px; margin-bottom: 5px;">
+			All Tags
+		</div>
+	</div>
+</div>

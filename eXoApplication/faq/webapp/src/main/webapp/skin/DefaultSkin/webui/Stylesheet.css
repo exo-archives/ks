@@ -12,7 +12,7 @@
 /******************************************** UIBreadcumbs ****************************************/
 
 .UIFAQPortlet .UIBreadcumbs {
-	height: auto;
+	height: 2;
 }
 
 .UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar {
@@ -1158,6 +1158,53 @@
 	height:20px;
 }
 
+.UIFAQPortlet .RatedVote {
+	float: left ;
+	background: url('background/SmallGreyStar.gif') no-repeat center;
+	height: 22px;	width: 22px;
+	cursor: pointer;
+}
+
+.UIFAQPortlet .UIRatingForm {
+	padding: 8px 10px;
+}
+
+.UIFAQPortlet .UIRatingForm .VoteFormContainer {
+	border: solid 1px #e1e1e1 ;
+	background: #f4f4f4 ;
+	padding-top: 10px;
+}
+
+.UIFAQPortlet .UIRatingForm .VoteFormContainer .RatingInfoContainer {
+	border: solid 1px #e1e1e1 ;
+	width: 130px;
+	margin: auto;
+}
+
+.UIFAQPortlet .UIRatingForm .VoteFormContainer .OptionsContainer {
+	border: solid 1px #ffffff ;
+	padding-left: 7px;
+}
+
+.UIFAQPortlet .OverVote {
+	float: left ;
+	background: url('background/SmallYellowStar.gif') no-repeat center;
+	height: 22px;	width: 22px;
+	cursor: pointer;
+}
+
+.UIFAQPortlet .HaftVote {
+	float: left ;
+	background: url('background/SmallHalfStar.gif') no-repeat center;
+	height: 22px;	width: 22px;
+	cursor: pointer;
+}
+
+.UIFAQPortlet .WatchUserManager {
+	background: url('background/FAQYey.gif') no-repeat right bottom;
+	padding: 10px 14px 9px 4px;
+}
+
 .UIPrintPreview {
 	background: white ;
 	height: 100% ;
@@ -1192,6 +1239,16 @@
 
 .UIFAQPortlet .JPGIcon {
 	background: url('background/JPGIcon.gif') no-repeat left center;
+}
+
+.UIFAQPortlet .UnWatch {
+	background: url('background/DeleteWatch.gif') no-repeat left center;
+	padding: 10px 14px 9px 4px;
+}
+
+.UIFAQPortlet .WatchQuestionManager {
+	background: url('background/FAQYey.gif') no-repeat left center;
+	padding: 10px 14px 9px 4px;
 }
 
 .UIFAQPortlet .FileAttachmentIcon {

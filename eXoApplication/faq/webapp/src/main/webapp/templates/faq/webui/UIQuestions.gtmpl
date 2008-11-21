@@ -587,8 +587,7 @@
 																		SendToFriend = "LockSendToFriend" ;
 																	}
 																	%>
-																	<a href="$link" class="$lockFunction"
-																			title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>">
+																	<a href="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>">
 																		<div class="$SendToFriend"><span></span></div>
 																	</a>
 																</td>
