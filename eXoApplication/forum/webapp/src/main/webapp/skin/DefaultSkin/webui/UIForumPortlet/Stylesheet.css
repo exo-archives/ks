@@ -182,12 +182,15 @@
 
 /******************************************** ForumContains ****************************************/
 .UIForumPortlet .ForumContains {
-	border: 1px solid #cdcdcd;
 	line-height: 42px;
-	max-height: 42px; 
-	margin: 10px 0px;
 	padding: 0px 0px 0px 15px;
 }
+
+.UIForumPortlet .UIForumIconState {
+	border: 1px solid #cdcdcd;
+	margin: 10px 0px;
+}
+
 
 .UIForumPortlet .ForumContains .IconPost {
 	float: left;
