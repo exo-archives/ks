@@ -1153,9 +1153,13 @@ public class UIQuestions extends UIContainer {
 					FAQSetting faqSetting = uiQuestions.faqSetting_ ;
 					String currentUser = FAQUtils.getCurrentUser() ;
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-					Category category = faqService_.getCategoryById(categoryId, sessionProvider) ;
-					String[] moderator = category.getModeratorsCategory() ;
+					String[] moderator = new String[]{""};
 					Boolean check = false ;
+					Category category = new Category();
+					if(categoryId != null && !categoryId.equals("null")){
+						category = faqService_.getCategoryById(categoryId, sessionProvider) ;
+						moderator = category.getModeratorsCategory() ;
+					}
 					if(faqSetting.getDisplayMode().equals("both")) {
 						if(uiQuestions.faqSetting_.isAdmin() || Arrays.asList(moderator).contains(currentUser) || question.isActivated()) {
 							check = true ;
@@ -1168,18 +1172,21 @@ public class UIQuestions extends UIContainer {
 					}
 					if (check) {
 						uiQuestions.pageList.setObjectRepare_(questionId);
-						uiQuestions.setCategoryId(categoryId) ;
+						if(!categoryId.equals("null"))uiQuestions.setCategoryId(categoryId) ;
+						else uiQuestions.setCategoryId(null) ;
 						uiQuestions.viewAuthorInfor = category.isViewAuthorInfor();
 						uiQuestions.setIsNotChangeLanguage() ;
 						uiQuestions.listCateId_.clear() ;
 						UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 						breadcumbs.setUpdataPath(null) ;
 						String oldPath = "" ;
-						FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-						List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
-						for(int i = listPath.size() -1 ; i >= 0; i --) {
-							oldPath = oldPath + "/" + listPath.get(i);
-						} 
+						if(categoryId != null && !categoryId.equals("null")){
+							FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+							List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
+							for(int i = listPath.size() -1 ; i >= 0; i --) {
+								oldPath = oldPath + "/" + listPath.get(i);
+							} 
+						}
 						newPath_ = "FAQService"+oldPath ;
 						breadcumbs.setUpdataPath(newPath_);
 						event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;

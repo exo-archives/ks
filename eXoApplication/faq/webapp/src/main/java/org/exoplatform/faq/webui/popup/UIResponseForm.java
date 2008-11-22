@@ -468,7 +468,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
         String cateId = questions.getCategoryId();
-        if(cateId.trim().length() < 1) cateId = "null";
+        if(cateId == null || cateId.trim().length() < 1) cateId = "null";
         if(questionNode!= null && !cateId.equals(question_.getCategoryId())) {
           UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
           if(question_.getCategoryId() != null || !question_.getCategoryId().equals("null")){
