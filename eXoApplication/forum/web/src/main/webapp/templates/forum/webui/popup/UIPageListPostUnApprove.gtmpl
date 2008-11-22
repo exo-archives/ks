@@ -1,0 +1,99 @@
+<% 
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Post; 
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML;
+	
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+  List posts = uicomponent.getPosts() ;
+  long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+  String formatDate = userProfile.getShortDateFormat() ;
+%>
+<div>
+  <% uiform.begin() %>
+	<div class="UITopicContainer">
+   	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th style="width: 40px;"></th>
+								<th>Post name</th>
+								<th style="width: 120px;">Created Date</th>
+								<th width="40px">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+								if(posts != null && posts.size() > 0) {
+								String classRow = "whileRow";
+								int i = 0;
+								 for(post in posts){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String postTitle = post.getName() ;
+									String message = ForumTransformHTML.getTitleInHTMLCode(post.getMessage()) ;
+									String titlePost = ForumUtils.getSubString(message, 100);
+									String iconPost = post.getIcon() ;
+									Date postDate = post.getCreatedDate() ;
+									postDate.setTime(postDate.getTime() - setTime) ;
+									String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
+									<td >
+										<div >
+											<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$titlePost" class="title">$postTitle</a>
+										</div>
+									</td>
+									<td class="Tdbox">
+										<div class="RatingInfoContainer">$createdDate</div>
+									</td>
+									<td class="Tdbox" align="center"><% uicomponent.renderChild(post.getId()); %></td>
+					 			</tr>
+						 	<% i = i + 1;
+						 		}
+						 	} else {
+						 	 %>
+						 	 <tr>
+						 	 	<td colspan="4" align="center">Empty</td>
+						 	 </tr>
+						 	 <% } %>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="UIAction"> 
+	  <table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+        <% for(action in uicomponent.getActions()) { 
+        		 if(action.indexOf("Open") >= 0) continue ; 
+        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+           String link = uicomponent.event(action) ;
+        %>
+        		<a href="$link" class="ActionButton LightBlueStyle">
+	      	  	<div class="ButtonLeft">
+	        	  	<div class="ButtonRight">
+	          	  	<div class="ButtonMiddle"> $actionLabel </div>
+	            	</div>
+	          	</div>
+	        	</a>
+          <%}%>
+      	</td>
+			</tr>
+	  </table> 
+  </div>
+  <%uiform.end()%>
+</div>

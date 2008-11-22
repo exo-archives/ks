@@ -1,0 +1,72 @@
+<%  
+	import org.exoplatform.forum.service.Category ;
+	import org.exoplatform.forum.service.Forum ;
+	import org.exoplatform.forum.webui.popup.UIMoveTopicForm ;
+%>
+
+<div class="UIMoveTopicForm">
+  <% uiform.begin() %>
+	<div class="TitleMoveThreads">Choose a Destination Forum:</div>
+	<div class="UITree ScrollArea">
+	  <div class="TreeContainer ParentNode">
+		<% 
+			List categories = uicomponent.getCategories(); 
+			for(category in categories) {
+		  	String categoryName = category.getCategoryName() ;
+		  	String display = "display:none;";
+		  	String iconClass = "SmallGrayMinus" ;
+		  	String isShow = "true";
+		  	if(uicomponent.getSelectCate(category.getId())) {
+		  		display = "display:block;" ;
+		  		iconClass = "SmallGrayPlus" ;
+		  	}
+	      	List forums =  uicomponent.getForums(category.getId());
+	      	if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
+		%>
+	    <div class="Node $iconClass">
+	     	<div class="Icon CategoryNormalIcon"><span></span></div>  
+	     	<div class="NodeLabel" onclick = 'eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
+	     		<div class="NodeSelected"><a>$categoryName</a></div> 
+	      </div> 		  
+	      <div style="clear: left;"><span></span></div>
+	      <div class="ChildNodeContainer" style="$display">
+	      <% 
+	      	for(forum in forums) {
+	      		String forumName = forum.getForumName() ;
+	      		String objectId = forum.getPath() ;
+	      		String link = uicomponent.event("Save",objectId ) ;
+	      		String classForumIcon = "ThreadsIcon";
+	      		if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
+	      		if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
+	      %>
+			    <div class="Node">
+			      <div class="Icon $classForumIcon"><span></span></div>
+			      <div class="NodeLabel"> 
+				      <a href="$link">$forumName</a>  
+				    </div>
+				    <div style="clear: left;"><span></span></div>
+			    </div>
+		    <% } %>		
+	      </div>
+		  </div>
+		<% } %>	
+		 </div>  
+	</div>
+	<div class="UIAction"> 
+    <table class="ActionContainer" align="center">
+		  <tr>
+			  <td align="center">
+	      <% String link = uicomponent.event("Cancel") ; %>
+	    		<a href="$link" class="ActionButton LightBlueStyle">
+		  	  	<div class="ButtonLeft">
+		    	  	<div class="ButtonRight">
+		      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel")%></div>
+		        	</div>
+		      	</div>
+	    		</a>
+      	</td>
+			</tr>
+ 	  </table> 
+	</div>
+	<%uiform.end()%>
+</div>

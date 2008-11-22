@@ -1,0 +1,193 @@
+<%
+	import org.exoplatform.forum.webui.UIForumPageIterator;  
+	import org.exoplatform.forum.service.Post;
+	import org.exoplatform.forum.service.user.ForumContact;
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.forum.ForumTransformHTML;
+	import org.exoplatform.forum.ForumSessionUtils;
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.services.organization.User;
+%>
+<div class="UIViewTopic UITopicDetail">
+  <% uiform.begin() %>
+<%  
+	uicomponent.initPage() ;
+	List posts = uicomponent.getPostPageList();
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+%>
+  <div class="ViewTopicContainer">
+	  <div class="ViewTopicPageIterator">
+	  	<% 
+	  	if(uicomponent.getIsRenderIter()) {
+	  		uicomponent.renderChild(UIForumPageIterator.class) ;
+	  	%>
+	  		<div style="clear: right;"><span></span></div>
+	  	<%} %>
+	  </div>
+  <%  
+  	String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
+		String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+		for(post in posts) {
+			String owner = post.getOwner() ;
+			ForumContact contact = uiform.getPersonalContact(owner) ;
+			String avatarUrl = uiform.getAvatarUrl(contact) ;
+			String location = "" ;
+			boolean isCity = false;
+			if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
+			if(contact.getCountry() != null) {
+				if(isCity)location = location + ", ";
+				location = location + contact.getCountry() ;
+			}
+			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
+			String classIconPost = post.getIcon() ;
+			if(ForumUtils.isEmpty(classIconPost)) 
+				classIconPost = "NormalTopicIcon" ;
+			String namePost = post.getName() ;
+			Date createdPostDate = post.getCreatedDate() ;
+			createdPostDate.setTime(createdPostDate.getTime() - setTime);
+			String createdDate = ForumUtils.getFormatDate(longDateFormat,createdPostDate);
+			String message = ForumTransformHTML.convertCodeHTML(post.getMessage()) ;
+			String editBy = post.getModifiedBy() ;
+			String editDate ;
+			if(!ForumUtils.isEmpty(editBy)) {
+				Date modifileDate = post.getModifiedDate() ;// modifile
+				modifileDate.setTime(modifileDate.getTime() - setTime);
+				editDate = ForumUtils.getFormatDate(longDateFormat,modifileDate);
+			}
+			
+			String idMessage = "Id" + post.getId().substring(15);
+			User user = ForumSessionUtils.getUserByUserId(owner) ; 
+			Date userCreated = user.getCreatedDate() ;
+			String joinDate = ForumUtils.getFormatDate("DDD yyyy", userCreated) ;
+			String isHedden = "" ;
+			if(post.getIsHidden()) {
+				isHedden = "(<span style='color:#f77617;'>This post is hidden!</span>)" ;
+			}
+			String privatePost = "";
+			if(post.getUserPrivate().length > 1){
+				privatePost = "(<span style='color:blue;font-weight:normal;'>This post is Private !</span>)" ;
+			}
+  %>
+  	<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
+			<table class="TablePost" cellspacing="0" borderspacing="0">
+				<tbody>
+					<tr>
+<!-- Start MemberContainer -->
+						<td class="MemberContainer">
+							<div class="MemberContent">
+							
+								<%  String userSmile = "OfflineIcon";
+										String titleSmile = "Offline" ;
+										if(uicomponent.isOnline(owner)) {
+											 userSmile = "AvailableIcon";
+											 titleSmile = "Online";
+										}
+								%>
+								<div class="MemberName">
+									<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
+									<div class="Name">$owner</div>
+									<div style="clear: left;"><span></span></div>
+								</div>
+								<div class="Rank"><%=userInfo.getUserTitle();%></div>
+								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();  
+									if(isDisplayAvatar) {
+								%>
+								<img src="$avatarUrl" class="Img" onload ="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+								<% } %>
+								<div class="InfoMember">
+									<div>Join Date: $joinDate</div>
+									<% long totalPost = userInfo.getTotalPost();
+										if(totalPost > 0) {
+											 Date lastPostOfUser = userInfo.getLastPostDate() ;
+											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
+											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat,lastPostOfUser) ;
+									%>
+									<div>Posts: $totalPost</div>
+									<div>Last Post: $lastPostDateOfUser</div>
+									<% } else {%>
+									<div><strong>$owner</strong> has no post!</div>
+									<% } 
+									 if(!ForumUtils.isEmpty(location)) {
+									%>
+									<div>Location: location</div>
+									<%} 
+										String lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, userInfo.getLastLoginDate()) ;
+									%>
+									<div>Last Login: $lastLoginUser</div>
+								</div>
+							</div>
+						</td>
+					</div>
+	<!-- End MemberContainer -->
+	<!-- Start PostViewContainer -->
+						<td class="PostViewContainer">
+							
+							<div class="PostViewHeader">
+								<div class="PostViewTitle">
+									<div class="PostViewIcon $classIconPost">$namePost $isHedden $privatePost</div>
+									<div class="PostTime">Posted: $createdDate</div>
+								</div>
+							</div>
+							<div class="PostContentContainer">
+								<div class="PostContent">
+									<div style="padding-top: 8px" id="$idMessage">$message</div>
+								</div>
+									<%	
+										if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
+									%>
+									<div class="Signature">__________________<br><%= userInfo.getSignature(); %></div>
+									<% } %>
+							</div>
+							<div class="FootPost">
+								<div class="PostInfo">
+								<%  
+									if(!ForumUtils.isEmpty(editBy)) {
+								%>
+									<div>Last edited by <b>$editBy</b> on $editDate</div>
+									<%
+										String reason = post.getEditReason() ;
+										if(!ForumUtils.isEmpty(reason)) { 
+										reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
+									%>
+									<div>$reason</div>
+									<% } %>
+								<%} %>
+								</div>
+							</div>	
+								
+						</td>
+	<!-- End PostViewContainer-->
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<% } %>
+	  <div class="ViewTopicPageIterator">
+	  	<% 
+	  	if(uicomponent.getIsRenderIter()) {
+	  		uicomponent.renderChild(UIForumPageIterator.class) ;
+	  	%>
+	  		<div style="clear: right;"><span></span></div>
+	  	<%} %>
+	  </div>
+  </div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+					<div style="width: 100px; margin: auto;">
+						<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+								</div>
+							</div>
+						</a>
+					</div>
+				</td>
+			</tr>
+ 		</table> 
+	</div>
+	<%uiform.end()%>
+</div>

@@ -1,0 +1,86 @@
+<%  
+	import org.exoplatform.forum.service.Post ;
+	import org.exoplatform.forum.service.Topic ;
+	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumUtils;
+%>
+<%  
+	Topic topic = uicomponent.getTopic() ;
+	List posts = uicomponent.getListPost();
+	UserProfile userProfile = uicomponent.getUserProfile() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+%>
+<div class="UISplitTopicForm" style="padding: 10px;">
+	<% uiform.begin() %>
+	<table class="ActionContainer" align="center">
+		<tr>
+			<td width="150px;" align="right">
+				<div class="label">  <%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%> :</div>
+    	</td>
+    	<td>
+    		<div class="label"> <strong><%=topic.getTopicName();%></strong> <div class="label">
+    	</td>
+		</tr>
+		<tr>
+			<td width="150px;" align="right">
+				<div class="label"> <%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>:</div>
+    	</td>
+    	<td>
+    		<%uiform.renderChild(uiform.FIELD_SPLITTHREAD_INPUT);%>
+    	</td>
+		</tr>
+ 	</table> 
+	<div class="ListPost">
+		<table class="UIGrid" borderspacing="0" cellspacing="0">
+		  <thead>
+		  	<tr>
+		      <th width="30px"></th>
+		      <th>Post Title</th>
+		      <th width="120px">Created Date</th>
+		      <th width="80px">Created By</th>
+		      <th width="40px">Action</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  <%  
+		  	for(post in posts) {
+			  	Date createdPostDate = post.getCreatedDate() ;
+			  	createdPostDate.setTime(createdPostDate.getTime() - setTime);
+					String createdDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
+			  	String classIconPost = post.getIcon() ;
+					if(classIconPost.length() <= 0) 
+						classIconPost = "NormalTopicIcon" ;
+		  %>
+			  <tr class="EvenRow">
+		 			 <td class="text"><div class="Icon24x24 $classIconPost"><span></span></div></td>
+		 			 <td class="text"><%=post.getName();%></td>
+		 			 <td class="text">$createdDate</td>
+		 			 <td class="text"><%=post.getOwner();%></td>
+		 			 <td class="text"><div><%uiform.renderChild(post.getId());%></div></td>
+				</tr>
+			<%} %>
+		  </tbody>
+		</table>
+	</div>
+	<div class="UIAction"> 
+	  <table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+	    <% for(action in uicomponent.getActions()) { 
+	    	 String actionLabel = _ctx.appRes("UIAddTagForm.action." + action); 
+	       String link = uicomponent.event(action) ;
+	    %>
+			<a href="$link" class="ActionButton LightBlueStyle">
+	  	  	<div class="ButtonLeft">
+	    	  	<div class="ButtonRight">
+	      	  	<div class="ButtonMiddle">$actionLabel</div>
+	        	</div>
+	      	</div>
+	    	</a>
+	    <%}%>
+	    </td>
+			</tr>
+	 	</table> 
+	</div>
+	<%uiform.end()%>
+</div>

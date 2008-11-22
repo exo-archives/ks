@@ -1,0 +1,143 @@
+<% 
+	import org.exoplatform.forum.service.Forum; 
+	import org.exoplatform.forum.service.Topic; 
+	import org.exoplatform.forum.service.Post;
+	import org.exoplatform.forum.service.UserProfile;
+	import org.exoplatform.forum.service.JCRPageList ;
+	import org.exoplatform.forum.webui.UIForumPageIterator ; 
+	import org.exoplatform.forum.ForumUtils ;
+	import org.exoplatform.forum.ForumTransformHTML; 
+	import org.exoplatform.forum.ForumSessionUtils; 
+	import java.util.GregorianCalendar;
+	import java.util.Date ; 
+  UserProfile userProfile = uicomponent.getUserProfile() ;
+	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+  List topics = uicomponent.getTopicsByUser() ;
+  boolean isAdmin = false;
+	if(userProfile.getUserRole() == 0)isAdmin = true;
+%>
+<div class="$uicomponent.id" id="$uicomponent.id">
+	<div class="UITopicContainer">
+   	<div class="UIForumContainer">
+			<div class="ContentContainer">
+				<div class="UITopicList">
+					<div style="overflow:auto; margin: 2px 0px;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>
+					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<thead>
+							<tr>
+								<th style="width: 40px;"></th>
+								<th style="width: 40px;"></th>
+								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
+								<th style="width: 96px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Rating");%></th>
+								<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Replies");%></th>
+								<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Views");%></th>
+								<%if(isAdmin){ %>
+									<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
+								<%}%>
+							</tr>
+						</thead>
+						<tbody>
+							<% 
+							if(!topics.isEmpty()) {
+								String classRow = "whileRow";
+								int i = 0;
+								 for(topic in topics){
+									if(i%2 == 0) classRow = "whileRow";
+									else classRow = "OddRow";
+									String topicId = topic.getId();
+									String topicPath = topic.getPath() ;
+									String iconClassTopic = topic.getIcon();
+									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
+									String topicTitle = topic.getTopicName();
+									String topicBy = topic.getOwner();
+									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
+									titlePost = ForumUtils.getSubString(titlePost, 100);
+									String postCount = String.valueOf(topic.getPostCount());
+									String postView = String.valueOf(topic.getViewCount());
+									String newPost = "New";
+									String hot = ""; 
+									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
+									String title = "";
+									if(isReadTopic) {
+										title = "TitleNorman";
+										newPost = "NoNew"; 
+									} else {
+										title = "TitleBold";
+									}
+									if(topic.getPostCount() > 10) hot = "Hot"; 
+									String titleTopicStatus = hot+" Thread with "+newPost+" post" ;
+									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
+									if(topic.getIsLock()) {
+										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
+										titleTopicStatus = hot+" Thread with "+newPost+" post lock" ;
+									}
+									if(topic.getIsClosed()) {
+										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
+										titleTopicStatus = hot+" Thread with "+newPost+" post close" ;
+									}
+							%>
+								<tr class="$classRow">
+									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
+									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
+									<td >
+										<div >
+										<% if(topic.getIsSticky()) {%>
+											<span class="Text StickyIcon">Sticky:</span>
+										<% } %>
+											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="$title">$topicTitle</a>
+										</div>
+										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
+									</td>
+									<td class="Tdbox">
+										<div class="RatingInfoContainer">
+										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
+											 String SumVote = classNames[5] ;
+										%>
+					 						<div class="AvgRatingImages" title="Thread Rating: $SumVote votes, 5 average">
+					 					<%	
+											for(className in classNames) {
+												if(className.equals("star")) className = "Voted" ;
+												if(className.equals("notStar")) className = "Unvoted" ;
+												if(className.equals("halfStar")) className = "HalfVoted" ;
+												if(className.equals(classNames[5])) break ;
+										%>
+								 				<div class="VoteIcon $className"><span/></div>
+										 <% } %>
+							 					<div style="clear: left;"><span></span></div>
+				 							</div>
+					 					</div>
+									</td>
+								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
+									<td class="Tdbox" align="center">$postView</td>
+									<%if(isAdmin){ %>
+										<td class="Tdbox" align="center" style="padding-left:5px;">
+											<a href="<%=uicomponent.event("DeleteTopic", topicId)%>">
+												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
+											</a>
+										</td>
+									<%}%>
+					 			</tr>
+						 	<% i = i + 1;}
+						 	} else {
+						 		%>
+						 		<tr>
+						 				<td colspan="7" align="center">
+						 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></b></div>
+						 				</td>
+						 			</tr>
+					 		<%
+						 	}
+					 	 %>
+						</tbody>
+					</table>
+					<div style="overflow:auto;">
+						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
+					</div>						
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

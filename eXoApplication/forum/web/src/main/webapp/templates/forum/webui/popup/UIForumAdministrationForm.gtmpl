@@ -1,0 +1,138 @@
+<%  
+	import org.exoplatform.forum.webui.popup.UIListTopicOld;
+%>
+<div class="UIFormInputWithActions UIForumAdministrationForm">	
+  <% uiform.begin() %>  
+  <div class="UIFormTabPane">
+    <div class="UITabPane">
+      <div class="TabPaneContent">
+        
+        <div class="WorkingArea">
+          <div class="UIHorizontalTabs">
+            <div class="LeftHorizontalTabs">
+              <div class="RightHorizontalTabs">
+                <div class="CenterHorizontalTabs">
+                  <div class="TabsContainer">
+                  <%String classCss = "SelectedTab" ; 
+                    int i = 0;
+                  	for(tabconten in uiform.getChildren()){ 
+                  		if(tabconten.id.indexOf("Tab") > 0) {	
+	                  		String link = "javascript:void(0);";
+	                  		if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
+	                  		else {
+	                  			classCss = "NormalTab" ;
+	                  			link = uicomponent.event("SelectTab",""+i) ;
+	                  		}
+                  %>  
+                    <div class="UITab NormalTabStyle">
+                      <div class="$classCss">
+                        <div class="LeftTab">
+                          <div class="RightTab">
+	                          <a href="$link">
+	                            <div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+	                          </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                	<%++i;}
+                		} %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="UIForm">
+            <div class="HorizontalLayout">
+              <div class="UITabContentContainer">
+                <% 
+                	String display =  "block";
+                	int j = 0;
+                	for(tabconten in uiform.getChildren()){
+                	  if(tabconten.id.indexOf("Tab") > 0) {
+	                		if(uiform.getIsSelected(j))display =  "block";
+	                  	else display = "none";
+                %>
+                <div style="display: $display;" id="UITabContent" class="UITabContent">
+                  <%  uiform.renderChild(tabconten.id) ; 
+                  	  if(tabconten.id.equals("activeTopicTab")){
+                  %>	
+                  		<table class="UIFormGrid">
+												<tbody>						
+													<tr>
+														<td class="FieldLabel"><%=_ctx.appRes("UIForumAdministrationForm.label.activeAbout")%>:</td>
+														<td class="FieldComponent">
+															<div class="InputContent">
+																<% uiform.renderField(uiform.FIELD_ACTIVEABOUT_INPUT) ;%>
+															</div>
+															<div style="float:left; margin-left:10px; white-space:nowrap;"><%=_ctx.appRes("UIForumAdministrationForm.label.Day")%></div>
+															<div style="clear: left;"><span></span></div>
+														</td>
+													</tr>
+													<tr>
+														<td class="FieldLabel"><%=_ctx.appRes("UIForumAdministrationForm.label.setActive")%>:</td>
+														<td class="FieldComponent">
+																<% uiform.renderField(uiform.FIELD_SETACTIVE_INPUT) ;%>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+	                  	<div class="UIAction"> 
+											  <table class="ActionContainer" align="center">
+													<tr>
+														<td align="center">
+										        <%  
+										        	 String actionLabel = _ctx.appRes("UIForumAdministrationForm.action.Run"); 
+										           String link = uiform.event("Run") ;
+										        %>
+												    	 <a href="$link" class="ActionButton LightBlueStyle">
+											      	   <div class="ButtonLeft">
+											        	   <div class="ButtonRight">
+											          	 	 <div class="ButtonMiddle">$actionLabel</div>
+											             </div>
+											           </div>
+											         </a>
+												     </td>
+													</tr>
+										 	  </table> 
+											</div>
+											<%  
+												if(uiform.isRenderListTopic()){
+													uiform.renderChild(UIListTopicOld.class);
+												}
+											%>
+                   <%} %>
+                </div>
+                <%   ++j;
+                	  }
+                  }%>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>  
+    </div>  
+  </div>
+  <div class="UIAction"> 
+	  <table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+        <% for(action in uiform.getActions()) { 
+        	 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
+           String link = uiform.event(action) ;
+        %>
+	    		<a href="$link" class="ActionButton LightBlueStyle">
+	      	  	<div class="ButtonLeft">
+	        	  	<div class="ButtonRight">
+	          	  	<div class="ButtonMiddle">$actionLabel</div>
+	            	</div>
+	          	</div>
+	        	</a>
+	      <%}%>
+	      </td>
+			</tr>
+ 	  </table> 
+	</div>		
+  <%uiform.end()%>
+</div>

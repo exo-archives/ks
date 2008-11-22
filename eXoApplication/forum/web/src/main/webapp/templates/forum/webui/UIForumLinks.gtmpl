@@ -1,0 +1,40 @@
+<%  
+	import org.exoplatform.forum.webui.UIForumLinks ;
+%>
+
+<div class="UIForumLinks">
+	 <% uiform.begin(); 
+	 	 uiform.setForumLinks() ;
+	 	 uiform.setUpdateForumLinks() ;
+	 %>
+	  <div class="HorizontalLayout">
+	    <div class="FormContainer">
+		  	<table class="UIFormGrid">
+		  		<tbody>
+		  			<tr>
+		  				<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</td>
+		  				<td>
+			  				<div style="float:left;">
+			  				<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
+			  				</div>
+		  					<div class="UIActionForum" onclick="script:scroll(0,0)">
+							  	<div class="NormalButtom">
+							  		<div class="ButtonLeft">
+							  			<div class="ButtonRight">
+							  				<div class="ButtonMiddle">
+							  				 <a href="<%=uicomponent.event("Select")%>"><div style="padding: 0px 10px;">Go</div></a>
+							  				</div>
+							  			</div>
+							  		</div>
+							  	</div>
+							  </div>
+		  					<div style="clear: left;"><span></span></div>
+		  				</td>
+		  			</tr>
+		  		</tbody>
+		  	</table>
+		  </div>
+		</div>
+		<div style="clear: right;"><span></span></div>
+	<%uiform.end()%>
+</div>
