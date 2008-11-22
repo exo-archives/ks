@@ -330,58 +330,62 @@ public class JCRDataStorage {
 			if(isNew) {
 				List<String> emails = new ArrayList<String>() ;
 				List<String> emailsList = new ArrayList<String>() ;
-				try {
-					Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
-					if(cate.isNodeType("exo:faqWatching")){
-						emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
-						for(String email: emails) {
-							String[] strings = Utils.splitForFAQ(email) ;
-							for(String string_ : strings ) {
-								emailsList.add(string_) ;
+				if(question.getCategoryId() != null && !question.getCategoryId().equals("null")){
+					try {
+						Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+						if(cate.isNodeType("exo:faqWatching")){
+							emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
+							for(String email: emails) {
+								String[] strings = Utils.splitForFAQ(email) ;
+								for(String string_ : strings ) {
+									emailsList.add(string_) ;
+								}
+							}
+							if(emailsList != null && emailsList.size() > 0) {
+								Message message = new Message();
+								message.setMimeType(MIMETYPE_TEXTHTML) ;
+								message.setSubject(faqSetting.getEmailSettingSubject());
+								message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
+										.replaceAll("&questionContent_", question.getQuestion())
+										.replaceAll("&questionLink_", question.getLink()));
+								sendEmailNotification(emailsList, message) ;
 							}
 						}
-						if(emailsList != null && emailsList.size() > 0) {
-							Message message = new Message();
-							message.setMimeType(MIMETYPE_TEXTHTML) ;
-							message.setSubject(faqSetting.getEmailSettingSubject());
-							message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
-									.replaceAll("&questionContent_", question.getQuestion())
-									.replaceAll("&questionLink_", question.getLink()));
-							sendEmailNotification(emailsList, message) ;
-						}
-					}
-				} catch(Exception e) {
-					e.printStackTrace() ;
-				}    	
+					} catch(Exception e) {
+						e.printStackTrace() ;
+					}    
+				}
 			}
 			// Send notifycation when question response or edited or watching
 			if(!isNew && question.getResponses() != " " && question.isActivated()) {
 				List<String> emails = new ArrayList<String>() ;
 				List<String> emailsList = new ArrayList<String>() ;
 				emailsList.add(question.getEmail()) ;
-				try {
-					Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
-					if(cate.isNodeType("exo:faqWatching")){
-						emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
-						for(String email: emails) {
-							String[] strings = Utils.splitForFAQ(email) ;
-							for(String string_ : strings ) {
-								emailsList.add(string_) ;
+				if(question.getCategoryId() != null && !question.getCategoryId().equals("null")){
+					try {
+						Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+						if(cate.isNodeType("exo:faqWatching")){
+							emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
+							for(String email: emails) {
+								String[] strings = Utils.splitForFAQ(email) ;
+								for(String string_ : strings ) {
+									emailsList.add(string_) ;
+								}
 							}
 						}
+						if(emailsList != null && emailsList.size() > 0) {
+							Message message = new Message();
+							message.setMimeType(MIMETYPE_TEXTHTML) ;
+							message.setSubject(faqSetting.getEmailSettingSubject());
+							message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
+									.replaceAll("&questionResponse_", question.getResponses())
+									.replaceAll("&questionLink_", question.getLink()));
+							sendEmailNotification(emailsList, message) ;
+						}
+					} catch(Exception e) {
+						e.printStackTrace() ;
 					}
-					if(emailsList != null && emailsList.size() > 0) {
-						Message message = new Message();
-						message.setMimeType(MIMETYPE_TEXTHTML) ;
-						message.setSubject(faqSetting.getEmailSettingSubject());
-						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
-								.replaceAll("&questionResponse_", question.getResponses())
-								.replaceAll("&questionLink_", question.getLink()));
-						sendEmailNotification(emailsList, message) ;
-					}
-				} catch(Exception e) {
-					e.printStackTrace() ;
-				}  		  		
+				}
 			}
 		}
 	}
@@ -622,6 +626,7 @@ public class JCRDataStorage {
 		Node questionHome = getQuestionHome(sProvider, null) ;
 		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer queryString = null;
+		if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
 		if(faqSetting.getDisplayMode().equals("approved")) {
 			queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
 					+ "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
@@ -868,6 +873,8 @@ public class JCRDataStorage {
 		}else {
 			parentCategory = categoryHome ;
 		}
+		
+		if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
 
 		StringBuffer questionQuerry = new StringBuffer("/jcr:root" + questionHome.getPath() 
 				+ "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");

@@ -122,7 +122,6 @@ public class UIQuestions extends UIContainer {
 	private List<Watch> watchList_ = new ArrayList<Watch>() ;
 
 	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
-	private String[] firstTollbar_ = new String[]{"AddCategory", "QuestionManagament"} ;
 	private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
@@ -209,11 +208,6 @@ public class UIQuestions extends UIContainer {
 
 	public void setFAQSetting(FAQSetting setting){
 		this.faqSetting_ = setting;
-	}
-
-	@SuppressWarnings("unused")
-	private String[] getFirstTollbar() {
-		return firstTollbar_ ;
 	}
 
 	@SuppressWarnings("unused")
@@ -545,14 +539,19 @@ public class UIQuestions extends UIContainer {
 
 	public String getPathService(String categoryId) throws Exception {
 		String oldPath = "";
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		List<String> listPath = faqService_.getCategoryPath(sessionProvider, categoryId) ;
-		sessionProvider.close();
-		for(int i = listPath.size() -1 ; i >= 0; i --) {
-			oldPath = oldPath + "/" + listPath.get(i);
+		String path = "FAQService";
+		if(categoryId != null && !categoryId.equals("null")){
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			List<String> listPath = faqService_.getCategoryPath(sessionProvider, categoryId) ;
+			sessionProvider.close();
+			for(int i = listPath.size() -1 ; i >= 0; i --) {
+				oldPath = oldPath + "/" + listPath.get(i);
+			}
+			path += oldPath ;
+			oldPath = path.substring(0, path.lastIndexOf("/")) ;
+		} else {
+			oldPath = path;
 		}
-		String path = "FAQService"+ oldPath ;
-		oldPath = path.substring(0, path.lastIndexOf("/")) ;
 		return oldPath ;
 	}
 
@@ -652,54 +651,55 @@ public class UIQuestions extends UIContainer {
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			try {
-				faqService_.getCategoryById(categoryId, sessionProvider);
-			} catch (Exception e) {
-				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+			if(categoryId != null){
 				try {
-					questions.setCategories() ;
-				} catch (Exception pathEx){
-					UIFAQContainer container = questions.getParent() ;
-					UIBreadcumbs breadcumbs = container.findFirstComponentOfType(UIBreadcumbs.class) ;
-					String pathCate = "" ;
-					for(String path : breadcumbs.paths_.get(breadcumbs.paths_.size() - 1).split("/")) {
-						if(path.equals("FAQService")){
-							pathCate = path ;
-							continue ;
-						}
-						try {
-							faqService_.getCategoryById(path, sessionProvider);
-							if(pathCate.trim().length() > 0) pathCate += "/" ;
-							pathCate += path ;
-						} catch (Exception pathExc) {
+					faqService_.getCategoryById(categoryId, sessionProvider);
+				} catch (Exception e) {
+					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					try {
+						questions.setCategories() ;
+					} catch (Exception pathEx){
+						UIFAQContainer container = questions.getParent() ;
+						UIBreadcumbs breadcumbs = container.findFirstComponentOfType(UIBreadcumbs.class) ;
+						String pathCate = "" ;
+						for(String path : breadcumbs.paths_.get(breadcumbs.paths_.size() - 1).split("/")) {
+							if(path.equals("FAQService")){
+								pathCate = path ;
+								continue ;
+							}
 							try {
-								breadcumbs.setUpdataPath(pathCate) ;
-							} catch (Exception exc) {
-								e.printStackTrace();
+								faqService_.getCategoryById(path, sessionProvider);
+								if(pathCate.trim().length() > 0) pathCate += "/" ;
+								pathCate += path ;
+							} catch (Exception pathExc) {
+								try {
+									breadcumbs.setUpdataPath(pathCate) ;
+								} catch (Exception exc) {
+									e.printStackTrace();
+								}
+								if(pathCate.indexOf("/") > 0) {
+									questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1)) ;
+									event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+								} else {
+									questions.categoryId_ = null ;
+									//questions.setCategories() ;
+									questions.setListObject();
+									questions.setIsNotChangeLanguage() ;
+									event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+								}
+								break ;
 							}
-							if(pathCate.indexOf("/") > 0) {
-								questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1)) ;
-								event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-							} else {
-								questions.categoryId_ = null ;
-								//questions.setCategories() ;
-								questions.setListObject();
-								questions.setIsNotChangeLanguage() ;
-								event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-							}
-							break ;
 						}
 					}
+					UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+					sessionProvider.close();
+					return ;
 				}
-				UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
-				sessionProvider.close();
-				return ;
-			} finally {
-				sessionProvider.close();
 			}
+			sessionProvider.close();
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;

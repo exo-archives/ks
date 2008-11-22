@@ -411,22 +411,26 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 
 			if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) {
 				question_ = new Question() ;
-				question_.setCategoryId(questionForm.getCategoryId()) ;
+				question_.setCategoryId("" + questionForm.getCategoryId()) ;
 				question_.setRelations(new String[]{}) ;
 				question_.setResponses(new String[]{" "}) ;
-				try{
-					questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, sessionProvider).isModerateQuestions() ;
-				} catch(Exception exception){
-					UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-
-					UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
-					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-					popupAction.deActivate() ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-					sessionProvider.close();
-					return;
+				if(questionForm.categoryId_ != null){
+					try{
+						questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, sessionProvider).isModerateQuestions() ;
+					} catch(Exception exception){
+						UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	
+						UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+						UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+						popupAction.deActivate() ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+						sessionProvider.close();
+						return;
+					}
+				} else {
+					questionIsApproved = true;
 				}
 				question_.setCreatedDate(date) ;
 				question_.setApproved(questionIsApproved) ;

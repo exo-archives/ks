@@ -467,10 +467,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
-        if(questionNode!= null && !questions.getCategoryId().equals(question_.getCategoryId())) {
+        String cateId = questions.getCategoryId();
+        if(cateId.trim().length() < 1) cateId = "null";
+        if(questionNode!= null && !cateId.equals(question_.getCategoryId())) {
           UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-          Category category = faqService.getCategoryById(question_.getCategoryId(), sessionProvider) ;
-          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
+          if(question_.getCategoryId() != null || !question_.getCategoryId().equals("null")){
+        	  if(!cateId.equals("null")){
+		          Category category = faqService.getCategoryById(question_.getCategoryId(), sessionProvider) ;
+		          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
+        	  } else {
+        		  uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{"Root category"}, ApplicationMessage.WARNING)) ;
+        	  }
+          }
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         }
       } else {
