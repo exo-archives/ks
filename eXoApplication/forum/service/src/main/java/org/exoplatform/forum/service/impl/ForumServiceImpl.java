@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -68,7 +69,7 @@ import org.picocontainer.Startable;
  */
 public class ForumServiceImpl implements ForumService, Startable{
   private JCRDataStorage storage_ ;
-  private final Map<String, Boolean> onlineUsers_ = new HashMap<String, Boolean>() ;
+  private final Map<String, Boolean> onlineUsers_ = new ConcurrentHashMap<String, Boolean>() ;
   private String lastLogin_ = "";
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
@@ -418,7 +419,7 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getTotalJobWattingForModerator(sProvider, userId);
   }
 
-  public synchronized void userLogin(String userId) throws Exception {
+  public void userLogin(String userId) throws Exception {
   	lastLogin_ = userId ;
     onlineUsers_.put(userId, true) ;
     SessionProvider sysProvider = SessionProvider.createSystemProvider() ;

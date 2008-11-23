@@ -232,6 +232,8 @@ public class JCRDataStorage {
 						categoryId = category.getId() ;
 						List<ForumData> forums = categoryData.getForums();
 						String forumId = "";
+						for (int i = 0; i < 10; i++) {
+							
 						for (ForumData forumData : forums) {
 							Forum forum = new Forum();
 							forum.setForumName(forumData.getName());
@@ -244,6 +246,8 @@ public class JCRDataStorage {
 						List<TopicData> topics = forum.getTopics();
 						String topicId = "";
 						String ct = "";
+						for (int j = 0; j < 10; j++) {
+							
 						for (TopicData topicData : topics) {
 							Topic topic = new Topic();
 							topic.setTopicName(topicData.getName());
@@ -267,6 +271,8 @@ public class JCRDataStorage {
 							post.setIcon(postData.getIcon());
 							this.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
 						}
+						
+						}}
 					}
 				}
 			}
@@ -1406,60 +1412,49 @@ public class JCRDataStorage {
 
 	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		Node categoryNode;
+		Node topicNode; 
 		try {
-			categoryNode = forumHomeNode.getNode(categoryId);
-			Node forumNode;
-			try {
-				forumNode = categoryNode.getNode(forumId);
-				try {
-					Node topicNode = forumNode.getNode(topicId);
-					JCRPageList pagelist;
-					StringBuffer stringBuffer = new StringBuffer();
-					stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
-					boolean isAnd = false;
-					if (userLogin != null && userLogin.length() > 0) {
-						isAnd = true;
-						stringBuffer.append("[((@exo:userPrivate='").append(userLogin).append("') or (@exo:userPrivate='exoUserPri'))");
-					}
-					if (isApproved != null && isApproved.length() > 0) {
-						if (isAnd) {
-							stringBuffer.append(" and (@exo:isApproved='").append(isApproved).append("')");
-						} else {
-							stringBuffer.append("[(@exo:isApproved='").append(isApproved).append("')");
-						}
-						if (isHidden.equals("false")) {
-							stringBuffer.append(" and (@exo:isHidden='false')");
-						}
-						stringBuffer.append("]");
-					} else {
-						if (isHidden.equals("true")) {
-							if (isAnd) {
-								stringBuffer.append(" and (@exo:isHidden='true')]");
-							} else {
-								stringBuffer.append("[@exo:isHidden='true']");
-							}
-						} else if (isHidden.equals("false")) {
-							if (isAnd) {
-								stringBuffer.append(" and (@exo:isHidden='false')]");
-							} else {
-								stringBuffer.append("[@exo:isHidden='false']");
-							}
-						} else {
-							if (isAnd) {
-								stringBuffer.append("]");
-							}
-						}
-					}
-					stringBuffer.append(" order by @exo:createdDate ascending");
-					pagelist = new ForumPageList(sProvider, null, 10, stringBuffer.toString(), true);
-					return pagelist;
-				} catch (PathNotFoundException e) {
-					return null;
-				}
-			} catch (PathNotFoundException e) {
-				return null;
+			topicNode = forumHomeNode.getNode(categoryId + "/" + forumId +"/" + topicId);
+			JCRPageList pagelist;
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
+			boolean isAnd = false;
+			if (userLogin != null && userLogin.length() > 0) {
+				isAnd = true;
+				stringBuffer.append("[((@exo:userPrivate='").append(userLogin).append("') or (@exo:userPrivate='exoUserPri'))");
 			}
+			if (isApproved != null && isApproved.length() > 0) {
+				if (isAnd) {
+					stringBuffer.append(" and (@exo:isApproved='").append(isApproved).append("')");
+				} else {
+					stringBuffer.append("[(@exo:isApproved='").append(isApproved).append("')");
+				}
+				if (isHidden.equals("false")) {
+					stringBuffer.append(" and (@exo:isHidden='false')");
+				}
+				stringBuffer.append("]");
+			} else {
+				if (isHidden.equals("true")) {
+					if (isAnd) {
+						stringBuffer.append(" and (@exo:isHidden='true')]");
+					} else {
+						stringBuffer.append("[@exo:isHidden='true']");
+					}
+				} else if (isHidden.equals("false")) {
+					if (isAnd) {
+						stringBuffer.append(" and (@exo:isHidden='false')]");
+					} else {
+						stringBuffer.append("[@exo:isHidden='false']");
+					}
+				} else {
+					if (isAnd) {
+						stringBuffer.append("]");
+					}
+				}
+			}
+			stringBuffer.append(" order by @exo:createdDate ascending");
+			pagelist = new ForumPageList(sProvider, null, 10, stringBuffer.toString(), true);
+			return pagelist;				
 		} catch (PathNotFoundException e) {
 			return null;
 		}
