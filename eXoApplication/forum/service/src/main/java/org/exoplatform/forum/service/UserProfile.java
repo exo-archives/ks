@@ -40,7 +40,13 @@ public class UserProfile {
 	private String[] readTopic ;
 	private String[] bookmark ;
 	
+	private Date joinedDate = null;
 	private Date lastLoginDate = null;
+	private String fullName = "" ;
+	private String firstName = "" ;
+	private String lastName = "" ;
+	private String email = "" ;
+	
 	private Date lastPostDate;
 	private boolean isDisplaySignature = true ;
 	private boolean isDisplayAvatar = true ;
@@ -62,6 +68,7 @@ public class UserProfile {
 	private long newMessage = 0;
 	private long totalMessage = 0;
 	private User user ;
+	
 	
 	@SuppressWarnings("deprecation")
   public UserProfile() {
@@ -110,6 +117,9 @@ public class UserProfile {
 	public void setLastLoginDate(Date lastLoginDate) {this.lastLoginDate = lastLoginDate; }
 	public Date getLastLoginDate() {return lastLoginDate; }
 	
+	public void setJoinedDate(Date joinDate) { this.joinedDate = joinDate; }
+	public Date getJoinedDate() { return joinedDate; }
+
 	public void setLastPostDate(Date lastPostDate) {this.lastPostDate = lastPostDate; }
 	public Date getLastPostDate() {return lastPostDate; }
 	
@@ -187,4 +197,36 @@ public class UserProfile {
 	public void setTotalMessage(long totalMessage) {
   	this.totalMessage = totalMessage;
   }
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEmail() {
+		return email;
+	}
 }

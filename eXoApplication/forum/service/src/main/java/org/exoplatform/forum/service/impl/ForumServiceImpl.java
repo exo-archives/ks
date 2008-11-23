@@ -32,6 +32,7 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.Category;
@@ -96,6 +97,15 @@ public class ForumServiceImpl implements ForumService, Startable{
   		systemSession.close() ;
   	}
   	
+  	systemSession = SessionProvider.createSystemProvider() ;
+  	try{
+  		initUserProfile(systemSession);  		
+  	}catch (Exception e) {
+  		e.printStackTrace() ;  		
+  	}finally{
+  		systemSession.close() ;
+  	}
+  	
   	try{
   		storage_.initDefaultData() ;
   	}catch(Exception e) {
@@ -115,6 +125,43 @@ public class ForumServiceImpl implements ForumService, Startable{
   	forumStatistic.setNewMembers(userList.get(0).getUserName()) ;
   	saveForumStatistic(systemSession, forumStatistic) ;  	
 	}
+	
+	private void initUserProfile (SessionProvider sysSession) throws Exception  {
+		Node profileHome = storage_.getUserProfileHome(sysSession) ;
+		if(profileHome.getNodes().getSize() == 0) {
+  		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+    	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
+    	List<User> userList = pageList.getAll() ;
+    	for(User user : userList) {
+    		createUserProfile(sysSession, user.getUserName()) ;
+    	}
+  	}
+	}
+	
+	public void createUserProfile (SessionProvider sysSession, String userId) throws Exception  {
+		Node profileHome = storage_.getUserProfileHome(sysSession) ;  	
+		if(!profileHome.hasNode(userId)){
+			System.out.println("\n\n Creating profile of user: " + userId);
+  		Node profile = profileHome.addNode(userId, "exo:userProfile") ;
+  		profile.setProperty("exo:joinedDate", storage_.getGreenwichMeanTime()) ;
+  		if(isAdminRole(userId)) {
+  			profile.setProperty("exo:userTitle", "Administrator") ;
+    		profile.setProperty("exo:userRole", 0) ;
+  		}else {
+  			profile.setProperty("exo:userTitle", "User") ;
+    		profile.setProperty("exo:userRole", 2) ;
+  		}
+  		
+  		if(profileHome.isNew()) {
+    		profileHome.getSession().save() ;
+    	}else {
+    		profileHome.save() ;
+    	}
+  		System.out.println("\n\n property role: " );
+		}
+  	  	
+	}
+	
 	
 	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
     storage_.saveCategory(sProvider, category, isNew);
@@ -374,6 +421,16 @@ public class ForumServiceImpl implements ForumService, Startable{
   public synchronized void userLogin(String userId) throws Exception {
   	lastLogin_ = userId ;
     onlineUsers_.put(userId, true) ;
+    SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+    try {
+    	Node userProfile = storage_.getUserProfileHome(sysProvider).getNode(userId);
+      userProfile.setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
+      userProfile.save() ;
+    }catch(Exception e) {
+    	e.printStackTrace() ;
+    }finally {
+    	sysProvider.close();
+    }
   }
 
   public void userLogout(String userId) throws Exception {

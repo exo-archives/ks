@@ -72,7 +72,6 @@ import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
-import org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -146,7 +145,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	private Node getUserProfileNode(SessionProvider sProvider) throws Exception {
+	public Node getUserProfileHome(SessionProvider sProvider) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node userAdministration;
 		try {
@@ -160,7 +159,9 @@ public class JCRDataStorage {
 			return userAdministration.addNode(Utils.USER_PROFILE, Utils.NT_UNSTRUCTURED);
 		}
 	}
-
+  
+	
+	
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node forumAdminNode;
@@ -525,7 +526,7 @@ public class JCRDataStorage {
 				queryLastTopic(sProvider, forumNode.getPath());
 			}
 			{// seveProfile
-				Node userProfileHomeNode = getUserProfileNode(sProvider);
+				Node userProfileHomeNode = getUserProfileHome(sProvider);
 				Node userProfileNode;
 				List<String> list = new ArrayList<String>();
 				List<String> moderators = ForumServiceUtils.getUserPermission(strModerators);
@@ -728,7 +729,7 @@ public class JCRDataStorage {
 			forumStatistic.setProperty("exo:postCount", count);
 			forumHomeNode.getSession().save();
 			String[] moderators = forum.getModerators();
-			Node userProfileHomeNode = getUserProfileNode(sProvider);
+			Node userProfileHomeNode = getUserProfileHome(sProvider);
 			Node userProfileNode;
 			forumId = forum.getForumName() + "(" + categoryId + "/" + forumId;
 			List<String> list;
@@ -1230,7 +1231,7 @@ public class JCRDataStorage {
 			}
 			long topicCount = forumStatisticNode.getProperty("exo:topicCount").getLong();
 			forumStatisticNode.setProperty("exo:topicCount", topicCount + 1);
-			Node userProfileNode = getUserProfileNode(sProvider);
+			Node userProfileNode = getUserProfileHome(sProvider);
 			Node newProfileNode;
 			try {
 				newProfileNode = userProfileNode.getNode(topic.getOwner());
@@ -1316,7 +1317,7 @@ public class JCRDataStorage {
 			Node forumNode = CategoryNode.getNode(forumId);
 			topic = getTopic(sProvider, categoryId, forumId, topicId, Utils.GUEST);
 			String owner = topic.getOwner();
-			Node userProfileNode = getUserProfileNode(sProvider);
+			Node userProfileNode = getUserProfileHome(sProvider);
 			try {
 				Node newProfileNode = userProfileNode.getNode(owner);
 				if (newProfileNode.hasProperty("exo:totalTopic")) {
@@ -1601,7 +1602,7 @@ public class JCRDataStorage {
 			} else {
 				postNode.setProperty("exo:isFirstPost", false);
 			}
-			Node userProfileNode = getUserProfileNode(sProvider);
+			Node userProfileNode = getUserProfileHome(sProvider);
 			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
 			long postCount = forumStatistic.getProperty("exo:postCount").getLong();
 			forumStatistic.setProperty("exo:postCount", postCount + 1);
@@ -1909,7 +1910,7 @@ public class JCRDataStorage {
 	
 	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		for (Post post : posts) {
 			try {
 				boolean isGetLastPost = false;
@@ -2031,7 +2032,7 @@ public class JCRDataStorage {
 				Node postNode = topicNode.getNode(postId);
 				long numberAttachs = postNode.getProperty("exo:numberAttach").getLong();
 				String owner = postNode.getProperty("exo:owner").getString();
-				Node userProfileNode = getUserProfileNode(sProvider);
+				Node userProfileNode = getUserProfileHome(sProvider);
 				try {
 					Node newProfileNode = userProfileNode.getNode(owner);
 					if (newProfileNode.hasProperty("exo:totalPost")) {
@@ -2437,14 +2438,14 @@ public class JCRDataStorage {
 	}
 
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		NodeIterator iterator = userProfileNode.getNodes();
 		JCRPageList pageList = new ForumPageList(sProvider, iterator, 10, userProfileNode.getPath(), false);
 		return pageList;
 	}
 
 	public JCRPageList searchUserProfile(SessionProvider sessionProvider, String userSearch) throws Exception {
-		Node userProfileNode = getUserProfileNode(sessionProvider);
+		Node userProfileNode = getUserProfileHome(sessionProvider);
 		Node forumHomeNode = getForumHomeNode(sessionProvider);
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
 		StringBuffer stringBuffer = new StringBuffer();
@@ -2460,7 +2461,7 @@ public class JCRDataStorage {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0)
 			return userProfile;
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;
 		String title = "";
 		try {
@@ -2468,9 +2469,16 @@ public class JCRDataStorage {
 			userProfile.setUserId(userName);
 			if (newProfileNode.hasProperty("exo:userTitle"))
 				title = newProfileNode.getProperty("exo:userTitle").getString();
+			if (userProfileNode.hasProperty("exo:fullName"))
+				userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
+			if (userProfileNode.hasProperty("exo:firstName"))
+				userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
+			if (userProfileNode.hasProperty("exo:lastName"))
+				userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());
+			if (userProfileNode.hasProperty("exo:email"))
+				userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
 			if(isAdminRole(userName)) {
-				userProfile.setUserRole((long)0);
-				if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
+				userProfile.setUserRole((long)0);				
 			} else {
 				if (newProfileNode.hasProperty("exo:userRole"))
 					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
@@ -2492,6 +2500,8 @@ public class JCRDataStorage {
 				userProfile.setBookmark(ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues()));
 			if (newProfileNode.hasProperty("exo:lastLoginDate"))
 				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
+			if (newProfileNode.hasProperty("exo:joinedDate"))
+				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:joinedDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:lastPostDate"))
 				userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:isDisplaySignature"))
@@ -2560,7 +2570,7 @@ public class JCRDataStorage {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0)
 			return userProfile;
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;
 		String title = "";
 		try {
@@ -2568,6 +2578,14 @@ public class JCRDataStorage {
 			userProfile.setUserId(userName);
 			if (newProfileNode.hasProperty("exo:userTitle"))
 				title = newProfileNode.getProperty("exo:userTitle").getString();
+			if (userProfileNode.hasProperty("exo:fullName"))
+				userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
+			if (userProfileNode.hasProperty("exo:firstName"))
+				userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
+			if (userProfileNode.hasProperty("exo:lastName"))
+				userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());
+			if (userProfileNode.hasProperty("exo:email"))
+				userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
 			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long)0);
 				if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
@@ -2588,6 +2606,8 @@ public class JCRDataStorage {
 				userProfile.setBookmark(ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues()));
 			if (newProfileNode.hasProperty("exo:lastLoginDate"))
 				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
+			if (newProfileNode.hasProperty("exo:joinedDate"))
+				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:joinedDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:lastPostDate"))
 				userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:isDisplaySignature"))
@@ -2610,7 +2630,7 @@ public class JCRDataStorage {
 	}
 
 	public void saveUserProfile(SessionProvider sProvider, UserProfile newUserProfile, boolean isOption, boolean isBan) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;
 		String userName = newUserProfile.getUserId();
 		if (userName != null && userName.length() > 0) {
@@ -2622,18 +2642,11 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:totalPost", 0);
 				newProfileNode.setProperty("exo:totalTopic", 0);
 				newProfileNode.setProperty("exo:readTopic", new String[] {});
-				if(Utils.DEFAULT_USER_ADMIN_ID.equals(userName) && newUserProfile.getUserRole() > 0) {
-					newUserProfile.setUserRole((long)0);
-					String title = newUserProfile.getUserTitle();
-					if(title.equalsIgnoreCase(Utils.USER) || title.equalsIgnoreCase(Utils.MODERATOR) || title.equalsIgnoreCase(Utils.GUEST))
-						newUserProfile.setUserTitle(Utils.ADMIN);
-				} else {
-					if (newUserProfile.getUserRole() >= 2) {
-						newUserProfile.setUserRole((long) 2);
-					}
+				if (newUserProfile.getUserRole() >= 2) {
+					newUserProfile.setUserRole((long) 2);
 				}
 				if(isAdminRole(userName)) {
-					newUserProfile.setUserTitle(Utils.GUEST);
+					newUserProfile.setUserTitle(Utils.ADMIN);
 				}
 			}
 			newProfileNode.setProperty("exo:userRole", newUserProfile.getUserRole());
@@ -2678,7 +2691,7 @@ public class JCRDataStorage {
 	}
 
 	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;
 		try {
 			newProfileNode = userProfileNode.getNode(userName);
@@ -2723,7 +2736,7 @@ public class JCRDataStorage {
 	}
 
 	private void saveUserReadTopic(SessionProvider sProvider, String userName, String topicId, boolean isRead) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode = null;
 		List<String> list;
 		if (isRead) {
@@ -2775,7 +2788,7 @@ public class JCRDataStorage {
 	}
 
 	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node profileNode = userProfileNode.getNode(userName);
 		long totalNewMessage = 0;
 		boolean isNew = false;
@@ -2803,7 +2816,7 @@ public class JCRDataStorage {
 	}
 
 	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		try {
 			Node profileNode = userProfileNode.getNode(userName);
 			QueryManager qm = profileNode.getSession().getWorkspace().getQueryManager();
@@ -2820,7 +2833,7 @@ public class JCRDataStorage {
 	}
 
 	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node profileNode = null;
 		Node profileNodeFirst = null;
 		Node messageNode = null;
@@ -2885,7 +2898,7 @@ public class JCRDataStorage {
 	}
 
 	private Node addNodeUserProfile(SessionProvider sProvider, String userName) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node profileNode = userProfileNode.addNode(userName, "exo:userProfile");
 		profileNode.setProperty("exo:userId", userName);
 		profileNode.setProperty("exo:userTitle", Utils.USER);
@@ -2899,7 +2912,7 @@ public class JCRDataStorage {
 	}
 
 	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node profileNode = userProfileNode.getNode(userName);
 		long totalMessage = 0;
 		try {
@@ -3007,7 +3020,7 @@ public class JCRDataStorage {
 	}
 
 	@SuppressWarnings("deprecation")
-	private Calendar getGreenwichMeanTime() {
+	public Calendar getGreenwichMeanTime() {
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.setLenient(false);
 		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
@@ -3414,7 +3427,7 @@ public class JCRDataStorage {
 
 	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		Node userProfileNode = getUserProfileNode(sProvider);
+		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode = userProfileNode.getNode(userId);
 		long t = 3;
 		if(isAdminRole(userId)) {
@@ -3469,7 +3482,7 @@ public class JCRDataStorage {
 	}
 	
 	public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception {
-		String path = getUserProfileNode(sysProvider).getPath() ;
+		String path = getUserProfileHome(sysProvider).getPath() ;
 		StringBuilder stringBuffer = new StringBuilder();
 		stringBuffer.append("/jcr:root").append(path).append(query);
 		NodeIterator iter = search(stringBuffer.toString(), sysProvider) ;

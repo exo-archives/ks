@@ -119,11 +119,11 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return new String[]{"userName", "firstName", "lastName", "birthDay", "gender", 
 				"email", "jobTitle", "location", "workPhone", "mobilePhone" , "website"};
 	}
-	@SuppressWarnings("unused")
+	/*@SuppressWarnings("unused")
 	private User getUser() {
 		User user = this.userProfile.getUser() ;
 		return user;
-	}
+	}*/
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}

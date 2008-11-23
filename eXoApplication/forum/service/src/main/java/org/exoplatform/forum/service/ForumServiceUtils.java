@@ -38,7 +38,7 @@ public class ForumServiceUtils {
 	public static boolean hasPermission(String[] userGroupMembership, String userId) throws Exception {
 		if(userGroupMembership == null || userGroupMembership.length <= 0 || userGroupMembership[0].equals(" ")) return false;
 		if(Arrays.asList(userGroupMembership).contains(userId)) return true;
-		List<String> users = ForumServiceUtils.getUserPermission(userGroupMembership) ;
+		List<String> users = getUserPermission(userGroupMembership) ;
 		if(users.contains(userId)) return true ;
 		return false ;
 	}

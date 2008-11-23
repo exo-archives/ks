@@ -16,8 +16,6 @@
  */
 package org.exoplatform.forum.service.conf;
 
-import java.util.List;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.ForumService;
@@ -40,12 +38,23 @@ public class NewUserListener extends UserEventListener {
   public void postSave(User user, boolean isNew) throws Exception {
     if(!isNew) return ;
     SessionProvider sysSession = SessionProvider.createSystemProvider();
-    try{
-    	ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;    	
+    ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+    //Update forum statistic
+    try{    	    	
     	ForumStatistic statistic = fservice.getForumStatistic(sysSession) ;
       statistic.setNewMembers(user.getUserName()) ;
       statistic.setMembersCount(statistic.getMembersCount() + 1) ;
       fservice.saveForumStatistic(sysSession, statistic) ;
+    }catch(Exception e) {
+    	e.printStackTrace() ;
+    }finally{
+    	sysSession.close() ;
+    }
+    
+    //Create Profile
+    sysSession = SessionProvider.createSystemProvider();
+    try{
+    	fservice.createUserProfile(sysSession, user.getUserName()) ;
     }catch(Exception e) {
     	e.printStackTrace() ;
     }finally{

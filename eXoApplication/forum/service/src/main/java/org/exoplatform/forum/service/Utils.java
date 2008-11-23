@@ -51,7 +51,6 @@ public class Utils {
 	public static final String USER = "User".intern() ;
 	public static final String GUEST = "Guest".intern() ;
 	
-	public static final String DEFAULT_USER_ADMIN_ID = "root".intern() ;
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
 
 	public static final String DEFAULT_EMAIL_CONTENT = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +

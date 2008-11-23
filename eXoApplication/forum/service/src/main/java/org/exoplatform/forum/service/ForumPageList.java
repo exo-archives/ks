@@ -303,6 +303,14 @@ public class ForumPageList extends JCRPageList {
 		UserProfile userProfile = new UserProfile() ;
 		userProfile.setUserId(userProfileNode.getName());
 		if(userProfileNode.hasProperty("exo:userTitle"))userProfile.setUserTitle(userProfileNode.getProperty("exo:userTitle").getString());
+		if (userProfileNode.hasProperty("exo:fullName"))
+			userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
+		if (userProfileNode.hasProperty("exo:firstName"))
+			userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
+		if (userProfileNode.hasProperty("exo:lastName"))
+			userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());
+		if (userProfileNode.hasProperty("exo:email"))
+			userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
 		if(userProfileNode.hasProperty("exo:userRole"))userProfile.setUserRole(userProfileNode.getProperty("exo:userRole").getLong());
 		if(userProfileNode.hasProperty("exo:signature"))userProfile.setSignature(userProfileNode.getProperty("exo:signature").getString());
 		if(userProfileNode.hasProperty("exo:totalPost"))userProfile.setTotalPost(userProfileNode.getProperty("exo:totalPost").getLong());
@@ -312,6 +320,7 @@ public class ForumPageList extends JCRPageList {
 		if(userProfileNode.hasProperty("exo:readTopic"))userProfile.setReadTopic(ValuesToStrings(userProfileNode.getProperty("exo:readTopic").getValues()));
 		if(userProfileNode.hasProperty("exo:bookmark"))userProfile.setBookmark(ValuesToStrings(userProfileNode.getProperty("exo:bookmark").getValues()));
 		if(userProfileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(userProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
+		if (userProfileNode.hasProperty("exo:joinedDate"))userProfile.setLastLoginDate(userProfileNode.getProperty("exo:joinedDate").getDate().getTime());
 		if(userProfileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(userProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 		if(userProfileNode.hasProperty("exo:isDisplaySignature"))userProfile.setIsDisplaySignature(userProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
 		if(userProfileNode.hasProperty("exo:isDisplayAvatar"))userProfile.setIsDisplayAvatar(userProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());

@@ -79,7 +79,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
 	private String[] permissionUser = null;
-  private JCRPageList pageList ;
+  private JCRPageList userPageList ;
 	private boolean isEdit = false ;
 	private UserProfile userProfile = new UserProfile();
 	private List<ForumLinkData> forumLinks = null;
@@ -133,17 +133,16 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	}
 	
   @SuppressWarnings("unused")
-  public JCRPageList setPageListUserProfile() throws Exception {
-  	if(listUser == null) {
+  public void setPageListUserProfile() throws Exception {
+  	/*if(listUser == null) {
   		listUser = ForumSessionUtils.getAllUser() ;
   	}
     for (User user : listUser) {
       UserProfile userProfile = this.forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), user.getUserName(), true, true, false) ;
-    }
-  	this.pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
-  	this.pageList.setPageSize(5);
-  	this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
-  	return this.pageList;
+    }*/
+  	userPageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
+  	userPageList.setPageSize(5);
+  	this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;  	
   }
   
   @SuppressWarnings("unused")
@@ -154,20 +153,18 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   
   @SuppressWarnings("unchecked")
   private void setListProFileUser() throws Exception {
-  	List<UserProfile> listUserProfile = null;
   	if(valueSearch == null || valueSearch.trim().length() < 1){
 	  	long page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
-	  	long maxPage = this.pageList.getAvailablePage() ;
+	  	long maxPage = this.userPageList.getAvailablePage() ;
 	  	if(page <= 0) page = 1;
 	  	if(page > maxPage) page = maxPage ;
-	  	listUserProfile = this.pageList.getPage(page) ;
+	  	this.userProfiles = this.userPageList.getPage(page) ;
   	} else {
-  		listUserProfile = this.pageList.getpage(this.valueSearch);
-  		this.getChild(UIForumPageIterator.class).setSelectPage(this.pageList.getPageSelected());
+  		this.userProfiles = this.userPageList.getpage(this.valueSearch);
+  		this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getPageSelected());
   		valueSearch = null;
   	}
-  	this.userProfiles = new ArrayList<UserProfile>();
-  	int i =0, j = 0;
+  	/*int i =0, j = 0;
   	for (UserProfile userProfile : listUserProfile) {
   		boolean isDefaulAdmin = this.forumService.isAdminRole(userProfile.getUserId()) ;
   		if(isDefaulAdmin) userProfile.setUserRole((long)0);
@@ -187,7 +184,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   			this.userProfiles.add(userProfile);
   		}
   		++ i;
-    }
+    }*/
   }
   
   private UserProfile getUserProfile(String userId) throws Exception {

@@ -1,6 +1,5 @@
 <%	
 	import org.exoplatform.forum.service.UserProfile ;
-	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.service.user.ForumContact;
 %>
@@ -28,11 +27,10 @@
 	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	String createdDate = "";
 	String fullName = userName;
-	User user = uiform.getUser() ;
-	if(user != null){ 
-		createdDate = ForumUtils.getFormatDate(shortDateFormat, user.getCreatedDate()) ;
-		fullName = user.getFullName();
-	}
+	
+	createdDate = ForumUtils.getFormatDate(shortDateFormat, userProfile.getJoinedDate()) ;
+	fullName = userProfile.getFullName();
+	
 	long totalPost = userProfile.getTotalPost();
 	shortDateFormat = shortDateFormat +	", " + userProfileLogin.getTimeFormat();
 	String userSmile = "OfflineIcon";
@@ -100,9 +98,9 @@
 										siteOfUser = contact.getWebSite() ;
 									}
 									if(user != null){
-										firstName = user.getFirstName();
-										lastName	= user.getLastName() ;
-										email		 = "<a target=\"_blank\" href=\"mailto:"+user.getEmail()+"\">"+user.getEmail()+"</a>" ;
+										firstName = userProfile.getFirstName();
+										lastName	= userProfile.getLastName() ;
+										email		 = "<a target=\"_blank\" href=\"mailto:"+userProfile.getEmail()+"\">"+userProfile.getEmail()+"</a>" ;
 									}
 									if(!ForumUtils.isEmpty(siteOfUser)) {
 										siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
