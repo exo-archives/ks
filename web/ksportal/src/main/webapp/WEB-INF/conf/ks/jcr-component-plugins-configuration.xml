@@ -211,7 +211,13 @@
 	        </object>
 	      </object-param>
 	    </init-params>
-	  </component-plugin>	  	  	  	  
+	  </component-plugin>	
+	  <component-plugin>
+	    <name>forum.new.user.event.listener</name>
+	    <set-method>addListenerPlugin</set-method>
+	    <type>org.exoplatform.forum.service.conf.NewUserListener</type>
+	    <description>description</description>	    
+	  </component-plugin>  	  	  	  
 	</external-component-plugins>
 	
 	<external-component-plugins>

@@ -72,6 +72,7 @@ import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;

@@ -17,6 +17,9 @@
 package org.exoplatform.forum.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +31,8 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -46,9 +51,12 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.picocontainer.Startable;
 
 /**
@@ -61,7 +69,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   private JCRDataStorage storage_ ;
   private final Map<String, Boolean> onlineUsers_ = new HashMap<String, Boolean>() ;
   private String lastLogin_ = "";
-
+  
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
     storage_ = new JCRDataStorage(nodeHierarchyCreator) ;
   }
@@ -79,6 +87,15 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public void start() {
+  	SessionProvider systemSession = SessionProvider.createSystemProvider() ;
+  	try{
+  		updateForumStatistic(systemSession);  		
+  	}catch (Exception e) {
+  		e.printStackTrace() ;  		
+  	}finally{
+  		systemSession.close() ;
+  	}
+  	
   	try{
   		storage_.initDefaultData() ;
   	}catch(Exception e) {
@@ -88,7 +105,18 @@ public class ForumServiceImpl implements ForumService, Startable{
 
 	public void stop() {}
 	
-  public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
+	public void updateForumStatistic(SessionProvider systemSession) throws Exception{
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
+  	List<User> userList = pageList.getAll() ;
+  	Collections.sort(userList, new Utils.DatetimeComparatorDESC()) ;
+  	ForumStatistic forumStatistic = getForumStatistic(systemSession) ;
+  	forumStatistic.setMembersCount(userList.size()) ;
+  	forumStatistic.setNewMembers(userList.get(0).getUserName()) ;
+  	saveForumStatistic(systemSession, forumStatistic) ;  	
+	}
+	
+	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
     storage_.saveCategory(sProvider, category, isNew);
   }
 

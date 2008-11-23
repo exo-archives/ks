@@ -882,4 +882,5 @@ public interface ForumService {
   public List<Post> getNewPosts(int number) throws Exception ;
   
   public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception ;
+  public void updateForumStatistic(SessionProvider systemSession) throws Exception ;
 }

@@ -16,7 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import java.util.Comparator;
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.services.organization.User;
 
 /**
  * Created by The eXo Platform SAS
@@ -337,4 +341,12 @@ public class Utils {
     }
 		return s;
 	}
+	
+	static public class DatetimeComparatorDESC implements Comparator<Object> {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	Date date1 = ((User) o1).getCreatedDate() ;
+      Date date2  = ((User) o2).getCreatedDate() ;
+      return date2.compareTo(date1) ;
+    }
+  }
 }

@@ -51,7 +51,7 @@ public class UICategoryInfo extends UIContainer	{
 	private boolean isGet = true;
 	
 	public UICategoryInfo() throws Exception { 
-		setPageListUserProfile();
+		setPageListUserProfile();		
 	} 
 	
 	@SuppressWarnings("unchecked")
@@ -104,9 +104,9 @@ public class UICategoryInfo extends UIContainer	{
 	
 	public ForumStatistic getForumStatistic() throws Exception {
 		ForumStatistic forumStatistic = forumService.getForumStatistic(ForumSessionUtils.getSystemProvider()) ;
-		List<User> userList = ForumSessionUtils.getAllUser();
+		/*List<User> userList = ForumSessionUtils.getAllUser();
 		long size = (long)userList.size() ;
-		boolean isSave = false ;
+		
 		if(forumStatistic.getMembersCount() < size) {
 			long max = userList.get(0).getCreatedDate().getTime(), temp ;
 			int i = 0, j = 0;
@@ -120,7 +120,8 @@ public class UICategoryInfo extends UIContainer	{
 			forumStatistic.setMembersCount(size) ;
 			forumStatistic.setNewMembers(userList.get(i).getUserName()) ;
 			isSave = true ;
-		}
+		}*/
+		boolean isSave = false ;
 		long mumberUserOnline = 0;
 		String mostUserOnlines = forumStatistic.getMostUsersOnline();
 		Date date = getInstanceTempCalendar().getTime() ;
