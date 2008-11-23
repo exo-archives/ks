@@ -44,27 +44,27 @@ import org.exoplatform.webui.core.UIContainer;
 		template =	"app:/templates/forum/webui/UICategoryInfo.gtmpl"
 )
 public class UICategoryInfo extends UIContainer	{
-	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private	ForumService forumService ;
 	private long mostUserOnline_ = 0;
-	private long numberActive = 0;
+	//private long numberActive = 0;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
-	private boolean isGet = true;
+	//private boolean isGet = true;
 	
-	public UICategoryInfo() throws Exception { 
-		setPageListUserProfile();		
+	public UICategoryInfo() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		//setPageListUserProfile();		
 	} 
 	
-	@SuppressWarnings("unchecked")
-	public List<UserProfile> setPageListUserProfile() throws Exception {
+	/*public List<UserProfile> setPageListUserProfile() throws Exception {
 		if(userProfiles == null || userProfiles.size() == 0 || isGet) {
 			JCRPageList pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
 			userProfiles = pageList.getPage(0) ;
 			isGet = false;
 		}
 		return userProfiles;
-	}
+	}*/
 	
-	@SuppressWarnings("unused")
+	/*@SuppressWarnings("unused")
 	private long getUserActive() throws Exception {
 		Date date = null;
 		long newTime = getInstanceTempCalendar().getTimeInMillis(), oldTime;
@@ -85,8 +85,8 @@ public class UICategoryInfo extends UIContainer	{
 			}
 		}
 		if(numberActive <= 0) numberActive = 1;
-		return numberActive;
-	}
+		
+	}*/
 	@SuppressWarnings("unused")
 	private List<String> getUserOnline() throws Exception {
 		List<String> list = this.forumService.getOnlineUsers() ;
@@ -139,7 +139,7 @@ public class UICategoryInfo extends UIContainer	{
 		} 
 		if(isSave) {
 			this.forumService.saveForumStatistic(ForumSessionUtils.getSystemProvider(), forumStatistic) ;
-			this.isGet = true;
+			//this.isGet = true;
 		}
 		return forumStatistic ;
 	}

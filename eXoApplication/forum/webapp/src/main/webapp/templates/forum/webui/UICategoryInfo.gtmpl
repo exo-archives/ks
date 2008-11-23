@@ -4,6 +4,7 @@
 	int size = userOnlines.size();
 	ForumStatistic forumStatistic = uicomponent.getForumStatistic() ;
 	String topics = String.valueOf(forumStatistic.getTopicCount());
+	String activeUsers = String.valueOf(forumStatistic.getActiveUsers());
 	String posts = String.valueOf(forumStatistic.getPostCount());
 	String members = String.valueOf(forumStatistic.getMembersCount());
 	String newMember = forumStatistic.getNewMembers();
@@ -57,7 +58,8 @@
 					 		<div class="text"><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics, 
 					 											<%=_ctx.appRes("UICategoryInfo.label.TotalPosts");%>: $posts, 
 					 											<%=_ctx.appRes("UICategoryInfo.label.TotalMembers");%>: $members, 
-					 											<%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>:<%=uicomponent.getUserActive();%></div>
+					 											<%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>:$activeUsers
+					 		</div>
 							<div class="text" style="padding-bottom: 5px;"><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>: <a>$newMember</a></div>
 					 	</td>
 		 			</tr>

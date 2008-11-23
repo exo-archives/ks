@@ -176,5 +176,29 @@
         </properties-param>
       </init-params>
     </component-plugin>
+    <component-plugin>
+      <name>RecountActiveUserJob</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.forum.service.conf.RecountActiveUserPeriodJob</type>
+      <description>add a RecountActiveUser job to the JobSchedulerService</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>save the monitor data  periodically</description>
+          <property name="jobName" value="RecountActiveUserJob"/>
+          <property name="groupName" value="KnowlegedSuite"/>
+          <property name="job" value="org.exoplatform.forum.service.conf.RecountActiveUserJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="7200000"/> <!-- 2 hours-->    
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>               
+        </properties-param>
+        <properties-param>
+          <name>RecountActiveUser.info</name>
+          <description></description>
+          <property name="lastPost" value="15"/> <!-- users are active if have last posts in 15 day -->
+        </properties-param>
+      </init-params>
+    </component-plugin>
   </external-component-plugins>  
 </configuration>

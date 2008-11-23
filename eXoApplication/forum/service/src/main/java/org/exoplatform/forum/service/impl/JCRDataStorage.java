@@ -2938,6 +2938,7 @@ public class JCRDataStorage {
 			forumStatistic.setPostCount(forumStatisticNode.getProperty("exo:postCount").getLong());
 			forumStatistic.setTopicCount(forumStatisticNode.getProperty("exo:topicCount").getLong());
 			forumStatistic.setMembersCount(forumStatisticNode.getProperty("exo:membersCount").getLong());
+			forumStatistic.setActiveUsers(forumStatisticNode.getProperty("exo:activeUsers").getLong());
 			forumStatistic.setNewMembers(forumStatisticNode.getProperty("exo:newMembers").getString());
 			forumStatistic.setMostUsersOnline(forumStatisticNode.getProperty("exo:mostUsersOnline").getString());
 		} catch (Exception e) {
@@ -2949,22 +2950,22 @@ public class JCRDataStorage {
 	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node forumStatisticNode;
-		try {
+		if(forumHomeNode.hasNode(Utils.FORUM_STATISTIC)) {
 			forumStatisticNode = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-			forumStatisticNode.setProperty("exo:postCount", forumStatistic.getPostCount());
-			forumStatisticNode.setProperty("exo:topicCount", forumStatistic.getTopicCount());
-			forumStatisticNode.setProperty("exo:membersCount", forumStatistic.getMembersCount());
-			forumStatisticNode.setProperty("exo:newMembers", forumStatistic.getNewMembers());
-			forumStatisticNode.setProperty("exo:mostUsersOnline", forumStatistic.getMostUsersOnline());
-		} catch (PathNotFoundException e) {
+		}else {
 			forumStatisticNode = forumHomeNode.addNode(Utils.FORUM_STATISTIC, "exo:forumStatistic");
-			forumStatisticNode.setProperty("exo:postCount", 0);
-			forumStatisticNode.setProperty("exo:topicCount", 0);
-			forumStatisticNode.setProperty("exo:membersCount", forumStatistic.getMembersCount());
-			forumStatisticNode.setProperty("exo:newMembers", forumStatistic.getNewMembers());
-			forumStatisticNode.setProperty("exo:mostUsersOnline", forumStatistic.getMostUsersOnline());
 		}
-		forumHomeNode.getSession().save();
+		forumStatisticNode.setProperty("exo:postCount", forumStatistic.getPostCount());
+		forumStatisticNode.setProperty("exo:topicCount", forumStatistic.getTopicCount());
+		forumStatisticNode.setProperty("exo:membersCount", forumStatistic.getMembersCount());
+		forumStatisticNode.setProperty("exo:activeUsers", forumStatistic.getActiveUsers());
+		forumStatisticNode.setProperty("exo:newMembers", forumStatistic.getNewMembers());
+		forumStatisticNode.setProperty("exo:mostUsersOnline", forumStatistic.getMostUsersOnline());
+		if(forumStatisticNode.isNew()) {
+			forumStatisticNode.getSession().save();
+		}else {
+			forumStatisticNode.save() ;
+		}		
 	}
 
 	private String[] ValuesToStrings(Value[] Val) throws Exception {
@@ -3465,5 +3466,21 @@ public class JCRDataStorage {
 		Query query = qm.createQuery(queryString, Query.XPATH);
 		QueryResult result = query.execute();
 		return result.getNodes();
+	}
+	
+	public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception {
+		String path = getUserProfileNode(sysProvider).getPath() ;
+		StringBuilder stringBuffer = new StringBuilder();
+		stringBuffer.append("/jcr:root").append(path).append(query);
+		NodeIterator iter = search(stringBuffer.toString(), sysProvider) ;
+		Node forumHomeNode = getForumHomeNode(sysProvider);
+		if(forumHomeNode.hasNode(Utils.FORUM_STATISTIC)) {
+			forumHomeNode.getNode(Utils.FORUM_STATISTIC).setProperty("exo:activeUsers", iter.getSize());
+			forumHomeNode.save() ;
+		}else {
+			ForumStatistic forumStatistic = new ForumStatistic();
+			forumStatistic.setActiveUsers(iter.getSize()) ;
+			saveForumStatistic(sysProvider, forumStatistic) ;
+		}		
 	}
 }

@@ -436,4 +436,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception {
   	return storage_.search(queryString, sessionProvider) ;
   }	
+  
+  public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception {
+  	storage_.evaluateActiveUsers(sysProvider, query) ;
+  }
 }

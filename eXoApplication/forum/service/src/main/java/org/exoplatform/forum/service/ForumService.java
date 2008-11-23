@@ -883,4 +883,6 @@ public interface ForumService {
   
   public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception ;
   public void updateForumStatistic(SessionProvider systemSession) throws Exception ;
+  public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception ;
+   
 }

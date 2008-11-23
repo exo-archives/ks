@@ -549,6 +549,9 @@
 			<propertyDefinition name="exo:mostUsersOnline" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
+			<propertyDefinition name="exo:activeUsers" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
 		</propertyDefinitions>
 	</nodeType>	 	 	 	
 
