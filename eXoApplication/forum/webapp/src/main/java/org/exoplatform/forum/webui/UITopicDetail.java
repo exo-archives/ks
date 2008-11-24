@@ -63,7 +63,6 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -150,7 +149,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
 	private List<Post>	posts ;
-	private boolean isEdit = false ;
 	private long maxPost = 10 ;
 	private UserProfile userProfile = null;
 	private String userName = " " ;
@@ -477,10 +475,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unused")
-	private void setIsEdit( boolean isEdit) {
-		this.isEdit = isEdit ;
-	}
-	@SuppressWarnings("unused")
 	public void setPostRules(boolean isNull) throws Exception {
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		postRules.setUserProfile(this.userProfile) ;
@@ -496,7 +490,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				String userLogin = this.userProfile.getUserId() ;
 				String[] strings = this.forum.getCreateTopicRole();
 				boolean canCreateThread = false;
-				if(this.isEdit || (strings != null && strings.length > 0 && ForumServiceUtils.hasPermission(strings, userLogin))) {
+				if(this.isMod || (strings != null && strings.length > 0 && ForumServiceUtils.hasPermission(strings, userLogin))) {
 					canCreateThread = true;
 					postRules.setCanCreateNewThread(true);
 				} else {
@@ -524,12 +518,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserInfo(String userName) throws Exception {
+		if(mapUserProfile.containsKey(userName)) return mapUserProfile.get(userName) ;
 		UserProfile userProfile = this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
-		if (userProfile.getUser() == null) {
-			User user = ForumSessionUtils.getUserByUserId(userName) ; 
-			userProfile.setUser(user) ;
-			mapUserProfile.put(userName, userProfile) ;
-		}
+		mapUserProfile.put(userName, userProfile) ;
 		return userProfile ;
 	}
 	
@@ -1239,8 +1230,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				userProfile = topicDetail.mapUserProfile.get(userId) ;
 			} else {
 				userProfile = topicDetail.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userId) ;
-				User user = ForumSessionUtils.getUserByUserId(userId) ; 
-				userProfile.setUser(user) ;
 			}
 			viewUserProfile.setUserProfile(userProfile) ;
 			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;

@@ -11,7 +11,6 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.forum.service.user.ForumContact;
-	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -54,23 +53,8 @@
 		}
 		if(isShowMenu) {
 			if(isAdmin) canEdit = true;
-			if(userProfile.getUserRole() == 1) {
-				String []moderatorsByUser = userProfile.getModerateForums() ;
-				if(moderatorsByUser == null || moderatorsByUser.length <= 0) canEdit = true;
-				else {
-					for(forumId in moderatorsByUser) {
-						if(forumId.indexOf(forum.getId()) >= 0) {
-							canEdit = true;
-							break ;
-						}
-					}
-				}
-			}
-			if(!canEdit && forum != null) {
-				canEdit = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin) ;
-			}
+			if(!canEdit) canEdit = uicomponent.isMod ;
 		}
-		uicomponent.setIsEdit(canEdit) ;
 		if(posts != null && posts.size() > 0) {
 			if(!isLock && forum != null)isLock = forum.getIsLock() ;
 			if(!isLock && topic != null)isLock = topic.getIsLock() ;
@@ -583,12 +567,7 @@
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + postId.substring(15);
-				User user = userInfo.getUser() ;
-				String joinDate = ""; 
-				if(user != null){
-					Date userCreated = user.getCreatedDate() ;
-					joinDate = ForumUtils.getFormatDate(shortDateFormat, userCreated) ;
-				}
+				String joinDate = ForumUtils.getFormatDate(shortDateFormat, userInfo.getJoinedDate()) ;
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {

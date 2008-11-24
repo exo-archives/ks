@@ -66,7 +66,7 @@ public class ForumUtils {
 	public static String getFormatDate(String format, Date myDate) {
 		/*h,hh,H, m, mm, D, DD, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
 		 * */
-		if(myDate == null) return null;
+		if(myDate == null) return "";
 		String strCase = "" ;
 		int day = myDate.getDay() ;
 		switch (day) {
