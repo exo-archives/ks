@@ -50,12 +50,13 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIListInBoxPrivateMessage extends UIContainer{
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private UserProfile userProfile = null	;
 	private List<ForumPrivateMessage> listInbox = null; 
 	private String userName = "";
 	private boolean isRenderIterator = false ;
 	public UIListInBoxPrivateMessage() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "PageListInBoxMessage") ;
 	}
 	@SuppressWarnings("unused")

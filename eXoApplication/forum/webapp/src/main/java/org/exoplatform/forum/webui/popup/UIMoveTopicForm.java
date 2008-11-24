@@ -58,7 +58,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String forumId ;
 	private List<Topic> topics ;
 	private List<Category> categories;
@@ -82,7 +82,9 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	  }
   }
 	
-	public UIMoveTopicForm() throws Exception {}
+	public UIMoveTopicForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	

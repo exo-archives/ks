@@ -57,11 +57,12 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UIPageListPostHidden extends UIForumKeepStickPageIterator implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String categoryId, forumId, topicId ;
 	private List<Post> listAllPost = new ArrayList<Post>() ;
 	
 	public UIPageListPostHidden() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"UnHidden","Cancel"});
 	}
 

@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -27,9 +26,6 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
-import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -46,47 +42,11 @@ import org.exoplatform.webui.core.UIContainer;
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService ;
 	private long mostUserOnline_ = 0;
-	//private long numberActive = 0;
-	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
-	//private boolean isGet = true;
 	
 	public UICategoryInfo() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-		//setPageListUserProfile();		
 	} 
-	
-	/*public List<UserProfile> setPageListUserProfile() throws Exception {
-		if(userProfiles == null || userProfiles.size() == 0 || isGet) {
-			JCRPageList pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
-			userProfiles = pageList.getPage(0) ;
-			isGet = false;
-		}
-		return userProfiles;
-	}*/
-	
-	/*@SuppressWarnings("unused")
-	private long getUserActive() throws Exception {
-		Date date = null;
-		long newTime = getInstanceTempCalendar().getTimeInMillis(), oldTime;
-		numberActive = 0;
-		for (UserProfile userProfile : userProfiles) {
-			date = userProfile.getLastLoginDate();
-			if(date != null){
-				oldTime = date.getTime();
-				if((newTime - oldTime) < 3*86400000) {// User have login at least 3 day
-					date = userProfile.getLastPostDate() ;
-					if(date != null) {
-						oldTime = date.getTime();
-						if((newTime - oldTime) < 5*86400000) {// User have a post at least in five day
-							++numberActive ;
-						}
-					}
-				}
-			}
-		}
-		if(numberActive <= 0) numberActive = 1;
-		
-	}*/
+
 	@SuppressWarnings("unused")
 	private List<String> getUserOnline() throws Exception {
 		List<String> list = this.forumService.getOnlineUsers() ;
@@ -104,23 +64,6 @@ public class UICategoryInfo extends UIContainer	{
 	
 	public ForumStatistic getForumStatistic() throws Exception {
 		ForumStatistic forumStatistic = forumService.getForumStatistic(ForumSessionUtils.getSystemProvider()) ;
-		/*List<User> userList = ForumSessionUtils.getAllUser();
-		long size = (long)userList.size() ;
-		
-		if(forumStatistic.getMembersCount() < size) {
-			long max = userList.get(0).getCreatedDate().getTime(), temp ;
-			int i = 0, j = 0;
-			for (User user : userList) {
-				temp = user.getCreatedDate().getTime() ;
-				if(temp > max){
-					max = temp; i = j ;
-				}
-				j++;
-			}
-			forumStatistic.setMembersCount(size) ;
-			forumStatistic.setNewMembers(userList.get(i).getUserName()) ;
-			isSave = true ;
-		}*/
 		boolean isSave = false ;
 		long mumberUserOnline = 0;
 		String mostUserOnlines = forumStatistic.getMostUsersOnline();
@@ -139,7 +82,6 @@ public class UICategoryInfo extends UIContainer	{
 		} 
 		if(isSave) {
 			this.forumService.saveForumStatistic(ForumSessionUtils.getSystemProvider(), forumStatistic) ;
-			//this.isGet = true;
 		}
 		return forumStatistic ;
 	}

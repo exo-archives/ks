@@ -209,7 +209,6 @@ public interface ForumService {
 	 * @throws Exception the exception
 	 */
 	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
-	
 	/**
 	 * Gets the page topic by user.
 	 * 
@@ -355,9 +354,8 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId,
-	    String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
-
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
+	public long getAvailablePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 	/**
 	 * Gets the page post by user.
 	 * 

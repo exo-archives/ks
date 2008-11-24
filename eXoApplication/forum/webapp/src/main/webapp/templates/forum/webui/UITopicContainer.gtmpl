@@ -1,10 +1,8 @@
 <%
-	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.service.Forum ;
-	import org.exoplatform.forum.service.JCRPageList ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.webui.UICategory ;
@@ -42,21 +40,7 @@
 	boolean canEdit = false ;
 	if(isShowMenu) {
 		if(userProfile.getUserRole() == 0) canEdit = true;
-		if(userProfile.getUserRole() == 1) {
-			String []moderatorsByUser = userProfile.getModerateForums() ;
-			if(moderatorsByUser == null || moderatorsByUser.length <= 0) canEdit = true;
-			else {
-				for(forumId in moderatorsByUser) {
-					if(forumId.indexOf(forum.getId()) >= 0) {
-						canEdit = true;
-						break ;
-					}
-				}
-			}
-		}
-		if(!canEdit) {
-			canEdit = ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()) ;
-		}
+		if(!canEdit) canEdit = uicomponent.isModerator;
 	}
 	
 	boolean isLock = forum.getIsLock() ;
@@ -401,8 +385,7 @@
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
-									JCRPageList pageList = uicomponent.getPageListPost(topicId) ;
-									long max_page = pageList.getAvailablePage() ;
+									long max_page = uicomponent.getSizePost(topicId) ;
 									String iconClassTopic = topic.getIcon();
 									if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
@@ -457,7 +440,7 @@
 								  String classSelect = "";
 								  if(checkeds.contains(topicId)){
 								    classSelect = "SelectedItem";
-								  } 
+								  }
 							%>
 								<tr class="$classRow $classSelect">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>

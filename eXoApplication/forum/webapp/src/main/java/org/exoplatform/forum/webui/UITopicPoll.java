@@ -62,7 +62,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 		}
 )
 public class UITopicPoll extends UIForm	{
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private Poll poll_ ;
 	private String categoryId, forumId, topicId ;
 	private boolean isAgainVote = false ;
@@ -73,6 +73,7 @@ public class UITopicPoll extends UIForm	{
 	private Forum forum ;
 	
 	public UITopicPoll() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 
 	@SuppressWarnings("unused")

@@ -71,7 +71,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		}
 )
 public class UIForumForm extends UIForm implements UIPopupComponent, UISelector {
-	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private boolean isCategoriesUpdate = true;
 	private boolean isForumUpdate = false;
 	private boolean isMode = false;
@@ -99,7 +99,9 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public static final String FIELD_TOPICABLE_MULTIVALUE = "Topicable" ;
 	
 	@SuppressWarnings("unchecked")
-	public UIForumForm() throws Exception {}
+	public UIForumForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	}
 
 	public boolean isMode() {return isMode;}
 	public void setMode(boolean isMode) {this.isMode = isMode;}

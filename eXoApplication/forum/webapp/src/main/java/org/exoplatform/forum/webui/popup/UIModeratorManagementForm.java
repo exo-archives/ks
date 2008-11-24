@@ -36,7 +36,6 @@ import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -76,7 +75,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
     }
 )
 public class UIModeratorManagementForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
 	private String[] permissionUser = null;
   private JCRPageList userPageList ;
@@ -84,7 +83,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private UserProfile userProfile = new UserProfile();
 	private List<ForumLinkData> forumLinks = null;
   private List<String> listModerate = new ArrayList<String>();
-	private List<User> listUser = null;
 	public static final String FIELD_USERPROFILE_FORM = "ForumUserProfile" ;
 	public static final String FIELD_USEROPTION_FORM = "ForumUserOption" ;
 	public static final String FIELD_USERBAN_FORM = "ForumUserBan" ;
@@ -118,6 +116,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private String valueSearch = null;
   
 	public UIModeratorManagementForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
 		addChild(new UIFormStringInput(FIELD_SEARCH_USER, FIELD_SEARCH_USER, null));
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
@@ -134,12 +133,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	
   @SuppressWarnings("unused")
   public void setPageListUserProfile() throws Exception {
-  	/*if(listUser == null) {
-  		listUser = ForumSessionUtils.getAllUser() ;
-  	}
-    for (User user : listUser) {
-      UserProfile userProfile = this.forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), user.getUserName(), true, true, false) ;
-    }*/
   	userPageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
   	userPageList.setPageSize(5);
   	this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;  	
@@ -164,27 +157,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   		this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getPageSelected());
   		valueSearch = null;
   	}
-  	/*int i =0, j = 0;
-  	for (UserProfile userProfile : listUserProfile) {
-  		boolean isDefaulAdmin = this.forumService.isAdminRole(userProfile.getUserId()) ;
-  		if(isDefaulAdmin) userProfile.setUserRole((long)0);
-  		if(isDefaulAdmin && userProfile.getUserTitle().equals(Utils.GUEST)) userProfile.setUserTitle(Utils.ADMIN);
-  		if(userProfile.getUser() == null) {
-	  		for (User user : listUser) {
-		      if(user.getUserName().equals(userProfile.getUserId())) {
-			  		userProfile.setUser(user);
-			  		userProfile.setLastLoginDate(user.getLastLoginTime());
-			  		this.userProfiles.add(userProfile);
-			  		++j;
-			  		break ;
-		      }
-	      }
-  		} else {
-  			++j;
-  			this.userProfiles.add(userProfile);
-  		}
-  		++ i;
-    }*/
   }
   
   private UserProfile getUserProfile(String userId) throws Exception {

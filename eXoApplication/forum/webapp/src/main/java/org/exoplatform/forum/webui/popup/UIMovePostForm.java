@@ -58,12 +58,13 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIMovePostForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String topicId ;
 	private List<Post> posts ;
 	private UserProfile userProfile ;
 	private List<Category> categories;
 	public UIMovePostForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 	
 	public void activate() throws Exception {}

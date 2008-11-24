@@ -135,7 +135,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		}
 )
 public class UITopicDetail extends UIForumKeepStickPageIterator {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String categoryId ;
 	private String forumId ; 
 	private String topicId = "";
@@ -160,6 +160,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;

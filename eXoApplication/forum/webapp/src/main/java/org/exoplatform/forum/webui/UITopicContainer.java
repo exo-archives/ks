@@ -99,7 +99,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 	}
 )
 public class UITopicContainer extends UIForumKeepStickPageIterator {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String forumId = "";
 	private String categoryId = "";
 	private Forum forum;
@@ -118,6 +118,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	public void setLogin(boolean isLogin) {this.isLogin = isLogin;}
 
 	public UITopicContainer() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
@@ -204,11 +205,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unused")
-	private JCRPageList getPageTopics() throws Exception {
-		return pageList ;
-	}
-	
-	@SuppressWarnings("unused")
 	private String[] getActionMenuForum() throws Exception {
 		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "WatchOption"};
 		return actions;
@@ -278,6 +274,27 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return pageListPost;
 	}
 	
+	@SuppressWarnings("unused")
+  private long getSizePost(String topicId) throws Exception {
+		String isApprove = "" ;
+		String isHidden = "" ;
+		String userLogin = this.userProfile.getUserId();
+		Topic topic = getTopic(topicId) ;
+		long role = this.userProfile.getUserRole() ;
+		if(role >=2){ isHidden = "false" ;}
+		if(role == 1) {
+			if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
+				isHidden = "false" ;
+			}
+		}
+		if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
+			if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
+		}
+		long availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, userLogin)	; 
+		long maxPost = getUserProfile().getMaxPostInPage() ;
+		if(maxPost > 0) this.maxPost = maxPost ;
+		return availablePost/this.maxPost;
+	}
 	
 	@SuppressWarnings("unused")
 	private String[] getStarNumber(Topic topic) throws Exception {

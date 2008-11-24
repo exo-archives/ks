@@ -17,10 +17,7 @@
 package org.exoplatform.forum.service.impl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +30,6 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.Category;
@@ -116,7 +112,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 
 	public void stop() {}
 	
-	public void updateForumStatistic(SessionProvider systemSession) throws Exception{
+	@SuppressWarnings("unchecked")
+  public void updateForumStatistic(SessionProvider systemSession) throws Exception{
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
   	List<User> userList = pageList.getAll() ;
@@ -127,7 +124,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   	saveForumStatistic(systemSession, forumStatistic) ;  	
 	}
 	
-	private void initUserProfile (SessionProvider sysSession) throws Exception  {
+	@SuppressWarnings("unchecked")
+  private void initUserProfile (SessionProvider sysSession) throws Exception  {
 		Node profileHome = storage_.getUserProfileHome(sysSession) ;
 		if(profileHome.getNodes().getSize() == 0) {
   		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
@@ -142,7 +140,6 @@ public class ForumServiceImpl implements ForumService, Startable{
 	public void createUserProfile (SessionProvider sysSession, String userId) throws Exception  {
 		Node profileHome = storage_.getUserProfileHome(sysSession) ;  	
 		if(!profileHome.hasNode(userId)){
-			System.out.println("\n\n Creating profile of user: " + userId);
   		Node profile = profileHome.addNode(userId, "exo:userProfile") ;
   		profile.setProperty("exo:joinedDate", storage_.getGreenwichMeanTime()) ;
   		if(isAdminRole(userId)) {
@@ -158,9 +155,7 @@ public class ForumServiceImpl implements ForumService, Startable{
     	}else {
     		profileHome.save() ;
     	}
-  		System.out.println("\n\n property role: " );
 		}
-  	  	
 	}
 	
 	
@@ -228,7 +223,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
-    return storage_.getPageTopic(sProvider, categoryId, forumId, strQuery, strOrderBy);
+  	return storage_.getPageTopic(sProvider, categoryId, forumId, strQuery, strOrderBy);
   }
 
   public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
@@ -247,11 +242,14 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getPost(sProvider, categoryId, forumId, topicId, postId);
   }
 
-  public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, 
-      String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
+  public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
     return storage_.getPosts(sProvider, categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
   }
 
+  public long getAvailablePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
+    return storage_.getAvailablePost(sProvider, categoryId, forumId, topicId, isApproved, isHidden, userLogin);
+  }
+  
   public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
     storage_.savePost(sProvider, categoryId, forumId, topicId, post, isNew, defaultEmailContent);
   }

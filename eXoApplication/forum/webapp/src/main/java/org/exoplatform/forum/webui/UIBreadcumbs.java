@@ -54,7 +54,7 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIBreadcumbs extends UIContainer {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
 	private List<String> path_ = new ArrayList<String>();
 	private String forumHomePath_ ;
@@ -65,6 +65,7 @@ public class UIBreadcumbs extends UIContainer {
 	private boolean isOpen = true;
 	//	private String[] path = new String[]{};
 	public UIBreadcumbs()throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 		path_.add(FORUM_SERVICE) ;

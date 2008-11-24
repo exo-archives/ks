@@ -63,11 +63,12 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIPageListTopicByUser extends UIContainer{
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private List<Topic> topics = new ArrayList<Topic>() ;
 	private UserProfile userProfile ;
 	private String userName = new String() ;
 	public UIPageListTopicByUser() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "PageListTopicByUser") ;
 	}
 	

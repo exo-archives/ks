@@ -72,3 +72,11 @@
 	cursor: pointer;
 	color: #135bbe;
 }
+/*---------------------------------UIViewPrivateMessageForm--------------------------------------*/
+.UIForumPortlet .UIViewPrivateMessageForm {
+	background-color: #ffffff;
+	border: solid 1px red;
+	padding: 0px;
+	width: 90%;
+	margin: auto;
+}

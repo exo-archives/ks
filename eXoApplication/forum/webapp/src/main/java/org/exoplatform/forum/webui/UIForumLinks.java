@@ -52,13 +52,15 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIForumLinks extends UIForm {
-	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	public static final String FIELD_FORUMLINK_SELECTBOX = "forumLink" ;
 	public static final String FIELD_FORUMHOMEPAGE_LABEL = "forumHomePage" ;
 	private String path	= Utils.FORUM_SERVICE;
 	private List<ForumLinkData> forumLinks = null;
 	private UserProfile userProfile = new UserProfile();
-	public UIForumLinks() throws Exception {}
+	public UIForumLinks() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	}
 	
 	
 	private String getStrQuery(List<String> list, String property){

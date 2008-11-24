@@ -61,7 +61,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 		}
 )
 public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UISelector {
-	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private UserProfile userProfile ;
 	private String userName ;
 	private int id = 0;
@@ -73,6 +73,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 	public static final String FIELD_REPLY_LABEL = "Reply" ;
 	public static final String FIELD_FORWARD_LABEL = "Forward" ;
 	public UIPrivateMessageForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormTextAreaInput SendTo = new UIFormTextAreaInput(FIELD_SENDTO_TEXTAREA, FIELD_SENDTO_TEXTAREA, null);
 		SendTo.addValidator(MandatoryValidator.class);
 		UIFormStringInput MailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);

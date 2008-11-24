@@ -41,7 +41,6 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 	 template = "app:/templates/forum/webui/UIForumPortlet.gtmpl"
 )
 public class UIForumPortlet extends UIPortletApplication {
-	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private boolean isCategoryRendered = true;
 	private boolean isForumRendered = false;
 	private boolean isTagRendered = false;
@@ -133,6 +132,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		}
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
+			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			this.userProfile = forumService.getUserProfile(sProvider, userId, true, true, isLogin) ;
 		}finally {
 			sProvider.close();

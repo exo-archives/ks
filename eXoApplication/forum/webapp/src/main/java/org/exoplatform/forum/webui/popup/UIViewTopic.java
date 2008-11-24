@@ -57,12 +57,13 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIViewTopic extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private Topic topic ;
 	private JCRPageList pageList ;
 	private UserProfile userProfile ;
 	private long pageSelect ;
 	public UIViewTopic() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator") ;
 	}
 	public void activate() throws Exception {	}

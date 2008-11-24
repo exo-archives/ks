@@ -58,10 +58,11 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String categoryId, forumId ;
 	private List<Topic> topics ;
 	public UIPageListTopicUnApprove() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"ApproveTopic","Cancel"});
 	}
 	public void activate() throws Exception {	}

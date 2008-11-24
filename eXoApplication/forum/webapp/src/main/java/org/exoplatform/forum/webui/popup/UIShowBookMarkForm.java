@@ -70,7 +70,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
-	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	ForumService forumService ;
 	private UserProfile userProfile ;
 	private boolean isOpen = true;
 	public final String BOOKMARK_ITERATOR = "BookmarkPageIterator";
@@ -79,6 +79,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	private List<String> bookMarks = new ArrayList<String>();
 	private String []bookMark = new String[]{}; 
 	public UIShowBookMarkForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		pageIterator = addChild(UIForumPageIterator.class, null, BOOKMARK_ITERATOR);
 	}
 	

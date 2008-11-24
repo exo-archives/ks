@@ -55,10 +55,11 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UITagManagerForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private List<Tag> tags = new ArrayList<Tag>();
 	private boolean isGetTag = true;
 	public UITagManagerForm() {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
   }
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}

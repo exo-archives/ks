@@ -75,7 +75,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 		}
 )
 public class UIPostForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	public static final String FIELD_POSTTITLE_INPUT = "PostTitle" ;
 	public static final String FIELD_EDITREASON_INPUT = "editReason" ;
 	//public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
@@ -103,6 +103,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private boolean isMP = false ;
 	private String link = "";
 	public UIPostForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
 		postTitle.addValidator(MandatoryValidator.class);
 		UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);

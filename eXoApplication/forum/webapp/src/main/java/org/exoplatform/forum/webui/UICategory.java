@@ -85,10 +85,11 @@ public class UICategory extends UIForm	{
 	private Category category ;
 	private boolean	isEditCategory = false ;
 	private boolean	isEditForum = false ;
-	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private	ForumService forumService ;
 	private List<Forum> forums = new ArrayList<Forum>() ;
 	private Map<String, Topic> MaptopicLast =new HashMap<String, Topic>(); 
 	public UICategory() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 	}
 	

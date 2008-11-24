@@ -60,7 +60,7 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UICategories extends UIContainer	{
-	protected ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	protected ForumService forumService ;
 	private Map<String, List<Forum>> mapListForum = new HashMap<String, List<Forum>>() ;
 	private Map<String, Topic> maptopicLast = new HashMap<String, Topic>() ;
 	private List<Category> categoryList = new ArrayList<Category>() ;
@@ -70,6 +70,7 @@ public class UICategories extends UIContainer	{
 	private boolean isRenderChild = false ;
 	private UserProfile userProfile ;
 	public UICategories() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
 	}
 	

@@ -66,7 +66,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 )
 
 public class UITopicsTag extends UIForumKeepStickPageIterator {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String tagId = "" ;
 	private JCRPageList listTopic ;
 	private List<Topic> topics ;
@@ -78,6 +78,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private boolean isUpdateTopicTag = true ;
 	private UserProfile userProfile = null;
 	public UITopicsTag() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 	
 	public void setIdTag(String tagId) throws Exception {

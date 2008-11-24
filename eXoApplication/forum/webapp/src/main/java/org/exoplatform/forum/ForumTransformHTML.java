@@ -71,7 +71,7 @@ public class ForumTransformHTML {
 		b = StringUtils.replace(b, "[/b]", "</b>");
 		b = StringUtils.replace(b, "[i]", "<i>");
 		b = StringUtils.replace(b, "[/i]", "</i>");
-		b = StringUtils.replace(b, "[link]", "[url]");
+		b = StringUtils.replace(b, "[link", "[url");
 		b = StringUtils.replace(b, "[/link]", "[/url]");
 		b = StringUtils.replace(b, "&quot;", "\"");
 		// Need to get the text inbetween img's
@@ -252,6 +252,7 @@ public class ForumTransformHTML {
 				int clsUrl = urlStr.indexOf("]");
 				String css = urlStr.substring(fstb, urlStr.indexOf("]", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
 				buffer.append("<div class='").append(css).append("'>").append(text).append("</div>");
 				b = StringUtils.replace(b, "[css:" + css + "]" + text + "[/css]", buffer.toString());
@@ -284,6 +285,7 @@ public class ForumTransformHTML {
 				int clsUrl = urlStr.indexOf("]");
 				String userName = urlStr.substring(fstb, urlStr.indexOf("]", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
 				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>Originally Posted by <strong>").append(userName).append(
@@ -301,6 +303,7 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/quote]", tagIndex);
 				String text = b.substring(tagIndex + 7, clsIndex);
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
 				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>").append(text).append("</div></div>");
@@ -317,6 +320,7 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/code]", tagIndex);
 				String text = b.substring(tagIndex + 6, clsIndex);
+				if(text == null || text.trim().length() == 0) continue;
 				String text_ = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&nbsp;", "&#32");
 				buffer = new StringBuffer();
 				buffer.append("<div>Code:</div><div class=\"ClassCode\">");
@@ -420,7 +424,7 @@ public class ForumTransformHTML {
 				 .replaceAll(">>http://", ">http://").replaceAll("> http://", ">http://");
 		return s;
 	}
-
+	
 	public static String clearQuote(String s) {
 		if (s == null || s.length() <= 0)
 			return "";
@@ -467,7 +471,14 @@ public class ForumTransformHTML {
 		// }
 		return s;
 	}
-	
+	public static String autoAddUser(String s) {
+		String tmp = s;
+	  for (int i = 0; i < 400; i++) {
+	  	String t = tmp.replaceFirst("testUser", "testUser" + i);
+	    s = s + "<br/>" + t;
+    }
+		return s;
+  }
 	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
 		if(s != null) {

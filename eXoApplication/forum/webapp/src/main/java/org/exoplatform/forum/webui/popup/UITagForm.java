@@ -57,7 +57,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UITagForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	@SuppressWarnings("unused")
 	private String IdSelected = "";
 	private String topicPath = "";
@@ -65,6 +65,7 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 	private boolean isUpdateList = true ;
 	List<Tag> tags_ = new ArrayList<Tag>() ;
 	public UITagForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 
 	public void activate() throws Exception {

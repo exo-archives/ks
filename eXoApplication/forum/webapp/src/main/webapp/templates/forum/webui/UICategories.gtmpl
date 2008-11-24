@@ -2,7 +2,6 @@
 	import org.exoplatform.forum.service.Category; 
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
-	import org.exoplatform.forum.service.Post; 
 	import org.exoplatform.forum.service.ForumServiceUtils ;
 	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumUtils;
