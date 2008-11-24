@@ -48,7 +48,7 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	private UserProfile userProfileLogin ;
 	private ForumContact contact = null;
-	
+	private ForumService forumService ;
 	
 	public ForumContact getContact(String userId) throws Exception {
 		if(contact == null) {
@@ -62,12 +62,16 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	}
 
 	public UIViewUserProfile() {
-		
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 
 	@SuppressWarnings("unused")
+  private boolean isAdmin(String userId) throws Exception {
+  	return forumService.isAdminRole(userId);
+  }
+	
+	@SuppressWarnings("unused")
 	private boolean isOnline(String userId) throws Exception {
-		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		return forumService.isOnline(userId) ;
 	}
 	

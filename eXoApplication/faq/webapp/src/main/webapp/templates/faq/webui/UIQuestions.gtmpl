@@ -13,7 +13,7 @@
 	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
-	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
+	jsmanager.addJavascript("setTimeout('eXo.faq.UIFAQPortlet.loadScroll()', 2000);") ;
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
 	<div class="FAQToolbar">

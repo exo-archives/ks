@@ -2491,7 +2491,7 @@ public class JCRDataStorage {
 			if (userProfileNode.hasProperty("exo:email"))
 				userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
 			if(isAdminRole(userName)) {
-				userProfile.setUserRole((long)0);				
+				userProfile.setUserRole((long)0);
 			} else {
 				if (newProfileNode.hasProperty("exo:userRole"))
 					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());

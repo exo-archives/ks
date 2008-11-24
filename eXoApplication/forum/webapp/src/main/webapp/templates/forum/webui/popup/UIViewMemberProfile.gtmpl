@@ -54,12 +54,14 @@
 							<div class="MemberContent">
 							<%	
 								boolean isDisplayAvatar = userProfile.getIsDisplayAvatar(); 
+								String userTitle = userProfile.getUserTitle();
+								if((userProfile.getUserRole() == 3 || userTitle.equals("Guest")) && uicomponent.isAdmin(userName)) userTitle = "Administrator";
 								if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
 								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
 								<% } %>
-								<div class="Rank"><%=userProfile.getUserTitle();%></div>
+								<div class="Rank">$userTitle</div>
 								<div class="InfoMember">
 									<div>Join Date: $createdDate</div>
 									<% if(totalPost > 0) { 
@@ -97,11 +99,9 @@
 										mobile		 = contact.getMobile();
 										siteOfUser = contact.getWebSite() ;
 									}
-									if(user != null){
-										firstName = userProfile.getFirstName();
-										lastName	= userProfile.getLastName() ;
-										email		 = "<a target=\"_blank\" href=\"mailto:"+userProfile.getEmail()+"\">"+userProfile.getEmail()+"</a>" ;
-									}
+									firstName = userProfile.getFirstName();
+									lastName	= userProfile.getLastName() ;
+									email		 = "<a target=\"_blank\" href=\"mailto:"+userProfile.getEmail()+"\">"+userProfile.getEmail()+"</a>" ;
 									if(!ForumUtils.isEmpty(siteOfUser)) {
 										siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
 									}

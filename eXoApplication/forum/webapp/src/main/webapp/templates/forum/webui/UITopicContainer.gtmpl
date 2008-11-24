@@ -3,7 +3,6 @@
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.service.Forum ;
-	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.webui.UICategory ;
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
