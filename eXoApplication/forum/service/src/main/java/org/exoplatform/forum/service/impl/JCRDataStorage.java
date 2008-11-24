@@ -2514,7 +2514,7 @@ public class JCRDataStorage {
 			if (newProfileNode.hasProperty("exo:lastLoginDate"))
 				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:joinedDate"))
-				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:joinedDate").getDate().getTime());
+				userProfile.setJoinedDate(newProfileNode.getProperty("exo:joinedDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:lastPostDate"))
 				userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:isDisplaySignature"))
@@ -2620,7 +2620,7 @@ public class JCRDataStorage {
 			if (newProfileNode.hasProperty("exo:lastLoginDate"))
 				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:joinedDate"))
-				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:joinedDate").getDate().getTime());
+				userProfile.setJoinedDate(newProfileNode.getProperty("exo:joinedDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:lastPostDate"))
 				userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
 			if (newProfileNode.hasProperty("exo:isDisplaySignature"))

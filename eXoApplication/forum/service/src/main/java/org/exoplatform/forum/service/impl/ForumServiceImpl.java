@@ -143,6 +143,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   		Node profile = profileHome.addNode(userId, "exo:userProfile") ;
   		profile.setProperty("exo:joinedDate", storage_.getGreenwichMeanTime()) ;
   		if(isAdminRole(userId)) {
+//  			System.out.println("\n\nAdmin: " + userId);
   			profile.setProperty("exo:userTitle", "Administrator") ;
     		profile.setProperty("exo:userRole", 0) ;
   		}else {
@@ -422,9 +423,9 @@ public class ForumServiceImpl implements ForumService, Startable{
     onlineUsers_.put(userId, true) ;
     SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
     try {
-    	Node userProfile = storage_.getUserProfileHome(sysProvider).getNode(userId);
-      userProfile.setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
-      userProfile.save() ;
+    	Node userProfileHome = storage_.getUserProfileHome(sysProvider); 
+    	userProfileHome.getNode(userId).setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
+      userProfileHome.save() ;
     }catch(Exception e) {
     	e.printStackTrace() ;
     }finally {
