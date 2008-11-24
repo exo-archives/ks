@@ -20,6 +20,7 @@ package org.exoplatform.forum;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -170,7 +171,7 @@ public class ForumTransformHTML {
 				int fstb = urlStr.indexOf("=");
 				int clsUrl = urlStr.indexOf("]");
 				String href = urlStr.substring(fstb + 1, clsUrl);
-				String href_ = href;
+				String href_ = href.trim();
 				if (href.indexOf("\"") >= 0)
 					href_ = href.replaceAll("\"", "");
 				String text = urlStr.substring(clsUrl + 1);
@@ -207,7 +208,7 @@ public class ForumTransformHTML {
 				int fstb = urlStr.indexOf("=");
 				int clsUrl = urlStr.indexOf("]");
 				String href = urlStr.substring(fstb + 1, clsUrl);
-				String href_ = href;
+				String href_ = href.trim();
 				if (href.indexOf("\"") >= 0)
 					href_ = href.replaceAll("\"", "");
 				String text = urlStr.substring(clsUrl + 1);
@@ -226,7 +227,7 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/email]", tagIndex);
 				String src = b.substring(tagIndex + 7, clsIndex);
-				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()	+ "\">" + src.trim() + "</a>");
+				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()	+ "\">" + src + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -346,7 +347,7 @@ public class ForumTransformHTML {
 				String href = urlStr.substring(fstb + 1, urlStr.indexOf("\"", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
 				b = StringUtils.replace(b, "[goto=\"" + href + "\"]" + text + "[/goto]", "<a href=\""
-				    + href + "\">" + text + "</a>");
+				    + href.trim() + "\">" + text + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -414,14 +415,11 @@ public class ForumTransformHTML {
 		if (s == null || s.length() <= 0)
 			return link;
 		s = transform(s);
-		s = s.replaceAll(
-		    "[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
-		    "<a target=\"blank_\" href=\"$0\">$0</a>");
+		s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)( )(https?|ftp)", "$1$3")
+				 .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
 //		s = s.replaceAll(
 //		    "[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
 //		    "<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
-		s = s.replaceAll("href=\" http://", "href=\"http://").replaceAll("href=\">http://", "href=\"http://")
-				 .replaceAll(">>http://", ">http://").replaceAll("> http://", ">http://");
 		return s;
 	}
 	
