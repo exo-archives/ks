@@ -98,7 +98,7 @@
 
 .PortletDecoration .HomePortletAdBackround {
 	background: white ;
-	padding: 8px;
+	padding: 18px 0px 18px 0px;
 }
 
 .PortletDecoration .PortletDecorationBL {
@@ -234,7 +234,7 @@
 .SideBar .DownloadButton{
 	background: #f1f1f1 url('DefaultSkin/background/DownloadButton.gif') no-repeat ;
 	width: 192px; height: 89px;
-	margin:18px 0px 0px 0px;
+	margin:0px 0px 8px 5px;
 }
 
 .SideBar .ArowIcon{
@@ -252,7 +252,7 @@
 .SideBar .LeftButton {
 	background: url('DefaultSkin/background/LeftButton17x33.gif') no-repeat left;
 	padding-left: 17px;
-	margin: 10px;
+	margin: 8px 12px 0px 12px;
 }
 
 .SideBar .RightButton {
