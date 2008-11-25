@@ -176,7 +176,11 @@ public class JCRDataStorage {
 		forumAdminNode.setProperty("exo:topicSortByType", forumAdministration.getTopicSortByType());
 		forumAdminNode.setProperty("exo:censoredKeyword", forumAdministration.getCensoredKeyword());
 		forumAdminNode.setProperty("exo:notifyEmailContent", forumAdministration.getNotifyEmailContent());
-		forumHomeNode.getSession().save();
+		if(forumAdminNode.isNew()) {
+			forumAdminNode.getSession().save();
+		} else {
+			forumAdminNode.save();
+		}
 	}
 
 	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception {
@@ -349,7 +353,11 @@ public class JCRDataStorage {
 		catNode.setProperty("exo:modifiedBy", category.getModifiedBy());
 		catNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
 		catNode.setProperty("exo:userPrivate", category.getUserPrivate());
-		forumHomeNode.getSession().save();
+		if(catNode.isNew()){
+			catNode.getSession().save();
+		} else {
+			catNode.save();
+		}
 	}
 
 	public Category removeCategory(SessionProvider sProvider, String categoryId) throws Exception {
@@ -381,7 +389,11 @@ public class JCRDataStorage {
 			forumStatistic.setProperty("exo:postCount", count);
 
 			categoryNode.remove();
-			forumHomeNode.getSession().save();
+			if(forumHomeNode.isNew()){
+				forumHomeNode.getSession().save();
+			} else {
+				forumHomeNode.save();
+			}
 			return category;
 		} catch (PathNotFoundException e) {
 			return null;
@@ -455,7 +467,11 @@ public class JCRDataStorage {
 			default:
 				break;
 			}
-			forumHomeNode.getSession().save();
+			if(forumNode.isNew()){
+				forumNode.getSession().save();
+			} else {
+				forumNode.save();
+			}
 		} catch (RepositoryException e) {
 			e.printStackTrace();
 		}
@@ -521,7 +537,11 @@ public class JCRDataStorage {
 					}
 				}
 			}
-			forumHomeNode.getSession().save();
+			if(catNode.isNew()){
+				catNode.getSession().save();
+			} else {
+				catNode.save();
+			}
 			if (isModerateTopic != isNewModerateTopic) {
 				queryLastTopic(sProvider, forumNode.getPath());
 			}
@@ -560,7 +580,11 @@ public class JCRDataStorage {
 							userProfileNode.setProperty("exo:moderateForums", strings);
 							userProfileNode.setProperty("exo:userRole", 1);
 							userProfileNode.setProperty("exo:userTitle", Utils.MODERATOR);
-							userProfileHomeNode.save();
+							if(userProfileNode.isNew()){
+								userProfileNode.getSession().save();
+							} else {
+								userProfileNode.save();
+							}
 						}
 					}
 				}
@@ -598,7 +622,11 @@ public class JCRDataStorage {
 						}
 					}
 				}
-				userProfileHomeNode.getSession().save();
+				if(userProfileHomeNode.isNew()){
+					userProfileHomeNode.getSession().save();
+				} else {
+					userProfileHomeNode.save();
+				}
 			}
 		} catch (PathNotFoundException e) {
 		}
@@ -654,7 +682,11 @@ public class JCRDataStorage {
 				e.printStackTrace();
 			}
 		}
-		forumHomeNode.getSession().save();
+		if(forumHomeNode.isNew()){
+			forumHomeNode.getSession().save();
+		} else {
+			forumHomeNode.save();
+		}
 	}
 
 	private Forum getForum(Node forumNode) throws Exception {
@@ -727,7 +759,11 @@ public class JCRDataStorage {
 			if (count < 0)
 				count = 0;
 			forumStatistic.setProperty("exo:postCount", count);
-			forumHomeNode.getSession().save();
+			if(forumHomeNode.isNew()){
+				forumHomeNode.getSession().save();
+			} else {
+				forumHomeNode.save();
+			}
 			String[] moderators = forum.getModerators();
 			Node userProfileHomeNode = getUserProfileHome(sProvider);
 			Node userProfileNode;
@@ -750,7 +786,11 @@ public class JCRDataStorage {
 					e.printStackTrace();
 				}
 			}
-			userProfileHomeNode.getSession().save();
+			if(userProfileHomeNode.isNew()){
+				userProfileHomeNode.getSession().save();
+			} else {
+				userProfileHomeNode.save();
+			}
 			return forum;
 		} catch (PathNotFoundException e) {
 			return null;
@@ -803,7 +843,11 @@ public class JCRDataStorage {
 		if (newCatNode.hasProperty("exo:forumCount"))
 			forumCount = newCatNode.getProperty("exo:forumCount").getLong() + forumCount;
 		newCatNode.setProperty("exo:forumCount", forumCount);
-		forumHomeNode.getSession().save();
+		if(forumHomeNode.isNew()){
+			forumHomeNode.getSession().save();
+		} else {
+			forumHomeNode.save();
+		}
 	}
 
 	private void setActiveTopicByForum(SessionProvider sProvider, Node forumNode, boolean isClosed) throws Exception {
@@ -817,7 +861,11 @@ public class JCRDataStorage {
 				setActivePostByTopic(sProvider, topicNode, isClosed);
 			}
 		}
-		getForumHomeNode(sProvider).getSession().save();
+		if(forumNode.isNew()){
+			forumNode.getSession().save();
+		} else {
+			forumNode.save();
+		}
 	}
 
 	private void setActivePostByTopic(SessionProvider sProvider, Node topicNode, boolean isActiveTopic) throws Exception {
@@ -837,7 +885,11 @@ public class JCRDataStorage {
 				postNode.setProperty("exo:isActiveByTopic", isActiveTopic);
 			}
 		}
-		getForumHomeNode(sProvider).getSession().save();
+		if(topicNode.isNew()){
+			topicNode.getSession().save();
+		} else {
+			topicNode.save();
+		}
 	}
 
 	// Old: SessionProvider sProvider, String categoryId, String forumId, String
@@ -906,9 +958,7 @@ public class JCRDataStorage {
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		try {
-			Node CategoryNode = forumHomeNode.getNode(categoryId);
-			Node forumNode = CategoryNode.getNode(forumId);
-			Node topicNode = forumNode.getNode(topicId);
+			Node topicNode = forumHomeNode.getNode(categoryId + "/" + forumId + "/" + topicId);
 			Topic topicNew = new Topic();
 			topicNew = getTopicNode(topicNode);
 			// setViewCount for Topic
@@ -916,9 +966,12 @@ public class JCRDataStorage {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
 				saveUserReadTopic(sProvider, userRead, topicId, true);
+				if(topicNode.isNew()){
+					topicNode.getSession().save();
+				} else {
+					topicNode.save();
+				}
 			}
-			// forumHomeNode.save() ;
-			forumHomeNode.getSession().save();
 			return topicNew;
 		} catch (PathNotFoundException e) {
 			return null;
@@ -979,7 +1032,11 @@ public class JCRDataStorage {
 			if (!isSavePath) {
 				forumNode.setProperty("exo:lastTopicPath", "");
 			}
-			forumHomeNode.getSession().save();
+			if(forumNode.isNew()){
+				forumNode.getSession().save();
+			} else {
+				forumNode.save();
+			}
 		} catch (RepositoryException e) {
 			e.printStackTrace();
 			return null;
@@ -1191,7 +1248,11 @@ public class JCRDataStorage {
 				default:
 					break;
 				}
-				forumHomeNode.getSession().save();
+				if(topicNode.isNew()){
+					topicNode.getSession().save();
+				} else {
+					topicNode.save();
+				}
 				if (type != 2 && type != 4 && type < 7) {
 					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
 				}
@@ -1202,8 +1263,7 @@ public class JCRDataStorage {
 
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		Node CategoryNode = forumHomeNode.getNode(categoryId);
-		Node forumNode = CategoryNode.getNode(forumId);
+		Node forumNode = forumHomeNode.getNode(categoryId + "/" + forumId);
 		Node topicNode;
 		if (isNew) {
 			topicNode = forumNode.addNode(topic.getId(), "exo:topic");
@@ -1272,8 +1332,12 @@ public class JCRDataStorage {
 		topicNode.setProperty("exo:userVoteRating", topic.getUserVoteRating());
 		topicNode.setProperty("exo:voteRating", topic.getVoteRating());
 		topicNode.setProperty("exo:numberAttachments", topic.getNumberAttachment());
-		// forumHomeNode.save() ;
-		forumHomeNode.getSession().save();
+		// forumNode.save() ;
+		if(forumNode.isNew()) {
+			forumNode.getSession().save();
+		} else {
+			forumNode.save();
+		}
 		if (!isMove) {
 			if (isNew) {
 				// createPost first
@@ -1313,8 +1377,7 @@ public class JCRDataStorage {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Topic topic = new Topic();
 		try {
-			Node CategoryNode = forumHomeNode.getNode(categoryId);
-			Node forumNode = CategoryNode.getNode(forumId);
+			Node forumNode = forumHomeNode.getNode(categoryId + "/" +forumId);
 			topic = getTopic(sProvider, categoryId, forumId, topicId, Utils.GUEST);
 			String owner = topic.getOwner();
 			Node userProfileNode = getUserProfileHome(sProvider);
@@ -1322,6 +1385,11 @@ public class JCRDataStorage {
 				Node newProfileNode = userProfileNode.getNode(owner);
 				if (newProfileNode.hasProperty("exo:totalTopic")) {
 					newProfileNode.setProperty("exo:totalTopic", newProfileNode.getProperty("exo:totalTopic").getLong() - 1);
+					if(newProfileNode.isNew()) {
+						newProfileNode.getSession().save();
+					} else {
+						newProfileNode.save();
+					}
 				}
 			} catch (PathNotFoundException e) {
 			}
@@ -1356,7 +1424,11 @@ public class JCRDataStorage {
 			forumStatistic.setProperty("exo:postCount", newPostCount);
 			forumNode.getNode(topicId).remove();
 			// forumHomeNode.save() ;
-			forumHomeNode.getSession().save();
+			if(forumNode.isNew()) {
+				forumNode.getSession().save();
+			} else {
+				forumNode.save();
+			}
 			return topic;
 		} catch (PathNotFoundException e) {
 			return null;
@@ -1400,8 +1472,11 @@ public class JCRDataStorage {
 			srcForumNode.setProperty("exo:postCount", tmp);
 			destForumNode.setProperty("exo:postCount", destForumNode.getProperty("exo:postCount").getLong() + topicPostCount);
 		}
-		// forumHomeNode.save() ;
-		forumHomeNode.getSession().save();
+		if(forumHomeNode.isNew()) {
+			forumHomeNode.getSession().save();
+		} else {
+			forumHomeNode.save();
+		}
 	}
 
 	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
@@ -1513,21 +1588,10 @@ public class JCRDataStorage {
 	public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		try {
-			Node CategoryNode = forumHomeNode.getNode(categoryId);
-			try {
-				Node forumNode = CategoryNode.getNode(forumId);
-				Node topicNode = forumNode.getNode(topicId);
-				try {
-					Node postNode = topicNode.getNode(postId);
-					Post postNew = new Post();
-					postNew = getPost(postNode);
-					return postNew;
-				} catch (PathNotFoundException e) {
-					return null;
-				}
-			} catch (PathNotFoundException e) {
-				return null;
-			}
+			Node postNode = forumHomeNode.getNode(categoryId + "/" + forumId + "/" + topicId + "/" + postId);
+			Post postNew = new Post();
+			postNew = getPost(postNode);
+			return postNew;
 		} catch (PathNotFoundException e) {
 			return null;
 		}
@@ -1637,7 +1701,11 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:totalPost", 1);
 			}
 			newProfileNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
-			userProfileNode.getSession().save();
+			if(userProfileNode.isNew()) {
+				userProfileNode.getSession().save();
+			} else {
+				userProfileNode.save();
+			}
 		} else {
 			postNode = topicNode.getNode(post.getId());
 		}
@@ -1753,8 +1821,11 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
 		}
 		postNode.setProperty("exo:numberAttach", numberAttach);
-		// forumHomeNode.save() ;
-		forumHomeNode.getSession().save();
+		if(forumNode.isNew()) {
+			forumNode.getSession().save();
+		} else {
+			forumNode.save();
+		}
 	}
 
 	private void sendNotification(Node forumHomeNode, Node node, Topic topic, Post post, String defaultEmailContent, boolean isApprovePost) throws Exception {
@@ -1923,7 +1994,6 @@ public class JCRDataStorage {
 	
 	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		Node userProfileNode = getUserProfileHome(sProvider);
 		for (Post post : posts) {
 			try {
 				boolean isGetLastPost = false;
@@ -1981,8 +2051,11 @@ public class JCRDataStorage {
 					topicNode.setProperty("exo:postCount", topicPostCount + 1);
 					forumNode.setProperty("exo:postCount", forumPostCount + 1);
 				}
-				forumHomeNode.getSession().save();
-				userProfileNode.getSession().save();
+				if(forumNode.isNew()) {
+					forumNode.getSession().save();
+				} else {
+					forumNode.save();
+				}
 				if (isGetLastPost)
 					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
 			} catch (PathNotFoundException e) {
@@ -2092,7 +2165,11 @@ public class JCRDataStorage {
 				else
 					postCount = 0;
 				forumStatistic.setProperty("exo:postCount", postCount);
-				forumHomeNode.getSession().save();
+				if(forumNode.isNew()) {
+					forumNode.getSession().save();
+				} else {
+					forumNode.save();
+				}
 				return post;
 			} catch (PathNotFoundException e) {
 				return null;
@@ -2164,8 +2241,11 @@ public class JCRDataStorage {
 			temp = 0;
 		srcForumNode.setProperty("exo:postCount", temp);
 		
-		forumHomeNode.save();
-		forumHomeNode.getSession().save();
+		if(forumHomeNode.isNew()) {
+			forumHomeNode.getSession().save();
+		} else {
+			forumHomeNode.save();
+		}
 	}
 
 	public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
@@ -2228,7 +2308,11 @@ public class JCRDataStorage {
 				String pollId = topicId.replaceFirst(Utils.TOPIC, Utils.POLL);
 				topicNode.getNode(pollId).remove();
 				topicNode.setProperty("exo:isPoll", false);
-				forumHomeNode.getSession().save();
+				if(topicNode.isNew()) {
+					topicNode.getSession().save();
+				} else {
+					topicNode.save();
+				}
 				return poll;
 			} catch (PathNotFoundException e) {
 				return null;
@@ -2278,7 +2362,11 @@ public class JCRDataStorage {
 					pollNode.setProperty("exo:isClosed", poll.getIsClosed());
 					pollNode.setProperty("exo:isAgainVote", poll.getIsAgainVote());
 				}
-				forumHomeNode.getSession().save();
+				if(topicNode.isNew()) {
+					topicNode.getSession().save();
+				} else {
+					topicNode.save();
+				}
 			} catch (PathNotFoundException e) {
 			}
 		} catch (PathNotFoundException e) {
@@ -2287,28 +2375,27 @@ public class JCRDataStorage {
 
 	public void setClosedPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		if (forumHomeNode.hasNode(categoryId)) {
-			Node CategoryNode = forumHomeNode.getNode(categoryId);
-			if (CategoryNode.hasNode(forumId)) {
-				Node forumNode = CategoryNode.getNode(forumId);
-				Node topicNode = forumNode.getNode(topicId);
-				String pollId = topicId.replaceFirst(Utils.TOPIC, Utils.POLL);
-				if (topicNode.hasNode(pollId)) {
-					Node pollNode = topicNode.getNode(pollId);
-					pollNode.setProperty("exo:isClosed", poll.getIsClosed());
-					if (poll.getTimeOut() == 0) {
-						pollNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
-						pollNode.setProperty("exo:timeOut", 0);
-					}
-					forumHomeNode.save();
-					forumHomeNode.getSession().save();
+		try {
+			Node topicNode = forumHomeNode.getNode(categoryId + "/" + forumId + "/"+ topicId);
+			String pollId = topicId.replaceFirst(Utils.TOPIC, Utils.POLL);
+			if (topicNode.hasNode(pollId)) {
+				Node pollNode = topicNode.getNode(pollId);
+				pollNode.setProperty("exo:isClosed", poll.getIsClosed());
+				if (poll.getTimeOut() == 0) {
+					pollNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
+					pollNode.setProperty("exo:timeOut", 0);
+				}
+				if(topicNode.isNew()) {
+					topicNode.getSession().save();
+				} else {
+					topicNode.save();
 				}
 			}
+		} catch (Exception e) {
 		}
 	}
 
 	public void addTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception {
-		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node topicNode = (Node) getForumHomeNode(sProvider).getSession().getItem(topicPath);
 		if (topicNode.hasProperty("exo:tagId")) {
 			String[] oldTagsId = ValuesToStrings(topicNode.getProperty("exo:tagId").getValues());
@@ -2318,13 +2405,15 @@ public class JCRDataStorage {
 			}
 			list.add(tagId);
 			topicNode.setProperty("exo:tagId", getStringsInList(list));
-			forumHomeNode.save();
-			forumHomeNode.getSession().save();
+			if(topicNode.isNew()) {
+				topicNode.getSession().save();
+			} else {
+				topicNode.save();
+			}
 		}
 	}
 
 	public void removeTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception {
-		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node topicNode = (Node) getForumHomeNode(sProvider).getSession().getItem(topicPath);
 		String[] oldTagsId = ValuesToStrings(topicNode.getProperty("exo:tagId").getValues());
 		List<String> list = new ArrayList<String>();
@@ -2334,8 +2423,11 @@ public class JCRDataStorage {
 			}
 		}
 		topicNode.setProperty("exo:tagId", getStringsInList(list));
-		forumHomeNode.save();
-		forumHomeNode.getSession().save();
+		if(topicNode.isNew()) {
+			topicNode.getSession().save();
+		} else {
+			topicNode.save();
+		}
 	}
 
 	public Tag getTag(SessionProvider sProvider, String tagId) throws Exception {
@@ -2439,15 +2531,21 @@ public class JCRDataStorage {
 		newTagNode.setProperty("exo:name", newTag.getName());
 		newTagNode.setProperty("exo:description", newTag.getDescription());
 		newTagNode.setProperty("exo:color", newTag.getColor());
-		forumHomeNode.save();
-		forumHomeNode.getSession().save();
+		if(forumHomeNode.isNew()) {
+			forumHomeNode.getSession().save();
+		} else {
+			forumHomeNode.save();
+		}
 	}
 
 	public void removeTag(SessionProvider sProvider, String tagId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		forumHomeNode.getNode(tagId).remove();
-		forumHomeNode.save();
-		forumHomeNode.getSession().save();
+		if(forumHomeNode.isNew()) {
+			forumHomeNode.getSession().save();
+		} else {
+			forumHomeNode.save();
+		}
 	}
 
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception {
@@ -2703,7 +2801,11 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:banCounter", "" + newUserProfile.getBanCounter());
 				newProfileNode.setProperty("exo:banReasonSummary", newUserProfile.getBanReasonSummary());
 			}
-			userProfileNode.getSession().save();
+			if(userProfileNode.isNew()) {
+				userProfileNode.getSession().save();
+			} else {
+				userProfileNode.save();
+			}
 		}
 	}
 
@@ -2734,10 +2836,18 @@ public class JCRDataStorage {
 				}
 				String[] bookMarks = listNew.toArray(new String[] {});
 				newProfileNode.setProperty("exo:bookmark", bookMarks);
-				userProfileNode.getSession().save();
+				if(newProfileNode.isNew()) {
+					newProfileNode.getSession().save();
+				} else {
+					newProfileNode.save();
+				}
 			} else {
 				newProfileNode.setProperty("exo:bookmark", new String[] { bookMark });
-				userProfileNode.getSession().save();
+				if(newProfileNode.isNew()) {
+					newProfileNode.getSession().save();
+				} else {
+					newProfileNode.save();
+				}
 			}
 		} catch (PathNotFoundException e) {
 			newProfileNode = userProfileNode.addNode(userName, "exo:userProfile");
@@ -2748,7 +2858,11 @@ public class JCRDataStorage {
 			}
 			newProfileNode.setProperty("exo:userRole", 2);
 			newProfileNode.setProperty("exo:bookmark", new String[] { bookMark });
-			userProfileNode.getSession().save();
+			if(newProfileNode.isNew()) {
+				newProfileNode.getSession().save();
+			} else {
+				newProfileNode.save();
+			}
 		}
 	}
 
@@ -2764,11 +2878,19 @@ public class JCRDataStorage {
 					if (!list.contains(topicId)) {
 						list.add(topicId);
 						newProfileNode.setProperty("exo:readTopic", getStringsInList(list));
-						userProfileNode.getSession().save();
+						if(userProfileNode.isNew()) {
+							userProfileNode.getSession().save();
+						} else {
+							userProfileNode.save();
+						}
 					}
 				} else {
 					newProfileNode.setProperty("exo:readTopic", new String[] { topicId });
-					userProfileNode.getSession().save();
+					if(userProfileNode.isNew()) {
+						userProfileNode.getSession().save();
+					} else {
+						userProfileNode.save();
+					}
 				}
 			} catch (PathNotFoundException e) {
 				newProfileNode = userProfileNode.addNode(userName, "exo:userProfile");
@@ -2779,7 +2901,11 @@ public class JCRDataStorage {
 				}
 				newProfileNode.setProperty("exo:userRole", 2);
 				newProfileNode.setProperty("exo:readTopic", new String[] { topicId });
-				userProfileNode.getSession().save();
+				if(userProfileNode.isNew()) {
+					userProfileNode.getSession().save();
+				} else {
+					userProfileNode.save();
+				}
 			}
 		} else {
 			NodeIterator iter = userProfileNode.getNodes();
@@ -2800,7 +2926,11 @@ public class JCRDataStorage {
 					}
 				}
 			}
-			userProfileNode.getSession().save();
+			if(userProfileNode.isNew()) {
+				userProfileNode.getSession().save();
+			} else {
+				userProfileNode.save();
+			}
 		}
 	}
 
@@ -2828,8 +2958,13 @@ public class JCRDataStorage {
 				}
 			}
 		}
-		if (isNew)
-			userProfileNode.getSession().save();
+		if (isNew){
+			if(userProfileNode.isNew()) {
+				userProfileNode.getSession().save();
+			} else {
+				userProfileNode.save();
+			}
+		}
 	}
 
 	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
@@ -2911,7 +3046,11 @@ public class JCRDataStorage {
 		if (messageNode != null) {
 			messageNode.setProperty("exo:type", Utils.SENDMESSAGE);
 		}
-		userProfileNode.getSession().save();
+		if(userProfileNode.isNew()) {
+			userProfileNode.getSession().save();
+		} else {
+			userProfileNode.save();
+		}
 	}
 
 	private Node addNodeUserProfile(SessionProvider sProvider, String userName) throws Exception {
@@ -2920,11 +3059,15 @@ public class JCRDataStorage {
 		profileNode.setProperty("exo:userId", userName);
 		profileNode.setProperty("exo:userTitle", Utils.USER);
 		if(isAdminRole(userName)) {
-			profileNode.setProperty("exo:userTitle",Utils.GUEST);
+			profileNode.setProperty("exo:userRole", 0);
+			profileNode.setProperty("exo:userTitle",Utils.ADMIN);
 		}
 		profileNode.setProperty("exo:userRole", 2);
-		userProfileNode.save();
-		userProfileNode.getSession().save();
+		if(userProfileNode.isNew()) {
+			userProfileNode.getSession().save();
+		} else {
+			userProfileNode.save();
+		}
 		return profileNode;
 	}
 
@@ -2953,7 +3096,11 @@ public class JCRDataStorage {
 				}
 			}
 			messageNode.remove();
-			userProfileNode.getSession().save();
+			if(profileNode.isNew()) {
+				profileNode.getSession().save();
+			} else {
+				profileNode.save();
+			}
 		} catch (PathNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -3309,7 +3456,6 @@ public class JCRDataStorage {
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(listEmail));
 					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers));
 				}
-				watchingNode.save();
 			} else {
 				watchingNode.addMixin("exo:forumWatching");
 				if (watchType == 1) { // send email when had changed on category
@@ -3320,9 +3466,12 @@ public class JCRDataStorage {
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(values));
 					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers));
 				}
+			}
+			if(watchingNode.isNew()) {
+				watchingNode.getSession().save();
+			} else {
 				watchingNode.save();
 			}
-			watchingNode.getSession().save();
 		} catch (PathNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -3351,8 +3500,11 @@ public class JCRDataStorage {
 					}
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(newValues));
 					watchingNode.setProperty("exo:userWatching", getStringsInList(listNewUsers));
-					watchingNode.save();
-					watchingNode.getSession().save();
+					if(watchingNode.isNew()) {
+						watchingNode.getSession().save();
+					} else {
+						watchingNode.save();
+					}
 				}
 			}
 		} catch (PathNotFoundException e) {
