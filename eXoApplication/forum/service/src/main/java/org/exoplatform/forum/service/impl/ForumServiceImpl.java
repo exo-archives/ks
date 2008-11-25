@@ -114,14 +114,17 @@ public class ForumServiceImpl implements ForumService, Startable{
 	
 	@SuppressWarnings("unchecked")
   public void updateForumStatistic(SessionProvider systemSession) throws Exception{
-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
-  	List<User> userList = pageList.getAll() ;
-  	Collections.sort(userList, new Utils.DatetimeComparatorDESC()) ;
-  	ForumStatistic forumStatistic = getForumStatistic(systemSession) ;
-  	forumStatistic.setMembersCount(userList.size()) ;
-  	forumStatistic.setNewMembers(userList.get(0).getUserName()) ;
-  	saveForumStatistic(systemSession, forumStatistic) ;  	
+		
+		ForumStatistic forumStatistic = getForumStatistic(systemSession) ;
+		if(forumStatistic.getActiveUsers() == 0 ) {
+			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+	  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
+	  	List<User> userList = pageList.getAll() ;
+	  	Collections.sort(userList, new Utils.DatetimeComparatorDESC()) ;
+	  	forumStatistic.setMembersCount(userList.size()) ;
+	  	forumStatistic.setNewMembers(userList.get(0).getUserName()) ;
+	  	saveForumStatistic(systemSession, forumStatistic) ;
+		} 	
 	}
 	
 	@SuppressWarnings("unchecked")

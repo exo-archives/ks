@@ -2562,7 +2562,11 @@ public class JCRDataStorage {
 						newProfileNode.setProperty("exo:isBanned", false);
 					}
 				}
-				userProfileNode.getSession().save();
+				if(newProfileNode.isNew()) {
+					newProfileNode.getSession().save() ;
+				}else {
+					newProfileNode.save() ;
+				}
 			}
 			return userProfile;
 		} catch (PathNotFoundException e) {
