@@ -20,7 +20,6 @@ package org.exoplatform.forum;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -411,16 +410,22 @@ public class ForumTransformHTML {
 	}
 
 	public static String convertCodeHTML(String s) {
-		String link = "";
 		if (s == null || s.length() <= 0)
-			return link;
-		s = transform(s);
-		s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)( )(https?|ftp)", "$1$3")
-				 .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
+			return "";
+		s = s.replaceFirst("(<br/>)*", "");
+		s = s.replaceAll("<p>(&nbsp;)*|\\s*</p>", "");
+		s = s.replaceAll("(\\w|\\$)(<br/>)*", "$1");
+		try {
+			s = transform(s);
+			s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)(\\s*)(https?|ftp)", "$1$3")
+					 .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
+    } catch (Exception e) {
+    	return "";
+    }
+		return s ;
 //		s = s.replaceAll(
 //		    "[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
 //		    "<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
-		return s;
 	}
 	
 	public static String clearQuote(String s) {
@@ -444,11 +449,8 @@ public class ForumTransformHTML {
 		buffer.append(s);
 		s = buffer.toString();
 		s = s.trim();
-		s = StringUtils.replace(s, "<p>[&nbsp;\\s?]</p>", "");
-		s = StringUtils.replace(s, "\n", "");
-		while(s.indexOf("<br/>") == 0){
-			s = s.replaceFirst("<br/>", "");
-		}
+		s = s.replaceAll("<p>(&nbsp;)*|\\s*</p>", "");
+		s = s.replaceFirst("(<br/>)*", "");
 		if (s.indexOf("<p>") == 0) {
 			s = s.replaceFirst("<p>", "");
 			s = s.replaceFirst("</p>", "");
@@ -480,6 +482,9 @@ public class ForumTransformHTML {
 	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
 		if(s != null) {
+			s = s.replaceFirst("(<br/>)*", "");
+			s = s.replaceAll("<p>(&nbsp;)*|\\s*</p>", "");
+			s = s.replaceAll("(\\w|\\$)(<br/>)*", "$1");
 			for (int j = 0; j < s.trim().length(); j++) {
 				char c = s.charAt(j); 
 				if((int)c == 60){

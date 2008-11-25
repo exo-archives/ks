@@ -151,6 +151,8 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 					newTag.setOwner(userName) ;
 					forumService.saveTag(sProvider, newTag, true);
 				}
+			}catch (Exception e) {
+				throw new MessageException(new ApplicationMessage("UIAddTagForm.ms.topicIsNull", null, ApplicationMessage.WARNING)) ;
 			} finally {
 				sProvider.close();
 			}

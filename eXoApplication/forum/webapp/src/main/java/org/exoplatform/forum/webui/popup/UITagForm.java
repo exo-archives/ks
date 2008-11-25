@@ -191,6 +191,12 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					uiForm.forumService.addTopicInTag(sProvider, uiForm.IdSelected, uiForm.topicPath);
+				} catch (Exception e) {
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+	      	Object[] args = { };
+					uiApp.addMessage(new ApplicationMessage("UITagForm.ms.topicIsNull", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return ;
 				} finally {
 					sProvider.close();
 				}

@@ -143,14 +143,13 @@ public class ForumServiceImpl implements ForumService, Startable{
   		Node profile = profileHome.addNode(userId, "exo:userProfile") ;
   		profile.setProperty("exo:joinedDate", storage_.getGreenwichMeanTime()) ;
   		if(isAdminRole(userId)) {
-//  			System.out.println("\n\nAdmin: " + userId);
+  			System.out.println("\n\nAdmin: " + userId);
   			profile.setProperty("exo:userTitle", "Administrator") ;
     		profile.setProperty("exo:userRole", 0) ;
   		}else {
   			profile.setProperty("exo:userTitle", "User") ;
     		profile.setProperty("exo:userRole", 2) ;
   		}
-  		
   		if(profileHome.isNew()) {
     		profileHome.getSession().save() ;
     	}else {

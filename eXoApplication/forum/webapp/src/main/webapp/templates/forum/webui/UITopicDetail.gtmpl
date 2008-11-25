@@ -18,11 +18,12 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.controlWorkSpace();");
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
 
+	long setTime = 0;
 	String uiformId = uicomponent.getName() ;
+	String userLogin ;
+	String url = "";
 	boolean isNull = false ;
 	boolean isShowMenu;
-	long setTime = 0;
-	String userLogin ;
 	boolean isBanned = false;
 	boolean isAdmin = false ;
 	boolean canEdit = false ;
@@ -30,6 +31,10 @@
 	boolean isLock = false;
 	boolean isUserCreatedTopic = false;
 	boolean isNotReply = false;
+	boolean isActive = true;
+	boolean isModeratePost = false;
+	boolean isApproved = true;
+	boolean isShowPost = true ;
 	List posts = null;
 	UserProfile userProfile = null;
 	Forum forum = uicomponent.getForum() ;
@@ -79,33 +84,37 @@
 		  isNotReply = true;
 		  isLock = false;
 		  isShowMenu = false;
-		}
-	} 
-	isNotReply = isLock ;
-	if(!isNotReply) isNotReply = !isShowMenu ;
-	boolean isModeratePost = uicomponent.getIsModeratePost() ;
-	
-	boolean isActive = topic.getIsActive();
-	boolean isApproved = true;
-	if(forum.getIsModerateTopic()){
-		isApproved = topic.getIsApproved();
-	}
-	boolean isShowPost = true ;
-	if(!canEdit){
-		if(!isActive || !isApproved || topic.getIsWaiting()){
-			isNotReply = true;
-			isShowPost = false;
-			isShowMenu = false;
-			isUserCreatedTopic= false;
+		  isNull = true;
 		}
 	}
-	String url = uicomponent.url("ViewThreadByUser","pathId");
-  uicomponent.setLink(url);
-  if(isNull){
+	if(!isNull) {
+		isNotReply = isLock ;
+		if(!isNotReply) isNotReply = !isShowMenu ;
+		isModeratePost = uicomponent.getIsModeratePost() ;
+		isActive = topic.getIsActive();
+		if(forum.getIsModerateTopic()){
+			isApproved = topic.getIsApproved();
+		}
+		if(!canEdit){
+			if(!isActive || !isApproved || topic.getIsWaiting()){
+				isNotReply = true;
+				isShowPost = false;
+				isShowMenu = false;
+				isUserCreatedTopic= false;
+				isClosed = true;
+			}
+		}
+		url = uicomponent.url("ViewThreadByUser","pathId");
+	  uicomponent.setLink(url);
+  } else {
 	  isClosed = true;
 	  isNotReply = true;
 	  isLock = false;
 	  isShowMenu = false;
+	}
+	if(isClosed) {
+		isLock = false;
+		isNotReply = true;
 	}
 %>
 <div class="UITopicDetail">
@@ -527,7 +536,8 @@
 		<%
 		if(isClosed && !canEdit)	isShowPost = false ;
 		int nb = 0;
-		List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+		List checkeds = null;
+		if(canEdit) checkeds = uicomponent.getListChecked(uicomponent.pageSelect)
 		if(checkeds == null) checkeds = new ArrayList<String>();
 		
 		if(posts != null && posts.size() > 0 && isShowPost) {
