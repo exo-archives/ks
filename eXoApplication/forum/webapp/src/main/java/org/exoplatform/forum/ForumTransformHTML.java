@@ -412,9 +412,10 @@ public class ForumTransformHTML {
 	public static String convertCodeHTML(String s) {
 		if (s == null || s.length() <= 0)
 			return "";
+		s = StringUtils.replace(s, "\n", "");
+		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 		s = s.replaceFirst("(<br/>)*", "");
-		s = s.replaceAll("<p>(&nbsp;)*|\\s*</p>", "");
-		s = s.replaceAll("(\\w|\\$)(<br/>)*", "$1");
+		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/>)*", "$1$2");
 		try {
 			s = transform(s);
 			s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)(\\s*)(https?|ftp)", "$1$3")
@@ -448,9 +449,10 @@ public class ForumTransformHTML {
 		}
 		buffer.append(s);
 		s = buffer.toString();
-		s = s.trim();
-		s = s.replaceAll("<p>(&nbsp;)*|\\s*</p>", "");
+		s = StringUtils.replace(s, "\n", "");
+		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 		s = s.replaceFirst("(<br/>)*", "");
+		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/>)*", "$1$2");
 		if (s.indexOf("<p>") == 0) {
 			s = s.replaceFirst("<p>", "");
 			s = s.replaceFirst("</p>", "");
@@ -482,9 +484,10 @@ public class ForumTransformHTML {
 	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
 		if(s != null) {
+			s = StringUtils.replace(s, "\n", "");
+			s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 			s = s.replaceFirst("(<br/>)*", "");
-			s = s.replaceAll("<p>(&nbsp;)*|\\s*</p>", "");
-			s = s.replaceAll("(\\w|\\$)(<br/>)*", "$1");
+			s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/>)*", "$1$2");
 			for (int j = 0; j < s.trim().length(); j++) {
 				char c = s.charAt(j); 
 				if((int)c == 60){

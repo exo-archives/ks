@@ -480,7 +480,9 @@ UIForumPortlet.prototype.reSizeImages = function() {
 };
 
 UIForumPortlet.prototype.reSizeImagesInMessageForm = function() {
-	setTimeout('eXo.forum.UIForumPortlet.setSizeImages(150, "UIViewPrivateMessageForm")', 500);
+	if(eXo.core.Browser.isIE6())
+		setTimeout('eXo.forum.UIForumPortlet.setSizeImages(100, "UIViewPrivateMessageForm")', 800);
+	else setTimeout('eXo.forum.UIForumPortlet.setSizeImages(10, "UIViewPrivateMessageForm")', 400);
 }
 
 UIForumPortlet.prototype.setSizeImages = function(delta, classParant) {

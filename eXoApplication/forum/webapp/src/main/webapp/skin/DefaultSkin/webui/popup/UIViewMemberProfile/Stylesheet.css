@@ -75,8 +75,12 @@
 /*---------------------------------UIViewPrivateMessageForm--------------------------------------*/
 .UIForumPortlet .UIViewPrivateMessageForm {
 	background-color: #ffffff;
-	border: solid 1px red;
-	padding: 0px;
+	padding: 10px 0px;
+	width: 95%;
 	width: 90%;
 	margin: auto;
+}
+
+*html .UIForumPortlet .UIViewPrivateMessageForm {
+	width: 90%;
 }

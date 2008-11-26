@@ -1,6 +1,5 @@
 <%
   import org.exoplatform.web.application.JavascriptManager;
-	import org.exoplatform.services.organization.User;
 	import org.exoplatform.forum.service.UserProfile;
   import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.webui.UIForumPageIterator;	
@@ -68,13 +67,7 @@
 			}
 			
 			String idMessage = "Id" + post.getId().substring(15);
-			User user = ForumSessionUtils.getUserByUserId(owner) ; 
-			//User user = userInfo.getUser() ;
-			String joinDate = ""; 
-			if(user != null){
-				Date userCreated = user.getCreatedDate() ;
-				joinDate = ForumUtils.getFormatDate(shortDateFormat, userCreated) ;
-			}
+			String joinDate = ForumUtils.getFormatDate(shortDateFormat, userInfo.getJoinedDate()) ;
 			String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 			boolean isAnd = false ;
 			if(post.getIsHidden()) {
