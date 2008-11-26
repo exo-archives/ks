@@ -503,3 +503,19 @@
 *html .UIForumPortlet .FixLeftPopup {
   left: 28px;
 }
+
+.UIForumPortlet .ExportForumIcon {
+  background: url('background/Export.gif') no-repeat left;
+}
+
+.UIForumPortlet .ExportCategoryIcon {
+  background: url('background/Export.gif') no-repeat left;
+}
+
+.UIForumPortlet .ImportForumIcon {
+  background: url('background/Import.gif') no-repeat left;
+}
+
+.UIForumPortlet .ImportCategory {
+  background: url('background/Import.gif') no-repeat left;
+}

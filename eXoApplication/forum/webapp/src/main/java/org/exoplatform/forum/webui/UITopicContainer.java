@@ -32,6 +32,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
+import org.exoplatform.forum.webui.popup.UIExportForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIMergeTopicForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
@@ -95,6 +96,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
+		@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
 		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 	}
 )
@@ -206,7 +208,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private String[] getActionMenuForum() throws Exception {
-		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "WatchOption"};
+		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption"};
 		return actions;
 	}
 
@@ -617,6 +619,26 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		}
 	}	
 
+	static public class ExportForumActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiTopicContainer = event.getSource();
+			Forum forum = uiTopicContainer.getForum() ;
+			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			if(forum == null){
+				UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+				return;
+			}
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIExportForm exportForm = popupAction.createUIComponent(UIExportForm.class, null, null) ;
+			exportForm.setObjectId(forum);
+			popupAction.activate(exportForm, 200, 130) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}	
+	
 	static public class WatchOptionActionListener extends EventListener<UITopicContainer> {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();

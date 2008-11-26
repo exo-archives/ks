@@ -19,6 +19,7 @@ package org.exoplatform.forum.service;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
+import javax.jcr.Session;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
@@ -883,4 +884,6 @@ public interface ForumService {
   public void updateForumStatistic(SessionProvider systemSession) throws Exception ;
   public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception ;
   public void createUserProfile (SessionProvider sysSession, String userId) throws Exception ;
+  
+  public Session getSession(SessionProvider sProvider, String categoryId, String forumId, boolean isExportForum) throws Exception;
 }

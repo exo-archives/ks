@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -498,5 +499,9 @@ public class ForumServiceImpl implements ForumService, Startable{
   
   public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception {
   	storage_.evaluateActiveUsers(sysProvider, query) ;
+  }
+  
+  public Session getSession(SessionProvider sProvider, String categoryId, String forumId, boolean isExportForum) throws Exception{
+	  return storage_.getSession(sProvider, categoryId, forumId, isExportForum);
   }
 }

@@ -30,6 +30,7 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -433,6 +434,17 @@ public class JCRDataStorage {
 			return forums;
 		} catch (PathNotFoundException e) {
 			return null;
+		}
+	}
+	
+	public Session getSession(SessionProvider sProvider, String categoryId, String forumId, boolean isExportForum) throws Exception{
+		Node homeNode = getForumHomeNode(sProvider);
+		if(isExportForum){
+			return homeNode.getNode(categoryId).getNode(forumId).getSession();
+		} else {
+			if(categoryId != null)
+				return homeNode.getNode(categoryId).getSession();
+			else return homeNode.getSession();
 		}
 	}
 
