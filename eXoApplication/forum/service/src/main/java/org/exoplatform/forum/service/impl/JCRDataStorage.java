@@ -2603,8 +2603,6 @@ public class JCRDataStorage {
 				userProfile.setTotalTopic(newProfileNode.getProperty("exo:totalTopic").getLong());
 			if (newProfileNode.hasProperty("exo:moderateForums"))
 				userProfile.setModerateForums(ValuesToStrings(newProfileNode.getProperty("exo:moderateForums").getValues()));
-			if (newProfileNode.hasProperty("exo:moderateTopics"))
-				userProfile.setModerateTopics(ValuesToStrings(newProfileNode.getProperty("exo:moderateTopics").getValues()));
 			if (newProfileNode.hasProperty("exo:readTopic"))
 				userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
 			if (newProfileNode.hasProperty("exo:bookmark"))
@@ -2769,7 +2767,6 @@ public class JCRDataStorage {
 			newProfileNode.setProperty("exo:signature", newUserProfile.getSignature());
 
 			newProfileNode.setProperty("exo:moderateForums", newUserProfile.getModerateForums());
-			newProfileNode.setProperty("exo:moderateTopics", newUserProfile.getModerateTopics());
 			Calendar calendar = getGreenwichMeanTime();
 			if (newUserProfile.getLastLoginDate() != null)
 				calendar.setTime(newUserProfile.getLastLoginDate());

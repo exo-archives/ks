@@ -252,11 +252,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return null ;
 	}
 	
-	private JCRPageList getPageListPost(String topicId) throws Exception {
+	private JCRPageList getPageListPost(Topic topic) throws Exception {
 		String isApprove = "" ;
 		String isHidden = "" ;
 		String userLogin = this.userProfile.getUserId();
-		Topic topic = getTopic(topicId) ;
 		long role = this.userProfile.getUserRole() ;
 		if(role >=2){ isHidden = "false" ;}
 		if(role == 1) {
@@ -267,7 +266,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
 			if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 		}
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin)	; 
+		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topic.getId(), isApprove, isHidden, "", userLogin)	; 
 		long maxPost = getUserProfile().getMaxPostInPage() ;
 		if(maxPost > 0) this.maxPost = maxPost ;
 		pageListPost.setPageSize(this.maxPost) ;
@@ -275,25 +274,26 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unused")
-  private long getSizePost(String topicId) throws Exception {
-		String isApprove = "" ;
-		String isHidden = "" ;
-		String userLogin = this.userProfile.getUserId();
-		Topic topic = getTopic(topicId) ;
-		long role = this.userProfile.getUserRole() ;
-		if(role >=2){ isHidden = "false" ;}
-		if(role == 1) {
-			if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
-				isHidden = "false" ;
+  private long getSizePost(Topic topic) throws Exception {
+		if(topic.getPostCount() > this.maxPost) {
+			String isApprove = "" ;
+			String isHidden = "" ;
+			String userLogin = this.userProfile.getUserId();
+			long role = this.userProfile.getUserRole() ;
+			if(role >=2){ isHidden = "false" ;}
+			if(role == 1) {
+				if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
+					isHidden = "false" ;
+				}
 			}
-		}
-		if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-			if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
-		}
-		long availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topicId, isApprove, isHidden, userLogin)	; 
-		long maxPost = getUserProfile().getMaxPostInPage() ;
-		if(maxPost > 0) this.maxPost = maxPost ;
-		return availablePost/this.maxPost;
+			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
+				if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
+			}
+			long availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topic.getId(), isApprove, isHidden, userLogin)	; 
+			long maxPost = getUserProfile().getMaxPostInPage() ;
+			if(maxPost > 0) this.maxPost = maxPost ;
+			return availablePost/this.maxPost;
+		} else return 1;
 	}
 	
 	@SuppressWarnings("unused")
@@ -455,7 +455,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				} else {
 					uiTopicDetail.setIdPostView("top") ;
 				}
-				JCRPageList pageList = uiTopicContainer.getPageListPost(temp[0]) ;
+				JCRPageList pageList = uiTopicContainer.getPageListPost(topic) ;
 				long page = Long.parseLong(temp[1]) ;
 				forumPortlet.setUserProfile() ;
 				UserProfile userProfile = forumPortlet.getUserProfile() ;

@@ -36,7 +36,6 @@ public class UserProfile {
 	private long totalTopic = 0;
 	private boolean isOnline = false ;
 	private String[] moderateForums ; //store Ids of forum this user is moderator
-	private String[] moderateTopics ; //store Ids of topic this user is moderator
 	private String[] readTopic ;
 	private String[] bookmark ;
 	
@@ -76,7 +75,6 @@ public class UserProfile {
 		userTitle = "Guest";
 		userRole = GUEST ;
 		moderateForums = new String[] {} ;
-		moderateTopics = new String[] {} ;
 		readTopic = new String[] {} ;
 		bookmark = new String[] {} ;
 		banReasonSummary = new String[] {} ;
@@ -107,9 +105,6 @@ public class UserProfile {
 
 	public void setModerateForums(String[] moderateForums) { this.moderateForums = moderateForums ;	}
 	public String[] getModerateForums() { return moderateForums ;	}
-
-	public void setModerateTopics(String[] moderateTopics) { this.moderateTopics = moderateTopics ; }
-	public String[] getModerateTopics() { return moderateTopics ;	}
 	
 	public String[] getReadTopic(){return readTopic;}
 	public void setReadTopic(String[] readTopic){this.readTopic = readTopic;}
