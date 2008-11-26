@@ -590,4 +590,6 @@ public interface FAQService {
  	* @throws Exception the exception
  	*/
  	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
+ 	
+ 	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception;
 }

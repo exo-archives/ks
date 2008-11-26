@@ -587,5 +587,9 @@ public class FAQServiceImpl implements FAQService{
 	
 	public boolean isAdminRole(String userName) throws Exception {
 	  return jcrData_.isAdminRole(userName);
-  }
+    }
+	
+	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getCategoryNodeById(categoryId, sProvider);
+	}
 }

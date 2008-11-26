@@ -1049,6 +1049,16 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -872px;
 }
 
+.UIFAQPortlet .Export {
+	background: url('background/Export.gif') no-repeat left;
+	height:16px;
+}
+
+.UIFAQPortlet .Import {
+	background: url('background/Import.gif') no-repeat left;
+	height:16px;
+}
+
 .UIFAQPortlet .QuestionIcon {
 	background:transparent url(background/FAQPortlet.gif) no-repeat scroll left -818px;
 	width: 16px; height: 16px;

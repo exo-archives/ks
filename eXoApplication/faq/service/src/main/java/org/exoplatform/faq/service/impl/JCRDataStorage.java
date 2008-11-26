@@ -816,19 +816,22 @@ public class JCRDataStorage {
 		return cat;
 	}
 
-	private Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
-		Node categoryHome = getCategoryHome(sProvider, null) ;	
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-				+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		return result.getNodes().nextNode() ;
+	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
+		if(categoryId != null){
+			Node categoryHome = getCategoryHome(sProvider, null) ;	
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+					+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			return result.getNodes().nextNode() ;
+		} else{
+			return getCategoryHome(sProvider, null);
+		}
 	}
 
 	public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
 		Category category = getCategory(getCategoryNodeById(categoryId, sProvider)) ;
-		 
 		return category;
 	}
 

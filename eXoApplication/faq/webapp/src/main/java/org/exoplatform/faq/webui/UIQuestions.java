@@ -37,6 +37,8 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
+import org.exoplatform.faq.webui.popup.UIExportForm;
+import org.exoplatform.faq.webui.popup.UIImportForm;
 import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
 import org.exoplatform.faq.webui.popup.UIMoveQuestionForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
@@ -84,6 +86,10 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.SettingActionListener.class),
 				@EventConfig(listeners = UIQuestions.WatchActionListener.class),
 				@EventConfig(listeners = UIQuestions.WatchManagerActionListener.class),
+				
+				@EventConfig(listeners = UIQuestions.ExportActionListener.class),
+				@EventConfig(listeners = UIQuestions.ImportActionListener.class),
+				//@EventConfig(listeners = UIQuestions.ImportrActionListener.class),
 				// action of question:
 				@EventConfig(listeners = UIQuestions.QuestionManagamentActionListener.class),
 				@EventConfig(listeners = UIQuestions.ViewQuestionActionListener.class),
@@ -121,7 +127,8 @@ public class UIQuestions extends UIContainer {
 	private static String language_ = "" ;
 	private List<Watch> watchList_ = new ArrayList<Watch>() ;
 
-	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
+	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Import"} ;
+	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
 	private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
@@ -199,6 +206,9 @@ public class UIQuestions extends UIContainer {
 	}
 
 	public String[] getActionTollbar() {
+		if(this.categoryId_ == null || this.categoryId_.equals("null") || this.categoryId_.trim().length() < 1){
+			return firstTollbar_;
+		}
 		return secondTollbar_ ;
 	}
 
@@ -1097,8 +1107,6 @@ public class UIQuestions extends UIContainer {
 		}
 	}
 
-	// action for question :
-
 	static  public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
@@ -1106,11 +1114,43 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-
+			
 			UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
 			popupContainer.setId("FAQQuestionManagerment") ;
 			popupAction.activate(popupContainer, 900, 850) ;
 			questionManagerForm.setFAQSetting(questions.faqSetting_);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	// action for question :
+
+	static  public class ExportActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions questions = event.getSource() ;
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.setId("FAQExportForm") ;
+			UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null) ;
+			popupAction.activate(popupContainer, 220, 150) ;
+			exportForm.setObjectId(categoryId);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static  public class ImportActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions questions = event.getSource() ;
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.setId("FAQImportForm") ;
+			UIImportForm importForm = popupContainer.addChild(UIImportForm.class, null, null) ;
+			popupAction.activate(popupContainer, 500, 170) ;
+			importForm.setCategoryId(categoryId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
