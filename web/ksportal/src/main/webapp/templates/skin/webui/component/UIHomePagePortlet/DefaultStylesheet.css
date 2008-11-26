@@ -101,6 +101,10 @@
 	padding: 18px 0px 18px 0px;
 }
 
+.UIHomePagePortlet .PortletDecoration .HomePortletAdBackround {
+	padding: 8px;
+}
+
 .PortletDecoration .PortletDecorationBL {
 	background: url('DefaultSkin/background/PortletDecorationBL.gif') no-repeat left top;
 	padding-left: 3px;
