@@ -168,6 +168,7 @@
 .UIFAQPortlet .UIGroupMembershipSelector .UIBreadcumbs .BreadcumbsInfoBar {
 	height: auto;
 	border: medium none;
+	background: none;
 }
 
 .UIFAQPortlet .UIGroupMembershipSelector .UIBreadcumbs .LeftBlock {
