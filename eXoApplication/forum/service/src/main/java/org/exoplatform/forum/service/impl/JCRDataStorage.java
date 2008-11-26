@@ -2652,7 +2652,6 @@ public class JCRDataStorage {
 					userProfile.setCreatedDateBan(newProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
 			}
 			if (isLogin) {
-				newProfileNode.setProperty("exo:lastLoginDate", getGreenwichMeanTime());
 				if (userProfile.getIsBanned()) {
 					if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
 						newProfileNode.setProperty("exo:isBanned", false);
@@ -2669,12 +2668,12 @@ public class JCRDataStorage {
 			userProfile.setUserId(userName);
 			userProfile.setUserTitle(Utils.USER);
 			userProfile.setUserRole((long)2);
-			saveUserProfile(sProvider, userProfile, false, false);
 			// default Administration
 			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long) 0);
 				userProfile.setUserTitle(Utils.ADMIN);
 			}
+			saveUserProfile(sProvider, userProfile, false, false);
 			return userProfile;
 		}
 	}
@@ -2732,11 +2731,11 @@ public class JCRDataStorage {
 			userProfile.setUserId(userName);
 			userProfile.setUserTitle(Utils.USER);
 			userProfile.setUserRole((long)2);
-			saveUserProfile(sProvider, userProfile, false, false);
 			// default Administration
 			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long) 0);
 				userProfile.setUserTitle(Utils.ADMIN);
+			saveUserProfile(sProvider, userProfile, false, false);
 			}
 			return userProfile;
 		}
