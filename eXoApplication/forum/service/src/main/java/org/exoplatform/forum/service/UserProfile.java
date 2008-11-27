@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.services.organization.User;
-
 public class UserProfile {
 	
 	public static final long ADMIN = 0 ;
@@ -70,7 +68,6 @@ public class UserProfile {
 	private Date createdDateBan ;
 	private long newMessage = 0;
 	private long totalMessage = 0;
-	private User user ;
 	
 	
 	@SuppressWarnings("deprecation")
@@ -167,10 +164,7 @@ public class UserProfile {
 	public void setCreatedDateBan(Date createdDate) {this.createdDateBan = createdDate; }
 	public Date getCreatedDateBan() {return createdDateBan; }
 
-  public void setUser(User user) {this.user = user;}
-  public User getUser() {return user; }
-
-	public String[] getBookmark() {return bookmark;}
+  public String[] getBookmark() {return bookmark;}
 	public void setBookmark(String[] bookmark) {this.bookmark = bookmark;}
 
 	public boolean getIsOnline() {

@@ -18,7 +18,6 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
@@ -376,7 +375,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 								isParentDelete = true;
 							}
 							topicDetail.setIdPostView("lastpost");
-							topicDetail.setUpdatePostPageList(true);
+							//topicDetail.setUpdatePostPageList(true);
 						} else{
 							post.setId(uiForm.postId) ;
 							post.setModifiedBy(userName) ;
@@ -397,7 +396,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 							isParentDelete = true;
 						}
 						topicDetail.setIdPostView("lastpost");
-						topicDetail.setUpdatePostPageList(true);
+						//topicDetail.setUpdatePostPageList(true);
 					}
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 				} finally {

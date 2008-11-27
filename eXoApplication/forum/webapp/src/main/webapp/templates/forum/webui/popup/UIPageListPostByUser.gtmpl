@@ -10,7 +10,9 @@
 	if(userProfile.getUserRole() == 0)isAdmin = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+	
 %>
+
 <div class="UIPageListPostByUser" id="$uicomponent.id">
 	<div class="UITopicContainer">
 	 	<div class="UIForumContainer">

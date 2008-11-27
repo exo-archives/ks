@@ -100,11 +100,14 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	private void initForumOption() throws Exception {
+		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ; 
 		try {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		} catch (Exception e) {
-			String userName = ForumSessionUtils.getCurrentUser() ;
-			this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userName, true, false, false) ;
+			String userId = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId() ;
+			this.userProfile = forumService.getUserSettingProfile(sProvider, userId) ;
+		} catch (Exception e) {			
+			e.printStackTrace() ;
+		}finally{
+			sProvider.close() ;
 		}
 		
 		List<SelectItemOption<String>> list ;
@@ -272,7 +275,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setIsShowForumJump(isJump);
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				uiForm.forumService.saveUserProfile(sProvider, userProfile, true, false);
+				uiForm.forumService.saveUserSettingProfile(sProvider, userProfile);
 			} finally {
 				sProvider.close();
 			}

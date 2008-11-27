@@ -415,7 +415,7 @@ public class ForumTransformHTML {
 		s = StringUtils.replace(s, "\n", "");
 		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 		s = s.replaceFirst("(<br/>)*", "");
-		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/>)*", "$1$2");
+		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
 		try {
 			s = transform(s);
 			s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)(\\s*)(https?|ftp)", "$1$3")
@@ -452,7 +452,7 @@ public class ForumTransformHTML {
 		s = StringUtils.replace(s, "\n", "");
 		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 		s = s.replaceFirst("(<br/>)*", "");
-		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/>)*", "$1$2");
+		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
 		if (s.indexOf("<p>") == 0) {
 			s = s.replaceFirst("<p>", "");
 			s = s.replaceFirst("</p>", "");

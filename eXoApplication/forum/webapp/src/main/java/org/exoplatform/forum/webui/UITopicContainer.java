@@ -255,7 +255,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return null ;
 	}
 	
-	private JCRPageList getPageListPost(Topic topic) throws Exception {
+	/*private JCRPageList getPageListPost(Topic topic) throws Exception {
 		String isApprove = "" ;
 		String isHidden = "" ;
 		String userLogin = this.userProfile.getUserId();
@@ -274,7 +274,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		if(maxPost > 0) this.maxPost = maxPost ;
 		pageListPost.setPageSize(this.maxPost) ;
 		return pageListPost;
-	}
+	}*/
 	
 	@SuppressWarnings("unused")
   private long getSizePost(Topic topic) throws Exception {
@@ -458,7 +458,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				} else {
 					uiTopicDetail.setIdPostView("top") ;
 				}
-				JCRPageList pageList = uiTopicContainer.getPageListPost(topic) ;
+				/*JCRPageList pageList = uiTopicContainer.getPageListPost(topic) ;
 				long page = Long.parseLong(temp[1]) ;
 				forumPortlet.updateUserProfileInfo() ;
 				UserProfile userProfile = forumPortlet.getUserProfile() ;
@@ -471,9 +471,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 						uiApp.addMessage(new ApplicationMessage("UITopicDetail.msg.erro-change-posts-per-page", args, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					}
-				}
-				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, page) ;
-				uiTopicDetail.setUpdatePageList(pageList) ;
+				}*/
+				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, Long.parseLong(temp[1])) ;
+				//uiTopicDetail.setUpdatePageList(pageList) ;
+				
 				WebuiRequestContext context = event.getRequestContext() ;
 				context.addUIComponentToUpdateByAjax(uiForumContainer) ;
 				context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class)) ;

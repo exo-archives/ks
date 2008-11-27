@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -36,7 +35,6 @@ import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.impl.core.SessionFactory;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;

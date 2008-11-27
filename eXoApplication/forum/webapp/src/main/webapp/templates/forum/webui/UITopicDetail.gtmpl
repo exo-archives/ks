@@ -40,6 +40,7 @@
 	Forum forum = uicomponent.getForum() ;
 	if(forum == null) isNull = true;
 	Topic topic = null;
+	
 	if(!isNull) {
 		 topic = uicomponent.getTopic() ;
 	}

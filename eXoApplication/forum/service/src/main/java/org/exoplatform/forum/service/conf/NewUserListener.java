@@ -54,7 +54,7 @@ public class NewUserListener extends UserEventListener {
     //Create Profile
     sysSession = SessionProvider.createSystemProvider();
     try{
-    	fservice.createUserProfile(sysSession, user.getUserName()) ;
+    	fservice.createUserProfile(sysSession, user) ;
     }catch(Exception e) {
     	e.printStackTrace() ;
     }finally{

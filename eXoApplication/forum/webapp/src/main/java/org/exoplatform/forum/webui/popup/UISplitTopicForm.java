@@ -204,7 +204,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-			topicDetail.setUpdatePostPageList(true);
+			//topicDetail.setUpdatePostPageList(true);
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}

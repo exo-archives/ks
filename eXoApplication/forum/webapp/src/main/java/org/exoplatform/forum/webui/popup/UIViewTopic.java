@@ -18,7 +18,9 @@ package org.exoplatform.forum.webui.popup;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 
@@ -35,6 +37,7 @@ import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -62,6 +65,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private JCRPageList pageList ;
 	private UserProfile userProfile ;
 	private long pageSelect ;
+	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	public UIViewTopic() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator") ;
@@ -88,6 +92,30 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		pageList.setPageSize(maxPost) ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
+		
+	}
+	
+	private void updateUserProfiles(JCRPageList pageList) throws Exception {
+		List<Post> posts = pageList.getPage(pageList.getCurrentPage() ) ;
+		List<String> userNames = new ArrayList<String>() ;
+		for(Post post : posts) {
+			if(!mapUserProfile.containsKey(post.getOwner())) {
+				userNames.add(post.getOwner()) ;
+			}
+		}
+		if(userNames.size() > 0) {
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				List<UserProfile> profiles = forumService.getQuickProfiles(sProvider, userNames) ;
+				for(UserProfile profile : profiles) {
+					mapUserProfile.put(profile.getUserId(), profile) ;
+				}
+			}catch(Exception e) {
+				e.printStackTrace() ;
+			}finally {
+				sProvider.close() ;
+			}
+		}
 	}
 	
 	@SuppressWarnings({ "unused", "unchecked" })
@@ -110,7 +138,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 				posts = null ;
 			}
 		}
+		
 		if(posts == null) posts = new ArrayList<Post>();
+		updateUserProfiles(this.pageList) ;
 		return posts ;
 	}
 	
@@ -123,8 +153,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserInfo(String userName) throws Exception {
-		return this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
+		return  mapUserProfile.get(userName);
 	}
+	
 	@SuppressWarnings("unused")
 	private ForumContact getPersonalContact(String userId) throws Exception {
 		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;

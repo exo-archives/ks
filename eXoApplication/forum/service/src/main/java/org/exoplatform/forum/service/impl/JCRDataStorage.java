@@ -228,9 +228,10 @@ public class JCRDataStorage {
 						}
 					}
 					if(isAdd) {
-						UserProfile userProfile = new UserProfile();
-						userProfile.setUserId(categoryData.getOwner());
-						this.saveUserProfile(sProvider, userProfile, false, false);
+						//UserProfile userProfile = new UserProfile();
+						//userProfile.setUserId(categoryData.getOwner());
+						
+						//this.saveUserProfile(sProvider, userProfile, false, false);
 						Category category = new Category();
 						category.setCategoryName(categoryData.getName());
 						category.setDescription(categoryData.getDescription());
@@ -2611,8 +2612,11 @@ public class JCRDataStorage {
 				//userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
 				Value[] values = newProfileNode.getProperty("exo:readTopic").getValues() ;
 				for(Value vl : values) {
-					String[] array = vl.getString().split(":") ;
-					userProfile.setLastTimeAccessTopic(array[0], Long.parseLong(array[1])) ;
+					String str = vl.getString() ;
+					if(str.indexOf(":") > 0) {
+						String[] array = str.split(":") ;
+						userProfile.setLastTimeAccessTopic(array[0], Long.parseLong(array[1])) ;
+					}
 				}
 			}
 
@@ -2630,8 +2634,8 @@ public class JCRDataStorage {
 				userProfile.setIsDisplayAvatar(newProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
 			if (newProfileNode.hasProperty("exo:newMessage"))
 				userProfile.setNewMessage(newProfileNode.getProperty("exo:newMessage").getLong());
-			if (newProfileNode.hasProperty("exo:totalMessage"))
-				userProfile.setTotalMessage(newProfileNode.getProperty("exo:totalMessage").getLong());
+			/*if (newProfileNode.hasProperty("exo:totalMessage"))
+				userProfile.setTotalMessage(newProfileNode.getProperty("exo:totalMessage").getLong());*/
 			if (isGetOption) {
 				if (newProfileNode.hasProperty("exo:timeZone"))
 					userProfile.setTimeZone(newProfileNode.getProperty("exo:timeZone").getDouble());
@@ -2688,7 +2692,76 @@ public class JCRDataStorage {
 			return userProfile;
 		}
 	}
-
+	
+	public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception {
+		UserProfile userProfile = new UserProfile();
+		if (userName == null || userName.length() <= 0)	return userProfile;
+		
+		Node profileNode = getUserProfileHome(sProvider).getNode(userName);
+		userProfile.setUserId(userName) ;
+		userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
+		userProfile.setModerateForums(ValuesToStrings(profileNode.getProperty("exo:moderateForums").getValues()));
+		userProfile.setNewMessage(profileNode.getProperty("exo:newMessage").getLong());
+		userProfile.setTimeZone(profileNode.getProperty("exo:timeZone").getDouble());
+		userProfile.setShortDateFormat(profileNode.getProperty("exo:shortDateformat").getString());
+		userProfile.setLongDateFormat(profileNode.getProperty("exo:longDateformat").getString());
+		userProfile.setTimeFormat(profileNode.getProperty("exo:timeFormat").getString());
+		userProfile.setMaxPostInPage(profileNode.getProperty("exo:maxPost").getLong());
+		userProfile.setMaxTopicInPage(profileNode.getProperty("exo:maxTopic").getLong());
+		userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
+		userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
+		userProfile.setEmail(profileNode.getProperty("exo:email").getString());
+		//if (newProfileNode.hasProperty("exo:readTopic")){
+			//userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
+			Value[] values = profileNode.getProperty("exo:readTopic").getValues() ;
+			for(Value vl : values) {
+				String str = vl.getString() ;
+				if(str.indexOf(":") > 0) {
+					String[] array = str.split(":") ;
+					userProfile.setLastTimeAccessTopic(array[0], Long.parseLong(array[1])) ;
+				}
+			}
+		//}
+		return userProfile ;
+	}
+	
+	public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception {
+		UserProfile userProfile = new UserProfile();
+		if (userName == null || userName.length() <= 0)	return userProfile;
+		Node profileNode = getUserProfileHome(sProvider).getNode(userName);
+		userProfile.setUserId(userName) ;
+		userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString());
+		userProfile.setSignature(profileNode.getProperty("exo:signature").getString());
+		userProfile.setIsDisplaySignature(profileNode.getProperty("exo:isDisplaySignature").getBoolean()) ;
+		userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
+		userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
+		userProfile.setTimeZone(profileNode.getProperty("exo:timeZone").getDouble());
+		userProfile.setShortDateFormat(profileNode.getProperty("exo:shortDateformat").getString());
+		userProfile.setLongDateFormat(profileNode.getProperty("exo:longDateformat").getString());
+		userProfile.setTimeFormat(profileNode.getProperty("exo:timeFormat").getString());
+		userProfile.setMaxPostInPage(profileNode.getProperty("exo:maxPost").getLong());
+		userProfile.setMaxTopicInPage(profileNode.getProperty("exo:maxTopic").getLong());
+		userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
+		return userProfile ;
+	}
+	
+	public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception {
+		Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
+		profileNode.setProperty("exo:userTitle", userProfile.getUserTitle());
+		profileNode.setProperty("exo:signature",userProfile.getSignature());
+		profileNode.setProperty("exo:isDisplaySignature", userProfile.getIsDisplaySignature()) ;
+		profileNode.setProperty("exo:isDisplayAvatar",userProfile.getIsDisplayAvatar()) ;
+		profileNode.setProperty("exo:userRole", userProfile.getUserRole());
+		profileNode.setProperty("exo:timeZone", userProfile.getTimeZone());
+		profileNode.setProperty("exo:shortDateformat", userProfile.getShortDateFormat());
+		profileNode.setProperty("exo:longDateformat", userProfile.getLongDateFormat());
+		profileNode.setProperty("exo:timeFormat",userProfile.getTimeFormat());
+		profileNode.setProperty("exo:maxPost", userProfile.getMaxPostInPage());
+		profileNode.setProperty("exo:maxTopic", userProfile.getMaxTopicInPage());
+		profileNode.setProperty("exo:isShowForumJump", userProfile.getIsShowForumJump());
+		profileNode.save();
+	}
+	
 	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0)
@@ -2751,7 +2824,55 @@ public class JCRDataStorage {
 			return userProfile;
 		}
 	}
-
+	
+	public List<UserProfile> getQuickProfiles(SessionProvider sProvider, List<String> userList) throws Exception {
+		UserProfile userProfile ;
+		Node userProfileHome = getUserProfileHome(sProvider);
+		Node profile ;
+		List<UserProfile> profiles = new ArrayList<UserProfile>() ;
+		for(String userName : userList) {
+			profile = userProfileHome.getNode(userName) ;
+			userProfile = new UserProfile();
+			userProfile.setUserId(userName) ;
+			userProfile.setUserTitle(profile.getProperty("exo:userTitle").getString()) ;
+			userProfile.setJoinedDate(profile.getProperty("exo:joinedDate").getDate().getTime()) ;
+			userProfile.setIsDisplayAvatar(profile.getProperty("exo:isDisplayAvatar").getBoolean()) ;
+			userProfile.setTotalPost(profile.getProperty("exo:totalPost").getLong()) ;
+			userProfile.setLastPostDate(profile.getProperty("exo:lastPostDate").getDate().getTime()) ;
+			userProfile.setLastLoginDate(profile.getProperty("exo:lastLoginDate").getDate().getTime()) ;
+			userProfile.setIsDisplaySignature(profile.getProperty("exo:isDisplaySignature").getBoolean()) ;
+			if(userProfile.getIsDisplaySignature()) userProfile.setSignature(profile.getProperty("exo:signature").getString()) ;			                                                                                      
+			profiles.add(userProfile) ;
+		}
+		return profiles ;		
+	}
+	
+	public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception {
+		UserProfile userProfile ;
+		Node userProfileHome = getUserProfileHome(sProvider);
+		Node profile = userProfileHome.getNode(userName) ;
+		userProfile = new UserProfile();
+		userProfile.setUserId(userName) ;
+		userProfile.setUserTitle(profile.getProperty("exo:userTitle").getString()) ;
+		userProfile.setJoinedDate(profile.getProperty("exo:joinedDate").getDate().getTime()) ;
+		userProfile.setIsDisplayAvatar(profile.getProperty("exo:isDisplayAvatar").getBoolean()) ;
+		userProfile.setTotalPost(profile.getProperty("exo:totalPost").getLong()) ;
+		userProfile.setLastPostDate(profile.getProperty("exo:lastPostDate").getDate().getTime()) ;
+		userProfile.setLastLoginDate(profile.getProperty("exo:lastLoginDate").getDate().getTime()) ;
+		userProfile.setIsDisplaySignature(profile.getProperty("exo:isDisplaySignature").getBoolean()) ;
+		if(userProfile.getIsDisplaySignature()) userProfile.setSignature(profile.getProperty("exo:signature").getString()) ;
+		return userProfile ;		
+	}
+	public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception {
+		Node userProfileHome = getUserProfileHome(sProvider);
+		Node profile = userProfileHome.getNode(userProfile.getUserId()) ;			
+		userProfile.setFirstName(profile.getProperty("exo:firstName").getString()) ;
+		userProfile.setLastName(profile.getProperty("exo:lastName").getString()) ;
+		userProfile.setFullName(profile.getProperty("exo:fullName").getString()) ;
+		userProfile.setEmail(profile.getProperty("exo:email").getString()) ;
+		return userProfile ;
+	}
+	
 	public void saveUserProfile(SessionProvider sProvider, UserProfile newUserProfile, boolean isOption, boolean isBan) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;
@@ -2957,7 +3078,7 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			e.printStackTrace();
 		}
-		if (type.equals(Utils.AGREEMESSAGE) && isNew) {
+		if (type.equals(Utils.RECEIVE_MESSAGE) && isNew) {
 			if (profileNode.hasProperty("exo:newMessage")) {
 				totalNewMessage = profileNode.getProperty("exo:newMessage").getLong();
 				if (totalNewMessage > 0) {
@@ -3007,7 +3128,7 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			profileNodeFirst = addNodeUserProfile(sProvider, userNameFirst);
 		}
-		long totalMessage = 1;
+		long totalMessage = 0;
 		if (profileNodeFirst != null) {
 			id = userNameFirst + IdGenerator.generate();
 			messageNode = profileNodeFirst.addNode(id, "exo:privateMessage");
@@ -3017,41 +3138,41 @@ public class JCRDataStorage {
 			messageNode.setProperty("exo:message", privateMessage.getMessage());
 			messageNode.setProperty("exo:receivedDate", getGreenwichMeanTime());
 			messageNode.setProperty("exo:isUnread", true);
-			messageNode.setProperty("exo:type", Utils.AGREEMESSAGE);
+			messageNode.setProperty("exo:type", Utils.RECEIVE_MESSAGE);
 		}
 		for (String userName : userNames) {
 			try {
 				profileNode = userProfileNode.getNode(userName);
 				id = profileNode.getPath() + "/" + userName + IdGenerator.generate();
 				userProfileNode.getSession().getWorkspace().copy(messageNode.getPath(), id);
-				totalMessage = 1;
-				if (profileNode.hasProperty("exo:newMessage")) {
-					totalMessage = profileNode.getProperty("exo:newMessage").getLong() + 1;
-				}
+				//totalMessage = 1;
+				//if (profileNode.hasProperty("exo:newMessage")) {
+				totalMessage = profileNode.getProperty("exo:newMessage").getLong() + 1;
+				//}
 				profileNode.setProperty("exo:newMessage", totalMessage);
-				totalMessage = 1;
+				/*totalMessage = 1;
 				if (profileNode.hasProperty("exo:totalMessage")) {
 					totalMessage = profileNode.getProperty("exo:totalMessage").getLong() + 1;
 				}
-				profileNode.setProperty("exo:totalMessage", totalMessage);
+				profileNode.setProperty("exo:totalMessage", totalMessage);*/
 			} catch (PathNotFoundException e) {
 				profileNode = addNodeUserProfile(sProvider, userName);
 				id = profileNode.getPath() + "/" + userName + IdGenerator.generate();
 				userProfileNode.getSession().getWorkspace().copy(messageNode.getPath(), id);
-				totalMessage = 1;
-				if (profileNode.hasProperty("exo:newMessage")) {
-					totalMessage = profileNode.getProperty("exo:newMessage").getLong() + 1;
-				}
+				//totalMessage = 1;
+				//if (profileNode.hasProperty("exo:newMessage")) {
+				totalMessage = profileNode.getProperty("exo:newMessage").getLong() + 1;
+				//}
 				profileNode.setProperty("exo:newMessage", totalMessage);
-				totalMessage = 1;
+				/*totalMessage = 1;
 				if (profileNode.hasProperty("exo:totalMessage")) {
 					totalMessage = profileNode.getProperty("exo:totalMessage").getLong() + 1;
 				}
-				profileNode.setProperty("exo:totalMessage", totalMessage);
+				profileNode.setProperty("exo:totalMessage", totalMessage);*/
 			}
 		}
 		if (messageNode != null) {
-			messageNode.setProperty("exo:type", Utils.SENDMESSAGE);
+			messageNode.setProperty("exo:type", Utils.SEND_MESSAGE);
 		}
 		if(userProfileNode.isNew()) {
 			userProfileNode.getSession().save();
@@ -3081,33 +3202,28 @@ public class JCRDataStorage {
 	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
 		Node profileNode = userProfileNode.getNode(userName);
-		long totalMessage = 0;
 		try {
 			Node messageNode = profileNode.getNode(messageId);
-			if (type.equals(Utils.AGREEMESSAGE)) {
+			if (type.equals(Utils.RECEIVE_MESSAGE)) {
 				if (messageNode.hasProperty("exo:isUnread")) {
 					if (messageNode.getProperty("exo:isUnread").getBoolean()) {
-						if (profileNode.hasProperty("exo:newMessage")) {
-							totalMessage = profileNode.getProperty("exo:newMessage").getLong();
-							if (totalMessage > 0) {
-								profileNode.setProperty("exo:newMessage", (totalMessage - 1));
-							}
+						//if (profileNode.hasProperty("exo:newMessage")) {
+						long totalMessage = profileNode.getProperty("exo:newMessage").getLong();
+						if (totalMessage > 0) {
+							profileNode.setProperty("exo:newMessage", (totalMessage - 1));
 						}
+						//}
 					}
 				}
 			}
-			if (type.equals(Utils.AGREEMESSAGE)) {
+			/*if (type.equals(Utils.RECEIVE_MESSAGE)) {
 				if (profileNode.hasProperty("exo:totalMessage")) {
 					totalMessage = profileNode.getProperty("exo:totalMessage").getLong() - 1;
 					profileNode.setProperty("exo:totalMessage", totalMessage);
 				}
-			}
+			}*/
 			messageNode.remove();
-			if(profileNode.isNew()) {
-				profileNode.getSession().save();
-			} else {
-				profileNode.save();
-			}
+			profileNode.save();			
 		} catch (PathNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -3713,5 +3829,13 @@ public class JCRDataStorage {
 		}
 		profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
 		profile.save() ;
+	}
+	
+	public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
+		Node profile = getUserProfileHome(sProvider).getNode(userName) ;
+		if(profile.hasProperty("exo:bookmark")) {
+			return ValuesToList(profile.getProperty("exo:bookmark").getValues()) ;
+		}
+		return new ArrayList<String>() ;
 	}
 }

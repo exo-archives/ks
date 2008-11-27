@@ -75,7 +75,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 	
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<ForumPrivateMessage> getPrivateMessageSendByUser() throws Exception {
-		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.SENDMESSAGE) ;
+		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.SEND_MESSAGE) ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null){
@@ -105,7 +105,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 			if(!ForumUtils.isEmpty(objctId)) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uicontainer.forumService.saveReadMessage(sProvider, objctId, uicontainer.userName, Utils.SENDMESSAGE);
+					uicontainer.forumService.saveReadMessage(sProvider, objctId, uicontainer.userName, Utils.SEND_MESSAGE);
 					ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
 					UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
 					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
@@ -126,7 +126,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 			if(!ForumUtils.isEmpty(objctId)) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uicontainer.forumService.removePrivateMessage(sProvider, objctId, uicontainer.userName, Utils.SENDMESSAGE);
+					uicontainer.forumService.removePrivateMessage(sProvider, objctId, uicontainer.userName, Utils.SEND_MESSAGE);
 				} finally {
 					sProvider.close();
 				}

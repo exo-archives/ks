@@ -133,7 +133,8 @@ public class UIForumPortlet extends UIPortletApplication {
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			this.userProfile = forumService.getUserProfile(sProvider, userId, true, true, isLogin) ;
+			//this.userProfile = forumService.getUserProfile(sProvider, userId, true, true, isLogin) ;
+			this.userProfile = forumService.getDefaultUserProfile(sProvider, userId) ;
 		}finally {
 			sProvider.close();
 		}

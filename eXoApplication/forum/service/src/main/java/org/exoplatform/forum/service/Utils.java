@@ -43,8 +43,8 @@ public class Utils {
 	public final static String POST = "post".intern() ;
 	public final static String POLL = "poll".intern() ;
 	public final static String TAG = "tag".intern() ;
-	public final static String AGREEMESSAGE = "agree".intern() ;
-	public final static String SENDMESSAGE = "send".intern() ;
+	public final static String RECEIVE_MESSAGE = "receive".intern() ;
+	public final static String SEND_MESSAGE = "send".intern() ;
 	
 	public static final String ADMIN = "Administrator".intern() ;
 	public static final String MODERATOR = "Moderator".intern() ;

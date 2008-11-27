@@ -56,7 +56,7 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIPageListPostByUser extends UIContainer {
 	private ForumService forumService ;
-	private UserProfile userProfile = new UserProfile() ;
+	private UserProfile userProfile ;
 	private String userName = new String() ;
 	private List<Post> posts = new ArrayList<Post>() ;
 	public UIPageListPostByUser() throws Exception {

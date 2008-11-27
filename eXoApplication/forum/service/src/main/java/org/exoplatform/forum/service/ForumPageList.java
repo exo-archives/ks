@@ -324,7 +324,7 @@ public class ForumPageList extends JCRPageList {
 		if(userProfileNode.hasProperty("exo:isDisplaySignature"))userProfile.setIsDisplaySignature(userProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
 		if(userProfileNode.hasProperty("exo:isDisplayAvatar"))userProfile.setIsDisplayAvatar(userProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
 		if(userProfileNode.hasProperty("exo:newMessage"))userProfile.setNewMessage(userProfileNode.getProperty("exo:newMessage").getLong());
-		if(userProfileNode.hasProperty("exo:totalMessage"))userProfile.setTotalMessage(userProfileNode.getProperty("exo:totalMessage").getLong());
+		//if(userProfileNode.hasProperty("exo:totalMessage"))userProfile.setTotalMessage(userProfileNode.getProperty("exo:totalMessage").getLong());
 		if(userProfileNode.hasProperty("exo:timeZone"))userProfile.setTimeZone(userProfileNode.getProperty("exo:timeZone").getDouble());
 		if(userProfileNode.hasProperty("exo:shortDateformat"))userProfile.setShortDateFormat(userProfileNode.getProperty("exo:shortDateformat").getString());
 		if(userProfileNode.hasProperty("exo:longDateformat"))userProfile.setLongDateFormat(userProfileNode.getProperty("exo:longDateformat").getString());

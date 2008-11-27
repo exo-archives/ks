@@ -21,11 +21,11 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
-import javax.jcr.Session;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.User;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -885,11 +885,17 @@ public interface ForumService {
   public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception ;
   public void updateForumStatistic(SessionProvider systemSession) throws Exception ;
   public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception ;
-  public void createUserProfile (SessionProvider sysSession, String userId) throws Exception ;
+  public void createUserProfile (SessionProvider sysSession, User user) throws Exception ;
 
   public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception ;
   public void exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception ;
-
+  public List<UserProfile> getQuickProfiles(SessionProvider sProvider, List<String> userList) throws Exception ;
+  public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception ;
+  public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
+  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception ;
+  public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception ;
+  public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception  ;
+  public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
 }

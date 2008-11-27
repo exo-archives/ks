@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -138,29 +138,30 @@ public class ForumServiceImpl implements ForumService, Startable{
     	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
     	List<User> userList = pageList.getAll() ;
     	for(User user : userList) {
-    		createUserProfile(sysSession, user.getUserName()) ;
+    		createUserProfile(sysSession, user) ;
     	}
   	}
 	}
 	
-	public void createUserProfile (SessionProvider sysSession, String userId) throws Exception  {
+	public void createUserProfile (SessionProvider sysSession, User user) throws Exception  {
 		Node profileHome = storage_.getUserProfileHome(sysSession) ;  	
-		if(!profileHome.hasNode(userId)){
-  		Node profile = profileHome.addNode(userId, "exo:userProfile") ;
-  		profile.setProperty("exo:joinedDate", storage_.getGreenwichMeanTime()) ;
-  		if(isAdminRole(userId)) {
+		if(!profileHome.hasNode(user.getUserName())){
+  		Node profile = profileHome.addNode(user.getUserName(), "exo:userProfile") ;
+  		Calendar cal = storage_.getGreenwichMeanTime() ;
+  		profile.setProperty("exo:userId", user.getUserName()) ;
+  		profile.setProperty("exo:lastLoginDate", cal) ;
+  		profile.setProperty("exo:lastPostDate", cal) ;
+  		cal.setTime(user.getCreatedDate()) ;
+  		profile.setProperty("exo:joinedDate", cal) ;  		
+  		if(isAdminRole(user.getUserName())) {
   			profile.setProperty("exo:userTitle", "Administrator") ;
     		profile.setProperty("exo:userRole", 0) ;
-  		}else {
-  			profile.setProperty("exo:userTitle", "User") ;
-    		profile.setProperty("exo:userRole", 2) ;
   		}
-  		profile.setProperty("exo:userId", userId) ;
   		if(profileHome.isNew()) {
     		profileHome.getSession().save() ;
     	}else {
     		profileHome.save() ;
-    	}
+    	}  		
 		}
 	}
 	
@@ -510,8 +511,39 @@ public class ForumServiceImpl implements ForumService, Startable{
   public void exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
 	  storage_.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
   }
+
+  
+  public List<UserProfile> getQuickProfiles(SessionProvider sProvider, List<String> userList) throws Exception {
+  	return storage_.getQuickProfiles(sProvider, userList) ;
+  }
+  
+  public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getQuickProfile(sProvider, userName) ;
+  }
+  
+  public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception {
+  	return storage_.getUserInformations(sProvider, userProfile) ;
+  }
+  
+  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getDefaultUserProfile(sProvider, userName) ;
+  }
+  
+  public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getBookmarks(sProvider, userName) ;
+  }
+  
+  public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getUserSettingProfile(sProvider, userName) ;
+  }
+  
+  public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception {
+  	storage_.saveUserSettingProfile(sProvider, userProfile);
+  }
+
   
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
 	  storage_.importXML(nodePath, bis, typeImport, sessionProvider);
   }
+
 }

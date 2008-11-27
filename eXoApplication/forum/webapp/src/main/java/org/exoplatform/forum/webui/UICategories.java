@@ -243,6 +243,11 @@ public class UICategories extends UIContainer	{
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			} else {
+//				boolean isOpen = false;
+//				String canviews[] = topic.getCanView();
+//				if(canviews != null || canviews[0].equals(" ")) {
+//					if(ForumUtils.isStringInStrings(canviews, forumPortlet.getUserProfile().getUserId())) ;
+//				}
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;

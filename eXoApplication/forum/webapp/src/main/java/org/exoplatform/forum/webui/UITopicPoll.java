@@ -128,7 +128,8 @@ public class UITopicPoll extends UIForm	{
 	@SuppressWarnings("unused")
 	private Poll getPoll() throws Exception {
 		if(!ForumUtils.isEmpty(categoryId)) {
-			if(this.isEditPoll) {
+			// TODO ?
+			if(this.isEditPoll && this.topic == null) {
 				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "guest") ;
 			}
 			UserProfile userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
@@ -136,12 +137,12 @@ public class UITopicPoll extends UIForm	{
 			long userRole = userProfile.getUserRole() ;
 			if(userRole == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userId)) this.canViewEditMenu = true ;
 			else this.canViewEditMenu = false ;
-			if(this.topic.getIsPoll()) {
+			//if(this.topic.getIsPoll()) {
 				Poll poll = forumService.getPoll(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId) ; 
 				poll_ = poll ;
 				this.init() ;
 				return poll ;
-			}
+			//}
 		}
 		return null ;
 	}
