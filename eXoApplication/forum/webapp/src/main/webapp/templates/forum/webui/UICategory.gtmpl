@@ -85,7 +85,7 @@
 																 </a>
 														<%	} else {%>
 																	<a class="MenuItem" href="javaScript: void(0)"
-																		onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}">	 
+																		onclick="$link">	 
 																		<div class="ItemIcon $classIconItem">
 																			<%=nameItem%>
 																		</div>

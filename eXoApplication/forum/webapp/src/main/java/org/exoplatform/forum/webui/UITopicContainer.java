@@ -91,12 +91,12 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
 		@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
 		@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
+		@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class, confirm="UICategory.confirm.SetDeleteOneThread"),
 		@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 		@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
-		@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
+		//@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
 		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 	}
 )
@@ -212,7 +212,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private String[] getActionMenuForum() throws Exception {
-		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption"};
+		//String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption"};
+		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "WatchOption"};
 		return actions;
 	}
 
