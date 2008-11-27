@@ -487,7 +487,7 @@ public class ForumTransformHTML {
 			s = StringUtils.replace(s, "\n", "");
 			s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 			s = s.replaceFirst("(<br/>)*", "");
-			s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/>)*", "$1$2");
+			s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
 			for (int j = 0; j < s.trim().length(); j++) {
 				char c = s.charAt(j); 
 				if((int)c == 60){
