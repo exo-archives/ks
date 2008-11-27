@@ -7,7 +7,7 @@
 	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.FAQChangeHeightToAuto');
 %>
 
-<div class="FAQUIQuestionManagerForm $uicomponent.id" style="height: auto;" id="$uicomponent.id">
+<div class="FAQUIQuestionManagerForm $uicomponent.id" style="height: auto;" id="Parent$uicomponent.id">
 	<div>
 		<div id="FAQViewTabContent" style="float: left; width: 100%; min-width: 625px;">
 			<% uicomponent.renderChild("QuestionInfo") ; %>
@@ -31,9 +31,9 @@
 				<td align="center">
         <% for(action in uicomponent.getActions()) { 
         	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-           String link = uicomponent.event(action) ;
+           String QMLink = uicomponent.event(action) ;
         %>
-        		<a href="$link" class="ActionButton LightBlueStyle">
+        		<a href="$QMLink" class="ActionButton LightBlueStyle">
 	      	  	<div class="ButtonLeft">
 	        	  	<div class="ButtonRight">
 	          	  	<div class="ButtonMiddle"> $actionLabel </div>
