@@ -14,6 +14,7 @@ import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -126,8 +127,9 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				return;
 			}
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UICategoryContainer categoryContainer   = portlet.getChild(UICategoryContainer.class);
-	        event.getRequestContext().addUIComponentToUpdateByAjax(categoryContainer) ;
+			UICategory category = portlet.findFirstComponentOfType(UICategory.class) ;
+			category.setIsEditCategory(true);
+	        event.getRequestContext().addUIComponentToUpdateByAjax(category) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
