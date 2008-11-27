@@ -212,6 +212,7 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 						uiTopicDetail.setUpdateForum(forum) ;
 						uiTopicDetail.setIdPostView("top") ;
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
+						forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}

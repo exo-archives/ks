@@ -147,7 +147,6 @@ public class ForumServiceImpl implements ForumService, Startable{
   		Node profile = profileHome.addNode(userId, "exo:userProfile") ;
   		profile.setProperty("exo:joinedDate", storage_.getGreenwichMeanTime()) ;
   		if(isAdminRole(userId)) {
-  			System.out.println("\n\nAdmin: " + userId);
   			profile.setProperty("exo:userTitle", "Administrator") ;
     		profile.setProperty("exo:userRole", 0) ;
   		}else {
@@ -499,6 +498,10 @@ public class ForumServiceImpl implements ForumService, Startable{
   
   public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception {
   	storage_.evaluateActiveUsers(sysProvider, query) ;
+  }
+  
+  public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
+  	storage_.updateTopicAccess(sysSession, userId, topicId) ;
   }
   
   public Session getSession(SessionProvider sProvider, String categoryId, String forumId, boolean isExportForum) throws Exception{

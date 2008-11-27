@@ -17,6 +17,8 @@
 package org.exoplatform.forum.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.services.organization.User;
 
@@ -36,7 +38,9 @@ public class UserProfile {
 	private long totalTopic = 0;
 	private boolean isOnline = false ;
 	private String[] moderateForums ; //store Ids of forum this user is moderator
+	
 	private String[] readTopic ;
+	private Map<String, Long> lastAccessTopics = new HashMap<String, Long>() ;
 	private String[] bookmark ;
 	
 	private Date joinedDate = null;
@@ -223,5 +227,14 @@ public class UserProfile {
 
 	public String getEmail() {
 		return email;
+	}
+	
+	public void setLastTimeAccessTopic(String topicId, long lastTime)throws Exception {
+		lastAccessTopics.put(topicId, lastTime) ;
+	}
+	
+	public long getLastTimeAccessTopic(String topicId) throws Exception {
+		if(lastAccessTopics.get(topicId) != null) return lastAccessTopics.get(topicId);
+		return 0 ; 
 	}
 }

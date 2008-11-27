@@ -115,11 +115,11 @@ public class UIForumPortlet extends UIPortletApplication {
 	}
 	
 	public UserProfile getUserProfile() throws Exception {
-		if(this.userProfile == null) setUserProfile() ;
+		if(this.userProfile == null) updateUserProfileInfo() ;
 		return this.userProfile ;
 	}
 	@SuppressWarnings("deprecation")
-	public void setUserProfile() throws Exception {
+	public void updateUserProfileInfo() throws Exception {
 		String userId = "" ;
 		try {
 			userId = ForumSessionUtils.getCurrentUser() ;

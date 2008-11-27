@@ -884,6 +884,8 @@ public interface ForumService {
   public void updateForumStatistic(SessionProvider systemSession) throws Exception ;
   public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception ;
   public void createUserProfile (SessionProvider sysSession, String userId) throws Exception ;
-  
+
+  public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception ;
   public Session getSession(SessionProvider sProvider, String categoryId, String forumId, boolean isExportForum) throws Exception;
+
 }

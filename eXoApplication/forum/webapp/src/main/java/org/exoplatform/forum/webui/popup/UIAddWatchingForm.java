@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -111,7 +112,6 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String path = uiForm.path;
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
-			System.out.println("");
 			boolean isEmail = true;
 			List<String> values_ = new ArrayList<String>();
 			if(values.size() > 0) {
@@ -145,7 +145,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+			//event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}
 	}
 	

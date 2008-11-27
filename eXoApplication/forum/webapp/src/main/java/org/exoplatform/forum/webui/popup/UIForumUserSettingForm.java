@@ -276,7 +276,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			} finally {
 				sProvider.close();
 			}
-			forumPortlet.setUserProfile() ;
+			forumPortlet.updateUserProfileInfo() ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}

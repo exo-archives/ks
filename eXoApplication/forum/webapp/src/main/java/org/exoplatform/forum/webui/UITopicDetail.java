@@ -191,7 +191,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(!this.viewTopic) userName = "guest" ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, userName) ;
-		if(!userName.equals("guest"))	forumPortlet.setUserProfile() ;
+		if(!userName.equals("guest"))	forumPortlet.updateUserProfileInfo() ;
 		this.userName = userName ;
 	}
 	
@@ -206,19 +206,20 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(this.userProfile == null) this.userProfile = new UserProfile();
 		String userName = this.userProfile.getUserId() ;
 		if(!this.viewTopic) userName = "guest" ;
-		boolean isGetService = false ;
-		if(!userName.equals(this.userName)) {
+		boolean isGetService = true ;
+		/*if(!userName.equals(this.userName)) {
 			String []topicsRead = this.userProfile.getReadTopic() ;
 			if(topicsRead != null && topicsRead.length > 0) {
 				if(!ForumUtils.isStringInStrings(topicsRead, this.topicId)) {
 					isGetService = true ;
 				} 
 			} else isGetService = true ;
-		} 
+		} */
 		this.userName = userName ;
 		if(isGetService) {
 			this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
-			forumPortlet.setUserProfile() ;
+			forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+			//forumPortlet.updateUserProfileInfo() ;
 		} else {
 			this.topic = topic ;
 		}
@@ -236,23 +237,24 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
 		String userName = this.userProfile.getUserId() ;
-		boolean isGetService = false ;
-		if(!userName.equals(this.userName)) {
+		//boolean isGetService = false ;
+		/*if(!userName.equals(this.userName)) {
 			String []topicsRead = this.userProfile.getReadTopic() ;
 			if(topicsRead != null && topicsRead.length > 0) {
 				if(!ForumUtils.isStringInStrings(topicsRead, this.topicId)) {
 					isGetService = true ;
 				} 
 			} else isGetService = true ;
-		} 
+		}*/ 
 		this.userName = userName ;
-		if(isGetService || this.isGetTopic) {
+		//if(isGetService || this.isGetTopic) {
 			this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
-			forumPortlet.setUserProfile() ;
-			this.isGetTopic = false ;
-		} else {
+			forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+			//forumPortlet.updateUserProfileInfo() ;
+			//this.isGetTopic = false ;
+		/*} else {
 			this.topic = topic ;
-		}
+		}*/
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 	}
 	
@@ -1361,6 +1363,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					topicDetail.forumService.savePost(sProvider, topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, ForumUtils.getDefaultMail()) ;
+					topicDetail.getAncestorOfType(UIForumPortlet.class).getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 				} catch (PathNotFoundException e) {
 					sProvider.close();
 					String[] args = new String[] { } ;

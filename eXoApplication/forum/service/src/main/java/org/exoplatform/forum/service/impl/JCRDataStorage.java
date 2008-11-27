@@ -977,7 +977,7 @@ public class JCRDataStorage {
 			if (!userRead.equals(Utils.GUEST)) {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
-				saveUserReadTopic(sProvider, userRead, topicId, true);
+				updateTopicAccess(sProvider, userRead, topicId) ;
 				if(topicNode.isNew()){
 					topicNode.getSession().save();
 				} else {
@@ -1822,7 +1822,7 @@ public class JCRDataStorage {
 							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
 						}
 					}
-					saveUserReadTopic(sProvider, post.getOwner(), topicId, false);
+					//saveUserReadTopic(sProvider, post.getOwner(), topicId, false);
 				}
 			} else {
 				postNode.setProperty("exo:isActiveByTopic", false);
@@ -2615,8 +2615,16 @@ public class JCRDataStorage {
 				userProfile.setTotalTopic(newProfileNode.getProperty("exo:totalTopic").getLong());
 			if (newProfileNode.hasProperty("exo:moderateForums"))
 				userProfile.setModerateForums(ValuesToStrings(newProfileNode.getProperty("exo:moderateForums").getValues()));
-			if (newProfileNode.hasProperty("exo:readTopic"))
-				userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
+			
+			if (newProfileNode.hasProperty("exo:readTopic")){
+				//userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
+				Value[] values = newProfileNode.getProperty("exo:readTopic").getValues() ;
+				for(Value vl : values) {
+					String[] array = vl.getString().split(":") ;
+					userProfile.setLastTimeAccessTopic(array[0], Long.parseLong(array[1])) ;
+				}
+			}
+				
 			if (newProfileNode.hasProperty("exo:bookmark"))
 				userProfile.setBookmark(ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues()));
 			if (newProfileNode.hasProperty("exo:lastLoginDate"))
@@ -2663,7 +2671,7 @@ public class JCRDataStorage {
 				if (newProfileNode.hasProperty("exo:createdDateBan"))
 					userProfile.setCreatedDateBan(newProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
 			}
-			if (isLogin) {
+			/*if (isLogin) {
 				if (userProfile.getIsBanned()) {
 					if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
 						newProfileNode.setProperty("exo:isBanned", false);
@@ -2674,7 +2682,7 @@ public class JCRDataStorage {
 				}else {
 					newProfileNode.save() ;
 				}
-			}
+			}*/
 			return userProfile;
 		} catch (PathNotFoundException e) {
 			userProfile.setUserId(userName);
@@ -2724,8 +2732,8 @@ public class JCRDataStorage {
 				userProfile.setTotalPost(newProfileNode.getProperty("exo:totalPost").getLong());
 			if (newProfileNode.hasProperty("exo:totalTopic"))
 				userProfile.setTotalTopic(newProfileNode.getProperty("exo:totalTopic").getLong());
-			if (newProfileNode.hasProperty("exo:readTopic"))
-				userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));
+			/*if (newProfileNode.hasProperty("exo:readTopic"))
+				userProfile.setReadTopic(ValuesToStrings(newProfileNode.getProperty("exo:readTopic").getValues()));*/
 			if (newProfileNode.hasProperty("exo:bookmark"))
 				userProfile.setBookmark(ValuesToStrings(newProfileNode.getProperty("exo:bookmark").getValues()));
 			if (newProfileNode.hasProperty("exo:lastLoginDate"))
@@ -2874,7 +2882,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	private void saveUserReadTopic(SessionProvider sProvider, String userName, String topicId, boolean isRead) throws Exception {
+	/*private void saveUserReadTopic(SessionProvider sProvider, String userName, String topicId, boolean isRead) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode = null;
 		List<String> list;
@@ -2940,7 +2948,7 @@ public class JCRDataStorage {
 				userProfileNode.save();
 			}
 		}
-	}
+	}*/
 
 	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -3673,4 +3681,27 @@ public class JCRDataStorage {
 			saveForumStatistic(sysProvider, forumStatistic) ;
 		}		
 	}
+	
+	public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
+  	Node profile = getUserProfileHome(sysSession).getNode(userId) ;
+  	List<String> values = new ArrayList<String>() ;
+  	if(profile.hasProperty("exo:readTopic")) {
+  		values = ValuesToList(profile.getProperty("exo:readTopic").getValues()) ;
+  	}
+  	
+  	int i = 0 ;
+  	boolean isUpdated = false ;
+  	for(String vl : values) {
+  		if(vl.indexOf(topicId) == 0) {
+  			values.set(i, topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
+  			isUpdated = true ;
+  			break ;
+  		}
+  	}
+  	if(!isUpdated) {
+  		values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
+  	}
+  	profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
+  	profile.save() ;
+  }
 }

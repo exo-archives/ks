@@ -613,7 +613,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 				sProvider.close();
 			}
       if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
-      	forumPortlet.setUserProfile() ;
+      	forumPortlet.updateUserProfileInfo() ;
       }
       uiForm.isEdit = false ;
       uiForm.setPageListUserProfile();

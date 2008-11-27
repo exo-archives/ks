@@ -441,7 +441,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			try {
 				Topic topic = uiTopicContainer.getTopic(temp[0]) ;
-				boolean isReadTopic = ForumUtils.isStringInStrings(uiTopicContainer.userProfile.getReadTopic(), topic.getId());
+				//boolean isReadTopic = ForumUtils.isStringInStrings(uiTopicContainer.userProfile.getReadTopic(), topic.getId());
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 				uiForumContainer.setIsRenderChild(false) ;
@@ -449,9 +449,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				uiTopicDetail.setUpdateForum(uiTopicContainer.forum) ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic ) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId+"/"+ uiTopicContainer.forumId + " "));
-				if(isReadTopic){
+				/*if(isReadTopic){
 					uiTopicDetail.setGetTopic(true) ;
-				}
+				}*/
 				if(temp[2].equals("true")) {
 					uiTopicDetail.setIdPostView("lastpost") ;
 				} else {
@@ -459,7 +459,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 				JCRPageList pageList = uiTopicContainer.getPageListPost(topic) ;
 				long page = Long.parseLong(temp[1]) ;
-				forumPortlet.setUserProfile() ;
+				forumPortlet.updateUserProfileInfo() ;
 				UserProfile userProfile = forumPortlet.getUserProfile() ;
 				if(pageList != null) {
 					pageList.setPageSize(userProfile.getMaxPostInPage()) ;
@@ -1065,7 +1065,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					String userName = topicContainer.userProfile.getUserId() ;
 					topicContainer.forumService.saveUserBookmark(sProvider, userName, buffer.toString(), true) ;
 					UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
-					forumPortlet.setUserProfile() ;
+					forumPortlet.updateUserProfileInfo() ;
 				} catch (Exception e) {
 					sProvider.close();
 				}

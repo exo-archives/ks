@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -33,6 +34,9 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.impl.core.SessionFactory;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -226,20 +230,31 @@ public class UIBreadcumbs extends UIContainer {
 				}else	if(path.lastIndexOf(Utils.TOPIC) > 0) {
 					String []id = path.split("/") ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-					Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
-					if(topic != null) {
-						forumPortlet.updateIsRendered(ForumUtils.FORUM);
-						Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
-						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-						UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-						uiForumContainer.setIsRenderChild(false) ;
-						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-						uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
-						uiTopicDetail.setUpdateForum(forum) ;
-						uiTopicDetail.setIdPostView("top") ;
-						uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+					SessionProvider sysSession = SessionProviderFactory.createSystemProvider() ;
+					try{
+						Topic topic = forumService.getTopicByPath(sysSession, path, false) ;
+						if(topic != null) {
+							forumPortlet.updateIsRendered(ForumUtils.FORUM);
+							Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+							UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+							UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+							uiForumContainer.setIsRenderChild(false) ;
+							uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+							UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+							uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
+							uiTopicDetail.setUpdateForum(forum) ;
+							uiTopicDetail.setIdPostView("top") ;
+							uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
+							forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+							if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
+								forumService.updateTopicAccess(sysSession, forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
+								forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+							}
+						}						
+					}catch(Exception e) {
+						throw e ;
+					}finally {
+						sysSession.close() ;
 					}
 				}else	if(path.lastIndexOf(Utils.FORUM) > 0) {
 					String id[] = path.split("/");

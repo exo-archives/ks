@@ -332,7 +332,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					String userName = topicTag.userProfile.getUserId() ;
 					topicTag.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), userName, buffer.toString(), true) ;
 					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
-					forumPortlet.setUserProfile() ;
+					forumPortlet.updateUserProfileInfo() ;
 				} catch (Exception e) {
 				}
 			}

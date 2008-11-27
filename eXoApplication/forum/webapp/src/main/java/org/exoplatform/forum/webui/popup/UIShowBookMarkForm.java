@@ -143,7 +143,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 					path = bookMark.getBookMarkId(path) ;
 					if(!ForumUtils.isEmpty(path)) {
 						bookMark.forumService.saveUserBookmark(sProvider, bookMark.userProfile.getUserId(), path, false) ;
-						forumPortlet.setUserProfile() ;
+						forumPortlet.updateUserProfileInfo() ;
 					}
 					return ;
 				}
@@ -165,7 +165,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 						path = bookMark.getBookMarkId(path) ;
 						if(!ForumUtils.isEmpty(path)) {
 							bookMark.forumService.saveUserBookmark(sProvider, bookMark.userProfile.getUserId(), path, false) ;
-							forumPortlet.setUserProfile() ;
+							forumPortlet.updateUserProfileInfo() ;
 						}
 						return ;
 					}
@@ -204,7 +204,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 						path = bookMark.getBookMarkId(path) ;
 						if(!ForumUtils.isEmpty(path)) {
 							bookMark.forumService.saveUserBookmark(sProvider, bookMark.userProfile.getUserId(), path, false) ;
-							forumPortlet.setUserProfile() ;
+							forumPortlet.updateUserProfileInfo() ;
 						}
 						return ;
 					}
@@ -257,7 +257,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 			UIShowBookMarkForm bookMark = event.getSource() ;
 			bookMark.forumService.saveUserBookmark(ForumSessionUtils.getSystemProvider(), bookMark.userProfile.getUserId(), path, false) ;
 			UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.setUserProfile() ;
+			forumPortlet.updateUserProfileInfo() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(bookMark.getParent()) ;
 		}
 	}

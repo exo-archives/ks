@@ -391,6 +391,15 @@
 									String topicBy = topic.getOwner();
 									String postNewBy = topic.getLastPostBy() ;
 									Date postDate = topic.getLastPostDate() ;
+									
+									long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
+									String title = "TitleNorman";
+									String newPost = "NoNew"; 
+									if(lastAccess < postDate.getTime()) {
+										title = "TitleBold";
+										newPost = "New";									
+									}
+									
 									postDate.setTime(postDate.getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
 									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
@@ -401,14 +410,9 @@
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
 									String number = "1";
-									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
-									String title = "TitleBold";
-									String newPost = "New";
+									
 									String hot = ""; 
-									if(isReadTopic) {
-										title = "TitleNorman";
-										newPost = "NoNew"; 
-									} 
+									 
 									if(topic.getPostCount() > 30) hot = "Hot"; 
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
 									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;

@@ -33,6 +33,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -167,9 +168,9 @@ public class UICategories extends UIContainer	{
 		Topic topic = new Topic() ;
 		topic = this.maptopicLast.get(topicId) ;
 		if(topic == null) {
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-			String forumHomePath = forumService.getForumHomePath(sProvider) ;
-			topic = forumService.getTopicByPath(sProvider, forumHomePath + "/" + path, false) ;
+			SessionProvider sysSession = SessionProviderFactory.createSystemProvider() ;
+			String forumHomePath = forumService.getForumHomePath(sysSession) ;
+			topic = forumService.getTopicByPath(sysSession, forumHomePath + "/" + path, false) ;
 		}
 		return topic ;
 	}
@@ -289,7 +290,7 @@ public class UICategories extends UIContainer	{
 					sProvider.close();
 				}
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.setUserProfile() ;
+				forumPortlet.updateUserProfileInfo() ;
 			}
 		}
 	}
