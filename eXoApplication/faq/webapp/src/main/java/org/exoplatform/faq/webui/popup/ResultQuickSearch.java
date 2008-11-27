@@ -167,15 +167,18 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				uiQuestions.pageList.setObjectRepare_(id);
-				uiQuestions.setCategories(categoryId) ;
+				if(categoryId.equals("null"))uiQuestions.setCategories(null) ;
+				else uiQuestions.setCategories(categoryId) ;
 				uiQuestions.setIsNotChangeLanguage() ;
 				uiQuestions.questionView_ = id ;
 				UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 				breadcumbs.setUpdataPath(null) ;
 				String oldPath = "" ;
-				List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
-				for(int i = listPath.size() -1 ; i >= 0; i --) {
-					oldPath = oldPath + "/" + listPath.get(i);
+				if(categoryId != null && !categoryId.equals("null")){
+					List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
+					for(int i = listPath.size() -1 ; i >= 0; i --) {
+						oldPath = oldPath + "/" + listPath.get(i);
+					}
 				}
 				String newPath = "FAQService" + oldPath ;
 				uiQuestions.setPath(newPath) ;
@@ -185,6 +188,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 				faqPortlet.cancelAction() ;
 			} catch (Exception e) {
+				e.printStackTrace();
 				UIApplication uiApplication = resultQuickSearch.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
