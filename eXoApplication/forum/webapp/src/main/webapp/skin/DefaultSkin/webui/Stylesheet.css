@@ -519,3 +519,11 @@
 .UIForumPortlet .ImportCategory {
   background: url('background/Import.gif') no-repeat left;
 }
+
+.UIForumPortlet .Refresh {
+  background:transparent url(background/refresh.png) no-repeat scroll left center;
+	float:left;
+	height:16px;
+	width:16px;
+	padding-top:30px;
+}

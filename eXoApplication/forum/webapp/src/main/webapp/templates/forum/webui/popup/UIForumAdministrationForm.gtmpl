@@ -54,7 +54,18 @@
 											else display = "none";
 								%>
 								<div style="display: $display;" id="UITabContent" class="UITabContent">
-									<%	uiform.renderChild(tabconten.id) ; 
+									<%if(tabconten.id.equals(uicomponent.FIELD_NOTIFYEMAIL_TAB)){
+											String linkReset = uicomponent.event("GetDefaultMail") ;
+											String titleReset = uicomponent.getLabel("TitleResetMail");
+									%>
+											<div style="float: left; white-space:nowrap; width: 90%;">
+												<%uiform.renderChild(tabconten.id) ;%>
+											</div>
+											<a href="$linkReset" title="$titleReset"><div class="Refresh"><span></span></div></a>
+											<div style="clear: left;"><span></span></div>
+									<%} else {
+											uiform.renderChild(tabconten.id) ; 
+										}
 											if(tabconten.id.equals("activeTopicTab")){
 											continue;
 									%>	

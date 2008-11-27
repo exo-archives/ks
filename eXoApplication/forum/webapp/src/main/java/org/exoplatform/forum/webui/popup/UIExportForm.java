@@ -55,25 +55,27 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 			String nodePath = "";
 			String name = "";
-			Session session = null;
+			String categoryId = null;
+			String forumId = null;
 			if(exportForm.object_ instanceof Forum) {
 				Forum forum = (Forum)exportForm.object_;
 				nodePath = forum.getPath();
 				name = forum.getForumName();
-				session = service.getSession(sessionProvider, forum.getPath().split("/")[3], forum.getId(),true);
+				categoryId = forum.getPath().split("/")[3];
+				forumId = forum.getId();
 			} else {
 				org.exoplatform.forum.service.Category category = (org.exoplatform.forum.service.Category)exportForm.object_;
 				nodePath = category.getPath();
 				name = category.getCategoryName();
-				session = service.getSession(sessionProvider, category.getId(), null, false);
+				categoryId = category.getId();
 			}
-			sessionProvider.close();
 		    DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class) ;
 		    InputStreamDownloadResource dresource ;
 		    ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
 		    CompressData zipService = new CompressData();
 		    
-		    session.exportSystemView(nodePath, bos, false, false ) ;
+		    service.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
+		    sessionProvider.close();
 		    /*ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		    outputStream.write(bos.toByteArray(), 0, bos.toByteArray().length);
 		    ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray()) ;*/

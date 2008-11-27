@@ -52,6 +52,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		template = "app:/templates/forum/webui/popup/UIForumAdministrationForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UIForumAdministrationForm.SaveActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.GetDefaultMailActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.RunActionListener.class)
@@ -227,6 +228,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	static	public class GetDefaultMailActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm uiForm = event.getSource();
+			UIFormTextAreaInput areaInput = ((UIFormInputWithActions)uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB)).getChildById(FIELD_NOTIFYEMAIL_TEXTAREA);
+			areaInput.setValue(uiForm.getLabel("notifyEmailContentDefault"));
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	

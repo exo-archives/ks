@@ -98,16 +98,14 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			}
 			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
-			Session session = service.getSession(sProvider, null, null, false);
 			try{
-				String nodePath = "";
+				String nodePath = null;
 				if(importForm.categoryId_ == null || importForm.categoryId_.trim().length() < 1){
-					nodePath += service.getForumHomePath(sProvider);
+					nodePath = service.getForumHomePath(sProvider);
 				} else {
-					nodePath += service.getCategory(ForumSessionUtils.getSystemProvider(), importForm.categoryId_).getPath();
+					nodePath = service.getCategory(ForumSessionUtils.getSystemProvider(), importForm.categoryId_).getPath();
 				}
-				session.importXML(nodePath, xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
-				session.save();
+				service.importXML(nodePath, xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
 		        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 		        sProvider.close();

@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -153,6 +155,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   			profile.setProperty("exo:userTitle", "User") ;
     		profile.setProperty("exo:userRole", 2) ;
   		}
+  		profile.setProperty("exo:userId", userId) ;
   		if(profileHome.isNew()) {
     		profileHome.getSession().save() ;
     	}else {
@@ -501,10 +504,14 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
-  	storage_.updateTopicAccess(sysSession, userId, topicId) ;
+	  storage_.updateTopicAccess(sysSession, userId, topicId) ;
   }
   
-  public Session getSession(SessionProvider sProvider, String categoryId, String forumId, boolean isExportForum) throws Exception{
-	  return storage_.getSession(sProvider, categoryId, forumId, isExportForum);
+  public void exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
+	  storage_.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
+  }
+  
+  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
+	  storage_.importXML(nodePath, bis, typeImport, sessionProvider);
   }
 }
