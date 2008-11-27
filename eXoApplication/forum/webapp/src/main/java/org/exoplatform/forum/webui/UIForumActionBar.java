@@ -21,6 +21,7 @@ import org.exoplatform.forum.webui.popup.UICategoryForm;
 import org.exoplatform.forum.webui.popup.UIForumAdministrationForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIForumUserSettingForm;
+import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIModeratorManagementForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
@@ -45,6 +46,7 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/UIForumActionBar.gtmpl", 
 		events = {
 				@EventConfig(listeners = UIForumActionBar.AddCategoryActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.AddForumActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.EditProfileActionListener.class),
@@ -66,6 +68,7 @@ public class UIForumActionBar extends UIContainer	{
 	public void setHasCategory(boolean hasCategory) {
 		this.hasCategory = hasCategory ;
 	}
+	
 	static public class AddCategoryActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
@@ -75,6 +78,19 @@ public class UIForumActionBar extends UIContainer	{
 			popupContainer.addChild(UICategoryForm.class, null, null) ;
 			popupContainer.setId("AddCategoryForm") ;
 			popupAction.activate(popupContainer, 500, 340) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}	
+	
+	static public class ImportCategoryActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.addChild(UIImportForm.class, null, null) ;
+			popupContainer.setId("FORUMImportCategoryForm") ;
+			popupAction.activate(popupContainer, 400, 150) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	

@@ -33,7 +33,9 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UICategoryForm;
+import org.exoplatform.forum.webui.popup.UIExportForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
+import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
@@ -64,6 +66,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		events = {
 				@EventConfig(listeners = UICategory.SearchFormActionListener.class),
 				@EventConfig(listeners = UICategory.EditCategoryActionListener.class),
+				@EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
+				@EventConfig(listeners = UICategory.ImportForumActionListener.class),
 				@EventConfig(listeners = UICategory.DeleteCategoryActionListener.class,confirm="UICategory.confirm.DeleteCategory"),
 				@EventConfig(listeners = UICategory.AddForumActionListener.class),
 				@EventConfig(listeners = UICategory.EditForumActionListener.class),
@@ -579,6 +583,40 @@ public class UICategory extends UIForm	{
 			addWatchingForm.initForm() ;
 			addWatchingForm.setPathNode(path);
 			popupAction.activate(addWatchingForm, 425, 250) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class ExportCategoryActionListener extends EventListener<UICategory> {
+		public void execute(Event<UICategory> event) throws Exception {
+			UICategory uiCategory = event.getSource();
+			Category category = uiCategory.getCategory();
+			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
+			if(category == null){
+				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+				return;
+			}
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIExportForm exportForm = popupAction.createUIComponent(UIExportForm.class, null, null) ;
+			exportForm.setObjectId(category);
+			popupAction.activate(exportForm, 200, 130) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class ImportForumActionListener extends EventListener<UICategory> {
+		public void execute(Event<UICategory> event) throws Exception {
+			UICategory category = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIForumPortlet forumPortlet = category.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIImportForm importForm = popupAction.createUIComponent(UIImportForm.class, null, null) ;
+			importForm.setCategoryId(category.categoryId);
+			popupAction.activate(importForm, 400, 150) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

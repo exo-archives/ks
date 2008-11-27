@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -30,6 +32,7 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -3485,5 +3488,24 @@ public class JCRDataStorage {
 		Query query = qm.createQuery(queryString, Query.XPATH);
 		QueryResult result = query.execute();
 		return result.getNodes();
+	}
+	
+	public void exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
+		Session session = null;
+		Node homeNode = getForumHomeNode(sessionProvider);
+		if(forumId != null){
+			session = homeNode.getNode(categoryId).getNode(forumId).getSession();
+		} else {
+			session = homeNode.getNode(categoryId).getSession();
+		}
+		session.exportSystemView(nodePath, bos, false, false ) ;
+		session.logout();
+	}
+
+	public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
+		Session session = getForumHomeNode(sessionProvider).getSession();
+		session.importXML(nodePath, bis, typeImport);
+		session.save();
+		session.logout();
 	}
 }

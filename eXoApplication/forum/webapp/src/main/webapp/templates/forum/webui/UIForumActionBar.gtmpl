@@ -16,7 +16,7 @@
 							<td width="85%" class="ControlButtonContainer">
 								<%String[] actions = [""];
 									if(isAdmin) { 
-										actions = ["AddCategory","AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
+										actions = ["AddCategory", "ImportCategory", "AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
 									} else {
 										actions = ["EditProfile","OpenBookMark"];
 									}

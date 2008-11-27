@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -412,4 +414,12 @@ public class ForumServiceImpl implements ForumService, Startable{
   public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception {
   	return storage_.search(queryString, sessionProvider) ;
   }	
+  
+  public void exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
+	  storage_.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
+  }
+  
+  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
+	  storage_.importXML(nodePath, bis, typeImport, sessionProvider);
+  }
 }
