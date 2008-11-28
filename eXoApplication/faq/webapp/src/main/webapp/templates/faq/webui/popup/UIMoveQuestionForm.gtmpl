@@ -26,7 +26,7 @@
 				<div style="clear: left;"><span></span></div>
     		<div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQRootChildren">
 			   	<%
-			   	if(!listCate.isEmpty()){
+			   	if(listCate!= null && !listCate.isEmpty()){
 				    int n = listCate.size() ;
 				    int i = 0 ;
 				    int id = 0;
