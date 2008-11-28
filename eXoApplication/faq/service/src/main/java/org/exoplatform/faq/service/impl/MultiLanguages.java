@@ -406,7 +406,6 @@ public class MultiLanguages {
       if(!pro.isProtected()) {
         String propertyName = pro.getName() ;
         JcrInputProperty property = (JcrInputProperty)inputs.get(NODE + propertyName) ;
-        System.out.println("propertyName ====>"+ propertyName + "===>"+ property);
         
         if(defaultLanguage.equals(language) && property != null) {
           setPropertyValue(propertyName, node, pro.getRequiredType(), property.getValue(), pro.isMultiple()) ;
@@ -441,8 +440,6 @@ public class MultiLanguages {
     if(isDefault && languagesNode.hasNode(language)) languagesNode.getNode(language).remove() ;
     node.save() ;
     node.getSession().save() ;
-    
-    System.out.println("\n\n\n\n>>>>addLanguage() --> size of questionNodeChildren: " + node.getNodes().getSize());
   }
   
   /**

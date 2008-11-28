@@ -103,7 +103,6 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			Session session = categoryNode.getSession();
 			sProvider.close();
 			try{
-				System.out.println(xmlInputStream.toString());
 				session.importXML(categoryNode.getPath(), xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 				session.save();
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));

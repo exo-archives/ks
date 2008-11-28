@@ -26,10 +26,10 @@
 		<div class="ForumStatsList">
 			<table cellspacing="0" borderspacing="0" id="UIListUsers" class="UIGrid">
 				<tbody>
-					<tr>
+					<!--tr>
 						<td style="width: 40px; border-right: 1px solid #ffffff; border-top: 1px solid #c7c7c7;" ><div class="UserIcon" ><span></span></div></td>
 					 	<td class="text" style="border-top: 1px solid #c7c7c7;"><%=_ctx.appRes("UICategoryInfo.label.CurrentUsers")%> </td>
-		 			</tr>
+		 			</tr-->
 					<tr class="OddRow">
 						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
 					 	<td >

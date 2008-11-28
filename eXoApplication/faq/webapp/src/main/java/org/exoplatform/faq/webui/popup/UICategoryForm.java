@@ -297,7 +297,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			}catch(RuntimeException exception){
 				throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
 			} catch (Exception e) {
-				System.out.println("\n\n\n\n----------->exception e: \n\n\n\n");
 				e.printStackTrace();
 				uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
 						ApplicationMessage.INFO)) ;

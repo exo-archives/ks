@@ -3774,18 +3774,21 @@ public class JCRDataStorage {
 	}
 
 	public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception {
-		String path = getUserProfileHome(sysProvider).getPath() ;
-		StringBuilder stringBuffer = new StringBuilder();
-		stringBuffer.append("/jcr:root").append(path).append(query);
-		NodeIterator iter = search(stringBuffer.toString(), sysProvider) ;
-		Node forumHomeNode = getForumHomeNode(sysProvider);
-		if(forumHomeNode.hasNode(Utils.FORUM_STATISTIC)) {
-			forumHomeNode.getNode(Utils.FORUM_STATISTIC).setProperty("exo:activeUsers", iter.getSize());
-			forumHomeNode.save() ;
-		}else {
-			ForumStatistic forumStatistic = new ForumStatistic();
-			forumStatistic.setActiveUsers(iter.getSize()) ;
-			saveForumStatistic(sysProvider, forumStatistic) ;
+		try {
+			String path = getUserProfileHome(sysProvider).getPath() ;
+			StringBuilder stringBuffer = new StringBuilder();
+			stringBuffer.append("/jcr:root").append(path).append(query);
+			NodeIterator iter = search(stringBuffer.toString(), sysProvider) ;
+			Node forumHomeNode = getForumHomeNode(sysProvider);
+			if(forumHomeNode.hasNode(Utils.FORUM_STATISTIC)) {
+				forumHomeNode.getNode(Utils.FORUM_STATISTIC).setProperty("exo:activeUsers", iter.getSize());
+				forumHomeNode.save() ;
+			}else {
+				ForumStatistic forumStatistic = new ForumStatistic();
+				forumStatistic.setActiveUsers(iter.getSize()) ;
+				saveForumStatistic(sysProvider, forumStatistic) ;
+			}
+		}catch (Exception e) {			
 		}		
 	}
 

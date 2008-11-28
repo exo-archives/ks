@@ -464,7 +464,6 @@ public class UICategory extends UIForm	{
 	
 	static public class OpenForumLinkActionListener extends EventListener<UICategory> {
 		public void execute(Event<UICategory> event) throws Exception {
-			System.out.println("OpenForumLinkActionListener=="+ GregorianCalendar.getInstance().getTimeInMillis());
 			UICategory uiCategory = event.getSource();
 			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			Forum forum = uiCategory.getForum(forumId) ;
@@ -476,9 +475,7 @@ public class UICategory extends UIForm	{
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
 			uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
-			System.out.println("OpenForumLinkActionListener.portlet=="+ GregorianCalendar.getInstance().getTimeInMillis());
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-			System.out.println("OpenForumLinkActionListener=="+ GregorianCalendar.getInstance().getTimeInMillis());
 		}
 	}
 	

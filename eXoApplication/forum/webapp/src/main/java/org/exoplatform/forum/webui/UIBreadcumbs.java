@@ -271,7 +271,6 @@ public class UIBreadcumbs extends UIContainer {
 				forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
-				System.out.println("\n\n========> not open\n\n");
 				uiBreadcums.isOpen = true;
 			}
 		}
