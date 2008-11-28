@@ -14,9 +14,11 @@
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</td>
 							<td>
-								<div style="float:left;">
+								<div>
 								<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
 								</div>
+							</td>
+							<td>
 								<div class="UIActionForum" onclick="script:scroll(0,0)">
 									<div class="NormalButtom">
 										<div class="ButtonLeft">
@@ -28,7 +30,6 @@
 										</div>
 									</div>
 								</div>
-								<div style="clear: left;"><span></span></div>
 							</td>
 						</tr>
 					</tbody>
