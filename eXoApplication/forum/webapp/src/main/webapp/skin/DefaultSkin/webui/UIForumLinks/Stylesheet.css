@@ -3,9 +3,14 @@
 }
 
 .UIForumLinks .HorizontalLayout {
-	width: 360px;
 	border: none;
 	float: right;
+	background: none;
+	!width: 420px;
+}
+
+*html .UIForumLinks .HorizontalLayout {
+	width: 420px;
 }
 
 .UIForumLinks .HorizontalLayout .UIFormGrid td.FieldLabel {
@@ -15,7 +20,6 @@
 }
 
 .UIForumLinks .HorizontalLayout .UIFormGrid .UIActionForum {
-	float: left;
 	margin-left: 4px;
 }
 
