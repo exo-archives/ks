@@ -95,8 +95,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		
 	}
 	
-	private void updateUserProfiles(JCRPageList pageList) throws Exception {
-		List<Post> posts = pageList.getPage(pageList.getCurrentPage() ) ;
+	private void updateUserProfiles(List<Post> posts) throws Exception {
 		List<String> userNames = new ArrayList<String>() ;
 		for(Post post : posts) {
 			if(!mapUserProfile.containsKey(post.getOwner())) {
@@ -128,19 +127,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			this.pageSelect = availablePage ;
 			forumPageIterator.setSelectPage(availablePage);
 		}
-		if(this.pageSelect < 1) this.pageSelect = 1 ;
-		List<Post> posts = null;
-		while(posts == null && pageSelect >= 1){
-			try {
-				posts = pageList.getPage(pageSelect) ;
-			} catch (Exception e) {
-				--pageSelect;
-				posts = null ;
-			}
-		}
-		
+		List<Post> posts = pageList.getPage(pageSelect);
 		if(posts == null) posts = new ArrayList<Post>();
-		updateUserProfiles(this.pageList) ;
+		updateUserProfiles(posts) ;
 		return posts ;
 	}
 	

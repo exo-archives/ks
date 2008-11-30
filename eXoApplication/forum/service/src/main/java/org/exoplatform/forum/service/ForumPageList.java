@@ -58,6 +58,7 @@ public class ForumPageList extends JCRPageList {
 		if(iter != null){
 			iter_ = iter ;
 			setAvailablePage(iter.getSize()) ;
+//			System.out.println("\n\nAdd iter_: " + iter_.getSize());
 		}
 	}
 	
@@ -65,8 +66,13 @@ public class ForumPageList extends JCRPageList {
 	protected void populateCurrentPage(long page) throws Exception	{
 		if(iter_ == null) {
 			iter_ = setQuery(sProvider_, isQuery_, value_) ;
+			setAvailablePage(iter_.getSize()) ;
+			checkAndSetPage(page) ;
+//			System.out.println("\n\nPage: " + page);
+			page = currentPage_;
+//			System.out.println("\n\nPage: " + currentPage_);
+//			System.out.println("\n\niter_: " + iter_.getSize());
 		}
-		if(iter_ != null)setAvailablePage(iter_.getSize()) ;
 		Node currentNode ;
 		long pageSize = 0 ;
 		if(page > 0) {

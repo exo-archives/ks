@@ -64,8 +64,8 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIPageListTopicByUser extends UIContainer{
 	private ForumService forumService ;
-	private List<Topic> topics = new ArrayList<Topic>() ;
 	private UserProfile userProfile ;
+	JCRPageList pageList;
 	private String userName = new String() ;
 	public UIPageListTopicByUser() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -86,26 +86,19 @@ public class UIPageListTopicByUser extends UIContainer{
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		boolean isMod = false;
 		if(this.userProfile.getUserRole() == 0) isMod = true;
-		JCRPageList pageList	= forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), this.userName, isMod) ;
+		pageList	= forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), this.userName, isMod) ;
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null)pageList.setPageSize(6) ;
 		long page = forumPageIterator.getPageSelected() ;
-		List<Topic> topics = null;
-		while(topics == null && page >= 1){
-			try {
-				topics = pageList.getPage(page) ;
-      } catch (Exception e) {
-      	topics = null; 
-      	--page;
-      }
-		}
+		List<Topic> topics = pageList.getPage(page) ;
 		if(topics == null) topics = new ArrayList<Topic>(); 
-		this.topics = topics ;
 		return topics ;
 	}
 	
-	public Topic getTopicById(String topicId) {
-		for(Topic topic : this.topics) {
+	@SuppressWarnings("unchecked")
+  public Topic getTopicById(String topicId) throws Exception {
+		List<Topic> topics = pageList.getPage(0) ;
+		for(Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
 		return null ;
@@ -117,27 +110,6 @@ public class UIPageListTopicByUser extends UIContainer{
 		return ForumUtils.getStarNumber(voteRating) ;
 	}
 
-	@SuppressWarnings("unused")
-	private JCRPageList getPageListPost(Forum forum, Topic topic, String categoryId) throws Exception {
-		String isApprove = "" ;
-		String isHidden = "" ;
-		String userLogin = this.userProfile.getUserId();
-		long role = this.userProfile.getUserRole() ;
-		if(role >=2){ isHidden = "false" ;}
-		if(role == 1) {
-			if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
-				isHidden = "false" ;
-			}
-		}
-		if(forum.getIsModeratePost() || topic.getIsModeratePost()) {
-			if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
-		}
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), categoryId, forum.getId(), topic.getId(), isApprove, isHidden, "", userLogin)	; 
-		long maxPost = this.userProfile.getMaxTopicInPage() ;
-		if(maxPost > 0)	pageListPost.setPageSize(maxPost) ;
-		return pageListPost;
-	}
-	
 	static	public class DeleteTopicActionListener extends EventListener<UIPageListTopicByUser> {
 		public void execute(Event<UIPageListTopicByUser> event) throws Exception {
 			UIPageListTopicByUser uiForm = event.getSource() ;
@@ -189,7 +161,6 @@ public class UIPageListTopicByUser extends UIContainer{
 					uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
 					return;
 				}
-				
 				if(uiForm.userProfile.getUserRole() == 0 || (forum.getModerators() != null && forum.getModerators().length > 0 && 
 								ForumServiceUtils.hasPermission(forum.getModerators(), uiForm.userProfile.getUserId()))) isRead = true;
 				else isRead = false;
@@ -237,10 +208,7 @@ public class UIPageListTopicByUser extends UIContainer{
 				uiForumContainer.setIsRenderChild(false) ;
 				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-				
 				uiTopicDetail.setUpdateContainer(categoryId, forumId, topic, 1) ;
-				
-				uiTopicDetail.setUpdatePageList(uiForm.getPageListPost(forum, topic, categoryId)) ;
 				uiTopicDetail.setUpdateForum(forum) ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(categoryId, forumId, topic ) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+ forumId + " "));

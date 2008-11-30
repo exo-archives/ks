@@ -203,12 +203,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		}catch (NullPointerException e) {
 			e.printStackTrace();
 		}
-		this.updatePageList(this.pageList);
+//		System.out.println("\n\ngetCurrentPage:" + pageList.getCurrentPage());
+//		this.updatePageList(this.pageList);
 	}
 	
 	@SuppressWarnings("unused")
 	private String[] getActionMenuForum() throws Exception {
-		//String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption"};
 		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "WatchOption"};
 		return actions;
 	}
@@ -224,15 +224,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private List<Topic> getTopicPageLits() throws Exception {
 		maxPage = this.pageList.getAvailablePage() ;
 		if(this.pageSelect > maxPage)this.pageSelect = maxPage ;
-		List<Topic> topics = null;
-		while(topics == null && pageSelect >= 1){
-			try {
-				topics = pageList.getPage(pageSelect) ;
-      } catch (Exception e) {
-      	topics = null; 
-      	--pageSelect;
-      }
-		}
+		List<Topic> topics = pageList.getPage(pageSelect);
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		this.topicList = topics;
 		for(Topic topic : this.topicList) {
@@ -247,7 +239,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unchecked")
-  private Topic getTopic(String topicId) throws Exception {
+  private Topic getTopicByAll(String topicId) throws Exception {
 		List<Topic> listTopic = this.pageList.getPage(0) ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
@@ -255,26 +247,13 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return null ;
 	}
 	
-	/*private JCRPageList getPageListPost(Topic topic) throws Exception {
-		String isApprove = "" ;
-		String isHidden = "" ;
-		String userLogin = this.userProfile.getUserId();
-		long role = this.userProfile.getUserRole() ;
-		if(role >=2){ isHidden = "false" ;}
-		if(role == 1) {
-			if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
-				isHidden = "false" ;
-			}
+	@SuppressWarnings("unchecked")
+  private Topic getTopic(String topicId) throws Exception {
+		for (Topic topic : topicList) {
+			if(topic.getId().equals(topicId)) return topic ;
 		}
-		if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-			if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
-		}
-		JCRPageList pageListPost = this.forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topic.getId(), isApprove, isHidden, "", userLogin)	; 
-		long maxPost = getUserProfile().getMaxPostInPage() ;
-		if(maxPost > 0) this.maxPost = maxPost ;
-		pageListPost.setPageSize(this.maxPost) ;
-		return pageListPost;
-	}*/
+		return null ;
+	}
 	
 	@SuppressWarnings("unused")
   private long getSizePost(Topic topic) throws Exception {
@@ -450,30 +429,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				uiTopicDetail.setUpdateForum(uiTopicContainer.forum) ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic ) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId+"/"+ uiTopicContainer.forumId + " "));
-				/*if(isReadTopic){
-					uiTopicDetail.setGetTopic(true) ;
-				}*/
 				if(temp[2].equals("true")) {
 					uiTopicDetail.setIdPostView("lastpost") ;
 				} else {
 					uiTopicDetail.setIdPostView("top") ;
 				}
-				/*JCRPageList pageList = uiTopicContainer.getPageListPost(topic) ;
-				long page = Long.parseLong(temp[1]) ;
-				forumPortlet.updateUserProfileInfo() ;
-				UserProfile userProfile = forumPortlet.getUserProfile() ;
-				if(pageList != null) {
-					pageList.setPageSize(userProfile.getMaxPostInPage()) ;
-					if(page > pageList.getAvailablePage()) {
-						page = pageList.getAvailablePage();
-						Object[] args = { };
-						UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
-						uiApp.addMessage(new ApplicationMessage("UITopicDetail.msg.erro-change-posts-per-page", args, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					}
-				}*/
 				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, Long.parseLong(temp[1])) ;
-				//uiTopicDetail.setUpdatePageList(pageList) ;
 				
 				WebuiRequestContext context = event.getRequestContext() ;
 				context.addUIComponentToUpdateByAjax(uiForumContainer) ;
@@ -664,7 +625,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List <Topic> topics = new ArrayList<Topic>();
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					if(topic.getIsApproved()) continue ;
 					topic.setIsApproved(true);
@@ -697,7 +658,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			Topic topic = null ;
 			boolean checked = false ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					checked = true ;
 					break;
@@ -728,7 +689,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List <Topic> topics = new ArrayList<Topic>();
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					if(!topic.getIsClosed()) continue ;
 					topic.setIsClosed(false);
@@ -759,7 +720,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					if(topic.getIsClosed()) continue ;
 					topic.setIsClosed(true);
@@ -790,7 +751,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					if(topic.getIsLock()) continue ;
 					topic.setIsLock(true);
@@ -832,7 +793,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					if(!topic.getIsLock()) continue ;
 					topic.setIsLock(false);
@@ -863,7 +824,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					if(topic.getIsSticky()){ topic.setIsSticky(false); topics.add(topic); }
 				}
@@ -891,7 +852,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					if(!topic.getIsSticky()){ topic.setIsSticky(true); topics.add(topic); }
 				}
@@ -919,7 +880,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					topics.add(topic);
 				}
@@ -948,7 +909,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					topics.add(topic);
 				}
@@ -976,7 +937,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					topics.add(topic);
 				}
@@ -1010,7 +971,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			List<String> topicIds = uiTopicContainer.getIdSelected() ;
 			Topic topic ;
 			for(String topicId : topicIds) {
-				topic = uiTopicContainer.getTopic(topicId);
+				topic = uiTopicContainer.getTopicByAll(topicId);
 				if(topic != null) {
 					if(topic.getIsWaiting()){ topic.setIsWaiting(false) ;topics.add(topic); } 
 				}
@@ -1060,7 +1021,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			if(!ForumUtils.isEmpty(topicId)) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try{
-					Topic topic = topicContainer.getTopic(topicId);
+					Topic topic = topicContainer.getTopicByAll(topicId);
 					StringBuffer buffer = new StringBuffer();
 					buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//")
 					.append(topicContainer.categoryId).append("/").append(topicContainer.forumId).append("/").append(topicId) ;

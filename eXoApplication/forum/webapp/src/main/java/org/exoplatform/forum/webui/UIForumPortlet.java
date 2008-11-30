@@ -46,7 +46,6 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isTagRendered = false;
 	private boolean isSearchRendered = false;
 	private boolean isJumpRendered = false;
-	private boolean isLogin = true ;
 	private UserProfile userProfile = null;
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
@@ -118,6 +117,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		if(this.userProfile == null) updateUserProfileInfo() ;
 		return this.userProfile ;
 	}
+	
 	@SuppressWarnings("deprecation")
 	public void updateUserProfileInfo() throws Exception {
 		String userId = "" ;
@@ -133,12 +133,10 @@ public class UIForumPortlet extends UIPortletApplication {
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			//this.userProfile = forumService.getUserProfile(sProvider, userId, true, true, isLogin) ;
 			this.userProfile = forumService.getDefaultUserProfile(sProvider, userId) ;
 		}finally {
 			sProvider.close();
 		}
-		this.isLogin = false;
 		this.userProfile.setIsOnline(true) ;
 		if(date != null)
 			this.userProfile.setLastLoginDate(date) ;

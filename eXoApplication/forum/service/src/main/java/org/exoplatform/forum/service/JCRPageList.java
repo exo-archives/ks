@@ -18,7 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.util.List;
 
-import org.exoplatform.commons.exception.ExoMessageException;
+//import org.exoplatform.commons.exception.ExoMessageException;
 /**
  * @author Tuan Nguyen (tuan08@users.sourceforge.net)
  * @since Oct 21, 2004
@@ -64,7 +64,9 @@ abstract public class JCRPageList {
 	
 	public List getPage(long page) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPage(page) ;
+		populateCurrentPage(currentPage_) ;
+//		System.out.println("\n\ncurrentPage_: " + currentPage_);
+		this.pageSelected = page;
 		return currentListPage_ ;
 	}
 	
@@ -89,14 +91,17 @@ abstract public class JCRPageList {
 		populateCurrentPageList(page, list) ;
 		return currentListPage_ ;
 	}
-	
-	
-	
+
 	protected void checkAndSetPage(long page) throws Exception	{
-		if(page < 0 || page > availablePage_) {
-			Object[] args = { Long.toString(page), Long.toString(availablePage_) } ;
-			throw new ExoMessageException("PageList.page-out-of-range", args) ;
+		if(page < 0 ){
+			page = 1;
+		}else if(page > availablePage_) {
+			page = availablePage_;
 		}
+//		if(page < 0 || page > availablePage_) {
+//			Object[] args = { Long.toString(page), Long.toString(availablePage_) } ;
+//			throw new ExoMessageException("PageList.page-out-of-range", args) ;
+//		}
 		currentPage_ =	page ;
 	}
 	

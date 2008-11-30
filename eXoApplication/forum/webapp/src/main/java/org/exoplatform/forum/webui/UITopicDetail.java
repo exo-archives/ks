@@ -145,12 +145,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private Topic topic = new Topic();
 	private JCRPageList pageList ;
 	private boolean isEditTopic = false ;
-	//private boolean isUpdatePageList = false ;
 	
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
-	private List<Post>	posts ;
-	private long maxPost = 10 ;
 	private UserProfile userProfile = null;
 	private String userName = " " ;
 	private boolean isModeratePost = false ;
@@ -321,8 +318,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		//this.isUpdatePageList = false ;
 	}
 	
-	private void updateUserProfiles(JCRPageList pageList) throws Exception {
-		List<Post> posts = pageList.getPage(this.pageSelect) ;
+  /*private void updateUserProfiles(JCRPageList pageList) throws Exception {
+		List<Post> posts = pageList.getPage(pageSelect) ;
 		List<String> userNames = new ArrayList<String>() ;
 		mapUserProfile.clear() ;
 		mapUserName.clear() ;
@@ -343,7 +340,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				sProvider.close() ;
 			}
 		}
-	}
+	}*/
 	@SuppressWarnings("unused")
 	private Topic getTopic() throws Exception {
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
@@ -427,6 +424,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			return contact.getAvatarUrl();
 		}
 	}
+
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
 		String userLogin = this.userProfile.getUserId();
@@ -435,30 +433,23 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin) ;
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try {
-			//if (this.isUpdatePageList) {
 				String isApprove = "";
 				String isHidden = "";
-				//Topic topic = this.topic;
 				if(!isMod) isHidden = "false"; 
-				
 				if (this.forum.getIsModeratePost() || this.topic.getIsModeratePost()) {
 					if (!isMod && !(this.topic.getOwner().equals(userLogin)))
 						isApprove = "true";
 				}
-				this.pageList = this.forumService.getPosts(sProvider, this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
-				//this.isUpdatePageList = false;
-			//}
+				pageList = this.forumService.getPosts(sProvider, this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
 			long maxPost = this.userProfile.getMaxPostInPage();
-			if (maxPost > 0)
-				this.maxPost = maxPost;
-			pageList.setPageSize(this.maxPost);
-			this.updatePageList(this.pageList);
-			maxPage = pageList.getAvailablePage();
+			if (maxPost <= 0) maxPost = 10;
+			pageList.setPageSize(maxPost);
+			this.updatePageList(pageList);
 			if (IdPostView.equals("lastpost")) {
 				this.pageSelect = maxPage;
 			}
 			this.isModeratePost = this.topic.getIsModeratePost();
-			updateUserProfiles(pageList) ;
+//			updateUserProfiles(pageList) ;
 		} catch (Exception e) {
 			sProvider.close();
 		}
@@ -466,27 +457,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private boolean getIsModeratePost(){return this.isModeratePost; }
-	/*public void setUpdatePostPageList(boolean isUpdatePageList) {
-		//this.isUpdatePageList = isUpdatePageList;
-	}*/
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPostPageList() throws Exception {
-		if(this.pageList == null) {
-			posts = new ArrayList<Post>(); 
-			return posts ;
-		}
-		posts = null;
-		while (posts ==  null && pageSelect >= 1) {
-			try {
-				this.posts = this.pageList.getPage(this.pageSelect) ;
-			} catch (Exception e) {
-				this.posts = null ;
-				--this.pageSelect;
-			}
-    }
-		if(this.posts == null) posts = new ArrayList<Post>(); 
-		for (Post post : this.posts) {
+		List<Post> posts = new ArrayList<Post>();  
+		if(this.pageList == null) return posts ;
+		posts = this.pageList.getPage(this.pageSelect) ;
+		if(posts == null) posts = new ArrayList<Post>(); 
+		List<String> userNames = new ArrayList<String>() ;
+		mapUserProfile.clear() ;
+		mapUserName.clear() ;
+		for (Post post : posts) {
+			mapUserName.put(post.getOwner(), post.getOwner()) ;			
 			if(getUIFormCheckBoxInput(post.getId()) != null) {
 				getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
 			}else {
@@ -494,7 +476,22 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			}
 			this.IdLastPost = post.getId() ;
 		}
-		return this.posts ;
+		//updateUserProfiles
+		userNames = Arrays.asList(mapUserName.keySet().toArray(new String[]{})) ;
+		if(userNames.size() > 0) {
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				List<UserProfile> profiles = forumService.getQuickProfiles(sProvider, userNames) ;
+				for(UserProfile profile : profiles) {
+					mapUserProfile.put(profile.getUserId(), profile) ;
+				}
+			}catch(Exception e) {
+				e.printStackTrace() ;
+			}finally {
+				sProvider.close() ;
+			}
+		}
+		return posts ;
 	}
 	
 	@SuppressWarnings("unchecked")

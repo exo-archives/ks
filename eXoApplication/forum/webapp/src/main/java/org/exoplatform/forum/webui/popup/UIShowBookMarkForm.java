@@ -70,12 +70,10 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	ForumService forumService ;
-	private boolean isOpen = true;
 	public final String BOOKMARK_ITERATOR = "BookmarkPageIterator";
 	private JCRPageList pageList ;
 	UIForumPageIterator pageIterator ;
 	private List<String> bookMarks = new ArrayList<String>();
-	//private String []bookMark = new String[]{}; 
 	public UIShowBookMarkForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		pageIterator = addChild(UIForumPageIterator.class, null, BOOKMARK_ITERATOR);
@@ -86,9 +84,6 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<String> getBookMark() throws Exception {
-		//this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		//bookMark = this.userProfile.getBookmark() ;
-		//bookMarks.clear();
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
 		try{
 			bookMarks = forumService.getBookmarks(sProvider, this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
@@ -105,12 +100,6 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 		long pageSelect = pageIterator.getPageSelected() ;
 		try {
 			list.addAll(this.pageList.getPageList(pageSelect, this.bookMarks)) ;
-			if(list.isEmpty()){
-				while(list.isEmpty() && pageSelect > 1) {
-					list.addAll(this.pageList.getPageList(--pageSelect, this.bookMarks)) ;
-					pageIterator.setSelectPage(pageSelect) ;
-				}
-			}
 		} catch (Exception e) {
 		}
 		try {
@@ -273,13 +262,5 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
-	}
-
-	public boolean getIsOpen() {
-		return isOpen;
-	}
-
-	public void setIsOpen(boolean isOpen) {
-		this.isOpen = isOpen;
 	}
 }
