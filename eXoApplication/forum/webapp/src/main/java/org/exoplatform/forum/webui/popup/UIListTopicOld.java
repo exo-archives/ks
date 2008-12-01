@@ -89,14 +89,8 @@ public class UIListTopicOld extends UIContainer {
 				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;
 				pageIterator.updatePageList(pageList) ;
 				long page = pageIterator.getPageSelected() ;
-				List<Topic> topics = null;
-				while(topics == null && page >= 1)
-					try {
-						topics = pageList.getPage(page) ;
-          } catch (Exception e) {
-	          topics = null;
-	          page = page - 1;
-          }
+				List<Topic> topics = pageList.getPage(page) ;
+				pageIterator.setSelectPage(pageList.getCurrentPage());
 				if(topics == null)topics = new ArrayList<Topic>();
 				this.topics = topics ;
 			} else {

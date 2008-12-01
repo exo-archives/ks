@@ -97,13 +97,10 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 		pageIterator = this.getChild(UIForumPageIterator.class);
 		pageIterator.updatePageList(pageList);
 		List<String>list = new ArrayList<String>();
-		long pageSelect = pageIterator.getPageSelected() ;
+		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), this.bookMarks)) ;
+		pageIterator.setSelectPage(pageList.getCurrentPage());
 		try {
-			list.addAll(this.pageList.getPageList(pageSelect, this.bookMarks)) ;
-		} catch (Exception e) {
-		}
-		try {
-			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

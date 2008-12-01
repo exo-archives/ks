@@ -27,7 +27,6 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -65,6 +64,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 				@EventConfig(listeners = UITopicsTag.RemoveTagActionListener.class),
 				@EventConfig(listeners = UITopicsTag.AddWatchingActionListener.class),
 				@EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class),
+				@EventConfig(listeners = UITopicsTag.SetOrderByActionListener.class),
 				@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 		}
 )
@@ -72,13 +72,10 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private ForumService forumService ;
 	private String tagId = "" ;
-	private JCRPageList listTopic ;
 	private Tag tag ;
-	private long maxPost = 10 ;
-	private long maxTopic = 10 ;
 	private long maxPage = 1 ;
 	private boolean isUpdateTag = true ;
-	private boolean isUpdateTopicTag = true ;
+	private String strOrderBy = "";
 	private UserProfile userProfile = null;
 	private Map<String, Long> mapNumberPagePost = new HashMap<String, Long>();
 	public UITopicsTag() throws Exception {
@@ -88,7 +85,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	public void setIdTag(String tagId) throws Exception {
 		this.tagId = tagId ;
 		this.isUpdateTag = true ;
-		this.isUpdateTopicTag = true ;
 		this.mapNumberPagePost.clear();
 		this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 	}
@@ -97,7 +93,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	  this.tag = tag;
 	  this.tagId = tag.getId();
 	  this.isUpdateTag = false;
-	  this.isUpdateTopicTag = true ;
 	  this.mapNumberPagePost.clear();
 	  this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
   }
@@ -107,24 +102,13 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unused")
-	private void getListTopicTag() throws Exception {
-		this.listTopic = forumService.getTopicsByTag(ForumSessionUtils.getSystemProvider(), this.tagId) ;
-		long maxTopic = this.userProfile.getMaxTopicInPage() ;
-		if(maxTopic > 0) this.maxTopic = maxTopic;
-		this.listTopic.setPageSize(this.maxTopic) ;
-		this.updatePageList(this.listTopic) ;
-		if(this.isUpdateTopicTag) { 
-			this.pageSelect = 1;
-			this.isUpdateTopicTag = false ;
-		}
-	}
-	
-	@SuppressWarnings("unused")
   private long getSizePost(String Id) throws Exception {
 		if(mapNumberPagePost.containsKey(Id)) return mapNumberPagePost.get(Id);
 		String Ids[] = Id.split("/") ;
 		Topic topic = getTopic(Ids[(Ids.length - 1)]) ;
-		if(topic !=null && topic.getPostCount() > this.maxPost) {
+		long maxPost = getUserProfile().getMaxPostInPage() ;
+		if(maxPost <= 0) maxPost = 10;
+		if(topic !=null && topic.getPostCount() > maxPost) {
 			String isApprove = "" ;
 			String isHidden = "" ;
 			String userLogin = this.userProfile.getUserId();
@@ -140,9 +124,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 				if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 			}
 			long availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden, userLogin)	; 
-			long maxPost = getUserProfile().getMaxPostInPage() ;
-			if(maxPost > 0) this.maxPost = maxPost ;
-			long value = availablePost/this.maxPost;
+			long value = availablePost/maxPost;
+			if(value*maxPost < availablePost) value = value + 1;
 			mapNumberPagePost.put(Id, value);
 			return value;
 		} else {
@@ -153,9 +136,13 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsTag() throws Exception {
-		getListTopicTag() ;
-		this.maxPage = this.listTopic.getAvailablePage();
-		List<Topic> topics = listTopic.getPage(pageSelect) ;
+		this.pageList = forumService.getTopicsByTag(ForumSessionUtils.getSystemProvider(), this.tagId, strOrderBy) ;
+		long maxTopic = this.userProfile.getMaxTopicInPage() ;
+		if(maxTopic > 0) maxTopic = 10;
+		this.pageList.setPageSize(maxTopic) ;
+		this.maxPage = this.pageList.getAvailablePage();
+		List<Topic> topics = pageList.getPage(pageSelect) ;
+		pageSelect = pageList.getCurrentPage();
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		for(Topic topic : topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
@@ -205,7 +192,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unchecked")
   private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.listTopic.getPage((long)0) ;
+		List<Topic> listTopic = this.pageList.getPage((long)0) ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
@@ -383,6 +370,27 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 				} catch (Exception e) {
 				}
 			}
+		}
+	}
+	
+	static public class SetOrderByActionListener extends EventListener<UITopicsTag> {
+		public void execute(Event<UITopicsTag> event) throws Exception {
+			UITopicsTag uiContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
+				if(uiContainer.strOrderBy.indexOf(path) >= 0) {
+					if(uiContainer.strOrderBy.indexOf("descending") > 0) {
+						uiContainer.strOrderBy = path + " ascending";
+					} else {
+						uiContainer.strOrderBy = path + " descending";
+					}
+				} else {
+					uiContainer.strOrderBy = path + " ascending";
+				}
+			} else {
+				uiContainer.strOrderBy = path + " ascending";
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}
 	}
 }

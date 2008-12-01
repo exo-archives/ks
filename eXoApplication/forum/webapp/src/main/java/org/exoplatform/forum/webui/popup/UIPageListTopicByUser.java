@@ -89,8 +89,8 @@ public class UIPageListTopicByUser extends UIContainer{
 		pageList	= forumService.getPageTopicByUser(ForumSessionUtils.getSystemProvider(), this.userName, isMod) ;
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null)pageList.setPageSize(6) ;
-		long page = forumPageIterator.getPageSelected() ;
-		List<Topic> topics = pageList.getPage(page) ;
+		List<Topic> topics = pageList.getPage(forumPageIterator.getPageSelected()) ;
+		forumPageIterator.setSelectPage(pageList.getCurrentPage());
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		return topics ;
 	}

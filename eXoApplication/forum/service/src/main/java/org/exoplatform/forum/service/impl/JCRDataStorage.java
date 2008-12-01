@@ -228,10 +228,6 @@ public class JCRDataStorage {
 						}
 					}
 					if(isAdd) {
-						//UserProfile userProfile = new UserProfile();
-						//userProfile.setUserId(categoryData.getOwner());
-						
-						//this.saveUserProfile(sProvider, userProfile, false, false);
 						Category category = new Category();
 						category.setCategoryName(categoryData.getName());
 						category.setDescription(categoryData.getDescription());
@@ -910,7 +906,8 @@ public class JCRDataStorage {
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)");
 			stringBuffer.append("[@exo:isActive='true'");
-			if (strQuery != null && strQuery.length() > 0) {// @exo:isClosed,
+			if (strQuery != null && strQuery.length() > 0) {
+				// @exo:isClosed,
 				// @exo:isWaiting ,
 				// @exo:isApprove
 				stringBuffer.append(" and ").append(strQuery);
@@ -2511,10 +2508,20 @@ public class JCRDataStorage {
 		return tags;
 	}
 
-	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId) throws Exception {
+	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-		String pathQuery = "/jcr:root" + forumHomeNode.getPath() + "//element(*,exo:topic)[@exo:tagId='" + tagId + "']";
+		StringBuilder builder = new StringBuilder();
+		builder.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:topic)[@exo:tagId='").append(tagId).append("']").append(" order by @exo:isSticky descending");
+		if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
+				builder.append(", @exo:lastPostDate descending");
+		} else {
+			builder.append(", @exo:").append(strOrderBy);
+			if (strOrderBy.indexOf("lastPostDate") < 0) {
+				builder.append(", @exo:lastPostDate descending");
+			}
+		}
+		String pathQuery = builder.toString();
 		Query query = qm.createQuery(pathQuery, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
@@ -2841,7 +2848,7 @@ public class JCRDataStorage {
 			userProfile.setLastPostDate(profile.getProperty("exo:lastPostDate").getDate().getTime()) ;
 			userProfile.setLastLoginDate(profile.getProperty("exo:lastLoginDate").getDate().getTime()) ;
 			userProfile.setIsDisplaySignature(profile.getProperty("exo:isDisplaySignature").getBoolean()) ;
-			if(userProfile.getIsDisplaySignature()) userProfile.setSignature(profile.getProperty("exo:signature").getString()) ;			                                                                                      
+			if(userProfile.getIsDisplaySignature()) userProfile.setSignature(profile.getProperty("exo:signature").getString()) ;
 			profiles.add(userProfile) ;
 		}
 		return profiles ;		

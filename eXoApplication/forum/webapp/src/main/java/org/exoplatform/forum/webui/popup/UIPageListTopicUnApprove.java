@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
@@ -79,19 +78,11 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsUnApprove() throws Exception {
-		JCRPageList pageList	= forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
-		this.updatePageList(pageList) ;
+		pageList	= forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
+//		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
-		long page = this.pageSelect ;
-		List<Topic> topics = null;
-		while(topics == null && page >= 1){
-			try {
-				topics = pageList.getPage(page) ;
-      } catch (Exception e) {
-      	topics = null; 
-      	--page;
-      }
-		}
+		List<Topic> topics = pageList.getPage(pageSelect);
+		pageSelect = pageList.getCurrentPage();
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		for (Topic topic : topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {

@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
@@ -80,19 +79,11 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPosts() throws Exception {
-		JCRPageList pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "", "");
-		this.updatePageList(pageList) ;
+		pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "", "");
+//		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
-		long page = pageSelect ;
-		List<Post> posts = null;
-		while(posts == null && page >= 1){
-			try {
-				posts = pageList.getPage(page) ;
-			} catch (Exception e) {
-				--page;
-				posts = null ;
-			}
-		}
+		List<Post> posts = pageList.getPage(pageSelect);
+		pageSelect = pageList.getCurrentPage();
 		if(posts == null) posts = new ArrayList<Post>();
 		if(!posts.isEmpty()) {
 			for (Post post : posts) {

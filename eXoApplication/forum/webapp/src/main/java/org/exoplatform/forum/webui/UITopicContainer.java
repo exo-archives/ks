@@ -26,7 +26,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -105,12 +104,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private String forumId = "";
 	private String categoryId = "";
 	private Forum forum;
-	private JCRPageList pageList ;
+//	private JCRPageList pageList ;
 	private List <Topic> topicList ;
 	private boolean isUpdate = false;
 	private boolean isModerator = false ;
-	private long maxTopic = 10 ;
-	private long maxPost = 10 ;
 	private boolean canAddNewThread = true ;
 	private UserProfile userProfile = null;
 	private String strOrderBy = "" ;
@@ -169,10 +166,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
 		this.canAddNewThread = true ;
-		if(this.userProfile == null) this.userProfile = new UserProfile();
+		if(userProfile == null) userProfile = new UserProfile();
 		StringBuffer strQuery = new StringBuffer() ;
-		long role = this.userProfile.getUserRole() ;
-		String userId = this.userProfile.getUserId() ;
+		long role = userProfile.getUserRole() ;
+		String userId = userProfile.getUserId() ;
 		String[] strings = this.forum.getCreateTopicRole() ;
 		if( strings != null && strings.length > 0){
 			this.canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
@@ -197,14 +194,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		}
 		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, strQuery.toString(), strOrderBy);
 		long maxTopic = userProfile.getMaxTopicInPage() ;
-		if(maxTopic > 0) this.maxTopic = maxTopic ;
+		if(maxTopic <= 0) maxTopic = 10 ;
 		try{
-			this.pageList.setPageSize(this.maxTopic);
+			this.pageList.setPageSize(maxTopic);
 		}catch (NullPointerException e) {
 			e.printStackTrace();
 		}
-//		System.out.println("\n\ngetCurrentPage:" + pageList.getCurrentPage());
-//		this.updatePageList(this.pageList);
 	}
 	
 	@SuppressWarnings("unused")
@@ -225,6 +220,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		maxPage = this.pageList.getAvailablePage() ;
 		if(this.pageSelect > maxPage)this.pageSelect = maxPage ;
 		List<Topic> topics = pageList.getPage(pageSelect);
+		pageSelect = pageList.getCurrentPage();
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		this.topicList = topics;
 		for(Topic topic : this.topicList) {
@@ -257,11 +253,13 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
   private long getSizePost(Topic topic) throws Exception {
-		if(topic.getPostCount() > this.maxPost) {
+		long maxPost = getUserProfile().getMaxPostInPage() ;
+		if(maxPost > 0) maxPost = 10;
+		if(topic.getPostCount() > maxPost) {
 			String isApprove = "" ;
 			String isHidden = "" ;
-			String userLogin = this.userProfile.getUserId();
-			long role = this.userProfile.getUserRole() ;
+			String userLogin = userProfile.getUserId();
+			long role = userProfile.getUserRole() ;
 			if(role >=2){ isHidden = "false" ;}
 			if(role == 1) {
 				if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
@@ -271,10 +269,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
 				if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 			}
-			long availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topic.getId(), isApprove, isHidden, userLogin)	; 
-			long maxPost = getUserProfile().getMaxPostInPage() ;
-			if(maxPost > 0) this.maxPost = maxPost ;
-			return availablePost/this.maxPost;
+			long availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topic.getId(), isApprove, isHidden, userLogin)	;
+			long value = availablePost/maxPost;
+			if((value*maxPost) < availablePost) value = value + 1;
+			return value;
 		} else return 1;
 	}
 	

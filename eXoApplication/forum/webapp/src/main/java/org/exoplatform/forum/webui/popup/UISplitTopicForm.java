@@ -25,7 +25,6 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -66,7 +65,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	private List<Post> posts = new ArrayList<Post>() ;
 	private Topic topic = new Topic() ;
 	private UserProfile userProfile = null;
-	private JCRPageList pageList ;
 	private List<String> listPostId = new ArrayList<String>();
 	private boolean isRender = true;
 	public static final String FIELD_SPLITTHREAD_INPUT = "SplitThread" ;
@@ -101,22 +99,14 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 		}
 		pageList = new ForumPageList(6, listPostId.size());
 		pageList.setPageSize(6);
-		this.updatePageList(pageList);
+//		this.updatePageList(pageList);
 		List<String>list = new ArrayList<String>();
 		try {
-			list.addAll(this.pageList.getPageList(pageSelect, this.listPostId)) ;
-			if(list.isEmpty()){
-				while(list.isEmpty() && pageSelect > 1) {
-					list.addAll(this.pageList.getPageList(--pageSelect, this.listPostId)) ;
-				}
-			}
+			list.addAll(pageList.getPageList(pageSelect, this.listPostId)) ;
 		} catch (Exception e) {
 		}
-		try {
-			if(maxPage <= 1) isRender =  false ;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		pageSelect = pageList.getCurrentPage();
+		if(maxPage <= 1) isRender =  false ;
 		return list ; 
 	}
 	
@@ -204,7 +194,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-			//topicDetail.setUpdatePostPageList(true);
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}

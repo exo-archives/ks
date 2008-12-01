@@ -147,14 +147,13 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   @SuppressWarnings({ "unused", "unchecked" })
   private List<UserProfile> getListProFileUser() throws Exception {
   	if(valueSearch == null || valueSearch.trim().length() < 1){
-	  	long page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
-	  	long maxPage = this.userPageList.getAvailablePage() ;
-	  	if(page <= 0) page = 1;
-	  	if(page > maxPage) page = maxPage ;
+  		UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
+	  	long page = pageIterator.getPageSelected() ;
 	  	this.userProfiles = this.userPageList.getPage(page) ;
+	  	pageIterator.setSelectPage(userPageList.getCurrentPage());
   	} else {
   		this.userProfiles = this.userPageList.getpage(this.valueSearch);
-  		this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getPageSelected());
+  		this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getCurrentPage());
   		valueSearch = null;
   	}
   	return this.userProfiles ;

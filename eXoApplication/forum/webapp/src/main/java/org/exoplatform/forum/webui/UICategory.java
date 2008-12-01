@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui;
 	
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -151,7 +151,7 @@
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
-									long max_page = uicomponent.getMaxPagePost(topic.getPath()) ;
+									long max_page = uicomponent.getSizePost(topic.getPath()) ;
 									String iconClassTopic = topic.getIcon();
 									if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();

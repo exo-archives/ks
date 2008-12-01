@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -65,7 +65,6 @@ abstract public class JCRPageList {
 	public List getPage(long page) throws Exception	 {
 		checkAndSetPage(page) ;
 		populateCurrentPage(currentPage_) ;
-//		System.out.println("\n\ncurrentPage_: " + currentPage_);
 		this.pageSelected = page;
 		return currentListPage_ ;
 	}
@@ -98,10 +97,6 @@ abstract public class JCRPageList {
 		}else if(page > availablePage_) {
 			page = availablePage_;
 		}
-//		if(page < 0 || page > availablePage_) {
-//			Object[] args = { Long.toString(page), Long.toString(availablePage_) } ;
-//			throw new ExoMessageException("PageList.page-out-of-range", args) ;
-//		}
 		currentPage_ =	page ;
 	}
 	

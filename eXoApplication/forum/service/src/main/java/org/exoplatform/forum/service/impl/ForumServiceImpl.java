@@ -325,8 +325,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getTagsByTopic(sProvider, tagIds);
   }
 
-  public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId) throws Exception {
-    return storage_.getTopicsByTag(sProvider, tagId);
+  public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception {
+    return storage_.getTopicsByTag(sProvider, tagId, strOrderBy);
   }
 
   public void saveTag(SessionProvider sProvider, Tag newTag, boolean isNew) throws Exception {

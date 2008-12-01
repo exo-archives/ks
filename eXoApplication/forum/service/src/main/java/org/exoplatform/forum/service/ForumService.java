@@ -602,12 +602,12 @@ public interface ForumService {
 	 * 
 	 * @param sProvider is the SessionProvider
 	 * @param tagId the tag id
-	 * 
+	 * @param strOrderBy TODO
 	 * @return the topics by tag
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId) throws Exception;
+	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception;
 
 	/**
 	 * Save tag.

@@ -28,6 +28,7 @@
 	return;
  }
 	uicomponent.initPage() ;
+	List topics = uicomponent.getTopicPageLits() ;
 	String forumName = forum.getForumName();
 	String subForumName = ForumUtils.getSubString(forumName, 35);
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
@@ -371,7 +372,6 @@
 						<tbody>
 							<%
 							int rCNB = 0;
-							List topics = uicomponent.getTopicPageLits() ;
 							List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 							if(checkeds == null) checkeds = new ArrayList<String>();
 							if(!topics.isEmpty()) {

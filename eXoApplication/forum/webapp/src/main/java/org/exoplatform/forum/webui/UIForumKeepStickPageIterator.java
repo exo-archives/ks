@@ -42,7 +42,7 @@ public class UIForumKeepStickPageIterator extends UIForm {
 
 	public long pageSelect = 1 ;
 	public long maxPage = 1;
-	private JCRPageList pageList ;
+	public JCRPageList pageList ;
 	private int endTabPage = 0;
 	private int beginTabPage = 0;
 	private Map<Long, List<String>> pageCheckedList = new HashMap<Long, List<String>>();
@@ -56,10 +56,6 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	public void cleanCheckedList() {
 	  this.pageCheckedList.clear();
   }
-	
-	public void updatePageList(JCRPageList pageList ) {
-		this.pageList = pageList ;
-	}
 	
 	public List<String> getTotalpage() throws	Exception {
 		int max_Page = (int)pageList.getAvailablePage() ;
@@ -94,7 +90,6 @@ public class UIForumKeepStickPageIterator extends UIForm {
 		temp.add(pageList.getCurrentPage()) ;// trang hien tai
 		temp.add(pageList.getAvailable()) ;//tong so item
 		temp.add(maxPage) ;
-//		System.out.println("\n\ngetCurrentPage:" + pageList.getCurrentPage());
 		return temp ;
 	} 
 	

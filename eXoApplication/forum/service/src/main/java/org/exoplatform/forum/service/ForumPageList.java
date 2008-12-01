@@ -58,7 +58,6 @@ public class ForumPageList extends JCRPageList {
 		if(iter != null){
 			iter_ = iter ;
 			setAvailablePage(iter.getSize()) ;
-//			System.out.println("\n\nAdd iter_: " + iter_.getSize());
 		}
 	}
 	
@@ -68,10 +67,7 @@ public class ForumPageList extends JCRPageList {
 			iter_ = setQuery(sProvider_, isQuery_, value_) ;
 			setAvailablePage(iter_.getSize()) ;
 			checkAndSetPage(page) ;
-//			System.out.println("\n\nPage: " + page);
 			page = currentPage_;
-//			System.out.println("\n\nPage: " + currentPage_);
-//			System.out.println("\n\niter_: " + iter_.getSize());
 		}
 		Node currentNode ;
 		long pageSize = 0 ;
@@ -108,7 +104,7 @@ public class ForumPageList extends JCRPageList {
 	}
 	
 	@SuppressWarnings("unchecked")
-  protected void populateCurrentPage(String valueString) throws Exception	{
+	protected void populateCurrentPage(String valueString) throws Exception	{
 		NodeIterator nodeIterator = setQuery(sProvider_, isQuery_, value_) ;
 		if(iter_ == null) {
 			iter_ = setQuery(sProvider_, isQuery_, value_) ;
@@ -144,33 +140,33 @@ public class ForumPageList extends JCRPageList {
 	}
 
 	@SuppressWarnings("unchecked")
-  protected void populateCurrentPageSearch(long page, List list) throws Exception {
+	protected void populateCurrentPageSearch(long page, List list) throws Exception {
 		long pageSize = getPageSize();
-	  long position = 0;
-	  if(page == 1) position = 0;
-	  else {
-	  	position = (page - 1) * pageSize;
-	  }
-	  pageSize *= page ;
-	  currentListPage_ = new ArrayList<ForumSearch>();
-	  for(int i = (int)position; i < pageSize && i < list.size(); i ++){
-	  	currentListPage_.add(list.get(i));
-	  }
-  }
+		long position = 0;
+		if(page == 1) position = 0;
+		else {
+			position = (page - 1) * pageSize;
+		}
+		pageSize *= page ;
+		currentListPage_ = new ArrayList<ForumSearch>();
+		for(int i = (int)position; i < pageSize && i < list.size(); i ++){
+			currentListPage_.add(list.get(i));
+		}
+	}
 
 	@SuppressWarnings("unchecked")
-  protected void populateCurrentPageList(long page, List<String> list) throws Exception{
+	protected void populateCurrentPageList(long page, List<String> list) throws Exception{
 		long pageSize = getPageSize();
-	  long position = 0;
-	  if(page == 1) position = 0;
-	  else {
-	  	position = (page - 1) * pageSize;
-	  }
-	  pageSize *= page ;
-	  currentListPage_ = new ArrayList<String>();
-	  for(int i = (int)position; i < pageSize && i < list.size(); i ++){
-	  	currentListPage_.add(list.get(i));
-	  }
+		long position = 0;
+		if(page == 1) position = 0;
+		else {
+			position = (page - 1) * pageSize;
+		}
+		pageSize *= page ;
+		currentListPage_ = new ArrayList<String>();
+		for(int i = (int)position; i < pageSize && i < list.size(); i ++){
+			currentListPage_.add(list.get(i));
+		}
 	}
 	
 	private NodeIterator setQuery(SessionProvider sProvider, boolean isQuery, String value) throws Exception {
@@ -371,11 +367,9 @@ public class ForumPageList extends JCRPageList {
 	}
 	
 	private Session getJCRSession(SessionProvider sProvider) throws Exception {
-    RepositoryService  repositoryService = (RepositoryService)PortalContainer.getComponent(RepositoryService.class) ;
-    String defaultWS = 
-      repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
-    return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
-  }
-
-
+		RepositoryService	repositoryService = (RepositoryService)PortalContainer.getComponent(RepositoryService.class) ;
+		String defaultWS = 
+			repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
+		return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
+	}
 }
