@@ -201,7 +201,7 @@ public class ForumUtils {
 	public static String unSplitForForum (String[] str) throws Exception {
 		StringBuilder rtn = new StringBuilder();
 		int t = str.length, i=0 ;
-		if(t > 0) {
+		if(t > 0 && !str[0].equals(" ")) {
 			for (String temp : str) {
 				if(i == (t-1))rtn.append(temp) ;
 				else rtn.append(temp).append(",") ;
