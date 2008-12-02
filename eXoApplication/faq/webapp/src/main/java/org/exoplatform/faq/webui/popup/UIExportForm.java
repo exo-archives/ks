@@ -1,10 +1,19 @@
 package org.exoplatform.faq.webui.popup;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -15,6 +24,7 @@ import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.services.compress.CompressData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -27,6 +37,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
+import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
@@ -38,20 +49,14 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 )
 public class UIExportForm extends UIForm implements UIPopupComponent{
 	//private final String TYPE_EXPORT = "ExportType";
-	private final String CREATE_ZIP = "createZip";
+	private final String FILE_NAME = "FileName";
 	private String objectId = "";
 	public void activate() throws Exception { }
 
 	public void deActivate() throws Exception { }
 	
 	public UIExportForm(){
-		/*WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-		ResourceBundle res = context.getApplicationResourceBundle() ;
-		List<SelectItemOption<String>> type_export = new ArrayList<SelectItemOption<String>>();
-		type_export.add(new SelectItemOption<String>(res.getString("UIExportForm.value.Categories"), "category" ));
-		type_export.add(new SelectItemOption<String>(res.getString("UIExportForm.action.Questions"), "question" ));
-		addChild(new UIFormSelectBox(TYPE_EXPORT, TYPE_EXPORT, type_export));*/
-		addChild(new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false ));
+		addChild(new UIFormStringInput(FILE_NAME, null));
 	}
 	
 	public void setObjectId(String objectId){
@@ -60,11 +65,12 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 	}
 	
 	static public class SaveActionListener extends EventListener<UIExportForm> {
+		@SuppressWarnings("unchecked")
 		public void execute(Event<UIExportForm> event) throws Exception {
 			UIExportForm exportForm = event.getSource() ;
 			
-			boolean isCreateZipFile = ((UIFormCheckBoxInput<Boolean>)exportForm.getChildById(exportForm.CREATE_ZIP)).isChecked();
-			
+			String fileName = ((UIFormStringInput)exportForm.getChildById(exportForm.FILE_NAME)).getValue();
+			String typeFIle = "";
 			FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			Node categoryNode = service.getCategoryNodeById(exportForm.objectId, sessionProvider);
@@ -73,29 +79,57 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 		    DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class) ;
 		    InputStreamDownloadResource dresource ;
 		    ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
-		    CompressData zipService = new CompressData();
-		    
+
 		    session.exportSystemView(categoryNode.getPath(), bos, false, false ) ;
-		    /*ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		    outputStream.write(bos.toByteArray(), 0, bos.toByteArray().length);
-		    ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray()) ;*/
-	        ByteArrayInputStream inputStream = new ByteArrayInputStream(bos.toByteArray()) ;
-	        
-	        if(!isCreateZipFile){
-		        // create file xml to dowload
-		        dresource = new InputStreamDownloadResource(inputStream, "text/xml") ;
-		        if(exportForm.objectId == null) dresource.setDownloadName(categoryNode.getName() + ".xml");
-		        else dresource.setDownloadName(categoryNode.getProperty("exo:name").getString() + ".xml");
-	        } else {
-	        	// create zip file
-		        zipService.addInputStream("System.xml", inputStream);
-		        bos = new ByteArrayOutputStream() ;
-		        zipService.createZip(bos);
-		        ByteArrayInputStream zipInput = new ByteArrayInputStream(bos.toByteArray());
-		        dresource = new InputStreamDownloadResource(zipInput, "application/zip") ;
-		        if(exportForm.objectId == null) dresource.setDownloadName(categoryNode.getName() + ".zip");
-		        else dresource.setDownloadName(categoryNode.getProperty("exo:name").getString() + ".zip");
+		    
+		    // test view bos:
+		    List<File> listFiles = new ArrayList<File>();
+		    File file = new File(categoryNode.getName() + ".xml");
+		    file.deleteOnExit();
+	    	file.createNewFile();
+		    Writer writer = new BufferedWriter(new FileWriter(file));
+		    writer.write(bos.toString());
+	    	writer.close();
+	    	listFiles.add(file);
+		    int i = 1;
+		    for(String path : service.getListPathQuestionByCategory(exportForm.objectId, sessionProvider)){
+		    	file =  new File("Question" + i + "_" + categoryNode.getName() + ".xml");
+		    	file.deleteOnExit();
+		    	file.createNewFile();
+		    	writer = new BufferedWriter(new FileWriter(file));
+		    	bos = new ByteArrayOutputStream();
+		    	session.exportSystemView(path, bos, false, false);
+		    	writer.write(bos.toString());
+		    	writer.close();
+		    	listFiles.add(file);
+		    	i ++;
+		    }
+		    // tao file zip:
+		    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+		    int byteReads;
+		    byte[] buffer = new byte[4096]; // Create a buffer for copying
+		    FileInputStream inputStream = null;
+		    ZipEntry zipEntry = null;
+		    for(File f : listFiles){
+		    	inputStream = new FileInputStream(f);
+		    	zipEntry = new ZipEntry(f.getPath());
+		    	zipOutputStream.putNextEntry(zipEntry);
+		    	while((byteReads = inputStream.read(buffer)) != -1)
+		    		zipOutputStream.write(buffer, 0, byteReads);
+		    	inputStream.close();
+		    }
+		    zipOutputStream.close();
+		    file = new File("exportCategory.zip");
+		    InputStream fileInputStream = new FileInputStream(file);
+	        dresource = new InputStreamDownloadResource(fileInputStream, "text/xml") ;
+	        typeFIle = ".zip";
+	        ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+	        if(!validatorDataInput.fckContentIsNotEmpty(fileName)){
+		        if(exportForm.objectId == null) fileName = categoryNode.getName();
+		        else fileName = categoryNode.getProperty("exo:name").getString();
 	        }
+	        
+	        dresource.setDownloadName(fileName + typeFIle);
 	        
 	        String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource)) ;
 	        event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");

@@ -17,21 +17,24 @@
 
 package org.exoplatform.faq.service.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -663,8 +666,8 @@ public class JCRDataStorage {
 		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer queryString = null;
 		if(faqSetting.getDisplayMode().equals("approved")){
-			queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-					+ "//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).append( 
+					"//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
 					append(" and (@exo:isApproved='true')").
 					append("]");
 		} else {
@@ -688,6 +691,40 @@ public class JCRDataStorage {
 		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 		 
 		return pageList ;
+	}
+	
+	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception{
+		List<String> listPath = new ArrayList<String>();
+		List<String> listCateIds = new ArrayList<String>();
+		Queue<Node> listNodes = new LinkedList<Node>();
+		Node questionHome = getQuestionHome(sProvider, null) ;
+		Node categoryNode = getCategoryNodeById(categoryId, sProvider);
+		NodeIterator nodeIterator = categoryNode.getNodes();
+		while(nodeIterator.hasNext()){
+			listNodes.add(nodeIterator.nextNode());
+		}
+		while(!listNodes.isEmpty()){
+			categoryNode = listNodes.poll();
+			listCateIds.add(categoryNode.getName());
+			nodeIterator = categoryNode.getNodes();
+			while(nodeIterator.hasNext()){
+				listNodes.add(nodeIterator.nextNode());
+			}
+		}
+		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath())
+									.append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
+		for(String id : listCateIds){
+			queryString.append(" or (@exo:categoryId='").append(id).append("')");
+		}
+		queryString.append("]");
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		nodeIterator = result.getNodes();
+		while(nodeIterator.hasNext()){
+			listPath.add(nodeIterator.nextNode().getPath());
+		}
+		return listPath;
 	}
 
 	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
@@ -1262,6 +1299,22 @@ public class JCRDataStorage {
 		NotifyInfo messageInfo = messagesInfoMap_.get(name) ;
 		messagesInfoMap_.remove(name) ;
 		return  messageInfo ;
+	}
+	
+	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception{
+		if(isImportCategory){
+			Node categoryNode = null;
+			if(categoryId != null)categoryNode = getCategoryHome(sProvider, null).getNode(categoryId);
+			else categoryNode = getCategoryHome(sProvider, null);
+			if(session == null)session = categoryNode.getSession();
+			session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+			session.save();
+		} else {
+			Node questionHomeNode = getQuestionHome(sProvider, null);
+			if(session == null)session = questionHomeNode.getSession();
+			session.importXML(questionHomeNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+			session.save();
+		}
 	}
 
 }

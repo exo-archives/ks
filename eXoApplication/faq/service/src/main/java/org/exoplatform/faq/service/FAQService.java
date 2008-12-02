@@ -16,11 +16,13 @@
  */
 package org.exoplatform.faq.service;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.Session;
 import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
@@ -592,4 +594,8 @@ public interface FAQService {
  	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
  	
  	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception;
+ 	
+ 	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception;
+ 	
+ 	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception;
 }

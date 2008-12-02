@@ -87,8 +87,8 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.WatchActionListener.class),
 				@EventConfig(listeners = UIQuestions.WatchManagerActionListener.class),
 				
-				//@EventConfig(listeners = UIQuestions.ExportActionListener.class),
-				//@EventConfig(listeners = UIQuestions.ImportActionListener.class),
+				@EventConfig(listeners = UIQuestions.ExportActionListener.class),
+				@EventConfig(listeners = UIQuestions.ImportActionListener.class),
 				//@EventConfig(listeners = UIQuestions.ImportrActionListener.class),
 				// action of question:
 				@EventConfig(listeners = UIQuestions.QuestionManagamentActionListener.class),
@@ -127,10 +127,10 @@ public class UIQuestions extends UIContainer {
 	private static String language_ = "" ;
 	private List<Watch> watchList_ = new ArrayList<Watch>() ;
 
-	//private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Import"} ;
-	//private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
-	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
-	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
+	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Import"} ;
+	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
+	//private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
+	//private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
 	private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
@@ -1136,7 +1136,7 @@ public class UIQuestions extends UIContainer {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.setId("FAQExportForm") ;
 			UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null) ;
-			popupAction.activate(popupContainer, 220, 150) ;
+			popupAction.activate(popupContainer, 500, 200) ;
 			exportForm.setObjectId(categoryId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

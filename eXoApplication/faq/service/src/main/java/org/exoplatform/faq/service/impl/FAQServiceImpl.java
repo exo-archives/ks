@@ -16,11 +16,13 @@
  */
 package org.exoplatform.faq.service.impl;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.Session;
 import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
@@ -591,5 +593,13 @@ public class FAQServiceImpl implements FAQService{
 	
 	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getCategoryNodeById(categoryId, sProvider);
+	}
+	
+	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception{
+		return jcrData_.getListPathQuestionByCategory(categoryId, sProvider);
+	}
+	
+	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception{
+		jcrData_.importData(categoryId, session, inputStream, isImportCategory, sProvider);
 	}
 }
