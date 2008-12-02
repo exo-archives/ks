@@ -163,6 +163,8 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
+			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 		}
 	}
 }
