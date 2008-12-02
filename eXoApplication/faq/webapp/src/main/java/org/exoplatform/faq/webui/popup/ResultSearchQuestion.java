@@ -147,7 +147,8 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				uiQuestions.pageList.setObjectRepare_(questionId);
-				uiQuestions.setCategories(categoryId) ;
+				if(!categoryId.equals("null")) uiQuestions.setCategories(categoryId) ;
+				else uiQuestions.setCategories(null) ;
 				uiQuestions.setCategories();
 				uiQuestions.questionView_ = questionId ;
 				int pos = 0 ;
@@ -183,9 +184,11 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 				breadcumbs.setUpdataPath(null) ;
 				String oldPath = "" ;
-				List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
-				for(int i = listPath.size() -1 ; i >= 0; i --) {
-					oldPath = oldPath + "/" + listPath.get(i);
+				if(!categoryId.equals("null")){
+					List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
+					for(int i = listPath.size() -1 ; i >= 0; i --) {
+						oldPath = oldPath + "/" + listPath.get(i);
+					}
 				}
 				String newPath = "FAQService"+oldPath ;
 				uiQuestions.setPath(newPath) ;

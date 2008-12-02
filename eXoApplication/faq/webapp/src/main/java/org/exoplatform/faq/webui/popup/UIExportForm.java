@@ -1,7 +1,6 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +10,6 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -25,18 +23,13 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.ValidatorDataInput;
-import org.exoplatform.services.compress.CompressData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
-import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormCheckBoxInput;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(

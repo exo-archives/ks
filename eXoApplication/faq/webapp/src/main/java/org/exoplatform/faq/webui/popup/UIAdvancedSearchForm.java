@@ -224,6 +224,9 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		FAQService faqService = FAQUtils.getFAQService() ;
 		String currentUser = FAQUtils.getCurrentUser() ;
 		SessionProvider sProvider = FAQUtils.getSystemProvider() ;
+		String categoryId = null;
+		Category category = null;
+		String[] moderator = null;
 
 		if(language.equals(defaultLanguage_)) {
 			List<Question> listQuestionSearch = new ArrayList<Question>();
@@ -232,15 +235,17 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 					return listResultQuesiton ;
 				} else {
 					for(Question quest: listResultQuesiton) {
-						String categoryId = quest.getCategoryId() ;
-						Category category = faqService.getCategoryById(categoryId, sProvider) ;
-						String[] moderator = category.getModeratorsCategory() ;
-						if(Arrays.asList(moderator).contains(currentUser)) {
-							listQuestionSearch.add(quest) ;
+						categoryId = quest.getCategoryId() ;
+						if(!categoryId.equals("null")){
+							category = faqService.getCategoryById(categoryId, sProvider) ;
+							moderator = category.getModeratorsCategory() ;
+							if(Arrays.asList(moderator).contains(currentUser)) {
+								listQuestionSearch.add(quest) ;
+							} else {
+								if(quest.isActivated()) listQuestionSearch.add(quest) ;
+							}
 						} else {
 							if(quest.isActivated()) listQuestionSearch.add(quest) ;
-							else
-								continue ;
 						}
 					}
 					sProvider.close();
@@ -248,15 +253,17 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				}
 			} else {
 				for(Question quest: listResultQuesiton) {
-					String categoryId = quest.getCategoryId() ;
-					Category category = faqService.getCategoryById(categoryId, sProvider) ;
-					String[] moderator = category.getModeratorsCategory() ;
-					if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
-						if(quest.isApproved()) listQuestionSearch.add(quest) ;
+					categoryId = quest.getCategoryId() ;
+					if(!categoryId.equals("null")){
+						category = faqService.getCategoryById(categoryId, sProvider) ;
+						moderator = category.getModeratorsCategory() ;
+						if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
+							if(quest.isApproved()) listQuestionSearch.add(quest) ;
+						} else {
+							if(quest.isApproved()&& quest.isActivated()) listQuestionSearch.add(quest) ;
+						}
 					} else {
 						if(quest.isApproved()&& quest.isActivated()) listQuestionSearch.add(quest) ;
-						else
-							continue ;
 					}
 				}
 				sProvider.close();
@@ -278,15 +285,19 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 					return listQuestionSearchByLanguage ;
 				} else {
 					for(Question quest: listQuestionSearchByLanguage) {
-						String categoryId = quest.getCategoryId() ;
-						Category category = faqService.getCategoryById(categoryId, sProvider) ;
-						String[] moderator = category.getModeratorsCategory() ;
-						if(Arrays.asList(moderator).contains(currentUser)) {
-							listQuestionLanguage.add(quest) ;
+						categoryId = quest.getCategoryId() ;
+						if(!categoryId.equals("null")){
+							category = faqService.getCategoryById(categoryId, sProvider) ;
+							moderator = category.getModeratorsCategory() ;
+							if(Arrays.asList(moderator).contains(currentUser)) {
+								listQuestionLanguage.add(quest) ;
+							} else {
+								if(quest.isActivated()) listQuestionLanguage.add(quest) ;
+								else
+									continue ;
+							}
 						} else {
 							if(quest.isActivated()) listQuestionLanguage.add(quest) ;
-							else
-								continue ;
 						}
 					}
 					sProvider.close();
@@ -294,15 +305,17 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				}
 			} else {
 				for(Question quest: listQuestionSearchByLanguage) {
-					String categoryId = quest.getCategoryId() ;
-					Category category = faqService.getCategoryById(categoryId, sProvider) ;
-					String[] moderator = category.getModeratorsCategory() ;
-					if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
-						if(quest.isApproved()) listQuestionLanguage.add(quest) ;
+					categoryId = quest.getCategoryId() ;
+					if(!categoryId.equals("null")){
+						category = faqService.getCategoryById(categoryId, sProvider) ;
+						moderator = category.getModeratorsCategory() ;
+						if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
+							if(quest.isApproved()) listQuestionLanguage.add(quest) ;
+						} else {
+							if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;
+						}
 					} else {
 						if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;
-						else
-							continue ;
 					}
 				}
 				sProvider.close();
