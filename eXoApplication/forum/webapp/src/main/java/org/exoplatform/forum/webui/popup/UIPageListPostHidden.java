@@ -160,10 +160,14 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 					sProvider.close();
 				}
 			}
-			UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);
-			forumPortlet.cancelAction();
-			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+			if(posts.size() == postHidden.listAllPost.size()) {
+				UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);
+				forumPortlet.cancelAction();
+				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+			}else{
+				event.getRequestContext().addUIComponentToUpdateByAjax(postHidden.getParent());
+			}
 		}
 	}
 	

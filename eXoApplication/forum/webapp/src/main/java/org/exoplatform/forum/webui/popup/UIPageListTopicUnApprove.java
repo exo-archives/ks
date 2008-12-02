@@ -59,7 +59,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator implements UIPopupComponent {
 	private ForumService forumService ;
 	private String categoryId, forumId ;
-	private List<Topic> topics ;
+	private List<Topic> allTopics ;
 	public UIPageListTopicUnApprove() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"ApproveTopic","Cancel"});
@@ -79,7 +79,6 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsUnApprove() throws Exception {
 		pageList	= forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
-//		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
 		List<Topic> topics = pageList.getPage(pageSelect);
 		pageSelect = pageList.getCurrentPage();
@@ -91,12 +90,12 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false) );
 			}
 		}
-		this.topics = pageList.getPage(0) ;
+		this.allTopics = pageList.getPage(0) ;
 		return topics ;
 	}
 	
 	private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.topics ;
+		List<Topic> listTopic = this.allTopics ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
@@ -149,10 +148,14 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIPageListTopicUnApprove.sms.notCheck", args, ApplicationMessage.WARNING)) ;
 			}
-			UIForumPortlet forumPortlet = topicUnApprove.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+			if(listTopic.size() == topicUnApprove.allTopics.size()) {
+				UIForumPortlet forumPortlet = topicUnApprove.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+				UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+			}else{
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicUnApprove.getParent()) ;
+			}
 		}
 	}
 	

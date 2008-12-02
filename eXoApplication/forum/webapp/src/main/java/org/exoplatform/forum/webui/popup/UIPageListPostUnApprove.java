@@ -160,10 +160,14 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 					sProvider.close();
 				}
 			}
-			UIForumPortlet forumPortlet = postUnApprove.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			if(posts.size() == postUnApprove.listAllPost.size()) {
+				UIForumPortlet forumPortlet = postUnApprove.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			} else {
+				event.getRequestContext().addUIComponentToUpdateByAjax(postUnApprove.getParent()) ;
+			}
 		}
 	}
 	
