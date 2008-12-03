@@ -24,6 +24,7 @@ import java.util.Map;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
@@ -39,6 +40,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -234,6 +236,17 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			String idAndNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String []id = idAndNumber.split(",") ;
 			Topic topic = uiTopicsTag.getTopic(id[0]);
+			String cateId = topic.getPath().split("/")[3];
+			SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+			Category category = ((ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class)).getCategory(sProvider, cateId);
+			String[] privateUsers = category.getUserPrivate();
+			if(privateUsers.length > 0 && privateUsers[0].trim().length() > 0 && 
+					!ForumServiceUtils.hasPermission(privateUsers, uiTopicsTag.userProfile.getUserId())){
+				UIApplication uiApp = uiTopicsTag.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", null, ApplicationMessage.WARNING)) ;
+				return ;
+			}
+			sProvider.close();
 			String []temp = topic.getPath().split("/") ;
 			Forum forum = uiTopicsTag.getForum(temp[temp.length-3], temp[temp.length-2]) ;
 			UIForumPortlet forumPortlet = uiTopicsTag.getAncestorOfType(UIForumPortlet.class) ;
