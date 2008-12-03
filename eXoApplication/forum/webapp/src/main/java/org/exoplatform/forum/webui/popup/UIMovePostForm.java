@@ -25,6 +25,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -109,18 +110,15 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 		if(this.posts.get(0).getPath().contains(forumId)) return true ;
 		else return false ;
 	}
-
+	
 	@SuppressWarnings("unused")
 	private List<Forum> getForums(String categoryId) throws Exception {
 		List<Forum> forums = new ArrayList<Forum>() ;
 		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
 			if(this.userProfile.getUserRole() == 1){
 				String []moderators = forum.getModerators();
-				if(moderators.length > 0 && !ForumUtils.isStringInStrings(moderators, this.userProfile.getUserId()) || moderators.length <=0){
-					if(forum.getIsClosed() || forum.getIsLock())continue ; 
-					if(forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())){
-						continue ;
-					}
+				if(!ForumServiceUtils.hasPermission(moderators, this.userProfile.getUserId())){
+					continue;
 				}
 			}
 			forums.add(forum) ;
