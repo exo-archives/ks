@@ -1461,7 +1461,8 @@ public class UIQuestions extends UIContainer {
 			url = url.replaceFirst("http://", "") ;
 			url = url.substring(0, url.indexOf("/")) ;
 			url = "http://" + url;
-			String path = uiQuestions.getPathService(categoryId)+"/"+ categoryId ;
+			String path = uiQuestions.getPathService(categoryId);
+			if(!categoryId.equals("null")) path += "/"+ categoryId;
 			link = link.replaceFirst("OBJECTID", path);
 			link = url + link;
 			sendMailForm.setLink(link);
