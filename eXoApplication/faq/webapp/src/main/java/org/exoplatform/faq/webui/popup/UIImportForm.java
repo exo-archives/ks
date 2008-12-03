@@ -78,13 +78,11 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
         return listId;
 	}
 
-	private void impotFromZipFile(ZipInputStream zipStream, Session session) throws Exception {
+	private void impotFromZipFile(ZipInputStream zipStream, Session session, FAQService service, SessionProvider sProvider) throws Exception {
 		List<String> listCateId = new ArrayList<String>();
 		List<String> listQuesId = new ArrayList<String>();
 		List<String> listNewCateId = new ArrayList<String>();
 		InputStream fileInputStream = null;
-		FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		SessionProvider sProvider = FAQUtils.getSystemProvider();
 		ByteArrayOutputStream out= new ByteArrayOutputStream();
 		byte[] data  = new byte[5120];   
 		ZipEntry entry = zipStream.getNextEntry();
@@ -163,51 +161,63 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	static public class SaveActionListener extends EventListener<UIImportForm> {
 		public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
-
+			FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+			SessionProvider sProvider = FAQUtils.getSystemProvider();
 			UIFAQPortlet portlet = importForm.getAncestorOfType(UIFAQPortlet.class) ;
-			UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
-			UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
-			if(uploadInput.getUploadResource() == null){
-				uiApplication.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
+			try{
+				service.getCategoryNodeById(importForm.categoryId_, sProvider);
+
+				UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
+				UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
+				if(uploadInput.getUploadResource() == null){
+					uiApplication.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+					return;
+				}
+				String fileName = uploadInput.getUploadResource().getFileName();
+				MimeTypeResolver mimeTypeResolver = new MimeTypeResolver();
+				String mimeType = mimeTypeResolver.getMimeType(fileName);
+				if (!"application/zip".equals(mimeType)) {
+					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.mimetype-invalid", null, ApplicationMessage.WARNING));
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					return;
+				}
+				
+				Session session = null;
+				try{
+					ZipInputStream zipInputStream = new ZipInputStream(uploadInput.getUploadDataAsStream());
+					importForm.impotFromZipFile(zipInputStream, session, service, sProvider);
+					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
+			        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+				} catch (AccessDeniedException ace) {
+					ace.printStackTrace();
+					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.access-denied", null, ApplicationMessage.WARNING));
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					session.logout();
+					return;
+				} catch (ConstraintViolationException con) {
+					con.printStackTrace();
+					//Object[] args = { categoryNode.getProperty("exo:name").getString() };
+					Object[] args = { null };
+					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", args, ApplicationMessage.WARNING));
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					session.logout();
+					return;
+				} catch (Exception ise) {
+					ise.printStackTrace();
+					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					session.logout();
+					return;
+				}
+			
+			} catch (Exception e){
+				UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
-				return;
-			}
-			String fileName = uploadInput.getUploadResource().getFileName();
-			MimeTypeResolver mimeTypeResolver = new MimeTypeResolver();
-			String mimeType = mimeTypeResolver.getMimeType(fileName);
-			if (!"application/zip".equals(mimeType)) {
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.mimetype-invalid", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-				return;
-			}
-			
-			Session session = null;
-			try{
-				ZipInputStream zipInputStream = new ZipInputStream(uploadInput.getUploadDataAsStream());
-				importForm.impotFromZipFile(zipInputStream, session);
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
-		        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-			} catch (AccessDeniedException ace) {
-				ace.printStackTrace();
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.access-denied", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-				session.logout();
-				return;
-			} catch (ConstraintViolationException con) {
-				con.printStackTrace();
-				//Object[] args = { categoryNode.getProperty("exo:name").getString() };
-				Object[] args = { null };
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", args, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-				session.logout();
-				return;
-			} catch (Exception ise) {
-				ise.printStackTrace();
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-				session.logout();
-				return;
+				sProvider.close();
 			}
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIFAQContainer faqContainer = portlet.getChild(UIFAQContainer.class);
