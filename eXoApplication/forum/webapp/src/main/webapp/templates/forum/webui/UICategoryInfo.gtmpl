@@ -30,6 +30,24 @@
 						<td style="width: 40px; border-right: 1px solid #ffffff; border-top: 1px solid #c7c7c7;" ><div class="UserIcon" ><span></span></div></td>
 					 	<td class="text" style="border-top: 1px solid #c7c7c7;"><%=_ctx.appRes("UICategoryInfo.label.CurrentUsers")%> </td>
 		 			</tr-->
+		 			<tr class="OddRow">
+						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
+					 	<td >
+							<div class="text"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> : $mostUserOnline</div>
+							<div class="text" style="padding-bottom: 5px;"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> : 
+							<% int t = 0 ;
+							for(user in userOnlines) {
+							 ++t;
+							%>
+							<% if(t != size){ %>
+							<span>&nbsp;<a>${user}</a>,</span>
+							<% } else {%>
+							<span>&nbsp;<a>${user}</a></span>
+							<% }
+							} %>
+							</div>
+						</td>
+		 			</tr>
 					<tr>
 						<td style="width: 40px; border-right: 1px solid #ffffff;"><div class="ChartIcon" ><span></span></div></td>
 					 	<td class="text"><%=_ctx.appRes("UICategoryInfo.label.ForumStatistics");%></td>
