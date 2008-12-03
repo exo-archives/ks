@@ -195,7 +195,8 @@
 		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 		<div style="clear: left;"><span></span></div>
 	</div>
-<!-- Start PostsInThreadContainer -->	
+<!-- Start PostsInThreadContainer -->
+  <div style="display: none;" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
 	<div class="PostsInThreadContainer ImageContentContainer">
 		<div class="ForumToolbar">
 			<div class="LeftBar">
@@ -249,7 +250,7 @@
 																	if(action.equals("DeletePost")){
 																%>
 																		<a class="MenuItem" href="javaScript: void(0)"
-														 					onclick="$link">	 
+														 					onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeletePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckPost")%>')){$link;}">	 
 																			<div class="ItemIcon $classIcon">
 																				$itemLabel
 																			</div>
@@ -714,7 +715,7 @@
 										    isChecked = "checked=\"checked\"";
 										  } 
 										%>
-										<input type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
+										<input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
 									</div>
 									<div style="clear: left;"><span></span></div>
 								</div>

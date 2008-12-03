@@ -68,7 +68,6 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -119,7 +118,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.SetHiddenPostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetUnHiddenPostActionListener.class ),	
 //			@EventConfig(listeners = UITopicDetail.SetUnApproveAttachmentActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class, confirm="UICategory.confirm.SetDeleteOnePost" ),
+			@EventConfig(listeners = UITopicDetail.DeletePostActionListener.class),
 			
 			@EventConfig(listeners = UITopicDetail.QuickReplyActionListener.class),
 			@EventConfig(listeners = UITopicDetail.PreviewReplyActionListener.class),
@@ -186,6 +185,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.userProfile = forumPortlet.getUserProfile() ;
 		String userName = this.userProfile.getUserId() ;
 		if(!this.viewTopic) userName = "guest" ;
+		cleanCheckedList();
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, userName) ;
 		if(!userName.equals("guest"))	forumPortlet.updateUserProfileInfo() ;
@@ -204,6 +204,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		String userName = this.userProfile.getUserId() ;
 		if(!this.viewTopic) userName = "guest" ;
 		this.userName = userName ;
+		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
@@ -225,6 +226,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.userProfile = forumPortlet.getUserProfile() ;
 		String userName = this.userProfile.getUserId() ;
 		this.userName = userName ;
+		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
@@ -492,27 +494,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			}
 		}
 		return mapUserProfile.get(userName) ;
-		/*UserProfile userProfile = this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
-		mapUserProfile.put(userName, userProfile) ;
-		return userProfile ;*/
-	}
-	
-	@SuppressWarnings("unchecked")
-  private List<String> getIdSelected() throws Exception{
-		List<UIComponent> children = this.getChildren() ;
-		List<String> ids = new ArrayList<String>() ;
-		for (int i = 0; i <= this.maxPage; i++) {
-			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
-		}
-		for(UIComponent child : children) {
-			if(child instanceof UIFormCheckBoxInput) {
-				if(((UIFormCheckBoxInput)child).isChecked()) {
-					if(!ids.contains(child.getName()))ids.add(child.getName());
-				}
-			}
-		}
-		this.cleanCheckedList();
-		return ids;
 	}
 	
 	static public class AddPostActionListener extends EventListener<UITopicDetail> {

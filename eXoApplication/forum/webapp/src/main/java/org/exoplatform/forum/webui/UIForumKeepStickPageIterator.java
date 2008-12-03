@@ -43,6 +43,7 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	public long pageSelect = 1 ;
 	public long maxPage = 1;
 	public JCRPageList pageList ;
+	public long totalCheked = 0;
 	private int endTabPage = 0;
 	private int beginTabPage = 0;
 	private Map<Long, List<String>> pageCheckedList = new HashMap<Long, List<String>>();
@@ -53,7 +54,11 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	  return pageCheckedList.get(page);
   }
 	
+	public long getTotalChecked() {
+	  return totalCheked;
+  }
 	public void cleanCheckedList() {
+		totalCheked = 0;
 	  this.pageCheckedList.clear();
   }
 	
@@ -100,7 +105,25 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	public long getPageSelect() {
 		return this.pageSelect ;
 	}
-		
+	
+  @SuppressWarnings("unchecked")
+  public List<String> getIdSelected() throws Exception{
+		List<UIComponent> children = this.getChildren() ;
+		List<String> ids = new ArrayList<String>() ;
+		for (long i = 0; i <= this.maxPage; i++) {
+			if(pageCheckedList.get(i) != null)ids.addAll(pageCheckedList.get(i));
+		}
+		for(UIComponent child : children) {
+			if(child instanceof UIFormCheckBoxInput) {
+				if(((UIFormCheckBoxInput)child).isChecked()) {
+					if(!ids.contains(child.getName()))ids.add(child.getName());
+				}
+			}
+		}
+		this.cleanCheckedList();
+		return ids;
+	}
+	
 	static public class GoPageActionListener extends EventListener<UIForumKeepStickPageIterator> {
 		@SuppressWarnings("unchecked")
     public void execute(Event<UIForumKeepStickPageIterator> event) throws Exception {
@@ -124,7 +147,7 @@ public class UIForumKeepStickPageIterator extends UIForm {
 				topicDetail.setIdPostView("top") ;
 			}
 			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
-			long maxPage = keepStickPageIter.pageList.getAvailablePage() ;
+			long maxPage = keepStickPageIter.maxPage;//pageList.getAvailablePage() ;
 			long presentPage	= keepStickPageIter.pageSelect ;
 			if(stateClick.equalsIgnoreCase("next")) {
 				if(presentPage < maxPage){
@@ -149,6 +172,13 @@ public class UIForumKeepStickPageIterator extends UIForm {
 				}
 			}
 			keepStickPageIter.pageCheckedList.put(presentPage, checkedList);
+			int checked = 0;
+			for(long i = 1; i <= maxPage; i++) {
+				if(keepStickPageIter.pageCheckedList.get(i) != null){
+					checked = checked + keepStickPageIter.pageCheckedList.get(i).size();
+				}
+      }
+			keepStickPageIter.totalCheked = checked;
 			event.getRequestContext().addUIComponentToUpdateByAjax(component) ;
 		}
 	}

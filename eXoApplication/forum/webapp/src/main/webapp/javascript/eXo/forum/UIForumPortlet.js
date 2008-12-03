@@ -44,23 +44,9 @@ UIForumPortlet.prototype.selectItem = function(obj) {
 	}
 } ;
 
-
-UIForumPortlet.prototype.OneChecked = function(formName) {
-	var form = document.forms[formName];
-	if(form) {
-		var checkboxs = form.elements;
-		for(var i = 0; i < checkboxs.length; i ++){
-			if(checkboxs[i].checked){
-				return true;
-			}
-		}
-	}
-	return false;
-} ;
-
-UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, multiAns1, multiAns2, onlyAns, notChecked) {
-	var form = document.forms[formName];
+UIForumPortlet.prototype.numberIsCheckedForum = function(formName, checkAllName, multiAns1, multiAns2, onlyAns, notChecked) {
 	var total = 0;
+	var form = document.forms[formName];
 	if(form) {
 		var checkboxs = form.elements;
 		for(var i = 0; i < checkboxs.length; i ++){
@@ -80,6 +66,46 @@ UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, mult
 		alert(notChecked);
 		return false;
 	}
+};
+
+UIForumPortlet.prototype.checkedPost = function(elm) {
+	if(elm.checked)eXo.forum.UIForumPortlet.setChecked(true);
+	else eXo.forum.UIForumPortlet.setChecked(false);
+};
+
+UIForumPortlet.prototype.setChecked = function(isChecked) {
+	var divChecked = document.getElementById('divChecked'); 
+	var check = 0;
+	check = eval(divChecked.getAttribute("checked"));
+	if(isChecked)divChecked.setAttribute("checked",(check+1));
+	else divChecked.setAttribute("checked",(check-1));
+};
+
+UIForumPortlet.prototype.OneChecked = function(formName) {
+	var form = document.forms[formName];
+	if(form) {
+		var checkboxs = form.elements;
+		for(var i = 0; i < checkboxs.length; i ++){
+			if(checkboxs[i].checked){
+				return true;
+			}
+		}
+	}
+	return false;
+} ;
+
+UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, multiAns1, multiAns2, onlyAns, notChecked) {
+	var divChecked = document.getElementById('divChecked'); 
+	var total = 0;
+	total = eval(divChecked.getAttribute("checked"));
+	if(total > 1){
+		return confirm(multiAns1 + " " + total + " " + multiAns2);
+	} else if(total == 1) {
+		return confirm(onlyAns);
+	} else {
+		alert(notChecked);
+		return false;
+	}
 } ;
 
 UIForumPortlet.prototype.checkAll = function(obj) {
@@ -90,13 +116,15 @@ UIForumPortlet.prototype.checkAll = function(obj) {
 		var len = checkboxes.length ;
 		if (obj.checked){
 			for(var i = 0 ; i < len ; i++) {
+				if(!checkboxes[i].checked)eXo.forum.UIForumPortlet.setChecked(true);
 				checkboxes[i].checked = true ;
 				this.selectItem(checkboxes[i]) ;
 			}
 		} else {
 			for(var i = 0 ; i < len ; i++) {
+				if(checkboxes[i].checked)eXo.forum.UIForumPortlet.setChecked(false);
 				checkboxes[i].checked = false ;
-				this.selectItem(checkboxes[i]) ;				
+				this.selectItem(checkboxes[i]) ;
 			}
 		}
 };
@@ -136,14 +164,14 @@ UIForumPortlet.prototype.checkAction = function(obj, evt) {
 				}			
 			}
 			if (j > 1) {
-					for(var k = 2; k < alen; k ++) {
-						if(!menuItems[arguments[k]].getAttribute("tmpClass")) {
-							menuItems[arguments[k]].setAttribute("tmpClass",menuItems[arguments[k]].className) ;
-							menuItems[arguments[k]].setAttribute("tmpHref",menuItems[arguments[k]].href) ;
-							menuItems[arguments[k]].className = "DisableMenuItem" ;
-							menuItems[arguments[k]].href = "javascript:void(0);" ;
-					}					
-				}	
+				for(var k = 2; k < alen; k ++) {
+					if(!menuItems[arguments[k]].getAttribute("tmpClass")) {
+						menuItems[arguments[k]].setAttribute("tmpClass",menuItems[arguments[k]].className) ;
+						menuItems[arguments[k]].setAttribute("tmpHref",menuItems[arguments[k]].href) ;
+						menuItems[arguments[k]].className = "DisableMenuItem" ;
+						menuItems[arguments[k]].href = "javascript:void(0);" ;
+					}
+				}
 			}
 		}
 	}
@@ -157,7 +185,9 @@ UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
 	var checkBoxs = eXo.core.DOMUtil.findDescendantsByClass(parentContent, "input", "checkbox") ;
 	var clen = checkBoxs.length ;
 	var mlen = menuItems.length ;
+	var divChecked = document.getElementById('divChecked'); 
 	var j = 0 ;
+	j = eval(divChecked.getAttribute("checked"));
 	for(var i = 1 ; i < clen ; i ++) {
 		if (checkBoxs[i].checked){ 
 			j = 1 ;
@@ -214,7 +244,7 @@ UIForumPortlet.prototype.showTreeNode = function(obj, isShow) {
 			nodes[i].className = "Node SmallGrayPlus" ;
 		} else {		
 			childrenContainer.style.display = "none" ;
-			if(nodes[i].className === "Node SmallGrayPlus false") continue ;			
+			if(nodes[i].className === "Node SmallGrayPlus false") continue ;		
 			nodes[i].className = "Node SmallGrayMinus" ;
 		}
 	}	
@@ -281,7 +311,7 @@ UIForumPortlet.prototype.showPopup = function(elevent,e) {
 	var popup = eXo.core.DOMUtil.findFirstDescendantByClass(parend, "div", "UIPopupCategory") ;
 	if(popup.style.display === "none") {
 		popup.style.display = "block" ;
-		eXo.core.DOMUtil.listHideElements(popup) ;	
+		eXo.core.DOMUtil.listHideElements(popup) ;
 	} else {
 		popup.style.display = "none" ;
 	}
@@ -599,7 +629,7 @@ UIForumPortlet.prototype.loadScroll = function(e) {
       uiNav.scrollMgr.initArrowButton(button[1],"right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton") ;
     }
 		
-    uiNav.scrollManagerLoaded = true;	
+    uiNav.scrollManagerLoaded = true;
     uiNav.initScroll() ;
   }
 } ;
@@ -643,6 +673,7 @@ eXo.forum.CheckBox = {
 			var len = checkboxes.length ;
 			for(var i = 1 ; i < len ; i ++) {
 				checkboxes[i].onclick = this.check ;
+				if(checkboxes[i].getAttribute("checked") != "checked")checkboxes[i].checked = false;
 				eXo.cs.CheckBox.checkItem(checkboxes[i]);
 			}
 		}
@@ -651,23 +682,28 @@ eXo.forum.CheckBox = {
 	check : function(){
 		eXo.cs.CheckBox.checkItem(this);
 		var row = eXo.core.DOMUtil.findAncestorByTagName(this,"tr");
-		if(this.checked) eXo.core.DOMUtil.addClass(row,"SelectedItem");
-		else eXo.core.DOMUtil.replaceClass(row,"SelectedItem","");
+		if(this.checked) {
+			eXo.core.DOMUtil.addClass(row,"SelectedItem");
+			eXo.forum.UIForumPortlet.setChecked(true);
+		}else{
+			eXo.forum.UIForumPortlet.setChecked(false);
+			eXo.core.DOMUtil.replaceClass(row,"SelectedItem","");
+		}
 	},
 	
 	checkAll : function(){
-		eXo.cs.CheckBox.checkAllItem(this);
+		eXo.forum.UIForumPortlet.checkAll(this);
 		var table = eXo.core.DOMUtil.findAncestorByTagName(this,"table");
 		table = eXo.core.DOMUtil.getChildrenByTagName(table,"tbody")[0];
 		var rows = eXo.core.DOMUtil.findDescendantsByTagName(table,"tr");
 		var i = rows.length ;
 		if(this.checked){
 			while(i--) {
-				eXo.core.DOMUtil.addClass(rows[i],"SelectedItem");				
+				eXo.core.DOMUtil.addClass(rows[i],"SelectedItem");
 			}
 		} else{
 			while(i--){
-				eXo.core.DOMUtil.replaceClass(rows[i],"SelectedItem","");				
+				eXo.core.DOMUtil.replaceClass(rows[i],"SelectedItem","");
 			}
 		}
 	}

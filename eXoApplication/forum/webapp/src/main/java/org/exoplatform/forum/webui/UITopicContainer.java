@@ -47,7 +47,6 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -90,7 +89,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.SetUnStickTopicActionListener.class),
 		@EventConfig(listeners = UITopicContainer.SetMoveTopicActionListener.class),
 		@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
-		@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class, confirm="UICategory.confirm.SetDeleteOneThread"),
+		@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
 		@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
 		@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
@@ -134,6 +133,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.userProfile = forumPortlet.getUserProfile() ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
+		cleanCheckedList();
 	}
 	
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
@@ -148,6 +148,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		if(!isBreadcumbs) {
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
 		}
+		cleanCheckedList();
 	}
 
 	public boolean getCanAddNewThread(){return this.canAddNewThread ; }
@@ -285,24 +286,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
 		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), tagIds);	
-	}
-	
-	@SuppressWarnings("unchecked")
-  private List<String> getIdSelected() throws Exception{
-		List<UIComponent> children = this.getChildren() ;
-		List<String> ids = new ArrayList<String>() ;
-		for (int i = 0; i <= this.maxPage; i++) {
-			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
-		}
-		for(UIComponent child : children) {
-			if(child instanceof UIFormCheckBoxInput) {
-				if(((UIFormCheckBoxInput)child).isChecked()) {
-					if(!ids.contains(child.getName()))ids.add(child.getName());
-				}
-			}
-		}
-		this.cleanCheckedList();
-		return ids;
 	}
 	
 	static public class SearchFormActionListener extends EventListener<UITopicContainer> {

@@ -31,7 +31,6 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -105,23 +104,6 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 		return null ;
 	}
 	
-	@SuppressWarnings("unchecked")
-  private List<String> getIdSelected() throws Exception{
-		List<UIComponent> children = this.getChildren() ;
-		List<String> ids = new ArrayList<String>() ;
-		for (int i = 0; i <= this.maxPage; i++) {
-			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
-		}
-		for(UIComponent child : children) {
-			if(child instanceof UIFormCheckBoxInput) {
-				if(((UIFormCheckBoxInput)child).isChecked()) {
-					if(!ids.contains(child.getName()))ids.add(child.getName());
-				}
-			}
-		}
-		this.cleanCheckedList();
-		return ids;
-	}
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostHidden> {
 		public void execute(Event<UIPageListPostHidden> event) throws Exception {
 			UIPageListPostHidden uiForm = event.getSource() ;
