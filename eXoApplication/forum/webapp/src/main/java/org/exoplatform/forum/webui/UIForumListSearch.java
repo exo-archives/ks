@@ -94,6 +94,7 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 	}
 	
 	private boolean canView(Category category, Forum forum, Topic topic, Post post, UserProfile userProfile) throws Exception{
+		if(userProfile.getUserRole() == 0) return true;
 		boolean canView = true;
 		boolean isModerator = false;
 		if(category == null) return false;
@@ -107,7 +108,7 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 		// check forum
 		if(forum != null){
 			listUsers = forum.getModerators();
-			if(userProfile.getUserRole() == 0 || (listUsers.length > 0 && listUsers[0].trim().length() > 0 && 
+			if(userProfile.getUserRole() == 1 && (listUsers.length > 0 && listUsers[0].trim().length() > 0 && 
 					ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId()))) {
 				isModerator = true;
 				canView = true;
