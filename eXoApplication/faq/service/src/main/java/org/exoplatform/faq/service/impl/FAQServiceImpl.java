@@ -16,11 +16,13 @@
  */
 package org.exoplatform.faq.service.impl;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.Session;
 import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
@@ -632,6 +634,10 @@ public class FAQServiceImpl implements FAQService{
 	  return jcrData_.isAdminRole(userName);
   }
 	
+	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getCategoryNodeById(categoryId, sProvider);
+	}
+	
 	public void addWatchQuestion(String questionId, Watch watch, boolean isNew, SessionProvider sessionProvider) throws Exception{
 		jcrData_.addWatchQuestion(questionId, watch, isNew, sessionProvider);
 	}
@@ -642,5 +648,13 @@ public class FAQServiceImpl implements FAQService{
 	
 	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception {
 		return jcrData_.getListQuestionsWatch(faqSetting, currentUser, sProvider);
+	}
+	
+	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception{
+		return jcrData_.getListPathQuestionByCategory(categoryId, sProvider);
+	}
+	
+	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception{
+		jcrData_.importData(categoryId, session, inputStream, isImportCategory, sProvider);
 	}
 }

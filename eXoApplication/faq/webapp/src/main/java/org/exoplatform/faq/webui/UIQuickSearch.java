@@ -85,6 +85,8 @@ public class UIQuickSearch  extends UIForm {
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		String currentUser = FAQUtils.getCurrentUser() ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+		Question question = null;
+		String categoryIdOfQuestion = null;
 		if(faqSetting_.getDisplayMode().equals("both")) {
 			if(faqSetting_.isAdmin()) {
 				return formSearchs;
@@ -93,17 +95,17 @@ public class UIQuickSearch  extends UIForm {
 					if(faqSearch.getType().equals("faqCategory")) {
 						listQuickSearch.add(faqSearch) ;
 					} else {
-						String questionId = faqSearch.getId() ;
-						Question question = faqService.getQuestionById(questionId, sessionProvider) ;
-						String categoryIdOfQuestion = question.getCategoryId() ;
-						Category category = faqService.getCategoryById(categoryIdOfQuestion, sessionProvider) ;
-						String[] moderator = category.getModeratorsCategory() ;
-						if(Arrays.asList(moderator).contains(currentUser)) {
-							listQuickSearch.add(faqSearch) ;
+						question = faqService.getQuestionById(faqSearch.getId(), sessionProvider) ;
+						categoryIdOfQuestion = question.getCategoryId() ;
+						if(!categoryIdOfQuestion.equals("null")){
+							if(Arrays.asList(faqService.getCategoryById(categoryIdOfQuestion, sessionProvider).getModeratorsCategory())
+									.contains(currentUser)) {
+								listQuickSearch.add(faqSearch) ;
+							} else {
+								if(question.isActivated()) listQuickSearch.add(faqSearch) ;
+							}
 						} else {
 							if(question.isActivated()) listQuickSearch.add(faqSearch) ;
-							else
-								continue ;
 						}
 					}
 				}
@@ -115,17 +117,19 @@ public class UIQuickSearch  extends UIForm {
 				if(faqSearch.getType().equals("faqCategory")) {
 					listQuickSearch.add(faqSearch) ;
 				} else {
-					String questionId = faqSearch.getId() ;
-					Question question = faqService.getQuestionById(questionId, sessionProvider) ;
-					String categoryIdOfQuestion = question.getCategoryId() ;
-					Category category = faqService.getCategoryById(categoryIdOfQuestion, sessionProvider) ;
-					String[] moderator = category.getModeratorsCategory() ;
-					if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
-						if(question.isApproved()) listQuickSearch.add(faqSearch) ;
+					question = faqService.getQuestionById(faqSearch.getId(), sessionProvider) ;
+					categoryIdOfQuestion = question.getCategoryId() ;
+					if(!categoryIdOfQuestion.equals("null")){
+						if(question.isApproved()){
+							if(faqSetting_.isAdmin() || Arrays.asList(faqService.getCategoryById(categoryIdOfQuestion, sessionProvider).getModeratorsCategory())
+									.contains(currentUser)) {
+								listQuickSearch.add(faqSearch) ;
+							} else {
+								if(question.isActivated()) listQuickSearch.add(faqSearch) ;
+							}
+						}
 					} else {
-						if(question.isApproved()&& question.isActivated()) listQuickSearch.add(faqSearch) ;
-						else
-							continue ;
+						if((question.isApproved() && question.isActivated()) || faqSetting_.isAdmin()) listQuickSearch.add(faqSearch) ;
 					}
 				}
 			}

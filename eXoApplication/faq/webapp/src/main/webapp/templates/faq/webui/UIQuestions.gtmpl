@@ -16,7 +16,7 @@
 	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
-	<div class="FAQToolbar">
+	<div class="FAQToolbar" style="float: left; width:100%;">
   	<div class="LeftBar">
   			<div class="RightBar">
   				<div class="CenterBar">
@@ -44,11 +44,7 @@
 							
 							if(canEditQuestion) {
 								String[] actionTollbar ;
-								if(cateId != null && cateId.trim().length() > 0) {
-									actionTollbar = uicomponent.getActionTollbar() ;
-								} else {
-									actionTollbar = uicomponent.getFirstTollbar() ;
-								}
+								actionTollbar = uicomponent.getActionTollbar() ;
 								String linkAction = "" ;
 								String opacity ;
 								for(String action in actionTollbar) {
@@ -71,7 +67,7 @@
 									<div class="SeparatorLine ControlButton"><span></span></div>
 							<%
 								}
-							} else if(cateId != null && cateId.trim().length() > 0) {
+							} else {
 								String linkAction =uicomponent.event("AddNewQuestion", cateId) ;
 							%>
 									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
@@ -142,6 +138,7 @@
   			</div>
 		</div>
 	</div>
+	<div style="clear: left;"><span></span></div>
 <!-- ===================================================== View category ======================================================  -->
 	<div class="FAQContainer" id="FAQViewContent">
 		<div class="FAQContent">
@@ -254,7 +251,6 @@
 		%>
 <!-- ===================================================== View question ======================================================  -->
 			<%
-			if(cateId != null && cateId.trim().length() > 0 ){
 				String[] questionActions = null ;
 				if(canEditQuestion) {
 					questionActions = uicomponent.getActionQuestion() ;
@@ -653,7 +649,7 @@
 																	</div>
 																</td>
 																<%
-																if(uicomponent.canVoteAnswer(question.getUsersVoteAnswer())){
+																if(uicomponent.canVoteAnswer(question.getUsersVoteAnswer(), question.getPos()[countResponse])){
 																%>
 																	<td width="50px" align="left">
 																		<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse])%>"
@@ -927,7 +923,6 @@
 					<%}%>
 		<%		questionId ++ ;
 				}
-			}
 		%>
 		<style type="text/css">
 			@media print {

@@ -23,8 +23,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.Question;
-import org.exoplatform.faq.webui.popup.UIAddRelationForm.Cate;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -37,88 +35,97 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-	  template = "app:/templates/faq/webui/UICategories.gtmpl"
+		template = "app:/templates/faq/webui/UICategories.gtmpl"
 )
 
 public class UICategories extends UIContainer{
 	public class Cate{
-    private Category category;
-    private int deft ;
-    public Category getCategory() {
-      return category;
-    }
-    public void setCategory(Category category) {
-      this.category = category;
-    }
-    public int getDeft() {
-      return deft;
-    }
-    public void setDeft(int deft) {
-      this.deft = deft;
-    }
-  }
-	
+		private Category category;
+		private int deft ;
+		public Category getCategory() {
+			return category;
+		}
+		public void setCategory(Category category) {
+			this.category = category;
+		}
+		public int getDeft() {
+			return deft;
+		}
+		public void setDeft(int deft) {
+			this.deft = deft;
+		}
+	}
+
 	private String categoryId_ = null;
+	private String pathCategory = "";
 	private List<Cate> listCate = new ArrayList<Cate>() ;
 	private FAQSetting faqSetting_ = new FAQSetting();
-  
+
 	public UICategories () throws Exception{
-		System.out.println("\n\n\n\n------------> run UICategories\n\n\n\n");
 		faqSetting_ = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting_);
 	}
-	
+
 	@SuppressWarnings("unused")
 	private long[] getCategoryInfo() {
-    long[] result = new long[]{0, 0, 0, 0} ;
-    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-	  try {
-      result = faqService_.getCategoryInfo(categoryId_, sessionProvider) ;
-	  } catch (Exception e) {
-      e.printStackTrace() ;
-    }
-	  sessionProvider.close();
-    return result ;
+		long[] result = new long[]{0, 0, 0, 0} ;
+		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+		FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		try {
+			result = faqService_.getCategoryInfo(categoryId_, sessionProvider) ;
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+		sessionProvider.close();
+		return result ;
 	}
-	
+
 	@SuppressWarnings("unused")
-  private List<Cate> getListCate(){
-    return this.listCate ;
-  }
-	
+	private List<Cate> getListCate(){
+		return this.listCate ;
+	}
+
+	public void setPathCategory(String pathCategory){
+		if(pathCategory.indexOf("FAQService/") >= 0)
+			this.pathCategory = pathCategory.replace("FAQService/", "");
+		else
+			this.pathCategory = pathCategory.replace("FAQService", "");
+		this.categoryId_ = pathCategory.substring(pathCategory.lastIndexOf("/")+1, pathCategory.length());
+		if(this.categoryId_.equals("FAQService")) this.categoryId_ = null;
+	}
+
 	@SuppressWarnings("unused")
 	private void setListCate() throws Exception {
+		this.listCate.clear();
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-    List<Cate> listCate = new ArrayList<Cate>();
-    this.listCate = new ArrayList<Cate>();
-    Cate parentCate = null ;
-    Cate childCate = null ;
-    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_)) {
-      if(category != null) {
-        Cate cate = new Cate() ;
-        cate.setCategory(category) ;
-        cate.setDeft(0) ;
-        listCate.add(cate) ;
-      }
-    }
-    
-    while (!listCate.isEmpty()) {
-      parentCate = new Cate() ;
-      parentCate = listCate.get(0);
-      listCate.remove(0);
-      this.listCate.add(parentCate) ;
-      int i = 0;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_)){
-        if(category != null) {
-          childCate = new Cate() ;
-          childCate.setCategory(category) ;
-          childCate.setDeft(parentCate.getDeft() + 1) ;
-          listCate.add(i ++, childCate) ;
-        }
-      }
-    }
-    sessionProvider.close();
-  }
+		List<Cate> listCate = new ArrayList<Cate>();
+		Cate parentCate = null ;
+		Cate childCate = null ;
+		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+		for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_)) {
+			if(category != null) {
+				Cate cate = new Cate() ;
+				cate.setCategory(category) ;
+				cate.setDeft(0) ;
+				listCate.add(cate) ;
+			}
+		}
+
+		while (!listCate.isEmpty()) {
+			parentCate = new Cate() ;
+			parentCate = listCate.get(0);
+			listCate.remove(0);
+			this.listCate.add(parentCate) ;
+			int i = 0;
+			for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_)){
+				if(category != null) {
+					childCate = new Cate() ;
+					childCate.setCategory(category) ;
+					childCate.setDeft(parentCate.getDeft() + 1) ;
+					listCate.add(i ++, childCate) ;
+				}
+			}
+		}
+		sessionProvider.close();
+	}
 }

@@ -102,15 +102,15 @@ public class UIBreadcumbs extends UIContainer {
 			UIBreadcumbs uiBreadcums = event.getSource() ;			
 			String paths = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet faqPortlet = uiBreadcums.getAncestorOfType(UIFAQPortlet.class) ;
+			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
 			if(paths.equals("FAQService")){
 				UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
-				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				String categoryId = null;
 				uiContainer.updateIsRender(true) ;
 				uiQuestions.setCategories(categoryId) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			} else {
-				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				uiQuestions.setPath(paths) ;
 				String cate = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
 				try {
@@ -131,6 +131,7 @@ public class UIBreadcumbs extends UIContainer {
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}
 			uiBreadcums.setUpdataPath(paths);
+			categories.setPathCategory(paths);
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 		}
 	}

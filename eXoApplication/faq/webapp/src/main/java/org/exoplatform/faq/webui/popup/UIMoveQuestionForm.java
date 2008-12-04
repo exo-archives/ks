@@ -157,7 +157,9 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
-				faqService_.getCategoryById(cateId, sessionProvider);
+				if(!cateId.equals("null")){
+					faqService_.getCategoryById(cateId, sessionProvider);
+				}
 				try {
 					Question question = faqService_.getQuestionById(moveQuestionForm.questionId_, sessionProvider) ;
 					if(cateId.equals(question.getCategoryId())) {

@@ -316,8 +316,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   }
   
   protected UIForm getParentForm() {
-    UIForm form = (UIForm)this.getParent() ;
-    return form ;
+    return (UIForm)this.getParent();
   }
   
   public List<ActionData> getActionList() { 

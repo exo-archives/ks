@@ -58,6 +58,17 @@ UIFAQPortlet.prototype.treeView = function(id) {
 	}
 };
 
+UIFAQPortlet.prototype.FAQViewAllBranch = function(ids) {
+	var arrayId = new Array;
+	arrayId = ids.split("/");
+	for(var i = 0; i < arrayId.length; i ++){
+		var obj = document.getElementById(arrayId[i]) ;
+		if(obj){
+			obj.style.display = "block" ;
+		}
+	}
+};
+
 UIFAQPortlet.prototype.viewTitle = function(id) {
 	var obj = document.getElementById(id) ;
 	obj.style.display = "block" ;

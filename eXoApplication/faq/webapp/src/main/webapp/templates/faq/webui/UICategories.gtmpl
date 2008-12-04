@@ -4,7 +4,7 @@
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
 %>
-<div id="$uicomponent.id" style="padding: 0px 5px 0px 5px;line-height:28px;">
+<div id="$uicomponent.id" style="padding: 0px 5px 0px 5px; line-height:28px; padding-bottom:2px;">
 	<div>
 		<div class="FAQToolbar">
 	  	<div class="LeftBar">
@@ -15,7 +15,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer" style="height: auto; padding-left:5px; margin-bottom: 5px;">
+		<div class="FAQContainer" style="height: auto; padding-left:5px; padding-bottom:5px; margin-bottom: 5px; line-height:18px;">
 			<%
 			long[] cateInfo = uicomponent.getCategoryInfo() ;
 			long numberOfSubCate = cateInfo[0] ;
@@ -23,11 +23,11 @@
 			long questionNotAnswer = cateInfo[2] ;
 			long questionNotApproved = cateInfo[3] ;
 			%>
-			SubCategories: $numberOfSubCate
+			<div style="margin-top: 2px;">SubCategories: $numberOfSubCate</div>
 		<%if(uicomponent.categoryId_ != null){%>
-				Questions: $numberOfQuestion
-				Questions not answer: $questionNotAnswer
-				Questions not approved: $questionNotApproved
+				<div style="margin-top: 2px;">Questions: $numberOfQuestion</div>
+				<div style="margin-top: 2px;">Questions not answer: $questionNotAnswer</div>
+				<div style="margin-top: 2px;">Questions not approved: $questionNotApproved</div>
 		<%}%>
 		</div>
 	</div>
@@ -51,28 +51,39 @@
 	    StringBuffer stringBuffer = new StringBuffer() ;
 	    int n = listCate.size() ;
 	    int i = 0 ;
-	    int id = 0 ;
+	    String id = "" ;
+	    String parentId = "";
 	    if(!listCate.isEmpty()){
 		    for(cate in listCate) {
-		    	id ++ ;
+		    	id = cate.getCategory().getId() ;
 		      if(i == 0) {%>
 						<div class="FAQCategoryTreeView" id="FAQCate$i">
-							<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('UICategoryId$id')"><%= cate.getCategory().getName();%></a>
+							<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
 						</div>
 		  	<%
 		      } else if(i > 0) {
 		        int sub = cate.getDeft() - listCate.get(i - 1).getDeft() ;
-		        if(sub == 0) {%>
-							<div class="FAQCategoryTreeView">
-									<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('UICategoryId$id')"><%= cate.getCategory().getName();%></a>
-							</div>
-		    <%
-		        } else if(sub > 0) {%>
-						  <div style=" display: none; padding-left: 20px ;" id="UICategoryId$i">
+		        if(sub == 0) {
+		        	if(cate.getDeft() > 0) {
+		      %>
+			      		<div class="FAQDotLine">
+									<div class="FAQCategoryTreeView">
+											<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
+									</div>
+								</div>
+		    <%		} else {%>
 								<div class="FAQCategoryTreeView">
-						    	<div id="FAQCate$i" style=" white-space:nowrap;">
-						    		<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('UICategoryId$id')"><%= cate.getCategory().getName();%></a>
-						    	</div>
+										<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
+								</div>
+		    		<%}
+		        } else if(sub > 0) {%>
+						  <div style=" display: none; padding-left: 20px ;" id="$parentId">
+						  	<div class="FAQDotLine">
+									<div class="FAQCategoryTreeView">
+							    	<div id="FAQCate$i" style=" white-space:nowrap;">
+							    		<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
+							    	</div>
+							    </div>
 						    </div>
 		    <%
 		        } else {%>
@@ -80,13 +91,14 @@
 		    				</div>
 	     		<%}%>
 						 <div class="Icon FAQCategoryTreeView">
-							 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('UICategoryId$id')"><%= cate.getCategory().getName();%></a>
+							 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
 						 </div>
 		     		<%
 		        }
 		      }
 		      stackCateid.push(cate.getCategory().getId()) ;
 		      i ++ ;
+		      parentId = id;
 		    }%>
 	     <%
 		    for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
@@ -97,7 +109,11 @@
 			%>
 		</div>
 	</div>
-	
+	<%
+		if(uicomponent.pathCategory != null && uicomponent.pathCategory.trim().length() > 0) {
+	  	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.FAQViewAllBranch('"+uicomponent.pathCategory+"');");
+	  }
+	%>
 	<div>
 		<div class="FAQToolbar">
 	  	<div class="LeftBar">

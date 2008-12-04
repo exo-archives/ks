@@ -94,7 +94,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private static Question question_ = null ;
 	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
+	@SuppressWarnings("unused")
 	private boolean isViewEditQuestion_ = true;
+	@SuppressWarnings("unused")
 	private String labelContent_ = new String();
 
 	// form input :
@@ -103,6 +105,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private UIFormSelectBox questionLanguages_ ;
 	private UIFormWYSIWYGInput inputResponseQuestion_ ; 
 	private UIFormInputWithActions inputAttachment_ ; 
+	@SuppressWarnings("unchecked")
 	private UIFormCheckBoxInput checkShowAnswer_ ;
 	private UIFormCheckBoxInput<Boolean> isApproved_ ;
 
@@ -153,6 +156,19 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private int numberOfAnswer(){
 		return listResponse.size();
 	}
+	
+	@SuppressWarnings("unused")
+	private void setListRelation() throws Exception {
+    String[] relations = question_.getRelations() ;
+    this.setListIdQuesRela(Arrays.asList(relations)) ;
+    if(relations != null && relations.length > 0){
+      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+      for(String relation : relations) {
+        listRelationQuestion.add(faqService.getQuestionById(relation, sessionProvider).getQuestion()) ;
+      }
+      sessionProvider.close();
+    }
+  }
 
 	public void setQuestionId(Question question, String languageViewed){
 		listResponse = new ArrayList<String>();
@@ -188,6 +204,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			QuestionLanguage questionLanguage = new QuestionLanguage() ;
 			questionLanguage.setLanguage(question.getLanguage()) ;
 			questionLanguage.setDetail(question.getDetail()) ;
+			questionLanguage.setQuestion(question.getQuestion());
+
 
 			if(question.getAllResponses() != null && question.getAllResponses().length > 0) {
 				questionLanguage.setResponse(question.getAllResponses()) ;
@@ -204,8 +222,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage())) ;
 				if(language.getLanguage().equals(languageIsResponsed)) {
 					questionChanged_ = language.getDetail() ;
-					inputQuestionDetail_.setValue(language.getDetail()) ;
 					inputQuestionContent_.setValue(language.getQuestion());
+					inputQuestionDetail_.setValue(language.getDetail()) ;
 					labelContent_ = language.getDetail();
 					inputResponseQuestion_.setValue(language.getResponse()[0]) ;
 				}
@@ -227,7 +245,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
 		questionLanguages_.setSelectedValues(new String[]{languageIsResponsed}) ;
 		questionLanguages_.setOnChange("ChangeQuestion") ;
-		inputQuestionContent_.setValue(question.getQuestion());
 
 		addChild(inputQuestionContent_) ;
 		addChild(inputQuestionDetail_) ;
