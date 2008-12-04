@@ -35,6 +35,7 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddTagForm;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

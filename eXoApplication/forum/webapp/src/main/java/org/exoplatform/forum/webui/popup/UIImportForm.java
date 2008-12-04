@@ -7,7 +7,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.Session;
 import javax.jcr.nodetype.ConstraintViolationException;
 
 import org.exoplatform.commons.utils.MimeTypeResolver;
@@ -15,7 +14,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UICategory;
-import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -99,16 +97,14 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			}
 			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
-			Session session = service.getSession(sProvider, null, null, false);
 			try{
-				String nodePath = "";
+				String nodePath = null;
 				if(importForm.categoryId_ == null || importForm.categoryId_.trim().length() < 1){
-					nodePath += service.getForumHomePath(sProvider);
+					nodePath = service.getForumHomePath(sProvider);
 				} else {
-					nodePath += service.getCategory(ForumSessionUtils.getSystemProvider(), importForm.categoryId_).getPath();
+					nodePath = service.getCategory(ForumSessionUtils.getSystemProvider(), importForm.categoryId_).getPath();
 				}
-				session.importXML(nodePath, xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
-				session.save();
+				service.importXML(nodePath, xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
 		        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 		        sProvider.close();
