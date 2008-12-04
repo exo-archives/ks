@@ -120,7 +120,11 @@ public class QuestionPageList extends JCRPageList {
       		languageIter = languageNode.getNodes();
       		while(languageIter.hasNext()){
       			language = languageIter.nextNode();
-      			response = this.ValuesToStrings(language.getProperty("exo:responses").getValues());
+      			try{
+      				response = this.ValuesToStrings(language.getProperty("exo:responses").getValues());
+      			} catch (Exception e){
+      				response = new String[]{language.getProperty("exo:responses").getValue().getString()};
+      			}
       			if(response[0] == null || response[0].trim().length() < 1) {
       				if(languages != null && languages.trim().length() > 0) languages += ",";
       				languages += language.getName();

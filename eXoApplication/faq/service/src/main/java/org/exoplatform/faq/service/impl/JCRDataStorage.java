@@ -36,6 +36,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -423,10 +424,18 @@ public class JCRDataStorage {
 
 				questionLanguage.setLanguage(node.getName()) ;
 				if(node.hasProperty("exo:name")) questionLanguage.setQuestion(node.getProperty("exo:name").getValue().getString());
-				if(node.hasProperty("exo:responses")) questionLanguage.setResponse(ValuesToStrings(node.getProperty("exo:responses").getValues()));
-				if(node.hasProperty("exo:responseBy")) questionLanguage.setResponseBy(ValuesToStrings(node.getProperty("exo:responseBy").getValues()));
-				if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(ValuesToDate(node.getProperty("exo:dateResponse").getValues()));
-
+				try{
+					if(node.hasProperty("exo:responses")) questionLanguage.setResponse(ValuesToStrings(node.getProperty("exo:responses").getValues()));
+					if(node.hasProperty("exo:responseBy")) questionLanguage.setResponseBy(ValuesToStrings(node.getProperty("exo:responseBy").getValues()));
+					if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(ValuesToDate(node.getProperty("exo:dateResponse").getValues()));
+				} catch (ValueFormatException valueFormatException){
+					if(node.hasProperty("exo:responses")) 
+						questionLanguage.setResponse(new String[]{node.getProperty("exo:responses").getValue().getString()});
+					if(node.hasProperty("exo:responseBy")) 
+						questionLanguage.setResponseBy(new String[]{node.getProperty("exo:responseBy").getValue().getString()});
+					if(node.hasProperty("exo:dateResponse")) 
+						questionLanguage.setDateResponse(new Date[]{node.getProperty("exo:dateResponse").getValue().getDate().getTime()});
+				}
 				listQuestionLanguage.add(questionLanguage) ;
 			}
 		}
@@ -464,7 +473,13 @@ public class JCRDataStorage {
 					if(questionNode.hasProperty("exo:author")) authorContent = questionNode.getProperty("exo:author").getValue().getString() ;
 					if(questionNode.hasProperty("exo:email")) emailContent = questionNode.getProperty("exo:email").getValue().getString() ;
 					if(node.hasProperty("exo:name")) questionContent = node.getProperty("exo:name").getValue().getString() ;
-					if(node.hasProperty("exo:responses")) responseContent = ValuesToStrings(node.getProperty("exo:responses").getValues());
+					if(node.hasProperty("exo:responses")){
+						try{
+							responseContent = ValuesToStrings(node.getProperty("exo:responses").getValues());
+						} catch (Exception e){
+							responseContent = new String[]{node.getProperty("exo:responses").getValue().getString()};
+						}
+					}
 					if((questionContent.toLowerCase().indexOf(text) >= 0) || ArrayContentValue(responseContent, text) ||
 							( authorContent.toLowerCase().indexOf(text) >= 0)||(emailContent.toLowerCase().indexOf(text) >= 0)) {
 						isAdd = true ;
@@ -502,7 +517,13 @@ public class JCRDataStorage {
 					boolean isAdd = false ;
 					node = languageNode.getNode(languageSearch) ;
 					if(node.hasProperty("exo:name")) questionContent = node.getProperty("exo:name").getValue().getString() ;
-					if(node.hasProperty("exo:responses")) responseContent = ValuesToStrings(node.getProperty("exo:responses").getValues());
+					if(node.hasProperty("exo:responses")){
+						try{
+							responseContent = ValuesToStrings(node.getProperty("exo:responses").getValues());
+						} catch (Exception e){
+							responseContent = new String[]{node.getProperty("exo:responses").getValue().getString()};
+						}
+					}
 					if((questionSearch == null || questionSearch.trim().length() < 1) && (responseSearch == null || responseSearch.trim().length() < 1)) {
 						isAdd = true ;
 					} else {

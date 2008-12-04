@@ -33,6 +33,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
 import javax.jcr.Workspace;
 import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.PropertyDefinition;
@@ -236,8 +237,16 @@ public class MultiLanguages {
     	langNode = languagesNode.addNode(language.getLanguage(), NTUNSTRUCTURED) ;
     }
     langNode.setProperty("exo:name", language.getQuestion()) ;
-    langNode.setProperty("exo:responses", language.getResponse()) ;
-    langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
+    try{
+	    langNode.setProperty("exo:responses", language.getResponse()) ;
+	    langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
+    } catch (ValueFormatException e){
+    	langNode.getProperty("exo:responses").remove();
+    	langNode.getProperty("exo:responseBy").remove();
+    	
+    	langNode.setProperty("exo:responses", language.getResponse()) ;
+    	langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
+    }
     if(language.getDateResponse() != null) {
     	java.util.Calendar calendar = null ;
     	List<Value> listCalendars = new ArrayList<Value>();
