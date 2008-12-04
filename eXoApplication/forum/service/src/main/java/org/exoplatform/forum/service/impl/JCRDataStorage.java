@@ -759,10 +759,11 @@ public class JCRDataStorage {
 			if (count < 0)
 				count = 0;
 			forumStatistic.setProperty("exo:postCount", count);
-			if(forumHomeNode.isNew()){
-				forumHomeNode.getSession().save();
+			forumStatistic.save();
+			if(catNode.isNew()){
+				catNode.getSession().save();
 			} else {
-				forumHomeNode.save();
+				catNode.save();
 			}
 			String[] moderators = forum.getModerators();
 			Node userProfileHomeNode = getUserProfileHome(sProvider);
@@ -1384,14 +1385,8 @@ public class JCRDataStorage {
 			Node userProfileNode = getUserProfileHome(sProvider);
 			try {
 				Node newProfileNode = userProfileNode.getNode(owner);
-				if (newProfileNode.hasProperty("exo:totalTopic")) {
-					newProfileNode.setProperty("exo:totalTopic", newProfileNode.getProperty("exo:totalTopic").getLong() - 1);
-					if(newProfileNode.isNew()) {
-						newProfileNode.getSession().save();
-					} else {
-						newProfileNode.save();
-					}
-				}
+				newProfileNode.setProperty("exo:totalTopic", newProfileNode.getProperty("exo:totalTopic").getLong() - 1);
+				newProfileNode.save();
 			} catch (PathNotFoundException e) {
 			}
 			// setTopicCount for Forum
@@ -1423,8 +1418,8 @@ public class JCRDataStorage {
 			else
 				newPostCount = 0;
 			forumStatistic.setProperty("exo:postCount", newPostCount);
+			forumStatistic.save();
 			forumNode.getNode(topicId).remove();
-			// forumHomeNode.save() ;
 			if(forumNode.isNew()) {
 				forumNode.getSession().save();
 			} else {

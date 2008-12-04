@@ -94,7 +94,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			
 			@EventConfig(listeners = UITopicDetail.PrintActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.EditActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.DeleteActionListener.class,confirm="UITopicDetail.confirm.DeletePost" ),	
+			@EventConfig(listeners = UITopicDetail.DeleteActionListener.class,confirm="UITopicDetail.confirm.DeleteThisPost" ),	
 			@EventConfig(listeners = UITopicDetail.PrivatePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.QuoteActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.EditTopicActionListener.class ),	//Topic Menu
@@ -110,7 +110,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.SplitTopicActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetApproveTopicActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetUnApproveTopicActionListener.class ),	
-			@EventConfig(listeners = UITopicDetail.SetDeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteTopic" ),	
+			@EventConfig(listeners = UITopicDetail.SetDeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteThisTopic" ),	
 			@EventConfig(listeners = UITopicDetail.MergePostActionListener.class ), //Post Menu 
 			@EventConfig(listeners = UITopicDetail.MovePostActionListener.class ),	
 			@EventConfig(listeners = UITopicDetail.SetApprovePostActionListener.class ),	
