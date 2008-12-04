@@ -272,11 +272,13 @@ public class JCRDataStorage {
 		}
 		
 		// reset link of question before send mail:
-		String path = "";
-		if(!question.getCategoryId().equals("null"))
-			path = getCategoryNodeById(question.getCategoryId(), sProvider).getPath().replace("/exo:applications/faqApp/catetories/", "");
-		path = (question.getLink().substring(0, question.getLink().indexOf("FAQService/") + 11) + path).replace("private", "public");
-		question.setLink(path);
+		if(question.getLink().trim().length() > 0){
+			String path = "";
+			if(!question.getCategoryId().equals("null"))
+				path = getCategoryNodeById(question.getCategoryId(), sProvider).getPath().replace("/exo:applications/faqApp/catetories/", "");
+			path = (question.getLink().substring(0, question.getLink().indexOf("FAQService/") + 11) + path).replace("private", "public");
+			question.setLink(path);
+		}
 		
 		if(faqSetting.getDisplayMode().equals("approved")) {
 			//Send notifycation when add new question in watching category
