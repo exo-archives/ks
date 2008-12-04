@@ -254,8 +254,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
   private long getSizePost(Topic topic) throws Exception {
-		long maxPost = getUserProfile().getMaxPostInPage() ;
-		if(maxPost > 0) maxPost = 10;
+		long maxPost = userProfile.getMaxPostInPage() ;
+		if(maxPost <= 0) maxPost = 10;
 		if(topic.getPostCount() > maxPost) {
 			String isApprove = "" ;
 			String isHidden = "" ;

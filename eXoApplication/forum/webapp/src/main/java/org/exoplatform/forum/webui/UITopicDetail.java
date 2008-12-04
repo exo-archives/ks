@@ -18,7 +18,6 @@ package org.exoplatform.forum.webui;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -150,7 +149,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private boolean isModeratePost = false ;
 	private boolean isMod = false ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
-	private Map<String, String> mapUserName = new HashMap<String, String>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UITopicDetail() throws Exception {
@@ -197,7 +195,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
 		this.viewTopic = viewTopic ;
-		//this.isUpdatePageList = true ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		this.userProfile = forumPortlet.getUserProfile() ;
 		if(this.userProfile == null) this.userProfile = new UserProfile();
@@ -381,6 +378,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			long maxPost = this.userProfile.getMaxPostInPage();
 			if (maxPost <= 0) maxPost = 10;
 			pageList.setPageSize(maxPost);
+			maxPage = pageList.getAvailablePage();
 			if (IdPostView.equals("lastpost")) {
 				this.pageSelect = maxPage;
 			}
@@ -401,9 +399,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(posts == null) posts = new ArrayList<Post>(); 
 		List<String> userNames = new ArrayList<String>() ;
 		mapUserProfile.clear() ;
-		mapUserName.clear() ;
 		for (Post post : posts) {
-			mapUserName.put(post.getOwner(), post.getOwner()) ;			
+			if(!userNames.contains(post.getOwner())) userNames.add(post.getOwner());			
 			if(getUIFormCheckBoxInput(post.getId()) != null) {
 				getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
 			}else {
@@ -412,7 +409,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			this.IdLastPost = post.getId() ;
 		}
 		//updateUserProfiles
-		userNames = Arrays.asList(mapUserName.keySet().toArray(new String[]{})) ;
 		if(userNames.size() > 0) {
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try{
@@ -666,7 +662,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				topicDetail.forumService.removePost(sProvider, topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, postId) ;
-				//topicDetail.isUpdatePageList = true ;
 				topicDetail.IdPostView = "top";
 			} finally {
 				sProvider.close();

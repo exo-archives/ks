@@ -96,7 +96,6 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}finally{
   		systemSession.close() ;
   	}
-  	
   	systemSession = SessionProvider.createSystemProvider() ;
   	try{
   		initUserProfile(systemSession);  		
@@ -105,7 +104,6 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}finally{
   		systemSession.close() ;
   	}
-  	
   	try{
   		storage_.initDefaultData() ;
   	}catch(Exception e) {
@@ -117,7 +115,6 @@ public class ForumServiceImpl implements ForumService, Startable{
 	
 	@SuppressWarnings("unchecked")
   public void updateForumStatistic(SessionProvider systemSession) throws Exception{
-		
 		ForumStatistic forumStatistic = getForumStatistic(systemSession) ;
 		if(forumStatistic.getActiveUsers() == 0 ) {
 			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);

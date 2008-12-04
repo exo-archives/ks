@@ -420,13 +420,13 @@ public class ForumTransformHTML {
 			s = transform(s);
 			s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)(\\s*)(https?|ftp)", "$1$3")
 					 .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
-    } catch (Exception e) {
-    	return "";
-    }
+		} catch (Exception e) {
+			return "";
+		}
 		return s ;
 //		s = s.replaceAll(
-//		    "[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
-//		    "<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
+//				"[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
+//				"<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
 	}
 	
 	public static String clearQuote(String s) {
@@ -475,12 +475,12 @@ public class ForumTransformHTML {
 	}
 	public static String autoAddUser(String s) {
 		String tmp = s;
-	  for (int i = 0; i < 400; i++) {
-	  	String t = tmp.replaceFirst("testUser", "testUser" + i);
-	    s = s + "<br/>" + t;
-    }
+		for (int i = 0; i < 400; i++) {
+			String t = tmp.replaceFirst("testUser", "testUser" + i);
+			s = s + "<br/>" + t;
+		}
 		return s;
-  }
+	}
 	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
 		if(s != null) {
