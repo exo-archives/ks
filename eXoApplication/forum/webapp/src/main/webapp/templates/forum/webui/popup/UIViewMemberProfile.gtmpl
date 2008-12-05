@@ -55,7 +55,6 @@
 							<%	
 								boolean isDisplayAvatar = userProfile.getIsDisplayAvatar(); 
 								String userTitle = userProfile.getUserTitle();
-								if((userProfile.getUserRole() == 3 || userTitle.equals("Guest")) && uicomponent.isAdmin(userName)) userTitle = "Administrator";
 								if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
