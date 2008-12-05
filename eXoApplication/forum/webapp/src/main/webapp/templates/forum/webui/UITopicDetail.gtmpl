@@ -670,8 +670,11 @@
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
+									String idAv = "avatar" + nb;
+									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
+									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="125px"/>
+								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload"/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes(uiformId + ".label.JoinDate");%>: $joinDate</div>
@@ -751,7 +754,6 @@
 								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
 								 		 String pathAtt = urlFile.replaceAll("&","(omu)");
-								 		 ++nb;
 								%>
 										<div class="AttachmentBox">
 										<% if(typeFile.indexOf("image") >= 0) {

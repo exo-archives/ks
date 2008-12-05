@@ -138,7 +138,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private List<Topic> getTopicsTag() throws Exception {
 		this.pageList = forumService.getTopicsByTag(ForumSessionUtils.getSystemProvider(), this.tagId, strOrderBy) ;
 		long maxTopic = this.userProfile.getMaxTopicInPage() ;
-		if(maxTopic > 0) maxTopic = 10;
+		if(maxTopic <= 0) maxTopic = 10;
 		this.pageList.setPageSize(maxTopic) ;
 		this.maxPage = this.pageList.getAvailablePage();
 		List<Topic> topics = pageList.getPage(pageSelect) ;

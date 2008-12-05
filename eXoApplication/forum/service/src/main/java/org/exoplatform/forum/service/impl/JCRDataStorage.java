@@ -248,6 +248,7 @@ public class JCRDataStorage {
 						List<TopicData> topics = forum.getTopics();
 						String topicId = "";
 						String ct = "";
+						for (int i = 0; i < 40; i++) {
 						for (TopicData topicData : topics) {
 							Topic topic = new Topic();
 							topic.setTopicName(topicData.getName());
@@ -258,6 +259,7 @@ public class JCRDataStorage {
 							topic.setIcon(topicData.getIcon());
 							this.saveTopic(sProvider, categoryId, forumId, topic, true, false, "");
 							topicId = topic.getId();
+						}
 						}
 						TopicData topic = topics.get(0) ;
 						List<PostData> posts = topic.getPosts();

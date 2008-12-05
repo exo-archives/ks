@@ -88,7 +88,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		int l = id.length ;
 		pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2], topic.getId(), "", "", "", userLogin)	; 
 		long maxPost = this.userProfile.getMaxPostInPage() ;
-		if(maxPost < 0) maxPost = 1 ;
+		if(maxPost <= 0) maxPost = 10 ;
 		pageList.setPageSize(maxPost) ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
