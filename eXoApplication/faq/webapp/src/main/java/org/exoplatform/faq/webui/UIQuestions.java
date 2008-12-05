@@ -110,6 +110,7 @@ import org.hibernate.usertype.UserVersionType;
 				@EventConfig(listeners = UIQuestions.CommentToAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.VoteQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.ChangeQuestionActionListener.class),
+				@EventConfig(listeners = UIQuestions.SortAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.ExportActionListener.class),
 				@EventConfig(listeners = UIQuestions.ImportActionListener.class)
 		}
@@ -125,6 +126,7 @@ public class UIQuestions extends UIContainer {
 	public List<Question> listQuestion_ =  null ;
 	private List<String> listCateId_ = new ArrayList<String>() ;
 	private boolean canEditQuestion = false ;
+	private boolean isSortDesc = true ;
 	private String categoryId_ = null ;
 	private String parentId_ = null ;
 	public String questionView_ = "" ;
@@ -158,7 +160,7 @@ public class UIQuestions extends UIContainer {
 
 	public UIQuestions()throws Exception {
 		backPath_ = null ;
-		this.categoryId_ = new String() ;
+		this.categoryId_ = null ;
 		currentUser_ = FAQUtils.getCurrentUser() ;
 		faqSetting_ = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting_);
@@ -382,9 +384,9 @@ public class UIQuestions extends UIContainer {
 		return true;
 	}
 
-	private boolean canVoteAnswer(String[] usersVoted, int posAnswer){
+	private boolean canVoteAnswer(String usersVoted, int posAnswer){
 		if(usersVoted != null)
-			for(String user : usersVoted[posAnswer].split(",")){
+			for(String user : usersVoted.split(",")){
 				if(user.equals(currentUser_)) return false;
 			}
 		return true;
@@ -455,12 +457,17 @@ public class UIQuestions extends UIContainer {
 				listQuestionLanguage.clear() ;
 
 				QuestionLanguage quesLanguage = new QuestionLanguage() ;
+				question.setPos();
 				quesLanguage.setLanguage(question.getLanguage()) ;
 				quesLanguage.setQuestion(question.getQuestion());
 				quesLanguage.setDetail(question.getDetail()) ;
 				quesLanguage.setResponse(question.getAllResponses()) ;
 				quesLanguage.setResponseBy(question.getResponseBy());
 				quesLanguage.setDateResponse(question.getDateResponse());
+				quesLanguage.setUsersVoteAnswer(question.getUsersVoteAnswer());
+				quesLanguage.setMarksVoteAnswer(question.getMarksVoteAnswer());
+				quesLanguage.setPos(question.getPos());
+				
 				listQuestionLanguage.add(quesLanguage) ;
 
 				listQuestionLanguage.addAll(faqService_.getQuestionLanguages(question.getId(), sessionProvider)) ;
@@ -624,6 +631,86 @@ public class UIQuestions extends UIContainer {
 		}
 		sessionProvider.close();
 		return listResult ;
+	}
+	
+	private QuestionLanguage sortQuestionLanguage(QuestionLanguage language){
+		String answers[] = language.getResponse();
+		String answersBy[] = language.getResponseBy();
+		Date dates[] = language.getDateResponse();
+		double[] marks = language.getMarksVoteAnswer();
+		String[] userVotes = language.getUsersVoteAnswer();
+		int[] pos = language.getPos();
+		
+		String answer = null;
+		String by = null;
+		Date date = null;
+		double mark = 0;
+		String userVote = null;
+		int p = 0;
+		if(isSortDesc){
+			for(int i = 0; i < answers.length - 1; i ++){
+				for(int j = i + 1; j < answers.length; j ++){
+					if(marks[i] < marks[j]){
+						answer = answers[i]; 
+						by = answersBy[i]; 
+						date = dates[i]; 
+						mark = marks[i]; 
+						userVote = userVotes[i]; 
+						p = pos[i];
+						
+						answers[i] = answers[j];
+						answersBy[i] = answersBy[j];
+						dates[i] = dates[j];
+						marks[i] = marks[j];
+						userVotes[i] = userVotes[j];
+						pos[i] = pos[j];
+						
+						answers[j] = answer;
+						answersBy[j] = by;
+						dates[j] = date;
+						marks[j] = mark;
+						userVotes[j] = userVote;
+						pos[j] = p;
+					}
+				}
+			}
+		} else {
+			for(int i = 0; i < answers.length - 1; i ++){
+				for(int j = i + 1; j < answers.length; j ++){
+					if(marks[i] > marks[j]){
+						answer = answers[i]; 
+						by = answersBy[i]; 
+						date = dates[i]; 
+						mark = marks[i]; 
+						userVote = userVotes[i]; 
+						p = pos[i];
+						
+						answers[i] = answers[j];
+						answersBy[i] = answersBy[j];
+						dates[i] = dates[j];
+						marks[i] = marks[j];
+						userVotes[i] = userVotes[j];
+						pos[i] = pos[j];
+						
+						answers[j] = answer;
+						answersBy[j] = by;
+						dates[j] = date;
+						marks[j] = mark;
+						userVotes[j] = userVote;
+						pos[j] = p;
+					}
+				}
+			}
+		}
+		
+		language.setResponse(answers);
+		language.setResponseBy(answersBy);
+		language.setDateResponse(dates);
+		language.setMarksVoteAnswer(marks);
+		language.setUsersVoteAnswer(userVotes);
+		language.setPos(pos);
+		
+		return language;
 	}
 
 	public Boolean checkUserWatch(String categoryId) throws Exception {
@@ -1318,6 +1405,18 @@ public class UIQuestions extends UIContainer {
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
+	
+	static  public class SortAnswerActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions questions = event.getSource() ;
+			for(int i = 0; i < questions.listQuestionLanguage.size(); i ++){
+				questions.listQuestionLanguage.set(i, questions.sortQuestionLanguage(questions.listQuestionLanguage.get(i)));
+			}
+			questions.isSortDesc = !questions.isSortDesc;
+			questions.isChangeLanguage = true;
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+		}
+	}
 
 	static  public class ViewQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
@@ -1880,6 +1979,9 @@ public class UIQuestions extends UIContainer {
 					uiQuestions.listQuestion_.get(pos).setResponses(questionLanguage.getResponse());
 					uiQuestions.listQuestion_.get(pos).setResponseBy(questionLanguage.getResponseBy());
 					uiQuestions.listQuestion_.get(pos).setDateResponse(questionLanguage.getDateResponse());
+					uiQuestions.listQuestion_.get(pos).setMarksVoteAnswer(questionLanguage.getMarksVoteAnswer());
+					uiQuestions.listQuestion_.get(pos).setUsersVoteAnswer(questionLanguage.getUsersVoteAnswer());
+					uiQuestions.listQuestion_.get(pos).setPos(questionLanguage.getPos());
 					break ;
 				}
 			}

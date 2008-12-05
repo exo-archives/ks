@@ -561,7 +561,7 @@
 															<%}%>
 																<!-- action Sort answer by vote -->
 																<td width="25">
-																	<a href="<%=uicomponent.event("SortAnswer",qId)%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
+																	<a href="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
 																		<div class="SortAnswer"><span></span></div>
 																	</a>
 																</td>
@@ -649,7 +649,7 @@
 																	</div>
 																</td>
 																<%
-																if(uicomponent.canVoteAnswer(question.getUsersVoteAnswer(), question.getPos()[countResponse])){
+																if(uicomponent.canVoteAnswer(question.getUsersVoteAnswer()[countResponse], question.getPos()[countResponse])){
 																%>
 																	<td width="50px" align="left">
 																		<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse])%>"

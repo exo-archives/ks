@@ -24,11 +24,9 @@
 			long questionNotApproved = cateInfo[3] ;
 			%>
 			<div style="margin-top: 2px;">SubCategories: $numberOfSubCate</div>
-		<%if(uicomponent.categoryId_ != null){%>
-				<div style="margin-top: 2px;">Questions: $numberOfQuestion</div>
-				<div style="margin-top: 2px;">Questions not answer: $questionNotAnswer</div>
-				<div style="margin-top: 2px;">Questions not approved: $questionNotApproved</div>
-		<%}%>
+			<div style="margin-top: 2px;">Questions: $numberOfQuestion</div>
+			<div style="margin-top: 2px;">Questions not answer: $questionNotAnswer</div>
+			<div style="margin-top: 2px;">Questions not approved: $questionNotApproved</div>
 		</div>
 	</div>
 	

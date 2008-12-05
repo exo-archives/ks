@@ -522,7 +522,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					popupAction.deActivate() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
-					if(questionNode!= null && !questions.getCategoryId().equals(question_.getCategoryId())) {
+					System.out.println("\n\n\n\n--------->questions.getCategoryId():'" + questions.getCategoryId() + "'\n--------->question_.getCategoryId():'" + question_.getCategoryId() + "'");
+					if(questionNode!= null && !("" + questions.getCategoryId()).equals(question_.getCategoryId())) {
 						UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
 						Category category = faqService.getCategoryById(question_.getCategoryId(), sessionProvider) ;
 						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
