@@ -109,6 +109,14 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}catch(Exception e) {
   		e.printStackTrace() ;
   	}  	
+  	systemSession = SessionProvider.createSystemProvider() ;
+  	try{
+  		storage_.evaluateActiveUsers(systemSession, "");
+  	}catch (Exception e) {
+  		e.printStackTrace() ;  		
+  	}finally{
+  		systemSession.close() ;
+  	}
 	}
 
 	public void stop() {}
@@ -147,7 +155,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   		Calendar cal = storage_.getGreenwichMeanTime() ;
   		profile.setProperty("exo:userId", user.getUserName()) ;
   		profile.setProperty("exo:lastLoginDate", cal) ;
-  		profile.setProperty("exo:lastPostDate", cal) ;
+  		//profile.setProperty("exo:lastPostDate", cal) ;
   		cal.setTime(user.getCreatedDate()) ;
   		profile.setProperty("exo:joinedDate", cal) ;  		
   		if(isAdminRole(user.getUserName())) {
@@ -356,7 +364,11 @@ public class ForumServiceImpl implements ForumService, Startable{
   public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
     return storage_.getPrivateMessage(sProvider, userName, type);
   }
-
+  
+  public long getNewPrivateMessage(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getNewPrivateMessage(sProvider, userName);
+  }
+  
   public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
     storage_.removePrivateMessage(sProvider, messageId, userName, type) ;
   }

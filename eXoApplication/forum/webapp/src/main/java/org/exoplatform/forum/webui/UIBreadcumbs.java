@@ -135,7 +135,7 @@ public class UIBreadcumbs extends UIContainer {
 	
 	@SuppressWarnings("unused")
 	private int getTotalJobWattingForModerator() throws Exception {
-		return forumService.getTotalJobWattingForModerator(ForumSessionUtils.getSystemProvider(), this.userProfile.getUserId());
+		return forumService.getTotalJobWattingForModerator(SessionProviderFactory.createSystemProvider(), this.userProfile.getUserId());
 	}
 	
 	public boolean isOpen() {
@@ -202,11 +202,12 @@ public class UIBreadcumbs extends UIContainer {
 	
 	@SuppressWarnings("unused")
 	private long getNewMessage() throws Exception {
-		if(!userProfile.getIsBanned()){
-			return this.userProfile.getNewMessage() ;
-		} else {
-			return -1;
-		}
+		try {
+			String username = this.userProfile.getUserId();
+			return forumService.getNewPrivateMessage(SessionProviderFactory.createSystemProvider(), username );
+    } catch (Exception e) {
+	    return -1;
+    }
 	}
 	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {

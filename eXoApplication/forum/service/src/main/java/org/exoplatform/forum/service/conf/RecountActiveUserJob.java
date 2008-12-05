@@ -55,8 +55,8 @@ public class RecountActiveUserJob implements Job{
 	    			calendar.setTimeInMillis(currentDay) ;
 	    			SessionProvider sysProvider = SessionProvider.createSystemProvider();
 	    			StringBuilder stringBuilder = new StringBuilder();
-	    			stringBuilder.append("//element(*,exo:userProfile)[");
-	    			stringBuilder.append("@exo:lastPostDate >= xs:dateTime('"+ISO8601.format(calendar)+"')]") ;
+	    			stringBuilder.append("//element(*,exo:userProfile)[")
+	    				.append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]") ;
 	    			forumService.evaluateActiveUsers(sysProvider, stringBuilder.toString()) ;
 	    			if (log_.isDebugEnabled()) {
     		  		log_.debug("\n\n The RecoundActiveUserJob have been done");

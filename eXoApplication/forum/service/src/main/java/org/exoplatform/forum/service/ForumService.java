@@ -822,7 +822,7 @@ public interface ForumService {
 	 * @throws Exception the exception
 	 */
 	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception;
-
+	public long getNewPrivateMessage(SessionProvider sProvider, String userName) throws Exception ;
 	/**
 	 * Save private message.
 	 * 
