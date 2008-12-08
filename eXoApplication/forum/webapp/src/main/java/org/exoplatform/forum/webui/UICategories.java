@@ -254,7 +254,7 @@ public class UICategories extends UIContainer	{
 				uiForumContainer.setIsRenderChild(false) ;
 				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 				uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
-				uiTopicDetail.setTopicFromCate(id[0], id[1], topic, true) ;
+				uiTopicDetail.setTopicFromCate(id[0], id[1], topic) ;
 				uiTopicDetail.setUpdateForum(categories.getForumById(id[0], id[1])) ;
 				uiTopicDetail.setIdPostView("lastpost") ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1], topic) ;

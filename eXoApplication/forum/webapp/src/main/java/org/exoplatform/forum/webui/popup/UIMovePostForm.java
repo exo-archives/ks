@@ -156,7 +156,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					forumPortlet.cancelAction() ;
 					String[] temp = topicPath.split("/") ;
 					UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
-					topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1], false) ;
+					topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
 					topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
         } catch (Exception e) {
