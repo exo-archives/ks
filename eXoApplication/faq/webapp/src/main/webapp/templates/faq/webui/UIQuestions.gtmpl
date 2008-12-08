@@ -24,118 +24,120 @@
 					<tbody>
 						<tr>
 							<td class="ControlButtonContainer">
-							<%
-							String url = uicomponent.url("Setting", "OBJECTID") ;
-							uicomponent.setLink(url);
-							String cateId = uicomponent.getCategoryId() ;
-							List categories = uicomponent.getCategories() ; 
-							/*
-							if(cateId == null || cateId.trim().length() < 1) {
-								uicomponent.setIsModerators() ;
-							}*/
-							boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
-							String[] categoryAction = null ;
-							String[] moderatorAction = null ;
-							if(cateId != null && cateId.trim().length() > 0){
-								moderatorAction = uicomponent.getSecondActionCategory() ;
-							} else {
-								moderatorAction = uicomponent.getActionCategory() ;
-							}
-							
-							if(canEditQuestion) {
-								String[] actionTollbar ;
-								actionTollbar = uicomponent.getActionTollbar() ;
-								String linkAction = "" ;
-								String opacity ;
-								for(String action in actionTollbar) {
-									linkAction = uicomponent.event(action, cateId) ;
-									String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
-							%>
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-										<a href="$linkAction">
-											<div class="LeftOverButton">
-												<div class="RightOverButton">
-													<div class="CenterOverButton">
-														<div class="Icon $action">
-															$itemLabelView
+								<div style="overflow:hidden; white-space:nowrap; width: 100%;height:30px;">
+									<%
+									String url = uicomponent.url("Setting", "OBJECTID") ;
+									uicomponent.setLink(url);
+									String cateId = uicomponent.getCategoryId() ;
+									List categories = uicomponent.getCategories() ; 
+									/*
+									if(cateId == null || cateId.trim().length() < 1) {
+										uicomponent.setIsModerators() ;
+									}*/
+									boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
+									String[] categoryAction = null ;
+									String[] moderatorAction = null ;
+									if(cateId != null && cateId.trim().length() > 0){
+										moderatorAction = uicomponent.getSecondActionCategory() ;
+									} else {
+										moderatorAction = uicomponent.getActionCategory() ;
+									}
+									
+									if(canEditQuestion) {
+										String[] actionTollbar ;
+										actionTollbar = uicomponent.getActionTollbar() ;
+										String linkAction = "" ;
+										String opacity ;
+										for(String action in actionTollbar) {
+											linkAction = uicomponent.event(action, cateId) ;
+											String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+									%>
+											<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
+												<a href="$linkAction">
+													<div class="LeftOverButton">
+														<div class="RightOverButton">
+															<div class="CenterOverButton">
+																<div class="Icon $action">
+																	$itemLabelView
+																</div>
+															</div>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="SeparatorLine ControlButton"><span></span></div>
+									<%
+										}
+									} else {
+										String linkAction =uicomponent.event("AddNewQuestion", cateId) ;
+									%>
+											<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
+												<a href="$linkAction">
+													<div class="LeftOverButton">
+														<div class="RightOverButton">
+															<div class="CenterOverButton">
+																<div class="Icon AddNewQuestion">
+																	<%=_ctx.appRes(uicomponent.getName() + ".action." + "AddQuestion")%>
+																</div>
+															</div>
+														</div>
+													</div>
+												</a>
+											</div>
+											<div class="SeparatorLine ControlButton"><span></span></div>
+								<%}%>
+								<% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
+										String actionSetting = uicomponent.event("Setting") ;
+								%>
+										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
+											<a href="$actionSetting" >
+												<div class="LeftOverButton">
+													<div class="RightOverButton">
+														<div class="CenterOverButton">
+															<div class="Icon Setting">
+																<%=_ctx.appRes(uicomponent.getName() + ".action." + "Settings")%>
+															</div>
 														</div>
 													</div>
 												</div>
-											</div>
-										</a>
-									</div>
-									<div class="SeparatorLine ControlButton"><span></span></div>
-							<%
-								}
-							} else {
-								String linkAction =uicomponent.event("AddNewQuestion", cateId) ;
-							%>
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-										<a href="$linkAction">
-											<div class="LeftOverButton">
-												<div class="RightOverButton">
-													<div class="CenterOverButton">
-														<div class="Icon AddNewQuestion">
-															<%=_ctx.appRes(uicomponent.getName() + ".action." + "AddQuestion")%>
-														</div>
-													</div>
-												</div>
-											</div>
-										</a>
-									</div>
-									<div class="SeparatorLine ControlButton"><span></span></div>
-						<%}%>
-						<% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
-								String actionSetting = uicomponent.event("Setting") ;
-						%>
-							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
-									<a href="$actionSetting" >
-										<div class="LeftOverButton">
-											<div class="RightOverButton">
-												<div class="CenterOverButton">
-													<div class="Icon Setting">
-														<%=_ctx.appRes(uicomponent.getName() + ".action." + "Settings")%>
-													</div>
-												</div>
-											</div>
+											</a>
 										</div>
-									</a>
+										<div class="SeparatorLine ControlButton"><span></span></div>
+								<% } %>
+									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
+										<a href="javascript:void(0);" onclick="eXo.faq.UIFAQPortlet.printAll(this)">
+											<div class="LeftOverButton">
+												<div class="RightOverButton">
+													<div class="CenterOverButton">
+														<div class="Icon Print">
+															<%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%>
+														</div>
+													</div>
+												</div>
+											</div>
+										</a>
+									</div>
+									<div class="SeparatorLine ControlButton"><span></span></div>
+									<div class="ScrollButtons" style="width:50px;">
+										<div title="Previous">
+											<div title="Next"><span></span></div>
+										</div>
+									</div>
+									<div style="clear: both;"><span></span></div>
 								</div>
-								<div class="SeparatorLine ControlButton"><span></span></div>
-							<% } %>
-							<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
-								<a href="javascript:void(0);" onclick="eXo.faq.UIFAQPortlet.printAll(this)">
-									<div class="LeftOverButton">
-										<div class="RightOverButton">
-											<div class="CenterOverButton">
-												<div class="Icon Print">
-													<%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%>
-												</div>
-											</div>
-										</div>
-									</div>
-								</a>
+							</td>
+							<td style="padding: 0px;width:260px;">
+							<div class="SearchForm">
+									<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
 							</div>
-							<div class="SeparatorLine ControlButton"><span></span></div>
-						<div class="ScrollButtons" style="width:50px;">
-							<div title="Previous">
-								<div title="Next"><span></span></div>
-							</div>
-						</div>
-						<div style="clear: both;"><span></span></div>
-						</td>
-						<td style="padding: 0px;width:260px;">
-						<div class="SearchForm">
-								<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
-						</div>
-				
-						<div style="clear: both;"><span></span></div>
-						</td>
-							</tr>
-						</body>
+					
+							<div style="clear: both;"><span></span></div>
+							</td>
+						</tr>
+					</body>
 					</table>
-					</div>
 				</div>
+			</div>
 		</div>
 	</div>
 <% /*View category*/ %>
