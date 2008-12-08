@@ -2,11 +2,10 @@
 	import org.exoplatform.forum.service.ForumSearch ;
 	import org.exoplatform.forum.service.Utils ;
 	import org.exoplatform.forum.ForumUtils;
-	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
+	import org.exoplatform.forum.webui.UIForumPageIterator;
 	List searchEvents = uicomponent.getListEvent() ;
 %>
-<div class="UIForumListSearch">
-<% uiform.begin() %>
+<div class="UIForumListSearch" id="$uicomponent.id">
 	<div class="ContentContainer">
 		<div class="UITopicList">
 			<div>
@@ -52,11 +51,10 @@
 			</div>
 		</div>
 	</div>
-<% if(uiform.getIsShowIter()){ %>
+<% if(uicomponent.getIsShowIter()){ %>
 <div style="overflow: auto;">
-  <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
+  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
 	<div style="clear: right; height: 0px;"><span></span></div>
 </div>
 <% } %>
-<%uiform.end()%>
 </div>
