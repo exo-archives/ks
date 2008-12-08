@@ -28,6 +28,7 @@ import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
+import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -38,7 +39,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -49,21 +50,25 @@ import org.exoplatform.webui.event.EventListener;
  * 14 Apr 2008, 08:22:52	
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
 		template =	"app:/templates/forum/webui/UIForumListSearch.gtmpl",
 		events = {
 			@EventConfig(listeners = UIForumListSearch.OpentContentActionListener.class),
-			@EventConfig(listeners = UIForumListSearch.CloseActionListener.class),
-			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
+			@EventConfig(listeners = UIForumListSearch.CloseActionListener.class)
 		}
 )
-public class UIForumListSearch extends UIForumKeepStickPageIterator {
+public class UIForumListSearch extends UIContainer {
 	private List<ForumSearch> listEvent = null ;
 	private boolean isShowIter = true;
-	public UIForumListSearch() throws Exception {}
+	 public final String SEARCH_ITERATOR = "forumSearchIterator";
+	 private JCRPageList pageList ;
+	 private UIForumPageIterator pageIterator ;
+	public UIForumListSearch() throws Exception {
+		pageIterator = addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR);
+	}
 	
 	public void setListSearchEvent(List<ForumSearch> listEvent) {
 		this.listEvent = listEvent ;
+		pageIterator.setSelectPage(1);
 	}
 	
 	public boolean getIsShowIter() {
@@ -74,9 +79,10 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 	public List<ForumSearch> getListEvent() {
 		pageList = new ForumPageList(10, listEvent.size());
 		pageList.setPageSize(10);
-//		this.updatePageList(pageList);
+		pageIterator.updatePageList(pageList);
 		isShowIter = true;
 		if(pageList.getAvailablePage() <= 1) isShowIter = false;
+		long pageSelect = pageIterator.getPageSelected();
 		List<ForumSearch>list = new ArrayList<ForumSearch>();
 		try {
 			list.addAll(pageList.getPageSearch(pageSelect, this.listEvent)) ;
