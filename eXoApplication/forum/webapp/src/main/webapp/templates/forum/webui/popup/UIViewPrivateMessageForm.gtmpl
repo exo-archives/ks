@@ -17,7 +17,7 @@
 			<div class="PlainTextMessage">
 				<div class="TitleBar">Title: <span class="UserLabel">$title</span></div>
 				<div class="MessageContent">
-					<div class="Content" style="padding:5px; margin: auto;">$message</div>
+					<div class="Content" style="padding:5px 0px; margin: auto;">$message</div>
 					<div class="line"><span></span></div>
 					<div class="MessageInfo"></div>
 				</div>

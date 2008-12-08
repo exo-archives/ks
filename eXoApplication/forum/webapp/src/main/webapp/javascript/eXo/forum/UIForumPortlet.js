@@ -515,7 +515,7 @@ UIForumPortlet.prototype.reSizeImages = function() {
 
 UIForumPortlet.prototype.reSizeImagesInMessageForm = function() {
 	if(eXo.core.Browser.isIE6())
-		setTimeout('eXo.forum.UIForumPortlet.setSizeImages(100, "UIViewPrivateMessageForm")', 800);
+		setTimeout('eXo.forum.UIForumPortlet.setSizeImages(130, "UIViewPrivateMessageForm")', 800);
 	else setTimeout('eXo.forum.UIForumPortlet.setSizeImages(10, "UIViewPrivateMessageForm")', 400);
 }
 
@@ -595,8 +595,9 @@ UIForumPortlet.prototype.ReloadImage = function() {
 		var length = aImage.length;
 		for (var i = 0; i < length; ++ i) {
 			aImage[i].src = aImage[i].src; 
+			if(aImage[i].width > 590)aImage[i].width = 590 + "px";
 		}
-		setTimeout(eXo.forum.UIForumPortlet.ReloadImage, 10000);
+		//setTimeout(eXo.forum.UIForumPortlet.ReloadImage, 10000);
 	}
 } 
 

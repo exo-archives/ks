@@ -3059,7 +3059,7 @@ public class JCRDataStorage {
 				return profileNode.getProperty("exo:newMessage").getLong();
 			}
 		} catch (PathNotFoundException e) {
-			e.printStackTrace();
+			return -1;
 		} finally {
 			sProvider.close();
 		}

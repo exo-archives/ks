@@ -108,7 +108,7 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 					ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
 					UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
 					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-					UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 600) ;
+					UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 650) ;
 					privateMessageForm.setPrivateMessage(privateMessage);
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 					forumPortlet.getUserProfile() ;
