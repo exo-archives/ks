@@ -1198,11 +1198,12 @@
 }
 
 .FAQDotLine {
-	background: url('background/line.gif') no-repeat left;
-	line-height:18px;
-	height: 13px;	width: 15px;
-	margin: 5px 0px 5px 8px;
-	padding-left: 15px;
+	background: url('background/line.gif') repeat-y left;
+	margin-left:20px;
+}
+
+.FAQDotLineTwo {
+	background: url('background/line2.gif') no-repeat left;
 }
 
 .UIFAQPortlet .OverVote {

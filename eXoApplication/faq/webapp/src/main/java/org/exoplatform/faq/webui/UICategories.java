@@ -24,8 +24,13 @@ import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SARL
@@ -35,7 +40,10 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template = "app:/templates/faq/webui/UICategories.gtmpl"
+		template = "app:/templates/faq/webui/UICategories.gtmpl",
+		events = {
+				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class)
+		}
 )
 
 public class UICategories extends UIContainer{
@@ -127,5 +135,47 @@ public class UICategories extends UIContainer{
 			}
 		}
 		sessionProvider.close();
+	}
+	
+	static  public class OpenCategoryActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories categories = event.getSource() ;
+			UIFAQContainer container = categories.getAncestorOfType(UIFAQContainer.class);
+			UIQuestions questions = container.getChild(UIQuestions.class);
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			if(questions.getCategoryId()!= null && questions.getCategoryId().equals(categoryId)) return;
+			questions.pageSelect = 0;
+			questions.backPath_ = "" ;
+			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+			try {
+				questions.viewAuthorInfor = faqService_.getCategoryById(categoryId, sessionProvider).isViewAuthorInfor() ;
+			} catch (Exception e) {
+				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				questions.setIsNotChangeLanguage();
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+				sessionProvider.close();
+				return ;
+			}
+			sessionProvider.close();
+			questions.setCategoryId(categoryId) ;
+			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+			String oldPath = breadcumbs.getPaths() ;
+			if(oldPath != null && oldPath.trim().length() > 0) {
+				if(!oldPath.contains(categoryId)) {
+					questions.newPath_ = oldPath + "/" +categoryId ;
+					questions.setPath(questions.newPath_) ;
+					breadcumbs.setUpdataPath(oldPath + "/" +categoryId);
+				}else {
+					oldPath = oldPath.substring(0, oldPath.indexOf(categoryId) + categoryId.length());
+					breadcumbs.setUpdataPath(oldPath);
+				}
+			} else breadcumbs.setUpdataPath(categoryId);
+			categories.setPathCategory(breadcumbs.getPaths());
+			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
+		}
 	}
 }

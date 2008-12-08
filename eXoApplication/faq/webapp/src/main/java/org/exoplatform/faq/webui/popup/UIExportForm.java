@@ -65,10 +65,18 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			UIExportForm exportForm = event.getSource() ;
 			
 			String fileName = ((UIFormStringInput)exportForm.getChildById(exportForm.FILE_NAME)).getValue();
+			ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+			UIFAQPortlet portlet = exportForm.getAncestorOfType(UIFAQPortlet.class) ;
+			if(!validatorDataInput.fckContentIsNotEmpty(fileName)){
+				UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIExportForm.msg.nameFileExport", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+				return;
+			}
 			String typeFIle = "";
 			FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			UIFAQPortlet portlet = exportForm.getAncestorOfType(UIFAQPortlet.class) ;
 			try{
 				Node categoryNode = service.getCategoryNodeById(exportForm.objectId, sessionProvider);
 				sessionProvider.close();
@@ -120,11 +128,11 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			    InputStream fileInputStream = new FileInputStream(file);
 		        dresource = new InputStreamDownloadResource(fileInputStream, "text/xml") ;
 		        typeFIle = ".zip";
-		        ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+		        /*ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 		        if(!validatorDataInput.fckContentIsNotEmpty(fileName)){
 			        if(exportForm.objectId == null) fileName = categoryNode.getName();
 			        else fileName = categoryNode.getProperty("exo:name").getString();
-		        }
+		        }*/
 		        
 		        dresource.setDownloadName(fileName + typeFIle);
 		        

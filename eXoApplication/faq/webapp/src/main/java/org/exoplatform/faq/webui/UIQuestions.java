@@ -152,7 +152,7 @@ public class UIQuestions extends UIContainer {
 	private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
 	private String[] userActionQues_ = new String[]{"SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
-	private boolean viewAuthorInfor = false;
+	public boolean viewAuthorInfor = false;
 
 	public JCRPageList pageList ;
 	private UIFAQPageIterator pageIterator = null ;

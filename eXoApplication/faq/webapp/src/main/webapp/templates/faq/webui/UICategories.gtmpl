@@ -54,9 +54,10 @@
 	    if(!listCate.isEmpty()){
 		    for(cate in listCate) {
 		    	id = cate.getCategory().getId() ;
+		    	String link = uicomponent.event("OpenCategory", id) ;
 		      if(i == 0) {%>
 						<div class="FAQCategoryTreeView" id="FAQCate$i">
-							<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
+							<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id');$link"><%= cate.getCategory().getName();%></a>
 						</div>
 		  	<%
 		      } else if(i > 0) {
@@ -64,22 +65,22 @@
 		        if(sub == 0) {
 		        	if(cate.getDeft() > 0) {
 		      %>
-			      		<div class="FAQDotLine">
+		    				<div class="FAQDotLineTwo">
 									<div class="FAQCategoryTreeView">
-											<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
+											<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id');$link"><%= cate.getCategory().getName();%></a>
 									</div>
 								</div>
 		    <%		} else {%>
-								<div class="FAQCategoryTreeView">
-										<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
-								</div>
+									<div class="FAQCategoryTreeView">
+											<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id');$link"><%= cate.getCategory().getName();%></a>
+									</div>
 		    		<%}
 		        } else if(sub > 0) {%>
-						  <div style=" display: none; padding-left: 20px ;" id="$parentId">
-						  	<div class="FAQDotLine">
+						  <div class="FAQDotLine" style=" display: none;" id="$parentId">
+						  	<div class="FAQDotLineTwo">
 									<div class="FAQCategoryTreeView">
 							    	<div id="FAQCate$i" style=" white-space:nowrap;">
-							    		<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
+							    		<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id');$link"><%= cate.getCategory().getName();%></a>
 							    	</div>
 							    </div>
 						    </div>
@@ -87,12 +88,20 @@
 		        } else {%>
 	         <%for(int j = 0 ; j < (-1*sub); j ++) {%>
 		    				</div>
-	     		<%}%>
-						 <div class="Icon FAQCategoryTreeView">
-							 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id')"><%= cate.getCategory().getName();%></a>
-						 </div>
-		     		<%
-		        }
+		    	 <%}
+		    	 	if(cate.getDeft() > 0){
+		    	 %>
+	     				<div class="FAQDotLineTwo">
+								 <div class="Icon FAQCategoryTreeView">
+									 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id');$link"><%= cate.getCategory().getName();%></a>
+								 </div>
+							</div>
+		       <%} else {%>
+		       		 <div class="Icon FAQCategoryTreeView">
+								 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('$id');$link"><%= cate.getCategory().getName();%></a>
+							 </div>
+		       	<%}
+		       	}
 		      }
 		      stackCateid.push(cate.getCategory().getId()) ;
 		      i ++ ;

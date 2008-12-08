@@ -91,7 +91,7 @@ public class FAQServiceUtils {
   	return users ;
   }
   
-  public List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
   	List<String> listOfUser = new ArrayList<String>();
 		listOfUser.add(userId);
 		String value = "";

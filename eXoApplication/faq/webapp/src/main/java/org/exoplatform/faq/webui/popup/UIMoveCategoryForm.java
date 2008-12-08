@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -183,9 +184,39 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
 				if(destCategoryId.equals("null")) {
-					faqService_.moveCategory(categoryId, destCategoryId, sessionProvider) ;
+					if(moveCategory.faqSetting_.isAdmin()){
+						faqService_.moveCategory(categoryId, destCategoryId, sessionProvider) ;
+					} else {
+						UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", null, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						sessionProvider.close();
+						return;
+					}
 				} else {
 					List<String> usersOfNewCateParent = Arrays.asList(faqService_.getCategoryById(destCategoryId, sessionProvider).getModerators()) ;
+					boolean canMove = false;
+					if(moveCategory.faqSetting_.isAdmin()){
+						canMove = true;
+					} else {
+						String[] listUserModerator = faqService_.getCategoryById(destCategoryId, sessionProvider).getModeratorsCategory();
+						List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
+						for(String user : listUserModerator){
+							if(currentUser.contains(user)) {
+								canMove = true;
+								break;
+							}
+						}
+					}
+					
+					if(!canMove){
+						UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", null, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						sessionProvider.close();
+						return;
+					}
+					
 					faqService_.moveCategory(categoryId, destCategoryId, sessionProvider) ;
 					for(CateClass cateClass : moveCategory.getListObjCategory(destCategoryId)) {
 						List<String> newUserList = new ArrayList<String>() ;
