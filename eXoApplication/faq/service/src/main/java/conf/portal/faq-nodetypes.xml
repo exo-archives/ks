@@ -56,6 +56,19 @@
 		</childNodeDefinitions>
   </nodeType>
   
+  <nodeType name="exo:faqQuestionHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>
+   <childNodeDefinitions>
+	   <childNodeDefinition name="*" defaultPrimaryType="exo:faqQuestion" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
+		    <requiredPrimaryTypes>
+		    	<requiredPrimaryType>exo:faqQuestion</requiredPrimaryType>
+		    </requiredPrimaryTypes>
+	   </childNodeDefinition>  
+  	</childNodeDefinitions>
+  </nodeType>
+  
 	<nodeType	name="exo:faqAttachment" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 	 	<supertypes>
 	 	  <supertype>nt:file</supertype>
@@ -109,6 +122,20 @@
       </childNodeDefinition>
     </childNodeDefinitions>
   </nodeType>	
+  
+  <nodeType name="exo:faqCategoryHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>   
+   <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:faqCategory" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:faqCategory</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
   
   <nodeType name="exo:faqWatching" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
     <propertyDefinitions>
