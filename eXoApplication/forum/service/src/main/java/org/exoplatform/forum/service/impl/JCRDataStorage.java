@@ -152,9 +152,9 @@ public class JCRDataStorage {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node userAdministration;
 		try {
-			userAdministration = forumHomeNode.getNode(Utils.USER_ADMINISTRATION);
+			userAdministration = forumHomeNode.getNode(Utils.USER_PROFILE_HOME);
 		} catch (PathNotFoundException e) {
-			userAdministration = forumHomeNode.addNode(Utils.USER_ADMINISTRATION, Utils.NT_UNSTRUCTURED);
+			userAdministration = forumHomeNode.addNode(Utils.USER_PROFILE_HOME, Utils.NT_UNSTRUCTURED);
 		}
 		try {
 			return userAdministration.getNode(Utils.USER_PROFILE);
