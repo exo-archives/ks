@@ -708,7 +708,8 @@ public class JCRDataStorage {
 		String lastTopicPath = "";
 		if (forumNode.hasProperty("exo:lastTopicPath")){
 			lastTopicPath = forumNode.getProperty("exo:lastTopicPath").getString();
-			lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
+			if(lastTopicPath.lastIndexOf("/") > 0)
+				lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
 		}
 		forum.setLastTopicPath(lastTopicPath);
 		if (forumNode.hasProperty("exo:description"))
