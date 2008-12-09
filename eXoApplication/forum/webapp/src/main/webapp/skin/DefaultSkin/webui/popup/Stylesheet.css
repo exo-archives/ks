@@ -25,6 +25,9 @@
 .UIForumAdministrationForm .InputContent input{
   width: 150px;
 }
+.UIForumAdministrationForm #notifyEmail___Frame{
+  width: 500px;
+}
 
 #notifyEmail {
   width: 400px;
