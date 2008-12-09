@@ -127,7 +127,7 @@ public class UIQuestions extends UIContainer {
 	private static String language_ = "" ;
 	private List<Watch> watchList_ = new ArrayList<Watch>() ;
 
-	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Import"} ;
+	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
 	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
 	//private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
 	//private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
