@@ -381,9 +381,33 @@ UIForumPortlet.prototype.showPicture = function(src) {
   containerNode.appendChild(imageNode) ;
   containerNode.setAttribute('title', 'Click to close') ;
   containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
+	this.showFullScreen(imageNode,containerNode);
   var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
-  var width = document.getElementsByTagName('html')[0].offsetWidth;
 	eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
+};
+
+UIForumPortlet.prototype.getImageSize = function(imageNode){
+	var tmp = imageNode.cloneNode(true);
+	tmp.style.visibility = "hidden";
+	document.body.appendChild(tmp);
+	var size = {
+		width: tmp.offsetWidth ,
+		height:tmp.offsetHeight
+	}
+	eXo.core.DOMUtil.removeElement(tmp);
+	return size ;
+};
+
+UIForumPortlet.prototype.showFullScreen = function(imageNode,containerNode){
+	var imageSize = this.getImageSize(imageNode);
+	if(imageSize.width > eXo.core.Browser.getBrowserWidth()){
+		containerNode.style.width = eXo.core.Browser.getBrowserWidth() + "px";
+		containerNode.style.overflowX = "auto";
+	}
+	if(imageSize.height > eXo.core.Browser.getBrowserWidth()){
+		containerNode.style.height = eXo.core.Browser.getBrowserHeight() + "px";
+		containerNode.style.overflowY = "auto";
+	}
 };
 
 UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
