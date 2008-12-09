@@ -54,9 +54,9 @@ public class Utils {
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
 
 	public static final String DEFAULT_EMAIL_CONTENT = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
-	"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
-	"has been added new Post with content below: <div> &content </div> For more detail, you can " +
-	"view at link : &link".intern();
+			"Watching notification.<br/>We would like to inform that $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> " +
+			"has been added new $ADD_TYPE with content below: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, <b>$POSTER</b> posted</div> " +
+			"For more detail, you can view at link : $LINK".intern();
 	
 	
 	

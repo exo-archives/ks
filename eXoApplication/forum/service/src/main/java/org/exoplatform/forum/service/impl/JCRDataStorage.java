@@ -18,6 +18,8 @@ package org.exoplatform.forum.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1281,11 +1283,12 @@ public class JCRDataStorage {
 		if (isNew) {
 			topicNode = forumNode.addNode(topic.getId(), "exo:topic");
 			topicNode.setProperty("exo:id", topic.getId());
-//			topicNode.setProperty("exo:path", forumId);
 			topicNode.setProperty("exo:owner", topic.getOwner());
-			topicNode.setProperty("exo:createdDate", getGreenwichMeanTime());
+			Calendar calendar = getGreenwichMeanTime();
+			topic.setCreatedDate(calendar.getTime());
+			topicNode.setProperty("exo:createdDate", calendar);
 			topicNode.setProperty("exo:lastPostBy", topic.getLastPostBy());
-			topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
+			topicNode.setProperty("exo:lastPostDate", calendar);
 			topicNode.setProperty("exo:postCount", -1);
 			topicNode.setProperty("exo:viewCount", 0);
 			topicNode.setProperty("exo:tagId", topic.getTagId());
@@ -1672,12 +1675,13 @@ public class JCRDataStorage {
 		Node forumNode = CategoryNode.getNode(forumId);
 		Node topicNode = forumNode.getNode(topicId);
 		Node postNode;
+		Calendar calendar = getGreenwichMeanTime();
 		if (isNew) {
 			postNode = topicNode.addNode(post.getId(), "exo:post");
 			postNode.setProperty("exo:id", post.getId());
 			postNode.setProperty("exo:owner", post.getOwner());
-//			postNode.setProperty("exo:path", forumId);// postNode.getPath());
-			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
+			post.setCreatedDate(calendar.getTime());
+			postNode.setProperty("exo:createdDate", calendar);
 			postNode.setProperty("exo:userPrivate", post.getUserPrivate());
 			postNode.setProperty("exo:isActiveByTopic", true);
 			postNode.setProperty("exo:link", post.getLink());
@@ -1708,7 +1712,7 @@ public class JCRDataStorage {
 				}
 				newProfileNode.setProperty("exo:totalPost", 1);
 			}
-			newProfileNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
+			newProfileNode.setProperty("exo:lastPostDate", calendar);
 			if(userProfileNode.isNew()) {
 				userProfileNode.getSession().save();
 			} else {
@@ -1719,7 +1723,7 @@ public class JCRDataStorage {
 		}
 		if (post.getModifiedBy() != null && post.getModifiedBy().length() > 0) {
 			postNode.setProperty("exo:modifiedBy", post.getModifiedBy());
-			postNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
+			postNode.setProperty("exo:modifiedDate", calendar);
 			postNode.setProperty("exo:editReason", post.getEditReason());
 		}
 		postNode.setProperty("exo:name", post.getName());
@@ -1784,7 +1788,7 @@ public class JCRDataStorage {
 
 						topicNode.setProperty("exo:postCount", topicPostCount);
 						topicNode.setProperty("exo:numberAttachments", newNumberAttach);
-						topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
+						topicNode.setProperty("exo:lastPostDate", calendar);
 						topicNode.setProperty("exo:lastPostBy", post.getOwner());
 						forumNode.setProperty("exo:postCount", forumPostCount);
 					}
@@ -1801,7 +1805,7 @@ public class JCRDataStorage {
 
 							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 							topicNode.setProperty("exo:postCount", topicPostCount);
-							topicNode.setProperty("exo:lastPostDate", getGreenwichMeanTime());
+							topicNode.setProperty("exo:lastPostDate", calendar);
 							topicNode.setProperty("exo:lastPostBy", post.getOwner());
 						}
 					}
@@ -1880,11 +1884,20 @@ public class JCRDataStorage {
 				Message message = new Message();
 				message.setMimeType("text/html");
 				message.setSubject("eXo Forum Watching Notification!");
+				
 				String content_ = node.getProperty("exo:name").getString();
-				content_ = content.replace("&objectName", content_);
-				content_ = content_.replaceAll("&objectWatch", "Forum");
-				content_ = content_.replaceAll("&content", Utils.convertCodeHTML(topic.getDescription()));
-				content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+				content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
+				content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+				content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Topic");
+				content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
+				Date createdDate = topic.getCreatedDate();
+				Format formatter = new SimpleDateFormat("HH:mm");
+				content_ =  StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+				formatter = new SimpleDateFormat("MM/dd/yyyy");
+				content_ =  StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+				content_ =  StringUtils.replace(content_, "$POSTER", topic.getOwner());
+				content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+				
 				message.setBody(content_);
 				sendEmailNotification(emailList, message);
 			}
@@ -1977,11 +1990,20 @@ public class JCRDataStorage {
 					Message message = new Message();
 					message.setMimeType("text/html");
 					message.setSubject("eXo Thread Watching Notification!");
+					
 					String content_ = node.getProperty("exo:name").getString();
-					content_ = content.replace("&objectName", content_);
-					content_ = content_.replaceAll("&objectWatch", "Topic");
-					content_ = content_.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-					content_ = content_.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
+					content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
+					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Post");
+					content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					Date createdDate = post.getCreatedDate();
+					Format formatter = new SimpleDateFormat("HH:mm");
+					content_ =  StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					formatter = new SimpleDateFormat("MM/dd/yyyy");
+					content_ =  StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ =  StringUtils.replace(content_, "$POSTER", post.getOwner());
+					content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
 				}
@@ -1989,10 +2011,19 @@ public class JCRDataStorage {
 					Message message = new Message();
 					message.setMimeType("text/html");
 					message.setSubject("eXo Forum Watching Notification!");
-					content = content.replaceAll("&objectWatch", "Forum");
-					content = content.replaceAll("&objectName", forumNode.getProperty("exo:name").getString());
-					content = content.replaceAll("&content", Utils.convertCodeHTML(post.getMessage()));
-					content = content.replaceAll("&link", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					
+					content =  StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
+					content =  StringUtils.replace(content, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+					content =  StringUtils.replace(content, "$ADD_TYPE", "Post");
+					content =  StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					Date createdDate = post.getCreatedDate();
+					Format formatter = new SimpleDateFormat("HH:mm");
+					content =  StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");
+					formatter = new SimpleDateFormat("MM/dd/yyyy");
+					content =  StringUtils.replace(content, "$DATE", formatter.format(createdDate));
+					content =  StringUtils.replace(content, "$POSTER", post.getOwner());
+					content =  StringUtils.replace(content, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					
 					message.setBody(content);
 					sendEmailNotification(emailListForum, message);
 				}

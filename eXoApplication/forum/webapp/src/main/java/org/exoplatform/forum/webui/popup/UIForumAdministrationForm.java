@@ -143,8 +143,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		//UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, null);
 		String value = administration.getNotifyEmailContent();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
-		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, null, value, true);
-		
+		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, null, "", true);
+		notifyEmail.setValue(value);
 		forumSortTab.addUIFormInput(forumSortBy) ;
 		forumSortTab.addUIFormInput(forumSortByType) ;
 		forumSortTab.addUIFormInput(topicSortBy) ;
