@@ -163,7 +163,7 @@ public class UIForumActionBar extends UIContainer	{
 			UIForumAdministrationForm administrationForm = popupContainer.addChild(UIForumAdministrationForm.class, null, null) ;
 			administrationForm.setInit();
 			popupContainer.setId("UIForumAdministration") ;
-			popupAction.activate(popupContainer, 630, 360) ;
+			popupAction.activate(popupContainer, 730, 360) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	

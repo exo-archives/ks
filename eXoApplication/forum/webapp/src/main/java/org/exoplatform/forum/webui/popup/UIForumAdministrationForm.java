@@ -26,8 +26,10 @@ import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -39,6 +41,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
@@ -136,10 +139,10 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		UIFormRadioBoxInput setActive = new UIFormRadioBoxInput(FIELD_SETACTIVE_INPUT, FIELD_SETACTIVE_INPUT, options);
 		setActive.setValue("false") ;
 		
-		UIFormTextAreaInput notifyEmail = new UIFormTextAreaInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, null);
+		//UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, null);
 		String value = administration.getNotifyEmailContent();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
-		notifyEmail.setValue(value) ;
+		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, null, value, true);
 		
 		forumSortTab.addUIFormInput(forumSortBy) ;
 		forumSortTab.addUIFormInput(forumSortByType) ;
@@ -189,7 +192,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			if(!ForumUtils.isEmpty(censoredKeyword)) {
 				censoredKeyword = censoredKeyword.toLowerCase();
 			}
-			String notifyEmail = notifyEmailTab.getUIFormTextAreaInput(FIELD_NOTIFYEMAIL_TEXTAREA).getValue() ;
+			String notifyEmail = ((UIFormWYSIWYGInput)notifyEmailTab.getChildById(FIELD_NOTIFYEMAIL_TEXTAREA)).getValue() ;
+			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
+			if(notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
+				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				return;
+			}
 			ForumAdministration forumAdministration = administrationForm.administration ;
 			forumAdministration.setForumSortBy(forumSortBy) ;
 			forumAdministration.setForumSortByType(forumSortByType) ;
@@ -203,7 +214,6 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			} finally {
 				sProvider.close();
 			}
-			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -233,7 +243,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	static	public class GetDefaultMailActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource();
-			UIFormTextAreaInput areaInput = ((UIFormInputWithActions)uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB)).getChildById(FIELD_NOTIFYEMAIL_TEXTAREA);
+			UIFormWYSIWYGInput areaInput = ((UIFormInputWithActions)uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB)).
+																																				getChildById(FIELD_NOTIFYEMAIL_TEXTAREA);
 			areaInput.setValue(uiForm.getLabel("notifyEmailContentDefault"));
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
