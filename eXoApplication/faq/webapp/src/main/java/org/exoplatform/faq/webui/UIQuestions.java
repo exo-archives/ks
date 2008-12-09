@@ -131,8 +131,8 @@ public class UIQuestions extends UIContainer {
 	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
 	//private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
 	//private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
-	private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
-	private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
+	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
+	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
 	private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
 	private String[] userActionQues_ = new String[]{"SendQuestion"} ;
