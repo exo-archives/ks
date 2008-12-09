@@ -708,8 +708,13 @@ public class JCRDataStorage {
 		String lastTopicPath = "";
 		if (forumNode.hasProperty("exo:lastTopicPath")){
 			lastTopicPath = forumNode.getProperty("exo:lastTopicPath").getString();
-			if(lastTopicPath.lastIndexOf("/") > 0)
-				lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
+			if(lastTopicPath.trim().length() > 0){
+				if(lastTopicPath.lastIndexOf("/") > 0){
+					lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
+				} else {
+					lastTopicPath = forum.getPath() + "/" + lastTopicPath;
+				}
+			}
 		}
 		forum.setLastTopicPath(lastTopicPath);
 		if (forumNode.hasProperty("exo:description"))
@@ -820,14 +825,14 @@ public class JCRDataStorage {
 			forumHomeNode.getSession().getWorkspace().move(forum.getPath(), newForumPath);
 			Node forumNode = (Node) forumHomeNode.getSession().getItem(newForumPath);
 			forumNode.setProperty("exo:path", newForumPath);
-			if (forumNode.hasProperty("exo:lastTopicPath")) {
-				String oldPath = forumNode.getProperty("exo:lastTopicPath").getString();
-				if (oldPath != null && oldPath.length() > 0) {
-					String topicId = oldPath.substring(oldPath.lastIndexOf("/"));
-					String newPath = newForumPath + topicId;
-					forumNode.setProperty("exo:lastTopicPath", newPath);
-				}
-			}
+//			if (forumNode.hasProperty("exo:lastTopicPath")) {
+//				String oldPath = forumNode.getProperty("exo:lastTopicPath").getString();
+//				if (oldPath != null && oldPath.length() > 0) {
+//					String topicId = oldPath.substring(oldPath.lastIndexOf("/"));
+//					String newPath = newForumPath + topicId;
+//					forumNode.setProperty("exo:lastTopicPath", newPath);
+//				}
+//			}
 			String[] strModerators = forum.getModerators();
 			forumNode.setProperty("exo:moderators", strModerators);
 			if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
@@ -1026,12 +1031,12 @@ public class JCRDataStorage {
 			while (iter.hasNext()) {
 				topicNode = iter.nextNode();
 				if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-					forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+					forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 					isSavePath = true;
 					break;
 				} else {
 					if (topicNode.getProperty("exo:isApproved").getBoolean()) {
-						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+						forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 						isSavePath = true;
 						break;
 					}
@@ -1784,9 +1789,9 @@ public class JCRDataStorage {
 						forumNode.setProperty("exo:postCount", forumPostCount);
 					}
 					if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+						forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 					} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
-						forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+						forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 					}
 				} else {
 					if (post.getIsApproved()) {
@@ -1803,14 +1808,14 @@ public class JCRDataStorage {
 					if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 						if (topicNode.getProperty("exo:isApproved").getBoolean()) {
 							if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-								forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 							}
 						}
 					} else {
 						if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 						} else if (post.getIsApproved()) {
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getPath());
+							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 						}
 					}
 					//saveUserReadTopic(sProvider, post.getOwner(), topicId, false);
