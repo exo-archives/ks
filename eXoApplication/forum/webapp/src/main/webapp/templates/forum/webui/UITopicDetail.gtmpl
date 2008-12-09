@@ -61,7 +61,7 @@
 			if(!canEdit) isLock = isNotReply;
 			else isLock = false;
 			isClosed = !uicomponent.userCanView() ;
-			if(topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
+			if(!canEdit && topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
 		} else {
 		  isClosed = true;
 		  isNotReply = true;

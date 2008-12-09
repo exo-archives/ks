@@ -9,16 +9,17 @@
 	 %>
 		<div class="HorizontalLayout">
 			<div class="FormContainer">
-				<table class="UIFormGrid">
+				<table class="UIFormGrid" width="98%">
 					<tbody>
 						<tr>
+							<td width="100%">&nbsp;</td>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</td>
-							<td>
+							<td width="242px;">
 								<div>
 								<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
 								</div>
 							</td>
-							<td>
+							<td width="100px">
 								<div class="UIActionForum" onclick="script:scroll(0,0)">
 									<div class="NormalButtom">
 										<div class="ButtonLeft">

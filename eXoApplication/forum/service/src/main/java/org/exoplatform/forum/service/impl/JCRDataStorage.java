@@ -144,7 +144,7 @@ public class JCRDataStorage {
 		try {
 			return appNode.getNode(Utils.FORUM_SERVICE);
 		} catch (PathNotFoundException e) {
-			return appNode.addNode(Utils.FORUM_SERVICE, Utils.NT_UNSTRUCTURED);
+			return appNode.addNode(Utils.FORUM_SERVICE, "exo:forumHome");
 		}
 	}
 
@@ -154,12 +154,12 @@ public class JCRDataStorage {
 		try {
 			userAdministration = forumHomeNode.getNode(Utils.USER_PROFILE_HOME);
 		} catch (PathNotFoundException e) {
-			userAdministration = forumHomeNode.addNode(Utils.USER_PROFILE_HOME, Utils.NT_UNSTRUCTURED);
+			userAdministration = forumHomeNode.addNode(Utils.USER_PROFILE_HOME, "exo:userProfileHome");
 		}
 		try {
-			return userAdministration.getNode(Utils.USER_PROFILE);
+			return userAdministration.getNode(Utils.USER_PROFILES);
 		} catch (PathNotFoundException e) {
-			return userAdministration.addNode(Utils.USER_PROFILE, Utils.NT_UNSTRUCTURED);
+			return userAdministration.addNode(Utils.USER_PROFILES, "exo:userProfiles");
 		}
 	}
 
@@ -705,8 +705,12 @@ public class JCRDataStorage {
 			forum.setModifiedBy(forumNode.getProperty("exo:modifiedBy").getString());
 		if (forumNode.hasProperty("exo:modifiedDate"))
 			forum.setModifiedDate(forumNode.getProperty("exo:modifiedDate").getDate().getTime());
-		if (forumNode.hasProperty("exo:lastTopicPath"))
-			forum.setLastTopicPath(forumNode.getProperty("exo:lastTopicPath").getString());
+		String lastTopicPath = "";
+		if (forumNode.hasProperty("exo:lastTopicPath")){
+			lastTopicPath = forumNode.getProperty("exo:lastTopicPath").getString();
+			lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
+		}
+		forum.setLastTopicPath(lastTopicPath);
 		if (forumNode.hasProperty("exo:description"))
 			forum.setDescription(forumNode.getProperty("exo:description").getString());
 		if (forumNode.hasProperty("exo:postCount"))

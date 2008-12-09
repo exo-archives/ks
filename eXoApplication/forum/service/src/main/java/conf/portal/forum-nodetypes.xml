@@ -666,4 +666,82 @@
   		</propertyDefinition>  		        
     </propertyDefinitions>
   </nodeType>
+  
+  <nodeType name="exo:userProfiles" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>   
+   <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:userProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:userProfile</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="exo:userProfileHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>   
+   <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:userProfiles" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:userProfiles</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="exo:forumHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>   
+   <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:administration" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:administration</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:userProfileHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:userProfileHome</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:forumStatistic" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:forumStatistic</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:forumCategory" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:forumCategory</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>      
+    </childNodeDefinitions>
+  </nodeType>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 </nodeTypes>

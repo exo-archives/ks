@@ -94,7 +94,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
-		//@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
+		@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
 		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 	}
 )
@@ -205,7 +205,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private String[] getActionMenuForum() throws Exception {
-		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "WatchOption"};
+		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption"};
 		return actions;
 	}
 

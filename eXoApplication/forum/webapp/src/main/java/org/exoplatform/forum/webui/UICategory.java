@@ -66,8 +66,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		events = {
 				@EventConfig(listeners = UICategory.SearchFormActionListener.class),
 				@EventConfig(listeners = UICategory.EditCategoryActionListener.class),
-				//@EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
-				//@EventConfig(listeners = UICategory.ImportForumActionListener.class),
+				@EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
+				@EventConfig(listeners = UICategory.ImportForumActionListener.class),
 				@EventConfig(listeners = UICategory.DeleteCategoryActionListener.class,confirm="UICategory.confirm.DeleteCategory"),
 				@EventConfig(listeners = UICategory.AddForumActionListener.class),
 				@EventConfig(listeners = UICategory.EditForumActionListener.class),
@@ -95,6 +95,8 @@ public class UICategory extends UIForm	{
 	public UICategory() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
+		setActions(new String[]{"EditCategory","ExportCategory","ImportForum","DeleteCategory","AddForum","EditForum","SetLocked",
+				"SetUnLock","SetOpen","SetClose","MoveForum","RemoveForum"});
 	}
 	
 	private UserProfile getUserProfile() throws Exception {
