@@ -24,6 +24,7 @@
 					<tbody>
 						<tr>
 							<td class="ControlButtonContainer">
+								<div style="height:22px;overflow-y:hidden;">
 									<%
 									String url = uicomponent.url("Setting", "OBJECTID") ;
 									uicomponent.setLink(url);
@@ -117,12 +118,13 @@
 										</a>
 									</div>
 									<div class="SeparatorLine ControlButton"><span></span></div>
-									<div class="ScrollButtons" style="width:50px;">
+									<div class="ScrollButtons" style="width:35px;">
 										<div title="Previous">
 											<div title="Next"><span></span></div>
 										</div>
 									</div>
 									<div style="clear: both;"><span></span></div>
+							</div>		
 							</td>
 							<td style="padding: 0px;width:260px;">
 							<div class="SearchForm">
