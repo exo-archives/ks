@@ -886,7 +886,7 @@ public interface ForumService {
   
   public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception ;
   
-  public void exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
+  public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception ;
 }

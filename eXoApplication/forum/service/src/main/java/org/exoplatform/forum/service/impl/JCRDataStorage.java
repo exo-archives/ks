@@ -16,8 +16,14 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,6 +33,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -3490,16 +3498,56 @@ public class JCRDataStorage {
 		return result.getNodes();
 	}
 	
-	public void exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
+	public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
 		Session session = null;
 		Node homeNode = getForumHomeNode(sessionProvider);
-		if(forumId != null){
-			session = homeNode.getNode(categoryId).getNode(forumId).getSession();
+		if(categoryId != null){
+			if(forumId != null){
+				session = homeNode.getNode(categoryId).getNode(forumId).getSession();
+			} else {
+				session = homeNode.getNode(categoryId).getSession();
+			}
+			session.exportSystemView(nodePath, bos, false, false ) ;
+			session.logout();
+			return null;
 		} else {
-			session = homeNode.getNode(categoryId).getSession();
+			List<File> listFiles = new ArrayList<File>();
+			File file = null;
+			Writer writer = null;
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
+			session = homeNode.getSession();
+			for(Category category : getCategories(sessionProvider)){
+				outputStream = new ByteArrayOutputStream() ;
+				session.exportSystemView(category.getPath(), outputStream, false, false ) ;
+				file =  new File(category.getId() + ".xml");
+				file.deleteOnExit();
+				file.createNewFile();
+				writer = new BufferedWriter(new FileWriter(file));
+				writer.write(outputStream.toString());
+				writer.close();
+				listFiles.add(file);
+			}
+		  // tao file zip:
+	    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+	    int byteReads;
+	    byte[] buffer = new byte[4096]; // Create a buffer for copying
+	    FileInputStream inputStream = null;
+	    ZipEntry zipEntry = null;
+	    for(File f : listFiles){
+	    	inputStream = new FileInputStream(f);
+	    	zipEntry = new ZipEntry(f.getPath());
+	    	zipOutputStream.putNextEntry(zipEntry);
+	    	while((byteReads = inputStream.read(buffer)) != -1)
+	    		zipOutputStream.write(buffer, 0, byteReads);
+	    	inputStream.close();
+	    }
+	    zipOutputStream.close();
+	    file = new File("exportCategory.zip");
+	    session.logout();
+	    for(File f : listFiles) f.deleteOnExit();
+	    return file;
+			//outputStream.toString().writeTo(bos);
 		}
-		session.exportSystemView(nodePath, bos, false, false ) ;
-		session.logout();
 	}
 
 	public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {

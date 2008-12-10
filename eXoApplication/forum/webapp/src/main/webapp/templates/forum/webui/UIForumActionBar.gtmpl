@@ -18,8 +18,8 @@
 								<div style="height:22px;overflow-y:hidden;">								
 								<%String[] actions = [""];
 									if(isAdmin) { 
-										//actions = ["AddCategory", "ImportCategory", "AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
-										actions = ["AddCategory", "AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
+										actions = ["AddCategory", "ExportCategory", "ImportCategory", "AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
+										//actions = ["AddCategory", "AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
 									} else {
 										actions = ["EditProfile","OpenBookMark"];
 									}

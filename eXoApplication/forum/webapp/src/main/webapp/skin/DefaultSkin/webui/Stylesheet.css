@@ -508,6 +508,10 @@
   background: url('background/Export.gif') no-repeat left;
 }
 
+.UIForumPortlet .ExportCategory {
+  background: url('background/Export.gif') no-repeat left;
+}
+
 .UIForumPortlet .ExportCategoryIcon {
   background: url('background/Export.gif') no-repeat left;
 }
