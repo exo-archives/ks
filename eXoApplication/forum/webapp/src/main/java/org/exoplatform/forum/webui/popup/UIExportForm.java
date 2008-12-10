@@ -2,6 +2,9 @@ package org.exoplatform.forum.webui.popup;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
@@ -38,17 +41,21 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 	public void activate() throws Exception { }
 
 	public void deActivate() throws Exception { }
-	
+
 	public UIExportForm(){
 		addChild(new UIFormStringInput(FILE_NAME, null));
 		addChild(new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false ));
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public void setObjectId(Object object){
 		this.object_ = object;
 		this.setActions(new String[]{"Save", "Cancel"});
+		if(object == null){
+			((UIFormCheckBoxInput<Boolean>)this.getChildById(CREATE_ZIP)).setChecked(true).setEditable(false);
+		}
 	}
-	
+
 	static public class SaveActionListener extends EventListener<UIExportForm> {
 		@SuppressWarnings("unchecked")
 		public void execute(Event<UIExportForm> event) throws Exception {
@@ -73,46 +80,52 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				nodePath = forum.getPath();
 				categoryId = forum.getPath().split("/")[3];
 				forumId = forum.getId();
-			} else {
+			} else if(exportForm.object_ instanceof org.exoplatform.forum.service.Category) {
 				org.exoplatform.forum.service.Category category = (org.exoplatform.forum.service.Category)exportForm.object_;
 				nodePath = category.getPath();
 				categoryId = category.getId();
+			} else if(exportForm.object_ == null){
+				categoryId = null;
 			}
-		    DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class) ;
-		    InputStreamDownloadResource dresource ;
-		    ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
-		    CompressData zipService = new CompressData();
-		    
-		    service.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
-		    sessionProvider.close();
-		    /*ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		    outputStream.write(bos.toByteArray(), 0, bos.toByteArray().length);
-		    ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray()) ;*/
-	        ByteArrayInputStream inputStream = new ByteArrayInputStream(bos.toByteArray()) ;
-	        
-	        if(!isCreateZipFile){
-		        // create file xml to dowload
-		        dresource = new InputStreamDownloadResource(inputStream, "text/xml") ;
-		        dresource.setDownloadName(fileName + ".xml");
-	        } else {
-	        	// create zip file
-		        zipService.addInputStream("System.xml", inputStream);
-		        bos = new ByteArrayOutputStream() ;
-		        zipService.createZip(bos);
-		        ByteArrayInputStream zipInput = new ByteArrayInputStream(bos.toByteArray());
-		        dresource = new InputStreamDownloadResource(zipInput, "application/zip") ;
-		        dresource.setDownloadName(fileName + ".zip");
-	        }
-	        
-	        String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource)) ;
-	        event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
-			
+			DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class) ;
+			InputStreamDownloadResource dresource ;
+			ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
+			CompressData zipService = new CompressData();
+
+			File file = (File)service.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
+			InputStream inputStream = null;
+			sessionProvider.close();
+			if(file == null){
+				inputStream = new ByteArrayInputStream(bos.toByteArray()) ;
+				if(!isCreateZipFile){
+					// create file xml to dowload
+					dresource = new InputStreamDownloadResource(inputStream, "text/xml") ;
+					dresource.setDownloadName(fileName + ".xml");
+				} else{
+					// create zip file
+					zipService.addInputStream("System.xml", inputStream);
+					bos = new ByteArrayOutputStream() ;
+					zipService.createZip(bos);
+					ByteArrayInputStream zipInput = new ByteArrayInputStream(bos.toByteArray());
+					dresource = new InputStreamDownloadResource(zipInput, "application/zip") ;
+					dresource.setDownloadName(fileName + ".zip");
+				}
+			}
+			else {
+				inputStream = new FileInputStream(file);
+				dresource = new InputStreamDownloadResource(inputStream, "text/xml") ;
+				dresource.setDownloadName(fileName + ".zip");
+			}
+
+			String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource)) ;
+			event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
+
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-	
+
 	static public class CancelActionListener extends EventListener<UIExportForm> {
 		public void execute(Event<UIExportForm> event) throws Exception {
 			UIExportForm exportForm = event.getSource() ;

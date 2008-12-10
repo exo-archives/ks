@@ -517,8 +517,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 	  storage_.updateTopicAccess(sysSession, userId, topicId) ;
   }
   
-  public void exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
-	  storage_.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
+  public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
+	  return storage_.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
   }
 
   

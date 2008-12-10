@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui;
 
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UICategoryForm;
+import org.exoplatform.forum.webui.popup.UIExportForm;
 import org.exoplatform.forum.webui.popup.UIForumAdministrationForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIForumUserSettingForm;
@@ -47,6 +48,7 @@ import org.exoplatform.webui.event.EventListener;
 		events = {
 				@EventConfig(listeners = UIForumActionBar.AddCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.ExportCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.AddForumActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.EditProfileActionListener.class),
@@ -91,6 +93,20 @@ public class UIForumActionBar extends UIContainer	{
 			popupContainer.addChild(UIImportForm.class, null, null) ;
 			popupContainer.setId("FORUMImportCategoryForm") ;
 			popupAction.activate(popupContainer, 400, 150) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}	
+	
+	static public class ExportCategoryActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null) ;
+			exportForm.setObjectId(null);
+			popupContainer.setId("FORUMExportCategoryForm") ;
+			popupAction.activate(popupContainer, 500, 150) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	

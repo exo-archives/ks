@@ -15,10 +15,8 @@ import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UICategory;
-import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -55,22 +53,25 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 		this.categoryPath = categoryPath;
 	}
 
-	private ByteArrayInputStream extractFromZipFile(ZipInputStream zipStream) throws Exception {
+	private void extractFromZipFile(ZipInputStream zipStream, String nodePath, ForumService service, SessionProvider sProvider) throws Exception {
 		ByteArrayOutputStream out= new ByteArrayOutputStream();
-		byte[] data  = new byte[1024];   
+		byte[] data  = new byte[5120];   
 		ZipEntry entry = zipStream.getNextEntry();
+		ByteArrayInputStream inputStream = null;
 		while(entry != null) {
+			out= new ByteArrayOutputStream();
 			int available = -1;
 			while ((available = zipStream.read(data, 0, 1024)) > -1) {
 				out.write(data, 0, available); 
 			}                         
 			zipStream.closeEntry();
+			out.close();
+			
+			inputStream = new ByteArrayInputStream(out.toByteArray());
+			service.importXML(nodePath, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider);
 			entry = zipStream.getNextEntry();
 		}
-		out.close();
 		zipStream.close();
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(out.toByteArray());
-		return inputStream;
 	}
 
 	static public class SaveActionListener extends EventListener<UIImportForm> {
@@ -90,28 +91,28 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			MimeTypeResolver mimeTypeResolver = new MimeTypeResolver();
 			String mimeType = mimeTypeResolver.getMimeType(fileName);
 			ByteArrayInputStream xmlInputStream = null;
-			if ("text/xml".equals(mimeType)) {
-				xmlInputStream = new ByteArrayInputStream(uploadInput.getUploadData());
-			} else if ("application/zip".equals(mimeType)) {
-				ZipInputStream zipInputStream = new ZipInputStream(uploadInput.getUploadDataAsStream());
-				xmlInputStream = importForm.extractFromZipFile(zipInputStream);
+			String nodePath = null;
+			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
+			if(ForumUtils.isEmpty(importForm.categoryPath)){
+				nodePath = service.getForumHomePath(sProvider);
 			} else {
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.mimetype-invalid", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-				return;
+				nodePath = importForm.categoryPath;
 			}
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			boolean isUdateForm = false;
-			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
 			try{
-				String nodePath = null;
-				if(ForumUtils.isEmpty(importForm.categoryPath)){
-					nodePath = service.getForumHomePath(sProvider);
+				if ("text/xml".equals(mimeType)) {
+					xmlInputStream = new ByteArrayInputStream(uploadInput.getUploadData());
+					service.importXML(nodePath, xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider);
+				} else if ("application/zip".equals(mimeType)) {
+					ZipInputStream zipInputStream = new ZipInputStream(uploadInput.getUploadDataAsStream());
+					importForm.extractFromZipFile(zipInputStream, nodePath, service, sProvider);
 				} else {
-					nodePath = importForm.categoryPath;
+					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.mimetype-invalid", null, ApplicationMessage.WARNING));
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					return;
 				}
-				service.importXML(nodePath, xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider);
   			popupAction.deActivate() ;
   			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
   			if(!ForumUtils.isEmpty(importForm.categoryPath)){
@@ -134,9 +135,11 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 			} catch(ItemExistsException ie){
+				ie.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 			} catch (Exception ise) {
+				ise.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 			} finally{
