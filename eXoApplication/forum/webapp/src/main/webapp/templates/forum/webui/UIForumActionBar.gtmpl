@@ -5,6 +5,7 @@
 	if(userProfile.getUserRole() == 0) isAdmin = true ;
 	def rcontext = _ctx.getRequestContext() ;
 	rcontext.getJavascriptManager().addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 2000);") ;
+	//rcontext.getJavascriptManager().addJavascript("eXo.forum.UIForumPortlet.loadScroll();") ;
 %>
 <div class="UIForumActionBar" style="height: auto" id="UIForumActionBar">
 	<div class="LeftForumActionBar">
@@ -14,6 +15,7 @@
 					<table>
 						<tr>
 							<td width="85%" class="ControlButtonContainer">
+								<div style="height:22px;overflow-y:hidden;">								
 								<%String[] actions = [""];
 									if(isAdmin) { 
 										//actions = ["AddCategory", "ImportCategory", "AddForum","ManageModerator", "OpenAdministration", "EditProfile","OpenBookMark"];
@@ -23,6 +25,7 @@
 									}
 									for(action in actions){	
 								%>
+
 									<div class="DefaultStyle ForumBar ControlButton" onmouseover="eXo.forum.UIForumPortlet.OverButton(this);" onmouseout="eXo.forum.UIForumPortlet.OverButton(this);">
 										<a href="<%=uicomponent.event(action)%>">
 											<div class="LeftOverButton">
@@ -43,6 +46,8 @@
 				      			<div title="Next"><span></span></div>
 				      		</div>
 				      	</div>
+								<div style="clear: both;"><span></span></div>
+							</div>	
 							</td>
 							<td>
 								<%

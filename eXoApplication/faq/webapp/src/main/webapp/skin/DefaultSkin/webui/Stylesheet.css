@@ -1071,12 +1071,12 @@
 
 .UIFAQPortlet .Export {
 	background: url('background/Export.gif') no-repeat left;
-	height:16px;
+	
 }
 
 .UIFAQPortlet .Import {
 	background: url('background/Import.gif') no-repeat left;
-	height:16px;
+	
 }
 
 .UIFAQPortlet .QuestionIcon {

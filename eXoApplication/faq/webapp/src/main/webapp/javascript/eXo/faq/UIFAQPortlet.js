@@ -1,4 +1,6 @@
-function UIFAQPortlet() {};
+function UIFAQPortlet() {
+	this.scrollManagerLoaded = false;
+};
 
 UIFAQPortlet.prototype.changeStarForVoteQuestion = function(i){
 	var objId = "startVote" + i;
@@ -217,20 +219,21 @@ UIFAQPortlet.prototype.loadScroll = function(e) {
     uiNav.scrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIQuestions") ;
     uiNav.scrollMgr.initFunction = uiNav.initScroll ;
     uiNav.scrollMgr.mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer") ;
-    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
-    uiNav.scrollMgr.loadElements("ControlButton", true) ;
-    
+    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(uiNav.scrollMgr.mainContainer, "div", "ScrollButtons") ;
+    uiNav.scrollMgr.loadElements("ControlButton") ;
     var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.scrollMgr.arrowsContainer, "div");
 		
     if(button.length >= 2) {    
       uiNav.scrollMgr.initArrowButton(button[0],"left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton") ;
       uiNav.scrollMgr.initArrowButton(button[1],"right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton") ;
     }
-
+		uiNav.scrollMgr.callback = uiNav.scrollCallback;
     uiNav.scrollManagerLoaded = true;	
     uiNav.initScroll() ;
   }
 } ;
+UIFAQPortlet.prototype.scrollCallback = function(){
+};
 
 UIFAQPortlet.prototype.initScroll = function() {
   var uiNav = eXo.faq.UIFAQPortlet ;

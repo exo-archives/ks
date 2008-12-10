@@ -24,6 +24,7 @@
 					<tbody>
 						<tr>
 							<td class="ControlButtonContainer">
+<<<<<<< .working
 							<%
 							String url = uicomponent.url("Setting", "OBJECTID") ;
 							uicomponent.setLink(url);
@@ -58,6 +59,45 @@
 													<div class="CenterOverButton">
 														<div class="Icon $action">
 															$itemLabelView
+=======
+								<div style="height:22px;overflow-y:hidden;">
+									<%
+									String url = uicomponent.url("Setting", "OBJECTID") ;
+									uicomponent.setLink(url);
+									String cateId = uicomponent.getCategoryId() ;
+									List categories = uicomponent.getCategories() ; 
+									/*
+									if(cateId == null || cateId.trim().length() < 1) {
+										uicomponent.setIsModerators() ;
+									}*/
+									boolean canEditQuestion = uicomponent.getCanEditQuestion() ;
+									String[] categoryAction = null ;
+									String[] moderatorAction = null ;
+									if(cateId != null && cateId.trim().length() > 0){
+										moderatorAction = uicomponent.getSecondActionCategory() ;
+									} else {
+										moderatorAction = uicomponent.getActionCategory() ;
+									}
+									
+									if(canEditQuestion) {
+										String[] actionTollbar ;
+										actionTollbar = uicomponent.getActionTollbar() ;
+										String linkAction = "" ;
+										String opacity ;
+										for(String action in actionTollbar) {
+											linkAction = uicomponent.event(action, cateId) ;
+											String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+									%>
+											<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
+												<a href="$linkAction">
+													<div class="LeftOverButton">
+														<div class="RightOverButton">
+															<div class="CenterOverButton">
+																<div class="Icon $action">
+																	$itemLabelView
+																</div>
+															</div>
+>>>>>>> .merge-right.r24678
 														</div>
 													</div>
 												</div>
@@ -84,6 +124,7 @@
 										</a>
 									</div>
 									<div class="SeparatorLine ControlButton"><span></span></div>
+<<<<<<< .working
 						<%}%>
 						<% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
 								String actionSetting = uicomponent.event("Setting") ;
@@ -98,6 +139,11 @@
 													</div>
 												</div>
 											</div>
+=======
+									<div class="ScrollButtons" style="width:35px;">
+										<div title="Previous">
+											<div title="Next"><span></span></div>
+>>>>>>> .merge-right.r24678
 										</div>
 									</a>
 								</div>
@@ -114,7 +160,16 @@
 											</div>
 										</div>
 									</div>
+<<<<<<< .working
 								</a>
+=======
+									<div style="clear: both;"><span></span></div>
+							</div>		
+							</td>
+							<td style="padding: 0px;width:260px;">
+							<div class="SearchForm">
+									<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
+>>>>>>> .merge-right.r24678
 							</div>
 							<div class="SeparatorLine ControlButton"><span></span></div>
 						<div class="ScrollButtons" style="width:50px;">
