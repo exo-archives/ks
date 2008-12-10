@@ -12,6 +12,8 @@ import javax.jcr.nodetype.ConstraintViolationException;
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -37,17 +39,17 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 public class UIImportForm extends UIForm implements UIPopupComponent{
 	private final String FILE_UPLOAD = "FileUpload";
-	private String categoryId_ = new String();
+	private String categoryPath = null;
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
 
 	public UIImportForm(){
 		this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
-		categoryId_ = null;
+		categoryPath = null;
 	}
 
-	public void setCategoryId(String categoryId){
-		this.categoryId_ = categoryId;
+	public void setCategoryId(String categoryPath){
+		this.categoryPath = categoryPath;
 	}
 
 	private ByteArrayInputStream extractFromZipFile(ZipInputStream zipStream) throws Exception {
@@ -99,10 +101,10 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
 			try{
 				String nodePath = null;
-				if(importForm.categoryId_ == null || importForm.categoryId_.trim().length() < 1){
+				if(ForumUtils.isEmpty(importForm.categoryPath)){
 					nodePath = service.getForumHomePath(sProvider);
 				} else {
-					nodePath = service.getCategory(ForumSessionUtils.getSystemProvider(), importForm.categoryId_).getPath();
+					nodePath = importForm.categoryPath;
 				}
 				service.importXML(nodePath, xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
@@ -125,11 +127,15 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				return;
 			}
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UICategory category = portlet.findFirstComponentOfType(UICategory.class) ;
-			category.setIsEditCategory(true);
-	        event.getRequestContext().addUIComponentToUpdateByAjax(category) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			if(!ForumUtils.isEmpty(importForm.categoryPath)){
+				UICategory category = portlet.findFirstComponentOfType(UICategory.class) ;
+				category.setIsEditForum(true);
+				event.getRequestContext().addUIComponentToUpdateByAjax(category) ;
+			}else{
+				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+			}
 		}
 	}
 

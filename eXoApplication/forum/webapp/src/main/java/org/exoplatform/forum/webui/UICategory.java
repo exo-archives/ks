@@ -618,7 +618,7 @@ public class UICategory extends UIForm	{
 			UIForumPortlet forumPortlet = category.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIImportForm importForm = popupAction.createUIComponent(UIImportForm.class, null, null) ;
-			importForm.setCategoryId(category.categoryId);
+			importForm.setCategoryId(category.getCategory().getPath());
 			popupAction.activate(importForm, 400, 150) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
