@@ -126,7 +126,14 @@ public class UICategories extends UIContainer	{
 		List<Forum> forumList = null ;
 		String strQuery = "";
 		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-		forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, strQuery);
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			forumList = forumService.getForums(sProvider, categoryId, strQuery);
+    } catch (Exception e) {
+    	forumList = new ArrayList<Forum>();
+    }finally {
+    	sProvider.close();
+    }
 		if(mapListForum.containsKey(categoryId)) {
 			mapListForum.remove(categoryId) ;
 		}
@@ -148,29 +155,36 @@ public class UICategories extends UIContainer	{
 			}
 		}
 		if(forum_ == null) {
-			forum_ = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId) ;
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				forum_ = forumService.getForum(sProvider, categoryId, forumId) ;
+	    } finally {
+	    	sProvider.close();
+	    }
 		}
 		return forum_ ;
 	}
 	
-	@SuppressWarnings("unused")
 	private Topic getLastTopic(String topicPath) throws Exception {
-		Topic topicLast = new Topic() ;
-		topicLast = maptopicLast.get(topicLast.getId()) ;
-		if(topicLast == null) {
-			topicLast = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
-			if(topicLast != null)maptopicLast.put(topicLast.getId(), topicLast) ;
-		}
-		return topicLast ;
-	}
-	
-	private Topic getTopic(String topicId, String path) throws Exception {
-		Topic topic = new Topic() ;
-		topic = this.maptopicLast.get(topicId) ;
-		if(topic == null) {
-			SessionProvider sysSession = SessionProviderFactory.createSystemProvider() ;
-			String forumHomePath = forumService.getForumHomePath(sysSession) ;
-			topic = forumService.getTopicByPath(sysSession, forumHomePath + "/" + path, false) ;
+		Topic topic = null;
+		if(!ForumUtils.isEmpty(topicPath)) {
+			String topicId = topicPath;
+			if(topicId.indexOf("/") >= 0) topicId = topicId.substring(topicPath.lastIndexOf("/")+1);
+			topic = maptopicLast.get(topicId) ;
+			if(topic == null) {
+				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+				if(topicPath.indexOf("ForumService") < 0){
+					topicPath = forumService.getForumHomePath(sProvider) + "/" + topicPath;
+				}
+				try {
+					topic = forumService.getTopicByPath(sProvider, topicPath, true) ;
+		    } catch (Exception e) {
+					e.printStackTrace();
+				}finally {
+		    	sProvider.close();
+		    }
+				if(topic != null)maptopicLast.put(topic.getId(), topic) ;
+			}
 		}
 		return topic ;
 	}
@@ -203,6 +217,7 @@ public class UICategories extends UIContainer	{
 				uiCategory.update(uiContainer.getCategory(categoryId), uiContainer.getForumList(categoryId)) ;
 				categoryContainer.updateIsRender(false) ;
 				((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
+				uiContainer.maptopicLast.clear();
 			} catch (Exception e) {
 				Object[] args = { "" };
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
@@ -227,6 +242,7 @@ public class UICategories extends UIContainer	{
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			categories.maptopicLast.clear();
 		}
 	}
 	
@@ -235,7 +251,8 @@ public class UICategories extends UIContainer	{
 			UICategories categories = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
-			Topic topic = categories.getTopic(id[2], path) ;
+			Forum forum = categories.getForumById(id[0], id[1]);
+			Topic topic = categories.getLastTopic(path) ;
 			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			if(topic == null) {
 				Object[] args = { "" };
@@ -243,19 +260,14 @@ public class UICategories extends UIContainer	{
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			} else {
-//				boolean isOpen = false;
-//				String canviews[] = topic.getCanView();
-//				if(canviews != null || canviews[0].equals(" ")) {
-//					if(ForumUtils.isStringInStrings(canviews, forumPortlet.getUserProfile().getUserId())) ;
-//				}
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 				uiForumContainer.setIsRenderChild(false) ;
 				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-				uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
+				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 				uiTopicDetail.setTopicFromCate(id[0], id[1], topic) ;
-				uiTopicDetail.setUpdateForum(categories.getForumById(id[0], id[1])) ;
+				uiTopicDetail.setUpdateForum(forum) ;
 				uiTopicDetail.setIdPostView("lastpost") ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1], topic) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
@@ -284,8 +296,7 @@ public class UICategories extends UIContainer	{
 					path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
 				} else {
 					path = path.substring(path.indexOf("//")+2) ;
-					String []id = path.trim().split("/");
-					Topic topic = uiContainer.getTopic(id[2], path) ;
+					Topic topic = uiContainer.getLastTopic(path) ;
 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
 				}
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
