@@ -148,7 +148,7 @@ public class UICategories extends UIContainer	{
 			}
 		}
 		if(forum_ == null) {
-			forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId) ;
+			forum_ = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId) ;
 		}
 		return forum_ ;
 	}

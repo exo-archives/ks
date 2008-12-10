@@ -257,20 +257,17 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		long maxPost = userProfile.getMaxPostInPage() ;
 		if(maxPost <= 0) maxPost = 10;
 		if(topic.getPostCount() > maxPost) {
-			String isApprove = "" ;
-			String isHidden = "" ;
-			String userLogin = userProfile.getUserId();
-			long role = userProfile.getUserRole() ;
-			if(role >=2){ isHidden = "false" ;}
-			if(role == 1) {
-				if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
-					isHidden = "false" ;
+			long availablePost = 0;
+			if(isModerator){
+				availablePost = topic.getPostCount()+1;
+			} else {
+				String isApprove = "" ;
+				String userLogin = userProfile.getUserId();
+				if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
+					if(!(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 				}
+				availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topic.getId(), isApprove, "false", userLogin)	;
 			}
-			if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
-				if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
-			}
-			long availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topic.getId(), isApprove, isHidden, userLogin)	;
 			long value = availablePost/maxPost;
 			if((value*maxPost) < availablePost) value = value + 1;
 			return value;

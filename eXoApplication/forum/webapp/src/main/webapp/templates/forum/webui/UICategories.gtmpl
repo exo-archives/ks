@@ -144,7 +144,7 @@
 											}
 											titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle);
 											if(topicNewPost.getIsClosed()) {
-												if(ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin) {
+												if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 													urlLastPost = uicomponent.url("OpenLastTopicLink", topicPath) ;
 													urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink" );
@@ -153,7 +153,7 @@
 												}
 											} else {
 												if(forum.getIsModerateTopic()) {
-													if(topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin){
+													if(isAdmin || topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin)){
 														openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 														urlLastPost = uicomponent.url("OpenLastTopicLink", topicPath) ;
 														urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink" );
