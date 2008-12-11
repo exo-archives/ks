@@ -126,8 +126,15 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			InputStreamDownloadResource dresource ;
 			ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
 			CompressData zipService = new CompressData();
-
-			File file = (File)service.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
+			UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
+			File file =  null;
+			try{
+				file = (File)service.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
+			} catch(Exception e){
+				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsNoLonagerExist", null, ApplicationMessage.WARNING));
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+				return;
+			}
 			InputStream inputStream = null;
 			sessionProvider.close();
 			if(file == null){
