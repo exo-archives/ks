@@ -762,8 +762,9 @@ public class JCRDataStorage {
 		Forum forum = new Forum();
 		try {
 			Node catNode = forumHomeNode.getNode(categoryId);
-			forum = getForum(sProvider, categoryId, forumId);
-			catNode.getNode(forumId).remove();
+			Node forumNode = catNode.getNode(forumId);
+			forum = getForum(forumNode);
+			forumNode.remove();
 			catNode.setProperty("exo:forumCount", catNode.getProperty("exo:forumCount").getLong() - 1);
 			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
 			long count = forumStatistic.getProperty("exo:topicCount").getLong();
