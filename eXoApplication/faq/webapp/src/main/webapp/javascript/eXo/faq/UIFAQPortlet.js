@@ -61,13 +61,38 @@ UIFAQPortlet.prototype.showPicture = function(obj) {
 	var imageNode = eXo.core.DOMUtil.findFirstDescendantByClass(obj,"img","AttachmentFile") ;
 	imageNodeSrc = imageNode.cloneNode(true);
 	imageNode.style.width = "auto" ;
-	imageNode.style.height = "100%" ;
+	imageNode.style.height = "auto" ;
   containerNode.appendChild(imageNode) ;
   containerNode.setAttribute('title', 'Click to close') ;
   containerNode.onclick = eXo.faq.UIFAQPortlet.hidePicture ;
+	this.showFullScreen(imageNode,containerNode);
   var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
   eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
 	obj.appendChild(imageNodeSrc);
+};
+
+UIFAQPortlet.prototype.getImageSize = function(imageNode){
+	var tmp = imageNode.cloneNode(true);
+	tmp.style.visibility = "hidden";
+	document.body.appendChild(tmp);
+	var size = {
+		width: tmp.offsetWidth ,
+		height:tmp.offsetHeight
+	}
+	eXo.core.DOMUtil.removeElement(tmp);
+	return size ;
+};
+
+UIFAQPortlet.prototype.showFullScreen = function(imageNode,containerNode){
+	var imageSize = this.getImageSize(imageNode);
+	if(imageSize.width > eXo.core.Browser.getBrowserWidth()){
+		containerNode.style.width = eXo.core.Browser.getBrowserWidth() + "px";
+		containerNode.style.overflowX = "auto";
+	}
+	if(imageSize.height > eXo.core.Browser.getBrowserWidth()){
+		containerNode.style.height = eXo.core.Browser.getBrowserHeight() + "px";
+		containerNode.style.overflowY = "auto";
+	}
 };
 
 UIFAQPortlet.prototype.showMenu = function(obj, evt){
