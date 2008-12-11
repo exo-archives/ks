@@ -731,22 +731,25 @@ public class JCRDataStorage {
 		List<String> listCateIds = new ArrayList<String>();
 		Queue<Node> listNodes = new LinkedList<Node>();
 		Node questionHome = getQuestionHome(sProvider, null) ;
-		Node categoryNode = getCategoryNodeById(categoryId, sProvider);
-		NodeIterator nodeIterator = categoryNode.getNodes();
-		while(nodeIterator.hasNext()){
-			listNodes.add(nodeIterator.nextNode());
-		}
-		while(!listNodes.isEmpty()){
-			categoryNode = listNodes.poll();
-			listCateIds.add(categoryNode.getName());
+		NodeIterator nodeIterator = null;
+		if(categoryId != null){
+			Node categoryNode = getCategoryNodeById(categoryId, sProvider);
 			nodeIterator = categoryNode.getNodes();
 			while(nodeIterator.hasNext()){
 				listNodes.add(nodeIterator.nextNode());
 			}
+			while(!listNodes.isEmpty()){
+				categoryNode = listNodes.poll();
+				listCateIds.add(categoryNode.getName());
+				nodeIterator = categoryNode.getNodes();
+				while(nodeIterator.hasNext()){
+					listNodes.add(nodeIterator.nextNode());
+				}
+			}
 		}
 		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath())
-									.append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
+									.append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId + "").append("')");
 		for(String id : listCateIds){
 			queryString.append(" or (@exo:categoryId='").append(id).append("')");
 		}

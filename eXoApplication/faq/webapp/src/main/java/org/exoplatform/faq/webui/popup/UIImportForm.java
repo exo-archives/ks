@@ -2,10 +2,6 @@ package org.exoplatform.faq.webui.popup;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -13,8 +9,6 @@ import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.Session;
 import javax.jcr.nodetype.ConstraintViolationException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.PortalContainer;
@@ -33,7 +27,6 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormUploadInput;
-import org.w3c.dom.*;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
@@ -117,22 +110,18 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 					ace.printStackTrace();
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.access-denied", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-					return;
 				} catch (ConstraintViolationException con) {
 					con.printStackTrace();
 					//Object[] args = { categoryNode.getProperty("exo:name").getString() };
 					Object[] args = { null };
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", args, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-					return;
 				} catch (ItemExistsException ise) {
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.CategoryIsExist", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-					return;
 				} catch(Exception e){
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-					return;
 				}
 			
 			} catch (Exception e){

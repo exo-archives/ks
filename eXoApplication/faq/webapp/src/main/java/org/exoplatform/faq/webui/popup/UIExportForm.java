@@ -102,6 +102,7 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 		    } else {
 		    	NodeIterator nodeIterator = categoryNode.getNodes();
 		    	Node node = null;
+		    	listQuestionPath.addAll(service.getListPathQuestionByCategory(null, sessionProvider));
 		    	while(nodeIterator.hasNext()){
 		    		node = nodeIterator.nextNode();
 		    		bos = new ByteArrayOutputStream();
