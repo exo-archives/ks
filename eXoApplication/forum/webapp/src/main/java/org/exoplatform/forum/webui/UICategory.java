@@ -39,6 +39,7 @@ import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -128,7 +129,14 @@ public class UICategory extends UIForm	{
 	
 	private Category getCategory() throws Exception{
 		if(this.isEditCategory || this.category == null) {
-			this.category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), this.categoryId);
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				this.category = forumService.getCategory(sProvider, this.categoryId);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				sProvider.close();
+			}
 			this.isEditCategory = true ;
 		}
 		return this.category ;
@@ -139,7 +147,14 @@ public class UICategory extends UIForm	{
 		if(this.isEditForum) {
 			String strQuery = "";
 			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-			this.forums = forumService.getForums(ForumSessionUtils.getSystemProvider(), this.categoryId, strQuery);
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				this.forums = forumService.getForums(sProvider, this.categoryId, strQuery);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				sProvider.close();
+			}
 			this.isEditForum = false ;
 			this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
 		}
@@ -171,7 +186,16 @@ public class UICategory extends UIForm	{
 	
 	@SuppressWarnings("unused")
 	private Topic getLastTopic(String topicPath) throws Exception {
-		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		Topic topic;
+		try {
+			topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
+		}catch (Exception e) {
+			topic = null;
+			e.printStackTrace();
+		}finally {
+			sProvider.close();
+		}
 		if(topic != null) {
 			String topicId = topic.getId() ;
 			if(this.MaptopicLast.containsKey(topicId)) {

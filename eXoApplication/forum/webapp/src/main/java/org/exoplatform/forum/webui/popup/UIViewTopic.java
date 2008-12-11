@@ -98,7 +98,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private void updateUserProfiles(List<Post> posts) throws Exception {
 		List<String> userNames = new ArrayList<String>() ;
 		for(Post post : posts) {
-			if(!mapUserProfile.containsKey(post.getOwner())) {
+			if(!userNames.contains(post.getOwner())) {
 				userNames.add(post.getOwner()) ;
 			}
 		}
@@ -142,7 +142,14 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserInfo(String userName) throws Exception {
-		return  mapUserProfile.get(userName);
+		UserProfile profile = mapUserProfile.get(userName);
+		if(profile == null ){
+			profile = new UserProfile();
+			profile.setUserId(userName);
+			profile.setUserTitle("User");
+			profile.setUserRole((long)2);
+		}
+		return profile;
 	}
 	
 	@SuppressWarnings("unused")

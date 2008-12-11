@@ -88,7 +88,6 @@ import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
-import org.exoplatform.services.jcr.impl.core.SessionFactory;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -1084,7 +1083,7 @@ public class JCRDataStorage {
 		topicNew.setIsActiveByForum(topicNode.getProperty("exo:isActiveByForum").getBoolean()) ;
 		topicNew.setCanView(ValuesToArray(topicNode.getProperty("exo:canView").getValues())) ;
 		topicNew.setCanPost(ValuesToArray(topicNode.getProperty("exo:canPost").getValues())) ;
-		topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
+		if(topicNode.hasProperty("exo:isPoll"))topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
 		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(ValuesToArray(topicNode.getProperty("exo:userVoteRating").getValues()));
 		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(ValuesToArray(topicNode.getProperty("exo:tagId").getValues()));
 		if(topicNode.hasProperty("exo:voteRating")) topicNew.setVoteRating(topicNode.getProperty("exo:voteRating").getDouble());
@@ -3582,7 +3581,8 @@ public class JCRDataStorage {
 	}
 	
 	
-	private void updateImportedData(String path) throws Exception {
+	@SuppressWarnings("unchecked")
+  private void updateImportedData(String path) throws Exception {
 		try {
 			Calendar cal = new GregorianCalendar();
 			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
@@ -3663,6 +3663,7 @@ public class JCRDataStorage {
 		  		profile.setProperty("exo:userId", userId) ;
 		  		profile.setProperty("exo:lastLoginDate", cal) ;
 		  		profile.setProperty("exo:joinedDate", cal) ; 
+		  		profile.setProperty("exo:lastPostDate", cal) ; 
 				}
 				long l = profile.getProperty("exo:totalTopic").getLong() + topicMap.get(userId) ;
 				profile.setProperty("exo:totalTopic", l) ;
@@ -3681,6 +3682,11 @@ public class JCRDataStorage {
 					profile = profileHome.getNode(userId) ;
 				}else {
 					profile = profileHome.addNode(userId, "exo:userProfile") ;
+					Calendar cal = getGreenwichMeanTime() ;
+		  		profile.setProperty("exo:userId", userId) ;
+		  		profile.setProperty("exo:lastLoginDate", cal) ;
+		  		profile.setProperty("exo:joinedDate", cal) ; 
+		  		profile.setProperty("exo:lastPostDate", cal) ; 
 				}
 				long t = profile.getProperty("exo:totalPost").getLong() + postMap.get(userId) ;
 				profile.setProperty("exo:totalPost", t) ;

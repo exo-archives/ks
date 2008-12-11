@@ -20,6 +20,8 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -55,7 +57,15 @@ public class UIForumDescription extends UIContainer	{
 	private Forum getForum() throws Exception {
     if(forum == null || this.isForum) {
   		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-  		return forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
+  		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				return forumService.getForum(sProvider, categoryId, forumId);
+			}catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}finally {
+				sProvider.close();
+			}
     } else {
       return this.forum ;
     }

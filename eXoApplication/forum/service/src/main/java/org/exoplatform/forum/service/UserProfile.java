@@ -48,7 +48,7 @@ public class UserProfile {
 	private String lastName = "" ;
 	private String email = "" ;
 	
-	private Date lastPostDate;
+	private Date lastPostDate =  null;
 	private boolean isDisplaySignature = true ;
 	private boolean isDisplayAvatar = true ;
 	//UserOption

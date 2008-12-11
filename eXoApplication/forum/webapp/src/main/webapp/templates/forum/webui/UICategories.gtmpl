@@ -36,18 +36,18 @@
 		<% // Start ForumCategory%>
 		<%
 			List categories = uicomponent.getCategoryList();
-			 for(category in categories) {
-				 if(uicomponent.getIsPrivate(userProfile,category)) {
-					 String title = category.getCategoryName();
-					 String categoryId = category.getId();
-					if(uicomponent.userProfile.getUserRole() < 3){
-						 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
-					} else {
-						actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
-					}
-					link = uicomponent.event("OpenCategory", categoryId) ;
-					url = uicomponent.url("OpenCategory", categoryId);
-					url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory" );
+			  for(category in categories) {
+				  if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
+					  String title = category.getCategoryName();
+					  String categoryId = category.getId();
+						if(uicomponent.userProfile.getUserRole() < 3){
+							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
+						} else {
+							actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
+						}
+						link = uicomponent.event("OpenCategory", categoryId) ;
+						url = uicomponent.url("OpenCategory", categoryId);
+						url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory" );
 		 %>
 			<div class="UIForumCategory">
 				<div class="ForumToolbar">

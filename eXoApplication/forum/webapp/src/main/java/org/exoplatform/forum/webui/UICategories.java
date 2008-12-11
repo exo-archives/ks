@@ -76,8 +76,7 @@ public class UICategories extends UIContainer	{
 	}
 	
 	public void setIsRenderChild(boolean isRenderChild) {this.isRenderChild = isRenderChild ;}
-	@SuppressWarnings("unused")
-	private boolean getIsRendered() throws Exception {
+	public boolean getIsRendered() throws Exception {
 		this.getChild(UIForumListSearch.class).setRendered(isRenderChild) ;
 		return isRenderChild ;
 	}
@@ -104,20 +103,27 @@ public class UICategories extends UIContainer	{
 		}
 		return list;
 	}
+	
 	public List<Forum> getForums(String categoryId) { return mapListForum.get(categoryId) ; }
 	public Map<String, Forum> getAllForum() { 
 		return AllForum ;
 	}
 		
-	
 	private List<Category> getCategoryList() throws Exception {
 		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-		this.categoryList = forumService.getCategories(ForumSessionUtils.getSystemProvider());
-		if(this.categoryList.size() > 0)
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			categoryList = forumService.getCategories(sProvider);
+    } catch (Exception e) {
+    	categoryList = new ArrayList<Category>();
+    }finally {
+    	sProvider.close();
+    }
+		if(categoryList.size() > 0)
 			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(true) ;
 		else 
 			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(false) ;
-		return this.categoryList;
+		return categoryList;
 	}	
 	
 	public void setIsgetForumList(boolean isGetForumList) { this.isGetForumList = isGetForumList ; }
@@ -197,13 +203,9 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean getIsPrivate(UserProfile userProfile, Category category) throws Exception {
-		String userId = userProfile.getUserId() ;
-		if(userProfile.getUserRole() == 0) return true ;
-		if(category.getOwner().equals(userId)) return true ;
-		String []uesrs = category.getUserPrivate() ;
+	private boolean getIsPrivate(String []uesrs) throws Exception {
 		if(uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
-			return ForumServiceUtils.hasPermission(uesrs, userId) ;
+			return ForumServiceUtils.hasPermission(uesrs, userProfile.getUserId()) ;
 		} else return true ;
 	}
 
@@ -299,9 +301,11 @@ public class UICategories extends UIContainer	{
 					Topic topic = uiContainer.getLastTopic(path) ;
 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
 				}
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
 					uiContainer.forumService.saveUserBookmark(sProvider, userName, path, true) ;
+				}catch (Exception e) {
+					e.printStackTrace();
 				}finally {
 					sProvider.close();
 				}
