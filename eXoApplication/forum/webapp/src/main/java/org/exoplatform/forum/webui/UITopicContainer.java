@@ -575,7 +575,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIExportForm exportForm = popupAction.createUIComponent(UIExportForm.class, null, null) ;
 			exportForm.setObjectId(forum);
-			popupAction.activate(exportForm, 200, 130) ;
+			popupAction.activate(exportForm, 380, 160) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	
