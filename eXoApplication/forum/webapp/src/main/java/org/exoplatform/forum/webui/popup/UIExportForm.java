@@ -5,17 +5,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.conf.ForumInitialData;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.compress.CompressData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -24,6 +30,8 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(
@@ -35,16 +43,17 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 )
 public class UIExportForm extends UIForm implements UIPopupComponent{
+	private final String LIST_CATEGORIES = "listCategories";
 	private final String CREATE_ZIP = "createZip";
 	private final String FILE_NAME = "FileName";
+	List<Category> listCategories = new ArrayList<Category>();
 	private Object object_ = "";
 	public void activate() throws Exception { }
 
 	public void deActivate() throws Exception { }
 
 	public UIExportForm(){
-		addChild(new UIFormStringInput(FILE_NAME, null));
-		addChild(new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false ));
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,7 +61,36 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 		this.object_ = object;
 		this.setActions(new String[]{"Save", "Cancel"});
 		if(object == null){
-			((UIFormCheckBoxInput<Boolean>)this.getChildById(CREATE_ZIP)).setChecked(true).setEditable(false);
+			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+			UIFormCheckBoxInput<Boolean> checkBoxInput = null;
+			try {
+				UIFormInputWithActions formInputWithActions = new UIFormInputWithActions(LIST_CATEGORIES);
+				for(Category category : service.getCategories(sessionProvider)){
+					listCategories.add(category);
+					checkBoxInput = new UIFormCheckBoxInput<Boolean>(category.getCategoryName(), category.getId(), true);
+					checkBoxInput.setChecked(true);
+					formInputWithActions.addChild(checkBoxInput);
+				}
+				addChild(formInputWithActions);
+			} catch (Exception e) {
+			}
+			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+			ResourceBundle res = context.getApplicationResourceBundle() ;
+			UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
+			stringInput.setValue(res.getString("UIExportForm.label.DefaultFileName"));
+			checkBoxInput = new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false );
+			checkBoxInput.setChecked(true).setEnable(false);
+			
+			addChild(stringInput);
+			addChild(checkBoxInput);
+		} else {
+			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+			ResourceBundle res = context.getApplicationResourceBundle() ;
+			UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
+			stringInput.setValue(res.getString("UIExportForm.label.DefaultFileName"));
+			addChild(stringInput);
+			addChild(new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false ));
 		}
 	}
 
@@ -69,7 +107,6 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				return;
 			}
-			boolean isCreateZipFile = ((UIFormCheckBoxInput<Boolean>)exportForm.getChildById(exportForm.CREATE_ZIP)).isChecked();
 			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 			String nodePath = "";
@@ -84,8 +121,6 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				org.exoplatform.forum.service.Category category = (org.exoplatform.forum.service.Category)exportForm.object_;
 				nodePath = category.getPath();
 				categoryId = category.getId();
-			} else if(exportForm.object_ == null){
-				categoryId = null;
 			}
 			DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class) ;
 			InputStreamDownloadResource dresource ;
@@ -96,6 +131,7 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			InputStream inputStream = null;
 			sessionProvider.close();
 			if(file == null){
+				boolean isCreateZipFile = ((UIFormCheckBoxInput<Boolean>)exportForm.getChildById(exportForm.CREATE_ZIP)).isChecked();
 				inputStream = new ByteArrayInputStream(bos.toByteArray()) ;
 				if(!isCreateZipFile){
 					// create file xml to dowload
@@ -110,8 +146,7 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 					dresource = new InputStreamDownloadResource(zipInput, "application/zip") ;
 					dresource.setDownloadName(fileName + ".zip");
 				}
-			}
-			else {
+			} else {
 				inputStream = new FileInputStream(file);
 				dresource = new InputStreamDownloadResource(inputStream, "text/xml") ;
 				dresource.setDownloadName(fileName + ".zip");
