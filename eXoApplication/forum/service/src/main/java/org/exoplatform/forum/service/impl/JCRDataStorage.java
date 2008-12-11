@@ -3659,6 +3659,10 @@ public class JCRDataStorage {
 					profile = profileHome.getNode(userId) ;
 				}else {
 					profile = profileHome.addNode(userId, "exo:userProfile") ;
+					Calendar cal = getGreenwichMeanTime() ;
+		  		profile.setProperty("exo:userId", userId) ;
+		  		profile.setProperty("exo:lastLoginDate", cal) ;
+		  		profile.setProperty("exo:joinedDate", cal) ; 
 				}
 				long l = profile.getProperty("exo:totalTopic").getLong() + topicMap.get(userId) ;
 				profile.setProperty("exo:totalTopic", l) ;
