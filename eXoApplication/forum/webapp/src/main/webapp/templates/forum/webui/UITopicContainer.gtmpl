@@ -14,8 +14,11 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
 	Forum forum = uicomponent.getForum() ;
-	
-	if(forum == null) {
+	if(forum != null)  {
+	uicomponent.initPage() ;
+	}
+	if(forum == null || uicomponent.isNull) {
+	uicomponent.isNull = false;
 %>
 <div class="UITopicContainer">
 	 <%uiform.begin();%>
@@ -27,7 +30,6 @@
 <%	
 	return;
  }
-	uicomponent.initPage() ;
 	List topics = uicomponent.getTopicPageLits() ;
 	String forumName = forum.getForumName();
 	String subForumName = ForumUtils.getSubString(forumName, 35);

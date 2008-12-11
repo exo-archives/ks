@@ -111,7 +111,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private UserProfile userProfile = null;
 	private String strOrderBy = "" ;
 	private boolean isLogin = false;
-
+	private boolean isNull = false; 
 	public boolean isLogin() {return isLogin;}
 	public void setLogin(boolean isLogin) {this.isLogin = isLogin;}
 
@@ -199,7 +199,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		try{
 			this.pageList.setPageSize(maxTopic);
 		}catch (NullPointerException e) {
-			e.printStackTrace();
+			isNull = true;
 		}
 	}
 	
