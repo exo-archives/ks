@@ -554,5 +554,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
 	  storage_.importXML(nodePath, bis, typeImport, sessionProvider);
   }
-
+  
+  public void updateForum(String path) throws Exception{
+  	storage_.updateForum(path) ;
+  }
 }

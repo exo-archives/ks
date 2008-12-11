@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.impl;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -47,6 +48,8 @@ import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ISO8601;
@@ -85,11 +88,15 @@ import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.jcr.impl.core.SessionFactory;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
+import org.quartz.JobDataMap;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
@@ -3573,7 +3580,116 @@ public class JCRDataStorage {
 		} catch (Exception e) {
 		}
 	}
-
+	
+	
+	private void updateImportedData(String path) throws Exception {
+		try {
+			Calendar cal = new GregorianCalendar();
+			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
+			String name = String.valueOf(cal.getTime().getTime());
+			Class clazz = Class.forName("org.exoplatform.forum.service.conf.UpdateDataJob");
+			JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
+			JobDataMap jdatamap = new JobDataMap() ;
+			jdatamap.put("path", path) ;
+			ExoContainer container = ExoContainerContext.getCurrentContainer();
+			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+			schedulerService.addPeriodJob(info, periodInfo, jdatamap);			
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+	}
+	
+	public void updateForum(String path) throws Exception {
+		Map<String, Long> topicMap = new HashMap<String, Long>() ;
+		Map<String, Long> postMap = new HashMap<String, Long>() ;
+		
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node forumHome = getForumHomeNode(sProvider) ;
+		QueryManager qm = forumHome.getSession().getWorkspace().getQueryManager() ;
+		try{
+			Query query = qm.createQuery("/jcr:root" + path + "//element(*,exo:topic)", Query.XPATH) ;
+			QueryResult result = query.execute();
+			NodeIterator topicIter = result.getNodes();
+			query = qm.createQuery("/jcr:root" + path + "//element(*,exo:post)", Query.XPATH) ;
+			result = query.execute();
+			NodeIterator postIter = result.getNodes();
+			//Update Forum statistic
+			Node forumStatisticNode = forumHome.getNode(Utils.FORUM_STATISTIC);
+			long count = forumStatisticNode.getProperty("exo:postCount").getLong() + postIter.getSize() ;
+			forumStatisticNode.setProperty("exo:postCount", count) ;
+			count = forumStatisticNode.getProperty("exo:topicCount").getLong() + topicIter.getSize() ;
+			forumStatisticNode.setProperty("exo:topicCount", count) ;
+			forumStatisticNode.save() ;
+			
+			// put post and topic to maps by user
+			Node node ;
+			while(topicIter.hasNext()) {
+				node = topicIter.nextNode() ;
+				String owner = node.getProperty("exo:owner").getString() ;
+				if(topicMap.containsKey(owner)){
+					long l = topicMap.get(owner) + 1 ;
+					topicMap.put(owner, l) ;
+				}else {
+					long l = 1 ;
+					topicMap.put(owner, l) ;
+				}
+			}
+			
+			while(postIter.hasNext()) {
+				node = postIter.nextNode() ;
+				String owner = node.getProperty("exo:owner").getString() ;
+				if(postMap.containsKey(owner)){
+					long l = postMap.get(owner) + 1 ;
+					postMap.put(owner, l) ;
+				}else {
+					long l = 1 ;
+					postMap.put(owner, l) ;
+				}
+			}
+			
+			
+			Node profileHome = getUserProfileHome(sProvider);
+			Node profile ;
+			//update topic to user profile
+			Iterator<String> it = topicMap.keySet().iterator() ;
+			String userId ;
+			while(it.hasNext()) {
+				userId = it.next() ;
+				if(profileHome.hasNode(userId)) {
+					profile = profileHome.getNode(userId) ;
+				}else {
+					profile = profileHome.addNode(userId, "exo:userProfile") ;
+				}
+				long l = profile.getProperty("exo:totalTopic").getLong() + topicMap.get(userId) ;
+				profile.setProperty("exo:totalTopic", l) ;
+				if(postMap.containsKey(userId)) {
+					long t = profile.getProperty("exo:totalPost").getLong() + postMap.get(userId) ;
+					profile.setProperty("exo:totalPost", t) ;
+					postMap.remove(userId) ;
+				}
+				profileHome.save() ;
+			}
+			//update post to user profile
+			it = postMap.keySet().iterator() ;
+			while(it.hasNext()) {
+				userId = it.next() ;
+				if(profileHome.hasNode(userId)) {
+					profile = profileHome.getNode(userId) ;
+				}else {
+					profile = profileHome.addNode(userId, "exo:userProfile") ;
+				}
+				long t = profile.getProperty("exo:totalPost").getLong() + postMap.get(userId) ;
+				profile.setProperty("exo:totalPost", t) ;
+				profileHome.save() ;				
+			}			
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally{
+			sProvider.close() ;
+		}
+		
+	}
+	
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
 		SendMessageInfo messageInfo = messagesInfoMap_.get(name);
 		messagesInfoMap_.remove(name);
@@ -3780,10 +3896,22 @@ public class JCRDataStorage {
 	}
 
 	public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
+		byte[] bdata  = new byte[bis.available()];
+		bis.read(bdata) ;
+		ByteArrayInputStream is = new ByteArrayInputStream(bdata) ;
 		Session session = getForumHomeNode(sessionProvider).getSession();
-		session.importXML(nodePath, bis, typeImport);
+		session.importXML(nodePath, is, typeImport);
 		session.save();
 		session.logout();
+		
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+    is = new ByteArrayInputStream(bdata) ;
+    Document doc = docBuilder.parse(is);
+    NodeList list = doc.getChildNodes() ;
+    String name = list.item(0).getAttributes().getNamedItem("sv:name").getTextContent() ;
+    updateImportedData(nodePath + "/" + name);
+    
 	}
 
 	public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
