@@ -82,7 +82,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
 			UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
 			if(uploadInput.getUploadResource() == null){
-				uiApplication.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
+				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				return;
