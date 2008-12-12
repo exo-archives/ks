@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -51,13 +52,15 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/popup/UIPageListPostByUser.gtmpl",
 		events = {
 			@EventConfig(listeners = UIPageListPostByUser.OpenPostLinkActionListener.class),
+			@EventConfig(listeners = UIPageListPostByUser.SetOrderByActionListener.class),
 			@EventConfig(listeners = UIPageListPostByUser.DeletePostLinkActionListener.class, confirm="UITopicDetail.confirm.DeleteThisPost")
 		}
 )
 public class UIPageListPostByUser extends UIContainer {
 	private ForumService forumService ;
 	private UserProfile userProfile ;
-	private String userName = new String() ;
+	private String userName = "";
+	private String strOrderBy = "createdDate descending";
 	private List<Post> posts = new ArrayList<Post>() ;
 	public UIPageListPostByUser() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -75,6 +78,7 @@ public class UIPageListPostByUser extends UIContainer {
 	
 	public void setUserName(String userId) {
 		this.userName = userId ;
+		strOrderBy = "createdDate descending";
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
@@ -85,7 +89,7 @@ public class UIPageListPostByUser extends UIContainer {
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() < 2) isMod = true;
-			JCRPageList pageList	= forumService.getPagePostByUser(sProvider, this.userName, this.userProfile.getUserId(), isMod) ;
+			JCRPageList pageList	= forumService.getPagePostByUser(sProvider, this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
 			forumPageIterator.updatePageList(pageList) ;
 			if(pageList != null) pageList.setPageSize(6) ;
 			posts = pageList.getPage(forumPageIterator.getPageSelected());
@@ -210,6 +214,26 @@ public class UIPageListPostByUser extends UIContainer {
 				sProvider.close();
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+	static public class SetOrderByActionListener extends EventListener<UIPageListPostByUser> {
+		public void execute(Event<UIPageListPostByUser> event) throws Exception {
+			UIPageListPostByUser uiContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
+				if(uiContainer.strOrderBy.indexOf(path) >= 0) {
+					if(uiContainer.strOrderBy.indexOf("descending") > 0) {
+						uiContainer.strOrderBy = path + " ascending";
+					} else {
+						uiContainer.strOrderBy = path + " descending";
+					}
+				} else {
+					uiContainer.strOrderBy = path + " ascending";
+				}
+			} else {
+				uiContainer.strOrderBy = path + " ascending";
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}
 	}
 	

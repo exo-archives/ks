@@ -17,8 +17,8 @@
 	if(forum != null)  {
 	uicomponent.initPage() ;
 	}
-	if(forum == null || uicomponent.isNull) {
-	uicomponent.isNull = false;
+	if(forum == null || uicomponent.isNull()) {
+	  uicomponent.setNull(false);
 %>
 <div class="UITopicContainer">
 	 <%uiform.begin();%>

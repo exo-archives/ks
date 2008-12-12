@@ -217,12 +217,12 @@ public interface ForumService {
 	 * 
 	 * @param sProvider is the SessionProvider
 	 * @param userName the user name
-	 * 
+	 * @param strOrderBy TODO
 	 * @return the page topic by user
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception;
+	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception;
 
 	/**
 	 * Gets the page topic old.
@@ -366,11 +366,12 @@ public interface ForumService {
 	 * @param userName the user name
 	 * @param userId TODO
 	 * @param isMod TODO
+	 * @param strQuery TODO
 	 * @return the page post by user
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception;
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
 
 	/**
 	 * This method should: 1. Check the user permission 2. Load the Page Post data

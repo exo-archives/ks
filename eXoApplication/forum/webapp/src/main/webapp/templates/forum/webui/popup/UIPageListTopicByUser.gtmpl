@@ -3,12 +3,9 @@
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.Post;
 	import org.exoplatform.forum.service.UserProfile;
-	import org.exoplatform.forum.service.JCRPageList ;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumTransformHTML; 
-	import org.exoplatform.forum.ForumSessionUtils; 
-	import java.util.GregorianCalendar;
 	import java.util.Date ; 
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
@@ -31,10 +28,11 @@
 							<tr>
 								<th style="width: 40px;"></th>
 								<th style="width: 40px;"></th>
-								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
-								<th style="width: 96px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Rating");%></th>
-								<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Replies");%></th>
-								<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Views");%></th>
+								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
+								<th style="width: 96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
+								<th style="width: 130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></a></th>
+								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
+								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
 								<%if(isAdmin){ %>
 									<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
 								<%}%>
@@ -58,16 +56,18 @@
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
-									String newPost = "New";
-									String hot = ""; 
-									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
-									String title = "";
-									if(isReadTopic) {
-										title = "TitleNorman";
-										newPost = "NoNew"; 
-									} else {
+
+									Date postDate = topic.getLastPostDate() ;
+									long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
+									String title = "TitleNorman";
+									String newPost = "NoNew"; 
+									if(lastAccess < postDate.getTime()) {
 										title = "TitleBold";
+										newPost = "New";									
 									}
+									postDate.setTime(postDate.getTime() - setTime);
+									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
+									String hot = ""; 
 									if(topic.getPostCount() > 10) hot = "Hot"; 
 									String titleTopicStatus = hot+" Thread with "+newPost+" post" ;
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
@@ -111,6 +111,7 @@
 				 							</div>
 					 					</div>
 									</td>
+									<td class="Tdbox" align="center">$lastPostDate</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">$postView</td>
 									<%if(isAdmin){ %>

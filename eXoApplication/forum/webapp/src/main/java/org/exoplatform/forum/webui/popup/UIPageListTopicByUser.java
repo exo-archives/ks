@@ -59,13 +59,15 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/popup/UIPageListTopicByUser.gtmpl",
 		events = {
 				@EventConfig(listeners = UIPageListTopicByUser.OpenTopicActionListener.class ),
+				@EventConfig(listeners = UIPageListTopicByUser.SetOrderByActionListener.class ),
 				@EventConfig(listeners = UIPageListTopicByUser.DeleteTopicActionListener.class,confirm="UITopicDetail.confirm.DeleteThisTopic" )
 		}
 )
 public class UIPageListTopicByUser extends UIContainer{
 	private ForumService forumService ;
 	private UserProfile userProfile ;
-	JCRPageList pageList;
+	private JCRPageList pageList;
+	private String strOrderBy = "";
 	private String userName = new String() ;
 	public UIPageListTopicByUser() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -89,7 +91,7 @@ public class UIPageListTopicByUser extends UIContainer{
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() == 0) isMod = true;
-			pageList	= forumService.getPageTopicByUser(sProvider, this.userName, isMod) ;
+			pageList	= forumService.getPageTopicByUser(sProvider, this.userName, isMod, strOrderBy) ;
 			forumPageIterator.updatePageList(pageList) ;
 			if(pageList != null)pageList.setPageSize(6) ;
 			topics = pageList.getPage(forumPageIterator.getPageSelected()) ;
@@ -237,6 +239,27 @@ public class UIPageListTopicByUser extends UIContainer{
 				forumPortlet.cancelAction() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			}
+		}
+	}
+	
+	static public class SetOrderByActionListener extends EventListener<UIPageListTopicByUser> {
+		public void execute(Event<UIPageListTopicByUser> event) throws Exception {
+			UIPageListTopicByUser uiContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
+				if(uiContainer.strOrderBy.indexOf(path) >= 0) {
+					if(uiContainer.strOrderBy.indexOf("descending") > 0) {
+						uiContainer.strOrderBy = path + " ascending";
+					} else {
+						uiContainer.strOrderBy = path + " descending";
+					}
+				} else {
+					uiContainer.strOrderBy = path + " ascending";
+				}
+			} else {
+				uiContainer.strOrderBy = path + " ascending";
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}
 	}
 }

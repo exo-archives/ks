@@ -112,6 +112,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private String strOrderBy = "" ;
 	private boolean isLogin = false;
 	private boolean isNull = false; 
+	
+	public boolean isNull() { return isNull; }
+	public void setNull(boolean isNull) { this.isNull = isNull;}
 	public boolean isLogin() {return isLogin;}
 	public void setLogin(boolean isLogin) {this.isLogin = isLogin;}
 

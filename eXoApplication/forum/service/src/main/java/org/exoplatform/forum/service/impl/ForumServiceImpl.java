@@ -385,12 +385,12 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getPageTopicOld(sProvider, date) ;
   }
 
-  public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
-    return storage_.getPageTopicByUser(sProvider, userName, isMod);
+  public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception {
+    return storage_.getPageTopicByUser(sProvider, userName, isMod, strOrderBy);
   }
 
-  public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception {
-    return storage_.getPagePostByUser(sProvider, userName, userId, isMod);
+  public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
+    return storage_.getPagePostByUser(sProvider, userName, userId, isMod, strOrderBy);
   }
 
   public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {

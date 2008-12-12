@@ -1148,18 +1148,20 @@ public class JCRDataStorage {
 		}
 	}
 
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
+	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception {
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider);
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:topic)[@exo:owner='").append(userName);
-			if (!isMod)
-				stringBuffer.append("' and @exo:isClosed='false' and @exo:isWaiting='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true']");
-			else
-				stringBuffer.append("']");
+			stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:topic)[@exo:owner='").append(userName).append("'");
+			if (!isMod)	stringBuffer.append(" and @exo:isClosed='false' and @exo:isWaiting='false' and @exo:isApproved='true' ").
+					append("and @exo:isActive='true' and @exo:isActiveByForum='true'");
+			stringBuffer.append("] order by @exo:isSticky descending");
+			if (strOrderBy != null && strOrderBy.trim().length() > 0) {
+				stringBuffer.append(",@exo:").append(strOrderBy);
+			}
+			stringBuffer.append(",exo:createdDate");
 			String pathQuery = stringBuffer.toString();
-			// System.out.println("\n\npathQuery: " + pathQuery);
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -1526,7 +1528,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception {
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider);
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
@@ -1536,21 +1538,16 @@ public class JCRDataStorage {
 				pathQuery.append("' and ((@exo:userPrivate='").append(userId).append("') or (@exo:userPrivate='exoUserPri'))]");
 			else
 				pathQuery.append("' and @exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true' and ((@exo:userPrivate='").append(userId).append("') or (@exo:userPrivate='exoUserPri'))]");
-
-			// System.out.println("\n\n" + pathQuery.toString());
+			if (strOrderBy != null && strOrderBy.trim().length() > 0) {
+				pathQuery.append("order by @exo:").append(strOrderBy);
+				if(strOrderBy.indexOf("createdDate") < 0) {
+					pathQuery.append(",@exo:createdDate descending");
+				}
+			}
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
 			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery.toString(), true);
-			// Node userProfileNode = getUserProfileNode(sProvider) ;
-			// try {
-			// Node userNode = userProfileNode.getNode(userName) ;
-			// if(userNode.hasProperty("exo:totalPost")) {
-			// userNode.setProperty("exo:totalPost", pagelist.getAvailable());
-			// userProfileNode.getSession().save() ;
-			// }
-			// } catch (PathNotFoundException e) {
-			// }
 			return pagelist;
 		} catch (Exception e) {
 			e.printStackTrace();
