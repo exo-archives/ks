@@ -25,7 +25,6 @@
 	boolean isNull = false ;
 	boolean isShowMenu;
 	boolean canEdit = false ;
-	boolean isLock = false;
 	boolean isUserCreatedTopic = false;
 	boolean isNotReply = false;
 	boolean isModeratePost = false;
@@ -58,14 +57,11 @@
 		}
 		if(posts != null && posts.size() > 0) {
 		  isNotReply = !uicomponent.isCanPostReply();
-			if(!canEdit) isLock = isNotReply;
-			else isLock = false;
 			isClosed = !uicomponent.userCanView() ;
 			if(!canEdit && topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
 		} else {
 		  isClosed = true;
 		  isNotReply = true;
-		  isLock = false;
 		  isShowMenu = false;
 		  isNull = true;
 		}
@@ -779,7 +775,7 @@
 											if(checked == 0){ 
 												if(action.equals("Edit")||action.equals("Delete"))continue ;
 											}
-											if(isLock&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
+											if(isNotReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
 											String actionLink = uicomponent.event(action,uiformId,postId);
 									%>
 										<div class="ActionButton">

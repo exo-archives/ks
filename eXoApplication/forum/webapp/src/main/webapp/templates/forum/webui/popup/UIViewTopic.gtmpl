@@ -38,6 +38,7 @@
 		String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 		String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+		int nb = 0;
 		for(post in posts) {
 			String owner = post.getOwner() ;
 			ForumContact contact = uiform.getPersonalContact(owner) ;
@@ -115,8 +116,11 @@
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
+									String idAv = "avatar" + nb;
+									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
+									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="125px"/>
+								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload"/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>

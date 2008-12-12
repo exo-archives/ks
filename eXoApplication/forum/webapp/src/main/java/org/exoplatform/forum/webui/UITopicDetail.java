@@ -450,13 +450,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				 * set permission for create new thread
 				 */
 				String[] strings = this.forum.getCreateTopicRole();
-				boolean canCreateThread = false;
-				if(this.isMod || (strings != null && strings.length > 0 && ForumServiceUtils.hasPermission(strings, userName))) {
-					canCreateThread = true;
-					postRules.setCanCreateNewThread(true);
-				} else {
-					postRules.setCanCreateNewThread(false);
+				boolean canCreateThread = this.isMod;
+				if(!canCreateThread){  
+					if(strings == null || strings.length == 0 || (strings.length == 1 && strings[0].equals(" "))) canCreateThread = true;
+					else canCreateThread = ForumServiceUtils.hasPermission(strings, userName);
 				}
+				postRules.setCanCreateNewThread(canCreateThread);
 				/**
 				 * set permission for post reply
 				 */

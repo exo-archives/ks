@@ -46,7 +46,8 @@ public class ForumServiceUtils {
 	@SuppressWarnings("unchecked")
 	public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
 		List<String> users = new ArrayList<String> () ;
-		if(userGroupMembership == null || userGroupMembership.length <= 0) return users ; 
+		if(userGroupMembership == null || userGroupMembership.length <= 0 || 
+				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 		for(String str : userGroupMembership) {
 			if(str.indexOf("/") >= 0) {
