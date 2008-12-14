@@ -25,7 +25,6 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -37,7 +36,6 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -66,7 +64,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	private List<Post> posts = new ArrayList<Post>() ;
 	private Topic topic = new Topic() ;
 	private UserProfile userProfile = null;
-	private JCRPageList pageList ;
 	private List<String> listPostId = new ArrayList<String>();
 	private boolean isRender = true;
 	public static final String FIELD_SPLITTHREAD_INPUT = "SplitThread" ;
@@ -101,22 +98,14 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 		}
 		pageList = new ForumPageList(6, listPostId.size());
 		pageList.setPageSize(6);
-		this.updatePageList(pageList);
+//		this.updatePageList(pageList);
 		List<String>list = new ArrayList<String>();
 		try {
-			list.addAll(this.pageList.getPageList(pageSelect, this.listPostId)) ;
-			if(list.isEmpty()){
-				while(list.isEmpty() && pageSelect > 1) {
-					list.addAll(this.pageList.getPageList(--pageSelect, this.listPostId)) ;
-				}
-			}
+			list.addAll(pageList.getPageList(pageSelect, this.listPostId)) ;
 		} catch (Exception e) {
 		}
-		try {
-			if(maxPage <= 1) isRender =  false ;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		pageSelect = pageList.getCurrentPage();
+		if(maxPage <= 1) isRender =  false ;
 		return list ; 
 	}
 	
@@ -127,24 +116,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() {return this.userProfile ;}
 	public void setUserProfile(UserProfile userProfile) { this.userProfile = userProfile; }
-	
-	@SuppressWarnings("unchecked")
-  private List<String> getIdSelected() throws Exception{
-		List<UIComponent> children = this.getChildren() ;
-		List<String> ids = new ArrayList<String>() ;
-		for (int i = 0; i <= this.maxPage; i++) {
-			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
-		}
-		for(UIComponent child : children) {
-			if(child instanceof UIFormCheckBoxInput) {
-				if(((UIFormCheckBoxInput)child).isChecked()) {
-					if(!ids.contains(child.getName()))ids.add(child.getName());
-				}
-			}
-		}
-		this.cleanCheckedList();
-		return ids;
-	}
 	
 	static	public class SaveActionListener extends EventListener<UISplitTopicForm> {
 		@SuppressWarnings("unchecked")
@@ -204,7 +175,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-			topicDetail.setUpdatePostPageList(true);
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}

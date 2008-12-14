@@ -19,6 +19,8 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.ItemExistsException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -121,11 +123,16 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
 					UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class);
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
 				}
-      } catch (Exception e) {
-      	sProvider.close();
+      } catch (ItemExistsException e) {
       	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-      	uiApp.addMessage(new ApplicationMessage("UIMoveForumForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+      	uiApp.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
       	return;
+      } catch (Exception e) {
+	    	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+	    	uiApp.addMessage(new ApplicationMessage("UIMoveForumForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+	    	return;
+      } finally{
+      	sProvider.close();
       }
 		}
 	}

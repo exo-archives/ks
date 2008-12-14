@@ -27,11 +27,13 @@ public class ForumStatistic {
 	private long postCount = 0;
 	private long topicCount = 0;
 	private long membersCount = 0;
+	private long activeUsers = 0;
 	private String newMembers = "";
 	private String mostUsersOnline = "" ; 
-	
+		
 	public ForumStatistic() {
   }
+	
 	public long getPostCount() {return postCount;}
 	public void setPostCount(long postCount) {this.postCount = postCount;}
 	
@@ -41,12 +43,13 @@ public class ForumStatistic {
 	public long getMembersCount() {return membersCount;}
 	public void setMembersCount(long membersCount) {this.membersCount = membersCount;}
 	
+	public void setActiveUsers(long activeUsers) { this.activeUsers = activeUsers ; }
+	public long getActiveUsers() { return activeUsers; }
+	
 	public String getNewMembers() {return newMembers;}
 	public void setNewMembers(String newMembers) {this.newMembers = newMembers;}
-	public String getMostUsersOnline() {
-  	return mostUsersOnline;
-  }
-	public void setMostUsersOnline(String mostUsersOnline) {
-  	this.mostUsersOnline = mostUsersOnline;
-  }
+	
+	public String getMostUsersOnline() { return mostUsersOnline; }
+	public void setMostUsersOnline(String mostUsersOnline) { this.mostUsersOnline = mostUsersOnline ; }
+	
 }

@@ -17,8 +17,8 @@
 package org.exoplatform.forum.service;
 
 import java.util.Date;
-
-import org.exoplatform.services.organization.User;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserProfile {
 	
@@ -36,12 +36,19 @@ public class UserProfile {
 	private long totalTopic = 0;
 	private boolean isOnline = false ;
 	private String[] moderateForums ; //store Ids of forum this user is moderator
-	private String[] moderateTopics ; //store Ids of topic this user is moderator
+	
 	private String[] readTopic ;
+	private Map<String, Long> lastAccessTopics = new HashMap<String, Long>() ;
 	private String[] bookmark ;
 	
+	private Date joinedDate = null;
 	private Date lastLoginDate = null;
-	private Date lastPostDate;
+	private String fullName = "" ;
+	private String firstName = "" ;
+	private String lastName = "" ;
+	private String email = "" ;
+	
+	private Date lastPostDate =  null;
 	private boolean isDisplaySignature = true ;
 	private boolean isDisplayAvatar = true ;
 	//UserOption
@@ -61,7 +68,7 @@ public class UserProfile {
 	private Date createdDateBan ;
 	private long newMessage = 0;
 	private long totalMessage = 0;
-	private User user ;
+	
 	
 	@SuppressWarnings("deprecation")
   public UserProfile() {
@@ -69,7 +76,6 @@ public class UserProfile {
 		userTitle = "Guest";
 		userRole = GUEST ;
 		moderateForums = new String[] {} ;
-		moderateTopics = new String[] {} ;
 		readTopic = new String[] {} ;
 		bookmark = new String[] {} ;
 		banReasonSummary = new String[] {} ;
@@ -100,9 +106,6 @@ public class UserProfile {
 
 	public void setModerateForums(String[] moderateForums) { this.moderateForums = moderateForums ;	}
 	public String[] getModerateForums() { return moderateForums ;	}
-
-	public void setModerateTopics(String[] moderateTopics) { this.moderateTopics = moderateTopics ; }
-	public String[] getModerateTopics() { return moderateTopics ;	}
 	
 	public String[] getReadTopic(){return readTopic;}
 	public void setReadTopic(String[] readTopic){this.readTopic = readTopic;}
@@ -110,6 +113,9 @@ public class UserProfile {
 	public void setLastLoginDate(Date lastLoginDate) {this.lastLoginDate = lastLoginDate; }
 	public Date getLastLoginDate() {return lastLoginDate; }
 	
+	public void setJoinedDate(Date joinDate) { this.joinedDate = joinDate; }
+	public Date getJoinedDate() { return joinedDate; }
+
 	public void setLastPostDate(Date lastPostDate) {this.lastPostDate = lastPostDate; }
 	public Date getLastPostDate() {return lastPostDate; }
 	
@@ -158,10 +164,7 @@ public class UserProfile {
 	public void setCreatedDateBan(Date createdDate) {this.createdDateBan = createdDate; }
 	public Date getCreatedDateBan() {return createdDateBan; }
 
-  public void setUser(User user) {this.user = user;}
-  public User getUser() {return user; }
-
-	public String[] getBookmark() {return bookmark;}
+  public String[] getBookmark() {return bookmark;}
 	public void setBookmark(String[] bookmark) {this.bookmark = bookmark;}
 
 	public boolean getIsOnline() {
@@ -187,4 +190,45 @@ public class UserProfile {
 	public void setTotalMessage(long totalMessage) {
   	this.totalMessage = totalMessage;
   }
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setLastTimeAccessTopic(String topicId, long lastTime)throws Exception {
+		lastAccessTopics.put(topicId, lastTime) ;
+	}
+	
+	public long getLastTimeAccessTopic(String topicId) throws Exception {
+		if(lastAccessTopics.get(topicId) != null) return lastAccessTopics.get(topicId);
+		return 0 ; 
+	}
 }

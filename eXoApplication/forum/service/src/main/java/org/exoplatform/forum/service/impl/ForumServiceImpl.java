@@ -19,10 +19,12 @@ package org.exoplatform.forum.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -30,6 +32,8 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -48,9 +52,12 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.picocontainer.Startable;
 
 /**
@@ -61,9 +68,9 @@ import org.picocontainer.Startable;
  */
 public class ForumServiceImpl implements ForumService, Startable{
   private JCRDataStorage storage_ ;
-  private final Map<String, Boolean> onlineUsers_ = new HashMap<String, Boolean>() ;
+  private final Map<String, Boolean> onlineUsers_ = new ConcurrentHashMap<String, Boolean>() ;
   private String lastLogin_ = "";
-
+  
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
     storage_ = new JCRDataStorage(nodeHierarchyCreator) ;
   }
@@ -81,16 +88,90 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public void start() {
+  	SessionProvider systemSession = SessionProvider.createSystemProvider() ;
+  	try{
+  		updateForumStatistic(systemSession);  		
+  	}catch (Exception e) {
+  		e.printStackTrace() ;  		
+  	}finally{
+  		systemSession.close() ;
+  	}
+  	systemSession = SessionProvider.createSystemProvider() ;
+  	try{
+  		initUserProfile(systemSession);  		
+  	}catch (Exception e) {
+  		e.printStackTrace() ;  		
+  	}finally{
+  		systemSession.close() ;
+  	}
   	try{
   		storage_.initDefaultData() ;
   	}catch(Exception e) {
   		e.printStackTrace() ;
   	}  	
+  	systemSession = SessionProvider.createSystemProvider() ;
+  	try{
+  		storage_.evaluateActiveUsers(systemSession, "");
+  	}catch (Exception e) {
+  		e.printStackTrace() ;  		
+  	}finally{
+  		systemSession.close() ;
+  	}
 	}
 
 	public void stop() {}
 	
-  public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
+	@SuppressWarnings("unchecked")
+  public void updateForumStatistic(SessionProvider systemSession) throws Exception{
+		ForumStatistic forumStatistic = getForumStatistic(systemSession) ;
+		if(forumStatistic.getActiveUsers() == 0 ) {
+			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+	  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
+	  	List<User> userList = pageList.getAll() ;
+	  	Collections.sort(userList, new Utils.DatetimeComparatorDESC()) ;
+	  	forumStatistic.setMembersCount(userList.size()) ;
+	  	forumStatistic.setNewMembers(userList.get(0).getUserName()) ;
+	  	saveForumStatistic(systemSession, forumStatistic) ;
+		} 	
+	}
+	
+	@SuppressWarnings("unchecked")
+  private void initUserProfile (SessionProvider sysSession) throws Exception  {
+		Node profileHome = storage_.getUserProfileHome(sysSession) ;
+		if(profileHome.getNodes().getSize() == 0) {
+  		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+    	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
+    	List<User> userList = pageList.getAll() ;
+    	for(User user : userList) {
+    		createUserProfile(sysSession, user) ;
+    	}
+  	}
+	}
+	
+	public void createUserProfile (SessionProvider sysSession, User user) throws Exception  {
+		Node profileHome = storage_.getUserProfileHome(sysSession) ;  	
+		if(!profileHome.hasNode(user.getUserName())){
+  		Node profile = profileHome.addNode(user.getUserName(), "exo:userProfile") ;
+  		Calendar cal = storage_.getGreenwichMeanTime() ;
+  		profile.setProperty("exo:userId", user.getUserName()) ;
+  		profile.setProperty("exo:lastLoginDate", cal) ;
+  		//profile.setProperty("exo:lastPostDate", cal) ;
+  		cal.setTime(user.getCreatedDate()) ;
+  		profile.setProperty("exo:joinedDate", cal) ;  		
+  		if(isAdminRole(user.getUserName())) {
+  			profile.setProperty("exo:userTitle", "Administrator") ;
+    		profile.setProperty("exo:userRole", 0) ;
+  		}
+  		if(profileHome.isNew()) {
+    		profileHome.getSession().save() ;
+    	}else {
+    		profileHome.save() ;
+    	}  		
+		}
+	}
+	
+	
+	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
     storage_.saveCategory(sProvider, category, isNew);
   }
 
@@ -154,7 +235,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
-    return storage_.getPageTopic(sProvider, categoryId, forumId, strQuery, strOrderBy);
+  	return storage_.getPageTopic(sProvider, categoryId, forumId, strQuery, strOrderBy);
   }
 
   public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
@@ -173,11 +254,14 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getPost(sProvider, categoryId, forumId, topicId, postId);
   }
 
-  public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, 
-      String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
+  public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
     return storage_.getPosts(sProvider, categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
   }
 
+  public long getAvailablePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
+    return storage_.getAvailablePost(sProvider, categoryId, forumId, topicId, isApproved, isHidden, userLogin);
+  }
+  
   public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
     storage_.savePost(sProvider, categoryId, forumId, topicId, post, isNew, defaultEmailContent);
   }
@@ -246,8 +330,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getTagsByTopic(sProvider, tagIds);
   }
 
-  public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId) throws Exception {
-    return storage_.getTopicsByTag(sProvider, tagId);
+  public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception {
+    return storage_.getTopicsByTag(sProvider, tagId, strOrderBy);
   }
 
   public void saveTag(SessionProvider sProvider, Tag newTag, boolean isNew) throws Exception {
@@ -280,7 +364,11 @@ public class ForumServiceImpl implements ForumService, Startable{
   public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
     return storage_.getPrivateMessage(sProvider, userName, type);
   }
-
+  
+  public long getNewPrivateMessage(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getNewPrivateMessage(sProvider, userName);
+  }
+  
   public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
     storage_.removePrivateMessage(sProvider, messageId, userName, type) ;
   }
@@ -297,12 +385,12 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getPageTopicOld(sProvider, date) ;
   }
 
-  public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception {
-    return storage_.getPageTopicByUser(sProvider, userName, isMod);
+  public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception {
+    return storage_.getPageTopicByUser(sProvider, userName, isMod, strOrderBy);
   }
 
-  public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception {
-    return storage_.getPagePostByUser(sProvider, userName, userId, isMod);
+  public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
+    return storage_.getPagePostByUser(sProvider, userName, userId, isMod, strOrderBy);
   }
 
   public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {
@@ -345,9 +433,19 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getTotalJobWattingForModerator(sProvider, userId);
   }
 
-  public synchronized void userLogin(String userId) throws Exception {
+  public void userLogin(String userId) throws Exception {
   	lastLogin_ = userId ;
     onlineUsers_.put(userId, true) ;
+    SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+    try {
+    	Node userProfileHome = storage_.getUserProfileHome(sysProvider); 
+    	userProfileHome.getNode(userId).setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
+      userProfileHome.save() ;
+    }catch(Exception e) {
+    	e.printStackTrace() ;
+    }finally {
+    	sysProvider.close();
+    }
   }
 
   public void userLogout(String userId) throws Exception {
@@ -375,10 +473,6 @@ public class ForumServiceImpl implements ForumService, Startable{
   public String getLastLogin() throws Exception {
     return lastLogin_ ;
   }
- // nguyen van truong
- // public NotifyInfo getMessageInfo(String name) throws Exception {
- //   return storage_.getMessageInfo(name) ;
- // }
 
   public SendMessageInfo getMessageInfo(String name) throws Exception {
     return storage_.getMessageInfo(name) ;
@@ -415,11 +509,53 @@ public class ForumServiceImpl implements ForumService, Startable{
   	return storage_.search(queryString, sessionProvider) ;
   }	
   
+  public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception {
+  	storage_.evaluateActiveUsers(sysProvider, query) ;
+  }
+  
+  public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
+	  storage_.updateTopicAccess(sysSession, userId, topicId) ;
+  }
+  
   public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
 	  return storage_.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
   }
+
+  
+  public List<UserProfile> getQuickProfiles(SessionProvider sProvider, List<String> userList) throws Exception {
+  	return storage_.getQuickProfiles(sProvider, userList) ;
+  }
+  
+  public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getQuickProfile(sProvider, userName) ;
+  }
+  
+  public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception {
+  	return storage_.getUserInformations(sProvider, userProfile) ;
+  }
+  
+  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getDefaultUserProfile(sProvider, userName) ;
+  }
+  
+  public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getBookmarks(sProvider, userName) ;
+  }
+  
+  public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getUserSettingProfile(sProvider, userName) ;
+  }
+  
+  public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception {
+  	storage_.saveUserSettingProfile(sProvider, userProfile);
+  }
+
   
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
 	  storage_.importXML(nodePath, bis, typeImport, sessionProvider);
+  }
+  
+  public void updateForum(String path) throws Exception{
+  	storage_.updateForum(path) ;
   }
 }

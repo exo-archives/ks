@@ -41,13 +41,11 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 	 template = "app:/templates/forum/webui/UIForumPortlet.gtmpl"
 )
 public class UIForumPortlet extends UIPortletApplication {
-	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	private boolean isCategoryRendered = true;
 	private boolean isForumRendered = false;
 	private boolean isTagRendered = false;
 	private boolean isSearchRendered = false;
 	private boolean isJumpRendered = false;
-	private boolean isLogin = true ;
 	private UserProfile userProfile = null;
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
@@ -116,11 +114,12 @@ public class UIForumPortlet extends UIPortletApplication {
 	}
 	
 	public UserProfile getUserProfile() throws Exception {
-		if(this.userProfile == null) setUserProfile() ;
+		if(this.userProfile == null) updateUserProfileInfo() ;
 		return this.userProfile ;
 	}
+	
 	@SuppressWarnings("deprecation")
-	public void setUserProfile() throws Exception {
+	public void updateUserProfileInfo() throws Exception {
 		String userId = "" ;
 		try {
 			userId = ForumSessionUtils.getCurrentUser() ;
@@ -133,11 +132,11 @@ public class UIForumPortlet extends UIPortletApplication {
 		}
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
-			this.userProfile = forumService.getUserProfile(sProvider, userId, true, true, isLogin) ;
+			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			this.userProfile = forumService.getDefaultUserProfile(sProvider, userId) ;
 		}finally {
 			sProvider.close();
 		}
-		this.isLogin = false;
 		this.userProfile.setIsOnline(true) ;
 		if(date != null)
 			this.userProfile.setLastLoginDate(date) ;

@@ -49,7 +49,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 		categoryPath = null;
 	}
 	
-	public void setCategoryId(String categoryPath){
+	public void setPath(String categoryPath){
 		this.categoryPath = categoryPath;
 	}
 

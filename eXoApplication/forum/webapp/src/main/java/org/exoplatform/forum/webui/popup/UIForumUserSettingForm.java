@@ -84,11 +84,12 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_ISDISPLAYAVATAR_CHECKBOX = "IsDisplayAvatar" ;
 	
 	
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private UserProfile userProfile = null ;
 	private String[] permissionUser = null;
 	
 	public UIForumUserSettingForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
 		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), 
@@ -99,11 +100,14 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	private void initForumOption() throws Exception {
+		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ; 
 		try {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		} catch (Exception e) {
-			String userName = ForumSessionUtils.getCurrentUser() ;
-			this.userProfile = forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), userName, true, false, false) ;
+			String userId = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId() ;
+			this.userProfile = forumService.getUserSettingProfile(sProvider, userId) ;
+		} catch (Exception e) {			
+			e.printStackTrace() ;
+		}finally{
+			sProvider.close() ;
 		}
 		
 		List<SelectItemOption<String>> list ;
@@ -271,11 +275,11 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setIsShowForumJump(isJump);
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				uiForm.forumService.saveUserProfile(sProvider, userProfile, true, false);
+				uiForm.forumService.saveUserSettingProfile(sProvider, userProfile);
 			} finally {
 				sProvider.close();
 			}
-			forumPortlet.setUserProfile() ;
+			forumPortlet.updateUserProfileInfo() ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}

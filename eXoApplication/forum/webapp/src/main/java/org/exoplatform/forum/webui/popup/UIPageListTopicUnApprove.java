@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
@@ -32,7 +31,6 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -58,10 +56,11 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String categoryId, forumId ;
-	private List<Topic> topics ;
+	private List<Topic> allTopics ;
 	public UIPageListTopicUnApprove() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"ApproveTopic","Cancel"});
 	}
 	public void activate() throws Exception {	}
@@ -78,19 +77,10 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsUnApprove() throws Exception {
-		JCRPageList pageList	= forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
-		this.updatePageList(pageList) ;
+		pageList	= forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
 		pageList.setPageSize(6) ;
-		long page = this.pageSelect ;
-		List<Topic> topics = null;
-		while(topics == null && page >= 1){
-			try {
-				topics = pageList.getPage(page) ;
-      } catch (Exception e) {
-      	topics = null; 
-      	--page;
-      }
-		}
+		List<Topic> topics = pageList.getPage(pageSelect);
+		pageSelect = pageList.getCurrentPage();
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		for (Topic topic : topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {
@@ -99,12 +89,12 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false) );
 			}
 		}
-		this.topics = pageList.getPage(0) ;
+		this.allTopics = pageList.getPage(0) ;
 		return topics ;
 	}
 	
 	private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.topics ;
+		List<Topic> listTopic = this.allTopics ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
@@ -117,23 +107,6 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-  private List<String> getIdSelected() throws Exception{
-		List<UIComponent> children = this.getChildren() ;
-		List<String> ids = new ArrayList<String>() ;
-		for (int i = 0; i <= this.maxPage; i++) {
-			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
-		}
-		for(UIComponent child : children) {
-			if(child instanceof UIFormCheckBoxInput) {
-				if(((UIFormCheckBoxInput)child).isChecked()) {
-					if(!ids.contains(child.getName()))ids.add(child.getName());
-				}
-			}
-		}
-		this.cleanCheckedList();
-		return ids;
-	}
 	
 	static	public class ApproveTopicActionListener extends EventListener<UIPageListTopicUnApprove> {
 		public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
@@ -157,10 +130,14 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIPageListTopicUnApprove.sms.notCheck", args, ApplicationMessage.WARNING)) ;
 			}
-			UIForumPortlet forumPortlet = topicUnApprove.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+			if(listTopic.size() == topicUnApprove.allTopics.size()) {
+				UIForumPortlet forumPortlet = topicUnApprove.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+				UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+			}else{
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicUnApprove.getParent()) ;
+			}
 		}
 	}
 	
@@ -168,6 +145,8 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		public void execute(Event<UIPageListTopicUnApprove> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
+			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 		}
 	}
 }

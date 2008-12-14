@@ -23,8 +23,8 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -71,7 +71,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			UIFormStringInput userName = getUIStringInput(USER_NAME) ;
 			userName.setEditable(false) ;
 			userName.setValue(userId) ;
-			CommonContact contact = this.getPersonalContact(userId) ;
+			ForumContact contact = this.getPersonalContact(userId) ;
 			String email = contact.getEmailAddress() ;
 			if(!ForumUtils.isEmpty(email))
 				list.add(email);
@@ -96,10 +96,10 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 		addUIFormInput(uiFormMultiValue) ;
 	}
 	
-	private CommonContact getPersonalContact(String userId) throws Exception {
-		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
+	private ForumContact getPersonalContact(String userId) throws Exception {
+		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new CommonContact() ;
+			contact = new ForumContact() ;
 		}
 		return contact ;
 	}
@@ -144,7 +144,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+			//event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}
 	}
 	

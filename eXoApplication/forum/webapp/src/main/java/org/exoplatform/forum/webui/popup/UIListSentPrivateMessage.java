@@ -50,12 +50,13 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIListSentPrivateMessage extends UIContainer {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private UserProfile userProfile = null	;
 	private List<ForumPrivateMessage> listSend = null; 
 	private String userName = "";
 	private boolean isRenderIterator = false ;
 	public UIListSentPrivateMessage() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "PageListSentMessage") ;
 	}
 	@SuppressWarnings("unused")
@@ -74,7 +75,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 	
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<ForumPrivateMessage> getPrivateMessageSendByUser() throws Exception {
-		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.SENDMESSAGE) ;
+		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.SEND_MESSAGE) ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null){
@@ -104,11 +105,11 @@ public class UIListSentPrivateMessage extends UIContainer {
 			if(!ForumUtils.isEmpty(objctId)) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uicontainer.forumService.saveReadMessage(sProvider, objctId, uicontainer.userName, Utils.SENDMESSAGE);
+					uicontainer.forumService.saveReadMessage(sProvider, objctId, uicontainer.userName, Utils.SEND_MESSAGE);
 					ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
 					UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
 					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-					UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 600) ;
+					UIViewPrivateMessageForm privateMessageForm = popupAction.activate(UIViewPrivateMessageForm.class, 670) ;
 					privateMessageForm.setPrivateMessage(privateMessage);
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 				} finally {
@@ -125,7 +126,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 			if(!ForumUtils.isEmpty(objctId)) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uicontainer.forumService.removePrivateMessage(sProvider, objctId, uicontainer.userName, Utils.SENDMESSAGE);
+					uicontainer.forumService.removePrivateMessage(sProvider, objctId, uicontainer.userName, Utils.SEND_MESSAGE);
 				} finally {
 					sProvider.close();
 				}

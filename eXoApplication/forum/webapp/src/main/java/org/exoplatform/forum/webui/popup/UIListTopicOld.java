@@ -49,12 +49,13 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIListTopicOld extends UIContainer {
-	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private UserProfile userProfile = null;
 	private List<Topic> topics = new ArrayList<Topic>() ;
 	private long date = 0 ;
 	private boolean isUpdate = false ;
 	public UIListTopicOld() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "PageListTopicTopicOld") ;
 	}
 	
@@ -88,14 +89,8 @@ public class UIListTopicOld extends UIContainer {
 				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;
 				pageIterator.updatePageList(pageList) ;
 				long page = pageIterator.getPageSelected() ;
-				List<Topic> topics = null;
-				while(topics == null && page >= 1)
-					try {
-						topics = pageList.getPage(page) ;
-          } catch (Exception e) {
-	          topics = null;
-	          page = page - 1;
-          }
+				List<Topic> topics = pageList.getPage(page) ;
+				pageIterator.setSelectPage(pageList.getCurrentPage());
 				if(topics == null)topics = new ArrayList<Topic>();
 				this.topics = topics ;
 			} else {

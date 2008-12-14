@@ -39,6 +39,7 @@ import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -66,8 +67,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		events = {
 				@EventConfig(listeners = UICategory.SearchFormActionListener.class),
 				@EventConfig(listeners = UICategory.EditCategoryActionListener.class),
-				//@EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
-				//@EventConfig(listeners = UICategory.ImportForumActionListener.class),
+				@EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
+				@EventConfig(listeners = UICategory.ImportForumActionListener.class),
 				@EventConfig(listeners = UICategory.DeleteCategoryActionListener.class,confirm="UICategory.confirm.DeleteCategory"),
 				@EventConfig(listeners = UICategory.AddForumActionListener.class),
 				@EventConfig(listeners = UICategory.EditForumActionListener.class),
@@ -76,7 +77,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UICategory.SetOpenActionListener.class),
 				@EventConfig(listeners = UICategory.SetCloseActionListener.class),
 				@EventConfig(listeners = UICategory.MoveForumActionListener.class),
-				@EventConfig(listeners = UICategory.RemoveForumActionListener.class, confirm="UICategory.confirm.SetDeleteOneForum"),
+				@EventConfig(listeners = UICategory.RemoveForumActionListener.class),
 				@EventConfig(listeners = UICategory.OpenForumLinkActionListener.class),
 				@EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class),
 				@EventConfig(listeners = UICategory.AddBookMarkActionListener.class),
@@ -89,11 +90,14 @@ public class UICategory extends UIForm	{
 	private Category category ;
 	private boolean	isEditCategory = false ;
 	private boolean	isEditForum = false ;
-	private	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private	ForumService forumService ;
 	private List<Forum> forums = new ArrayList<Forum>() ;
 	private Map<String, Topic> MaptopicLast =new HashMap<String, Topic>(); 
 	public UICategory() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
+		setActions(new String[]{"EditCategory","ExportCategory","ImportForum","DeleteCategory","AddForum","EditForum","SetLocked",
+				"SetUnLock","SetOpen","SetClose","MoveForum","RemoveForum"});
 	}
 	
 	private UserProfile getUserProfile() throws Exception {
@@ -125,7 +129,14 @@ public class UICategory extends UIForm	{
 	
 	private Category getCategory() throws Exception{
 		if(this.isEditCategory || this.category == null) {
-			this.category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), this.categoryId);
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				this.category = forumService.getCategory(sProvider, this.categoryId);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				sProvider.close();
+			}
 			this.isEditCategory = true ;
 		}
 		return this.category ;
@@ -136,7 +147,14 @@ public class UICategory extends UIForm	{
 		if(this.isEditForum) {
 			String strQuery = "";
 			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-			this.forums = forumService.getForums(ForumSessionUtils.getSystemProvider(), this.categoryId, strQuery);
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				this.forums = forumService.getForums(sProvider, this.categoryId, strQuery);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				sProvider.close();
+			}
 			this.isEditForum = false ;
 			this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
 		}
@@ -168,7 +186,16 @@ public class UICategory extends UIForm	{
 	
 	@SuppressWarnings("unused")
 	private Topic getLastTopic(String topicPath) throws Exception {
-		Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		Topic topic;
+		try {
+			topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
+		}catch (Exception e) {
+			topic = null;
+			e.printStackTrace();
+		}finally {
+			sProvider.close();
+		}
 		if(topic != null) {
 			String topicId = topic.getId() ;
 			if(this.MaptopicLast.containsKey(topicId)) {
@@ -491,7 +518,7 @@ public class UICategory extends UIForm	{
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
 			Topic topic = uiCategory.getTopic(id[1]) ;
-			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic, true) ;
+			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic) ;
 			uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0])) ;
 			uiTopicDetail.setIdPostView("lastpost") ;
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiCategory.categoryId, id[0], topic) ;
@@ -568,7 +595,7 @@ public class UICategory extends UIForm	{
 					sProvider.close();
 				}
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.setUserProfile() ;
+				forumPortlet.updateUserProfileInfo() ;
 			}
 		}
 	}
@@ -615,7 +642,7 @@ public class UICategory extends UIForm	{
 			UIForumPortlet forumPortlet = category.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIImportForm importForm = popupAction.createUIComponent(UIImportForm.class, null, null) ;
-			importForm.setCategoryId(category.categoryId);
+			importForm.setPath(category.getCategory().getPath());
 			popupAction.activate(importForm, 400, 150) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

@@ -75,7 +75,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 		}
 )
 public class UIPostForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	public static final String FIELD_POSTTITLE_INPUT = "PostTitle" ;
 	public static final String FIELD_EDITREASON_INPUT = "editReason" ;
 	//public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
@@ -103,6 +103,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private boolean isMP = false ;
 	private String link = "";
 	public UIPostForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
 		postTitle.addValidator(MandatoryValidator.class);
 		UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
@@ -182,12 +183,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		return attachments_ ;
 	}
 	 
-	public void updatePost(String postId, boolean isQuote, boolean isMP, Post post) throws Exception {
-		this.post_ = post;
+	public void updatePost(String postId, boolean isQuote, boolean isPP, Post post) throws Exception {
+		if(post != null)this.post_ = post;
 		this.postId = postId ;
 		this.isQuote = isQuote ;
-		this.isMP = isMP ;
-		if(!isMP && post != null && post.getUserPrivate() != null && post.getUserPrivate().length > 0 && !post.getUserPrivate()[0].equals("exoUserPri") ) this.isMP = true;
+		this.isMP = isPP ;
 		UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB) ;
 		UIFormStringInput editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
 		editReason.setRendered(false) ;
@@ -202,7 +202,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
 				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
-			} else if(isMP){
+			} else if(isPP){
 				String title = this.topic.getTopicName() ;
 				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(getLabel(FIELD_LABEL_QUOTE) + ": " + ForumTransformHTML.unCodeHTML(title)) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
@@ -308,6 +308,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			postTitle = postTitle.trim();
 			if(postTitle.trim().length() <= 3) {k = 0;}
 			postTitle = ForumTransformHTML.enCodeHTML(postTitle) ;
+			Post post = uiForm.post_;
+			boolean isPP = false;
 			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
 				boolean isOffend = false ; 
 				boolean hasTopicMod = false ;
@@ -322,9 +324,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 							if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
 						}
 					}
-					if(uiForm.topic != null && !uiForm.isMP) hasTopicMod = uiForm.topic.getIsModeratePost() ;
+					
+					if(post.getUserPrivate() != null && post.getUserPrivate().length == 2)isPP = true;
+					if((!uiForm.isMP || !isPP) && uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 				}
-				if(isOffend && uiForm.isMP) {
+				if(isOffend && (uiForm.isMP || isPP)) {
 					Object[] args = { "" };
 					uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.PrivateCensor", args, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -341,7 +345,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
 				link = url + link;
 				//
-				Post post = new Post();
+				if(uiForm.isQuote || uiForm.isMP) post = new Post();
 				post.setName(postTitle) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
@@ -374,9 +378,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 								isParentDelete = true;
 							}
 							topicDetail.setIdPostView("lastpost");
-							topicDetail.setUpdatePostPageList(true);
 						} else{
-							post.setId(uiForm.postId) ;
+							//post.setId(uiForm.postId) ;
 							post.setModifiedBy(userName) ;
 							post.setModifiedDate(new Date()) ;
 							post.setEditReason(editReason) ;
@@ -395,8 +398,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 							isParentDelete = true;
 						}
 						topicDetail.setIdPostView("lastpost");
-						topicDetail.setUpdatePostPageList(true);
 					}
+					forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 				} finally {
 					sProvider.close();
 				}

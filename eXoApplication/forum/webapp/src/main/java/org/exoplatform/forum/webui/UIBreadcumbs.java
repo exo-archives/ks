@@ -33,6 +33,8 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -54,7 +56,7 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIBreadcumbs extends UIContainer {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
 	private List<String> path_ = new ArrayList<String>();
 	private String forumHomePath_ ;
@@ -65,6 +67,7 @@ public class UIBreadcumbs extends UIContainer {
 	private boolean isOpen = true;
 	//	private String[] path = new String[]{};
 	public UIBreadcumbs()throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 		path_.add(FORUM_SERVICE) ;
@@ -132,7 +135,7 @@ public class UIBreadcumbs extends UIContainer {
 	
 	@SuppressWarnings("unused")
 	private int getTotalJobWattingForModerator() throws Exception {
-		return forumService.getTotalJobWattingForModerator(ForumSessionUtils.getSystemProvider(), this.userProfile.getUserId());
+		return forumService.getTotalJobWattingForModerator(SessionProviderFactory.createSystemProvider(), this.userProfile.getUserId());
 	}
 	
 	public boolean isOpen() {
@@ -199,11 +202,12 @@ public class UIBreadcumbs extends UIContainer {
 	
 	@SuppressWarnings("unused")
 	private long getNewMessage() throws Exception {
-		if(!userProfile.getIsBanned()){
-			return this.userProfile.getNewMessage() ;
-		} else {
-			return -1;
-		}
+		try {
+			String username = this.userProfile.getUserId();
+			return forumService.getNewPrivateMessage(SessionProviderFactory.createSystemProvider(), username );
+    } catch (Exception e) {
+	    return -1;
+    }
 	}
 	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
@@ -225,20 +229,31 @@ public class UIBreadcumbs extends UIContainer {
 				}else	if(path.lastIndexOf(Utils.TOPIC) > 0) {
 					String []id = path.split("/") ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-					Topic topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), path, false) ;
-					if(topic != null) {
-						forumPortlet.updateIsRendered(ForumUtils.FORUM);
-						Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
-						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-						UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-						uiForumContainer.setIsRenderChild(false) ;
-						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-						uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, true) ;
-						uiTopicDetail.setUpdateForum(forum) ;
-						uiTopicDetail.setIdPostView("top") ;
-						uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+					SessionProvider sysSession = SessionProviderFactory.createSystemProvider() ;
+					try{
+						Topic topic = forumService.getTopicByPath(sysSession, path, false) ;
+						if(topic != null) {
+							forumPortlet.updateIsRendered(ForumUtils.FORUM);
+							Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+							UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+							UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+							uiForumContainer.setIsRenderChild(false) ;
+							uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+							UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+							uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
+							uiTopicDetail.setUpdateForum(forum) ;
+							uiTopicDetail.setIdPostView("top") ;
+							uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
+							forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+							if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
+								forumService.updateTopicAccess(sysSession, forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
+								forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+							}
+						}						
+					}catch(Exception e) {
+						throw e ;
+					}finally {
+						sysSession.close() ;
 					}
 				}else	if(path.lastIndexOf(Utils.FORUM) > 0) {
 					String id[] = path.split("/");
@@ -257,7 +272,6 @@ public class UIBreadcumbs extends UIContainer {
 				forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
-				System.out.println("\n\n========> not open\n\n");
 				uiBreadcums.isOpen = true;
 			}
 		}

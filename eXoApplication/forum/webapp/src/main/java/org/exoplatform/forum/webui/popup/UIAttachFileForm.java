@@ -55,7 +55,7 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 	final static public String FIELD_UPLOAD = "upload" ;	
 	private boolean isTopicForm = true ;
 	private int maxField = 5 ;
-	private long maxSize = 12000000;
+//	private long maxSize = 12000000;
 
 	public UIAttachFileForm() throws Exception {
 		setMultiPart(true) ;
@@ -78,7 +78,7 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 			UIAttachFileForm uiForm = event.getSource();
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			List<BufferAttachment> files = new ArrayList<BufferAttachment>() ;
-			int i = 0 ; long size ;
+			int i = 0 ;
 			BufferAttachment attachfile ;
 			UploadService uploadService = uiForm.getApplicationComponent(UploadService.class) ;
 			while(i++ < uiForm.maxField) {
@@ -92,13 +92,13 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 					continue ;
 				}
 				try {
-					size = (long)uploadResource.getUploadedSize() ;
-					if(size > uiForm.maxSize) {
-						Object[] args = {String.valueOf(i)};
-						uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-long", args, ApplicationMessage.WARNING));
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-						return ;
-					}
+//					size = (long)uploadResource.getUploadedSize() ;
+//					if(size > uiForm.maxSize) {
+//						Object[] args = {String.valueOf(i)};
+//						uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-long", args, ApplicationMessage.WARNING));
+//						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+//						return ;
+//					}
 					attachfile = new BufferAttachment() ;
 					attachfile.setId("ForumAttachment" + IdGenerator.generate());
 					attachfile.setName(uploadResource.getFileName()) ;

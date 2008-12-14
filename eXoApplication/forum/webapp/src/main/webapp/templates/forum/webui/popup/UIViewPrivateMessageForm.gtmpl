@@ -4,7 +4,7 @@
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumTransformHTML;
 %>
-<div class="UIViewPrivateMessageForm UIViewMemberProfile">
+<div class="UIViewMemberProfile UIViewPrivateMessageForm">
 <% uiform.begin() %>
 <%	
 	ForumPrivateMessage privateMessage = uicomponent.getPrivateMessage() ;
@@ -17,7 +17,7 @@
 			<div class="PlainTextMessage">
 				<div class="TitleBar">Title: <span class="UserLabel">$title</span></div>
 				<div class="MessageContent">
-					<div class="Content" style="padding:5px 30px;">$message</div>
+					<div class="Content" style="padding:5px 0px; margin: auto;">$message</div>
 					<div class="line"><span></span></div>
 					<div class="MessageInfo"></div>
 				</div>

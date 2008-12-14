@@ -1,20 +1,24 @@
 .UIForumPortlet .UIViewPost {
-	margin: 10px;
+	margin: 10px auto;
+	width: 96%;
+}
+
+*html .UIForumPortlet .UIViewPost {
+	margin: 10px auto;
+	width: 94%;
 }
 
 .UIViewPost .ViewContainer {
 	border: 1px solid #c7c7c7;
-	background: #f7f7f7;
+	background: #f7f7f7;	
 }
 
 .UIViewPost .ViewTopicContent {
 	border: 1px solid white;
-	padding: 10px;
 }
 
 .UIViewPost .PostViewTitle {
 	border-bottom: 1px solid #d8d8d8;
-	padding: 5px 0px 3px 0px;
 	width: 98%;
 	margin: auto;
 }

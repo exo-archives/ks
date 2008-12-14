@@ -62,7 +62,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		}
 )
 public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private ForumAdministration administration ;
 	private int id = 0 ;
 	private boolean isRenderListTopic = false ;
@@ -84,6 +84,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
 	
 	public UIForumAdministrationForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIListTopicOld.class, null, null) ;
 		this.setActions(new String[]{"Save", "Cancel"}) ;
 	}
@@ -142,8 +143,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		//UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, null);
 		String value = administration.getNotifyEmailContent();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
-		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, null, value, true);
-		
+		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, null, "", true);
+		notifyEmail.setValue(value);
 		forumSortTab.addUIFormInput(forumSortBy) ;
 		forumSortTab.addUIFormInput(forumSortByType) ;
 		forumSortTab.addUIFormInput(topicSortBy) ;

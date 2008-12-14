@@ -18,7 +18,9 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -36,7 +38,6 @@ import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -76,15 +77,14 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
     }
 )
 public class UIModeratorManagementForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
 	private String[] permissionUser = null;
-  private JCRPageList pageList ;
+  private JCRPageList userPageList ;
 	private boolean isEdit = false ;
 	private UserProfile userProfile = new UserProfile();
 	private List<ForumLinkData> forumLinks = null;
   private List<String> listModerate = new ArrayList<String>();
-	private List<User> listUser = null;
 	public static final String FIELD_USERPROFILE_FORM = "ForumUserProfile" ;
 	public static final String FIELD_USEROPTION_FORM = "ForumUserOption" ;
 	public static final String FIELD_USERBAN_FORM = "ForumUserBan" ;
@@ -118,6 +118,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private String valueSearch = null;
   
 	public UIModeratorManagementForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
 		addChild(new UIFormStringInput(FIELD_SEARCH_USER, FIELD_SEARCH_USER, null));
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
@@ -133,61 +134,29 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	}
 	
   @SuppressWarnings("unused")
-  public JCRPageList setPageListUserProfile() throws Exception {
-  	if(listUser == null) {
-  		listUser = ForumSessionUtils.getAllUser() ;
-  	}
-    for (User user : listUser) {
-      UserProfile userProfile = this.forumService.getUserProfile(ForumSessionUtils.getSystemProvider(), user.getUserName(), true, true, false) ;
-    }
-  	this.pageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
-  	this.pageList.setPageSize(5);
-  	this.getChild(UIForumPageIterator.class).updatePageList(this.pageList) ;
-  	return this.pageList;
+  public void setPageListUserProfile() throws Exception {
+  	userPageList = this.forumService.getPageListUserProfile(ForumSessionUtils.getSystemProvider()) ;
+  	userPageList.setPageSize(5);
+  	this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;  	
   }
   
-  @SuppressWarnings("unused")
+  private boolean isAdmin(String userId) throws Exception {
+  	return forumService.isAdminRole(userId);
+  }
+  
+  @SuppressWarnings({ "unused", "unchecked" })
   private List<UserProfile> getListProFileUser() throws Exception {
-  	setListProFileUser() ;
-  	return this.userProfiles ;
-  }
-  
-  @SuppressWarnings("unchecked")
-  private void setListProFileUser() throws Exception {
-  	List<UserProfile> listUserProfile = null;
   	if(valueSearch == null || valueSearch.trim().length() < 1){
-	  	long page = this.getChild(UIForumPageIterator.class).getPageSelected() ;
-	  	long maxPage = this.pageList.getAvailablePage() ;
-	  	if(page <= 0) page = 1;
-	  	if(page > maxPage) page = maxPage ;
-	  	listUserProfile = this.pageList.getPage(page) ;
+  		UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
+	  	long page = pageIterator.getPageSelected() ;
+	  	this.userProfiles = this.userPageList.getPage(page) ;
+	  	pageIterator.setSelectPage(userPageList.getCurrentPage());
   	} else {
-  		listUserProfile = this.pageList.getpage(this.valueSearch);
-  		this.getChild(UIForumPageIterator.class).setSelectPage(this.pageList.getPageSelected());
+  		this.userProfiles = this.userPageList.getpage(this.valueSearch);
+  		this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getCurrentPage());
   		valueSearch = null;
   	}
-  	this.userProfiles = new ArrayList<UserProfile>();
-  	int i =0, j = 0;
-  	for (UserProfile userProfile : listUserProfile) {
-  		boolean isDefaulAdmin = this.forumService.isAdminRole(userProfile.getUserId()) ;
-  		if(isDefaulAdmin) userProfile.setUserRole((long)0);
-  		if(isDefaulAdmin && userProfile.getUserTitle().equals(Utils.GUEST)) userProfile.setUserTitle(Utils.ADMIN);
-  		if(userProfile.getUser() == null) {
-	  		for (User user : listUser) {
-		      if(user.getUserName().equals(userProfile.getUserId())) {
-			  		userProfile.setUser(user);
-			  		userProfile.setLastLoginDate(user.getLastLoginTime());
-			  		this.userProfiles.add(userProfile);
-			  		++j;
-			  		break ;
-		      }
-	      }
-  		} else {
-  			++j;
-  			this.userProfiles.add(userProfile);
-  		}
-  		++ i;
-    }
+  	return this.userProfiles ;
   }
   
   private UserProfile getUserProfile(String userId) throws Exception {
@@ -251,21 +220,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     UIFormInputWithActions inputSetProfile = this.getChildById(FIELD_USERPROFILE_FORM) ;
     String value = stringProcess(values) ;
     inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).setValue(value) ;
-//    UIFormStringInput stringInput = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT) ;
-//    String userTitle = stringInput.getValue() ;
-//    boolean isChangeTitle = false;
-//    if(!values.isEmpty()) {
-//    	if(userTitle == null || userTitle.equals("User") || userTitle.equals("Guest")) {
-//    		userTitle = "Moderator" ;
-//    		isChangeTitle = true;
-//    	}
-//    } else {
-//    	if(userTitle.equals("Moderator")) {
-//    		userTitle = "User" ;
-//    		isChangeTitle = true;
-//    	}
-//    }
-//    if(isChangeTitle)stringInput.setValue(userTitle) ;
   }
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
@@ -280,11 +234,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		String title = this.userProfile.getUserTitle();
 		boolean isAdmin = false ;
 		UIFormCheckBoxInput userRole = new UIFormCheckBoxInput<Boolean>(FIELD_USERROLE_CHECKBOX, FIELD_USERROLE_CHECKBOX, false) ;
-		if(this.forumService.isAdminRole(userProfile.getUserId())){
+		if(this.userProfile.getUserRole() == 0) isAdmin = true;
+		if(isAdmin(userProfile.getUserId())){
 			userRole.setEnable(false);
 			isAdmin = true;
 			if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
-		} else if(this.userProfile.getUserRole() == 0) isAdmin = true;
+		}  
 		userRole.setValue(isAdmin);
 		userTitle.setValue(title);
 		
@@ -448,14 +403,13 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		listPostByUser.setUserName(this.userProfile.getUserId()) ;
 	}
 	
-	@SuppressWarnings("deprecation")
+  @SuppressWarnings("static-access")
   private Date getNewDate(double timeZoneOld) {
-		Date date = new Date() ;
-		long timeZoneMyHost = (long)date.getTimezoneOffset() ;
-		if(timeZoneMyHost == 0) {
-			date.setTime(date.getTime() + (long)(timeZoneOld*3600000));
+		Calendar calendar = GregorianCalendar.getInstance();
+		if(calendar.ZONE_OFFSET == 0) {
+			calendar.setTimeInMillis(calendar.getTimeInMillis() + (long)(timeZoneOld*3600000));
 		}
-		return date ;
+		return calendar.getTime() ;
 	}
 	
 	private Date getInstanceTempCalendar() {
@@ -526,10 +480,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
     	long userRole = 3;
     	boolean isAdmin = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_USERROLE_CHECKBOX).getValue() ;
-    	if(!uiForm.forumService.isAdminRole(userProfile.getUserId())) {
-    		if(isAdmin) userRole = 0;
-    	}else {
-    		if(userTitle.equals(Utils.ADMIN)) userTitle = userProfile.getUserTitle();
+    	if(isAdmin) userRole = 0;
+    	else if(uiForm.isAdmin(userProfile.getUserId())){
+    		isAdmin = true; userRole = 0;
+    		if(userTitle ==  null || userTitle.trim().length() == 0) userTitle = Utils.ADMIN;
+    		else if(userTitle.equals(Utils.ADMIN)) userTitle = userProfile.getUserTitle();
     	}
     	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
       List<String> moderateForums = new ArrayList<String>() ;
@@ -657,7 +612,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 				sProvider.close();
 			}
       if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
-      	forumPortlet.setUserProfile() ;
+      	forumPortlet.updateUserProfileInfo() ;
       }
       uiForm.isEdit = false ;
       uiForm.setPageListUserProfile();

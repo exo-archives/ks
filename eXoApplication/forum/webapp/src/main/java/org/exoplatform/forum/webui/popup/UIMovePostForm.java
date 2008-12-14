@@ -19,6 +19,8 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.ItemExistsException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -59,12 +61,13 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIMovePostForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String topicId ;
 	private List<Post> posts ;
 	private UserProfile userProfile ;
 	private List<Category> categories;
 	public UIMovePostForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 	
 	public void activate() throws Exception {}
@@ -155,11 +158,14 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					forumPortlet.cancelAction() ;
 					String[] temp = topicPath.split("/") ;
 					UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
-					topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1], false) ;
+					topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
 					topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+        } catch (ItemExistsException e) {
+        	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+        	uiApp.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
+        	return;
         } catch (Exception e) {
-        	sProvider.close();
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIMovePostForm.msg.parent-deleted", null, ApplicationMessage.WARNING)) ;
         	return ;

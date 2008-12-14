@@ -4,6 +4,7 @@
 	int size = userOnlines.size();
 	ForumStatistic forumStatistic = uicomponent.getForumStatistic() ;
 	String topics = String.valueOf(forumStatistic.getTopicCount());
+	String activeUsers = String.valueOf(forumStatistic.getActiveUsers());
 	String posts = String.valueOf(forumStatistic.getPostCount());
 	String members = String.valueOf(forumStatistic.getMembersCount());
 	String newMember = forumStatistic.getNewMembers();
@@ -25,10 +26,10 @@
 		<div class="ForumStatsList">
 			<table cellspacing="0" borderspacing="0" id="UIListUsers" class="UIGrid">
 				<tbody>
-					<tr>
+					<!--tr>
 						<td style="width: 40px; border-right: 1px solid #ffffff; border-top: 1px solid #c7c7c7;" ><div class="UserIcon" ><span></span></div></td>
 					 	<td class="text" style="border-top: 1px solid #c7c7c7;"><%=_ctx.appRes("UICategoryInfo.label.CurrentUsers")%> </td>
-		 			</tr>
+		 			</tr-->
 					<tr class="OddRow">
 						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
 					 	<td >
@@ -57,7 +58,8 @@
 					 		<div class="text"><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics, 
 					 											<%=_ctx.appRes("UICategoryInfo.label.TotalPosts");%>: $posts, 
 					 											<%=_ctx.appRes("UICategoryInfo.label.TotalMembers");%>: $members, 
-					 											<%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>:<%=uicomponent.getUserActive();%></div>
+					 											<%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>:$activeUsers
+					 		</div>
 							<div class="text" style="padding-bottom: 5px;"><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>: <a>$newMember</a></div>
 					 	</td>
 		 			</tr>

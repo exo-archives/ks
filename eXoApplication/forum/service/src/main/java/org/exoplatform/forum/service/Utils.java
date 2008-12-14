@@ -16,7 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import java.util.Comparator;
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.services.organization.User;
 
 /**
  * Created by The eXo Platform SAS
@@ -28,8 +32,8 @@ public class Utils {
 
 	public final static String FORUM_SERVICE = "ForumService".intern() ;
 	public final static String FORUM_STATISTIC = "forumStatisticId".intern() ;
-	public final static String USER_ADMINISTRATION = "UserAdministration".intern() ;
-	public final static String USER_PROFILE = "UserProfile".intern() ;
+	public final static String USER_PROFILE_HOME = "UserAdministration".intern() ;
+	public final static String USER_PROFILES = "UserProfile".intern() ;
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	
 	public final static String FORUMADMINISTRATION = "forumAdministration".intern() ;
@@ -39,21 +43,20 @@ public class Utils {
 	public final static String POST = "post".intern() ;
 	public final static String POLL = "poll".intern() ;
 	public final static String TAG = "tag".intern() ;
-	public final static String AGREEMESSAGE = "agree".intern() ;
-	public final static String SENDMESSAGE = "send".intern() ;
+	public final static String RECEIVE_MESSAGE = "receive".intern() ;
+	public final static String SEND_MESSAGE = "send".intern() ;
 	
 	public static final String ADMIN = "Administrator".intern() ;
 	public static final String MODERATOR = "Moderator".intern() ;
 	public static final String USER = "User".intern() ;
 	public static final String GUEST = "Guest".intern() ;
 	
-	public static final String DEFAULT_USER_ADMIN_ID = "root".intern() ;
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
 
 	public static final String DEFAULT_EMAIL_CONTENT = "Hi ,</br> You have received this email because you registered for eXo Forum/Topic " +
-	"Watching notification.<br/>We would like to inform that &objectWatch <b>&objectName</b> " +
-	"has been added new Post with content below: <div> &content </div> For more detail, you can " +
-	"view at link : &link".intern();
+			"Watching notification.<br/>We would like to inform that $OBJECT_WATCH_TYPE <b>$OBJECT_NAME</b> " +
+			"has been added new $ADD_TYPE with content below: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, <b>$POSTER</b> posted</div> " +
+			"For more detail, you can view at link : $LINK".intern();
 	
 	
 	
@@ -65,8 +68,8 @@ public class Utils {
 		int tagIndex = 0;
 		// Lower Case bbc
 		String start, end;
-		String[] bbcs = new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
-				"RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS" };
+		String[] bbcs = new String[] { "B", "I", "HIGHLIGHT", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
+		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL", "CODE" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
 			end = "[/" + bbc + "]";
@@ -79,7 +82,7 @@ public class Utils {
 					String content = b.substring(tagIndex + bbc.length() + 1, clsIndex);
 					String bbc_ = bbc.toLowerCase();
 					b = StringUtils.replace(b, "[" + bbc + content + end, "[" + bbc_ + content + "[/" + bbc_
-							+ "]");
+					    + "]");
 				} catch (Exception e) {
 					continue;
 				}
@@ -94,9 +97,7 @@ public class Utils {
 		b = StringUtils.replace(b, "[/b]", "</b>");
 		b = StringUtils.replace(b, "[i]", "<i>");
 		b = StringUtils.replace(b, "[/i]", "</i>");
-		b = StringUtils.replace(b, "[CODE]", "<code>");
-		b = StringUtils.replace(b, "[/CODE]", "</code>");
-		b = StringUtils.replace(b, "[link]", "[url]");
+		b = StringUtils.replace(b, "[link", "[url");
 		b = StringUtils.replace(b, "[/link]", "[/url]");
 		b = StringUtils.replace(b, "&quot;", "\"");
 		// Need to get the text inbetween img's
@@ -108,8 +109,9 @@ public class Utils {
 			try {
 				int clsIndex = b.indexOf("[/img]", tagIndex);
 				String src = b.substring(tagIndex + 5, clsIndex);
+				String src_ = src.replaceAll("&nbsp;", "").replaceAll(" ", "").trim() ;
 				buffer = new StringBuffer();
-				buffer.append("<img src=\"").append(src).append("\" />");
+				buffer.append("<img src=\"").append(src_).append("\" />");
 				b = StringUtils.replace(b, "[img]" + src + "[/img]", buffer.toString());
 			} catch (Exception e) {
 				continue;
@@ -129,13 +131,13 @@ public class Utils {
 					int clsIndex = b.indexOf(end, tagIndex);
 					String content = b.substring(tagIndex + string.length() + 2, clsIndex);
 					b = StringUtils.replace(b, start + content + end, "<div align=\"" + string + "\">"
-							+ content + "</div>");
+					    + content + "</div>");
 				} catch (Exception e) {
 					continue;
 				}
 			}
 		}
-		// size
+		// size [size=-1]jlfjsdfjds[/size] font-size: 12px;
 		tagIndex = 0;
 		lastIndex = 0;
 		while ((tagIndex = b.indexOf("[size=", lastIndex)) != -1) {
@@ -147,10 +149,12 @@ public class Utils {
 				int clsUrl = urlStr.indexOf("]");
 				String size = urlStr.substring(fstb + 1, clsUrl);
 				String size_ = size;
+				
 				if (size.indexOf("\"") >= 0)
 					size_ = size_.replaceAll("\"", "");
-				if (size.indexOf("+") >= 0)
+				if (size.indexOf("+") >= 0){
 					size_ = size_.replace("+", "");
+				}
 				String text = urlStr.substring(clsUrl + 1);
 				buffer = new StringBuffer();
 				buffer.append("<font size=\"").append(size_).append("\">").append(text).append("</font>");
@@ -192,13 +196,13 @@ public class Utils {
 				int fstb = urlStr.indexOf("=");
 				int clsUrl = urlStr.indexOf("]");
 				String href = urlStr.substring(fstb + 1, clsUrl);
-				String href_ = href;
+				String href_ = href.trim();
 				if (href.indexOf("\"") >= 0)
 					href_ = href.replaceAll("\"", "");
 				String text = urlStr.substring(clsUrl + 1);
 				buffer = new StringBuffer();
 				buffer.append("<a target='_blank' href=\"").append(href_).append("\">").append(text)
-						.append("</a>");
+				    .append("</a>");
 				b = StringUtils.replace(b, "[url=" + href + "]" + text + "[/url]", buffer.toString());
 			} catch (Exception e) {
 				continue;
@@ -212,8 +216,43 @@ public class Utils {
 			try {
 				int clsIndex = b.indexOf("[/url]", tagIndex);
 				String src = b.substring(tagIndex + 5, clsIndex);
-				b = StringUtils.replace(b, "[url]" + src + "[/url]", "<a target='_blank' href=\"" + src
-						+ "\">" + src + "</a>");
+				b = StringUtils.replace(b, "[url]" + src + "[/url]", "<a target='_blank' href=\"" + src.trim()
+				    + "\">" + src + "</a>");
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		// email=
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[email=", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/email]", tagIndex);
+				String urlStr = b.substring(tagIndex, clsIndex);
+				int fstb = urlStr.indexOf("=");
+				int clsUrl = urlStr.indexOf("]");
+				String href = urlStr.substring(fstb + 1, clsUrl);
+				String href_ = href.trim();
+				if (href.indexOf("\"") >= 0)
+					href_ = href.replaceAll("\"", "");
+				String text = urlStr.substring(clsUrl + 1);
+				buffer = new StringBuffer();
+				buffer.append("<a href=\"mailto:").append(href_).append("\">").append(text).append("</a>");
+				b = StringUtils.replace(b, "[email=" + href + "]" + text + "[/email]", buffer.toString());
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		// url
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[email]", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/email]", tagIndex);
+				String src = b.substring(tagIndex + 7, clsIndex);
+				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()	+ "\">" + src + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -239,6 +278,7 @@ public class Utils {
 				int clsUrl = urlStr.indexOf("]");
 				String css = urlStr.substring(fstb, urlStr.indexOf("]", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
 				buffer.append("<div class='").append(css).append("'>").append(text).append("</div>");
 				b = StringUtils.replace(b, "[css:" + css + "]" + text + "[/css]", buffer.toString());
@@ -246,7 +286,6 @@ public class Utils {
 				continue;
 			}
 		}
-		
 		//highlight
 		tagIndex = 0;
 		lastIndex = 0;
@@ -272,13 +311,14 @@ public class Utils {
 				int clsUrl = urlStr.indexOf("]");
 				String userName = urlStr.substring(fstb, urlStr.indexOf("]", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
-				buffer.append("<div>Quote:</div><div class=\"Classquote\">");
+				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>Originally Posted by <strong>").append(userName).append(
-						"</strong></div>");
+				    "</strong></div>");
 				buffer.append("<div>").append(text).append("</div></div>");
 				b = StringUtils.replace(b, "[quote=" + userName + "]" + text + "[/quote]", buffer
-						.toString());
+				    .toString());
 			} catch (Exception e) {
 				continue;
 			}
@@ -289,11 +329,32 @@ public class Utils {
 			try {
 				int clsIndex = b.indexOf("[/quote]", tagIndex);
 				String text = b.substring(tagIndex + 7, clsIndex);
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
-				buffer.append("<div>Quote:</div><div class=\"Classquote\">");
+				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>").append(text).append("</div></div>");
 				b = StringUtils.replace(b, "[quote]" + text + "[/quote]", buffer.toString());
 			} catch (Exception e) {
+				continue;
+			}
+		}
+		// Code
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[code]", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/code]", tagIndex);
+				String text = b.substring(tagIndex + 6, clsIndex);
+				if(text == null || text.trim().length() == 0) continue;
+				String text_ = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&nbsp;", "&#32");
+				buffer = new StringBuffer();
+				buffer.append("<div>Code:</div><div class=\"ClassCode\">");
+				buffer.append("<pre>").append(text_).append("</pre></div>");
+				b = StringUtils.replace(b, "[code]" + text + "[/code]", buffer.toString());
+			} catch (Exception e) {
+				System.out.println("Error in BBcodeSmall near char: " + tagIndex);
+				e.printStackTrace();
 				continue;
 			}
 		}
@@ -311,7 +372,7 @@ public class Utils {
 				String href = urlStr.substring(fstb + 1, urlStr.indexOf("\"", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
 				b = StringUtils.replace(b, "[goto=\"" + href + "\"]" + text + "[/goto]", "<a href=\""
-						+ href + "\">" + text + "</a>");
+				    + href.trim() + "\">" + text + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -320,21 +381,26 @@ public class Utils {
 	}
 	
 	public static String convertCodeHTML(String s) {
-		String link = "";
 		if (s == null || s.length() <= 0)
-			return link;
+			return "";
+		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
+		s = s.replaceFirst("(<br/>)*", "");
+		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
 		try {
 			s = transform(s);
-			s = s.replaceAll(
-					"[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
-			"<a target=\"blank_\" href=\"$0\">$0</a>");
-			s = s.replaceAll(
-					"[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
-			"<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
-			s = s.replaceAll("href=\" http://", "href=\"http://").replaceAll("href=\">http://", "href=\"http://")
-			 .replaceAll(">>http://", ">http://").replaceAll("> http://", ">http://");
+			s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)( )(https?|ftp)", "$1$3")
+					 .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
     } catch (Exception e) {
+    	return "";
     }
 		return s;
 	}
+	
+	static public class DatetimeComparatorDESC implements Comparator<Object> {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	Date date1 = ((User) o1).getCreatedDate() ;
+      Date date2  = ((User) o2).getCreatedDate() ;
+      return date2.compareTo(date1) ;
+    }
+  }
 }

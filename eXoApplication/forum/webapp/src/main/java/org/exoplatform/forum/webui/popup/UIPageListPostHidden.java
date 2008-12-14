@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
@@ -32,7 +31,6 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -57,11 +55,12 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		}
 )
 public class UIPageListPostHidden extends UIForumKeepStickPageIterator implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String categoryId, forumId, topicId ;
 	private List<Post> listAllPost = new ArrayList<Post>() ;
 	
 	public UIPageListPostHidden() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"UnHidden","Cancel"});
 	}
 
@@ -79,19 +78,11 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPosts() throws Exception {
-		JCRPageList pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "", "");
-		this.updatePageList(pageList) ;
+		pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "", "");
+//		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
-		long page = pageSelect ;
-		List<Post> posts = null;
-		while(posts == null && page >= 1){
-			try {
-				posts = pageList.getPage(page) ;
-			} catch (Exception e) {
-				--page;
-				posts = null ;
-			}
-		}
+		List<Post> posts = pageList.getPage(pageSelect);
+		pageSelect = pageList.getCurrentPage();
 		if(posts == null) posts = new ArrayList<Post>();
 		if(!posts.isEmpty()) {
 			for (Post post : posts) {
@@ -113,23 +104,6 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 		return null ;
 	}
 	
-	@SuppressWarnings("unchecked")
-  private List<String> getIdSelected() throws Exception{
-		List<UIComponent> children = this.getChildren() ;
-		List<String> ids = new ArrayList<String>() ;
-		for (int i = 0; i <= this.maxPage; i++) {
-			if(this.getListChecked(i) != null)ids.addAll(this.getListChecked(i));
-		}
-		for(UIComponent child : children) {
-			if(child instanceof UIFormCheckBoxInput) {
-				if(((UIFormCheckBoxInput)child).isChecked()) {
-					if(!ids.contains(child.getName()))ids.add(child.getName());
-				}
-			}
-		}
-		this.cleanCheckedList();
-		return ids;
-	}
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostHidden> {
 		public void execute(Event<UIPageListPostHidden> event) throws Exception {
 			UIPageListPostHidden uiForm = event.getSource() ;
@@ -168,10 +142,14 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 					sProvider.close();
 				}
 			}
-			UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);
-			forumPortlet.cancelAction();
-			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+			if(posts.size() == postHidden.listAllPost.size()) {
+				UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);
+				forumPortlet.cancelAction();
+				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+			}else{
+				event.getRequestContext().addUIComponentToUpdateByAjax(postHidden.getParent());
+			}
 		}
 	}
 	
@@ -179,6 +157,8 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 		public void execute(Event<UIPageListPostHidden> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
+			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
 }

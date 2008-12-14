@@ -71,7 +71,7 @@ public class ForumTransformHTML {
 		b = StringUtils.replace(b, "[/b]", "</b>");
 		b = StringUtils.replace(b, "[i]", "<i>");
 		b = StringUtils.replace(b, "[/i]", "</i>");
-		b = StringUtils.replace(b, "[link]", "[url]");
+		b = StringUtils.replace(b, "[link", "[url");
 		b = StringUtils.replace(b, "[/link]", "[/url]");
 		b = StringUtils.replace(b, "&quot;", "\"");
 		// Need to get the text inbetween img's
@@ -170,7 +170,7 @@ public class ForumTransformHTML {
 				int fstb = urlStr.indexOf("=");
 				int clsUrl = urlStr.indexOf("]");
 				String href = urlStr.substring(fstb + 1, clsUrl);
-				String href_ = href;
+				String href_ = href.trim();
 				if (href.indexOf("\"") >= 0)
 					href_ = href.replaceAll("\"", "");
 				String text = urlStr.substring(clsUrl + 1);
@@ -207,7 +207,7 @@ public class ForumTransformHTML {
 				int fstb = urlStr.indexOf("=");
 				int clsUrl = urlStr.indexOf("]");
 				String href = urlStr.substring(fstb + 1, clsUrl);
-				String href_ = href;
+				String href_ = href.trim();
 				if (href.indexOf("\"") >= 0)
 					href_ = href.replaceAll("\"", "");
 				String text = urlStr.substring(clsUrl + 1);
@@ -226,7 +226,7 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/email]", tagIndex);
 				String src = b.substring(tagIndex + 7, clsIndex);
-				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()	+ "\">" + src.trim() + "</a>");
+				b = StringUtils.replace(b, "[email]" + src + "[/email]", "<a href=\"mailto:" + src.trim()	+ "\">" + src + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -252,6 +252,7 @@ public class ForumTransformHTML {
 				int clsUrl = urlStr.indexOf("]");
 				String css = urlStr.substring(fstb, urlStr.indexOf("]", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
 				buffer.append("<div class='").append(css).append("'>").append(text).append("</div>");
 				b = StringUtils.replace(b, "[css:" + css + "]" + text + "[/css]", buffer.toString());
@@ -284,6 +285,7 @@ public class ForumTransformHTML {
 				int clsUrl = urlStr.indexOf("]");
 				String userName = urlStr.substring(fstb, urlStr.indexOf("]", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
 				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>Originally Posted by <strong>").append(userName).append(
@@ -301,6 +303,7 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/quote]", tagIndex);
 				String text = b.substring(tagIndex + 7, clsIndex);
+				if(text == null || text.trim().length() == 0) continue;
 				buffer = new StringBuffer();
 				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>").append(text).append("</div></div>");
@@ -317,6 +320,7 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/code]", tagIndex);
 				String text = b.substring(tagIndex + 6, clsIndex);
+				if(text == null || text.trim().length() == 0) continue;
 				String text_ = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&nbsp;", "&#32");
 				buffer = new StringBuffer();
 				buffer.append("<div>Code:</div><div class=\"ClassCode\">");
@@ -342,7 +346,7 @@ public class ForumTransformHTML {
 				String href = urlStr.substring(fstb + 1, urlStr.indexOf("\"", fstb + 1));
 				String text = urlStr.substring(clsUrl + 1, urlStr.length());
 				b = StringUtils.replace(b, "[goto=\"" + href + "\"]" + text + "[/goto]", "<a href=\""
-				    + href + "\">" + text + "</a>");
+				    + href.trim() + "\">" + text + "</a>");
 			} catch (Exception e) {
 				continue;
 			}
@@ -406,21 +410,25 @@ public class ForumTransformHTML {
 	}
 
 	public static String convertCodeHTML(String s) {
-		String link = "";
 		if (s == null || s.length() <= 0)
-			return link;
-		s = transform(s);
-		s = s.replaceAll(
-		    "[^=\"?|\'?](https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
-		    "<a target=\"blank_\" href=\"$0\">$0</a>");
+			return "";
+		s = StringUtils.replace(s, "\n", "");
+		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
+		s = s.replaceFirst("(<br/>)*", "");
+		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
+		try {
+			s = transform(s);
+			s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)(\\s*)(https?|ftp)", "$1$3")
+					 .replaceAll("[^=\"|^=\'|^\'>|^\">](https?://|ftp://)([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])", "<a target=\"_blank\" href=\"$1$2\">$1$2</a>");
+		} catch (Exception e) {
+			return "";
+		}
+		return s ;
 //		s = s.replaceAll(
-//		    "[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
-//		    "<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
-		s = s.replaceAll("href=\" http://", "href=\"http://").replaceAll("href=\">http://", "href=\"http://")
-				 .replaceAll(">>http://", ">http://").replaceAll("> http://", ">http://");
-		return s;
+//				"[^mailto:\"?|\'?][_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}",
+//				"<a target=\"_blank\" href=\"mailto:$0\"> $0 </a>");
 	}
-
+	
 	public static String clearQuote(String s) {
 		if (s == null || s.length() <= 0)
 			return "";
@@ -441,12 +449,10 @@ public class ForumTransformHTML {
 		}
 		buffer.append(s);
 		s = buffer.toString();
-		s = s.trim();
-		s = StringUtils.replace(s, "<p>[&nbsp;\\s?]</p>", "");
 		s = StringUtils.replace(s, "\n", "");
-		while(s.indexOf("<br/>") == 0){
-			s = s.replaceFirst("<br/>", "");
-		}
+		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
+		s = s.replaceFirst("(<br/>)*", "");
+		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
 		if (s.indexOf("<p>") == 0) {
 			s = s.replaceFirst("<p>", "");
 			s = s.replaceFirst("</p>", "");
@@ -467,10 +473,21 @@ public class ForumTransformHTML {
 		// }
 		return s;
 	}
-	
+	public static String autoAddUser(String s) {
+		String tmp = s;
+		for (int i = 0; i < 400; i++) {
+			String t = tmp.replaceFirst("testUser", "testUser" + i);
+			s = s + "<br/>" + t;
+		}
+		return s;
+	}
 	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
 		if(s != null) {
+			s = StringUtils.replace(s, "\n", "");
+			s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
+			s = s.replaceFirst("(<br/>)*", "");
+			s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
 			for (int j = 0; j < s.trim().length(); j++) {
 				char c = s.charAt(j); 
 				if((int)c == 60){

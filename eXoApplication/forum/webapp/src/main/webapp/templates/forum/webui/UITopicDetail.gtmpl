@@ -10,8 +10,7 @@
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
-	import org.exoplatform.ks.common.CommonContact;
-	import org.exoplatform.services.organization.User ;
+	import org.exoplatform.forum.service.user.ForumContact;
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -19,23 +18,25 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.controlWorkSpace();");
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
 
+	long setTime = 0;
 	String uiformId = uicomponent.getName() ;
+	String userLogin ;
+	String url = "";
 	boolean isNull = false ;
 	boolean isShowMenu;
-	long setTime = 0;
-	String userLogin ;
-	boolean isBanned = false;
-	boolean isAdmin = false ;
 	boolean canEdit = false ;
-	boolean isClosed = false;
-	boolean isLock = false;
 	boolean isUserCreatedTopic = false;
 	boolean isNotReply = false;
+	boolean isModeratePost = false;
+	boolean isApproved = true;
+	boolean isShowPost = true ;
+	boolean isClosed = false ;
 	List posts = null;
 	UserProfile userProfile = null;
 	Forum forum = uicomponent.getForum() ;
 	if(forum == null) isNull = true;
 	Topic topic = null;
+	
 	if(!isNull) {
 		 topic = uicomponent.getTopic() ;
 	}
@@ -48,80 +49,22 @@
 		setTime = (long)(userProfile.getTimeZone()*3600000) ;
 		isBanned = userProfile.getIsBanned() ;
 		posts = uicomponent.getPostPageList() ;
-		if(userProfile.getUserRole() == 0) isAdmin = true;
 		if(isBanned) {
 			isShowMenu = false ;
 		}
 		if(isShowMenu) {
-			if(isAdmin) canEdit = true;
-			if(userProfile.getUserRole() == 1) {
-				String []moderatorsByUser = userProfile.getModerateForums() ;
-				if(moderatorsByUser == null || moderatorsByUser.length <= 0) canEdit = true;
-				else {
-					for(forumId in moderatorsByUser) {
-						if(forumId.indexOf(forum.getId()) >= 0) {
-							canEdit = true;
-							break ;
-						}
-					}
-				}
-			}
-			if(!canEdit && forum != null) {
-				canEdit = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin) ;
-			}
+			canEdit = uicomponent.isMod ;
 		}
-		uicomponent.setIsEdit(canEdit) ;
 		if(posts != null && posts.size() > 0) {
-			if(!isLock && forum != null)isLock = forum.getIsLock() ;
-			if(!isLock && topic != null)isLock = topic.getIsLock() ;
-			if(!isLock && forum != null)isLock = forum.getIsClosed() ;
-			if(!isLock && topic != null)isLock = topic.getIsClosed() ;
-			if(!isClosed && forum != null)isClosed = forum.getIsClosed() ;
-			if(!isClosed && topic != null)isClosed = topic.getIsClosed() ;
-			if(!canEdit) {
-				if(!isLock) {
-					if(!isBanned)
-						isLock = !uicomponent.isCanPostReply();
-				}
-				if(!isClosed){ 
-					isClosed = !uicomponent.userCanView() ;
-				}
-			}
-			if(!canEdit) {
-				if(topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
-			}
+		  isNotReply = !uicomponent.isCanPostReply();
+			isClosed = !uicomponent.userCanView() ;
+			if(!canEdit && topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
 		} else {
 		  isClosed = true;
 		  isNotReply = true;
-		  isLock = false;
 		  isShowMenu = false;
+		  isNull = true;
 		}
-	} 
-	isNotReply = isLock ;
-	if(!isNotReply) isNotReply = !isShowMenu ;
-	boolean isModeratePost = uicomponent.getIsModeratePost() ;
-	
-	boolean isActive = topic.getIsActive();
-	boolean isApproved = true;
-	if(forum.getIsModerateTopic()){
-		isApproved = topic.getIsApproved();
-	}
-	boolean isShowPost = true ;
-	if(!canEdit){
-		if(!isActive || !isApproved || topic.getIsWaiting()){
-			isNotReply = true;
-			isShowPost = false;
-			isShowMenu = false;
-			isUserCreatedTopic= false;
-		}
-	}
-	String url = uicomponent.url("ViewThreadByUser","pathId");
-  uicomponent.setLink(url);
-  if(isNull){
-	  isClosed = true;
-	  isNotReply = true;
-	  isLock = false;
-	  isShowMenu = false;
 	}
 %>
 <div class="UITopicDetail">
@@ -201,7 +144,8 @@
 		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 		<div style="clear: left;"><span></span></div>
 	</div>
-<!-- Start PostsInThreadContainer -->	
+<!-- Start PostsInThreadContainer -->
+  <div style="display: none;" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
 	<div class="PostsInThreadContainer ImageContentContainer">
 		<div class="ForumToolbar">
 			<div class="LeftBar">
@@ -255,7 +199,7 @@
 																	if(action.equals("DeletePost")){
 																%>
 																		<a class="MenuItem" href="javaScript: void(0)"
-														 					onclick="$link">	 
+														 					onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeletePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckPost")%>')){$link;}">	 
 																			<div class="ItemIcon $classIcon">
 																				$itemLabel
 																			</div>
@@ -543,7 +487,8 @@
 		<%
 		if(isClosed && !canEdit)	isShowPost = false ;
 		int nb = 0;
-		List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
+		List checkeds = null;
+		if(canEdit) checkeds = uicomponent.getListChecked(uicomponent.pageSelect)
 		if(checkeds == null) checkeds = new ArrayList<String>();
 		
 		if(posts != null && posts.size() > 0 && isShowPost) {
@@ -554,7 +499,7 @@
 			for(post in posts) {
 			  String postId = post.getId();
 				String owner = post.getOwner() ;
-				CommonContact contact = uiform.getPersonalContact(owner) ;
+				ForumContact contact = uiform.getPersonalContact(owner) ;
 				String avatarUrl = "" ;
 				String location = "" ;
 				boolean isCity = false;
@@ -583,12 +528,7 @@
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + postId.substring(15);
-				User user = userInfo.getUser() ;
-				String joinDate = ""; 
-				if(user != null){
-					Date userCreated = user.getCreatedDate() ;
-					joinDate = ForumUtils.getFormatDate(shortDateFormat, userCreated) ;
-				}
+				String joinDate = ForumUtils.getFormatDate(shortDateFormat, userInfo.getJoinedDate()) ;
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
@@ -679,8 +619,11 @@
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
+									String idAv = "avatar" + nb;
+									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
+									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="125px"/>
+								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload"/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes(uiformId + ".label.JoinDate");%>: $joinDate</div>
@@ -724,7 +667,7 @@
 										    isChecked = "checked=\"checked\"";
 										  } 
 										%>
-										<input type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
+										<input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
 									</div>
 									<div style="clear: left;"><span></span></div>
 								</div>
@@ -760,7 +703,6 @@
 								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
 								 		 String pathAtt = urlFile.replaceAll("&","(omu)");
-								 		 ++nb;
 								%>
 										<div class="AttachmentBox">
 										<% if(typeFile.indexOf("image") >= 0) {
@@ -833,7 +775,7 @@
 											if(checked == 0){ 
 												if(action.equals("Edit")||action.equals("Delete"))continue ;
 											}
-											if(isLock&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
+											if(isNotReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
 											String actionLink = uicomponent.event(action,uiformId,postId);
 									%>
 										<div class="ActionButton">

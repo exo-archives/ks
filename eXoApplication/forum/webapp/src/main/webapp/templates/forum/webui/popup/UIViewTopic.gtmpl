@@ -1,11 +1,10 @@
 <%
   import org.exoplatform.web.application.JavascriptManager;
-	import org.exoplatform.services.organization.User;
 	import org.exoplatform.forum.service.UserProfile;
   import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.webui.UIForumPageIterator;	
 	import org.exoplatform.forum.service.Post;
-	import org.exoplatform.ks.common.CommonContact;
+	import org.exoplatform.forum.service.user.ForumContact;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.ForumSessionUtils;
@@ -39,9 +38,10 @@
 		String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 		String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+		int nb = 0;
 		for(post in posts) {
 			String owner = post.getOwner() ;
-			CommonContact contact = uiform.getPersonalContact(owner) ;
+			ForumContact contact = uiform.getPersonalContact(owner) ;
 			String avatarUrl = uiform.getAvatarUrl(contact) ;
 			String location = "" ;
 			boolean isCity = false;
@@ -68,13 +68,9 @@
 			}
 			
 			String idMessage = "Id" + post.getId().substring(15);
-			User user = ForumSessionUtils.getUserByUserId(owner) ; 
-			//User user = userInfo.getUser() ;
-			String joinDate = ""; 
-			if(user != null){
-				Date userCreated = user.getCreatedDate() ;
-				joinDate = ForumUtils.getFormatDate(shortDateFormat, userCreated) ;
-			}
+			Date joinedDate =  userInfo.getJoinedDate();
+			String joinDate = "";
+			if(joinedDate != null) joinDate = ForumUtils.getFormatDate(shortDateFormat, joinedDate) ;
 			String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 			boolean isAnd = false ;
 			if(post.getIsHidden()) {
@@ -120,8 +116,11 @@
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
+									String idAv = "avatar" + nb;
+									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
+									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);" width="125px"/>
+								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload"/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>

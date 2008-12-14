@@ -47,6 +47,7 @@
 	  <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 	  <div style="clear: right; height: 0px;"><span></span></div>
 	</div>
+	<div style="display: none;" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
 	<div class="ForumContainer">
 		<div class="ForumCategory">
 			<div class="ForumToolbar">
@@ -151,7 +152,7 @@
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
-									long max_page = uicomponent.getMaxPagePost(topic.getPath()) ;
+									long max_page = uicomponent.getSizePost(topic.getPath()) ;
 									String iconClassTopic = topic.getIcon();
 									if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
@@ -293,13 +294,13 @@
 																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
 																		if(tagId.equals(tag.getId())){
 																%>
-																			<div class="classDisable" title="$tagNameTitle">	 
+																			<div class="MenuItem" title="$tagNameTitle">	 
 																				<div class="ItemIcon TagIcon ${color}TagIcon  DisableMenuItem">
 																					<span>$tagName</span>
 																				</div>
 																			</div>
 																<%  } else{ %>
-																			<a class="classDisable" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
+																			<a class="MenuItem" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
 																				<div class="ItemIcon TagIcon ${color}TagIcon">
 																					<span>$tagName</span>
 																				</div>

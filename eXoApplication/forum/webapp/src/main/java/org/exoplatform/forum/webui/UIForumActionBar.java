@@ -47,7 +47,7 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/UIForumActionBar.gtmpl", 
 		events = {
 				@EventConfig(listeners = UIForumActionBar.AddCategoryActionListener.class),
-				//@EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ExportCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.AddForumActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),

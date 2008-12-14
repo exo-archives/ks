@@ -25,6 +25,7 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -93,6 +94,17 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			addChild(new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false ));
 		}
 	}
+	
+	@SuppressWarnings({ "unused", "unchecked" })
+	private List<String> getListSelected(){
+		List<String> listId = new ArrayList<String>();
+		UIFormCheckBoxInput<Boolean> checkBox = null;
+		for(UIComponent component : ((UIFormInputWithActions)this.getChildById(LIST_CATEGORIES)).getChildren()){
+			checkBox = (UIFormCheckBoxInput<Boolean>)component;
+			if(checkBox.isChecked()) listId.add(checkBox.getId());
+		}
+		return listId;
+	} 
 
 	static public class SaveActionListener extends EventListener<UIExportForm> {
 		@SuppressWarnings("unchecked")

@@ -25,8 +25,8 @@ import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
-import org.exoplatform.ks.common.CommonContact;
-import org.exoplatform.ks.common.user.ContactProvider;
+import org.exoplatform.forum.service.user.ContactProvider;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -188,12 +188,12 @@ public class ForumSessionUtils {
   	return erroUser;
   }
   
-  public static CommonContact getPersonalContact(String userId) throws Exception {
+  public static ForumContact getPersonalContact(String userId) throws Exception {
     try {
-    	ContactProvider provider = (ContactProvider) PortalContainer.getComponent(org.exoplatform.ks.common.user.ContactProvider.class) ;
-    	return provider.getCommonContact(userId);
+    	ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
+    	return provider.getForumContact(userId);
     } catch (Exception e) {
-	    return new CommonContact();
+	    return new ForumContact();
     }
   }
   

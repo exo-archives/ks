@@ -2,7 +2,6 @@
 	import org.exoplatform.forum.service.Category; 
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
-	import org.exoplatform.forum.service.Post;
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumSessionUtils; 
@@ -34,6 +33,7 @@
 %>
 <div class="UIForumCategory" style="padding: 2px 10px;">
 <%uiform.begin()%>
+  <div style="display: none;" id="divChecked" checked="0"><span></span></div>
 	<div class="ForumToolbar">
 		<div class="LeftBar">
 			<div class="RightBar">
@@ -42,7 +42,7 @@
 					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(isShowMenu){ %>
 					<div class="SeparatorLine"><span></span></div>
-					<div class="ToolbarActionsContainer" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 3);">
+					<div class="ToolbarActionsContainer" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 5);">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 							<div class="LeftOverButton">
 								<div class="RightOverButton">
@@ -72,7 +72,7 @@
 													<div class="UIRightPopupMenuContainer">
 														<%
 															for(action in uicomponent.getActions()) {
-																if(action.indexOf("Link") > 0 || action.indexOf("Search") >= 0 || action.indexOf("AddBook") >= 0 || action.indexOf("AddWatching") >= 0) continue ;
+																//if(action.indexOf("Link") > 0 || action.indexOf("Search") >= 0 || action.indexOf("AddBook") >= 0 || action.indexOf("AddWatching") >= 0) continue ;
 																String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
 																String classIconItem = action + "Icon";
 																String link = uicomponent.event(action,uicomponent.id,"category") ;
@@ -85,7 +85,7 @@
 																 </a>
 														<%	} else {%>
 																	<a class="MenuItem" href="javaScript: void(0)"
-																		onclick="$link">	 
+																		onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}">	 
 																		<div class="ItemIcon $classIconItem">
 																			<%=nameItem%>
 																		</div>

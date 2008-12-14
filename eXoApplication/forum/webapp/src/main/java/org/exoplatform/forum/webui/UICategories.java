@@ -33,6 +33,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -60,7 +61,7 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UICategories extends UIContainer	{
-	protected ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	protected ForumService forumService ;
 	private Map<String, List<Forum>> mapListForum = new HashMap<String, List<Forum>>() ;
 	private Map<String, Topic> maptopicLast = new HashMap<String, Topic>() ;
 	private List<Category> categoryList = new ArrayList<Category>() ;
@@ -70,12 +71,12 @@ public class UICategories extends UIContainer	{
 	private boolean isRenderChild = false ;
 	private UserProfile userProfile ;
 	public UICategories() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
 	}
 	
 	public void setIsRenderChild(boolean isRenderChild) {this.isRenderChild = isRenderChild ;}
-	@SuppressWarnings("unused")
-	private boolean getIsRendered() throws Exception {
+	public boolean getIsRendered() throws Exception {
 		this.getChild(UIForumListSearch.class).setRendered(isRenderChild) ;
 		return isRenderChild ;
 	}
@@ -102,20 +103,27 @@ public class UICategories extends UIContainer	{
 		}
 		return list;
 	}
+	
 	public List<Forum> getForums(String categoryId) { return mapListForum.get(categoryId) ; }
 	public Map<String, Forum> getAllForum() { 
 		return AllForum ;
 	}
 		
-	
 	private List<Category> getCategoryList() throws Exception {
 		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-		this.categoryList = forumService.getCategories(ForumSessionUtils.getSystemProvider());
-		if(this.categoryList.size() > 0)
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			categoryList = forumService.getCategories(sProvider);
+    } catch (Exception e) {
+    	categoryList = new ArrayList<Category>();
+    }finally {
+    	sProvider.close();
+    }
+		if(categoryList.size() > 0)
 			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(true) ;
 		else 
 			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(false) ;
-		return this.categoryList;
+		return categoryList;
 	}	
 	
 	public void setIsgetForumList(boolean isGetForumList) { this.isGetForumList = isGetForumList ; }
@@ -124,7 +132,14 @@ public class UICategories extends UIContainer	{
 		List<Forum> forumList = null ;
 		String strQuery = "";
 		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-		forumList = forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, strQuery);
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			forumList = forumService.getForums(sProvider, categoryId, strQuery);
+    } catch (Exception e) {
+    	forumList = new ArrayList<Forum>();
+    }finally {
+    	sProvider.close();
+    }
 		if(mapListForum.containsKey(categoryId)) {
 			mapListForum.remove(categoryId) ;
 		}
@@ -146,29 +161,36 @@ public class UICategories extends UIContainer	{
 			}
 		}
 		if(forum_ == null) {
-			forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId) ;
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				forum_ = forumService.getForum(sProvider, categoryId, forumId) ;
+	    } finally {
+	    	sProvider.close();
+	    }
 		}
 		return forum_ ;
 	}
 	
-	@SuppressWarnings("unused")
 	private Topic getLastTopic(String topicPath) throws Exception {
-		Topic topicLast = new Topic() ;
-		topicLast = maptopicLast.get(topicLast.getId()) ;
-		if(topicLast == null) {
-			topicLast = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
-			if(topicLast != null)maptopicLast.put(topicLast.getId(), topicLast) ;
-		}
-		return topicLast ;
-	}
-	
-	private Topic getTopic(String topicId, String path) throws Exception {
-		Topic topic = new Topic() ;
-		topic = this.maptopicLast.get(topicId) ;
-		if(topic == null) {
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-			String forumHomePath = forumService.getForumHomePath(sProvider) ;
-			topic = forumService.getTopicByPath(sProvider, forumHomePath + "/" + path, false) ;
+		Topic topic = null;
+		if(!ForumUtils.isEmpty(topicPath)) {
+			String topicId = topicPath;
+			if(topicId.indexOf("/") >= 0) topicId = topicId.substring(topicPath.lastIndexOf("/")+1);
+			topic = maptopicLast.get(topicId) ;
+			if(topic == null) {
+				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+				if(topicPath.indexOf("ForumService") < 0){
+					topicPath = forumService.getForumHomePath(sProvider) + "/" + topicPath;
+				}
+				try {
+					topic = forumService.getTopicByPath(sProvider, topicPath, true) ;
+		    } catch (Exception e) {
+					e.printStackTrace();
+				}finally {
+		    	sProvider.close();
+		    }
+				if(topic != null)maptopicLast.put(topic.getId(), topic) ;
+			}
 		}
 		return topic ;
 	}
@@ -181,13 +203,9 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean getIsPrivate(UserProfile userProfile, Category category) throws Exception {
-		String userId = userProfile.getUserId() ;
-		if(userProfile.getUserRole() == 0) return true ;
-		if(category.getOwner().equals(userId)) return true ;
-		String []uesrs = category.getUserPrivate() ;
+	private boolean getIsPrivate(String []uesrs) throws Exception {
 		if(uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
-			return ForumServiceUtils.hasPermission(uesrs, userId) ;
+			return ForumServiceUtils.hasPermission(uesrs, userProfile.getUserId()) ;
 		} else return true ;
 	}
 
@@ -201,6 +219,7 @@ public class UICategories extends UIContainer	{
 				uiCategory.update(uiContainer.getCategory(categoryId), uiContainer.getForumList(categoryId)) ;
 				categoryContainer.updateIsRender(false) ;
 				((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
+				uiContainer.maptopicLast.clear();
 			} catch (Exception e) {
 				Object[] args = { "" };
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
@@ -225,6 +244,7 @@ public class UICategories extends UIContainer	{
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			categories.maptopicLast.clear();
 		}
 	}
 	
@@ -233,7 +253,8 @@ public class UICategories extends UIContainer	{
 			UICategories categories = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
-			Topic topic = categories.getTopic(id[2], path) ;
+			Forum forum = categories.getForumById(id[0], id[1]);
+			Topic topic = categories.getLastTopic(path) ;
 			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			if(topic == null) {
 				Object[] args = { "" };
@@ -246,9 +267,9 @@ public class UICategories extends UIContainer	{
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 				uiForumContainer.setIsRenderChild(false) ;
 				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-				uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
-				uiTopicDetail.setTopicFromCate(id[0], id[1], topic, true) ;
-				uiTopicDetail.setUpdateForum(categories.getForumById(id[0], id[1])) ;
+				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+				uiTopicDetail.setTopicFromCate(id[0], id[1], topic) ;
+				uiTopicDetail.setUpdateForum(forum) ;
 				uiTopicDetail.setIdPostView("lastpost") ;
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1], topic) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
@@ -277,18 +298,19 @@ public class UICategories extends UIContainer	{
 					path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
 				} else {
 					path = path.substring(path.indexOf("//")+2) ;
-					String []id = path.trim().split("/");
-					Topic topic = uiContainer.getTopic(id[2], path) ;
+					Topic topic = uiContainer.getLastTopic(path) ;
 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
 				}
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
 					uiContainer.forumService.saveUserBookmark(sProvider, userName, path, true) ;
+				}catch (Exception e) {
+					e.printStackTrace();
 				}finally {
 					sProvider.close();
 				}
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.setUserProfile() ;
+				forumPortlet.updateUserProfileInfo() ;
 			}
 		}
 	}

@@ -2,6 +2,14 @@
 	padding: 4px 0px;
 }
 
+.UIForumPortlet .UISearchForm .UIFormGrid  {
+	width: 100%;
+}
+
+.UIForumPortlet .UISearchForm .UIFormGrid .UIFormGrid {
+	width: auto;
+}
+
 .UIForumPortlet .UISearchForm td.FieldLabel {
 	/*width: 250px;*/
 	padding: 4px 8px;
@@ -20,12 +28,4 @@
 
 .UIForumPortlet .UISearchForm .InputSearchForm .selectbox {
 	width: 204px;
-}
-
-.UIForumPortlet .UISearchForm .UIFormGrid  {
-	width: 100%;
-}
-
-.UIForumPortlet .UISearchForm .UIFormGrid .UIFormGrid {
-	width: auto;
 }

@@ -21,11 +21,11 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
-import javax.jcr.Session;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.User;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -212,18 +212,17 @@ public interface ForumService {
 	 * @throws Exception the exception
 	 */
 	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
-	
 	/**
 	 * Gets the page topic by user.
 	 * 
 	 * @param sProvider is the SessionProvider
 	 * @param userName the user name
-	 * 
+	 * @param strOrderBy TODO
 	 * @return the page topic by user
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod) throws Exception;
+	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception;
 
 	/**
 	 * Gets the page topic old.
@@ -358,9 +357,8 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId,
-	    String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
-
+	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
+	public long getAvailablePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 	/**
 	 * Gets the page post by user.
 	 * 
@@ -368,11 +366,12 @@ public interface ForumService {
 	 * @param userName the user name
 	 * @param userId TODO
 	 * @param isMod TODO
+	 * @param strQuery TODO
 	 * @return the page post by user
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception;
+	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
 
 	/**
 	 * This method should: 1. Check the user permission 2. Load the Page Post data
@@ -604,12 +603,12 @@ public interface ForumService {
 	 * 
 	 * @param sProvider is the SessionProvider
 	 * @param tagId the tag id
-	 * 
+	 * @param strOrderBy TODO
 	 * @return the topics by tag
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId) throws Exception;
+	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception;
 
 	/**
 	 * Save tag.
@@ -824,7 +823,7 @@ public interface ForumService {
 	 * @throws Exception the exception
 	 */
 	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception;
-
+	public long getNewPrivateMessage(SessionProvider sProvider, String userName) throws Exception ;
 	/**
 	 * Save private message.
 	 * 
@@ -885,8 +884,20 @@ public interface ForumService {
   public List<Post> getNewPosts(int number) throws Exception ;
   
   public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception ;
-  
+  public void updateForumStatistic(SessionProvider systemSession) throws Exception ;
+  public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception ;
+  public void createUserProfile (SessionProvider sysSession, User user) throws Exception ;
+
+  public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception ;
   public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception ;
+  public List<UserProfile> getQuickProfiles(SessionProvider sProvider, List<String> userList) throws Exception ;
+  public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception ;
+  public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
+  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception ;
+  public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception ;
+  public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception  ;
+  public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
+  public void updateForum(String path) throws Exception ;
 }

@@ -25,7 +25,7 @@
 .UIForumPortlet .UIViewMemberProfile .ViewMemberProfileContainer .TitleBar {
 	height: 24px;
 	background-color: #d1d2fe;
-	padding: 6px 16px 0px 12px;
+	padding: 6px 0px 0px 12px;
 	font-weight: bold;
 	line-height: 16px;
 }
@@ -71,4 +71,15 @@
 	text-align: left;
 	cursor: pointer;
 	color: #135bbe;
+}
+/*---------------------------------UIViewPrivateMessageForm--------------------------------------*/
+.UIForumPortlet .UIViewPrivateMessageForm {
+	background-color: #ffffff;
+	padding: 10px 0px;
+	width: 96%;
+	margin: auto;
+}
+
+*html .UIForumPortlet .UIViewPrivateMessageForm {
+	width: 94%;
 }

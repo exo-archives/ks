@@ -38,7 +38,7 @@ public class ForumServiceUtils {
 	public static boolean hasPermission(String[] userGroupMembership, String userId) throws Exception {
 		if(userGroupMembership == null || userGroupMembership.length <= 0 || userGroupMembership[0].equals(" ")) return false;
 		if(Arrays.asList(userGroupMembership).contains(userId)) return true;
-		List<String> users = ForumServiceUtils.getUserPermission(userGroupMembership) ;
+		List<String> users = getUserPermission(userGroupMembership) ;
 		if(users.contains(userId)) return true ;
 		return false ;
 	}
@@ -46,7 +46,8 @@ public class ForumServiceUtils {
 	@SuppressWarnings("unchecked")
 	public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
 		List<String> users = new ArrayList<String> () ;
-		if(userGroupMembership == null || userGroupMembership.length <= 0) return users ; 
+		if(userGroupMembership == null || userGroupMembership.length <= 0 || 
+				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 		for(String str : userGroupMembership) {
 			if(str.indexOf("/") >= 0) {

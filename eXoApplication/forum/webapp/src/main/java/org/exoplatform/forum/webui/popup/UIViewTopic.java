@@ -18,7 +18,9 @@ package org.exoplatform.forum.webui.popup;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 
@@ -31,10 +33,11 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -57,12 +60,14 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIViewTopic extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private Topic topic ;
 	private JCRPageList pageList ;
 	private UserProfile userProfile ;
 	private long pageSelect ;
+	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	public UIViewTopic() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator") ;
 	}
 	public void activate() throws Exception {	}
@@ -83,10 +88,33 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		int l = id.length ;
 		pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2], topic.getId(), "", "", "", userLogin)	; 
 		long maxPost = this.userProfile.getMaxPostInPage() ;
-		if(maxPost < 0) maxPost = 1 ;
+		if(maxPost <= 0) maxPost = 10 ;
 		pageList.setPageSize(maxPost) ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
+		
+	}
+	
+	private void updateUserProfiles(List<Post> posts) throws Exception {
+		List<String> userNames = new ArrayList<String>() ;
+		for(Post post : posts) {
+			if(!userNames.contains(post.getOwner())) {
+				userNames.add(post.getOwner()) ;
+			}
+		}
+		if(userNames.size() > 0) {
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				List<UserProfile> profiles = forumService.getQuickProfiles(sProvider, userNames) ;
+				for(UserProfile profile : profiles) {
+					mapUserProfile.put(profile.getUserId(), profile) ;
+				}
+			}catch(Exception e) {
+				e.printStackTrace() ;
+			}finally {
+				sProvider.close() ;
+			}
+		}
 	}
 	
 	@SuppressWarnings({ "unused", "unchecked" })
@@ -99,17 +127,9 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			this.pageSelect = availablePage ;
 			forumPageIterator.setSelectPage(availablePage);
 		}
-		if(this.pageSelect < 1) this.pageSelect = 1 ;
-		List<Post> posts = null;
-		while(posts == null && pageSelect >= 1){
-			try {
-				posts = pageList.getPage(pageSelect) ;
-			} catch (Exception e) {
-				--pageSelect;
-				posts = null ;
-			}
-		}
+		List<Post> posts = pageList.getPage(pageSelect);
 		if(posts == null) posts = new ArrayList<Post>();
+		updateUserProfiles(posts) ;
 		return posts ;
 	}
 	
@@ -122,13 +142,21 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserInfo(String userName) throws Exception {
-		return this.forumService.getUserInfo(ForumSessionUtils.getSystemProvider(), userName);
+		UserProfile profile = mapUserProfile.get(userName);
+		if(profile == null ){
+			profile = new UserProfile();
+			profile.setUserId(userName);
+			profile.setUserTitle("User");
+			profile.setUserRole((long)2);
+		}
+		return profile;
 	}
+	
 	@SuppressWarnings("unused")
-	private CommonContact getPersonalContact(String userId) throws Exception {
-		CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
+	private ForumContact getPersonalContact(String userId) throws Exception {
+		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new CommonContact() ;
+			contact = new ForumContact() ;
 		}
 		return contact ;
 	}
@@ -154,7 +182,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(CommonContact contact) throws Exception {
+	private String getAvatarUrl(ForumContact contact) throws Exception {
 //	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 //	try {
 //		ContactAttachment attachment = contact.getAttachment() ; 
@@ -164,7 +192,6 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 //	} catch (NullPointerException e) {
 //		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //	}
-		CommonContact common = new CommonContact() ;
 	if (contact.getAvatarUrl() == null ) {
 		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 	} else {

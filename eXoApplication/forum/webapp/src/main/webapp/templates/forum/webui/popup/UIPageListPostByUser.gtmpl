@@ -10,7 +10,9 @@
 	if(userProfile.getUserRole() == 0)isAdmin = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
+	
 %>
+
 <div class="UIPageListPostByUser" id="$uicomponent.id">
 	<div class="UITopicContainer">
 	 	<div class="UIForumContainer">
@@ -24,8 +26,8 @@
 						<thead>
 							<tr>
 								<th width="40px"></th>
-								<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
-								<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div></a></th>
+								<th width="120px"><a href="<%=uicomponent.event("SetOrderBy","createdDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div></a></th>
 								<%if(isAdmin){ %>
 									<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
 									<th width="40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>

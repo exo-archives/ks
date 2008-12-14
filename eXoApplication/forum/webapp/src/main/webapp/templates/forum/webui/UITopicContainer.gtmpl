@@ -1,11 +1,8 @@
 <%
-	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.service.Forum ;
-	import org.exoplatform.forum.service.JCRPageList ;
-	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.webui.UICategory ;
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
@@ -17,8 +14,11 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
 	Forum forum = uicomponent.getForum() ;
-	
-	if(forum == null) {
+	if(forum != null)  {
+	uicomponent.initPage() ;
+	}
+	if(forum == null || uicomponent.isNull()) {
+	  uicomponent.setNull(false);
 %>
 <div class="UITopicContainer">
 	 <%uiform.begin();%>
@@ -30,7 +30,7 @@
 <%	
 	return;
  }
-	uicomponent.initPage() ;
+	List topics = uicomponent.getTopicPageLits() ;
 	String forumName = forum.getForumName();
 	String subForumName = ForumUtils.getSubString(forumName, 35);
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
@@ -42,21 +42,7 @@
 	boolean canEdit = false ;
 	if(isShowMenu) {
 		if(userProfile.getUserRole() == 0) canEdit = true;
-		if(userProfile.getUserRole() == 1) {
-			String []moderatorsByUser = userProfile.getModerateForums() ;
-			if(moderatorsByUser == null || moderatorsByUser.length <= 0) canEdit = true;
-			else {
-				for(forumId in moderatorsByUser) {
-					if(forumId.indexOf(forum.getId()) >= 0) {
-						canEdit = true;
-						break ;
-					}
-				}
-			}
-		}
-		if(!canEdit) {
-			canEdit = ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()) ;
-		}
+		if(!canEdit) canEdit = uicomponent.isModerator;
 	}
 	
 	boolean isLock = forum.getIsLock() ;
@@ -144,8 +130,8 @@
 		  _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");
 		%>
 		<div style="clear: left;"><span></span></div>
-
 	</div>
+	<div style="display: none;" id="divChecked" checked="<%=uicomponent.getTotalChecked()%>"><span></span></div>
 	<div class="ForumContainer">
 		<div class="ForumCategory">
 			<div class="ForumToolbar">
@@ -200,7 +186,7 @@
 														 <% 
 														 		} else {%>
 														 			<a class="MenuItem" href="javaScript: void(0)"
-														 				onclick="$link">	 
+														 				onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">	 
 																		<div class="ItemIcon $classIcon">
 																			$itemLabel
 																		</div>
@@ -339,7 +325,7 @@
 														 			classDisable = "DisableMenuItem" ;
 														 		}
 														 %>
-																<a class="$classDisable" href="$link">	 
+																<a class="MenuItem $classDisable " href="$link">	 
 																	<div class="ItemIcon $classIcon">
 																		$itemLabel
 																	</div>
@@ -388,7 +374,6 @@
 						<tbody>
 							<%
 							int rCNB = 0;
-							List topics = uicomponent.getTopicPageLits() ;
 							List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 							if(checkeds == null) checkeds = new ArrayList<String>();
 							if(!topics.isEmpty()) {
@@ -401,14 +386,22 @@
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
-									JCRPageList pageList = uicomponent.getPageListPost(topicId) ;
-									long max_page = pageList.getAvailablePage() ;
+									long max_page = uicomponent.getSizePost(topic) ;
 									String iconClassTopic = topic.getIcon();
 									if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
 									String postNewBy = topic.getLastPostBy() ;
 									Date postDate = topic.getLastPostDate() ;
+									
+									long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
+									String title = "TitleNorman";
+									String newPost = "NoNew"; 
+									if(lastAccess < postDate.getTime()) {
+										title = "TitleBold";
+										newPost = "New";									
+									}
+									
 									postDate.setTime(postDate.getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
 									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
@@ -419,14 +412,9 @@
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
 									String number = "1";
-									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
-									String title = "TitleBold";
-									String newPost = "New";
+									
 									String hot = ""; 
-									if(isReadTopic) {
-										title = "TitleNorman";
-										newPost = "NoNew"; 
-									} 
+									 
 									if(topic.getPostCount() > 30) hot = "Hot"; 
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
 									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
@@ -457,7 +445,7 @@
 								  String classSelect = "";
 								  if(checkeds.contains(topicId)){
 								    classSelect = "SelectedItem";
-								  } 
+								  }
 							%>
 								<tr class="$classRow $classSelect">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
@@ -545,7 +533,7 @@
 																		String tagNameTitle = tag.getName() ;
 																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
 																%>
-																			<a class="classDisable" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
+																			<a class="MenuItem" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
 																				<div class="ItemIcon TagIcon ${color}TagIcon">
 																					<span>$tagName</span>
 																				</div>

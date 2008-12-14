@@ -8,15 +8,15 @@
 	 	 uiform.setUpdateForumLinks() ;
 	 %>
 		<div class="HorizontalLayout">
-			<div class="FormContainer">
-				<table class="UIFormGrid">
+			<div class="FormContainer" align="right">
+				<table class="UIFormGrid" align="right">
 					<tbody>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</td>
-							<td>
-								<div style="float:left;">
+							<td width="242px;">
 								<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
-								</div>
+							</td>
+							<td>
 								<div class="UIActionForum" onclick="script:scroll(0,0)">
 									<div class="NormalButtom">
 										<div class="ButtonLeft">
@@ -28,13 +28,12 @@
 										</div>
 									</div>
 								</div>
-								<div style="clear: left;"><span></span></div>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
+
 		</div>
-		<div style="clear: right;"><span></span></div>
 	<%uiform.end()%>
 </div>

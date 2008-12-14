@@ -39,7 +39,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
-import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -50,32 +50,25 @@ import org.exoplatform.webui.event.EventListener;
  * 14 Apr 2008, 08:22:52	
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class,
 		template =	"app:/templates/forum/webui/UIForumListSearch.gtmpl",
 		events = {
 			@EventConfig(listeners = UIForumListSearch.OpentContentActionListener.class),
-			@EventConfig(listeners = UIForumListSearch.CloseActionListener.class),
-			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
+			@EventConfig(listeners = UIForumListSearch.CloseActionListener.class)
 		}
 )
-public class UIForumListSearch extends UIForumKeepStickPageIterator {
+public class UIForumListSearch extends UIContainer {
 	private List<ForumSearch> listEvent = null ;
-	private JCRPageList pageList ;
-	private List<ForumSearch> list = null;
 	private boolean isShowIter = true;
-	public UIForumListSearch() throws Exception {}
+	 public final String SEARCH_ITERATOR = "forumSearchIterator";
+	 private JCRPageList pageList ;
+	 private UIForumPageIterator pageIterator ;
+	public UIForumListSearch() throws Exception {
+		pageIterator = addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR);
+	}
 	
 	public void setListSearchEvent(List<ForumSearch> listEvent) {
 		this.listEvent = listEvent ;
-		pageList = new ForumPageList(10, listEvent.size());
-		pageList.setPageSize(10);
-		this.updatePageList(pageList);
-		isShowIter = true;
-		try {
-			if(this.getInfoPage().get(3) <= 1) isShowIter = false;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		pageIterator.setSelectPage(1);
 	}
 	
 	public boolean getIsShowIter() {
@@ -84,16 +77,18 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unchecked")
 	public List<ForumSearch> getListEvent() {
-		list = new ArrayList<ForumSearch>();
+		pageList = new ForumPageList(10, listEvent.size());
+		pageList.setPageSize(10);
+		pageIterator.updatePageList(pageList);
+		isShowIter = true;
+		if(pageList.getAvailablePage() <= 1) isShowIter = false;
+		long pageSelect = pageIterator.getPageSelected();
+		List<ForumSearch>list = new ArrayList<ForumSearch>();
 		try {
-			list.addAll(this.pageList.getPageSearch(pageSelect, this.listEvent)) ;
-			if(list.isEmpty()){
-				while(list.isEmpty() && pageSelect > 1) {
-					list.addAll(this.pageList.getPageSearch(--pageSelect, this.listEvent)) ;
-				}
-			}
+			list.addAll(pageList.getPageSearch(pageSelect, this.listEvent)) ;
 		} catch (Exception e) {
 		}
+		pageSelect = pageList.getCurrentPage();
 		return list ;
 	}
 	
@@ -105,6 +100,7 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 	}
 	
 	private boolean canView(Category category, Forum forum, Topic topic, Post post, UserProfile userProfile) throws Exception{
+		if(userProfile.getUserRole() == 0) return true;
 		boolean canView = true;
 		boolean isModerator = false;
 		if(category == null) return false;
@@ -118,7 +114,7 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 		// check forum
 		if(forum != null){
 			listUsers = forum.getModerators();
-			if(userProfile.getUserRole() == 0 || (listUsers.length > 0 && listUsers[0].trim().length() > 0 && 
+			if(userProfile.getUserRole() == 1 && (listUsers.length > 0 && listUsers[0].trim().length() > 0 && 
 					ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId()))) {
 				isModerator = true;
 				canView = true;
@@ -208,10 +204,11 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 						uiForumContainer.setIsRenderChild(false) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-						uiTopicDetail.setTopicFromCate(id[length-3], id[length-2] , topic, true) ;
+						uiTopicDetail.setTopicFromCate(id[length-3], id[length-2], topic) ;
 						uiTopicDetail.setUpdateForum(forum) ;
 						uiTopicDetail.setIdPostView("top") ;
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
+						forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}
@@ -231,10 +228,6 @@ public class UIForumListSearch extends UIForumKeepStickPageIterator {
 				Object[] args = { };
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", args, ApplicationMessage.WARNING)) ;
-				/*UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);*/
 				for(ForumSearch search : uiForm.listEvent){
 					if(search.getId().equals(objId)){
 						uiForm.listEvent.remove(search);

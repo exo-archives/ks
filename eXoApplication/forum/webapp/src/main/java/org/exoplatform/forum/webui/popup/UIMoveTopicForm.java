@@ -19,6 +19,8 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.ItemExistsException;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -58,7 +60,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	private ForumService forumService ;
 	private String forumId ;
 	private List<Topic> topics ;
 	private List<Category> categories;
@@ -82,7 +84,9 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	  }
   }
 	
-	public UIMoveTopicForm() throws Exception {}
+	public UIMoveTopicForm() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
@@ -151,14 +155,17 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 						UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class) ;
 						forumContainer.setIsRenderChild(false) ;
 						String[] temp = forumPath.split("/") ;
-						topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId(), false) ;
+						topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId()) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					} else {
 						UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 					}
+        } catch (ItemExistsException e) {
+        	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+        	uiApp.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
+        	return;
         } catch (Exception e) {
-        	sProvider.close();
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIMoveTopicForm.msg.parent-deleted", null, ApplicationMessage.WARNING)) ;
         	return;

@@ -2,7 +2,6 @@
 	import org.exoplatform.forum.service.Category; 
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
-	import org.exoplatform.forum.service.Post; 
 	import org.exoplatform.forum.service.ForumServiceUtils ;
 	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumUtils;
@@ -37,18 +36,18 @@
 		<% // Start ForumCategory%>
 		<%
 			List categories = uicomponent.getCategoryList();
-			 for(category in categories) {
-				 if(uicomponent.getIsPrivate(userProfile,category)) {
-					 String title = category.getCategoryName();
-					 String categoryId = category.getId();
-					if(uicomponent.userProfile.getUserRole() < 3){
-						 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
-					} else {
-						actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
-					}
-					link = uicomponent.event("OpenCategory", categoryId) ;
-					url = uicomponent.url("OpenCategory", categoryId);
-					url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory" );
+			  for(category in categories) {
+				  if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
+					  String title = category.getCategoryName();
+					  String categoryId = category.getId();
+						if(uicomponent.userProfile.getUserRole() < 3){
+							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
+						} else {
+							actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
+						}
+						link = uicomponent.event("OpenCategory", categoryId) ;
+						url = uicomponent.url("OpenCategory", categoryId);
+						url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory" );
 		 %>
 			<div class="UIForumCategory">
 				<div class="ForumToolbar">
@@ -145,7 +144,7 @@
 											}
 											titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle);
 											if(topicNewPost.getIsClosed()) {
-												if(ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin) {
+												if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 													urlLastPost = uicomponent.url("OpenLastTopicLink", topicPath) ;
 													urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink" );
@@ -154,7 +153,7 @@
 												}
 											} else {
 												if(forum.getIsModerateTopic()) {
-													if(topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin){
+													if(isAdmin || topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin)){
 														openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 														urlLastPost = uicomponent.url("OpenLastTopicLink", topicPath) ;
 														urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink" );

@@ -50,15 +50,15 @@
 
 	<nodeType	name="exo:forumAttachment" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 	 	<supertypes>
-	 	  <supertype>nt:file</supertype>
+	 		<supertype>nt:file</supertype>
 	 	</supertypes>
 	 	<propertyDefinitions>
-  	  <propertyDefinition name="exo:fileName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-  		<valueConstraints/>
-  	  </propertyDefinition>	  		
-  	</propertyDefinitions>	
-  </nodeType>	 
-  
+			<propertyDefinition name="exo:fileName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<valueConstraints/>
+			</propertyDefinition>				
+		</propertyDefinitions>	
+	</nodeType>	 
+	
 	<nodeType name="exo:post" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
 			<supertype>nt:base</supertype>
@@ -431,78 +431,150 @@
 			<propertyDefinition name="exo:userId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
-			<propertyDefinition name="exo:userTitle" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:fullName" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:userRole" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:firstName" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:signature" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:lastName" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:totalPost" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:email" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:totalTopic" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:userTitle" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>User</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			
-			<propertyDefinition name="exo:moderateForums" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+			<propertyDefinition name="exo:userRole" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>2</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:moderateTopics" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+			<propertyDefinition name="exo:signature" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:readTopic" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+			<propertyDefinition name="exo:totalPost" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>0</defaultValue>
+				</defaultValues>
+			</propertyDefinition>
+			<propertyDefinition name="exo:totalTopic" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>0</defaultValue>
+				</defaultValues>
+			</propertyDefinition>			
+			<propertyDefinition name="exo:moderateForums" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
+			</propertyDefinition>
+			<propertyDefinition name="exo:readTopic" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
 			</propertyDefinition>
 			<propertyDefinition name="exo:bookmark" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>				
+			</propertyDefinition>
+			<propertyDefinition name="exo:lastLoginDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
-
-			<propertyDefinition name="exo:lastLoginDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:joinedDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
 			<propertyDefinition name="exo:lastPostDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
-			<propertyDefinition name="exo:isDisplaySignature" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:isDisplaySignature" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:isDisplayAvatar" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:isDisplayAvatar" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>true</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:newMessage" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:newMessage" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>0</defaultValue>
+				</defaultValues>
+			</propertyDefinition>			
+			<propertyDefinition name="exo:timeZone" requiredType="Double" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>0.0</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:totalMessage" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:timeFormat" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>hh:mm a</defaultValue>
+				</defaultValues>				
+			</propertyDefinition>		
+			<propertyDefinition name="exo:shortDateformat" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>MM/dd/yyyy</defaultValue>
+				</defaultValues>
+			</propertyDefinition>		
+			<propertyDefinition name="exo:longDateformat" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>DDD,MMM dd,yyyy</defaultValue>
+				</defaultValues>
+			</propertyDefinition>
+			<propertyDefinition name="exo:maxPost" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>10</defaultValue>
+				</defaultValues>
+			</propertyDefinition>
+			<propertyDefinition name="exo:maxTopic" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>10</defaultValue>
+				</defaultValues>
+			</propertyDefinition>
+			<propertyDefinition name="exo:isShowForumJump" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>true</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
 			
-			<propertyDefinition name="exo:timeZone" requiredType="Double" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
+			<propertyDefinition name="exo:isBanned" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
-			</propertyDefinition>
-			<propertyDefinition name="exo:timeFormat" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>		
-			<propertyDefinition name="exo:shortDateformat" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>		
-			<propertyDefinition name="exo:longDateformat" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-			<propertyDefinition name="exo:maxPost" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-			<propertyDefinition name="exo:maxTopic" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-			<propertyDefinition name="exo:isShowForumJump" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-			
-			<propertyDefinition name="exo:isBanned" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
 			<propertyDefinition name="exo:banUntil" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
@@ -521,7 +593,7 @@
 			</propertyDefinition>
 		</propertyDefinitions>
 		<childNodeDefinitions>
-			<childNodeDefinition	name="*" defaultPrimaryType="exo:privateMessage" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
+			<childNodeDefinition name="*" defaultPrimaryType="exo:privateMessage" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
 				<requiredPrimaryType>exo:privateMessage</requiredPrimaryType>
 				</requiredPrimaryTypes>
@@ -547,6 +619,9 @@
 				<valueConstraints/>
 			</propertyDefinition>
 			<propertyDefinition name="exo:mostUsersOnline" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:activeUsers" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
 		</propertyDefinitions>
@@ -579,16 +654,75 @@
 	</nodeType>	 	 	 	
 	
 	<nodeType name="exo:forumWatching" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
-    <propertyDefinitions>
-      <propertyDefinition name="exo:emailWatching" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="exo:userWatching" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
-        <valueConstraints/>
-      </propertyDefinition>
-      <propertyDefinition name="exo:rssWatching" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
-  			<valueConstraints/>
-  		</propertyDefinition>  		        
-    </propertyDefinitions>
-  </nodeType>
+		<propertyDefinitions>
+			<propertyDefinition name="exo:emailWatching" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:userWatching" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:rssWatching" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>							
+		</propertyDefinitions>
+	</nodeType>
+	
+	<nodeType name="exo:userProfiles" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	  <supertypes>
+		  <supertype>nt:base</supertype>
+	  </supertypes>	 
+	  <childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:userProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:userProfile</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+		</childNodeDefinitions>
+	</nodeType>
+	
+	<nodeType name="exo:userProfileHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	 <supertypes>
+		<supertype>nt:base</supertype>
+	 </supertypes>	 
+	 <childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:userProfiles" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:userProfiles</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+		</childNodeDefinitions>
+	</nodeType>
+	
+	<nodeType name="exo:forumHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	  <supertypes>
+		  <supertype>nt:base</supertype>
+	  </supertypes>	 
+	  <childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:administration" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:administration</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:userProfileHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:userProfileHome</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumStatistic" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:forumStatistic</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumTag" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:forumTag</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumCategory" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:forumCategory</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>			
+		</childNodeDefinitions>
+	</nodeType>
 </nodeTypes>
