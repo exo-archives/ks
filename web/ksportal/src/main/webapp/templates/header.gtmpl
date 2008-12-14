@@ -23,14 +23,14 @@
 					<div class="RightContainer">
 						<div class="CenterContainer">
 						<% if(isLogin){ %>
-							<div class="TextAcount">Welcome : <span style="font-weight: bold;">$userLogin</span></div>
+							<div class="TextAcount">Welcome <span style="font-weight: bold;">$userLogin</span></div>
 						<% }else { %>	
 							<div class="TextAcount">Demo accounts: <span style="font-weight: bold;">demo/exo, admin/exo</span></div>
 						<% } %>
 								<a class="ActionButton"  href="/portal/public/classic/register">
 								<div class="LeftButton">
 									<div class="RightButton">
-										<div class="CenterButton">Your account</div>
+										<div class="CenterButton">Sign up for demo</div>
 									</div>
 								</div>
 								</a>
@@ -46,7 +46,7 @@
 								<a class="ActionButton" href="$signOutAction">
 									<div class="LeftButton">
 										<div class="RightButton">
-											<div class="CenterButton">Sign out</div>
+											<div class="CenterButton">log out</div>
 										</div>
 									</div>
 								</a>
