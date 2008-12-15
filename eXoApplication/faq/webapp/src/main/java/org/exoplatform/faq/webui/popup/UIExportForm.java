@@ -14,6 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 
 import org.exoplatform.container.PortalContainer;
@@ -81,63 +82,78 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				Node categoryNode = service.getCategoryNodeById(exportForm.objectId, sessionProvider);
 				sessionProvider.close();
 				Session session = categoryNode.getSession();
-			    DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class) ;
-			    InputStreamDownloadResource dresource ;
-			    ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
-	
+		    DownloadService dservice = exportForm.getApplicationComponent(DownloadService.class) ;
+		    InputStreamDownloadResource dresource ;
+		    ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
+		    File file = null;
+		    List<File> listFiles = new ArrayList<File>();
+		    Writer writer = null;
+		    List<String> listQuestionPath = new ArrayList<String>();
+		    if(exportForm.objectId != null){
 			    session.exportSystemView(categoryNode.getPath(), bos, false, false ) ;
-			    
-			    // test view bos:
-			    List<File> listFiles = new ArrayList<File>();
-			    File file = new File(categoryNode.getName() + ".xml");
+			    file = new File(categoryNode.getName() + ".xml");
 			    file.deleteOnExit();
 		    	file.createNewFile();
-			    Writer writer = new BufferedWriter(new FileWriter(file));
+			    writer = new BufferedWriter(new FileWriter(file));
 			    writer.write(bos.toString());
 		    	writer.close();
 		    	listFiles.add(file);
-			    int i = 1;
-			    for(String path : service.getListPathQuestionByCategory(exportForm.objectId, sessionProvider)){
-			    	file =  new File("Question" + i + "_" + categoryNode.getName() + ".xml");
-			    	file.deleteOnExit();
+		    	listQuestionPath.addAll(service.getListPathQuestionByCategory(exportForm.objectId, sessionProvider));
+		    } else {
+		    	NodeIterator nodeIterator = categoryNode.getNodes();
+		    	Node node = null;
+		    	listQuestionPath.addAll(service.getListPathQuestionByCategory(null, sessionProvider));
+		    	while(nodeIterator.hasNext()){
+		    		node = nodeIterator.nextNode();
+		    		bos = new ByteArrayOutputStream();
+		    		session.exportSystemView(node.getPath(), bos, false, false ) ;
+				    file = new File(node.getName() + ".xml");
+				    file.deleteOnExit();
 			    	file.createNewFile();
-			    	writer = new BufferedWriter(new FileWriter(file));
-			    	bos = new ByteArrayOutputStream();
-			    	session.exportSystemView(path, bos, false, false);
-			    	writer.write(bos.toString());
+				    writer = new BufferedWriter(new FileWriter(file));
+				    writer.write(bos.toString());
 			    	writer.close();
 			    	listFiles.add(file);
-			    	i ++;
-			    }
-			    // tao file zip:
-			    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-			    int byteReads;
-			    byte[] buffer = new byte[4096]; // Create a buffer for copying
-			    FileInputStream inputStream = null;
-			    ZipEntry zipEntry = null;
-			    for(File f : listFiles){
-			    	inputStream = new FileInputStream(f);
-			    	zipEntry = new ZipEntry(f.getPath());
-			    	zipOutputStream.putNextEntry(zipEntry);
-			    	while((byteReads = inputStream.read(buffer)) != -1)
-			    		zipOutputStream.write(buffer, 0, byteReads);
-			    	inputStream.close();
-			    }
-			    zipOutputStream.close();
-			    file = new File("exportCategory.zip");
-			    InputStream fileInputStream = new FileInputStream(file);
-		        dresource = new InputStreamDownloadResource(fileInputStream, "text/xml") ;
-		        typeFIle = ".zip";
-		        /*ValidatorDataInput validatorDataInput = new ValidatorDataInput();
-		        if(!validatorDataInput.fckContentIsNotEmpty(fileName)){
-			        if(exportForm.objectId == null) fileName = categoryNode.getName();
-			        else fileName = categoryNode.getProperty("exo:name").getString();
-		        }*/
-		        
-		        dresource.setDownloadName(fileName + typeFIle);
-		        
-		        String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource)) ;
-		        event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
+			    	listQuestionPath.addAll(service.getListPathQuestionByCategory(node.getName(), sessionProvider));
+		    	}
+		    }
+		    int i = 1;
+		    for(String path : listQuestionPath){
+		    	file =  new File("Question" + i + "_" + categoryNode.getName() + ".xml");
+		    	file.deleteOnExit();
+		    	file.createNewFile();
+		    	writer = new BufferedWriter(new FileWriter(file));
+		    	bos = new ByteArrayOutputStream();
+		    	session.exportSystemView(path, bos, false, false);
+		    	writer.write(bos.toString());
+		    	writer.close();
+		    	listFiles.add(file);
+		    	i ++;
+		    }
+		    // tao file zip:
+		    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+		    int byteReads;
+		    byte[] buffer = new byte[4096]; // Create a buffer for copying
+		    FileInputStream inputStream = null;
+		    ZipEntry zipEntry = null;
+		    for(File f : listFiles){
+		    	inputStream = new FileInputStream(f);
+		    	zipEntry = new ZipEntry(f.getPath());
+		    	zipOutputStream.putNextEntry(zipEntry);
+		    	while((byteReads = inputStream.read(buffer)) != -1)
+		    		zipOutputStream.write(buffer, 0, byteReads);
+		    	inputStream.close();
+		    }
+		    zipOutputStream.close();
+		    file = new File("exportCategory.zip");
+		    InputStream fileInputStream = new FileInputStream(file);
+        dresource = new InputStreamDownloadResource(fileInputStream, "text/xml") ;
+        typeFIle = ".zip";
+        
+        dresource.setDownloadName(fileName + typeFIle);
+        
+        String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource)) ;
+        event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
 			
 			} catch (Exception e){
 				UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;

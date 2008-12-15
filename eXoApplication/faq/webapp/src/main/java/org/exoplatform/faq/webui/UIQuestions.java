@@ -144,10 +144,9 @@ public class UIQuestions extends UIContainer {
 	private static String language_ = "" ;
 	private List<Watch> watchList_ = new ArrayList<Watch>() ;
 
-	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Import"} ;
-	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
-	private String[] firstActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
-	private String[] secondActionCate_ = new String[]{"AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
+	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
+	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
+	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
 	private String[] moderatorActionQues_ = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
 	private String[] userActionQues_ = new String[]{"SendQuestion"} ;
@@ -223,10 +222,7 @@ public class UIQuestions extends UIContainer {
 	}
 
 	public String[] getActionTollbar() {
-		if(this.categoryId_ == null || this.categoryId_.equals("null") || this.categoryId_.trim().length() < 1){
-			return firstTollbar_;
-		}
-		return secondTollbar_ ;
+		return firstTollbar_;
 	}
 
 	public FAQSetting getFAQSetting(){
@@ -287,11 +283,6 @@ public class UIQuestions extends UIContainer {
 
 	public void setFAQSetting(FAQSetting setting){
 		this.faqSetting_ = setting;
-	}
-
-	@SuppressWarnings("unused")
-	private String[] getFirstTollbar() {
-		return firstTollbar_ ;
 	}
 
 	@SuppressWarnings("unused")

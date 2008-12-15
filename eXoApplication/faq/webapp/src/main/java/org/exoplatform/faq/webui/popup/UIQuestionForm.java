@@ -146,7 +146,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     questionId_ = new String() ;
     question_ = null ;
     
-    this.setActions(new String[]{"Attachment", "Save", "Cancel"});
+    this.setActions(new String[]{"Save", "Cancel"});
   }
   
 	public void refresh() throws Exception {    
@@ -598,7 +598,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           if(questionForm.listLanguages.size() > 1) {
           	try{
           		QuestionLanguage questionLanguage = new QuestionLanguage() ;
-          		for(int i = 1; i < questionForm.listLanguages.size() ; i ++) {
+          		for(int i = 0; i < questionForm.listLanguages.size() ; i ++) {
+          			if(questionForm.listLanguages.get(i).equals(questionForm.defaultLanguage_)) continue;
+          			questionLanguage = new QuestionLanguage() ;
           			questionLanguage.setLanguage(questionForm.listLanguages.get(i)) ;
           			questionLanguage.setDetail(questionForm.listQuestionDetail.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           			questionLanguage.setQuestion(questionForm.listQuestionContent.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;

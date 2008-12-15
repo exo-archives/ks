@@ -83,6 +83,8 @@ public class JCRDataStorage {
   final private static String FAQ_APP = "faqApp".intern() ;
   final private static String USER_SETTING = "UserSetting".intern();
   final private static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
+  final private static String EXO_FAQCATEGORYHOME = "exo:faqCategoryHome".intern() ;
+	final private static String EXO_FAQQUESTIONHOME = "exo:faqQuestionHome".intern() ;
   final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
   @SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
@@ -190,7 +192,7 @@ public class JCRDataStorage {
     try {
       return faqServiceHome.getNode(QUESTION_HOME) ;
     } catch (PathNotFoundException ex) {
-      Node questionHome = faqServiceHome.addNode(QUESTION_HOME, NT_UNSTRUCTURED) ;
+      Node questionHome = faqServiceHome.addNode(QUESTION_HOME, EXO_FAQQUESTIONHOME) ;
       faqServiceHome.save() ;
       return questionHome ;
     }
@@ -201,7 +203,7 @@ public class JCRDataStorage {
     try {
       return faqServiceHome.getNode(CATEGORY_HOME) ;
     } catch (PathNotFoundException ex) {
-      Node categoryHome = faqServiceHome.addNode(CATEGORY_HOME, NT_UNSTRUCTURED) ;
+      Node categoryHome = faqServiceHome.addNode(CATEGORY_HOME, EXO_FAQCATEGORYHOME) ;
       faqServiceHome.save() ;
       return categoryHome ;
     }
@@ -859,22 +861,25 @@ public class JCRDataStorage {
 		List<String> listCateIds = new ArrayList<String>();
 		Queue<Node> listNodes = new LinkedList<Node>();
 		Node questionHome = getQuestionHome(sProvider, null) ;
-		Node categoryNode = getCategoryNodeById(categoryId, sProvider);
-		NodeIterator nodeIterator = categoryNode.getNodes();
-		while(nodeIterator.hasNext()){
-			listNodes.add(nodeIterator.nextNode());
-		}
-		while(!listNodes.isEmpty()){
-			categoryNode = listNodes.poll();
-			listCateIds.add(categoryNode.getName());
+		NodeIterator nodeIterator = null;
+		if(categoryId != null){
+			Node categoryNode = getCategoryNodeById(categoryId, sProvider);
 			nodeIterator = categoryNode.getNodes();
 			while(nodeIterator.hasNext()){
 				listNodes.add(nodeIterator.nextNode());
 			}
+			while(!listNodes.isEmpty()){
+				categoryNode = listNodes.poll();
+				listCateIds.add(categoryNode.getName());
+				nodeIterator = categoryNode.getNodes();
+				while(nodeIterator.hasNext()){
+					listNodes.add(nodeIterator.nextNode());
+				}
+			}
 		}
 		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath())
-									.append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
+									.append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId + "").append("')");
 		for(String id : listCateIds){
 			queryString.append(" or (@exo:categoryId='").append(id).append("')");
 		}
