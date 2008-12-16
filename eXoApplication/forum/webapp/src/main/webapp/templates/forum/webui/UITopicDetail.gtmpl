@@ -31,6 +31,7 @@
 	boolean isApproved = true;
 	boolean isShowPost = true ;
 	boolean isClosed = false ;
+	boolean isShowIP = uicomponent.getHasEnableIPLogging() ;
 	List posts = null;
 	UserProfile userProfile = null;
 	Forum forum = uicomponent.getForum() ;
@@ -659,14 +660,22 @@
 									<div class="PostTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </div>
 								</div>
 								<div class="CheckPost" style="float: right;">
-									<div class="IPIcon" title="IP: <%=post.getRemoteAddr();%>"><span></span></div>
+								<%  
+								  if(isShowIP) {
+								    String ip = post.getRemoteAddr();
+								    if(ip != null && ip.length() > 0) {
+								%>
+									<div class="IPIcon" title="IP: $ip"><span></span></div>
+								<%  }  
+								  }
+								%>
 									<div style="float:left">
-										<%//uiform.renderChild(postId)
-										  String isChecked = "";
-											if(checkeds.contains(postId)){
-										    isChecked = "checked=\"checked\"";
-										  } 
-										%>
+									<%//uiform.renderChild(postId)
+									  String isChecked = "";
+										if(checkeds.contains(postId)){
+									    isChecked = "checked=\"checked\"";
+									  } 
+									%>
 										<input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
 									</div>
 									<div style="clear: left;"><span></span></div>

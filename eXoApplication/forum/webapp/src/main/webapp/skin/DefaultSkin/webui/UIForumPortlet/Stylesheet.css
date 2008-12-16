@@ -49,14 +49,6 @@
 	float: right;
 	margin: -3px 7px;
 }
-
-.UIForumPortlet .UISearchForm {
-	padding: 10px ;
-}
-
-.UIForumPortlet .UISearchForm .HorizontalLayout {
-	padding: 20px ;
-}
 /******************************************** UIBreadcumbs ****************************************/
 
 .UIForumPortlet .UIBreadcumbs {

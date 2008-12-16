@@ -37,15 +37,27 @@
 }
 
 /**************************** UIAdvancedSearchForm ****************************************/
-.UIAdvancedSearchForm .FieldComponent {
+.UIForumPortlet .UIAdvancedSearchForm {
+	padding: 10px ;
+}
+
+.UIForumPortlet .UIAdvancedSearchForm .UIFormInput{
+	padding: 10px 0px;
+}
+
+.UIForumPortlet .UIAdvancedSearchForm .HorizontalLayout {
+	padding: 20px ;
+}
+
+.UIForumPortlet .UIAdvancedSearchForm .FieldComponent {
   width: 235px;
 }
 
-.UIAdvancedSearchForm .FieldCalendar input{
+.UIForumPortlet .UIAdvancedSearchForm .FieldCalendar input{
   width: 170px;
 }
 
-.UIAdvancedSearchForm .FieldUserName input{
+.UIForumPortlet .UIAdvancedSearchForm .FieldUserName input{
   width: 170px;
 }
 

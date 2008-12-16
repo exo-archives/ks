@@ -58,9 +58,10 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIPageListPostByUser extends UIContainer {
 	private ForumService forumService ;
-	private UserProfile userProfile ;
+	private UserProfile userProfile = null ;
 	private String userName = "";
 	private String strOrderBy = "createdDate descending";
+	private boolean hasEnableIPLogging = true;
 	private List<Post> posts = new ArrayList<Post>() ;
 	public UIPageListPostByUser() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -68,10 +69,15 @@ public class UIPageListPostByUser extends UIContainer {
 		addChild(UIForumPageIterator.class, null, "PageListPostByUser") ;
 	}
 	
+	public boolean getHasEnableIPLogging() {
+	  return hasEnableIPLogging;
+  }
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
 		if(this.userProfile == null) {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+			UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+			this.userProfile = forumPortlet.getUserProfile() ;
+			hasEnableIPLogging = forumPortlet.getHasEnableIPLogging();
 		}
 		return this.userProfile ;
 	}
