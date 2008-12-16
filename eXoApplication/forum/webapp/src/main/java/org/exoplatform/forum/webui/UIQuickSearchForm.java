@@ -103,6 +103,8 @@ public class UIQuickSearchForm extends UIForm {
 			UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class) ;
 			searchForm.setUserProfile(forumPortlet.getUserProfile()) ;
 			searchForm.setSelectType(Utils.CATEGORY) ;
+			searchForm.setIsSearchForum(false);
+			searchForm.setIsSearchTopic(false);
 //			searchForm.setValueOnchange(false, false, false, false, false, false, false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

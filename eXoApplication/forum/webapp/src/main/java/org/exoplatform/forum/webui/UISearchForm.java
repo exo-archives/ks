@@ -29,12 +29,10 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.webui.popup.UIForumInputWithActions;
 import org.exoplatform.forum.webui.popup.UIGroupSelector;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UISelectComponent;
 import org.exoplatform.forum.webui.popup.UISelector;
-import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -101,12 +99,11 @@ public class UISearchForm extends UIForm implements UISelector {
 	private boolean isSearchForum = false;
 	private boolean isSearchTopic = false;
 	
-	public boolean getIsSearchForum() {
-	  return isSearchForum;
-  }
-	public boolean getIsSearchTopic() {
-		return isSearchTopic;
-	}
+	public boolean getIsSearchForum() { return isSearchForum;}
+	public void setIsSearchForum(boolean isSearchForum){this.isSearchForum = isSearchForum;}
+	public boolean getIsSearchTopic() {return isSearchTopic;}
+	public void setIsSearchTopic(boolean isSearchTopic) {this.isSearchTopic = isSearchTopic;}
+	
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 		try {
 			this.userProfile = userProfile ;
@@ -326,11 +323,11 @@ public class UISearchForm extends UIForm implements UISelector {
 					isClosed = "false"; remain = "@exo:isActiveByForum='true'";
 				}else if(type.equals(Utils.POST)) remain = "@exo:isActiveByTopic='true'";
 			}
-			String topicCountMin = uiForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).getValue();
+			String topicCountMin = "";//uiForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).getValue();
 			String topicCountMax = uiForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
-			String postCountMin = uiForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).getValue();
+			String postCountMin = "";//uiForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).getValue();
 			String postCountMax = uiForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
-			String viewCountMin = uiForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).getValue();
+			String viewCountMin = "";//uiForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).getValue();
 			String viewCountMax = uiForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
 			try{
 				if(topicCountMax != null && topicCountMax.trim().length() > 0 && topicCountMin != null && topicCountMin.trim().length() > 0 && 
