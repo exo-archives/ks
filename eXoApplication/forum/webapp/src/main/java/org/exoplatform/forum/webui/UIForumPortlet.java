@@ -18,6 +18,8 @@ package org.exoplatform.forum.webui;
 
 import java.util.Date;
 
+import javax.portlet.PortletPreferences;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -27,6 +29,7 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPortletApplication;
@@ -47,6 +50,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isSearchRendered = false;
 	private boolean isJumpRendered = false;
 	private UserProfile userProfile = null;
+	private boolean enableIPLogging = true;
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
@@ -55,6 +59,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(false) ;
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
+		setHasEnableIPLogging();
 	}
 //
 //	@Override
@@ -98,6 +103,21 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean	getIsJumpRendered() {
 		return isJumpRendered ;
 	}
+	
+	private void setHasEnableIPLogging() throws Exception {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		try {
+			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+		
+	public boolean getHasEnableIPLogging() {
+		System.out.println("\n\n==========> get: " + enableIPLogging);
+  	return enableIPLogging;
+  }
 
 	public void renderPopupMessages() throws Exception {
 		UIPopupMessages popupMess = getUIPopupMessages();

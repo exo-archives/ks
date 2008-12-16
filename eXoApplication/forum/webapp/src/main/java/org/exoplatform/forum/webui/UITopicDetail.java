@@ -148,6 +148,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private String userName = " " ;
 	private boolean isModeratePost = false ;
 	private boolean isMod = false ;
+	private boolean hasEnableIPLogging = true;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
@@ -165,7 +166,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	public UserProfile getUserProfile() {
 		return userProfile ;
 	}
-	
+	public boolean getHasEnableIPLogging() {
+	  return hasEnableIPLogging;
+  }
 	@SuppressWarnings("unused")
 	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;
@@ -178,6 +181,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topicId ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+		hasEnableIPLogging = forumPortlet.getHasEnableIPLogging();
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
@@ -190,6 +194,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+		hasEnableIPLogging = forumPortlet.getHasEnableIPLogging();
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
@@ -209,6 +214,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+		hasEnableIPLogging = forumPortlet.getHasEnableIPLogging();
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
@@ -1279,9 +1285,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				link = link.replaceFirst("pathId", (topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId)) ;
 				link = url + link;
 				//
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
 				String userName = topicDetail.userProfile.getUserId() ;
-				PortletRequestImp request = event.getRequestContext().getRequest();
-				String remoteAddr = request.getRemoteAddr();
+				String remoteAddr = "";
+				if(forumPortlet.getHasEnableIPLogging()) {
+					PortletRequestImp request = event.getRequestContext().getRequest();
+					remoteAddr = request.getRemoteAddr();
+				}
 				Topic topic = topicDetail.topic ;
 				Post post = new Post() ;
 				post.setName("Re: " + topic.getTopicName()) ;
@@ -1298,7 +1308,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					long postCount = topicDetail.getUserInfo(userName).getTotalPost() + 1 ;
 					topicDetail.getUserInfo(userName).setTotalPost(postCount);
 					topicDetail.getUserInfo(userName).setLastPostDate(ForumUtils.getInstanceTempCalendar().getTime()) ;
-					topicDetail.getAncestorOfType(UIForumPortlet.class).getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+					forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 				} catch (PathNotFoundException e) {
 					sProvider.close();
 					String[] args = new String[] { } ;

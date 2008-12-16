@@ -295,13 +295,17 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			editReason = ForumTransformHTML.enCodeHTML(editReason).trim() ;
 			String userName = ForumSessionUtils.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-			PortletRequestImp request = event.getRequestContext().getRequest();
-			String remoteAddr = request.getRemoteAddr();
+			String remoteAddr = "";
+			if(forumPortlet.getHasEnableIPLogging()) {
+				PortletRequestImp request = event.getRequestContext().getRequest();
+				remoteAddr = request.getRemoteAddr();
+			}
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.length() ;
@@ -363,7 +367,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				post.setUserPrivate(userPrivate);
 				post.setIsApproved(!hasTopicMod) ;
 				
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
 				boolean isParentDelete = false;

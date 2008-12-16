@@ -10,7 +10,7 @@
 	if(userProfile.getUserRole() == 0)isAdmin = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
-	
+	boolean isShowIP = uicomponent.getHasEnableIPLogging() ;
 %>
 
 <div class="UIPageListPostByUser" id="$uicomponent.id">
@@ -28,8 +28,11 @@
 								<th width="40px"></th>
 								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div></a></th>
 								<th width="120px"><a href="<%=uicomponent.event("SetOrderBy","createdDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div></a></th>
-								<%if(isAdmin){ %>
+								<%if(isAdmin){ 
+								    if(isShowIP) {
+								%>
 									<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
+								<%  }%>
 									<th width="40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
 								<%} %>
 							</tr>
@@ -60,8 +63,11 @@
 									<td class="Tdbox">
 										<div class="RatingInfoContainer">$createdDate</div>
 									</td>
-									<%if(isAdmin){ %>
+									<%if(isAdmin){ 
+									    if(isShowIP) {
+									%>
 										<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
+									<%  }%>
 										<td class="Tdbox" align="center" style="padding-left:5px;">
 											<a href="<%=uicomponent.event("DeletePostLink", post.getId());%>">
 												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
