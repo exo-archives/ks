@@ -16,7 +16,6 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.conf.ForumInitialData;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.compress.CompressData;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -32,7 +31,6 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(

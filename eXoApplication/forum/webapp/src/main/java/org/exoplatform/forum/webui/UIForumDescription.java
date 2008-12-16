@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;

@@ -1,5 +1,7 @@
 <%	import org.exoplatform.portal.webui.util.Util; 
-String toururi = Util.getPortalRequestContext().getPortalURI() + "tour";
+String url = Util.getPortalRequestContext().getPortalURI();
+String tourUrl = url + "tour";
+String registerUri = url + "tour";
 %>
 
 <div class="SideBar">
@@ -25,7 +27,7 @@ String toururi = Util.getPortalRequestContext().getPortalURI() + "tour";
 					<div class="DotLine"><span></span></div>
 					<div class="LeftButton">
 						<div class="RightButton">
-							<div class="CenterButton"><a href="$toururi" style="color: white;">Take a tour</a></div>
+							<div class="CenterButton"><a href="$tourUrl" style="color: white;">Take a tour</a></div>
 						</div>
 					</div>		
 					<div class="LeftButton">
