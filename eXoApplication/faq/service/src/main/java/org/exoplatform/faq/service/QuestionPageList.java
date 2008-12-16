@@ -380,8 +380,24 @@ public class QuestionPageList extends JCRPageList {
 		int posSearch = 0;
 		if(listObject_ == null || listObject_.isEmpty()){
 			listObject_ = new ArrayList<Object>();
-			Session session = getJCRSession() ;
-			QueryManager qm = session.getWorkspace().getQueryManager() ;
+			int size = 0;
+      
+      //================== get list questions ===================================================
+      Session session = getJCRSession() ;
+      QueryManager qm = session.getWorkspace().getQueryManager() ;
+      Query query = qm.createQuery(questionQuery_, Query.XPATH);
+      QueryResult result = query.execute();
+      iter_ = result.getNodes();
+      Question question = null;
+      while(iter_.hasNext()){
+      	question = getQuestion(iter_.nextNode());
+      	if(!question.getId().equals(idSearch)) size ++;
+      	else posSearch = size + 1;
+      	listObject_.add(question);
+      }
+      
+			//================== get list catetgories ===================================================
+      iter_ = null;
       iter_ = nodeCategory_.getNodes();
       List<Category> listCategory = new ArrayList<Category>();
       while(iter_.hasNext()){
@@ -395,19 +411,6 @@ public class QuestionPageList extends JCRPageList {
 				else Collections.sort(listCategory, new Utils.NameComparatorDESC()) ;
 			}
       listObject_.addAll(listCategory);
-      iter_ = null;
-      int size = listObject_.size() - 1;
-      
-      Query query = qm.createQuery(questionQuery_, Query.XPATH);
-      QueryResult result = query.execute();
-      iter_ = result.getNodes();
-      Question question = null;
-      while(iter_.hasNext()){
-      	question = getQuestion(iter_.nextNode());
-      	if(!question.getId().equals(idSearch)) size ++;
-      	else posSearch = size + 1;
-      	listObject_.add(question);
-      }
       
       if(getAvailablePage() < listObject_.size())
       	setAvailablePage(listObject_.size());
