@@ -45,7 +45,6 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
-import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -138,10 +137,10 @@ public class UISearchForm extends UIForm implements UISelector {
 		UIFormCheckBoxInput<Boolean> isClosed = new UIFormCheckBoxInput<Boolean>(FIELD_ISCLOSED_CHECKBOX, FIELD_ISCLOSED_CHECKBOX, false);
 		UIFormCheckBoxInput<Boolean> isOpent = new UIFormCheckBoxInput<Boolean>(FIELD_ISOPEN_CHECKBOX, FIELD_ISOPEN_CHECKBOX, false);
 		
-		UIFormDateTimeInput FromDateCreated = new UIFormDateTimeInput(FROMDATECREATED, FROMDATECREATED, null, false) ;
-		UIFormDateTimeInput ToDateCreated = new UIFormDateTimeInput(TODATECREATED, TODATECREATED, null, false) ;
-		UIFormDateTimeInput FromDateCreatedLastPost = new UIFormDateTimeInput(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false) ;
-		UIFormDateTimeInput ToDateCreatedLastPost = new UIFormDateTimeInput(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false) ;
+		UIFormDateTimePicker FromDateCreated = new UIFormDateTimePicker(FROMDATECREATED, FROMDATECREATED, null, false) ;
+		UIFormDateTimePicker ToDateCreated = new UIFormDateTimePicker(TODATECREATED, TODATECREATED, null, false) ;
+		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false) ;
+		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false) ;
 
 		UIFormStringInput topicCountMin = new UIFormStringInput(FIELD_TOPICCOUNTMIN_INPUT, FIELD_TOPICCOUNTMIN_INPUT, null) ;
 		topicCountMin.addValidator(PositiveNumberFormatValidator.class) ;
@@ -200,8 +199,8 @@ public class UISearchForm extends UIForm implements UISelector {
 	}
 	
 	public void setValueOnchange(boolean isLastDate, boolean islock, boolean isClose, boolean isTopicCount, boolean isPostCount, boolean isViewCount, boolean isModerator){
-		UIFormDateTimeInput fromDateCreatedLastPost = getUIFormDateTimeInput(FROMDATECREATEDLASTPOST).setRendered(isLastDate) ;
-		UIFormDateTimeInput toDateCreatedLastPost	 = getUIFormDateTimeInput(TODATECREATEDLASTPOST).setRendered(isLastDate) ;
+		UIFormDateTimePicker fromDateCreatedLastPost = getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setRendered(isLastDate) ;
+		UIFormDateTimePicker toDateCreatedLastPost	 = getUIFormDateTimePicker(TODATECREATEDLASTPOST).setRendered(isLastDate) ;
 		UIFormCheckBoxInput<Boolean> isLock	 = getUIFormCheckBoxInput(FIELD_ISLOCK_CHECKBOX).setRendered(islock);
 		UIFormCheckBoxInput<Boolean> isUnLock	 = getUIFormCheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setRendered(islock);
 		if(isClose) {
@@ -273,7 +272,7 @@ public class UISearchForm extends UIForm implements UISelector {
 		fieldInput.setValue(values) ;
 	}
 	
-	private Calendar getCalendar(UIFormDateTimeInput dateTimeInput, String faled) throws Exception{
+	private Calendar getCalendar(UIFormDateTimePicker dateTimeInput, String faled) throws Exception{
 		Calendar calendar = dateTimeInput.getCalendar();
 		if(!ForumUtils.isEmpty(dateTimeInput.getValue())){
 			if(calendar == null){
@@ -282,6 +281,10 @@ public class UISearchForm extends UIForm implements UISelector {
 			}
 		}
 		return calendar;
+	}
+	
+	public UIFormDateTimePicker getUIFormDateTimePicker(String name) {
+		return (UIFormDateTimePicker) findComponentById(name) ;
 	}
 	
 	static	public class SearchActionListener extends EventListener<UISearchForm> {
@@ -352,10 +355,10 @@ public class UISearchForm extends UIForm implements UISelector {
 				return ;
 			}
 			String moderator = uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).getValue();
-			Calendar fromDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimeInput(FROMDATECREATED), FROMDATECREATED);
-			Calendar toDateCreated= uiForm.getCalendar(uiForm.getUIFormDateTimeInput(TODATECREATED), TODATECREATED);
-			Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimeInput(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
-			Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimeInput(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
+			Calendar fromDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATED), FROMDATECREATED);
+			Calendar toDateCreated= uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATED), TODATECREATED);
+			Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
+			Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
 			ForumEventQuery eventQuery = new ForumEventQuery() ;
 			eventQuery.setListOfUser(ForumSessionUtils.getAllGroupAndMembershipOfUser(uiForm.userProfile.getUserId()));
 			eventQuery.setUserPermission(uiForm.userProfile.getUserRole());
