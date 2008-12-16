@@ -120,7 +120,8 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	dummyPortlet.className = "UIFAQPortlet UIPrintPreview" ;
 	FAQContainer.className = "FAQContainer" ;
 	FAQContent.className = "FAQContent" ;
-	printArea.style.overflow = "visible" ;
+	//printArea.style.overflow = "visible" ;
+	printArea.style.overflow = "hidden" ;
 	//defaultAction.style.display = "none" ;
 	printAction.style.display = "block" ;
 	FAQContent.appendChild(previousElement) ;
