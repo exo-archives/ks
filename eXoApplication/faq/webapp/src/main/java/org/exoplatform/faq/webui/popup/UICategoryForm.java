@@ -84,6 +84,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
 		inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false )) ;
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
+		moderator.setValue(FAQUtils.getCurrentUser());
+		moderator.addValidator(MandatoryValidator.class);
 		inputset.addUIFormInput(moderator) ;
 		List<ActionData> actionData = new ArrayList<ActionData>() ;
 		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
