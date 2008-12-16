@@ -1,32 +1,146 @@
-<div class="UIFormForum $uicomponent.id">
+<div class="UIFormForum UIAdvancedSearchForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table class="UIFormGrid">
-					<tbody>
-						<tr>						
-							<td class="FieldLabel"><%=uiform.getLabel("SearchValue");%>:</td>
-							<td class="FieldComponent"><%uiform.renderField("SearchValue");%></td>
-							<td class="FieldComponent textIn"><%uiform.renderField("textIn");%></td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<td class="FieldLabel"><%=uiform.getLabel(uiform.FIELD_SEARCHUSER_INPUT);%>:</td>
-							<td class="FieldComponent" colspan="3"><%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT);%></td>
-						</tr>
-						<tr>
-							<td class="FieldLabel"><%=uiform.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX);%>:</td>
-							<td class="FieldComponent" colspan="3"><%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX);%></td>
-						</tr>
-						<tr>
-							<td class="FieldLabel" colspan="4">Created Date: </td>
-						</tr>
-						<tr>
-							<td class="FieldLabel"><%=uiform.getLabel(uiform.FROM);%>:</td>
-							<td class="FieldComponent"><%uiform.renderField(uiform.FROMDATECREATED);%></td>
-							<td class="FieldLabelDate"><%=uiform.getLabel(uiform.TO);%>:</td>
-							<td class="FieldComponent"><%uiform.renderField(uiform.TODATECREATED);%></td>
-						</tr>
+					<tbody>						
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_SEARCHVALUE_INPUT); %>
+									</td>
+									<td class="FieldComponent">
+											<%uiform.renderField(uiform.FIELD_SEARCHVALUE_INPUT); %>
+									</td>
+									<td></td>
+							</tr>
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
+									</td>
+									<td class="FieldComponent">
+											<%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
+									</td>
+									<td></td>
+							</tr>
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>
+									</td>
+									<td class="FieldComponent">
+											<%uiform.renderField(uiform.FIELD_SCOPE_RADIOBOX); %>
+									</td>
+									<td></td>
+							</tr>
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %>
+									</td>
+									<td class="FieldComponent FieldUserName">
+									  <%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
+									  <a href="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>">
+									    <img class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+									  </a> 
+									</td>
+									<td></td>
+							</tr>
+							<%  
+							if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
+							%>
+							<tr>
+									<td class="FieldLabel">
+											<%=_ctx.appRes("UISearchForm.label.Status");%>
+									</td>
+									<td class="FieldComponent">
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%></div><div style="float:left; padding-left: 5px; width: 65px;"><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %></div>
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%></div><div style="float:left; padding-left: 5px;"><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %></div>
+									  <div style="clear: left;"><span></span></div>
+									</td>
+									<td></td>
+							</tr>
+							<tr>
+									<td class="FieldLabel">
+											<%=_ctx.appRes("UISearchForm.label.State");%>
+									</td>
+									<td class="FieldComponent">
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%></div><div style="float:left; padding-left: 5px; width: 65px;"><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %></div>
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%></div><div style="float:left; padding-left: 5px;"><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %></div>
+									  <div style="clear: left;"><span></span></div>
+									</td>
+									<td></td>
+							</tr>
+							<%  
+							}
+							%>
+							<tr>
+									<td class="FieldLabel">
+											<%=_ctx.appRes("UISearchForm.label.FromDateCreated");%>
+									</td>
+									<td class="FieldComponent FieldCalendar">
+											<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATED); %></div><div style="float:left; padding-left: 5px; width: 35px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
+											<div style="clear: left;"><span></span></div>
+									</td>
+									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATED); %></td>
+							</tr>
+							<% if(uiform.getIsSearchTopic()){ %>
+							<tr>
+									<td class="FieldLabel">
+											<%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%>
+									</td>
+									<td class="FieldComponent FieldCalendar">
+											<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %></div><div style="float:left; padding-left: 5px; width: 35px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
+											<div style="clear: left;"><span></span></div>
+									</td>
+									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATEDLASTPOST); %></td>
+							</tr>
+							<% } 
+							  if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
+							%>
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_POSTCOUNTMIN_INPUT); %>
+									</td>
+									<td class="FieldComponent FieldCalendar">
+									  <%uiform.renderField(uiform.FIELD_POSTCOUNTMIN_INPUT); %>
+									</td>
+									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.FIELD_POSTCOUNTMAX_INPUT); %></td>
+							</tr>
+							<%}  
+							if(uiform.getIsSearchForum()){
+							%>
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_TOPICCOUNTMIN_INPUT); %>
+									</td>
+									<td class="FieldComponent FieldCalendar">
+									  <%uiform.renderField(uiform.FIELD_TOPICCOUNTMIN_INPUT); %>
+									</td>
+									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.FIELD_TOPICCOUNTMAX_INPUT); %></td>
+							</tr>
+							<%}  
+							if(uiform.getIsSearchTopic()) {
+							%>
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_VIEWCOUNTMIN_INPUT); %>
+									</td>
+									<td class="FieldComponent FieldCalendar">
+									  <%uiform.renderField(uiform.FIELD_VIEWCOUNTMIN_INPUT); %>
+									</td>
+									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.FIELD_VIEWCOUNTMAX_INPUT); %></td>
+							</tr>
+							<%}  
+								if(uiform.getIsSearchForum()){
+							%>
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %>
+									</td>
+									<td class="FieldComponent">
+											<%uiform.renderField(uiform.FIELD_MODERATOR_INPUT); %>
+									</td>
+									<td></td>
+							</tr>
+							<%} %>
 					</tbody>
 				</table>
 			</div>
@@ -38,11 +152,13 @@
 				<% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
+					 String onclick = "" ;
+					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
 				%>
 						<a href="$link" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
+							<div class="ButtonLeft" onclick="$onclick">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle">$actionLabel</div>
+									<div class="ButtonMiddle"> $actionLabel </div>
 								</div>
 							</div>
 						</a>

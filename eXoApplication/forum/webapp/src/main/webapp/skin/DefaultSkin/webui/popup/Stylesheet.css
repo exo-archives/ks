@@ -25,6 +25,7 @@
 .UIForumAdministrationForm .InputContent input{
   width: 150px;
 }
+
 .UIForumAdministrationForm #notifyEmail___Frame{
   width: 500px;
   height: 250px;
@@ -34,3 +35,17 @@
   width: 400px;
   height: 150px;
 }
+
+/**************************** UIAdvancedSearchForm ****************************************/
+.UIAdvancedSearchForm .FieldComponent {
+  width: 235px;
+}
+
+.UIAdvancedSearchForm .FieldCalendar input{
+  width: 170px;
+}
+
+.UIAdvancedSearchForm .FieldUserName input{
+  width: 170px;
+}
+

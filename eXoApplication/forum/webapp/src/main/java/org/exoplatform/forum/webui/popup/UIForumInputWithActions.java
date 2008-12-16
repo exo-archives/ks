@@ -30,6 +30,7 @@ import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormInputBase;
 import org.exoplatform.webui.form.UIFormInputSet;
+import org.exoplatform.webui.form.UIFormRadioBoxInput;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -122,6 +123,10 @@ public class UIForumInputWithActions extends UIFormInputSet {
 	
 	public UIFormDateTimeInput getUIFormDateTimeInput(String name) {
 		return (UIFormDateTimeInput) findComponentById(name) ;
+	}
+
+	public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
+		return (UIFormRadioBoxInput) findComponentById(name) ;
 	}
 	
 	static public class ActionData {
