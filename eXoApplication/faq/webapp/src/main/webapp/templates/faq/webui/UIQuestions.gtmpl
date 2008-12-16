@@ -126,12 +126,11 @@
 									<div style="clear: both;"><span></span></div>
 							</div>		
 							</td>
-							<td style="padding: 0px;width:260px;">
-							<div class="SearchForm">
-									<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
-							</div>
-					
-							<div style="clear: both;"><span></span></div>
+							<td style="padding: 0px;width: 290px;" align="left;">
+								<div class="SearchForm" style="padding-right:2px; float: left; width: 100%;">
+										<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
+								</div>
+								<div style="clear: both;"><span></span></div>
 							</td>
 						</tr>
 					</body>
