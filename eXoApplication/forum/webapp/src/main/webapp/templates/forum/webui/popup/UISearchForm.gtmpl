@@ -97,36 +97,36 @@
 							%>
 							<tr>
 									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_POSTCOUNTMIN_INPUT); %>
+											<%=_ctx.appRes("UISearchForm.label.Posts");%>
 									</td>
 									<td class="FieldComponent FieldCalendar">
-									  <%uiform.renderField(uiform.FIELD_POSTCOUNTMIN_INPUT); %>
+									  <%uiform.renderField(uiform.FIELD_POSTCOUNTMAX_INPUT); %>
 									</td>
-									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.FIELD_POSTCOUNTMAX_INPUT); %></td>
+									<td></td>
 							</tr>
 							<%}  
 							if(uiform.getIsSearchForum()){
 							%>
 							<tr>
 									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_TOPICCOUNTMIN_INPUT); %>
+											<%=_ctx.appRes("UISearchForm.label.Topics");%>
 									</td>
 									<td class="FieldComponent FieldCalendar">
-									  <%uiform.renderField(uiform.FIELD_TOPICCOUNTMIN_INPUT); %>
+									  <%uiform.renderField(uiform.FIELD_TOPICCOUNTMAX_INPUT); %>
 									</td>
-									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.FIELD_TOPICCOUNTMAX_INPUT); %></td>
+									<td></td>
 							</tr>
 							<%}  
 							if(uiform.getIsSearchTopic()) {
 							%>
 							<tr>
 									<td class="FieldLabel">
-											<%=uicomponent.getLabel(uiform.FIELD_VIEWCOUNTMIN_INPUT); %>
+											<%=_ctx.appRes("UISearchForm.label.Views");%>
 									</td>
 									<td class="FieldComponent FieldCalendar">
-									  <%uiform.renderField(uiform.FIELD_VIEWCOUNTMIN_INPUT); %>
+									  <%uiform.renderField(uiform.FIELD_VIEWCOUNTMAX_INPUT); %>
 									</td>
-									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.FIELD_VIEWCOUNTMAX_INPUT); %></td>
+									<td></td>
 							</tr>
 							<%}  
 								if(uiform.getIsSearchForum()){
