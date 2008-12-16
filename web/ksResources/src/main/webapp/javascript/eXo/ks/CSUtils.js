@@ -1,6 +1,9 @@
 if(!eXo.cs){
 	eXo.cs = {} ;
 }
+if(!eXo.ks){
+	eXo.ks = {} ;
+}
 /********************* Checkbox Manager ******************/
 function CheckBoxManager() {
 } ;
