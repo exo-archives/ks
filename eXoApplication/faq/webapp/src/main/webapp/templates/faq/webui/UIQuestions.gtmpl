@@ -599,13 +599,6 @@
 		<%		questionId ++ ;
 				}
 		%>
-		<style type="text/css">
-			@media print {
-				.UIAction .PrintAction {
-					display:none ;
-				}
-			}
-		</style>
 		
 		<!-- ==================================================== View Categories ====================================================== -->
 		<%	
@@ -711,6 +704,14 @@
 		<%i ++ ;
 			}
 		%>
+		
+		<style type="text/css">
+			@media print {
+				.UIAction .PrintAction {
+					display:none ;
+				}
+			}
+		</style>
 		
 			<div class="UIAction" style="display:none ;">			
 				<div style="float:right">			
