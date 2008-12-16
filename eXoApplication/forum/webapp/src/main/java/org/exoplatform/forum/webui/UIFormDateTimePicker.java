@@ -85,13 +85,14 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
   public void processRender(WebuiRequestContext context) throws Exception {
   	context.getJavascriptManager().importJavascript("eXo.ks.UIDateTimePicker","/ksResources/javascript/") ;
     Writer w = context.getWriter();
-    w.write("<input type='text' onfocus='eXo.ks.UIDateTimePicker.init(this,") ;
-    w.write(String.valueOf(isDisplayTime_));
-    w.write(");' onkeyup='eXo.ks.UIDateTimePicker.show();' name='") ;
+    w.write("<input type='text' class='DateTimeInput'") ;
+    w.write("name='") ;
     w.write(getName()) ; w.write('\'') ;
     if(value_ != null && value_.length() > 0) {      
       w.write(" value='"); w.write(value_.toString()); w.write('\'');
     }
-    w.write(" onmousedown='event.cancelBubble = true' />") ;
+    w.write("/>");
+    w.write("<div class='CalendarIcons' onclick='eXo.ks.UIDateTimePicker.init(this,");
+    w.write(String.valueOf(isDisplayTime_)+");' title='Show Calendar'><span></span></div>");
   }
 }

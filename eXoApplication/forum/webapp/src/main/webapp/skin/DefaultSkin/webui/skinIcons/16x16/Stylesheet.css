@@ -421,4 +421,14 @@
 .UIForumPortlet .View {
 	background: url('icons/ViewIcon.gif') no-repeat left center;
 }
-
+.UIForumPortlet .CalendarIcons {
+  background: url('icons/CalendarIcons.gif') no-repeat left center;
+  width:16px;
+  height:16px;
+  float:left;
+  margin-left:5px; 
+}
+.UIForumPortlet .DateTimeInput {
+  width:100px;
+  float:left;
+}

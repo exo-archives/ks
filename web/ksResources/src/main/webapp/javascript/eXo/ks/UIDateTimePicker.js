@@ -186,7 +186,9 @@ UIDateTimePicker.prototype.setDate = function(year, month, day) {
     if (!this.currentMinutes) this.currentMinutes = new Date().getMinutes() ;
     if (!this.currentSeconds) this.currentSeconds = new Date().getSeconds() ;
     if(this.isDisplayTime) dateString += " " + this.currentHours + ":" + this.currentMinutes + ":" + this.currentSeconds ;
-    this.dateField.value = dateString ;
+    var objRoot = this.dateField.parentNode;
+    var fielDateTime = eXo.core.DOMUtil.findFirstDescendantByClass(objRoot, "input","DateTimeInput") ; 
+    fielDateTime.value = dateString ;
     this.hide() ;
   }
   return ;
