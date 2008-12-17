@@ -1,3 +1,7 @@
+<% 
+  import org.exoplatform.portal.webui.util.Util ;
+  String registerUri = Util.getPortalRequestContext().getPortalURI() + "register";
+%>
 <div class="UIKSGuidedTour" id="UIKSGuidedTour">
 	<div class="LeftKSGuidedTour">
 		<div class="Header"><span></span></div>
@@ -28,7 +32,7 @@
 				</div>
 			</div>
 		</div>
-		<a href="/portal/public/classic/register">
+		<a href="$registerUri">
 			<div class="SignUpButton">
 				<div>Sign up Now</div>
 			</div>
