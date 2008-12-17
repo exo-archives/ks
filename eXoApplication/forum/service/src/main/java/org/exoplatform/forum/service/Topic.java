@@ -41,6 +41,7 @@ public class Topic {
 	private long viewCount = 0;
 	private String icon ;
 	private String link = "";
+	private String remoteAddr= "";
 	private long numberAttachments = 0 ;
 	
 	private boolean isModeratePost = false ;
@@ -169,6 +170,9 @@ public class Topic {
 	public String getLink() {return link;}
 	public void setLink(String link) {this.link = link;}
 	
+	public String getRemoteAddr() { return remoteAddr;}
+	public void setRemoteAddr(String remoteAddr) { this.remoteAddr = remoteAddr; }
+
 	public String[] getEmailNotification(){return emailNotification;}	
 	public void setEmailNotification(String[] emailNotification){this.emailNotification = emailNotification;}
 }
