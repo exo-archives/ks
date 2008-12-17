@@ -60,6 +60,7 @@
 		  isNotReply = !uicomponent.isCanPostReply();
 			isClosed = !uicomponent.userCanView() ;
 			if(!canEdit && topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
+			isModeratePost = topic.getIsModeratePost();
 		} else {
 		  isClosed = true;
 		  isNotReply = true;
