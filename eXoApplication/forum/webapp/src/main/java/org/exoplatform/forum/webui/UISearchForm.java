@@ -68,7 +68,6 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		}
 )
 public class UISearchForm extends UIForm implements UISelector {
-//	final static	private String FIELD_INPUTSEARCH_FORM = "InputSearchForm" ;
 	
 	final static	private String FIELD_SEARCHVALUE_INPUT = "SearchValue" ;
 	final static	private String FIELD_SCOPE_RADIOBOX = "Scope" ;
@@ -98,24 +97,6 @@ public class UISearchForm extends UIForm implements UISelector {
 	private boolean isSearchForum = false;
 	private boolean isSearchTopic = false;
 	
-	public boolean getIsSearchForum() { return isSearchForum;}
-	public void setIsSearchForum(boolean isSearchForum){this.isSearchForum = isSearchForum;}
-	public boolean getIsSearchTopic() {return isSearchTopic;}
-	public void setIsSearchTopic(boolean isSearchTopic) {this.isSearchTopic = isSearchTopic;}
-	
-	public void setUserProfile(UserProfile userProfile) throws Exception {
-		try {
-			this.userProfile = userProfile ;
-		} catch (Exception e) {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		}
-	}
-	private boolean getIsAdmin() {
-		if(this.userProfile != null) {
-			if(this.userProfile.getUserRole() < 2) return true ;
-		}
-		return false ;
-	}
 	public UISearchForm() throws Exception {
 		UIFormStringInput searchValue = new UIFormStringInput(FIELD_SEARCHVALUE_INPUT, FIELD_SEARCHVALUE_INPUT, null) ;
 		UIFormStringInput searchUser = new UIFormStringInput(FIELD_SEARCHUSER_INPUT, FIELD_SEARCHUSER_INPUT, null) ;
@@ -179,15 +160,26 @@ public class UISearchForm extends UIForm implements UISelector {
 		addUIFormInput(viewCountMin) ;
 		addUIFormInput(viewCountMax) ;
 		addUIFormInput(moderator) ;
-		
-//		addUIFormInput(a) ;
-//		List<ActionData> actions = new ArrayList<ActionData>() ;;
-//		ActionData ad = new ActionData() ;
-//		ad.setActionListener("AddValuesUser") ;
-//		ad.setCssIconClass("SelectUserIcon") ;
-//		ad.setActionName(FIELD_SEARCHUSER_INPUT);
-//		actions.add(ad) ;
-//		a.setActionField(FIELD_SEARCHUSER_INPUT, actions);
+		setActions(new String[]{"Search","ResetField", "Cancel"});
+	}
+	
+	public boolean getIsSearchForum() { return isSearchForum;}
+	public void setIsSearchForum(boolean isSearchForum){this.isSearchForum = isSearchForum;}
+	public boolean getIsSearchTopic() {return isSearchTopic;}
+	public void setIsSearchTopic(boolean isSearchTopic) {this.isSearchTopic = isSearchTopic;}
+	
+	public void setUserProfile(UserProfile userProfile) throws Exception {
+		try {
+			this.userProfile = userProfile ;
+		} catch (Exception e) {
+			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		}
+	}
+	private boolean getIsMod() {
+		if(this.userProfile != null) {
+			if(this.userProfile.getUserRole() < 2) return true ;
+		}
+		return false ;
 	}
 	
 	public void setSelectType(String type) {
@@ -196,44 +188,6 @@ public class UISearchForm extends UIForm implements UISelector {
 	
 	public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
 		return (UIFormRadioBoxInput) findComponentById(name) ;
-	}
-	
-	public void setValueOnchange(boolean isLastDate, boolean islock, boolean isClose, boolean isTopicCount, boolean isPostCount, boolean isViewCount, boolean isModerator){
-		UIFormDateTimePicker fromDateCreatedLastPost = getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setRendered(isLastDate) ;
-		UIFormDateTimePicker toDateCreatedLastPost	 = getUIFormDateTimePicker(TODATECREATEDLASTPOST).setRendered(isLastDate) ;
-		UIFormCheckBoxInput<Boolean> isLock	 = getUIFormCheckBoxInput(FIELD_ISLOCK_CHECKBOX).setRendered(islock);
-		UIFormCheckBoxInput<Boolean> isUnLock	 = getUIFormCheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setRendered(islock);
-		if(isClose) {
-			isClose = getIsAdmin();
-		}
-		UIFormCheckBoxInput<Boolean> isClosed	 = getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).setRendered(isClose);
-		UIFormCheckBoxInput<Boolean> isOpen	 = getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).setRendered(isClose);
-		
-		UIFormStringInput topicCountMin = getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).setRendered(isTopicCount);
-		UIFormStringInput topicCountMax = getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setRendered(isTopicCount);
-		UIFormStringInput postCountMax	= getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setRendered(isPostCount);
-		UIFormStringInput postCountMin	= getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).setRendered(isPostCount);
-		UIFormStringInput viewCountMax	= getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).setRendered(isViewCount);
-		UIFormStringInput viewCountMin	= getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).setRendered(isViewCount);
-		UIFormStringInput moderator		 = getUIStringInput(FIELD_MODERATOR_INPUT).setRendered(isModerator);
-		getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue("") ;
-		getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue("entire");
-		getUIFormDateTimeInput(FROMDATECREATED).setValue("") ;
-		getUIFormDateTimeInput(TODATECREATED).setValue("") ;
-		getUIStringInput(FIELD_SEARCHUSER_INPUT).setValue("") ;
-		fromDateCreatedLastPost.setValue("") ;
-		toDateCreatedLastPost.setValue("") ;
-		isLock.setValue(false) ;
-		isUnLock.setValue(false) ;
-		isClosed.setValue(false) ;
-		isOpen.setValue(false) ;
-		topicCountMax.setValue("") ;
-		topicCountMin.setValue("") ;
-		postCountMax.setValue("") ;
-		postCountMin.setValue("") ;
-		viewCountMax.setValue("") ;
-		viewCountMin.setValue("") ;
-		moderator.setValue("") ;
 	}
 	
 	public String getLabel(ResourceBundle res, String id) throws Exception {
@@ -254,10 +208,6 @@ public class UISearchForm extends UIForm implements UISelector {
 				return null;
 			}
 		} else return null;
-	}
-	
-	public String[] getActions() {
-		return new String[]{"Search","Onchange", "Cancel"} ;
 	}
 	
 	public void updateSelect(String selectField, String value) throws Exception {
@@ -304,6 +254,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			}
 			String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
 			String valueIn = uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).getValue() ;
+			if(valueIn == null || valueIn.length() == 0) valueIn = "entire";
 			String path = "" ;
 			String byUser = uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).getValue() ;
 			
@@ -316,7 +267,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			String remain = "";
 			boolean isCl = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).getValue();
 			boolean isOp = (Boolean) uiForm.getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).getValue();
-			if(uiForm.getIsAdmin()) {
+			if(uiForm.getIsMod()) {
 				if(isCl && !isOp) isClosed = "true";
 				if(!isCl && isOp) isClosed = "false";
 			} else {
@@ -326,12 +277,12 @@ public class UISearchForm extends UIForm implements UISelector {
 					isClosed = "false"; remain = "@exo:isActiveByForum='true'";
 				}else if(type.equals(Utils.POST)) remain = "@exo:isActiveByTopic='true'";
 			}
-			String topicCountMin = "";//uiForm.getUIStringInput(FIELD_TOPICCOUNTMIN_INPUT).getValue();
-			String topicCountMax = uiForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
-			String postCountMin = "";//uiForm.getUIStringInput(FIELD_POSTCOUNTMIN_INPUT).getValue();
-			String postCountMax = uiForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
-			String viewCountMin = "";//uiForm.getUIStringInput(FIELD_VIEWCOUNTMIN_INPUT).getValue();
-			String viewCountMax = uiForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
+			String topicCountMin = uiForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
+			String topicCountMax = "";
+			String postCountMin = uiForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
+			String postCountMax = "";
+			String viewCountMin = uiForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
+			String viewCountMax = "";
 			try{
 				if(topicCountMax != null && topicCountMax.trim().length() > 0 && topicCountMin != null && topicCountMin.trim().length() > 0 && 
 									Integer.parseInt(topicCountMax) < Integer.parseInt(topicCountMin)){
@@ -414,25 +365,38 @@ public class UISearchForm extends UIForm implements UISelector {
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
 			String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
+			uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue("entire");
 			if(type.equals(Utils.FORUM)) {
 				uiForm.isSearchForum = true; uiForm.isSearchTopic = false;
-				//uiForm.setValueOnchange(false, true, true, true, true, false, true) ;
 			} else if(type.equals(Utils.TOPIC)){
 				uiForm.isSearchForum = false; uiForm.isSearchTopic = true;
-//				uiForm.setValueOnchange(true, true, true, false, true, true, false) ;
 			} else {
 				uiForm.isSearchForum = false; uiForm.isSearchTopic = false;
-//				uiForm.setValueOnchange(false, false, false, false, false, false, false) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	
 	static	public class ResetFieldActionListener extends EventListener<UISearchForm> {
+		@SuppressWarnings("unchecked")
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
 			uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(Utils.CATEGORY);
-			uiForm.setValueOnchange(false, false, false, false, false, false, false) ;
+			uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue("entire");
+			uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST).setValue("") ;
+			uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST).setValue("");
+			uiForm.getUIFormCheckBoxInput(FIELD_ISLOCK_CHECKBOX).setValue(false);
+			uiForm.getUIFormCheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setValue(false);
+			uiForm.getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).setValue(false);
+			uiForm.getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).setValue(false);
+//			uiForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setValue("");
+//			uiForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setValue("");
+//			uiForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).setValue("");
+			uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).setValue("");
+			uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue("") ;
+			uiForm.getUIFormDateTimePicker(FROMDATECREATED).setValue("") ;
+			uiForm.getUIFormDateTimePicker(TODATECREATED).setValue("") ;
+			uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).setValue("") ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
