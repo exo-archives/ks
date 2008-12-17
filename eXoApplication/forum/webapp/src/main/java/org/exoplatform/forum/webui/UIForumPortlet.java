@@ -115,7 +115,6 @@ public class UIForumPortlet extends UIPortletApplication {
 	}
 		
 	public boolean getHasEnableIPLogging() {
-		System.out.println("\n\n==========> get: " + enableIPLogging);
   	return enableIPLogging;
   }
 

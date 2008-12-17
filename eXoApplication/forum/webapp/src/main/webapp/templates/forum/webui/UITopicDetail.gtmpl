@@ -654,30 +654,32 @@
 						<td class="PostViewContainer">
 							
 							<div class="PostViewHeader">
-							<% if(checked > 0 && canEdit) {%>
+							<% if(canEdit) {%>
 								<div class="PostViewTitle" style="float: left;">
 									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
 									<div class="PostTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </div>
 								</div>
 								<div class="CheckPost" style="float: right;">
 								<%  
-								  if(isShowIP) {
-								    String ip = post.getRemoteAddr();
-								    if(ip != null && ip.length() > 0) {
+								   if(isShowIP) {
+								     String ip = post.getRemoteAddr();
+								     if(ip != null && ip.length() > 0) {
 								%>
 									<div class="IPIcon" title="IP: $ip"><span></span></div>
-								<%  }  
-								  }
+								<%   }
+								   }
+								   if(checked > 0){
 								%>
 									<div style="float:left">
 									<%//uiform.renderChild(postId)
-									  String isChecked = "";
-										if(checkeds.contains(postId)){
-									    isChecked = "checked=\"checked\"";
-									  } 
+									   String isChecked = "";
+										 if(checkeds.contains(postId)){
+									     isChecked = "checked=\"checked\"";
+									   } 
 									%>
 										<input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
 									</div>
+									<%}  %>
 									<div style="clear: left;"><span></span></div>
 								</div>
 								<div style="clear: both;"><span></span></div>

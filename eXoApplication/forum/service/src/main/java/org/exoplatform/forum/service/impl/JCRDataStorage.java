@@ -1333,6 +1333,7 @@ public class JCRDataStorage {
 				post.setAttachments(topic.getAttachments());
 				post.setUserPrivate(new String[] { "exoUserPri" });
 				post.setLink(topic.getLink());
+				post.setRemoteAddr(topic.getRemoteAddr());
 				savePost(sProvider, categoryId, forumId, topic.getId(), post, true, defaultEmailContent);
 			} else {
 				String id = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);

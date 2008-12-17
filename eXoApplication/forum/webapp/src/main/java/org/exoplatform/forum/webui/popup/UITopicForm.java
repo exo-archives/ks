@@ -43,6 +43,7 @@ import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -496,6 +497,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					topicNew.setVoteRating(0.0) ;
 					topicNew.setUserVoteRating(new String[] {}) ;
 					try {
+						if(forumPortlet.getHasEnableIPLogging()) {
+							PortletRequestImp request = event.getRequestContext().getRequest();
+							topicNew.setRemoteAddr(request.getRemoteAddr());
+						}
 						forumService.saveTopic(sProvider, uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
 					} catch (PathNotFoundException e) {
 						sProvider.close();
