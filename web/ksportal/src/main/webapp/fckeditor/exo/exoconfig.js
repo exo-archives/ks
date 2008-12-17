@@ -6,15 +6,20 @@ FCKConfig.ToolbarSets["eXoBar"] = [
 ];
 
 FCKConfig.ToolbarSets["eXoForum"] = [
-
-	['NewPage','Preview','-','Templates'],['Cut','Copy','Paste','-','Print','FitWindow'],['Link','Unlink','Anchor'],
-	['Undo','Redo','-','SelectAll','RemoveFormat','SpecialChar'],'/',
-	['Bold','Italic','Underline','StrikeThrough','-','Subscript','Superscript'],
-	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull','-','OrderedList','UnorderedList','Outdent','Indent'],
-	['Image','Flash','Table'],'/',
-	['TextColor','BGColor'],['FontName','FontSize'],
+	['FitWindow','-','Cut','Copy','Paste'],['Undo','Redo'],['Link','Unlink'],
+	['Image','Flash','Table'],['OrderedList','UnorderedList','Outdent','Indent'],'/',
+	['FontName','FontSize'],['TextColor','BGColor'],'/',
+	['Bold','Italic','Underline','-','Subscript','Superscript'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
 	['-','Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
-
+] ;
+FCKConfig.ToolbarSets["eXoFAQ"] = [
+	['FitWindow','-','Cut','Copy','Paste'],['Undo','Redo'],['Link','Unlink'],
+	['Image','Flash','Table'],'/',
+	['Bold','Italic','Underline','-','Subscript','Superscript'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
+	['OrderedList','UnorderedList','Outdent','Indent'],'/',
+	['TextColor','BGColor'],['FontName','FontSize'],
 ] ;
 
 FCKConfig.eXoPath = FCKConfig.BasePath.substr(0, FCKConfig.BasePath.length - 7) + "exo/" ;
@@ -39,8 +44,16 @@ eXoPlugin.switchToolBar = function(R) {
 	}
 };
 
-//eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoBar"});
-eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoForum"});
+var isForum = window.parent.document.getElementById('UIForumPortlet');
+var isFAQ = window.parent.document.getElementById('UIFAQPortlet');
+if(isForum) {
+	eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoForum"});
+}else if(isFAQ){
+	eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoFAQ"});
+}else{
+	eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoBar"});
+}
+
 eXoPlugin.addBar = function(R) {
 	var Setting = {
 		newBar: R.newBar || "",
@@ -73,6 +86,6 @@ eXoPlugin.getContent = function() {
 };
 
 //eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Basic" });
-//eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Default" });
+eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Default" });
 
 FCK["eXoPlugin"] = eXoPlugin;
