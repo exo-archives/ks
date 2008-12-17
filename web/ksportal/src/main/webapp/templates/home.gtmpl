@@ -1,8 +1,6 @@
 <% 
-
   import org.exoplatform.portal.webui.util.Util ;
 %>
-
 <div class="UIHomePagePortlet" id="$uicomponent.id">
 	<div class="UIHomePagePortlet" >
 		<div class="PortletDecoration">
