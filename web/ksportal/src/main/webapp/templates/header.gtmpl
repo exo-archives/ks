@@ -7,11 +7,13 @@
 	String portletId = uicomponent.getId() ;	
 	String portalName = Util.getUIPortal().getName() ;
 	portalName = URLEncoder.encode(portalName, "UTF-8") ;
-	String signOutAction = prContext.getRequestContextPath() + "/public/" + portalName + "/" ;
+	String path = prContext.getRequestContextPath();
+	String signOutAction = path + "/public/" + portalName + "/" ;
 	String signInAction = "if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ShowLoginForm', true));" ;
 	boolean isLogin = false ;
 	if(prContext.getAccessPath() == PortalRequestContext.PRIVATE_ACCESS) isLogin = true;
 	String userLogin =	Util.getPortalRequestContext().getRemoteUser();
+	String registerUri = path + "/register";
 %>
 <div class="UIBannerPortlet UIApplication">
 	<div class="ApplicationMinWidth">
@@ -27,7 +29,7 @@
 						<% }else { %>	
 							<div class="TextAcount">Demo accounts: <span style="font-weight: bold;">demo/exo, admin/exo</span></div>
 						<% } %>
-								<a class="ActionButton"  href="/portal/public/classic/register">
+								<a class="ActionButton"  href="$registerUri">
 								<div class="LeftButton">
 									<div class="RightButton">
 										<div class="CenterButton">Sign up for demo</div>

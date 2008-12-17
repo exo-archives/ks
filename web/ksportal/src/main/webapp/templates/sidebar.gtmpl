@@ -1,7 +1,9 @@
-<%	import org.exoplatform.portal.webui.util.Util; 
-String url = Util.getPortalRequestContext().getPortalURI();
-String tourUrl = url + "tour";
-String registerUri = url + "tour";
+<%
+	import org.exoplatform.portal.webui.util.Util; 
+	String url = Util.getPortalRequestContext().getPortalURI();
+	String tourUrl = url + "tour";
+	String registerUri = url + "register";
+	registerUri.replaceFirst("private", "public");
 %>
 
 <div class="SideBar">
@@ -22,7 +24,7 @@ String registerUri = url + "tour";
 					<div class="ArowIcon" style="margin-bottom: 0px;">For support, check our </div>
 					<a href="http://www.exoplatform.com/portal/public/en/download/dl_compare" class="ProVersion">professional version</a>
 					<div class="DotLine"><span></span></div>
-					<a href="/portal/public/classic/register" class="SignUp">Sign Up</a>
+					<a href="$registerUri" class="SignUp">Sign Up</a>
 					<div class="ArowIcon">For a better experience of the demo, create your own account</div>
 					<div class="DotLine"><span></span></div>
 					<div class="LeftButton">
