@@ -57,6 +57,9 @@
 									</td>
 									<td></td>
 							</tr>
+							<%  
+							  if(uiform.getIsMod()){
+							%>
 							<tr>
 									<td class="FieldLabel">
 											<%=_ctx.appRes("UISearchForm.label.State");%>
@@ -68,7 +71,7 @@
 									</td>
 									<td></td>
 							</tr>
-							<%  
+							<%} 
 							}
 							%>
 							<tr>
@@ -151,11 +154,14 @@
 					<td align="center">
 				<% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = uicomponent.event(action) ;
+					 String link = "href=\"" + uicomponent.event(action) + "\"";
 					 String onclick = "" ;
-					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
+					 if(action.indexOf("ResetField") >= 0) {
+					   onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
+					   link = "style=\"cursor:pointer;\"";
+					 }
 				%>
-						<a href="$link" class="ActionButton LightBlueStyle">
+						<a $link class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft" onclick="$onclick">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle"> $actionLabel </div>
