@@ -627,14 +627,14 @@ UIForumPortlet.prototype.ReloadImage = function() {
 
 UIForumPortlet.prototype.shareLink = function(obj){
 	var shareLinkContainer = document.getElementById("popupShareLink");
-	var shareLink = eXo.core.DOMUtil.findDescendantsByTagName(shareLinkContainer,"input")[0] ;
+//	var shareLink = eXo.core.DOMUtil.findDescendantsByTagName(shareLinkContainer,"a")[0] ;
 	if(shareLinkContainer.style.display != "none")
 		shareLinkContainer.style.display = "none" ;
 	else
 		shareLinkContainer.style.display = "block" ;
-	shareLink.value = window.location.protocol + "//" + window.location.host + 	shareLinkContainer.getAttribute("shareLink") ;
-	shareLink.select() ;
-	shareLink.onclick = function(){this.select();} ;
+//	shareLink.value = window.location.protocol + "//" + window.location.host + 	shareLinkContainer.getAttribute("shareLink") ;
+//	shareLink.select() ;
+//	shareLink.onclick = function(){this.select();} ;
 };
 
 UIForumPortlet.prototype.closeShareLink = function(obj){
