@@ -48,17 +48,22 @@ UIDateTimePicker.prototype.show = function() {
 	  	this.selectedDate.setSeconds(arr[2], 10) ;
 	  }
 	}
+  var fieldDateTime = eXo.core.DOMUtil.findFirstDescendantByClass(this.dateField.parentNode, "input","DateTimeInput") ;
 	this.currentDate = new Date(this.selectedDate.valueOf()) ;
   var clndr = document.getElementById(this.calendarId) ;
   clndr.firstChild.lastChild.innerHTML = this.renderCalendar() ;
-  var x = 0 ;
-  var y = this.dateField.offsetHeight ;
+  var x = 0 ; 
+  //var y = this.dateField.offsetHeight ;
+  var y = fieldDateTime.offsetHeight ;
+  if(eXo.core.Browser.getBrowserType() == "ie")  {
+    x = -(eXo.ocore.Browser.findPosX(this.dateField) - eXo.core.Browser.findPosX(fieldDateTime)+this.dateField.offsetWidth);
+  }
   with (clndr.firstChild.style) {
   	display = 'block' ;
-	  left = x + "px" ;
-	  top = y + "px" ;
+	  left = x+"px";
+	  top = y +2+ "px" ;
   }
-	
+
 	var drag = document.getElementById("BlockCaledar");
 	var component =  eXo.core.DOMUtil.findAncestorByClass(drag, "UICalendarComponent");
 	var calendar = eXo.core.DOMUtil.findFirstChildByClass(drag, "div", "UICalendar");
@@ -71,15 +76,6 @@ UIDateTimePicker.prototype.show = function() {
 		drag.style.width = innerWidth + "px";
 		eXo.core.DragDrop.init(null, drag, component, event);
 	}
-	
-	//
-	var primary = eXo.core.DOMUtil.findAncestorById(this.dateField, "UIECMSearch");
-	if (primary && eXo.core.Browser.isFF()) {
-			calendar = clndr.firstChild;
-			calendar.style.top = "0px";
-			calendar.style.left = this.dateField.offsetLeft - this.dateField.offsetWidth - 32 + "px";
-	}
-	
 };
 
 UIDateTimePicker.prototype.hide = function() {
