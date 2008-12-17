@@ -1,15 +1,15 @@
 <div class="UIQuickSeach">
   <% uiform.begin() %>  
   <div class="UISearchForm">
-		<a class="AdvancedSearch" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" href="<%=uicomponent.event("AdvancedSearch");%>"><span></span></a>
-		<a class="SearchIcon" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" href="<%=uicomponent.event("Search");%>"><span></span></a>
-		<div class="Input">
-		<%  
-			uiform.renderChildren() ;
-		%>
+		<div style="float: left;margin-top: 6px;"><%= _ctx.appRes("UIQuickSeach.label.search"); %></div>
+		<div class="Input" style="float: left; !width: 165px;">
+			<%  
+				uiform.renderChildren() ;
+			%>
 		</div>
-		<div style="float: right;margin-top: 6px;"><%= _ctx.appRes("UIQuickSeach.label.search"); %></div>
-		<div style="clear: right;"><span></span></div>
+		<a style="float: left;" class="SearchIcon" title="<%= _ctx.appRes("UIQuickSeach.title.search"); %>" href="<%=uicomponent.event("Search");%>"><span></span></a>
+		<a style="float: left;" class="AdvancedSearch" title="<%= _ctx.appRes("UIQuickSeach.title.advance-search"); %>" href="<%=uicomponent.event("AdvancedSearch");%>"><span></span></a>
+		<div style="clear: left;"><span></span></div>
 	</div>
   <%uiform.end()%>
 </div>

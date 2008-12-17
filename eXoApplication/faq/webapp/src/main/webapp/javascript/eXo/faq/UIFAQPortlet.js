@@ -152,7 +152,8 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	dummyPortlet.className = "UIFAQPortlet UIPrintPreview" ;
 	FAQContainer.className = "FAQContainer" ;
 	FAQContent.className = "FAQContent" ;
-	printArea.style.overflow = "visible" ;
+	//printArea.style.overflow = "visible" ;
+	printArea.style.overflow = "hidden" ;
 	//defaultAction.style.display = "none" ;
 	printAction.style.display = "block" ;
 	FAQContent.appendChild(previousElement) ;
@@ -162,13 +163,14 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	dummyPortlet = this.removeLink(dummyPortlet);
 	dummyPortlet.style.position ="absolute";
 	dummyPortlet.style.width ="100%";
-	//dummyPortlet.style.zIndex = 1 ;
+	dummyPortlet.style.zIndex = 1;
 	document.body.insertBefore(this.removeLink(dummyPortlet),uiPortalApplication) ;
 	//uiPortalApplication.style.visibility = "hidden" ;
 	uiPortalApplication.style.display = "none" ;
 	
 	uiPortalApplication.style.height =  dummyPortlet.offsetHeight + "px";
 	uiPortalApplication.style.overflow =  "hidden";
+	uiPortalApplication.style.display = "none";
 	window.scroll(0,0) ;
 };
 
@@ -187,11 +189,13 @@ UIFAQPortlet.prototype.printAll = function(obj) {
   dummyPortlet.appendChild(this.removeLink(faqContainer)) ;
 	dummyPortlet.style.position ="absolute";
 	dummyPortlet.style.width ="100%";
+	dummyPortlet.style.zIndex = 1;
   document.body.insertBefore(dummyPortlet,uiPortalApplication) ;
   //uiPortalApplication.style.visibility = "hidden" ;
   uiPortalApplication.style.display = "none" ;
 	uiPortalApplication.style.height =  dummyPortlet.offsetHeight + "px";
 	uiPortalApplication.style.overflow =  "hidden";
+	uiPortalApplication.style.display = "none";
 	window.scroll(0,0) ;
 };
 
@@ -228,6 +232,7 @@ UIFAQPortlet.prototype.closePrint = function() {
 	uiPortalApplication.style.height =  "auto";
 	uiPortalApplication.style.overflow =  "auto";
 	//uiPortalApplication.style.visibility = "visible" ;
+	uiPortalApplication.style.display = "block";
 	for(var i = 0 ; i < document.body.childNodes.length ; i++) {
 		if(DOMUtil.hasClass(document.body.childNodes[i], "UIFAQPortlet")) {
 			DOMUtil.removeElement(document.body.childNodes[i]) ;

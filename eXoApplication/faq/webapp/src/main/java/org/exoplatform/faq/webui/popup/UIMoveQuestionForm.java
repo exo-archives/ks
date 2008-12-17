@@ -28,6 +28,8 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -54,6 +56,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 	private String questionId_ = new String() ;
+	private String link;
 	private String categoryId_ ;
 	private FAQSetting faqSetting_ ;
 	@SuppressWarnings("unused")
@@ -86,6 +89,10 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 
 	public List<Cate> getListCate(){
 		return this.listCate ;
+	}
+	
+	private void setLink(String url){
+		this.link = url;
 	}
 
 	public void setQuestionId(String questionId) throws Exception {
@@ -156,6 +163,8 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 			UIMoveQuestionForm moveQuestionForm = event.getSource() ;
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			UIFAQPortlet portlet = moveQuestionForm.getAncestorOfType(UIFAQPortlet.class) ;
+      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
 			try{
 				if(!cateId.equals("null")){
 					faqService_.getCategoryById(cateId, sessionProvider);
@@ -169,6 +178,23 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 						return ;
 					}
 					question.setCategoryId(cateId) ;
+					String link = moveQuestionForm.link.replaceFirst("UIMoveQuestionForm", "UIBreadcumbs").replaceFirst("Cancel", "ChangePath").replaceAll("&amp;", "&");
+		      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+		      String portalName = "/" + Util.getUIPortal().getName() ;
+		      if(link.indexOf(portalName) > 0) {
+				    if(link.indexOf(portalName + "/" + selectedNode) < 0){
+				      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+				    }									
+		      }	
+		      PortalRequestContext portalContext = Util.getPortalRequestContext();
+		      String url = portalContext.getRequest().getRequestURL().toString();
+					url = url.replaceFirst("http://", "") ;
+					url = url.substring(0, url.indexOf("/")) ;
+					url = "http://" + url;
+					String path = questions.getPathService(question.getCategoryId()) + "/" + question.getCategoryId() ;
+					link = link.replaceFirst("OBJECTID", path);
+					link = url + link;
+					question.setLink(link);
 					FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
 					faqService_.saveQuestion(question, false, sessionProvider,moveQuestionForm.faqSetting_) ;
 				}catch (Exception e) {
@@ -184,9 +210,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
 			sessionProvider.close();
-			UIFAQPortlet portlet = moveQuestionForm.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
 			questions.setIsNotChangeLanguage() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			popupAction.deActivate() ;

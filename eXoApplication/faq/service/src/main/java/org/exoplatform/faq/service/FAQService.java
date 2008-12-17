@@ -37,7 +37,8 @@ import org.exoplatform.services.mail.Message;
  * with category and question include: add, edit, remove and search
  * categories or questions.
  * 
- * @author  Hung Nguyen Quanghung.nguyen@exoplatform.com
+ * @author  Hung Nguyen Quang
+ * 					hung.nguyen@exoplatform.com
  * @since   Mar 04, 2008
  */
 public interface FAQService {
