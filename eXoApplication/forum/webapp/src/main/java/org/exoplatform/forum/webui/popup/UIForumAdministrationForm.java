@@ -217,17 +217,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		String ip = "";
 		try{
 			int[] ips = new int[4];
-			int i = 0;
 			for(int t = 0; t < ipAdd.length; t ++){
 				if(t>0) ip += ".";
 				ip += ipAdd[t];
-				ips[i++] = Integer.parseInt(ipAdd[t]);
+				ips[t] = Integer.parseInt(ipAdd[t]);
 			}
-			if(ips.length != 4 || ips[0] <= 0 || ips[0] > 255 || 
-					(ips[0] == 255 && ips[1] == 255 || ips[2] == 255 || ips[3] == 255)) return null;
-			for(i = 1; i < 4; i ++){
+			for(int i = 0; i < 4; i ++){
 				if(ips[i] < 0 || ips[i] > 255) return null;
 			}
+			if(ips[0] == 255 && ips[1] == 255 && ips[2] == 255 && ips[3] == 255) return null;
 			return ip;
 		} catch (Exception e){
 			return null;
