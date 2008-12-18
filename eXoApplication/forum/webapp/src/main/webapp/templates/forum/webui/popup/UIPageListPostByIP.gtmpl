@@ -27,6 +27,7 @@
 						<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 							<thead>
 								<tr>
+									<th><span></span></th>
 									<th width="40px"></th>
 									<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div></a></th>
 									<th width="120px"><a href="<%=uicomponent.event("SetOrderBy","createdDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div></a></th>
@@ -50,12 +51,17 @@
 										String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
 										String path = post.getPath();
 										String topicId = path.substring(path.indexOf(Utils.TOPIC), path.lastIndexOf("/"));
-										System.out.println("\n\n========> topicId: " +  topicId);
-										if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){
-											System.out.println("\n\n========> is topic! ");
-										}
 								%>
 									<tr class="$classRow">
+										<td class="Tdbox">
+										<%
+											if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){%>
+												<%=_ctx.appRes("UIPageListPostByIP.label.Topic");%>
+										<%} else {%>
+												<%=_ctx.appRes("UIPageListPostByIP.label.Post");%>
+										<%}
+										%>
+										</td>
 										<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
 										<td >
 											<div >

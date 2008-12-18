@@ -327,7 +327,6 @@ public class ForumUtils {
 	public static boolean enableIPLogging(){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-		System.out.println("\n\n\n\n----------------> enableIPLogging:" + portletPref.getValue("enableIPFiltering", ""));
 		return Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
 	}
 	

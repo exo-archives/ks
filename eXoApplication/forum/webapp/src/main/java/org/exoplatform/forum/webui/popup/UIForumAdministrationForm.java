@@ -177,10 +177,10 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		//addUIFormInput(activeTopicTab) ;
 		if(ForumUtils.enableIPLogging()){
 			ipBanTab.addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
-			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT1, null));
-			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT2, null));
-			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT3, null));
-			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT4, null));
+			ipBanTab.addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
+			ipBanTab.addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT2, null)).setMaxLength(3));
+			ipBanTab.addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT3, null)).setMaxLength(3));
+			ipBanTab.addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT4, null)).setMaxLength(3));
 			addUIFormInput(ipBanTab);
 		}
 	}
@@ -217,7 +217,6 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		String ip = "";
 		try{
 			int[] ips = new int[4];
-			System.out.println("\n\n\n\n---------->" + ipAdd.length);
 			int i = 0;
 			for(int t = 0; t < ipAdd.length; t ++){
 				if(t>0) ip += ".";
@@ -227,12 +226,10 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			if(ips.length != 4 || ips[0] <= 0 || ips[0] > 255 || 
 					(ips[0] == 255 && ips[1] == 255 || ips[2] == 255 || ips[3] == 255)) return null;
 			for(i = 1; i < 4; i ++){
-				System.out.println("\n\n\n\n---------> ips:" + ips[i]);
 				if(ips[i] < 0 || ips[i] > 255) return null;
 			}
 			return ip;
 		} catch (Exception e){
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -344,11 +341,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 				return ;
 			} 
 			ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			if(fservice.addBanIP(ipAdd)){
-				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanSuccessful", null, ApplicationMessage.INFO)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
-			} else {
+			if(!fservice.addBanIP(ipAdd)){
 				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanFalse", new Object[]{ipAdd}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return;
