@@ -889,6 +889,7 @@ public interface ForumService {
   public void createUserProfile (SessionProvider sysSession, User user) throws Exception ;
 
   public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception ;
+  //public Object exportXML(List<String> listCategoryIds, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception ;
@@ -900,4 +901,6 @@ public interface ForumService {
   public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception  ;
   public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
   public void updateForum(String path) throws Exception ;
+  
+  public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception;
 }

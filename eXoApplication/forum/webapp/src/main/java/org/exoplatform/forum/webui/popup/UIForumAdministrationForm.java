@@ -55,6 +55,9 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		template = "app:/templates/forum/webui/popup/UIForumAdministrationForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UIForumAdministrationForm.SaveActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.AddIpActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.PostsActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.UnBanActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.GetDefaultMailActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
@@ -70,7 +73,10 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_CENSOREDKEYWORD_TAB = "forumCensorTab" ;
 	public static final String FIELD_ACTIVETOPIC_TAB = "activeTopicTab" ;
 	public static final String FIELD_NOTIFYEMAIL_TAB = "notifyEmailTab" ;
+	public static final String IP_BAN_TAB = "ipBanTab" ;
 	
+	public static final String NEW_IP_BAN_INPUT = "newIpBan";
+	public static final String SEARCH_IP_BAN = "searchIpBan";
 	public static final String FIELD_FORUMSORTBY_INPUT = "forumSortBy" ;
 	public static final String FIELD_FORUMSORTBYTYPE_INPUT = "forumSortByType" ;
 	public static final String FIELD_TOPICSORTBY_INPUT = "topicSortBy" ;
@@ -82,6 +88,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
+	
+	private List<String> listIpBan = new ArrayList<String>();
 	
 	public UIForumAdministrationForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -95,6 +103,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
 //		UIFormInputWithActions activeTopicTab = new UIFormInputWithActions(FIELD_ACTIVETOPIC_TAB);
 		UIFormInputWithActions notifyEmailTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_TAB);
+		UIFormInputWithActions ipBanTab = new UIFormInputWithActions(IP_BAN_TAB);
+		
 		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
 																"modifiedDate",	"topicCount", "postCount"}; 
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
@@ -160,6 +170,13 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		addUIFormInput(forumCensorTab) ;
 		addUIFormInput(notifyEmailTab) ;
 		//addUIFormInput(activeTopicTab) ;
+		if(ForumUtils.enableIPLogging()){
+			ipBanTab.addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
+			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT, null));
+			listIpBan.add("192.168.1.49");
+			listIpBan.add("192.168.2.1");
+			addUIFormInput(ipBanTab);
+		}
 	}
 	
 	public boolean isRenderListTopic() {
@@ -176,6 +193,24 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	private boolean getIsSelected(int id) {
 		if(this.id == id) return true ;
 		return false ;
+	}
+	
+	private boolean checkIpAddress(String ipAdd){
+		try{
+			int[] ips = new int[ipAdd.split(".").length];
+			int i = 0;
+			for(String str : ipAdd.split(".")){
+				ips[i++] = Integer.parseInt(str);
+			}
+			if(ips.length != 4 || ips[0] <= 0 || ips[0] > 255 || 
+					(ips[0] == 255 && ips[1] == 255 || ips[2] == 255 || ips[3] == 255)) return false;
+			for(i = 1; i < 4; i ++){
+				if(ips[i] < 0 || ips[i] > 255) return false;
+			}
+			return true;
+		} catch (Exception e){
+			return false;
+		}
 	}
 	
 	static	public class SaveActionListener extends EventListener<UIForumAdministrationForm> {
@@ -261,6 +296,41 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	}
 	
 	static	public class CancelActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.cancelAction() ;
+		}
+	}
+	
+	static	public class AddIpActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIForumAdministrationForm uiForm = event.getSource();
+			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+			if(!uiForm.checkIpAddress(ip)){
+				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipInvalid", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			} else {
+				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanSuccessful", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+	
+	static	public class PostsActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm forumAdministrationForm = event.getSource();
+			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIPopupContainer popupContainer = forumAdministrationForm.getAncestorOfType(UIPopupContainer.class);
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+			UIPageListPostByIP viewPostedByUser = popupAction.activate(UIPageListPostByIP.class, 650) ;
+			viewPostedByUser.setIp(ip) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static	public class UnBanActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;

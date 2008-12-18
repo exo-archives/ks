@@ -31,8 +31,10 @@ import java.util.ResourceBundle;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.portlet.PortletPreferences;
 
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -320,6 +322,13 @@ public class ForumUtils {
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
 		return res.getString("UIForumAdministrationForm.label.notifyEmailContentDefault");
+	}
+	
+	public static boolean enableIPLogging(){
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		System.out.println("\n\n\n\n----------------> enableIPLogging:" + portletPref.getValue("enableIPFiltering", ""));
+		return Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
 	}
 	
 }
