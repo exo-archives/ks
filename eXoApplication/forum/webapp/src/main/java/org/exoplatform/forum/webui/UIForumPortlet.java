@@ -141,7 +141,6 @@ public class UIForumPortlet extends UIPortletApplication {
 	
 	public UserProfile getUserProfile() throws Exception {
 		if(this.userProfile == null) updateUserProfileInfo() ;
-		userProfile.setUserRole((long)0);
 		return this.userProfile ;
 	}
 	
