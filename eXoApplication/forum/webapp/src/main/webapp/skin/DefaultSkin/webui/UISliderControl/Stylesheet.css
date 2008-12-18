@@ -1,0 +1,47 @@
+.UISliderControl {
+	height:17px;
+	width:300px;
+}
+#UICalendarControl {
+	z-index:1;
+}
+.UISliderControl .SliderContainer {
+	float: left;
+	padding-top: 5px;
+	width: 228px;
+	margin-right:10px;
+	z-index:0;
+}
+.UISliderControl .LeftSide {
+	background: url(SliderPointer.gif) left top no-repeat;
+	padding-left: 1px;
+}
+
+.UISliderControl .RightSide {
+	background: url(SliderPointer.gif) right top no-repeat;
+	padding-right: 1px;
+}
+
+.UISliderControl .CenterSide {
+	background: url(SliderPointer.gif) left -17px repeat-x;
+	height: 17px;
+}
+
+.UISliderControl .SliderPointer {
+	background:url(SliderPointer.gif) right -35px no-repeat;
+	width: 14px;
+	height: 18px;
+	display: block;
+	-moz-user-select:none;
+}
+
+.UISliderControl .BoxNumber .BoxNumberInput {
+	width: 30px;
+	height: 17px;
+	text-align:right;
+	cursor:default;
+	border:solid 1px #ccc;
+	padding:2px 2px 0px 0px;
+	float:left;
+	left:0px;
+}
