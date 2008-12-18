@@ -7,14 +7,8 @@ import java.util.List;
 
 import org.exoplatform.common.http.HTTPMethods;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.MessageListBean;
-import org.exoplatform.forum.service.MessageBean ;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Utils;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.rest.CacheControl;
 import org.exoplatform.services.rest.HTTPMethod;
 import org.exoplatform.services.rest.OutputTransformer;
@@ -31,7 +25,9 @@ import org.exoplatform.ws.frameworks.json.transformer.Bean2JsonOutputTransformer
 public class ForumWebservice implements ResourceContainer {
 
   protected final static String JSON_CONTENT_TYPE = "application/json";
-
+  
+  private String strQuery ;
+  private List<Object> ipsToJson = new ArrayList<Object>();
   public ForumWebservice() {}
   @HTTPMethod(HTTPMethods.GET)
   @URITemplate("/ks/forum/getmessage/{maxcount}/")
@@ -47,13 +43,32 @@ public class ForumWebservice implements ResourceContainer {
     cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     List<Post> list = forumService.getNewPosts(counter) ;
-    List<MessageBean> lastMessages = new ArrayList<MessageBean>() ;
+    List<Object> lastMessages = new ArrayList<Object>() ;
     if(!list.isEmpty()) {
       for(Post post : list) {
         lastMessages.add(new MessageBean(post)) ;
       }
     }
-    return Response.Builder.ok(new MessageListBean(lastMessages), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+    return Response.Builder.ok(new BeanToJsons(lastMessages), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+  }
+  
+  @HTTPMethod(HTTPMethods.GET)
+  @URITemplate("/ks/forum/filter/{strIP}/")
+  @OutputTransformer(Bean2JsonOutputTransformer.class)
+  public Response filterIps(@URIParam("strIP") String str) throws Exception {
+  	CacheControl cacheControl = new CacheControl();
+    cacheControl.setNoCache(true);
+    cacheControl.setNoStore(true);
+  	if(!str.equals(strQuery)){
+  		ipsToJson.clear() ;
+  		ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  		List<String> banIps = forumService.getBanList() ;
+  		for(String ip : banIps) {
+  			if(ip.startsWith(str)) ipsToJson.add(new BanIP(ip)) ;
+  		}
+  		strQuery = str ;
+    }    
+    return Response.Builder.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }
 
 }
