@@ -693,6 +693,9 @@
 		</childNodeDefinitions>
 	</nodeType>
 	<nodeType name="exo:banIP" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+		  <supertype>nt:base</supertype>
+	  </supertypes>	
 		<propertyDefinitions>
 			<propertyDefinition name="exo:ips" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>

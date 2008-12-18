@@ -167,11 +167,11 @@ public class JCRDataStorage {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node userAdministration;
 		try {
-			return forumHomeNode.getNode(Utils.BAN);
+			return forumHomeNode.getNode(Utils.FORUM_BAN_IP);
 		} catch (PathNotFoundException e) {
-			forumHomeNode.addNode(Utils.BAN, "exo:banIP");
+			forumHomeNode.addNode(Utils.FORUM_BAN_IP, "exo:banIP");
 		}
-		return forumHomeNode.getNode(Utils.BAN);
+		return forumHomeNode.getNode(Utils.FORUM_BAN_IP);
 	}
 
 	public Node getUserProfileHome(SessionProvider sProvider) throws Exception {
@@ -2760,10 +2760,12 @@ public class JCRDataStorage {
 			}
 		}
 		if (userProfile.getIsBanned()) {
-			userProfile.setBanUntil(profileNode.getProperty("exo:banUntil").getLong());
-			if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
-				profileNode.setProperty("exo:isBanned", false);
-				profileNode.save();
+			if(profileNode.hasProperty("exo:banUntil")) {
+				userProfile.setBanUntil(profileNode.getProperty("exo:banUntil").getLong());
+				if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+					profileNode.setProperty("exo:isBanned", false);
+					profileNode.save();
+				}
 			}
 		}
 		return userProfile ;
