@@ -39,7 +39,7 @@
 									  <%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
 									  <a href="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>">
 									    <img class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
-									  </a> 
+									  </a>
 									</td>
 									<td></td>
 							</tr>
@@ -102,10 +102,10 @@
 									<td class="FieldLabel">
 											<%=_ctx.appRes("UISearchForm.label.Posts");%>
 									</td>
-									<td class="FieldComponent FieldCalendar">
+									<td class="FieldComponent FieldCalendar" colspan="2">
 									  <%uiform.renderField(uiform.FIELD_POSTCOUNTMAX_INPUT); %>
-									</td>
-									<td></td>
+
+	   							</td>
 							</tr>
 							<%}  
 							if(uiform.getIsSearchForum()){
@@ -114,10 +114,9 @@
 									<td class="FieldLabel">
 											<%=_ctx.appRes("UISearchForm.label.Topics");%>
 									</td>
-									<td class="FieldComponent FieldCalendar">
+									<td class="FieldComponent FieldCalendar" colspan="2">
 									  <%uiform.renderField(uiform.FIELD_TOPICCOUNTMAX_INPUT); %>
 									</td>
-									<td></td>
 							</tr>
 							<%}  
 							if(uiform.getIsSearchTopic()) {
@@ -126,12 +125,10 @@
 									<td class="FieldLabel">
 											<%=_ctx.appRes("UISearchForm.label.Views");%>
 									</td>
-									<td class="FieldComponent FieldCalendar">
+									<td class="FieldComponent FieldCalendar" colspan="2">
 									  <%uiform.renderField(uiform.FIELD_VIEWCOUNTMAX_INPUT); %>
 									</td>
-									<td></td>
-							</tr>
-							<%}  
+							</tr>							<%}  
 								if(uiform.getIsSearchForum()){
 							%>
 							<tr>

@@ -125,17 +125,18 @@ public class UISearchForm extends UIForm implements UISelector {
 
 		UIFormStringInput topicCountMin = new UIFormStringInput(FIELD_TOPICCOUNTMIN_INPUT, FIELD_TOPICCOUNTMIN_INPUT, null) ;
 		topicCountMin.addValidator(PositiveNumberFormatValidator.class) ;
-		UIFormStringInput topicCountMax = new UIFormStringInput(FIELD_TOPICCOUNTMAX_INPUT, FIELD_TOPICCOUNTMAX_INPUT, null) ;
+    UISliderControl topicCountMax = new UISliderControl(FIELD_TOPICCOUNTMAX_INPUT, FIELD_TOPICCOUNTMAX_INPUT, "") ;
 		topicCountMax.addValidator(PositiveNumberFormatValidator.class) ;
 
 		UIFormStringInput postCountMin = new UIFormStringInput(FIELD_POSTCOUNTMIN_INPUT, FIELD_POSTCOUNTMIN_INPUT, null) ;
 		postCountMin.addValidator(PositiveNumberFormatValidator.class) ;
-		UIFormStringInput postCountMax = new UIFormStringInput(FIELD_POSTCOUNTMAX_INPUT, FIELD_POSTCOUNTMAX_INPUT, null) ;
+    UISliderControl postCountMax = new UISliderControl(FIELD_POSTCOUNTMAX_INPUT, FIELD_POSTCOUNTMAX_INPUT, "") ;
 		postCountMin.addValidator(PositiveNumberFormatValidator.class) ;
 		
 		UIFormStringInput viewCountMin = new UIFormStringInput(FIELD_VIEWCOUNTMIN_INPUT, FIELD_VIEWCOUNTMIN_INPUT, null) ;
 		viewCountMin.addValidator(PositiveNumberFormatValidator.class) ;viewCountMin.setRendered(false) ;
-		UIFormStringInput viewCountMax = new UIFormStringInput(FIELD_VIEWCOUNTMAX_INPUT, FIELD_VIEWCOUNTMAX_INPUT, null) ;
+		//UIFormStringInput viewCountMax = new UIFormStringInput(FIELD_VIEWCOUNTMAX_INPUT, FIELD_VIEWCOUNTMAX_INPUT, null) ;
+    UISliderControl viewCountMax = new UISliderControl(FIELD_VIEWCOUNTMAX_INPUT, FIELD_VIEWCOUNTMAX_INPUT, "") ;
 		viewCountMax.addValidator(PositiveNumberFormatValidator.class) ;viewCountMax.setRendered(false) ;
 		
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
