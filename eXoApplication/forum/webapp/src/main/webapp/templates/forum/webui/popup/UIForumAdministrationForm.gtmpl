@@ -20,10 +20,14 @@
 									<div class="TabsContainer">
 									<%String classCss = "SelectedTab" ; 
 										int i = 0;
+										String tabSelected = "";
 										for(tabconten in uiform.getChildren()){ 
 											if(tabconten.id.indexOf("Tab") > 0) {	
 												String link = "javascript:void(0);";
-												if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
+												if(uiform.getIsSelected(i)){
+													 classCss = "SelectedTab" ;
+													 tabSelected = tabconten.getId();
+												}
 												else {
 													classCss = "NormalTab" ;
 													link = uicomponent.event("SelectTab",""+i) ;
@@ -183,26 +187,27 @@
 			</div>	
 		</div>	
 	</div>
-	
-	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
-			<tr>
-				<td align="center">
-				<% for(action in uiform.getActions()) { 
-					 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
-					 String link = uiform.event(action) ;
-				%>
-					<a href="$link" class="ActionButton LightBlueStyle">
-						<div class="ButtonLeft">
-							<div class="ButtonRight">
-								<div class="ButtonMiddle">$actionLabel</div>
-							</div>
-						</div>
-					</a>
-				<%}%>
-				</td>
-			</tr>
- 		</table> 
-	</div>		
+	<%if(!tabSelected.equals(uicomponent.IP_BAN_TAB)){%>
+			<div class="UIAction"> 
+				<table class="ActionContainer" align="center">
+					<tr>
+						<td align="center">
+						<% for(action in uiform.getActions()) { 
+							 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
+							 String link = uiform.event(action) ;
+						%>
+							<a href="$link" class="ActionButton LightBlueStyle">
+								<div class="ButtonLeft">
+									<div class="ButtonRight">
+										<div class="ButtonMiddle">$actionLabel</div>
+									</div>
+								</div>
+							</a>
+						<%}%>
+						</td>
+					</tr>
+		 		</table> 
+			</div>	
+	<%}%>	
 	<%uiform.end()%>
 </div>
