@@ -34,6 +34,7 @@ public class Utils {
 	public final static String FORUM_STATISTIC = "forumStatisticId".intern() ;
 	public final static String USER_PROFILE_HOME = "UserAdministration".intern() ;
 	public final static String USER_PROFILES = "UserProfile".intern() ;
+	public final static String BAN = "ban".intern() ;
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	
 	public final static String FORUMADMINISTRATION = "forumAdministration".intern() ;

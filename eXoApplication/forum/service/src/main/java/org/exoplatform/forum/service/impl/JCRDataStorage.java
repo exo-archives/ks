@@ -162,6 +162,17 @@ public class JCRDataStorage {
 			return appNode.addNode(Utils.FORUM_SERVICE, "exo:forumHome");
 		}
 	}
+	
+	private Node getForumBanNode(SessionProvider sProvider) throws Exception {
+		Node forumHomeNode = getForumHomeNode(sProvider);
+		Node userAdministration;
+		try {
+			return forumHomeNode.getNode(Utils.BAN);
+		} catch (PathNotFoundException e) {
+			forumHomeNode.addNode(Utils.BAN, "exo:banIP");
+		}
+		return forumHomeNode.getNode(Utils.BAN);
+	}
 
 	public Node getUserProfileHome(SessionProvider sProvider) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
@@ -2599,7 +2610,7 @@ public class JCRDataStorage {
 		return pagelist;
 	}
 
-	public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
+	/*public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0)
 			return userProfile;
@@ -2690,18 +2701,18 @@ public class JCRDataStorage {
 				if (newProfileNode.hasProperty("exo:createdDateBan"))
 					userProfile.setCreatedDateBan(newProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
 			}
-			/*if (isLogin) {
-				if (userProfile.getIsBanned()) {
-					if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
-						newProfileNode.setProperty("exo:isBanned", false);
-					}
-				}
-				if(newProfileNode.isNew()) {
-					newProfileNode.getSession().save() ;
-				}else {
-					newProfileNode.save() ;
-				}
-			}*/
+//			if (isLogin) {
+//				if (userProfile.getIsBanned()) {
+//					if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+//						newProfileNode.setProperty("exo:isBanned", false);
+//					}
+//				}
+//				if(newProfileNode.isNew()) {
+//					newProfileNode.getSession().save() ;
+//				}else {
+//					newProfileNode.save() ;
+//				}
+//			}
 			return userProfile;
 		} catch (PathNotFoundException e) {
 			userProfile.setUserId(userName);
@@ -2715,9 +2726,9 @@ public class JCRDataStorage {
 			saveUserProfile(sProvider, userProfile, false, false);
 			return userProfile;
 		}
-	}
+	}*/
 	
-	public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception {
+	public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName, String ip) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0)	return userProfile;
 		
@@ -2733,7 +2744,12 @@ public class JCRDataStorage {
 		userProfile.setMaxPostInPage(profileNode.getProperty("exo:maxPost").getLong());
 		userProfile.setMaxTopicInPage(profileNode.getProperty("exo:maxTopic").getLong());
 		userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
+		
 		userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
+		if(!userProfile.getIsBanned() && ip != null) {
+			userProfile.setIsBanned(isBanIp(ip)) ;
+		}
+		
 		userProfile.setEmail(profileNode.getProperty("exo:email").getString());
 		Value[] values = profileNode.getProperty("exo:readTopic").getValues() ;
 		for(Value vl : values) {
@@ -2751,6 +2767,12 @@ public class JCRDataStorage {
 			}
 		}
 		return userProfile ;
+	}
+	
+	private boolean isBanIp(String ip) throws Exception {
+		List<String> banList = getBanList() ;
+		if(banList.contains(ip)) return true ;
+		return false ;
 	}
 	
 	public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception {
@@ -4027,5 +4049,56 @@ public class JCRDataStorage {
 			return ValuesToList(profile.getProperty("exo:bookmark").getValues()) ;
 		}
 		return new ArrayList<String>() ;
+	}
+	
+	public List<String> getBanList() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node banNode = getForumBanNode(sProvider) ;
+			if(banNode.hasProperty("exo:ips")) return ValuesToList(banNode.getProperty("exo:ips").getValues()) ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally {
+			sProvider.close() ;
+		}
+		return new ArrayList<String>() ;
+	}
+	
+	public boolean addBanIP(String ip) throws Exception {
+		List<String> ips = getBanList() ;
+		if (ips.contains(ip)) return false ;
+		ips.add(ip) ;
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node banNode = getForumBanNode(sProvider) ;
+			banNode.setProperty("exo:ips", ips.toArray(new String[]{})) ;
+			banNode.save() ;
+			return true ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally {
+			sProvider.close() ;
+		}
+		return false ;
+	}
+	
+	public void removeBan(String ip) throws Exception {
+		List<String> ips = getBanList() ;
+		if (ips.contains(ip)){
+			List<String> temp = new ArrayList<String>() ;
+			for(String str : ips){
+				if(!ip.equals(str)) temp.add(str) ;
+			}
+			SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+			try{
+				Node banNode = getForumBanNode(sProvider) ;
+				banNode.setProperty("exo:ips", temp.toArray(new String[]{})) ;
+				banNode.save() ;			
+			}catch(Exception e) {
+				e.printStackTrace() ;
+			}finally {
+				sProvider.close() ;
+			}
+		}
 	}
 }

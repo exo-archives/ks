@@ -342,9 +342,9 @@ public class ForumServiceImpl implements ForumService, Startable{
     storage_.removeTag(sProvider, tagId) ;
   }
 
-  public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
+  /*public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
     return storage_.getUserProfile(sProvider, userName, isGetOption, isGetBan, isLogin);
-  }
+  }*/
 
   public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
     storage_.saveUserProfile(sProvider, userProfile, isOption, isBan) ;
@@ -538,8 +538,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   	return storage_.getUserInformations(sProvider, userProfile) ;
   }
   
-  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception {
-  	return storage_.getDefaultUserProfile(sProvider, userName) ;
+  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName, String ip) throws Exception {
+  	return storage_.getDefaultUserProfile(sProvider, userName, ip) ;
   }
   
   public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
@@ -563,7 +563,20 @@ public class ForumServiceImpl implements ForumService, Startable{
   	storage_.updateForum(path) ;
   }
   
+  public List<String> getBanList() throws Exception {
+  	return storage_.getBanList() ;
+  }
+  
+  public boolean addBanIP(String ip) throws Exception {
+  	return storage_.addBanIP(ip) ;
+  }
+  
+  public void removeBan(String ip) throws Exception {
+  	storage_.removeBan(ip) ;
+  }
+
   public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception{
   	return storage_.getListPostsByIP(ip, strOrderBy, sessionProvider);
   }
+
 }

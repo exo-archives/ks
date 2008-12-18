@@ -302,7 +302,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
 			String remoteAddr = "";
-			if(forumPortlet.getHasEnableIPLogging()) {
+			if(forumPortlet.isEnableIPLogging()) {
 				PortletRequestImp request = event.getRequestContext().getRequest();
 				remoteAddr = request.getRemoteAddr();
 			}

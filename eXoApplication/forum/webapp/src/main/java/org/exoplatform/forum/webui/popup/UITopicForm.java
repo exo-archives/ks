@@ -497,7 +497,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					topicNew.setVoteRating(0.0) ;
 					topicNew.setUserVoteRating(new String[] {}) ;
 					try {
-						if(forumPortlet.getHasEnableIPLogging()) {
+						if(forumPortlet.isEnableIPLogging()) {
 							PortletRequestImp request = event.getRequestContext().getRequest();
 							topicNew.setRemoteAddr(request.getRemoteAddr());
 						}

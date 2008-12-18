@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -50,7 +51,8 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isSearchRendered = false;
 	private boolean isJumpRendered = false;
 	private UserProfile userProfile = null;
-	private boolean enableIPLogging = true;
+	private boolean enableIPLogging = false;
+	private boolean enableBanIP = false;
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
@@ -59,7 +61,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(false) ;
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
-		setHasEnableIPLogging();
+		loadPreferences();
 	}
 //
 //	@Override
@@ -104,18 +106,23 @@ public class UIForumPortlet extends UIPortletApplication {
 		return isJumpRendered ;
 	}
 	
-	private void setHasEnableIPLogging() throws Exception {
+	private void loadPreferences() throws Exception {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 		try {
 			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
+			enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 		
-	public boolean getHasEnableIPLogging() {
+	public boolean isEnableIPLogging() {
   	return enableIPLogging;
+  }
+	
+	public boolean isEnableBanIp() {
+  	return enableBanIP;
   }
 
 	public void renderPopupMessages() throws Exception {
@@ -152,7 +159,14 @@ public class UIForumPortlet extends UIPortletApplication {
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			this.userProfile = forumService.getDefaultUserProfile(sProvider, userId) ;
+			if(enableBanIP) {
+				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+				PortletRequestImp request = context.getRequest() ;
+				this.userProfile = forumService.getDefaultUserProfile(sProvider, userId, request.getRemoteAddr()) ;
+			}else {
+				this.userProfile = forumService.getDefaultUserProfile(sProvider, userId, null) ;
+			}
+			
 		}finally {
 			sProvider.close();
 		}

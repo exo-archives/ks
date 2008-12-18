@@ -19,6 +19,8 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
@@ -310,11 +312,18 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			if(!uiForm.checkIpAddress(ip)){
 				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipInvalid", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			} else {
+				return ;
+			} 
+			ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+			if(fservice.addBanIP(ip)){
 				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanSuccessful", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			} else {
+				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanFalse", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			
 		}
 	}
 	
@@ -332,8 +341,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	
 	static	public class UnBanActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
+			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			//UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+			ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+			fservice.removeBan(ip) ;
+			//forumPortlet.cancelAction() ;
 		}
 	}
 }

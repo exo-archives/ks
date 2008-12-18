@@ -77,7 +77,7 @@ public class UIPageListPostByUser extends UIContainer {
 		if(this.userProfile == null) {
 			UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 			this.userProfile = forumPortlet.getUserProfile() ;
-			hasEnableIPLogging = forumPortlet.getHasEnableIPLogging();
+			hasEnableIPLogging = forumPortlet.isEnableIPLogging();
 		}
 		return this.userProfile ;
 	}

@@ -657,8 +657,8 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public UserProfile getUserProfile(SessionProvider sProvider, String userName,
-	    boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception;
+	/*public UserProfile getUserProfile(SessionProvider sProvider, String userName,
+	    boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception;*/
 
 	public JCRPageList searchUserProfile(SessionProvider sessionProvider, String userSearch) throws Exception;
 	
@@ -896,11 +896,13 @@ public interface ForumService {
   public List<UserProfile> getQuickProfiles(SessionProvider sProvider, List<String> userList) throws Exception ;
   public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception ;
   public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
-  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception ;
+  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName, String ip) throws Exception ;
   public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception ;
   public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception  ;
   public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
   public void updateForum(String path) throws Exception ;
-  
+  public List<String> getBanList() throws Exception ;
+  public boolean addBanIP(String ip) throws Exception ;
+  public void removeBan(String ip) throws Exception ;
   public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception;
 }
