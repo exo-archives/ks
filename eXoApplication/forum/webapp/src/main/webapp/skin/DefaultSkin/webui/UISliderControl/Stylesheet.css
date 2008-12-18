@@ -28,9 +28,9 @@
 }
 
 .UISliderControl .SliderPointer {
-	background:url(SliderPointer.gif) right -35px no-repeat;
+	background:url(SliderPointer.gif) right -34px no-repeat;
 	width: 14px;
-	height: 18px;
+	height: 17px;
 	display: block;
 	-moz-user-select:none;
 }

@@ -45,6 +45,7 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -125,18 +126,18 @@ public class UISearchForm extends UIForm implements UISelector {
 
 		UIFormStringInput topicCountMin = new UIFormStringInput(FIELD_TOPICCOUNTMIN_INPUT, FIELD_TOPICCOUNTMIN_INPUT, null) ;
 		topicCountMin.addValidator(PositiveNumberFormatValidator.class) ;
-    UISliderControl topicCountMax = new UISliderControl(FIELD_TOPICCOUNTMAX_INPUT, FIELD_TOPICCOUNTMAX_INPUT, "") ;
+    UISliderControl topicCountMax = new UISliderControl(FIELD_TOPICCOUNTMAX_INPUT, FIELD_TOPICCOUNTMAX_INPUT, "0") ;
 		topicCountMax.addValidator(PositiveNumberFormatValidator.class) ;
 
 		UIFormStringInput postCountMin = new UIFormStringInput(FIELD_POSTCOUNTMIN_INPUT, FIELD_POSTCOUNTMIN_INPUT, null) ;
 		postCountMin.addValidator(PositiveNumberFormatValidator.class) ;
-    UISliderControl postCountMax = new UISliderControl(FIELD_POSTCOUNTMAX_INPUT, FIELD_POSTCOUNTMAX_INPUT, "") ;
+    UISliderControl postCountMax = new UISliderControl(FIELD_POSTCOUNTMAX_INPUT, FIELD_POSTCOUNTMAX_INPUT, "0") ;
 		postCountMin.addValidator(PositiveNumberFormatValidator.class) ;
 		
 		UIFormStringInput viewCountMin = new UIFormStringInput(FIELD_VIEWCOUNTMIN_INPUT, FIELD_VIEWCOUNTMIN_INPUT, null) ;
 		viewCountMin.addValidator(PositiveNumberFormatValidator.class) ;viewCountMin.setRendered(false) ;
 		//UIFormStringInput viewCountMax = new UIFormStringInput(FIELD_VIEWCOUNTMAX_INPUT, FIELD_VIEWCOUNTMAX_INPUT, null) ;
-    UISliderControl viewCountMax = new UISliderControl(FIELD_VIEWCOUNTMAX_INPUT, FIELD_VIEWCOUNTMAX_INPUT, "") ;
+    UISliderControl viewCountMax = new UISliderControl(FIELD_VIEWCOUNTMAX_INPUT, FIELD_VIEWCOUNTMAX_INPUT, "0") ;
 		viewCountMax.addValidator(PositiveNumberFormatValidator.class) ;viewCountMax.setRendered(false) ;
 		
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
@@ -278,13 +279,12 @@ public class UISearchForm extends UIForm implements UISelector {
 					isClosed = "false"; remain = "@exo:isActiveByForum='true'";
 				}else if(type.equals(Utils.POST)) remain = "@exo:isActiveByTopic='true'";
 			}
-			String topicCountMin = (String)uiForm.getUIInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
+			String topicCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_TOPICCOUNTMAX_INPUT)).getValue();
 			String topicCountMax = "";
-			String postCountMin = (String)uiForm.getUIInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
+			String postCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_POSTCOUNTMAX_INPUT)).getValue();
 			String postCountMax = "";
-			String viewCountMin = (String)uiForm.getUIInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
-			String viewCountMax = "";
-			System.out.println() ;
+			String viewCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_VIEWCOUNTMAX_INPUT)).getValue();
+			String viewCountMax = "";      
 			try{
 				if(topicCountMax != null && topicCountMax.trim().length() > 0 && topicCountMin != null && topicCountMin.trim().length() > 0 && 
 									Integer.parseInt(topicCountMax) < Integer.parseInt(topicCountMin)){
@@ -429,3 +429,18 @@ public class UISearchForm extends UIForm implements UISelector {
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
