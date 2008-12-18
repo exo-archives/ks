@@ -56,7 +56,7 @@ UIDateTimePicker.prototype.show = function() {
   //var y = this.dateField.offsetHeight ;
   var y = fieldDateTime.offsetHeight ;
   if(eXo.core.Browser.getBrowserType() == "ie")  {
-    x = -(eXo.ocore.Browser.findPosX(this.dateField) - eXo.core.Browser.findPosX(fieldDateTime)+this.dateField.offsetWidth);
+    x = -(eXo.core.Browser.findPosX(this.dateField) - eXo.core.Browser.findPosX(fieldDateTime)+this.dateField.offsetWidth);
   }
   with (clndr.firstChild.style) {
   	display = 'block' ;
