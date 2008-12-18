@@ -1,6 +1,10 @@
 <%	
 	import org.exoplatform.forum.webui.popup.UIListTopicOld;
 	import org.exoplatform.forum.webui.popup.UIPageListPostByUser;
+	
+	def jsManager = _ctx.getRequestContext().getJavascriptManager() ;
+	jsManager.importJavascript('eXo.forum.webservice.SearchIpBan', '/forum/javascript/') ;
+	jsManager.addJavascript('eXo.forum.webservice.SearchIpBan.init();') ;
 %>
 <div class="UIFormInputWithActions UIForumAdministrationForm">	
 	<% uiform.begin() %>	
@@ -91,7 +95,7 @@
 																if(t/2 == 0) color = "#ffffff";
 																else color = "#edf3ee";
 														%>
-															<tr background="$color">
+															<tr background="$color" class="IpBanItem">
 																<td class="FieldLabel">$ip</td>
 																<td class="FieldLabel">
 																		[<a href="<%=uicomponent.event("Posts", ip)%>">
