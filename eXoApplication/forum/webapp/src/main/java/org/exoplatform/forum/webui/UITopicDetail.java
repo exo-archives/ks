@@ -229,7 +229,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private boolean isCanPostReply() throws Exception {
-		if(userProfile.getUserRole() > 2) return false;
 		if(userProfile.getIsBanned()) return false;
 		if(forum.getIsClosed() || forum.getIsLock() || topic.getIsClosed() || topic.getIsLock()) return false;
 		if(!isMod) {
