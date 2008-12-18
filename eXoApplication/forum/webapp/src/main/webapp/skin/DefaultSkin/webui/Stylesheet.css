@@ -361,6 +361,18 @@
 	width: 435px;
 	height: 200px;
 }
+.UIForumPortlet #newIpBan1 {
+	width: 40px;
+}
+.UIForumPortlet #newIpBan2 {
+	width: 40px;
+}
+.UIForumPortlet #newIpBan3 {
+	width: 40px;
+}
+.UIForumPortlet #newIpBan4 {
+	width: 40px;
+}
 
 .UIForumPortlet .ParentMaskLayer {
 	position: relative ;

@@ -73,7 +73,10 @@
 															</tr>	
 															<tr background="#edf3ee">
 																<td class="FieldLabel">
-																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT)) ;%>
+																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT1)) ;%>*
+																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT2)) ;%>*
+																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT3)) ;%>*
+																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT4)) ;%>
 																</td>
 																<td class="FieldLabel">
 																	<a href="<%=uicomponent.event("AddIp")%>">
@@ -84,7 +87,7 @@
 														<%
 															String color = "#ffffff";
 															t= 0;
-															for(ip in uicomponent.listIpBan){
+															for(ip in uicomponent.getListIpBan()){
 																if(t/2 == 0) color = "#ffffff";
 																else color = "#edf3ee";
 														%>

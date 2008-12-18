@@ -77,7 +77,10 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_NOTIFYEMAIL_TAB = "notifyEmailTab" ;
 	public static final String IP_BAN_TAB = "ipBanTab" ;
 	
-	public static final String NEW_IP_BAN_INPUT = "newIpBan";
+	public static final String NEW_IP_BAN_INPUT1 = "newIpBan1";
+	public static final String NEW_IP_BAN_INPUT2 = "newIpBan2";
+	public static final String NEW_IP_BAN_INPUT3 = "newIpBan3";
+	public static final String NEW_IP_BAN_INPUT4 = "newIpBan4";
 	public static final String SEARCH_IP_BAN = "searchIpBan";
 	public static final String FIELD_FORUMSORTBY_INPUT = "forumSortBy" ;
 	public static final String FIELD_FORUMSORTBYTYPE_INPUT = "forumSortByType" ;
@@ -174,11 +177,24 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		//addUIFormInput(activeTopicTab) ;
 		if(ForumUtils.enableIPLogging()){
 			ipBanTab.addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
-			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT, null));
-			listIpBan.add("192.168.1.49");
-			listIpBan.add("192.168.2.1");
+			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT1, null));
+			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT2, null));
+			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT3, null));
+			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT4, null));
 			addUIFormInput(ipBanTab);
 		}
+	}
+	
+	@SuppressWarnings("unused")
+	private List<String> getListIpBan(){
+		listIpBan = new ArrayList<String>();
+		ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+		try {
+			listIpBan.addAll(fservice.getBanList());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listIpBan;
 	}
 	
 	public boolean isRenderListTopic() {
@@ -197,21 +213,27 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		return false ;
 	}
 	
-	private boolean checkIpAddress(String ipAdd){
+	private String checkIpAddress(String[] ipAdd){
+		String ip = "";
 		try{
-			int[] ips = new int[ipAdd.split(".").length];
+			int[] ips = new int[4];
+			System.out.println("\n\n\n\n---------->" + ipAdd.length);
 			int i = 0;
-			for(String str : ipAdd.split(".")){
-				ips[i++] = Integer.parseInt(str);
+			for(int t = 0; t < ipAdd.length; t ++){
+				if(t>0) ip += ".";
+				ip += ipAdd[t];
+				ips[i++] = Integer.parseInt(ipAdd[t]);
 			}
 			if(ips.length != 4 || ips[0] <= 0 || ips[0] > 255 || 
-					(ips[0] == 255 && ips[1] == 255 || ips[2] == 255 || ips[3] == 255)) return false;
+					(ips[0] == 255 && ips[1] == 255 || ips[2] == 255 || ips[3] == 255)) return null;
 			for(i = 1; i < 4; i ++){
-				if(ips[i] < 0 || ips[i] > 255) return false;
+				System.out.println("\n\n\n\n---------> ips:" + ips[i]);
+				if(ips[i] < 0 || ips[i] > 255) return null;
 			}
-			return true;
+			return ip;
 		} catch (Exception e){
-			return false;
+			e.printStackTrace();
+			return null;
 		}
 	}
 	
@@ -306,24 +328,32 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	
 	static	public class AddIpActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UIForumAdministrationForm administrationForm = event.getSource();
+			UIFormInputWithActions inputWithActions = (UIFormInputWithActions)administrationForm.getChildById(IP_BAN_TAB);
+			String[] ip = new String[]{((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT1)).getValue(),
+																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT2)).getValue(),
+																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT3)).getValue(),
+																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT4)).getValue(),
+																	};
 			UIForumAdministrationForm uiForm = event.getSource();
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-			if(!uiForm.checkIpAddress(ip)){
+			String ipAdd = uiForm.checkIpAddress(ip);
+			if(ipAdd == null){
 				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipInvalid", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			} 
 			ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			if(fservice.addBanIP(ip)){
-				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanSuccessful", null, ApplicationMessage.WARNING)) ;
+			if(fservice.addBanIP(ipAdd)){
+				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanSuccessful", null, ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 			} else {
-				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanFalse", null, ApplicationMessage.WARNING)) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanFalse", new Object[]{ipAdd}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return;
 			}
-			
+			event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
 		}
 	}
 	
@@ -341,11 +371,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	
 	static	public class UnBanActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm administrationForm = event.getSource();
 			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			//UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			fservice.removeBan(ip) ;
-			//forumPortlet.cancelAction() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
 		}
 	}
 }
