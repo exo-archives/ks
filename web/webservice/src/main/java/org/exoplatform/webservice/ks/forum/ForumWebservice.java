@@ -59,9 +59,15 @@ public class ForumWebservice implements ResourceContainer {
   	CacheControl cacheControl = new CacheControl();
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
-  	if(!str.equals(strQuery)){
+    ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  	if(str.equals("all")){
   		ipsToJson.clear() ;
-  		ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  		List<String> banIps = forumService.getBanList() ;
+  		for(String ip : banIps) {
+  			ipsToJson.add(new BanIP(ip)) ;
+  		}
+  	} else if(!str.equals(strQuery)){
+  		ipsToJson.clear() ;
   		List<String> banIps = forumService.getBanList() ;
   		for(String ip : banIps) {
   			if(ip.startsWith(str)) ipsToJson.add(new BanIP(ip)) ;
