@@ -517,6 +517,10 @@ public class ForumServiceImpl implements ForumService, Startable{
 	  storage_.updateTopicAccess(sysSession, userId, topicId) ;
   }
   
+ /* public Object exportXML(List<String> listCategoryIds, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
+	  return storage_.exportXML(listCategoryIds, forumId, nodePath, bos, sessionProvider);
+  }*/
+  
   public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
 	  return storage_.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
   }
@@ -557,5 +561,9 @@ public class ForumServiceImpl implements ForumService, Startable{
   
   public void updateForum(String path) throws Exception{
   	storage_.updateForum(path) ;
+  }
+  
+  public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception{
+  	return storage_.getListPostsByIP(ip, strOrderBy, sessionProvider);
   }
 }

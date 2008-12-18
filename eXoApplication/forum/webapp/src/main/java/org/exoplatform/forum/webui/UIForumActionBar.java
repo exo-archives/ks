@@ -106,7 +106,7 @@ public class UIForumActionBar extends UIContainer	{
 			UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null) ;
 			exportForm.setObjectId(null);
 			popupContainer.setId("FORUMExportCategoryForm") ;
-			popupAction.activate(popupContainer, 500, 180) ;
+			popupAction.activate(popupContainer, 500, 400) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	

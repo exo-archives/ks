@@ -32,6 +32,12 @@
 				<value>true</value> <!--true/false -->
 				<read-only>false</read-only>
 			</preference>
+			
+			<preference>
+				<name>enableIPFiltering</name>
+				<value>true</value> <!--true/false -->
+				<read-only>false</read-only>
+			</preference>
 		</portlet-preferences>
 
 	</portlet>

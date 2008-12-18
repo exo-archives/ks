@@ -1,5 +1,6 @@
 <%	
 	import org.exoplatform.forum.webui.popup.UIListTopicOld;
+	import org.exoplatform.forum.webui.popup.UIPageListPostByUser;
 %>
 <div class="UIFormInputWithActions UIForumAdministrationForm">	
 	<% uiform.begin() %>	
@@ -54,7 +55,56 @@
 											else display = "none";
 								%>
 								<div style="display: $display;" id="UITabContent" class="UITabContent">
-									<%if(tabconten.id.equals(uicomponent.FIELD_NOTIFYEMAIL_TAB)){
+									<%if(tabconten.id.equals(uicomponent.IP_BAN_TAB)){%>
+										<center>
+											<div style="width: 400px;">
+												<div class="UIQuickSearchForm" style="padding-bottom: 10px;">
+													<div style="float: left;">
+														<% uiform.renderField(tabconten.getChildById(uicomponent.SEARCH_IP_BAN)) ;%>
+													</div>
+													<div class="Search" style="float: left;margin:0px 5px;"><span></span></div>
+													<div style="clear: left;"><span></span></div>
+												</div>
+													<table class="UIGrid" width="100%">
+														<tbody>
+															<tr >
+																<th align="center">IP</th>
+																<th><span></span></th>
+															</tr>	
+															<tr background="#edf3ee">
+																<td class="FieldLabel">
+																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT)) ;%>
+																</td>
+																<td class="FieldLabel">
+																	<a href="<%=uicomponent.event("AddIp")%>">
+																		[<%=_ctx.appRes("UIForumAdministrationForm.label.Add")%>]
+																	</a>
+																</td>
+															</tr>
+														<%
+															String color = "#ffffff";
+															t= 0;
+															for(ip in uicomponent.listIpBan){
+																if(t/2 == 0) color = "#ffffff";
+																else color = "#edf3ee";
+														%>
+															<tr background="$color">
+																<td class="FieldLabel">$ip</td>
+																<td class="FieldLabel">
+																		[<a href="<%=uicomponent.event("Posts", ip)%>">
+																				<%=_ctx.appRes("UIForumAdministrationForm.label.Posts")%>
+																		 </a>]&nbsp;
+																		[<a style="color: red;" href="<%=uicomponent.event("UnBan", ip)%>">
+																				X
+																		 </a>]
+																</td>
+															</tr>
+														<%}%>
+														</tbody>
+													</table>
+											</div>
+										</center>
+									<%}else if(tabconten.id.equals(uicomponent.FIELD_NOTIFYEMAIL_TAB)){
 											String linkReset = uicomponent.event("GetDefaultMail") ;
 											String titleReset = uicomponent.getLabel("TitleResetMail");
 									%>
@@ -126,6 +176,7 @@
 			</div>	
 		</div>	
 	</div>
+	
 	<div class="UIAction"> 
 		<table class="ActionContainer" align="center">
 			<tr>

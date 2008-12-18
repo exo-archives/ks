@@ -19,7 +19,6 @@ package org.exoplatform.forum.service.impl;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -1566,6 +1565,28 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			return null;
 		}
+	}
+	
+	public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception{
+		Node forumHomeNode = getForumHomeNode(sessionProvider);
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
+		StringBuilder builder = new StringBuilder();
+		builder.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:post)[@exo:remoteAddr='")
+						.append(ip).append("']");
+		if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
+				builder.append(" order by @exo:lastPostDate descending");
+		} else {
+			builder.append(" order by @exo:").append(strOrderBy);
+			if (strOrderBy.indexOf("lastPostDate") < 0) {
+				builder.append(", @exo:lastPostDate descending");
+			}
+		}
+		String pathQuery = builder.toString();
+		Query query = qm.createQuery(pathQuery, Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		JCRPageList pagelist = new ForumPageList(sessionProvider, iter, 5, pathQuery, true);
+		return pagelist;
 	}
 
 	protected Post getPost(Node postNode) throws Exception {
@@ -3851,7 +3872,7 @@ public class JCRDataStorage {
 		}catch (Exception e) {			
 		}		
 	}
-
+	
 	public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
 		Session session = null;
 		Node homeNode = getForumHomeNode(sessionProvider);
@@ -3903,6 +3924,60 @@ public class JCRDataStorage {
 			//outputStream.toString().writeTo(bos);
 		}
 	}
+
+	/*public Object exportXML(List<String> listCategoriesId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
+		Session session = null;
+		Node homeNode = getForumHomeNode(sessionProvider);
+		if(listCategoriesId.size() == 1){
+			if(forumId != null){
+				session = homeNode.getNode(listCategoriesId.get(0)).getNode(forumId).getSession();
+			} else {
+				session = homeNode.getNode(listCategoriesId.get(0)).getSession();
+			}
+			session.exportSystemView(nodePath, bos, false, false ) ;
+			session.logout();
+			return null;
+		} else {
+			List<File> listFiles = new ArrayList<File>();
+			File file = null;
+			Writer writer = null;
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
+			session = homeNode.getSession();
+			for(Category category : getCategories(sessionProvider)){
+				if(listCategoriesId.contains(category.getId())){
+					outputStream = new ByteArrayOutputStream() ;
+					session.exportSystemView(category.getPath(), outputStream, false, false ) ;
+					file =  new File(category.getId() + ".xml");
+					file.deleteOnExit();
+					file.createNewFile();
+					writer = new BufferedWriter(new FileWriter(file));
+					writer.write(outputStream.toString());
+					writer.close();
+					listFiles.add(file);
+				}
+			}
+		  // tao file zip:
+	    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+	    int byteReads;
+	    byte[] buffer = new byte[4096]; // Create a buffer for copying
+	    FileInputStream inputStream = null;
+	    ZipEntry zipEntry = null;
+	    for(File f : listFiles){
+	    	inputStream = new FileInputStream(f);
+	    	zipEntry = new ZipEntry(f.getPath());
+	    	zipOutputStream.putNextEntry(zipEntry);
+	    	while((byteReads = inputStream.read(buffer)) != -1)
+	    		zipOutputStream.write(buffer, 0, byteReads);
+	    	inputStream.close();
+	    }
+	    zipOutputStream.close();
+	    file = new File("exportCategory.zip");
+	    session.logout();
+	    for(File f : listFiles) f.deleteOnExit();
+	    return file;
+			//outputStream.toString().writeTo(bos);
+		}
+	}*/
 
 	public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
 		byte[] bdata  = new byte[bis.available()];
