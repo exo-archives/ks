@@ -170,6 +170,7 @@ public class JCRDataStorage {
 			return forumHomeNode.getNode(Utils.FORUM_BAN_IP);
 		} catch (PathNotFoundException e) {
 			forumHomeNode.addNode(Utils.FORUM_BAN_IP, "exo:banIP");
+			forumHomeNode.save() ;
 		}
 		return forumHomeNode.getNode(Utils.FORUM_BAN_IP);
 	}
