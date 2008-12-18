@@ -278,12 +278,13 @@ public class UISearchForm extends UIForm implements UISelector {
 					isClosed = "false"; remain = "@exo:isActiveByForum='true'";
 				}else if(type.equals(Utils.POST)) remain = "@exo:isActiveByTopic='true'";
 			}
-			String topicCountMin = uiForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
+			String topicCountMin = (String)uiForm.getUIInput(FIELD_TOPICCOUNTMAX_INPUT).getValue();
 			String topicCountMax = "";
-			String postCountMin = uiForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
+			String postCountMin = (String)uiForm.getUIInput(FIELD_POSTCOUNTMAX_INPUT).getValue();
 			String postCountMax = "";
-			String viewCountMin = uiForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
+			String viewCountMin = (String)uiForm.getUIInput(FIELD_VIEWCOUNTMAX_INPUT).getValue();
 			String viewCountMax = "";
+			System.out.println() ;
 			try{
 				if(topicCountMax != null && topicCountMax.trim().length() > 0 && topicCountMin != null && topicCountMin.trim().length() > 0 && 
 									Integer.parseInt(topicCountMax) < Integer.parseInt(topicCountMin)){
