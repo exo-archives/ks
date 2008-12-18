@@ -53,7 +53,7 @@
   width: 235px;
 }
 
-.UIForumPortlet .UIAdvancedSearchForm .FieldCalendar input{
+.UIForumPortlet .UIAdvancedSearchForm .FieldCalendar input.DateTimeInput {
   width: 170px;
 }
 
