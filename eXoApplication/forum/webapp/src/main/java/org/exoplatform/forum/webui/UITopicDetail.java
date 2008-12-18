@@ -181,7 +181,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topicId ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
-		hasEnableIPLogging = forumPortlet.getHasEnableIPLogging();
+		hasEnableIPLogging = forumPortlet.isEnableIPLogging();
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
@@ -194,7 +194,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
-		hasEnableIPLogging = forumPortlet.getHasEnableIPLogging();
+		hasEnableIPLogging = forumPortlet.isEnableIPLogging();
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
@@ -214,7 +214,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
-		hasEnableIPLogging = forumPortlet.getHasEnableIPLogging();
+		hasEnableIPLogging = forumPortlet.isEnableIPLogging();
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
@@ -229,6 +229,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private boolean isCanPostReply() throws Exception {
+		if(userProfile.getUserRole() > 2) return false;
 		if(userProfile.getIsBanned()) return false;
 		if(forum.getIsClosed() || forum.getIsLock() || topic.getIsClosed() || topic.getIsLock()) return false;
 		if(!isMod) {
@@ -1288,7 +1289,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
 				String userName = topicDetail.userProfile.getUserId() ;
 				String remoteAddr = "";
-				if(forumPortlet.getHasEnableIPLogging()) {
+				if(forumPortlet.isEnableIPLogging()) {
 					PortletRequestImp request = event.getRequestContext().getRequest();
 					remoteAddr = request.getRemoteAddr();
 				}

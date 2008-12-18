@@ -59,7 +59,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(false) ;
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
-		setHasEnableIPLogging();
+		loadPreferences();
 	}
 //
 //	@Override
@@ -104,7 +104,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		return isJumpRendered ;
 	}
 	
-	private void setHasEnableIPLogging() throws Exception {
+	private void loadPreferences() throws Exception {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 		try {
@@ -114,7 +114,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		}
 	}
 		
-	public boolean getHasEnableIPLogging() {
+	public boolean isEnableIPLogging() {
   	return enableIPLogging;
   }
 

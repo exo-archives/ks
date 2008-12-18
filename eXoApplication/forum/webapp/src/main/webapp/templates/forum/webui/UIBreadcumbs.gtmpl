@@ -68,7 +68,9 @@
 									<div class="MiddleCenterDecorator">
 										<div class="UIWindowContent">
 											<div style="padding: 10px; background: white">
-												<div align="center" style="padding: 0px 10px; height: 25px;border: 1px solid #b7b7b7; text-align: center;"><a href="$link" target="_blank" title="Link"><%=_ctx.appRes("UIBreadcumbs.label.Link");%></a></div>
+												<div align="center" style="padding: 0px 10px; height: 25px;border: 1px solid #b7b7b7; text-align: center;">
+												  <a href="$link" target="_blank" title="<%=_ctx.appRes("UIBreadcumbs.title.Link");%>"><%=_ctx.appRes("UIBreadcumbs.label.Link");%></a>
+												</div>
 											</div>
 										</div>
 									</div>

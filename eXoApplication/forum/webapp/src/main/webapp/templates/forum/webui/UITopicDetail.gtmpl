@@ -26,7 +26,7 @@
 	boolean isShowMenu;
 	boolean canEdit = false ;
 	boolean isUserCreatedTopic = false;
-	boolean isNotReply = false;
+	boolean isCanReply = false;
 	boolean isModeratePost = false;
 	boolean isApproved = true;
 	boolean isShowPost = true ;
@@ -57,40 +57,41 @@
 			canEdit = uicomponent.isMod ;
 		}
 		if(posts != null && posts.size() > 0) {
-		  isNotReply = !uicomponent.isCanPostReply();
+		  isCanReply = uicomponent.isCanPostReply();
 			isClosed = !uicomponent.userCanView() ;
 			if(!canEdit && topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
 			isModeratePost = topic.getIsModeratePost();
 		} else {
 		  isClosed = true;
-		  isNotReply = true;
+		  isCanReply = false;
 		  isShowMenu = false;
 		  isNull = true;
 		}
 	}
 %>
+$isCanReply
 <div class="UITopicDetail">
 <% uiform.begin() %>
 	<% if(!isNull) {%>
 	<div class="ButtomAndPageListContainer">
-	<%if(isNotReply) { %>
-		<div class="LockActionForum UIActionForum" style="float: left;">
-	<% } else { %>
+	<%if(isCanReply) { %>
 		<div class="UIActionForum" style="float: left;">
+	<% } else { %>
+		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } %>
 			<div class="ActionButton">
 				<div class="NormalStyle">
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isNotReply) { %>
-									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
+							<% if(isCanReply) { %>
+									<a href="<%=uicomponent.event("AddPost")%>">
+										<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
+											<%=_ctx.appRes(uiformId + ".action.AddPost");%>
+										</div>
+									</a>
 							<% } else { %>
-								<a href="<%=uicomponent.event("AddPost")%>">
-									<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
-										<%=_ctx.appRes(uiformId + ".action.AddPost");%>
-									</div>
-								</a>
+									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
 							<% } %>
 								</a>
 							</div>
@@ -787,7 +788,7 @@
 											if(checked == 0){ 
 												if(action.equals("Edit")||action.equals("Delete"))continue ;
 											}
-											if(isNotReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
+											if(!isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
 											String actionLink = uicomponent.event(action,uiformId,postId);
 									%>
 										<div class="ActionButton">
@@ -832,24 +833,24 @@
 	</div>	
 <!-- End PostsInThreadContainer -->
 	<div class="ButtomAndPageListContainer">
-		<% if(isNotReply) { %>
-		<div class="LockActionForum UIActionForum" style="float: left;">
-	<% } else { %>
+	<% if(isCanReply) { %>
 		<div class="UIActionForum" style="float: left;">
+	<% } else { %>
+		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } %>
 			<div class="ActionButton">
 				<div class="NormalStyle">
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isNotReply) { %>
-									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
+							<% if(isCanReply) { %>
+									<a href="<%=uicomponent.event("AddPost")%>">
+										<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
+											<%=_ctx.appRes(uicomponent.getName() + ".action.AddPost");%>
+										</div>
+									</a>
 							<% } else { %>
-								<a href="<%=uicomponent.event("AddPost")%>">
-									<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
-										<%=_ctx.appRes(uicomponent.getName() + ".action.AddPost");%>
-									</div>
-								</a>
+									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
 							<% } %>
 								</a>
 							</div>
@@ -905,7 +906,7 @@
 		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 		<div style="clear: left;"><span></span></div>
 	</div>
-<% if(!isNotReply){ %>
+<% if(isCanReply){ %>
 	<div class="UIAction"> 
 		<table class="ActionContainer" align="center">
 			<tbody>
