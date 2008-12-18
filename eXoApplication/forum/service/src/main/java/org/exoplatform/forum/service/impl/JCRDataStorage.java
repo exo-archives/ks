@@ -4072,7 +4072,11 @@ public class JCRDataStorage {
 		try{
 			Node banNode = getForumBanNode(sProvider) ;
 			banNode.setProperty("exo:ips", ips.toArray(new String[]{})) ;
-			banNode.save() ;
+			if(banNode.isNew()) {
+				banNode.getSession().save() ;
+			}else {
+				banNode.save() ;
+			}			
 			return true ;
 		}catch(Exception e) {
 			e.printStackTrace() ;
