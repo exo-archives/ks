@@ -49,7 +49,7 @@ eXo.core.UIMaskLayer.createMask = function(blockContainerId, object, opacity, po
 	  }
 		if(maskLayer.parentNode.id == "UIPage") {
 			eXo.core.UIMaskLayer.enablePageDesktop(false);
-		}
+	  }
 	}catch(err) {
 		//alert(err) ;
 	}
