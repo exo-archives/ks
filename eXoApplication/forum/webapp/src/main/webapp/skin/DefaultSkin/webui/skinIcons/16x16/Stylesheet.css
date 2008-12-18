@@ -427,6 +427,7 @@
   height:16px;
   float:left;
   margin-left:5px; 
+  cursor: pointer;
 }
 .UIForumPortlet .DateTimeInput {
   width:100px;
