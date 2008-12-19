@@ -310,11 +310,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.length() ;
 			postTitle = postTitle.trim();
-			if(postTitle.trim().length() <= 3) {k = 0;}
+			if(postTitle.trim().length() <= 0) {k = 0;}
 			postTitle = ForumTransformHTML.enCodeHTML(postTitle) ;
 			Post post = uiForm.post_;
 			boolean isPP = false;
-			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
+			if(t > 0 && k != 0 && !checksms.equals("null")) {	
 				boolean isOffend = false ; 
 				boolean hasTopicMod = false ;
 				if(!uiForm.isMod()) {
@@ -430,9 +430,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String[] args = { ""} ;
 				if(k == 0) {
 					args = new String[] {uiForm.getLabel(FIELD_POSTTITLE_INPUT)} ;
-					if(t < 4) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
+					if(t == 0) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
-				} else if(t < 4) {
+				} else if(t == 0) {
 					args = new String[] {uiForm.getLabel(FIELD_MESSAGECONTENT) } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 				}
