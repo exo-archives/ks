@@ -585,8 +585,10 @@ UIForumPortlet.prototype.resetFielForm = function(idElm) {
 	var inputs = elm.getElementsByTagName("input") ;
 	for(var i=0; i<inputs.length; i++) {
 		if(inputs[i].type === "checkbox") inputs[i].checked = false;
-		else inputs[i].value = "" 
+		else if(eXo.core.DOMUtil.hasClass(inputs[i],"UISliderInput")) eXo.webui.UISliderControl.reset(inputs[i]);
+		else inputs[i].value = "";
 	}
+	
 };
 
 UIForumPortlet.prototype.RightClickBookMark = function(elmId) {

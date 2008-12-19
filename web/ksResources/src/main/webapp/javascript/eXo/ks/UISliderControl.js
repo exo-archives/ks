@@ -66,4 +66,12 @@ UISliderControl.prototype.end = function(){
 	document.onmouseup = null;
 };
 
+UISliderControl.prototype.reset = function(input){
+	input.value = 0;
+	input.previousSibling.innerHTML = 0;
+	var uiSliderControl = eXo.core.DOMUtil.findAncestorByClass(input,"UISliderControl");
+	var sliderPointer = eXo.core.DOMUtil.findFirstDescendantByClass(uiSliderControl,"div","SliderPointer");
+	sliderPointer.style.width = "14px";
+};
+
 eXo.webui.UISliderControl = new UISliderControl();
