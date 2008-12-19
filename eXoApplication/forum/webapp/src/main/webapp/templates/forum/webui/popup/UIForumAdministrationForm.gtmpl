@@ -68,9 +68,9 @@
 											<div style="width: 400px;">
 												<div class="UIQuickSearchForm" style="padding-bottom: 10px;">
 													<div style="float: left;">
+														<%=_ctx.appRes("UIForumAdministrationForm.label.Filter")%>: &nbsp;
 														<% uiform.renderField(tabconten.getChildById(uicomponent.SEARCH_IP_BAN)) ;%>
 													</div>
-													<div class="Search" style="float: left;margin:0px 5px;"><span></span></div>
 													<div style="clear: left;"><span></span></div>
 												</div>
 													<table class="UIGrid" width="100%">
@@ -86,7 +86,7 @@
 																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT3)) ;%>*
 																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT4)) ;%>
 																</td>
-																<td class="FieldLabel">
+																<td class="FieldLabel" align="center">
 																	<a href="<%=uicomponent.event("AddIp")%>">
 																		[<%=_ctx.appRes("UIForumAdministrationForm.label.Add")%>]
 																	</a>
@@ -101,7 +101,7 @@
 														%>
 															<tr background="$color" class="IpBanItem">
 																<td class="FieldLabel">$ip</td>
-																<td class="FieldLabel">
+																<td class="FieldLabel" align="center">
 																		[<a href="<%=uicomponent.event("Posts", ip)%>">
 																				<%=_ctx.appRes("UIForumAdministrationForm.label.Posts")%>
 																		 </a>]&nbsp;
