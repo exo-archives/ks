@@ -13,12 +13,9 @@ FCKConfig.ToolbarSets["eXoForum"] = [
 ] ;
 
 FCKConfig.ToolbarSets["eXoFAQ"] = [
-	['FitWindow','-','Cut','Copy','Paste'],['Undo','Redo'],['Link','Unlink'],
-	['Image','Flash','Table'],'/',
-	['Bold','Italic','Underline','-','Subscript','Superscript'],
-	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
-	['OrderedList','UnorderedList','Outdent','Indent'],'/',
-	['TextColor','BGColor'],['FontName','FontSize'],
+	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent'],
+	['Image','Flash','Table'],['TextColor','BGColor']
 ] ;
 
 FCKConfig.eXoPath = FCKConfig.BasePath.substr(0, FCKConfig.BasePath.length - 7) + "exo/" ;
