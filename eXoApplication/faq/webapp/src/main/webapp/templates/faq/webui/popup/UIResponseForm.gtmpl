@@ -16,7 +16,7 @@
 						<tr>
 							<%fieldName = uicomponent.getLabel(field.getName());
 								if(!fieldName.equals(uicomponent.getId())) { %>												
-								<td class="FieldLabel" width="14%">
+								<td class="FieldLabel" width="15%"  style="white-space:nowrap;">
 									<%=uicomponent.getLabel(field.getName()) %> : 
 								</td>
 								<td class="FieldComponent" width="86%">
@@ -117,7 +117,7 @@
 													</div>
 									    <%}
 											}
-										}else if(field.getName().equals("QuestionContent")){
+										}else if(field.getName().equals("QuestionContent") || field.getName().equals("QuestionTitle")){
 											String display = "none";
 											if(uicomponent.isViewEditQuestion_){
 												display="block";
@@ -128,9 +128,13 @@
 													<div class="ViewQuestionNotApproved">
 														<%=uicomponent.labelContent_%>
 													</div>
-													<a href="$isEditQuestion">
-														<div class="EditQuestionContent"><span></span></div>
-													</a>
+													<%
+													if(field.getName().equals("QuestionTitle")){
+													%>
+														<a href="$isEditQuestion">
+															<div class="EditQuestionContent"><span></span></div>
+														</a>
+													<%}%>
 												</div>
 										<%}%>
 											<div style="display:$display">

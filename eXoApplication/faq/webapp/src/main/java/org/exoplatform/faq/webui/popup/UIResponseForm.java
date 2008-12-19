@@ -95,7 +95,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
 	@SuppressWarnings("unused")
-	private boolean isViewEditQuestion_ = true;
+	private boolean isViewEditQuestion_ = false;
 	@SuppressWarnings("unused")
 	private String labelContent_ = new String();
 
@@ -814,7 +814,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						break ;
 					}
 				}
-				responseForm.isViewEditQuestion_ = true;
+				responseForm.isViewEditQuestion_ = false;
 				event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
 			}
 		}
