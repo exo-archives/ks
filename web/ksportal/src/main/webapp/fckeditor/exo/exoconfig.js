@@ -6,9 +6,9 @@ FCKConfig.ToolbarSets["eXoBar"] = [
 ];
 
 FCKConfig.ToolbarSets["eXoForum"] = [
-	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline','-','Subscript','Superscript'],
+	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent'],
-	['Image','Flash','Table','-','Link','Unlink'],['TextColor','BGColor'],
+	['Image','Flash','Table'],['TextColor','BGColor'],
 	['Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
 ] ;
 
