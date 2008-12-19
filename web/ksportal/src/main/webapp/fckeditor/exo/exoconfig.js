@@ -6,13 +6,12 @@ FCKConfig.ToolbarSets["eXoBar"] = [
 ];
 
 FCKConfig.ToolbarSets["eXoForum"] = [
-	['FitWindow','-','Cut','Copy','Paste'],['Undo','Redo'],['Link','Unlink'],
-	['Image','Flash','Table'],['OrderedList','UnorderedList','Outdent','Indent'],'/',
-	['FontName','FontSize'],['TextColor','BGColor'],'/',
-	['Bold','Italic','Underline','-','Subscript','Superscript'],
-	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
-	['-','Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
+	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline','-','Subscript','Superscript'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent'],
+	['Image','Flash','Table','-','Link','Unlink'],['TextColor','BGColor'],
+	['Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
 ] ;
+
 FCKConfig.ToolbarSets["eXoFAQ"] = [
 	['FitWindow','-','Cut','Copy','Paste'],['Undo','Redo'],['Link','Unlink'],
 	['Image','Flash','Table'],'/',
