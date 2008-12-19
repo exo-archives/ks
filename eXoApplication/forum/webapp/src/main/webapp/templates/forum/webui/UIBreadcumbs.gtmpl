@@ -49,42 +49,6 @@
 					t = t + 1 ;
 					} 
 				 %>
-	<!-- share link popup start -->
-					<div id="popupShareLink" style="width: 350px; display: none; visibility: visible; z-index: 4; top: 225px; left: 482px;"	class="UIPopupWindow UIDragObject" shareLink="$link">
-						<div class="NormalStyle">
-							<div class="TopLeftCornerDecorator">
-								<div class="TopRightCornerDecorator">
-									<div class="TopCenterDecorator">
-										<div class="OverflowContainer">
-											<div class="PopupTitleIcon"><span/></div>
-												<div onclick="eXo.forum.UIForumPortlet.closeShareLink(this);" title="Close Window" class="CloseButton"><span/><div style="width: 16px; height: 16px;" class="ClosePopup"><span/></div></div>
-											<div class="PopupTitle"><%=_ctx.appRes("UIForumPortlet.label.ShareLink");%></div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="MiddleLeftSideDecorator">
-								<div class="MiddleRightSideDecorator">
-									<div class="MiddleCenterDecorator">
-										<div class="UIWindowContent">
-											<div style="padding: 10px; background: white">
-												<div align="center" style="padding: 0px 10px; height: 25px;border: 1px solid #b7b7b7; text-align: center;"><a href="$link" target="_blank" title="Link"><%=_ctx.appRes("UIBreadcumbs.label.Link");%></a></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div><span/></div>
-							<div class="BottomLeftCornerDecorator">
-								<div class="BottomRightCornerDecorator">
-									<div class="BottomCenterDecorator">
-										<div class="ResizeButton" style="display: block;"><span/></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-	<!-- share link popup end -->	
 					<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">
@@ -116,7 +80,7 @@
 					<%}
 					} else if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)){%>
 					<div class="SeparatorLine">
-						<div style="line-height: 24px; cursor: pointer;" onclick="eXo.forum.UIForumPortlet.shareLink(this);"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></div>
+						<div style="line-height: 24px; cursor: pointer;"><a href="$link" target="_blank" title="<%=_ctx.appRes("UIBreadcumbs.title.Link");%>"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
 					</div>	
 					<%}%>
 				</div>
