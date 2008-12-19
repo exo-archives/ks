@@ -1244,7 +1244,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
 			String checksms = message ;
-			if(checksms != null && checksms.trim().length() > 3) {
+			if(checksms != null && checksms.trim().length() > 0) {
 				boolean isOffend = false ;
 				boolean hasTopicMod = false ;
 				if(!topicDetail.isMod) {

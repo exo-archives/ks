@@ -365,10 +365,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
-			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
+			if(topicTitle.length() <= 0 && topicTitle.equals("null")) {k = 0;}
 			topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
 			editReason = ForumTransformHTML.enCodeHTML(editReason);
-			if(t >= 3 && k != 0 && !checksms.equals("null")) {
+			if(t > 0 && k != 0 && !checksms.equals("null")) {
 				ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 				boolean isOffend = false ; 
 				boolean hasForumMod = false ;
@@ -529,13 +529,11 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
-				String sms = "" ;
 				if(k == 0) {
-					sms = "Thread Title" ;
-					if(t <= 4) sms = "Thread Title and Message";
-					Object[] args = { sms };
+					Object[] args = new String[] {uiForm.getLabel(FIELD_TOPICTITLE_INPUT)} ;
+					if(t <= 0) args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " and " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-				} else if(t <= 4) {
+				} else if(t <= 0) {
 					Object[] args = { "Message" };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
 				}
