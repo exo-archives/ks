@@ -50,7 +50,7 @@ public class UISliderControl extends UIFormInputBase<String>{
     w.write("          </div>");
     w.write("      </div>");
     w.write("  </div>");
-    w.write("<div class='BoxNumber'><div class='BoxNumberInput'>"+value_+"</div><input type='hidden' name='"+getName()+"' id='"+getId()+"' value='"+ value_ +"'/></div>");
+    w.write("<div class='BoxNumber'><div class='BoxNumberInput'>"+value_+"</div><input class='UISliderInput' type='hidden' name='"+getName()+"' id='"+getId()+"' value='"+ value_ +"'/></div>");
     w.write("</div>");    
   }   
   
