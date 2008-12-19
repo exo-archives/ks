@@ -53,6 +53,9 @@ function SearchIpBan() {
 SearchIpBan.prototype.init = function(userName) {
 	var DOMUtil = eXo.core.DOMUtil;
 	this.searchIpBanNode = document.getElementById('searchIpBan');
+	if (!this.searchIpBanNode) {
+		return;
+	}
 	var uiTabContentNode = DOMUtil.findAncestorById(this.searchIpBanNode, 'UITabContent');
 	this.uiGridNode = DOMUtil.findFirstDescendantByClass(uiTabContentNode, 'table', 'UIGrid');
   this.searchIpBanNode.onkeydown = this.searchIpBanWrapper;
