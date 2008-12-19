@@ -75,12 +75,9 @@ public class UISearchForm extends UIForm implements UISelector {
 	final static	private String FIELD_SEARCHUSER_INPUT = "SearchUser" ;
 	final static	private String FIELD_SEARCHTYPE_SELECTBOX = "SearchType" ;
 	
-	final static	private String FIELD_TOPICCOUNTMIN_INPUT = "TopicCountMin" ;
-	final static	private String FIELD_TOPICCOUNTMAX_INPUT = "TopicCountMax" ;
-	final static	private String FIELD_POSTCOUNTMIN_INPUT = "PostCountMin" ;
-	final static	private String FIELD_POSTCOUNTMAX_INPUT = "PostCountMax" ;
-	final static	private String FIELD_VIEWCOUNTMIN_INPUT = "ViewCountMin" ;
-	final static	private String FIELD_VIEWCOUNTMAX_INPUT = "ViewCountMax" ;
+	final static	private String FIELD_TOPICCOUNTMIN_SLIDER = "TopicCountMax" ;
+	final static	private String FIELD_POSTCOUNTMIN_SLIDER = "PostCountMax" ;
+	final static	private String FIELD_VIEWCOUNTMIN_SLIDER = "ViewCountMax" ;
 	
 	final static	private String FIELD_ISLOCK_CHECKBOX = "IsLock" ;
 	final static	private String FIELD_ISUNLOCK_CHECKBOX = "IsUnLock" ;
@@ -124,21 +121,11 @@ public class UISearchForm extends UIForm implements UISelector {
 		UIFormDateTimePicker FromDateCreatedLastPost = new UIFormDateTimePicker(FROMDATECREATEDLASTPOST, FROMDATECREATEDLASTPOST, null, false) ;
 		UIFormDateTimePicker ToDateCreatedLastPost = new UIFormDateTimePicker(TODATECREATEDLASTPOST, TODATECREATEDLASTPOST, null, false) ;
 
-		UIFormStringInput topicCountMin = new UIFormStringInput(FIELD_TOPICCOUNTMIN_INPUT, FIELD_TOPICCOUNTMIN_INPUT, null) ;
-		topicCountMin.addValidator(PositiveNumberFormatValidator.class) ;
-    UISliderControl topicCountMax = new UISliderControl(FIELD_TOPICCOUNTMAX_INPUT, FIELD_TOPICCOUNTMAX_INPUT, "0") ;
-		topicCountMax.addValidator(PositiveNumberFormatValidator.class) ;
+    UISliderControl topicCountMin = new UISliderControl(FIELD_TOPICCOUNTMIN_SLIDER, FIELD_TOPICCOUNTMIN_SLIDER, "0") ;//Sliders 
 
-		UIFormStringInput postCountMin = new UIFormStringInput(FIELD_POSTCOUNTMIN_INPUT, FIELD_POSTCOUNTMIN_INPUT, null) ;
-		postCountMin.addValidator(PositiveNumberFormatValidator.class) ;
-    UISliderControl postCountMax = new UISliderControl(FIELD_POSTCOUNTMAX_INPUT, FIELD_POSTCOUNTMAX_INPUT, "0") ;
-		postCountMin.addValidator(PositiveNumberFormatValidator.class) ;
+    UISliderControl postCountMin = new UISliderControl(FIELD_POSTCOUNTMIN_SLIDER, FIELD_POSTCOUNTMIN_SLIDER, "0") ;
 		
-		UIFormStringInput viewCountMin = new UIFormStringInput(FIELD_VIEWCOUNTMIN_INPUT, FIELD_VIEWCOUNTMIN_INPUT, null) ;
-		viewCountMin.addValidator(PositiveNumberFormatValidator.class) ;viewCountMin.setRendered(false) ;
-		//UIFormStringInput viewCountMax = new UIFormStringInput(FIELD_VIEWCOUNTMAX_INPUT, FIELD_VIEWCOUNTMAX_INPUT, null) ;
-    UISliderControl viewCountMax = new UISliderControl(FIELD_VIEWCOUNTMAX_INPUT, FIELD_VIEWCOUNTMAX_INPUT, "0") ;
-		viewCountMax.addValidator(PositiveNumberFormatValidator.class) ;viewCountMax.setRendered(false) ;
+    UISliderControl viewCountMin = new UISliderControl(FIELD_VIEWCOUNTMIN_SLIDER, FIELD_VIEWCOUNTMIN_SLIDER, "0") ;
 		
 		UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
 		
@@ -156,11 +143,8 @@ public class UISearchForm extends UIForm implements UISelector {
 		addUIFormInput(FromDateCreatedLastPost) ;
 		addUIFormInput(ToDateCreatedLastPost) ;
 		addUIFormInput(topicCountMin) ;
-		addUIFormInput(topicCountMax) ;
 		addUIFormInput(postCountMin) ;
-		addUIFormInput(postCountMax) ;
 		addUIFormInput(viewCountMin) ;
-		addUIFormInput(viewCountMax) ;
 		addUIFormInput(moderator) ;
 		setActions(new String[]{"Search","ResetField", "Cancel"});
 	}
@@ -279,34 +263,10 @@ public class UISearchForm extends UIForm implements UISelector {
 					isClosed = "false"; remain = "@exo:isActiveByForum='true'";
 				}else if(type.equals(Utils.POST)) remain = "@exo:isActiveByTopic='true'";
 			}
-			String topicCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_TOPICCOUNTMAX_INPUT)).getValue();
-			String topicCountMax = "";
-			String postCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_POSTCOUNTMAX_INPUT)).getValue();
-			String postCountMax = "";
-			String viewCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_VIEWCOUNTMAX_INPUT)).getValue();
-			String viewCountMax = "";      
-			try{
-				if(topicCountMax != null && topicCountMax.trim().length() > 0 && topicCountMin != null && topicCountMin.trim().length() > 0 && 
-									Integer.parseInt(topicCountMax) < Integer.parseInt(topicCountMin)){
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.MaxMinValueInvalid", null, ApplicationMessage.WARNING)) ;
-					return ;
-				} else if(postCountMax != null && postCountMax.trim().length() > 0 && postCountMin != null && postCountMin.trim().length() > 0 &&
-									Integer.parseInt(postCountMax) < Integer.parseInt(postCountMin)){
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.MaxMinValueInvalid", null, ApplicationMessage.WARNING)) ;
-					return ;
-				} else if(viewCountMax != null && viewCountMax.trim().length() > 0 && viewCountMin != null && viewCountMin.trim().length() > 0 && 
-									Integer.parseInt(viewCountMax) < Integer.parseInt(viewCountMin)){
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.MaxMinValueInvalid", null, ApplicationMessage.WARNING)) ;
-					return ;
-				}
-			} catch(Exception e){
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.ValueInvalid", null, ApplicationMessage.WARNING)) ;
-				return ;
-			}
+			String topicCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_TOPICCOUNTMIN_SLIDER)).getValue();
+			String postCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_POSTCOUNTMIN_SLIDER)).getValue();
+			String viewCountMin = (String)((UIFormInput)uiForm.getUIInput(FIELD_VIEWCOUNTMIN_SLIDER)).getValue();
+
 			String moderator = uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).getValue();
 			Calendar fromDateCreated = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATED), FROMDATECREATED);
 			Calendar toDateCreated= uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATED), TODATECREATED);
@@ -323,11 +283,8 @@ public class UISearchForm extends UIForm implements UISelector {
 			eventQuery.setIsLock(isLock) ;
 			eventQuery.setIsClose(isClosed) ;
 			eventQuery.setTopicCountMin(uiForm.checkValue(topicCountMin)) ;
-			eventQuery.setTopicCountMax(uiForm.checkValue(topicCountMax)) ;
 			eventQuery.setPostCountMin(uiForm.checkValue(postCountMin)) ;
-			eventQuery.setPostCountMax(uiForm.checkValue(postCountMax)) ;
 			eventQuery.setViewCountMin(uiForm.checkValue(viewCountMin)) ;
-			eventQuery.setViewCountMax(uiForm.checkValue(viewCountMax)) ;
 			eventQuery.setModerator(moderator) ;
 			eventQuery.setFromDateCreated(fromDateCreated) ;
 			eventQuery.setToDateCreated(toDateCreated) ;
@@ -391,9 +348,9 @@ public class UISearchForm extends UIForm implements UISelector {
 			uiForm.getUIFormCheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setValue(false);
 			uiForm.getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).setValue(false);
 			uiForm.getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).setValue(false);
-//			uiForm.getUIStringInput(FIELD_TOPICCOUNTMAX_INPUT).setValue("");
-//			uiForm.getUIStringInput(FIELD_POSTCOUNTMAX_INPUT).setValue("");
-//			uiForm.getUIStringInput(FIELD_VIEWCOUNTMAX_INPUT).setValue("");
+//			uiForm.getUIStringInput(FIELD_TOPICCOUNTMIN_SLIDER).setValue("");
+//			uiForm.getUIStringInput(FIELD_POSTCOUNTMIN_SLIDER).setValue("");
+//			uiForm.getUIStringInput(FIELD_VIEWCOUNTMIN_SLIDER).setValue("");
 			uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).setValue("");
 			uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue("") ;
 			uiForm.getUIFormDateTimePicker(FROMDATECREATED).setValue("") ;
@@ -429,18 +386,3 @@ public class UISearchForm extends UIForm implements UISelector {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

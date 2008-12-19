@@ -8,40 +8,36 @@
 									<td class="FieldLabel">
 											<%=uicomponent.getLabel(uiform.FIELD_SEARCHVALUE_INPUT); %>
 									</td>
-									<td class="FieldComponent">
+									<td class="FieldComponent" colspan="2">
 											<%uiform.renderField(uiform.FIELD_SEARCHVALUE_INPUT); %>
 									</td>
-									<td></td>
 							</tr>
 							<tr>
 									<td class="FieldLabel">
 											<%=uicomponent.getLabel(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
 									</td>
-									<td class="FieldComponent">
+									<td class="FieldComponent" colspan="2">
 											<%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
 									</td>
-									<td></td>
 							</tr>
 							<tr>
 									<td class="FieldLabel">
 											<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>
 									</td>
-									<td class="FieldComponent">
+									<td class="FieldComponent" colspan="2">
 											<%uiform.renderField(uiform.FIELD_SCOPE_RADIOBOX); %>
 									</td>
-									<td></td>
 							</tr>
 							<tr>
 									<td class="FieldLabel">
 											<%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %>
 									</td>
-									<td class="FieldComponent FieldUserName">
+									<td class="FieldComponent FieldUserName" colspan="2">
 									  <%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
 									  <a href="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>">
 									    <img class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 									  </a>
 									</td>
-									<td></td>
 							</tr>
 							<%  
 							if(uiform.getIsSearchForum() || uiform.getIsSearchTopic()) {
@@ -50,12 +46,11 @@
 									<td class="FieldLabel">
 											<%=_ctx.appRes("UISearchForm.label.Status");%>
 									</td>
-									<td class="FieldComponent">
+									<td class="FieldComponent" colspan="2">
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%></div><div style="float:left; padding-left: 5px; width: 65px;"><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %></div>
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%></div><div style="float:left; padding-left: 5px;"><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %></div>
 									  <div style="clear: left;"><span></span></div>
 									</td>
-									<td></td>
 							</tr>
 							<%  
 							  if(uiform.getIsMod()){
@@ -64,12 +59,11 @@
 									<td class="FieldLabel">
 											<%=_ctx.appRes("UISearchForm.label.State");%>
 									</td>
-									<td class="FieldComponent">
+									<td class="FieldComponent" colspan="2">
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%></div><div style="float:left; padding-left: 5px; width: 65px;"><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %></div>
 									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%></div><div style="float:left; padding-left: 5px;"><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %></div>
 									  <div style="clear: left;"><span></span></div>
 									</td>
-									<td></td>
 							</tr>
 							<%} 
 							}
@@ -79,7 +73,7 @@
 											<%=_ctx.appRes("UISearchForm.label.FromDateCreated");%>
 									</td>
 									<td class="FieldComponent FieldCalendar">
-											<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATED); %></div><div style="float:left; padding-left: 5px; width: 35px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
+											<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATED); %></div><div style="float:left; padding-left: 5px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
 											<div style="clear: left;"><span></span></div>
 									</td>
 									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATED); %></td>
@@ -90,7 +84,7 @@
 											<%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%>
 									</td>
 									<td class="FieldComponent FieldCalendar">
-											<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %></div><div style="float:left; padding-left: 5px; width: 35px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
+											<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %></div><div style="float:left; padding-left: 5px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
 											<div style="clear: left;"><span></span></div>
 									</td>
 									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATEDLASTPOST); %></td>
@@ -103,7 +97,7 @@
 											<%=_ctx.appRes("UISearchForm.label.Posts");%>
 									</td>
 									<td class="FieldComponent FieldCalendar" colspan="2">
-									  <%uiform.renderField(uiform.FIELD_POSTCOUNTMAX_INPUT); %>
+									  <%uiform.renderField(uiform.FIELD_POSTCOUNTMIN_SLIDER); %>
 
 	   							</td>
 							</tr>
@@ -115,7 +109,7 @@
 											<%=_ctx.appRes("UISearchForm.label.Topics");%>
 									</td>
 									<td class="FieldComponent FieldCalendar" colspan="2">
-									  <%uiform.renderField(uiform.FIELD_TOPICCOUNTMAX_INPUT); %>
+									  <%uiform.renderField(uiform.FIELD_TOPICCOUNTMIN_SLIDER); %>
 									</td>
 							</tr>
 							<%}  
@@ -126,7 +120,7 @@
 											<%=_ctx.appRes("UISearchForm.label.Views");%>
 									</td>
 									<td class="FieldComponent FieldCalendar" colspan="2">
-									  <%uiform.renderField(uiform.FIELD_VIEWCOUNTMAX_INPUT); %>
+									  <%uiform.renderField(uiform.FIELD_VIEWCOUNTMIN_SLIDER); %>
 									</td>
 							</tr>							<%}  
 								if(uiform.getIsSearchForum()){
@@ -135,10 +129,9 @@
 									<td class="FieldLabel">
 											<%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %>
 									</td>
-									<td class="FieldComponent">
+									<td class="FieldComponent" colspan="2">
 											<%uiform.renderField(uiform.FIELD_MODERATOR_INPUT); %>
 									</td>
-									<td></td>
 							</tr>
 							<%} %>
 					</tbody>

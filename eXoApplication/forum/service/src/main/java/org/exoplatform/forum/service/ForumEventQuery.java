@@ -18,11 +18,8 @@ public class ForumEventQuery {
 	private String isLock;
 	private String isClosed;
 	private String topicCountMin;
-	private String topicCountMax;
 	private String postCountMin;
-	private String postCountMax;
 	private String viewCountMin;
-	private String viewCountMax;
 	private String moderator;
 	private String remain;
 	private Calendar fromDateCreated ;
@@ -94,35 +91,17 @@ public class ForumEventQuery {
 	public void setTopicCountMin(String topicCountMin) {
   	this.topicCountMin = topicCountMin;
   }
-	public String getTopicCountMax() {
-  	return topicCountMax;
-  }
-	public void setTopicCountMax(String topicCountMax) {
-  	this.topicCountMax = topicCountMax;
-  }
 	public String getPostCountMin() {
   	return postCountMin;
   }
 	public void setPostCountMin(String postCountMin) {
   	this.postCountMin = postCountMin;
   }
-	public String getPostCountMax() {
-  	return postCountMax;
-  }
-	public void setPostCountMax(String postCountMax) {
-  	this.postCountMax = postCountMax;
-  }
 	public String getViewCountMin() {
   	return viewCountMin;
   }
 	public void setViewCountMin(String viewCountMin) {
   	this.viewCountMin = viewCountMin;
-  }
-	public String getViewCountMax() {
-  	return viewCountMax;
-  }
-	public void setViewCountMax(String viewCountMax) {
-  	this.viewCountMax = viewCountMax;
   }
 	public String getModerator() {
   	return moderator;
@@ -278,15 +257,15 @@ public class ForumEventQuery {
     	stringBuffer.append("(@exo:moderators='").append(moderator).append("')") ;
     	isAnd = true ;
     }
-    String temp = setMaxAndMin(topicCountMax, topicCountMin, "topicCount") ;
+    String temp = setMaxAndMin(topicCountMin, "topicCount") ;
     if(temp != null && temp.length() > 0) { 
     	stringBuffer.append(temp) ;
     }
-    temp = setMaxAndMin(postCountMax, postCountMin, "postCount") ;
+    temp = setMaxAndMin(postCountMin, "postCount") ;
     if(temp != null && temp.length() > 0) { 
     	stringBuffer.append(temp) ;
     }
-    temp = setMaxAndMin(viewCountMax, viewCountMin, "viewCount") ;
+    temp = setMaxAndMin(viewCountMin, "viewCount") ;
     if(temp != null && temp.length() > 0) { 
     	stringBuffer.append(temp) ;
     }
@@ -302,17 +281,6 @@ public class ForumEventQuery {
     if(type.equals("topic") && userPermission > 1){
 			if(isAnd) stringBuffer.append(" and ");
 			stringBuffer.append("(@exo:isApproved='true' and @exo:isActive='true' and @exo:isWaiting='false' and @exo:isActiveByForum='true')");
-			
-			/*stringBuffer.append(" and (").append("@exo:canPost=' '");
-			for(String str : listOfUser){
-				stringBuffer.append(" or @exo:canPost='").append(str).append("'");
-			}
-			
-			stringBuffer.append(" or @exo:canView=' '");
-			for(String str : listOfUser){
-				stringBuffer.append(" or @exo:canView='").append(str).append("'");
-			}
-			stringBuffer.append(")");*/
 		} else if(type.equals("post")){
     	if(isAnd) stringBuffer.append(" and ");
     	stringBuffer.append("(@exo:userPrivate='exoUserPri'");
@@ -329,31 +297,13 @@ public class ForumEventQuery {
 	  return queryString.toString();
   }
 	
-	private String setMaxAndMin(String max, String min, String property) {
+	private String setMaxAndMin(String min, String property) {
 		StringBuffer queryString = new StringBuffer() ;
-		if(max !=null && min != null){
-    	if(Integer.parseInt(max) > Integer.parseInt(min)) {
-    		if(isAnd) queryString.append(" and ");
-    		queryString.append("(@exo:").append(property).append(">=").append(min).append(" and @exo:").append(property).append("<=").append(max).append(")");
-    		isAnd = true ;
-    	} else if(Integer.parseInt(max) == Integer.parseInt(min)) {
-    		if(isAnd) queryString.append(" and ");
-    		queryString.append("(@exo:").append(property).append("=").append(max).append(")");
-    		isAnd = true ;
-    	}
-    } else if(max != null) {
-    	if(Integer.parseInt(max) > 0) {
-    		if(isAnd) queryString.append(" and ");
-    		queryString.append("(@exo:").append(property).append("<=").append(max).append(")") ;
-    		isAnd = true ;
-    	}
-    } else if(min != null) {
     	if(Integer.parseInt(min) > 0) {
     		if(isAnd) queryString.append(" and ") ;
     		queryString.append("(@exo:").append(property).append(">=").append(min).append(")") ;
     		isAnd = true ;
     	}
-    }
 		return queryString.toString() ;
 	}
 
