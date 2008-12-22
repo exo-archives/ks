@@ -69,7 +69,6 @@
 		}
 	}
 %>
-$isCanReply
 <div class="UITopicDetail">
 <% uiform.begin() %>
 	<% if(!isNull) {%>
