@@ -598,4 +598,6 @@ public interface FAQService {
  	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception;
  	
  	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception;
+ 	
+ 	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception ;
 }

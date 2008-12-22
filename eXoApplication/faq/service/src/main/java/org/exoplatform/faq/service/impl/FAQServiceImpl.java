@@ -602,4 +602,7 @@ public class FAQServiceImpl implements FAQService{
 	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception{
 		jcrData_.importData(categoryId, session, inputStream, isImportCategory, sProvider);
 	}
+	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception {
+		return jcrData_.categoryAlreadyExist(categoryId, sProvider);
+	}
 }

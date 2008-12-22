@@ -808,6 +808,7 @@ public class JCRDataStorage {
 		categoryNode.setProperty("exo:createdDate", cal.getInstance()) ;
 		categoryNode.setProperty("exo:moderators", category.getModerators()) ;
 		categoryNode.setProperty("exo:isModerateQuestions", category.isModerateQuestions()) ;
+		categoryNode.setProperty("exo:index", 0) ;
 	}
 	
 	private boolean getCategoryNodeByName(Category category, boolean isAddNew, SessionProvider sProvider) throws Exception {
@@ -886,6 +887,7 @@ public class JCRDataStorage {
 		if(categoryNode.hasProperty("exo:createdDate")) cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
 		if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
 		if(categoryNode.hasProperty("exo:isModerateQuestions")) cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
+		if(categoryNode.hasProperty("exo:index")) cat.setIndex(categoryNode.getProperty("exo:index").getLong()) ;
 		return cat;
 	}
 
@@ -901,6 +903,17 @@ public class JCRDataStorage {
 		} else{
 			return getCategoryHome(sProvider, null);
 		}
+	}
+	
+	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception {
+		Node categoryHome = getCategoryHome(sProvider, null) ;	
+		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+				+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		if (result.getNodes().getSize() > 0) return true;
+		else return false;
 	}
 
 	public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
@@ -1353,4 +1366,57 @@ public class JCRDataStorage {
 		}
 	}
 
+	public void swapCategories(String parentCateId, String cateId1, String cateId2, boolean isUp, SessionProvider sessionProvider) throws Exception{
+		Node categoryHomeNode = getCategoryHome(sessionProvider, null);
+		Node parentCate = null;
+		if(parentCateId == null) parentCate = categoryHomeNode;
+		else parentCate = getCategoryNodeById(parentCateId, sessionProvider);
+		Node category1 = getCategoryNodeById(cateId1, sessionProvider);
+		QueryManager qm = categoryHomeNode.getSession().getWorkspace().getQueryManager();
+		Node cateNode = null;
+		StringBuffer queryString = null;
+		NodeIterator iter = null;
+		long f = category1.getProperty("exo:index").getValue().getLong();
+		if(cateId2 != null){
+			long t = 0;
+			long l = 0;
+			t = getCategoryNodeById(cateId2, sessionProvider).getProperty("exo:index").getValue().getLong();
+			if(f > t) l = 1;
+			else l = -1;
+			queryString = new StringBuffer("/jcr:root").append(parentCate.getPath()).
+			append("//element(*,exo:faqCategory)[((@exo:index < ").append(f).
+			append(") and (@exo:index >= ").append(t).append(")) or ").
+			append("((@exo:index > ").append(f).
+			append(") and (@exo:index <= ").append(t).append("))]");
+			iter = qm.createQuery(queryString.toString(), Query.XPATH).execute().getNodes() ;
+			while(iter.hasNext()) {
+				cateNode = iter.nextNode();
+				cateNode.setProperty("exo:index", cateNode.getProperty("exo:index").getValue().getLong() + l);
+				cateNode.save();
+			}
+		} else {
+			queryString = new StringBuffer("/jcr:root").append(parentCate.getPath()).
+			append("//element(*,exo:faqCategory)[((@exo:index");
+			if(isUp){
+				queryString.append("<").append(f);
+			} else {
+				queryString.append(">").append(f);
+			}
+			iter = qm.createQuery(queryString.toString(), Query.XPATH).execute().getNodes() ;
+			if(iter.hasNext()){
+				if(isUp){
+					iter.skip(iter.getSize() - 1);
+				} 
+				cateNode = iter.nextNode();
+			}
+			
+		}
+		//category1.setProperty("exo:index", t);
+		category1.save();
+		parentCate.save();
+	}
 }
+
+
+
+

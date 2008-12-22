@@ -1,4 +1,7 @@
 <% 
+	import java.util.ArrayList;
+	import java.util.Arrays;
+	import java.util.List;
 	import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
@@ -700,6 +703,36 @@
 						</div>
 					</div>
 			</div>
+			
+			<!-- =========================== View all subcategories and sub questions to fix issue ks-768 ============================= -->
+			<div style="padding-left: 20px; white-space: nowrap;">
+				<!-- ============== View all subcategory ========================= -->
+				<div style="float: left;">
+					<%String subTitle = "";
+						for(Category subCategory in uicomponent.getSubCategories(category.getId())){
+					%>
+							<div class="FAQCategory" style="float: left; margin:0px 15px 5px 0px;">
+								<a title="<%=subCategory.getName()%>" href="<%=uicomponent.event("OpenCategory", subCategory.getId())%>">
+									<%=FAQUtils.getSubString(subCategory.getName(), 150)%>
+								</a>
+							</div>
+					<%}%>
+				</div>
+				<div style="clear:left;"></div>
+				<!-- ============== View All SubQuestions ======================== -->
+				<div>
+					<%for(Question subQuestion in uicomponent.getListSubQuestion(category.getId())){%>
+							<div class="Question" style="white-space: nowrap; padding:0 0 5px 18px;">
+								<a title="<%=subQuestion.getQuestion()%>" href="<%=uicomponent.event("ViewQuestion", category.getId() + "/" + subQuestion.getId())%>">
+									<%=FAQUtils.getSubString(subQuestion.getQuestion(), 150)%>
+								</a>
+							</div>
+							<div style="clear: left;"></div>
+					<%}%>
+				</div>
+			</div>
+			<!-- ======================== End View all subcategories and sub questions to fix issue ks-768 ============================= -->
+			
 		<%i ++ ;
 			}
 		%>
