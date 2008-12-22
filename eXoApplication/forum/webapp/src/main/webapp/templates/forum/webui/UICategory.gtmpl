@@ -72,7 +72,6 @@
 													<div class="UIRightPopupMenuContainer">
 														<%
 															for(action in uicomponent.getActions()) {
-																//if(action.indexOf("Link") > 0 || action.indexOf("Search") >= 0 || action.indexOf("AddBook") >= 0 || action.indexOf("AddWatching") >= 0) continue ;
 																String nameItem = _ctx.appRes(uicomponent.getName() + ".action." + action);
 																String classIconItem = action + "Icon";
 																String link = uicomponent.event(action,uicomponent.id,"category") ;
@@ -156,6 +155,12 @@
 															</div>
 														</div>
 														<div style="clear: left;"><span></span></div>
+														<div class="LineMenu"><span></span></div>
+														<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>">	 
+															<div class="ItemIcon AdvancedSearchIcon">
+																Advance Search
+															</div>
+														</a>
 													</div>
 												</div>
 											</div>

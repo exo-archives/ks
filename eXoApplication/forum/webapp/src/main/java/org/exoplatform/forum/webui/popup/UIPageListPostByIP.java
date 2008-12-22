@@ -88,9 +88,8 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 		return this.userProfile ;
 	}
 
-	public void setUserName(String userId) {
-		this.userName = userId ;
-	}
+	public String getUserName() { return userName;}
+	public void setUserName(String userId) { this.userName = userId ;}
 
 	public void setIp(String ip){
 		this.ip_ = ip;
