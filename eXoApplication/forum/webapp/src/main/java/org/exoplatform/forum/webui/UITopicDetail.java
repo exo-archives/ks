@@ -129,7 +129,8 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.WatchOptionActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class ),
-			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
+			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
+			@EventConfig(listeners = UITopicDetail.AdvancedSearchActionListener.class)
 		}
 )
 public class UITopicDetail extends UIForumKeepStickPageIterator {
@@ -1396,4 +1397,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		}
 	}	
 	
+	static	public class AdvancedSearchActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail uiForm = event.getSource() ;
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL) ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
+			UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class) ;
+			searchForm.setUserProfile(forumPortlet.getUserProfile()) ;
+			searchForm.setSelectType(Utils.CATEGORY) ;
+			searchForm.setIsSearchForum(false);
+			searchForm.setIsSearchTopic(false);
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
 }

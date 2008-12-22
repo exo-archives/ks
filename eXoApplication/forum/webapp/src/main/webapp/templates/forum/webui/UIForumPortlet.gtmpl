@@ -15,12 +15,7 @@
 		List children = uicomponent.getChildren() ;
 		for(component in children) {
 			if(component.isRendered()){
-				if(component.getId().equals("UIForumLinks")) {
-					if(uicomponent.getIsJumpRendered())
-						uicomponent.renderChild(component.getClass()) ;
-				} else {
-					uicomponent.renderChild(component.getClass()) ; 
-				}
+				uicomponent.renderChild(component.getClass()) ; 
 			}
 		}
 	%>

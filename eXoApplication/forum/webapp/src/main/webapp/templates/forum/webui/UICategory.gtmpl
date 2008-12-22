@@ -158,7 +158,7 @@
 														<div class="LineMenu"><span></span></div>
 														<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>">	 
 															<div class="ItemIcon AdvancedSearchIcon">
-																Advance Search
+																<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>
 															</div>
 														</a>
 													</div>
