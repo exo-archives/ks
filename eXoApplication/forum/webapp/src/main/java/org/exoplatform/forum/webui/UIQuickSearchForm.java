@@ -105,7 +105,6 @@ public class UIQuickSearchForm extends UIForm {
 			searchForm.setSelectType(Utils.CATEGORY) ;
 			searchForm.setIsSearchForum(false);
 			searchForm.setIsSearchTopic(false);
-//			searchForm.setValueOnchange(false, false, false, false, false, false, false) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

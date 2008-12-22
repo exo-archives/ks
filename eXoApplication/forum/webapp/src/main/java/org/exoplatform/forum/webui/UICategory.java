@@ -81,7 +81,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UICategory.OpenForumLinkActionListener.class),
 				@EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class),
 				@EventConfig(listeners = UICategory.AddBookMarkActionListener.class),
-				@EventConfig(listeners = UICategory.AddWatchingActionListener.class)
+				@EventConfig(listeners = UICategory.AddWatchingActionListener.class),
+				@EventConfig(listeners = UICategory.AdvancedSearchActionListener.class)
 		}
 )
 public class UICategory extends UIForm	{
@@ -611,6 +612,21 @@ public class UICategory extends UIForm	{
 			addWatchingForm.setPathNode(path);
 			popupAction.activate(addWatchingForm, 425, 250) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static	public class AdvancedSearchActionListener extends EventListener<UICategory> {
+		public void execute(Event<UICategory> event) throws Exception {
+			UICategory uiForm = event.getSource() ;
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL) ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
+			UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class) ;
+			searchForm.setUserProfile(forumPortlet.getUserProfile()) ;
+			searchForm.setSelectType(Utils.CATEGORY) ;
+			searchForm.setIsSearchForum(false);
+			searchForm.setIsSearchTopic(false);
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	

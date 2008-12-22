@@ -49,6 +49,12 @@
 	float: right;
 	margin: -3px 7px;
 }
+
+.UIForumPortlet .AdvancedSearchIcon {
+	background: url('icons/16x16/FindIcon.gif') no-repeat left center;	
+	cursor: pointer;
+	margin: 0px 20px;
+}
 /******************************************** UIBreadcumbs ****************************************/
 
 .UIForumPortlet .UIBreadcumbs {
