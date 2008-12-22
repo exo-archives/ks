@@ -250,6 +250,12 @@
 																</div>
 															</div>
 															<div style="clear: left;"><span></span></div>
+															<div class="LineMenu"><span></span></div>
+															<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>">	 
+																<div class="ItemIcon AdvancedSearchIcon">
+																	<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>
+																</div>
+															</a>
 														</div>
 													</div>
 												</div>

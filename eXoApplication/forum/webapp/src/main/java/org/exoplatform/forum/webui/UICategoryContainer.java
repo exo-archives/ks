@@ -50,8 +50,11 @@ public class UICategoryContainer extends UIContainer	{
 		getChild(UICategories.class).setRendered(isRender) ;
 		getChild(UICategory.class).setRendered(!isRender) ;
 		this.findFirstComponentOfType(UICategoryInfo.class).setRendered(isRender) ;
+		UIForumLinks forumLinks = ((UIForumPortlet) this.getParent()).getChild(UIForumLinks.class) ;
 		if(isRenderJump) {
-			this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setRendered(!isRender) ;
+			forumLinks.setRendered(!isRender);
+		} else {
+			forumLinks.setRendered(false);
 		}
 	}
 }

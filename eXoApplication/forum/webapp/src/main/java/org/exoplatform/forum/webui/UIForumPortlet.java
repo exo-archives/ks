@@ -59,7 +59,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
 		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
 		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
-		addChild(UIForumLinks.class, null, null).setRendered(false) ;
+		addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered) ;
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 		loadPreferences();
 	}
@@ -93,17 +93,17 @@ public class UIForumPortlet extends UIPortletApplication {
 			isCategoryRendered = false ;
 			isSearchRendered = true ;
 		}
+		if(userProfile == null) updateUserProfileInfo();
+		isJumpRendered = this.userProfile.getIsShowForumJump() ;
 		UICategoryContainer categoryContainer = getChild(UICategoryContainer.class).setRendered(isCategoryRendered) ;
-		categoryContainer.setIsRenderJump(isJumpRendered) ;
-		UIForumContainer forumContainer = getChild(UIForumContainer.class).setRendered(isForumRendered) ;
-		forumContainer.setIsRenderJump(isJumpRendered) ;
+		if(isCategoryRendered) {
+			categoryContainer.setIsRenderJump(isJumpRendered);
+		}else {
+			getChild(UIForumLinks.class).setRendered(isJumpRendered) ;
+		}
+		getChild(UIForumContainer.class).setRendered(isForumRendered) ;
 		getChild(UITopicsTag.class).setRendered(isTagRendered) ;
 		getChild(UISearchForm.class).setRendered(isSearchRendered) ;
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean	getIsJumpRendered() {
-		return isJumpRendered ;
 	}
 	
 	private void loadPreferences() throws Exception {
@@ -173,6 +173,5 @@ public class UIForumPortlet extends UIPortletApplication {
 		this.userProfile.setIsOnline(true) ;
 		if(date != null)
 			this.userProfile.setLastLoginDate(date) ;
-		this.isJumpRendered = this.userProfile.getIsShowForumJump() ;
 	}
 }
