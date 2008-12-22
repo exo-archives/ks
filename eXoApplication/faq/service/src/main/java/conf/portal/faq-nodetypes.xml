@@ -129,7 +129,10 @@
   		</propertyDefinition>	
   		<propertyDefinition name="exo:createdDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-  		</propertyDefinition> 		  		
+  		</propertyDefinition>
+  		<propertyDefinition name="exo:index" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>		
   	</propertyDefinitions>
   	<childNodeDefinitions>
       <childNodeDefinition name="*" defaultPrimaryType="exo:faqQuestion" autoCreated="false" mandatory="false"

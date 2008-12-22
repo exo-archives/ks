@@ -9,6 +9,8 @@ import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemExistsException;
 import javax.jcr.Session;
 import javax.jcr.nodetype.ConstraintViolationException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.PortalContainer;
@@ -27,6 +29,8 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormUploadInput;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
@@ -51,7 +55,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 		this.categoryId_ = categoryId;
 	}
 	
-	private void impotFromZipFile(ZipInputStream zipStream, Session session, FAQService service, SessionProvider sProvider) throws Exception {
+	private boolean impotFromZipFile(ZipInputStream zipStream, Session session, FAQService service, SessionProvider sProvider) throws Exception {
 		ByteArrayOutputStream out= new ByteArrayOutputStream();
 		byte[] data  = new byte[5120];   
 		ZipEntry entry = zipStream.getNextEntry();
@@ -65,6 +69,16 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			zipStream.closeEntry();
 			out.close();
 			
+	    if(entry.getName().indexOf("Category") >= 0){
+	    	inputStream = new ByteArrayInputStream(out.toByteArray());
+	    	DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+	    	DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+	    	Document doc = docBuilder.parse(inputStream);
+	    	NodeList list = doc.getChildNodes() ;
+	    	String categoryId = list.item(0).getAttributes().getNamedItem("sv:name").getTextContent() ;
+	    	if(service.categoryAlreadyExist(categoryId, sProvider)) return false;
+	    }
+			
 			inputStream = new ByteArrayInputStream(out.toByteArray());
 			if(entry.getName().indexOf("Question") < 0)	service.importData(this.categoryId_, session, inputStream, true, sProvider);
 			else service.importData(null, session, inputStream, false, sProvider);
@@ -72,6 +86,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 		}
 		zipStream.close();
 		sProvider.close();
+		return true;
 	}
 
 	static public class SaveActionListener extends EventListener<UIImportForm> {
@@ -103,9 +118,13 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				Session session = null;
 				try{
 					ZipInputStream zipInputStream = new ZipInputStream(uploadInput.getUploadDataAsStream());
-					importForm.impotFromZipFile(zipInputStream, session, service, sProvider);
-					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
-			        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					if(!importForm.impotFromZipFile(zipInputStream, session, service, sProvider)){
+						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.CategoryIsExist", null, ApplicationMessage.WARNING));
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					} else {
+						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
+			      event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					}
 				} catch (AccessDeniedException ace) {
 					ace.printStackTrace();
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.access-denied", null, ApplicationMessage.WARNING));
@@ -117,14 +136,17 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", args, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				} catch (ItemExistsException ise) {
+					ise.printStackTrace();
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.CategoryIsExist", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				} catch(Exception e){
+					e.printStackTrace();
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				}
 			
 			} catch (Exception e){
+				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;

@@ -34,6 +34,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  */
 public class Category {
   private String id ;
+  private long index;
   private String name ;
   private String description ;
   private boolean isModerateQuestions = true ;
@@ -156,5 +157,13 @@ public class Category {
 
 	public void setViewAuthorInfor(boolean viewAuthorInfor) {
 		this.viewAuthorInfor = viewAuthorInfor;
+	}
+	
+	public long getIndex() {
+		return index;
+	}
+
+	public void setIndex(long index) {
+		this.index = index;
 	}
 }

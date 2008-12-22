@@ -968,6 +968,7 @@ public class JCRDataStorage {
   	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
   	if(categoryNode.hasProperty("exo:isModerateQuestions")) cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
   	if(categoryNode.hasProperty("exo:viewAuthorInfor")) cat.setViewAuthorInfor(categoryNode.getProperty("exo:viewAuthorInfor").getBoolean()) ;
+  	if(categoryNode.hasProperty("exo:index")) cat.setIndex(categoryNode.getProperty("exo:index").getLong()) ;
   	return cat;
   }
   
@@ -1622,5 +1623,16 @@ public class JCRDataStorage {
 			session.importXML(questionHomeNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 			session.save();
 		}
+	}
+	
+	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception {
+		Node categoryHome = getCategoryHome(sProvider, null) ;	
+		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+				+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		if (result.getNodes().getSize() > 0) return true;
+		else return false;
 	}
 }

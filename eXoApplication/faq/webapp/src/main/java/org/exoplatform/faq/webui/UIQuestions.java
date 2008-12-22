@@ -603,6 +603,31 @@ public class UIQuestions extends UIContainer {
 	}
 
 	public void setLink(String link) { this.link_ = link;}
+	
+	//get all subcategory to fix for issue ks-768: List questions under categories
+	private List<Category> getSubCategories(String cateId){
+		SessionProvider sProvider = FAQUtils.getSystemProvider();
+		List<Category> listCategories = new ArrayList<Category>();
+		try {
+			listCategories = faqService_.getSubCategories(cateId, sProvider, faqSetting_);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		sProvider.close();
+		return listCategories;
+	}
+	//get all sub Questions to fix for issue ks-768: List questions under categories
+	private List<Question> getListSubQuestion(String cateId){
+		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+		List<Question> listQuestions = new ArrayList<Question>();
+		try {
+			listQuestions = faqService_.getQuestionsByCatetory(cateId, sessionProvider, faqSetting_).getAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		sessionProvider.close();
+		return listQuestions;
+	}
 
 	private List<Category> getAllSubCategory(String categoryId) throws Exception {
 		List<Category> listResult = new ArrayList<Category>() ;
