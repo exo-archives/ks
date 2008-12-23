@@ -20,8 +20,6 @@ import java.io.Writer;
 
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.form.UIFormInputBase;
-import org.w3c.tidy.Out;
-import org.w3c.tidy.ParserImpl.ParseInline;
 
 /**
  * Created by The eXo Platform SAS

@@ -971,7 +971,7 @@ public class JCRDataStorage {
 			Topic topicNew = new Topic();
 			topicNew = getTopicNode(topicNode);
 			// setViewCount for Topic
-			if (!userRead.equals(Utils.GUEST)) {
+			if (!userRead.equals(UserProfile.USER_GUEST)) {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
 				updateTopicAccess(sProvider, userRead, topicId) ;
@@ -1282,7 +1282,7 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:userId", topic.getOwner());
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
 				if(isAdminRole(topic.getOwner())) {
-					newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+					newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
 				}
 				newProfileNode.setProperty("exo:totalTopic", 1);
 			}
@@ -1357,7 +1357,7 @@ public class JCRDataStorage {
 		Topic topic = new Topic();
 		try {
 			Node forumNode = forumHomeNode.getNode(categoryId + "/" +forumId);
-			topic = getTopic(sProvider, categoryId, forumId, topicId, Utils.GUEST);
+			topic = getTopic(sProvider, categoryId, forumId, topicId, UserProfile.USER_GUEST);
 			String owner = topic.getOwner();
 			Node userProfileNode = getUserProfileHome(sProvider);
 			try {
@@ -1690,7 +1690,7 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:userId", post.getOwner());
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
 				if(isAdminRole(post.getOwner())) {
-					newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+					newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
 				}
 				newProfileNode.setProperty("exo:totalPost", 1);
 			}
@@ -3010,7 +3010,7 @@ public class JCRDataStorage {
 			newProfileNode.setProperty("exo:userId", userName);
 			newProfileNode.setProperty("exo:userTitle", Utils.USER);
 			if(isAdminRole(userName)) {
-				newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+				newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
 			}
 			newProfileNode.setProperty("exo:userRole", 2);
 			newProfileNode.setProperty("exo:bookmark", new String[] { bookMark });

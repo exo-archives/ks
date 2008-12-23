@@ -313,7 +313,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
-				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
+				categoryContainer.updateIsRender(true);
+				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(uiTopicContainer.getUserProfile().getUserId()));
