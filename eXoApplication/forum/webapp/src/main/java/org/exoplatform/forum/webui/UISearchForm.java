@@ -49,7 +49,6 @@ import org.exoplatform.webui.form.UIFormInput;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**
  * Created by The eXo Platform SARL
@@ -224,7 +223,8 @@ public class UISearchForm extends UIForm implements UISelector {
 	}
 	
 	static	public class SearchActionListener extends EventListener<UISearchForm> {
-		public void execute(Event<UISearchForm> event) throws Exception {
+		@SuppressWarnings("unchecked")
+    public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
 			String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
 			if(!ForumUtils.isEmpty(keyValue)) {
@@ -311,7 +311,9 @@ public class UISearchForm extends UIForm implements UISelector {
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
-			UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
+			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
+			categoryContainer.updateIsRender(true);
+			UICategories categories = categoryContainer.getChild(UICategories.class);
 			categories.setIsRenderChild(true) ;				
 			UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 			listSearchEvent.setListSearchEvent(list) ;

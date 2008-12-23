@@ -13,7 +13,7 @@
 	boolean isLogin = false ;
 	if(prContext.getAccessPath() == PortalRequestContext.PRIVATE_ACCESS) isLogin = true;
 	String userLogin =	Util.getPortalRequestContext().getRemoteUser();
-	String registerUri = path + "/register";
+	String registerUri = path + "/public/register";
 %>
 <div class="UIBannerPortlet UIApplication">
 	<div class="ApplicationMinWidth">

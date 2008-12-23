@@ -74,9 +74,11 @@ public class UICategories extends UIContainer	{
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
 	}
 	
-	public void setIsRenderChild(boolean isRenderChild) {this.isRenderChild = isRenderChild ;}
-	public boolean getIsRendered() throws Exception {
+	public void setIsRenderChild(boolean isRenderChild) {
 		this.getChild(UIForumListSearch.class).setRendered(isRenderChild) ;
+		this.isRenderChild = isRenderChild ;
+	}
+	public boolean getIsRendered() throws Exception {
 		return isRenderChild ;
 	}
 	
