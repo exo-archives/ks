@@ -395,7 +395,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       String detail = questionForm.inputQuestionDetail.getValue();
       String question = questionForm.inputQuestionContent.getValue();
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
-      
       if(!validatorDataInput.fckContentIsNotEmpty(detail)) detail = " ";
       if(validatorDataInput.fckContentIsNotEmpty(question)){
       	if(questionForm.listQuestionDetail.containsKey(questionForm.lastLanguage_)) {
@@ -579,9 +578,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           if(questionForm.listLanguages.size() > 1) {
           	try{
           		QuestionLanguage questionLanguage = new QuestionLanguage() ;
-          		System.out.println("\n\n\n\n----------> size of list language: " + questionForm.listLanguages.size());
           		for(int i = 1; i < questionForm.listLanguages.size() ; i ++) {
-          			System.out.println("\n\n\n\n--------------> i : " + i);
           			if(questionForm.listLanguages.get(i).equals(questionForm.defaultLanguage_)) continue;
           			questionLanguage = questionForm.mapLanguageNode_.get(questionForm.listLanguages.get(i));
           			if(questionLanguage == null){
