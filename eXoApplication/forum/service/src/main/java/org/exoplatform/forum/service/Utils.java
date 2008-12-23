@@ -60,7 +60,7 @@ public class Utils {
 			"For more detail, you can view at link : $LINK".intern();
 	
 	
-	
+
 	public static String transform(String bbcode) {
 		String b = bbcode.substring(0, bbcode.length());
 
@@ -102,8 +102,7 @@ public class Utils {
 		b = StringUtils.replace(b, "[/link]", "[/url]");
 		b = StringUtils.replace(b, "&quot;", "\"");
 		// Need to get the text inbetween img's
-		lastIndex = -0;
-		;
+		lastIndex = 0;
 		tagIndex = 0;
 		while ((tagIndex = b.indexOf("[img]", lastIndex)) != -1) {
 			lastIndex = tagIndex + 1;
@@ -303,28 +302,8 @@ public class Utils {
 			}
 		}
 		// quote
-		while ((tagIndex = b.indexOf("[quote=", lastIndex)) != -1) {
-			lastIndex = tagIndex + 1;
-			try {
-				int clsIndex = b.indexOf("[/quote]", tagIndex);
-				String urlStr = b.substring(tagIndex, clsIndex);
-				int fstb = urlStr.indexOf("=") + 1;
-				int clsUrl = urlStr.indexOf("]");
-				String userName = urlStr.substring(fstb, urlStr.indexOf("]", fstb + 1));
-				String text = urlStr.substring(clsUrl + 1, urlStr.length());
-				if(text == null || text.trim().length() == 0) continue;
-				buffer = new StringBuffer();
-				buffer.append("<div class=\"Classquote\">");
-				buffer.append("<div>Originally Posted by <strong>").append(userName).append(
-				    "</strong></div>");
-				buffer.append("<div>").append(text).append("</div></div>");
-				b = StringUtils.replace(b, "[quote=" + userName + "]" + text + "[/quote]", buffer
-				    .toString());
-			} catch (Exception e) {
-				continue;
-			}
-		}
-
+		tagIndex = 0;
+		lastIndex = 0;
 		while ((tagIndex = b.indexOf("[quote]", lastIndex)) != -1) {
 			lastIndex = tagIndex + 1;
 			try {
@@ -339,6 +318,29 @@ public class Utils {
 				continue;
 			}
 		}
+		tagIndex = 0;
+		lastIndex = 0;
+		while ((tagIndex = b.indexOf("[quote=", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/quote]", tagIndex);
+				String urlStr = b.substring(tagIndex + 7, clsIndex);
+				int clsUrl = urlStr.indexOf("]");
+				String userName = urlStr.substring(0, clsUrl);
+				String text = urlStr.substring(clsUrl + 1);
+				if(text == null || text.trim().length() == 0) continue;
+				buffer = new StringBuffer();
+				buffer.append("<div class=\"Classquote\">");
+				buffer.append("<div>Originally Posted by <strong>").append(StringUtils.remove(userName, '"')).append(
+				    "</strong></div>");
+				buffer.append("<div>").append(text).append("</div></div>");
+				b = StringUtils.replace(b, "[quote=" + userName + "]" + text + "[/quote]", buffer
+				    .toString());
+			} catch (Exception e) {
+				continue;
+			}
+		}
+
 		// Code
 		tagIndex = 0;
 		lastIndex = 0;
@@ -378,9 +380,66 @@ public class Utils {
 				continue;
 			}
 		}
+		//List 
+		lastIndex = 0;
+		tagIndex = 0;
+		while ((tagIndex = b.indexOf("[list]", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			try {
+				int clsIndex = b.indexOf("[/list]", tagIndex);
+				String str = b.substring(tagIndex + 6, clsIndex);
+				String str_ =  "";
+				str_ = StringUtils.replaceOnce(str, "[*]", "<li>");
+				str_ = StringUtils.replace(str_, "[*]", "</li><li>");
+				if(str_.lastIndexOf("</li><li>") > 0) {
+					str_ = str_ + "</li>";
+				}
+				if(str_.indexOf("<br/>") >= 0) {
+					str_ = StringUtils.replace(str_, "<br/>", "");
+				}
+				if(str_.indexOf("<p>") >= 0) {
+					str_ = StringUtils.replace(str_, "<p>", "");
+					str_ = StringUtils.replace(str_, "</p>", "");
+				}
+				b = StringUtils.replace(b, "[list]" + str + "[/list]", "<ul>" + str_ + "</ul>");
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		
+		lastIndex = 0;
+		tagIndex = 0;
+		while ((tagIndex = b.indexOf("[list=", lastIndex)) != -1) {
+			lastIndex = tagIndex + 1;
+			
+			try {
+				int clsIndex = b.indexOf("[/list]", tagIndex);
+				String content = b.substring(tagIndex + 6, clsIndex);
+				int clsType = content.indexOf("]");
+				String type = content.substring(0, clsType);
+				type.replaceAll("\"", "").replaceAll("'", "");
+				String str = content.substring(clsType + 1);
+				String str_ =  "";
+				str_ = StringUtils.replaceOnce(str, "[*]", "<li>");
+				str_ = StringUtils.replace(str_, "[*]", "</li><li>");
+				if(str_.lastIndexOf("</li><li>") > 0) {
+					str_ = str_ + "</li>";
+				}
+				if(str_.indexOf("<br/>") >= 0) {
+					str_ = StringUtils.replace(str_, "<br/>", "");
+				}
+				if(str_.indexOf("<p>") >= 0) {
+					str_ = StringUtils.replace(str_, "<p>", "");
+					str_ = StringUtils.replace(str_, "</p>", "");
+				}
+				b = StringUtils.replace(b, "[list=" + content + "[/list]", "<ol type=\""+type+"\">" + str_ + "</ol>");
+			} catch (Exception e) {
+				continue;
+			}
+		}
 		return b;
 	}
-	
+
 	public static String convertCodeHTML(String s) {
 		if (s == null || s.length() <= 0)
 			return "";
