@@ -12,7 +12,7 @@
 </head>
 <body id="SubBody">	
 <div class="Content UIForumPortlet">
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<thead>
 			<tr>
 				<td class="tcat" colspan="2">BB Code</td>
@@ -70,6 +70,10 @@
 				<td class="alt1">URL Hyperlinking</td>
 			</tr>
 			<tr align="center">
+				<td class="alt2"><a href="#list">[list]</a></td>
+				<td class="alt1">Bulleted Lists / Advanced Lists</td>
+			</tr>
+			<tr align="center">
 				<td class="alt2"><a href="#imgcode">[img]</a></td>
 				<td class="alt1">Images</td>
 			</tr>
@@ -103,7 +107,7 @@
 <br/>
 <!-- BEGIN vB CODE LIST -->
 <!-- Begin Allow Basic BBcode Conditional -->
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Bold / Italic / Underline<a name="basic"></a></td>
@@ -139,7 +143,7 @@
 	</table>
 	<br/>
 <!-- End Allow Basic BBcode Conditional -->
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Color<a name="color"></a></td>
@@ -163,7 +167,7 @@
 	</table>
 	<br/>
 
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Size<a name="size"></a></td>
@@ -187,7 +191,7 @@
 	</table>
 	<br/>
 
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Font<a name="font"></a></td>
@@ -211,7 +215,7 @@
 	</table>
 	<br/>
 
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Highlight<a name="highlight"></a></td>
@@ -235,7 +239,7 @@
 	</table>
 <br/>
 
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Left / Right / Center / Justify<a name="align"></a></td>
@@ -274,7 +278,7 @@
 	</table>
 	<br/>
 
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Indent<a name="indent"></a></td>
@@ -298,7 +302,7 @@
 	</table>
 	<br/>
 
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Email Linking<a name="email"></a></td>
@@ -331,7 +335,7 @@
 	</table>
 	<br/>
 
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">URL Hyperlinking<a name="url"></a></td>
@@ -363,8 +367,53 @@
 		</tbody>
 	</table>
 	<br/>
-
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
+		<tbody>
+			<tr>
+				<td colspan="2" class="tcat">Bulleted Lists<a name="list"/></td>
+			</tr>
+			<tr>
+				<td style="font-weight: normal;" colspan="2" class="thead">The [list] tag allows you to create simple, bulleted lists without specifying an option. Within the value portion, each bullet is denoted by the [*] tag.</td>
+			</tr>
+			<tr valign="top">
+				<td width="20%" class="alt1"><strong>Usage</strong></td>
+				<td class="alt1">[list]<span class="highlight">value</span>[/list]</td>
+			</tr>
+			<tr valign="top">
+				<td width="20%" class="alt2"><strong>Example Usage</strong></td>
+				<td class="alt2">[list]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]</td>
+			</tr>
+			<tr valign="top">
+				<td width="20%" class="alt1"><strong>Example Output</strong></td>
+				<td class="alt1"><ul><li>list item 1</li><li>list item 2</li></ul></td>
+			</tr>
+		</tbody>
+	</table>
+	<br/>
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
+		<tbody>
+			<tr>
+				<td colspan="2" class="tcat">Advanced Lists</td>
+			</tr>
+			<tr>
+				<td style="font-weight: normal;" colspan="2" class="thead">The [list] tag allows you to create advanced lists by specifying an option. The option should have a value of 1 (for a numbered list) or A (for an alphabetic with capital letters list) or a (for an alphabetic with lowercase letters list) or I (for a numbered with capital Roman numeral list) or i (for a numbered with small Roman numeral list).</td>
+			</tr>
+			<tr valign="top">
+				<td width="20%" class="alt1"><strong>Usage</strong></td>
+				<td class="alt1">[list=<span class="highlight">Option</span>]<span class="highlight">value</span>[/list]</td>
+			</tr>
+			<tr valign="top">
+				<td width="20%" class="alt2"><strong>Example Usage</strong></td>
+				<td class="alt2">[list=1]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]<br/><br/>[list=a]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]<br/><br/>[list=A]<br/>[*]list item 1<br/>[*]list item 2<br/>[/list]</td>
+			</tr>
+			<tr valign="top">
+				<td width="20%" class="alt1"><strong>Example Output</strong></td>
+				<td class="alt1"><ol type="1"><li>list item 1</li><li>list item 2</li></ol><ol type="a"><li>list item 1</li><li>list item 2</li></ol><ol type="I"><li>list item 1</li><li>list item 2</li></ol></td>
+			</tr>
+		</tbody>
+	</table>
+	<br/>
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Images<a name="imgcode"></a></td>
@@ -394,8 +443,8 @@
 			</tr>
 		</tbody>
 	</table>
-</br>
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	</br>
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">Quote<a name="quote"></a></td>
@@ -422,7 +471,7 @@
 				<td class="alt1">
 					<div style="margin: 5px 20px 20px;">
 						<div class="smallfont" style="margin-bottom: 2px;">Quote:</div>
-						<table width="100%" border="0" cellpadding="6" cellspacing="0">
+						<table width="100%" border="0" cellpadding="1" cellspacing="0">
 							<tbody>
 								<tr>
 									<td class="alt2" style="border: 1px inset ;">
@@ -434,7 +483,7 @@
 					</div>
 					<div style="margin: 5px 20px 20px;">
 						<div class="smallfont" style="margin-bottom: 2px;">Quote:</div>
-						<table width="100%" border="0" cellpadding="6" cellspacing="0">
+						<table width="100%" border="0" cellpadding="1" cellspacing="0">
 							<tbody>
 								<tr>
 									<td class="alt2" style="border: 1px inset ;">
@@ -452,7 +501,7 @@
 		</tbody>
 	</table>
 	<br/>
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">css<a name="css"></a></td>
@@ -479,7 +528,7 @@
 		</tbody>
 	</table>
 	<br/>
-	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="6" cellspacing="1">
+	<table class="UIGrid" width="100%" align="center" border="0" cellpadding="1" cellspacing="1">
 		<tbody>
 			<tr>
 				<td class="tcat" colspan="2">CODE<a name="code"></a></td>
