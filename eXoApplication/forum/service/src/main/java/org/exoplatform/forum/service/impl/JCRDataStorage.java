@@ -165,7 +165,6 @@ public class JCRDataStorage {
 	
 	private Node getForumBanNode(SessionProvider sProvider) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		Node userAdministration;
 		try {
 			return forumHomeNode.getNode(Utils.FORUM_BAN_IP);
 		} catch (PathNotFoundException e) {
@@ -491,6 +490,10 @@ public class JCRDataStorage {
 				forumNode.setProperty("exo:isLock", forum.getIsLock());
 				break;
 			}
+			case 3: {
+				forumNode.setProperty("exo:banIPs", forum.getBanIP());
+				break;
+			}
 			default:
 				break;
 			}
@@ -520,6 +523,7 @@ public class JCRDataStorage {
 				forumNode.setProperty("exo:lastTopicPath", forum.getLastTopicPath());
 				forumNode.setProperty("exo:postCount", 0);
 				forumNode.setProperty("exo:topicCount", 0);
+				forumNode.setProperty("exo:banIPs", new String[]{});
 				long forumCount = 1;
 				if (catNode.hasProperty("exo:forumCount"))
 					forumCount = catNode.getProperty("exo:forumCount").getLong() + 1;
@@ -762,6 +766,9 @@ public class JCRDataStorage {
 			forum.setPoster(ValuesToArray(forumNode.getProperty("exo:poster").getValues()));
 		if (forumNode.hasProperty("exo:moderators"))
 			forum.setModerators(ValuesToArray(forumNode.getProperty("exo:moderators").getValues()));
+		if (forumNode.hasProperty("exo:banIPs"))
+			forum.setBanIP(ValuesToArray(forumNode.getProperty("exo:banIPs").getValues()));
+		
 		if (forumNode.isNodeType("exo:forumWatching")) {
 			forum.setEmailNotification(ValuesToArray(forumNode.getProperty("exo:emailWatching").getValues()));
 		}
@@ -983,7 +990,7 @@ public class JCRDataStorage {
 			Topic topicNew = new Topic();
 			topicNew = getTopicNode(topicNode);
 			// setViewCount for Topic
-			if (!userRead.equals(Utils.GUEST)) {
+			if (!userRead.equals(UserProfile.USER_GUEST)) {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
 				updateTopicAccess(sProvider, userRead, topicId) ;
@@ -1294,7 +1301,7 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:userId", topic.getOwner());
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
 				if(isAdminRole(topic.getOwner())) {
-					newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+					newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
 				}
 				newProfileNode.setProperty("exo:totalTopic", 1);
 			}
@@ -1369,7 +1376,7 @@ public class JCRDataStorage {
 		Topic topic = new Topic();
 		try {
 			Node forumNode = forumHomeNode.getNode(categoryId + "/" +forumId);
-			topic = getTopic(sProvider, categoryId, forumId, topicId, Utils.GUEST);
+			topic = getTopic(sProvider, categoryId, forumId, topicId, UserProfile.USER_GUEST);
 			String owner = topic.getOwner();
 			Node userProfileNode = getUserProfileHome(sProvider);
 			try {
@@ -1702,7 +1709,7 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:userId", post.getOwner());
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
 				if(isAdminRole(post.getOwner())) {
-					newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+					newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
 				}
 				newProfileNode.setProperty("exo:totalPost", 1);
 			}
@@ -2747,9 +2754,6 @@ public class JCRDataStorage {
 		userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
 		
 		userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
-		if(!userProfile.getIsBanned() && ip != null) {
-			userProfile.setIsBanned(isBanIp(ip)) ;
-		}
 		
 		userProfile.setEmail(profileNode.getProperty("exo:email").getString());
 		Value[] values = profileNode.getProperty("exo:readTopic").getValues() ;
@@ -2768,6 +2772,8 @@ public class JCRDataStorage {
 					profileNode.save();
 				}
 			}
+		} else if(ip != null) {
+			userProfile.setIsBanned(isBanIp(ip)) ;
 		}
 		return userProfile ;
 	}
@@ -3035,7 +3041,7 @@ public class JCRDataStorage {
 			newProfileNode.setProperty("exo:userId", userName);
 			newProfileNode.setProperty("exo:userTitle", Utils.USER);
 			if(isAdminRole(userName)) {
-				newProfileNode.setProperty("exo:userTitle",Utils.GUEST);
+				newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
 			}
 			newProfileNode.setProperty("exo:userRole", 2);
 			newProfileNode.setProperty("exo:bookmark", new String[] { bookMark });

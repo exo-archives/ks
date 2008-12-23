@@ -68,7 +68,7 @@ public class UserProfile {
 	private Date createdDateBan ;
 	private long newMessage = 0;
 	private long totalMessage = 0;
-	
+	private String ipLogin = "";
 	
 	@SuppressWarnings("deprecation")
   public UserProfile() {
@@ -167,66 +167,33 @@ public class UserProfile {
   public String[] getBookmark() {return bookmark;}
 	public void setBookmark(String[] bookmark) {this.bookmark = bookmark;}
 
-	public boolean getIsOnline() {
-  	return isOnline;
-  }
+	public boolean getIsOnline() { return isOnline; }
+	public void setIsOnline(boolean isOnline) { this.isOnline = isOnline; }
 
-	public void setIsOnline(boolean isOnline) {
-  	this.isOnline = isOnline;
-  }
+	public long getNewMessage() { return newMessage; }
+	public void setNewMessage(long isNewMessage) { this.newMessage = isNewMessage; }
 
-	public long getNewMessage() {
-  	return newMessage;
-  }
+	public long getTotalMessage() { return totalMessage; }
+	public void setTotalMessage(long totalMessage) { this.totalMessage = totalMessage; }
 
-	public void setNewMessage(long isNewMessage) {
-  	this.newMessage = isNewMessage;
-  }
+	public void setFullName(String fullName) { this.fullName = fullName; }
+	public String getFullName() { return fullName; }
 
-	public long getTotalMessage() {
-  	return totalMessage;
-  }
+	public void setFirstName(String firstName) { this.firstName = firstName; }
+	public String getFirstName() { return firstName; }
 
-	public void setTotalMessage(long totalMessage) {
-  	this.totalMessage = totalMessage;
-  }
+	public void setLastName(String lastName) { this.lastName = lastName; }
+	public String getLastName() { return lastName; }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getEmail() {
-		return email;
-	}
+	public void setEmail(String email) { this.email = email; }
+	public String getEmail() { return email; }
 	
+	public String getIpLogin() { return ipLogin; }
+	public void setIpLogin(String ipLogin) { this.ipLogin = ipLogin; }
+
 	public void setLastTimeAccessTopic(String topicId, long lastTime)throws Exception {
 		lastAccessTopics.put(topicId, lastTime) ;
 	}
-	
 	public long getLastTimeAccessTopic(String topicId) throws Exception {
 		if(lastAccessTopics.get(topicId) != null) return lastAccessTopics.get(topicId);
 		return 0 ; 

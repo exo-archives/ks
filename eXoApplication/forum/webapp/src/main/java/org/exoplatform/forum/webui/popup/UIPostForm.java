@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
@@ -38,7 +39,6 @@ import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -296,16 +296,13 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				return ;
 			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			UserProfile userProfile = forumPortlet.getUserProfile();
 			editReason = ForumTransformHTML.enCodeHTML(editReason).trim() ;
-			String userName = ForumSessionUtils.getCurrentUser() ;
+			String userName = userProfile.getUserId() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-			String remoteAddr = "";
-			if(forumPortlet.isEnableIPLogging()) {
-				PortletRequestImp request = event.getRequestContext().getRequest();
-				remoteAddr = request.getRemoteAddr();
-			}
+			String remoteAddr = userProfile.getIpLogin();
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.length() ;

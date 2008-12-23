@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -31,6 +32,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
+import org.exoplatform.forum.webui.popup.UIBanIPForumManagerForm;
 import org.exoplatform.forum.webui.popup.UIExportForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIMergeTopicForm;
@@ -96,7 +98,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
 		@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
 		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
-		@EventConfig(listeners = UITopicContainer.AdvancedSearchActionListener.class)
+		@EventConfig(listeners = UITopicContainer.AdvancedSearchActionListener.class),
+		@EventConfig(listeners = UITopicContainer.BanIpForumToolsActionListener.class)
 	}
 )
 public class UITopicContainer extends UIForumKeepStickPageIterator {
@@ -175,10 +178,18 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		StringBuffer strQuery = new StringBuffer() ;
 		long role = userProfile.getUserRole() ;
 		String userId = userProfile.getUserId() ;
-		String[] strings = this.forum.getCreateTopicRole() ;
-		if( strings != null && strings.length > 0){
-			this.canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
-		}
+		String [] ips = forum.getBanIP();
+		List<String> ipBaneds = new ArrayList<String>();
+		if(ips != null && ips.length > 0) {
+			ipBaneds = Arrays.asList(ips);
+			System.out.println("\n\n----------->" + ips[0]);
+		} 
+		if(!ipBaneds.contains(userProfile.getIpLogin())) {
+			String[] strings = this.forum.getCreateTopicRole() ;
+			if(strings != null && strings.length > 0){
+				canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
+			}
+		} else canAddNewThread = false;
 		isModerator = false ;
 		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
 		else {
@@ -209,7 +220,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private String[] getActionMenuForum() throws Exception {
-		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", "MoveForum", "RemoveForum", "ExportForum", "WatchOption"};
+		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", 
+				"MoveForum", "RemoveForum", "ExportForum", "WatchOption", "BanIpForumTools"};
 		return actions;
 	}
 
@@ -313,7 +325,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
-				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
+				categoryContainer.updateIsRender(true);
+				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(uiTopicContainer.getUserProfile().getUserId()));
@@ -1045,6 +1059,20 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			searchForm.setIsSearchForum(false);
 			searchForm.setIsSearchTopic(false);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+
+	static	public class BanIpForumToolsActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiForm = event.getSource() ;
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIBanIPForumManagerForm ipForumManager = popupContainer.addChild(UIBanIPForumManagerForm.class, null, null) ;
+			popupContainer.setId("BanIPForumManagerForm") ;
+			ipForumManager.setForum(uiForm.forum);
+			popupAction.activate(popupContainer, 450, 300) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 }

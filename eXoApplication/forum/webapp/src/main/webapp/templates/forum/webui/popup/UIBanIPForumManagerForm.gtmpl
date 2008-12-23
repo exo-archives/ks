@@ -1,0 +1,73 @@
+<div class="UIBanIPForumManagerForm">
+	<% uiform.begin() %>	
+	<div style="width: 400px; margin: auto;">
+		<div class="UIQuickSearchForm" style="padding-bottom: 10px;">
+			<div style="float: left;">
+				<%=_ctx.appRes("UIForumAdministrationForm.label.Filter")%>: &nbsp;
+			</div>
+			<div style="clear: left;"><span></span></div>
+		</div>
+		<table class="UIGrid" width="100%">
+			<tbody>
+				<tr >
+					<th align="center">IP</th>
+					<th><span></span></th>
+				</tr>	
+				<tr background="#edf3ee">
+					<td class="FieldLabel" style="padding-left: 20px;">
+						<% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;
+						<% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;
+						<% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;
+						<% uiform.renderField(uiform.NEW_IP_BAN_INPUT4) ;%>*&nbsp;
+					</td>
+					<td class="FieldLabel" align="center">
+						<a href="<%=uicomponent.event("AddIp")%>">
+							[<%=_ctx.appRes("UIForumAdministrationForm.label.Add")%>]
+						</a>
+					</td>
+				</tr>
+			<%
+				String color = "#ffffff";
+				String[] ips = uicomponent.getListIpBan();
+				for(int i = 0; i < ips.length; ++i){
+					if(i%2 == 0) color = "#edf3ee";
+					else color = "#ffffff";
+					String ip = ips[i];
+			%>
+				<tr style="background:$color" class="IpBanItem">
+					<td class="FieldLabel">$ip</td>
+					<td class="FieldLabel" align="center">
+							[<a href="<%=uicomponent.event("OpenPosts", ip)%>">
+									<%=_ctx.appRes("UIForumAdministrationForm.label.Posts")%>
+							 </a>]&nbsp;
+							[<a style="color: red;" href="<%=uicomponent.event("UnBan", ip)%>">
+									X
+							 </a>]
+					</td>
+				</tr>
+			<%}%>
+			</tbody>
+		</table>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<a href="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">$actionLabel</div>
+								</div>
+							</div>
+						</a>
+					<%}%>
+				</td>
+			</tr>
+		</table> 
+	</div>
+	<% uiform.end() %>	
+</div>

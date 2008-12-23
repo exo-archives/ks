@@ -32,6 +32,7 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIBreadcumbs;
@@ -43,7 +44,6 @@ import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -386,7 +386,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					if(uiForm.forum != null) hasForumMod = uiForm.forum.getIsModerateTopic() ;
 				}
 				UIForumInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
-				// uiForm.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
 				String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
 				Boolean moderatePost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
@@ -424,7 +423,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topic.getId())) ;
 				link = url + link;
 				//
-				String userName = ForumSessionUtils.getCurrentUser() ;
+				UserProfile userProfile = forumPortlet.getUserProfile();
+				String userName = userProfile.getUserId() ;
 				Topic topicNew = uiForm.topic;
 				topicNew.setOwner(userName);
 				topicNew.setTopicName(topicTitle);
@@ -497,10 +497,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					topicNew.setVoteRating(0.0) ;
 					topicNew.setUserVoteRating(new String[] {}) ;
 					try {
-						if(forumPortlet.isEnableIPLogging()) {
-							PortletRequestImp request = event.getRequestContext().getRequest();
-							topicNew.setRemoteAddr(request.getRemoteAddr());
-						}
+						topicNew.setRemoteAddr(userProfile.getIpLogin());
 						forumService.saveTopic(sProvider, uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
 					} catch (PathNotFoundException e) {
 						sProvider.close();

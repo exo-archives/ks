@@ -60,10 +60,10 @@ import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -130,7 +130,9 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.PrivateMessageActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.DownloadAttachActionListener.class ),
 			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
-			@EventConfig(listeners = UITopicDetail.AdvancedSearchActionListener.class)
+			@EventConfig(listeners = UITopicDetail.AdvancedSearchActionListener.class),
+			@EventConfig(listeners = UITopicDetail.BanIPAllForumActionListener.class),
+			@EventConfig(listeners = UITopicDetail.BanIPThisForumActionListener.class)
 		}
 )
 public class UITopicDetail extends UIForumKeepStickPageIterator {
@@ -142,11 +144,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private Forum forum;
 	private Topic topic = new Topic();
 	private boolean isEditTopic = false ;
-	
 	private String IdPostView = "false" ;
 	private String IdLastPost = "false" ;
 	private UserProfile userProfile = null;
 	private String userName = " " ;
+	private List<String> ipBaneds = new ArrayList<String>();
 	private boolean isModeratePost = false ;
 	private boolean isMod = false ;
 	private boolean hasEnableIPLogging = true;
@@ -167,9 +169,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	public UserProfile getUserProfile() {
 		return userProfile ;
 	}
+	
 	public boolean getHasEnableIPLogging() {
 	  return hasEnableIPLogging;
   }
+	
+  private boolean isIPBaned(String ip){
+		if(ipBaneds.contains(ip)) return true;
+		return false;
+	}
 	@SuppressWarnings("unused")
 	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;
@@ -230,23 +238,23 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private boolean isCanPostReply() throws Exception {
+		if(isMod) return true;
 		if(userProfile.getUserRole() == 3) return false;
 		if(userProfile.getIsBanned()) return false;
+		if(isIPBaned(userProfile.getIpLogin())) return false;
 		if(forum.getIsClosed() || forum.getIsLock() || topic.getIsClosed() || topic.getIsLock()) return false;
-		if(!isMod) {
-			if(!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
-			List<String> listUser = new ArrayList<String>() ;
-			String [] canPost = this.topic.getCanPost();
+		if(!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
+		List<String> listUser = new ArrayList<String>() ;
+		String [] canPost = this.topic.getCanPost();
+		if(canPost != null && canPost.length > 0 && !canPost[0].equals(" ")){
+			listUser.addAll(Arrays.asList(canPost));
+			canPost = this.forum.getPoster();
 			if(canPost != null && canPost.length > 0 && !canPost[0].equals(" ")){
 				listUser.addAll(Arrays.asList(canPost));
-				canPost = this.forum.getPoster();
-				if(canPost != null && canPost.length > 0 && !canPost[0].equals(" ")){
-					listUser.addAll(Arrays.asList(canPost));
-				}
 			}
-			if(listUser.size() > 0) {
-				return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
-			}
+		}
+		if(listUser.size() > 0) {
+			return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
 		}
 		return true ;
 	}
@@ -371,6 +379,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
 		String userLogin = this.userProfile.getUserId();
+		String [] ips = forum.getBanIP();
+		if(ips != null && ips.length > 0) {
+			ipBaneds = Arrays.asList(ips);
+		} else {
+			ipBaneds = new ArrayList<String>();
+		}
 		isMod = false;
 		if(this.userProfile.getUserRole() == 0) isMod = true;
 		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin) ;
@@ -449,7 +463,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		postRules.setUserProfile(this.userProfile) ;
 		if(!isNull) {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 			if(this.forum.getIsClosed() || this.forum.getIsLock()){
 				postRules.setCanCreateNewThread(false);
 				postRules.setCanAddPost(false);
@@ -459,9 +472,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				 */
 				String[] strings = this.forum.getCreateTopicRole();
 				boolean canCreateThread = this.isMod;
-				if(!canCreateThread){  
-					if(strings == null || strings.length == 0 || (strings.length == 1 && strings[0].equals(" "))) canCreateThread = true;
-					else canCreateThread = ForumServiceUtils.hasPermission(strings, userName);
+				if(!canCreateThread){ 
+					if(isIPBaned(userProfile.getIpLogin())) canCreateThread = false;
+					else {
+						if(strings == null || strings.length == 0 || (strings.length == 1 && strings[0].equals(" "))) canCreateThread = true;
+						else canCreateThread = ForumServiceUtils.hasPermission(strings, userName);
+					}
 				}
 				postRules.setCanCreateNewThread(canCreateThread);
 				/**
@@ -1289,11 +1305,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				//
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
 				String userName = topicDetail.userProfile.getUserId() ;
-				String remoteAddr = "";
-				if(forumPortlet.isEnableIPLogging()) {
-					PortletRequestImp request = event.getRequestContext().getRequest();
-					remoteAddr = request.getRemoteAddr();
-				}
+				String remoteAddr = topicDetail.userProfile.getIpLogin();
 				Topic topic = topicDetail.topic ;
 				Post post = new Post() ;
 				post.setName("Re: " + topic.getTopicName()) ;
@@ -1409,6 +1421,54 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			searchForm.setIsSearchForum(false);
 			searchForm.setIsSearchTopic(false);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+
+	static	public class BanIPAllForumActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			String ip = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UITopicDetail uiForm = event.getSource() ;
+			if(!uiForm.forumService.addBanIP(ip)){
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanFalse", new Object[]{ip}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return;
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+
+	static	public class BanIPThisForumActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			String ip = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UITopicDetail uiForm = event.getSource() ;
+			List<String> listIp = new ArrayList<String>();
+			String[] ips = uiForm.forum.getBanIP();
+			if(ips != null && ips.length > 0){
+				listIp.addAll(Arrays.asList(uiForm.forum.getBanIP()));
+			}
+			if(!listIp.contains(ip)) {
+				listIp.add(ip);
+				ips = listIp.toArray(new String[]{});
+				for (String string : ips) {
+	        System.out.println("\n==>IP: " + string);
+        }
+				uiForm.forum.setBanIP(ips);
+				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+				try {
+					uiForm.forumService.modifyForum(sProvider, uiForm.forum, 3);
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
+	      } catch (Exception e) {
+	        e.printStackTrace();
+	      }finally {
+	      	sProvider.close();
+	      }
+			}else{
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIBanIPForumManagerForm.sms.ipBanFalse", new Object[]{ip}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return;
+			}
 		}
 	}
 }

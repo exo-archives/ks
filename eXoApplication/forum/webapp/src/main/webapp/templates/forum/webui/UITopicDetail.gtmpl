@@ -59,7 +59,8 @@
 		if(posts != null && posts.size() > 0) {
 		  isCanReply = uicomponent.isCanPostReply();
 			isClosed = !uicomponent.userCanView() ;
-			if(!canEdit && topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
+			if(uicomponent.isIPBaned(userProfile.getIpLogin())) isBanned = true;
+			else if(!canEdit && topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
 			isModeratePost = topic.getIsModeratePost();
 		} else {
 		  isClosed = true;
@@ -241,7 +242,7 @@
 								</div>
 							</div>
 							<% } %>
-						<%if(!isClosed && userProfile.getUserRole() != 3 && !userProfile.getIsBanned()) {%>
+						<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
@@ -671,8 +672,16 @@
 								   if(isShowIP) {
 								     String ip = post.getRemoteAddr();
 								     if(ip != null && ip.length() > 0) {
+								     String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "'))" + uicomponent.event("BanIPAllForum", ip);
+								     String link2= "href=\"" + uicomponent.event("BanIPThisForum", ip) + "\"";
+								     String title1 = "Ban IP: "+ip+" this Forum";
+								     if(uicomponent.isIPBaned(ip)){
+								   	   title1 = "IP: " +ip+ " is baned this Forum."
+								   	   link2 ="";
+								     }
 								%>
-									<div class="IPIcon" title="IP: $ip"><span></span></div>
+									<a $link2 class="IPIcon" title="$title1"><span></span></a>
+									<a href="$link" class="IPIcon" title="IP: $ip"><span></span></a>
 								<%   }
 								   }
 								   if(checked > 0){

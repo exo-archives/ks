@@ -33,30 +33,25 @@
 	List topics = uicomponent.getTopicPageLits() ;
 	String forumName = forum.getForumName();
 	String subForumName = ForumUtils.getSubString(forumName, 35);
-	boolean isShowMenu = !ForumSessionUtils.isAnonim();
 	UserProfile userProfile = uicomponent.getUserProfile();
+	boolean isShowMenu = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-	if(userProfile.getIsBanned()) {
+	boolean canEdit = uicomponent.isModerator;
+	if(!canEdit && (userProfile.getIsBanned() || userProfile.getUserRole() == 3)) {
 		isShowMenu = false ;
 	}
-	boolean canEdit = false ;
-	if(isShowMenu) {
-		if(userProfile.getUserRole() == 0) canEdit = true;
-		if(!canEdit) canEdit = uicomponent.isModerator;
-	}
-	
 	boolean isLock = forum.getIsLock() ;
 	if(!isLock) isLock = forum.getIsClosed() ;
 	boolean isApproveTopic = forum.getIsModerateTopic();
-	boolean hasCreadTopic = false;
+	boolean hasCreadTopic = true;
 	if(!canEdit) {
-		if(!isLock) hasCreadTopic = !uicomponent.getCanAddNewThread() ;
+		if(!isLock) hasCreadTopic = uicomponent.getCanAddNewThread() ;
 	}
 %>
 <div class="UITopicContainer">
 	<% uiform.begin() %>
 	<div class="ButtomAndPageListContainer">
-	<% if(isLock || !isShowMenu || hasCreadTopic) { %>
+	<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 		<div class="LockActionForum UIActionForum" style="float: left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float: left;">
@@ -66,7 +61,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu || hasCreadTopic) { %>
+							<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 									<div class="IconButton LockIcon" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddTopic")%>">
@@ -298,7 +293,7 @@
 												<div class="MiddleLeftRightClickPopupMenu">
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
-														<% if(!isLock || hasCreadTopic) { %>
+														<% if(!isLock && hasCreadTopic) { %>
 															<a class="MenuItem" href="<%=uicomponent.event("AddTopic")%>">	 
 																<div class="ItemIcon PostnewThreadIcon">
 																	<%=_ctx.appRes(uicomponent.getName() + ".action.AddTopic");%>
@@ -603,7 +598,7 @@
 		</div>
 	</div>
 	<div class="ButtomAndPageListContainer">
-		<% if(isLock || !isShowMenu || hasCreadTopic) { %>
+		<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 			<div class="LockActionForum UIActionForum" style="float: left;">
 		<% } else { %>
 			<div class="UIActionForum" style="float: left;">
@@ -613,7 +608,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu || hasCreadTopic) { %>
+							<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 								<div class="IconButton LockIcon" title="Forum is Closed for Posting"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 							<% } else { %>
 								<a href="<%=uicomponent.event("AddTopic")%>">

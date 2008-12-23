@@ -53,6 +53,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private UserProfile userProfile = null;
 	private boolean enableIPLogging = false;
 	private boolean enableBanIP = false;
+	private boolean isGet = true;
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
@@ -153,22 +154,32 @@ public class UIForumPortlet extends UIPortletApplication {
 			e.printStackTrace() ;
 		}
 		Date date = null ;
-		if(this.userProfile != null) {
-			date = this.userProfile.getLastLoginDate() ;
+		if(userProfile != null) {
+			date = userProfile.getLastLoginDate() ;
 		}
+		String ip = null;
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			if(enableBanIP) {
 				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
 				PortletRequestImp request = context.getRequest() ;
-				this.userProfile = forumService.getDefaultUserProfile(sProvider, userId, request.getRemoteAddr()) ;
+				ip = request.getRemoteAddr();
+				userProfile = forumService.getDefaultUserProfile(sProvider, userId, ip) ;
 			}else {
-				this.userProfile = forumService.getDefaultUserProfile(sProvider, userId, null) ;
+				userProfile = forumService.getDefaultUserProfile(sProvider, userId, null) ;
 			}
-			
 		}finally {
 			sProvider.close();
+		}
+		if(isGet && enableIPLogging) {
+			if(ip == null) {
+				WebuiRequestContext context = RequestContext.getCurrentInstance() ;
+				PortletRequestImp request = context.getRequest();
+				ip = request.getRemoteAddr();
+			}
+			userProfile.setIpLogin(ip);
+			isGet = false;
 		}
 		this.userProfile.setIsOnline(true) ;
 		if(date != null)

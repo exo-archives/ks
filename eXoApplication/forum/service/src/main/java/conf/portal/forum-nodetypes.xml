@@ -311,6 +311,9 @@
 			<propertyDefinition name="exo:moderators" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
 			</propertyDefinition>
+			<propertyDefinition name="exo:banIPs" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>
 		</propertyDefinitions>
 		
 		<childNodeDefinitions>

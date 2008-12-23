@@ -50,6 +50,7 @@ public class Forum {
 	private String[] poster;
 	
 	private String[] emailNotification;
+	private String[] banIP;
 	
 	
 	public Forum() {
@@ -138,4 +139,7 @@ public class Forum {
 
 	public String[] getEmailNotification(){return emailNotification;}	
 	public void setEmailNotification(String[] emailNotification){this.emailNotification = emailNotification;}
+
+	public String[] getBanIP() { return banIP;}
+	public void setBanIP(String[] banIP) { this.banIP = banIP;}
 }

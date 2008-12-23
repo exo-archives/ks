@@ -73,46 +73,46 @@
 													</div>
 													<div style="clear: left;"><span></span></div>
 												</div>
-													<table class="UIGrid" width="100%">
-														<tbody>
-															<tr >
-																<th align="center">IP</th>
-																<th><span></span></th>
-															</tr>	
-															<tr background="#edf3ee">
-																<td class="FieldLabel">
-																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT1)) ;%>*
-																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT2)) ;%>*
-																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT3)) ;%>*
-																	<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT4)) ;%>
-																</td>
-																<td class="FieldLabel" align="center">
-																	<a href="<%=uicomponent.event("AddIp")%>">
-																		[<%=_ctx.appRes("UIForumAdministrationForm.label.Add")%>]
-																	</a>
-																</td>
-															</tr>
-														<%
-															String color = "#ffffff";
-															t= 0;
-															for(ip in uicomponent.getListIpBan()){
-																if(t/2 == 0) color = "#ffffff";
-																else color = "#edf3ee";
-														%>
-															<tr background="$color" class="IpBanItem">
-																<td class="FieldLabel">$ip</td>
-																<td class="FieldLabel" align="center">
-																		[<a href="<%=uicomponent.event("Posts", ip)%>">
-																				<%=_ctx.appRes("UIForumAdministrationForm.label.Posts")%>
-																		 </a>]&nbsp;
-																		[<a style="color: red;" href="<%=uicomponent.event("UnBan", ip)%>">
-																				X
-																		 </a>]
-																</td>
-															</tr>
-														<%}%>
-														</tbody>
-													</table>
+												<table class="UIGrid" width="100%">
+													<tbody>
+														<tr >
+															<th align="center">IP</th>
+															<th><span></span></th>
+														</tr>	
+														<tr background="#edf3ee">
+															<td class="FieldLabel">
+																<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT1)) ;%>*
+																<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT2)) ;%>*
+																<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT3)) ;%>*
+																<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT4)) ;%>
+															</td>
+															<td class="FieldLabel" align="center">
+																<a href="<%=uicomponent.event("AddIp")%>">
+																	[<%=_ctx.appRes("UIForumAdministrationForm.label.Add")%>]
+																</a>
+															</td>
+														</tr>
+													<%
+														String color = "#ffffff";
+														t= 0;
+														for(ip in uicomponent.getListIpBan()){
+															if(t/2 == 0) color = "#ffffff";
+															else color = "#edf3ee";
+													%>
+														<tr background="$color" class="IpBanItem">
+															<td class="FieldLabel">$ip</td>
+															<td class="FieldLabel" align="center">
+																	[<a href="<%=uicomponent.event("Posts", ip)%>">
+																			<%=_ctx.appRes("UIForumAdministrationForm.label.Posts")%>
+																	 </a>]&nbsp;
+																	[<a style="color: red;" href="<%=uicomponent.event("UnBan", ip)%>">
+																			X
+																	 </a>]
+															</td>
+														</tr>
+													<%}%>
+													</tbody>
+												</table>
 											</div>
 										</center>
 									<%}else if(tabconten.id.equals(uicomponent.FIELD_NOTIFYEMAIL_TAB)){
