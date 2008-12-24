@@ -672,7 +672,6 @@
 								   if(isShowIP) {
 								     String ip = post.getRemoteAddr();
 								     if(ip != null && ip.length() > 0) {
-								     String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "'))" + uicomponent.event("BanIPAllForum", ip);
 								     String link2= "href=\"" + uicomponent.event("BanIPThisForum", ip) + "\"";
 								     String title1 = "Ban IP: "+ip+" this Forum";
 								     if(uicomponent.isIPBaned(ip)){
@@ -680,8 +679,50 @@
 								   	   link2 ="";
 								     }
 								%>
-									<a $link2 class="IPIcon" title="$title1"><span></span></a>
-									<a href="$link" class="IPIcon" title="IP: $ip"><span></span></a>
+									<div class="IPIcon" title="IP: $ip" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
+										<% /*Begin Popup Menu*/ %>
+										<div style="position: relative;">
+											<div class="UIPopupCategory SearchPopup" style="display: none; ">
+												<div class="UIRightClickPopupMenu" style="display: block; left: -40px;">
+													<div class="UIContextMenuContainer">
+														<div class="TopLeftRightClickPopupMenu">
+															<div class="TopRightRightClickPopupMenu">
+																<div class="TopCenterRightClickPopupMenu"><span></span></div>
+															</div>
+														</div>
+														<div class="MiddleLeftRightClickPopupMenu">
+															<div class="MiddleRightRightClickPopupMenu">
+																<div class="UIRightPopupMenuContainer" style="width: 140px; min-width: 140px;">
+																	<div class="LineMenu"><span></span></div>
+																	<a title="$title1" class="MenuItem" $link2>	 
+																		<div class="ItemIcon">
+																			<%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%>
+																		</div>
+																	</a>
+																	<% 
+																		if(userProfile.getUserRole() == 0) {
+																		String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "'))" + uicomponent.event("BanIPAllForum", ip); 
+																	%>
+																	<a class="MenuItem" href="$link">	 
+																		<div class="ItemIcon">
+																			<%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%>
+																		</div>
+																	</a>
+																	<% } %>
+																</div>
+															</div>
+														</div>
+														<div class="BottomLeftRightClickPopupMenu">
+															<div class="BottomRightRightClickPopupMenu">
+																<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<% /*End Popup Menu*/ %>
+									</div>
 								<%   }
 								   }
 								   if(checked > 0){

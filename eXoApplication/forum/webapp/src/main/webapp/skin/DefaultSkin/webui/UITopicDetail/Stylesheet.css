@@ -24,6 +24,7 @@
 	float: left;
 	width: 16px;
 	height: 16px;
+	cursor: pointer;
 	background: url('icons/16x16/IPIcon.gif') no-repeat left ;
 }
 /********************************* PostsInThreadContainer ************************************/
