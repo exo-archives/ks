@@ -280,14 +280,14 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 							ApplicationMessage.INFO)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					//questions.setCategories() ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 					sessionProvider.close();
 					return ; 
 				} finally {
 					sessionProvider.close();
 				}
 				//questions.setCategories() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 				return ;
 			} 
 
@@ -306,14 +306,14 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 						ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				questions.setCategories() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 				sessionProvider.close();
 				return ; 
 			} finally {
 				sessionProvider.close();
 			}
 			questions.setCategories() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			return ;
 
 		}

@@ -2,7 +2,7 @@
 	<%List children = uicomponent.getChildren() ;%>
 	<table width="100%">
 		<tr>
-			<td width="200"><%uicomponent.renderChild(children.get(2).getClass());%></td>
+			<td style="width: 200px;" id = "FAQViewCategoriesColumn"><%uicomponent.renderChild(children.get(2).getClass());%></td>
 			<td>
 				<%uicomponent.renderChild(children.get(0).getClass()); %>
 				<%uicomponent.renderChild(children.get(1).getClass()); %>

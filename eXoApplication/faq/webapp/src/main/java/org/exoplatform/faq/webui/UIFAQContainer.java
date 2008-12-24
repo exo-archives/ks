@@ -16,9 +16,12 @@
  */
 package org.exoplatform.faq.webui;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 
 /**
  * Created by The eXo Platform SARL
@@ -31,11 +34,34 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 		template = "app:/templates/faq/webui/UIFAQContainer.gtmpl"
 )
 public class UIFAQContainer extends UIContainer  {
+	private FAQSetting faqSetting_ = null;
+	private String currentUser_;
   public UIFAQContainer() throws Exception {
+  	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  	currentUser_ = FAQUtils.getCurrentUser() ;
+  	faqSetting_ = new FAQSetting();
+		FAQUtils.getPorletPreference(faqSetting_);
+		if(currentUser_ != null && currentUser_.trim().length() > 0){
+			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
+				if(faqService_.isAdminRole(currentUser_)) faqSetting_.setIsAdmin("TRUE");
+				else faqSetting_.setIsAdmin("FALSE");
+			}
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			faqService_.getUserSetting(sessionProvider, currentUser_, faqSetting_);
+			sessionProvider.close();
+		} else {
+			faqSetting_.setIsAdmin("FALSE");
+		}
+  	
     addChild(UIBreadcumbs.class, null, null).setRendered(true) ; 
-    addChild(UIQuestions.class, null, null).setRendered(true) ;    
-    addChild(UICategories.class, null, null).setRendered(true);
+    UIQuestions uiQuestions = addChild(UIQuestions.class, null, null).setRendered(true) ;    
+    UICategories uiCategories = addChild(UICategories.class, null, null).setRendered(true);
+    uiCategories.setFAQSetting(faqSetting_);
+    uiQuestions.setFAQSetting(faqSetting_);
   } 
+  
+  public FAQSetting getFAQSetting(){return faqSetting_;}
+  
   public void updateIsRender(boolean isRender) throws Exception {
   	getChild(UICategories.class).setRendered(isRender) ;
 		getChild(UIBreadcumbs.class).setRendered(isRender) ;

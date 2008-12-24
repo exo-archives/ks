@@ -24,6 +24,21 @@
 					<tbody>
 						<tr>
 							<td class="ControlButtonContainer">
+								<!-- ================== CustomView action ====================== -->
+								<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
+									<a href="javaScript: void(0);" onclick="eXo.faq.UIFAQPortlet.changeCustomView('true')">
+										<div class="LeftOverButton">
+											<div class="RightOverButton">
+												<div class="CenterOverButton">
+													<div class="Icon CustomView" id = "FAQCustomView">
+														<%=_ctx.appRes(uicomponent.getName() + ".action." + "CustomView")%>
+													</div>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+								<div class="SeparatorLine ControlButton"><span></span></div>
 							<%
 							String url = uicomponent.url("Setting", "OBJECTID") ;
 							uicomponent.setLink(url);

@@ -250,6 +250,50 @@
 	white-space: nowrap;
 }
 
+.UIFAQPortlet .UICategories{
+		padding-left: 5px;
+		white-space: nowrap;
+		overflow: hidden;
+}
+
+.UIFAQPortlet .UICategories .FAQCategoryRoot {
+	background: url('background/BlackBorderDownArrow.gif') no-repeat left;
+	padding-left: 28px;
+	height: 18px;
+	line-height: 18px;
+	margin: 8px 0px;
+	white-space: nowrap;
+}
+
+.UIFAQPortlet .UICategories .FAQCategoryRootBlack {
+	background: url('background/BlackBorderDownBlack.gif') no-repeat left;
+	padding-left: 28px;
+	height: 18px;
+	line-height: 18px;
+	margin: 8px 0px;
+	white-space: nowrap;
+	font-weight: bold;
+}
+
+.UIFAQPortlet .UICategories .FAQCategoryRight {
+	background: url('background/BlackBorderRightArrow.gif') no-repeat left;
+	padding-left: 28px;
+	height: 18px;
+	line-height: 18px;
+	margin: 8px 0px;
+	white-space: nowrap;
+}
+
+.UIFAQPortlet .UICategories .FAQCategoryRightBlack {
+	background: url('background/BlackBorderRightBlack.gif') no-repeat left;
+	padding-left: 28px;
+	height: 18px;
+	line-height: 18px;
+	margin: 8px 0px;
+	white-space: nowrap;
+	font-weight: bold;
+}
+
 .UIFAQPortlet .UIQuestions .FAQContainer .UIFAQPopupCategory {
 	left: 40px;
 	position: absolute;
@@ -942,6 +986,14 @@
 .UIFAQPortlet .FAQToolbar .Icon {
 	padding:0px 2px 0px 26px;
 	line-height: 22px;
+}
+
+.UIFAQPortlet .FAQToolbar .CustomView {
+	background: url('background/CustomViewIconLeft.GIF') no-repeat left;
+}
+
+.UIFAQPortlet .FAQToolbar .CustomViewRight {
+	background: url('background/CustomViewIconRight.GIF') no-repeat left;
 }
 
 .UIFAQPortlet .FAQToolbar .AddCategory {

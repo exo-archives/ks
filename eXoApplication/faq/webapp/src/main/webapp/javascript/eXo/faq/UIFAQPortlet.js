@@ -2,6 +2,67 @@ function UIFAQPortlet() {
 	this.scrollManagerLoaded = false;
 };
 
+UIFAQPortlet.prototype.checkCustomView = function(){
+	pCOOKIES = new Array();
+	pCOOKIES = document.cookie.split('; ');
+	var categories = document.getElementById('UICategories');
+	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
+	var buttomView = document.getElementById('FAQCustomView');
+	var results = null;
+	for(bb = 0; bb < pCOOKIES.length; bb++){
+		NmeVal  = new Array();
+		NmeVal  = pCOOKIES[bb].split('=');
+		if(NmeVal[0] == "FAQCustomView"){
+			results = unescape(NmeVal[1]);
+		}
+	}
+	if(!results){
+		categories.style.display = "block";
+		document.cookie = "FAQCustomView=block";
+		columnCategories.style.width = "200px";
+		buttomView.className = "Icon CustomView";
+	} else {
+		if(results === "none"){
+			categories.style.display = "none";
+			columnCategories.style.width = "0px";
+			buttomView.className = "Icon CustomViewRight";
+		}
+	}
+};
+
+UIFAQPortlet.prototype.changeCustomView = function(change){
+	pCOOKIES = new Array();
+	pCOOKIES = document.cookie.split('; ');
+	var categories = document.getElementById('UICategories');
+	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
+	var buttomView = document.getElementById('FAQCustomView');
+	var results = null;
+	for(bb = 0; bb < pCOOKIES.length; bb++){
+		NmeVal  = new Array();
+		NmeVal  = pCOOKIES[bb].split('=');
+		if(NmeVal[0] == "FAQCustomView"){
+			results = unescape(NmeVal[1]);
+		}
+	}
+	if(!results){
+		categories.style.display = "block";
+		document.cookie = "FAQCustomView=block";
+		columnCategories.style.width = "200px";
+	} else{
+		if(results === "block"){
+			 categories.style.display = "none";
+			 document.cookie = "FAQCustomView=none";
+			 columnCategories.style.width = "0px";
+			 buttomView.className = "Icon CustomViewRight";
+		}	else {
+			categories.style.display = "block";
+			document.cookie = "FAQCustomView=block";
+			columnCategories.style.width = "200px";
+			buttomView.className = "Icon CustomView";
+		}
+	} 
+};
+
 UIFAQPortlet.prototype.changeStarForVoteQuestion = function(i){
 	var objId = "startVote" + i;
 	var obj = document.getElementById(objId);

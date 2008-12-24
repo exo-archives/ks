@@ -127,7 +127,7 @@ public class UIQuestions extends UIContainer {
 	private List<String> listCateId_ = new ArrayList<String>() ;
 	private boolean canEditQuestion = false ;
 	private boolean isSortDesc = true ;
-	private String categoryId_ = null ;
+	public String categoryId_ = null ;
 	private String parentId_ = null ;
 	public String questionView_ = "" ;
 	public static String newPath_ = "" ;
@@ -161,7 +161,7 @@ public class UIQuestions extends UIContainer {
 		backPath_ = null ;
 		this.categoryId_ = null ;
 		currentUser_ = FAQUtils.getCurrentUser() ;
-		faqSetting_ = new FAQSetting();
+		/*faqSetting_ = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting_);
 		if(currentUser_ != null && currentUser_.trim().length() > 0){
 			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
@@ -173,10 +173,10 @@ public class UIQuestions extends UIContainer {
 			sessionProvider.close();
 		} else {
 			faqSetting_.setIsAdmin("FALSE");
-		}
+		}*/
 		addChild(UIQuickSearch.class, null, QUICK_SEARCH) ;
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
-		setListObject();
+		//setListObject();
 	}
 
 	public String getPortalName() {
@@ -283,6 +283,7 @@ public class UIQuestions extends UIContainer {
 
 	public void setFAQSetting(FAQSetting setting){
 		this.faqSetting_ = setting;
+		setListObject();
 	}
 
 	@SuppressWarnings("unused")
