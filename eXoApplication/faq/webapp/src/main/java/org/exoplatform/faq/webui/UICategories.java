@@ -299,7 +299,13 @@ public class UICategories extends UIContainer{
 	
 	@SuppressWarnings("unused")
 	private String[] getActionCategoryWithUser() {
-		return userActionsCate_ ;
+		try {
+			if(FAQUtils.getCurrentUser() != null) return userActionsCate_ ;
+			else return new String[]{userActionsCate_[0]};
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new String[]{userActionsCate_[0]};
+		}
 	}
 	
 	static  public class OpenCategoryActionListener extends EventListener<UICategories> {
@@ -789,42 +795,31 @@ public class UICategories extends UIContainer{
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories question = event.getSource() ;
 			String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
-			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+			UIFAQContainer container = question.getAncestorOfType(UIFAQContainer.class);
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			if(objectId.indexOf("Question") < 0){
-				try {
-					faqService_.getCategoryById(objectId, sessionProvider) ;
-				} catch (Exception e) {
-					UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					return ;
+			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
+			try {
+				Watch watch = new Watch();
+				String userName = FAQUtils.getCurrentUser();
+				watch.setUser(userName);
+				watch.setEmails(FAQUtils.getEmailUser(userName));
+				for(Watch watch2 : faqService_.getListMailInWatch(objectId, sessionProvider).getAllWatch()){
+					if(watch2.getEmails().equals(watch.getEmails()) && watch.getUser().equals(userName)){
+						watch = null;
+						break;
+					}
 				}
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
-				popupContainer.setId("CategoryWatchForm") ;
-				uiWatchForm.setCategoryID(objectId) ;
-			} else {
-				try {
-					faqService_.getQuestionById(objectId, sessionProvider) ;
-				} catch (Exception e) {
-					UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					return ;
-				}
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
-				popupContainer.setId("CategoryWatchForm") ;
-				uiWatchForm.setQuestionID(objectId) ;
+				if(watch != null)faqService_.addWatch(objectId, watch, sessionProvider);
+				uiApplication.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null, ApplicationMessage.INFO)) ;
+       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+       	event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
+			} catch (Exception e) {
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
+				return ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	

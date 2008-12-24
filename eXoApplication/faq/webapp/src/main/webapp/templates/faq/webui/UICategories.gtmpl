@@ -80,6 +80,7 @@
 					List listCateModerator = uicomponent.categoryModerators ;
 					String classCss = "";
 					int i = 0;
+					boolean addWatched = false;
 					for(category in listCate){
 						if(category.getId().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
 						else classCss = "FAQCategoryRight";
@@ -101,6 +102,7 @@
 									}
 								}
 								if(uicomponent.checkUserWatch(category.getId())) {
+									addWatched = true;
 								%>
 									<a href="<%=uicomponent.event("UnWatch", category.getId());%>" title="<%= _ctx.appRes("UIQuestions.title.un-watch"); %>" class="UnWatch">&nbsp;</a>
 								<%
@@ -140,7 +142,15 @@
 																</a>
 														<%
 															}
+															if(addWatched) {
 														%>
+															<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("UnWatch", category.getId());%>" class="MenuItem">
+																<div class="ItemIcon UnWatch" style="padding:3px 0px 5px 5px;">
+																		<div style="padding-left: 20px;"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></div>
+																</div>
+															</a>
+														<%
+														}%>
 													</div>
 												</div>
 											</div>

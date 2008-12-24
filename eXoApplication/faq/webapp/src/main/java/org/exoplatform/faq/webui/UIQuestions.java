@@ -234,7 +234,10 @@ public class UIQuestions extends UIContainer {
 	}
 
 	private String[] getActionCategoryWithUser() {
-		return userActionsCate_ ;
+		if(currentUser_ != null)
+			return userActionsCate_ ;
+		else 
+			return new String[]{userActionsCate_[0]};
 	}
 
 
@@ -1175,23 +1178,37 @@ public class UIQuestions extends UIContainer {
 			UIQuestions question = event.getSource() ;
 			String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
-			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			if(objectId.indexOf("Question") < 0){
+				UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 				try {
-					faqService_.getCategoryById(objectId, sessionProvider) ;
+					Watch watch = new Watch();
+					String userName = FAQUtils.getCurrentUser();
+					watch.setUser(userName);
+					watch.setEmails(FAQUtils.getEmailUser(userName));
+					for(Watch watch2 : faqService_.getListMailInWatch(objectId, sessionProvider).getAllWatch()){
+						if(watch2.getEmails().equals(watch.getEmails()) && watch.getUser().equals(userName)){
+							watch = null;
+							break;
+						}
+					}
+					if(watch != null)faqService_.addWatch(objectId, watch, sessionProvider);
+					uiApplication.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null, ApplicationMessage.INFO)) ;
+	       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	       	UIFAQContainer container = question.getAncestorOfType(UIFAQContainer.class);
+	       	event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
 				} catch (Exception e) {
-					UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					question.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 					return ;
 				}
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+				
+				/*UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
 				popupContainer.setId("CategoryWatchForm") ;
-				uiWatchForm.setCategoryID(objectId) ;
+				uiWatchForm.setCategoryID(objectId) ;*/
 			} else {
 				try {
 					faqService_.getQuestionById(objectId, sessionProvider) ;
@@ -1203,12 +1220,13 @@ public class UIQuestions extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 					return ;
 				}
+				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
 				popupContainer.setId("CategoryWatchForm") ;
 				uiWatchForm.setQuestionID(objectId) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 
