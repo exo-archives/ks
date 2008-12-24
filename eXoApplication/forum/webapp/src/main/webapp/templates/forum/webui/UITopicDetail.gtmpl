@@ -59,7 +59,7 @@
 		if(posts != null && posts.size() > 0) {
 		  isCanReply = uicomponent.isCanPostReply();
 			isClosed = !uicomponent.userCanView() ;
-			if(uicomponent.isIPBaned(userProfile.getIpLogin())) isBanned = true;
+			if(uicomponent.isIPBaned(uicomponent.getIPRemoter())) isBanned = true;
 			else if(!canEdit && topic.getOwner().equals(userLogin)) isUserCreatedTopic = true;
 			isModeratePost = topic.getIsModeratePost();
 		} else {

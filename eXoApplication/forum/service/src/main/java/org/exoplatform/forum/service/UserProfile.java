@@ -68,7 +68,6 @@ public class UserProfile {
 	private Date createdDateBan ;
 	private long newMessage = 0;
 	private long totalMessage = 0;
-	private String ipLogin = "";
 	
 	@SuppressWarnings("deprecation")
   public UserProfile() {
@@ -188,9 +187,6 @@ public class UserProfile {
 	public void setEmail(String email) { this.email = email; }
 	public String getEmail() { return email; }
 	
-	public String getIpLogin() { return ipLogin; }
-	public void setIpLogin(String ipLogin) { this.ipLogin = ipLogin; }
-
 	public void setLastTimeAccessTopic(String topicId, long lastTime)throws Exception {
 		lastAccessTopics.put(topicId, lastTime) ;
 	}

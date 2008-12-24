@@ -16,12 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.service.Forum;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
@@ -57,12 +54,16 @@ import org.exoplatform.webui.form.UIFormStringInput;
 )
 
 public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
+	public static final String SEARCH_IP_BAN = "searchIpBan";
 	public static final String NEW_IP_BAN_INPUT1 = "newIpBan1";
 	public static final String NEW_IP_BAN_INPUT2 = "newIpBan2";
 	public static final String NEW_IP_BAN_INPUT3 = "newIpBan3";
 	public static final String NEW_IP_BAN_INPUT4 = "newIpBan4";
-	private Forum forum ;
+	private String forumId ;
+	private ForumService forumService ;
 	public UIBanIPForumManagerForm() {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT2, null)).setMaxLength(3));
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT3, null)).setMaxLength(3));
@@ -72,15 +73,13 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 
-	public void setForum(Forum forum) {
-	  this.forum = forum;
+	public void setForumId(String forumId) {
+	  this.forumId = forumId;
   }
 	
 	@SuppressWarnings("unused")
-  private String[] getListIpBan() throws Exception {
-		String[]ips = forum.getBanIP();
-		if(ips == null) ips = new String[]{};
-		return ips;
+  private List<String> getListIpBan() throws Exception {
+		return forumService.getForumBanList(forumId);
 	}
 	
 	private String checkIpAddress(String[] ipAdd){
@@ -117,31 +116,11 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			} 
-			List<String> listIp = new ArrayList<String>();
-			String[] ips = ipManagerForm.forum.getBanIP();
-			if(ips != null && ips.length > 0){
-				listIp.addAll(Arrays.asList(ipManagerForm.forum.getBanIP()));
-			}
-			if(listIp.contains(ipAdd)){
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			if(!ipManagerForm.forumService.addBanIPForum(sProvider, ipAdd, ipManagerForm.forumId)){
 				uiApp.addMessage(new ApplicationMessage("UIBanIPForumManagerForm.sms.ipBanFalse", new Object[]{ipAdd}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return;
-			} else {
-				ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-				listIp.add(ipAdd);
-				ips = listIp.toArray(new String[]{});
-				ipManagerForm.forum.setBanIP(ips);
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-				try {
-					fservice.modifyForum(sProvider, ipManagerForm.forum, 3);
-        } catch (Exception e) {
-	        e.printStackTrace();
-	        uiApp.addMessage(new ApplicationMessage("UIBanIPForumManagerForm.sms.ipBanFalse", new Object[]{ipAdd}, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					return;
-        }finally {
-        	sProvider.close();
-        }
 			}
 			UIForumPortlet forumPortlet = ipManagerForm.getAncestorOfType(UIForumPortlet.class);
 			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
@@ -166,29 +145,8 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 		public void execute(Event<UIBanIPForumManagerForm> event) throws Exception {
 			UIBanIPForumManagerForm ipManagerForm = event.getSource();
 			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			List<String> listIp = new ArrayList<String>();
-			String[] ips = ipManagerForm.forum.getBanIP();
-			if(ips != null && ips.length > 0){
-				listIp.addAll(Arrays.asList(ipManagerForm.forum.getBanIP()));
-				if(listIp.contains(ip)) {
-					ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-					listIp.remove(ip);
-					ips = listIp.toArray(new String[]{});
-					ipManagerForm.forum.setBanIP(ips);
-					SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-					try {
-						fservice.modifyForum(sProvider, ipManagerForm.forum, 3);
-	        } catch (Exception e) {
-		        e.printStackTrace();
-		        UIApplication uiApp = ipManagerForm.getAncestorOfType(UIApplication.class) ;
-		        uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanRemoveFalse", new Object[]{ip}, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-						return;
-	        }finally {
-	        	sProvider.close();
-	        }
-				}
-			}
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			ipManagerForm.forumService.removeBanIPForum(sProvider, ip, ipManagerForm.forumId);
 			UIForumPortlet forumPortlet = ipManagerForm.getAncestorOfType(UIForumPortlet.class);
 			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
 			topicContainer.setIdUpdate(true);

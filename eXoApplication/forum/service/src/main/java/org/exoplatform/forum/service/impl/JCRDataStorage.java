@@ -490,10 +490,6 @@ public class JCRDataStorage {
 				forumNode.setProperty("exo:isLock", forum.getIsLock());
 				break;
 			}
-			case 3: {
-				forumNode.setProperty("exo:banIPs", forum.getBanIP());
-				break;
-			}
 			default:
 				break;
 			}
@@ -767,7 +763,7 @@ public class JCRDataStorage {
 		if (forumNode.hasProperty("exo:moderators"))
 			forum.setModerators(ValuesToArray(forumNode.getProperty("exo:moderators").getValues()));
 		if (forumNode.hasProperty("exo:banIPs"))
-			forum.setBanIP(ValuesToArray(forumNode.getProperty("exo:banIPs").getValues()));
+			forum.setBanIP(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
 		
 		if (forumNode.isNodeType("exo:forumWatching")) {
 			forum.setEmailNotification(ValuesToArray(forumNode.getProperty("exo:emailWatching").getValues()));
@@ -4098,14 +4094,11 @@ public class JCRDataStorage {
 	public void removeBan(String ip) throws Exception {
 		List<String> ips = getBanList() ;
 		if (ips.contains(ip)){
-			List<String> temp = new ArrayList<String>() ;
-			for(String str : ips){
-				if(!ip.equals(str)) temp.add(str) ;
-			}
+			ips.remove(ip);
 			SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 			try{
 				Node banNode = getForumBanNode(sProvider) ;
-				banNode.setProperty("exo:ips", temp.toArray(new String[]{})) ;
+				banNode.setProperty("exo:ips", getStringsInList(ips)) ;
 				banNode.save() ;			
 			}catch(Exception e) {
 				e.printStackTrace() ;
@@ -4114,4 +4107,91 @@ public class JCRDataStorage {
 			}
 		}
 	}
+	
+	
+	public List<String> getForumBanList(String forumId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		List<String> list = new ArrayList<String>();
+		try{
+			if(forumId.indexOf(".") > 0) forumId = StringUtils.replace(forumId, ".", "/");
+			Node forumNode = getForumHomeNode(sProvider).getNode(forumId);
+			if (forumNode.hasProperty("exo:banIPs"))
+				list.addAll(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally {
+			sProvider.close() ;
+		}
+		return list ;
+	}
+	
+	public boolean addBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
+		List<String> ips = new ArrayList<String>() ;
+		try{
+			Node forumNode = getForumHomeNode(sProvider).getNode(forumId);
+			if (forumNode.hasProperty("exo:banIPs"))
+				ips.addAll(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
+			if (ips.contains(ip)) return false ;
+			ips.add(ip);
+			forumNode.setProperty("exo:banIPs", getStringsInList(ips));
+			if(forumNode.isNew()) {
+				forumNode.getSession().save() ;
+			}else {
+				forumNode.save() ;
+			}			
+			return true ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally {
+			sProvider.close() ;
+		}
+		return false ;
+	}
+	
+	public void removeBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
+		List<String> ips = new ArrayList<String>() ;
+		try{
+			Node forumNode = getForumHomeNode(sProvider).getNode(forumId);
+			if (forumNode.hasProperty("exo:banIPs"))
+				ips.addAll(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
+			if (ips.contains(ip)){
+				ips.remove(ip);
+				forumNode.setProperty("exo:banIPs", getStringsInList(ips));
+				if(forumNode.isNew()) {
+					forumNode.getSession().save() ;
+				}else {
+					forumNode.save() ;
+				}			
+			}
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally {
+			sProvider.close() ;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

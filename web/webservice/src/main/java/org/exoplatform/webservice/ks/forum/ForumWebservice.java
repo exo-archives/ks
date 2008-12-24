@@ -77,4 +77,29 @@ public class ForumWebservice implements ResourceContainer {
     return Response.Builder.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }
 
+  @HTTPMethod(HTTPMethods.GET)
+  @URITemplate("/ks/forum/filterIpBanforum/{strForumId}/{strIP}/")
+  @OutputTransformer(Bean2JsonOutputTransformer.class)
+  public Response filterIpBanForum(@URIParam("strForumId") String forumId, @URIParam("strIP") String str) throws Exception {
+  	CacheControl cacheControl = new CacheControl();
+  	cacheControl.setNoCache(true);
+  	cacheControl.setNoStore(true);
+  	ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
+  	if(str.equals("all")){
+  		ipsToJson.clear() ;
+  		List<String> banIps = forumService.getForumBanList(forumId) ;
+  		for(String ip : banIps) {
+  			ipsToJson.add(new BanIP(ip)) ;
+  		}
+  	} else if(!str.equals(strQuery)){
+  		ipsToJson.clear() ;
+  		List<String> banIps = forumService.getForumBanList(forumId) ;
+  		for(String ip : banIps) {
+  			if(ip.startsWith(str)) ipsToJson.add(new BanIP(ip)) ;
+  		}
+  		strQuery = str ;
+  	}    
+  	return Response.Builder.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+  }
+
 }

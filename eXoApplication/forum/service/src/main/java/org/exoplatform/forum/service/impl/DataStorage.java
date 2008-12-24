@@ -142,4 +142,12 @@ public interface DataStorage {
   public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception  ;
   public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
   public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception ;
+  public void updateForum(String path) throws Exception ;
+  public List<String> getBanList() throws Exception ;
+  public boolean addBanIP(String ip) throws Exception ;
+  public void removeBan(String ip) throws Exception ;
+  public List<String> getForumBanList(String forumId) throws Exception ;
+  public boolean addBanIPForum(SessionProvider sessionProvider, String ip, String forumId) throws Exception ;
+  public void removeBanIPForum(SessionProvider sessionProvider, String ip, String forumId) throws Exception ;
+  public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception;
 }

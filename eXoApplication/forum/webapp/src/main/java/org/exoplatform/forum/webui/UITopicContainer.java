@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -44,7 +43,9 @@ import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -116,7 +117,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private String strOrderBy = "" ;
 	private boolean isLogin = false;
 	private boolean isNull = false; 
-	
+	private boolean enableIPLogging = true;
 	public boolean isNull() { return isNull; }
 	public void setNull(boolean isNull) { this.isNull = isNull;}
 	public boolean isLogin() {return isLogin;}
@@ -139,6 +140,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.pageSelect = 1 ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.userProfile = forumPortlet.getUserProfile() ;
+		enableIPLogging = forumPortlet.isEnableIPLogging() ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
 		cleanCheckedList();
 	}
@@ -151,6 +153,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.isUpdate = true ;
 		this.pageSelect = 1 ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+		enableIPLogging = forumPortlet.isEnableIPLogging() ;
 		this.userProfile = forumPortlet.getUserProfile() ;
 		if(!isBreadcumbs) {
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
@@ -178,18 +181,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		StringBuffer strQuery = new StringBuffer() ;
 		long role = userProfile.getUserRole() ;
 		String userId = userProfile.getUserId() ;
-		String [] ips = forum.getBanIP();
-		List<String> ipBaneds = new ArrayList<String>();
-		if(ips != null && ips.length > 0) {
-			ipBaneds = Arrays.asList(ips);
-			System.out.println("\n\n----------->" + ips[0]);
-		} 
-		if(!ipBaneds.contains(userProfile.getIpLogin())) {
-			String[] strings = this.forum.getCreateTopicRole() ;
-			if(strings != null && strings.length > 0){
-				canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
-			}
-		} else canAddNewThread = false;
+		List<String> ipBaneds = forum.getBanIP();
+		if(ipBaneds != null && ipBaneds.size() > 0) {
+			if(!ipBaneds.contains(getIPRemoter())) {
+				String[] strings = this.forum.getCreateTopicRole() ;
+				if(strings != null && strings.length > 0){
+					canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
+				}
+			} else canAddNewThread = false;
+		}
 		isModerator = false ;
 		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
 		else {
@@ -216,6 +216,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		}catch (NullPointerException e) {
 			isNull = true;
 		}
+	}
+	
+	private String getIPRemoter() throws Exception {
+		if(enableIPLogging) {
+			WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+			PortletRequestImp request = context.getRequest() ;
+			return request.getRemoteAddr();
+		}
+		return "";
 	}
 	
 	@SuppressWarnings("unused")
@@ -1070,7 +1079,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIBanIPForumManagerForm ipForumManager = popupContainer.addChild(UIBanIPForumManagerForm.class, null, null) ;
 			popupContainer.setId("BanIPForumManagerForm") ;
-			ipForumManager.setForum(uiForm.forum);
+			ipForumManager.setForumId(uiForm.categoryId + "/" + uiForm.forumId);
 			popupAction.activate(popupContainer, 450, 300) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

@@ -56,8 +56,8 @@ SearchIpBan.prototype.init = function(userName) {
 	if (!this.searchIpBanNode) {
 		return;
 	}
-	var uiTabContentNode = DOMUtil.findAncestorById(this.searchIpBanNode, 'UITabContent');
-	this.uiGridNode = DOMUtil.findFirstDescendantByClass(uiTabContentNode, 'table', 'UIGrid');
+	this.uiTabContentNode = DOMUtil.findAncestorById(this.searchIpBanNode, 'UITabContent');
+	this.uiGridNode = DOMUtil.findFirstDescendantByClass(this.uiTabContentNode, 'table', 'UIGrid');
   this.searchIpBanNode.onkeydown = this.searchIpBanWrapper;
 };
 
@@ -72,7 +72,12 @@ SearchIpBan.prototype.searchIpBanTimeout = function() {
 SearchIpBan.prototype.searchIpBan = function(keyword) {
 	// Get data from service, url: /portal/rest/ks/forum/filter/{strIP}/
 	keyword = keyword || 'all';
-  var url = '/portal/rest/ks/forum/filter/' + keyword + '/';
+	var url = '/portal/rest/ks/forum/filter/' + keyword + '/';
+	var forumId = this.uiTabContentNode.getAttribute("forumId");
+	if(forumId){
+		url = '/portal/rest/ks/forum/filterIpBanforum/' + forumId + '/' +keyword + '/';
+	}
+	//alert(url);
   var handler = new AjaxHandler(this, this.SEARCH_IP_BAN);
   this.ajaxWrapper(handler, url, 'GET');
 }

@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.Date;
-
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
@@ -53,7 +51,6 @@ public class UIForumPortlet extends UIPortletApplication {
 	private UserProfile userProfile = null;
 	private boolean enableIPLogging = false;
 	private boolean enableBanIP = false;
-	private boolean isGet = true;
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
@@ -153,36 +150,19 @@ public class UIForumPortlet extends UIPortletApplication {
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
-		Date date = null ;
-		if(userProfile != null) {
-			date = userProfile.getLastLoginDate() ;
-		}
-		String ip = null;
+		
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			if(enableBanIP) {
 				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
 				PortletRequestImp request = context.getRequest() ;
-				ip = request.getRemoteAddr();
-				userProfile = forumService.getDefaultUserProfile(sProvider, userId, ip) ;
+				userProfile = forumService.getDefaultUserProfile(sProvider, userId, request.getRemoteAddr()) ;
 			}else {
 				userProfile = forumService.getDefaultUserProfile(sProvider, userId, null) ;
 			}
 		}finally {
 			sProvider.close();
-		}
-		if(isGet && enableIPLogging) {
-			if(ip == null) {
-				WebuiRequestContext context = RequestContext.getCurrentInstance() ;
-				PortletRequestImp request = context.getRequest();
-				ip = request.getRemoteAddr();
-			}
-			userProfile.setIpLogin(ip);
-			isGet = false;
-		}
-		this.userProfile.setIsOnline(true) ;
-		if(date != null)
-			this.userProfile.setLastLoginDate(date) ;
+		}				
 	}
 }

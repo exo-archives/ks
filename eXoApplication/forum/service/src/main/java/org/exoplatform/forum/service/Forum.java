@@ -17,6 +17,7 @@
 package org.exoplatform.forum.service ;
 
 import java.util.Date;
+import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
 /**
@@ -50,7 +51,7 @@ public class Forum {
 	private String[] poster;
 	
 	private String[] emailNotification;
-	private String[] banIP;
+	private List<String> banIPs;
 	
 	
 	public Forum() {
@@ -140,6 +141,6 @@ public class Forum {
 	public String[] getEmailNotification(){return emailNotification;}	
 	public void setEmailNotification(String[] emailNotification){this.emailNotification = emailNotification;}
 
-	public String[] getBanIP() { return banIP;}
-	public void setBanIP(String[] banIP) { this.banIP = banIP;}
+	public List<String> getBanIP() { return banIPs;}
+	public void setBanIP(List<String> banIPs) { this.banIPs = banIPs;}
 }

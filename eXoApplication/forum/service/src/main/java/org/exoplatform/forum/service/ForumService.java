@@ -904,5 +904,10 @@ public interface ForumService {
   public List<String> getBanList() throws Exception ;
   public boolean addBanIP(String ip) throws Exception ;
   public void removeBan(String ip) throws Exception ;
+  
+  public List<String> getForumBanList(String forumId) throws Exception ;
+  public boolean addBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception ;
+  public void removeBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception ;
+  
   public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception;
 }

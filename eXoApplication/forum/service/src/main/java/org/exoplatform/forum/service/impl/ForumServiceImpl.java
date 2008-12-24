@@ -575,8 +575,19 @@ public class ForumServiceImpl implements ForumService, Startable{
   	storage_.removeBan(ip) ;
   }
 
-  public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception{
-  	return storage_.getListPostsByIP(ip, strOrderBy, sessionProvider);
+  public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sProvider) throws Exception{
+  	return storage_.getListPostsByIP(ip, strOrderBy, sProvider);
+  }
+  
+  public List<String> getForumBanList(String forumId) throws Exception {
+  	return storage_.getForumBanList(forumId);
   }
 
+	public boolean addBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
+	  return storage_.addBanIPForum(sProvider, ip, forumId);
+  }
+
+	public void removeBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
+	  storage_.removeBanIPForum(sProvider, ip, forumId);
+  }
 }

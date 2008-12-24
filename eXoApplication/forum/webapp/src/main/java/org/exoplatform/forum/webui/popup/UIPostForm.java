@@ -39,6 +39,7 @@ import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -302,7 +303,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-			String remoteAddr = userProfile.getIpLogin();
+			String remoteAddr = "";
+			if(forumPortlet.isEnableIPLogging()) {
+				PortletRequestImp request = event.getRequestContext().getRequest();
+				remoteAddr = request.getRemoteAddr();
+			}
 			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.length() ;
