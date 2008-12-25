@@ -178,7 +178,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 		public void execute(Event<UIMoveCategoryForm> event) throws Exception {
 			UIMoveCategoryForm moveCategory = event.getSource() ;	
 			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
-			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			String categoryId = moveCategory.getCategoryID() ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
@@ -237,7 +236,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			}
 			sessionProvider.close();
 			//questions.setListObject() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			faqPortlet.cancelAction() ;
 		}
 	}

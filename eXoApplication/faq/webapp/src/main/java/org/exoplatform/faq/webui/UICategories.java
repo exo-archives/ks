@@ -502,11 +502,11 @@ public class UICategories extends UIContainer{
 	
 	static	public class DeleteCategoryActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
-			UICategories question = event.getSource() ; 			
+			UICategories uiCategories = event.getSource() ; 			
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIApplication uiApp = question.getAncestorOfType(UIApplication.class) ;
-			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
-			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
+			UIApplication uiApp = uiCategories.getAncestorOfType(UIApplication.class) ;
+			UIFAQPortlet uiPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
+			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			try {
@@ -514,8 +514,8 @@ public class UICategories extends UIContainer{
 				String moderator[] = cate.getModeratorsCategory() ;
 				String currentUser = FAQUtils.getCurrentUser() ;
 				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-				if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
-					List<Category> listCate = question.getAllSubCategory(categoryId, faqService_) ;
+				if(Arrays.asList(moderator).contains(currentUser)|| uiCategories.faqSetting_.isAdmin()) {
+					List<Category> listCate = uiCategories.getAllSubCategory(categoryId, faqService_) ;
 					FAQSetting faqSetting = new FAQSetting();
 					faqSetting.setDisplayMode(FAQUtils.DISPLAYBOTH);
 					faqSetting.setOrderBy("alphabet");
