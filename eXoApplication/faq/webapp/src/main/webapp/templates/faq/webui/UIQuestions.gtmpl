@@ -330,7 +330,12 @@
 																		<%
 																		if(uicomponent.viewAuthorInfor){
 																		%>
-																			<div style="padding-top: 5px;">Author: <%=question.getAuthor()%> ( <%=question.getEmail()%> )</div>
+																			<div style="padding-top: 5px;">
+																				Author: 
+																				<a href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
+																					<%=question.getAuthor()%> ( <%=question.getEmail()%> )
+																				</a>
+																			</div>
 																		<%}%>
 																	</div>
 																	<div style="clear: left;"><span/></div>
