@@ -186,7 +186,7 @@ public class UICategories extends UIContainer{
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		newList = faqService.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
-		if(!newList.isEmpty()){
+		if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_))){
 			this.listCate.clear();
 			listCate.addAll(newList);
 			parentCateId_ = categoryId_;

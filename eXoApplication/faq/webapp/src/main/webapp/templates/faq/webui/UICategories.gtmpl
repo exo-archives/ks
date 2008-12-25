@@ -134,8 +134,8 @@
 															for(viewAction in categoryAction) {
 																String linkView = uicomponent.event(viewAction, category.getId()) ;
 																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-																if((viewAction.equals("DeleteCategory") || viewAction.equals("EditCategory") || 
-																		viewAction.equals("MoveCategory")) && category.getId().equals(uicomponent.categoryId_))
+																if(category.getId().equals(uicomponent.categoryId_) && (viewAction.equals("DeleteCategory") || 
+																		viewAction.equals("EditCategory") || viewAction.equals("MoveCategory")))
 																	continue;
 														%>
 																<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem">
