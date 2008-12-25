@@ -28,6 +28,7 @@ UIFAQPortlet.prototype.checkCustomView = function(){
 			buttomView.className = "Icon CustomViewRight";
 		}
 	}
+	//controlWorkSpace();
 };
 
 UIFAQPortlet.prototype.changeCustomView = function(change){
@@ -61,6 +62,8 @@ UIFAQPortlet.prototype.changeCustomView = function(change){
 			buttomView.className = "Icon CustomView";
 		}
 	} 
+	var uiNav = eXo.faq.UIFAQPortlet ;
+	uiNav.initScroll();
 };
 
 UIFAQPortlet.prototype.changeStarForVoteQuestion = function(i){
