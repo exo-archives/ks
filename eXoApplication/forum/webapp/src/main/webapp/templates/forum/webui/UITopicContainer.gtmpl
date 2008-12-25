@@ -267,10 +267,10 @@
 											</div>
 										</div>
 									</div>
+								</div>
 								<% /*End Popup Menu*/ %>
-								</div>
-								</div>
 							</div>
+						</div>
 						<% if(isShowMenu && canEdit) { %>	
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">

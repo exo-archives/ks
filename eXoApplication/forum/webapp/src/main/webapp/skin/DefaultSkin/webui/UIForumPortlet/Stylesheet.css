@@ -25,17 +25,14 @@
 }
 
 .UIForumPortlet .UIQuickSearchForm .Input input {
-	width: 130px;
-	height: 15px;
+	width: 130px;	height: 15px;
 }
 
 .UIForumPortlet .UIQuickSearchForm .Search {
 	background: url('icons/16x16/SearchIcon.gif') no-repeat ;	
-	height: 16px;
-	width: 16px;
-	float: right;
+	height: 16px;	width: 16px;
+	float: right;	cursor: pointer;
 	margin: 3px 5px 0px 0px;
-	cursor: pointer;
 }
 
 .UIForumPortlet .UIQuickSearchForm .AdvancedSearch {
@@ -110,6 +107,7 @@
 .UIForumPortlet .UIBreadcumbs .RSSBar .SeparatorLine {
 	background: url('background/SeparatorLine2x27.gif') no-repeat left;
 	padding-left: 12px;
+	white-space: nowrap;
 }
 
 .UIForumPortlet .UIBreadcumbs .RSSBar .RSSIcon {
@@ -118,6 +116,16 @@
 	background: url('icons/16x16/RSSIcon.gif') no-repeat left;
 }
 
+.UIForumPortlet .UIBreadcumbs .ShareLink a:hover{
+  text-decoration: underline;
+  color: #058EE6;
+}
+
+.UIForumPortlet .UIBreadcumbs .ShareLink a {
+  line-height: 24px; 
+  cursor: pointer;
+  color: #000000;
+}
 /******************************************** UIForumActionBar ****************************************/
 .UIForumPortlet .UIForumActionBar {
 	border: 1px solid #9499d8;
@@ -150,8 +158,7 @@
 .UIForumPortlet .ToolbarActionsTag {
 	float:right;
 	margin: 2px 6px 0px 0px;
-	width: 120px;
-	cursor: pointer ;
+	width: 120px;	cursor: pointer ;
 }
 
 /******************************************** UIForumDescription ****************************************/
