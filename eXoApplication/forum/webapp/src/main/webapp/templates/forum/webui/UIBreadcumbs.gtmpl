@@ -52,10 +52,14 @@
 					<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">
+				  <%if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)){%>
+					<div class="SeparatorLine" style="float: right;">
+						<div class="ShareLink"><a href="$link" target="_blank" title="<%=_ctx.appRes("UIBreadcumbs.title.Link");%>"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
+					</div>	
+					<%}%>
 					<%
 					long numberOfNewMessage = uicomponent.getNewMessage();
 					if(!ForumSessionUtils.isAnonim() && numberOfNewMessage >= 0){
-						String fl = "";
 						String newMessage = _ctx.appRes("UIBreadcumbs.label.PrivateMessages") ; 
 						if(numberOfNewMessage > 0) {
 							newMessage = "<b>"+newMessage+"(" + uicomponent.getNewMessage() + ") </b>";
@@ -63,26 +67,18 @@
 							newMessage = newMessage + "&nbsp;" ;
 						}
 						if(uicomponent.userProfile.getUserRole() <= 1) {
-						  fl = "float: right;";
 							int total = uicomponent.getTotalJobWattingForModerator();
 					%>
-					<div class="SeparatorLine" style="$fl">
+					<div class="SeparatorLine" style="float: right;">
 						<div style="line-height: 24px;"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>: ($total)</div>
 					</div>	
 					<%}%>
-					<div class="SeparatorLine" style="$fl">
+					<div class="SeparatorLine" style="float: right;">
 						<div style="line-height: 24px; cursor: pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
 							 $newMessage
 						</div>
 					</div>
-					<% if(uicomponent.userProfile.getUserRole() <= 1){ %>
-						<div style="clear: right"><span></span></div>
-					<%}
-					} else if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)){%>
-					<div class="SeparatorLine">
-						<div style="line-height: 24px; cursor: pointer;"><a href="$link" target="_blank" title="<%=_ctx.appRes("UIBreadcumbs.title.Link");%>"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
-					</div>	
-					<%}%>
+					<% } %>
 				</div>
 				<div style="clear: both"><span></span></div>
 			</div>
