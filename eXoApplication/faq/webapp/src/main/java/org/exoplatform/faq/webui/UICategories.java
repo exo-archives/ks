@@ -83,7 +83,7 @@ public class UICategories extends UIContainer{
 	private List<Boolean> categoryModerators = new ArrayList<Boolean>() ;
 	private boolean canEditQuestion = false ;
 	private FAQSetting faqSetting_ = new FAQSetting();
-	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch", "ChangeIndex"} ;
+	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
 	public static String newPath_ = "" ;
 	public UICategories () throws Exception{ }
