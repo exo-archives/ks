@@ -641,4 +641,6 @@ public interface FAQService {
  	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception;
  	
  	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception ;
+ 	
+ 	public void swapCategories(String parentCateId, String cateId1, String cateId2, SessionProvider sessionProvider) throws Exception;
 }

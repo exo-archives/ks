@@ -66,6 +66,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 public class UICategoryForm extends UIForm implements UIPopupComponent, UISelector 	{
 	private String categoryId_ = "";
 	private String parentId_ ;
+	protected long index_ = 0;
 	final private static String FIELD_NAME_INPUT = "eventCategoryName" ; 
   final private static String FIELD_DESCRIPTION_INPUT = "description" ;
   final private static String FIELD_MODERATOR_INPUT = "moderator" ;
@@ -138,6 +139,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String modera[] = cat.getModeratorsCategory() ;
 			categoryId_ = categoryId ; 
 			oldName_ = cat.getName() ;
+			index_ = cat.getIndex();
 			getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription()) ;
 			getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions()) ;
@@ -237,6 +239,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
 			cat.setViewAuthorInfor(viewAuthorInfor);
+			cat.setIndex(uiCategory.index_);
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentId() ;
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;

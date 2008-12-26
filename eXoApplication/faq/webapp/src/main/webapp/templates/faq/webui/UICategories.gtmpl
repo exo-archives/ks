@@ -82,10 +82,11 @@
 					int i = 0;
 					boolean addWatched = false;
 					for(category in listCate){
+						System.out.println("---------------->cateName: " + category.getName() + "~~~>index: " + category.getIndex());
 						if(category.getId().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
 						else classCss = "FAQCategoryRight";
 				%>
-						<div class="$classCss">
+						<div id="<%=category.getId()%>" class="$classCss">
 							<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupCategories$i', '', null, null)">
 								
 								<a title="<%=category.getName()%>" href="<%=uicomponent.event("OpenCategory", category.getId())%>">

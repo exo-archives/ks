@@ -27,6 +27,8 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UICategories;
+import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
@@ -118,7 +120,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			
 			List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
 			orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
-			orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET, FAQSetting.DISPLAY_TYPE_ALPHABET ));
+			orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET + "/Index", FAQSetting.DISPLAY_TYPE_ALPHABET + "/Index" ));
 			
 			List<SelectItemOption<String>> orderType = new ArrayList<SelectItemOption<String>>();
 			orderType.add(new SelectItemOption<String>(ASC, FAQSetting.ORDERBY_TYPE_ASC ));
@@ -148,7 +150,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		
 			List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
 			orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
-			orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET, FAQSetting.DISPLAY_TYPE_ALPHABET ));
+			orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET + "/Index", FAQSetting.DISPLAY_TYPE_ALPHABET + "/Index" ));
 			addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));
 			
 			List<SelectItemOption<String>> orderType = new ArrayList<SelectItemOption<String>>();
@@ -230,14 +232,14 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
 				faqSetting.setSortQuestionByVote(settingForm.getUIFormCheckBoxInput(settingForm.ITEM_VOTE).isChecked());
 				service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;
-				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-				questions.setFAQSetting(faqSetting);
-				questions.setListObject() ;
-				//questions.setListQuestion() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 				UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 				uiPopupAction.deActivate() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
+				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				questions.setFAQSetting(faqSetting);
+				questions.setListObject() ;
+				UIFAQContainer container = uiPortlet.findFirstComponentOfType(UIFAQContainer.class);
+				event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
 			}
 		}
 	}

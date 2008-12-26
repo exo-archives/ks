@@ -35,7 +35,6 @@ import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
-import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -63,13 +62,12 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UICategories.EditCategoryActionListener.class),
 				@EventConfig(listeners = UICategories.DeleteCategoryActionListener.class, confirm= "UIQuestions.msg.confirm-delete-category"),
 				@EventConfig(listeners = UICategories.MoveCategoryActionListener.class),
-				@EventConfig(listeners = UICategories.MoveDownActionListener.class),
-				@EventConfig(listeners = UICategories.MoveUpActionListener.class),
 				@EventConfig(listeners = UICategories.WatchActionListener.class),
 				@EventConfig(listeners = UICategories.WatchManagerActionListener.class),
 				@EventConfig(listeners = UICategories.UnWatchActionListener.class), 
 				@EventConfig(listeners = UICategories.ExportActionListener.class),
 				@EventConfig(listeners = UICategories.ImportActionListener.class),
+				@EventConfig(listeners = UICategories.ChangeIndexActionListener.class),
 				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class)
 		}
 )
@@ -271,26 +269,6 @@ public class UICategories extends UIContainer{
 		}
 		return oldPath ;
 	}
-	
-	public void moveDownUp(Event<UICategories> event, int i) {
-		String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-		int index = 0 ;
-		for (Category cate : listCate) {
-			if (cate.getId().equals(categoryId)) {
-				break ;
-			} else {
-				index ++ ;
-			}
-		}
-
-		if (index < 0) return ;
-		if ( index ==0 && i == -1) return ;
-		if (index == listCate.size()-1 && i==1) return ;
-		Category category = listCate.remove(index) ;
-		for (Category cate : listCate) {
-		}
-		listCate.add(index+i, category) ;
-	}	
 	
 	@SuppressWarnings("unused")
 	private String[] getActionCategory(){
@@ -717,79 +695,7 @@ public class UICategories extends UIContainer{
 		}
 	}
 	
-	static	public class MoveDownActionListener extends EventListener<UICategories> {
-		public void execute(Event<UICategories> event) throws Exception {
-			UICategories question = event.getSource() ; 
-			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class) ;
-			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			try {
-				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
-				String moderator[] = cate.getModeratorsCategory() ;
-				String currentUser = FAQUtils.getCurrentUser() ;
-				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-				if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
-					question.moveDownUp(event, 1);
-					//question.isChangeLanguage = true;
-					event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
-				} else {
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
-				}
-			} catch (Exception e) {
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//question.setIsNotChangeLanguage();
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				sessionProvider.close();
-				return ;
-			}
-			sessionProvider.close();
-		}
-	}
 	
-	static	public class MoveUpActionListener extends EventListener<UICategories> {
-		public void execute(Event<UICategories> event) throws Exception {
-			UICategories question = event.getSource() ; 
-			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class) ;
-			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			try {
-				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
-				String moderator[] = cate.getModeratorsCategory() ;
-				String currentUser = FAQUtils.getCurrentUser() ;
-				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-				if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
-					question.moveDownUp(event, -1);
-					//question.isChangeLanguage = true;
-					event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
-				} else {
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
-				}
-				sessionProvider.close();
-			} catch (Exception e) {
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//question.setIsNotChangeLanguage();
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				sessionProvider.close();
-				return ;
-			}
-		}
-	}
 	
 	static	public class WatchActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
@@ -909,6 +815,32 @@ public class UICategories extends UIContainer{
 			faqService_.UnWatch(cateId, sessionProvider,FAQUtils.getCurrentUser()) ;
 			sessionProvider.close();
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+		}
+	}
+	
+	static	public class ChangeIndexActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiCategories = event.getSource() ;
+			String objectIds = event.getRequestContext().getRequestParameter(OBJECTID);
+			String fCateId = objectIds.split(",")[0];
+			String tCateId = objectIds.split(",")[1];
+			/*String fCateId = "Category714cc2140aef00010030fb7105d12d48";
+			String tCateId = "Category714ce78e0aef000101bf756b37c9ecb4";*/
+			UIFAQContainer container = uiCategories.getAncestorOfType(UIFAQContainer.class);
+			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+			try {
+				faqService_.swapCategories(uiCategories.parentCateId_, fCateId, tCateId, sessionProvider);
+			} catch (Exception e) {
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
+				sessionProvider.close();
+				return ;
+			}
+			sessionProvider.close();
+			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
 		}
 	}
 }
