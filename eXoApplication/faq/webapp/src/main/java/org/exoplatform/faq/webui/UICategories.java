@@ -24,7 +24,6 @@ import java.util.Stack;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Watch;
@@ -122,7 +121,6 @@ public class UICategories extends UIContainer{
 
 	private void setIsModerators(String currentUser_, FAQService faqService_) {
 		categoryModerators.clear() ;
-		FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 		if(faqSetting_.getIsAdmin().equals("TRUE")) {
 			canEditQuestion = true ;
 			for(int i = 0 ; i < this.listCate.size(); i ++) {
@@ -291,6 +289,7 @@ public class UICategories extends UIContainer{
 	}
 	
 	static  public class OpenCategoryActionListener extends EventListener<UICategories> {
+		@SuppressWarnings("static-access")
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories categories = event.getSource() ;
 			UIFAQContainer container = categories.getAncestorOfType(UIFAQContainer.class);
@@ -354,7 +353,6 @@ public class UICategories extends UIContainer{
 					Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 					String moderator[] = cate.getModeratorsCategory() ;
 					String currentUser = FAQUtils.getCurrentUser() ;
-					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 					if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
 						uiPopupAction.activate(uiPopupContainer, 540, 320) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
@@ -382,7 +380,6 @@ public class UICategories extends UIContainer{
 			}
 			category.init(true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
-			UIFAQContainer fAQContainer = question.getAncestorOfType(UIFAQContainer.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
 	}
@@ -400,7 +397,6 @@ public class UICategories extends UIContainer{
 				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 				String moderator[] = cate.getModeratorsCategory() ;
 				String currentUser = FAQUtils.getCurrentUser() ;
-				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 				if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
 					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
 					uiPopupContainer.setId("EditCategoryForm") ;
@@ -443,7 +439,6 @@ public class UICategories extends UIContainer{
 				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 				String moderator[] = cate.getModeratorsCategory() ;
 				String currentUser = FAQUtils.getCurrentUser() ;
-				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 				if(Arrays.asList(moderator).contains(currentUser) || questions.faqSetting_.isAdmin()) {
 					if (newPath.equals(pathService)) {
 						UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,550) ;  
@@ -486,7 +481,6 @@ public class UICategories extends UIContainer{
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ; 			
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIApplication uiApp = uiCategories.getAncestorOfType(UIApplication.class) ;
 			UIFAQPortlet uiPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
@@ -495,7 +489,6 @@ public class UICategories extends UIContainer{
 				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 				String moderator[] = cate.getModeratorsCategory() ;
 				String currentUser = FAQUtils.getCurrentUser() ;
-				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 				if(Arrays.asList(moderator).contains(currentUser)|| uiCategories.faqSetting_.isAdmin()) {
 					List<Category> listCate = uiCategories.getAllSubCategory(categoryId, faqService_) ;
 					FAQSetting faqSetting = new FAQSetting();
@@ -656,7 +649,6 @@ public class UICategories extends UIContainer{
 				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 				String moderator[] = cate.getModeratorsCategory() ;
 				String currentUser = FAQUtils.getCurrentUser() ;
-				FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 				if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
 					List<Category> listCate = faqService_.getSubCategories(null, sessionProvider, question.faqSetting_) ;
 					String cateId = null ;
@@ -748,7 +740,6 @@ public class UICategories extends UIContainer{
 					Category cate = faqService_.getCategoryById(objectID, sessionProvider) ;
 					String moderator[] = cate.getModeratorsCategory() ;
 					String currentUser = FAQUtils.getCurrentUser() ;
-					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 					if(Arrays.asList(moderator).contains(currentUser)|| uiCategory.faqSetting_.isAdmin()) {
 						UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 						UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
@@ -776,9 +767,7 @@ public class UICategories extends UIContainer{
 				// watch question manager
 			} else {
 				try {
-					Question question = faqService_.getQuestionById(objectID, sessionProvider) ;
-					String currentUser = FAQUtils.getCurrentUser() ;
-					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
+					faqService_.getQuestionById(objectID, sessionProvider) ;
 					UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 					UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
 					UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
@@ -803,12 +792,11 @@ public class UICategories extends UIContainer{
 			UICategories question = event.getSource() ;
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet faqPortlet = question.getAncestorOfType(UIFAQPortlet.class);
-			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			try {
-				Category cate = faqService_.getCategoryById(cateId, sessionProvider) ;
+				faqService_.getCategoryById(cateId, sessionProvider) ;
 			} catch (Exception e) {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
