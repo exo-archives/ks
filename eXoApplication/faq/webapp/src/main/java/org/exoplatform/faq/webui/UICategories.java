@@ -75,6 +75,7 @@ import org.exoplatform.webui.event.EventListener;
 public class UICategories extends UIContainer{
 	private String categoryId_ = null;
 	private String parentCateId_ = null;
+	private boolean isSwap = false;
 	private String parentCateName = "Root";
 	private String pathCategory = "";
 	private List<Category> listCate = new ArrayList<Category>() ;
@@ -82,7 +83,7 @@ public class UICategories extends UIContainer{
 	private List<Boolean> categoryModerators = new ArrayList<Boolean>() ;
 	private boolean canEditQuestion = false ;
 	private FAQSetting faqSetting_ = new FAQSetting();
-	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
+	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch", "ChangeIndex"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
 	public static String newPath_ = "" ;
 	public UICategories () throws Exception{ }
@@ -180,19 +181,22 @@ public class UICategories extends UIContainer{
 	
 	@SuppressWarnings("unused")
 	private void setListCate() throws Exception {
-		List<Category> newList = new ArrayList<Category>();
-		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		newList = faqService.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
-		if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_))){
-			this.listCate.clear();
-			listCate.addAll(newList);
-			parentCateId_ = categoryId_;
-			if(parentCateId_ != null)parentCateName =  faqService.getCategoryById(this.categoryId_, sessionProvider).getName();
-			else parentCateName = "Root";
+		if(!isSwap){
+			List<Category> newList = new ArrayList<Category>();
+			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			newList = faqService.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
+			if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_))){
+				this.listCate.clear();
+				listCate.addAll(newList);
+				parentCateId_ = categoryId_;
+				if(parentCateId_ != null)parentCateName =  faqService.getCategoryById(this.categoryId_, sessionProvider).getName();
+				else parentCateName = "Root";
+			}
+			sessionProvider.close();
+			setIsModerators(FAQUtils.getCurrentUser(), faqService);
 		}
-		sessionProvider.close();
-		setIsModerators(FAQUtils.getCurrentUser(), faqService);
+		isSwap = false;
 	}
 	
 	public List<Watch> getListWatch(String categoryId) throws Exception {
@@ -832,6 +836,10 @@ public class UICategories extends UIContainer{
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			try {
 				faqService_.swapCategories(uiCategories.parentCateId_, fCateId, tCateId, sessionProvider);
+				uiCategories.isSwap = true;
+				uiCategories.listCate.clear();
+				uiCategories.listCate.addAll(faqService_.getSubCategories(uiCategories.parentCateId_, sessionProvider, uiCategories.faqSetting_));
+				uiCategories.setIsModerators(FAQUtils.getCurrentUser(), faqService_);
 			} catch (Exception e) {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
