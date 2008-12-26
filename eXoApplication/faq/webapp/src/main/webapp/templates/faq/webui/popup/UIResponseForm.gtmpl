@@ -126,7 +126,7 @@
 											%>
 												<div style="float:left; width: 100%">
 													<div class="ViewQuestionNotApproved">
-														<%=uicomponent.labelContent_%>
+														<%=uicomponent.getValue(field.getName())%>
 													</div>
 													<%
 													if(field.getName().equals("QuestionTitle")){

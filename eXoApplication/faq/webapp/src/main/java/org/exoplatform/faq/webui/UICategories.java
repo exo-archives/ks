@@ -197,6 +197,13 @@ public class UICategories extends UIContainer{
 		isSwap = false;
 	}
 	
+	public void resetListCate(FAQService faqService_, SessionProvider sessionProvider) throws Exception{
+		isSwap = true;
+		listCate.clear();
+		listCate.addAll(faqService_.getSubCategories(parentCateId_, sessionProvider, faqSetting_));
+		setIsModerators(FAQUtils.getCurrentUser(), faqService_);
+	}
+	
 	public List<Watch> getListWatch(String categoryId) throws Exception {
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		List<Watch> watchList_ = new ArrayList<Watch>() ;
@@ -824,10 +831,7 @@ public class UICategories extends UIContainer{
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			try {
 				faqService_.swapCategories(uiCategories.parentCateId_, fCateId, tCateId, sessionProvider);
-				uiCategories.isSwap = true;
-				uiCategories.listCate.clear();
-				uiCategories.listCate.addAll(faqService_.getSubCategories(uiCategories.parentCateId_, sessionProvider, uiCategories.faqSetting_));
-				uiCategories.setIsModerators(FAQUtils.getCurrentUser(), faqService_);
+				uiCategories.resetListCate(faqService_, sessionProvider);
 			} catch (Exception e) {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

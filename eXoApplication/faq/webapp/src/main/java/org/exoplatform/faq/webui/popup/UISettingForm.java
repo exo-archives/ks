@@ -231,15 +231,19 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
 				faqSetting.setSortQuestionByVote(settingForm.getUIFormCheckBoxInput(settingForm.ITEM_VOTE).isChecked());
-				service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), SessionProviderFactory.createSystemProvider()) ;
+				SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider();
+				service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), sessionProvider) ;
 				UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 				uiPopupAction.deActivate() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+				UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
+				categories.resetListCate(service, sessionProvider);
 				questions.setFAQSetting(faqSetting);
 				questions.setListObject() ;
-				UIFAQContainer container = uiPortlet.findFirstComponentOfType(UIFAQContainer.class);
-				event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(categories) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				sessionProvider.close();
 			}
 		}
 	}

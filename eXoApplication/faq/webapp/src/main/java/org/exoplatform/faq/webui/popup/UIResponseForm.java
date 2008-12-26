@@ -97,7 +97,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private boolean isViewEditQuestion_ = false;
 	@SuppressWarnings("unused")
-	private String labelContent_ = new String();
+	private String questionDetail = new String();
+	private String questionContent = new String();
 
 	// form input :
 	private UIFormStringInput inputQuestionContent_ ;
@@ -224,7 +225,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					questionChanged_ = language.getDetail() ;
 					inputQuestionContent_.setValue(language.getQuestion());
 					inputQuestionDetail_.setValue(language.getDetail()) ;
-					labelContent_ = language.getDetail();
+					questionDetail = language.getDetail();
+					questionContent = language.getQuestion();
 					inputResponseQuestion_.setValue(language.getResponse()[0]) ;
 				}
 			}
@@ -255,6 +257,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		addChild(inputAttachment_) ;
 		
 		sessionProvider.close();
+	}
+	
+	@SuppressWarnings("unused")
+	private String getValue(String id){
+		if(id.equals("QuestionTitle")) return questionContent;
+		else return questionDetail;
 	}
 
 	public String getQuestionId(){ 
@@ -783,7 +791,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						responseForm.languageIsResponsed = language ;
 						responseForm.inputQuestionDetail_.setValue(questionLanguage.getDetail()) ;
 						responseForm.inputQuestionContent_.setValue(questionLanguage.getQuestion()) ;
-						responseForm.labelContent_ = questionLanguage.getDetail();
+						responseForm.questionDetail = questionLanguage.getDetail();
 						responseForm.inputResponseQuestion_.setValue(questionLanguage.getResponse()[0]) ;
 						responseForm.posOfResponse = 0;
 
