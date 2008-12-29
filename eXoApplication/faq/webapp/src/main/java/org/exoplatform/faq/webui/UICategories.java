@@ -72,10 +72,12 @@ import org.exoplatform.webui.event.EventListener;
 )
 
 public class UICategories extends UIContainer{
+	private String backCateID_ = null;
 	private String categoryId_ = null;
 	private String parentCateId_ = null;
 	private boolean isSwap = false;
 	private String parentCateName = "Root";
+	private String currentName = "Root";
 	private String pathCategory = "";
 	private List<Category> listCate = new ArrayList<Category>() ;
 	private List<String> listCateId_ = new ArrayList<String>() ;
@@ -184,9 +186,15 @@ public class UICategories extends UIContainer{
 			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			newList = faqService.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
+			if(categoryId_ != null)currentName = faqService.getCategoryById(this.categoryId_, sessionProvider).getName();
+			else currentName = "Root";
+			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
 			if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_))){
 				this.listCate.clear();
 				listCate.addAll(newList);
+				String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
+				if(listId.length > 1) backCateID_ = listId[listId.length - 2];
+				else backCateID_ = listId[0];
 				parentCateId_ = categoryId_;
 				if(parentCateId_ != null)parentCateName =  faqService.getCategoryById(this.categoryId_, sessionProvider).getName();
 				else parentCateName = "Root";
@@ -296,7 +304,7 @@ public class UICategories extends UIContainer{
 	}
 	
 	static  public class OpenCategoryActionListener extends EventListener<UICategories> {
-		@SuppressWarnings("static-access")
+		@SuppressWarnings({ "static-access"})
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories categories = event.getSource() ;
 			UIFAQContainer container = categories.getAncestorOfType(UIFAQContainer.class);
@@ -308,19 +316,23 @@ public class UICategories extends UIContainer{
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			try {
-				questions.viewAuthorInfor = faqService_.getCategoryById(categoryId, sessionProvider).isViewAuthorInfor() ;
-			} catch (Exception e) {
-				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				questions.setIsNotChangeLanguage();
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				sessionProvider.close();
-				return ;
+			if(!categoryId.equals("FAQService")){
+				try {
+					questions.viewAuthorInfor = faqService_.getCategoryById(categoryId, sessionProvider).isViewAuthorInfor() ;
+				} catch (Exception e) {
+					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					questions.setIsNotChangeLanguage();
+					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+					sessionProvider.close();
+					return ;
+				}
+				questions.setCategoryId(categoryId) ;
+			} else {
+				questions.setCategoryId(null) ;
 			}
 			sessionProvider.close();
-			questions.setCategoryId(categoryId) ;
 			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 			String oldPath = breadcumbs.getPaths() ;
 			if(oldPath != null && oldPath.trim().length() > 0) {
@@ -820,7 +832,8 @@ public class UICategories extends UIContainer{
 	static	public class ChangeIndexActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
-			String objectIds = event.getRequestContext().getRequestParameter(OBJECTID);
+			//String objectIds = event.getRequestContext().getRequestParameter(OBJECTID);
+			String objectIds = "Category714cc2140aef00010030fb7105d12d48,Category714ce78e0aef000101bf756b37c9ecb4";
 			String fCateId = objectIds.split(",")[0];
 			String tCateId = objectIds.split(",")[1];
 			/*String fCateId = "Category714cc2140aef00010030fb7105d12d48";

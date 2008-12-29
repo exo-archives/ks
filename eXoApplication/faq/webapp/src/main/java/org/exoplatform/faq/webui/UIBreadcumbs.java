@@ -80,7 +80,7 @@ public class UIBreadcumbs extends UIContainer {
 	}
 
 	@SuppressWarnings("unused")
-	private String getPath(int index) {
+	public String getPath(int index) {
 		return this.paths_.get(index) ;
 	}
 
@@ -93,7 +93,7 @@ public class UIBreadcumbs extends UIContainer {
 	}
 
 	@SuppressWarnings("unused")
-	private List<String> getBreadcumbs() throws Exception {
+	public List<String> getBreadcumbs() throws Exception {
 		return breadcumbs_ ;
 	}
 
