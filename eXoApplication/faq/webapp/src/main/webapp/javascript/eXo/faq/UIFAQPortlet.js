@@ -457,8 +457,8 @@ eXo.faq.UIFAQDragDrop = {
 		faqDnd.tmpNode.innerHTML = "<span></span>";
 		faqDnd.tmpNode.className = this.className + " FAQTmpCategory";
 		faqDnd.tmpNode.style.width = (this.offsetWidth - 30) + "px";
-		faqDnd.initTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
 		faqDnd.insertAfter(this,faqDnd.tmpNode);
+		faqDnd.initTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
 		faqDnd.setPostion(this,evt);
 		dnd.init(targets,this,this,evt);
 		dnd.initCallback = eXo.faq.UIFAQDragDrop.initCallback;
@@ -477,8 +477,10 @@ eXo.faq.UIFAQDragDrop = {
 	dropCallback:function(dndEvent){
 		var faqDnd = eXo.faq.UIFAQDragDrop;
 		var dragObj = dndEvent.dragObject;
-		var currentTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
 		var beforeObject = null;
+		var currentTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
+		if(eXo.core.Browser.isFF()) currentTop += 26;
+		alert(currentTop);
 		eXo.core.DOMUtil.replaceClass(dragObj,"FAQDnDCategory","");
 		if(currentTop == faqDnd.initTop){
 			eXo.core.DOMUtil.removeElement(faqDnd.tmpNode);
