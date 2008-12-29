@@ -832,8 +832,8 @@ public class UICategories extends UIContainer{
 	static	public class ChangeIndexActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
-			//String objectIds = event.getRequestContext().getRequestParameter(OBJECTID);
-			String objectIds = "Category714cc2140aef00010030fb7105d12d48,Category714ce78e0aef000101bf756b37c9ecb4";
+			String objectIds = event.getRequestContext().getRequestParameter(OBJECTID);
+			//String objectIds = "Category714cc2140aef00010030fb7105d12d48,Category714ce78e0aef000101bf756b37c9ecb4";
 			String fCateId = objectIds.split(",")[0];
 			String tCateId = objectIds.split(",")[1];
 			/*String fCateId = "Category714cc2140aef00010030fb7105d12d48";
