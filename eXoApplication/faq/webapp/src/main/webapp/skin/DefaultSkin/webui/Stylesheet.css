@@ -294,6 +294,16 @@
 	font-weight: bold;
 }
 
+.UIFAQPortlet .UICategories .FAQBack {
+	background: url('background/BlueUpLevelArrow.gif') no-repeat left;
+	padding-left: 28px;
+	height: 18px;
+	line-height: 18px;
+	margin: 8px 0px;
+	white-space: nowrap;
+	font-weight: bold;
+}
+
 .UIFAQPortlet .UIQuestions .FAQContainer .UIFAQPopupCategory {
 	left: 40px;
 	position: absolute;
