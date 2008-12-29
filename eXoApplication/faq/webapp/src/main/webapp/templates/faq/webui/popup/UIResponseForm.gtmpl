@@ -1,5 +1,9 @@
 <% 
 	import org.exoplatform.faq.webui.FAQUtils;
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript('eXo.faq.UIFAQPortlet.setSelectboxOnchange("'+ uicomponent.id +'");');
 %>
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>

@@ -544,5 +544,19 @@ eXo.faq.UIFAQDragDrop = {
 		if(orginalNode.nextSibling) orginalNode.parentNode.insertBefore(node,orginalNode.nextSibling);
 		else orginalNode.parentNode.appendChild(node);
 	}
-}
+};
+
+UIFAQPortlet.prototype.setSelectboxOnchange = function(fid) {
+	if(!eXo.core.Browser.isFF()) return;
+	var form = document.getElementById(fid);
+	var select = eXo.core.DOMUtil.findFirstDescendantByClass(form,"select","selectbox");
+	var onchange = select.getAttribute("onchange");
+	onchange = onchange.replace("javascript:","javascript:eXo.faq.UIFAQPortlet.setDisableSelectbox(this);");
+	select.setAttribute("onchange",onchange);
+} ;
+
+UIFAQPortlet.prototype.setDisableSelectbox = function(selectbox) {
+	selectbox.disabled = true;
+} ;
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;
