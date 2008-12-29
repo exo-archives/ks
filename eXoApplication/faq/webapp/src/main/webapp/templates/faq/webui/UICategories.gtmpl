@@ -9,6 +9,8 @@
 	
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.faq.UIFAQPortlet','/faq/javascript/');
+	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView();");
 	if(uicomponent.canEditQuestion)
