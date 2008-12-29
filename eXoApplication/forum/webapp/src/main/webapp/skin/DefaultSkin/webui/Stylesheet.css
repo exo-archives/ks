@@ -365,14 +365,15 @@
 
 .UIForumPortlet .ParentMaskLayer {
 	position: relative ;
+	z-index: 0;
 }
 
 .UIForumPortlet .ParentMaskLayer .MaskLayerForum {
-	left: 0px;
-	top: 0px;
-	visibility: visible;
-	z-index: 1;
+	left: 0px;	top: 0px;
+	z-index: 5;
 	position: absolute ;
+	visibility: visible;
+	background: url('background/Point1x1.png') no-repeat top center ;	
 }
 
 .UIForumPortlet .ContentAction .UIPopupCategory {
