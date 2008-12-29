@@ -3,65 +3,74 @@ function UIFAQPortlet() {
 };
 
 UIFAQPortlet.prototype.checkCustomView = function(){
-	pCOOKIES = new Array();
-	pCOOKIES = document.cookie.split('; ');
-	var categories = document.getElementById('UICategories');
-	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
-	var buttomView = document.getElementById('FAQCustomView');
-	var results = null;
-	for(bb = 0; bb < pCOOKIES.length; bb++){
-		NmeVal  = new Array();
-		NmeVal  = pCOOKIES[bb].split('=');
-		if(NmeVal[0] == "FAQCustomView"){
-			results = unescape(NmeVal[1]);
-		}
-	}
-	if(!results){
-		categories.style.display = "block";
-		document.cookie = "FAQCustomView=block";
-		columnCategories.style.width = "200px";
-		buttomView.className = "Icon CustomView";
-	} else {
-		if(results === "none"){
-			categories.style.display = "none";
-			columnCategories.style.width = "0px";
-			buttomView.className = "Icon CustomViewRight";
-		}
-	}
+	var cookie = eXo.core.Browser.getCookie("FAQCustomView");
+	document.getElementById('FAQViewCategoriesColumn').style.display = cookie;
+//	pCOOKIES = new Array();
+//	pCOOKIES = document.cookie.split('; ');
+//	var categories = document.getElementById('UICategories');
+//	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
+//	var buttomView = document.getElementById('FAQCustomView');
+//	var results = null;
+//	for(bb = 0; bb < pCOOKIES.length; bb++){
+//		NmeVal  = new Array();
+//		NmeVal  = pCOOKIES[bb].split('=');
+//		if(NmeVal[0] == "FAQCustomView"){
+//			results = unescape(NmeVal[1]);
+//		}
+//	}
+//	if(!results){
+//		categories.style.display = "block";
+//		document.cookie = "FAQCustomView=block";
+//		columnCategories.style.width = "200px";
+//		buttomView.className = "Icon CustomView";
+//	} else {
+//		if(results === "none"){
+//			categories.style.display = "none";
+//			columnCategories.style.width = "0px";
+//			buttomView.className = "Icon CustomViewRight";
+//		}
+//	}
 	//controlWorkSpace();
 };
 
 UIFAQPortlet.prototype.changeCustomView = function(change){
-	pCOOKIES = new Array();
-	pCOOKIES = document.cookie.split('; ');
-	var categories = document.getElementById('UICategories');
-	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
-	var buttomView = document.getElementById('FAQCustomView');
-	var results = null;
-	for(bb = 0; bb < pCOOKIES.length; bb++){
-		NmeVal  = new Array();
-		NmeVal  = pCOOKIES[bb].split('=');
-		if(NmeVal[0] == "FAQCustomView"){
-			results = unescape(NmeVal[1]);
-		}
+	var buttomView = document.getElementById('FAQViewCategoriesColumn');
+	if(buttomView.style.display != "none"){
+		buttomView.style.display = "none";
+	}else{
+		buttomView.style.display = "block";
 	}
-	if(!results){
-		categories.style.display = "block";
-		document.cookie = "FAQCustomView=block";
-		columnCategories.style.width = "200px";
-	} else{
-		if(results === "block"){
-			 categories.style.display = "none";
-			 document.cookie = "FAQCustomView=none";
-			 columnCategories.style.width = "0px";
-			 buttomView.className = "Icon CustomViewRight";
-		}	else {
-			categories.style.display = "block";
-			document.cookie = "FAQCustomView=block";
-			columnCategories.style.width = "200px";
-			buttomView.className = "Icon CustomView";
-		}
-	} 
+	eXo.core.Browser.setCookie("FAQCustomView",buttomView.style.display,1);
+//	pCOOKIES = new Array();
+//	pCOOKIES = document.cookie.split('; ');
+//	var categories = document.getElementById('UICategories');
+//	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
+//	var buttomView = document.getElementById('FAQCustomView');
+//	var results = null;
+//	for(bb = 0; bb < pCOOKIES.length; bb++){
+//		NmeVal  = new Array();
+//		NmeVal  = pCOOKIES[bb].split('=');
+//		if(NmeVal[0] == "FAQCustomView"){
+//			results = unescape(NmeVal[1]);
+//		}
+//	}
+//	if(!results){
+//		categories.style.display = "block";
+//		document.cookie = "FAQCustomView=block";
+//		columnCategories.style.width = "200px";
+//	} else{
+//		if(results === "block"){
+//			 categories.style.display = "none";
+//			 document.cookie = "FAQCustomView=none";
+//			 columnCategories.style.width = "0px";
+//			 buttomView.className = "Icon CustomViewRight";
+//		}	else {
+//			categories.style.display = "block";
+//			document.cookie = "FAQCustomView=block";
+//			columnCategories.style.width = "200px";
+//			buttomView.className = "Icon CustomView";
+//		}
+//	} 
 	var uiNav = eXo.faq.UIFAQPortlet ;
 	uiNav.initScroll();
 };
@@ -480,7 +489,6 @@ eXo.faq.UIFAQDragDrop = {
 		var beforeObject = null;
 		var currentTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
 		if(eXo.core.Browser.isFF()) currentTop += 26;
-		alert(currentTop);
 		eXo.core.DOMUtil.replaceClass(dragObj,"FAQDnDCategory","");
 		if(currentTop == faqDnd.initTop){
 			eXo.core.DOMUtil.removeElement(faqDnd.tmpNode);
