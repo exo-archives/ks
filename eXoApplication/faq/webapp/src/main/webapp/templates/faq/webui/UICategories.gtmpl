@@ -10,7 +10,8 @@
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.faq.UIFAQPortlet','/faq/javascript/');
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
-	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.checkCustomView();");
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView();");
+	jsmanager.addJavascript('eXo.faq.UIFAQDragDrop.init("'+compId+'") ;') ;
 %>
 <div id="$uicomponent.id" style="padding: 0px 5px 0px 5px; line-height:28px; padding-bottom:2px;">
 	<div>
@@ -97,7 +98,7 @@
 						if(category.getId().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
 						else classCss = "FAQCategoryRight";
 				%>
-						<div id="<%=category.getId()%>" class="$classCss">
+						<div id="<%=category.getId()%>" class="$classCss FAQCategory"  actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
 							<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupCategories$i', '', null, null)">
 								
 								<a title="<%=category.getName()%>" href="<%=uicomponent.event("OpenCategory", category.getId())%>">

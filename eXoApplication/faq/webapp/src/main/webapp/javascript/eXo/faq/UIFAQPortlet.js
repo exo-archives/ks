@@ -416,4 +416,120 @@ UIFAQPortlet.prototype.FAQChangeHeightToAuto = function() {
 	}
 } ;
 
+DragDrop.prototype.onMouseMove = function(evt) {
+  eXo.core.Mouse.update(evt) ;
+	var dndEvent = eXo.core.DragDrop.dndEvent ;
+  dndEvent.backupMouseEvent = evt ;
+	var dragObject =  dndEvent.dragObject ;
+
+	var y = parseInt(dragObject.style.top) ;
+	var x = parseInt(dragObject.style.left) ;
+
+	dragObject.style["left"] =  x + eXo.core.Mouse.deltax + "px" ;
+	dragObject.style["top"]  =  y + eXo.core.Mouse.deltay + "px" ;
+	
+  if(eXo.core.DragDrop.dragCallback != null) {
+    var foundTarget = eXo.core.DragDrop.findDropableTarget(dndEvent, eXo.core.DragDrop.dropableTargets, evt) ;
+    var junkMove =  eXo.core.DragDrop.isJunkMove(dragObject, foundTarget) ;
+    dndEvent.update(foundTarget, junkMove) ;
+    eXo.core.DragDrop.dragCallback(dndEvent,evt) ;
+  }
+    
+	return false ;
+} ;
+
+eXo.faq.UIFAQDragDrop = {
+	init:function(compid){
+		var comp = document.getElementById(compid);
+		var elements = eXo.core.DOMUtil.findDescendantsByClass(comp,"div","FAQCategory");
+		var i = elements.length;
+		while(i--){
+			elements[i].onmousedown = this.initDnD;
+		}
+	},
+	initDnD:function(evt){
+		eXo.core.EventManager.cancelEvent(evt);
+		if(eXo.core.EventManager.getMouseButton(evt) == 2) return ;
+		var dnd = eXo.core.DragDrop;
+		var faqDnd = eXo.faq.UIFAQDragDrop;
+		var targets = eXo.core.DOMUtil.findChildrenByClass(this.parentNode,"div","FAQCategory");
+		faqDnd.tmpNode = document.createElement("div");
+		faqDnd.tmpNode.innerHTML = "<span></span>";
+		faqDnd.tmpNode.className = this.className + " FAQTmpCategory";
+		faqDnd.tmpNode.style.width = (this.offsetWidth - 30) + "px";
+		faqDnd.initTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
+		faqDnd.insertAfter(this,faqDnd.tmpNode);
+		faqDnd.setPostion(this,evt);
+		dnd.init(targets,this,this,evt);
+		dnd.initCallback = eXo.faq.UIFAQDragDrop.initCallback;
+		dnd.dragCallback = eXo.faq.UIFAQDragDrop.dragCallback;
+		dnd.dropCallback = eXo.faq.UIFAQDragDrop.dropCallback;
+	},
+	initCallback:function(dndEvent){
+		
+	},
+	dragCallback:function(dndEvent,evt){
+		dndEvent.dragObject.style.left = eXo.faq.UIFAQDragDrop.constLeft;
+		if (dndEvent.foundTargetObject) {
+			eXo.faq.UIFAQDragDrop.insertNode(dndEvent.foundTargetObject,eXo.faq.UIFAQDragDrop.tmpNode,evt);
+		}
+	},
+	dropCallback:function(dndEvent){
+		var faqDnd = eXo.faq.UIFAQDragDrop;
+		var dragObj = dndEvent.dragObject;
+		var currentTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
+		var beforeObject = null;
+		eXo.core.DOMUtil.replaceClass(dragObj,"FAQDnDCategory","");
+		if(currentTop == faqDnd.initTop){
+			eXo.core.DOMUtil.removeElement(faqDnd.tmpNode);
+			dragObj.removeAttribute("style");
+			return ;
+		}else if(currentTop > faqDnd.initTop){
+			beforeObject = eXo.core.DOMUtil.findPreviousElementByTagName(eXo.faq.UIFAQDragDrop.tmpNode,"div");
+		}else{
+			beforeObject = eXo.core.DOMUtil.findNextElementByTagName(eXo.faq.UIFAQDragDrop.tmpNode,"div");
+		}
+		dragObj.parentNode.replaceChild(dragObj,faqDnd.tmpNode);
+		var actionLink = dragObj.getAttribute("actionLink");
+		actionLink = actionLink.replace("=objectId","="+dragObj.id +","+beforeObject.id);
+		eval(actionLink);
+	},
+	setPostion:function(obj,evt){
+		if(!isNaN(parseInt(obj.style.left))) return ;
+		var objX = eXo.core.Browser.findPosX(obj);
+		var objY = eXo.core.Browser.findPosY(obj);
+		var objWidth = obj.offsetWidth - 30;
+		var mouseX = eXo.core.Browser.findMouseXInPage(evt);
+		var mouseY = eXo.core.Browser.findMouseYInPage(evt);
+		obj.style.width = objWidth + "px";
+		eXo.core.DOMUtil.addClass(obj,"FAQDnDCategory");
+		var mouseRX = eXo.core.Browser.findMouseRelativeX(obj.offsetParent,evt);
+		var mouseRY = eXo.core.Browser.findMouseRelativeY(obj.offsetParent,evt);
+		objX = mouseX - objX;
+		if((eXo.core.Browser.browserType=="ie") && (document.getElementById("UIControlWorkspace")))
+			objX += document.getElementById("UIControlWorkspace").offsetWidth;
+		objY = mouseY - objY;
+		obj.style.left = (mouseRX - objX) + "px";
+		obj.style.top	 = (mouseRY - objY) + "px";
+		this.constLeft = (mouseRX - objX) + "px";
+	},
+	insertNode: function(node,newNode,evt){
+		var nextElement = eXo.core.DOMUtil.findNextElementByTagName(node,(node.tagName).toString().toLowerCase());
+		if(nextElement && !this.getPos(node,evt)) node.parentNode.insertBefore(newNode,node);
+		else if(nextElement && this.getPos(node,evt)) node.parentNode.insertBefore(newNode,nextElement);
+		else node.parentNode.appendChild(newNode);
+		return newNode;
+	},
+	getPos: function(obj,evt){
+		var mouseY = eXo.core.Browser.findMouseRelativeY(obj.offsetParent,evt);
+		var posY = obj.offsetTop;
+		var delta = obj.offsetHeight/2;
+		if((mouseY - posY) < delta) return false;
+		return true;
+	},
+	insertAfter:function(orginalNode,node) {
+		if(orginalNode.nextSibling) orginalNode.parentNode.insertBefore(node,orginalNode.nextSibling);
+		else orginalNode.parentNode.appendChild(node);
+	}
+}
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;

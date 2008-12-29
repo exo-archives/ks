@@ -294,6 +294,20 @@
 	font-weight: bold;
 }
 
+.UIFAQPortlet .UICategories .FAQTmpCategory {
+	background:none;
+	border: dotted 1px #cccccc;
+}
+
+.UIFAQPortlet .UICategories .FAQDnDCategory{
+	position: absolute;
+	margin: 0px 0px 0px 0px;
+	border: solid 1px #cccccc;
+	background: #cccccc url('background/BlackBorderRightArrow.gif') no-repeat left;
+	-moz-opacity:0.5;
+	filter: Alpha(Opacity=50);
+}
+
 .UIFAQPortlet .UICategories .FAQBack {
 	background: url('background/BlueUpLevelArrow.gif') no-repeat left;
 	padding-left: 28px;
