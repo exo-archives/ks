@@ -475,8 +475,8 @@ UIForumPortlet.prototype.setMaskLayer = function() {
  	}
  	if(popupWindow != null) {
 	 	if(popupWindow.style.display == "block") {
-			masklayer.style.width = forumPortlet.offsetWidth - 15 + "px";
-			masklayer.style.height = forumPortlet.offsetHeight - 15 + "px";
+			masklayer.style.width = (forumPortlet.offsetWidth - 3) + "px";
+			masklayer.style.height = (forumPortlet.offsetHeight - 3) + "px";
 		}
 		var closeButton = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
 		if(closeButton) {

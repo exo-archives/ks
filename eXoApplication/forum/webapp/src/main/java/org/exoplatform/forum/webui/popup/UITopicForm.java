@@ -487,7 +487,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						topicDetail.setIsEditTopic(true) ;
-					} catch (PathNotFoundException e) {
+					} catch (PathNotFoundException e) {e.printStackTrace();
 						// hung.hoang add
 						sProvider.close();
 						uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
@@ -506,6 +506,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						topicNew.setRemoteAddr(remoteAddr);
 						forumService.saveTopic(sProvider, uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
 					} catch (PathNotFoundException e) {
+						e.printStackTrace();
 						sProvider.close();
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;

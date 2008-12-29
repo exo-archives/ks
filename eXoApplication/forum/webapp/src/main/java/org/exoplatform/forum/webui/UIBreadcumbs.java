@@ -19,7 +19,9 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -40,6 +42,7 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 
 /**
  * Created by The eXo Platform SARL
@@ -209,6 +212,13 @@ public class UIBreadcumbs extends UIContainer {
 	    return -1;
     }
 	}
+	
+  public String getUserToken()throws Exception {
+  	ExoContainer container = RootContainer.getInstance();
+  	container = ((RootContainer)container).getPortalContainer("portal");
+  	ContinuationService continuation = (ContinuationService) container.getComponentInstanceOfType(ContinuationService.class);
+    return continuation.getUserToken(userProfile.getUserId());
+  }
 	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {

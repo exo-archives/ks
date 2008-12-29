@@ -3,6 +3,15 @@
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.portal.webui.util.Util;
 	import org.exoplatform.forum.service.JobWattingForModerator;
+	import org.exoplatform.web.application.JavascriptManager;
+	
+	uicomponent.setUserProfile();
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('eXo.core.JSON') ;
+	jsmanager.importJavascript('eXo.core.Cometd') ;
+	jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
+	jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'");') ;
 %>
 <div class="UIBreadcumbs" id="$uicomponent.id">
 	<div class="LeftBreadcumbs">
@@ -69,9 +78,9 @@
 						if(uicomponent.userProfile.getUserRole() <= 1) {
 							int total = uicomponent.getTotalJobWattingForModerator();
 					%>
-					<div class="SeparatorLine" style="float: right;">
-						<div style="line-height: 24px;"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>: ($total)</div>
-					</div>	
+					<div class="SeparatorLine"  style="float: right;">
+						<div style="line-height: 24px;" id="PendingJob"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</div>
+					</div>
 					<%}%>
 					<div class="SeparatorLine" style="float: right;">
 						<div style="line-height: 24px; cursor: pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">

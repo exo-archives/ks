@@ -432,3 +432,7 @@
   width:100px;
   float:left;
 }
+
+.UIForumPortlet .BanIpToolsIcon {
+  background: url('icons/BanIpToolsIcon.gif') no-repeat left center;
+}
