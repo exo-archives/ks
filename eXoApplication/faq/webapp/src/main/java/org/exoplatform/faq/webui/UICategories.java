@@ -832,18 +832,13 @@ public class UICategories extends UIContainer{
 	static	public class ChangeIndexActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
-			String objectIds = event.getRequestContext().getRequestParameter(OBJECTID);
-			//String objectIds = "Category714cc2140aef00010030fb7105d12d48,Category714ce78e0aef000101bf756b37c9ecb4";
-			String fCateId = objectIds.split(",")[0];
-			String tCateId = objectIds.split(",")[1];
-			/*String fCateId = "Category714cc2140aef00010030fb7105d12d48";
-			String tCateId = "Category714ce78e0aef000101bf756b37c9ecb4";*/
+			String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
 			UIFAQContainer container = uiCategories.getAncestorOfType(UIFAQContainer.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			try {
-				faqService_.swapCategories(uiCategories.parentCateId_, fCateId, tCateId, sessionProvider);
+				faqService_.swapCategories(uiCategories.parentCateId_, objectIds[0], objectIds[1], sessionProvider);
 				uiCategories.resetListCate(faqService_, sessionProvider);
 			} catch (Exception e) {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;

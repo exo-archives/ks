@@ -11,7 +11,8 @@
 	jsmanager.importJavascript('eXo.faq.UIFAQPortlet','/faq/javascript/');
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView();");
-	jsmanager.addJavascript('eXo.faq.UIFAQDragDrop.init("'+compId+'") ;') ;
+	if(uicomponent.canEditQuestion)
+		jsmanager.addJavascript('eXo.faq.UIFAQDragDrop.init("'+compId+'") ;') ;
 %>
 <div id="$uicomponent.id" style="padding: 0px 5px 0px 5px; line-height:28px; padding-bottom:2px;">
 	<div>
