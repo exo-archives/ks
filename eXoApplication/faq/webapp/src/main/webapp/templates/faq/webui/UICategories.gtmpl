@@ -25,7 +25,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer" style="height: auto; padding-left:5px; padding-bottom:5px; margin-bottom: 5px; line-height:18px;">
+		<div class="FAQContainer" style="height: auto; padding-left:5px; padding-bottom:5px; margin-bottom: 5px; line-height:18px;_width: 182px;">
 			<%
 			long[] cateInfo = uicomponent.getCategoryInfo() ;
 			long numberOfSubCate = cateInfo[0] ;
@@ -50,7 +50,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer"  style="height: 200px; margin-bottom: 5px; overflow:auto;">
+		<div class="FAQContainer"  style="height: 200px; margin-bottom: 5px; overflow:auto;_width: 187px;">
 			<div class="UICategories">
 					<%
 						if(uicomponent.parentCateId_ == null){
@@ -205,7 +205,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer" style="height: auto; padding-left:5px; margin-bottom: 5px;">
+		<div class="FAQContainer" style="height: auto; padding-left:5px; margin-bottom: 5px; _width: 182px;">
 			All Tags
 		</div>
 	</div>
