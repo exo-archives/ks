@@ -16,10 +16,14 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
@@ -59,9 +63,12 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 	public static final String NEW_IP_BAN_INPUT2 = "newIpBan2";
 	public static final String NEW_IP_BAN_INPUT3 = "newIpBan3";
 	public static final String NEW_IP_BAN_INPUT4 = "newIpBan4";
+	public static final String BAN_IP_PAGE_ITERATOR = "IpBanPageIterator";
 	private String forumId ;
 	private ForumService forumService ;
-	public UIBanIPForumManagerForm() {
+	private JCRPageList pageList ;
+	private UIForumPageIterator pageIterator ;
+	public UIBanIPForumManagerForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
@@ -69,6 +76,7 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT3, null)).setMaxLength(3));
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT4, null)).setMaxLength(3));
 		setActions(new String[]{"Cancel"});
+		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
   }
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
@@ -77,9 +85,23 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 	  this.forumId = forumId;
   }
 	
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "unchecked" })
   private List<String> getListIpBan() throws Exception {
-		return forumService.getForumBanList(forumId);
+		List<String> listIpBan = forumService.getForumBanList(forumId);
+		pageList = new ForumPageList(8, listIpBan.size());
+		pageList.setPageSize(8);
+		pageIterator = this.getChild(UIForumPageIterator.class);
+		pageIterator.updatePageList(pageList);
+		List<String>list = new ArrayList<String>();
+		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), listIpBan)) ;
+		pageIterator.setSelectPage(pageList.getCurrentPage());
+		try {
+			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
+			else  pageIterator.setRendered(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 	
 	private String checkIpAddress(String[] ipAdd){

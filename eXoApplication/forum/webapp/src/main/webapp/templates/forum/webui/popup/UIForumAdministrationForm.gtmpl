@@ -114,12 +114,18 @@
 													</tbody>
 												</table>
 											</div>
+											<div style="overflow: auto; width: 400px;">
+											<% 
+												uiform.renderChild(uiform.BAN_IP_PAGE_ITERATOR);
+											%>
+												<div style="clear: right;"><span></span></div>
+											</div>
 										</center>
 									<%}else if(tabconten.id.equals(uicomponent.FIELD_NOTIFYEMAIL_TAB)){
 											String linkReset = uicomponent.event("GetDefaultMail") ;
 											String titleReset = uicomponent.getLabel("TitleResetMail");
 									%>
-											<div style="float: left; white-space:nowrap; width: 90%;">
+											<div style="float: left; white-space:nowrap; width: 95%;">
 												<%uiform.renderChild(tabconten.id) ;%>
 											</div>
 											<a href="$linkReset" title="$titleReset"><div class="Refresh"><span></span></div></a>
@@ -187,27 +193,29 @@
 			</div>	
 		</div>	
 	</div>
-	<%if(!tabSelected.equals(uicomponent.IP_BAN_TAB)){%>
-			<div class="UIAction"> 
-				<table class="ActionContainer" align="center">
-					<tr>
-						<td align="center">
-						<% for(action in uiform.getActions()) { 
-							 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
-							 String link = uiform.event(action) ;
-						%>
-							<a href="$link" class="ActionButton LightBlueStyle">
-								<div class="ButtonLeft">
-									<div class="ButtonRight">
-										<div class="ButtonMiddle">$actionLabel</div>
-									</div>
-								</div>
-							</a>
-						<%}%>
-						</td>
-					</tr>
-		 		</table> 
-			</div>	
-	<%}%>	
+	
+	<div class="UIAction"> 
+		<table class="ActionContainer" align="center">
+			<tr>
+				<td align="center">
+				<%for(action in uiform.getActions()) { 
+						if(tabSelected.equals(uicomponent.IP_BAN_TAB)){
+							if(action.equals("Save")) continue ;
+						}
+						String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
+						String link = uiform.event(action) ;
+				%>
+					<a href="$link" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">$actionLabel</div>
+							</div>
+						</div>
+					</a>
+				<%}%>
+				</td>
+			</tr>
+ 		</table> 
+	</div>	
 	<%uiform.end()%>
 </div>

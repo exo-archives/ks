@@ -24,7 +24,10 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumAdministration;
+import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -92,13 +95,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
-	
+	public static final String BAN_IP_PAGE_ITERATOR = "IpBanPageIterator" ;
+	private JCRPageList pageList ;
 	private List<String> listIpBan = new ArrayList<String>();
-	
+	private UIForumPageIterator pageIterator ;
 	public UIForumAdministrationForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIListTopicOld.class, null, null) ;
 		this.setActions(new String[]{"Save", "Cancel"}) ;
+		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
 	}
 	
 	public void setInit() throws Exception{
@@ -184,8 +189,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		}
 	}
 	
-	@SuppressWarnings("unused")
-	private List<String> getListIpBan(){
+	@SuppressWarnings({ "unused", "unchecked" })
+	private List<String> getListIpBan() throws Exception{
 		listIpBan = new ArrayList<String>();
 		ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		try {
@@ -193,7 +198,20 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return listIpBan;
+		pageList = new ForumPageList(8, listIpBan.size());
+		pageList.setPageSize(8);
+		pageIterator = this.getChild(UIForumPageIterator.class);
+		pageIterator.updatePageList(pageList);
+		List<String>list = new ArrayList<String>();
+		list.addAll(this.pageList.getPageList(pageIterator.getPageSelected(), listIpBan)) ;
+		pageIterator.setSelectPage(pageList.getCurrentPage());
+		try {
+			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
+			else  pageIterator.setRendered(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 	
 	public boolean isRenderListTopic() {

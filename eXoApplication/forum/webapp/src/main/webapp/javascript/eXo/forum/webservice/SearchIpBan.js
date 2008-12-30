@@ -78,6 +78,7 @@ SearchIpBan.prototype.searchIpBan = function(keyword) {
 		url = '/portal/rest/ks/forum/filterIpBanforum/' + forumId + '/' +keyword + '/';
 	}
 	//alert(url);
+	this.url_ = url;
   var handler = new AjaxHandler(this, this.SEARCH_IP_BAN);
   this.ajaxWrapper(handler, url, 'GET');
 }
@@ -127,7 +128,19 @@ SearchIpBan.prototype.updateIpBanList = function() {
 	
 	// Fill up with new list
 	var tBodyNode = this.uiGridNode.getElementsByTagName('tbody')[0] || this.uiGridNode;
-	for(var i=0; i<this.data.jsonList.length; i++) {
+	var pageIter = document.getElementById('IpBanPageIterator');
+	var length_ = this.data.jsonList.length ;
+	if(pageIter){
+		pageIter.style.display = "none";
+		var url = String(this.url_);
+		if(url.indexOf('all') > 0) {
+			if(length_ >= 7) {
+				length_ = 7;
+				pageIter.style.display = "block";
+			}
+		}
+	}
+	for(var i=0; i < length_; i++) {
 		tBodyNode.appendChild(this.buildIpBanItemNode(this.data.jsonList[i].ip));
 	}
 };
@@ -155,7 +168,7 @@ SearchIpBan.prototype.buildIpBanItemNode = function(ip) {
 	fieldLabelNode.innerHTML = '[<a href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIForumAdministrationForm\',\'Posts\',\'&objectId=' + ip + '\')">Posts</a>]&nbsp;\
 				[<a style="color: red;" href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIForumAdministrationForm\',\'UnBan\',\'&objectId=' + ip + '\')">X</a>]';
 	
-	ipBanItemNode.appendChild(fieldLabelNode);			
+	ipBanItemNode.appendChild(fieldLabelNode);
 	return ipBanItemNode;
 }
 

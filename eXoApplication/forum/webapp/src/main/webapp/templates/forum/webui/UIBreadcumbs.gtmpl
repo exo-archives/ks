@@ -79,7 +79,7 @@
 							int total = uicomponent.getTotalJobWattingForModerator();
 					%>
 					<div class="SeparatorLine"  style="float: right;">
-						<div style="line-height: 24px;" id="PendingJob"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</div>
+						<div style="line-height: 24px;" id="PendingJob"><a href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a></div>
 					</div>
 					<%}%>
 					<div class="SeparatorLine" style="float: right;">

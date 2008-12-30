@@ -10,6 +10,7 @@
 		String forumId = uicomponent.forumId.replaceAll("/",".") ;
 	%>
 	<div id="UITabContent"  forumId="$forumId" class="UITabContent">
+	<center>
 		<div style="width: 400px; margin: auto;">
 			<div class="UIQuickSearchForm" style="padding: 10px 0px;">
 				<div style="float: left;">
@@ -60,6 +61,13 @@
 				</tbody>
 			</table>
 		</div>
+		<div style="overflow: auto; width: 400px;">
+		<% 
+			uiform.renderChild(uiform.BAN_IP_PAGE_ITERATOR);
+		%>
+			<div style="clear: right;"><span></span></div>
+		</div>
+	</center>
 	</div>
 	<div class="UIAction"> 
 		<table class="ActionContainer" align="center">
