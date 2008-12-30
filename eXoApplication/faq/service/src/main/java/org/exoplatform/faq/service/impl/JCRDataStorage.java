@@ -209,6 +209,15 @@ public class JCRDataStorage {
     }
   }
   
+  protected Value[] booleanToValues(Node node, Boolean[] bools) throws Exception{
+  	if(bools == null) return new Value[]{node.getSession().getValueFactory().createValue(true)};
+  	Value[] values = new Value[bools.length]; 
+  	for(int i = 0; i < values.length; i ++){
+  		values[i] = node.getSession().getValueFactory().createValue(bools[i]);
+  	}
+  	return values;
+  }
+  
   @SuppressWarnings("static-access")
   private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
     questionNode.setProperty("exo:language", question.getLanguage()) ;
@@ -227,6 +236,10 @@ public class JCRDataStorage {
   	questionNode.setProperty("exo:relatives", question.getRelations()) ;
   	questionNode.setProperty("exo:responses", question.getAllResponses()) ;
     questionNode.setProperty("exo:responseBy", question.getResponseBy()) ;
+    
+    questionNode.setProperty("exo:approveResponses", booleanToValues(questionNode, question.getApprovedAnswers())) ;
+    questionNode.setProperty("exo:activateResponses", booleanToValues(questionNode,question.getActivateAnswers())) ;
+    
     questionNode.setProperty("exo:comments", question.getComments()) ;
     questionNode.setProperty("exo:commentBy", question.getCommentBy()) ;
     questionNode.setProperty("exo:usersVote", question.getUsersVote()) ;
@@ -465,6 +478,8 @@ public class JCRDataStorage {
         if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(ValuesToDate(node.getProperty("exo:dateResponse").getValues()));
         if(node.hasProperty("exo:usersVoteAnswer")) questionLanguage.setUsersVoteAnswer(ValuesToStrings(node.getProperty("exo:usersVoteAnswer").getValues())) ;
         if(node.hasProperty("exo:marksVoteAnswer")) questionLanguage.setMarksVoteAnswer(ValuesToDouble(node.getProperty("exo:marksVoteAnswer").getValues())) ;
+        if(questionNode.hasProperty("exo:approveResponses")) questionLanguage.setIsApprovedAnswers(ValuesToBoolean(node.getProperty("exo:approveResponses").getValues())) ;
+        if(questionNode.hasProperty("exo:activateResponses")) questionLanguage.setIsActivateAnswers(ValuesToBoolean(node.getProperty("exo:activateResponses").getValues())) ;
         questionLanguage.setPos();
         listQuestionLanguage.add(questionLanguage) ;
       }
@@ -648,6 +663,8 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
     if(questionNode.hasProperty("exo:usersVoteAnswer")) question.setUsersVoteAnswer(ValuesToStrings(questionNode.getProperty("exo:usersVoteAnswer").getValues())) ;
     if(questionNode.hasProperty("exo:marksVoteAnswer")) question.setMarksVoteAnswer(ValuesToDouble(questionNode.getProperty("exo:marksVoteAnswer").getValues())) ;
+    if(questionNode.hasProperty("exo:approveResponses")) question.setApprovedAnswers(ValuesToBoolean(questionNode.getProperty("exo:approveResponses").getValues())) ;
+    if(questionNode.hasProperty("exo:activateResponses")) question.setActivateAnswers(ValuesToBoolean(questionNode.getProperty("exo:activateResponses").getValues())) ;
     question.setPos();
     List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
   	NodeIterator nodeIterator = questionNode.getNodes() ;
@@ -684,6 +701,11 @@ public class JCRDataStorage {
   public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
     return getQuestion(questionHome.getNode(questionId)) ;
+  }
+  
+  public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception{
+  	Node questionHome = getQuestionHome(sProvider, null) ;
+  	return questionHome.getNode(questionId);
   }
   
   public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
@@ -842,6 +864,7 @@ public class JCRDataStorage {
   	categoryNode.setProperty("exo:moderators", category.getModerators()) ;
   	categoryNode.setProperty("exo:isModerateQuestions", category.isModerateQuestions()) ;
   	categoryNode.setProperty("exo:viewAuthorInfor", category.isViewAuthorInfor()) ;
+  	categoryNode.setProperty("exo:isModerateAnswers", category.isModerateAnswers());
   }
   
 	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
@@ -986,6 +1009,7 @@ public class JCRDataStorage {
   	if(categoryNode.hasProperty("exo:createdDate")) cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
   	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
   	if(categoryNode.hasProperty("exo:isModerateQuestions")) cat.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
+  	if(categoryNode.hasProperty("exo:isModerateAnswers")) cat.setModerateAnswers(categoryNode.getProperty("exo:isModerateAnswers").getBoolean()) ;
   	if(categoryNode.hasProperty("exo:viewAuthorInfor")) cat.setViewAuthorInfor(categoryNode.getProperty("exo:viewAuthorInfor").getBoolean()) ;
   	if(categoryNode.hasProperty("exo:index")) cat.setIndex(categoryNode.getProperty("exo:index").getLong()) ;
   	return cat;
@@ -1215,6 +1239,15 @@ public class JCRDataStorage {
   		dates[i] = Val[i].getDate().getTime() ;
   	}
   	return dates;
+  }
+  
+  private Boolean[] ValuesToBoolean(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new Boolean[]{} ;
+  	Boolean[] bools = new Boolean[Val.length] ;
+  	for(int i = 0; i < Val.length; ++i) {
+  		bools[i] = Val[i].getBoolean();
+  	}
+  	return bools;
   }
   
   public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception {

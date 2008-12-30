@@ -74,6 +74,10 @@ public class Question {
   /** The date response. */
   private Date[] dateResponse ;
   
+  private Boolean[] activateAnswers;
+  
+  private Boolean[] approvedAnswers;
+  
   /** link to question. */
   private String link = "";
   
@@ -596,6 +600,22 @@ public class Question {
 
 	public void setQuestion(String title) {
 		this.question = title;
+	}
+
+	public Boolean[] getActivateAnswers() {
+		return activateAnswers;
+	}
+
+	public void setActivateAnswers(Boolean[] activateAnswers) {
+		this.activateAnswers = activateAnswers;
+	}
+
+	public Boolean[] getApprovedAnswers() {
+		return approvedAnswers;
+	}
+
+	public void setApprovedAnswers(Boolean[] approvedAnswers) {
+		this.approvedAnswers = approvedAnswers;
 	}
 }
 

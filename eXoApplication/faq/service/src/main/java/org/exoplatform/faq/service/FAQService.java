@@ -643,4 +643,6 @@ public interface FAQService {
  	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception ;
  	
  	public void swapCategories(String parentCateId, String cateId1, String cateId2, SessionProvider sessionProvider) throws Exception;
+ 	
+ 	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception;
 }

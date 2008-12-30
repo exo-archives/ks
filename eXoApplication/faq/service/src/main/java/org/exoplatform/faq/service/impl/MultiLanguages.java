@@ -258,7 +258,18 @@ public class MultiLanguages {
     	}
     	langNode.setProperty("exo:dateResponse", (listCalendars.toArray(new Value[]{}))) ;
     }
+    langNode.setProperty("exo:approveResponses", booleanToValues(langNode, language.getIsApprovedAnswers()));
+    langNode.setProperty("exo:activateResponses", booleanToValues(langNode, language.getIsActivateAnswers()));
     questionNode.save() ;
+  }
+  
+  protected Value[] booleanToValues(Node node, Boolean[] bools) throws Exception{
+  	if(bools == null) return new Value[]{node.getSession().getValueFactory().createValue(true)};
+  	Value[] values = new Value[bools.length]; 
+  	for(int i = 0; i < values.length; i ++){
+  		values[i] = node.getSession().getValueFactory().createValue(bools[i]);
+  	}
+  	return values;
   }
   
   /**

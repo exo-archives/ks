@@ -38,6 +38,7 @@ public class Category {
   private String name ;
   private String description ;
   private boolean isModerateQuestions = true ;
+  private boolean isModerateAnswers = true ;
   private boolean viewAuthorInfor = false;
   private String[] moderators ;
   private Date createdDate ;
@@ -165,5 +166,13 @@ public class Category {
 
 	public void setIndex(long index) {
 		this.index = index;
+	}
+
+	public boolean isModerateAnswers() {
+		return isModerateAnswers;
+	}
+
+	public void setModerateAnswers(boolean isModerateAnswers) {
+		this.isModerateAnswers = isModerateAnswers;
 	}
 }

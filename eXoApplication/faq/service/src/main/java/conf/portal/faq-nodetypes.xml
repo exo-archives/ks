@@ -43,6 +43,12 @@
   		<propertyDefinition name="exo:responseBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
 	  	</propertyDefinition>
+  		<propertyDefinition name="exo:approveResponses" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+	  	</propertyDefinition>
+  		<propertyDefinition name="exo:activateResponses" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+	  	</propertyDefinition>
   		<propertyDefinition name="exo:comments" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
   		</propertyDefinition>
@@ -119,6 +125,9 @@
   			<valueConstraints/>
   		</propertyDefinition>  
   		<propertyDefinition name="exo:isModerateQuestions" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>			
+  		<propertyDefinition name="exo:isModerateAnswers" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>			
   		<propertyDefinition name="exo:viewAuthorInfor" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">

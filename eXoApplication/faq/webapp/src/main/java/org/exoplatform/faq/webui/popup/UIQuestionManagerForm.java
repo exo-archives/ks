@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui.popup;
 
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -99,11 +100,11 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
       UIFAQPortlet portlet = questionManagerForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIQuestions uiQuestions = portlet.findFirstComponentOfType(UIQuestions.class) ;
-      uiQuestions.setIsNotChangeLanguage() ;
+      UIFAQContainer container = portlet.findFirstComponentOfType(UIFAQContainer.class) ;
+      //uiQuestions.setIsNotChangeLanguage() ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }

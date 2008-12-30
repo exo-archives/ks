@@ -38,6 +38,7 @@ import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Watch;
+import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UICommentForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
@@ -82,6 +83,7 @@ import org.hibernate.usertype.UserVersionType;
 		template =	"app:/templates/faq/webui/UIQuestions.gtmpl" ,
 		events = {
 				@EventConfig(listeners = UIQuestions.DownloadAttachActionListener.class),
+				@EventConfig(listeners = UIQuestions.ChangeStatusAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.AddCategoryActionListener.class),
 				@EventConfig(listeners = UIQuestions.AddNewQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.SettingActionListener.class),
@@ -408,6 +410,8 @@ public class UIQuestions extends UIContainer {
 				quesLanguage.setResponse(question.getAllResponses()) ;
 				quesLanguage.setResponseBy(question.getResponseBy());
 				quesLanguage.setDateResponse(question.getDateResponse());
+				quesLanguage.setIsActivateAnswers(question.getActivateAnswers());
+				quesLanguage.setIsApprovedAnswers(question.getApprovedAnswers());
 				quesLanguage.setUsersVoteAnswer(question.getUsersVoteAnswer());
 				quesLanguage.setMarksVoteAnswer(question.getMarksVoteAnswer());
 				quesLanguage.setPos(question.getPos());
@@ -723,7 +727,7 @@ public class UIQuestions extends UIContainer {
 					String currentUser = FAQUtils.getCurrentUser() ;
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 					if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
-						uiPopupAction.activate(uiPopupContainer, 540, 320) ;
+						uiPopupAction.activate(uiPopupContainer, 540, 370) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
 						category.setParentId(categoryId) ;
 					} else {
@@ -1186,8 +1190,11 @@ public class UIQuestions extends UIContainer {
 			Question question2 = null ;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			boolean cateIsApprovedAnswers = false;
 			try{
 				question2 = faqService_.getQuestionById(questionId, sessionProvider);
+				if(question.categoryId_ == null) cateIsApprovedAnswers = true;
+				else cateIsApprovedAnswers = !faqService_.getCategoryById(question.categoryId_, sessionProvider).isModerateAnswers();
 			} catch(javax.jcr.PathNotFoundException e) {
 				UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1203,9 +1210,9 @@ public class UIQuestions extends UIContainer {
 			sessionProvider.close();
 			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
 			if(questionId.equals(question.questionView_)){
-				responseForm.setQuestionId(question2, language_) ;
+				responseForm.setQuestionId(question2, language_, cateIsApprovedAnswers) ;
 			} else {
-				responseForm.setQuestionId(question2, "") ;
+				responseForm.setQuestionId(question2, "", cateIsApprovedAnswers) ;
 			}
 			responseForm.setFAQSetting(question.faqSetting_);
 			popupContainer.setId("FAQResponseQuestion") ;
@@ -1613,12 +1620,70 @@ public class UIQuestions extends UIContainer {
 					uiQuestions.listQuestion_.get(pos).setResponses(questionLanguage.getResponse());
 					uiQuestions.listQuestion_.get(pos).setResponseBy(questionLanguage.getResponseBy());
 					uiQuestions.listQuestion_.get(pos).setDateResponse(questionLanguage.getDateResponse());
+					uiQuestions.listQuestion_.get(pos).setActivateAnswers(questionLanguage.getIsActivateAnswers());
+					uiQuestions.listQuestion_.get(pos).setApprovedAnswers(questionLanguage.getIsApprovedAnswers());
 					uiQuestions.listQuestion_.get(pos).setMarksVoteAnswer(questionLanguage.getMarksVoteAnswer());
 					uiQuestions.listQuestion_.get(pos).setUsersVoteAnswer(questionLanguage.getUsersVoteAnswer());
 					uiQuestions.listQuestion_.get(pos).setPos(questionLanguage.getPos());
 					break ;
 				}
 			}
+			uiQuestions.isChangeLanguage = true ;
+			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+		}
+	}
+	
+	static  public class ChangeStatusAnswerActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions uiQuestions = event.getSource() ; 
+			String[] stringInput = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
+			int posQuestion = Integer.parseInt(stringInput[0]);
+			String language = stringInput[1] ;
+			int pos = Integer.parseInt(stringInput[2]) ;
+			String action = stringInput[3] ;
+			Question question = uiQuestions.listQuestion_.get(posQuestion);
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			try{
+				if(language.trim().length() > 1){
+					for(QuestionLanguage questionLanguage : uiQuestions.listQuestionLanguage) {
+						if(questionLanguage.getLanguage().equals(language)) {
+							if(action.equals("Activate")){
+								Boolean[] boolAct = questionLanguage.getIsActivateAnswers();
+								boolAct[pos] = !boolAct[pos];
+								questionLanguage.setIsActivateAnswers(boolAct);
+							} else {
+								Boolean[] boolApp = questionLanguage.getIsApprovedAnswers();
+								boolApp[pos] = !boolApp[pos];
+								questionLanguage.setIsApprovedAnswers(boolApp);
+							}
+							MultiLanguages multiLanguages = new MultiLanguages();
+							multiLanguages.addLanguage(faqService_.getQuestionNodeById(uiQuestions.questionView_, sessionProvider), questionLanguage);
+							break ;
+						}
+					}
+				} else {
+					if(action.equals("Activate")){
+						Boolean[] boolAct = question.getActivateAnswers();
+						boolAct[pos] = !boolAct[pos];
+						question.setActivateAnswers(boolAct);
+					} else {
+						Boolean[] boolApp = question.getApprovedAnswers();
+						boolApp[pos] = !boolApp[pos];
+						question.setApprovedAnswers(boolApp);
+					}
+					FAQUtils.getEmailSetting(uiQuestions.faqSetting_, false, false);
+					faqService_.saveQuestion(question, false, sessionProvider, uiQuestions.faqSetting_);
+				}
+			} catch (Exception e){
+				UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				uiQuestions.setIsNotChangeLanguage() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+			}
+			sessionProvider.close();
 			uiQuestions.isChangeLanguage = true ;
 			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;

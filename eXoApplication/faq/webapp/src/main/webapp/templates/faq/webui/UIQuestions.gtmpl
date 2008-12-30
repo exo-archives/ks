@@ -287,6 +287,9 @@
 								</div>
 							<div style="clear: left;"><span></span></div>
 						</div>
+						
+						
+				<!-- ============================================== View Question which is selected ===================================== -->
 				<%} else {
 						List listQuestLanguage = uicomponent.getQuestionLangauges(question) ;
 						questionContent = question.getQuestion() ;
@@ -540,17 +543,55 @@
 											</table>
 										</div>
 										
+										<!-- ===================================== View response content ==================================================== -->
 										<div class="ResponseContent">
 											<div class="Response" id="SetWidthContent" style="padding-left:0px; _width: 98%;" >
 												<%
 												if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 													int countResponse = 0;
+													boolean[] approvedAnswers = question.getApprovedAnswers();
+													boolean[] activateAnswers = question.getActivateAnswers();
+													String actionAnswer = "";
 													for(String res in question.getAllResponses()) {
+														if(!uicomponent.canEditQuestion && (!approvedAnswers[countResponse] || !activateAnswers[countResponse])){
+															countResponse ++;
+															continue;
+														}
 														date = dateFormatter.format(question.getDateResponse()[countResponse]);
 														responseBy = FAQUtils.getFullName(question.getResponseBy()[countResponse]) ;
 														String userProfile = uicomponent.event("ViewUserProfile", question.getResponseBy()[countResponse]) ;
-												%>
-														$res
+													%>
+														<table>
+															<tr>
+																<%if(uicomponent.canEditQuestion){%>
+																	<td width="70">
+																		<%
+																			actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Approve");
+																			if(approvedAnswers[countResponse]) {
+																			%>
+																					[ <a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;"><%=_ctx.appRes("UIQuestionsInfo.title.Approve")%></a> ]
+																			<%} else {
+																			%>
+																					[ <a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;"><%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%></a> ]
+																			<%}%>
+																			<br/>
+																			<%
+																				actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Activate");
+																				if(activateAnswers[countResponse]) {
+																			%>
+																					[ <a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;"><%=_ctx.appRes("UIQuestionsInfo.title.Activate")%></a> ]
+																			<%} else {
+																			%>
+																					[ <a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;"><%=_ctx.appRes("UIQuestionsInfo.title.UnActivate")%></a> ]
+																			<%}%>
+																	</td>
+																<%}%>
+																<td>
+																	$res
+																</td>
+															</tr>
+														</table>
+														
 														<table width="100%">
 															<tr>
 																<td style="white-space:nowrap;">

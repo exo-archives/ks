@@ -448,6 +448,15 @@ public class QuestionPageList extends JCRPageList {
 	  }
 	  listObject_ = null;
   }
+	
+	private Boolean[] ValuesToBoolean(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new Boolean[]{} ;
+  	Boolean[] bools = new Boolean[Val.length] ;
+  	for(int i = 0; i < Val.length; ++i) {
+  		bools[i] = Val[i].getBoolean();
+  	}
+  	return bools;
+  }
   
   /**
    * Set values for all question's properties from question node which is got
@@ -484,6 +493,8 @@ public class QuestionPageList extends JCRPageList {
     if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
     if(questionNode.hasProperty("exo:usersVoteAnswer")) question.setUsersVoteAnswer(ValuesToStrings(questionNode.getProperty("exo:usersVoteAnswer").getValues())) ;
     if(questionNode.hasProperty("exo:marksVoteAnswer")) question.setMarksVoteAnswer(ValuesToDoubles(questionNode.getProperty("exo:marksVoteAnswer").getValues())) ;
+    if(questionNode.hasProperty("exo:approveResponses")) question.setApprovedAnswers(ValuesToBoolean(questionNode.getProperty("exo:approveResponses").getValues())) ;
+    if(questionNode.hasProperty("exo:activateResponses")) question.setActivateAnswers(ValuesToBoolean(questionNode.getProperty("exo:activateResponses").getValues())) ;
     question.setPos();
     List<FileAttachment> attList = new ArrayList<FileAttachment>() ;
     NodeIterator nodeIterator = questionNode.getNodes() ;

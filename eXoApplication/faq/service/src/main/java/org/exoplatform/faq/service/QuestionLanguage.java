@@ -48,6 +48,10 @@ public class QuestionLanguage {
   /** The date response. */
   private Date[] dateResponse ;
   
+  private Boolean[] isApprovedAnswers;
+  
+  private Boolean[] isActivateAnswers;
+  
   /** The users vote answer. */
   private String[] usersVoteAnswer;
   
@@ -212,6 +216,22 @@ public class QuestionLanguage {
 				pos[i] = i;
 			}
 		}
+	}
+
+	public Boolean[] getIsApprovedAnswers() {
+		return isApprovedAnswers;
+	}
+
+	public void setIsApprovedAnswers(Boolean[] isApprovedAnswers) {
+		this.isApprovedAnswers = isApprovedAnswers;
+	}
+
+	public Boolean[] getIsActivateAnswers() {
+		return isActivateAnswers;
+	}
+
+	public void setIsActivateAnswers(Boolean[] isActivateAnswers) {
+		this.isActivateAnswers = isActivateAnswers;
 	}
 }
 

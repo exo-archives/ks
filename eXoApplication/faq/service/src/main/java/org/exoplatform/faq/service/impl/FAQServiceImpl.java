@@ -665,4 +665,8 @@ public class FAQServiceImpl implements FAQService{
 	public void swapCategories(String parentCateId, String cateId1, String cateId2, SessionProvider sessionProvider) throws Exception{
 		jcrData_.swapCategories(parentCateId, cateId1, cateId2, sessionProvider);
 	}
+	
+	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception{
+		return jcrData_.getQuestionNodeById(questionId, sProvider);
+	}
 }
