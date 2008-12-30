@@ -32,6 +32,7 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.popup.UIModerationForum;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
@@ -55,6 +56,7 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 		events = {
 				@EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class),
 				@EventConfig(listeners = UIBreadcumbs.RssActionListener.class),
+				@EventConfig(listeners = UIBreadcumbs.ModerationActionListener.class),
 				@EventConfig(listeners = UIBreadcumbs.PrivateMessageActionListener.class)
 		}
 )
@@ -68,7 +70,6 @@ public class UIBreadcumbs extends UIContainer {
 	JobWattingForModerator wattingForModerator;
 	private boolean isLink = false ;
 	private boolean isOpen = true;
-	//	private String[] path = new String[]{};
 	public UIBreadcumbs()throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
@@ -149,42 +150,6 @@ public class UIBreadcumbs extends UIContainer {
 		this.isOpen = isOpen;
 	}
 	
-//	
-//	public String[] getPath() {
-//		if(userProfile.getUserRole() <= 1) {
-//			if(userProfile.getUserRole() == 1){
-//				path = this.userProfile.getModerateForums() ;
-//			} 
-//		}
-//		return path;
-//	}
-//
-//	public void setPath(String[] path) {
-//		this.path = path;
-//	}
-//	@SuppressWarnings("unused")
-//	private JobWattingForModerator getJobWattingForModerator() throws Exception {
-//		wattingForModerator = forumService.getJobWattingForModerator(ForumSessionUtils.getSystemProvider(), this.getPath()) ;
-//		return wattingForModerator;
-//	}
-//	
-//	@SuppressWarnings("unused")
-//	private long getTopicUACount() throws Exception{ 
-//		return wattingForModerator.getTopicUnApproved().getAvailable();
-//	}
-//	@SuppressWarnings("unused")
-//	private long getTopicWaitCount() throws Exception{ 
-//		return wattingForModerator.getTopicWaiting().getAvailable();
-//	}
-//	@SuppressWarnings("unused")
-//	private long getPostHiddenCount() throws Exception{ 
-//		return wattingForModerator.getPostsHidden().getAvailable();
-//	}
-//	@SuppressWarnings("unused")
-//	private long getPostUACount() throws Exception{ 
-//		return wattingForModerator.getPostsUnApproved().getAvailable();
-//	}
-//	
 	
 	@SuppressWarnings("unused")
 	private boolean isLink() {return this.isLink;}
@@ -253,7 +218,7 @@ public class UIBreadcumbs extends UIContainer {
 							uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
 							uiTopicDetail.setUpdateForum(forum) ;
 							uiTopicDetail.setIdPostView("top") ;
-							uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[0], id[1] , topic) ;
+							uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 							forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
 							if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
 								forumService.updateTopicAccess(sysSession, forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
@@ -297,6 +262,20 @@ public class UIBreadcumbs extends UIContainer {
 			messageForm.setUserProfile(breadcumbs.userProfile);
 			messageForm.setFullMessage(true) ;
 			popupContainer.setId("PrivateMessageForm") ;
+			popupAction.activate(popupContainer, 650, 480) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}	
+
+	static public class ModerationActionListener extends EventListener<UIBreadcumbs> {
+		public void execute(Event<UIBreadcumbs> event) throws Exception {
+			UIBreadcumbs breadcumbs = event.getSource() ;
+			UIForumPortlet forumPortlet = breadcumbs.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIModerationForum messageForm = popupContainer.addChild(UIModerationForum.class, null, null) ;
+			messageForm.setUserProfile(breadcumbs.userProfile);
+			popupContainer.setId("ModerationForum") ;
 			popupAction.activate(popupContainer, 650, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

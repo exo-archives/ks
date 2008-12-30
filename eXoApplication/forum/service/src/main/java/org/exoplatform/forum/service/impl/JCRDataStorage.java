@@ -987,7 +987,7 @@ public class JCRDataStorage {
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		try {
-			Node topicNode = forumHomeNode.getNode(categoryId + "/" + forumId + "/" + topicId);
+			Node topicNode = forumHomeNode.getNode(categoryId+"/"+forumId+"/"+topicId);
 			Topic topicNew = new Topic();
 			topicNew = getTopicNode(topicNode);
 			// setViewCount for Topic
@@ -1003,6 +1003,7 @@ public class JCRDataStorage {
 			}
 			return topicNew;
 		} catch (PathNotFoundException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -2886,7 +2887,6 @@ public class JCRDataStorage {
 				userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
 			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long)0);
-				if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
 			} else {
 				if (newProfileNode.hasProperty("exo:userRole"))
 					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
@@ -3813,9 +3813,7 @@ public class JCRDataStorage {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		String string = forumHomeNode.getPath();
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-		StringBuffer stringBuffer = new StringBuffer();
 		String pathQuery = "";
-		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)");
 		StringBuffer buffer = new StringBuffer();
 		int l = paths.length;
 		if (l > 0) {
@@ -3828,14 +3826,20 @@ public class JCRDataStorage {
 			}
 			buffer.append(")");
 		}
-		pathQuery = stringBuffer.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending").toString();
+		StringBuffer stringBuffer = new StringBuffer();
+		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
+			.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending");
+		pathQuery =  stringBuffer.toString();
 		Query query = qm.createQuery(pathQuery, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
 		JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
 		wattingForModerator.setTopicUnApproved(pagelist);
-
-		pathQuery = stringBuffer.append("[@exo:isWaiting='false'").append(buffer).append("] order by @exo:modifiedDate descending").toString();
+		
+		stringBuffer = new StringBuffer();
+		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
+			.append("[@exo:isWaiting='false'").append(buffer).append("] order by @exo:modifiedDate descending");
+		pathQuery = stringBuffer.toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
 		iter = result.getNodes();
@@ -3843,15 +3847,19 @@ public class JCRDataStorage {
 		wattingForModerator.setTopicWaiting(pagelist);
 
 		stringBuffer = new StringBuffer();
-		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)");
-		pathQuery = stringBuffer.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending").toString();
+		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
+			.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending");
+		pathQuery = stringBuffer.toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
 		iter = result.getNodes();
 		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
 		wattingForModerator.setPostsUnApproved(pagelist);
-
-		pathQuery = stringBuffer.append("[@exo:isHidden='false'").append(buffer).append("] order by @exo:modifiedDate descending").toString();
+		
+		stringBuffer = new StringBuffer();
+		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
+			.append("[@exo:isHidden='false'").append(buffer).append("] order by @exo:modifiedDate descending");
+		pathQuery = stringBuffer.toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
 		iter = result.getNodes();
@@ -4105,26 +4113,29 @@ public class JCRDataStorage {
 	}
 
 	public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
-		Node profile = getUserProfileHome(sysSession).getNode(userId) ;
-		List<String> values = new ArrayList<String>() ;
-		if(profile.hasProperty("exo:readTopic")) {
-			values = ValuesToList(profile.getProperty("exo:readTopic").getValues()) ;
-		}
-
-		int i = 0 ;
-		boolean isUpdated = false ;
-		for(String vl : values) {
-			if(vl.indexOf(topicId) == 0) {
-				values.set(i, topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
-				isUpdated = true ;
-				break ;
+		try {
+			Node profile = getUserProfileHome(sysSession).getNode(userId) ;
+			List<String> values = new ArrayList<String>() ;
+			if(profile.hasProperty("exo:readTopic")) {
+				values = ValuesToList(profile.getProperty("exo:readTopic").getValues()) ;
 			}
-		}
-		if(!isUpdated) {
-			values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
-		}
-		profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
-		profile.save() ;
+			
+			int i = 0 ;
+			boolean isUpdated = false ;
+			for(String vl : values) {
+				if(vl.indexOf(topicId) == 0) {
+					values.set(i, topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
+					isUpdated = true ;
+					break ;
+				}
+			}
+			if(!isUpdated) {
+				values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
+			}
+			profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
+			profile.save() ;
+    } catch (PathNotFoundException e) {
+    }
 	}
 	
 	public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {

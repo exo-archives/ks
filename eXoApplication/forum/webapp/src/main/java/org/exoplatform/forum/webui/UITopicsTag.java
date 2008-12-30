@@ -238,7 +238,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiTopicDetail.setUpdateContainer(temp[temp.length-3], temp[temp.length-2], topic, Long.parseLong(id[1])) ;
 			uiTopicDetail.setUpdateForum(forum);
-			uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(temp[temp.length-3], temp[temp.length-2], topic) ;
+			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length-3], temp[temp.length-2], topic.getId()) ;
 			if(id[2].equals("true")) {
 				uiTopicDetail.setIdPostView("lastpost") ;
 			} else {
