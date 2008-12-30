@@ -771,7 +771,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void userLogin(String userId) throws Exception;
+	public void userLogin(String userId, String userName) throws Exception;
 
 	/**
 	 * User logout.

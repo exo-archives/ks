@@ -20,6 +20,7 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
+import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.security.ConversationRegistry;
 import org.exoplatform.services.security.ConversationState;
 
@@ -38,6 +39,9 @@ public class AuthenticationLoginListener extends Listener<ConversationRegistry, 
 	public void onEvent(Event<ConversationRegistry, ConversationState> event) throws Exception {
 		ExoContainer container = ExoContainerContext.getCurrentContainer();
   	ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-  	fservice.userLogin(event.getData().getIdentity().getUserId()) ;  	
+  	OrganizationService oservice = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
+  	String userId = event.getData().getIdentity().getUserId() ;
+  	String userFullName = oservice.getUserHandler().findUserByName(userId).getFullName() ; 
+  	fservice.userLogin(userId, userFullName) ;
 	}	
 }

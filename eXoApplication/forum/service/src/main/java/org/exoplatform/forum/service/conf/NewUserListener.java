@@ -42,7 +42,7 @@ public class NewUserListener extends UserEventListener {
     //Update forum statistic
     try{    	    	
     	ForumStatistic statistic = fservice.getForumStatistic(sysSession) ;
-      statistic.setNewMembers(user.getUserName()) ;
+      statistic.setNewMembers(user.getFullName()) ;
       statistic.setMembersCount(statistic.getMembersCount() + 1) ;
       fservice.saveForumStatistic(sysSession, statistic) ;
     }catch(Exception e) {

@@ -68,7 +68,7 @@ import org.picocontainer.Startable;
  */
 public class ForumServiceImpl implements ForumService, Startable{
   private JCRDataStorage storage_ ;
-  private final Map<String, Boolean> onlineUsers_ = new ConcurrentHashMap<String, Boolean>() ;
+  private final Map<String, String> onlineUsers_ = new ConcurrentHashMap<String, String>() ;
   private String lastLogin_ = "";
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
@@ -433,9 +433,9 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getTotalJobWattingForModerator(sProvider, userId);
   }
 
-  public void userLogin(String userId) throws Exception {
+  public void userLogin(String userId, String userName) throws Exception {
   	lastLogin_ = userId ;
-    onlineUsers_.put(userId, true) ;
+    onlineUsers_.put(userId, userName) ;
     SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
     try {
     	Node userProfileHome = storage_.getUserProfileHome(sysProvider); 
@@ -449,12 +449,12 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void userLogout(String userId) throws Exception {
-    onlineUsers_.put(userId, false) ;		
+    onlineUsers_.remove(userId) ;		
   }
 
   public boolean isOnline(String userId) throws Exception {
     try{
-      if(onlineUsers_.get(userId) != null) return onlineUsers_.get(userId) ;			
+      if(onlineUsers_.containsKey(userId) &&  onlineUsers_.get(userId) != null) return true ;			
     }	catch (Exception e) {
       e.printStackTrace() ;
     }
@@ -465,7 +465,7 @@ public class ForumServiceImpl implements ForumService, Startable{
     List<String> users = new ArrayList<String>() ;
     Set<String> keys = onlineUsers_.keySet() ;
     for(String key : keys) {
-      if(onlineUsers_.get(key)) users.add(key) ;
+      users.add(onlineUsers_.get(key)) ;
     }
     return users ;
   }
