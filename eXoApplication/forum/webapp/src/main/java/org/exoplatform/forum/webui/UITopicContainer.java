@@ -411,7 +411,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				uiForumContainer.setIsRenderChild(false) ;
 				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 				uiTopicDetail.setUpdateForum(uiTopicContainer.forum) ;
-				uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic ) ;
+				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic.getId() ) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId+"/"+ uiTopicContainer.forumId + " "));
 				if(temp[2].equals("true")) {
 					uiTopicDetail.setIdPostView("lastpost") ;

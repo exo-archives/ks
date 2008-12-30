@@ -207,7 +207,7 @@ public class UIForumListSearch extends UIContainer {
 						uiTopicDetail.setTopicFromCate(id[length-3], id[length-2], topic) ;
 						uiTopicDetail.setUpdateForum(forum) ;
 						uiTopicDetail.setIdPostView("top") ;
-						uiTopicDetailContainer.getChild(UITopicPoll.class).updatePoll(id[length-3], id[length-2] , topic) ;
+						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[length-3], id[length-2] , topic.getId()) ;
 						forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;

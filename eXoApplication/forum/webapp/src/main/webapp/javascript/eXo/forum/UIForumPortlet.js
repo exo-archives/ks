@@ -472,26 +472,26 @@ UIForumPortlet.prototype.setMaskLayer = function() {
  	if(masklayer) {
   	masklayer.style.width = "auto";
   	masklayer.style.height = "auto";
- 	}
- 	if(popupWindow != null) {
-	 	if(popupWindow.style.display == "block") {
-			masklayer.style.width = forumPortlet.offsetWidth - 15 + "px";
-			masklayer.style.height = forumPortlet.offsetHeight - 15 + "px";
-		}
-		var closeButton = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
-		if(closeButton) {
-			var newDiv = eXo.core.DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
-			if(!newDiv) newDiv = document.createElement("div");
-			closeButton.appendChild(newDiv);
-			newDiv.style.width = "16px";
-			newDiv.style.height = "16px";
-			newDiv.className = "ClosePopup";
-			newDiv.innerHTML = '<span></span>' ;
-			newDiv.onclick = function(){
-				masklayer.style.width = "auto";
-				masklayer.style.height = "auto";
-			};
-		}
+	 	if(popupWindow) {
+		 	if(popupWindow.style.display == "block") {
+				masklayer.style.width = (forumPortlet.offsetWidth - 3) + "px";
+				masklayer.style.height = (forumPortlet.offsetHeight - 3) + "px";
+			}
+			var closeButton = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
+			if(closeButton) {
+				var newDiv = eXo.core.DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
+				if(!newDiv) newDiv = document.createElement("div");
+				closeButton.appendChild(newDiv);
+				newDiv.style.width = "16px";
+				newDiv.style.height = "16px";
+				newDiv.className = "ClosePopup";
+				newDiv.innerHTML = '<span></span>' ;
+				newDiv.onclick = function(){
+					masklayer.style.width = "auto";
+					masklayer.style.height = "auto";
+				};
+			}
+	 	}
 	}
 };
 

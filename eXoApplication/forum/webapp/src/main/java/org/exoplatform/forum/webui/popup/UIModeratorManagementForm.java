@@ -238,7 +238,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		if(isAdmin(userProfile.getUserId())){
 			userRole.setEnable(false);
 			isAdmin = true;
-			if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
 		}  
 		userRole.setValue(isAdmin);
 		userTitle.setValue(title);

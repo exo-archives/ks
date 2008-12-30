@@ -284,7 +284,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try {
 			if(this.isEditTopic || this.topic == null) {
-				this.topic = forumService.getTopic(sProvider, categoryId, forumId, topicId, Utils.GUEST) ;
+				this.topic = forumService.getTopic(sProvider, categoryId, forumId, topicId, UserProfile.USER_GUEST) ;
 				this.isEditTopic = false ;
 			}
 			return this.topic ;

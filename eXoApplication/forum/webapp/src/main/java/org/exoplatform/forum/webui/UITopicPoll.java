@@ -27,7 +27,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Poll;
-import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
@@ -69,7 +68,6 @@ public class UITopicPoll extends UIForm	{
 	private boolean isEditPoll = false ;
 	private boolean canViewEditMenu = false ;
 	private boolean userIsBanned = false;
-	private Topic topic ;
 	private Forum forum ;
 	
 	public UITopicPoll() throws Exception {
@@ -83,12 +81,6 @@ public class UITopicPoll extends UIForm	{
 	
 	public void setForum(Forum forum) {
 		this.forum = forum ;
-	}
-	public void updatePoll(String categoryId, String forumId, Topic topic) throws Exception {
-		this.categoryId = categoryId; 
-		this.forumId = forumId; 
-		this.topicId = topic.getId();
-		this.topic = topic ;
 	}
 
 	public void updateFormPoll(String categoryId, String forumId, String topicId) throws Exception {
@@ -128,21 +120,15 @@ public class UITopicPoll extends UIForm	{
 	@SuppressWarnings("unused")
 	private Poll getPoll() throws Exception {
 		if(!ForumUtils.isEmpty(categoryId)) {
-			// TODO ?
-			if(this.isEditPoll && this.topic == null) {
-				this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, "guest") ;
-			}
 			UserProfile userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 			String userId = userProfile.getUserId() ;
 			long userRole = userProfile.getUserRole() ;
 			if(userRole == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userId)) this.canViewEditMenu = true ;
 			else this.canViewEditMenu = false ;
-			//if(this.topic.getIsPoll()) {
-				Poll poll = forumService.getPoll(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId) ; 
-				poll_ = poll ;
-				this.init() ;
-				return poll ;
-			//}
+			Poll poll = forumService.getPoll(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId) ; 
+			poll_ = poll ;
+			this.init() ;
+			return poll ;
 		}
 		return null ;
 	}

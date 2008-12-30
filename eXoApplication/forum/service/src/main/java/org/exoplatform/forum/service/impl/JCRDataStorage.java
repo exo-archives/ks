@@ -967,7 +967,7 @@ public class JCRDataStorage {
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		try {
-			Node topicNode = forumHomeNode.getNode(categoryId + "/" + forumId + "/" + topicId);
+			Node topicNode = forumHomeNode.getNode(categoryId+"/"+forumId+"/"+topicId);
 			Topic topicNew = new Topic();
 			topicNew = getTopicNode(topicNode);
 			// setViewCount for Topic
@@ -983,6 +983,7 @@ public class JCRDataStorage {
 			}
 			return topicNew;
 		} catch (PathNotFoundException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -2812,7 +2813,6 @@ public class JCRDataStorage {
 				userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
 			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long)0);
-				if(title.equals(Utils.GUEST)) title = Utils.ADMIN;
 			} else {
 				if (newProfileNode.hasProperty("exo:userRole"))
 					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
@@ -3999,26 +3999,29 @@ public class JCRDataStorage {
 	}
 
 	public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
-		Node profile = getUserProfileHome(sysSession).getNode(userId) ;
-		List<String> values = new ArrayList<String>() ;
-		if(profile.hasProperty("exo:readTopic")) {
-			values = ValuesToList(profile.getProperty("exo:readTopic").getValues()) ;
-		}
-
-		int i = 0 ;
-		boolean isUpdated = false ;
-		for(String vl : values) {
-			if(vl.indexOf(topicId) == 0) {
-				values.set(i, topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
-				isUpdated = true ;
-				break ;
+		try {
+			Node profile = getUserProfileHome(sysSession).getNode(userId) ;
+			List<String> values = new ArrayList<String>() ;
+			if(profile.hasProperty("exo:readTopic")) {
+				values = ValuesToList(profile.getProperty("exo:readTopic").getValues()) ;
 			}
-		}
-		if(!isUpdated) {
-			values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
-		}
-		profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
-		profile.save() ;
+			
+			int i = 0 ;
+			boolean isUpdated = false ;
+			for(String vl : values) {
+				if(vl.indexOf(topicId) == 0) {
+					values.set(i, topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
+					isUpdated = true ;
+					break ;
+				}
+			}
+			if(!isUpdated) {
+				values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
+			}
+			profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
+			profile.save() ;
+    } catch (PathNotFoundException e) {
+    }
 	}
 	
 	public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
