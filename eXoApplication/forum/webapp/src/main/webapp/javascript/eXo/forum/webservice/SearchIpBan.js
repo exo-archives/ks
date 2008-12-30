@@ -134,8 +134,8 @@ SearchIpBan.prototype.updateIpBanList = function() {
 		pageIter.style.display = "none";
 		var url = String(this.url_);
 		if(url.indexOf('all') > 0) {
-			if(length_ >= 7) {
-				length_ = 7;
+			if(length_ >= 8) {
+				length_ = 8;
 				pageIter.style.display = "block";
 			}
 		}
