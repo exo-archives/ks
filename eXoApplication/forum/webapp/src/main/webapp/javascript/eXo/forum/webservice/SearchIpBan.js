@@ -164,10 +164,14 @@ SearchIpBan.prototype.buildIpBanItemNode = function(ip) {
 	fieldLabelNode.innerHTML = ip;
 	
 	ipBanItemNode.appendChild(fieldLabelNode.cloneNode(true));
-	
-	fieldLabelNode.innerHTML = '[<a href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIForumAdministrationForm\',\'Posts\',\'&objectId=' + ip + '\')">Posts</a>]&nbsp;\
+		var forumId = this.uiTabContentNode.getAttribute("forumId");
+	if(forumId){
+		fieldLabelNode.innerHTML = '[<a href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIBanIPForumManagerForm\',\'OpenPosts\',\'&objectId=' + ip + '\')">Posts</a>]&nbsp;\
+				[<a style="color: red;" href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIBanIPForumManagerForm\',\'UnBan\',\'&objectId=' + ip + '\')">X</a>]';
+	} else {
+		fieldLabelNode.innerHTML = '[<a href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIForumAdministrationForm\',\'Posts\',\'&objectId=' + ip + '\')">Posts</a>]&nbsp;\
 				[<a style="color: red;" href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIForumAdministrationForm\',\'UnBan\',\'&objectId=' + ip + '\')">X</a>]';
-	
+	}
 	ipBanItemNode.appendChild(fieldLabelNode);
 	return ipBanItemNode;
 }
