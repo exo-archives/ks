@@ -652,7 +652,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
         if(questionManagerForm.isResponseQuestion && questionForm.getQuestionId().equals(responseForm.getQuestionId())) {
           responseForm.setIsChildren(true) ;
-          responseForm.setQuestionId(question_, "") ;
+          responseForm.setQuestionId(question_, "", questionIsApproved) ;
         }
         questionManagerForm.isEditQuestion = false ;
         UIPopupContainer popupContainer = questionManagerForm.getParent() ;
