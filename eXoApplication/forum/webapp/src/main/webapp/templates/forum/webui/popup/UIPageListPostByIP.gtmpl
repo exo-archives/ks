@@ -71,8 +71,16 @@
 										<td class="Tdbox">
 											<div class="RatingInfoContainer">$createdDate</div>
 										</td>
+										<%
+										String link_ = "";
+										if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){
+											link_ = "javascript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread") + "'))" + uicomponent.event("DeletePostLink", post.getId());
+										} else {
+											link_ = "javascript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost") + "'))" + uicomponent.event("DeletePostLink", post.getId());
+										}
+										%>
 										<td class="Tdbox" align="center" style="padding-left:5px;">
-											<a href="<%=uicomponent.event("DeletePostLink", post.getId());%>">
+											<a href="$link_">
 												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
 											</a>
 										</td>

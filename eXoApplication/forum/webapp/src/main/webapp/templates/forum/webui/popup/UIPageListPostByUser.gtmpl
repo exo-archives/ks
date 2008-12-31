@@ -67,9 +67,12 @@
 									    if(isShowIP) {
 									%>
 										<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
-									<%  }%>
+									<%  }
+									String link_ = "javascript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost") + "'))" + uicomponent.event("DeletePostLink", post.getId());
+									%>
+										
 										<td class="Tdbox" align="center" style="padding-left:5px;">
-											<a href="<%=uicomponent.event("DeletePostLink", post.getId());%>">
+											<a href="$link_">
 												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
 											</a>
 										</td>
