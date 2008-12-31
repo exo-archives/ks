@@ -98,9 +98,9 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
 		@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
-		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AdvancedSearchActionListener.class),
-		@EventConfig(listeners = UITopicContainer.BanIpForumToolsActionListener.class)
+		@EventConfig(listeners = UITopicContainer.BanIpForumToolsActionListener.class),
+		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 	}
 )
 public class UITopicContainer extends UIForumKeepStickPageIterator {

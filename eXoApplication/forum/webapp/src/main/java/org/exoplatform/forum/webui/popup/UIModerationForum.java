@@ -17,11 +17,10 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Post;
@@ -51,8 +50,10 @@ import org.exoplatform.webui.event.Event.Phase;
 		events = {
 			@EventConfig(listeners = UIModerationForum.OpenActionListener.class),
 			@EventConfig(listeners = UIModerationForum.ApplyAllActionListener.class),
+			@EventConfig(listeners = UIModerationForum.ApplyItemActionListener.class),
 			@EventConfig(listeners = UIModerationForum.SelectTabActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIModerationForum.CloseActionListener.class, phase=Phase.DECODE)
+			@EventConfig(listeners = UIModerationForum.CloseActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 		}
 )
 
@@ -61,11 +62,12 @@ public class UIModerationForum extends UIForumKeepStickPageIterator implements U
 	private ForumService forumService;
 	private JobWattingForModerator wattingForModerator;
 	private String[] path = new String[]{};
-	private int id = 0 ;
+	private int idTab = 0 ;
 	private Long pages[] = new Long[]{(long)1,(long)1,(long)1,(long)1};  
 	public UIModerationForum() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-  }
+		setActions(new String[]{"Close"});
+	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
@@ -75,6 +77,7 @@ public class UIModerationForum extends UIForumKeepStickPageIterator implements U
 	  if(this.userProfile == null) {
 	  	this.userProfile = getAncestorOfType(UIForumPortlet.class).getUserProfile();
 	  }
+	  setJobWattingForModerator("all");
   }
 	
 	public String[] getPath() {
@@ -97,54 +100,81 @@ public class UIModerationForum extends UIForumKeepStickPageIterator implements U
 	}
 	
 	@SuppressWarnings("unused")
-	private void setJobWattingForModerator() throws Exception {
+	private void setJobWattingForModerator(String type) throws Exception {
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
-			wattingForModerator = forumService.getJobWattingForModerator(sProvider, this.getPath()) ;
+			if(type.equals("all")) {
+				wattingForModerator = forumService.getJobWattingForModerator(sProvider, this.getPath(), type) ;
+			}else {
+				JobWattingForModerator moderatorJob = forumService.getJobWattingForModerator(sProvider, this.getPath(), type);
+				switch (Integer.parseInt(type)) {
+		      case 0: {
+		      	wattingForModerator.setTopicUnApproved(moderatorJob.getTopicUnApproved());
+		      	break;
+		      }
+		      case 1: {
+		      	wattingForModerator.setTopicWaiting(moderatorJob.getTopicWaiting());
+		      	break;
+		      }
+		      case 2: {
+		      	wattingForModerator.setPostsUnApproved(moderatorJob.getPostsUnApproved());
+		      	break;
+		      }
+		      case 3: {
+		      	wattingForModerator.setPostsHidden(moderatorJob.getPostsHidden());
+		      	break;
+		      }
+				}
+			}
     } catch (Exception e) {
     	wattingForModerator = new JobWattingForModerator();
     	e.printStackTrace();
     } finally {
     	sProvider.close();
     }
-    wattingForModerator.getTopicUnApproved();
 	}
 	
-	private List<Topic> getListTopic(int type) throws Exception {
+	@SuppressWarnings({ "unused", "unchecked" })
+  private List<Topic> getListTopic(int type) throws Exception {
 		List<Topic> list = new ArrayList<Topic>();
 		if(type == 0) {
 			pageList = wattingForModerator.getTopicUnApproved();
 		} else {
 			pageList = wattingForModerator.getTopicWaiting();
 		}
-		long page = getPageSelect();
-		list = pageList.getPage(page);
-		pages[type] = pageList.getCurrentPage();
+		pageList.setPageSize(6);
+		maxPage = pageList.getAvailablePage() ;
+		list = pageList.getPage(pageSelect);
+		pageSelect = pageList.getCurrentPage();
+		pages[type] = pageSelect;
 		return list;
 	}
 
-	private List<Topic> getListPost(int type) throws Exception {
+	@SuppressWarnings({ "unused", "unchecked" })
+  private List<Topic> getListPost(int type) throws Exception {
 		List<Topic> list = new ArrayList<Topic>();
 		if(type == 2) {
 			pageList = wattingForModerator.getPostsUnApproved();
 		} else {
 			pageList = wattingForModerator.getPostsHidden();
 		}
-		long page = getPageSelect();
-		list = pageList.getPage(page);
-		pages[type] = pageList.getCurrentPage();
+		pageList.setPageSize(6);
+		maxPage = pageList.getAvailablePage() ;
+		list = pageList.getPage(pageSelect);
+		pageSelect = pageList.getCurrentPage();
+		pages[type] = pageSelect;
 		return list;
 	}
 
 	@SuppressWarnings("unused")
 	private boolean getIsSelected(int id) {
-		if(this.id == id) return true ;
+		if(this.idTab == id) return true ;
 		return false ;
 	}
 	
 	static	public class OpenActionListener extends EventListener<UIModerationForum> {
 		public void execute(Event<UIModerationForum> event) throws Exception {
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String objectId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String type = event.getRequestContext().getRequestParameter("type") ;
 		}
 	}
@@ -153,8 +183,8 @@ public class UIModerationForum extends UIForumKeepStickPageIterator implements U
 		public void execute(Event<UIModerationForum> event) throws Exception {
 			String tabType = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIModerationForum uiform = event.getSource();
-			uiform.id = Integer.parseInt(tabType);
-			uiform.setPageSelect(uiform.pages[uiform.id]);
+			uiform.idTab = Integer.parseInt(tabType);
+			uiform.setPageSelect(uiform.pages[uiform.idTab]);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiform) ;
 		}
 	}
@@ -162,6 +192,57 @@ public class UIModerationForum extends UIForumKeepStickPageIterator implements U
 	static	public class ApplyAllActionListener extends EventListener<UIModerationForum> {
 		public void execute(Event<UIModerationForum> event) throws Exception {
 			String objectType = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		}
+	}
+
+	static	public class ApplyItemActionListener extends EventListener<UIModerationForum> {
+		public void execute(Event<UIModerationForum> event) throws Exception {
+			String objectId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String type = event.getRequestContext().getRequestParameter("type") ;
+			UIModerationForum moderationForum = event.getSource();
+			int tp =  Integer.parseInt(type);
+			List<Topic> listTopic = new ArrayList<Topic>();
+			List<Post> listPost = new ArrayList<Post>();
+			if(tp <= 1){
+			}
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			switch (tp) {
+      case 0: {
+				try {
+					moderationForum.forumService.modifyTopic(sProvider, listTopic, 3) ;
+				} finally {
+					sProvider.close();
+				}
+      	break;
+      }
+      case 1: {
+      	try {
+      		moderationForum.forumService.modifyTopic(sProvider, listTopic, 3) ;
+      	} finally {
+      		sProvider.close();
+      	}
+      	break;
+      }
+      case 2: {
+      	try {
+      		moderationForum.forumService.modifyPost(sProvider, listPost, 3) ;
+      	} finally {
+      		sProvider.close();
+      	}
+      	break;
+      }
+      case 3: {
+      	try {
+      		moderationForum.forumService.modifyPost(sProvider, listPost, 3) ;
+      	} finally {
+      		sProvider.close();
+      	}
+      	break;
+      }
+
+      default:
+	      break;
+      }
 		}
 	}
 	

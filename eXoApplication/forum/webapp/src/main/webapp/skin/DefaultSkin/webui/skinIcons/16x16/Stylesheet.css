@@ -433,6 +433,18 @@
   float:left;
 }
 
-.UIForumPortlet .BanIpToolsIcon {
-  background: url('icons/BanIpToolsIcon.gif') no-repeat left center;
+.UIForumPortlet .TopicUnApprovedIcon {
+  background: url('icons/ApproveTopicsIcon.gif') no-repeat left center;
+}
+
+.UIForumPortlet .TopicWaitingIcon {
+  background: url('icons/SetUnWaiting.gif') no-repeat left center;
+}
+
+.UIForumPortlet .PostUnApprovedIcon {
+  background: url('icons/ApprovePostsIcon.gif') no-repeat left center;
+}
+
+.UIForumPortlet .PostsHiddenIcon {
+  background: url('icons/HiddenPostIcon.gif') no-repeat left center;
 }

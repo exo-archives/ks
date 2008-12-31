@@ -51,11 +51,8 @@
 										<div class="UITabContentContainer">
 											<% 
 												String display =	"block";
-												uiform.setJobWattingForModerator();
-												for(int i = 0; i < 4; ++i) {
+													int i = uiform.idTab;
 													String tabconten = uiform.getTabId(i);
-													if(uiform.getIsSelected(i))display =	"block";
-													else display = "none";
 													List objects;
 													if(i <= 1) {
 														objects = uicomponent.getListTopic(i);
@@ -63,7 +60,7 @@
 														objects = uicomponent.getListPost(i);
 													}
 											%>
-											<div style="display: $display;" id="UITabContent" class="UITabContent">
+											<div id="UITabContent" class="UITabContent">
 											
 												<div class="UITopicList">
 													<div style="overflow:auto; margin: 2px 0px;">
@@ -73,9 +70,13 @@
 													<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 														<thead>
 															<tr>
+															<% if(i <= 1) {%>
 																<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
-																<th>Thoi gian tao</th>
-																<th style="width: 50px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+															<% } else { %>
+																<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
+															<% } %>
+																<th style="width: 120px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+																<th style="width: 70px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 															</tr>
 														</thead>
 														<tbody>
@@ -86,7 +87,7 @@
 															  if(checkeds == null) checkeds = new ArrayList<String>();
 																int j = 0;
 																String objectTitle = ""; 	String titlePost = "";
-																String type = "post";
+																String type = String.valueOf(i);
 																 for(object in objects){
 																	if(j%2 == 0) classRow = "whileRow";
 																	else classRow = "OddRow";
@@ -112,10 +113,16 @@
 																	<%
 																	  String checked = "";
 																	  if(checkeds.contains(objectId+tabconten)){
-																	    checked = "checked=\"checked\"";
+																	    checked = "checked=\"checked\""; 
 																	  }
 																	%>
-																	<td class="Tdbox" align="center"><input type="checkbox" class="checkbox" value="false" name="$objectId" $checked/></td>
+																	<td class="Tdbox" align="center">
+																		<a href="<%=uicomponent.event("ApplyItem",objectId+"&type="+type) ;%>" title="<%=_ctx.appRes(uiform.id + ".title." + tabconten);%>" class="FloatLeft IconAction ${tabconten}Icon"><span></span></a>
+																		<div class="FloatLeft">
+																			<input type="checkbox" class="checkbox" value="false" name="$objectId" $checked/>
+																		</div>
+																		<div style="clear: left; height: 0px;"><span></span></div>
+																	</td>
 													 			</tr>
 														 	<% j = j + 1;} 
 														 	} else {
@@ -139,13 +146,13 @@
 														<tr>
 															<td align="center">
 															<% 
-																 String actionLabel = "ap dung";// _ctx.appRes(uiform.id + ".action." + tabconten); 
-																 String link = uicomponent.event("ApplyAll",tabconten) ;
+																 String actionLabel_ = _ctx.appRes(uiform.id + ".action." + tabconten); 
+																 String link_ = uicomponent.event("ApplyAll",tabconten) ;
 															%>
-																	<a href="$link" class="ActionButton LightBlueStyle">
+																	<a href="$link_" class="ActionButton LightBlueStyle">
 																		<div class="ButtonLeft">
 																			<div class="ButtonRight">
-																				<div class="ButtonMiddle">$actionLabel</div>
+																				<div class="ButtonMiddle">$actionLabel_</div>
 																			</div>
 																		</div>
 																	</a>
@@ -156,7 +163,7 @@
 												
 												
 											</div>
-											<% } %>
+											<% //} %>
 										</div>
 									</div>
 								</div>

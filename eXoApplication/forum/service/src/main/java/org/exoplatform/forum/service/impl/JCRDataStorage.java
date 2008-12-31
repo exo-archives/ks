@@ -1084,15 +1084,15 @@ public class JCRDataStorage {
 		topicNew.setCreatedDate(topicNode.getProperty("exo:createdDate").getDate().getTime()) ;
 		if(topicNode.hasProperty("exo:modifiedBy"))topicNew.setModifiedBy(topicNode.getProperty("exo:modifiedBy").getString()) ;
 		if(topicNode.hasProperty("exo:modifiedDate"))topicNew.setModifiedDate(topicNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
-		topicNew.setLastPostBy(topicNode.getProperty("exo:lastPostBy").getString()) ;
-		topicNew.setLastPostDate(topicNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
+		if(topicNode.hasProperty("exo:lastPostBy"))topicNew.setLastPostBy(topicNode.getProperty("exo:lastPostBy").getString()) ;
+		if(topicNode.hasProperty("exo:lastPostDate"))topicNew.setLastPostDate(topicNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
 		topicNew.setDescription(topicNode.getProperty("exo:description").getString()) ;
 		topicNew.setPostCount(topicNode.getProperty("exo:postCount").getLong()) ;
 		topicNew.setViewCount(topicNode.getProperty("exo:viewCount").getLong()) ;
 		if(topicNode.hasProperty("exo:numberAttachments")) topicNew.setNumberAttachment(topicNode.getProperty("exo:numberAttachments").getLong()) ;
 		topicNew.setIcon(topicNode.getProperty("exo:icon").getString()) ;
 		topicNew.setLink(topicNode.getProperty("exo:link").getString());
-		topicNew.setIsNotifyWhenAddPost(topicNode.getProperty("exo:isNotifyWhenAddPost").getString()) ;
+		if(topicNode.hasProperty("exo:isNotifyWhenAddPost"))topicNew.setIsNotifyWhenAddPost(topicNode.getProperty("exo:isNotifyWhenAddPost").getString()) ;
 		topicNew.setIsModeratePost(topicNode.getProperty("exo:isModeratePost").getBoolean()) ;
 		topicNew.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean()) ;
 		if(topicNode.getParent().getProperty("exo:isLock").getBoolean()) topicNew.setIsLock(true);
@@ -1855,6 +1855,7 @@ public class JCRDataStorage {
 				}
 			}
 			sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
+			if(isNew && defaultEmailContent.length() == 0) sendAlertJob = false; // initDefaulDate
 			if(sendAlertJob) {
 				List<String>userIdsp = new ArrayList<String>();
 				if(forumNode.hasProperty("exo:moderators")) {
@@ -3808,7 +3809,7 @@ public class JCRDataStorage {
 		return path;
 	}
 
-	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception {
+	public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths, String type) throws Exception {
 		JobWattingForModerator wattingForModerator = new JobWattingForModerator();
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		String string = forumHomeNode.getPath();
@@ -3827,44 +3828,53 @@ public class JCRDataStorage {
 			buffer.append(")");
 		}
 		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
-			.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending");
-		pathQuery =  stringBuffer.toString();
-		Query query = qm.createQuery(pathQuery, Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes();
-		JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
-		wattingForModerator.setTopicUnApproved(pagelist);
-		
-		stringBuffer = new StringBuffer();
-		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
-			.append("[@exo:isWaiting='false'").append(buffer).append("] order by @exo:modifiedDate descending");
-		pathQuery = stringBuffer.toString();
-		query = qm.createQuery(pathQuery, Query.XPATH);
-		result = query.execute();
-		iter = result.getNodes();
-		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
-		wattingForModerator.setTopicWaiting(pagelist);
-
-		stringBuffer = new StringBuffer();
-		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
-			.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending");
-		pathQuery = stringBuffer.toString();
-		query = qm.createQuery(pathQuery, Query.XPATH);
-		result = query.execute();
-		iter = result.getNodes();
-		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
-		wattingForModerator.setPostsUnApproved(pagelist);
-		
-		stringBuffer = new StringBuffer();
-		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
-			.append("[@exo:isHidden='false'").append(buffer).append("] order by @exo:modifiedDate descending");
-		pathQuery = stringBuffer.toString();
-		query = qm.createQuery(pathQuery, Query.XPATH);
-		result = query.execute();
-		iter = result.getNodes();
-		pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
-		wattingForModerator.setPostsHidden(pagelist);
+		Query query ;
+		NodeIterator iter;
+		QueryResult result;
+		JCRPageList pagelist;
+		if(type.equals("all") || type.equals("0")) {
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
+				.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending");
+			pathQuery =  stringBuffer.toString();
+			query = qm.createQuery(pathQuery, Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
+			wattingForModerator.setTopicUnApproved(pagelist);
+		}
+		if(type.equals("all") || type.equals("1")) {
+			stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
+				.append("[@exo:isWaiting='true'").append(buffer).append("] order by @exo:modifiedDate descending");
+			pathQuery = stringBuffer.toString();
+			query = qm.createQuery(pathQuery, Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
+			wattingForModerator.setTopicWaiting(pagelist);
+		}
+		if(type.equals("all") || type.equals("2")) {
+			stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
+				.append("[@exo:isApproved='false'").append(buffer).append("] order by @exo:modifiedDate descending");
+			pathQuery = stringBuffer.toString();
+			query = qm.createQuery(pathQuery, Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
+			wattingForModerator.setPostsUnApproved(pagelist);
+		}
+		if(type.equals("all") || type.equals("3")) {
+			stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
+				.append("[@exo:isHidden='true'").append(buffer).append("] order by @exo:modifiedDate descending");
+			pathQuery = stringBuffer.toString();
+			query = qm.createQuery(pathQuery, Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
+			wattingForModerator.setPostsHidden(pagelist);
+		}
 		return wattingForModerator;
 	}
 

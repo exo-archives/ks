@@ -27,6 +27,13 @@
 	width: 870px;
 }
 
+.UIForumPortlet .Cursor {
+  cursor: pointer;
+}
+
+.UIForumPortlet .FloatLeft {
+  float: left;
+}
 
 .UIForumPortlet .UIRightClickPopupMenu .FixHeight {
 	height: 0px;

@@ -65,3 +65,9 @@
   margin-left: 20px;
 }
 
+/**************************** UIModerationForum ****************************************/
+.UIModerationForum .IconAction {
+	margin: 0px 10px;
+	width: 16px; height: 16px;
+}
+

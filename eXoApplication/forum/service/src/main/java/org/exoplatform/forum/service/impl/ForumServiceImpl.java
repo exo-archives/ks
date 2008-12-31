@@ -425,8 +425,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     storage_.removeWatch(sProvider, watchType, path, values) ; 
   }
 
-  public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception {
-    return storage_.getJobWattingForModerator(sProvider, paths); 
+  public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths, String type) throws Exception {
+    return storage_.getJobWattingForModerator(sProvider, paths, type); 
   }
 
   public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
