@@ -45,6 +45,7 @@
 						if(i%2 == 0) color = "#edf3ee";
 						else color = "#ffffff";
 						String ip = ips[i];
+						String unBanLink = "javascript:if(confirm('" + _ctx.appRes("UIBanIPForumManagerForm.confirm.UnBanIP") + "'))" + uicomponent.event("UnBan", ip);
 				%>
 					<tr background="$color" class="IpBanItem">
 						<td class="FieldLabel">$ip</td>
@@ -52,7 +53,7 @@
 								[<a href="<%=uicomponent.event("OpenPosts", ip)%>">
 										<%=_ctx.appRes("UIForumAdministrationForm.label.Posts")%>
 								 </a>]&nbsp;
-								[<a style="color: red;" href="<%=uicomponent.event("UnBan", ip)%>">
+								[<a style="color: red;" href="$unBanLink">
 										X
 								 </a>]
 						</td>
