@@ -198,6 +198,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 					FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
 					faqService_.saveQuestion(question, false, sessionProvider,moveQuestionForm.faqSetting_) ;
 				}catch (Exception e) {
+					e.printStackTrace();
 					UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

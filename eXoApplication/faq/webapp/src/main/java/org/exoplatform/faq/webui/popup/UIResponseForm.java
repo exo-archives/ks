@@ -830,6 +830,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						responseForm.inputQuestionDetail_.setValue(questionLanguage.getDetail()) ;
 						responseForm.inputQuestionContent_.setValue(questionLanguage.getQuestion()) ;
 						responseForm.questionDetail = questionLanguage.getDetail();
+						responseForm.questionContent = questionLanguage.getQuestion();
 						responseForm.inputResponseQuestion_.setValue(questionLanguage.getResponse()[0]) ;
 						responseForm.posOfResponse = 0;
 
@@ -842,7 +843,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						responseForm.listUsersVoteResponse.clear();
 
 						responseForm.listResponse.addAll(Arrays.asList(questionLanguage.getResponse()));
-						if(questionLanguage.getMarksVoteAnswer() != null){
+						if(questionLanguage.getMarksVoteAnswer() != null && questionLanguage.getUsersVoteAnswer() != null){
 							responseForm.listUsersVoteResponse.addAll(Arrays.asList(questionLanguage.getUsersVoteAnswer()));
 							for(double d : questionLanguage.getMarksVoteAnswer()){
 								responseForm.listMarkResponse.add(d);
@@ -862,6 +863,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 							responseForm.listActiveAnswers.add(true);
 							responseForm.listApprovedAnswers.add(responseForm.cateIsApprovedAnswer_);
 						}
+						
+						
 						break ;
 					}
 				}
