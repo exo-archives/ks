@@ -119,9 +119,6 @@
 								}
 								if(uicomponent.checkUserWatch(category.getId())) {
 									addWatched = true;
-								%>
-									<a href="<%=uicomponent.event("UnWatch", category.getId());%>" title="<%= _ctx.appRes("UIQuestions.title.un-watch"); %>" class="UnWatch">&nbsp;</a>
-								<%
 								}
 								%>
 								
