@@ -236,10 +236,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						listActiveAnswers.addAll(Arrays.asList(language.getIsActivateAnswers()));
 						listApprovedAnswers.addAll(Arrays.asList(language.getIsApprovedAnswers()));
 					}
-					for(double d : language.getMarksVoteAnswer()){
-						listMarkResponse.add(d);
+					if(language.getMarksVoteAnswer() != null){
+						for(double d : language.getMarksVoteAnswer()){
+							listMarkResponse.add(d);
+						}
+						listUsersVoteResponse.addAll(Arrays.asList(language.getUsersVoteAnswer()));
 					}
-					listUsersVoteResponse.addAll(Arrays.asList(language.getUsersVoteAnswer()));
 				}
 			}
 			this.setListRelation(sessionProvider);
