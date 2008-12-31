@@ -363,11 +363,12 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       try{
         Question question = faqService_.getQuestionById(param[0], sessionProvider) ;
+        Category category = faqService_.getCategoryById(question.getCategoryId(), sessionProvider);
         UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
         responseForm.setFAQSetting(questionsInfo.faqSetting_);
         responseForm.setIsChildren(true) ;
-        if(param.length == 1) responseForm.setQuestionId(question, null) ;
-        else responseForm.setQuestionId(question, param[1]) ;
+        if(param.length == 1) responseForm.setQuestionId(question, null, !category.isModerateAnswers()) ;
+        else responseForm.setQuestionId(question, param[1], !category.isModerateAnswers()) ;
         questionManagerForm.isViewEditQuestion = false ;
         questionManagerForm.isViewResponseQuestion = true ;
         questionManagerForm.isResponseQuestion = true ;
