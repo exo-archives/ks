@@ -3280,7 +3280,7 @@ public class JCRDataStorage {
 				topic.setPath(path);
 				topic.setTopicName(myNode.getProperty("exo:name").getString());
 				object = topic;
-			} else if (path.indexOf(Utils.FORUM) > 0) {
+			} else if (path.indexOf(Utils.FORUM) > 0 && (path.lastIndexOf(Utils.FORUM) > path.indexOf(Utils.CATEGORY))) {
 				Forum forum = new Forum();
 				forum.setId(myNode.getName());
 				forum.setPath(path);

@@ -52,9 +52,12 @@
 					<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">
-				  <%if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)){%>
+				  <%String toolTip = uicomponent.getToolTip();
+				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) || !toolTip.equals("tag")){
+					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
+				  %>
 					<div class="SeparatorLine" style="float: right;">
-						<div class="ShareLink"><a href="$link" target="_blank" title="<%=_ctx.appRes("UIBreadcumbs.title.Link");%>"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
+						<div class="ShareLink"><a href="$link" target="_blank" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
 					</div>	
 					<%}%>
 					<%
