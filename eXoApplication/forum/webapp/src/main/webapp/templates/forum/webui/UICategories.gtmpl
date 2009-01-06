@@ -56,7 +56,7 @@
 							<div class="CenterBar">
 								<div class="Title" title="$title">
 									<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-										<a actions="$link;" href="$url" class="UICategoryTitle">$title</a>
+										<a actions="$link;" href="$url" class="ActionLink UICategoryTitle">$title</a>
 										<div style="position: relative;">
 											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block; font-weight:normal;">
@@ -194,7 +194,7 @@
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 											<td>
 												<div style="float: left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-													<a actions="$link;" href="$url" style="$lineHeight" class="ForumTitle UICategoryTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+													<a actions="$link;" href="$url" style="$lineHeight" class="ForumTitle ActionLink">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 															<div action="$actionBookmark" class="ClickPopupContent"></div>
@@ -212,10 +212,10 @@
 													actionBookmark = uicomponent.event("ShareLink","topic//" + topicPath);
 												}
 											%>
-										 	<td >
+										 	<td>
 										 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
 										 		<div style="float: left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-										 			<a actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle UICategoryTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+										 			<a actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 															<div action="$actionBookmark" class="ClickPopupContent"></div>
