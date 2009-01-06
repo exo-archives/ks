@@ -268,6 +268,7 @@ public class JCRDataStorage {
 							topic.setTopicName(topicData.getName());
 							ct = topicData.getContent();
 							ct = StringUtils.replace(ct, "\\n","<br/>");
+							ct = Utils.removeCharterStrange(ct);
 							topic.setDescription(ct);
 							topic.setOwner(topicData.getOwner());
 							topic.setIcon(topicData.getIcon());
@@ -281,6 +282,7 @@ public class JCRDataStorage {
 							post.setName(postData.getName());
 							ct = postData.getContent();
 							ct = StringUtils.replace(ct, "\\n","<br/>");
+							ct = Utils.removeCharterStrange(ct);
 							post.setMessage(ct);
 							post.setOwner(postData.getOwner());
 							post.setIcon(postData.getIcon());
