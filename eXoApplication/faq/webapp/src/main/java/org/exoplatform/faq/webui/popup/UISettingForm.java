@@ -215,7 +215,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setDisplayMode(((UIFormSelectBox)displayTab.getChildById(settingForm.DISPLAY_MODE)).getValue());
 				faqSetting.setOrderBy(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_BY)).getValue())) ;
 				faqSetting.setOrderType(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_TYPE)).getValue())) ;
-				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)settingForm.
+				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)displayTab.
 																								getChildById(settingForm.ENABLE_VOTE_COMMNET)).isChecked());
 				
 				UIFormInputWithActions emailTab = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
