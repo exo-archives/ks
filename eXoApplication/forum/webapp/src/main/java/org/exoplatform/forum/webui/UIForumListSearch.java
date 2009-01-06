@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -35,6 +34,8 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIViewPost;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -59,9 +60,9 @@ import org.exoplatform.webui.event.EventListener;
 public class UIForumListSearch extends UIContainer {
 	private List<ForumSearch> listEvent = null ;
 	private boolean isShowIter = true;
-	 public final String SEARCH_ITERATOR = "forumSearchIterator";
-	 private JCRPageList pageList ;
-	 private UIForumPageIterator pageIterator ;
+	public final String SEARCH_ITERATOR = "forumSearchIterator";
+	private JCRPageList pageList ;
+	private UIForumPageIterator pageIterator ;
 	public UIForumListSearch() throws Exception {
 		pageIterator = addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR);
 	}
@@ -154,17 +155,19 @@ public class UIForumListSearch extends UIContainer {
 			Forum forum = null;
 			Topic topic = null;
 			Post post = null;
-			
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try{
 				String cateId =  id[3];
-				category = forumService.getCategory(ForumSessionUtils.getSystemProvider(), cateId) ;
+				category = forumService.getCategory(sProvider, cateId) ;
 				String forumId = id[4];
-				forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),cateId , forumId ) ;
+				forum = forumService.getForum(sProvider,cateId , forumId ) ;
 				String topicId = id[5];
-				topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), cateId, forumId, topicId, userProfile.getUserId());
-				String postId = id[6];
-				post = forumService.getPost(ForumSessionUtils.getSystemProvider(), cateId , forumId, topicId, postId) ;
-			} catch (Exception e) { }
+				topic = forumService.getTopic(sProvider, cateId, forumId, topicId, userProfile.getUserId());
+				post = forumService.getPost(sProvider, "" , "", "", path) ;
+			} catch (Exception e) { 
+			}finally {
+				sProvider.close();
+			}
 			
 			isRead = uiForm.canView(category, forum, topic, post, userProfile);
 			
@@ -220,6 +223,7 @@ public class UIForumListSearch extends UIContainer {
 						UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
 						viewPost.setPostView(post) ;
 						viewPost.setViewUserInfo(false) ;
+						viewPost.setActionForm(new String[] {"Close"});
 						event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 					}
 				} else isErro = true ;

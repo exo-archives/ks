@@ -1392,6 +1392,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
 				viewPost.setPostView(post) ;
 				viewPost.setViewUserInfo(false) ;
+				viewPost.setActionForm(new String[] {"Close"});
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}else {
 				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;

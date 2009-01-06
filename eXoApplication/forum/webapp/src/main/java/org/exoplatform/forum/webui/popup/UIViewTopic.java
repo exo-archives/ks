@@ -56,6 +56,7 @@ import org.exoplatform.webui.form.UIForm;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/forum/webui/popup/UIViewTopic.gtmpl",
 		events = {
+			@EventConfig(listeners = UIViewTopic.ApproveActionListener.class, phase = Phase.DECODE),
 			@EventConfig(listeners = UIViewTopic.CloseActionListener.class, phase = Phase.DECODE)
 		}
 )
@@ -79,6 +80,11 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private UserProfile getUserProfile() throws Exception {
 		return this.userProfile ;
 	}
+	
+	public void setActionForm(String[] actions) {
+	  this.setActions(actions);
+  }
+	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
@@ -202,6 +208,38 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private boolean isOnline(String userId) throws Exception {
 		return this.forumService.isOnline(userId) ;
 	}
+	static	public class ApproveActionListener extends EventListener<UIViewTopic> {
+		public void execute(Event<UIViewTopic> event) throws Exception {
+			UIViewTopic uiForm = event.getSource() ;
+			Topic topic = uiForm.topic;
+			topic.setIsApproved(true);
+			topic.setIsWaiting(false);
+			List<Topic> topics = new ArrayList<Topic>();
+			topics.add(topic);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				uiForm.forumService.modifyTopic(sProvider, topics, 3);
+				uiForm.forumService.modifyTopic(sProvider, topics, 5);
+			}catch(Exception e) {
+				e.printStackTrace() ;
+			}finally {
+				sProvider.close() ;
+			}
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			if(popupContainer != null) {
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+				popupAction.deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
+				if(moderationForum != null)
+					event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+			} else {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+			}
+		}
+	}
+	
 	static	public class CloseActionListener extends EventListener<UIViewTopic> {
 		public void execute(Event<UIViewTopic> event) throws Exception {
 			UIViewTopic uiForm = event.getSource() ;

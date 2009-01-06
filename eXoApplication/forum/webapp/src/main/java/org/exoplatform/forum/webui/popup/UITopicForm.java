@@ -319,6 +319,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
 				viewPost.setId("UIViewTopic") ;
 				viewPost.setPostView(postNew) ;
+				viewPost.setActionForm(new String[] {"Close"});
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}else {
 				String sms = "" ;

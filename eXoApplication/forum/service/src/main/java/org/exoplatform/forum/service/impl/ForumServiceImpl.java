@@ -45,7 +45,6 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
@@ -425,8 +424,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     storage_.removeWatch(sProvider, watchType, path, values) ; 
   }
 
-  public JobWattingForModerator getJobWattingForModerator(SessionProvider sProvider, String[] paths, String type) throws Exception {
-    return storage_.getJobWattingForModerator(sProvider, paths, type); 
+  public List<ForumSearch> getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception {
+    return storage_.getJobWattingForModerator(sProvider, paths); 
   }
 
   public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {

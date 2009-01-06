@@ -290,15 +290,14 @@ public class UISearchForm extends UIForm implements UISelector {
 			eventQuery.setToDateCreated(toDateCreated) ;
 			eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost) ;
 			eventQuery.setToDateCreatedLastPost(toDateCreatedLastPost) ;
-
-			eventQuery.getPathQuery() ;
-			boolean isEmpty = eventQuery.getIsAnd() ;
-			eventQuery.setRemain(remain) ;
-			if(!isEmpty) {
+			
+			eventQuery.getPathQuery();
+			if(eventQuery.getIsEmpty()) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-empty-search", null, ApplicationMessage.WARNING)) ;
 				return ;
 			}
+			eventQuery.setRemain(remain) ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			List<ForumSearch> list = null ;
 			try {
@@ -350,9 +349,6 @@ public class UISearchForm extends UIForm implements UISelector {
 			uiForm.getUIFormCheckBoxInput(FIELD_ISUNLOCK_CHECKBOX).setValue(false);
 			uiForm.getUIFormCheckBoxInput(FIELD_ISCLOSED_CHECKBOX).setValue(false);
 			uiForm.getUIFormCheckBoxInput(FIELD_ISOPEN_CHECKBOX).setValue(false);
-//			uiForm.getUIStringInput(FIELD_TOPICCOUNTMIN_SLIDER).setValue("");
-//			uiForm.getUIStringInput(FIELD_POSTCOUNTMIN_SLIDER).setValue("");
-//			uiForm.getUIStringInput(FIELD_VIEWCOUNTMIN_SLIDER).setValue("");
 			uiForm.getUIStringInput(FIELD_MODERATOR_INPUT).setValue("");
 			uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).setValue("") ;
 			uiForm.getUIFormDateTimePicker(FROMDATECREATED).setValue("") ;

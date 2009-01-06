@@ -27,7 +27,6 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.JobWattingForModerator;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -67,9 +66,9 @@ public class UIBreadcumbs extends UIContainer {
 	private String forumHomePath_ ;
 	public static final String FORUM_SERVICE = Utils.FORUM_SERVICE ;
 	private UserProfile userProfile ;
-	JobWattingForModerator wattingForModerator;
 	private boolean isLink = false ;
 	private boolean isOpen = true;
+	private String tooltipLink = "forumHome";
 	public UIBreadcumbs()throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
@@ -85,6 +84,7 @@ public class UIBreadcumbs extends UIContainer {
 			path_.clear() ;
 			breadcumbs_.clear() ;
 			path_.add(FORUM_SERVICE) ;
+			tooltipLink = "forumHome";
 			breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			if(path.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
 				breadcumbs_.add(ForumUtils.FIELD_SEARCHFORUM_LABEL) ;
@@ -103,22 +103,26 @@ public class UIBreadcumbs extends UIContainer {
 					if(obj instanceof Category) {
 						Category category = (Category)obj ;
 						tempPath = string;
-							breadcumbs_.add(category.getCategoryName()) ;
+						breadcumbs_.add(category.getCategoryName()) ;
+						tooltipLink = "category";
 					}else if(obj instanceof Forum) {
 						if(!ForumUtils.isEmpty(tempPath))
 							tempPath = tempPath + "/" + string ;
 						else tempPath = string;
 						Forum forum = (Forum)obj ;
 						breadcumbs_.add(forum.getForumName()) ;
+						tooltipLink = "forum";
 					}else if(obj instanceof Topic) {
 						if(!ForumUtils.isEmpty(tempPath))
 							tempPath = tempPath + "/" + string ;
 						else tempPath = string;
 						Topic topic = (Topic)obj;
 						breadcumbs_.add(topic.getTopicName()) ;
+						tooltipLink = "topic";
 					} else if(obj instanceof Tag){
 						Tag tag = (Tag)obj;
 						breadcumbs_.add(tag.getName()) ;
+						tooltipLink = "tag";
 					}
 					path_.add(tempPath) ;
 					++i;
@@ -129,6 +133,7 @@ public class UIBreadcumbs extends UIContainer {
 			breadcumbs_.clear() ;
 			path_.add(FORUM_SERVICE) ;
 			breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
+			tooltipLink = "forumHome";
 		}
 	}
 	
@@ -150,7 +155,10 @@ public class UIBreadcumbs extends UIContainer {
 		this.isOpen = isOpen;
 	}
 	
-	
+	@SuppressWarnings("unused")
+  private String getToolTip() {
+		return tooltipLink ;
+	}
 	@SuppressWarnings("unused")
 	private boolean isLink() {return this.isLink;}
 	@SuppressWarnings("unused")

@@ -27,6 +27,8 @@ public class ForumEventQuery {
 	private Calendar fromDateCreatedLastPost ;
 	private Calendar toDateCreatedLastPost ;
 
+	private boolean isAnd = false ;
+	private boolean isEmpty = true ;
 	public void setListOfUser(List<String> listOfUser){
 		this.listOfUser = new ArrayList<String>();
 		this.listOfUser.addAll(listOfUser);
@@ -40,7 +42,6 @@ public class ForumEventQuery {
   	this.userPermission = userPermission;
   }
 	
-	private boolean isAnd = false ;
 	public ForumEventQuery() {}
 	
 	public String getType() {
@@ -139,12 +140,12 @@ public class ForumEventQuery {
 	public void setToDateCreatedLastPost(Calendar toDateCreatedLastPost) {
   	this.toDateCreatedLastPost = toDateCreatedLastPost;
   }
-	public boolean getIsAnd() {
-	  return this.isAnd ;
+	public boolean getIsEmpty() {
+	  return this.isEmpty ;
   }
 	
 	public String getPathQuery() {
-		isAnd = false ;
+		isAnd = false ; isEmpty = true;
 		StringBuffer queryString = new StringBuffer() ;
     if(path != null && path.length() > 0) queryString.append("/jcr:root").append(path).append("//element(*,exo:").append(type).append(")") ;
     else  queryString.append("//element(*,exo:").append(type).append(")") ;
@@ -176,6 +177,7 @@ public class ForumEventQuery {
     	stringBuffer.append(")");
 			isAnd = true ;
 		}
+    if(isAnd) isEmpty = false;
     if(isClosed != null && isClosed.length() > 0) {
     	if(userPermission == 1){
 	    	if(type.equals("forum")){
@@ -213,39 +215,11 @@ public class ForumEventQuery {
     	}
     }
     if(isLock != null && isLock.length() > 0) {
-    	if(userPermission == 0){
-    		if(!isLock.equals("all")){
-    			if(isAnd) stringBuffer.append(" and ");
-    			stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
-    			isAnd = true ;
-    		}
-    	} else if(userPermission == 1){
-    		if(type.equals("forum")){
-    			if(isAnd) stringBuffer.append(" and ");
-	    		if(isLock.equals("all")){
-	    			stringBuffer.append("(@exo:isLock='false'");
-	    			for(String str : listOfUser){
-	    				stringBuffer.append(" or @exo:moderators='").append(str).append("'");
-	    			}
-	    			stringBuffer.append(")") ;
-	    		} else if (isLock.equals("true")){
-	    			stringBuffer.append("(@exo:isLock='true' and (@exo:moderators='").append(listOfUser.get(0)).append("'");
-	    			for(String str : listOfUser){
-	    				stringBuffer.append(" or @exo:moderators='").append(str).append("'");
-	    			}
-	    			stringBuffer.append("))") ;
-	    		} else {
-	    			stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
-	    		}
-	    		isAnd = true ;
-    		} else {
-    			if(!isLock.equals("all")){
-    				if(isAnd) stringBuffer.append(" and ");
-  		    	stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
-  		    	isAnd = true ;
-      		}
-    		}
-    	}
+  		if(!isLock.equals("all")){
+  			if(isAnd) stringBuffer.append(" and ");
+  			stringBuffer.append("(@exo:isLock='").append(isLock).append("')") ;
+  			isAnd = true ; isEmpty = false;
+  		}
     }
     if(remain != null && remain.length() > 0) {
     	if(isAnd) stringBuffer.append(" and ");
@@ -255,17 +229,17 @@ public class ForumEventQuery {
     if(moderator != null && moderator.length() > 0) {
     	if(isAnd) stringBuffer.append(" and ");
     	stringBuffer.append("(@exo:moderators='").append(moderator).append("')") ;
-    	isAnd = true ;
+    	isAnd = true ;isEmpty = false;
     }
-    String temp = setMaxAndMin(topicCountMin, "topicCount") ;
+    String temp = setValueMin(topicCountMin, "topicCount") ;
     if(temp != null && temp.length() > 0) { 
     	stringBuffer.append(temp) ;
     }
-    temp = setMaxAndMin(postCountMin, "postCount") ;
+    temp = setValueMin(postCountMin, "postCount") ;
     if(temp != null && temp.length() > 0) { 
     	stringBuffer.append(temp) ;
     }
-    temp = setMaxAndMin(viewCountMin, "viewCount") ;
+    temp = setValueMin(viewCountMin, "viewCount") ;
     if(temp != null && temp.length() > 0) { 
     	stringBuffer.append(temp) ;
     }
@@ -297,12 +271,12 @@ public class ForumEventQuery {
 	  return queryString.toString();
   }
 	
-	private String setMaxAndMin(String min, String property) {
+	private String setValueMin(String min, String property) {
 		StringBuffer queryString = new StringBuffer() ;
     	if(Integer.parseInt(min) > 0) {
     		if(isAnd) queryString.append(" and ") ;
     		queryString.append("(@exo:").append(property).append(">=").append(min).append(")") ;
-    		isAnd = true ;
+    		isAnd = true ;isEmpty = false;
     	}
 		return queryString.toString() ;
 	}
@@ -313,15 +287,15 @@ public class ForumEventQuery {
 			if(isAnd) queryString.append(" and ") ;
 			queryString.append("((@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) and ") ;
 			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ") ;
-			isAnd = true ;
+			isAnd = true ;isEmpty = false;
 		} else if(fromDate != null){
 			if(isAnd) queryString.append(" and ") ;
 			queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
-			isAnd = true ;
+			isAnd = true ;isEmpty = false;
 		} else if(toDate != null){
 			if(isAnd) queryString.append(" and ") ;
 			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
-			isAnd = true ;
+			isAnd = true ;isEmpty = false;
 		}
 		return queryString.toString() ;
 	}

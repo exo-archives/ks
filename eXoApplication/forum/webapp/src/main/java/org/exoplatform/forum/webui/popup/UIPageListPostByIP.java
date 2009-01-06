@@ -203,6 +203,7 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
 				viewPost.setPostView(post) ;
 				viewPost.setViewUserInfo(false) ;
+				viewPost.setActionForm(new String[] {"Close"});
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				String[] s = new String[]{};

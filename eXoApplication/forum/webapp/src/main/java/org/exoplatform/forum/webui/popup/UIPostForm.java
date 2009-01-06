@@ -260,6 +260,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
 				viewPost.setId("viewPost") ;
 				viewPost.setPostView(post) ;
+				viewPost.setActionForm(new String[] {"Close"});
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}else {
 				String[] args = { ""} ;

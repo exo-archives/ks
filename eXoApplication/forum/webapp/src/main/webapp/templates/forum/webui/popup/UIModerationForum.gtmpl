@@ -1,177 +1,85 @@
 <%  
+	import org.exoplatform.forum.service.ForumSearch;
 	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.ForumUtils;
-
 %>
 <div class="$uicomponent.id">
 	<% uiform.begin() %>
 	<div class="UITopicContainer">
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
-				<div class="UIFormTabPane">
-					<div class="UITabPane">
-						<div class="TabPaneContent">
-							
-							<div class="WorkingArea">
-								 <div class="UIHorizontalTabs">
-									 <div class="LeftHorizontalTabs">
-										 <div class="RightHorizontalTabs">
-											 <div class="CenterHorizontalTabs">
-												<div class="TabsContainer">
-													<%String classCss = "SelectedTab" ; 
-													
-													for(int t = 0; t < 4; ++t) {
-														String tabconten = uiform.getTabId(t);
-														String link = "javascript:void(0);";
-														if(uiform.getIsSelected(t)) classCss = "SelectedTab" ;
-														else {
-															classCss = "NormalTab" ;
-															link = uicomponent.event("SelectTab", String.valueOf(t)) ;
-														}
-													%>	
-													<div class="UITab NormalTabStyle">
-														<div class="$classCss">
-															<div class="LeftTab">
-																<div class="RightTab">
-																<a href="$link">
-																	<div class="MiddleTab">$tabconten</div>
-																</a>
-																</div>
-															</div>
-														</div>
-													</div>
-												<% } %>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="UIForm">
-									<div class="HorizontalLayout">
-										<div class="UITabContentContainer">
+			
+				<div class="UIForm">
+				<% 
+					String display =	"block";
+					List objects = uicomponent.getListObject();
+					if(uicomponent.getIsShowIter()){ 
+				%>
+					<div style="overflow: auto;">
+					  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
+						<div style="clear: right; height: 0px;"><span></span></div>
+					</div>
+				<% } %>	
+					<div class="HorizontalLayout" style="margin-top: 3px;">
+						<div class="UITabContentContainer">
+							<div id="UITabContent" class="UITabContent">
+								<div class="UITopicList">
+									<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+										<thead>
+											<tr>
+												<th style="width: 60px;">Type</th>
+												<th>Name</th>
+												<th style="width: 140px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+											</tr>
+										</thead>
+										<tbody>
 											<% 
-												String display =	"block";
-													int i = uiform.idTab;
-													String tabconten = uiform.getTabId(i);
-													List objects;
-													if(i <= 1) {
-														objects = uicomponent.getListTopic(i);
-													} else {
-														objects = uicomponent.getListPost(i);
-													}
+												String classRow = "whileRow";
+												if(objects != null && objects.size() > 0) {
+													int j = 0;
+													for(object in objects){
+														if(j%2 == 0) classRow = "whileRow";
+														else classRow = "OddRow";
+														String objectId = object.getId();
+														String type = object.getType();
+														String objectTitle = object.getName();
+														String titlePost = ForumTransformHTML.getTitleInHTMLCode(object.getContent());
+														String createdDate = ForumUtils.getFormatDate("dd/MM/yyyy, hh:mm a", object.getCreatedDate());
+														titlePost = ForumUtils.getSubString(titlePost, 100);
 											%>
-											<div id="UITabContent" class="UITabContent">
-											
-												<div class="UITopicList">
-													<div style="overflow:auto; margin: 2px 0px;">
-														<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-														<div style="clear: right; height: 0px;"><span></span></div>
-													</div>
-													<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
-														<thead>
-															<tr>
-															<% if(i <= 1) {%>
-																<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
-															<% } else { %>
-																<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
-															<% } %>
-																<th style="width: 120px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
-																<th style="width: 70px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
-															</tr>
-														</thead>
-														<tbody>
-															<% 
-																String classRow = "whileRow";
-																if(objects != null && objects.size() > 0) {
-																List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
-															  if(checkeds == null) checkeds = new ArrayList<String>();
-																int j = 0;
-																String objectTitle = ""; 	String titlePost = "";
-																String type = String.valueOf(i);
-																 for(object in objects){
-																	if(j%2 == 0) classRow = "whileRow";
-																	else classRow = "OddRow";
-																	String objectId = object.getId();
-																	if(i <= 1){
-																		objectTitle = object.getTopicName();
-																		titlePost = ForumTransformHTML.getTitleInHTMLCode(object.getDescription());
-																		type = "topic";
-																	}else{
-																		objectTitle = object.getName();
-																		titlePost = ForumTransformHTML.getTitleInHTMLCode(object.getMessage());
-																	}
-																	String createdDate = object.getCreatedDate();
-																	titlePost = ForumUtils.getSubString(titlePost, 100);
-															%>
-																<tr class="$classRow">
-																	<td >
-																		<div >
-																			<a href="<%=uicomponent.event("Open", objectId+"&type="+type)%>" title="$titlePost">$objectTitle</a>
-																		</div>
-																	</td>
-																 	<td class="Tdbox" align="center"><div>$createdDate</div></td>
-																	<%
-																	  String checked = "";
-																	  if(checkeds.contains(objectId+tabconten)){
-																	    checked = "checked=\"checked\""; 
-																	  }
-																	%>
-																	<td class="Tdbox" align="center">
-																		<a href="<%=uicomponent.event("ApplyItem",objectId+"&type="+type) ;%>" title="<%=_ctx.appRes(uiform.id + ".title." + tabconten);%>" class="FloatLeft IconAction ${tabconten}Icon"><span></span></a>
-																		<div class="FloatLeft">
-																			<input type="checkbox" class="checkbox" value="false" name="$objectId" $checked/>
-																		</div>
-																		<div style="clear: left; height: 0px;"><span></span></div>
-																	</td>
-													 			</tr>
-														 	<% j = j + 1;} 
-														 	} else {
-													 		%>
-													 			<tr>
-													 				<td colspan="5" align="center">
-													 					<div class="ContentNotPost1"><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></div>
-													 				</td>
-													 			</tr>
-													 		<%}%>
-														</tbody>
-													</table>
-													<div style="overflow:auto;">
-														<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-														<div style="clear: right; height: 0px;"><span></span></div>
-													</div>						
-												</div>
-												
-												<div class="UIAction"> 
-													<table class="ActionContainer" align="center">
-														<tr>
-															<td align="center">
-															<% 
-																 String actionLabel_ = _ctx.appRes(uiform.id + ".action." + tabconten); 
-																 String link_ = uicomponent.event("ApplyAll",tabconten) ;
-															%>
-																	<a href="$link_" class="ActionButton LightBlueStyle">
-																		<div class="ButtonLeft">
-																			<div class="ButtonRight">
-																				<div class="ButtonMiddle">$actionLabel_</div>
-																			</div>
-																		</div>
-																	</a>
-															</td>
-														</tr>
-													</table> 
-												</div>
-												
-												
-											</div>
-											<% //} %>
-										</div>
-									</div>
+												<tr class="$classRow">
+													<td class="Tdbox">$type</td>
+													<td>
+														<div>
+															<a href="<%=uicomponent.event("Open", objectId)%>" title="$titlePost">$objectTitle</a>
+														</div>
+													</td>
+												 	<td class="Tdbox" align="center"><div>$createdDate</div></td>
+									 			</tr>
+										 	<% j = j + 1;} 
+										 		} else {
+									 		%>
+									 			<tr>
+									 				<td colspan="5" align="center">
+									 					<div class="ContentNotPost1"><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></div>
+									 				</td>
+									 			</tr>
+									 		<%}%>
+										</tbody>
+									</table>
 								</div>
 							</div>
-							
-						</div>	
-					</div>	
+						
+						</div>
+					</div>
+				<% if(uicomponent.getIsShowIter()){ %>
+					<div style="overflow: auto;">
+					  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
+						<div style="clear: right; height: 0px;"><span></span></div>
+					</div>
+				<% } %>					
 				</div>
+				
 			</div>
 		</div>
 	</div>

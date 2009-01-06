@@ -155,6 +155,7 @@ public class UIListTopicOld extends UIContainer {
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
 			UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
 			viewTopic.setTopic(topic) ;
+			viewTopic.setActionForm(new String[] {"Close"});
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}

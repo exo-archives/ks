@@ -2,7 +2,6 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.portal.webui.util.Util;
-	import org.exoplatform.forum.service.JobWattingForModerator;
 	import org.exoplatform.web.application.JavascriptManager;
 	
 	uicomponent.setUserProfile();
@@ -61,9 +60,12 @@
 					<div style="clear: left"><span></span></div>
 				</div>
 				<div class="RSSBar">
-				  <%if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)){%>
+				  <%String toolTip = uicomponent.getToolTip();
+				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) || !toolTip.equals("tag")){
+					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
+				  %>
 					<div class="SeparatorLine" style="float: right;">
-						<div class="ShareLink"><a href="$link" target="_blank" title="<%=_ctx.appRes("UIBreadcumbs.title.Link");%>"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
+						<div class="ShareLink"><a href="$link" target="_blank" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
 					</div>	
 					<%}%>
 					<%
@@ -79,12 +81,12 @@
 							int total = uicomponent.getTotalJobWattingForModerator();
 					%>
 					<div class="SeparatorLine"  style="float: right;">
-						<div style="line-height: 24px;" id="PendingJob"><div action="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</div></div>
+						<a style="line-height: 24px;" id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
 					</div>
 					<%}%>
 					<div class="SeparatorLine" style="float: right;">
 						<div style="line-height: 24px; cursor: pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
-							 $newMessage
+							 $newMessage<div action="<%=uicomponent.event("Moderation");%>"></div>
 						</div>
 					</div>
 					<% } %>

@@ -17,6 +17,8 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
@@ -24,10 +26,12 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -47,6 +51,7 @@ import org.exoplatform.webui.form.UIForm;
 		template = "app:/templates/forum/webui/popup/UIViewPost.gtmpl",
 		events = {
 			@EventConfig(listeners = UIViewPost.CloseActionListener.class, phase = Phase.DECODE),
+			@EventConfig(listeners = UIViewPost.ApproveActionListener.class, phase = Phase.DECODE),
 			@EventConfig(listeners = UIViewPost.DownloadAttachActionListener.class, phase = Phase.DECODE)
 		}
 )
@@ -55,6 +60,10 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	private boolean isViewUserInfo = true ;
 	public UIViewPost() {
 	}
+	
+	public void setActionForm(String[] actions) {
+	  this.setActions(actions);
+  }
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
@@ -100,6 +109,39 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIViewPost> event) throws Exception {
 			UIViewPost viewPost = event.getSource() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(viewPost) ;
+		}
+	}
+	
+	static	public class ApproveActionListener extends EventListener<UIViewPost> {
+		public void execute(Event<UIViewPost> event) throws Exception {
+			UIViewPost uiForm = event.getSource() ;
+			Post post = uiForm.post;
+			post.setIsApproved(true);
+			post.setIsHidden(false);
+			List<Post> posts = new ArrayList<Post>();
+			posts.add(post);
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				forumService.modifyPost(sProvider, posts, 1);
+				forumService.modifyPost(sProvider, posts, 2);
+			}catch(Exception e) {
+				e.printStackTrace() ;
+			}finally {
+				sProvider.close() ;
+			}
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			if(popupContainer != null) {
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+				popupAction.deActivate();
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
+				if(moderationForum != null)
+					event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+			} else {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+			}
 		}
 	}
 	

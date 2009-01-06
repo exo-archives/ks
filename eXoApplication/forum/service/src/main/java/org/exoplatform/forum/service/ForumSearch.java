@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import java.util.Date;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Duy Tu
@@ -29,7 +31,7 @@ public class ForumSearch {
 	private String name ;
 	private String content ;
 	private String icon ;
-	
+	private Date createdDate;
 	public ForumSearch() {}
 	
 	public String getId() {
@@ -70,4 +72,7 @@ public class ForumSearch {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
+	
+	public Date getCreatedDate(){return createdDate;}
+	public void setCreatedDate(Date createdDate){this.createdDate = createdDate;}
 }

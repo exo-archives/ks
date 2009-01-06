@@ -114,6 +114,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 			UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
 			viewPost.setPostView(post) ;
 			viewPost.setViewUserInfo(false) ;
+			viewPost.setActionForm(new String[] {"Close"});
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
