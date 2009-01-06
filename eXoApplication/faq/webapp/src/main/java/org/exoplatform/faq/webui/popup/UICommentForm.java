@@ -100,20 +100,20 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		this.faqSetting_ = faqSetting;
 		FAQUtils.getEmailSetting(faqSetting_, false, false);
 		
-		if(languageView.trim().length() < 1 || languageView.equals(question.getLanguage()))
+		if(languageView.trim().length() < 1 || languageView.equals(question.getLanguage())) {
+			listComments_.addAll(Arrays.asList(question_.getComments()));
+			listUserNames_.addAll(Arrays.asList(question_.getCommentBy()));
+			listDates_.addAll(Arrays.asList(question_.getDateComment()));
 			if(posCommentEdit >= 0){
 				pos = posCommentEdit;
 				((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(question_.getComments()[posCommentEdit]);
-				listComments_.addAll(Arrays.asList(question_.getComments()));
-				listUserNames_.addAll(Arrays.asList(question_.getCommentBy()));
-				listDates_.addAll(Arrays.asList(question_.getDateComment()));
 			} else {
 				listComments_.add(" ");
 				listUserNames_.add(currentUser_);
 				listDates_.add(date_);
-				pos = 0;
+				pos = listComments_.size() - 1;
 			}
-		
+		}
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		SessionProvider sProvider = FAQUtils.getSystemProvider();
 		List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
@@ -124,17 +124,24 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 			listLanguageToReponse.add(new SelectItemOption<String>(language, language)) ;
 			if(language.equals(languageView)){
 				questionLanguage_ = questionLanguage;
-				if(posCommentEdit >= 0){
-					pos = posCommentEdit;
-					((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(questionLanguage.getComments()[posCommentEdit]);
+				try{
 					listComments_.addAll(Arrays.asList(questionLanguage.getComments()));
 					listUserNames_.addAll(Arrays.asList(questionLanguage.getCommentBy()));
 					listDates_.addAll(Arrays.asList(questionLanguage.getDateComment()));
+				} catch (Exception e){
+					e.printStackTrace();
+					listComments_ = new ArrayList<String>();
+					listUserNames_ = new ArrayList<String>();
+					listDates_ = new ArrayList<Date>();
+				}
+				if(posCommentEdit >= 0){
+					pos = posCommentEdit;
+					((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(questionLanguage.getComments()[posCommentEdit]);
 				} else {
 					listComments_.add(" ");
 					listUserNames_.add(currentUser_);
 					listDates_.add(date_);
-					pos = 0;
+					pos = listComments_.size() - 1;
 				}
 				questionContent = questionLanguage.getQuestion();
 				questionDetail = questionLanguage.getDetail();

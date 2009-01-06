@@ -219,8 +219,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
       Boolean moderateAnswer = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked() ;
-      System.out.println("\n\n\n\n----------->moderatequestion:" + moderatequestion);
-      System.out.println("\n\n\n\n----------->moderateAnswer:" + moderateAnswer);
       boolean viewAuthorInfor = uiCategory.getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
