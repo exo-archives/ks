@@ -13,6 +13,7 @@
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"') ;") ;
 	Forum forum = uicomponent.getForum() ;
 	if(forum != null)  {
 	uicomponent.initPage() ;
@@ -401,12 +402,11 @@
 									if(lastAccess < postDate.getTime()) {
 										title = "TitleBold";
 										newPost = "New";									
-									}
-									
+									}									
 									postDate.setTime(postDate.getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
 									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
-									titlePost = ForumUtils.getSubString(titlePost, 100);
+									titlePost = ForumUtils.getSubString(titlePost, 101);
 									int att = topic.getNumberAttachment() ;
 									if(att < 0) att = 0;
 									String attachment = String.valueOf(att);
@@ -457,7 +457,7 @@
 											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
 											<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-												<a onclick="$link; return false;" href="$url" title="$titlePost" class="$title">$topicTitle</a>
+												<a actions="$link;" href="$url" title="$titlePost" class="ActionLink $title">$topicTitle</a>
 												<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 													<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 														<div action="$actionBookmark" class="ClickPopupContent"></div>
@@ -472,14 +472,14 @@
 												if(t <= 5) { 
 													number = String.valueOf(t) ;
 											%>
-											<a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url">$number</a>
+											<a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink" href="$url">$number</a>
 											<% }
 											t = t + 1 ;
 											}
 											if(max_page > 5) { 
 												number = String.valueOf(max_page) ;
 											%>
-											<span>... <a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
+											<span>... <a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
 											<%} else {%>
 											<span>)</span>
 											<%} 

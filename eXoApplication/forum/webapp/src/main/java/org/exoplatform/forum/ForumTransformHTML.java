@@ -43,7 +43,7 @@ public class ForumTransformHTML {
 		// Lower Case bbc
 		String start, end;
 		String[] bbcs = new String[] { "B", "I", "HIGHLIGHT", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
-		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL", "CODE" };
+		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL", "CODE", "LIST" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
 			end = "[/" + bbc + "]";
@@ -416,10 +416,11 @@ public class ForumTransformHTML {
 	public static String cleanHtmlCode(String sms) {
 		if (sms == null || sms.trim().length() <= 0)
 			return "";
+		sms = StringUtils.replace(sms, "\n", "");
 		List<String> bbcList = new ArrayList<String>();
 		// clean bbcode
-		String[] bbcs = new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
-		    "RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS" };
+		String[] bbcs = new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT", "CODE",
+		    "RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL", "LIST" };
 		bbcList.addAll(Arrays.asList(bbcs));
 		for (String bbc : bbcs) {
 			bbcList.add(bbc.toLowerCase());
@@ -463,11 +464,28 @@ public class ForumTransformHTML {
 	}
 
 	public static String getTitleInHTMLCode(String s) {
+		if(s.length() > 500) s = s.substring(0, 500);
+		s = removeCharterStrange(s);
 		s = cleanHtmlCode(s);
-		s = s.replaceAll("&nbsp;&nbsp;", "&nbsp;").replaceAll("&nbsp; ", " ").replaceAll("\n", "");
+		s = s.replaceAll("&nbsp;&nbsp;", "&nbsp;").replaceAll("&nbsp; ", "&nbsp;").replaceAll("<br/>", " ");
+		s = StringUtils.replace(s, "  ", " ");
 		return s;
 	}
 
+	public static String removeCharterStrange(String s) {
+		if (s == null || s.length() <= 0)
+			return "";
+		int i=0;
+		StringBuilder builder = new StringBuilder();
+		while(i < s.length()) {
+			if(s.codePointAt(i) > 31){
+				builder.append(s.charAt(i)) ;
+			}
+			++i;
+		}
+		return builder.toString();
+	}
+	
 	public static String convertCodeHTML(String s) {
 		if (s == null || s.length() <= 0)
 			return "";

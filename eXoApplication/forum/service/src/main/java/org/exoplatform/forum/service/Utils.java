@@ -456,6 +456,20 @@ public class Utils {
 		return s;
 	}
 	
+	public static String removeCharterStrange(String s) {
+		if (s == null || s.length() <= 0)
+			return "";
+		int i=0;
+		StringBuilder builder = new StringBuilder();
+		while(i < s.length()) {
+			if(s.codePointAt(i) > 31){
+				builder.append(s.charAt(i)) ;
+			}
+			++i;
+		}
+		return builder.toString();
+	}
+	
 	static public class DatetimeComparatorDESC implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {
     	Date date1 = ((User) o1).getCreatedDate() ;
