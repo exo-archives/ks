@@ -23,9 +23,10 @@
 					String link = "";
 					String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 					String portalName = "/" + Util.getUIPortal().getName() ;
-					String checkPath = "";
+					String checkPath = ""; 
 					for(namePath in uicomponent.getBreadcumbs()) {
 					  checkPath = namePath;
+					  oncl = "";
 						link = uicomponent.url("ChangePath", uicomponent.getPath(t)) ;
 						if(link.indexOf(portalName) > 0) {
 							if(link.indexOf(portalName + "/" + selectedNode) < 0){
@@ -35,6 +36,9 @@
 						String event = uicomponent.event("ChangePath", uicomponent.getPath(t)) ;
 						if(namePath.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.eXoForum");
+							if(link.indexOf("?") > 0) {
+								link = link.substring(0, link.indexOf("?"));
+							}
 						}
 						if(namePath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.SearchForums");

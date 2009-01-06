@@ -685,7 +685,7 @@ UIForumPortlet.prototype.executeLink = function(evt) {
 
 UIForumPortlet.prototype.createLink = function(cpId) {
   var comp = document.getElementById(cpId);
-	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a","UICategoryTitle");
+	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a","ActionLink");
 	var i = uiCategoryTitle.length;
 	if(!i || (i <=0)) return ;
 	while(i--){
