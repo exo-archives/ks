@@ -478,8 +478,12 @@ public class JCRDataStorage {
         if(node.hasProperty("exo:dateResponse")) questionLanguage.setDateResponse(ValuesToDate(node.getProperty("exo:dateResponse").getValues()));
         if(node.hasProperty("exo:usersVoteAnswer")) questionLanguage.setUsersVoteAnswer(ValuesToStrings(node.getProperty("exo:usersVoteAnswer").getValues())) ;
         if(node.hasProperty("exo:marksVoteAnswer")) questionLanguage.setMarksVoteAnswer(ValuesToDouble(node.getProperty("exo:marksVoteAnswer").getValues())) ;
-        if(questionNode.hasProperty("exo:approveResponses")) questionLanguage.setIsApprovedAnswers(ValuesToBoolean(node.getProperty("exo:approveResponses").getValues())) ;
-        if(questionNode.hasProperty("exo:activateResponses")) questionLanguage.setIsActivateAnswers(ValuesToBoolean(node.getProperty("exo:activateResponses").getValues())) ;
+        if(node.hasProperty("exo:approveResponses")) questionLanguage.setIsApprovedAnswers(ValuesToBoolean(node.getProperty("exo:approveResponses").getValues())) ;
+        if(node.hasProperty("exo:activateResponses")) questionLanguage.setIsActivateAnswers(ValuesToBoolean(node.getProperty("exo:activateResponses").getValues())) ;
+        if(node.hasProperty("exo:comments")) questionLanguage.setComments(ValuesToStrings(node.getProperty("exo:comments").getValues())) ;
+        if(node.hasProperty("exo:commentBy")) questionLanguage.setCommentBy(ValuesToStrings(node.getProperty("exo:commentBy").getValues())) ;  	
+        if(node.hasProperty("exo:dateComment")) questionLanguage.setDateComment(ValuesToDate(node.getProperty("exo:dateComment").getValues())) ;
+        
         questionLanguage.setPos();
         listQuestionLanguage.add(questionLanguage) ;
       }

@@ -320,6 +320,7 @@ public class FAQUtils {
 	public static void getPorletPreference(FAQSetting faqSetting) {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		faqSetting.setEnanbleVotesAndComments(Boolean.parseBoolean(portletPref.getValue("enanbleVotesAndComments", "")));
 		faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
 		faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
 		faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
@@ -356,6 +357,7 @@ public class FAQUtils {
 			portletPref.setValue("display", setting.getDisplayMode());
 			portletPref.setValue("orderBy", setting.getOrderBy());
 			portletPref.setValue("orderType", setting.getOrderType());
+			portletPref.setValue("enanbleVotesAndComments", setting.isEnanbleVotesAndComments() + "");
 			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
 			portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
 			portletPref.store();

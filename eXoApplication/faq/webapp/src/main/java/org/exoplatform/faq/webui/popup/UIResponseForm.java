@@ -209,6 +209,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				questionLanguage.setDateResponse(question.getDateResponse());
 				questionLanguage.setMarksVoteAnswer(question.getMarksVoteAnswer());
 				questionLanguage.setUsersVoteAnswer(question.getUsersVoteAnswer());
+				questionLanguage.setIsActivateAnswers(question.getActivateAnswers());
+				questionLanguage.setIsApprovedAnswers(question.getApprovedAnswers());
 			} else {
 				questionLanguage.setResponse(new String[]{""}) ;
 			}

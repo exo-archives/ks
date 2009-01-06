@@ -461,25 +461,28 @@
 																			<div class="BackPageFAq"><span></span></div>
 												        		</a>
 																	</td>
-											        	<%}%>
-											        	<!-- action vote question -->
-											        	<% 
-											        	if(uicomponent.canVote(question)){
-										        	 %>
-												        	<td width="25">
-																		<a onclick="<%=uicomponent.event("VoteQuestion",question.getId())%>"
-																				title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
-																			<div class="VoteFAQ"><span></span></div>
+											        	<%}
+											        	if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+											        	%>
+												        	<!-- action vote question -->
+												        	<% 
+												        	if(uicomponent.currentUser_ != null && uicomponent.currentUser_.trim().length() > 0 &&
+												        		 uicomponent.canVote(question)){
+											        	 %>
+													        	<td width="25">
+																			<a onclick="<%=uicomponent.event("VoteQuestion",question.getId())%>"
+																					title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+																				<div class="VoteFAQ"><span></span></div>
+																			</a>
+																		</td>
+																<%}%>
+																	<!-- action Sort answer by vote -->
+																	<td width="25">
+																		<a href="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
+																			<div class="SortAnswer"><span></span></div>
 																		</a>
 																	</td>
 															<%}%>
-																<!-- action Sort answer by vote -->
-																<td width="25">
-																	<a href="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">
-																		<div class="SortAnswer"><span></span></div>
-																	</a>
-																</td>
-																
 																<!-- action print question -->
 											        	<td width="25">
 																	<a onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
@@ -504,40 +507,46 @@
 															</tr>
 														</table>
 														<div style="clear:left;"><span></span></div>
-														<!-- Vote result -->
-														<table align="left" style="width:120px;float: right;">
-															<tr>
-																<td>
-																	<% 
-																	int markVote =(Integer) question.getMarkVote();
-																	double sodu = question.getMarkVote() - markVote;
-																	%>
-																	<div class="RatingInfoContainer">
-																		<div class="OptionsContainer">
-																		<%
-																		for(int mark = 0; mark < 5; mark ++){
-																			if(mark < markVote){%>
-																				<div class="OverVote"><span></span></div>
-																		<%} else if (mark > markVote){%>
-																				<div class="RatedVote"><span></span></div>
-																		<%} else{
-																				if(sodu < 0.3){%>
-																					<div class="RatedVote"><span></span></div>
-																			<%} else if (sodu > 0.7){%>
-																					<div class="OverVote"><span></span></div>
-																			<%} else {%>
-																					<div class="HaftVote"><span></span></div>
-																			<%}
-																			}
-																		}
+														<%
+														if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+														%>
+															<!-- Vote result -->
+															<table align="left" style="width:120px;float: right;">
+																<tr>
+																	<td>
+																		<% 
+																		int markVote =(Integer) question.getMarkVote();
+																		double sodu = question.getMarkVote() - markVote;
 																		%>
-																		
+																		<div class="RatingInfoContainer">
+																			<div class="OptionsContainer">
+																			<%
+																			for(int mark = 0; mark < 5; mark ++){
+																				if(mark < markVote){%>
+																					<div class="OverVote"><span></span></div>
+																			<%} else if (mark > markVote){%>
+																					<div class="RatedVote"><span></span></div>
+																			<%} else{
+																					if(sodu < 0.3){%>
+																						<div class="RatedVote"><span></span></div>
+																				<%} else if (sodu > 0.7){%>
+																						<div class="OverVote"><span></span></div>
+																				<%} else {%>
+																						<div class="HaftVote"><span></span></div>
+																				<%}
+																				}
+																			}
+																			%>
+																			
+																			</div>
 																		</div>
-																	</div>
-																</td>
-															</tr>
-														</table>
-														<div style="clear:right;"><span></span></div>
+																	</td>
+																</tr>
+															</table>
+															<div style="clear:right;"><span></span></div>
+														<%
+														}
+														%>
 													</td>
 												</tr>
 											</table>
@@ -601,45 +610,48 @@
 																	</div>
 																</td>
 																<%
-																if(uicomponent.canVoteAnswer(question.getUsersVoteAnswer()[countResponse], question.getPos()[countResponse])){
-																%>
-																	<td width="50px" align="left">
-																		<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse])%>"
-																				title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
-																			<div class="VoteFAQ"><span></span></div>
-																		</a>
-																	</td>
-																<%
-																}
-																%>
-																<% 
-																markVote =(Integer) question.getMarksVoteAnswer()[countResponse];
-																%>
-																<td width="100%">
-																	<div class="RatingInfoContainer">
-																		<div class="OptionsContainer">
-																		<%
-																		for(int mark = 0; mark < 5; mark ++){
-																			if(mark < markVote){%>
-																				<div class="OverVote"><span></span></div>
-																		<%} else if (mark > markVote){%>
-																				<div class="RatedVote"><span></span></div>
-																		<%} else{
-																				sodu = question.getMarksVoteAnswer()[countResponse] - markVote;
-																				if(sodu < 0.3){%>
-																					<div class="RatedVote"><span></span></div>
-																			<%} else if (sodu > 0.7){%>
+																if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+																	if(uicomponent.currentUser_ != null && uicomponent.currentUser_.trim().length() > 0 &&
+																			uicomponent.canVoteAnswer(question.getUsersVoteAnswer()[countResponse], question.getPos()[countResponse])){
+																	%>
+																		<td width="50px" align="left">
+																			<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse])%>"
+																					title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+																				<div class="VoteFAQ"><span></span></div>
+																			</a>
+																		</td>
+																	<%
+																	}
+																	%>
+																	<% 
+																	markVote =(Integer) question.getMarksVoteAnswer()[countResponse];
+																	%>
+																	<td width="100%">
+																		<div class="RatingInfoContainer">
+																			<div class="OptionsContainer">
+																			<%
+																			for(int mark = 0; mark < 5; mark ++){
+																				if(mark < markVote){%>
 																					<div class="OverVote"><span></span></div>
-																			<%} else {%>
-																					<div class="HaftVote"><span></span></div>
-																			<%}
+																			<%} else if (mark > markVote){%>
+																					<div class="RatedVote"><span></span></div>
+																			<%} else{
+																					sodu = question.getMarksVoteAnswer()[countResponse] - markVote;
+																					if(sodu < 0.3){%>
+																						<div class="RatedVote"><span></span></div>
+																				<%} else if (sodu > 0.7){%>
+																						<div class="OverVote"><span></span></div>
+																				<%} else {%>
+																						<div class="HaftVote"><span></span></div>
+																				<%}
+																				}
 																			}
-																		}
-																		%>
+																			%>
+																			</div>
 																		</div>
-																	</div>
-																</td>
-															</tr>
+																	</td>
+																<%}%>
+																</tr>
 														</table>
 											<%		countResponse ++;
 													}
@@ -650,7 +662,7 @@
 											</div>
 											
 											<%
-											if(question.getComments() != null){
+											if(question.getComments() != null && question.getDateComment() != null && question.getCommentBy() != null){
 												boolean canEditComment = false;
 											%>
 												<div class="Response">

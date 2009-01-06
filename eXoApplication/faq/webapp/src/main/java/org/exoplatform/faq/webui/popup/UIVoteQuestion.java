@@ -74,7 +74,6 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 		faqSetting_ = setting;
 		this.language_ = language;
 		pos_ = pos;
-		System.out.println("\n\n\n\n----->questionId:" + question.getId() + "\n----->language:" + language + "\n----->pos:" + pos_);
 	}
 	
 	static public class VoteActionListener extends EventListener<UIVoteQuestion> {

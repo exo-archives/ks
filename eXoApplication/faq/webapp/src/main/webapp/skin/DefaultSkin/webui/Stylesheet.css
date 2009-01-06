@@ -1126,6 +1126,10 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -660px;
 }
 
+.UIFAQPortlet .CommentToAnswer {
+	background: url('background/CommentToAnswer.gif') no-repeat left;
+}
+
 .UIFAQPortlet .Edit {
 	background: url('background/FAQPortlet.gif') no-repeat left -616px;
 }

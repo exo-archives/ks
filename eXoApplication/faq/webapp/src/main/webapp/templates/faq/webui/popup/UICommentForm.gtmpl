@@ -1,26 +1,43 @@
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
-		
 			<div class="UIFormInput">
 				<table width="100%">
 					<tbody>						
 						<tr>
-							<td style="white-space:nowrap;" align="right"><div style="margin: 5px 5px 0px 0px;">Author : </div></td>
+							<td style="white-space:nowrap;" align="right"><div style="margin: 5px 5px 0px 0px;">
+								<%=_ctx.appRes(uicomponent.getName() + ".title.Author")%> : </div>
+							</td>
 							<td>
 								<div style="margin:0px 0px 5px 5px;"></div><% uiform.renderChild(uicomponent.TITLE_USERNAME) %>
 							</td>
 						</tr>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
-								<div style="margin: 5px 5px 0px 0px;">Question : </div>
+								<div style="margin: 5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Language")%>: </div>
 							</td>
 							<td style="white-space:nowrap;">
-								<div style="margin: 5px 0px 10px 5px;white-space:normal;"><%=uicomponent.question_.getQuestion()%></div>
+								<div style="margin: 5px 0px 10px 5px;white-space:normal;"><%=uicomponent.languageSelected%></div>
 							</td>
 						</tr>
 						<tr>
-							<td style="white-space:nowrap;" align="right"><div style="margin: 0px 5px 0px 0px;">Comment : </div></td>
+							<td style="white-space:nowrap;" align="right">
+								<div style="margin: 5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Question")%>: </div>
+							</td>
+							<td style="white-space:nowrap;">
+								<div style="margin: 5px 0px 10px 5px;white-space:normal;"><%=uicomponent.questionContent%></div>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space:nowrap;" align="right">
+								<div style="margin: 5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Detail")%>: </div>
+							</td>
+							<td style="white-space:nowrap;">
+								<div style="margin: 5px 0px 10px 5px;white-space:normal;"><%=uicomponent.questionDetail%></div>
+							</td>
+						</tr>
+						<tr>
+							<td style="white-space:nowrap;" align="right"><div style="margin: 0px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Comment")%>: </div></td>
 							<td><% uiform.renderChild(uicomponent.COMMENT_CONTENT) %></td>
 						</tr>
 					</tbody>

@@ -260,6 +260,20 @@ public class MultiLanguages {
     }
     langNode.setProperty("exo:approveResponses", booleanToValues(langNode, language.getIsApprovedAnswers()));
     langNode.setProperty("exo:activateResponses", booleanToValues(langNode, language.getIsActivateAnswers()));
+    
+    langNode.setProperty("exo:comments", language.getComments());
+    if(language.getDateComment() != null) {
+    	java.util.Calendar calendar = null ;
+    	List<Value> listCalendars = new ArrayList<Value>();
+    	for(Date date : language.getDateComment()){
+	    	calendar = GregorianCalendar.getInstance() ;
+	    	calendar.setTime(date) ;
+	    	listCalendars.add(langNode.getSession().getValueFactory().createValue(calendar));
+    	}
+    	langNode.setProperty("exo:dateComment", (listCalendars.toArray(new Value[]{}))) ;
+    }
+    langNode.setProperty("exo:commentBy", language.getCommentBy());
+    
     questionNode.save() ;
   }
   

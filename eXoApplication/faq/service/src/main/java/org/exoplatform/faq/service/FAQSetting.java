@@ -26,6 +26,7 @@ package org.exoplatform.faq.service;
  * Apr 10, 2008, 2:07:25 PM
  */
 public class FAQSetting {
+	private boolean enanbleVotesAndComments = true;
 	
 	/** display mode of faq. */
 	private String displayMode ;
@@ -213,5 +214,12 @@ public class FAQSetting {
 	public void setSortQuestionByVote(boolean sortAnswerByVote) {
 		this.sortQuestionByVote = sortAnswerByVote;
 	}
-	
+
+	public boolean isEnanbleVotesAndComments() {
+		return enanbleVotesAndComments;
+	}
+
+	public void setEnanbleVotesAndComments(boolean enanbleVotesAndComments) {
+		this.enanbleVotesAndComments = enanbleVotesAndComments;
+	}
 }

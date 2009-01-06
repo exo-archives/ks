@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.jcr.Node;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -69,6 +71,7 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.validator.NullFieldValidator;
 import org.hibernate.usertype.UserVersionType;
 
 
@@ -140,7 +143,9 @@ public class UIQuestions extends UIContainer {
 	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
 	private String[] moderatorActionQues_ = new String[]{"CommentQuestion", "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
+	private String[] moderatorActionQues2_ = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
 	private String[] userActionQues_ = new String[]{"CommentQuestion", "SendQuestion"} ;
+	private String[] userActionQues2_ = new String[]{"SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	public boolean viewAuthorInfor = false;
 
@@ -235,9 +240,14 @@ public class UIQuestions extends UIContainer {
 	@SuppressWarnings("unused")
 	private String[] getActionQuestion(){
 		if(canEditQuestion) {
-			return moderatorActionQues_;
+			if(!faqSetting_.isEnanbleVotesAndComments()) return moderatorActionQues2_;
+			else return moderatorActionQues_;
 		} else {
-			return userActionQues_;
+			if(!faqSetting_.isEnanbleVotesAndComments()) return userActionQues2_;
+			else{
+				if(currentUser_ == null || currentUser_.trim().length() < 1) return userActionQues2_;
+				return userActionQues_;
+			}
 		}
 	}
 
@@ -270,6 +280,7 @@ public class UIQuestions extends UIContainer {
 
 	@SuppressWarnings("unused")
 	private String[] getActionQuestionWithUser(){
+		if(!faqSetting_.isEnanbleVotesAndComments() || (currentUser_ == null || currentUser_.trim().length() < 1)) return userActionQues2_ ;
 		return userActionQues_ ;
 	}
 
@@ -415,6 +426,9 @@ public class UIQuestions extends UIContainer {
 				quesLanguage.setUsersVoteAnswer(question.getUsersVoteAnswer());
 				quesLanguage.setMarksVoteAnswer(question.getMarksVoteAnswer());
 				quesLanguage.setPos(question.getPos());
+				quesLanguage.setComments(question.getComments());
+				quesLanguage.setCommentBy(question.getCommentBy());
+				quesLanguage.setDateComment(question.getDateComment());
 				
 				listQuestionLanguage.add(quesLanguage) ;
 
@@ -727,7 +741,7 @@ public class UIQuestions extends UIContainer {
 					String currentUser = FAQUtils.getCurrentUser() ;
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 					if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
-						uiPopupAction.activate(uiPopupContainer, 540, 370) ;
+						uiPopupAction.activate(uiPopupContainer, 540, 400) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
 						category.setParentId(categoryId) ;
 					} else {
@@ -1317,11 +1331,11 @@ public class UIQuestions extends UIContainer {
 			try{
 				String[] arr = questionId.split("/");
 				questionId = arr[0];
+				Node node = faqService_.getQuestionNodeById(questionId, sessionProvider);
 				int pos = Integer.parseInt(arr[1]);
 				List<String> listComments = new ArrayList<String>();
 				List<String> listUSers = new ArrayList<String>();
 				List<Date> listDates = new ArrayList<Date>();
-				question = faqService_.getQuestionById(questionId, sessionProvider) ;
 				for(int i = 0; i < questions.listQuestion_.size(); i ++){
 					if(questions.listQuestion_.get(i).getId().equals(questionId)){
 						question = questions.listQuestion_.get(i);
@@ -1335,13 +1349,24 @@ public class UIQuestions extends UIContainer {
 				listComments.remove(pos);
 				listUSers.remove(pos);
 				listDates.remove(pos);
-
 				question.setComments(listComments.toArray(new String[]{}));
 				question.setCommentBy(listUSers.toArray(new String[]{}));
 				question.setDateComment(listDates.toArray(new Date[]{}));
-
-				FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
-				faqService_.saveQuestion(question, false, sessionProvider, questions.faqSetting_);
+				if(questions.listLanguage.get(0).equals(language_) || language_.trim().length() < 1){
+					FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
+					faqService_.saveQuestion(question, false, sessionProvider, questions.faqSetting_);
+				} else {
+					MultiLanguages multiLanguages = new MultiLanguages();
+					for(QuestionLanguage language : questions.listQuestionLanguage){
+						if(language.getLanguage().equals(language_)){
+							language.setComments(listComments.toArray(new String[]{}));
+							language.setCommentBy(listUSers.toArray(new String[]{}));
+							language.setDateComment(listDates.toArray(new Date[]{}));
+							multiLanguages.addLanguage(node, language);
+							break;
+						}
+					}
+				}
 			} catch (javax.jcr.PathNotFoundException e) {
 				e.printStackTrace() ;
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -1355,7 +1380,7 @@ public class UIQuestions extends UIContainer {
 				e.printStackTrace() ;
 			} 
 			sessionProvider.close();
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 		}
 	}
 
@@ -1366,6 +1391,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			Question question = null ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			QuestionLanguage questionLanguage = null;
 			try{
 				String[] arr = questionId.split("/");
 				questionId = arr[0];
@@ -1373,7 +1399,17 @@ public class UIQuestions extends UIContainer {
 				List<String> listComments = new ArrayList<String>();
 				List<String> listUSers = new ArrayList<String>();
 				List<Date> listDates = new ArrayList<Date>();
-				question = faqService_.getQuestionById(questionId, sessionProvider) ;
+				Node node = faqService_.getQuestionNodeById(questionId, sessionProvider) ;
+				
+				if(!language_.equals(questions.listLanguage.get(0))){
+					for(QuestionLanguage language : questions.listQuestionLanguage){
+						if(language.getLanguage().equals(language_)){
+							questionLanguage = language;
+							break;
+						}
+					}
+				}
+				
 				for(int i = 0; i < questions.listQuestion_.size(); i ++){
 					if(questions.listQuestion_.get(i).getId().equals(questionId)){
 						question = questions.listQuestion_.get(i);
@@ -1395,30 +1431,76 @@ public class UIQuestions extends UIContainer {
 				question.setComments(listComments.toArray(new String[]{}));
 				question.setCommentBy(listUSers.toArray(new String[]{}));
 				question.setDateComment(listDates.toArray(new Date[]{}));
-
+				
+				if(questionLanguage != null){
+					questionLanguage.setComments(listComments.toArray(new String[]{}));
+					questionLanguage.setCommentBy(listUSers.toArray(new String[]{}));
+					questionLanguage.setDateComment(listDates.toArray(new Date[]{}));
+				}
+				
 				/*
 				 * add new answer from comment
 				 */ 
 				listComments = new ArrayList<String>();
 				listUSers = new ArrayList<String>();
 				listDates = new ArrayList<Date>();
+				List<Boolean> listActivateAnswers = new ArrayList<Boolean>();
+				List<Boolean> listApprovedAnswers = new ArrayList<Boolean>();
+				double[] listMarkResponse = null;
+				List<String> listUsersVoteResponse = new ArrayList<String>();
+				
 				if(question.getAllResponses()[0].trim().length() > 0){
 					listComments.addAll(Arrays.asList(question.getAllResponses()));
 					listUSers.addAll(Arrays.asList(question.getResponseBy()));
 					listDates.addAll(Arrays.asList(question.getDateResponse()));
 				}
+				listActivateAnswers.addAll(Arrays.asList(question.getActivateAnswers()));
+				listApprovedAnswers.addAll(Arrays.asList(question.getApprovedAnswers()));
+				int i = 0;
+				try{
+					listMarkResponse = new double[question.getMarksVoteAnswer().length + 1];
+					for(double d : question.getMarksVoteAnswer()){
+						listMarkResponse[i] = d;
+						i ++;
+					}
+					listUsersVoteResponse.addAll(Arrays.asList(question.getUsersVoteAnswer()));
+				} catch (NullPointerException nullPointerException){
+					listMarkResponse = new double[1];
+				}
+				listMarkResponse[i] = 0;
 
 				listComments.add(newAnswer);
 				listUSers.add(newUser);
 				listDates.add(newDate);
-
+				listActivateAnswers.add(true);
+				listApprovedAnswers.add(true);
+				listUsersVoteResponse.add(" ");
+				
 				question.setResponses(listComments.toArray(new String[]{}));
 				question.setResponseBy(listUSers.toArray(new String[]{}));
 				question.setDateResponse(listDates.toArray(new Date[]{}));
+				question.setMarksVoteAnswer(listMarkResponse);
+				question.setActivateAnswers(listActivateAnswers.toArray(new Boolean[]{}));
+				question.setApprovedAnswers(listApprovedAnswers.toArray(new Boolean[]{}));
+				question.setUsersVoteAnswer(listUsersVoteResponse.toArray(new String[]{}));
 
-
-				FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
-				faqService_.saveQuestion(question, false, sessionProvider, questions.faqSetting_);
+				if(questionLanguage == null){
+					FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
+					faqService_.saveQuestion(question, false, sessionProvider, questions.faqSetting_);
+				} else {
+					questionLanguage.setResponse(listComments.toArray(new String[]{}));
+					questionLanguage.setResponseBy(listUSers.toArray(new String[]{}));
+					questionLanguage.setDateResponse(listDates.toArray(new Date[]{}));
+					questionLanguage.setMarksVoteAnswer(listMarkResponse);
+					questionLanguage.setIsActivateAnswers(listActivateAnswers.toArray(new Boolean[]{}));
+					questionLanguage.setIsApprovedAnswers(listApprovedAnswers.toArray(new Boolean[]{}));
+					questionLanguage.setUsersVoteAnswer(listUsersVoteResponse.toArray(new String[]{}));
+					
+					MultiLanguages multiLanguages = new MultiLanguages();
+					multiLanguages.addLanguage(node, questionLanguage);
+					
+					questions.setIsNotChangeLanguage();
+				}
 			} catch (javax.jcr.PathNotFoundException e) {
 				e.printStackTrace() ;
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -1432,7 +1514,8 @@ public class UIQuestions extends UIContainer {
 				e.printStackTrace() ;
 			} 
 			sessionProvider.close();
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+			questions.setLanguageView(language_);
+			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 		}
 	}
 
@@ -1471,8 +1554,8 @@ public class UIQuestions extends UIContainer {
 			} 
 			sessionProvider.close();
 			UICommentForm commentForm = popupContainer.addChild(UICommentForm.class, null, null) ;
-			commentForm.setInfor(question, pos, questions.faqSetting_) ;
-			popupContainer.setId("FAQDeleteQuestion") ;
+			commentForm.setInfor(question, pos, questions.faqSetting_, language_) ;
+			popupContainer.setId("FAQCommentForm") ;
 			popupAction.activate(popupContainer, 720, 1000) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -1515,7 +1598,7 @@ public class UIQuestions extends UIContainer {
 			sessionProvider.close();
 			UIVoteQuestion voteQuestion = popupContainer.addChild(UIVoteQuestion.class, null, null) ;
 			voteQuestion.setInfor(question, language, pos, questions.faqSetting_);
-			popupContainer.setId("FAQDeleteQuestion") ;
+			popupContainer.setId("FAQVoteQuestion") ;
 			popupAction.activate(popupContainer, 300, 200) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -1625,6 +1708,9 @@ public class UIQuestions extends UIContainer {
 					uiQuestions.listQuestion_.get(pos).setMarksVoteAnswer(questionLanguage.getMarksVoteAnswer());
 					uiQuestions.listQuestion_.get(pos).setUsersVoteAnswer(questionLanguage.getUsersVoteAnswer());
 					uiQuestions.listQuestion_.get(pos).setPos(questionLanguage.getPos());
+					uiQuestions.listQuestion_.get(pos).setComments(questionLanguage.getComments());
+					uiQuestions.listQuestion_.get(pos).setCommentBy(questionLanguage.getCommentBy());
+					uiQuestions.listQuestion_.get(pos).setDateComment(questionLanguage.getDateComment());
 					break ;
 				}
 			}

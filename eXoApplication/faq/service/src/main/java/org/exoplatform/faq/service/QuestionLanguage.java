@@ -30,6 +30,11 @@ import java.util.Date;
  * @since   Jul 11, 2007
  */
 public class QuestionLanguage {
+	private String[] comments = null;
+	
+	private Date[] dateComment = null;
+	
+	private String[] commentBy = null;
   
   /** The language. */
   private String language = " " ;
@@ -232,6 +237,30 @@ public class QuestionLanguage {
 
 	public void setIsActivateAnswers(Boolean[] isActivateAnswers) {
 		this.isActivateAnswers = isActivateAnswers;
+	}
+
+	public String[] getComments() {
+		return comments;
+	}
+
+	public void setComments(String[] comments) {
+		this.comments = comments;
+	}
+
+	public Date[] getDateComment() {
+		return dateComment;
+	}
+
+	public void setDateComment(Date[] dateComment) {
+		this.dateComment = dateComment;
+	}
+
+	public String[] getCommentBy() {
+		return commentBy;
+	}
+
+	public void setCommentBy(String[] commentBy) {
+		this.commentBy = commentBy;
 	}
 }
 

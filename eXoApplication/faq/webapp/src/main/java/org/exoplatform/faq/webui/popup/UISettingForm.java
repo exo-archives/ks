@@ -49,6 +49,7 @@ import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
+import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTabPane;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 /**
@@ -81,6 +82,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String ORDER_TYPE = "order-type".intern(); 
 	private final String DISPLAY_APPROVED = "approved";
 	private final String DISPLAY_BOTH = "both";
+	private final String ENABLE_VOTE_COMMNET = "enableVotComment";
 	public static final String ITEM_CREATE_DATE= "created".intern() ;
 	public static final String ITEM_ALPHABET= "alphabet".intern() ;
 	public static final String ASC= "asc".intern() ;
@@ -136,6 +138,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			DisplayTab.addUIFormInput((new UIFormSelectBox(DISPLAY_MODE, DISPLAY_MODE, displayMode)).setValue(faqSetting_.getDisplayMode()));
 			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));;
 			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
+			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_VOTE_COMMNET, ENABLE_VOTE_COMMNET, false)).
+																																	setChecked(faqSetting_.isEnanbleVotesAndComments()));
 			EmailTab.addChild(EmailAddNewQuestion);
 			EmailTab.addChild(EmailEditQuestion);
 			
@@ -211,6 +215,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setDisplayMode(((UIFormSelectBox)displayTab.getChildById(settingForm.DISPLAY_MODE)).getValue());
 				faqSetting.setOrderBy(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_BY)).getValue())) ;
 				faqSetting.setOrderType(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_TYPE)).getValue())) ;
+				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)settingForm.
+																								getChildById(settingForm.ENABLE_VOTE_COMMNET)).isChecked());
 				
 				UIFormInputWithActions emailTab = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
 				String defaultAddnewQuestion = ((UIFormWYSIWYGInput)((UIFormInputWithActions)emailTab.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB))

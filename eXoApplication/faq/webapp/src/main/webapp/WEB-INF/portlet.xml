@@ -29,6 +29,11 @@
     
     <portlet-preferences>
     	<preference>
+        <name>enanbleVotesAndComments</name>
+        <value>true</value> <!-- true/false -->
+        <read-only>false</read-only>
+      </preference>
+    	<preference>
         <name>display</name>
         <value>both</value> <!--approved/both -->
         <read-only>false</read-only>

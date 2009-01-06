@@ -25,6 +25,8 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -36,9 +38,11 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 
@@ -59,8 +63,11 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 )
 
 public class UICommentForm extends UIForm implements UIPopupComponent {
-	
+	private QuestionLanguage questionLanguage_ = null;
+	private String languageSelected = null;
 	private Question question_ = new Question();
+	private String questionContent = new String();
+	private String questionDetail = new String();
 	private String currentUser_ = "";
 	private final String TITLE_USERNAME = "UserName";
 	private final String COMMENT_CONTENT = "CommentContent";
@@ -80,29 +87,61 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		this.addChild(new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, null, true));
 	}
 	
-	public void setInfor(Question question, int posCommentEdit, FAQSetting faqSetting){
+	public void setInfor(Question question, int posCommentEdit, FAQSetting faqSetting, String languageView) throws Exception{
+		if(languageView.trim().length() > 0) languageSelected = languageView;
+		else languageSelected = question.getLanguage();
 		listComments_ = new ArrayList<String>();
 		listUserNames_ = new ArrayList<String>();
 		listDates_ = new ArrayList<Date>();
 		
 		this.question_ = question;
+		this.questionContent = question.getQuestion();
+		this.questionDetail = question.getDetail();
 		this.faqSetting_ = faqSetting;
 		FAQUtils.getEmailSetting(faqSetting_, false, false);
-		if(question_.getComments() != null){
-			listComments_.addAll(Arrays.asList(question_.getComments()));
-			listUserNames_.addAll(Arrays.asList(question_.getCommentBy()));
-			listDates_.addAll(Arrays.asList(question_.getDateComment()));
+		
+		if(languageView.trim().length() < 1 || languageView.equals(question.getLanguage()))
+			if(posCommentEdit >= 0){
+				pos = posCommentEdit;
+				((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(question_.getComments()[posCommentEdit]);
+				listComments_.addAll(Arrays.asList(question_.getComments()));
+				listUserNames_.addAll(Arrays.asList(question_.getCommentBy()));
+				listDates_.addAll(Arrays.asList(question_.getDateComment()));
+			} else {
+				listComments_.add(" ");
+				listUserNames_.add(currentUser_);
+				listDates_.add(date_);
+				pos = 0;
+			}
+		
+		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		SessionProvider sProvider = FAQUtils.getSystemProvider();
+		List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
+		listLanguageToReponse.add(new SelectItemOption<String>(question.getLanguage(), question.getLanguage())) ;
+		String language = null;
+		for(QuestionLanguage questionLanguage : faqService.getQuestionLanguages(question.getId(), sProvider)){
+			language = questionLanguage.getLanguage();
+			listLanguageToReponse.add(new SelectItemOption<String>(language, language)) ;
+			if(language.equals(languageView)){
+				questionLanguage_ = questionLanguage;
+				if(posCommentEdit >= 0){
+					pos = posCommentEdit;
+					((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(questionLanguage.getComments()[posCommentEdit]);
+					listComments_.addAll(Arrays.asList(questionLanguage.getComments()));
+					listUserNames_.addAll(Arrays.asList(questionLanguage.getCommentBy()));
+					listDates_.addAll(Arrays.asList(questionLanguage.getDateComment()));
+				} else {
+					listComments_.add(" ");
+					listUserNames_.add(currentUser_);
+					listDates_.add(date_);
+					pos = 0;
+				}
+				questionContent = questionLanguage.getQuestion();
+				questionDetail = questionLanguage.getDetail();
+			}
 		}
 		
-		if(posCommentEdit >= 0){
-			pos = posCommentEdit;
-			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(question_.getComments()[posCommentEdit]);
-		} else {
-			listComments_.add(" ");
-			listUserNames_.add(currentUser_);
-			listDates_.add(date_);
-			pos = listComments_.size() - 1;
-		}
+		sProvider.close();
 	}
 
 	static public class CancelActionListener extends EventListener<UICommentForm> {
@@ -126,10 +165,19 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(comment != null && comment.trim().length() > 0 && validatorDataInput.fckContentIsNotEmpty(comment)){
 					commentForm.listComments_.set(commentForm.pos, comment);
-					commentForm.question_.setComments(commentForm.listComments_.toArray(new String[]{}));
-					commentForm.question_.setCommentBy(commentForm.listUserNames_.toArray(new String[]{}));
-					commentForm.question_.setDateComment(commentForm.listDates_.toArray(new Date[]{}));
-					faqService_.saveQuestion(commentForm.question_, false, sessionProvider, commentForm.faqSetting_);
+					if(commentForm.questionLanguage_ == null){
+						commentForm.question_.setComments(commentForm.listComments_.toArray(new String[]{}));
+						commentForm.question_.setCommentBy(commentForm.listUserNames_.toArray(new String[]{}));
+						commentForm.question_.setDateComment(commentForm.listDates_.toArray(new Date[]{}));
+						faqService_.saveQuestion(commentForm.question_, false, sessionProvider, commentForm.faqSetting_);
+					} else {
+						commentForm.questionLanguage_.setComments(commentForm.listComments_.toArray(new String[]{}));
+						commentForm.questionLanguage_.setCommentBy(commentForm.listUserNames_.toArray(new String[]{}));
+						commentForm.questionLanguage_.setDateComment(commentForm.listDates_.toArray(new Date[]{}));
+						
+						MultiLanguages multiLanguages = new MultiLanguages();
+						multiLanguages.addLanguage(faqService_.getQuestionNodeById(commentForm.question_.getId(), sessionProvider), commentForm.questionLanguage_) ;
+					}
 				} else {
 					UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
 	        uiApplication.addMessage(new ApplicationMessage("UICommentForm.msg.comment-is-null", null, ApplicationMessage.WARNING)) ;
@@ -137,6 +185,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	        return;
 				}
 			} catch(Exception e){
+				e.printStackTrace();
 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

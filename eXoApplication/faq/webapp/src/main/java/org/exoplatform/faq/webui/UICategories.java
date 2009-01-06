@@ -373,7 +373,7 @@ public class UICategories extends UIContainer{
 					String moderator[] = cate.getModeratorsCategory() ;
 					String currentUser = FAQUtils.getCurrentUser() ;
 					if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
-						uiPopupAction.activate(uiPopupContainer, 540, 370) ;
+						uiPopupAction.activate(uiPopupContainer, 540, 400) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
 						category.setParentId(categoryId) ;
 					} else {
