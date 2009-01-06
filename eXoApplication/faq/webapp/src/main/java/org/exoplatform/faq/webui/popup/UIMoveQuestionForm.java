@@ -17,11 +17,13 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -167,7 +169,32 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
 			try{
 				if(!cateId.equals("null")){
-					faqService_.getCategoryById(cateId, sessionProvider);
+					Category category = faqService_.getCategoryById(cateId, sessionProvider);
+					List<String> listUserModerator = Arrays.asList(category.getModerators()) ;
+					List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
+					boolean canMove = false;
+					for(String user : listUserModerator){
+						if(currentUser.contains(user)) {
+							canMove = true;
+							break;
+						}
+					}
+					if(!canMove){
+						UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-question", 
+																			new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						sessionProvider.close();
+						return;
+					}
+				} else {
+					if(!moveQuestionForm.faqSetting_.isAdmin()){
+						UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-question", new Object[]{"/"}, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						sessionProvider.close();
+						return;
+					}
 				}
 				try {
 					Question question = faqService_.getQuestionById(moveQuestionForm.questionId_, sessionProvider) ;

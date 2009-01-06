@@ -187,18 +187,19 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 						faqService_.moveCategory(categoryId, destCategoryId, sessionProvider) ;
 					} else {
 						UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", null, ApplicationMessage.WARNING)) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", new Object[]{"/"}, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 						sessionProvider.close();
 						return;
 					}
 				} else {
-					List<String> usersOfNewCateParent = Arrays.asList(faqService_.getCategoryById(destCategoryId, sessionProvider).getModerators()) ;
+					Category category = faqService_.getCategoryById(destCategoryId, sessionProvider);
+					List<String> usersOfNewCateParent = Arrays.asList(category.getModerators()) ;
 					boolean canMove = false;
 					if(moveCategory.faqSetting_.isAdmin()){
 						canMove = true;
 					} else {
-						String[] listUserModerator = faqService_.getCategoryById(destCategoryId, sessionProvider).getModeratorsCategory();
+						String[] listUserModerator = category.getModeratorsCategory();
 						List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
 						for(String user : listUserModerator){
 							if(currentUser.contains(user)) {
@@ -210,7 +211,8 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 					
 					if(!canMove){
 						UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", null, ApplicationMessage.WARNING)) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", 
+																			new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 						sessionProvider.close();
 						return;

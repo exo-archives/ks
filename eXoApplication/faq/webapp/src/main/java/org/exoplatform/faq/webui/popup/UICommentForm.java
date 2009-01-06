@@ -101,9 +101,15 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		FAQUtils.getEmailSetting(faqSetting_, false, false);
 		
 		if(languageView.trim().length() < 1 || languageView.equals(question.getLanguage())) {
-			listComments_.addAll(Arrays.asList(question_.getComments()));
-			listUserNames_.addAll(Arrays.asList(question_.getCommentBy()));
-			listDates_.addAll(Arrays.asList(question_.getDateComment()));
+			try{
+				listComments_.addAll(Arrays.asList(question_.getComments()));
+				listUserNames_.addAll(Arrays.asList(question_.getCommentBy()));
+				listDates_.addAll(Arrays.asList(question_.getDateComment()));
+			} catch (NullPointerException nullPointerException){
+				listComments_ = new ArrayList<String>();
+				listUserNames_ = new ArrayList<String>();
+				listDates_ = new ArrayList<Date>();
+			}
 			if(posCommentEdit >= 0){
 				pos = posCommentEdit;
 				((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(question_.getComments()[posCommentEdit]);
@@ -129,7 +135,6 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 					listUserNames_.addAll(Arrays.asList(questionLanguage.getCommentBy()));
 					listDates_.addAll(Arrays.asList(questionLanguage.getDateComment()));
 				} catch (Exception e){
-					e.printStackTrace();
 					listComments_ = new ArrayList<String>();
 					listUserNames_ = new ArrayList<String>();
 					listDates_ = new ArrayList<Date>();
