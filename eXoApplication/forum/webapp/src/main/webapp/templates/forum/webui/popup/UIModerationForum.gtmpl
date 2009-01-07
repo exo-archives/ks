@@ -1,5 +1,6 @@
 <%  
 	import org.exoplatform.forum.service.ForumSearch;
+	import org.exoplatform.forum.service.Utils ;
 	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.ForumUtils;
 %>
@@ -27,8 +28,8 @@
 									<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
 										<thead>
 											<tr>
-												<th style="width: 60px;">Type</th>
-												<th>Name</th>
+												<th style="width: 60px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
+												<th><%=_ctx.appRes("UIForumListSearch.label.Name");%></th>
 												<th style="width: 140px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
 											</tr>
 										</thead>
@@ -46,9 +47,12 @@
 														String titlePost = ForumTransformHTML.getTitleInHTMLCode(object.getContent());
 														String createdDate = ForumUtils.getFormatDate("dd/MM/yyyy, hh:mm a", object.getCreatedDate());
 														titlePost = ForumUtils.getSubString(titlePost, 100);
+														String classType = "HotThreadNoNewPost";
+														if(type.equals(Utils.POST)) classType = "PostIcon";
+														String titleType = _ctx.appRes("UIForumPortlet.label."+type) ;
 											%>
 												<tr class="$classRow">
-													<td class="Tdbox">$type</td>
+													<td class="Tdbox" align="center"><div class="$classType Icon24x24" style="margin:auto;" title="$titleType"><span></span></div></td>
 													<td>
 														<div>
 															<a href="<%=uicomponent.event("Open", objectId)%>" title="$titlePost">$objectTitle</a>

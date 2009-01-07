@@ -1,6 +1,5 @@
 <%	
 	import org.exoplatform.forum.service.ForumSearch ;
-	import org.exoplatform.forum.service.Utils ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.webui.UIForumPageIterator;
 	List searchEvents = uicomponent.getListEvent() ;
@@ -27,11 +26,7 @@
 							else classRow = "OddRow";
 							String classIcon = searchEvent.getIcon();
 							String objId = searchEvent.getId();
-							String type = searchEvent.getType() ;
-							if(type.equals(Utils.FORUM)) type = ForumUtils.FORUM;
-							else if(type.equals(Utils.TOPIC)) type = ForumUtils.THREAD;
-							else if(type.equals(Utils.POST)) type = ForumUtils.POST;
-							else type = ForumUtils.CATEGORY ;
+							String type = _ctx.appRes("UIForumPortlet.label."+searchEvent.getType()) ;
 					%>
 						<tr class="$classRow">
 							<td class="Tdbox"><div class="" title=""><%=type%></div></td>

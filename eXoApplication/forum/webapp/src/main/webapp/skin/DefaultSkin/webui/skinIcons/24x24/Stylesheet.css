@@ -70,6 +70,10 @@
 .UIForumPortlet .ThreadNoNewPost {
 	background: url('icons/ThreadNoNewPost.gif') no-repeat ;
 }
+
+.UIForumPortlet .PostIcon {
+	background: url('icons/PostIcon.gif') no-repeat ;
+}
 /*******************************  MenuCategoryIcon    **************************************/
 
 .UIForumPortlet .AddForumIcon {
