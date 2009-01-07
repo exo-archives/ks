@@ -16,7 +16,6 @@
  **/
 package org.exoplatform.faq.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -143,13 +142,8 @@ public class Category {
    * 
    * @throws Exception
    */
-  public String[] getModeratorsCategory() throws Exception {
-  	List<String> listUser = new ArrayList<String>();
-  	List<String> modera = FAQServiceUtils.getUserPermission(moderators) ;
-		for (String string : modera) {
-			listUser.add(string) ;
-		}
-  	return listUser.toArray(new String[]{});
+  public List<String> getModeratorsCategory() throws Exception {
+  	return FAQServiceUtils.getUserPermission(moderators) ;
   }
 
 	public boolean isViewAuthorInfor() {

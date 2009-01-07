@@ -226,7 +226,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		SessionProvider sProvider = FAQUtils.getSystemProvider() ;
 		String categoryId = null;
 		Category category = null;
-		String[] moderator = null;
 
 		if(language.equals(defaultLanguage_)) {
 			List<Question> listQuestionSearch = new ArrayList<Question>();
@@ -238,8 +237,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 						categoryId = quest.getCategoryId() ;
 						if(!categoryId.equals("null")){
 							category = faqService.getCategoryById(categoryId, sProvider) ;
-							moderator = category.getModeratorsCategory() ;
-							if(Arrays.asList(moderator).contains(currentUser)) {
+							if(category.getModeratorsCategory().contains(currentUser)) {
 								listQuestionSearch.add(quest) ;
 							} else {
 								if(quest.isActivated()) listQuestionSearch.add(quest) ;
@@ -256,8 +254,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 					categoryId = quest.getCategoryId() ;
 					if(!categoryId.equals("null")){
 						category = faqService.getCategoryById(categoryId, sProvider) ;
-						moderator = category.getModeratorsCategory() ;
-						if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
+						if(faqSetting_.isAdmin() || category.getModeratorsCategory().contains(currentUser)) {
 							if(quest.isApproved()) listQuestionSearch.add(quest) ;
 						} else {
 							if(quest.isApproved()&& quest.isActivated()) listQuestionSearch.add(quest) ;
@@ -288,8 +285,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 						categoryId = quest.getCategoryId() ;
 						if(!categoryId.equals("null")){
 							category = faqService.getCategoryById(categoryId, sProvider) ;
-							moderator = category.getModeratorsCategory() ;
-							if(Arrays.asList(moderator).contains(currentUser)) {
+							if(category.getModeratorsCategory().contains(currentUser)) {
 								listQuestionLanguage.add(quest) ;
 							} else {
 								if(quest.isActivated()) listQuestionLanguage.add(quest) ;
@@ -308,8 +304,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 					categoryId = quest.getCategoryId() ;
 					if(!categoryId.equals("null")){
 						category = faqService.getCategoryById(categoryId, sProvider) ;
-						moderator = category.getModeratorsCategory() ;
-						if(Arrays.asList(moderator).contains(currentUser)|| faqSetting_.isAdmin()) {
+						if(category.getModeratorsCategory().contains(currentUser)|| faqSetting_.isAdmin()) {
 							if(quest.isApproved()) listQuestionLanguage.add(quest) ;
 						} else {
 							if(quest.isApproved()&& quest.isActivated()) listQuestionLanguage.add(quest) ;

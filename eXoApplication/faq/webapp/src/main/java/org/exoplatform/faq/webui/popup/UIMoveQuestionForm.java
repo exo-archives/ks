@@ -170,13 +170,16 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 			try{
 				if(!cateId.equals("null")){
 					Category category = faqService_.getCategoryById(cateId, sessionProvider);
-					List<String> listUserModerator = Arrays.asList(category.getModerators()) ;
-					List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
+					List<String> listModerator = Arrays.asList(category.getModerators()) ;
 					boolean canMove = false;
-					for(String user : listUserModerator){
-						if(currentUser.contains(user)) {
-							canMove = true;
-							break;
+					if(listModerator.contains(FAQUtils.getCurrentUser())) canMove = true;
+					else {
+						List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
+						for(String user : listModerator){
+							if(currentUser.contains(user)) {
+								canMove = true;
+								break;
+							}
 						}
 					}
 					if(!canMove){

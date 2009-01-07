@@ -152,9 +152,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     
     String dept = "";
     
-    FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
     boolean isAdmin = faqSetting_.isAdmin();
-    List<String> listGroup = serviceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
+    List<String> listGroup = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
     
     while (!listCate.isEmpty()) {
       parentCate = new Cate();

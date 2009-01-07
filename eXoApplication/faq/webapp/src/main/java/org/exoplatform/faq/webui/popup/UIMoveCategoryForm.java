@@ -199,12 +199,15 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 					if(moveCategory.faqSetting_.isAdmin()){
 						canMove = true;
 					} else {
-						String[] listUserModerator = category.getModeratorsCategory();
-						List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
-						for(String user : listUserModerator){
-							if(currentUser.contains(user)) {
-								canMove = true;
-								break;
+						String userId = FAQUtils.getCurrentUser();
+						if(usersOfNewCateParent.contains(userId)) canMove = true;
+						else {
+							List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(userId);
+							for(String user : usersOfNewCateParent){
+								if(currentUser.contains(user)) {
+									canMove = true;
+									break;
+								}
 							}
 						}
 					}

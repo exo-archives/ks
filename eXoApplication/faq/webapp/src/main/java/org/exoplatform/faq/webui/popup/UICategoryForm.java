@@ -138,7 +138,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			Category cat = faqService.getCategoryById(categoryId, sessionProvider) ;
 			sessionProvider.close();
-			String modera[] = cat.getModeratorsCategory() ;
 			categoryId_ = categoryId ; 
 			oldName_ = cat.getName() ;
 			index_ = cat.getIndex();

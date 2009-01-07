@@ -737,10 +737,8 @@ public class UIQuestions extends UIContainer {
 				SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 				try {
 					Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
-					String moderator[] = cate.getModeratorsCategory() ;
-					String currentUser = FAQUtils.getCurrentUser() ;
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-					if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
+					if(question.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
 						uiPopupAction.activate(uiPopupContainer, 540, 400) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
 						category.setParentId(categoryId) ;
@@ -935,10 +933,8 @@ public class UIQuestions extends UIContainer {
 			if(objectID.indexOf("Question") < 0){
 				try {
 					Category cate = faqService_.getCategoryById(objectID, sessionProvider) ;
-					String moderator[] = cate.getModeratorsCategory() ;
-					String currentUser = FAQUtils.getCurrentUser() ;
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-					if(Arrays.asList(moderator).contains(currentUser)|| uiQuestions.faqSetting_.isAdmin()) {
+					if(uiQuestions.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
 						UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 						UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
 						UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
@@ -1108,7 +1104,7 @@ public class UIQuestions extends UIContainer {
 					FAQSetting faqSetting = uiQuestions.faqSetting_ ;
 					String currentUser = FAQUtils.getCurrentUser() ;
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-					String[] moderator = new String[]{""};
+					List<String> moderator = new ArrayList<String>();
 					Boolean check = false ;
 					Category category = new Category();
 					if(categoryId != null && !categoryId.equals("null")){
@@ -1116,12 +1112,12 @@ public class UIQuestions extends UIContainer {
 						moderator = category.getModeratorsCategory() ;
 					}
 					if(faqSetting.getDisplayMode().equals("both")) {
-						if(uiQuestions.faqSetting_.isAdmin() || Arrays.asList(moderator).contains(currentUser) || question.isActivated()) {
+						if(uiQuestions.faqSetting_.isAdmin() || moderator.contains(currentUser) || question.isActivated()) {
 							check = true ;
 						}
 					} else {
-						if(uiQuestions.faqSetting_.isAdmin() && question.isApproved() || Arrays.asList(moderator).contains(currentUser)&&question.isApproved()
-								|| question.isActivated()&&question.isApproved()) {
+						if(uiQuestions.faqSetting_.isAdmin() && question.isApproved() 
+								|| question.isActivated()&&question.isApproved() || moderator.contains(currentUser)&&question.isApproved()) {
 							check = true ;
 						}
 					}
