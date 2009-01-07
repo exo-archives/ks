@@ -335,7 +335,7 @@
 																		%>
 																			<div style="padding-top: 5px;">
 																				Author: 
-																				<a href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
+																				<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
 																					<%=FAQUtils.getFullName(question.getAuthor())%> ( <%=question.getEmail()%> )
 																				</a>
 																			</div>
@@ -606,7 +606,7 @@
 																<td style="white-space:nowrap;">
 																	<div style="color:gray;">
 																		<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
-																		<a href="<%=uicomponent.event("ViewUserProfile", question.getResponseBy()[countResponse])%>" style="color:gray;">
+																		<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getResponseBy()[countResponse])%>" style="color:gray;">
 																			&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
 																		</a>
 																	</div>
@@ -681,7 +681,7 @@
 																<%=question.getComments()[commentCount]%>
 																<div style="color:gray;">
 																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionCommentBy")%> :
-																	<a href="<%=uicomponent.event("ViewUserProfile", question.getCommentBy()[commentCount])%>" style="color:gray;">
+																	<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getCommentBy()[commentCount])%>" style="color:gray;">
 																	&nbsp; <%=FAQUtils.getFullName(question.getCommentBy()[commentCount])%> <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> 
 																	<font style="color:#721d95"><%=dateFormatter.format(question.getDateComment()[commentCount]);%></font>
 																	</a>
