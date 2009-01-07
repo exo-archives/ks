@@ -9,23 +9,32 @@
 	User user = uiform.getUser() ;
 	String userName = user.getUserName() ;
 	CommonContact contact = uiform.getContact(userName) ;
+	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMM dd yyyy - hh:mm");
 	String avatarUrl = "";
-	String birthDay = "" ;
-	String location = "" ;
-	Date birthDayDate =	null;
+	String birthDay = contact.getBirthday();
+	String location = contact.getCity() ;
+	String createdDate = "";
+	String fullName = userName;
+	String firstName = "";
+	String lastName = "";
+	String email = "";
+	String gender = contact.getGender();
+	String jobTitle = contact.getJob();
+	String workPhone = contact.getPhone();
+	String mobile = contact.getMobile();
+	String siteOfUser = contact.getWebSite();
+	//Date birthDayDate =	null;
 	boolean isCity = false;
 	if(contact != null) {
-		birthDayDate = contact.getBirthday() ;
+		//birthDayDate = contact.getBirthday() ;
 		if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
 		if(contact.getCountry() != null) {
 			if(isCity) location = location + ", ";
 			location = location + contact.getCountry() ;
 		}
 	}
-	String createdDate = "";
-	String fullName = userName;
 	if(user != null){ 
-		createdDate = user.getCreatedDate();
+		createdDate = dateFormatter.format(user.getCreatedDate());
 		fullName = user.getFullName();
 	}
 %>
@@ -47,7 +56,10 @@
 								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);"/>
 								<div class="Rank"><%=user.getFullName();%></div>
 								<div class="InfoUser">
-									<div>Join Date: $createdDate</div>
+									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>
+									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: 
+												<%=dateFormatter.format(user.getLastLoginTime())%>
+									</div>
 								</div>
 							</div>
 						</td>
@@ -55,14 +67,6 @@
 							<table class="TablePost" cellspacing="0" borderspacing="0">
 								<tbody>
 								<% 
-									String firstName = "";
-									String lastName = "";
-									String email = "";
-									String gender = "";
-									String jobTitle = "";
-									String workPhone = "";
-									String mobile = "";
-									String siteOfUser = "";
 									if(user != null){
 										userName = user.getUserName();
 										firstName = user.getFirstName();
@@ -80,7 +84,6 @@
 										String content = "";
 										content = contents[i];
 										if(content == null) content = "";
-										label = _ctx.appRes(uicomponent.getName() + ".label." + label) ;
 										++i ;
 								%>
 									<tr>

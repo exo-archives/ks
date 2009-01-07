@@ -34,12 +34,14 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JcrInputProperty;
+import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.services.organization.UserProfile;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
@@ -119,6 +121,22 @@ public class FAQUtils {
   	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   	return organizationService.getUserHandler().findUserByName(userId) ;
   }
+	
+	public static void setCommonContactInfor(String userId, CommonContact contact) throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		UserProfile profile = organizationService.getUserProfileHandler().findUserProfileByName(userId);
+		contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+		contact.setBirthday(profile.getAttribute("user.bdate"));
+		contact.setGender(profile.getAttribute("user.gender"));
+		contact.setJob(profile.getAttribute("user.jobtitle"));
+		
+		contact.setEmailAddress(profile.getAttribute("user.business-info.online.email"));
+		contact.setCity(profile.getAttribute("user.business-info.postal.city"));
+		contact.setCountry(profile.getAttribute("user.business-info.postal.country"));        
+		contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
+		contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
+		contact.setWebSite(profile.getAttribute("user.business-info.online.uri"));
+	}
   
   @SuppressWarnings("unchecked")
   public static List<User> getAllUser() throws Exception {
@@ -223,10 +241,14 @@ public class FAQUtils {
 	}
 
 	static public String getFullName(String userName) throws Exception {
-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		User user = organizationService.getUserHandler().findUserByName(userName) ;
-		String fullName = user.getFullName() ;
-		return fullName ;
+		try{
+			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+			User user = organizationService.getUserHandler().findUserByName(userName) ;
+			String fullName = user.getFullName() ;
+			return fullName ;
+		} catch (Exception e){
+			return userName;
+		}
 	}
 
 	public static boolean isFieldEmpty(String s) {

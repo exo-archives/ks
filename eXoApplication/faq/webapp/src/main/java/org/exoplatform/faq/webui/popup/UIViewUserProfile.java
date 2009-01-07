@@ -16,10 +16,14 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+import java.util.ResourceBundle;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.ks.common.user.ContactProvider;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -42,13 +46,26 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	private CommonContact contact = null;
+	String[] lableProfile = null;
 	public User user_  ;
 
-	public UIViewUserProfile() throws Exception { this.setActions(new String[]{"Close"}) ; }
+	public UIViewUserProfile() throws Exception {
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+    ResourceBundle res = context.getApplicationResourceBundle() ;
+		lableProfile = new String[]{res.getString("UIViewUserProfile.label.userName"), res.getString("UIViewUserProfile.label.firstName"),
+																res.getString("UIViewUserProfile.label.lastName"), res.getString("UIViewUserProfile.label.birthDay"),
+																res.getString("UIViewUserProfile.label.gender"), res.getString("UIViewUserProfile.label.email"),
+																res.getString("UIViewUserProfile.label.jobTitle"), res.getString("UIViewUserProfile.label.location"),
+																res.getString("UIViewUserProfile.label.workPhone"),res.getString("UIViewUserProfile.label.mobilePhone"),
+																res.getString("UIViewUserProfile.label.website")
+																};
+		this.setActions(new String[]{"Close"}) ; 
+	}
 	
 	public CommonContact getContact(String userId) throws Exception {
 		if(contact == null) {
 			contact = getPersonalContact(userId) ;
+			FAQUtils.setCommonContactInfor(userId, contact);
 		}
 		return contact;
 	}
@@ -92,8 +109,7 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private String[] getLabelProfile() {
-		return new String[]{"userName", "firstName", "lastName", "birthDay", "gender", 
-				"email", "jobTitle", "location", "workPhone", "mobilePhone" , "website"};
+		return this.lableProfile;
 	}
 	
 	public  CommonContact getPersonalContact1(String userId){

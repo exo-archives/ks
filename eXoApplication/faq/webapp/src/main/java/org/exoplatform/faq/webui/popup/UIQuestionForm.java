@@ -174,6 +174,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	    e1.printStackTrace();
     }
     inputAuthor = new UIFormStringInput(AUTHOR, AUTHOR, author_) ;
+    if(author_.trim().length() > 0) inputAuthor.setEditable(false);
     inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_) ;
     inputQuestionContent = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null);
     selectLanguage = new UIFormSelectBox(ALL_LANGUAGES, ALL_LANGUAGES, listSystemLanguages);

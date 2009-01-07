@@ -1525,3 +1525,54 @@
 	padding-left:12px;
 	width:13px;
 }
+
+/************************** UIViewUserProfile *****************************/
+.UIFAQPortlet .UIViewUserProfile {
+	margin: 10px;
+	background-color:#f4f4f4;
+	border: solid 1px #b4b4b4;
+}
+
+.UIFAQPortlet .UIViewUserProfile .TitleBar{
+	background-color:#D1D2FE;
+	font-weight:bold;
+	height:24px;
+	line-height:16px;
+	padding:6px 0 0 12px;
+}
+	
+.UIFAQPortlet .UIViewUserProfile .UserContent{
+	padding:10px 0 0 15px;
+}
+
+.UIFAQPortlet .UIViewUserProfile .UserContent .Rank{
+	line-height:18px;
+	margin-left: 5px;
+	padding-bottom: 5px;
+}
+
+.UIFAQPortlet .UIViewUserProfile .UserContent .InfoUser{
+	line-height:18px;
+}
+	
+.UIFAQPortlet .UIViewUserProfile .UserContainer{
+	width:192px;
+}
+
+.UIFAQPortlet .UIViewUserProfile .ProfileContainer{
+	padding:0 8px;
+}
+
+.UIFAQPortlet .UIViewUserProfile .ProfileContainer .Label{
+	line-height:20px;
+	padding-right:6px;
+	text-align:right;
+}
+
+.UIFAQPortlet .UIViewUserProfile .ProfileContainer .LabelProfile{
+	line-height:20px;
+	text-align:left;
+	width:65%;
+}
+
+

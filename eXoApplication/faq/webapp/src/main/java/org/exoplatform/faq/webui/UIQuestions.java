@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import javax.jcr.Node;
-
+import org.exoplatform.services.organization.User;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -836,7 +836,7 @@ public class UIQuestions extends UIContainer {
 			String name = "" ;
 			String userName = FAQUtils.getCurrentUser() ;
 			if(!FAQUtils.isFieldEmpty(userName)){
-				name = FAQUtils.getFullName(userName) ;
+				name = userName;
 				email = FAQUtils.getEmailUser(userName) ;
 			}
 			questionForm.setFAQSetting(questions.faqSetting_) ;
@@ -1239,19 +1239,27 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = question.getAncestorOfType(UIFAQPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIViewUserProfile viewUserProfile = popupContainer.addChild(UIViewUserProfile.class, null, null) ;
-			popupContainer.setId("ViewUserProfile") ;
-			CommonContact contact = null ;
-			if(question.mapContact.containsKey(userId)) {
-				contact = question.mapContact.get(userId) ;
+			User user = FAQUtils.getUserByUserId(userId);
+			if(user != null){
+				UIFAQPortlet portlet = question.getAncestorOfType(UIFAQPortlet.class) ;
+				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+				UIViewUserProfile viewUserProfile = popupContainer.addChild(UIViewUserProfile.class, null, null) ;
+				popupContainer.setId("ViewUserProfile") ;
+				CommonContact contact = null ;
+				if(question.mapContact.containsKey(userId)) {
+					contact = question.mapContact.get(userId) ;
+				}
+				viewUserProfile.setContact(contact) ;
+				viewUserProfile.setUser(user) ;
+				popupAction.activate(popupContainer, 680, 350) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			} else {
+				UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.user-is-not-exist", new Object[]{userId}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				return ;
 			}
-			viewUserProfile.setContact(contact) ;
-			viewUserProfile.setUser(FAQUtils.getUserByUserId(userId)) ;
-			popupAction.activate(popupContainer, 600, 420) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 

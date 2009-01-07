@@ -336,7 +336,7 @@
 																			<div style="padding-top: 5px;">
 																				Author: 
 																				<a href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
-																					<%=question.getAuthor()%> ( <%=question.getEmail()%> )
+																					<%=FAQUtils.getFullName(question.getAuthor())%> ( <%=question.getEmail()%> )
 																				</a>
 																			</div>
 																		<%}%>
@@ -606,7 +606,9 @@
 																<td style="white-space:nowrap;">
 																	<div style="color:gray;">
 																		<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
-																		&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
+																		<a href="<%=uicomponent.event("ViewUserProfile", question.getResponseBy()[countResponse])%>" style="color:gray;">
+																			&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
+																		</a>
 																	</div>
 																</td>
 																<%
@@ -661,6 +663,7 @@
 											<%}%>
 											</div>
 											
+											<!-- ============================== View question's commnets ============================================== -->
 											<%
 											if(question.getComments() != null && question.getDateComment() != null && question.getCommentBy() != null){
 												boolean canEditComment = false;
@@ -678,8 +681,10 @@
 																<%=question.getComments()[commentCount]%>
 																<div style="color:gray;">
 																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionCommentBy")%> :
-																	&nbsp; <%=question.getCommentBy()[commentCount]%> <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> 
+																	<a href="<%=uicomponent.event("ViewUserProfile", question.getCommentBy()[commentCount])%>" style="color:gray;">
+																	&nbsp; <%=FAQUtils.getFullName(question.getCommentBy()[commentCount])%> <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> 
 																	<font style="color:#721d95"><%=dateFormatter.format(question.getDateComment()[commentCount]);%></font>
+																	</a>
 																</div>
 															</td>
 															<%
