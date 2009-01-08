@@ -125,17 +125,17 @@ public class FAQUtils {
 	public static void setCommonContactInfor(String userId, CommonContact contact) throws Exception {
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 		UserProfile profile = organizationService.getUserProfileHandler().findUserProfileByName(userId);
-		contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
-		contact.setBirthday(profile.getAttribute("user.bdate"));
-		contact.setGender(profile.getAttribute("user.gender"));
-		contact.setJob(profile.getAttribute("user.jobtitle"));
+		if(profile.getAttribute("user.bdate") != null)contact.setBirthday(profile.getAttribute("user.bdate"));
+		if(profile.getAttribute("user.gender") != null)contact.setGender(profile.getAttribute("user.gender"));
+		if(profile.getAttribute("user.jobtitle") != null)contact.setJob(profile.getAttribute("user.jobtitle"));
 		
-		contact.setEmailAddress(profile.getAttribute("user.business-info.online.email"));
-		contact.setCity(profile.getAttribute("user.business-info.postal.city"));
-		contact.setCountry(profile.getAttribute("user.business-info.postal.country"));        
-		contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
-		contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
-		contact.setWebSite(profile.getAttribute("user.business-info.online.uri"));
+		if(profile.getAttribute("user.business-info.online.email") != null)contact.setEmailAddress(profile.getAttribute("user.business-info.online.email"));
+		if(profile.getAttribute("user.business-info.postal.city") != null)contact.setCity(profile.getAttribute("user.business-info.postal.city"));
+		if(profile.getAttribute("user.business-info.postal.country") != null)contact.setCountry(profile.getAttribute("user.business-info.postal.country"));        
+		if(profile.getAttribute("user.business-info.telecom.mobile.number") != null)contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
+		if(profile.getAttribute("user.business-info.telecom.telephone.number") != null)contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
+		if(profile.getAttribute("user.business-info.online.uri") != null)contact.setWebSite(profile.getAttribute("user.business-info.online.uri"));
+		if(profile.getAttribute("user.other-info.avatar.url") != null)contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
 	}
   
   @SuppressWarnings("unchecked")

@@ -180,6 +180,10 @@ public class UICategories extends UIContainer{
 		}
 	}
 	
+	public boolean getCanEditQuestions(){
+		return this.canEditQuestion;
+	}
+	
 	@SuppressWarnings("unused")
 	private void setListCate() throws Exception {
 		if(!isSwap){
@@ -549,7 +553,7 @@ public class UICategories extends UIContainer{
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					try {
-						questions.setCategories() ;
+						questions.setQuestions() ;
 					} catch (Exception pathEx){
 						UIBreadcumbs breadcumbs = container.findFirstComponentOfType(UIBreadcumbs.class) ;
 						String pathCate = "" ;

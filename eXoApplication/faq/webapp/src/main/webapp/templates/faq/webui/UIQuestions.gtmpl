@@ -43,7 +43,7 @@
 							String url = uicomponent.url("Setting", "OBJECTID") ;
 							uicomponent.setLink(url);
 							String cateId = uicomponent.getCategoryId() ;
-							uicomponent.getCategories() ; 
+							uicomponent.getQuestions() ; 
 							/*
 							if(cateId == null || cateId.trim().length() < 1) {
 								uicomponent.setIsModerators() ;

@@ -62,26 +62,16 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		this.setActions(new String[]{"Close"}) ; 
 	}
 	
-	public CommonContact getContact(String userId) throws Exception {
+	public CommonContact getContact(String userId) {
 		if(contact == null) {
-			contact = getPersonalContact(userId) ;
-			FAQUtils.setCommonContactInfor(userId, contact);
+			contact = new CommonContact() ;
+			try {
+				FAQUtils.setCommonContactInfor(userId, contact);
+			} catch (Exception e) {}
 		}
 		return contact;
 	}
 
-	public void setContact(CommonContact contact) {
-		this.contact = contact;
-	}
-	
-	private CommonContact getPersonalContact(String userId) throws Exception {
-		CommonContact contact = getPersonalContact1(userId) ;
-		if(contact == null) {
-			contact = new CommonContact() ;
-		}
-		return contact ;
-	}
-	
 	@SuppressWarnings("unused")
 	private String getAvatarUrl(CommonContact contact) throws Exception {
 //	DownloadService dservice = getApplicationComponent(DownloadService.class) ;

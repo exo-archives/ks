@@ -26,6 +26,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -130,6 +131,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				String newPath = "FAQService"+oldPath ;
 				uiQuestions.setPath(newPath) ;
 				breadcumbs.setUpdataPath(newPath);
+				UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
+				categories.setPathCategory(breadcumbs.getPaths());
 				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 				UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
@@ -183,10 +186,13 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				String newPath = "FAQService" + oldPath ;
 				uiQuestions.setPath(newPath) ;
 				breadcumbs.setUpdataPath(newPath);
-				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-				UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
-				faqPortlet.cancelAction() ;
+				UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
+				categories.setPathCategory(breadcumbs.getPaths());
+				UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class) ;
+				popupAction.deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet.getChild(UIFAQContainer.class));
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				UIApplication uiApplication = resultQuickSearch.getAncestorOfType(UIApplication.class) ;

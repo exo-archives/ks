@@ -26,6 +26,7 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -149,7 +150,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				uiQuestions.pageList.setObjectRepare_(questionId);
 				if(!categoryId.equals("null")) uiQuestions.setCategories(categoryId) ;
 				else uiQuestions.setCategories(null) ;
-				uiQuestions.setCategories();
+				uiQuestions.setQuestions();
 				uiQuestions.questionView_ = questionId ;
 				int pos = 0 ;
 				for(Question question2 : uiQuestions.listQuestion_) {
@@ -193,9 +194,9 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				String newPath = "FAQService"+oldPath ;
 				uiQuestions.setPath(newPath) ;
 				breadcumbs.setUpdataPath(newPath);
-				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-				UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+				UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
+				categories.setPathCategory(breadcumbs.getPaths());
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet.getChild(UIFAQContainer.class));
 				faqPortlet.cancelAction() ;
 			} catch (Exception e) {
 				e.printStackTrace();
