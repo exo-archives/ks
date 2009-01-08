@@ -3840,7 +3840,7 @@ public class JCRDataStorage {
 		NodeIterator iter;
 		QueryResult result;
 		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
-			.append("[@exo:isApproved='false' or @exo:isWaiting='true'").append(buffer).append("] order by @exo:modifiedDate descending");
+			.append("[(@exo:isApproved='false' or @exo:isWaiting='true')").append(buffer).append("] order by @exo:modifiedDate descending");
 		pathQuery =  stringBuffer.toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
@@ -3859,7 +3859,7 @@ public class JCRDataStorage {
     }
 		stringBuffer = new StringBuffer();
 		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
-			.append("[@exo:isApproved='false' or @exo:isHidden='true'").append(buffer).append("] order by @exo:modifiedDate descending");
+			.append("[(@exo:isApproved='false' or @exo:isHidden='true')").append(buffer).append("] order by @exo:modifiedDate descending");
 		pathQuery = stringBuffer.toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
@@ -3896,7 +3896,7 @@ public class JCRDataStorage {
 				String pathQuery = "";
 				stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)");
 				StringBuffer buffer = new StringBuffer();
-				if (t == 1) {
+				if (t > 0) {
 					String[] paths = ValuesToArray(newProfileNode.getProperty("exo:moderateForums").getValues());
 					int l = paths.length;
 					if (l > 0) {
