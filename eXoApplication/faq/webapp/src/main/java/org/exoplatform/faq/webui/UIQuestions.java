@@ -1104,6 +1104,7 @@ public class UIQuestions extends UIContainer {
 						breadcumbs.setUpdataPath(newPath_);
 						UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
 						categories.setPathCategory(breadcumbs.getPaths());
+						categories.isBack = true;
 						event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 					} else {
 						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.INFO)) ;

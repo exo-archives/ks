@@ -75,6 +75,7 @@ public class UICategories extends UIContainer{
 	private String categoryId_ = null;
 	private String parentCateId_ = null;
 	private boolean isSwap = false;
+	public boolean isBack = false;
 	private String parentCateName = "Root";
 	private String currentName = "Root";
 	private String pathCategory = "";
@@ -193,12 +194,15 @@ public class UICategories extends UIContainer{
 			if(categoryId_ != null)currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
 			else currentName = "Root";
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
-			if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_))){
+			if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_)) || isBack){
 				this.listCate.clear();
 				listCate.addAll(newList);
 				String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
 				if(listId.length > 1) backCateID_ = listId[listId.length - 2];
 				else backCateID_ = listId[0];
+				if(backCateID_.equals("FAQService")){
+					parentCateName = "Root";
+				}
 				parentCateId_ = categoryId_;
 				if(parentCateId_ != null)parentCateName =	faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
 				else parentCateName = "Root";
@@ -207,6 +211,7 @@ public class UICategories extends UIContainer{
 			setIsModerators(FAQUtils.getCurrentUser());
 		}
 		isSwap = false;
+		isBack = false;
 	}
 	
 	public void resetListCate(SessionProvider sProvider) throws Exception{
