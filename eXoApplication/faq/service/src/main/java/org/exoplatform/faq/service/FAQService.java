@@ -646,5 +646,7 @@ public interface FAQService {
  	
  	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception;
  	
+ 	public void generateRSS(String path, boolean isNewQuestion) throws Exception  ;
+ 	
  	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception;
 }

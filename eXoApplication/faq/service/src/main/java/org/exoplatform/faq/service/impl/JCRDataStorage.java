@@ -35,8 +35,11 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Repository;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -57,11 +60,13 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
+import org.exoplatform.faq.service.notify.RSSEventListener;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.Membership;
@@ -194,6 +199,17 @@ public class JCRDataStorage {
     } catch (PathNotFoundException ex) {
       Node questionHome = faqServiceHome.addNode(QUESTION_HOME, EXO_FAQQUESTIONHOME) ;
       faqServiceHome.save() ;
+      
+      //    Add observation
+    	String wsName = faqServiceHome.getSession().getWorkspace().getName() ;
+    	RepositoryImpl repo = (RepositoryImpl)faqServiceHome.getSession().getRepository() ;
+    	RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
+    	ObservationManager observation = faqServiceHome.getSession().getWorkspace().getObservationManager() ;
+    	observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,questionHome.getPath(), true, null, null, false) ;
+    	RSSEventListener addQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+    	observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,questionHome.getPath(), false, null, null, false) ;
+    	RSSEventListener removeQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+    	observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,questionHome.getPath(), false, null, null, false) ;
       return questionHome ;
     }
   }
@@ -1772,5 +1788,25 @@ public class JCRDataStorage {
 		category1.setProperty("exo:index", t);
 		category1.save();
 		parentCate.save();
+	}
+	
+	public void generateRSS(String path, boolean isNewQuestion) throws Exception  {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			if(isNewQuestion) {
+				Node faqHome = getFAQServiceHome(sProvider) ;
+				Node addedQuestion = (Node)faqHome.getSession().getItem(path) ;
+				// create rss file if doesn't exist
+				// add addedQuestion to rss
+				
+			}else {
+				String id = path.substring(0, path.lastIndexOf("/")) ;
+				//remove id from existing rss file 
+			}
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally{
+			sProvider.close() ;
+		}		
 	}
 }

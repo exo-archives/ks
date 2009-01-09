@@ -670,7 +670,13 @@ public class FAQServiceImpl implements FAQService{
 		return jcrData_.getQuestionNodeById(questionId, sProvider);
 	}
 	
+	public void generateRSS(String path, boolean isNewQuestion) throws Exception  {
+		jcrData_.generateRSS(path, isNewQuestion) ;
+	}
+
+	
 	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getMaxindexCategory(parentId, sProvider);
 	}
+
 }
