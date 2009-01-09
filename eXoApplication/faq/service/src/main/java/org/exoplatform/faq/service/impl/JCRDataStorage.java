@@ -962,6 +962,23 @@ public class JCRDataStorage {
     }
 	}
 	
+	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception {
+		Node categoryHome = getCategoryHome(sProvider, null) ;
+  	QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();;
+  	Query query = null;
+  	QueryResult result = null;
+		if(parentId != null && parentId.length() > 0) {	
+      StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+                                     append("//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
+      query = qm.createQuery(queryString.toString(), Query.XPATH);
+      result = query.execute();
+      Node parentCategory = result.getNodes().nextNode() ;
+      return  getMaxIndex(parentCategory.getPath(), qm, query, result);
+		} else {
+			return  getMaxIndex(categoryHome.getPath(), qm, query, result);
+		}
+	}
+	
 	protected long getMaxIndex(String nodePath, QueryManager qm, Query query, QueryResult result) throws Exception{
 		StringBuffer queryString = new StringBuffer("/jcr:root").append(nodePath). 
 															append("/element(*,exo:faqCategory)order by @exo:index descending");

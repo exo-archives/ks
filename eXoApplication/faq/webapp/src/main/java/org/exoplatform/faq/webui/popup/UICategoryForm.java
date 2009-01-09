@@ -86,6 +86,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
     UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;
+    SessionProvider sProvider = FAQUtils.getSystemProvider();
+    index_ = faqService_.getMaxindexCategory(parentId_, sProvider);
+    sProvider.close();
     index.setValue(String.valueOf(index_));
     inputset.addUIFormInput(index) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;

@@ -669,4 +669,8 @@ public class FAQServiceImpl implements FAQService{
 	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception{
 		return jcrData_.getQuestionNodeById(questionId, sProvider);
 	}
+	
+	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getMaxindexCategory(parentId, sProvider);
+	}
 }

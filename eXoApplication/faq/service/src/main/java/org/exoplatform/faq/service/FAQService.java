@@ -645,4 +645,6 @@ public interface FAQService {
  	public void swapCategories(String parentCateId, String cateId1, String cateId2, SessionProvider sessionProvider) throws Exception;
  	
  	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception;
+ 	
+ 	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception;
 }
