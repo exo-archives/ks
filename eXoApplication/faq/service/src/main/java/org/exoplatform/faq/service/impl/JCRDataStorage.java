@@ -862,9 +862,8 @@ public class JCRDataStorage {
   	categoryNode.setProperty("exo:index", category.getIndex()) ;
   	categoryNode.setProperty("exo:name", category.getName()) ;
   	categoryNode.setProperty("exo:description", category.getDescription()) ;
-  	GregorianCalendar cal = new GregorianCalendar() ;
-  	cal.setTime(category.getCreatedDate()) ;
-  	categoryNode.setProperty("exo:createdDate", cal.getInstance()) ;
+  	//cal.setTime(category.getCreatedDate()) ;
+  	categoryNode.setProperty("exo:createdDate", GregorianCalendar.getInstance()) ;
   	categoryNode.setProperty("exo:moderators", category.getModerators()) ;
   	categoryNode.setProperty("exo:isModerateQuestions", category.isModerateQuestions()) ;
   	categoryNode.setProperty("exo:viewAuthorInfor", category.isViewAuthorInfor()) ;
@@ -944,6 +943,25 @@ public class JCRDataStorage {
 		}
 	}
 	
+	private void setIndexCategory(Node parentNode, QueryManager qm) throws Exception {
+	  StringBuffer queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()). 
+	                                 append("/element(*,exo:faqCategory)order by @exo:index ascending, @exo:createdDate descending") ;
+	  Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+	  QueryResult result = query.execute();
+    NodeIterator iter = result.getNodes();
+    long i = 1;
+    while (iter.hasNext()) {
+	    Node node = (Node)iter.next();
+	    node.setProperty("exo:index", i);
+	    ++i;
+    }
+    if(parentNode.isNew()) {
+    	parentNode.getSession().save();
+    } else {
+    	parentNode.save();
+    }
+	}
+	
 	protected long getMaxIndex(String nodePath, QueryManager qm, Query query, QueryResult result) throws Exception{
 		StringBuffer queryString = new StringBuffer("/jcr:root").append(nodePath). 
 															append("/element(*,exo:faqCategory)order by @exo:index descending");
@@ -971,25 +989,28 @@ public class JCRDataStorage {
       query = qm.createQuery(queryString.toString(), Query.XPATH);
       result = query.execute();
       Node parentCategory = result.getNodes().nextNode() ;
+      Node catNode;
       if(isAddNew) {
-      	cat.setIndex(getMaxIndex(parentCategory.getPath(), qm, query, result) + 1);
-      	Node catNode = parentCategory.addNode(cat.getId(), "exo:faqCategory") ;
+      	catNode = parentCategory.addNode(cat.getId(), "exo:faqCategory") ;
       	saveCategory(catNode, cat) ;
-      	parentCategory.save() ;
+      	parentCategory.getSession().save() ;
       }else {
-      	Node catNode = parentCategory.getNode(cat.getId()) ;
+      	catNode = parentCategory.getNode(cat.getId()) ;
       	saveCategory(catNode, cat) ;
       	catNode.save() ;
       }
+      setIndexCategory(parentCategory, qm);
   	} else {
   		Node catNode ;
   		if(isAddNew) {
-  			cat.setIndex(getMaxIndex(categoryHome.getPath(), qm, query, result) + 1);
   			catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
-  		} else catNode = categoryHome.getNode(cat.getId()) ;
+  		} else 
+  			catNode = categoryHome.getNode(cat.getId()) ;
   		saveCategory(catNode, cat) ;
-    	categoryHome.getSession().save() ;
-  	}  	
+    	if(categoryHome.isNew()) categoryHome.getSession().save();
+    	else categoryHome.save();
+    	setIndexCategory(categoryHome, qm);
+  	} 	
   }
   
   public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception {

@@ -53,7 +53,6 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
  * Aus 01, 2007 2:48:18 PM 
  */
 
-@SuppressWarnings({ "unused", "unused" })
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
 		template =	"system:/groovy/webui/form/UIForm.gtmpl",
@@ -70,19 +69,25 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	final private static String FIELD_NAME_INPUT = "eventCategoryName" ; 
   final private static String FIELD_DESCRIPTION_INPUT = "description" ;
   final private static String FIELD_MODERATOR_INPUT = "moderator" ;
+  final private static String FIELD_INDEX_INPUT = "index" ;
   final private static String FIELD_MODERATEQUESTIONS_CHECKBOX = "moderatequestions" ;
   public static final String VIEW_AUTHOR_INFOR = "ViewAuthorInfor".intern();
   final private static String FIELD_MODERATE_ANSWERS_CHECKBOX = "moderateAnswers" ;
-  private static FAQService faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  private static FAQService faqService_ ;
   private static boolean isAddNew_ = true ;
   private String oldName_ = "";
   
-	public UICategoryForm() throws Exception {}
+	public UICategoryForm() throws Exception {
+		faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	}
 
 	public void init(boolean isAddNew) throws Exception {
 		isAddNew_ = isAddNew ;
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
+    UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;
+    index.setValue(String.valueOf(index_));
+    inputset.addUIFormInput(index) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false )) ;
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(VIEW_AUTHOR_INFOR, VIEW_AUTHOR_INFOR, false )) ;
@@ -142,6 +147,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			oldName_ = cat.getName() ;
 			index_ = cat.getIndex();
 			getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
+			getUIStringInput(FIELD_INDEX_INPUT).setValue(String.valueOf(index_)) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription()) ;
 			getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions()) ;
 			getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).setChecked(cat.isModerateAnswers()) ;
@@ -214,6 +220,18 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
       }
+      long index = 0;
+      String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue() ;
+      if(strIndex != null && strIndex.trim().length() > 0) {
+      	try {
+	        index = Long.parseLong(strIndex);
+        } catch (Exception e){
+        	uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-large-number", 
+        			new String[]{uiCategory.getLabel(FIELD_INDEX_INPUT)}, ApplicationMessage.WARNING)) ;
+	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	        return ;
+        }
+      }
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
@@ -243,7 +261,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setModerateQuestions(moderatequestion) ;
 			cat.setModerateAnswers(moderateAnswer);
 			cat.setViewAuthorInfor(viewAuthorInfor);
-			cat.setIndex(uiCategory.index_);
+			cat.setIndex(index);
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String parentCate = uiCategory.getParentId() ;
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
@@ -280,7 +298,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 					}
 					faqService_.saveCategory(parentCate, cat, isAddNew_, sessionProvider);
 					faqPortlet.cancelAction() ;
-				} catch(RuntimeException exception){
+				} catch(RuntimeException e){
 					throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
 				} catch (Exception e) {
 					uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
@@ -296,7 +314,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				//questions.setCategories() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 				return ;
-			} 
+			}
 
 			cat.setModerators(users) ;
 			try {
@@ -306,7 +324,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				faqService_.saveCategory(null, cat, isAddNew_, sessionProvider);
 				faqPortlet.cancelAction() ;
 
-			} catch(RuntimeException exception){
+			} catch(RuntimeException e){
 				throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
 			} catch (Exception e) {
 				uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,

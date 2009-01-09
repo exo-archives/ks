@@ -21,7 +21,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
+import javax.jcr.nodetype.NodeType;
 
 
 /**
@@ -118,6 +123,18 @@ public class Utils {
     	String name1 = ((Watch) o1).getUser() ;
       String name2  = ((Watch) o2).getUser();
       return name1.compareToIgnoreCase(name2) ;
+    }
+  }
+	
+  static public class NodeTypeComparator implements Comparator<Object> {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	try {
+    		String name1 = ((Node) o1).getProperty("@exo:index").getString();
+    		String name2 = ((Node) o2).getProperty("@exo:index").getString();
+    		return name1.compareToIgnoreCase(name2);
+      } catch (Exception e) {
+	    	return 0;
+      }
     }
   }
 }
