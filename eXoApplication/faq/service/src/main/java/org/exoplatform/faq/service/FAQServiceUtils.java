@@ -91,6 +91,25 @@ public class FAQServiceUtils {
   	return users ;
   }
   
+  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+  	List<String> listOfUser = new ArrayList<String>();
+		listOfUser.add(userId);
+		String value = "";
+		String id = "";
+		Membership membership = null;
+		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
+			id = object.toString();
+			id = id.replace("Membership[", "").replace("]", "");
+			membership = organizationService_.getMembershipHandler().findMembership(id);
+			value = membership.getGroupId();
+			listOfUser.add(value);
+			value = membership.getMembershipType() + ":" + value;
+			listOfUser.add(value);
+		}
+		return listOfUser;
+  }
+  
   /**
    * Repare permission of node
    * @param node	Node which is repared permission

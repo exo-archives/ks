@@ -114,10 +114,10 @@ public class UIQuestions extends UIContainer {
 	private List<String> listCateId_ = new ArrayList<String>() ;
 	private boolean canEditQuestion = false ;
 	private String categoryId_ = null ;
-	private String parentId_ = null ;
 	public String questionView_ = "" ;
 	public static String newPath_ = "" ;
 	private String currentUser_ = "";
+	private List<String> listUserGroupMember = new ArrayList<String>();
 	private String link_ ="";
 	private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
@@ -129,8 +129,6 @@ public class UIQuestions extends UIContainer {
 
 	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
 	private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament", "Export", "Import"} ;
-	//private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
-	//private String[] secondTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
 	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
@@ -139,6 +137,9 @@ public class UIQuestions extends UIContainer {
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	private boolean viewAuthorInfor = false;
 
+	private String[] subCategoryAction = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", 
+																										"DeleteCategory", "MoveCategory", "Watch"};
+	
 	public JCRPageList pageList ;
 	private UIFAQPageIterator pageIterator = null ;
 	long pageSelect = 0;
@@ -220,6 +221,11 @@ public class UIQuestions extends UIContainer {
 
 	public void setFAQSetting(FAQSetting setting){
 		this.faqSetting_ = setting;
+		if(faqSetting_.isAdmin()){
+			try {
+				listUserGroupMember = FAQServiceUtils.getAllGroupAndMembershipOfUser(currentUser_);
+			} catch (Exception e) {			}
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -249,15 +255,6 @@ public class UIQuestions extends UIContainer {
 	private String[] getActionQuestionWithUser(){
 		String[] action = new String[]{"SendQuestion"} ;
 		return action ;
-	}
-
-	@SuppressWarnings("unused")
-	private String getParentId(){
-		return this.parentId_ ;
-	}
-
-	public void setParentId(String parentId_) {
-		this.parentId_ = parentId_ ;
 	}
 
 	public void setCategories() throws Exception  {
@@ -296,6 +293,15 @@ public class UIQuestions extends UIContainer {
 
 	public void setCategories(String categoryId) throws Exception  {
 		setCategoryId(categoryId) ;
+	}
+	
+	private String[] getMenuSubCategory(Category category){
+		if(currentUser_ == null) return userActionsCate_;
+		if(category.getModerators().length == 1 && currentUser_.equals(category.getModerators()[0])) return subCategoryAction;
+		for(String str : category.getModerators()){
+			if(listUserGroupMember.contains(str)) return subCategoryAction;
+		}
+		return userActionsCate_;
 	}
 
 	private void setIsModerators() {
@@ -650,7 +656,7 @@ public class UIQuestions extends UIContainer {
 					String moderator[] = cate.getModeratorsCategory() ;
 					String currentUser = FAQUtils.getCurrentUser() ;
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
-					if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isAdmin()) {
+					if(Arrays.asList(moderator).contains(currentUser)|| question.faqSetting_.isCanEdit() || question.canEditQuestion) {
 						uiPopupAction.activate(uiPopupContainer, 540, 320) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
 						category.setParentId(categoryId) ;
@@ -662,6 +668,7 @@ public class UIQuestions extends UIContainer {
 						return ;
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					question.setIsNotChangeLanguage();
@@ -765,7 +772,13 @@ public class UIQuestions extends UIContainer {
 			questions.pageSelect = 0;
 			questions.backPath_ = "" ;
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			String parentId = null;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			if(categoryId.indexOf("/") > 0){
+				String[] ids = categoryId.split("/");
+				parentId = ids[0];
+				categoryId = ids[1];
+			}
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
 				questions.viewAuthorInfor = faqService_.getCategoryById(categoryId, sessionProvider).isViewAuthorInfor() ;
@@ -781,6 +794,7 @@ public class UIQuestions extends UIContainer {
 			questions.setCategoryId(categoryId) ;
 			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 			String oldPath = breadcumbs.getPaths() ;
+			if(parentId != null) oldPath += "/" + parentId;
 			if(oldPath != null && oldPath.trim().length() > 0) {
 				if(!oldPath.contains(categoryId)) {
 					newPath_ = oldPath + "/" +categoryId ;

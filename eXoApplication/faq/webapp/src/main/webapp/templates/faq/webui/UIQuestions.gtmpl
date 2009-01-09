@@ -607,10 +607,11 @@
 			String id = "";
 			int i = 0 ;
 			List listCateModerator = uicomponent.getIsModerator() ;
+			String[] actionSubCate = null;
 			for(category in categories) {
 				String categoryName = category.getName() ;
 				String titleCategory = categoryName ;
-				if(listCateModerator.get(i)) {
+				if(uicomponent.canEditQuestion || listCateModerator.get(i)) {
 					categoryAction = moderatorAction ;
 				} else {
 					categoryAction = uicomponent.getActionCategoryWithUser() ;
@@ -710,22 +711,134 @@
 				<div style="float: left;">
 					<%String subTitle = "";
 						for(Category subCategory in uicomponent.getSubCategories(category.getId())){
+							if(uicomponent.canEditQuestion || listCateModerator.get(i)) actionSubCate = uicomponent.subCategoryAction;
+							else actionSubCate = uicomponent.getMenuSubCategory(subCategory);
 					%>
 							<div class="FAQCategory" style="float: left; margin:0px 15px 5px 0px;">
-								<a title="<%=subCategory.getName()%>" href="<%=uicomponent.event("OpenCategory", subCategory.getId())%>">
+								<div	onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupSubCategory$i', '', null, null)">
+								<a title="<%=subCategory.getName()%>" href="<%=uicomponent.event("OpenCategory", categoryId + "/" +subCategory.getId())%>">
 									<%=FAQUtils.getSubString(subCategory.getName(), 150)%>
 								</a>
+								
+								<!-- ============================ action of this subcategory ========================================================== -->
+								<div class="UIFAQPopupCategory" id="UIFAQPopupSubCategory$i" style="display: none; left: 50px;">
+									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+										<div class="UIContextMenuContainer">
+																		
+											<div class="TopLeftRightClickPopupMenu">
+												<div class="TopRightRightClickPopupMenu">
+													<div class="TopCenterRightClickPopupMenu"><span></span></div>
+													<div class="RightClickCustomItem" style="display: none;">Open</div>
+												</div>
+											</div>
+											
+											<div class="MiddleLeftRightClickPopupMenu">
+												<div class="MiddleRightRightClickPopupMenu">
+													<div class="UIRightPopupMenuContainer">
+														<%
+															for(viewSubAction in actionSubCate) {
+																sublinkView = uicomponent.event(viewSubAction, subCategory.getId()) ;
+																subitemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewSubAction);
+														%>
+																<a href="javascript:void(0) ;" onmousedown="$sublinkView" class="MenuItem">
+																	<div class="ItemIcon $viewSubAction" style="padding:3px 0px 5px 5px;">
+																			<div style="padding-left: 20px;">$subitemLabelView</div>
+																	</div>
+																</a>
+														<%
+															}
+														%>
+													</div>
+												</div>
+											</div>
+											
+											<div class="BottomLeftRightClickPopupMenu">
+												<div class="BottomRightRightClickPopupMenu">
+													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+												</div>
+											</div>
+									
+										</div>
+									</div>
+								</div>
+					
+								
+								</div>
 							</div>
 					<%}%>
 				</div>
 				<div style="clear:left;"></div>
 				<!-- ============== View All SubQuestions ======================== -->
 				<div>
-					<%for(Question subQuestion in uicomponent.getListSubQuestion(category.getId())){%>
-							<div class="Question" style="white-space: nowrap; padding:0 0 5px 18px;">
-								<a title="<%=subQuestion.getQuestion()%>" href="<%=uicomponent.event("ViewQuestion", category.getId() + "/" + subQuestion.getId())%>">
-									<%=FAQUtils.getSubString(subQuestion.getQuestion(), 150)%>
-								</a>
+					<%String subQuesIcon = "";
+						if(uicomponent.canEditQuestion || listCateModerator.get(i)) questionActions = uicomponent.moderatorActionQues_;
+						else  questionActions = uicomponent.userActionQues_;
+						for(Question subQuestion in uicomponent.getListSubQuestion(category.getId())){
+							if(subQuestion.getResponses().trim().length() < 1) subQuesIcon = "NotResponse";
+							else subQuesIcon = "Question";
+					%>
+							<div class="$subQuesIcon" style="white-space: nowrap; padding:0 0 5px 18px;">
+								<div style="float: left; width: 95%;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupSubQuestion$questionId', '', null, null)">
+									<a title="<%=subQuestion.getQuestion()%>" href="<%=uicomponent.event("ViewQuestion", category.getId() + "/" + subQuestion.getId())%>">
+										<%=FAQUtils.getSubString(subQuestion.getQuestion(), 150)%>
+									</a>
+									
+									<!-- ============================================== Action of subquestion ========================================= -->
+									<div class="UIFAQPopupCategory" id="UIPopupSubQuestion$questionId" style="display: none; left: 50px;">
+										<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+											<div class="UIContextMenuContainer">
+
+												<div class="TopLeftRightClickPopupMenu">
+													<div class="TopRightRightClickPopupMenu">
+														<div class="TopCenterRightClickPopupMenu"><span></span></div>
+														<div class="RightClickCustomItem" style="display: none;">Open</div>
+													</div>
+												</div>
+												
+												<div class="MiddleLeftRightClickPopupMenu">
+													<div class="MiddleRightRightClickPopupMenu">
+														<div class="UIRightPopupMenuContainer">
+															<%
+																iconView = "" ;
+																for(viewAction in questionActions) {
+																	if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
+																		iconView = viewAction.replace("Question", "") ;
+																	else
+																		iconView = viewAction ;
+																	String linkView = uicomponent.event(viewAction, subQuestion.getId()) ;
+																	String lockFunction = "" ;
+																	if(viewAction.equals("SendQuestion") && (!subQuestion.isApproved() || !subQuestion.isActivated())) {
+																		linkView = "javaScript: alert('" + 
+																								_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
+																		lockFunction = "LockFunction" ;
+																	}
+																	String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+															%>
+																	<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem $lockFunction">
+																		<div class="ItemIcon $iconView" style="padding:3px 0px 5px 5px;">
+																				<div style="padding-left: 20px;">$itemLabelView</div>
+																		</div>
+																	</a>
+															<%
+																}
+															%>
+															
+														</div>
+													</div>
+												</div>
+															
+												<div class="BottomLeftRightClickPopupMenu">
+													<div class="BottomRightRightClickPopupMenu">
+														<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+													</div>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+									<!-- finish action of this question -->
+									
+								</div>
 							</div>
 							<div style="clear: left;"></div>
 					<%}%>
