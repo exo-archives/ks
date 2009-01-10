@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.impl.FAQServiceImpl;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
@@ -73,13 +74,13 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIAttachMentForm> event) throws Exception {
       UIAttachMentForm attachMentForm = event.getSource() ;
       List<FileAttachment> listFileAttachment = new ArrayList<FileAttachment>() ;
-      long maxSize = 10485760 ;
+      long maxSize = FAQServiceImpl.maxUploadSize_ ;
       for(int i = 0 ; i < attachMentForm.numberUpload; i ++) {
         UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i) ;
         UploadResource uploadResource = uploadInput.getUploadResource() ;
         long fileSize = 0 ;
-        if(uploadResource != null) {
-          if(uploadResource.getUploadedSize() > 0 && uploadResource.getUploadedSize() <= maxSize) {
+        if(uploadResource != null && uploadResource.getUploadedSize() > 0) {
+          if(maxSize == 0 || uploadResource.getUploadedSize() <= maxSize) {
             FileAttachment fileAttachment = new FileAttachment() ;
             fileAttachment.setName(uploadResource.getFileName()) ;
             fileAttachment.setInputStream(uploadInput.getUploadDataAsStream()) ;
@@ -91,7 +92,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
             listFileAttachment.add(fileAttachment) ;
           } else {
             UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-            uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", new Object[]{uploadResource.getFileName()}, ApplicationMessage.WARNING)) ;
+            uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", new Object[]{uploadResource.getFileName(), String.valueOf(maxSize)}, ApplicationMessage.WARNING)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
             return ;
           }

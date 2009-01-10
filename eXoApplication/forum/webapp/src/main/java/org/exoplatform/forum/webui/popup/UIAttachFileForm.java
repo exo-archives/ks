@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.service.BufferAttachment;
+import org.exoplatform.forum.service.impl.ForumServiceImpl;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
@@ -52,12 +53,13 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 
-	final static public String FIELD_UPLOAD = "upload" ;	
-	private boolean isTopicForm = true ;
-	private int maxField = 5 ;
-//	private long maxSize = 12000000;
+	final static public String FIELD_UPLOAD	 = "upload";
+	private boolean	           isTopicForm	 = true;
+	private int	               maxField	     = 5;
+	private long	             maxSize	     = 0;
 
 	public UIAttachFileForm() throws Exception {
+		maxSize = ForumServiceImpl.maxUploadSize_ ;
 		setMultiPart(true) ;
 		int i = 0 ;
 		while(i++ < maxField) {
@@ -92,13 +94,14 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 					continue ;
 				}
 				try {
-//					size = (long)uploadResource.getUploadedSize() ;
-//					if(size > uiForm.maxSize) {
-//						Object[] args = {String.valueOf(i)};
-//						uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-long", args, ApplicationMessage.WARNING));
-//						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-//						return ;
-//					}
+					if(uiForm.maxSize > 0){
+						if((long)uploadResource.getUploadedSize() > uiForm.maxSize) {
+							Object[] args = {fileName, String.valueOf(uiForm.maxSize)};
+							uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-long", args, ApplicationMessage.WARNING));
+							event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+							return ;
+						}
+					}
 					attachfile = new BufferAttachment() ;
 					attachfile.setId("ForumAttachment" + IdGenerator.generate());
 					attachfile.setName(uploadResource.getFileName()) ;
