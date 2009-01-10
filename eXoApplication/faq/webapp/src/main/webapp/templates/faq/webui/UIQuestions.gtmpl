@@ -591,7 +591,7 @@
 																			actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Activate");
 																			if(activateAnswers[countResponse]) {
 																		%>
-																				<a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivate")%>">
+																				<a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
 																					<div class="ActivateQuestion"><span></span></div>
 																				</a>
 																		<%} else {
@@ -601,7 +601,7 @@
 																				</a>
 																		<%}%>
 																		
-																		<a href="<%=uicomponent.event("DeleteAnswer", "" + question.getPos()[countResponse])%>" style="font-size: 9px; color: blue; font-style: italic;" title="<%=(_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer") + question.getPos()[countResponse])%>">
+																		<a href="<%=uicomponent.event("DeleteAnswer", "" + question.getPos()[countResponse])%>" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
 																			<div class="DeleteAnswer"><span></span></div>
 																		</a>
 															<%}%>

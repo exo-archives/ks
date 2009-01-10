@@ -129,7 +129,7 @@
 												String isEditQuestion = uicomponent.event("ViewEditQuestion", "");
 											%>
 												<div style="float:left; width: 100%">
-													<div class="ViewQuestionNotApproved">
+													<div class="ViewQuestionNotApproved" style="white-space:normal;">
 														<%=uicomponent.getValue(field.getName())%>
 													</div>
 													<%
