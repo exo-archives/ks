@@ -95,6 +95,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   
   private boolean isViewEditQuestion_ = true;
   private String labelContent_ = new String();
+  private boolean noCheck = false;
   
   // form input :
   private UIFormStringInput questionContent_ ;
@@ -148,10 +149,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   	return listResponse.size();
   }
   
-  public void setQuestionId(Question question, String languageViewed){
-	listResponse = new ArrayList<String>();
-	listUserResponse = new ArrayList<String>();
-	listDateResponse = new ArrayList<Date>();
+  public void setQuestionId(Question question, String languageViewed, boolean nonCheck){
+  	this.noCheck = nonCheck;
+		listResponse = new ArrayList<String>();
+		listUserResponse = new ArrayList<String>();
+		listDateResponse = new ArrayList<Date>();
     try{
       if(listQuestIdRela!= null && !listQuestIdRela.isEmpty()) {
         listRelationQuestion.clear() ;
@@ -431,12 +433,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }	
       PortalRequestContext portalContext = Util.getPortalRequestContext();
       String url = portalContext.getRequest().getRequestURL().toString();
-		url = url.replaceFirst("http://", "") ;
-		url = url.substring(0, url.indexOf("/")) ;
-		url = "http://" + url;
-		String path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
-		link = link.replaceFirst("OBJECTID", path);
-		link = url + link;
+			url = url.replaceFirst("http://", "") ;
+			url = url.substring(0, url.indexOf("/")) ;
+			url = "http://" + url;
+			String path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
+			link = link.replaceFirst("OBJECTID", path);
+			link = url + link;
       question_.setLink(link) ;
       SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       try{
@@ -467,19 +469,19 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
-        String cateId = questions.getCategoryId();
-        if(cateId == null || cateId.trim().length() < 1) cateId = "null";
-        if(questionNode!= null && !cateId.equals(question_.getCategoryId())) {
-          UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-          if(question_.getCategoryId() != null || !question_.getCategoryId().equals("null")){
-        	  if(!cateId.equals("null")){
+        if(!responseForm.noCheck){
+	        String cateId = questions.getCategoryId();
+	        if(cateId == null || cateId.trim().length() < 1) cateId = "null";
+	        if(questionNode!= null && !cateId.equals(question_.getCategoryId())) {
+	          UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
+        	  if(!question_.getCategoryId().equals("null")){
 		          Category category = faqService.getCategoryById(question_.getCategoryId(), sessionProvider) ;
 		          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
         	  } else {
-        		  uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{"Root category"}, ApplicationMessage.WARNING)) ;
+        		  uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{"Root"}, ApplicationMessage.WARNING)) ;
         	  }
-          }
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        }
         }
       } else {
         UIQuestionManagerForm questionManagerForm = responseForm.getParent() ;

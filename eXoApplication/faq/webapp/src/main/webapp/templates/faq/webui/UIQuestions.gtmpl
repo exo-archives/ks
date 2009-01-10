@@ -806,6 +806,7 @@
 																	else
 																		iconView = viewAction ;
 																	String linkView = uicomponent.event(viewAction, subQuestion.getId()) ;
+																	if(viewAction.equals("ResponseQuestion")) linkView = uicomponent.event(viewAction, subQuestion.getId() + "/nonCheck") ;
 																	String lockFunction = "" ;
 																	if(viewAction.equals("SendQuestion") && (!subQuestion.isApproved() || !subQuestion.isActivated())) {
 																		linkView = "javaScript: alert('" + 

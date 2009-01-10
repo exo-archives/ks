@@ -1330,7 +1330,10 @@ public class UIQuestions extends UIContainer {
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			Question question2 = null ;
-			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
+			boolean nonCheck = false;
+			String[] ids = event.getRequestContext().getRequestParameter(OBJECTID).split("/");
+			String questionId = ids[0];
+			if(ids.length > 1) nonCheck = true;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
 				question2 = faqService_.getQuestionById(questionId, sessionProvider);
@@ -1350,9 +1353,9 @@ public class UIQuestions extends UIContainer {
 			}
 			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
 			if(questionId.equals(question.questionView_)){
-				responseForm.setQuestionId(question2, language_) ;
+				responseForm.setQuestionId(question2, language_, nonCheck) ;
 			} else {
-				responseForm.setQuestionId(question2, "") ;
+				responseForm.setQuestionId(question2, "", nonCheck) ;
 			}
 			responseForm.setFAQSetting(question.faqSetting_);
 			popupContainer.setId("FAQResponseQuestion") ;
