@@ -1352,7 +1352,7 @@ public class UIQuestions extends UIContainer {
 				sessionProvider.close();
 			}
 			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
-			if(questionId.equals(question.questionView_)){
+			if(questionId.equals(question.questionView_) && !nonCheck){
 				responseForm.setQuestionId(question2, language_, nonCheck) ;
 			} else {
 				responseForm.setQuestionId(question2, "", nonCheck) ;

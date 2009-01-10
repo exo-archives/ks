@@ -773,18 +773,20 @@
 					<%String subQuesIcon = "";
 						if(uicomponent.canEditQuestion || listCateModerator.get(i)) questionActions = uicomponent.moderatorActionQues_;
 						else  questionActions = uicomponent.userActionQues_;
+						String idViewPopup;
 						for(Question subQuestion in uicomponent.getListSubQuestion(category.getId())){
 							if(subQuestion.getResponses().trim().length() < 1) subQuesIcon = "NotResponse";
 							else subQuesIcon = "Question";
+							idViewPopup = subQuestion.getId();
 					%>
 							<div class="$subQuesIcon" style="white-space: nowrap; padding:0 0 5px 18px;">
-								<div style="float: left; width: 95%;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupSubQuestion$questionId', '', null, null)">
+								<div style="float: left; width: 95%;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupSubQuestion$idViewPopup', '', null, null)">
 									<a title="<%=subQuestion.getQuestion()%>" href="<%=uicomponent.event("ViewQuestion", category.getId() + "/" + subQuestion.getId() + "/nonBack")%>">
 										<%=FAQUtils.getSubString(subQuestion.getQuestion(), 150)%>
 									</a>
 									
 									<!-- ============================================== Action of subquestion ========================================= -->
-									<div class="UIFAQPopupCategory" id="UIPopupSubQuestion$questionId" style="display: none; left: 50px;">
+									<div class="UIFAQPopupCategory" id="UIPopupSubQuestion$idViewPopup" style="display: none; left: 50px;">
 										<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 											<div class="UIContextMenuContainer">
 
