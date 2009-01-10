@@ -96,7 +96,7 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 				try {
 					if(uiForm.maxSize > 0){
 						if((long)uploadResource.getUploadedSize() > uiForm.maxSize) {
-							Object[] args = {fileName, String.valueOf(uiForm.maxSize)};
+							Object[] args = {fileName, String.valueOf((uiForm.maxSize/1048576))};
 							uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-long", args, ApplicationMessage.WARNING));
 							event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 							return ;

@@ -92,7 +92,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
             listFileAttachment.add(fileAttachment) ;
           } else {
             UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-            uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", new Object[]{uploadResource.getFileName(), String.valueOf(maxSize)}, ApplicationMessage.WARNING)) ;
+            uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", new Object[]{uploadResource.getFileName(), String.valueOf((maxSize/1048576))}, ApplicationMessage.WARNING)) ;
             event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
             return ;
           }
