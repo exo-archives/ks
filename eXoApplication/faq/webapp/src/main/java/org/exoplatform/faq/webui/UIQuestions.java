@@ -137,9 +137,6 @@ public class UIQuestions extends UIContainer {
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	private boolean viewAuthorInfor = false;
 
-	private String[] subCategoryAction = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", 
-																										"DeleteCategory", "MoveCategory", "Watch"};
-	
 	public JCRPageList pageList ;
 	private UIFAQPageIterator pageIterator = null ;
 	long pageSelect = 0;
@@ -297,9 +294,9 @@ public class UIQuestions extends UIContainer {
 	
 	private String[] getMenuSubCategory(Category category){
 		if(currentUser_ == null) return userActionsCate_;
-		if(category.getModerators().length == 1 && currentUser_.equals(category.getModerators()[0])) return subCategoryAction;
+		if(category.getModerators().length == 1 && currentUser_.equals(category.getModerators()[0])) return secondActionCate_;
 		for(String str : category.getModerators()){
-			if(listUserGroupMember.contains(str)) return subCategoryAction;
+			if(listUserGroupMember.contains(str)) return secondActionCate_;
 		}
 		return userActionsCate_;
 	}
@@ -1104,14 +1101,19 @@ public class UIQuestions extends UIContainer {
 	static  public class EditSubCategoryActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+			String ids[] = event.getRequestContext().getRequestParameter(OBJECTID).split("/");
+			String categoryId = ids[0];
+			boolean canNext = false;
+			if(ids.length == 2) canNext = true;
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction uiPopupAction = faqPortlet.getChild(UIPopupAction.class) ; 
 			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				String newPath = questions.cutCaret(newPath_) ;
-				String pathService = questions.cutCaret(questions.getPathService(categoryId)) ;
+				String newPath = "";
+				String pathService = questions.getPathService(categoryId) ;
+				if(!canNext)newPath = newPath_ ;
+				else newPath =  questions.getPathService(categoryId);
 				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 				String moderator[] = cate.getModeratorsCategory() ;
 				String currentUser = FAQUtils.getCurrentUser() ;
@@ -1122,7 +1124,7 @@ public class UIQuestions extends UIContainer {
 						uiPopupContainer.setId("EditSubCategoryForm") ;
 						UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 						categoryForm.init(false) ;
-						String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
+						String parentCategoryId = newPath.substring(newPath.lastIndexOf("/")+1, newPath.length()) ;
 						categoryForm.setParentId(parentCategoryId) ;
 						categoryForm.setCategoryValue(categoryId, true) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;

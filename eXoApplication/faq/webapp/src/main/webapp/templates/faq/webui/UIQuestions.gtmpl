@@ -716,7 +716,7 @@
 							<div style="float: left;">
 								<%String subTitle = "";
 									for(Category subCategory in listSubCategories){
-										if(uicomponent.canEditQuestion || listCateModerator.get(i)) actionSubCate = uicomponent.subCategoryAction;
+										if(uicomponent.canEditQuestion || listCateModerator.get(i)) actionSubCate = uicomponent.secondActionCate_;
 										else actionSubCate = uicomponent.getMenuSubCategory(subCategory);
 								%>
 										<div class="FAQCategory" style="float: left; margin:0px 15px 5px 0px;">
@@ -743,6 +743,8 @@
 																	<%
 																		for(viewSubAction in actionSubCate) {
 																			sublinkView = uicomponent.event(viewSubAction, subCategory.getId()) ;
+																			if(viewSubAction.equals("EditSubCategory")) sublinkView = uicomponent.event(viewSubAction, subCategory.getId() + "/subCategory") ;
+																			if(viewSubAction.equals("MoveDown") || viewSubAction.equals("MoveUp")) continue;
 																			subitemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewSubAction);
 																	%>
 																			<a href="javascript:void(0) ;" onmousedown="$sublinkView" class="MenuItem">
