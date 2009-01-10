@@ -989,9 +989,9 @@ public class JCRDataStorage {
       query = qm.createQuery(queryString.toString(), Query.XPATH);
       result = query.execute();
       Node parentCategory = result.getNodes().nextNode() ;
-      return  getMaxIndex(parentCategory.getPath(), qm, query, result) + 1;
+      return  getMaxIndex(parentCategory.getPath(), qm, query, result);
 		} else {
-			return  getMaxIndex(categoryHome.getPath(), qm, query, result) + 1;
+			return  getMaxIndex(categoryHome.getPath(), qm, query, result);
 		}
 	}
 	
