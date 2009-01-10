@@ -562,6 +562,7 @@
 													boolean[] activateAnswers = question.getActivateAnswers();
 													String actionAnswer = "";
 													for(String res in question.getAllResponses()) {
+														res = res.replaceFirst("<p>", "").substring(0, res.lastIndexOf("</p>"))
 														if(!uicomponent.canEditQuestion && (!approvedAnswers[countResponse] || !activateAnswers[countResponse])){
 															countResponse ++;
 															continue;
@@ -570,37 +571,42 @@
 														responseBy = FAQUtils.getFullName(question.getResponseBy()[countResponse]) ;
 														String userProfile = uicomponent.event("ViewUserProfile", question.getResponseBy()[countResponse]) ;
 													%>
-														<table>
-															<tr>
-																<%if(uicomponent.canEditQuestion){%>
-																	<td width="70">
+														<div style="float: left;">
+															<div style="float: left;">$res &nbsp;</div>
+															<%if(uicomponent.canEditQuestion){%>
+																	<%
+																		actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Approve");
+																		if(approvedAnswers[countResponse]) {
+																		%>
+																				<a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
+																					<div class="ApprovedQuestion"><span></span></div>
+																				</a>
+																		<%} else {
+																		%>
+																				<a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>">
+																					<div class="UnApprovedQuestion"><span></span></div>
+																				</a>
+																		<%}%>
 																		<%
-																			actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Approve");
-																			if(approvedAnswers[countResponse]) {
-																			%>
-																					[ <a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;"><%=_ctx.appRes("UIQuestionsInfo.title.Approve")%></a> ]
-																			<%} else {
-																			%>
-																					[ <a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;"><%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%></a> ]
-																			<%}%>
-																			<br/>
-																			<%
-																				actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Activate");
-																				if(activateAnswers[countResponse]) {
-																			%>
-																					[ <a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;"><%=_ctx.appRes("UIQuestionsInfo.title.Activate")%></a> ]
-																			<%} else {
-																			%>
-																					[ <a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;"><%=_ctx.appRes("UIQuestionsInfo.title.UnActivate")%></a> ]
-																			<%}%>
-																	</td>
-																<%}%>
-																<td>
-																	$res
-																</td>
-															</tr>
-														</table>
-														
+																			actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Activate");
+																			if(activateAnswers[countResponse]) {
+																		%>
+																				<a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivate")%>">
+																					<div class="ActivateQuestion"><span></span></div>
+																				</a>
+																		<%} else {
+																		%>
+																				<a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
+																					<div class="DeActivateQuestion"><span></span></div>
+																				</a>
+																		<%}%>
+																		
+																		<a href="<%=uicomponent.event("DeleteAnswer", "" + question.getPos()[countResponse])%>" style="font-size: 9px; color: blue; font-style: italic;" title="<%=(_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer") + question.getPos()[countResponse])%>">
+																			<div class="DeleteAnswer"><span></span></div>
+																		</a>
+															<%}%>
+														</div>
+														<div style="clear: left;"><span></span></div>
 														<table width="100%">
 															<tr>
 																<td style="white-space:nowrap;">

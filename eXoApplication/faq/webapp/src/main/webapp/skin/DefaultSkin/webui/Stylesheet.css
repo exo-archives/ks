@@ -393,6 +393,46 @@
 	margin: 0px 4px;
 }
 
+.UIFAQPortlet .ApprovedQuestion {
+	float: left;
+	background: url('background/question-approve.gif') no-repeat left center;
+	width: 16px; height: 20px;
+	cursor: pointer;
+	margin: 0px 0px 0px 4px;
+}
+
+.UIFAQPortlet .UnApprovedQuestion {
+	float: left;
+	background: url('background/question-unapprove.gif') no-repeat left center;
+	width: 16px; height: 20px;
+	cursor: pointer;
+	margin: 0px 0px 0px 4px;
+}
+
+.UIFAQPortlet .ActivateQuestion {
+	float: left;
+	background: url('background/question-active.gif') no-repeat left center;
+	width: 16px; height: 20px;
+	cursor: pointer;
+	margin: 0px 0px 0px 4px;
+}
+
+.UIFAQPortlet .DeActivateQuestion {
+	float: left;
+	background: url('background/question-deactive.gif') no-repeat left center;
+	width: 16px; height: 20px;
+	cursor: pointer;
+	margin: 0px 0px 0px 4px;
+}
+
+.UIFAQPortlet .DeleteAnswer {
+	float: left;
+	background: url('background/DustBin.gif') no-repeat left center;
+	width: 18px; height: 20px;
+	cursor: pointer;
+	margin: 0px 0px 0px 4px;
+}
+
 .UIFAQPortlet .VoteFAQ {
 	float: right;
 	background: url('background/VoteIcon.gif') no-repeat left center;
