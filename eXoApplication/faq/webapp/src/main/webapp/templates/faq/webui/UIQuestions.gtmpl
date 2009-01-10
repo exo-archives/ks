@@ -779,7 +779,7 @@
 					%>
 							<div class="$subQuesIcon" style="white-space: nowrap; padding:0 0 5px 18px;">
 								<div style="float: left; width: 95%;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupSubQuestion$questionId', '', null, null)">
-									<a title="<%=subQuestion.getQuestion()%>" href="<%=uicomponent.event("ViewQuestion", category.getId() + "/" + subQuestion.getId())%>">
+									<a title="<%=subQuestion.getQuestion()%>" href="<%=uicomponent.event("ViewQuestion", category.getId() + "/" + subQuestion.getId() + "/nonBack")%>">
 										<%=FAQUtils.getSubString(subQuestion.getQuestion(), 150)%>
 									</a>
 									

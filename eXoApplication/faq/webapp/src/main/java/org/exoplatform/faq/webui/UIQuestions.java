@@ -1224,7 +1224,8 @@ public class UIQuestions extends UIContainer {
 					}
 				} else {
 					String[] strArr = strId.split("/");
-					if(uiQuestions.backPath_ != null && uiQuestions.backPath_.trim().length() > 0 && uiQuestions.backPath_.equals(strId)) {
+					if((uiQuestions.backPath_ != null && uiQuestions.backPath_.trim().length() > 0 && uiQuestions.backPath_.equals(strId))
+							|| strArr.length == 3) {
 						uiQuestions.backPath_ = "" ;
 					} else {
 						uiQuestions.backPath_ = uiQuestions.categoryId_ + "/" + uiQuestions.questionView_ ;
