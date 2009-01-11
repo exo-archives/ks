@@ -83,6 +83,7 @@ public class UICategories extends UIContainer{
 	private List<String> listCateId_ = new ArrayList<String>() ;
 	private List<Boolean> categoryModerators = new ArrayList<Boolean>() ;
 	private boolean canEditQuestion = false ;
+	private boolean isModeratorSubCate = false ;
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
@@ -125,17 +126,25 @@ public class UICategories extends UIContainer{
 
 	private void setIsModerators(String currentUser_) {
 		categoryModerators.clear() ;
-		if(faqSetting_.getIsAdmin().equals("TRUE")) {
+		isModeratorSubCate = false;
+		canEditQuestion = false ;
+		
+		if(faqSetting_.isAdmin()) {
 			canEditQuestion = true ;
-			for(int i = 0 ; i < this.listCate.size(); i ++) {
-				this.categoryModerators.add(true);
-			}
+			isModeratorSubCate = true;
 		} else {
 			if(categoryId_ == null || categoryId_.trim().length() < 1) {
 				listCateId_.clear() ;
 			} else {
 				if(!listCateId_.contains(categoryId_)) {
-					listCateId_.add(categoryId_) ;
+					try {
+						if(listCateId_.isEmpty() || 
+							 !getPathService(categoryId_).equals(getPathService(listCateId_.get(listCateId_.size() - 1))))
+								listCateId_.add(categoryId_) ;
+						else listCateId_.set(listCateId_.size() - 1, categoryId_);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				} else {
 					int pos = listCateId_.indexOf(categoryId_) ;
 					for(int i = pos + 1; i < listCateId_.size() ; i ++) {
@@ -143,28 +152,25 @@ public class UICategories extends UIContainer{
 					}
 				}
 			}
-			boolean isContinue = true ;
 			if(listCateId_.size() > 0){
 				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+				int i = 0;
 				for(String cateIdProcess : listCateId_) {
 					try {
 						if(faqService_.getCategoryById(cateIdProcess, sessionProvider).getModeratorsCategory().contains(currentUser_)){
-							for(int j = 0 ; j < listCate.size(); j ++) {
-								categoryModerators.add(true) ;
-							}
-							isContinue = false ;
 							canEditQuestion = true ;
+							if(i < listCateId_.size() - 1) isModeratorSubCate = true;
 							break ;
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					i ++;
 				}
 				sessionProvider.close();
 			}
 
-			if(isContinue) {
-				canEditQuestion = false ;
+			if(!isModeratorSubCate) {
 				for(Category category : listCate) {
 					try {
 						if(category.getModeratorsCategory().contains(currentUser_)) {

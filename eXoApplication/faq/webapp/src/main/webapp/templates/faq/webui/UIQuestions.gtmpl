@@ -262,7 +262,7 @@
 															<%if(uicomponent.canEditQuestion) {
 																	if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
 															%>
-																		<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>" >
+																		<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>">
 																			<div class="ItemIcon WatchQuestionManager" style="padding:3px 0px 5px 5px;">
 																				<div style="padding-left: 20px;white-space:nowrap;"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></div>
 																			</div>
@@ -395,7 +395,7 @@
 																							<%if(uicomponent.canEditQuestion) {
 																									if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
 																							%>
-																										<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>" >
+																										<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>">
 																											<div class="ItemIcon WatchQuestionManager" style="padding:3px 0px 5px 5px;">
 																												<div style="padding-left: 20px;white-space:nowrap;"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></div>
 																											</div>
@@ -441,7 +441,7 @@
 																				color = "#914ab6";
 																			}
 																	%>
-																			<a style="line-height:20px;color:$color;" href="$linkView" > $quesLanguage </a>
+																			<a style="line-height:20px;color:$color;" href="$linkView"> $quesLanguage </a>
 																	<%  if(countLanguage < listQuestLanguage.size()){%>
 																				 |
 																		<%} else {%>
@@ -554,7 +554,7 @@
 										
 										<!-- ===================================== View response content ==================================================== -->
 										<div class="ResponseContent">
-											<div class="Response" id="SetWidthContent" style="padding-left:0px; _width: 98%;" >
+											<div class="Response" id="SetWidthContent" style="padding-left:0px; _width: 98%;">
 												<%
 												if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 													int countResponse = 0;
@@ -776,7 +776,7 @@
 																    	<div style="clear: left;"><span></span></div>
 													 						<div class="LabelBox">
 														 						<div style="line-height:20px;">
-															 						<div class="Size AttachmentLabel" style="color:#1052b5;" >
+															 						<div class="Size AttachmentLabel" style="color:#1052b5;">
 															 							<%
 															 								downloadAtt = uicomponent.event("DownloadAttach");
 															 							%>
@@ -860,7 +860,7 @@
 											}
 												
 											</style>
-											<div class="UIAction" >
+											<div class="UIAction">
 												<div style="float:right">
 													<div class="PrintAction" style="display:none ;">
 														<a href="javascript:window.print() ;" class="ActionButton LightBlueStyle">

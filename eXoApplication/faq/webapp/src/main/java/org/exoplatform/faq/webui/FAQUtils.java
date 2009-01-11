@@ -359,15 +359,15 @@ public class FAQUtils {
 		}
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
-		if(!isSettingForm){
+		//if(!isSettingForm){
 			if(emailContent == null || emailContent.trim().length() < 1){
-			if(isNew){
-				emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
-			} else {
-				emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
+				if(isNew){
+					emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
+				} else {
+					emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
+				}
 			}
-			}
-		}
+		//}
 		faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
 		faqSetting.setEmailSettingContent(emailContent) ;
 	}

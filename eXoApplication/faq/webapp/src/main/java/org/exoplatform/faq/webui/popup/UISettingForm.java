@@ -67,6 +67,7 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 				@EventConfig(listeners = UISettingForm.SaveActionListener.class),
 				@EventConfig(listeners = UISettingForm.UserWatchManagerActionListener.class),
 				@EventConfig(listeners = UISettingForm.ChildTabChangeActionListener.class),
+				@EventConfig(listeners = UISettingForm.ResetMailContentActionListener.class),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )

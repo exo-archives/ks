@@ -13,7 +13,7 @@
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView();");
-	if(uicomponent.canEditQuestion)
+	if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate)
 		jsmanager.addJavascript('eXo.faq.UIFAQDragDrop.init("'+compId+'") ;') ;
 %>
 <div id="$uicomponent.id" style="padding: 0px 5px 0px 5px; line-height:28px; padding-bottom:2px;">
@@ -109,7 +109,7 @@
 								</a>
 								<%
 								String linkWacth = uicomponent.event("WatchManager", category.getId());
-								if(listCateModerator.get(i)) {
+								if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate || listCateModerator.get(i)) {
 											List emailWatch = uicomponent.getListWatch(category.getId()) ;
 											if(emailWatch.size() > 0) {
 								%>
@@ -138,7 +138,7 @@
 												<div class="MiddleRightRightClickPopupMenu">
 													<div class="UIRightPopupMenuContainer">
 														<%
-															if(listCateModerator.get(i)) {
+															if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate || listCateModerator.get(i)) {
 																categoryAction = uicomponent.getActionCategory() ;
 															} else {
 																categoryAction = uicomponent.getActionCategoryWithUser() ;
