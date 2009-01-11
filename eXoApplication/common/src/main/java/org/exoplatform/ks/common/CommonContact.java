@@ -25,16 +25,16 @@ package org.exoplatform.ks.common;
  *
  */
 public class CommonContact {
-  private String emailAddress;
-  private String city;
-  private String country;
-  private String avatarUrl;
-  private String birthday;
-  private String gender;
-  private String job;
-  private String phone;
-  private String mobile;
-  private String webSite;
+  private String emailAddress = "";
+  private String city = "";
+  private String country = "";
+  private String avatarUrl = "";
+  private String birthday = "";
+  private String gender = "";
+  private String job = "";
+  private String phone = "";
+  private String mobile = "";
+  private String webSite = "";
   
   public CommonContact() {
     
