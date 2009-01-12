@@ -329,8 +329,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
         responseForm.setFAQSetting(questionsInfo.faqSetting_);
         responseForm.setIsChildren(true) ;
-        if(param.length == 1) responseForm.setQuestionId(question, null) ;
-        else responseForm.setQuestionId(question, param[1]) ;
+        if(param.length == 1) responseForm.setQuestionId(question, null, false) ;
+        else responseForm.setQuestionId(question, param[1], false) ;
         questionManagerForm.isViewEditQuestion = false ;
         questionManagerForm.isViewResponseQuestion = true ;
         questionManagerForm.isResponseQuestion = true ;
