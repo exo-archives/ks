@@ -120,7 +120,7 @@
 			
 			<div class="ContentContainer" id="UITopicContent">
 				<div class="UITopicList">
-					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+					<table cellspacing="0" borderspacing="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th style="width: 40px;">&nbsp;</th>
@@ -213,9 +213,9 @@
 							%>
 								<tr class="$classRow $classSelect">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
-									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
-									<td >
-										<div >
+									<td class="Tdbox"><div class="StatusIcon $iconClassTopic"><span></span></div></td>
+									<td>
+										<div>
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
@@ -250,7 +250,7 @@
 											$approved
 											<div style="clear: left;"><span></span></div>
 										</div>
-										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
+										<div><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
 									<td class="Tdbox">$attachment</td>
 									<td class="Tdbox">
@@ -322,7 +322,7 @@
 											<% /*End Popup Menu*/ %>
 										</div>
 									</td>
-								 	<td >
+								 	<td>
 								 		<div class="DateTime">$lastPostDate</div>
 								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
 										<div class="PostInfos LastPostInfos"><%=_ctx.appRes("UITopicContainer.label.by");%> <a href="#" class="PostBy">$postNewBy</a></div>

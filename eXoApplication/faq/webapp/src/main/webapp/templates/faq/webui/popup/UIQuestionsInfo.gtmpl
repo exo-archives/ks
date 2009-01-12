@@ -4,7 +4,7 @@
 	import org.exoplatform.webui.form.UIFormInputWithActions;
 %>
 
-<div class="FAQUIQuestionInfo $uicomponent.id" >
+<div class="FAQUIQuestionInfo $uicomponent.id">
 	<% uiform.begin() %>
   <div class="UIFormTabPane">
     <div class="UITabPane">
@@ -131,7 +131,7 @@
 																		<%}%>
 																		</td>
 																		<td align="center">
-																				<a href="$linkEdit" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "EditQuestion")%>" >
+																				<a href="$linkEdit" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "EditQuestion")%>">
 																					<div class="ItemIcon Edit">
 																							<div style="padding-left: 20px;"><span></span></div>
 																					</div>
@@ -200,14 +200,14 @@
 																			for(String language : question.getLanguagesNotYetAnswered().split(",")){
 																				linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getId() + "/" + language ) ;
 																		%>
-																			<a href="$linkResponseByLanguage" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>" >
+																			<a href="$linkResponseByLanguage" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>">
 																				<div style="padding: 0px 4px 4px 0px;">- &nbsp;$language</div>
 																			</a>
 																		<%}%>
 																		</td>
 																		<td align="center">
 																			<div style="float: left">
-																				<a href="$linkResponse" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>" >
+																				<a href="$linkResponse" style="float: left" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>">
 																					<div class="ItemIcon ResponseQuestion">
 																							<div style="padding-left: 20px;"><span></span></div>
 																					</div>

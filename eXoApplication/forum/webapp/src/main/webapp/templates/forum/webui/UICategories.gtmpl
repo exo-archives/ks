@@ -75,7 +75,7 @@
 				</div>
 				<div class="ContentContainer">
 					<div class="ForumList">
-						<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+						<table cellspacing="0" borderspacing="0" class="UIGrid">
 							<thead>
 								<tr>
 									<th style="width: 40px;"></th>
@@ -213,7 +213,7 @@
 												}
 											%>
 										 	<td>
-										 		<div class="LastPostIcon $topicNewPostIcon" ><span></span></div>
+										 		<div class="LastPostIcon $topicNewPostIcon"><span></span></div>
 										 		<div style="float: left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 										 			<a actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
@@ -240,7 +240,7 @@
 												else userSmile = "OfflineIcon";
 											%>
 												<a class="ModeratorContent" href="#">
-													<div class="EmoticonsIcon $userSmile" >$forumModerator</div>
+													<div class="EmoticonsIcon $userSmile">$forumModerator</div>
 												</a>
 											<% } %>
 												<div style="clear: left;"><span></span></div>

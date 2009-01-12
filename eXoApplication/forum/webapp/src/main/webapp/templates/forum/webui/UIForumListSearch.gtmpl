@@ -8,7 +8,7 @@
 	<div class="ContentContainer">
 		<div class="UITopicList">
 			<div>
-				<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+				<table cellspacing="0" borderspacing="0" class="UIGrid">
 					<thead>
 						<tr>
 							<th style="width: 80px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>

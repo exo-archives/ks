@@ -3,7 +3,7 @@ import org.exoplatform.forum.service.Category;
 %>
 <div class="UIFormForum $uicomponent.id" style="padding: 10px;">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" >
+		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 			<%if(!uiform.listCategories.isEmpty()){%>
 					<div style="width: 90%;">

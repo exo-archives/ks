@@ -1,6 +1,6 @@
 <div class="UIQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" >
+		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table class="UIFormGrid">
 					<tbody>				

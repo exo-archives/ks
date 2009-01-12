@@ -6,7 +6,7 @@
 					<tbody>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_QUESTION_INPUT)%>:</td>
-							<td class="FieldComponent" style="width: 400px;" >
+							<td class="FieldComponent" style="width: 400px;">
 								<div class="QuestionInput">
 								<% uiform.renderChild(uicomponent.FIELD_QUESTION_INPUT) %>
 								</div>
@@ -21,7 +21,7 @@
 							<tbody>
 								<tr>
 									<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_OPTIONS)%>:</td>
-									<td class="FieldComponent" >
+									<td class="FieldComponent">
 										<% uiform.renderChild(uicomponent.FIELD_OPTIONS) %>
 									</td>
 								</tr>

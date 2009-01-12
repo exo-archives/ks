@@ -34,7 +34,7 @@
 		  			<tr>
 		  				<td class="FieldLabel">Message:</td>
 		  				<td class="FieldComponent">
-		  					<textarea class="TexMessage" name="description" ></textarea>
+		  					<textarea class="TexMessage" name="description"></textarea>
 		  				</td>
 		  			</tr>
 		  		</tbody>
