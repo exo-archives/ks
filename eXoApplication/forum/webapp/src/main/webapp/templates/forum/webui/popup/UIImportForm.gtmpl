@@ -1,6 +1,6 @@
 <div class="UIFormForum $uicomponent.id" style="padding: 10px;">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" >
+		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table class="UIFormGrid">
 					<tbody>				

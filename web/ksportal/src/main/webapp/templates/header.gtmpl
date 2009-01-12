@@ -26,7 +26,7 @@
 						<div class="CenterContainer">
 						<% if(isLogin){ %>
 							<div class="TextAcount">Welcome <span style="font-weight: bold;">$userLogin</span></div>
-						<% }else { %>	
+						<% }else { %>
 							<div class="TextAcount">Demo accounts: <span style="font-weight: bold;">demo/exo, admin/exo</span></div>
 						<% } %>
 								<a class="ActionButton"  href="$registerUri">
@@ -44,7 +44,7 @@
 									</div>
 								</div>
 							</a>-->
-							<%if(isLogin) {%>	
+							<%if(isLogin) {%>
 								<a class="ActionButton" href="$signOutAction">
 									<div class="LeftButton">
 										<div class="RightButton">
@@ -63,7 +63,7 @@
 							<% } %>
 						</div>
 					</div>
-					<div style="clear: right"><span></span></div>		 
+					<div style="clear: right"><span></span></div> 
 				</div>
 			</div>
 	 	</div>

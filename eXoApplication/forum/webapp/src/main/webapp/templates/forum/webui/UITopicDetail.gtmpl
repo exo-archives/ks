@@ -98,7 +98,7 @@
 				</div>
 			</div>
 		</div>
-		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon" >
+		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative; ">
@@ -409,7 +409,7 @@
 															 		} 
 															 		if(!isView){ 
 													 		%>
-														 				<div class="DisableMenuItem" >	 
+														 				<div class="DisableMenuItem">	 
 																			<div class="ItemIcon $classIcon">
 																				$itemLabel
 																			</div>
@@ -450,7 +450,7 @@
 															 		 }
 															 		 if(!isView){ 
 													 			%>
-														 				<div class="DisableMenuItem" >	 
+														 				<div class="DisableMenuItem">	 
 																			<div class="ItemIcon $classIcon">
 																				<%=itemLabel%>
 																			</div>
@@ -863,7 +863,7 @@
 				</div>
 			</div>
 		</div>
-		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon" >
+		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative;">

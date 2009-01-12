@@ -71,7 +71,7 @@
  											} else {
  										 %>
  										 <tr class="EvenRow">
-												<td class="Tdbox" colspan="10" align="center"><div class="" ><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div></td>
+												<td class="Tdbox" colspan="10" align="center"><div><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div></td>
 			  							</tr>
 										<% } %> 
  									</tbody>

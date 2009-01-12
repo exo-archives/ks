@@ -83,7 +83,7 @@
 			</div>
 		</div>
 		
-		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon" >
+		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon">
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative;">
@@ -361,7 +361,7 @@
 			
 			<div class="ContentContainer" id="UITopicContent">
 				<div class="UITopicList">
-					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+					<table cellspacing="0" borderspacing="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th style="width: 40px;">&nbsp;</th>
@@ -455,9 +455,9 @@
 							%>
 								<tr class="$classRow $classSelect">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
-									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
-									<td >
-										<div >
+									<td class="Tdbox"><div class="StatusIcon $iconClassTopic"><span></span></div></td>
+									<td>
+										<div>
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
@@ -481,7 +481,7 @@
 											<% }
 											t = t + 1 ;
 											}
-											if(max_page > 5) { 
+											if(max_page> 5) { 
 												number = String.valueOf(max_page) ;
 											%>
 											<span>... <a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )</span>
@@ -492,7 +492,7 @@
 											$approved
 											<div style="clear: left;"><span></span></div>
 										</div>
-										<div ><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
+										<div><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
 									<td class="Tdbox">$attachment</td>
 									<td class="Tdbox">
@@ -520,7 +520,7 @@
 									%> 
 										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="Topic have $sizeTag Tag!">
 											<% /*Begin Popup Menu*/ 
-											if(sizeTag > 0) {
+											if(sizeTag> 0) {
 											%>
 											<div style="position: relative;" class="FixLeftPopup">
 												<div class="UIPopupCategory" style="display: none; ">
@@ -560,7 +560,7 @@
 											<% } /*End Popup Menu*/ %>
 										</div>
 									</td>
-								 	<td >
+								 	<td>
 								 		<div class="DateTime">$lastPostDate</div>
 								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
 										<div class="PostInfos LastPostInfos"><%=_ctx.appRes("UITopicContainer.label.by");%> <a href="#" class="PostBy">$postNewBy</a></div>
@@ -629,7 +629,7 @@
 			</div>
 		</div>
 		
-		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon" >
+		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon">
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative;">

@@ -35,13 +35,13 @@
  									<% } %>
  									<td style="width: 90px;" align="center">
  										<a href="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" style="float:left;">
- 											<div class="LinkWatchIcon" ></div>
+ 											<div class="LinkWatchIcon"></div>
  										</a>
  										<a href="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" style="float:left;">
- 											<div class="EditWatchIcon" ></div>
+ 											<div class="EditWatchIcon"></div>
  										</a>
  										<a href="$linkDelete" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" style="float:left;">
- 											<div class="DeleteWatchIcon" ></div>
+ 											<div class="DeleteWatchIcon"></div>
  										</a>
  									</td>
  								</tr>
@@ -50,7 +50,7 @@
  								} else {
  									   %>
  										 <tr class="EvenRow">
-												<td class="Tdbox" colspan="10" align="center"><div class="" ><%= _ctx.appRes("UIWatchManager.title.no-matches"); %> </div></td>
+												<td class="Tdbox" colspan="10" align="center"><div class=""><%= _ctx.appRes("UIWatchManager.title.no-matches"); %> </div></td>
 			  						</tr>
 								<% } %>
  							</tbody>

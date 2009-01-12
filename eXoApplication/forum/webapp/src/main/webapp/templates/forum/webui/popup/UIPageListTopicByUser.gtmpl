@@ -23,7 +23,7 @@
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 						<div style="clear: right; height: 0px;"><span></span></div>
 					</div>
-					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+					<table cellspacing="0" borderspacing="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th style="width: 40px;"></th>
@@ -82,7 +82,7 @@
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
-									<td class="Tdbox"><div class="StatusIcon $iconClassTopic" ><span></span></div></td>
+									<td class="Tdbox"><div class="StatusIcon $iconClassTopic"><span></span></div></td>
 									<td >
 										<div >
 										<% if(topic.getIsSticky()) {%>

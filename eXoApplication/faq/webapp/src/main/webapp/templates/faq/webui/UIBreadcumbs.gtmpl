@@ -20,7 +20,7 @@
 				%>
 								<a href="$url" onclick="$link; return false;" class="Selected" title="$title">$namePath</a>
 							<% } else { %>
-								<a href="$url" onclick="$link; return false;" class="Selected" >$namePath</a>
+								<a href="$url" onclick="$link; return false;" class="Selected">$namePath</a>
 							<% } %>
 							<div class="RightArrowIcon"><span></span></div>
 				 <% } else {
@@ -31,7 +31,7 @@
 				%>
 								<div class="Selected" title="$title">$namePath </div>
 							<% } else { %>
-								<div class="Selected" >$namePath</div>
+								<div class="Selected">$namePath</div>
 							<% } 
 						} %>
 			  <% t = t + 1 ;

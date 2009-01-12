@@ -18,7 +18,7 @@
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 						<div style="clear: right; height: 0px;"><span></span></div>
 					</div>
-					<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+					<table cellspacing="0" borderspacing="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
@@ -49,14 +49,14 @@
 									if(topic.getIsActive())titleTp = "UnActive";
 							%>
 								<tr class="$classRow">
-									<td >
-										<div >
+									<td>
+										<div>
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
 											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="TitleNorman">$topicTitle</a>
 										</div>
-										<div ><a class="LastPostInfos PostBy">$topicBy</a></div>
+										<div><a class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
 								 	<td class="Tdbox" align="center"><div>$isActive</div></td>
 								 	<td class="Tdbox" align="center"><div>$lastPostDate</div></td>

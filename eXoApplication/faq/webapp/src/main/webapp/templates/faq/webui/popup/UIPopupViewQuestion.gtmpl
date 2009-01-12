@@ -12,10 +12,10 @@
 	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImagesView');
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.reSizeImagesView();");
  %>
-<div class="UIPopupViewQuestion" >
+<div class="UIPopupViewQuestion">
 	<div><% uiform.begin() %></div>
 	<%uicomponent.renderChildren() ;%>
-	<div class= "ViewQuestion" >
+	<div class= "ViewQuestion">
 		<table class="UIFormGridTableForm">
 			<tbody>	
 				<% 
@@ -83,7 +83,7 @@
 					 						<div style="clear: left;"><span></span></div>
 					 						<div class="LabelBox">
 						 						<div style="line-height:20px;">
-							 						<div class="Size AttachmentLabel" style="color:#1052b5;" >
+							 						<div class="Size AttachmentLabel" style="color:#1052b5;">
 							 							<%
 							 								downloadAtt = uicomponent.event("DownloadAttach");
 							 							%>
@@ -148,7 +148,7 @@
 										quesRelaCont = FAQUtils.getSubString(quesRelaCont, 50); 
 									}
 						%>
-									&nbsp;  <div title="$title" >- $quesRelaCont<br></div>
+									&nbsp; <div title="$title">- $quesRelaCont<br></div>
 						<% 	}
 							}%>
 					</div>

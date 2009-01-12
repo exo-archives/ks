@@ -134,7 +134,7 @@
 										}
 										String icon = node.getIcon();
 										if(icon == null) icon = "DefaultPageIcon";
-						%>			
+						%>		
 						
 										<div class="UITab">
 											<div class="$tabStyleNavigation">
