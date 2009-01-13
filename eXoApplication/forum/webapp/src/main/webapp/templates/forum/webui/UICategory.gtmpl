@@ -192,7 +192,6 @@
 						<th style="width: 30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
 						<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
 						<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
-						<th style="width: 170px;"><%=_ctx.appRes("UICategory.label.moderator");%></th>
 						<% if(isShowMenu){ %>
 						<th style="width: 30px;"><input id="UIFORUMCheckAllForum" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 						<% } %>
@@ -209,7 +208,6 @@
 						<td><%=_ctx.appRes("UICategory.label.noPost");%></td>
 						<td>0</td>
 						<td>0</td>
-						<td>&nbsp;</td>
 						<% if(isShowMenu){ %>
 						<td></td>
 						<% } %>
@@ -260,7 +258,7 @@
 								}
 								titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle) ;
 								if(topicNewPost.getIsClosed()) {
-									if(ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin) {
+									if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
 										urlLastPost = uicomponent.url("OpenLastTopicLink", (forumId+'/'+topicId)) ;
 										urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
@@ -353,19 +351,6 @@
 									</td>
 									 <td class="Tdbox">$topicCount</td>
 									<td class="Tdbox">$postCount</td>
-									<td style="width: 170px;">
-								<% boolean isOnline = false; String userSmile; 
-									for(forumModerator in forumModerators) {
-										isOnline = uicomponent.isOnline(forumModerator) ;
-										if(isOnline) userSmile = "OnlineIcon";
-										else userSmile = "OfflineIcon";
-									%>
-										<a class="ModeratorContent" href="#">
-											<div class="EmoticonsIcon $userSmile">$forumModerator</div>
-										</a>
-									<% } %>
-										<div style="clear: left;"><span></span></div>
-									</td>
 								<% if(isShowMenu){ %>
 									<td isLock="$isLock" isClose="$isClose" class="Tdbox" onclick="eXo.forum.UIForumPortlet.selectItem(this.firstChild)"><% uicomponent.renderChild(forumId)%></td>
 								<% } %>

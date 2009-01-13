@@ -64,7 +64,7 @@ if(!uicomponent.isEditPortlet_){
 		<div style="padding:2px;">
 	    <div class="WorkingArea">
 	    
-	     	<div class="UIHorizontalTabs" >
+	     	<div class="UIHorizontalTabs">
 	     	  <div class="LeftHorizontalTabs">
 	     	    <div class="RightHorizontalTabs">
 	     	      <div class="CenterHorizontalTabs">
@@ -117,7 +117,7 @@ if(!uicomponent.isEditPortlet_){
 	                  
 	              		<div>
 	                  	<!-- -------------------------------------------------------------------------------------------------------------------- -->
-	                  	<div class="UIHorizontalTabs" >
+	                  	<div class="UIHorizontalTabs">
 								     	  <div class="LeftHorizontalTabs">
 								     	    <div class="RightHorizontalTabs">
 								     	      <div class="CenterHorizontalTabs">

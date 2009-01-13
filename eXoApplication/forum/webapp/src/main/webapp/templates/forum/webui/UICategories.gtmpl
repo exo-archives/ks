@@ -83,7 +83,6 @@
 									<th style="width: 30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
 									<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
 									<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
-					 				<th style="width: 170px;"><%=_ctx.appRes("UICategory.label.moderator");%></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -97,7 +96,6 @@
 									<td class="Tdbox"><%=_ctx.appRes("UICategory.label.noPost");%></td>
 									<td class="Tdbox">0</td>
 									<td class="Tdbox">0</td>
-									<td></td>
 								</tr>
 							<% }else {%>
 								<%
@@ -232,19 +230,6 @@
 											</td>
 										 	<td class="Tdbox">$topicCount</td>
 											<td class="Tdbox">$postCount</td>
-											<td style="width: 170px;">
-											<% boolean isOnline = false; String userSmile; 
-											for(forumModerator in forumModerators) {
-												isOnline = uicomponent.isOnline(forumModerator) ;
-												if(isOnline) userSmile = "OnlineIcon";
-												else userSmile = "OfflineIcon";
-											%>
-												<a class="ModeratorContent" href="#">
-													<div class="EmoticonsIcon $userSmile">$forumModerator</div>
-												</a>
-											<% } %>
-												<div style="clear: left;"><span></span></div>
-											</td>
 							 			</tr>
 						 		<% } 
 						 		 }
