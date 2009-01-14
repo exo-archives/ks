@@ -44,6 +44,8 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -54,7 +56,6 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.Category;
@@ -83,10 +84,12 @@ import org.exoplatform.forum.service.conf.ForumData;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
+import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -387,6 +390,14 @@ public class JCRDataStorage {
 		catNode.setProperty("exo:userPrivate", category.getUserPrivate());
 		if(catNode.isNew()){
 			catNode.getSession().save();
+//    Add observation
+    	String wsName = catNode.getSession().getWorkspace().getName() ;
+    	RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
+    	ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
+    	StatisticEventListener addQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
+    	observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,catNode.getPath(), true, null, null, false) ;
+    	StatisticEventListener removeQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
+    	observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
 		} else {
 			catNode.save();
 		}
@@ -398,34 +409,9 @@ public class JCRDataStorage {
 			Category category = new Category();
 			category = getCategory(sProvider, categoryId);
 			Node categoryNode = forumHomeNode.getNode(categoryId);
-			NodeIterator iter = categoryNode.getNodes();
-			long topicCount = 0, postCount = 0;
-			Node forumNode;
-			while (iter.hasNext()) {
-				forumNode = iter.nextNode();
-				if (forumNode.hasProperty("exo:postCount"))
-					postCount = postCount + forumNode.getProperty("exo:postCount").getLong();
-				if (forumNode.hasProperty("exo:topicCount"))
-					topicCount = topicCount + forumNode.getProperty("exo:topicCount").getLong();
-			}
-			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-			long count = forumStatistic.getProperty("exo:topicCount").getLong();
-			count = count - topicCount;
-			if (count < 0)
-				count = 0;
-			forumStatistic.setProperty("exo:topicCount", count);
-			count = forumStatistic.getProperty("exo:postCount").getLong();
-			count = count - postCount;
-			if (count < 0)
-				count = 0;
-			forumStatistic.setProperty("exo:postCount", count);
 
 			categoryNode.remove();
-			if(forumHomeNode.isNew()){
-				forumHomeNode.getSession().save();
-			} else {
-				forumHomeNode.save();
-			}
+			forumHomeNode.save();
 			return category;
 		} catch (PathNotFoundException e) {
 			return null;
@@ -786,7 +772,7 @@ public class JCRDataStorage {
 			forum = getForum(forumNode);
 			forumNode.remove();
 			catNode.setProperty("exo:forumCount", catNode.getProperty("exo:forumCount").getLong() - 1);
-			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
+			/*Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
 			long count = forumStatistic.getProperty("exo:topicCount").getLong();
 			count = count - forum.getTopicCount();
 			if (count < 0)
@@ -797,12 +783,8 @@ public class JCRDataStorage {
 			if (count < 0)
 				count = 0;
 			forumStatistic.setProperty("exo:postCount", count);
-			forumStatistic.save();
-			if(catNode.isNew()){
-				catNode.getSession().save();
-			} else {
-				catNode.save();
-			}
+			forumStatistic.save();*/
+			catNode.save();			
 			String[] moderators = forum.getModerators();
 			Node userProfileHomeNode = getUserProfileHome(sProvider);
 			Node userProfileNode;
@@ -1292,26 +1274,15 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:isPoll", topic.getIsPoll());
 			topicNode.setProperty("exo:link", topic.getLink());
 			topicNode.setProperty("exo:path", forumId);
-			// setTopicCount for Forum
+			// TODO: Thinking for update forum and user profile by node observation?
+			// setTopicCount for Forum and userProfile
 			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1;
 			forumNode.setProperty("exo:topicCount", newTopicCount);
-			Node forumStatisticNode ;
-			try {
-				forumStatisticNode = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-			} catch (Exception e) {
-				forumStatisticNode = forumHomeNode.addNode(Utils.FORUM_STATISTIC, "exo:forumStatistic");
-				forumStatisticNode.setProperty("exo:postCount", 0);
-				forumStatisticNode.setProperty("exo:topicCount", 0);
-			}
-			long topicCount = forumStatisticNode.getProperty("exo:topicCount").getLong();
-			forumStatisticNode.setProperty("exo:topicCount", topicCount + 1);
 			Node userProfileNode = getUserProfileHome(sProvider);
 			Node newProfileNode;
 			try {
 				newProfileNode = userProfileNode.getNode(topic.getOwner());
-				long totalTopicByUser = 0;
-				if (newProfileNode.hasProperty("exo:totalTopic"))
-					totalTopicByUser = newProfileNode.getProperty("exo:totalTopic").getLong();
+				long totalTopicByUser = newProfileNode.getProperty("exo:totalTopic").getLong();
 				newProfileNode.setProperty("exo:totalTopic", totalTopicByUser + 1);
 			} catch (PathNotFoundException e) {
 				newProfileNode = userProfileNode.addNode(topic.getOwner(), "exo:userProfile");
@@ -1396,48 +1367,21 @@ public class JCRDataStorage {
 			topic = getTopic(sProvider, categoryId, forumId, topicId, UserProfile.USER_GUEST);
 			String owner = topic.getOwner();
 			Node userProfileNode = getUserProfileHome(sProvider);
-			try {
-				Node newProfileNode = userProfileNode.getNode(owner);
-				newProfileNode.setProperty("exo:totalTopic", newProfileNode.getProperty("exo:totalTopic").getLong() - 1);
-				newProfileNode.save();
-			} catch (PathNotFoundException e) {
-			}
+			
+			Node newProfileNode = userProfileNode.getNode(owner);
+			newProfileNode.setProperty("exo:totalTopic", newProfileNode.getProperty("exo:totalTopic").getLong() - 1);
+			newProfileNode.save();
+			
+//		 TODO: Thinking for update forum and user profile by node observation?
 			// setTopicCount for Forum
-			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong();
-			if (newTopicCount > 0)
-				newTopicCount = newTopicCount - 1;
-			else
-				newTopicCount = 0;
+			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() - 1;
 			forumNode.setProperty("exo:topicCount", newTopicCount);
 			// setPostCount for Forum
-			long postCount = topic.getPostCount() + 1;
-			long newPostCount = forumNode.getProperty("exo:postCount").getLong();
-			if (newPostCount > postCount)
-				newPostCount = newPostCount - postCount;
-			else
-				newPostCount = 0;
+			long postCount = topic.getPostCount() + 1; //+1 for default post
+			long newPostCount = forumNode.getProperty("exo:postCount").getLong() - postCount;
 			forumNode.setProperty("exo:postCount", newPostCount);
-			// set forumStatistic
-			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-			long topicCount = forumStatistic.getProperty("exo:topicCount").getLong();
-			if (topicCount > 0)
-				topicCount = topicCount - 1;
-			else
-				topicCount = 0;
-			forumStatistic.setProperty("exo:topicCount", topicCount);
-			newPostCount = forumStatistic.getProperty("exo:postCount").getLong();
-			if (newPostCount > postCount)
-				newPostCount = newPostCount - postCount;
-			else
-				newPostCount = 0;
-			forumStatistic.setProperty("exo:postCount", newPostCount);
-			forumStatistic.save();
 			forumNode.getNode(topicId).remove();
-			if(forumNode.isNew()) {
-				forumNode.getSession().save();
-			} else {
-				forumNode.save();
-			}
+			forumNode.save();
 			return topic;
 		} catch (PathNotFoundException e) {
 			return null;
@@ -1717,18 +1661,14 @@ public class JCRDataStorage {
 			} else {
 				postNode.setProperty("exo:isFirstPost", false);
 			}
-			Node userProfileNode = getUserProfileHome(sProvider);
-			Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-			long postCount = forumStatistic.getProperty("exo:postCount").getLong();
-			forumStatistic.setProperty("exo:postCount", postCount + 1);
-			forumStatistic.save();
+//		 TODO: Thinking for update forum and user profile by node observation?
+			
+			Node userProfileNode = getUserProfileHome(sProvider);			
 			Node newProfileNode;
 			try {
 				newProfileNode = userProfileNode.getNode(post.getOwner());
 				long totalPostByUser = 0;
-				if (newProfileNode.hasProperty("exo:totalPost")) {
-					totalPostByUser = newProfileNode.getProperty("exo:totalPost").getLong();
-				}
+				totalPostByUser = newProfileNode.getProperty("exo:totalPost").getLong();
 				newProfileNode.setProperty("exo:totalPost", totalPostByUser + 1);
 			} catch (PathNotFoundException e) {
 				newProfileNode = userProfileNode.addNode(post.getOwner(), "exo:userProfile");
@@ -2174,30 +2114,6 @@ public class JCRDataStorage {
 		return postNode;
 	}
 
-	/*
-	 * private void sendNotification(List<String> emails, Message message) throws
-	 * Exception { //List<Message> messages = new ArrayList<Message> () ; List<String>
-	 * emails_ = new ArrayList<String>(); //ServerConfiguration config =
-	 * getServerConfig() ; Message message_; for(String string : emails) {
-	 * if(emails_.contains(string)) continue ; emails_.add(string) ; message_ =
-	 * new Message(); message_.setSubject(message.getSubject());
-	 * message_.setBody(message.getBody()); //message_.setTo(string) ;
-	 * //message_.setFrom(config.getUserName()) ; //messages.add(message_) ; }
-	 * try{ if(messages.size() > 0) { MailService mService =
-	 * (MailService)PortalContainer.getComponent(MailService.class) ;
-	 * mService.sendMessages(messages, config) ; } }catch(Exception e) {
-	 * e.printStackTrace() ; } }
-	 */
-
-	/*
-	 * private ServerConfiguration getServerConfig() throws Exception {
-	 * ServerConfiguration config = new ServerConfiguration();
-	 * config.setUserName(serverConfig_.get("account"));
-	 * config.setPassword(serverConfig_.get("password")); config.setSsl(true);
-	 * config.setOutgoingHost(serverConfig_.get("outgoing"));
-	 * config.setOutgoingPort(serverConfig_.get("port")); return config ; }
-	 */
-
 	public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Post post = new Post();
@@ -2219,11 +2135,7 @@ public class JCRDataStorage {
 				}
 				postNode.remove();
 				//update information: setPostCount, lastpost for Topic
-				long topicPostCount = topicNode.getProperty("exo:postCount").getLong();
-				if (topicPostCount > 0)
-					topicPostCount = topicPostCount - 1;
-				else
-					topicPostCount = 0;
+				long topicPostCount = topicNode.getProperty("exo:postCount").getLong() - 1;
 				topicNode.setProperty("exo:postCount", topicPostCount);
 				long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong();
 				if (newNumberAttachs > numberAttachs)
@@ -2240,28 +2152,12 @@ public class JCRDataStorage {
 				}
 				topicNode.setProperty("exo:lastPostBy", postNode.getProperty("exo:owner").getValue().getString());
 				topicNode.setProperty("exo:lastPostDate", postNode.getProperty("exo:createdDate").getValue().getDate());
-
+				
+				//TODO: Thinking for update forum and user profile by node observation?
 				// setPostCount for Forum
-				long forumPostCount = forumNode.getProperty("exo:postCount").getLong();
-				if (forumPostCount > 0)
-					forumPostCount = forumPostCount - 1;
-				else
-					forumPostCount = 0;
+				long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1;
 				forumNode.setProperty("exo:postCount", forumPostCount);
-
-				Node forumStatistic = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
-				long postCount = forumStatistic.getProperty("exo:postCount").getLong();
-				if (postCount > 0)
-					postCount = postCount - 1;
-				else
-					postCount = 0;
-				forumStatistic.setProperty("exo:postCount", postCount);
-				forumStatistic.save();
-				if(forumNode.isNew()) {
-					forumNode.getSession().save();
-				} else {
-					forumNode.save();
-				}
+				forumNode.save();
 				return post;
 			} catch (PathNotFoundException e) {
 				return null;
@@ -3957,12 +3853,10 @@ public class JCRDataStorage {
   }
 
 	
-	 protected ContinuationService getContinuationService() {
-	    ExoContainer container = RootContainer.getInstance();
-	    container = ((RootContainer)container).getPortalContainer("portal");
-	    ContinuationService continuation = (ContinuationService) container.getComponentInstanceOfType(ContinuationService.class);
-	    return continuation;
-	  }
+	protected ContinuationService getContinuationService() {
+	  ContinuationService continuation = (ContinuationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContinuationService.class);
+	  return continuation;
+	}
 	 
 	public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception {
 		QueryManager qm = getForumHomeNode(sessionProvider).getSession().getWorkspace().getQueryManager() ;
@@ -4283,5 +4177,29 @@ public class JCRDataStorage {
 	    list.add(userNode.getName());
     }
 		return list;
+	}
+	
+	public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
+		SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node forumHomeNode = getForumHomeNode(sysProvider);
+			Node forumStatisticNode;
+			forumStatisticNode = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
+			if(topicCount != 0) {				
+				long count = forumStatisticNode.getProperty("exo:topicCount").getLong() + topicCount;
+				if(count < 0) count = 0 ;
+				forumStatisticNode.setProperty("exo:topicCount", count) ;
+			}
+			if(postCount != 0){
+				long count = forumStatisticNode.getProperty("exo:postCount").getLong() + postCount;
+				if(count < 0) count = 0 ;
+				forumStatisticNode.setProperty("exo:postCount", count) ;
+			}
+			forumStatisticNode.save() ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}	finally{
+			sysProvider.close() ;
+		}
 	}
 }

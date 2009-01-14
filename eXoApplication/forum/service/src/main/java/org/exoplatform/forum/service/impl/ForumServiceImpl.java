@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -413,6 +414,10 @@ public class ForumServiceImpl implements ForumService, Startable{
     storage_.saveForumStatistic(sProvider, forumStatistic) ;
   }
 
+  public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
+  	storage_.updateStatisticCounts(topicCount, postCount) ;
+  }
+  
   public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser) throws Exception {
     return storage_.getQuickSearch(sProvider, textQuery, type, pathQuery, currentUser);
   }
@@ -452,7 +457,20 @@ public class ForumServiceImpl implements ForumService, Startable{
     try {
     	Node userProfileHome = storage_.getUserProfileHome(sysProvider); 
     	userProfileHome.getNode(userId).setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
-      userProfileHome.save() ;
+    	userProfileHome.save() ;
+    	// update most online users
+    	Node statisticNode = storage_.getForumHomeNode(sysProvider).getNode(Utils.FORUM_STATISTIC) ;
+    	String[] array = statisticNode.getProperty("exo:mostUsersOnline").getString().split(",") ;
+  		if(array.length > 1) {
+    		int ol = onlineUsers_.size() ;
+    		if(ol > Integer.parseInt(array[0].trim())) {
+    			statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(ol) + ", at " + GregorianCalendar.getInstance().getTime().toString()) ;
+      		statisticNode.save() ;
+    		}
+    	}else {
+    		statisticNode.setProperty("exo:mostUsersOnline", "1, at " + GregorianCalendar.getInstance().getTime().toString()) ;
+    		statisticNode.save() ;
+    	}    	
     }catch(Exception e) {
     	e.printStackTrace() ;
     }finally {

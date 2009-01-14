@@ -17,13 +17,11 @@
 package org.exoplatform.forum.webui;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -41,7 +39,7 @@ import org.exoplatform.webui.core.UIContainer;
 )
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService ;
-	private long mostUserOnline_ = 0;
+	//private long mostUserOnline_ = 0;
 	
 	public UICategoryInfo() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -50,7 +48,7 @@ public class UICategoryInfo extends UIContainer	{
 	@SuppressWarnings("unused")
 	private List<String> getUserOnline() throws Exception {
 		List<String> list = this.forumService.getOnlineUsers() ;
-		this.mostUserOnline_ = list.size() ;
+		//this.mostUserOnline_ = list.size() ;
 		return	list;
 	}
 
@@ -63,26 +61,6 @@ public class UICategoryInfo extends UIContainer	{
 	}
 	
 	public ForumStatistic getForumStatistic() throws Exception {
-		ForumStatistic forumStatistic = forumService.getForumStatistic(ForumSessionUtils.getSystemProvider()) ;
-		boolean isSave = false ;
-		long mumberUserOnline = 0;
-		String mostUserOnlines = forumStatistic.getMostUsersOnline();
-		Date date = getInstanceTempCalendar().getTime() ;
-		if(!ForumUtils.isEmpty(mostUserOnlines)) {
-			mumberUserOnline = Long.parseLong(mostUserOnlines.split(",")[0]) ;
-			if(this.mostUserOnline_ > mumberUserOnline) {
-				mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date) + " GMT+0";
-				forumStatistic.setMostUsersOnline(mostUserOnlines) ;
-				isSave = true ;
-			}
-		} else {
-			mostUserOnlines = this.mostUserOnline_ + ", at " + ForumUtils.getFormatDate("MM-dd-yyyy, hh:mm a", date) + " GMT+0";
-			forumStatistic.setMostUsersOnline(mostUserOnlines) ;
-			isSave = true ;
-		} 
-		if(isSave) {
-			this.forumService.saveForumStatistic(ForumSessionUtils.getSystemProvider(), forumStatistic) ;
-		}
-		return forumStatistic ;
+		return  forumService.getForumStatistic(ForumSessionUtils.getSystemProvider()) ;				
 	}
 }

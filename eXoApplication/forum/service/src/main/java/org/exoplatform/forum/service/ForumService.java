@@ -910,4 +910,6 @@ public interface ForumService {
   public void removeBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception ;
   
   public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception;
+  public void updateStatisticCounts(long topicCoutn, long postCount) throws Exception  ;
+  
 }
