@@ -221,7 +221,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setOrderType(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_TYPE)).getValue())) ;
 				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)displayTab.
 																								getChildById(settingForm.ENABLE_VOTE_COMMNET)).isChecked());
-				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)displayTab.
+				faqSetting.setEnableAutomaticRSS(((UIFormCheckBoxInput<Boolean>)displayTab.
 																								getChildById(settingForm.ENABLE_RSS)).isChecked());
 				
 				UIFormInputWithActions emailTab = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
