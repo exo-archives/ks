@@ -1923,13 +1923,9 @@ public class JCRDataStorage {
 		      
 		      feed.setEntries(entries);
 
-		      Writer writer = new FileWriter("FAQRSSService.xml");
 		      SyndFeedOutput output = new SyndFeedOutput();
 		      data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
 		      addNodeRSS(categoryNode, RSSNode, data, isNew);
-		      
-		      output.output(feed, writer);
-		      writer.close();
 		    } catch (Exception ex) {
 		        ex.printStackTrace();
 		    }
