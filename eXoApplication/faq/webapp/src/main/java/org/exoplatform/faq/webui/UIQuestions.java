@@ -91,6 +91,7 @@ import org.hibernate.usertype.UserVersionType;
 				@EventConfig(listeners = UIQuestions.AddNewQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.SettingActionListener.class),
 				@EventConfig(listeners = UIQuestions.WatchActionListener.class),
+				@EventConfig(listeners = UIQuestions.RSSFAQActionListener.class),
 				@EventConfig(listeners = UIQuestions.WatchManagerActionListener.class),
 				@EventConfig(listeners = UIQuestions.UnWatchQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.QuestionManagamentActionListener.class),
@@ -173,6 +174,12 @@ public class UIQuestions extends UIContainer {
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
 		//setListObject();
 	}
+	
+	public String getRSSLink(){
+		String rssLink = "";
+		rssLink = "/faq/iFAQRss/" + getPortalName() + "/" + categoryId_ + "/faq.rss" ;
+		return rssLink;
+	}
 
 	public String getPortalName() {
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
@@ -231,6 +238,8 @@ public class UIQuestions extends UIContainer {
 	private String[] getActionCategoryWithUser() {
 		if(currentUser_ != null)
 			return userActionsCate_ ;
+		else if(faqSetting_.isEnableAutomaticRSS())
+			return new String[]{userActionsCate_[0], "RSSFAQ"};
 		else 
 			return new String[]{userActionsCate_[0]};
 	}
@@ -997,6 +1006,13 @@ public class UIQuestions extends UIContainer {
 				uiWatchForm.setQuestionID(objectId) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
+		}
+	}
+	
+	static	public class RSSFAQActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions question = event.getSource() ;
+			System.out.println("\n\n\n\n----------> Run RSS");
 		}
 	}
 

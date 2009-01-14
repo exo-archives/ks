@@ -38,5 +38,18 @@
       <version>${org.exoplatform.ks.version}</version>      
     </dependency>
     
+		<dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>0.8</version>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jcrom</groupId>
+      <artifactId>jcrom</artifactId>
+      <version>1.2</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 </project>

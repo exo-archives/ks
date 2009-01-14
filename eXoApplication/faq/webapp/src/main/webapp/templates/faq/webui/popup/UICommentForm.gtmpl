@@ -3,7 +3,11 @@
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table width="100%">
-					<tbody>						
+					<tbody>
+						<%
+						String url = uicomponent.url("Cancel", "OBJECTID") ;
+						uicomponent.setLink(url);
+						%>
 						<tr>
 							<td style="white-space:nowrap;" align="right"><div style="margin: 5px 5px 0px 0px;">
 								<%=_ctx.appRes(uicomponent.getName() + ".title.Author")%> : </div>

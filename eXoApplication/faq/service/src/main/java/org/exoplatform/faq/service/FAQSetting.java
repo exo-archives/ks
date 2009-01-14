@@ -26,6 +26,8 @@ package org.exoplatform.faq.service;
  * Apr 10, 2008, 2:07:25 PM
  */
 public class FAQSetting {
+	private boolean enableAutomaticRSS = true;
+	
 	private boolean enanbleVotesAndComments = true;
 	
 	/** display mode of faq. */
@@ -221,5 +223,13 @@ public class FAQSetting {
 
 	public void setEnanbleVotesAndComments(boolean enanbleVotesAndComments) {
 		this.enanbleVotesAndComments = enanbleVotesAndComments;
+	}
+
+	public boolean isEnableAutomaticRSS() {
+		return enableAutomaticRSS;
+	}
+
+	public void setEnableAutomaticRSS(boolean enableAutomaticRSS) {
+		this.enableAutomaticRSS = enableAutomaticRSS;
 	}
 }

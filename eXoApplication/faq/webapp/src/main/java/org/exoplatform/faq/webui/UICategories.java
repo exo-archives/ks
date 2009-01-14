@@ -89,8 +89,10 @@ public class UICategories extends UIContainer{
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
 	public static String newPath_ = "" ;
 	FAQService faqService_;
+	private String portalName = null;
 	public UICategories () throws Exception{ 
 		faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		portalName = getPortalName();
 	}
 	
 	public void setFAQSetting(FAQSetting faqSetting){
@@ -218,6 +220,17 @@ public class UICategories extends UIContainer{
 		}
 		isSwap = false;
 		isBack = false;
+	}
+	
+	public String getRSSLink(String cateId){
+		String rssLink = "";
+		rssLink = "/faq/iFAQRss/" + portalName + "/" + cateId + "/faq.rss" ;
+		return rssLink;
+	}
+
+	private String getPortalName() {
+		PortalContainer pcontainer =  PortalContainer.getInstance() ;
+		return pcontainer.getPortalContainerInfo().getContainerName() ;  
 	}
 	
 	public void resetListCate(SessionProvider sProvider) throws Exception{

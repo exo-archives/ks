@@ -42,6 +42,9 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.mail.Message;
 
+import com.sun.syndication.feed.synd.*;
+import com.sun.syndication.io.SyndFeedOutput;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
@@ -684,13 +687,17 @@ public class FAQServiceImpl implements FAQService{
 		return jcrData_.getQuestionNodeById(questionId, sProvider);
 	}
 	
-	public void generateRSS(String path, boolean isNewQuestion) throws Exception  {
-		jcrData_.generateRSS(path, isNewQuestion) ;
+	public void generateRSS(String path, int typeEvent) throws Exception  {
+		jcrData_.generateRSS(path, typeEvent) ;
 	}
 
 	
 	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getMaxindexCategory(parentId, sProvider);
 	}
-
+	
+	public Node getRSSNode(SessionProvider sProvider, String categoryId) throws Exception{
+		return jcrData_.getRSSNode(sProvider, categoryId);
+	}
+	
 }

@@ -110,8 +110,8 @@
 								<%
 								String linkWacth = uicomponent.event("WatchManager", category.getId());
 								if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate || listCateModerator.get(i)) {
-											List emailWatch = uicomponent.getListWatch(category.getId()) ;
-											if(emailWatch.size() > 0) {
+									List emailWatch = uicomponent.getListWatch(category.getId()) ;
+									if(emailWatch.size() > 0) {
 								%>
 									<a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
 								<%
@@ -165,8 +165,14 @@
 																		<div style="padding-left: 20px;"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></div>
 																</div>
 															</a>
-														<%
-														}%>
+														<%}
+															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){%>
+																<a href="javaScript: void(0);" onmousedown="<%=uicomponent.getRSSLink(category.getId())%>" class="MenuItem">
+																	<div class="ItemIcon FAQRSS" style="padding:3px 0px 5px 5px;">
+																			<div style="padding-left: 20px;">RSS</div>
+																	</div>
+																</a>
+														<%}%>
 													</div>
 												</div>
 											</div>

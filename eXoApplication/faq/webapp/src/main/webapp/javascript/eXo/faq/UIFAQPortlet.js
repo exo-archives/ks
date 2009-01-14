@@ -6,7 +6,7 @@ UIFAQPortlet.prototype.checkCustomView = function(){
 	var cookie = eXo.core.Browser.getCookie("FAQCustomView");
 	document.getElementById('FAQViewCategoriesColumn').style.display = cookie;
 	var buttomView = document.getElementById('FAQCustomView');
-	if(cookie == "none") eXo.core.DOMUtil.addClass(buttomView,"CustomViewRight");
+	if(cookie == "none") eXo.core.DOMUtil.addClass(buttomView,"FAQCustomViewRight");
 //	pCOOKIES = new Array();
 //	pCOOKIES = document.cookie.split('; ');
 //	var categories = document.getElementById('UICategories');
@@ -40,10 +40,10 @@ UIFAQPortlet.prototype.changeCustomView = function(change){
 	var buttomView = document.getElementById('FAQCustomView');
 	if(columnCategories.style.display != "none"){		
 		columnCategories.style.display = "none";
-		 eXo.core.DOMUtil.addClass(buttomView,"CustomViewRight");
+		 eXo.core.DOMUtil.addClass(buttomView,"FAQCustomViewRight");
 	}else{
 		columnCategories.style.display = "";
-		 eXo.core.DOMUtil.replaceClass(buttomView,"CustomViewRight","");
+		 eXo.core.DOMUtil.replaceClass(buttomView,"FAQCustomViewRight","");
 	}
 	eXo.core.Browser.setCookie("FAQCustomView",columnCategories.style.display,1);
 //	pCOOKIES = new Array();

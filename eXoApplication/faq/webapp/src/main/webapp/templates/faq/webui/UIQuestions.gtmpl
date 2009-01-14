@@ -30,7 +30,7 @@
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
-													<div class="Icon CustomView" id = "FAQCustomView">
+													<div class="Icon FAQCustomView" id = "FAQCustomView">
 														<%=_ctx.appRes(uicomponent.getName() + ".action." + "CustomView")%>
 													</div>
 												</div>
@@ -39,7 +39,26 @@
 									</a>
 								</div>
 								<div class="SeparatorLine ControlButton"><span></span></div>
+								<%
+								if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
+								%>
+									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
+										<a href="<%=uicomponent.getRSSLink()%>">
+											<div class="LeftOverButton">
+												<div class="RightOverButton">
+													<div class="CenterOverButton">
+														<div class="Icon FAQRSS">
+															RSS
+														</div>
+													</div>
+												</div>
+											</div>
+										</a>
+									</div>
+									<div class="SeparatorLine ControlButton"><span></span></div>
+								
 							<%
+							}
 							String url = uicomponent.url("Setting", "OBJECTID") ;
 							uicomponent.setLink(url);
 							String cateId = uicomponent.getCategoryId() ;

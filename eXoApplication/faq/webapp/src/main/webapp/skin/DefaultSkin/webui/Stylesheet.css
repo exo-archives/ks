@@ -1052,12 +1052,14 @@
 	line-height: 22px;
 }
 
-.UIFAQPortlet .FAQToolbar .CustomView {
+.UIFAQPortlet .FAQToolbar .FAQCustomView {
 	background: url('background/CustomViewIconLeft.GIF') no-repeat left;
+	height:20px;
 }
 
-.UIFAQPortlet .FAQToolbar .CustomViewRight {
+.UIFAQPortlet .FAQToolbar .FAQCustomViewRight {
 	background: url('background/CustomViewIconRight.GIF') no-repeat left;
+	height:20px;
 }
 
 .UIFAQPortlet .FAQToolbar .AddCategory {
@@ -1076,7 +1078,7 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -122px;
 }
 
-.UIFAQPortlet .FAQToolbar .Rss {
+.UIFAQPortlet .FAQRSS {
 	background: url('background/FAQPortlet.gif') no-repeat left -143px;
 }
 

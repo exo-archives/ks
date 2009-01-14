@@ -32,6 +32,8 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -77,6 +79,8 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	private int pos = 0;
 	private FAQSetting faqSetting_ = null;
 	private Date date_ = new java.util.Date();
+	
+	private String link_ = "";
 
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
@@ -155,6 +159,10 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		
 		sProvider.close();
 	}
+	
+	public void setLink(String link) { this.link_ = link;}
+	
+	public String getLink() {return link_;}
 
 	static public class CancelActionListener extends EventListener<UICommentForm> {
     public void execute(Event<UICommentForm> event) throws Exception {
@@ -172,8 +180,32 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 			String comment = ((UIFormWYSIWYGInput)commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
 			try{
 				commentForm.question_ = faqService_.getQuestionById(commentForm.question_.getId(), sessionProvider);
+				
+				//link
+	      String link = commentForm.getLink().replaceFirst("UICommentForm", "UIBreadcumbs").replaceFirst("Cancel", "ChangePath").replaceAll("&amp;", "&");
+	      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+	      String portalName = "/" + Util.getUIPortal().getName() ;
+	      if(link.indexOf(portalName) > 0) {
+			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
+			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+			    }									
+				}	
+				PortalRequestContext portalContext = Util.getPortalRequestContext();
+				String url = portalContext.getRequest().getRequestURL().toString();
+				url = url.replaceFirst("http://", "") ;
+				url = url.substring(0, url.indexOf("/")) ;
+				url = "http://" + url;
+				String path = "" ;
+				if(FAQUtils.isFieldEmpty(commentForm.question_.getId())) path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;
+				else path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;
+				link = link.replaceFirst("OBJECTID", path);
+				link = url + link;
+				commentForm.question_.setLink(link) ;
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(comment != null && comment.trim().length() > 0 && validatorDataInput.fckContentIsNotEmpty(comment)){
 					commentForm.listComments_.set(commentForm.pos, comment);
@@ -203,9 +235,6 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
 			sessionProvider.close();
-			UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
       questions.setIsNotChangeLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;

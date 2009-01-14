@@ -27,6 +27,18 @@
     <servlet-name>PortletWrapper</servlet-name>
     <servlet-class>org.exoplatform.services.portletcontainer.impl.servlet.ServletWrapper</servlet-class>
   </servlet>
+  
+  <servlet>
+    <servlet-name>ifaqservlet</servlet-name>
+    <servlet-class>org.exoplatform.faq.webui.IFAQServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>ifaqservlet</servlet-name>
+    <url-pattern>/iFAQRss/*</url-pattern>
+  </servlet-mapping> 
+  
   <servlet-mapping>
     <servlet-name>PortletWrapper</servlet-name>
     <url-pattern>/PortletWrapper</url-pattern>

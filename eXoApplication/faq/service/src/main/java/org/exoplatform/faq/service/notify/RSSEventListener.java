@@ -27,6 +27,9 @@ import org.exoplatform.faq.service.FAQService;
 public class RSSEventListener implements EventListener{
 	private String workspace_ ;
 	private String repository_ ; 
+	private final int EVENT_ADDNEW = 0;
+	private final int EVENT_EDIT = 1;
+	private final int EVENT_REMOVE = 2;
 	
 	public RSSEventListener(String ws, String repo) throws Exception {
 		workspace_ = ws ;
@@ -43,16 +46,13 @@ public class RSSEventListener implements EventListener{
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.NODE_ADDED){
-					System.out.println("\n\n NODE_ADDED =======>" + ev.getPath()) ;
-					faqService.generateRSS(ev.getPath(), true) ;
+					faqService.generateRSS(ev.getPath(), EVENT_ADDNEW) ;
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
-					System.out.println("\n\n  PROPERTY_CHANGED =======>" + ev.getPath()) ;
 					String propertyPath = ev.getPath() ;
 					String nodePath = propertyPath.substring(0, propertyPath.lastIndexOf("/")) ;
-					faqService.generateRSS(nodePath, true) ;
+					faqService.generateRSS(nodePath, EVENT_EDIT) ;
 				}else if(ev.getType() == Event.NODE_REMOVED) {
-					System.out.println("\n\n NODE_REMOVED =======>" + ev.getPath()) ;
-					 faqService.generateRSS(ev.getPath(), false) ;
+					 faqService.generateRSS(ev.getPath(), EVENT_REMOVE) ;
 				}
 				break ;								
 			}

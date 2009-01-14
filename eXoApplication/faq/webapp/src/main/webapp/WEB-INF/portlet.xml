@@ -29,6 +29,11 @@
     
     <portlet-preferences>
     	<preference>
+        <name>enableAutomaticRSS</name>
+        <value>true</value> <!-- true/false -->
+        <read-only>false</read-only>
+      </preference>
+    	<preference>
         <name>enanbleVotesAndComments</name>
         <value>true</value> <!-- true/false -->
         <read-only>false</read-only>

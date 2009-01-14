@@ -84,6 +84,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	private final String DISPLAY_APPROVED = "approved";
 	private final String DISPLAY_BOTH = "both";
 	private final String ENABLE_VOTE_COMMNET = "enableVotComment";
+	private final String ENABLE_RSS = "enableRSS";
 	public static final String ITEM_CREATE_DATE= "created".intern() ;
 	public static final String ITEM_ALPHABET= "alphabet".intern() ;
 	public static final String ASC= "asc".intern() ;
@@ -141,6 +142,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
 			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_VOTE_COMMNET, ENABLE_VOTE_COMMNET, false)).
 																																	setChecked(faqSetting_.isEnanbleVotesAndComments()));
+			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_RSS, ENABLE_RSS, false)).
+																																	setChecked(faqSetting_.isEnableAutomaticRSS()));
 			EmailTab.addChild(EmailAddNewQuestion);
 			EmailTab.addChild(EmailEditQuestion);
 			
@@ -218,6 +221,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setOrderType(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_TYPE)).getValue())) ;
 				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)displayTab.
 																								getChildById(settingForm.ENABLE_VOTE_COMMNET)).isChecked());
+				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)displayTab.
+																								getChildById(settingForm.ENABLE_RSS)).isChecked());
 				
 				UIFormInputWithActions emailTab = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
 				String defaultAddnewQuestion = ((UIFormWYSIWYGInput)((UIFormInputWithActions)emailTab.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB))
