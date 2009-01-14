@@ -11,7 +11,7 @@
 				</div>
 			</div>
 			<div class="PortletDecorationML">
-				<div class="PortletDecorationMR">		
+				<div class="PortletDecorationMR">
 					<div class="HomePortletAdBackround">
 						<div class="AdImage__">
 	
@@ -31,52 +31,54 @@
 							<div class="Decorator" style="margin: 8px 4px 0px 0px">
 								
 									<div class="DecoratorML">
-											<div class="DecoratorMR">
-												<div class="DecoratorMC">
+										<div class="DecoratorMR">
+											<div class="DecoratorMC">
+												<div class="TryNowIcon">
 													<div class="ForumIcon">
-														<div class="ForumLabel">
+														<div class="ForumLabel" style="float:left">
 															<div class="Title"><a href="$forumuri">Forum</a></div>
-															<div class="Label">It's time to open discussion with your </div>
+															<div class="Label">It's time to open discussion with your</div>
 															<div class="Label">portal audience!</div>
 														</div>
+														<a href="$forumuri" style="float:right; width: 93px; height: 80px;"><span></span></a>
+														<div style="clear: both;"><span></span></div>
 													</div>
-													
-													<a href="$forumuri" style="float: left; margin-top: 60px;">
-													<div class="Button"><span></span></div>
-												</a>
-												<div style="margin:0px 0px 0px 130px;">
+												</div>
+												<div style="margin:0px 0px 0px 90px;">
 													<div class="CheckIcon">Unlimited categories and forums</div>
 													<div class="CheckIcon">Thread permissions, quick reply, preview...</div>
 													<div class="CheckIcon">Private messages, bookmarks, watch...</div>
 													<div class="CheckIcon">Advanced moderation : lock, close, approve...</div>
-													<div class="CheckIcon">Full administration : bans, auto-prune,... </div>			
+													<div class="CheckIcon">Full administration : bans, auto-prune,... </div>
 												</div>
 													<div style="clear: left;"><span></span></div>
 											</div>
 										</div>
-									</div>	
+									</div>
 									
-								</div>						
+								</div>
 							</td>
 							<td>
 							<%String faquri = Util.getPortalRequestContext().getPortalURI() + "faq" %>
 								<div class="Decorator" style="margin: 8px 0px 0px 4px">
 									
 									<div class="DecoratorML">
-											<div class="DecoratorMR">
-												<div class="DecoratorMC">
+										<div class="DecoratorMR">
+											<div class="DecoratorMC">
+												<div class="TryNowIcon">
 													<div class="FAQIcon">
-														<div class="FAQLabel">
+														<div class="FAQLabel" style="float:left">
 															<div class="Title"><a href="$faquri">FAQ</a></div>
 															<div class="Label">Capture and manage key knowledge </div>
 															<div class="Label">efficiently in FAQ.</div>
 														</div>
+														<a href="$faquri" style="float:right; width: 93px; height: 80px;">
+															<div><span></span></div>
+														</a>
+														<div style="clear: both;"><span></span></div>
 													</div>
-													
-													<a href="$faquri" style="float: left; margin-top: 60px;">
-													<div class="Button"><span></span></div>
-												</a>
-												<div style="margin:0px 0px 0px 130px;">
+												</div>
+												<div style="margin:0px 0px 0px 90px;">
 													<div class="CheckIcon">Unlimited categories and questions</div>
 													<div class="CheckIcon">Public / private categories</div>
 													<div class="CheckIcon">Multi-language Q/A</div>
@@ -87,9 +89,9 @@
 													
 											</div>
 										</div>
-									</div>	
+									</div>
 									
-								</div>							
+								</div>
 							</td>
 						</tr>
 					</table>

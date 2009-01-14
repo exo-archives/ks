@@ -78,6 +78,10 @@
 	padding: 4px 0px 4px 4px;
 }
 
+.UIHomePagePortlet .TryNowIcon{
+	background: url('DefaultSkin/background/TryNowIcon.gif') no-repeat top right;
+}
+
 .PortletDecoration {
 }
 
@@ -166,7 +170,7 @@
 
 .UIHomePagePortlet .Decorator .DecoratorMR {
 	background: url('DefaultSkin/background/DecoratorMR.gif') no-repeat right;
-	padding-right: 2px;
+	padding-right: 0px;
 }
 
 .UIHomePagePortlet .Decorator .DecoratorMC {
@@ -223,9 +227,7 @@
 }
 
 .UIHomePagePortlet .Decorator .Button {
-	background: url('DefaultSkin/background/Button2.gif') no-repeat left ;
-	height: 30px; width: 120px;
-	cursor: pointer;
+	height: 30px; width: 90px;
 }
 
 /***************************************************************************************************/
@@ -935,8 +937,6 @@
 	font-size: 12px;
 	padding-left: 24px;
 	margin-left: 8px;
-	font-weight: bold;
-	background:transparent url(DefaultSkin/background/CheckTitleIcon.gif) no-repeat left 5px;
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .ShowImageKS1 {
