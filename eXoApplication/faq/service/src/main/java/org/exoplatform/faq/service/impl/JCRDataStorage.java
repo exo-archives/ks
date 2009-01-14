@@ -1878,8 +1878,9 @@ public class JCRDataStorage {
       Node RSSNode = null;
 			if(typeEvent != EVENT_REMOVE) {
 				Node addedQuestion = (Node)faqHome.getSession().getItem(path) ;
-				categoryNode = getCategoryNodeById(addedQuestion.getProperty("exo:categoryId").getValue().getString(), sProvider);
 				Question question = getQuestion(addedQuestion);
+				if(!question.isActivated() || !question.isApproved()) return;
+				categoryNode = getCategoryNodeById(addedQuestion.getProperty("exo:categoryId").getValue().getString(), sProvider);
 				// create rss file if doesn't exist
 				try{
 					RSSNode = categoryNode.getNode(FAQ_RSS);
@@ -1891,10 +1892,11 @@ public class JCRDataStorage {
 				}
 				try{
 					feed.setTitle(categoryNode.getProperty("exo:name").getString());
-					feed.setDescription(categoryNode.getProperty("exo:description").getString());
+					if(categoryNode.hasProperty("categoryNode")) feed.setDescription(categoryNode.getProperty("exo:description").getString());
+					else feed.setDescription("RSS link: " + this.linkQuestion);
 				} catch (Exception e){
 					feed.setTitle(categoryNode.getName());
-					feed.setDescription("description for this category");
+					feed.setDescription(" ");
 				}
 				feed.setLink("http://www.exoplatform.com");
 				
@@ -1937,7 +1939,8 @@ public class JCRDataStorage {
 					entries.addAll(getDetailRss(data, path.substring(path.lastIndexOf("/") + 1)));
 					try{
 						feed.setTitle(categoryNode.getProperty("exo:name").getString());
-						feed.setDescription(categoryNode.getProperty("exo:description").getString());
+						if(categoryNode.hasProperty("categoryNode"))feed.setDescription(categoryNode.getProperty("exo:description").getString());
+						else feed.setDescription(" ");
 					} catch (Exception e){
 						feed.setTitle(categoryNode.getName());
 						feed.setDescription(" ");
@@ -1976,7 +1979,8 @@ public class JCRDataStorage {
       Node RSSNode = cateNode.addNode(FAQ_RSS, "exo:faqRSS");
       try{
 				feed.setTitle(cateNode.getProperty("exo:name").getString());
-				feed.setDescription(cateNode.getProperty("exo:description").getString());
+				if(cateNode.hasProperty("categoryNode"))feed.setDescription(cateNode.getProperty("exo:description").getString());
+				else feed.setDescription(" ");
 			} catch (Exception e){
 				feed.setTitle(cateNode.getName());
 				feed.setDescription(" ");

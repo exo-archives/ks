@@ -19,11 +19,14 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 
+import org.apache.tools.ant.taskdefs.condition.HasMethod;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -82,6 +85,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 )
 
 public class UIResponseForm extends UIForm implements UIPopupComponent {
+	private Map<Long, String> mapNew = new HashMap<Long, String>();
 	private static final String QUESTION_CONTENT = "QuestionTitle" ;
 	private static final String QUESTION_DETAIL = "QuestionContent" ;
 	private static final String QUESTION_LANGUAGE = "Language" ;
@@ -175,8 +179,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   }
 
 	public void setQuestionId(Question question, String languageViewed, boolean cateIsApprovedAnswer){
+		System.out.println("\n\n\n\n---------->question.getLanguage:" + question.getLanguage());
 		this.cateIsApprovedAnswer_ = cateIsApprovedAnswer;
 		listResponse = new ArrayList<String>();
+		mapNew = new HashMap<Long, String>();
 		listUserResponse = new ArrayList<String>();
 		listDateResponse = new ArrayList<Date>();
 		listActiveAnswers = new ArrayList<Boolean>();
