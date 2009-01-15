@@ -134,11 +134,12 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       name = FAQUtils.getFullName(userName) ;
       email = FAQUtils.getEmailUser(userName) ;
     }
-    String quest = question.getDetail().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
+    String quest = question.getQuestion().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
     languageIsResponsed = question.getLanguage() ;
     QuestionLanguage questionLanguage = new QuestionLanguage() ;
+    questionLanguage.setQuestion(question.getQuestion());
+    questionLanguage.setDetail(question.getDetail()) ;
     questionLanguage.setLanguage(question.getLanguage()) ;
-    questionLanguage.setDetail(quest) ;
     questionLanguage.setResponse(question.getAllResponses()) ;
     
     listQuestionLanguage.add(questionLanguage) ;
@@ -147,7 +148,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     	questionLanguage2.setDetail(quest2) ;
       listQuestionLanguage.add(questionLanguage2) ;
     }
-    questionChanged_ = question.getDetail() ;
+    questionChanged_ = question.getQuestion() ;
     // set info for form
     for(QuestionLanguage quesLanguage : listQuestionLanguage) {
       listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
@@ -168,22 +169,28 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     String contenQuestion = "" ;
     for(QuestionLanguage questionLangua : listQuestionLanguage) {
       if(questionLangua.getLanguage().equals(language)) {
-       contenQuestion =  questionLangua.getDetail() ;
+       contenQuestion =  questionLangua.getQuestion() ;
      	 String[] response = questionLangua.getResponse() ;
-        if(response[posOfResponse].equals(" ")) content =this.getLabel("change-content1") + this.getLabel("change-content2")
-        														+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
-        														+"<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>" ;
-        else {
+        if(response[posOfResponse].equals(" ")){ 
+        	content =this.getLabel("change-content1") + this.getLabel("change-content2")
+										+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>";
+        	if(questionLangua.getDetail()!= null && questionLangua.getDetail().trim().length() > 0)
+        		content += "<p><b>" + this.getLabel( "Detail") + "</b> "+ questionLangua.getDetail() + "</p>";
+      		content += "<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>" ;
+        } else {
         	StringBuffer stringBuffer = new StringBuffer();
         	stringBuffer.append(this.getLabel("change-content1")).append(this.getLabel("change-content2"))
-        							.append("<p><b>").append(this.getLabel( "Question")).append("</b> "+ contenQuestion + "</p>")
-        							.append("<p><b>" + this.getLabel( "Response") + "</b> ");
+        							.append("<p><b>").append(this.getLabel( "Question")).append("</b> "+ contenQuestion + "</p>");
+        	if(questionLangua.getDetail()!= null && questionLangua.getDetail().trim().length() > 0)
+        		stringBuffer.append("<p><b>").append(this.getLabel( "Detail")).append("</b> "+ questionLangua.getDetail() + "</p>");
+        	stringBuffer.append("<p><b>" + this.getLabel( "Response") + "</b> ");
         	for(String res : response){
         		stringBuffer.append(res + "</p>");
         	}
         	stringBuffer.append("<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>");
         	content =stringBuffer.toString();
         }
+        break;
       }
     }
     addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " "+ contenQuestion.replaceAll("<br>", " "))) ;
@@ -369,20 +376,23 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
        for(QuestionLanguage questionLanguage : sendMailForm.listQuestionLanguage) {
          if(questionLanguage.getLanguage().equals(language)) {
         	 sendMailForm.languageIsResponsed = language ;
-        	 contenQuestion =  questionLanguage.getDetail() ;
+        	 contenQuestion =  questionLanguage.getQuestion() ;
         	 String response[] = questionLanguage.getResponse() ;
            @SuppressWarnings("unused")
           String content = "" ;
            if(response[sendMailForm.posOfResponse].equals(" ")) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
           	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
+          	 													+"<p><b>" + sendMailForm.getLabel( "Detail") + "</b> "+ questionLanguage.getDetail() + "</p>"
           	 													+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
            else 
            	content =sendMailForm.getLabel("change-content1")+ sendMailForm.getLabel("change-content2")
            			+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
+           			+"<p><b>" + sendMailForm.getLabel( "Detail") + "</b> "+ questionLanguage.getDetail() + "</p>"
            			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response[sendMailForm.posOfResponse] + "</p>"
            			+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
            body.setValue(content) ;
            subject.setValue(sendMailForm.getLabel("change-title")+contenQuestion) ;
+           break;
          }
        }
        event.getRequestContext().addUIComponentToUpdateByAjax(sendMailForm) ;

@@ -1842,7 +1842,7 @@ public class UIQuestions extends UIContainer {
 			UISendEmailsContainer watchContainer = popupAction.activate(UISendEmailsContainer.class, 700) ;
 			UISendMailForm sendMailForm = watchContainer.getChild(UISendMailForm.class) ;
 			//link
-			String link = uiQuestions.getLink().replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("Setting", "ChangePath").replaceAll("&amp;", "&");
+			String link = uiQuestions.getLink().replaceFirst("UIQuestions", "UIQuestions").replaceFirst("Setting", "ViewQuestion").replaceAll("&amp;", "&");
 			String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 			String portalName = "/" + Util.getUIPortal().getName() ;
 			if(link.indexOf(portalName) > 0) {
@@ -1859,7 +1859,7 @@ public class UIQuestions extends UIContainer {
 			if(!categoryId.equals("null")) path += "/"+ categoryId;
 			link = link.replaceFirst("OBJECTID", path);
 			link = url + link;
-			sendMailForm.setLink(link);
+			sendMailForm.setLink(link.replaceFirst("private", "public") + "/" + questionId + "/noBack");
 			if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "") ;
 			else sendMailForm.setUpdateQuestion(questionId , language_) ;
 			watchContainer.setId("FAQSendMailForm") ;

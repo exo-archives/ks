@@ -1842,7 +1842,7 @@ public class JCRDataStorage {
     NodeList listNodes = doc.getElementsByTagName("item");
     NodeList childNodes = null;
     Element element = null;
-    for(int i = 0; i < listNodes.getLength(); i ++){
+    for(int i = 0; i < listNodes.getLength() && i < 9; i ++){
     	try{
 	    	entry = new SyndEntryImpl();
 	    	element = (Element) listNodes.item(i);
