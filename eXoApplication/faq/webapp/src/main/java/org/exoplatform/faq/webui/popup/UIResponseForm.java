@@ -553,18 +553,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				}
 				
-				// get all response which is new
-				responseForm.listResponse.clear();
-				responseForm.listDateResponse.clear();
-				responseForm.listDateResponse.addAll(Arrays.asList(question_.getDateResponse()));
-				int length = question_.getAllResponses().length;
-				for(int i = 0; i < length; i ++){
-					if(responseForm.listDateResponse.get(i).getTime() >= responseForm.currentDate) 
-						responseForm.listResponse.add(question_.getAllResponses()[i]);
-				}
-				
-				System.out.println("\n\n\n\n-------------> number of new answers: " + responseForm.listResponse.size());
-
 				//cancel
 				if(!responseForm.isChildren_) {
 					questions.setIsNotChangeLanguage() ;
@@ -590,6 +578,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 				}
 				/////////////Discuss forum
+			// get all response which is new
+				responseForm.listResponse.clear();
+				responseForm.listDateResponse.clear();
+				if(question_.getDateResponse() == null) {sessionProvider.close(); return;}
+				responseForm.listDateResponse.addAll(Arrays.asList(question_.getDateResponse()));
+				int length = question_.getAllResponses().length;
+				for(int i = 0; i < length; i ++){
+					if(responseForm.listDateResponse.get(i).getTime() >= responseForm.currentDate) 
+						responseForm.listResponse.add(question_.getAllResponses()[i]);
+				}
+				
+				System.out.println("\n\n\n\n-------------> number of new answers: " + responseForm.listResponse.size());
 				FAQSetting faqSetting = new FAQSetting();
 				FAQUtils.getPorletPreference(faqSetting);
 				if(faqSetting.getIsDiscussForum()) {
