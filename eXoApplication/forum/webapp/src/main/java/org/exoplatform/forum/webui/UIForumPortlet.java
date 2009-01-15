@@ -50,7 +50,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isSearchRendered = false;
 	private boolean isJumpRendered = false;
 	private UserProfile userProfile = null;
-	private boolean enableIPLogging = true;
+	private boolean enableIPLogging = false;
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
@@ -59,7 +59,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered) ;
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
-		loadPreferences();
+//		loadPreferences();
 	}
 //
 //	@Override
@@ -104,15 +104,15 @@ public class UIForumPortlet extends UIPortletApplication {
 		getChild(UISearchForm.class).setRendered(isSearchRendered) ;
 	}
 	
-	private void loadPreferences() throws Exception {
-		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-		try {
-			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	private void loadPreferences() throws Exception {
+//		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+//		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+//		try {
+//			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 		
 	public boolean isEnableIPLogging() {
   	return enableIPLogging;

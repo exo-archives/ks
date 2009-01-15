@@ -175,7 +175,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			ipBanTab.addUIFormInput(new UIFormStringInput(NEW_IP_BAN_INPUT, null));
 			listIpBan.add("192.168.1.49");
 			listIpBan.add("192.168.2.1");
-			addUIFormInput(ipBanTab);
+			//addUIFormInput(ipBanTab);
 		}
 	}
 	
