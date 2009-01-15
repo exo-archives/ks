@@ -62,9 +62,6 @@ public class UIFAQPortlet extends UIPortletApplication {
     			removeChild(UISettingForm.class);
     		}
 	    	addChild(UIFAQContainer.class, null, null) ;
-	    	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
-	      uiPopup.setId("UIFAQPopupAction") ;
-	      uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
     	} /*else {
     		UIFAQContainer container = getChild(UIFAQContainer.class);
     		container.updateIsRender(true);
@@ -85,7 +82,6 @@ public class UIFAQPortlet extends UIPortletApplication {
 		    	if(getChild(UISettingForm.class) == null) {
 		    		if(faqSetting.isAdmin()){
 			    		removeChild(UIFAQContainer.class);
-			    		removeChild(UIPopupAction.class);
 				    	UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
 				    	settingForm.setRendered(true);
 				    	settingForm.setIsEditPortlet(true);
@@ -93,7 +89,7 @@ public class UIFAQPortlet extends UIPortletApplication {
 			    	}
 		    	}
     		}
-    	} catch (Exception e) { }
+    	} catch (Exception e) { e.printStackTrace();}
     }
     
     super.processRender(app, context) ;

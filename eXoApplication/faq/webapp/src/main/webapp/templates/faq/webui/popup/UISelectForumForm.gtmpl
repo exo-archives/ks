@@ -1,0 +1,40 @@
+<%  
+	import org.exoplatform.forum.service.Forum;
+%>
+<div class="UIListCategoryForumForm">
+<% uiform.begin() %>
+	<div class="CategoryContainer">
+		<div class="ContentLabel">Select forum and discuss:</div>
+		<div class="ListCategory">
+			<div class="ContentList">
+			<%  
+				List list = uicomponent.getListForum();
+				for(forum in list) {
+				 String forumName = forum.getForumName();
+			%>
+			<div class="ItemCategory">
+				<a href="<%=uicomponent.event("SelectForum", forum.getId());%>"><div class="ForumIcon IconCategory">$forumName</div></a>
+			</div>
+			<%} %>
+			</div>
+		</div>
+	</div>
+	<div class="UIAction">
+	  <table class="ActionContainer" align="center">
+	  	<tr>
+	 	 		<td align="center">
+					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+					  <div class="ButtonLeft">
+						  <div class="ButtonRight">
+						    <div class="ButtonMiddle">
+					       Close
+						    </div>
+					    </div>
+						</div>
+					</a>
+	   		</td>
+	  	</tr>
+	  </table>
+	</div>
+<%uiform.end()%>
+</div>

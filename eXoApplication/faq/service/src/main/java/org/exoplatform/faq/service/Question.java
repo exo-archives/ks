@@ -120,6 +120,7 @@ public class Question {
   /** The pos. */
   private int pos[];
   
+  private String pathTopicDiscuss;
   /**
    * Class constructor specifying id of object is created.
    */
@@ -617,6 +618,14 @@ public class Question {
 	public void setApprovedAnswers(Boolean[] approvedAnswers) {
 		this.approvedAnswers = approvedAnswers;
 	}
+
+	public String getPathTopicDiscuss() {
+  	return pathTopicDiscuss;
+  }
+
+	public void setPathTopicDiscuss(String pathTopicDiscus) {
+  	this.pathTopicDiscuss = pathTopicDiscus;
+  }
 }
 
 

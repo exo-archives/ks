@@ -63,6 +63,16 @@
         <value>asc</value>      <!-- asc/desc -->
         <read-only>false</read-only>
       </preference>
+      <preference>
+        <name>isDiscussForum</name>
+        <value>false</value>
+        <read-only>false</read-only>
+      </preference>
+      <preference>
+        <name>pathNameCategoryForum</name>
+        <value> </value>
+        <read-only>false</read-only>
+      </preference>
     </portlet-preferences>  
-  </portlet>  
+  </portlet>
 </portlet-app>

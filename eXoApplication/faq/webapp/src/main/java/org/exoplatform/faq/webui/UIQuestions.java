@@ -21,13 +21,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import javax.jcr.Node;
-import org.exoplatform.services.organization.User;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -46,7 +44,6 @@ import org.exoplatform.faq.webui.popup.UICommentForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
 import org.exoplatform.faq.webui.popup.UIExportForm;
 import org.exoplatform.faq.webui.popup.UIImportForm;
-import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
 import org.exoplatform.faq.webui.popup.UIMoveQuestionForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
@@ -54,17 +51,18 @@ import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
 import org.exoplatform.faq.webui.popup.UIRSSForm;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
+import org.exoplatform.faq.webui.popup.UISelectForumForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIViewUserProfile;
 import org.exoplatform.faq.webui.popup.UIVoteQuestion;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
-import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -72,8 +70,6 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.validator.NullFieldValidator;
-import org.hibernate.usertype.UserVersionType;
 
 
 /**
@@ -111,8 +107,9 @@ import org.hibernate.usertype.UserVersionType;
 				@EventConfig(listeners = UIQuestions.ChangeQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.SortAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.ExportActionListener.class),
+				@EventConfig(listeners = UIQuestions.ImportActionListener.class),
 				@EventConfig(listeners = UIQuestions.RSSActionListener.class),
-				@EventConfig(listeners = UIQuestions.ImportActionListener.class)
+				@EventConfig(listeners = UIQuestions.DiscussForumActionListener.class)
 		}
 )
 public class UIQuestions extends UIContainer {
@@ -186,6 +183,12 @@ public class UIQuestions extends UIContainer {
 	public String getPortalName() {
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
+	}
+	
+	private boolean isDiscussForum() throws Exception{
+		FAQSetting faqSetting = new FAQSetting();
+		FAQUtils.getPorletPreference(faqSetting);
+		return faqSetting.getIsDiscussForum();
 	}
 
 	public String getRepository() throws Exception {
@@ -1948,6 +1951,19 @@ public class UIQuestions extends UIContainer {
 			uiQuestions.isChangeLanguage = true ;
 			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+		}
+	}
+	
+	static  public class DiscussForumActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions uiQuestions = event.getSource() ; 
+			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
+			UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UISelectForumForm selectForumForm = popupAction.createUIComponent(UISelectForumForm.class, null, null);
+			selectForumForm.setQuestionId(questionId);
+			popupAction.activate(selectForumForm, 380, 400) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 }

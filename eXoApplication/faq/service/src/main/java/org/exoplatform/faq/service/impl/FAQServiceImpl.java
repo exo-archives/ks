@@ -691,6 +691,9 @@ public class FAQServiceImpl implements FAQService{
 		jcrData_.generateRSS(path, typeEvent) ;
 	}
 
+	public void savePathDiscussQuestion(String questionId, String pathDiscuss, SessionProvider sProvider) throws Exception {
+		jcrData_.savePathDiscussQuestion(questionId, pathDiscuss, sProvider);
+	}
 	
 	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getMaxindexCategory(parentId, sProvider);

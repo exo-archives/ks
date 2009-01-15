@@ -64,6 +64,9 @@
   		<propertyDefinition name="exo:usersVote" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
 	  	</propertyDefinition>
+  		<propertyDefinition name="exo:pathTopicDiscuss" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+	  	</propertyDefinition>
 	  	<propertyDefinition name="exo:markVote" requiredType="Double" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
 	  	</propertyDefinition>

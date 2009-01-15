@@ -54,6 +54,10 @@ public class FAQSetting {
 	/** The is admin. */
 	private String isAdmin = null;
 	
+	private String pathNameCategoryForum ;
+	
+	private boolean isDiscussForum = false;
+	
 	/** The DISPLA y_ typ e_ alphabet. */
 	public static String DISPLAY_TYPE_ALPHABET = "alphabet" ;
 	
@@ -65,6 +69,7 @@ public class FAQSetting {
 	
 	/** The ORDERB y_ typ e_ desc. */
 	public static String ORDERBY_TYPE_DESC = "desc" ;
+	
 	
 	/**
 	 * This method get one value is Alphabet or Post Date.
@@ -224,6 +229,22 @@ public class FAQSetting {
 	public void setEnanbleVotesAndComments(boolean enanbleVotesAndComments) {
 		this.enanbleVotesAndComments = enanbleVotesAndComments;
 	}
+	
+	public boolean getIsDiscussForum() {
+		return isDiscussForum;
+	}
+	
+	public void setIsDiscussForum(boolean b) {
+		this.isDiscussForum = b;
+	}
+	
+	public String getPathNameCategoryForum() {
+  	return pathNameCategoryForum;
+  }
+
+	public void setPathNameCategoryForum(String str) {
+  	this.pathNameCategoryForum = str;
+  }
 
 	public boolean isEnableAutomaticRSS() {
 		return enableAutomaticRSS;

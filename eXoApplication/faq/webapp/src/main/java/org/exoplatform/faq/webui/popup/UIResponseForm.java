@@ -19,15 +19,11 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ListResourceBundle;
-import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 
-import org.apache.tools.ant.taskdefs.condition.HasMethod;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
@@ -41,6 +37,8 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Post;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -591,7 +589,25 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					UIPopupContainer popupContainer = questionManagerForm.getParent() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 				}
-				
+				/////////////Discuss forum
+				FAQSetting faqSetting = new FAQSetting();
+				FAQUtils.getPorletPreference(faqSetting);
+				if(faqSetting.getIsDiscussForum()) {
+					String pathTopic = question_.getPathTopicDiscuss();
+					if(pathTopic != null && pathTopic.length() > 0) {
+						ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+						String []ids = pathTopic.split("/");
+						Post post;
+						for (String str : responseForm.listResponse) {
+							post = new Post();
+							post.setOwner(question_.getAuthor());
+							post.setIcon("ViewIcon");
+							post.setName("Re: " + question_.getQuestion());
+							post.setMessage(str);
+							forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
+            }
+					}
+				}
 				sessionProvider.close();
 			}
 		}

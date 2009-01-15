@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
-import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;

@@ -1617,4 +1617,88 @@
 	width:65%;
 }
 
+.UIFAQPortlet .AddIcon16x16 {
+	float: left ;
+	width: 16px;	height: 16px;
+	margin: 0px 0px 0px 6px;
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif') no-repeat center;
+	cursor: pointer;
+}
+
+.UIFAQPortlet .Discussion #CategoryPath {
+	font-size:11px;
+	width:215px;
+	float:left;
+}
+/************************** UIListCategoryForumForm *****************************/
+.UIFAQPortlet .UIListCategoryForumForm {
+}
+
+.UIFAQPortlet .UIListCategoryForumForm .CategoryContainer {
+	padding-top: 40px;
+	width: 350px; 
+	margin:auto;
+}
+
+.UIFAQPortlet .UIListCategoryForumForm .ContentLabel {
+	font-weight: bold;
+}
+
+.UIFAQPortlet .UIListCategoryForumForm .ListCategory {
+	margin-top: 2px;
+	border: solid 1px #b7b7b7;
+	background: #F7F7F7;
+}
+
+.UIFAQPortlet .UIListCategoryForumForm .ContentList {
+	padding: 10px 0px 0px 10px;
+	border: solid 1px #ffffff;
+	min-height: 200px;
+}
+
+.UIFAQPortlet .UIListCategoryForumForm .IconCategory {
+	padding-left: 26px;
+	width: auto;
+	line-height: 18px;
+}
+
+.UIFAQPortlet .DisableMenuItem {
+	display:block;
+	line-height:16px;
+	white-space:nowrap;
+	cursor: none;
+	filter: alpha(opacity: 50);
+	-moz-opacity: 0.5;
+}
+
+.UIFAQPortlet .DisableMenuItem {
+	*color: #b7b7b7;
+	_color: #b7b7b7;
+}
+
+.UIFAQPortlet .ForumIcon {
+	background: url('background/ThreadIcon.gif') no-repeat left;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

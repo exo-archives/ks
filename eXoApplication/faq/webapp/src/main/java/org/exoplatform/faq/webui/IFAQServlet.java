@@ -32,7 +32,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.RepositoryService;
 
 /**
  * Created by The eXo Platform SARL

@@ -709,6 +709,7 @@ public class JCRDataStorage {
     if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) ;
     if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
     if(questionNode.hasProperty("exo:usersVoteAnswer")) question.setUsersVoteAnswer(ValuesToStrings(questionNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+    if(questionNode.hasProperty("exo:pathTopicDiscuss")) question.setPathTopicDiscuss(questionNode.getProperty("exo:pathTopicDiscuss").getString()) ;
     if(questionNode.hasProperty("exo:marksVoteAnswer")) question.setMarksVoteAnswer(ValuesToDouble(questionNode.getProperty("exo:marksVoteAnswer").getValues())) ;
     if(questionNode.hasProperty("exo:approveResponses")) question.setApprovedAnswers(ValuesToBoolean(questionNode.getProperty("exo:approveResponses").getValues())) ;
     if(questionNode.hasProperty("exo:activateResponses")) question.setActivateAnswers(ValuesToBoolean(questionNode.getProperty("exo:activateResponses").getValues())) ;
@@ -1887,9 +1888,11 @@ public class JCRDataStorage {
 					RSSNode = categoryNode.getNode(FAQ_RSS);
 					getRSSData(RSSNode, data);
 					entries.addAll(getDetailRss(data, question.getId()));
-				} catch (Exception e){
+				} catch (PathNotFoundException e){
 					RSSNode = categoryNode.addNode(FAQ_RSS, "exo:faqRSS");
 					isNew = true;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				try{
 					feed.setTitle(categoryNode.getProperty("exo:name").getString());
@@ -1966,6 +1969,18 @@ public class JCRDataStorage {
 		}
 		cateOfQuestion = null;
 		linkQuestion = null;
+	}
+	
+	public void savePathDiscussQuestion(String questionId, String pathDiscuss, SessionProvider sProvider) throws Exception{
+		Node questionHome = getQuestionHome(sProvider, null) ;
+    Node questionNode ;
+    try {
+    	questionNode = questionHome.getNode(questionId);
+    	questionNode.setProperty("exo:pathTopicDiscuss", pathDiscuss);
+    	questionHome.save() ;
+    } catch (PathNotFoundException e) {
+    	e.printStackTrace();
+    }
 	}
 	
 	public Node getRSSNode(SessionProvider sProvider, String categoryId) throws Exception{

@@ -347,6 +347,8 @@ public class FAQUtils {
 		faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
 		faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
 		faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
+		faqSetting.setIsDiscussForum(Boolean.parseBoolean(portletPref.getValue("isDiscussForum", ""))) ;
+		faqSetting.setPathNameCategoryForum(portletPref.getValue("pathNameCategoryForum", "")) ;
 	}
 
 	public static void getEmailSetting(FAQSetting faqSetting, boolean isNew, boolean isSettingForm) {
@@ -380,6 +382,8 @@ public class FAQUtils {
 			portletPref.setValue("display", setting.getDisplayMode());
 			portletPref.setValue("orderBy", setting.getOrderBy());
 			portletPref.setValue("orderType", setting.getOrderType());
+			portletPref.setValue("isDiscussForum", String.valueOf(setting.getIsDiscussForum()));
+			portletPref.setValue("pathNameCategoryForum", setting.getPathNameCategoryForum());
 			portletPref.setValue("enableAutomaticRSS", setting.isEnableAutomaticRSS() + "");
 			portletPref.setValue("enanbleVotesAndComments", setting.isEnanbleVotesAndComments() + "");
 			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);

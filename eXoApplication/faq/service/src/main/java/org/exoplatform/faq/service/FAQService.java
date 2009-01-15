@@ -629,6 +629,8 @@ public interface FAQService {
  	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
  	
  	public void addWatchQuestion(String questionId, Watch watch, boolean isNew, SessionProvider sessionProvider) throws Exception;
+
+ 	public void savePathDiscussQuestion(String questionId, String pathDiscuss, SessionProvider sessionProvider) throws Exception;
  	
  	public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception;
  	

@@ -492,6 +492,7 @@ public class QuestionPageList extends JCRPageList {
     if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) ;
     if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
     if(questionNode.hasProperty("exo:usersVoteAnswer")) question.setUsersVoteAnswer(ValuesToStrings(questionNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+    if(questionNode.hasProperty("exo:pathTopicDiscuss")) question.setPathTopicDiscuss(questionNode.getProperty("exo:pathTopicDiscuss").getString()) ;
     if(questionNode.hasProperty("exo:marksVoteAnswer")) question.setMarksVoteAnswer(ValuesToDoubles(questionNode.getProperty("exo:marksVoteAnswer").getValues())) ;
     if(questionNode.hasProperty("exo:approveResponses")) question.setApprovedAnswers(ValuesToBoolean(questionNode.getProperty("exo:approveResponses").getValues())) ;
     if(questionNode.hasProperty("exo:activateResponses")) question.setActivateAnswers(ValuesToBoolean(questionNode.getProperty("exo:activateResponses").getValues())) ;

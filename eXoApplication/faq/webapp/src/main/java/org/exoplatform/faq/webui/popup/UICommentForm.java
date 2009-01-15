@@ -32,6 +32,8 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Post;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -44,7 +46,6 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
-import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 
@@ -77,6 +78,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	private List<String> listUserNames_ = new ArrayList<String>();
 	private List<Date> listDates_ = new ArrayList<Date>();
 	private int pos = 0;
+	private boolean isAddNew = false;
 	private FAQSetting faqSetting_ = null;
 	private Date date_ = new java.util.Date();
 	
@@ -118,6 +120,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				pos = posCommentEdit;
 				((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(question_.getComments()[posCommentEdit]);
 			} else {
+				isAddNew = true;
 				listComments_.add(" ");
 				listUserNames_.add(currentUser_);
 				listDates_.add(date_);
@@ -221,6 +224,17 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 						
 						MultiLanguages multiLanguages = new MultiLanguages();
 						multiLanguages.addLanguage(faqService_.getQuestionNodeById(commentForm.question_.getId(), sessionProvider), commentForm.questionLanguage_) ;
+					}
+					if(commentForm.isAddNew) {
+						String pathTopic = commentForm.question_.getPathTopicDiscuss();
+						ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+						String []ids = pathTopic.split("/");
+						Post post = new Post();
+						post.setOwner(commentForm.currentUser_);
+						post.setIcon("ViewIcon");
+						post.setName("Re: " + commentForm.question_.getQuestion());
+						post.setMessage(comment);
+						forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
 					}
 				} else {
 					UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
