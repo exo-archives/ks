@@ -187,7 +187,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				commentForm.question_ = faqService_.getQuestionById(commentForm.question_.getId(), sessionProvider);
 				
 				//link
-	      String link = commentForm.getLink().replaceFirst("UICommentForm", "UIBreadcumbs").replaceFirst("Cancel", "ChangePath").replaceAll("&amp;", "&");
+	      String link = commentForm.getLink().replaceFirst("UICommentForm", "UIQuestions").replaceFirst("Cancel", "ViewQuestion").replaceAll("&amp;", "&");
 	      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 	      String portalName = "/" + Util.getUIPortal().getName() ;
 	      if(link.indexOf(portalName) > 0) {

@@ -208,7 +208,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 						return ;
 					}
 					question.setCategoryId(cateId) ;
-					String link = moveQuestionForm.link.replaceFirst("UIMoveQuestionForm", "UIBreadcumbs").replaceFirst("Cancel", "ChangePath").replaceAll("&amp;", "&");
+					String link = moveQuestionForm.link.replaceFirst("UIMoveQuestionForm", "UIQuestions").replaceFirst("Cancel", "ViewQuestion").replaceAll("&amp;", "&");
 		      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 		      String portalName = "/" + Util.getUIPortal().getName() ;
 		      if(link.indexOf(portalName) > 0) {

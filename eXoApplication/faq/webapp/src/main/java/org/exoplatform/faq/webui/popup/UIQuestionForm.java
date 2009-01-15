@@ -548,7 +548,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
       //link
-      String link = questionForm.getLink().replaceFirst("UIQuestionForm", "UIBreadcumbs").replaceFirst("Attachment", "ChangePath").replaceAll("&amp;", "&");
+      String link = questionForm.getLink().replaceFirst("UIQuestionForm", "UIQuestions").replaceFirst("Attachment", "ViewQuestion").replaceAll("&amp;", "&");
       String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
       String portalName = "/" + Util.getUIPortal().getName() ;
       if(link.indexOf(portalName) > 0) {
