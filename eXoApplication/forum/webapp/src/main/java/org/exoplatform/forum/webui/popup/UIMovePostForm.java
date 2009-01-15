@@ -163,7 +163,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
         } catch (ItemExistsException e) {
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-        	uiApp.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
+        	uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
         	return;
         } catch (Exception e) {
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
