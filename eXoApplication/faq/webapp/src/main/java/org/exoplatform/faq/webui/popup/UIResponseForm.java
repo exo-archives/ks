@@ -748,7 +748,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						if(responseForm.posOfResponse < newPosResponse) newPosResponse--;
 					} else if(!responseContent.equals(responseForm.listResponse.get(responseForm.posOfResponse))){
 						responseForm.listResponse.set(responseForm.posOfResponse, responseContent);
-						responseForm.listDateResponse.set(responseForm.posOfResponse, date);
 					}
 					formWYSIWYGInput.setValue(responseForm.listResponse.get(newPosResponse));
 					responseForm.posOfResponse = newPosResponse;
