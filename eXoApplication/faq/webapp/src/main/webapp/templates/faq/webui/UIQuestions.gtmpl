@@ -720,13 +720,13 @@
 										else actionSubCate = uicomponent.getMenuSubCategory(subCategory);
 								%>
 										<div class="FAQCategory" style="float: left; margin:0px 15px 5px 0px;">
-											<div	onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupSubCategory$i', '', null, null)">
+											<div	onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupSubCategory<%=subCategory.getId()%>', '', null, null)">
 											<a title="<%=subCategory.getName()%>" href="<%=uicomponent.event("OpenCategory", categoryId + "/" +subCategory.getId())%>">
 												<%=FAQUtils.getSubString(subCategory.getName(), 150)%>
 											</a>
 											
 											<!-- ============================ action of this subcategory ========================================================== -->
-											<div class="UIFAQPopupCategory" id="UIFAQPopupSubCategory$i" style="display: none; left: 50px;">
+											<div class="UIFAQPopupCategory" id="UIFAQPopupSubCategory<%=subCategory.getId()%>" style="display: none; left: 50px;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 													<div class="UIContextMenuContainer">
 																					
