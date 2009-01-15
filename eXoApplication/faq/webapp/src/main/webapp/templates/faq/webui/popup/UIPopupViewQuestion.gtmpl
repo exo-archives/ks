@@ -22,8 +22,8 @@
  						Question question = uicomponent.getViewQuestion() ; 
 						String qId = question.getId();
 						String content = question.getQuestion() ;
-						String responseBy = "..." ;
-						String date = "..." ;
+						String responseBy = "" ;
+						String date = "" ;
 						String response = "<center><b>" + _ctx.appRes("UIPopupViewQuestion.title.not-answer")+ "</center></b>" ;
 				%>
 				<div class="ResponseContent">
@@ -45,11 +45,11 @@
 							}
 						}
 					 %>
+					<%
+					if(!question.getAttachMent().isEmpty()) {
+					%>
 					<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
 					<div class="AttachmentContent">
-					<%
-							if(!question.getAttachMent().isEmpty()) {
-					%>
 						<div style="margin-top: 5px; margin-bottom: 5px;">
 							<%
 								for(FileAttachment fileAttachment : question.getAttachMent()){
@@ -122,39 +122,48 @@
 						    	}
 						  	} %>
 						  	</div>
-					  	<%} else {%>
-					  	&nbsp;
-				  	<%}%>
 				  	<div style="clear: left;"><span></span></div>
 					</div>
-					<div class="RelatedQuestionsView"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br>
-						<%String questionRelationById = "" ;
-							String cateRelaId = "" ;
-							String quesRelaId = "" ;
-							String quesRelaCont = "" ;
-							String linkRelaQues = "" ;
-							for(String relationId : question.getRelations()) { 
-								quesRelaCont = "" ;
-								questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
-								if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
-									cateRelaId = questionRelationById.split("/")[0] ;
-									quesRelaId = questionRelationById.split("/")[1] ;
-									quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
-								}
-								if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
-								String title = quesRelaCont ;
-									if (quesRelaCont.length() > 50) {
-										title = FAQUtils.getTitle(title) ;
-										quesRelaCont = FAQUtils.getSubString(quesRelaCont, 50); 
+			  	<%
+			  	}%>
+					<%
+					if(question.getRelations() != null && question.getRelations().length > 0){
+					%>
+						<div class="RelatedQuestionsView"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br>
+							<%String questionRelationById = "" ;
+								String cateRelaId = "" ;
+								String quesRelaId = "" ;
+								String quesRelaCont = "" ;
+								String linkRelaQues = "" ;
+								for(String relationId : question.getRelations()) { 
+									quesRelaCont = "" ;
+									questionRelationById = uicomponent.getQuestionRelationById(relationId) ;
+									if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
+										cateRelaId = questionRelationById.split("/")[0] ;
+										quesRelaId = questionRelationById.split("/")[1] ;
+										quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "") ;
 									}
-						%>
-									&nbsp; <div title="$title">- $quesRelaCont<br></div>
-						<% 	}
-							}%>
-					</div>
-					<div class=" ResponsActions">
-							<div ><b><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %></b> $responseBy , $date</div>
-					 </div>
+									if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
+									String title = quesRelaCont ;
+										if (quesRelaCont.length() > 50) {
+											title = FAQUtils.getTitle(title) ;
+											quesRelaCont = FAQUtils.getSubString(quesRelaCont, 50); 
+										}
+							%>
+										&nbsp; <div title="$title">- $quesRelaCont<br></div>
+							<% 	}
+								}%>
+						</div>
+					<%
+					}
+					if(responseBy.trim().length() > 0){
+					%>
+						<div class=" ResponsActions">
+								<div ><b><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %></b> $responseBy , $date</div>
+						</div>
+					 <%
+					 }
+					 %>
 					</div>
 				</tbody>
 			</table>
