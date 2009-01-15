@@ -1595,11 +1595,12 @@ public class JCRDataStorage {
 				node = (Node)iter.nextNode();
 				id = node.getName() ;
 				formSearch.setId(id) ;
-				formSearch.setName(node.getProperty("exo:name").getString()) ;
 				formSearch.setType(type) ;
 				if(type.equals("faqCategory")) {
+					formSearch.setName(node.getProperty("exo:name").getString()) ;
 					formSearch.setIcon("FAQCategorySearch") ;
 				} else {
+					formSearch.setName(node.getProperty("exo:title").getString()) ;
 					Question question = getQuestionById(id, sProvider) ;
 					String response = question.getResponses() ;
 					if(response.equals(" ")) {
@@ -1969,7 +1970,12 @@ public class JCRDataStorage {
 	
 	public Node getRSSNode(SessionProvider sProvider, String categoryId) throws Exception{
 		Node rssNode = null;
-		Node cateNode = getCategoryNodeById(categoryId, sProvider);
+		Node cateNode = null;
+		try{
+			cateNode = getCategoryNodeById(categoryId, sProvider);
+		} catch (Exception e){
+			return null;
+		}
 		if(!cateNode.hasNode(FAQ_RSS)){
 			String feedType = "rss_2.0";
 			SyndFeed feed = new SyndFeedImpl();

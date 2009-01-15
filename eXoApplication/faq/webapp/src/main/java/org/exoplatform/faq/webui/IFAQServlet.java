@@ -50,19 +50,15 @@ public class IFAQServlet extends HttpServlet {
     Session session = null ;
     try{
       String portalName = arrayInfo[1] ;
-      /*String wsName = arrayInfo[2] ;
-      String categoryId = arrayInfo[3] ;*/
       String categoryId = arrayInfo[2] ;
       StringBuffer fileName = new StringBuffer() ;
       PortalContainer pcontainer = getPortalContainer(portalName) ;
       PortalContainer.setInstance(pcontainer) ;
-      //RepositoryService repositoryService = (RepositoryService)pcontainer.getComponentInstanceOfType(RepositoryService.class) ;
-      //session = repositoryService.getDefaultRepository().getSystemSession(wsName) ;
       FAQService faqService = (FAQService)pcontainer.getComponentInstanceOfType(FAQService.class) ;
       
       Node node = faqService.getRSSNode(SessionProviderFactory.createSystemProvider(), categoryId) ;
+      if (node == null) throw new Exception("Node not found. ");
       session = node.getSession();
-      if (node == null) throw new Exception("Node " + fileName + " not found. ");
       response.setContentType("text/xml") ;
       InputStream is = node.getProperty("exo:content").getStream();
       byte[] buf = new byte[is.available()];
@@ -70,7 +66,6 @@ public class IFAQServlet extends HttpServlet {
       ServletOutputStream os = response.getOutputStream();
       os.write(buf);
     }catch(Exception e) {
-      e.printStackTrace() ;
       throw new ServletException(e) ;
     }finally{
       if(session != null) {
