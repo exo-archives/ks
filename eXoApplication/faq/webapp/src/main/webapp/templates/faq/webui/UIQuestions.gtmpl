@@ -43,7 +43,7 @@
 								if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
 								%>
 									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
-										<a href="<%=uicomponent.getRSSLink()%>">
+										<a href="<%=uicomponent.event("RSS", uicomponent.getRSSLink())%>">
 											<div class="LeftOverButton">
 												<div class="RightOverButton">
 													<div class="CenterOverButton">

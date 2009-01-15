@@ -52,6 +52,7 @@ import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
+import org.exoplatform.faq.webui.popup.UIRSSForm;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
@@ -110,6 +111,7 @@ import org.hibernate.usertype.UserVersionType;
 				@EventConfig(listeners = UIQuestions.ChangeQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.SortAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.ExportActionListener.class),
+				@EventConfig(listeners = UIQuestions.RSSActionListener.class),
 				@EventConfig(listeners = UIQuestions.ImportActionListener.class)
 		}
 )
@@ -1130,6 +1132,21 @@ public class UIQuestions extends UIContainer {
 			UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null) ;
 			popupAction.activate(popupContainer, 500, 200) ;
 			exportForm.setObjectId(categoryId);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static  public class RSSActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions questions = event.getSource() ;
+			String rssLink = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.setId("FAQRSSForm") ;
+			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
+			popupAction.activate(popupContainer, 560, 170) ;
+			exportForm.setRSSLink(rssLink);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

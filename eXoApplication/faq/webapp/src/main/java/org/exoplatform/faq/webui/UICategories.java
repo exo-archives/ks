@@ -33,6 +33,7 @@ import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
+import org.exoplatform.faq.webui.popup.UIRSSForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -66,6 +67,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UICategories.ExportActionListener.class),
 				@EventConfig(listeners = UICategories.ImportActionListener.class),
 				@EventConfig(listeners = UICategories.ChangeIndexActionListener.class),
+				@EventConfig(listeners = UICategories.RSSActionListener.class),
 				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class)
 		}
 )
@@ -852,6 +854,21 @@ public class UICategories extends UIContainer{
 			}
 			sessionProvider.close();
 			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
+		}
+	}
+	
+	static  public class RSSActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiCategories = event.getSource() ;
+			String rssLink = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIFAQPortlet portlet = uiCategories.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.setId("FAQRSSForm") ;
+			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
+			popupAction.activate(popupContainer, 560, 170) ;
+			exportForm.setRSSLink(rssLink);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 }

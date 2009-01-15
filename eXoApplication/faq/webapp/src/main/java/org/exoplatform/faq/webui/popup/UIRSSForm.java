@@ -16,6 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -34,29 +37,31 @@ import org.exoplatform.webui.form.UIForm;
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/faq/webui/popup/UIRSSForm.gtmpl",
 		events = {
-				@EventConfig(listeners = UIRSSForm.SaveActionListener.class),
 				@EventConfig(listeners = UIRSSForm.CancelActionListener.class)
 		}
 )
 public class UIRSSForm extends UIForm	{
+	private String rssLink;
 	 
 	public UIRSSForm() throws Exception {
 	}
 	
-	static public class SaveActionListener extends EventListener<UIRSSForm> {
-    public void execute(Event<UIRSSForm> event) throws Exception {
-			UIRSSForm uiCategory = event.getSource() ;			
-			System.out.println("========> Save") ;
-		}
+	public void setRSSLink(String rssLink){
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String url = portalContext.getRequest().getRequestURL().toString();
+		url = url.replaceFirst("http://", "") ;
+		url = url.substring(0, url.indexOf("/")) ;
+		url = "http://" + url;
+		this.rssLink = url + rssLink;
 	}
 
 	static public class CancelActionListener extends EventListener<UIRSSForm> {
     public void execute(Event<UIRSSForm> event) throws Exception {
-			UIRSSForm uiCategory = event.getSource() ;			
-			System.out.println("==========> Cancel") ;
-		}
-	}
-	
-	
-	
+    	UIRSSForm commentForm = event.getSource() ;
+    	UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
+      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+      popupAction.deActivate() ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+    }
+  }
 }
