@@ -12,7 +12,7 @@
 	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
-	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView();");
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate)
 		jsmanager.addJavascript('eXo.faq.UIFAQDragDrop.init("'+compId+'") ;') ;
 %>
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer"  style="height: 200px; margin-bottom: 5px; overflow:auto;_width: 187px;">
+		<div class="FAQContainer"  style="height: 290px; margin-bottom: 5px; overflow:auto;_width: 187px;">
 			<div class="UICategories">
 					<%
 						if(uicomponent.parentCateId_ == null){
@@ -200,6 +200,7 @@
 	  	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.FAQViewAllBranch('"+uicomponent.pathCategory+"');");
 	  }
 	%>
+	<!--
 	<div>
 		<div class="FAQToolbar">
 	  	<div class="LeftBar">
@@ -214,4 +215,5 @@
 			All Tags
 		</div>
 	</div>
+	-->
 </div>

@@ -26,12 +26,12 @@
 							<td class="ControlButtonContainer">
 								<!-- ================== CustomView action ====================== -->
 								<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
-									<a href="javaScript: void(0);" onclick="eXo.faq.UIFAQPortlet.changeCustomView('true')">
+									<a href="javaScript: void(0);" id = "FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.faq.UIFAQPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="Icon FAQCustomView" id = "FAQCustomView">
-														<%=_ctx.appRes(uicomponent.getName() + ".action." + "CustomView")%>
+														<span></span>
 													</div>
 												</div>
 											</div>
