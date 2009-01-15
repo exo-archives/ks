@@ -167,6 +167,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				this.idPath = new String[]{pathCate.substring(0,pathCate.indexOf(";")), pathCate.substring(pathCate.indexOf(";")+1)};
 			}
 			categoryPath.setValue(idPath[1]);
+			categoryPath.setEditable(false);
 			Discussion.addUIFormInput(categoryPath);
 			List<ActionData> actionData = new ArrayList<ActionData>() ;
 			ActionData ad ;
