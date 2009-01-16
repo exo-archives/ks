@@ -158,11 +158,9 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			
 			UIFormCheckBoxInput enableDiscus = new UIFormCheckBoxInput<Boolean>(ENABLE_DISCUSSION, ENABLE_DISCUSSION, false);
 			enableDiscus.setChecked(faqSetting_.getIsDiscussForum());
-			System.out.println("\n\n======>getIsDiscusForum: " + faqSetting_.getIsDiscussForum());
 			Discussion.addUIFormInput(enableDiscus);
 			UIFormStringInput categoryPath = new UIFormStringInput(FIELD_CATEGORY_PATH_INPUT, FIELD_CATEGORY_PATH_INPUT, null) ;
 			String pathCate = faqSetting_.getPathNameCategoryForum();
-			System.out.println("\n\n ======>pathCate: " + pathCate);
 			if(pathCate.indexOf(";") > 0) {
 				this.idPath = new String[]{pathCate.substring(0,pathCate.indexOf(";")), pathCate.substring(pathCate.indexOf(";")+1)};
 			}

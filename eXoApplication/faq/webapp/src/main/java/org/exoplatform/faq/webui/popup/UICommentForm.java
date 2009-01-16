@@ -227,14 +227,16 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 					}
 					if(commentForm.isAddNew) {
 						String pathTopic = commentForm.question_.getPathTopicDiscuss();
-						ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-						String []ids = pathTopic.split("/");
-						Post post = new Post();
-						post.setOwner(commentForm.currentUser_);
-						post.setIcon("ViewIcon");
-						post.setName("Re: " + commentForm.question_.getQuestion());
-						post.setMessage(comment);
-						forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
+						if(pathTopic != null && pathTopic.length() > 0) {
+							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+							String []ids = pathTopic.split("/");
+							Post post = new Post();
+							post.setOwner(commentForm.currentUser_);
+							post.setIcon("ViewIcon");
+							post.setName("Re: " + commentForm.question_.getQuestion());
+							post.setMessage(comment);
+							forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
+						}
 					}
 				} else {
 					UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;

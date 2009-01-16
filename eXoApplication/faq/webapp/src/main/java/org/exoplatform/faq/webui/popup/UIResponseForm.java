@@ -589,7 +589,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						responseForm.listResponse.add(question_.getAllResponses()[i]);
 				}
 				
-				System.out.println("\n\n\n\n-------------> number of new answers: " + responseForm.listResponse.size());
 				FAQSetting faqSetting = new FAQSetting();
 				FAQUtils.getPorletPreference(faqSetting);
 				if(faqSetting.getIsDiscussForum()) {

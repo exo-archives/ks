@@ -205,7 +205,7 @@
 			%>
 						<div class="QuestionContainer" id="$qId">
 							<div class="$questionIcon"><span></span></div>
-								<div style="float: left; width: 95%; _width: 90%" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+								<div style="float: left; width: 85%; _width: 80%" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 									<!-- question content -->
 										<%
 										String titleQuestion = "" ;
@@ -290,7 +290,6 @@
 															<%	}
 																if(uicomponent.isDiscussForum()) {
 																	String pathDiscuss = question.getPathTopicDiscuss();
-																	System.out.println(pathDiscuss);
 																	if(pathDiscuss == null || pathDiscuss.length() <= 0){
 															%>
 																		<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>">
