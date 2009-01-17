@@ -17,7 +17,9 @@
 }
 
 .UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar {
+	border: 1px solid #B7B7B7;
 	background: #EEF0F2;
+	padding: 0px;
 	/*border: 1px solid #B7B7B7;*/
 }
 
@@ -135,13 +137,12 @@
 	float: left;
 }
 
-.UIFAQPortlet .FAQToolbar .SearchForm {
-	float: right;
+.UIFAQPortlet .UIBreadcumbs .SearchForm {
+	float: left;
 	width: 260px;
-	padding-right: 10px;
 }
 
-.UIFAQPortlet .FAQToolbar .SearchForm .SearchIcon {
+.UIFAQPortlet .UIBreadcumbs .SearchForm .SearchIcon {
 	background: url('background/FAQPortlet.gif') no-repeat left -210px;
 	float: right;
 	height:16px;
@@ -150,7 +151,7 @@
 	cursor: pointer;
 }
 
-.UIFAQPortlet .FAQToolbar .SearchForm .AdvancedSearch {
+.UIFAQPortlet .UIBreadcumbs .SearchForm .AdvancedSearch {
 	background: url('background/FAQPortlet.gif') no-repeat left -226px;
 	float:right;
 	height:16px;

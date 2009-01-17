@@ -1,7 +1,7 @@
 <div class="UIQuickSeach">
   <% uiform.begin() %>  
   <div class="UISearchForm">
-		<div style="float: left;margin-top: 6px;"><%= _ctx.appRes("UIQuickSeach.label.search"); %></div>
+		<div style="float: left;"><%= _ctx.appRes("UIQuickSeach.label.search"); %></div>
 		<div class="Input" style="float: left; !width: 165px;">
 			<%  
 				uiform.renderChildren() ;

@@ -47,9 +47,12 @@ public class UIBreadcumbs extends UIContainer {
 	private String path_ = "FAQService" ;
 	public static final String FIELD_FAQHOME_BREADCUMBS = "faqHome" ;
 	public static final String FIELD_EXOFAQ_LABEL = "eXoFAQ".intern();
+	private static final String QUICK_SEARCH = "QuickSearch";
+	
 	public UIBreadcumbs()throws Exception {
 		breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
 		paths_.add("FAQService") ;
+		addChild(UIQuickSearch.class, null, QUICK_SEARCH) ;
 	}
 
 	public void setUpdataPath(String path) throws Exception {

@@ -115,7 +115,6 @@ import org.exoplatform.webui.event.EventListener;
 public class UIQuestions extends UIContainer {
 	private static String SEARCH_INPUT = "SearchInput" ;
 	private static final String OBJECT_ITERATOR = "object_iter";
-	private static final String QUICK_SEARCH = "QuickSearch";
 
 	private FAQSetting faqSetting_ = null;
 	public List<Question> listQuestion_ =  null ;
@@ -169,7 +168,6 @@ public class UIQuestions extends UIContainer {
 		} else {
 			faqSetting_.setIsAdmin("FALSE");
 		}*/
-		addChild(UIQuickSearch.class, null, QUICK_SEARCH) ;
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
 		//setListObject();
 	}
