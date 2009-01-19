@@ -51,7 +51,7 @@
 						String userTitle = "";
 						for(user in listUser) {
 							userTitle = user.getUserTitle();
-							if(user.getUserRole() == 3 && uicomponent.isAdmin(user.getUserId())) {
+							if(user.getUserRole() != 0 && uicomponent.isAdmin(user.getUserId())) {
 								userTitle = Utils.ADMIN;
 								user.setUserRole(0);
 							}
