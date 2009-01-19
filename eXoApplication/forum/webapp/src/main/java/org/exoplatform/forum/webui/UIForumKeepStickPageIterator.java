@@ -146,7 +146,7 @@ public class UIForumKeepStickPageIterator extends UIForm {
 				topicDetail.setIdPostView("top") ;
 			}
 			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
-			long maxPage = keepStickPageIter.maxPage;//pageList.getAvailablePage() ;
+			long maxPage = keepStickPageIter.maxPage;
 			long presentPage	= keepStickPageIter.pageSelect ;
 			if(stateClick.equalsIgnoreCase("next")) {
 				if(presentPage < maxPage){

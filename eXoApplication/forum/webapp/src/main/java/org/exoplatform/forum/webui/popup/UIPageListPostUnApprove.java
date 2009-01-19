@@ -79,8 +79,8 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPosts() throws Exception {
 		pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "false", "", "", "");
-//		this.updatePageList(pageList) ;
 		pageList.setPageSize(6) ;
+		maxPage = pageList.getAvailablePage();
 		List<Post> posts = pageList.getPage(pageSelect);
 		pageSelect = pageList.getCurrentPage();
 		if(posts == null) posts = new ArrayList<Post>();
