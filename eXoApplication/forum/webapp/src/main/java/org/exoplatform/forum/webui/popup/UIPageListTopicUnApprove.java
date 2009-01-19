@@ -81,10 +81,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
 		List<Topic> topics = pageList.getPage(pageSelect);
-		System.out.println("\n\nmaxPage: " + maxPage);
-		System.out.println("\n\nSelect1: " + pageSelect);
 		pageSelect = pageList.getCurrentPage();
-		System.out.println("\n\nSelect2: " + pageSelect);
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		for (Topic topic : topics) {
 			if(getUIFormCheckBoxInput(topic.getId()) != null) {

@@ -535,7 +535,9 @@
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + postId.substring(15);
-				String joinDate = ForumUtils.getFormatDate(shortDateFormat, userInfo.getJoinedDate()) ;
+				String joinDate = "";
+				Date joinDate = userInfo.getJoinedDate();
+				if(joinDate != null)joinDate = ForumUtils.getFormatDate(shortDateFormat, joinDate) ;
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
