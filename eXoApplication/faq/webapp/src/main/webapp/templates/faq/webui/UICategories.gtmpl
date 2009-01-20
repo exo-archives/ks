@@ -22,7 +22,7 @@
 	  	<div class="LeftBar">
 	  		<div class="RightBar">
 	  			<div class="CenterBar" style="padding-left: 10px;font-size:12px;">
-						<center><b><%=FAQUtils.getSubString(uicomponent.currentName, 50);%></b></center>
+						<center><b><%=FAQUtils.getSubString(uicomponent.getCurrentName(), 50);%></b></center>
 					</div>
 				</div>
 			</div>
@@ -58,12 +58,12 @@
 						if(uicomponent.parentCateId_ == null){
 							if(uicomponent.categoryId_ == null){%>
 								<div class="FAQCategoryRootBlack">
-									<b><%=FAQUtils.getSubString(uicomponent.parentCateName, 25);%></b>
+									<b><%=FAQUtils.getSubString(uicomponent.getParentCateName(), 25);%></b>
 								</div>
 						<%} else {%>
 								<div class="FAQCategoryRoot">
 									<a href="<%=uicomponent.event("OpenCategory", "FAQService")%>">
-										<%=FAQUtils.getSubString(uicomponent.parentCateName, 25);%>
+										<%=FAQUtils.getSubString(uicomponent.getParentCateName(), 25);%>
 									</a>
 								</div>
 						<%}%>
@@ -77,7 +77,7 @@
 										</a>
 									</div>
 									<div class="FAQCategoryRootBlack">
-										<b><%=FAQUtils.getSubString(uicomponent.parentCateName, 25);%></b>
+										<b><%=FAQUtils.getSubString(uicomponent.getParentCateName(), 25);%></b>
 									</div>
 								<%} else {%>
 									<div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.backCateID_)%>">
@@ -85,7 +85,7 @@
 									</div>
 									<div class="FAQCategoryRoot">
 										<a title="<%=uicomponent.parentCateName%>" href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateId_)%>">
-											<%=FAQUtils.getSubString(uicomponent.parentCateName, 25);%>
+											<%=FAQUtils.getSubString(uicomponent.getParentCateName(), 25);%>
 										</a>
 									</div>
 								<%}%>

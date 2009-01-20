@@ -122,6 +122,10 @@
 	width:175px;
 }
 
+.UIFAQPortlet .UICategories .UIRightClickPopupMenu {
+	font-weight: normal;
+}
+
 .UIFAQPortlet .FAQToolbar .UIRightClickPopupMenu .LineMenu {
 	width:150px;
 	margin: 4px auto;

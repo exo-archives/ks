@@ -78,8 +78,8 @@ public class UICategories extends UIContainer{
 	private String parentCateId_ = null;
 	private boolean isSwap = false;
 	public boolean isBack = false;
-	private String parentCateName = "Root";
-	private String currentName = "Root";
+	private String parentCateName = "";
+	private String currentName = "";
 	private String pathCategory = "";
 	private List<Category> listCate = new ArrayList<Category>() ;
 	private List<String> listCateId_ = new ArrayList<String>() ;
@@ -195,6 +195,14 @@ public class UICategories extends UIContainer{
 		return this.canEditQuestion;
 	}
 	
+	public String getCurrentName() {
+	  return currentName;
+  }
+	
+	public String getParentCateName() {
+		return parentCateName;
+	}
+	
 	@SuppressWarnings("unused")
 	private void setListCate() throws Exception {
 		if(!isSwap){
@@ -202,7 +210,7 @@ public class UICategories extends UIContainer{
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			newList = faqService_.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
 			if(categoryId_ != null)currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
-			else currentName = "Root";
+			else currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
 			if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_)) || isBack){
 				this.listCate.clear();
@@ -211,11 +219,11 @@ public class UICategories extends UIContainer{
 				if(listId.length > 1) backCateID_ = listId[listId.length - 2];
 				else backCateID_ = listId[0];
 				if(backCateID_.equals("FAQService")){
-					parentCateName = "Root";
+					parentCateName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 				}
 				parentCateId_ = categoryId_;
 				if(parentCateId_ != null)parentCateName =	faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
-				else parentCateName = "Root";
+				else parentCateName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 			}
 			sessionProvider.close();
 			setIsModerators(FAQUtils.getCurrentUser());

@@ -271,6 +271,12 @@ public class FAQUtils {
 		return isInvalid ;
 	}
 
+	public static String getResourceBundle(String resourceBundl){
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+		ResourceBundle res = context.getApplicationResourceBundle() ;
+		return res.getString(resourceBundl);
+	}
+	
 	public static String[] getQuestionLanguages() {
 
 		return null ;
@@ -333,6 +339,7 @@ public class FAQUtils {
 	public static String getTitle(String text) {
 		int i = 0 ;
 		while (i < text.length()) {
+			if(text.codePointAt(i) < 10) continue;
 			if (text.charAt(i) == '"'  ) text = text.replace((text.charAt(i)) + "", "&quot;") ;
 			else i ++ ;
 		}
