@@ -2691,7 +2691,9 @@ public class JCRDataStorage {
 		
 		Node profileNode = getUserProfileHome(sProvider).getNode(userName);
 		userProfile.setUserId(userName) ;
-		userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
+		if(isAdminRole(userName)) {
+			userProfile.setUserRole((long)0);
+		} else userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
 		userProfile.setModerateForums(ValuesToArray(profileNode.getProperty("exo:moderateForums").getValues()));
 		userProfile.setNewMessage(profileNode.getProperty("exo:newMessage").getLong());
 		userProfile.setTimeZone(profileNode.getProperty("exo:timeZone").getDouble());
@@ -2756,6 +2758,8 @@ public class JCRDataStorage {
 	public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception {
 		Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
 		profileNode.setProperty("exo:userTitle", userProfile.getUserTitle());
+//		if(userProfile.getUserRole()== 0 && userProfile.getUserTitle().equals(Utils.USER))
+//			userProfile.setUserTitle(Utils.ADMIN);
 		profileNode.setProperty("exo:signature",userProfile.getSignature());
 		profileNode.setProperty("exo:isDisplaySignature", userProfile.getIsDisplaySignature()) ;
 		profileNode.setProperty("exo:isDisplayAvatar",userProfile.getIsDisplayAvatar()) ;

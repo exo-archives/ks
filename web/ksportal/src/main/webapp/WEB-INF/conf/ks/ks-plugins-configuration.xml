@@ -66,9 +66,9 @@
 				<values-param>
 					<name>rules</name>
 					<description>rules of the role</description>
-					<value>member:/demo</value>
 					<value>root</value>
 					<value>admin</value>
+					<!--value>member:/demo</value-->
 					<!--value>/platform/administrators</value-->
 					<!--value>manager:/platform/users</value-->
 					<!--value>*:/somegroup/somesubgroup</value-->
@@ -99,6 +99,8 @@
 					<value>root</value>
 					<value>admin</value>
 					<value>member:/demo</value>
+					<value>/forums/admin</value>
+          <value>*:/forum/admin</value> 
 					<!--value>/platform/administrators</value-->
 					<!--value>manager:/platform/users</value-->
 					<!--value>*:/somegroup/somesubgroup</value-->
