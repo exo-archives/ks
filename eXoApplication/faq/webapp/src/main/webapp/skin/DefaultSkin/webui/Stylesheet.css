@@ -142,8 +142,8 @@
 }
 
 .UIFAQPortlet .UIBreadcumbs .SearchForm {
-	float: left;
-	width: 260px;
+	float: right;
+	padding-right: 6px;
 }
 
 .UIFAQPortlet .UIBreadcumbs .SearchForm .SearchIcon {

@@ -47,11 +47,11 @@
 						  <% } %>
 						 </div>
 				  </td>
-				  <td style="padding: 0px;width:260px;">
+				  <td style="width:300px;">
 						<div class="SearchForm">
 							<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
 						</div>
-						<div style="clear: both;"><span></span></div>
+						<div style="clear: right;"><span></span></div>
 					</td>
 		 		</tr>
 		 	</tbody>
