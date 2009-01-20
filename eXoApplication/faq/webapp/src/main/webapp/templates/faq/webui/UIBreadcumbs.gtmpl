@@ -7,11 +7,10 @@
 			<tbody>
 				<tr>
 					<td>
-						<div style="overflow: hidden;">
+						<div style="overflow: hidden; padding-left: 5px;">
 							<%  
 								if(uicomponent.getBreadcumbs().size() > 1){
 							%>
-							<div class="OpenIcon"><span></span></div>
 							<% int t = 1 ;
 								for(namePath in uicomponent.getBreadcumbs()) {
 									String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
