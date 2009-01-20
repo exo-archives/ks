@@ -52,6 +52,7 @@ import org.exoplatform.webui.form.UIForm;
 		events = {
 			@EventConfig(listeners = UIViewPost.CloseActionListener.class, phase = Phase.DECODE),
 			@EventConfig(listeners = UIViewPost.ApproveActionListener.class, phase = Phase.DECODE),
+			@EventConfig(listeners = UIViewPost.DeletePostActionListener.class, phase = Phase.DECODE),
 			@EventConfig(listeners = UIViewPost.DownloadAttachActionListener.class, phase = Phase.DECODE)
 		}
 )
@@ -145,6 +146,35 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 		}
 	}
 	
+	static	public class DeletePostActionListener extends EventListener<UIViewPost> {
+		public void execute(Event<UIViewPost> event) throws Exception {
+			UIViewPost uiForm = event.getSource() ;
+			Post post = uiForm.post;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				String []path = post.getPath().split("/");
+				int l = path.length ;
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				forumService.removePost(sProvider, path[l-4], path[l-3], path[l-2], post.getId());
+			}catch(Exception e) {
+				e.printStackTrace() ;
+			}finally {
+				sProvider.close() ;
+			}
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			if(popupContainer != null) {
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+				popupAction.deActivate();
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+			}
+		}
+	}
+
 	static	public class CloseActionListener extends EventListener<UIViewPost> {
 		public void execute(Event<UIViewPost> event) throws Exception {
 			UIViewPost uiForm = event.getSource() ;

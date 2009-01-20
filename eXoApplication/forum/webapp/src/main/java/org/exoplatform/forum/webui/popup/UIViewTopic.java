@@ -36,6 +36,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -57,6 +58,7 @@ import org.exoplatform.webui.form.UIForm;
 		template = "app:/templates/forum/webui/popup/UIViewTopic.gtmpl",
 		events = {
 			@EventConfig(listeners = UIViewTopic.ApproveActionListener.class, phase = Phase.DECODE),
+			@EventConfig(listeners = UIViewTopic.DeleteTopicActionListener.class, phase = Phase.DECODE),
 			@EventConfig(listeners = UIViewTopic.CloseActionListener.class, phase = Phase.DECODE)
 		}
 )
@@ -233,6 +235,32 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 				UIModerationForum moderationForum = popupContainer.getChild(UIModerationForum.class);
 				if(moderationForum != null)
 					event.getRequestContext().addUIComponentToUpdateByAjax(moderationForum) ;
+			} else {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+			}
+		}
+	}
+	
+	static	public class DeleteTopicActionListener extends EventListener<UIViewTopic> {
+		public void execute(Event<UIViewTopic> event) throws Exception {
+			UIViewTopic uiForm = event.getSource() ;
+			Topic topic = uiForm.topic;
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				String []path = topic.getPath().split("/");
+				int l = path.length ;
+	      uiForm.forumService.removeTopic(sProvider, path[l-3], path[l-2], topic.getId());
+      } catch (Exception e) {
+	      e.printStackTrace();
+      }
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			if(popupContainer != null) {
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+				popupAction.deActivate() ;
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;

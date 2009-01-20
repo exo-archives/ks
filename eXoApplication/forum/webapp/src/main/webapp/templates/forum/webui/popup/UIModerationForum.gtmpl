@@ -29,7 +29,7 @@
 										<thead>
 											<tr>
 												<th style="width: 60px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
-												<th><%=_ctx.appRes("UIForumListSearch.label.Name");%></th>
+												<th><%=_ctx.appRes("UIForumListSearch.label.NameItem");%></th>
 												<th style="width: 140px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
 											</tr>
 										</thead>
