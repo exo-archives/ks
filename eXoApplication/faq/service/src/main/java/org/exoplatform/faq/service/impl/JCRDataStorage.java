@@ -439,9 +439,14 @@ public class JCRDataStorage {
 							Message message = new Message();
 							message.setMimeType(MIMETYPE_TEXTHTML) ;
 							message.setSubject(faqSetting.getEmailSettingSubject());
-							message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion())
-									.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses())
-									.replaceAll("&questionLink_", question.getLink()));
+							String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
+							if(question.getAnswers() != null && question.getAnswers().length > 0){
+								contentMail = contentMail.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
+							} else {
+								contentMail = contentMail.replaceAll("&questionResponse_", "");
+							}
+							contentMail.replaceAll("&questionLink_", question.getLink());
+							message.setBody(contentMail);
 							sendEmailNotification(emailsList, message) ;
 						}
 					} catch(Exception e) {
@@ -995,8 +1000,8 @@ public class JCRDataStorage {
     										append("//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
     } else {
     	queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-    										append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')]").append("order by @exo:createdDate ascending");
-    	
+    										append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')]").
+    										append("order by @exo:createdDate ascending");
     }
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
@@ -1089,8 +1094,8 @@ public class JCRDataStorage {
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
     Node questionHome = getQuestionHome(sProvider, null) ;
     QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-    StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).append("//element(*,exo:faqQuestion)[(");
-    
+    StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).
+    																append("//element(*,exo:faqQuestion)[(");
     int i = 0 ;
     for(String categoryId : listCategoryId) {
       queryString.append("(@exo:categoryId='").append(categoryId).append("')");
@@ -1471,19 +1476,13 @@ public class JCRDataStorage {
     NodeIterator nodeIterator = result.getNodes() ;
     cateInfo[1] = nodeIterator.getSize() ;
     
-    queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-        							append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-        							append(" and (@exo:responses=' ')]").append("order by @exo:createdDate ascending");
-    query = qm.createQuery(queryString.toString(), Query.XPATH);
-    result = query.execute();
-    cateInfo[2] = result.getNodes().getSize() ;
-    
     Node questionNode = null;
     while(nodeIterator.hasNext()) {
       questionNode = nodeIterator.nextNode() ;
-      if(questionNode.hasProperty("exo:isApproved") && !questionNode.getProperty("exo:isApproved").getBoolean()) {
-        cateInfo[3] ++ ;
-      }
+      if(questionNode.hasProperty("exo:isApproved") && !questionNode.getProperty("exo:isApproved").getBoolean())
+        cateInfo[3] ++ ;      
+      if(!questionNode.hasNode(ANSWER_HOME) || questionNode.getNode(ANSWER_HOME).getNodes().getSize() < 1)
+      	cateInfo[2] ++;
     }
     
     return cateInfo ;
@@ -2130,9 +2129,14 @@ public class JCRDataStorage {
       Node RSSNode = null;
 			if(typeEvent != EVENT_REMOVE) {
 				Node addedQuestion = (Node)faqHome.getSession().getItem(path) ;
+				int lop = 0;
+				while(!addedQuestion.isNodeType("exo:faqQuestion") && lop < 6){
+					addedQuestion = addedQuestion.getParent();
+					lop ++;
+				}
 				Question question = getQuestion(addedQuestion);
 				if(!question.isActivated() || !question.isApproved()) return;
-				categoryNode = getCategoryNodeById(addedQuestion.getProperty("exo:categoryId").getValue().getString(), sProvider);
+				categoryNode = getCategoryNodeById(question.getCategoryId(), sProvider);
 				// create rss file if doesn't exist
 				try{
 					RSSNode = categoryNode.getNode(FAQ_RSS);
@@ -2186,6 +2190,7 @@ public class JCRDataStorage {
 		        ex.printStackTrace();
 		    }
 			} else {
+				if(cateOfQuestion == null || cateOfQuestion.trim().length() < 1) return;
 				try{
 					categoryNode = getCategoryNodeById(cateOfQuestion, sProvider);
 					RSSNode = categoryNode.getNode(FAQ_RSS);

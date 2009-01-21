@@ -494,7 +494,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 					popupAction.deActivate() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(questions) ; 
+					event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ; 
 					if(questionNode!= null && !("" + questions.getCategoryId()).equals(question_.getCategoryId())) {
 						UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
 						Category category = faqService.getCategoryById(question_.getCategoryId(), sessionProvider) ;

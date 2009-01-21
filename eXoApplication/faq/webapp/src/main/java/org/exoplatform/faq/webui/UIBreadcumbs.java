@@ -131,6 +131,7 @@ public class UIBreadcumbs extends UIContainer {
 				}
 				uiQuestions.setCategories(cate) ;
 				uiQuestions.backPath_ = "" ;
+				uiQuestions.language_ = "";
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}
 			uiBreadcums.setUpdataPath(paths);

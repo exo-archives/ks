@@ -103,7 +103,6 @@ public class QuestionPageList extends JCRPageList {
    */
   private void setTotalQuestion(){
   	listQuestions_ = new ArrayList<Question>();
-  	String[] response = new String[]{""};
   	NodeIterator nodeIterator = iter_;
   	NodeIterator languageIter = null;
   	Node questionNode = null;
@@ -114,8 +113,7 @@ public class QuestionPageList extends JCRPageList {
   		languages = new String();
   		questionNode = nodeIterator.nextNode();
   		try {
-        response = this.ValuesToStrings(questionNode.getProperty("exo:responses").getValues());
-        if(response[0] == null || response[0].trim().length() < 1){
+        if(!questionNode.hasNode(ANSWER_HOME) || questionNode.getNode(ANSWER_HOME).getNodes().getSize() < 1){
         	languages = questionNode.getProperty("exo:language").getValue().getString();
         }
       	if(questionNode.hasNode("languages")){
@@ -123,8 +121,7 @@ public class QuestionPageList extends JCRPageList {
       		languageIter = languageNode.getNodes();
       		while(languageIter.hasNext()){
       			language = languageIter.nextNode();
-      			response = this.ValuesToStrings(language.getProperty("exo:responses").getValues());
-      			if(response[0] == null || response[0].trim().length() < 1) {
+      			if(!language.hasNode(ANSWER_HOME) || language.getNode(ANSWER_HOME).getNodes().getSize() < 1) {
       				if(languages != null && languages.trim().length() > 0) languages += ",";
       				languages += language.getName();
       			}

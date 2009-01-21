@@ -349,6 +349,7 @@ public class UICategories extends UIContainer{
 			if(questions.getCategoryId()!= null && questions.getCategoryId().equals(categoryId)) return;
 			questions.pageSelect = 0;
 			questions.backPath_ = "" ;
+			questions.language_ = "";
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 			if(!categoryId.equals("FAQService")){

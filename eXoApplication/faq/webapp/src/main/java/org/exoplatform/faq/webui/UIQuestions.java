@@ -135,7 +135,7 @@ public class UIQuestions extends UIContainer {
 	public boolean isChangeLanguage = false ;
 	public List<String> listLanguage = new ArrayList<String>() ;
 	public String backPath_ = "" ;
-	private static String language_ = "" ;
+	public static String language_ = "" ;
 	private List<Watch> watchList_ = new ArrayList<Watch>() ;
 
 	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
@@ -402,6 +402,13 @@ public class UIQuestions extends UIContainer {
 				listQuestionLanguage.addAll(faqService_.getQuestionLanguages(question.getId(), sessionProvider)) ;
 				for(QuestionLanguage questionLanguage : listQuestionLanguage) {
 					listLanguage.add(questionLanguage.getLanguage()) ;
+					if(language_ != null && language_.trim().length() > 0 && language_.equals(questionLanguage.getLanguage())){
+						question.setLanguage(questionLanguage.getLanguage()) ;
+						question.setQuestion(questionLanguage.getQuestion());
+						question.setDetail(questionLanguage.getDetail()) ;
+						question.setAnswers(questionLanguage.getAnswers()) ;
+						question.setComments(questionLanguage.getComments());
+					}
 				}
 			}
 			sessionProvider.close();
