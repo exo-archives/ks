@@ -37,7 +37,7 @@
 											String view = uicomponent.event("View", questionId);
 											String link = uicomponent.event("Link",questionId) ;
 											String icon = "" ;
-											if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+											if(question.getAnswers() != null && question.getAnswers().length > 0) {
 												icon = "QuestionSearch" ;
 											} else {
 												icon = "NotResponseSearch" ;

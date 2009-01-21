@@ -408,7 +408,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				eventQuery.setResponse(response) ;
 			} else {
 				if(type.equals("faqQuestion")) eventQuery.setText("") ;
-				if(!FAQUtils.isFieldEmpty(question) || !FAQUtils.isFieldEmpty(response) || !FAQUtils.isFieldEmpty(text)) isEmptyMulti = true;
+				if(!FAQUtils.isFieldEmpty(question) && !FAQUtils.isFieldEmpty(response) && !FAQUtils.isFieldEmpty(text)) isEmptyMulti = true;
 				else isEmptyMulti = false ;
 			}
 			eventQuery.getPathQuery() ;

@@ -355,7 +355,6 @@ public String getPathQuery() {
 		  	isAnd = true ;
 			}
     } else if(type.equals("faqQuestion")) {
-    	System.out.println("\n\n\n\n------------->query:" + queryString.toString());
 	    if(author != null && author.length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");
 	    	stringBuffer.append("(jcr:contains(@exo:author, '").append(author).append("'))") ;
@@ -372,10 +371,8 @@ public String getPathQuery() {
 	    	isAnd = true ;
 	    }
 	    if(response != null && response.length() > 0) {
-	    	if(isAnd) stringBuffer.append(" and ");
-	    	stringBuffer.append("(jcr:contains(@exo:responses, '").append(response).append("'))") ;
 	    	isAnd = true ;
-	    } 
+	    }
     } else if(type.equals("faqAttachment")) {
     	if(attachment != null && attachment.length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");

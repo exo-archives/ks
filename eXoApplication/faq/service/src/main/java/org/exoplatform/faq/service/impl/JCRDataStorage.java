@@ -1810,11 +1810,14 @@ public class JCRDataStorage {
 		  Node node ;
 		  FAQFormSearch formSearch ;
 		  String id;
+		  List<String> ids = new ArrayList<String>();
 			while(iter.hasNext()) {
 				formSearch = new FAQFormSearch() ;
 				node = (Node)iter.nextNode();
 				if(type.equals("comment") || type.equals("answer")){
 					node = (node.getParent()).getParent();
+					if(ids.contains(node.getName())) continue;
+					ids.add(node.getName());
 				}
 				id = node.getName() ;
 				formSearch.setId(id) ;
@@ -1873,7 +1876,8 @@ public class JCRDataStorage {
   
   public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	Node faqServiceHome = getFAQServiceHome(sProvider) ;
-		List<Question> questionList = new ArrayList<Question>() ;
+  	Map<String, Question> questionMap = new HashMap<String, Question>();
+  	Question question = null;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
 		String path = eventQuery.getPath() ;
 		if(path == null || path.length() <= 0) {
@@ -1882,37 +1886,63 @@ public class JCRDataStorage {
 		eventQuery.setPath(path) ;
 		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
-		try {
-			Query query = qm.createQuery(queryString, Query.XPATH) ;
-			QueryResult result = query.execute() ;
+		if(eventQuery.getText() != null || eventQuery.getAuthor() != null || eventQuery.getEmail() != null || eventQuery.getQuestion() != null){
+			try {
+				Query query = qm.createQuery(queryString, Query.XPATH) ;
+				QueryResult result = query.execute() ;
+				NodeIterator iter = result.getNodes() ;
+				while (iter.hasNext()) {
+					if(type.equals("faqQuestion")) {
+						Node nodeObj = (Node) iter.nextNode();
+						if(questionMap.isEmpty() || !questionMap.containsKey(nodeObj.getName())){
+							question = getQuestion(nodeObj) ;
+							questionMap.put(nodeObj.getName(), question) ;
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace() ;
+			}
+		}
+		
+		// search with response 
+		if(eventQuery.getResponse() != null && eventQuery.getResponse().trim().length() > 0){
+			StringBuffer queryStr = new StringBuffer("/jcr:root").append(faqServiceHome.getPath()).append("//element(*,exo:answer)")
+																							.append("[(jcr:contains(., '").append(eventQuery.getResponse()).append("'))]") ;
+		  Query query = qm.createQuery(queryStr.toString(), Query.XPATH);
+		  QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes() ;
-			while (iter.hasNext()) {
-				if(type.equals("faqQuestion")) {
-					Node nodeObj = (Node) iter.nextNode();
-					Question question = getQuestion(nodeObj) ;
-		      questionList.add(question) ;
+		  Node node ;
+		  String id = "";
+			while(iter.hasNext()) {
+				node = (Node)iter.nextNode().getParent().getParent();
+				id = node.getName();
+				question = getQuestionById(node.getName(), sProvider);
+				if(questionMap.isEmpty() || !questionMap.containsKey(id)){
+					questionMap.put(id, question);
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace() ;
 		}
+		
+		// search with attachment
 		if(eventQuery.getAttachment() !=null && eventQuery.getAttachment().trim().length() > 0) {
 			List<Question> listQuestionAttachment = new ArrayList<Question>();
-			Map<String, Question> newMap = new HashMap<String, Question>();
-			for(Question question : questionList) {
-				if(!question.getAttachMent().isEmpty()) {
-					for(FileAttachment fileAttachment : question.getAttachMent()){
+			questionMap = new HashMap<String, Question>();
+			for(Question ques : questionMap.values().toArray(new Question[]{})) {
+				if(!ques.getAttachMent().isEmpty()) {
+					for(FileAttachment fileAttachment : ques.getAttachMent()){
 				    String fileName = fileAttachment.getName().toUpperCase() ;
 				    if(fileName.contains(eventQuery.getAttachment().toUpperCase())) {
-				    	newMap.put(question.getId(), question);
+				    	questionMap.put(ques.getId(), ques);
 				    } 
 					}
 				} 
 			}
-			listQuestionAttachment.addAll(Arrays.asList(newMap.values().toArray(new Question[]{})));
+			listQuestionAttachment.addAll(Arrays.asList(questionMap.values().toArray(new Question[]{})));
 			return listQuestionAttachment;
 		}
-	  return questionList;
+		
+	  return  Arrays.asList(questionMap.values().toArray(new Question[]{}));
   }
   
   public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
