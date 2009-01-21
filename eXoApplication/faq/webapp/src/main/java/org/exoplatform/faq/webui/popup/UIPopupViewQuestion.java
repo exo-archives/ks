@@ -82,9 +82,7 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
 	    for(QuestionLanguage questionLanguage : listQuestionLanguage) {
 	    	if(questionLanguage.getLanguage().equals(language_)) {
 	    		question.setDetail(questionLanguage.getDetail()) ;
-	    		question.setResponses(questionLanguage.getResponse()) ;
-	    		question.setResponseBy(questionLanguage.getResponseBy()) ;
-	    		question.setDateResponse(questionLanguage.getDateResponse());
+	    		question.setAnswers(questionLanguage.getAnswers()) ;
 	    	}
 	    }
     } catch (Exception e) {

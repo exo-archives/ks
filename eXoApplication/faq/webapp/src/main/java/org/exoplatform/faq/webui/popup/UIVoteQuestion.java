@@ -21,10 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -59,8 +60,7 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 	private Question question_ = null;
 	private FAQSetting faqSetting_ = null;
 	private String language_ = null;
-	int pos_ = 0;
-	private QuestionLanguage questionLanguage = null;
+	String answerId_;
 
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
@@ -69,11 +69,11 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 		this.setActions(new String[]{"Cancel"});
 	}
 	
-	public void setInfor(Question question,String language, int pos, FAQSetting setting){
+	public void setInfor(Question question, String language, String answerId, FAQSetting setting){
 		question_ = question;
 		faqSetting_ = setting;
 		this.language_ = language;
-		pos_ = pos;
+		answerId_ = answerId;
 	}
 	
 	static public class VoteActionListener extends EventListener<UIVoteQuestion> {
@@ -113,46 +113,32 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 			int number = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID));
 			String currentUser = FAQUtils.getCurrentUser();
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			QuestionLanguage questionLanguage = null;
-			String[] listUsersVoteAnswers = null;
-			double[] markVote = null;
+			List<String> listUsersVoteAnswers = new ArrayList<String>();
+			double markVote = 0;
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			
-			if(voteQuestion.language_.trim().length() > 0){
-				for(QuestionLanguage language : faqService_.getQuestionLanguages(voteQuestion.question_.getId(), sessionProvider)){
-					if(language.getLanguage().equals(voteQuestion.language_)){
-						questionLanguage = language;
-						break;
-					}
-				}
-			}
-			
-			if(questionLanguage == null){
-				listUsersVoteAnswers = voteQuestion.question_.getUsersVoteAnswer();
-				markVote = voteQuestion.question_.getMarksVoteAnswer();
-			} else {
-				listUsersVoteAnswers = questionLanguage.getUsersVoteAnswer();
-				markVote = questionLanguage.getMarksVoteAnswer();
-			}
+			MultiLanguages multiLanguages = new MultiLanguages();
+			Answer answer =  null;
+			if(voteQuestion.language_ != null && voteQuestion.language_.trim().length() > 0)
+				answer = multiLanguages.getAnswerById(faqService_.getQuestionNodeById(voteQuestion.question_.getId(), sessionProvider),
+																										voteQuestion.answerId_, voteQuestion.language_);
+			else
+				answer = faqService_.getAnswerById(voteQuestion.question_.getId(), voteQuestion.answerId_, sessionProvider);
+			if(answer.getUsersVoteAnswer() != null && answer.getUsersVoteAnswer().length > 0)
+				listUsersVoteAnswers.addAll(Arrays.asList(answer.getUsersVoteAnswer()));
+			markVote = answer.getMarksVoteAnswer();
 			
 			long totalVote = 0;
-			if(listUsersVoteAnswers[voteQuestion.pos_].trim().length() > 0){
-				totalVote = listUsersVoteAnswers[voteQuestion.pos_].split(",").length;
-				listUsersVoteAnswers[voteQuestion.pos_] += ",";
+			if(!listUsersVoteAnswers.isEmpty())
+				totalVote = listUsersVoteAnswers.size();
+			listUsersVoteAnswers.add(currentUser);
+			markVote =  (markVote * totalVote + number)/(totalVote + 1);
+			answer.setMarksVoteAnswer(markVote);
+			answer.setUsersVoteAnswer(listUsersVoteAnswers.toArray(new String[]{}));
+			if(voteQuestion.language_ == null || voteQuestion.language_.trim().length() < 1){
+				faqService_.saveAnswer(voteQuestion.question_.getId(), answer, false, sessionProvider);
 			} else {
-				listUsersVoteAnswers[voteQuestion.pos_] = "";
-			}
-			listUsersVoteAnswers[voteQuestion.pos_] += currentUser;
-			markVote[voteQuestion.pos_] =  (markVote[voteQuestion.pos_] * totalVote + number)/(totalVote + 1);
-			if(questionLanguage == null){
-				voteQuestion.question_.setMarksVoteAnswer(markVote);
-				voteQuestion.question_.setUsersVoteAnswer(listUsersVoteAnswers);
-				FAQUtils.getEmailSetting(voteQuestion.faqSetting_, false, false);
-				faqService_.saveQuestion(voteQuestion.question_, false, sessionProvider, voteQuestion.faqSetting_);
-			} else {
-				questionLanguage.setMarksVoteAnswer(markVote);
-				questionLanguage.setUsersVoteAnswer(listUsersVoteAnswers);
-				faqService_.voteQuestionLanguage(voteQuestion.question_.getId(), questionLanguage, sessionProvider);
+				multiLanguages.saveAnswer(faqService_.getQuestionNodeById(voteQuestion.question_.getId(), sessionProvider), 
+																	answer, voteQuestion.language_, sessionProvider);
 			}
 			sessionProvider.close();
 			UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;

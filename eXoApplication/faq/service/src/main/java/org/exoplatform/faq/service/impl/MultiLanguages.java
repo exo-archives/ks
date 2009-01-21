@@ -38,9 +38,12 @@ import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.PropertyDefinition;
 
 import org.exoplatform.commons.utils.ISO8601;
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.CategoryLanguage;
+import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.value.DateValue;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
 
@@ -56,7 +59,9 @@ import org.exoplatform.services.jcr.impl.core.value.StringValue;
  */
 
 public class MultiLanguages {
-	
+	final private static String LANGUAGE_HOME = "languages".intern();
+	final private static String ANSWER_HOME = "faqAnswerHome".intern();
+  final private static String COMMENT_HOME = "faqCommentHome".intern();
 	/** The Constant LANGUAGES. */
 	final static public String LANGUAGES = "languages" ;
   
@@ -237,44 +242,193 @@ public class MultiLanguages {
     }
     langNode.setProperty("exo:name", language.getDetail()) ;
     langNode.setProperty("exo:title", language.getQuestion()) ;
-    langNode.setProperty("exo:responses", language.getResponse()) ;
-    langNode.setProperty("exo:responseBy", language.getResponseBy()) ;
-    langNode.setProperty("exo:usersVoteAnswer", language.getUsersVoteAnswer()) ;
-    Value[] values = null;
-    if(language.getMarksVoteAnswer() != null) {
-    	values = new Value[language.getMarksVoteAnswer().length];
-	    for(int i = 0; i < values.length; i ++){
-	    	values[i] = langNode.getSession().getValueFactory().createValue(language.getMarksVoteAnswer()[i]);
-	    }
-    }
-    langNode.setProperty("exo:marksVoteAnswer", values) ;
-    if(language.getDateResponse() != null) {
-    	java.util.Calendar calendar = null ;
-    	List<Value> listCalendars = new ArrayList<Value>();
-    	for(Date date : language.getDateResponse()){
-	    	calendar = GregorianCalendar.getInstance() ;
-	    	calendar.setTime(date) ;
-	    	listCalendars.add(langNode.getSession().getValueFactory().createValue(calendar));
-    	}
-    	langNode.setProperty("exo:dateResponse", (listCalendars.toArray(new Value[]{}))) ;
-    }
-    langNode.setProperty("exo:approveResponses", booleanToValues(langNode, language.getIsApprovedAnswers()));
-    langNode.setProperty("exo:activateResponses", booleanToValues(langNode, language.getIsActivateAnswers()));
     
-    langNode.setProperty("exo:comments", language.getComments());
-    if(language.getDateComment() != null) {
+    if(langNode.isNew())questionNode.getSession().save() ;
+    else questionNode.save();
+  }
+  
+  public void deleteAnswerQuestionLang(Node questionNode, String answerId, String language, SessionProvider sProvider) throws Exception{
+  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
+  	Node answerNode = languageNode.getNode(ANSWER_HOME).getNode(answerId);
+  	answerNode.remove();
+  	questionNode.save();
+  }
+  
+  public void deleteCommentQuestionLang(Node questionNode, String commentId, String language, SessionProvider sProvider) throws Exception{
+  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
+  	Node commnetNode = languageNode.getNode(COMMENT_HOME).getNode(commentId);
+  	commnetNode.remove();
+  	questionNode.save();
+  }
+  
+  public QuestionLanguage getQuestionLanguageByLanguage(Node questionNode, String language) throws Exception{
+  	QuestionLanguage questionLanguage = new QuestionLanguage();
+  	questionLanguage.setLanguage(language);
+  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
+  	questionLanguage.setDetail(languageNode.getProperty("exo:name").getString());
+  	questionLanguage.setQuestion(languageNode.getProperty("exo:title").getString());
+  	
+  	return questionLanguage;
+  }
+  
+  public Comment getCommentById(Node questionNode, String commentId, String language) throws Exception{
+  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
+  	try{
+  		Comment comment = new Comment();
+  		Node commentNode = languageNode.getNode(COMMENT_HOME).getNode(commentId);
+			if(commentNode.hasProperty("exo:id")) comment.setId((commentNode.getProperty("exo:id").getValue().getString())) ;
+			if(commentNode.hasProperty("exo:comments")) comment.setComments((commentNode.getProperty("exo:comments").getValue().getString())) ;
+			if(commentNode.hasProperty("exo:commentBy")) comment.setCommentBy((commentNode.getProperty("exo:commentBy").getValue().getString())) ;  	
+			if(commentNode.hasProperty("exo:dateComment")) comment.setDateComment((commentNode.getProperty("exo:dateComment").getValue().getDate().getTime())) ;
+  		return comment;
+  	} catch (Exception e){
+  		e.printStackTrace();
+  		return null;
+  	}
+  }
+  
+  public Answer getAnswerById(Node questionNode, String answerid, String language) throws Exception{
+  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
+  	Answer answer = new Answer();
+  	try{
+  		Node answerNode = languageNode.getNode(ANSWER_HOME).getNode(answerid);
+  		if(answerNode.hasProperty("exo:id")) answer.setId((answerNode.getProperty("exo:id").getValue().getString())) ;
+    	if(answerNode.hasProperty("exo:responses")) answer.setResponses((answerNode.getProperty("exo:responses").getValue().getString())) ;
+      if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
+      if(answerNode.hasProperty("exo:dateResponse")) answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
+      if(answerNode.hasProperty("exo:usersVoteAnswer")) answer.setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+      if(answerNode.hasProperty("exo:marksVoteAnswer")) answer.setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
+      if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
+      if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
+      return answer;
+  	} catch (Exception e){
+  		return null;
+  	}
+  }
+  
+  private String [] ValuesToStrings(Value[] Val) throws Exception {
+		if(Val.length < 1) return new String[]{} ;
+		if(Val.length == 1) return new String[]{Val[0].getString()} ;
+		String[] Str = new String[Val.length] ;
+		for(int i = 0; i < Val.length; ++i) {
+			Str[i] = Val[i].getString() ;
+		}
+		return Str;
+	}
+  
+  public void saveAnswer(Node questionNode, Answer answer, String languge, SessionProvider sessionProvider) throws Exception{
+  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(languge);
+  	if(!languageNode.isNodeType("mix:faqi18n")) {
+  		languageNode.addMixin("mix:faqi18n") ;
+  	}
+  	Node answerHome = null;
+  	try{
+  		answerHome = languageNode.getNode(ANSWER_HOME);
+  	} catch (Exception e){
+  		answerHome = languageNode.addNode(ANSWER_HOME, NTUNSTRUCTURED);
+  	}
+  	Node answerNode = null;
+  	try{
+  		answerNode = answerHome.getNode(answer.getId());
+  	} catch (Exception e) {
+  		answerNode = answerHome.addNode(answer.getId(), "exo:answer");
+  	}
+  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
+  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
+  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer()) ;
+    if(answer.isNew()){
     	java.util.Calendar calendar = null ;
-    	List<Value> listCalendars = new ArrayList<Value>();
-    	for(Date date : language.getDateComment()){
-	    	calendar = GregorianCalendar.getInstance() ;
-	    	calendar.setTime(date) ;
-	    	listCalendars.add(langNode.getSession().getValueFactory().createValue(calendar));
-    	}
-    	langNode.setProperty("exo:dateComment", (listCalendars.toArray(new Value[]{}))) ;
+    	calendar = GregorianCalendar.getInstance() ;
+    	calendar.setTime(new Date()) ;
+    	answerNode.setProperty("exo:dateResponse", answerNode.getSession().getValueFactory().createValue(calendar)) ;
+    	answerNode.setProperty("exo:id", answer.getId());
     }
-    langNode.setProperty("exo:commentBy", language.getCommentBy());
-    
-    questionNode.save() ;
+    answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
+    answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
+    if(answer.isNew()) questionNode.getSession().save();
+    else questionNode.save();
+  }
+  
+  public void saveAnswer(Node quesNode, QuestionLanguage questionLanguage) throws Exception{
+  	Node quesLangNode = quesNode.getNode(LANGUAGES).getNode(questionLanguage.getLanguage());
+  	if(!quesLangNode.isNodeType("mix:faqi18n")) {
+  		quesLangNode.addMixin("mix:faqi18n") ;
+  	}
+  	Node answerHome = null;
+  	Node answerNode;
+  	Answer[] answers = questionLanguage.getAnswers();
+  	try{
+  		answerHome = quesLangNode.getNode(ANSWER_HOME);
+  	} catch (Exception e){
+  		answerHome = quesLangNode.addNode(ANSWER_HOME, NTUNSTRUCTURED);
+  	}
+  	if(!answerHome.isNew()){
+  		List<String> listNewAnswersId = new ArrayList<String>();
+    	for(int i = 0; i < answers.length; i ++){
+    		listNewAnswersId.add(answers[i].getId());
+    	}
+    	NodeIterator nodeIterator = answerHome.getNodes();
+    	while(nodeIterator.hasNext()){
+    		answerNode = nodeIterator.nextNode();
+    		if(!listNewAnswersId.contains(answerNode.getProperty("exo:id").getString()))
+    			answerNode.remove();
+    	}
+  	}
+  	for(Answer answer : answers){
+  		answerNode = null;
+  		try{
+  			answerNode = answerHome.getNode(answer.getId());
+  		} catch(Exception e) {
+  			answerNode = answerHome.addNode(answer.getId(), "exo:answer");
+  			answerNode.setProperty("exo:id", answer.getId());
+  		}
+	  	if(answerNode.isNew()){
+	  		java.util.Calendar calendar = null ;
+	  		calendar = null ;
+	  		calendar = GregorianCalendar.getInstance();
+	  		calendar.setTime(new Date());
+	  		answerNode.setProperty("exo:dateResponse", quesLangNode.getSession().getValueFactory().createValue(calendar));
+	  	}
+	  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
+	  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
+	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
+	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+	  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer());
+	  	if(answerNode.isNew()) quesNode.getSession().save();
+	  	else quesNode.save();
+  	}
+  }
+  
+  public void saveComment(Node questionNode, Comment comment, String languge, SessionProvider sessionProvider) throws Exception{
+  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(languge);
+  	if(!languageNode.isNodeType("mix:faqi18n")) {
+  		languageNode.addMixin("mix:faqi18n") ;
+  	}
+  	Node commentHome = null;
+  	Node commnetNode = null;
+  	
+  	try{
+  		commentHome = languageNode.getNode(COMMENT_HOME);
+  	} catch (Exception e){
+  		commentHome = languageNode.addNode(COMMENT_HOME, NTUNSTRUCTURED);
+  	}
+  	try{
+  		commnetNode = commentHome.getNode(comment.getId());
+  	} catch(Exception e) {
+  		commnetNode = commentHome.addNode(comment.getId(), "exo:comment");
+  		commnetNode.setProperty("exo:id", comment.getId()) ;
+  	}
+  	commnetNode.setProperty("exo:comments", comment.getComments());
+  	commnetNode.setProperty("exo:commentBy", comment.getCommentBy());
+  	if(commnetNode.isNew()) {
+  		java.util.Calendar calendar = null ;
+  		calendar = GregorianCalendar.getInstance() ;
+  		calendar.setTime(new Date()) ;
+  		commnetNode.setProperty("exo:dateComment", commnetNode.getSession().getValueFactory().createValue(calendar)) ;
+  		questionNode.getSession().save();
+  	}else questionNode.save();
   }
   
   protected Value[] booleanToValues(Node node, Boolean[] bools) throws Exception{

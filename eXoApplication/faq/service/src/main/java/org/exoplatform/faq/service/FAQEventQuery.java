@@ -355,6 +355,7 @@ public String getPathQuery() {
 		  	isAnd = true ;
 			}
     } else if(type.equals("faqQuestion")) {
+    	System.out.println("\n\n\n\n------------->query:" + queryString.toString());
 	    if(author != null && author.length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");
 	    	stringBuffer.append("(jcr:contains(@exo:author, '").append(author).append("'))") ;

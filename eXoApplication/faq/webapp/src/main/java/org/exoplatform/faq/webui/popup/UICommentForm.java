@@ -16,12 +16,10 @@
  */
 package org.exoplatform.faq.webui.popup;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
@@ -42,7 +40,6 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
-import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
@@ -66,21 +63,16 @@ import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 )
 
 public class UICommentForm extends UIForm implements UIPopupComponent {
-	private QuestionLanguage questionLanguage_ = null;
 	private String languageSelected = null;
 	private Question question_ = new Question();
+	private Comment comment = new Comment();
 	private String questionContent = new String();
 	private String questionDetail = new String();
 	private String currentUser_ = "";
 	private final String TITLE_USERNAME = "UserName";
 	private final String COMMENT_CONTENT = "CommentContent";
-	private List<String> listComments_ = new ArrayList<String>();
-	private List<String> listUserNames_ = new ArrayList<String>();
-	private List<Date> listDates_ = new ArrayList<Date>();
-	private int pos = 0;
 	private boolean isAddNew = false;
 	private FAQSetting faqSetting_ = null;
-	private Date date_ = new java.util.Date();
 	
 	private String link_ = "";
 
@@ -93,12 +85,9 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		this.addChild(new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, null, true));
 	}
 	
-	public void setInfor(Question question, int posCommentEdit, FAQSetting faqSetting, String languageView) throws Exception{
+	public void setInfor(Question question, String commentId, FAQSetting faqSetting, String languageView) throws Exception{
 		if(languageView.trim().length() > 0) languageSelected = languageView;
 		else languageSelected = question.getLanguage();
-		listComments_ = new ArrayList<String>();
-		listUserNames_ = new ArrayList<String>();
-		listDates_ = new ArrayList<Date>();
 		
 		this.question_ = question;
 		this.questionContent = question.getQuestion();
@@ -106,59 +95,35 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		this.faqSetting_ = faqSetting;
 		FAQUtils.getEmailSetting(faqSetting_, false, false);
 		
-		if(languageView.trim().length() < 1 || languageView.equals(question.getLanguage())) {
-			try{
-				listComments_.addAll(Arrays.asList(question_.getComments()));
-				listUserNames_.addAll(Arrays.asList(question_.getCommentBy()));
-				listDates_.addAll(Arrays.asList(question_.getDateComment()));
-			} catch (NullPointerException nullPointerException){
-				listComments_ = new ArrayList<String>();
-				listUserNames_ = new ArrayList<String>();
-				listDates_ = new ArrayList<Date>();
-			}
-			if(posCommentEdit >= 0){
-				pos = posCommentEdit;
-				((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(question_.getComments()[posCommentEdit]);
-			} else {
-				isAddNew = true;
-				listComments_.add(" ");
-				listUserNames_.add(currentUser_);
-				listDates_.add(date_);
-				pos = listComments_.size() - 1;
-			}
-		}
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		SessionProvider sProvider = FAQUtils.getSystemProvider();
-		List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
-		listLanguageToReponse.add(new SelectItemOption<String>(question.getLanguage(), question.getLanguage())) ;
-		String language = null;
-		for(QuestionLanguage questionLanguage : faqService.getQuestionLanguages(question.getId(), sProvider)){
-			language = questionLanguage.getLanguage();
-			listLanguageToReponse.add(new SelectItemOption<String>(language, language)) ;
-			if(language.equals(languageView)){
-				questionLanguage_ = questionLanguage;
-				try{
-					listComments_.addAll(Arrays.asList(questionLanguage.getComments()));
-					listUserNames_.addAll(Arrays.asList(questionLanguage.getCommentBy()));
-					listDates_.addAll(Arrays.asList(questionLanguage.getDateComment()));
-				} catch (Exception e){
-					listComments_ = new ArrayList<String>();
-					listUserNames_ = new ArrayList<String>();
-					listDates_ = new ArrayList<Date>();
-				}
-				if(posCommentEdit >= 0){
-					pos = posCommentEdit;
-					((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(questionLanguage.getComments()[posCommentEdit]);
-				} else {
-					listComments_.add(" ");
-					listUserNames_.add(currentUser_);
-					listDates_.add(date_);
-					pos = listComments_.size() - 1;
-				}
-				questionContent = questionLanguage.getQuestion();
-				questionDetail = questionLanguage.getDetail();
+		if(languageView.trim().length() < 1 || languageView.equals(question.getLanguage())) {
+			if(!commentId.equals("new")){
+				comment = faqService.getCommentById(faqService.getQuestionNodeById(question.getId(), sProvider), commentId);
+				isAddNew = false;
+			} else {
+				comment = new Comment();
+				comment.setNew(true);
+				comment.setCommentBy(FAQUtils.getCurrentUser());
+				isAddNew = true;
+			}
+		} else {
+			if(!commentId.equals("new")){
+				MultiLanguages multiLanguages = new MultiLanguages();
+				Node questionNode = faqService.getQuestionNodeById(question.getId(), sProvider);
+				comment = multiLanguages.getCommentById(questionNode, commentId, languageView);
+				QuestionLanguage questionLanguage = multiLanguages.getQuestionLanguageByLanguage(questionNode, languageView);
+				this.questionContent = questionLanguage.getQuestion();
+				this.questionDetail = questionLanguage.getDetail();
+				isAddNew = false;
+			} else {
+				comment = new Comment();
+				comment.setNew(true);
+				comment.setCommentBy(FAQUtils.getCurrentUser());
+				isAddNew = true;
 			}
 		}
+		((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
 		
 		sProvider.close();
 	}
@@ -211,19 +176,15 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				commentForm.question_.setLink(link) ;
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(comment != null && comment.trim().length() > 0 && validatorDataInput.fckContentIsNotEmpty(comment)){
-					commentForm.listComments_.set(commentForm.pos, comment);
-					if(commentForm.questionLanguage_ == null){
-						commentForm.question_.setComments(commentForm.listComments_.toArray(new String[]{}));
-						commentForm.question_.setCommentBy(commentForm.listUserNames_.toArray(new String[]{}));
-						commentForm.question_.setDateComment(commentForm.listDates_.toArray(new Date[]{}));
+					commentForm.comment.setComments(comment);
+					if(commentForm.languageSelected == null || commentForm.languageSelected.trim().length() < 0 ||
+							commentForm.languageSelected.equals(commentForm.question_.getLanguage())){
+						faqService_.saveComment(commentForm.question_.getId(), commentForm.comment, commentForm.isAddNew, sessionProvider);
 						faqService_.saveQuestion(commentForm.question_, false, sessionProvider, commentForm.faqSetting_);
 					} else {
-						commentForm.questionLanguage_.setComments(commentForm.listComments_.toArray(new String[]{}));
-						commentForm.questionLanguage_.setCommentBy(commentForm.listUserNames_.toArray(new String[]{}));
-						commentForm.questionLanguage_.setDateComment(commentForm.listDates_.toArray(new Date[]{}));
-						
 						MultiLanguages multiLanguages = new MultiLanguages();
-						multiLanguages.addLanguage(faqService_.getQuestionNodeById(commentForm.question_.getId(), sessionProvider), commentForm.questionLanguage_) ;
+						multiLanguages.saveComment(faqService_.getQuestionNodeById(commentForm.question_.getId(), sessionProvider), 
+																			 commentForm.comment, commentForm.languageSelected, sessionProvider);
 					}
 					if(commentForm.isAddNew) {
 						String pathTopic = commentForm.question_.getPathTopicDiscuss();

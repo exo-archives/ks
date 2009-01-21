@@ -30,65 +30,23 @@ import java.util.Date;
  * @since   Jul 11, 2007
  */
 public class QuestionLanguage {
-	private String[] comments = null;
-	
-	private Date[] dateComment = null;
-	
-	private String[] commentBy = null;
-  
   /** The language. */
   private String language = " " ;
+  
+  private Answer[] answers;
+  
+  private Comment[] comments;
   
   /** The question. */
   private String detail = " " ;
   
   private String question = " ";
   
-  /** The response. */
-  private String[] response = new String[]{" "} ;
-  
-  /** The answerer */
-  private String[] responseBy = new String[]{" "};
-  
-  /** The date response. */
-  private Date[] dateResponse ;
-  
-  private Boolean[] isApprovedAnswers;
-  
-  private Boolean[] isActivateAnswers;
-  
-  /** The users vote answer. */
-  private String[] usersVoteAnswer;
-  
-  /** The marks vote answer. */
-  private double[] marksVoteAnswer;
-  
-  /** The pos. */
-  private int pos[];
-  
   /**
    * class constructor.
    */
   public QuestionLanguage() { }
   
-  /**
-   * Get the name of person who answered for question in this language
-   * 
-   * @return	the name of answerer
-   */
-  public String[] getResponseBy() {
-  	return responseBy;
-  }
-  
-  /**
-   * Registers the name of person who answer question in this language.
-   * 
-   * @param author	the name of person who answer question
-   */
-	public void setResponseBy(String[] responseBy) {
-  	this.responseBy = responseBy;
-  }
-
 	/**
    * Get name of language is used to write quetsion.
    * 
@@ -117,36 +75,6 @@ public class QuestionLanguage {
    */
   public void setDetail(String q) { this.detail = q ; }
 
-  /**
-   * Gets the response of question in this Language node.
-   * 
-   * @return the response's content
-   */
-  public String[] getResponse() { return response ; }
-  
-  /**
-   * Registers content of reponse, this content is only written by admin or moderator.
-   * 
-   * @param res the respnose of question
-   */
-  public void setResponse(String res[]) { this.response = res ; }
-
-  /**
-   * Get the date when question whith this language is answered
-   * @return	date when question is responsed
-   */
-	public Date[] getDateResponse() {
-  	return dateResponse;
-  }
-
-	/**
-	 * Registers date when response question
-	 * @param dateResponse	the date when question is responsed
-	 */
-	public void setDateResponse(Date[] dateResponse) {
-  	this.dateResponse = dateResponse;
-  }
-
 	public String getQuestion() {
 		return question;
 	}
@@ -155,112 +83,20 @@ public class QuestionLanguage {
 		this.question = question;
 	}
 	
-	/**
-	 * Gets the users vote answer.
-	 * 
-	 * @return the users vote answer
-	 */
-	public String[] getUsersVoteAnswer() {
-		return usersVoteAnswer;
+	public Answer[] getAnswers() {
+		return answers;
 	}
 
-	/**
-	 * Sets the users vote answer.
-	 * 
-	 * @param usersVoteAnswer the new users vote answer
-	 */
-	public void setUsersVoteAnswer(String[] usersVoteAnswer) {
-		this.usersVoteAnswer = usersVoteAnswer;
+	public void setAnswers(Answer[] answers) {
+		this.answers = answers;
 	}
 
-	/**
-	 * Gets the marks vote answer.
-	 * 
-	 * @return the marks vote answer
-	 */
-	public double[] getMarksVoteAnswer() {
-		return marksVoteAnswer;
-	}
-
-	/**
-	 * Sets the marks vote answer.
-	 * 
-	 * @param marksVoteAnswer the new marks vote answer
-	 */
-	public void setMarksVoteAnswer(double[] marksVoteAnswer) {
-		this.marksVoteAnswer = marksVoteAnswer;
-	}
-
-	/**
-	 * Gets the pos.
-	 * 
-	 * @return the pos
-	 */
-	public int[] getPos() {
-		return pos;
-	}
-
-	/**
-	 * Sets the pos.
-	 * 
-	 * @param pos the new pos
-	 */
-	public void setPos(int[] pos) {
-		this.pos = pos;
-	}
-	
-	/**
-	 * Sets the pos.
-	 * 
-	 * @param pos the new pos
-	 */
-	public void setPos() {
-		if(marksVoteAnswer != null) {
-			pos = new int[marksVoteAnswer.length];
-			for(int i = 0; i < marksVoteAnswer.length; i ++){
-				pos[i] = i;
-			}
-		}
-	}
-
-	public Boolean[] getIsApprovedAnswers() {
-		return isApprovedAnswers;
-	}
-
-	public void setIsApprovedAnswers(Boolean[] isApprovedAnswers) {
-		this.isApprovedAnswers = isApprovedAnswers;
-	}
-
-	public Boolean[] getIsActivateAnswers() {
-		return isActivateAnswers;
-	}
-
-	public void setIsActivateAnswers(Boolean[] isActivateAnswers) {
-		this.isActivateAnswers = isActivateAnswers;
-	}
-
-	public String[] getComments() {
+	public Comment[] getComments() {
 		return comments;
 	}
 
-	public void setComments(String[] comments) {
+	public void setComments(Comment[] comments) {
 		this.comments = comments;
-	}
-
-	public Date[] getDateComment() {
-		return dateComment;
-	}
-
-	public void setDateComment(Date[] dateComment) {
-		this.dateComment = dateComment;
-	}
-
-	public String[] getCommentBy() {
-		return commentBy;
-	}
-
-	public void setCommentBy(String[] commentBy) {
-		this.commentBy = commentBy;
 	}
 }
 

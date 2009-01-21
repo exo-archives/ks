@@ -21,9 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.services.jcr.util.IdGenerator;
-import org.hibernate.usertype.UserVersionType;
 
-// TODO: Auto-generated Javadoc
 /**
  * Data of question node is stored in question object which is used in processings:
  * add new question, edit question and reponse question.
@@ -39,6 +37,7 @@ public class Question {
   /** The language. */
   private String language ;
   
+  /** The question. */
   private String question;
   
   /** The question. */
@@ -62,21 +61,8 @@ public class Question {
   /** The category id. */
   private String categoryId ;
   
-  /** The responses. */
-  private String[] responses = null;
-  
   /** The relations. */
   private String[] relations ;
-  
-  /** The response by. */
-  private String[] responseBy = null ;
-  
-  /** The date response. */
-  private Date[] dateResponse ;
-  
-  private Boolean[] activateAnswers;
-  
-  private Boolean[] approvedAnswers;
   
   /** link to question. */
   private String link = "";
@@ -90,14 +76,11 @@ public class Question {
   /** The name attachs. */
   private String[] nameAttachs ;
   
+  /** The answers. */
+  private Answer[] answers;
+  
   /** The comments. */
-  private String[] comments;
-  
-  /** The comment by. */
-  private String[] commentBy;
-  
-  /** The date comment. */
-  private Date[] dateComment;
+  private Comment[] comments;
   
   /** The users vote. */
   private String[] usersVote;
@@ -111,16 +94,9 @@ public class Question {
   /** The emails watch. */
   private String[] emailsWatch = null;
   
-  /** The users vote answer. */
-  private String[] usersVoteAnswer;
-  
-  /** The marks vote answer. */
-  private double[] marksVoteAnswer;
-  
-  /** The pos. */
-  private int pos[];
-  
+  /** The path topic discuss. */
   private String pathTopicDiscuss;
+  
   /**
    * Class constructor specifying id of object is created.
    */
@@ -187,28 +163,6 @@ public class Question {
    * @return author  the name of question's author
    */
 	public String getAuthor() { return author; }
-
-  /**
-   * Get content of question's response.
-   * 
-   * @return  the response of questions
-   */
-	public String getResponses() {return responses[0];}
-	
-	/**
-	 * Get content of question's response.
-	 * 
-	 * @return  the response of questions
-	 */
-	public String[] getAllResponses() {return responses;}
-  
-  /**
-   * Registers response for question, only admin or moderator can response for this quetsion.
-   * 
-   * @param responses the content of question's response which addmin or
-   * morderator answer for this question
-   */
-	public void setResponses(String[] responses) {this.responses = responses;}
 
   /**
    * Get list questions in system which are like, related or support for this question.
@@ -320,37 +274,6 @@ public class Question {
   public List<FileAttachment> getAttachMent(){return this.listAttachments ; }
 
   /**
-   * Get date time when question is responsed, it's the lastest time . A question can be
-   * rereponse some time, but system only lastest time is saved in to quetsion.
-   * 
-   * @return  the date time when question is response
-   */
-  public Date[] getDateResponse() { return dateResponse; }
-  
-  /**
-   * Registers date time for question object when addmin or moderator response for this question,
-   * this date time is automatic set for quetsion by system.
-   * 
-   * @param dateResponse the date time when question is responsed
-   */
-  public void setDateResponse(Date dateResponse[]) { this.dateResponse = dateResponse; }
-
-  /**
-   * Get name of admin or moderator who responsed this question.
-   * 
-   * @return    the name of admin or moderator
-   */
-  public String[] getResponseBy() { return responseBy; }
-  
-  /**
-   * Registers name of person who response for this question, system auto set this
-   * property for question when admin or moderator response a question.
-   * 
-   * @param responseBy  the name of admin or moderator
-   */
-  public void setResponseBy(String[] responseBy) { this.responseBy = responseBy; }
-
-  /**
    * Get list languages of question which are not yet answered.
    * 
    * @return list languages
@@ -400,60 +323,6 @@ public class Question {
 	 * @param link the link
 	 */
 	public void setLink(String link) { this.link = link;}
-
-	/**
-	 * Gets the comments.
-	 * 
-	 * @return the comments
-	 */
-	public String[] getComments() {
-		return comments;
-	}
-
-	/**
-	 * Sets the comments.
-	 * 
-	 * @param comments the new comments
-	 */
-	public void setComments(String[] comments) {
-		this.comments = comments;
-	}
-
-	/**
-	 * Gets the comment by.
-	 * 
-	 * @return the comment by
-	 */
-	public String[] getCommentBy() {
-		return commentBy;
-	}
-
-	/**
-	 * Sets the comment by.
-	 * 
-	 * @param commentBy the new comment by
-	 */
-	public void setCommentBy(String[] commentBy) {
-		this.commentBy = commentBy;
-	}
-
-	/**
-	 * Gets the date comment.
-	 * 
-	 * @return the date comment
-	 */
-	public Date[] getDateComment() {
-		return dateComment;
-	}
-
-	/**
-	 * Sets the date comment.
-	 * 
-	 * @param dateComment the new date comment
-	 */
-	public void setDateComment(Date[] dateComment) {
-		this.dateComment = dateComment;
-	}
 
 	/**
 	 * Gets the users vote.
@@ -528,104 +397,76 @@ public class Question {
 	}
 
 	/**
-	 * Gets the users vote answer.
+	 * Gets the question.
 	 * 
-	 * @return the users vote answer
+	 * @return the question
 	 */
-	public String[] getUsersVoteAnswer() {
-		return usersVoteAnswer;
-	}
-
-	/**
-	 * Sets the users vote answer.
-	 * 
-	 * @param usersVoteAnswer the new users vote answer
-	 */
-	public void setUsersVoteAnswer(String[] usersVoteAnswer) {
-		this.usersVoteAnswer = usersVoteAnswer;
-	}
-
-	/**
-	 * Gets the marks vote answer.
-	 * 
-	 * @return the marks vote answer
-	 */
-	public double[] getMarksVoteAnswer() {
-		return marksVoteAnswer;
-	}
-
-	/**
-	 * Sets the marks vote answer.
-	 * 
-	 * @param marksVoteAnswer the new marks vote answer
-	 */
-	public void setMarksVoteAnswer(double[] marksVoteAnswer) {
-		this.marksVoteAnswer = marksVoteAnswer;
-	}
-
-	/**
-	 * Gets the pos.
-	 * 
-	 * @return the pos
-	 */
-	public int[] getPos() {
-		return pos;
-	}
-
-	/**
-	 * Sets the pos.
-	 * 
-	 * @param pos the new pos
-	 */
-	public void setPos(int[] pos) {
-		this.pos = pos;
-	}
-	
-	/**
-	 * Sets the pos.
-	 * 
-	 * @param pos the new pos
-	 */
-	public void setPos() {
-		if(marksVoteAnswer != null) {
-			pos = new int[marksVoteAnswer.length];
-			for(int i = 0; i < marksVoteAnswer.length; i ++){
-				pos[i] = i;
-			}
-		}
-	}
-
 	public String getQuestion() {
 		return question;
 	}
 
+	/**
+	 * Sets the question.
+	 * 
+	 * @param title the new question
+	 */
 	public void setQuestion(String title) {
 		this.question = title;
 	}
 
-	public Boolean[] getActivateAnswers() {
-		return activateAnswers;
-	}
-
-	public void setActivateAnswers(Boolean[] activateAnswers) {
-		this.activateAnswers = activateAnswers;
-	}
-
-	public Boolean[] getApprovedAnswers() {
-		return approvedAnswers;
-	}
-
-	public void setApprovedAnswers(Boolean[] approvedAnswers) {
-		this.approvedAnswers = approvedAnswers;
-	}
-
+	/**
+	 * Gets the path topic discuss.
+	 * 
+	 * @return the path topic discuss
+	 */
 	public String getPathTopicDiscuss() {
   	return pathTopicDiscuss;
   }
 
+	/**
+	 * Sets the path topic discuss.
+	 * 
+	 * @param pathTopicDiscus the new path topic discuss
+	 */
 	public void setPathTopicDiscuss(String pathTopicDiscus) {
   	this.pathTopicDiscuss = pathTopicDiscus;
   }
+
+	/**
+	 * Gets the answers.
+	 * 
+	 * @return the answers
+	 */
+	public Answer[] getAnswers() {
+		return answers;
+	}
+
+	/**
+	 * Sets the answers.
+	 * 
+	 * @param answers the new answers
+	 */
+	public void setAnswers(Answer[] answers) {
+		this.answers = answers;
+	}
+
+	/**
+	 * Gets the comments.
+	 * 
+	 * @return the comments
+	 */
+	public Comment[] getComments() {
+		return comments;
+	}
+
+	/**
+	 * Sets the comments.
+	 * 
+	 * @param comments the new comments
+	 */
+	public void setComments(Comment[] comments) {
+		this.comments = comments;
+	}
 }
 
 

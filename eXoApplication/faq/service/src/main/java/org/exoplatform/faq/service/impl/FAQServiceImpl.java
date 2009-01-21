@@ -28,7 +28,9 @@ import javax.jcr.Value;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
@@ -207,8 +209,8 @@ public class FAQServiceImpl implements FAQService{
     return jcrData_.getQuestionLanguages(questionId, sProvider) ;
   }
   
-  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, SessionProvider sProvider) throws Exception {
-  	jcrData_.voteQuestionLanguage(questionId, questionLanguage, sProvider);
+  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, Answer answer, SessionProvider sProvider) throws Exception {
+  	jcrData_.voteQuestionLanguage(questionId, questionLanguage, answer, sProvider);
   }
   
   /**
@@ -703,4 +705,31 @@ public class FAQServiceImpl implements FAQService{
 		return jcrData_.getRSSNode(sProvider, categoryId);
 	}
 	
+	public void deleteAnswer(String questionId, String answerId, SessionProvider sProvider) throws Exception{
+		jcrData_.deleteAnswer(questionId, answerId, sProvider);
+	}
+	
+	public void deleteComment(String questionId, String commentId, SessionProvider sProvider) throws Exception{
+		jcrData_.deleteComment(questionId, commentId, sProvider);
+	}
+	
+	public void saveAnswer(String questionId, Answer answer, boolean isNew, SessionProvider sProvider) throws Exception{
+		jcrData_.saveAnswer(questionId, answer, isNew, sProvider);
+	}
+	
+	public void saveComment(String questionId, Comment comment, boolean isNew, SessionProvider sProvider) throws Exception{
+		jcrData_.saveComment(questionId, comment, isNew, sProvider);
+	}
+	
+	public Comment getCommentById(Node questionNode, String commentId) throws Exception{
+		return jcrData_.getCommentById(questionNode, commentId);
+	}
+	
+	public Answer getAnswerById(String questionId, String answerid, SessionProvider sProvider) throws Exception{
+		return jcrData_.getAnswerById(questionId, answerid, sProvider);
+	}
+	
+	public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception{
+		jcrData_.saveAnswer(questionId, answers, sProvider);
+	}
 }

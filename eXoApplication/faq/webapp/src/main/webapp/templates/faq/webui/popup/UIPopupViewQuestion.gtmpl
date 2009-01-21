@@ -7,6 +7,8 @@
 	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.service.FileAttachment;
 	import org.exoplatform.faq.webui.FAQUtils;
+	import org.exoplatform.faq.service.Answer;
+	import org.exoplatform.faq.service.Comment;
 	def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImagesView');
@@ -30,18 +32,21 @@
 					<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b></div>
 					<div class="Response" style="width: 97%;">$content</div>
 					<% 
-					if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
-							int countResponse = 0;
-							for(String res in question.getAllResponses()) {
-								responseBy = question.getResponseBy()[countResponse] ;
+					if(question.getAnswers() != null && question.getAnswers().length > 0) {
+							for(Answer answer in question.getAnswers()) {
+								responseBy = answer.getResponseBy();
 								Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
-							 	date = formatter.format(question.getDateResponse()[countResponse]);
-								response = question.getResponses();
+							 	date = formatter.format(answer.getDateResponse());
+								response = answer.getResponses();
 								%> 
 								<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
 								<div class="Response" id="SetWidthImageContent" style="width: 97%;">$response</div>
+								<div class=" ResponsActions">
+									<div style="margin-left: 10px; color:gray;"><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %>
+										$responseBy , $date
+									</div>
+								</div>
 								<%
-								countResponse ++;
 							}
 						}
 					 %>
@@ -155,15 +160,7 @@
 								}%>
 						</div>
 					<%
-					}
-					if(responseBy.trim().length() > 0){
-					%>
-						<div class=" ResponsActions">
-								<div ><b><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %></b> $responseBy , $date</div>
-						</div>
-					 <%
-					 }
-					 %>
+					}%>
 					</div>
 				</tbody>
 			</table>

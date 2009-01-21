@@ -2,6 +2,8 @@
   import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.service.Answer;
+	import org.exoplatform.faq.service.Comment;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.webui.FAQUtils;
 	import org.exoplatform.faq.service.FileAttachment;
@@ -187,7 +189,7 @@
 					String qId = question.getId() ;
 					linkQuestion=uicomponent.event("ViewQuestion", qId) ;
 					String questionIcon = "" ;
-					if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+					if(question.getAnswers() != null && question.getAnswers().length > 0) {
 						questionIcon = "Question" ;
 					} else {
 						questionIcon = "NotResponse" ;
@@ -367,7 +369,7 @@
 																		if(uicomponent.viewAuthorInfor){
 																		%>
 																			<div style="padding-top: 5px;">
-																				Author: 
+																				<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>: 
 																				<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
 																					<%=FAQUtils.getFullName(question.getAuthor())%> ( <%=question.getEmail()%> )
 																				</a>
@@ -589,27 +591,25 @@
 										<div class="ResponseContent">
 											<div class="Response" id="SetWidthContent" style="padding-left:0px; _width: 98%;">
 												<%
-												if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+												if(question.getAnswers() != null && question.getAnswers().length > 0) {
 													int countResponse = 0;
-													boolean[] approvedAnswers = question.getApprovedAnswers();
-													boolean[] activateAnswers = question.getActivateAnswers();
 													String actionAnswer = "";
-													for(String res in question.getAllResponses()) {
-														res = res.replaceFirst("<p>", "").substring(0, res.lastIndexOf("</p>"))
-														if(!uicomponent.canEditQuestion && (!approvedAnswers[countResponse] || !activateAnswers[countResponse])){
+													for(Answer answer in question.getAnswers()) {
+														res = answer.getResponses().replaceFirst("<p>", "").substring(0, answer.getResponses().lastIndexOf("</p>"))
+														if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 															countResponse ++;
 															continue;
 														}
-														date = dateFormatter.format(question.getDateResponse()[countResponse]);
-														responseBy = FAQUtils.getFullName(question.getResponseBy()[countResponse]) ;
-														String userProfile = uicomponent.event("ViewUserProfile", question.getResponseBy()[countResponse]) ;
+														date = dateFormatter.format(answer.getDateResponse());
+														responseBy = FAQUtils.getFullName(answer.getResponseBy()) ;
+														String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy()) ;
 													%>
 														<div style="float: left;">
 															<div style="float: left;">$res &nbsp;</div>
 															<%if(uicomponent.canEditQuestion){%>
 																	<%
-																		actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Approve");
-																		if(approvedAnswers[countResponse]) {
+																		actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Approve");
+																		if(answer.getApprovedAnswers()) {
 																		%>
 																				<a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
 																					<div class="ApprovedQuestion"><span></span></div>
@@ -621,8 +621,8 @@
 																				</a>
 																		<%}%>
 																		<%
-																			actionAnswer = uicomponent.event("ChangeStatusAnswer",questionId + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse] + "/Activate");
-																			if(activateAnswers[countResponse]) {
+																			actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Activate");
+																			if(answer.getActivateAnswers()) {
 																		%>
 																				<a href="$actionAnswer" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
 																					<div class="ActivateQuestion"><span></span></div>
@@ -634,7 +634,7 @@
 																				</a>
 																		<%}%>
 																		
-																		<a href="<%=uicomponent.event("DeleteAnswer", "" + question.getPos()[countResponse])%>" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
+																		<a href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" style="font-size: 9px; color: blue; font-style: italic;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
 																			<div class="DeleteAnswer"><span></span></div>
 																		</a>
 															<%}%>
@@ -645,7 +645,7 @@
 																<td style="white-space:nowrap;">
 																	<div style="color:gray;">
 																		<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
-																		<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getResponseBy()[countResponse])%>" style="color:gray;">
+																		<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", answer.getResponseBy())%>" style="color:gray;">
 																			&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
 																		</a>
 																	</div>
@@ -653,10 +653,10 @@
 																<%
 																if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
 																	if(uicomponent.currentUser_ != null && uicomponent.currentUser_.trim().length() > 0 &&
-																			uicomponent.canVoteAnswer(question.getUsersVoteAnswer()[countResponse], question.getPos()[countResponse])){
+																			uicomponent.canVoteAnswer(answer.getUsersVoteAnswer())){
 																	%>
 																		<td width="50px" align="left">
-																			<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + uicomponent.language_ + "/" + question.getPos()[countResponse])%>"
+																			<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + answer.getId())%>"
 																					title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
 																				<div class="VoteFAQ"><span></span></div>
 																			</a>
@@ -665,7 +665,7 @@
 																	}
 																	%>
 																	<% 
-																	markVote =(Integer) question.getMarksVoteAnswer()[countResponse];
+																	markVote =(Integer) answer.getMarksVoteAnswer();
 																	%>
 																	<td width="100%">
 																		<div class="RatingInfoContainer">
@@ -677,7 +677,7 @@
 																			<%} else if (mark > markVote){%>
 																					<div class="RatedVote"><span></span></div>
 																			<%} else{
-																					sodu = question.getMarksVoteAnswer()[countResponse] - markVote;
+																					sodu = answer.getMarksVoteAnswer() - markVote;
 																					if(sodu < 0.3){%>
 																						<div class="RatedVote"><span></span></div>
 																				<%} else if (sodu > 0.7){%>
@@ -704,25 +704,26 @@
 											
 											<!-- ============================== View question's commnets ============================================== -->
 											<%
-											if(question.getComments() != null && question.getDateComment() != null && question.getCommentBy() != null){
+											if(question.getComments() != null && question.getComments().length > 0){
 												boolean canEditComment = false;
 											%>
 												<div class="Response">
 											<%
-												for(int commentCount = 0; commentCount < question.getComments().length; commentCount ++){
-													if(uicomponent.currentUser_.equals(question.getCommentBy()[commentCount])) canEditComment = true;
+												Comment[] comments = question.getComments();
+												for(int commentCount = 0; commentCount < comments.length; commentCount ++){
+													if(uicomponent.currentUser_.equals(comments[commentCount].getCommentBy())) canEditComment = true;
 													else canEditComment = false;
 											%>
 												<div style="background:#F0F0F0; padding: 5px 0px 5px 5px; padding: 5px; margin-bottom:5px;">
 													<table width="100%">
 														<tr>
 															<td>
-																<%=question.getComments()[commentCount]%>
+																<%=comments[commentCount].getComments()%>
 																<div style="color:gray;">
 																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionCommentBy")%> :
-																	<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getCommentBy()[commentCount])%>" style="color:gray;">
-																	&nbsp; <%=FAQUtils.getFullName(question.getCommentBy()[commentCount])%> <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> 
-																	<font style="color:#721d95"><%=dateFormatter.format(question.getDateComment()[commentCount]);%></font>
+																	<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", comments[commentCount].getCommentBy())%>" style="color:gray;">
+																	&nbsp; <%=FAQUtils.getFullName(comments[commentCount].getCommentBy())%> <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> 
+																	<font style="color:#721d95"><%=dateFormatter.format(comments[commentCount].getDateComment());%></font>
 																	</a>
 																</div>
 															</td>
@@ -730,7 +731,7 @@
 															if(canEditComment){
 																if (uicomponent.faqSetting_.isCanEdit()){%>
 																	<td width="20" align="center">
-																		<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("CommentToAnswer", question.getId() + "/" + commentCount)%>">
+																		<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("CommentToAnswer", comments[commentCount].getId())%>">
 																			<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
 																					<span></span>
 																			</div>
@@ -738,14 +739,14 @@
 																	</td>
 															<%}%>
 																<td width="20" align="center">
-																	<a title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>" href="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + commentCount)%>">
+																	<a title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>" href="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + comments[commentCount].getId())%>">
 																		<div class="ItemIcon Edit" style="height:24px;width:16px;">
 																				<span></span>
 																		</div>
 																	</a>
 																</td>
 																<td width="20" align="center">
-																	<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DeleteComment", question.getId() + "/" + commentCount)%>">
+																	<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DeleteComment", comments[commentCount].getId())%>">
 																		<div class="ItemIcon Delete" style="height:24px;width:16px;">
 																				<span></span>
 																		</div>
@@ -753,14 +754,14 @@
 																</td>
 														<%} else if (uicomponent.faqSetting_.isCanEdit()){%>
 																<td width="20" align="center">
-																	<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("CommentToAnswer", question.getId() + "/" + commentCount)%>">
+																	<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("CommentToAnswer", comments[commentCount].getId())%>">
 																		<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
 																				<span></span>
 																		</div>
 																	</a>
 																</td>
 																<td width="20" align="center">
-																	<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DeleteComment", question.getId() + "/" + commentCount)%>">
+																	<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DeleteComment", comments[commentCount].getId())%>">
 																		<div class="ItemIcon Delete" style="height:24px;width:16px;">
 																				<span></span>
 																		</div>

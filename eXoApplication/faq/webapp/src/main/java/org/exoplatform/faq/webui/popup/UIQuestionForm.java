@@ -503,9 +503,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         question_ = new Question() ;
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
-        question_.setResponses(new String[]{" "}) ;
-        question_.setMarksVoteAnswer(new double[]{0}) ;
-        question_.setUsersVoteAnswer(new String[]{" "});
         if(questionForm.categoryId_ != null){
 	        try{
 	          questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, sessionProvider).isModerateQuestions() ;
@@ -525,7 +522,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         }
         question_.setCreatedDate(date) ;
         question_.setApproved(questionIsApproved) ;
-        question_.setDateResponse(null) ;
       } else {
         question_.setApproved(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_APPROVED)).isChecked()) ;
         question_.setActivated(((UIFormCheckBoxInput<Boolean>)questionForm.getChildById(IS_ACTIVATED)).isChecked()) ;

@@ -144,9 +144,9 @@ public class TestFAQService extends FAQServiceTestCase{
 		Question question = new Question() ;
 		question.setCategoryId(cate.getId()) ;
 		question.setRelations(new String[]{}) ;
-		question.setResponses(new String[]{" "}) ;
+		//question.setResponses(new String[]{" "}) ;
     question.setApproved(true) ;
-    question.setDateResponse(new Date[]{new Date()}) ;
+    //question.setDateResponse(new Date[]{new Date()}) ;
     question.setActivated(true) ;
     question.setLanguage("English") ;
     question.setAuthor("Nguyen van truong") ;
@@ -175,9 +175,9 @@ public class TestFAQService extends FAQServiceTestCase{
 //		Add question 2
 		Question question2 = createQuestion() ;
 		question2.setRelations(new String[]{}) ;
-		question2.setResponses(new String[]{" "}) ;
+		//question2.setResponses(new String[]{" "}) ;
     question2.setApproved(true) ;
-    question2.setDateResponse(new Date[]{new Date()}) ;
+    //question2.setDateResponse(new Date[]{new Date()}) ;
     question2.setActivated(true) ;
     question2.setLanguage("English") ;
     question2.setAuthor("Mai Van Ha") ;
@@ -195,9 +195,9 @@ public class TestFAQService extends FAQServiceTestCase{
 //	Add question 3
 		Question question3 = createQuestion() ;
 		question3.setRelations(new String[]{}) ;
-		question3.setResponses(new String[]{" "}) ;
+		//question3.setResponses(new String[]{" "}) ;
 		question3.setApproved(true) ;
-		question3.setDateResponse(new Date[]{new Date()}) ;
+		//question3.setDateResponse(new Date[]{new Date()}) ;
 		question3.setActivated(true) ;
 		question3.setLanguage("English") ;
 		question3.setAuthor("Phung Hai Nam") ;
@@ -209,9 +209,9 @@ public class TestFAQService extends FAQServiceTestCase{
 //	Add question 4
 		Question question4 = createQuestion() ;
 		question4.setRelations(new String[]{}) ;
-		question4.setResponses(new String[]{" "}) ;
+		//question4.setResponses(new String[]{" "}) ;
 		question4.setApproved(false) ;
-		question4.setDateResponse(new Date[]{new Date()}) ;
+		//question4.setDateResponse(new Date[]{new Date()}) ;
 		question4.setActivated(true) ;
 		question4.setLanguage("English") ;
 		question4.setAuthor("Pham Dinh Tan") ;
@@ -223,9 +223,9 @@ public class TestFAQService extends FAQServiceTestCase{
 //	Add question 5
 		Question question5 = createQuestion() ;
 		question5.setRelations(new String[]{}) ;
-		question5.setResponses(new String[]{" "}) ;
+		//question5.setResponses(new String[]{" "}) ;
 		question5.setApproved(false) ;
-		question5.setDateResponse(new Date[]{new Date()}) ;
+		//question5.setDateResponse(new Date[]{new Date()}) ;
 		question5.setActivated(true) ;
 		question5.setLanguage("English") ;
 		question5.setAuthor("Ly Dinh Quang") ;

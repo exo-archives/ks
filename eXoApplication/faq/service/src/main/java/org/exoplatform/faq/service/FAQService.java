@@ -278,7 +278,7 @@ public interface FAQService {
    */
   public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
   
-  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, SessionProvider sProvider) throws Exception;
+  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, Answer answer, SessionProvider sProvider) throws Exception ;
   
   /**
    * This method should lookup languageNode of question
@@ -653,4 +653,18 @@ public interface FAQService {
  	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception;
  	
  	public Node getRSSNode(SessionProvider sProvider, String categoryId) throws Exception;
+ 	
+ 	public void deleteAnswer(String questionId, String answerId, SessionProvider sProvider) throws Exception;
+ 	
+ 	public void deleteComment(String questionId, String commentId, SessionProvider sProvider) throws Exception;
+ 	
+ 	public void saveAnswer(String questionId, Answer answer, boolean isNew, SessionProvider sProvider) throws Exception;
+	
+	public void saveComment(String questionId, Comment comment, boolean isNew, SessionProvider sProvider) throws Exception;
+	
+	public Comment getCommentById(Node questionNode, String commentId) throws Exception;
+	
+	public Answer getAnswerById(String questionId, String answerid, SessionProvider sProvider) throws Exception;
+	
+	public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception;
 }

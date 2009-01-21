@@ -25,6 +25,8 @@ import javax.mail.internet.InternetAddress;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.faq.service.Answer;
+import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -140,7 +142,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     questionLanguage.setQuestion(question.getQuestion());
     questionLanguage.setDetail(question.getDetail()) ;
     questionLanguage.setLanguage(question.getLanguage()) ;
-    questionLanguage.setResponse(question.getAllResponses()) ;
+    questionLanguage.setAnswers(question.getAnswers()) ;
+    questionLanguage.setComments(question.getComments());
     
     listQuestionLanguage.add(questionLanguage) ;
     for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionId, sessionProvider)) {
@@ -170,8 +173,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     for(QuestionLanguage questionLangua : listQuestionLanguage) {
       if(questionLangua.getLanguage().equals(language)) {
        contenQuestion =  questionLangua.getQuestion() ;
-     	 String[] response = questionLangua.getResponse() ;
-        if(response[posOfResponse].equals(" ")){ 
+     	 Answer[] answers = questionLangua.getAnswers() ;
+        if(answers == null || answers.length < 1){ 
         	content =this.getLabel("change-content1") + this.getLabel("change-content2")
 										+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>";
         	if(questionLangua.getDetail()!= null && questionLangua.getDetail().trim().length() > 0)
@@ -184,8 +187,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
         	if(questionLangua.getDetail()!= null && questionLangua.getDetail().trim().length() > 0)
         		stringBuffer.append("<p><b>").append(this.getLabel( "Detail")).append("</b> "+ questionLangua.getDetail() + "</p>");
         	stringBuffer.append("<p><b>" + this.getLabel( "Response") + "</b> ");
-        	for(String res : response){
-        		stringBuffer.append(res + "</p>");
+        	for(Answer answer : answers){
+        		stringBuffer.append(answer.getResponses() + "</p>");
         	}
         	stringBuffer.append("<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>");
         	content =stringBuffer.toString();
@@ -377,19 +380,20 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
          if(questionLanguage.getLanguage().equals(language)) {
         	 sendMailForm.languageIsResponsed = language ;
         	 contenQuestion =  questionLanguage.getQuestion() ;
-        	 String response[] = questionLanguage.getResponse() ;
-           @SuppressWarnings("unused")
-          String content = "" ;
-           if(response[sendMailForm.posOfResponse].equals(" ")) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
+        	 Answer[] answers = questionLanguage.getAnswers() ;
+        	 Comment[] comments = questionLanguage.getComments();
+           String content = "" ;
+           if(answers == null || answers.length < 1) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
           	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
           	 													+"<p><b>" + sendMailForm.getLabel( "Detail") + "</b> "+ questionLanguage.getDetail() + "</p>"
           	 													+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
-           else 
+           else {
            	content =sendMailForm.getLabel("change-content1")+ sendMailForm.getLabel("change-content2")
            			+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
            			+"<p><b>" + sendMailForm.getLabel( "Detail") + "</b> "+ questionLanguage.getDetail() + "</p>"
-           			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + response[sendMailForm.posOfResponse] + "</p>"
+           			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + answers[sendMailForm.posOfResponse].getResponses() + "</p>"
            			+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
+           }
            body.setValue(content) ;
            subject.setValue(sendMailForm.getLabel("change-title")+contenQuestion) ;
            break;

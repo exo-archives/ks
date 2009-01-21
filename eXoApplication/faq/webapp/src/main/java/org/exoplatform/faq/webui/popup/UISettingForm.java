@@ -274,7 +274,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			       event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			       return ;
 					}
-					System.out.println("\n\npathName: " + faqSetting.getPathNameCategoryForum());
 				}else{
 					faqSetting.setPathNameCategoryForum("");
 				}

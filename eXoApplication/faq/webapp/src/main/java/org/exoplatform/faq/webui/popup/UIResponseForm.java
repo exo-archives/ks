@@ -25,6 +25,7 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -129,13 +130,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private String link_ = "" ;
 	private boolean isChildren_ = false ;
 	private FAQSetting faqSetting_;
-	private List<String> listResponse = new ArrayList<String>();
-	private List<String> listUserResponse = new ArrayList<String>();
-	private List<Date> listDateResponse = new ArrayList<Date>();
-	private List<Double> listMarkResponse = new ArrayList<Double>();
-	private List<String> listUsersVoteResponse = new ArrayList<String>();
-	private List<Boolean> listActiveAnswers = new ArrayList<Boolean>();
-	private List<Boolean> listApprovedAnswers = new ArrayList<Boolean>();
+	private List<Answer> listAnswers = new ArrayList<Answer>();
 	private int posOfResponse = 0;
 	private boolean cateIsApprovedAnswer_ = true;
 	
@@ -162,7 +157,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private int numberOfAnswer(){
-		return listResponse.size();
+		return listAnswers.size();
 	}
 	
 	@SuppressWarnings("unused")
@@ -180,13 +175,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 	public void setQuestionId(Question question, String languageViewed, boolean cateIsApprovedAnswer){
 		this.cateIsApprovedAnswer_ = cateIsApprovedAnswer;
-		listResponse = new ArrayList<String>();
-		listUserResponse = new ArrayList<String>();
-		listDateResponse = new ArrayList<Date>();
-		listActiveAnswers = new ArrayList<Boolean>();
-		listApprovedAnswers = new ArrayList<Boolean>();
-		listMarkResponse = new ArrayList<Double>();
-		listUsersVoteResponse = new ArrayList<String>();
+		listAnswers = new ArrayList<Answer>();
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		try{
 			if(listQuestIdRela!= null && !listQuestIdRela.isEmpty()) {
@@ -205,19 +194,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			questionLanguage.setLanguage(question.getLanguage()) ;
 			questionLanguage.setDetail(question.getDetail()) ;
 			questionLanguage.setQuestion(question.getQuestion());
-
-
-			if(question.getAllResponses() != null && question.getAllResponses().length > 0) {
-				questionLanguage.setResponse(question.getAllResponses()) ;
-				questionLanguage.setResponseBy(question.getResponseBy());
-				questionLanguage.setDateResponse(question.getDateResponse());
-				questionLanguage.setMarksVoteAnswer(question.getMarksVoteAnswer());
-				questionLanguage.setUsersVoteAnswer(question.getUsersVoteAnswer());
-				questionLanguage.setIsActivateAnswers(question.getActivateAnswers());
-				questionLanguage.setIsApprovedAnswers(question.getApprovedAnswers());
-			} else {
-				questionLanguage.setResponse(new String[]{""}) ;
-			}
+			questionLanguage.setAnswers(question.getAnswers()) ;
+			
 			listQuestionLanguage.add(questionLanguage) ;
 			listQuestionLanguage.addAll(faqService.getQuestionLanguages(question_.getId(), sessionProvider)) ;
 			for(QuestionLanguage language : listQuestionLanguage) {
@@ -228,29 +206,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					inputQuestionDetail_.setValue(language.getDetail()) ;
 					questionDetail = language.getDetail();
 					questionContent = language.getQuestion();
-					inputResponseQuestion_.setValue(language.getResponse()[0]) ;
-					
-					listResponse.addAll(Arrays.asList(language.getResponse()));
-					if(listResponse.size() == 1 && listResponse.get(0).trim().length() < 1){
-						listUserResponse.add(FAQUtils.getCurrentUser());
-						listDateResponse.add(new java.util.Date());
-						listActiveAnswers.add(true);
-						listApprovedAnswers.add(cateIsApprovedAnswer_);
-					} else {
-						listUserResponse.addAll(Arrays.asList(language.getResponseBy()));
-						listDateResponse.addAll(Arrays.asList(language.getDateResponse()));
-						listActiveAnswers.addAll(Arrays.asList(language.getIsActivateAnswers()));
-						listApprovedAnswers.addAll(Arrays.asList(language.getIsApprovedAnswers()));
+					if(language.getAnswers() != null && language.getAnswers().length > 0) {
+						inputResponseQuestion_.setValue(language.getAnswers()[0].getResponses()) ;
 					}
-					if(language.getMarksVoteAnswer() != null){
-						for(double d : language.getMarksVoteAnswer()){
-							listMarkResponse.add(d);
-						}
-						listUsersVoteResponse.addAll(Arrays.asList(language.getUsersVoteAnswer()));
-					} else {
-						listMarkResponse.add(0.0);
-						listUsersVoteResponse.add(FAQUtils.getCurrentUser());
-					}
+					listAnswers.addAll(Arrays.asList(language.getAnswers()));
+					if(listAnswers.isEmpty()){
+						listAnswers.add(new Answer(FAQUtils.getCurrentUser(), cateIsApprovedAnswer_));
+					} 
 				}
 			}
 			this.setListRelation(sessionProvider);
@@ -433,22 +395,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				String responseQuestionContent = responseForm.inputResponseQuestion_.getValue() ;
 				java.util.Date date = new java.util.Date();
 				if(responseQuestionContent != null && responseQuestionContent.trim().length() >0 && validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
-						if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() > 0){
-							responseForm.listResponse.set(responseForm.posOfResponse, responseQuestionContent);
+						if(!responseForm.listAnswers.isEmpty() && responseForm.listAnswers.size() > 0){
+							responseForm.listAnswers.get(responseForm.posOfResponse).setResponses(responseQuestionContent);
 						} else {
-							responseForm.listResponse.add(responseQuestionContent);
-							responseForm.listDateResponse.add(date);
-							responseForm.listApprovedAnswers.add(responseForm.cateIsApprovedAnswer_);
-							responseForm.listActiveAnswers.add(true);
+							Answer answer = new Answer(FAQUtils.getCurrentUser(), responseForm.cateIsApprovedAnswer_);
+							answer.setResponses(responseQuestionContent);
+							responseForm.listAnswers.add(answer);
 						}
-				} else if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() > 0){
-					responseForm.listResponse.remove(responseForm.posOfResponse);
-					responseForm.listDateResponse.remove(responseForm.posOfResponse);
-					responseForm.listApprovedAnswers.remove(responseForm.posOfResponse);
-					responseForm.listActiveAnswers.remove(responseForm.posOfResponse);
+				} else if(!responseForm.listAnswers.isEmpty() && responseForm.listAnswers.size() > 0){
+					responseForm.listAnswers.remove(responseForm.posOfResponse);
 				}
 
-				if(responseForm.listResponse.isEmpty()){
+				if(responseForm.listAnswers.isEmpty()){
 					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -458,43 +416,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				if(question_.getLanguage().equals(responseForm.languageIsResponsed)) {
 					question_.setQuestion(questionContent);
 					question_.setDetail(questionDetail) ;
-					if(!responseForm.compareTowArraies(question_.getAllResponses(), responseForm.listResponse.toArray(new String[]{}))){
-						question_.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
-						question_.setResponses(responseForm.listResponse.toArray(new String[]{}));
-						question_.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
-						question_.setActivateAnswers(responseForm.listActiveAnswers.toArray(new Boolean[]{}));
-						question_.setApprovedAnswers(responseForm.listApprovedAnswers.toArray(new Boolean[]{}));
-						question_.setUsersVoteAnswer(responseForm.listUsersVoteResponse.toArray(new String[]{}));
-						question_.setMarksVoteAnswer(responseForm.getMarkVoteAnswer(responseForm.listMarkResponse));
-					}
+					question_.setAnswers(responseForm.listAnswers.toArray(new Answer[]{}));
 				} else {
 					question_.setQuestion(responseForm.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
 					question_.setDetail(responseForm.listQuestionLanguage.get(0).getDetail().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
-					if(!responseForm.compareTowArraies(question_.getAllResponses(), responseForm.listQuestionLanguage.get(0).getResponse())){
-						question_.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
-						question_.setResponses(responseForm.listQuestionLanguage.get(0).getResponse());
-						question_.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
-						question_.setActivateAnswers(responseForm.listActiveAnswers.toArray(new Boolean[]{}));
-						question_.setApprovedAnswers(responseForm.listApprovedAnswers.toArray(new Boolean[]{}));
-						question_.setUsersVoteAnswer(responseForm.listQuestionLanguage.get(0).getUsersVoteAnswer());
-						question_.setMarksVoteAnswer(responseForm.listQuestionLanguage.get(0).getMarksVoteAnswer());
-					}
+					question_.setAnswers(responseForm.listQuestionLanguage.get(0).getAnswers());
 				}
 
 				for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
 					if(questionLanguage.getLanguage().equals(responseForm.languageIsResponsed) && !question_.getLanguage().equals(responseForm.languageIsResponsed)) {
 						questionLanguage.setQuestion(questionContent) ;
 						questionLanguage.setDetail(questionDetail) ;
-						if(questionLanguage.getResponse() == null || 
-								!responseForm.compareTowArraies(questionLanguage.getResponse(), responseForm.listResponse.toArray(new String[]{}))){
-							questionLanguage.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
-							questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{}));
-							questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
-							questionLanguage.setIsActivateAnswers(responseForm.listActiveAnswers.toArray(new Boolean[]{}));
-							questionLanguage.setIsApprovedAnswers(responseForm.listApprovedAnswers.toArray(new Boolean[]{}));
-							questionLanguage.setUsersVoteAnswer(responseForm.listUsersVoteResponse.toArray(new String[]{}));
-							questionLanguage.setMarksVoteAnswer(responseForm.getMarkVoteAnswer(responseForm.listMarkResponse));
-						}
+						questionLanguage.setAnswers(responseForm.listAnswers.toArray(new Answer[]{}));
 						break;
 					}
 				}
@@ -535,9 +468,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				try{
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					questionNode = faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;
+					faqService.saveAnswer(question_.getId(), question_.getAnswers(), sessionProvider);
 					MultiLanguages multiLanguages = new MultiLanguages() ;
 					for(int i = 1; i < responseForm.listQuestionLanguage.size(); i ++) {
 						multiLanguages.addLanguage(questionNode, responseForm.listQuestionLanguage.get(i)) ;
+						multiLanguages.saveAnswer(questionNode, responseForm.listQuestionLanguage.get(i));
 					}
 				} catch (PathNotFoundException e) {
 					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
@@ -547,7 +482,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					e.printStackTrace() ;
 				}
 
-				if(question_.getResponses() == null || question_.getResponses().trim().length() < 1) {
+				if(question_.getAnswers() == null || question_.getAnswers().length < 1) {
 					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-invalid", new String[]{question_.getLanguage()}, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -579,14 +514,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				}
 				/////////////Discuss forum
 			// get all response which is new
-				responseForm.listResponse.clear();
-				responseForm.listDateResponse.clear();
-				if(question_.getDateResponse() == null) {sessionProvider.close(); return;}
-				responseForm.listDateResponse.addAll(Arrays.asList(question_.getDateResponse()));
-				int length = question_.getAllResponses().length;
-				for(int i = 0; i < length; i ++){
-					if(responseForm.listDateResponse.get(i).getTime() >= responseForm.currentDate) 
-						responseForm.listResponse.add(question_.getAllResponses()[i]);
+				responseForm.listAnswers.clear();
+				responseForm.listAnswers.addAll(Arrays.asList(question_.getAnswers()));
+				for(int i = 0; i < responseForm.listAnswers.size(); ){
+					if(responseForm.listAnswers.get(i).getDateResponse().getTime() < responseForm.currentDate) 
+						responseForm.listAnswers.remove(i);
+					else i ++;
 				}
 				
 				FAQSetting faqSetting = new FAQSetting();
@@ -597,12 +530,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 						String []ids = pathTopic.split("/");
 						Post post;
-						for (String str : responseForm.listResponse) {
+						for (Answer answer : responseForm.listAnswers) {
 							post = new Post();
-							post.setOwner(question_.getAuthor());
+							post.setOwner(answer.getResponseBy());
 							post.setIcon("ViewIcon");
 							post.setName("Re: " + question_.getQuestion());
-							post.setMessage(str);
+							post.setMessage(answer.getResponses());
 							forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
             }
 					}
@@ -709,42 +642,20 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				if(pos.equals("New")){
 					ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 					if(responseContent != null && validatorDataInput.fckContentIsNotEmpty(responseContent)){
-						if(responseForm.listResponse.isEmpty()){
-							responseForm.listResponse.add(responseContent);
-							responseForm.listDateResponse.add(date);
-							responseForm.listUserResponse.add(user);
-							responseForm.listMarkResponse.add(0.0);
-							responseForm.listUsersVoteResponse.add(" ");
+						if(responseForm.listAnswers.isEmpty()){
+							Answer answer = new Answer(user, responseForm.cateIsApprovedAnswer_);
+							answer.setResponses(responseContent);
+							responseForm.listAnswers.add(answer);
 						} else {
-							responseForm.listResponse.set(responseForm.posOfResponse, responseContent);
+							responseForm.listAnswers.get(responseForm.posOfResponse).setResponses(responseContent);
 						}
-						responseForm.posOfResponse = responseForm.listResponse.size();
-						responseForm.listResponse.add(" ");
-						responseForm.listDateResponse.add(date);
-						responseForm.listActiveAnswers.add(true);
-						responseForm.listApprovedAnswers.add(responseForm.cateIsApprovedAnswer_);
-						responseForm.listUserResponse.add(user);
-						responseForm.listMarkResponse.add(0.0);
-						responseForm.listUsersVoteResponse.add(" ");
+						responseForm.posOfResponse = responseForm.listAnswers.size();
+						responseForm.listAnswers.add(new Answer(user, responseForm.cateIsApprovedAnswer_));
 						formWYSIWYGInput.setValue("");
-					} else if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() != responseForm.posOfResponse + 1){
-						responseForm.listResponse.remove(responseForm.posOfResponse);
-						responseForm.listUserResponse.remove(responseForm.posOfResponse);
-						responseForm.listDateResponse.remove(responseForm.posOfResponse);
-						responseForm.listApprovedAnswers.remove(responseForm.posOfResponse);
-						responseForm.listActiveAnswers.remove(responseForm.posOfResponse);
-						responseForm.listMarkResponse.remove(responseForm.posOfResponse);
-						responseForm.listUsersVoteResponse.remove(responseForm.posOfResponse);
-
-						responseForm.posOfResponse = responseForm.listResponse.size();
-						responseForm.listResponse.add(" ");
-						responseForm.listDateResponse.add(date);
-						responseForm.listApprovedAnswers.add(responseForm.cateIsApprovedAnswer_);
-						responseForm.listActiveAnswers.add(true);
-						responseForm.listUserResponse.add(user);
-						responseForm.listMarkResponse.add(0.0);
-						responseForm.listUsersVoteResponse.add(" ");
-
+					} else if(!responseForm.listAnswers.isEmpty() && responseForm.listAnswers.size() != responseForm.posOfResponse + 1){
+						responseForm.listAnswers.remove(responseForm.posOfResponse);
+						responseForm.posOfResponse = responseForm.listAnswers.size();
+						responseForm.listAnswers.add(new Answer(user, responseForm.cateIsApprovedAnswer_));
 						formWYSIWYGInput.setValue("");
 					}
 				} else {
@@ -752,19 +663,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					if(newPosResponse == responseForm.posOfResponse) return;
 					ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 					if(responseContent == null || !validatorDataInput.fckContentIsNotEmpty(responseContent)){
-						responseForm.listResponse.remove(responseForm.posOfResponse);
-						responseForm.listUserResponse.remove(responseForm.posOfResponse);
-						responseForm.listDateResponse.remove(responseForm.posOfResponse);
-						responseForm.listApprovedAnswers.remove(responseForm.posOfResponse);
-						responseForm.listActiveAnswers.remove(responseForm.posOfResponse);
-						responseForm.listMarkResponse.remove(responseForm.posOfResponse);
-						responseForm.listUsersVoteResponse.remove(responseForm.posOfResponse);
-
+						responseForm.listAnswers.remove(responseForm.posOfResponse);
 						if(responseForm.posOfResponse < newPosResponse) newPosResponse--;
-					} else if(!responseContent.equals(responseForm.listResponse.get(responseForm.posOfResponse))){
-						responseForm.listResponse.set(responseForm.posOfResponse, responseContent);
+					} else if(!responseContent.equals(responseForm.listAnswers.get(responseForm.posOfResponse))){
+						responseForm.listAnswers.get(responseForm.posOfResponse).setResponses(responseContent);
 					}
-					formWYSIWYGInput.setValue(responseForm.listResponse.get(newPosResponse));
+					formWYSIWYGInput.setValue(responseForm.listAnswers.get(newPosResponse).getResponses());
 					responseForm.posOfResponse = newPosResponse;
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(responseForm);
@@ -801,55 +705,22 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
 					if(questionLanguage.getLanguage().equals(responseForm.languageIsResponsed)) {
 						if(responseContent!= null && validatorDataInput.fckContentIsNotEmpty(responseContent)) {
-							if(!responseForm.listResponse.contains(responseContent)){
-								if(responseForm.listResponse.isEmpty()){
-									responseForm.listResponse.add(responseContent);
-									responseForm.listDateResponse.add(date);
-									responseForm.listActiveAnswers.add(true);
-									responseForm.listApprovedAnswers.add(responseForm.cateIsApprovedAnswer_);
-									responseForm.listUserResponse.add(user);
-									responseForm.listMarkResponse.add(0.0);
-									responseForm.listUsersVoteResponse.add(" ");
-								} else {
-									responseForm.listResponse.set(responseForm.posOfResponse, responseContent);
-									responseForm.listDateResponse.set(responseForm.posOfResponse, date);
-								}
-							}
-							if(questionLanguage.getResponse() == null || 
-									!responseForm.compareTowArraies(questionLanguage.getResponse(),responseForm.listResponse.toArray(new String[]{}))) {
-								//questionLanguage.setResponseBy(FAQUtils.getFullName(FAQUtils.getCurrentUser()));
-								questionLanguage.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
-								questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
-								questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
-								questionLanguage.setIsActivateAnswers(responseForm.listActiveAnswers.toArray(new Boolean[]{}));
-								questionLanguage.setIsApprovedAnswers(responseForm.listApprovedAnswers.toArray(new Boolean[]{}));
-								questionLanguage.setMarksVoteAnswer(responseForm.getMarkVoteAnswer(responseForm.listMarkResponse));
-								questionLanguage.setUsersVoteAnswer(responseForm.listUsersVoteResponse.toArray(new String[]{}));
-							}
-						} else {
-							if(!responseForm.listResponse.isEmpty() && responseForm.listResponse.size() > responseForm.posOfResponse){
-								responseForm.listResponse.remove(responseForm.posOfResponse);
-								responseForm.listDateResponse.remove(responseForm.posOfResponse);
-								responseForm.listActiveAnswers.remove(responseForm.posOfResponse);
-								responseForm.listApprovedAnswers.remove(responseForm.posOfResponse);
-								responseForm.listUserResponse.remove(responseForm.posOfResponse);
-								responseForm.listMarkResponse.remove(responseForm.posOfResponse);
-								responseForm.listUsersVoteResponse.remove(responseForm.posOfResponse);
-							}
-							if(responseForm.listResponse.isEmpty()){
-								questionLanguage.setResponse(new String[]{" "});
-								questionLanguage.setDateResponse(null);
-								questionLanguage.setResponseBy(null);
-								questionLanguage.setMarksVoteAnswer(new double[]{0});
-								questionLanguage.setUsersVoteAnswer(null);
+							if(responseForm.listAnswers.isEmpty()){
+								Answer answer = new Answer(user, responseForm.cateIsApprovedAnswer_);
+								answer.setResponses(responseContent);
+								responseForm.listAnswers.add(answer);
 							} else {
-								questionLanguage.setResponseBy(responseForm.listUserResponse.toArray(new String[]{}));
-								questionLanguage.setResponse(responseForm.listResponse.toArray(new String[]{})) ;
-								questionLanguage.setDateResponse(responseForm.listDateResponse.toArray(new Date[]{}));
-								questionLanguage.setIsActivateAnswers(responseForm.listActiveAnswers.toArray(new Boolean[]{}));
-								questionLanguage.setIsApprovedAnswers(responseForm.listApprovedAnswers.toArray(new Boolean[]{}));
-								questionLanguage.setMarksVoteAnswer(responseForm.getMarkVoteAnswer(responseForm.listMarkResponse));
-								questionLanguage.setUsersVoteAnswer(responseForm.listUsersVoteResponse.toArray(new String[]{}));
+								responseForm.listAnswers.get(responseForm.posOfResponse).setResponses(responseContent);
+							}
+							questionLanguage.setAnswers(responseForm.listAnswers.toArray(new Answer[]{})) ;
+						} else {
+							if(!responseForm.listAnswers.isEmpty() && responseForm.listAnswers.size() > responseForm.posOfResponse){
+								responseForm.listAnswers.remove(responseForm.posOfResponse);
+							}
+							if(responseForm.listAnswers.isEmpty()){
+								questionLanguage.setAnswers(new Answer[]{});
+							} else {
+								questionLanguage.setAnswers(responseForm.listAnswers.toArray(new Answer[]{})) ;
 							}
 						}
 						questionLanguage.setDetail(questionDetail.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
@@ -864,39 +735,19 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						responseForm.inputQuestionContent_.setValue(questionLanguage.getQuestion()) ;
 						responseForm.questionDetail = questionLanguage.getDetail();
 						responseForm.questionContent = questionLanguage.getQuestion();
-						responseForm.inputResponseQuestion_.setValue(questionLanguage.getResponse()[0]) ;
+						if(questionLanguage.getAnswers() != null && questionLanguage.getAnswers().length > 0)
+							responseForm.inputResponseQuestion_.setValue(questionLanguage.getAnswers()[0].getResponses()) ;
+						else 
+							responseForm.inputResponseQuestion_.setValue("") ;
 						responseForm.posOfResponse = 0;
 
-						responseForm.listResponse.clear();
-						responseForm.listDateResponse.clear();
-						responseForm.listActiveAnswers.clear();
-						responseForm.listApprovedAnswers.clear();
-						responseForm.listUserResponse.clear();
-						responseForm.listMarkResponse.clear();
-						responseForm.listUsersVoteResponse.clear();
+						responseForm.listAnswers.clear();
 
-						responseForm.listResponse.addAll(Arrays.asList(questionLanguage.getResponse()));
-						if(questionLanguage.getMarksVoteAnswer() != null && questionLanguage.getUsersVoteAnswer() != null){
-							responseForm.listUsersVoteResponse.addAll(Arrays.asList(questionLanguage.getUsersVoteAnswer()));
-							for(double d : questionLanguage.getMarksVoteAnswer()){
-								responseForm.listMarkResponse.add(d);
-							}
-						}else{
-							responseForm.listUsersVoteResponse.add(" ");
-							responseForm.listMarkResponse.add(0.0);
+						responseForm.listAnswers.addAll(Arrays.asList(questionLanguage.getAnswers()));
+						if(responseForm.listAnswers.isEmpty()){
+							Answer answer = new Answer(user, responseForm.cateIsApprovedAnswer_);
+							responseForm.listAnswers.add(answer);
 						}
-						if(responseForm.listResponse.get(0).trim().length() > 0){
-							responseForm.listUserResponse.addAll(Arrays.asList(questionLanguage.getResponseBy()));
-							responseForm.listDateResponse.addAll(Arrays.asList(questionLanguage.getDateResponse()));
-							responseForm.listActiveAnswers.addAll(Arrays.asList(questionLanguage.getIsActivateAnswers()));
-							responseForm.listApprovedAnswers.addAll(Arrays.asList(questionLanguage.getIsApprovedAnswers()));
-						} else {
-							responseForm.listUserResponse.add(FAQUtils.getCurrentUser());
-							responseForm.listDateResponse.add(date);
-							responseForm.listActiveAnswers.add(true);
-							responseForm.listApprovedAnswers.add(responseForm.cateIsApprovedAnswer_);
-						}
-						
 						
 						break ;
 					}

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
@@ -116,13 +117,13 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 				forumService.saveTopic(sProvider, uiForm.categoryId, forumId, topic, true, false, "");
 				faqService.savePathDiscussQuestion(uiForm.questionId, uiForm.categoryId+"/"+forumId+"/"+topic.getId(), sProvider);
 				Post post;
-				String []AllResponses = question.getAllResponses();
+				Answer[] AllResponses = question.getAnswers();
 				for (int i = 0; i < AllResponses.length; i++) {
 	        post = new Post();
 	        post.setIcon("IconsView");
 	        post.setName("Re: " + question.getQuestion());
-	        post.setMessage(AllResponses[i]);
-	        post.setOwner(question.getAuthor());
+	        post.setMessage(AllResponses[i].getResponses());
+	        post.setOwner(AllResponses[i].getResponseBy());
 	        forumService.savePost(sProvider, uiForm.categoryId, forumId, topic.getId(), post, true, "");
         }
       } catch (Exception e) {

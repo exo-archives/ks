@@ -29,7 +29,9 @@ import javax.jcr.Node;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
@@ -321,9 +323,9 @@ public class UIQuestions extends UIContainer {
 		return true;
 	}
 
-	private boolean canVoteAnswer(String usersVoted, int posAnswer){
+	private boolean canVoteAnswer(String[] usersVoted){
 		if(usersVoted != null)
-			for(String user : usersVoted.split(",")){
+			for(String user : usersVoted){
 				if(user.equals(currentUser_)) return false;
 			}
 		return true;
@@ -389,21 +391,11 @@ public class UIQuestions extends UIContainer {
 				listQuestionLanguage.clear() ;
 
 				QuestionLanguage quesLanguage = new QuestionLanguage() ;
-				question.setPos();
 				quesLanguage.setLanguage(question.getLanguage()) ;
 				quesLanguage.setQuestion(question.getQuestion());
 				quesLanguage.setDetail(question.getDetail()) ;
-				quesLanguage.setResponse(question.getAllResponses()) ;
-				quesLanguage.setResponseBy(question.getResponseBy());
-				quesLanguage.setDateResponse(question.getDateResponse());
-				quesLanguage.setIsActivateAnswers(question.getActivateAnswers());
-				quesLanguage.setIsApprovedAnswers(question.getApprovedAnswers());
-				quesLanguage.setUsersVoteAnswer(question.getUsersVoteAnswer());
-				quesLanguage.setMarksVoteAnswer(question.getMarksVoteAnswer());
-				quesLanguage.setPos(question.getPos());
+				quesLanguage.setAnswers(question.getAnswers()) ;
 				quesLanguage.setComments(question.getComments());
-				quesLanguage.setCommentBy(question.getCommentBy());
-				quesLanguage.setDateComment(question.getDateComment());
 				
 				listQuestionLanguage.add(quesLanguage) ;
 
@@ -575,199 +567,31 @@ public class UIQuestions extends UIContainer {
 		return listResult ;
 	}
 	
-	private QuestionLanguage sortQuestionLangeByIndex(QuestionLanguage questionLanguage, int posDelete){
-		String answers[] = questionLanguage.getResponse();
-		String answersBy[] = questionLanguage.getResponseBy();
-		Date dates[] = questionLanguage.getDateResponse();
-		double[] marks = questionLanguage.getMarksVoteAnswer();
-		String[] userVotes = questionLanguage.getUsersVoteAnswer();
-		Boolean[] isActivate = questionLanguage.getIsActivateAnswers();
-		Boolean[] isApproved = questionLanguage.getIsApprovedAnswers();
-		int[] pos = questionLanguage.getPos();
-		
-		String answer = null;
-		String by = null;
-		Date date = null;
-		double mark = 0;
-		String userVote = null;
-		Boolean activate = false;
-		Boolean approved = false;
-		int p = 0;
-		for(int i = 0; i < answers.length - 1; i ++){
-			for(int j = i + 1; j < answers.length; j ++){
-				if(pos[i] > pos[j]){
-					answer = answers[i]; 
-					by = answersBy[i]; 
-					date = dates[i]; 
-					mark = marks[i]; 
-					userVote = userVotes[i]; 
-					p = pos[i];
-					activate = isActivate[i];
-					approved = isApproved[i];
-					
-					answers[i] = answers[j];
-					answersBy[i] = answersBy[j];
-					dates[i] = dates[j];
-					marks[i] = marks[j];
-					userVotes[i] = userVotes[j];
-					isActivate[i] = isActivate[j];
-					isApproved[i] = isApproved[j];
-					pos[i] = pos[j];
-					
-					answers[j] = answer;
-					answersBy[j] = by;
-					dates[j] = date;
-					marks[j] = mark;
-					userVotes[j] = userVote;
-					isActivate[j] = activate;
-					isApproved[j] = approved;
-					pos[j] = p;
-				}
-			}
-		}
-		List<String> listAnswer = new ArrayList<String>();
-		listAnswer.addAll(Arrays.asList(answers));
-		listAnswer.remove(posDelete);
-		if(!listAnswer.isEmpty())questionLanguage.setResponse(listAnswer.toArray(new String[]{}));
-		else questionLanguage.setResponse(new String[]{" "});
-		
-		listAnswer = new ArrayList<String>();
-		listAnswer.addAll(Arrays.asList(answersBy));
-		listAnswer.remove(posDelete);
-		questionLanguage.setResponseBy(listAnswer.toArray(new String[]{}));
-		
-		listAnswer = new ArrayList<String>();
-		listAnswer.addAll(Arrays.asList(userVotes));
-		listAnswer.remove(posDelete);
-		questionLanguage.setUsersVoteAnswer(listAnswer.toArray(new String[]{}));
-		
-		List<Date> listDate = new ArrayList<Date>();
-		listDate.addAll(Arrays.asList(dates));
-		listDate.remove(posDelete);
-		questionLanguage.setDateResponse(listDate.toArray(new Date[]{}));
-		
-		double[] newMark = new double[marks.length - 1];
-		int j = 0;
-		for(int i = 0; i < newMark.length; i ++){
-			if(i != posDelete) newMark[j ++] = marks[i];
-		}
-		questionLanguage.setMarksVoteAnswer(newMark);
-		
-		List<Boolean> listBol = new ArrayList<Boolean>();
-		listBol.addAll(Arrays.asList(isActivate));
-		listBol.remove(posDelete);
-		questionLanguage.setIsActivateAnswers(listBol.toArray(new Boolean[]{}));
-		
-		listBol = new ArrayList<Boolean>();
-		listBol.addAll(Arrays.asList(isApproved));
-		listBol.remove(posDelete);
-		questionLanguage.setIsApprovedAnswers(listBol.toArray(new Boolean[]{}));
-		
-		int[] newPos = new int[pos.length - 1];
-		j = 0;
-		for(int i = 0; i < pos.length; i ++){
-			if(i != posDelete) newPos[j ++] = pos[i];
-		}
-		questionLanguage.setPos(newPos);
-		
-		return questionLanguage;
-	}
-	
 	private QuestionLanguage sortQuestionLanguage(QuestionLanguage language){
-		String answers[] = language.getResponse();
-		String answersBy[] = language.getResponseBy();
-		Date dates[] = language.getDateResponse();
-		double[] marks = language.getMarksVoteAnswer();
-		String[] userVotes = language.getUsersVoteAnswer();
-		Boolean[] isActivate = language.getIsActivateAnswers();
-		Boolean[] isApproved = language.getIsApprovedAnswers();
-		int[] pos = language.getPos();
-		
-		String answer = null;
-		String by = null;
-		Date date = null;
-		double mark = 0;
-		String userVote = null;
-		Boolean activate = false;
-		Boolean approved = false;
-		int p = 0;
+		Answer answers[] = language.getAnswers();
+		Answer answer = null;
 		if(isSortDesc){
 			for(int i = 0; i < answers.length - 1; i ++){
 				for(int j = i + 1; j < answers.length; j ++){
-					if(marks[i] < marks[j]){
-						answer = answers[i]; 
-						by = answersBy[i]; 
-						date = dates[i]; 
-						mark = marks[i]; 
-						userVote = userVotes[i]; 
-						p = pos[i];
-						activate = isActivate[i];
-						approved = isApproved[i];
-						
+					if(answers[i].getMarksVoteAnswer() < answers[j].getMarksVoteAnswer()){
+						answer = answers[i];
 						answers[i] = answers[j];
-						answersBy[i] = answersBy[j];
-						dates[i] = dates[j];
-						marks[i] = marks[j];
-						userVotes[i] = userVotes[j];
-						isActivate[i] = isActivate[j];
-						isApproved[i] = isApproved[j];
-						pos[i] = pos[j];
-						
 						answers[j] = answer;
-						answersBy[j] = by;
-						dates[j] = date;
-						marks[j] = mark;
-						userVotes[j] = userVote;
-						isActivate[j] = activate;
-						isApproved[j] = approved;
-						pos[j] = p;
 					}
 				}
 			}
 		} else {
 			for(int i = 0; i < answers.length - 1; i ++){
 				for(int j = i + 1; j < answers.length; j ++){
-					if(marks[i] > marks[j]){
-						answer = answers[i]; 
-						by = answersBy[i]; 
-						date = dates[i]; 
-						mark = marks[i]; 
-						userVote = userVotes[i]; 
-						p = pos[i];
-						activate = isActivate[i];
-						approved = isApproved[i];
-						
+					if(answers[i].getMarksVoteAnswer() > answers[j].getMarksVoteAnswer()){
+						answer = answers[i];
 						answers[i] = answers[j];
-						answersBy[i] = answersBy[j];
-						dates[i] = dates[j];
-						marks[i] = marks[j];
-						userVotes[i] = userVotes[j];
-						isActivate[i] = isActivate[j];
-						isApproved[i] = isApproved[j];
-						pos[i] = pos[j];
-						
 						answers[j] = answer;
-						answersBy[j] = by;
-						dates[j] = date;
-						marks[j] = mark;
-						userVotes[j] = userVote;
-						isActivate[j] = activate;
-						isApproved[j] = approved;
-						pos[j] = p;
 					}
 				}
 			}
 		}
-		
-		language.setResponse(answers);
-		language.setResponseBy(answersBy);
-		language.setDateResponse(dates);
-		language.setMarksVoteAnswer(marks);
-		language.setUsersVoteAnswer(userVotes);
-		language.setIsActivateAnswers(isActivate);
-		language.setIsApprovedAnswers(isApproved);
-		language.setPos(pos);
-		
+		language.setAnswers(answers);
 		return language;
 	}
 
@@ -1015,7 +839,6 @@ public class UIQuestions extends UIContainer {
 	static	public class RSSFAQActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ;
-			System.out.println("\n\n\n\n----------> Run RSS");
 		}
 	}
 
@@ -1198,9 +1021,10 @@ public class UIQuestions extends UIContainer {
 					for(int i = 0; i < uiQuestions.listQuestion_.size(); i ++) {
 						if(uiQuestions.listQuestion_.get(i).getId().equals(uiQuestions.questionView_)) {
 							uiQuestions.listQuestion_.get(i).setQuestion(uiQuestions.listQuestionLanguage.get(0).getQuestion()) ;
+							uiQuestions.listQuestion_.get(i).setDetail(uiQuestions.listQuestionLanguage.get(0).getDetail()) ;
 							uiQuestions.listQuestion_.get(i).setLanguage(uiQuestions.listQuestionLanguage.get(0).getLanguage()) ;
-							uiQuestions.listQuestion_.get(i).setResponses(uiQuestions.listQuestionLanguage.get(0).getResponse()) ;
-							uiQuestions.listQuestion_.get(i).setDateResponse(uiQuestions.listQuestionLanguage.get(0).getDateResponse());
+							uiQuestions.listQuestion_.get(i).setAnswers(uiQuestions.listQuestionLanguage.get(0).getAnswers()) ;
+							uiQuestions.listQuestion_.get(i).setComments(uiQuestions.listQuestionLanguage.get(0).getComments()) ;
 							break ;
 						}
 					}
@@ -1439,109 +1263,50 @@ public class UIQuestions extends UIContainer {
 	static  public class DeleteAnswerActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
-			int postAnswer = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
-			Question question = null;
-			for(Question q : questions.listQuestion_){
-				if(q.getId().equals(questions.questionView_)){
-					question = q;
-					break;
-				}
-			}
-			QuestionLanguage questionLanguage = new QuestionLanguage();
 			SessionProvider sProvider = FAQUtils.getSystemProvider();
-			if(language_ == null || language_.trim().length() < 1){
-				questionLanguage = questions.sortQuestionLangeByIndex(questions.listQuestionLanguage.get(0), postAnswer);
-				question.setLanguage(questionLanguage.getLanguage()) ;
-				question.setQuestion(questionLanguage.getQuestion());
-				question.setDetail(questionLanguage.getDetail()) ;
-				question.setResponses(questionLanguage.getResponse()) ;
-				question.setResponseBy(questionLanguage.getResponseBy());
-				question.setDateResponse(questionLanguage.getDateResponse());
-				question.setActivateAnswers(questionLanguage.getIsActivateAnswers());
-				question.setApprovedAnswers(questionLanguage.getIsApprovedAnswers());
-				question.setUsersVoteAnswer(questionLanguage.getUsersVoteAnswer());
-				question.setMarksVoteAnswer(questionLanguage.getMarksVoteAnswer());
-				question.setPos(questionLanguage.getPos());
-				question.setComments(questionLanguage.getComments());
-				question.setCommentBy(questionLanguage.getCommentBy());
-				question.setDateComment(questionLanguage.getDateComment());
-        FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
-				faqService_.saveQuestion(question, false, sProvider, questions.faqSetting_);
-			} else {
-				for(QuestionLanguage ql : questions.listQuestionLanguage){
-					if(ql.getLanguage().equals(language_)) {
-						questionLanguage = questions.sortQuestionLangeByIndex(ql, postAnswer);
-						question.setLanguage(questionLanguage.getLanguage()) ;
-						question.setQuestion(questionLanguage.getQuestion());
-						question.setDetail(questionLanguage.getDetail()) ;
-						question.setResponses(questionLanguage.getResponse()) ;
-						question.setResponseBy(questionLanguage.getResponseBy());
-						question.setDateResponse(questionLanguage.getDateResponse());
-						question.setActivateAnswers(questionLanguage.getIsActivateAnswers());
-						question.setApprovedAnswers(questionLanguage.getIsApprovedAnswers());
-						question.setUsersVoteAnswer(questionLanguage.getUsersVoteAnswer());
-						question.setMarksVoteAnswer(questionLanguage.getMarksVoteAnswer());
-						question.setPos(questionLanguage.getPos());
-						question.setComments(questionLanguage.getComments());
-						question.setCommentBy(questionLanguage.getCommentBy());
-						question.setDateComment(questionLanguage.getDateComment());
-						MultiLanguages multiLanguages = new MultiLanguages();
-						multiLanguages.addLanguage(faqService_.getQuestionNodeById(questions.questionView_, sProvider), questionLanguage);
-						break;
-					}
-				}
+			Question question = null;
+			try{
+				question = faqService_.getQuestionById(questions.questionView_, sProvider);
+			} catch(Exception e){
+				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				questions.setIsNotChangeLanguage() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
+				sProvider.close();
+				return ;
 			}
+			String answerId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			try{
+				if(language_ == null || language_.trim().length() < 1 || language_.equals(question.getLanguage())){
+					faqService_.deleteAnswer(question.getId(), answerId, sProvider);
+				} else {
+					MultiLanguages multiLanguages = new MultiLanguages();
+					multiLanguages.deleteAnswerQuestionLang(faqService_.getQuestionNodeById(questions.questionView_, sProvider), 
+																									answerId, language_, sProvider);
+				}
+			} catch(Exception e){}
 			sProvider.close();
-			UIFAQContainer container = questions.getAncestorOfType(UIFAQContainer.class);
-			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
+			questions.setIsNotChangeLanguage();
+			questions.setLanguageView(language_);
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 		}
 	}
 
 	static  public class DeleteCommentActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
-			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String commentId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			Question question = null ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
-				String[] arr = questionId.split("/");
-				questionId = arr[0];
-				Node node = faqService_.getQuestionNodeById(questionId, sessionProvider);
-				int pos = Integer.parseInt(arr[1]);
-				List<String> listComments = new ArrayList<String>();
-				List<String> listUSers = new ArrayList<String>();
-				List<Date> listDates = new ArrayList<Date>();
-				for(int i = 0; i < questions.listQuestion_.size(); i ++){
-					if(questions.listQuestion_.get(i).getId().equals(questionId)){
-						question = questions.listQuestion_.get(i);
-						break;
-					}
-				}
-				listComments.addAll(Arrays.asList(question.getComments()));
-				listUSers.addAll(Arrays.asList(question.getCommentBy()));
-				listDates.addAll(Arrays.asList(question.getDateComment()));
-
-				listComments.remove(pos);
-				listUSers.remove(pos);
-				listDates.remove(pos);
-				question.setComments(listComments.toArray(new String[]{}));
-				question.setCommentBy(listUSers.toArray(new String[]{}));
-				question.setDateComment(listDates.toArray(new Date[]{}));
-				if(questions.listLanguage.get(0).equals(language_) || language_.trim().length() < 1){
-					FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
-					faqService_.saveQuestion(question, false, sessionProvider, questions.faqSetting_);
-				} else {
+				Node node = faqService_.getQuestionNodeById(questions.questionView_, sessionProvider);
+				if(questions.language_ != null && questions.language_.trim().length() > 0){
 					MultiLanguages multiLanguages = new MultiLanguages();
-					for(QuestionLanguage language : questions.listQuestionLanguage){
-						if(language.getLanguage().equals(language_)){
-							language.setComments(listComments.toArray(new String[]{}));
-							language.setCommentBy(listUSers.toArray(new String[]{}));
-							language.setDateComment(listDates.toArray(new Date[]{}));
-							multiLanguages.addLanguage(node, language);
-							break;
-						}
-					}
+					multiLanguages.deleteCommentQuestionLang(node, commentId, questions.language_, sessionProvider);
+				} else {
+					faqService_.deleteComment(questions.questionView_, commentId, sessionProvider);
 				}
 			} catch (javax.jcr.PathNotFoundException e) {
 				e.printStackTrace() ;
@@ -1556,128 +1321,55 @@ public class UIQuestions extends UIContainer {
 				e.printStackTrace() ;
 			} 
 			sessionProvider.close();
-			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 		}
 	}
 
 	static  public class CommentToAnswerActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
-			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String commentId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			Question question = null ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			QuestionLanguage questionLanguage = null;
 			try{
-				String[] arr = questionId.split("/");
-				questionId = arr[0];
-				int pos = Integer.parseInt(arr[1]);
-				List<String> listComments = new ArrayList<String>();
-				List<String> listUSers = new ArrayList<String>();
-				List<Date> listDates = new ArrayList<Date>();
-				Node node = faqService_.getQuestionNodeById(questionId, sessionProvider) ;
+				MultiLanguages multiLanguages = new MultiLanguages();
+				Node questionNode = faqService_.getQuestionNodeById(questions.questionView_, sessionProvider);
+				Comment comment = null;
+				if(questions.language_ != null && questions.language_.trim().length() > 0 && 
+						!questionNode.getProperty("exo:language").getString().equals(questions.language_)){
+					comment = multiLanguages.getCommentById(questionNode, commentId, questions.language_);
+				} else comment = faqService_.getCommentById(questionNode, commentId);
 				
-				if(!language_.equals(questions.listLanguage.get(0))){
-					for(QuestionLanguage language : questions.listQuestionLanguage){
-						if(language.getLanguage().equals(language_)){
-							questionLanguage = language;
-							break;
-						}
-					}
-				}
-				
-				for(int i = 0; i < questions.listQuestion_.size(); i ++){
-					if(questions.listQuestion_.get(i).getId().equals(questionId)){
-						question = questions.listQuestion_.get(i);
-						break;
-					}
-				}
-
-				/*
-				 * remove comment form list comment of this question
-				 */ 
-				listComments.addAll(Arrays.asList(question.getComments()));
-				listUSers.addAll(Arrays.asList(question.getCommentBy()));
-				listDates.addAll(Arrays.asList(question.getDateComment()));
-
-				String newAnswer = listComments.remove(pos);
-				String newUser = listUSers.remove(pos);
-				Date newDate = listDates.remove(pos);
-
-				question.setComments(listComments.toArray(new String[]{}));
-				question.setCommentBy(listUSers.toArray(new String[]{}));
-				question.setDateComment(listDates.toArray(new Date[]{}));
-				
-				if(questionLanguage != null){
-					questionLanguage.setComments(listComments.toArray(new String[]{}));
-					questionLanguage.setCommentBy(listUSers.toArray(new String[]{}));
-					questionLanguage.setDateComment(listDates.toArray(new Date[]{}));
-				}
-				
-				/*
-				 * add new answer from comment
-				 */ 
-				listComments = new ArrayList<String>();
-				listUSers = new ArrayList<String>();
-				listDates = new ArrayList<Date>();
-				List<Boolean> listActivateAnswers = new ArrayList<Boolean>();
-				List<Boolean> listApprovedAnswers = new ArrayList<Boolean>();
-				double[] listMarkResponse = null;
-				List<String> listUsersVoteResponse = new ArrayList<String>();
-				
-				if(question.getAllResponses()[0].trim().length() > 0){
-					listComments.addAll(Arrays.asList(question.getAllResponses()));
-					listUSers.addAll(Arrays.asList(question.getResponseBy()));
-					listDates.addAll(Arrays.asList(question.getDateResponse()));
-				}
-				listActivateAnswers.addAll(Arrays.asList(question.getActivateAnswers()));
-				listApprovedAnswers.addAll(Arrays.asList(question.getApprovedAnswers()));
-				int i = 0;
-				try{
-					listMarkResponse = new double[question.getMarksVoteAnswer().length + 1];
-					for(double d : question.getMarksVoteAnswer()){
-						listMarkResponse[i] = d;
-						i ++;
-					}
-					listUsersVoteResponse.addAll(Arrays.asList(question.getUsersVoteAnswer()));
-				} catch (NullPointerException nullPointerException){
-					listMarkResponse = new double[1];
-				}
-				listMarkResponse[i] = 0;
-
-				listComments.add(newAnswer);
-				listUSers.add(newUser);
-				listDates.add(newDate);
-				listActivateAnswers.add(true);
-				listApprovedAnswers.add(true);
-				listUsersVoteResponse.add(" ");
-				
-				question.setResponses(listComments.toArray(new String[]{}));
-				question.setResponseBy(listUSers.toArray(new String[]{}));
-				question.setDateResponse(listDates.toArray(new Date[]{}));
-				question.setMarksVoteAnswer(listMarkResponse);
-				question.setActivateAnswers(listActivateAnswers.toArray(new Boolean[]{}));
-				question.setApprovedAnswers(listApprovedAnswers.toArray(new Boolean[]{}));
-				question.setUsersVoteAnswer(listUsersVoteResponse.toArray(new String[]{}));
-
-				if(questionLanguage == null){
-					FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
-					faqService_.saveQuestion(question, false, sessionProvider, questions.faqSetting_);
+				if(comment == null){
+					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					questions.setIsNotChangeLanguage() ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+					sessionProvider.close();
+					return ;
 				} else {
-					questionLanguage.setResponse(listComments.toArray(new String[]{}));
-					questionLanguage.setResponseBy(listUSers.toArray(new String[]{}));
-					questionLanguage.setDateResponse(listDates.toArray(new Date[]{}));
-					questionLanguage.setMarksVoteAnswer(listMarkResponse);
-					questionLanguage.setIsActivateAnswers(listActivateAnswers.toArray(new Boolean[]{}));
-					questionLanguage.setIsApprovedAnswers(listApprovedAnswers.toArray(new Boolean[]{}));
-					questionLanguage.setUsersVoteAnswer(listUsersVoteResponse.toArray(new String[]{}));
-					
-					MultiLanguages multiLanguages = new MultiLanguages();
-					multiLanguages.addLanguage(node, questionLanguage);
-					
-					questions.setIsNotChangeLanguage();
+					Answer answer = new Answer();
+					answer.setNew(true);
+					answer.setResponses(comment.getComments());
+					answer.setResponseBy(comment.getCommentBy());
+					answer.setDateResponse(comment.getDateComment());
+					answer.setMarksVoteAnswer(0);
+					answer.setUsersVoteAnswer(null);
+					answer.setActivateAnswers(true);
+					answer.setApprovedAnswers(true);
+					if(questions.language_ != null && questions.language_.trim().length() > 0 && 
+							!questionNode.getProperty("exo:language").getString().equals(questions.language_)){
+						multiLanguages.deleteCommentQuestionLang(questionNode, commentId, questions.language_, sessionProvider);
+						multiLanguages.saveAnswer(questionNode, answer, questions.language_, sessionProvider);
+					} else {
+						faqService_.saveAnswer(questions.questionView_, answer, true, sessionProvider);
+						faqService_.deleteComment(questions.questionView_, commentId, sessionProvider);
+					}
 				}
-			} catch (javax.jcr.PathNotFoundException e) {
+			} catch (Exception e) {
 				e.printStackTrace() ;
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1686,31 +1378,25 @@ public class UIQuestions extends UIContainer {
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				sessionProvider.close();
 				return ;
-			} catch (Exception e) { 
-				e.printStackTrace() ;
-			} 
+			}
 			sessionProvider.close();
 			questions.setLanguageView(language_);
-			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+			questions.setIsNotChangeLanguage();
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 		}
 	}
 
 	static  public class CommentQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
-			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			int pos = 0;
+			String[] objIds = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
+			String questionId = objIds[0];
+			String commentId = "new";
+			if(objIds.length > 1) commentId = objIds[1];
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			Question question = null ;
-			if(questionId.indexOf("/") >= 0){
-				String[] arr = questionId.split("/");
-				pos = Integer.parseInt(arr[1]);
-				questionId = arr[0];
-			} else {
-				pos = -1;
-			}
 
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 
@@ -1730,7 +1416,7 @@ public class UIQuestions extends UIContainer {
 			} 
 			sessionProvider.close();
 			UICommentForm commentForm = popupContainer.addChild(UICommentForm.class, null, null) ;
-			commentForm.setInfor(question, pos, questions.faqSetting_, language_) ;
+			commentForm.setInfor(question, commentId, questions.faqSetting_, language_) ;
 			popupContainer.setId("FAQCommentForm") ;
 			popupAction.activate(popupContainer, 720, 1000) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
@@ -1741,21 +1427,14 @@ public class UIQuestions extends UIContainer {
 	static  public class VoteQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
-			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			String language = "";
-			int pos = 0;
+			String[] objIds = event.getRequestContext().getRequestParameter(OBJECTID).split("/");
+			String questionId = objIds[0];
+			String answerId = null;
+			if(objIds.length > 1) answerId = objIds[1];
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			Question question = null ;
-			if(questionId.indexOf("/") >= 0){
-				String[] arr = questionId.split("/");
-				language = arr[1];
-				pos = Integer.parseInt(arr[2]);
-				questionId = arr[0];
-			} else {
-				pos = -1;
-			}
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
 				question = faqService_.getQuestionById(questionId, sessionProvider) ;
@@ -1773,7 +1452,7 @@ public class UIQuestions extends UIContainer {
 			} 
 			sessionProvider.close();
 			UIVoteQuestion voteQuestion = popupContainer.addChild(UIVoteQuestion.class, null, null) ;
-			voteQuestion.setInfor(question, language, pos, questions.faqSetting_);
+			voteQuestion.setInfor(question, questions.language_, answerId, questions.faqSetting_);
 			popupContainer.setId("FAQVoteQuestion") ;
 			popupAction.activate(popupContainer, 300, 200) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
@@ -1876,17 +1555,8 @@ public class UIQuestions extends UIContainer {
 					uiQuestions.listQuestion_.get(pos).setDetail(questionLanguage.getDetail());
 					uiQuestions.listQuestion_.get(pos).setQuestion(questionLanguage.getQuestion());
 					uiQuestions.listQuestion_.get(pos).setLanguage(questionLanguage.getLanguage());
-					uiQuestions.listQuestion_.get(pos).setResponses(questionLanguage.getResponse());
-					uiQuestions.listQuestion_.get(pos).setResponseBy(questionLanguage.getResponseBy());
-					uiQuestions.listQuestion_.get(pos).setDateResponse(questionLanguage.getDateResponse());
-					uiQuestions.listQuestion_.get(pos).setActivateAnswers(questionLanguage.getIsActivateAnswers());
-					uiQuestions.listQuestion_.get(pos).setApprovedAnswers(questionLanguage.getIsApprovedAnswers());
-					uiQuestions.listQuestion_.get(pos).setMarksVoteAnswer(questionLanguage.getMarksVoteAnswer());
-					uiQuestions.listQuestion_.get(pos).setUsersVoteAnswer(questionLanguage.getUsersVoteAnswer());
-					uiQuestions.listQuestion_.get(pos).setPos(questionLanguage.getPos());
+					uiQuestions.listQuestion_.get(pos).setAnswers(questionLanguage.getAnswers());
 					uiQuestions.listQuestion_.get(pos).setComments(questionLanguage.getComments());
-					uiQuestions.listQuestion_.get(pos).setCommentBy(questionLanguage.getCommentBy());
-					uiQuestions.listQuestion_.get(pos).setDateComment(questionLanguage.getDateComment());
 					break ;
 				}
 			}
@@ -1900,44 +1570,41 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ; 
 			String[] stringInput = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
-			int posQuestion = Integer.parseInt(stringInput[0]);
+			String questionId = stringInput[0];
 			String language = stringInput[1] ;
-			int pos = Integer.parseInt(stringInput[2]) ;
+			String answerId = stringInput[2] ;
 			String action = stringInput[3] ;
-			Question question = uiQuestions.listQuestion_.get(posQuestion);
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
-				if(language.trim().length() > 1){
+				Question question = faqService_.getQuestionById(questionId, sessionProvider);
+				if(language != null && language.trim().length() > 1 && !language.equals(question.getLanguage())){
 					for(QuestionLanguage questionLanguage : uiQuestions.listQuestionLanguage) {
 						if(questionLanguage.getLanguage().equals(language)) {
-							if(action.equals("Activate")){
-								Boolean[] boolAct = questionLanguage.getIsActivateAnswers();
-								boolAct[pos] = !boolAct[pos];
-								questionLanguage.setIsActivateAnswers(boolAct);
-							} else {
-								Boolean[] boolApp = questionLanguage.getIsApprovedAnswers();
-								boolApp[pos] = !boolApp[pos];
-								questionLanguage.setIsApprovedAnswers(boolApp);
+							for(Answer answer : questionLanguage.getAnswers()){
+								if(answer.getId().equals(answerId)){
+									if(action.equals("Activate")) answer.setActivateAnswers(!answer.getActivateAnswers());
+									else answer.setApprovedAnswers(!answer.getApprovedAnswers());
+									MultiLanguages multiLanguages = new MultiLanguages();
+									multiLanguages.saveAnswer(faqService_.getQuestionNodeById(question.getId(), 
+																						sessionProvider), answer, language, sessionProvider);
+									break;
+								}
 							}
-							MultiLanguages multiLanguages = new MultiLanguages();
-							multiLanguages.addLanguage(faqService_.getQuestionNodeById(uiQuestions.questionView_, sessionProvider), questionLanguage);
 							break ;
 						}
-					}
+					} 
 				} else {
-					if(action.equals("Activate")){
-						Boolean[] boolAct = question.getActivateAnswers();
-						boolAct[pos] = !boolAct[pos];
-						question.setActivateAnswers(boolAct);
-					} else {
-						Boolean[] boolApp = question.getApprovedAnswers();
-						boolApp[pos] = !boolApp[pos];
-						question.setApprovedAnswers(boolApp);
+					for(Answer answer : question.getAnswers()){
+						if(answer.getId().equals(answerId)){
+							if(action.equals("Activate")) answer.setActivateAnswers(!answer.getActivateAnswers());
+							else answer.setApprovedAnswers(!answer.getApprovedAnswers());
+							faqService_.saveAnswer(question.getId(), answer, false, sessionProvider);
+							break;
+						}
 					}
-					FAQUtils.getEmailSetting(uiQuestions.faqSetting_, false, false);
-					faqService_.saveQuestion(question, false, sessionProvider, uiQuestions.faqSetting_);
 				}
 			} catch (Exception e){
+				e.printStackTrace();
 				UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1946,8 +1613,7 @@ public class UIQuestions extends UIContainer {
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}
 			sessionProvider.close();
-			uiQuestions.isChangeLanguage = true ;
-			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+			uiQuestions.setIsNotChangeLanguage();
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 		}
 	}
