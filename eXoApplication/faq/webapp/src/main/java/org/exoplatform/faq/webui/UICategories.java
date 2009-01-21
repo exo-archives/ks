@@ -560,6 +560,7 @@ public class UICategories extends UIContainer{
 					return ;
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				//question.setIsNotChangeLanguage();

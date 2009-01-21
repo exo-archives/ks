@@ -631,7 +631,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       if(!questionForm.isChildOfManager) {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
         questions.setIsNotChangeLanguage() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         String pathParentCategoryId = questions.getPathService(question_.getCategoryId()) ;

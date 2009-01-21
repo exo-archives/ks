@@ -1463,7 +1463,7 @@ public class JCRDataStorage {
     
     NodeIterator iter = parentCategory.getNodes() ;
     cateInfo[0] = iter.getSize() ;
-    
+    if(parentCategory.hasNode(FAQ_RSS)) cateInfo[0]--;
     if(categoryId == null) categoryId = "null";
     
     Node questionHome = getQuestionHome(sProvider, null) ;
@@ -2150,7 +2150,7 @@ public class JCRDataStorage {
 				}
 				try{
 					feed.setTitle(categoryNode.getProperty("exo:name").getString());
-					if(categoryNode.hasProperty("categoryNode")) feed.setDescription(categoryNode.getProperty("exo:description").getString());
+					if(categoryNode.hasProperty("exo:description")) feed.setDescription(categoryNode.getProperty("exo:description").getString());
 					else feed.setDescription("RSS link: " + this.linkQuestion);
 				} catch (Exception e){
 					feed.setTitle(categoryNode.getName());
