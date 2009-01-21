@@ -16,7 +16,6 @@
  **/
 package org.exoplatform.faq.service;
 
-import java.util.Date;
 
 /**
  * A question may be have multiple languages, user can write his question in

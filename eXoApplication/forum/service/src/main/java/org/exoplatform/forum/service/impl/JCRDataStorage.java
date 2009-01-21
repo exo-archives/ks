@@ -974,7 +974,7 @@ public class JCRDataStorage {
 			Topic topicNew = new Topic();
 			topicNew = getTopicNode(topicNode);
 			// setViewCount for Topic
-			if (!userRead.equals(UserProfile.USER_GUEST)) {
+			if (userRead != null &&  userRead.length() > 0 && !userRead.equals(UserProfile.USER_GUEST)) {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
 				updateTopicAccess(sProvider, userRead, topicId) ;

@@ -569,6 +569,9 @@ public class JCRDataStorage {
   	} else {
   		answerNode = answerHome.getNode(answer.getId());
   	}
+  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
+  		answerNode.setProperty("exo:postId", answer.getPostId());
+  	}
   	answerNode.setProperty("exo:responses", answer.getResponses()) ;
   	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
   	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
@@ -619,6 +622,9 @@ public class JCRDataStorage {
 	  		answerNode.setProperty("exo:dateResponse", quesNode.getSession().getValueFactory().createValue(calendar));
 	  		answerNode.setProperty("exo:id", answer.getId());
 	  	}
+	  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
+	  		answerNode.setProperty("exo:postId", answer.getPostId());
+	  	}
 	  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
 	  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
 	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
@@ -652,6 +658,9 @@ public class JCRDataStorage {
   		commentNode.setProperty("exo:id", comment.getId());
   	} else {
   		commentNode = commentHome.getNode(comment.getId());
+  	}
+  	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
+  		commentNode.setProperty("exo:postId", comment.getPostId());
   	}
   	commentNode.setProperty("exo:comments", comment.getComments()) ;
   	commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
@@ -722,7 +731,7 @@ public class JCRDataStorage {
 	  	while(nodeIterator.hasNext()){
 	  		answerNode = nodeIterator.nextNode();
 	  		answers[i] = new Answer();
-	  		if(answerNode.hasProperty("exo:id")) answers[i].setId((answerNode.getProperty("exo:id").getValue().getString())) ;
+	  		answers[i].setId(answerNode.getName()) ;
 	    	if(answerNode.hasProperty("exo:responses")) answers[i].setResponses((answerNode.getProperty("exo:responses").getValue().getString())) ;
 	      if(answerNode.hasProperty("exo:responseBy")) answers[i].setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
 	      if(answerNode.hasProperty("exo:dateResponse")) answers[i].setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
@@ -730,6 +739,7 @@ public class JCRDataStorage {
 	      if(answerNode.hasProperty("exo:marksVoteAnswer")) answers[i].setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
 	      if(answerNode.hasProperty("exo:approveResponses")) answers[i].setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
 	      if(answerNode.hasProperty("exo:activateResponses")) answers[i].setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
+	      if(answerNode.hasProperty("exo:postId")) answers[i].setPostId(answerNode.getProperty("exo:postId").getString()) ;
 	      i ++;
 	  	}
 	  	return answers;
@@ -743,7 +753,7 @@ public class JCRDataStorage {
   	Answer answer = new Answer();
   	try{
   		Node answerNode = getQuestionNodeById(questionId, sProvider).getNode(ANSWER_HOME).getNode(answerid);
-  		if(answerNode.hasProperty("exo:id")) answer.setId((answerNode.getProperty("exo:id").getValue().getString())) ;
+  		answer.setId(answerNode.getName()) ;
     	if(answerNode.hasProperty("exo:responses")) answer.setResponses((answerNode.getProperty("exo:responses").getValue().getString())) ;
       if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
       if(answerNode.hasProperty("exo:dateResponse")) answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
@@ -751,6 +761,7 @@ public class JCRDataStorage {
       if(answerNode.hasProperty("exo:marksVoteAnswer")) answer.setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
       if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
       if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
+      if(answerNode.hasProperty("exo:postId")) answer.setPostId(answerNode.getProperty("exo:postId").getString()) ;
       return answer;
   	} catch (Exception e){
   		e.printStackTrace();
@@ -763,15 +774,16 @@ public class JCRDataStorage {
   		if(!questionNode.hasNode(COMMENT_HOME)) return new Comment[]{};
   		NodeIterator nodeIterator = questionNode.getNode(COMMENT_HOME).getNodes();
   		Comment[] comments = new Comment[(int) nodeIterator.getSize()];
-  		Node commentNOde = null;
+  		Node commentNode = null;
   		int i = 0;
   		while(nodeIterator.hasNext()){
-  			commentNOde = nodeIterator.nextNode();
+  			commentNode = nodeIterator.nextNode();
   			comments[i] = new Comment();
-  			if(commentNOde.hasProperty("exo:id")) comments[i].setId((commentNOde.getProperty("exo:id").getValue().getString())) ;
-  			if(commentNOde.hasProperty("exo:comments")) comments[i].setComments((commentNOde.getProperty("exo:comments").getValue().getString())) ;
-  			if(commentNOde.hasProperty("exo:commentBy")) comments[i].setCommentBy((commentNOde.getProperty("exo:commentBy").getValue().getString())) ;  	
-  			if(commentNOde.hasProperty("exo:dateComment")) comments[i].setDateComment((commentNOde.getProperty("exo:dateComment").getValue().getDate().getTime())) ;
+  			comments[i].setId((commentNode.getName())) ;
+  			if(commentNode.hasProperty("exo:comments")) comments[i].setComments((commentNode.getProperty("exo:comments").getValue().getString())) ;
+  			if(commentNode.hasProperty("exo:commentBy")) comments[i].setCommentBy((commentNode.getProperty("exo:commentBy").getValue().getString())) ;  	
+  			if(commentNode.hasProperty("exo:dateComment")) comments[i].setDateComment((commentNode.getProperty("exo:dateComment").getValue().getDate().getTime())) ;
+  			if(commentNode.hasProperty("exo:postId")) comments[i].setPostId(commentNode.getProperty("exo:postId").getString()) ;
   			i ++;
   		}
   		return comments;
@@ -785,10 +797,11 @@ public class JCRDataStorage {
   	try{
   		Comment comment = new Comment();
   		Node commentNode = questionNode.getNode(COMMENT_HOME).getNode(commentId);
-			if(commentNode.hasProperty("exo:id")) comment.setId((commentNode.getProperty("exo:id").getValue().getString())) ;
+			comment.setId(commentNode.getName()) ;
 			if(commentNode.hasProperty("exo:comments")) comment.setComments((commentNode.getProperty("exo:comments").getValue().getString())) ;
 			if(commentNode.hasProperty("exo:commentBy")) comment.setCommentBy((commentNode.getProperty("exo:commentBy").getValue().getString())) ;  	
 			if(commentNode.hasProperty("exo:dateComment")) comment.setDateComment((commentNode.getProperty("exo:dateComment").getValue().getDate().getTime())) ;
+			if(commentNode.hasProperty("exo:postId")) comment.setPostId(commentNode.getProperty("exo:postId").getString()) ;
   		return comment;
   	} catch (Exception e){
   		e.printStackTrace();

@@ -533,7 +533,7 @@ public class QuestionPageList extends JCRPageList {
 	  	while(nodeIterator.hasNext()){
 	  		answers[i] = new Answer();
 	  		answerNode = nodeIterator.nextNode();
-	  		if(answerNode.hasProperty("exo:id")) answers[i].setId((answerNode.getProperty("exo:id").getValue().getString())) ;
+	  		answers[i].setId(answerNode.getName()) ;
 	    	if(answerNode.hasProperty("exo:responses")) answers[i].setResponses((answerNode.getProperty("exo:responses").getValue().getString())) ;
 	      if(answerNode.hasProperty("exo:responseBy")) answers[i].setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
 	      if(answerNode.hasProperty("exo:dateResponse")) answers[i].setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
@@ -541,6 +541,7 @@ public class QuestionPageList extends JCRPageList {
 	      if(answerNode.hasProperty("exo:marksVoteAnswer")) answers[i].setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
 	      if(answerNode.hasProperty("exo:approveResponses")) answers[i].setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
 	      if(answerNode.hasProperty("exo:activateResponses")) answers[i].setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
+	      if(answerNode.hasProperty("exo:postId")) answers[i].setPostId(answerNode.getProperty("exo:postId").getString()) ;
 	      i ++;
 	  	}
 	  	return answers;
@@ -555,15 +556,16 @@ public class QuestionPageList extends JCRPageList {
   		if(!questionNode.hasNode(COMMENT_HOME)) return new Comment[]{};
   		NodeIterator nodeIterator = questionNode.getNode(COMMENT_HOME).getNodes();
   		Comment[] comments = new Comment[(int) nodeIterator.getSize()];
-  		Node commentNOde = null;
+  		Node commentNode = null;
   		int i = 0;
   		while(nodeIterator.hasNext()){
   			comments[i] = new Comment();
-  			commentNOde = nodeIterator.nextNode();
-  			if(commentNOde.hasProperty("exo:id")) comments[i].setId((commentNOde.getProperty("exo:id").getString())) ;
-  			if(commentNOde.hasProperty("exo:comments")) comments[i].setComments((commentNOde.getProperty("exo:comments").getString())) ;
-  			if(commentNOde.hasProperty("exo:commentBy")) comments[i].setCommentBy((commentNOde.getProperty("exo:commentBy").getString())) ;  	
-  			if(commentNOde.hasProperty("exo:dateComment")) comments[i].setDateComment((commentNOde.getProperty("exo:dateComment").getDate().getTime())) ;
+  			commentNode = nodeIterator.nextNode();
+  			comments[i].setId(commentNode.getName()) ;
+  			if(commentNode.hasProperty("exo:comments")) comments[i].setComments((commentNode.getProperty("exo:comments").getString())) ;
+  			if(commentNode.hasProperty("exo:commentBy")) comments[i].setCommentBy((commentNode.getProperty("exo:commentBy").getString())) ;  	
+  			if(commentNode.hasProperty("exo:dateComment")) comments[i].setDateComment((commentNode.getProperty("exo:dateComment").getDate().getTime())) ;
+  			if(commentNode.hasProperty("exo:postId")) comments[i].setPostId(commentNode.getProperty("exo:postId").getString()) ;
   			i ++;
   		}
   		return comments;

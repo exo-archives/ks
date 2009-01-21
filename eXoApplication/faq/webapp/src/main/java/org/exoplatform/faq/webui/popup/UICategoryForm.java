@@ -281,6 +281,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 						}
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 					UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -330,6 +331,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			} catch(RuntimeException e){
 				throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
 			} catch (Exception e) {
+				e.printStackTrace();
 				uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
 						ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;

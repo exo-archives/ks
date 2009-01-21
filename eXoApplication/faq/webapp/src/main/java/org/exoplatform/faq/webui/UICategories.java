@@ -352,7 +352,7 @@ public class UICategories extends UIContainer{
 			questions.language_ = "";
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-			if(!categoryId.equals("FAQService")){
+			if(categoryId == null || !categoryId.equals("FAQService")){
 				try {
 					questions.viewAuthorInfor = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider).isViewAuthorInfor() ;
 				} catch (Exception e) {

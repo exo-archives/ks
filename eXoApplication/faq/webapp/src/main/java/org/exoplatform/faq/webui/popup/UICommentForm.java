@@ -177,6 +177,49 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(comment != null && comment.trim().length() > 0 && validatorDataInput.fckContentIsNotEmpty(comment)){
 					commentForm.comment.setComments(comment);
+					
+					if(commentForm.isAddNew) {
+						Post post = new Post();
+						String pathTopic = commentForm.question_.getPathTopicDiscuss();
+						if(pathTopic != null && pathTopic.length() > 0) {
+							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+							String []ids = pathTopic.split("/");
+							post.setOwner(commentForm.currentUser_);
+							post.setIcon("ViewIcon");
+							post.setName("Re: " + commentForm.question_.getQuestion());
+							post.setMessage(comment);
+							try {
+								forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
+              } catch (Exception e) {
+	              e.printStackTrace();
+              }
+						}
+						commentForm.comment.setPostId(post.getId());
+					} else {
+						String pathTopic = commentForm.question_.getPathTopicDiscuss();
+						if(pathTopic != null && pathTopic.length() > 0) {
+							String postId = commentForm.comment.getPostId();
+							if(postId != null && postId.length() > 0) {
+								ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+								try {
+									String []ids = pathTopic.split("/");
+									Post post = forumService.getPost(sessionProvider, ids[0], ids[1], ids[2], postId);
+									boolean isNew = false;
+									if(post == null){
+										post = new Post();
+										isNew = true;
+									}
+									post.setModifiedBy(commentForm.currentUser_);
+									post.setName("Re: " + commentForm.question_.getQuestion());
+									post.setMessage(comment);
+									forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, isNew, "");
+	              } catch (Exception e) {
+		              e.printStackTrace();
+	              }
+							}
+						}
+					}
+					
 					if(commentForm.languageSelected == null || commentForm.languageSelected.trim().length() < 0 ||
 							commentForm.languageSelected.equals(commentForm.question_.getLanguage())){
 						faqService_.saveComment(commentForm.question_.getId(), commentForm.comment, commentForm.isAddNew, sessionProvider);
@@ -186,19 +229,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 						multiLanguages.saveComment(faqService_.getQuestionNodeById(commentForm.question_.getId(), sessionProvider), 
 																			 commentForm.comment, commentForm.languageSelected, sessionProvider);
 					}
-					if(commentForm.isAddNew) {
-						String pathTopic = commentForm.question_.getPathTopicDiscuss();
-						if(pathTopic != null && pathTopic.length() > 0) {
-							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-							String []ids = pathTopic.split("/");
-							Post post = new Post();
-							post.setOwner(commentForm.currentUser_);
-							post.setIcon("ViewIcon");
-							post.setName("Re: " + commentForm.question_.getQuestion());
-							post.setMessage(comment);
-							forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
-						}
-					}
+					
 				} else {
 					UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
 	        uiApplication.addMessage(new ApplicationMessage("UICommentForm.msg.comment-is-null", null, ApplicationMessage.WARNING)) ;

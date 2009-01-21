@@ -43,6 +43,7 @@ public class Comment {
   /** The date comment. */
   private Date dateComment;
   
+  private String postId;
   /**
    * Instantiates a new comment.
    */
@@ -139,4 +140,12 @@ public class Comment {
 	public void setNew(boolean isNew) {
 		this.isNew = isNew;
 	}
+
+	public String getPostId() {
+  	return postId;
+  }
+
+	public void setPostId(String postId) {
+  	this.postId = postId;
+  }
 }

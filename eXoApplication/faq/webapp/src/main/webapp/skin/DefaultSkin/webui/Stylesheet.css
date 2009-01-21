@@ -263,38 +263,34 @@
 
 .UIFAQPortlet .UICategories .FAQCategoryRoot {
 	background: url('background/BlackBorderDownArrow.gif') no-repeat left;
-	padding-left: 28px;
+	padding: 0px 0px 6px 28px;
 	height: 18px;
 	line-height: 18px;
-	margin: 8px 0px;
 	white-space: nowrap;
 }
 
 .UIFAQPortlet .UICategories .FAQCategoryRootBlack {
 	background: url('background/BlackBorderDownBlack.gif') no-repeat left;
-	padding-left: 28px;
+	padding: 0px 0px 0px 28px;
 	height: 18px;
 	line-height: 18px;
-	margin: 8px 0px;
 	white-space: nowrap;
 	font-weight: bold;
 }
 
 .UIFAQPortlet .UICategories .FAQCategoryRight {
 	background: url('background/BlackBorderRightArrow.gif') no-repeat left;
-	padding-left: 28px;
+	padding: 0px 0px 6px 28px;
 	height: 18px;
 	line-height: 18px;
-	margin: 8px 0px;
 	white-space: nowrap;
 }
 
 .UIFAQPortlet .UICategories .FAQCategoryRightBlack {
 	background: url('background/BlackBorderRightBlack.gif') no-repeat left;
-	padding-left: 28px;
+	padding: 0px 0px 6px 28px;
 	height: 18px;
 	line-height: 18px;
-	margin: 8px 0px;
 	white-space: nowrap;
 	font-weight: bold;
 }

@@ -40,6 +40,8 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -570,6 +572,29 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         if(questionForm.questionId_ != null && questionForm.questionId_.trim().length() > 0) isNew = false;
         utils.getEmailSetting(questionForm.faqSetting_, isNew, false);
         if(!isNew) {
+        	FAQSetting faqSetting = new FAQSetting();
+ 					FAQUtils.getPorletPreference(faqSetting);
+ 					if(faqSetting.getIsDiscussForum()) {
+ 						String pathTopic = question_.getPathTopicDiscuss();
+ 						if(pathTopic != null && pathTopic.length() > 0) {
+ 							try {
+ 								ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+ 								String []ids = pathTopic.split("/");
+ 								Topic topic = forumService.getTopic(sessionProvider, ids[0], ids[1], ids[2], "");
+ 								if(topic == null){
+ 									System.out.println("\n\n ==========> Topic is removed or deleted");
+ 								} else {
+ 									topic.setModifiedBy(FAQUtils.getCurrentUser());
+ 									topic.setTopicName(question_.getQuestion());
+ 									topic.setDescription(question_.getDetail());
+ 									forumService.saveTopic(sessionProvider, ids[0], ids[1], topic, false, false, "");
+ 								}
+              } catch (Exception e) {
+	              e.printStackTrace();
+              }
+ 						}
+ 					}
+        	
           questionNode = fAQService_.saveQuestion(question_, false, sessionProvider, questionForm.faqSetting_) ;
           multiLanguages.removeLanguage(questionNode, questionForm.listLanguages) ;
           if(questionForm.listLanguages.size() > 1) {
@@ -590,6 +615,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           		e.printStackTrace() ;
           	}
           }
+          
         } else {
           questionNode = fAQService_.saveQuestion(question_, true, sessionProvider, questionForm.faqSetting_) ;
           if(questionForm.listLanguages.size() > 1) {

@@ -29,6 +29,7 @@
 		  if(InBoxmails.size() > 0) {
 				String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 				String classCssInbox = "EvenRow";
+				long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 				i = 0;
 				for(mail in InBoxmails) {
 					if(i%2 == 0) classCssInbox = "EvenRow";
@@ -39,7 +40,8 @@
 					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
 					String fromUser = mail.getFrom();
 					Date fromDate = mail.getReceivedDate() ;
-					String strFromDate = ForumUtils.getFormatDate(formatDate,fromDate);
+					fromDate.setTime(fromDate.getTime() - setTime);
+					String strFromDate = ForumUtils.getFormatDate(formatDate, fromDate);
 		%>
 			<tr class="$classCssInbox">
 				<td class="text"><a href="<%=uicomponent.event("ViewMessage",mailId)%>">$nameMail</a></td>

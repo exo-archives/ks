@@ -431,6 +431,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						break;
 					}
 				}
+				
 				// set relateion of question:
 				question_.setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
 
@@ -468,6 +469,46 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				try{
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					questionNode = faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;
+				
+					FAQSetting faqSetting = new FAQSetting();
+					FAQUtils.getPorletPreference(faqSetting);
+					if(faqSetting.getIsDiscussForum()) {
+						String pathTopic = question_.getPathTopicDiscuss();
+						if(pathTopic != null && pathTopic.length() > 0) {
+							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+							String []ids = pathTopic.split("/");
+							Post post;
+							int l = question_.getAnswers().length;
+							for (int i = 0; i < l; ++i) {
+								String postId = question_.getAnswers()[i].getPostId();
+								try {
+									if(postId != null && postId.length() > 0){
+										post = forumService.getPost(sessionProvider, ids[0], ids[1], ids[2], postId);
+										if(post == null) {
+											post = new Post();
+											post.setOwner(question_.getAnswers()[i].getResponseBy());
+											post.setName("Re: " + question_.getQuestion());
+											post.setIcon("ViewIcon");
+											question_.getAnswers()[i].setPostId(post.getId());
+										}
+										post.setMessage(question_.getAnswers()[i].getResponses());
+										forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, false, "");
+									} else {
+										post = new Post();
+										post.setOwner(question_.getAnswers()[i].getResponseBy());
+										post.setName("Re: " + question_.getQuestion());
+										post.setIcon("ViewIcon");
+										post.setMessage(question_.getAnswers()[i].getResponses());
+										forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
+										question_.getAnswers()[i].setPostId(post.getId());
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+	            }
+						}
+					}
+					
 					faqService.saveAnswer(question_.getId(), question_.getAnswers(), sessionProvider);
 					MultiLanguages multiLanguages = new MultiLanguages() ;
 					for(int i = 1; i < responseForm.listQuestionLanguage.size(); i ++) {
@@ -511,34 +552,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					questionManagerForm.isResponseQuestion = false ;
 					UIPopupContainer popupContainer = questionManagerForm.getParent() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
-				}
-				/////////////Discuss forum
-			// get all response which is new
-				responseForm.listAnswers.clear();
-				responseForm.listAnswers.addAll(Arrays.asList(question_.getAnswers()));
-				for(int i = 0; i < responseForm.listAnswers.size(); ){
-					if(responseForm.listAnswers.get(i).getDateResponse().getTime() < responseForm.currentDate) 
-						responseForm.listAnswers.remove(i);
-					else i ++;
-				}
-				
-				FAQSetting faqSetting = new FAQSetting();
-				FAQUtils.getPorletPreference(faqSetting);
-				if(faqSetting.getIsDiscussForum()) {
-					String pathTopic = question_.getPathTopicDiscuss();
-					if(pathTopic != null && pathTopic.length() > 0) {
-						ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-						String []ids = pathTopic.split("/");
-						Post post;
-						for (Answer answer : responseForm.listAnswers) {
-							post = new Post();
-							post.setOwner(answer.getResponseBy());
-							post.setIcon("ViewIcon");
-							post.setName("Re: " + question_.getQuestion());
-							post.setMessage(answer.getResponses());
-							forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
-            }
-					}
 				}
 				sessionProvider.close();
 			}

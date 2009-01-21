@@ -15,6 +15,7 @@
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate)
 		jsmanager.addJavascript('eXo.faq.UIFAQDragDrop.init("'+compId+'") ;') ;
+	String [] categoryAction;
 %>
 <div id="$uicomponent.id" style="padding: 0px 5px 0px 5px; line-height:28px; padding-bottom:2px;">
 	<div>
@@ -35,10 +36,10 @@
 			long questionNotAnswer = cateInfo[2] ;
 			long questionNotApproved = cateInfo[3] ;
 			%>
-			<div style="margin-top: 2px;">SubCategories: $numberOfSubCate</div>
-			<div style="margin-top: 2px;">Questions: $numberOfQuestion</div>
-			<div style="margin-top: 2px;">Questions not answer: $questionNotAnswer</div>
-			<div style="margin-top: 2px;">Questions not approved: $questionNotApproved</div>
+			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.label.SubCategories"); %>: $numberOfSubCate</div>
+			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.title.Categories"); %>: $numberOfQuestion</div>
+			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %>: $questionNotAnswer</div>
+			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %>: $questionNotApproved</div>
 		</div>
 	</div>
 	
@@ -54,6 +55,7 @@
 		</div>
 		<div class="FAQContainer"  style="height: 290px; margin-bottom: 5px; overflow:auto;_width: 187px;">
 			<div class="UICategories">
+				<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupCategoriesRoot', '', null, null)">
 					<%
 						if(uicomponent.parentCateId_ == null){
 							if(uicomponent.categoryId_ == null){%>
@@ -79,7 +81,7 @@
 									<div class="FAQCategoryRootBlack">
 										<b><%=FAQUtils.getSubString(uicomponent.getParentCateName(), 25);%></b>
 									</div>
-								<%} else {%>
+						 	<%} else {%>
 									<div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.backCateID_)%>">
 										<span></span>
 									</div>
@@ -88,9 +90,75 @@
 											<%=FAQUtils.getSubString(uicomponent.getParentCateName(), 25);%>
 										</a>
 									</div>
-								<%}%>
+							<%}%>
 					<%}%>
-				<div style="padding-left: 15px;">
+													<!-- action of this category -->
+								<div class="UIFAQPopupCategory" id="UIFAQPopupCategoriesRoot" style="display: none;">
+									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+										<div class="UIContextMenuContainer">
+																		
+											<div class="TopLeftRightClickPopupMenu">
+												<div class="TopRightRightClickPopupMenu">
+													<div class="TopCenterRightClickPopupMenu"><span></span></div>
+													<div class="RightClickCustomItem" style="display: none;">Open</div>
+												</div>
+											</div>
+											
+											<div class="MiddleLeftRightClickPopupMenu">
+												<div class="MiddleRightRightClickPopupMenu">
+													<div class="UIRightPopupMenuContainer">
+														<%
+															if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate ) {
+																categoryAction = uicomponent.getActionCategory() ;
+															} else {
+																categoryAction = uicomponent.getActionCategoryWithUser() ;
+															}
+															
+															for(viewAction in categoryAction) {
+																String linkView = uicomponent.event(viewAction, uicomponent.parentCateId_) ;
+																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																if(viewAction.equals("DeleteCategory") || viewAction.equals("EditCategory") || viewAction.equals("MoveCategory"))
+																	continue;
+																if(uicomponent.categoryId_ == null && viewAction.equals("Watch")) continue;
+														%>
+																<a href="javascript:void(0) ;" onmousedown="$linkView" class="MenuItem">
+																	<div class="ItemIcon $viewAction" style="padding:3px 0px 5px 5px;">
+																			<div style="padding-left: 20px;">$itemLabelView</div>
+																	</div>
+																</a>
+														<%
+															}
+															if(uicomponent.checkUserWatch(uicomponent.parentCateId_)) {
+														%>
+															<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("UnWatch", uicomponent.parentCateId_);%>" class="MenuItem">
+																<div class="ItemIcon UnWatch" style="padding:3px 0px 5px 5px;">
+																		<div style="padding-left: 20px;"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></div>
+																</div>
+															</a>
+														<%}
+															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){%>
+																<a class="MenuItem" onmousedown="<%=uicomponent.event("RSS", uicomponent.getRSSLink(uicomponent.parentCateId_))%>">
+																	<div class="ItemIcon FAQRSS" style="padding:3px 0px 5px 5px;">
+																			<div style="padding-left: 20px;"><%= _ctx.appRes("UICategories.label.RSS"); %></div>
+																	</div>
+																</a>
+														<%}%>
+													</div>
+												</div>
+											</div>
+											
+											<div class="BottomLeftRightClickPopupMenu">
+												<div class="BottomRightRightClickPopupMenu">
+													<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+												</div>
+											</div>
+									
+										</div>
+									</div>
+								</div>
+								<!-- end action of this category -->
+					</div>
+				<div style="padding: 4px 0px 0px 15px;">
 				<%
 					List listCate = uicomponent.getListCate() ;
 					List listCateModerator = uicomponent.categoryModerators ;
@@ -169,7 +237,7 @@
 															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){%>
 																<a class="MenuItem" onmousedown="<%=uicomponent.event("RSS", uicomponent.getRSSLink(category.getId()))%>">
 																	<div class="ItemIcon FAQRSS" style="padding:3px 0px 5px 5px;">
-																			<div style="padding-left: 20px;">RSS</div>
+																			<div style="padding-left: 20px;"><%= _ctx.appRes("UICategories.label.RSS"); %></div>
 																	</div>
 																</a>
 														<%}%>

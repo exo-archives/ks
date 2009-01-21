@@ -21,12 +21,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.jcr.Value;
-import javax.jcr.ValueFormatException;
-import javax.jcr.nodetype.NodeType;
 
 
 /**

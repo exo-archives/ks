@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Answer;
+import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
@@ -117,15 +118,31 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 				forumService.saveTopic(sProvider, uiForm.categoryId, forumId, topic, true, false, "");
 				faqService.savePathDiscussQuestion(uiForm.questionId, uiForm.categoryId+"/"+forumId+"/"+topic.getId(), sProvider);
 				Post post;
-				Answer[] AllResponses = question.getAnswers();
-				for (int i = 0; i < AllResponses.length; i++) {
-	        post = new Post();
-	        post.setIcon("IconsView");
-	        post.setName("Re: " + question.getQuestion());
-	        post.setMessage(AllResponses[i].getResponses());
-	        post.setOwner(AllResponses[i].getResponseBy());
-	        forumService.savePost(sProvider, uiForm.categoryId, forumId, topic.getId(), post, true, "");
-        }
+				Answer[] AllAnswer = question.getAnswers();
+				if(AllAnswer != null && AllAnswer.length > 0) {
+					for (int i = 0; i < AllAnswer.length; i++) {
+		        post = new Post();
+		        post.setIcon("IconsView");
+		        post.setName("Re: " + question.getQuestion());
+		        post.setMessage(AllAnswer[i].getResponses());
+		        post.setOwner(AllAnswer[i].getResponseBy());
+		        forumService.savePost(sProvider, uiForm.categoryId, forumId, topic.getId(), post, true, "");
+		        AllAnswer[i].setPostId(post.getId());
+		        System.out.println(AllAnswer[i].getPostId());
+	        }
+					faqService.saveAnswer(uiForm.questionId, AllAnswer, sProvider);
+				}
+				Comment[] comments = question.getComments();
+				for (int i = 0; i < comments.length; i++) {
+					post = new Post();
+					post.setIcon("IconsView");
+					post.setName("Re: " + question.getQuestion());
+					post.setMessage(comments[i].getComments());
+					post.setOwner(comments[i].getCommentBy());
+					forumService.savePost(sProvider, uiForm.categoryId, forumId, topic.getId(), post, true, "");
+					comments[i].setPostId(post.getId());
+					faqService.saveComment(uiForm.questionId, comments[i], false, sProvider);
+				}
       } catch (Exception e) {
 	      e.printStackTrace();
       } finally {

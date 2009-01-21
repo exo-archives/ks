@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import java.util.Date;
+
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
@@ -53,7 +54,9 @@ public class Answer {
   /** The marks vote answer. */
   private double marksVoteAnswer;
   
-  /**
+  private String postId ;
+
+	/**
    * Instantiates a new answer.
    */
   public Answer(){
@@ -225,4 +228,12 @@ public class Answer {
 	public void setNew(boolean isNew) {
 		this.isNew = isNew;
 	}
+	
+	public String getPostId() {
+  	return postId;
+  }
+
+	public void setPostId(String postId) {
+  	this.postId = postId;
+  }
 }
