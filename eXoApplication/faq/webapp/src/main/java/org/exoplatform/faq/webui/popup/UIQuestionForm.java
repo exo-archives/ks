@@ -202,11 +202,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       }
       inputQuestionDetail.setValue(input) ;
     }
-    addChild(inputAuthor) ;
-    addChild(inputEmailAddress) ;
     addChild(selectLanguage);
     addChild(inputQuestionContent);
     addChild(inputQuestionDetail);
+    addChild(inputAuthor) ;
+    addChild(inputEmailAddress) ;
     if(questionId_ != null && questionId_.trim().length() > 0) {
       addChild(inputIsApproved.setChecked(isApproved_)) ;
       addChild(inputIsActivated.setChecked(isActivated_)) ;
