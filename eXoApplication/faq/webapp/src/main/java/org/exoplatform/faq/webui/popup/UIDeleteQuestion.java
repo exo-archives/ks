@@ -71,7 +71,7 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
   
   @SuppressWarnings("unused")
   private String getQuestion(){
-    return this.question_.getDetail() ;
+    return this.question_.getQuestion() ;
   }
   
   public void setIsManagement(boolean isManagement) {
