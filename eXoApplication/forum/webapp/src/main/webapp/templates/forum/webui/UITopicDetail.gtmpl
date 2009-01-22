@@ -535,7 +535,13 @@
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + postId.substring(15);
-				String joinDate = ForumUtils.getFormatDate(shortDateFormat, userInfo.getJoinedDate()) ;
+				String joinDate = "";
+				Date joinDate_ = userInfo.getJoinedDate();
+				if(joinDate_ != null){
+				  joinDate_.setTime(joinDate_.getTime() - setTime);
+				  joinDate = ForumUtils.getFormatDate(shortDateFormat, joinDate_) ;
+				}
+				System.out.println("cong hoa xa hoi" + setTime);
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
@@ -649,7 +655,12 @@
 									%>
 									<div><%=_ctx.appRes(uiformId + ".label.Location");%>: $location</div>
 									<%} 
-										String lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, userInfo.getLastLoginDate()) ;
+									  Date lastLogin = userInfo.getLastLoginDate();
+										String lastLoginUser = "" ;
+									  if(lastLogin != null){
+										  lastLogin.setTime(lastLogin.getTime() - setTime);
+										  lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, lastLogin) ;
+										}
 									%>
 									<div><%=_ctx.appRes(uiformId + ".label.LastLogin");%>: $lastLoginUser</div>
 								</div>
