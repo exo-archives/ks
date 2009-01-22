@@ -378,6 +378,31 @@
 																	</div>
 																	<div style="clear: left;"><span/></div>
 																	
+																	
+																	<!-- ===================================== view answer bottom =============================== -->
+																	<%
+																		if(uicomponent.canEditQuestion){
+														        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action.ResponseQuestion"); 
+														           String link = uicomponent.event("ResponseQuestion", question.getId()) ;
+																	%>
+																			<div class="UIAction" align="center" style="padding: 2px;"> 
+																				<table class="ActionContainer" align="center">
+																					<tr>
+																						<td align="center">
+																		        		<a href="$link" class="ActionButton LightBlueStyle">
+																			      	  	<div class="ButtonLeft">
+																			        	  	<div class="ButtonRight">
+																			          	  	<div class="ButtonMiddle"> $actionLabel </div>
+																			            	</div>
+																			          	</div>
+																			        	</a>
+																		      	</td>
+																					</tr>
+																			  </table> 
+																			</div>
+																	<%}%>
+																		
+																	
 																	<!-- action of this question -->
 																	<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display: none; left: 50px;">
 																		<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
