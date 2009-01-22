@@ -490,9 +490,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 											post.setName("Re: " + question_.getQuestion());
 											post.setIcon("ViewIcon");
 											question_.getAnswers()[i].setPostId(post.getId());
+											post.setMessage(question_.getAnswers()[i].getResponses());
+											forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
+										}else {
+											post.setMessage(question_.getAnswers()[i].getResponses());
+											forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, false, "");
 										}
-										post.setMessage(question_.getAnswers()[i].getResponses());
-										forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, false, "");
 									} else {
 										post = new Post();
 										post.setOwner(question_.getAnswers()[i].getResponseBy());

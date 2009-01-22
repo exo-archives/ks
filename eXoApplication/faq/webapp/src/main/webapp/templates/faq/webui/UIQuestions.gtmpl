@@ -279,7 +279,7 @@
 															<%if(uicomponent.canEditQuestion) {
 																	if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
 															%>
-																		<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>">
+																		<a class="MenuItem" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>">
 																			<div class="ItemIcon WatchQuestionManager" style="padding:3px 0px 5px 5px;">
 																				<div style="padding-left: 20px;white-space:nowrap;"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></div>
 																			</div>
@@ -289,15 +289,15 @@
 																	String pathDiscuss = question.getPathTopicDiscuss();
 																	if(pathDiscuss == null || pathDiscuss.length() <= 0){
 															%>
-																		<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>">
-																			<div class="ItemIcon WatchQuestionManager" style="padding:3px 0px 5px 5px;">
+																		<a class="MenuItem" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>">
+																			<div class="ItemIcon" style="padding:3px 0px 5px 5px;">
 																				<div style="padding-left: 20px;white-space:nowrap;"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></div>
 																			</div>
 																		</a>
 																		
 															<%	} else { %>
-																		<div title="Question is Discussed">
-																			<div class="DisableMenuItem WatchQuestionManager">
+																		<div class="MenuItem" title="Question is Discussed">
+																			<div class="DisableMenuItem" style="padding:3px 0px 5px 5px;">
 																				<div style="padding-left: 20px;white-space:nowrap;"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></div>
 																			</div>
 																		</div>
