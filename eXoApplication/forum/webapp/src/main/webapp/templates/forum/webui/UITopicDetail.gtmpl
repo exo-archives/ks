@@ -537,7 +537,10 @@
 				String idMessage = "Id" + postId.substring(15);
 				String joinDate = "";
 				Date joinDate_ = userInfo.getJoinedDate();
-				if(joinDate_ != null)joinDate = ForumUtils.getFormatDate(shortDateFormat, joinDate_) ;
+				if(joinDate_ != null){
+				  joinDate_.setTime(joinDate_.getTime() - setTime);
+				  joinDate = ForumUtils.getFormatDate(shortDateFormat, joinDate_) ;
+				}
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
