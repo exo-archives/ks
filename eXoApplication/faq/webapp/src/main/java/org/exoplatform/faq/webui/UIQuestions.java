@@ -128,7 +128,7 @@ public class UIQuestions extends UIContainer {
 	public static String newPath_ = "" ;
 	private String currentUser_ = "";
 	private String link_ ="";
-	private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	private static	FAQService faqService_;
 
 	public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
 	public boolean isChangeLanguage = false ;
@@ -156,21 +156,7 @@ public class UIQuestions extends UIContainer {
 		backPath_ = null ;
 		this.categoryId_ = null ;
 		currentUser_ = FAQUtils.getCurrentUser() ;
-		/*faqSetting_ = new FAQSetting();
-		FAQUtils.getPorletPreference(faqSetting_);
-		if(currentUser_ != null && currentUser_.trim().length() > 0){
-			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
-				if(faqService_.isAdminRole(currentUser_)) faqSetting_.setIsAdmin("TRUE");
-				else faqSetting_.setIsAdmin("FALSE");
-			}
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			faqService_.getUserSetting(sessionProvider, currentUser_, faqSetting_);
-			sessionProvider.close();
-		} else {
-			faqSetting_.setIsAdmin("FALSE");
-		}*/
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
-		//setListObject();
 	}
 	
 	public String getRSSLink(){
@@ -218,10 +204,10 @@ public class UIQuestions extends UIContainer {
 			pageIterator = this.getChildById(OBJECT_ITERATOR);
 			pageIterator.updatePageList(pageList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			this.pageList = null ;
 			this.pageList.setPageSize(10);
 			pageIterator.updatePageList(this.pageList) ;
-			e.printStackTrace();
 		} finally {
 			sessionProvider.close();
 		}
@@ -283,6 +269,10 @@ public class UIQuestions extends UIContainer {
 	public void setFAQSetting(FAQSetting setting){
 		this.faqSetting_ = setting;
 		setListObject();
+	}
+	
+	public void setFAQService(FAQService service){
+		faqService_ = service;
 	}
 
 	@SuppressWarnings("unused")
@@ -1050,7 +1040,7 @@ public class UIQuestions extends UIContainer {
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 					List<String> moderator = new ArrayList<String>();
 					Boolean check = false ;
-					Category category = new Category();
+					Category category = null;
 					if(categoryId != null && !categoryId.equals("null")){
 						category = faqService_.getCategoryById(categoryId, sessionProvider) ;
 						moderator = category.getModeratorsCategory() ;
@@ -1069,7 +1059,8 @@ public class UIQuestions extends UIContainer {
 						uiQuestions.pageList.setObjectRepare_(questionId);
 						if(!categoryId.equals("null"))uiQuestions.setCategoryId(categoryId) ;
 						else uiQuestions.setCategoryId(null) ;
-						uiQuestions.viewAuthorInfor = category.isViewAuthorInfor();
+						if(category != null)uiQuestions.viewAuthorInfor = category.isViewAuthorInfor();
+						else uiQuestions.viewAuthorInfor = false;
 						uiQuestions.setIsNotChangeLanguage() ;
 						uiQuestions.listCateId_.clear() ;
 						UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;

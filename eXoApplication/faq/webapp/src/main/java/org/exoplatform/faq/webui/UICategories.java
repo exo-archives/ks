@@ -93,8 +93,11 @@ public class UICategories extends UIContainer{
 	FAQService faqService_;
 	private String portalName = null;
 	public UICategories () throws Exception{ 
-		faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		portalName = getPortalName();
+	}
+	
+	public void setFAQService(FAQService service){
+		faqService_ = service;
 	}
 	
 	public void setFAQSetting(FAQSetting faqSetting){
@@ -367,6 +370,7 @@ public class UICategories extends UIContainer{
 				questions.setCategoryId(categoryId) ;
 			} else {
 				questions.setCategoryId(null) ;
+				questions.viewAuthorInfor = false;
 			}
 			sessionProvider.close();
 			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
@@ -633,11 +637,11 @@ public class UICategories extends UIContainer{
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
 			String email = "" ;
-			String name = "" ;
-			String userName = FAQUtils.getCurrentUser() ;
-			if(!FAQUtils.isFieldEmpty(userName)){
-				name = FAQUtils.getFullName(userName) ;
-				email = FAQUtils.getEmailUser(userName) ;
+			String name = FAQUtils.getCurrentUser() ;
+			if(!FAQUtils.isFieldEmpty(name)){
+				email = FAQUtils.getEmailUser(name) ;
+			} else {
+				name = "";
 			}
 			questionForm.setFAQSetting(uiCategories.faqSetting_) ;
 			questionForm.setAuthor(name) ;

@@ -55,9 +55,11 @@ public class UIFAQContainer extends UIContainer  {
   	
     addChild(UIBreadcumbs.class, null, null).setRendered(true) ; 
     UIQuestions uiQuestions = addChild(UIQuestions.class, null, null).setRendered(true) ;    
+    uiQuestions.setFAQService(faqService_);
+    uiQuestions.setFAQSetting(faqSetting_);
     UICategories uiCategories = addChild(UICategories.class, null, null).setRendered(true);
     uiCategories.setFAQSetting(faqSetting_);
-    uiQuestions.setFAQSetting(faqSetting_);
+    uiCategories.setFAQService(faqService_);
   } 
   
   public FAQSetting getFAQSetting(){return faqSetting_;}
