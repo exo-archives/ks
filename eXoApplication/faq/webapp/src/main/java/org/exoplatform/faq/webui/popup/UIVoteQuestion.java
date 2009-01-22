@@ -89,7 +89,7 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
     	long totalVote = listUsers.size();
     	double markVote = (voteQuestion.question_.getMarkVote() * totalVote + number)/(totalVote + 1);
     	
-    	listUsers.add(currentUser);
+    	listUsers.add(currentUser + "/" + number);
     	voteQuestion.question_.setMarkVote(markVote);
     	voteQuestion.question_.setUsersVote(listUsers.toArray(new String[]{}));
     	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;

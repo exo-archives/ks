@@ -103,6 +103,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.CommentQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.DeleteCommentActionListener.class, confirm= "UIQuestions.msg.confirm-delete-comment"),
 				@EventConfig(listeners = UIQuestions.DeleteAnswerActionListener.class, confirm= "UIQuestions.msg.confirm-delete-answer"),
+				@EventConfig(listeners = UIQuestions.UnVoteQuestionActionListener.class, confirm= "UIQuestions.msg.confirm-unvote-question"),
 				@EventConfig(listeners = UIQuestions.CommentToAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.VoteQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.ChangeQuestionActionListener.class),
@@ -307,7 +308,7 @@ public class UIQuestions extends UIContainer {
 	private boolean canVote(Question question){
 		if(question.getUsersVote() != null)
 			for(String user : question.getUsersVote()){
-				if(user.equals(currentUser_)) return false;
+				if(user.contains(currentUser_ + "/")) return false;
 			}
 		return true;
 	}
@@ -1625,6 +1626,42 @@ public class UIQuestions extends UIContainer {
 			selectForumForm.setQuestionId(questionId);
 			popupAction.activate(selectForumForm, 380, 400) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static  public class UnVoteQuestionActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions uiQuestions = event.getSource() ; 
+			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			try{
+				Question question = faqService_.getQuestionById(questionId, sessionProvider);
+				List<String> listUserVote = new ArrayList<String>();
+				listUserVote.addAll( Arrays.asList(question.getUsersVote()));
+				double markVote = question.getMarkVote();
+				double userMark = 0;
+				for(String user : listUserVote){
+					if(user.contains(uiQuestions.currentUser_ + "/")){
+						userMark = Double.parseDouble(user.split("/")[1]);
+						listUserVote.remove(user);
+						break;
+					}
+				}
+				if(!listUserVote.isEmpty()) markVote = ((markVote * (listUserVote.size() + 1)) - userMark)/listUserVote.size();
+				else markVote = 0.0;
+				question.setUsersVote(listUserVote.toArray(new String[]{}));
+				question.setMarkVote(markVote);
+				FAQUtils.getEmailSetting(uiQuestions.faqSetting_, false, false);
+				faqService_.saveQuestion(question, false, sessionProvider, uiQuestions.faqSetting_);
+				sessionProvider.close();
+			} catch(Exception e){
+				e.printStackTrace();
+				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				uiQuestions.setIsNotChangeLanguage() ;
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class));
 		}
 	}
 }
