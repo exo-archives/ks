@@ -605,8 +605,17 @@
 														String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy()) ;
 													%>
 														<div style="float: left;">
-															<div style="float: left;">$res &nbsp;</div>
-															<%if(uicomponent.canEditQuestion){%>
+															<%
+															if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
+															%>
+																<div style="float: left;">$res &nbsp;</div>
+															<%
+															} else {
+															%>
+																<div style="float: left; color: gray;">$res &nbsp;</div>
+															<%
+															}
+															if(uicomponent.canEditQuestion){%>
 																	<%
 																		actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Approve");
 																		if(answer.getApprovedAnswers()) {
