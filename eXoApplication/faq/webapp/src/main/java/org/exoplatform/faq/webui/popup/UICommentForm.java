@@ -208,9 +208,13 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 									if(post == null){
 										post = new Post();
 										isNew = true;
+										post.setOwner(commentForm.currentUser_);
+										post.setIcon("ViewIcon");
+										post.setName("Re: " + commentForm.question_.getQuestion());
+										commentForm.comment.setPostId(post.getId());
+									}else{
+										post.setModifiedBy(commentForm.currentUser_);
 									}
-									post.setModifiedBy(commentForm.currentUser_);
-									post.setName("Re: " + commentForm.question_.getQuestion());
 									post.setMessage(comment);
 									forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, isNew, "");
 	              } catch (Exception e) {
