@@ -541,7 +541,6 @@
 				  joinDate_.setTime(joinDate_.getTime() - setTime);
 				  joinDate = ForumUtils.getFormatDate(shortDateFormat, joinDate_) ;
 				}
-				System.out.println("cong hoa xa hoi" + setTime);
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
 				if(post.getIsHidden()) {
