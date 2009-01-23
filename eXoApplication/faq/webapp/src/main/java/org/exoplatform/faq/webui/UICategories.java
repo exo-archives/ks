@@ -88,8 +88,8 @@ public class UICategories extends UIContainer{
 	private boolean isModeratorSubCate = false ;
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
+	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
-	public static String newPath_ = "" ;
 	FAQService faqService_;
 	private String portalName = null;
 	public UICategories () throws Exception{ 
@@ -215,7 +215,8 @@ public class UICategories extends UIContainer{
 			if(categoryId_ != null)currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
 			else currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
-			if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_)) || isBack){
+			if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_)) || isBack || 
+					(parentCateId_ == null && categoryId_ == null)){
 				this.listCate.clear();
 				listCate.addAll(newList);
 				String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
@@ -328,7 +329,8 @@ public class UICategories extends UIContainer{
 	
 	@SuppressWarnings("unused")
 	private String[] getActionCategory(){
-		return firstActionCate_ ;
+		if(categoryId_ == null)return firstActionCate_ ;
+		else return secondActionCate_;
 	}
 	
 	@SuppressWarnings("unused")
@@ -459,6 +461,9 @@ public class UICategories extends UIContainer{
 					uiCategoryForm.init(false);
 					uiCategoryForm.setCategoryValue(categoryId, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+					
+					System.out.println("\n\n\n\n--------------->edit category~~~>cateId:" + categoryId);
+					
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -488,17 +493,15 @@ public class UICategories extends UIContainer{
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				String newPath = uiCategories.cutCaret(newPath_) ;
-				String pathService = uiCategories.cutCaret(uiCategories.getPathService(categoryId)) ;
 				Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
 				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-					if (newPath.equals(pathService)) {
+					if (uiCategories.faqService_.getCategoryNodeById(uiCategories.parentCateId_, sessionProvider).hasNode(categoryId)) {
 						UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,550) ;	
-						uiPopupContainer.setId("EditSubCategoryForm") ;
+						uiPopupContainer.setId("FAQEditSubCategoryForm") ;
 						UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 						categoryForm.init(false) ;
-						String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
-						categoryForm.setParentId(parentCategoryId) ;
+						//String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
+						categoryForm.setParentId(uiCategories.parentCateId_) ;
 						categoryForm.setCategoryValue(categoryId, true) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 					} else {
@@ -518,12 +521,11 @@ public class UICategories extends UIContainer{
 					return ;
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				//questions.setIsNotChangeLanguage();
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				sessionProvider.close();
-				return ;
 			}
 			sessionProvider.close();
 		}
