@@ -655,7 +655,12 @@
 									%>
 									<div><%=_ctx.appRes(uiformId + ".label.Location");%>: $location</div>
 									<%} 
-										String lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, userInfo.getLastLoginDate()) ;
+									  Date lastLogin = userInfo.getLastLoginDate();
+										String lastLoginUser = "" ;
+									  if(lastLogin != null){
+										  lastLogin.setTime(lastLogin.getTime() - setTime);
+										  lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, lastLogin) ;
+										}
 									%>
 									<div><%=_ctx.appRes(uiformId + ".label.LastLogin");%>: $lastLoginUser</div>
 								</div>
