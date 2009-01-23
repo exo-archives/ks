@@ -34,11 +34,12 @@
 	    </div>
 	    
 	   <!-- ===================================== view all subcategories of root category ==================================== -->
-	   <%for(cate in uicomponent.getListCate()) {
+	   <%
+	   if(!uicomponent.getListCate().isEmpty()){
+	   	for(cate in uicomponent.getListCate()) {
 	   		stackCateid.push(cate.getCategory().getId()) ;
 	    	id ++ ;
 	    	i ++ ;
-	    	System.out.println("\n\n\n\n----------->i:" + i + "\tid: " + id);
 	      if(i == 1) {%>
 					<div class="FAQCategoryTreeView" id="FAQCate$i">
 						<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
@@ -115,6 +116,7 @@
 	    	</div>
 	  	<%
 	    }
+	   }
 			%>
 		</div>
 		
