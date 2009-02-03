@@ -216,7 +216,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					if(!question.getLanguage().equals(languageIsResponsed)) {
 						questionId = questionId + "/" + Utils.LANGUAGE_HOME+"/"+languageIsResponsed;
 					}
-					listAnswers.addAll((List<Answer>)faqService.getPageListAnswer(sessionProvider, questionId).getPageItem(0));
+					try{
+						listAnswers.addAll((List<Answer>)faqService.getPageListAnswer(sessionProvider, questionId).getPageItem(0));
+					} catch(NullPointerException npe){}
 					if(listAnswers.size() > 0) {
 						inputResponseQuestion_.setValue(listAnswers.get(0).getResponses()) ;
 					}
@@ -529,6 +531,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						multiLanguages.saveAnswer(questionNode, responseForm.listQuestionLanguage.get(i));
 					}
 				} catch (PathNotFoundException e) {
+					e.printStackTrace();
 					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

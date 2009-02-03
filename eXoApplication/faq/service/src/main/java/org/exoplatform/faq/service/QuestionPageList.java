@@ -314,7 +314,6 @@ public class QuestionPageList extends JCRPageList {
   		page = currentPage_;
   	}
   	Node currentNode;
-  	System.out.println("\n\n size Iter: " + iter_.getSize());
   	long pageSize = getPageSize() ;
   	long position = 0 ;
   	if(page == 1) position = 0;
@@ -335,7 +334,6 @@ public class QuestionPageList extends JCRPageList {
 				break ;
 			}
   	}
-  	System.out.println("\n\n size currentListObject_: " + currentListObject_.size());
   	iter_ = null ;    
   }
   

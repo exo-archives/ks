@@ -467,37 +467,37 @@ public class JCRDataStorage {
 	public void sendMessage(Message message) throws Exception {
 		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
 		mService.sendMessage(message) ;		
-	}
-	
-	public List<QuestionLanguage> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
-		List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		Node questionNode = questionHome.getNode(questionId) ;
-		if(questionNode.hasNode(Utils.LANGUAGE_HOME)) {
-			Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME) ;
-			NodeIterator nodeIterator = languageNode.getNodes() ;
-			while(nodeIterator.hasNext()) {
-				Node node = (Node)nodeIterator.next() ;
-				QuestionLanguage questionLanguage = new QuestionLanguage() ;
-				
-				questionLanguage.setLanguage(node.getName()) ;
-				if(node.hasProperty("exo:title")) questionLanguage.setQuestion(node.getProperty("exo:title").getValue().getString());
-				if(node.hasProperty("exo:name")) questionLanguage.setDetail(node.getProperty("exo:name").getValue().getString());
-				Comment[] comments = getComment(node);
-				Answer[] answers = getAnswers(node);
-				questionLanguage.setComments(comments);
-				questionLanguage.setAnswers(answers);
-				
-				
-				listQuestionLanguage.add(questionLanguage) ;
-			}
-		}
-		return listQuestionLanguage ;
-	}
-	
-	public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, Answer answer, SessionProvider sProvider) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null);
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+  }
+  
+  public List<QuestionLanguage> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
+    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
+    String languages = "languages" ;
+    Node questionHome = getQuestionHome(sProvider, null) ;
+    Node questionNode = questionHome.getNode(questionId) ;
+    if(questionNode.hasNode(languages)) {
+      Node languageNode = questionNode.getNode(languages) ;
+      NodeIterator nodeIterator = languageNode.getNodes() ;
+      while(nodeIterator.hasNext()) {
+        Node node = (Node)nodeIterator.next() ;
+        QuestionLanguage questionLanguage = new QuestionLanguage() ;
+        
+        questionLanguage.setId(node.getName()) ;
+        if(node.hasProperty("exo:language")) questionLanguage.setLanguage(node.getProperty("exo:language").getValue().getString());
+        if(node.hasProperty("exo:title")) questionLanguage.setQuestion(node.getProperty("exo:title").getValue().getString());
+        if(node.hasProperty("exo:name")) questionLanguage.setDetail(node.getProperty("exo:name").getValue().getString());
+        Comment[] comments = getComment(node);
+        Answer[] answers = getAnswers(node);
+        questionLanguage.setComments(comments);
+        questionLanguage.setAnswers(answers);
+        listQuestionLanguage.add(questionLanguage) ;
+      }
+    }
+    return listQuestionLanguage ;
+  }
+  
+  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, Answer answer, SessionProvider sProvider) throws Exception {
+  	Node questionHome = getQuestionHome(sProvider, null);
+  	StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
 												append("//element(*,exo:faqQuestion)[fn:name() = '").append(questionId).append("']");
 		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
@@ -589,20 +589,16 @@ public class JCRDataStorage {
 		try {
 			Node questionHome = getQuestionHome(sProvider, null) ;
 			Node answerHome = questionHome.getNode(questionId).getNode(Utils.ANSWER_HOME);
-			System.out.println("\n\n----->path: " + answerHome.getPath() + "\n\n----->size:  "+  answerHome.getNodes().getSize());
 			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()). 
 																	append("//element(*,exo:answer)").append("order by @exo:dateResponse ascending");
-			
-			System.out.println("------------->query: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			QuestionPageList pageList = new QuestionPageList(answerHome.getNodes(), 10, queryString.toString(), true) ;
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 
     

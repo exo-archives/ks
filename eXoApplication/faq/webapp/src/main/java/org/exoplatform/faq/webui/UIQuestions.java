@@ -443,6 +443,7 @@ public class UIQuestions extends UIContainer {
 				listQuestionLanguage.clear() ;
 
 				QuestionLanguage quesLanguage = new QuestionLanguage() ;
+				quesLanguage.setId(question.getId());
 				quesLanguage.setLanguage(question.getLanguage()) ;
 				quesLanguage.setQuestion(question.getQuestion());
 				quesLanguage.setDetail(question.getDetail()) ;
@@ -1672,7 +1673,7 @@ public class UIQuestions extends UIContainer {
 					String qsId = question.getId();
 					String dflg = faqService_.getQuestionById(qsId, sProvider).getLanguage();
 					if(!language_.equals(dflg)) {
-						uiQuestions.pathParentNode = Utils.LANGUAGE_HOME+"/"+language_;
+						uiQuestions.pathParentNode = Utils.LANGUAGE_HOME+"/"+questionLanguage.getId();
 					} else {
 						uiQuestions.pathParentNode = "";
 					}

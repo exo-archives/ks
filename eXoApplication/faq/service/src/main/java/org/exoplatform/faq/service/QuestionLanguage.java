@@ -16,6 +16,8 @@
  **/
 package org.exoplatform.faq.service;
 
+import org.exoplatform.services.jcr.util.IdGenerator;
+
 
 /**
  * A question may be have multiple languages, user can write his question in
@@ -29,10 +31,10 @@ package org.exoplatform.faq.service;
  * @since   Jul 11, 2007
  */
 public class QuestionLanguage {
+	private String id;
+	
   /** The language. */
   private String language = " " ;
-  
-  private String id = "";
   
   private Answer[] answers;
   
@@ -46,7 +48,9 @@ public class QuestionLanguage {
   /**
    * class constructor.
    */
-  public QuestionLanguage() { }
+  public QuestionLanguage() {
+  	id = "Language" + IdGenerator.generate() ;
+  }
   
 	/**
    * Get name of language is used to write quetsion.
@@ -101,12 +105,12 @@ public class QuestionLanguage {
 	}
 
 	public String getId() {
-  	return id;
-  }
+		return id;
+	}
 
 	public void setId(String id) {
-  	this.id = id;
-  }
+		this.id = id;
+	}
 }
 
 

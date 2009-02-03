@@ -139,6 +139,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     String quest = question.getQuestion().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
     languageIsResponsed = question.getLanguage() ;
     QuestionLanguage questionLanguage = new QuestionLanguage() ;
+    questionLanguage.setId(question.getId());
     questionLanguage.setQuestion(question.getQuestion());
     questionLanguage.setDetail(question.getDetail()) ;
     questionLanguage.setLanguage(question.getLanguage()) ;

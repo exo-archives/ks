@@ -231,13 +231,13 @@ public class MultiLanguages {
     }
     Node langNode = null ;
     try{
-    	langNode = languagesNode.getNode(language.getLanguage()) ;
+    	langNode = languagesNode.getNode(language.getId()) ;
     }catch(Exception e) {
-    	langNode = languagesNode.addNode(language.getLanguage(), NTUNSTRUCTURED) ;
+    	langNode = languagesNode.addNode(language.getId(), NTUNSTRUCTURED) ;
     }
+    langNode.setProperty("exo:language", language.getLanguage()) ;
     langNode.setProperty("exo:name", language.getDetail()) ;
     langNode.setProperty("exo:title", language.getQuestion()) ;
-    System.out.println("\n\n path LG: " + langNode.getPath());
     if(langNode.isNew())questionNode.getSession().save() ;
     else questionNode.save();
   }
@@ -260,6 +260,8 @@ public class MultiLanguages {
   	QuestionLanguage questionLanguage = new QuestionLanguage();
   	questionLanguage.setLanguage(language);
   	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
+  	questionLanguage.setId(languageNode.getName());
+  	questionLanguage.setLanguage(languageNode.getProperty("exo:language").getString());
   	questionLanguage.setDetail(languageNode.getProperty("exo:name").getString());
   	questionLanguage.setQuestion(languageNode.getProperty("exo:title").getString());
   	
@@ -283,7 +285,7 @@ public class MultiLanguages {
   }
   
   public Answer getAnswerById(Node questionNode, String answerid, String language) throws Exception{
-  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
+  	Node languageNode = getLanguageNodeByLanguage(questionNode, language);
   	Answer answer = new Answer();
   	try{
   		Node answerNode = languageNode.getNode(Utils.ANSWER_HOME).getNode(answerid);
@@ -334,8 +336,18 @@ public class MultiLanguages {
   	return values;
   }
   
+  private Node getLanguageNodeByLanguage(Node questionNode, String languge) throws Exception{
+  	NodeIterator nodeIterator = questionNode.getNode(Utils.LANGUAGE_HOME).getNodes();
+  	Node languageNode = null;
+  	while(nodeIterator.hasNext()){
+  		languageNode = nodeIterator.nextNode();
+  		if(languageNode.getProperty("exo:language").getString().equals(languge)) return languageNode;
+  	}
+  	return null;
+  }
+  
   public void saveAnswer(Node questionNode, Answer answer, String languge, SessionProvider sessionProvider) throws Exception{
-  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(languge);
+  	Node languageNode = getLanguageNodeByLanguage(questionNode, languge);
   	if(!languageNode.isNodeType("mix:faqi18n")) {
   		languageNode.addMixin("mix:faqi18n") ;
   	}
@@ -372,9 +384,9 @@ public class MultiLanguages {
   public void saveAnswer(Node quesNode, QuestionLanguage questionLanguage) throws Exception{
   	Node quesLangNode ;
   	try {
-  		quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).getNode(questionLanguage.getLanguage());
+  		quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).getNode(questionLanguage.getId());
     } catch (Exception e) {
-    	quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).addNode(questionLanguage.getLanguage());
+    	quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).addNode(questionLanguage.getId());
     }
   	if(!quesLangNode.isNodeType("mix:faqi18n")) {
   		quesLangNode.addMixin("mix:faqi18n") ;
@@ -488,7 +500,7 @@ public class MultiLanguages {
       Node node = null ;
       while(nodeIterator.hasNext()) {
         node = nodeIterator.nextNode() ;
-        if(!listLanguage.contains(node.getName())) {
+        if(!listLanguage.contains(node.getProperty("exo:language").getString())) {
           node.remove() ;
         }
       }

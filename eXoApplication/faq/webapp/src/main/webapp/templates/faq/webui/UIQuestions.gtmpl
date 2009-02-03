@@ -758,26 +758,30 @@
 																	
 																	<!-- ============================= user vote ================================ -->
 																	<%
+																	actionVoteUp = "javaScript: alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "');";
+																	actionVoteDown = "javaScript: alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "');";
 																	if(uicomponent.currentUser_ != null){
+																		actionVoteUp = uicomponent.event("VoteAnswer", answer.getId() + "/1");
+																		actionVoteDown = uicomponent.event("VoteAnswer", answer.getId() + "/-1");
+																	}
 																	%>
 																		<div align="left" style="width:200px; line-height: 22px; float: left;">
 																			<div style="width: 16px; heigth: 22px; float:left;">
-																				<a href="<%=uicomponent.event("VoteAnswer", answer.getId() + "/1")%>"
+																				<a href="$actionVoteUp"
 																						title="+1">
-																					<div class="VoteAnswerUp" id="FAQVoteAnswerUp" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp', null)"><span></span></div>
+																					<div class="VoteAnswerUp" id="FAQVoteAnswerUp<%=answer.getId()%>" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp<%=answer.getId()%>', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp<%=answer.getId()%>', null)"><span></span></div>
 																				</a>
 																				
-																				<a href="<%=uicomponent.event("VoteAnswer", answer.getId() + "/-1")%>"
+																				<a href="$actionVoteDown"
 																						title="-1">
-																					<div class="VoteAnswerDown" id="FAQVoteAnswerDown" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown', null)"><span></span></div>
+																					<div class="VoteAnswerDown" id="FAQVoteAnswerDown<%=answer.getId()%>" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown<%=answer.getId()%>', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown<%=answer.getId()%>', null)"><span></span></div>
 																				</a>
 																			</div>
 																			<div style="float: left; height: 22px; line-height: 22px; margin-left: 4px;">
 																				<%=answer.getMarkVotes()[0] - answer.getMarkVotes()[1]%>
 																			</div>
 																		</div>
-																	<%}%>
-																<%}%>
+															<%}%>
 														</div>
 														<div style="clear: left;"> <span></span></div>
 												<%} %>
