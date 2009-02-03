@@ -217,7 +217,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						questionId = questionId + "/" + Utils.LANGUAGE_HOME+"/"+languageIsResponsed;
 					}
 					try{
-						listAnswers.addAll((List<Answer>)faqService.getPageListAnswer(sessionProvider, questionId).getPageItem(0));
+						listAnswers.addAll((List<Answer>)faqService.getPageListAnswer(sessionProvider, questionId, null).getPageItem(0));
 					} catch(NullPointerException npe){}
 					if(listAnswers.size() > 0) {
 						inputResponseQuestion_.setValue(listAnswers.get(0).getResponses()) ;
