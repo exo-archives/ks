@@ -35,6 +35,7 @@ import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
@@ -718,8 +719,8 @@ public class FAQServiceImpl implements FAQService{
 		jcrData_.saveComment(questionId, comment, isNew, sProvider);
 	}
 	
-	public Comment getCommentById(Node questionNode, String commentId) throws Exception{
-		return jcrData_.getCommentById(questionNode, commentId);
+	public Comment getCommentById(SessionProvider sProvider, String questionId, String commentId) throws Exception{
+		return jcrData_.getCommentById(questionId, commentId, sProvider);
 	}
 	
 	public Answer getAnswerById(String questionId, String answerid, SessionProvider sProvider) throws Exception{
@@ -729,4 +730,12 @@ public class FAQServiceImpl implements FAQService{
 	public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception{
 		jcrData_.saveAnswer(questionId, answers, sProvider);
 	}
+
+	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId) throws Exception {
+	  return jcrData_.getPageListAnswer(sProvider, questionId);
+  }
+
+	public JCRPageList getPageListComment(SessionProvider sProvider, String questionId) throws Exception {
+	  return jcrData_.getPageListComment(sProvider, questionId);
+  }
 }

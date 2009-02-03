@@ -38,6 +38,7 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
@@ -117,6 +118,8 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIQuestions extends UIContainer {
 	private static String SEARCH_INPUT = "SearchInput" ;
+	private static String COMMENT_ITER = "CommentIter" ;
+	private static String ANSWER_ITER = "AnswerIter" ;
 	private static final String OBJECT_ITERATOR = "object_iter";
 
 	private FAQSetting faqSetting_ = null;
@@ -130,6 +133,7 @@ public class UIQuestions extends UIContainer {
 	public static String newPath_ = "" ;
 	private String currentUser_ = "";
 	private String link_ ="";
+	private String pathParentNode = "";
 	private static	FAQService faqService_;
 
 	public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
@@ -159,6 +163,7 @@ public class UIQuestions extends UIContainer {
 		this.categoryId_ = null ;
 		currentUser_ = FAQUtils.getCurrentUser() ;
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
+		faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	}
 	
 	public String getRSSLink(){
@@ -215,6 +220,64 @@ public class UIQuestions extends UIContainer {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+  private List<Answer> getPageListAnswer(String questionId) throws Exception {
+		List<Answer> list = new ArrayList<Answer>();
+		SessionProvider sProvider = FAQUtils.getSystemProvider();
+		try {
+			String IterId = ANSWER_ITER + questionId;
+			if(pathParentNode.length() > 0) {
+				questionId = questionId + "/" + pathParentNode;
+			}
+			JCRPageList pageListAnswre = faqService_.getPageListAnswer(sProvider, questionId);
+			UIFAQPageIterator iterator ;
+			if(this.getChildById(IterId) == null) {
+				iterator = addChild(UIFAQPageIterator.class, null, IterId);
+			}else{
+				iterator = getChildById(IterId);
+			}
+			pageListAnswre.setPageSize(6);
+			long page = iterator.getPageSelected();
+			iterator.updatePageList(pageListAnswre);
+			list = pageListAnswre.getPageItem(page);
+			iterator.setSelectPage(pageListAnswre.getCurrentPage());
+    } catch (Exception e) {
+	    e.printStackTrace();
+    } finally {
+    	sProvider.close();
+    }
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Comment> getPageListComment(String questionId) throws Exception {
+		List<Comment> list = new ArrayList<Comment>();
+		SessionProvider sProvider = FAQUtils.getSystemProvider();
+		try {
+			String IterId = COMMENT_ITER + questionId;
+			if(pathParentNode.length() > 0) {
+				questionId = questionId + "/" + pathParentNode;
+			}
+			JCRPageList pageListComment = faqService_.getPageListComment(sProvider, questionId);
+			UIFAQPageIterator iterator ;
+			if(this.getChildById(IterId) == null) {
+				iterator = addChild(UIFAQPageIterator.class, null, IterId);
+			}else{
+				iterator = getChildById(IterId);
+			}
+			pageListComment.setPageSize(6);
+			long page = iterator.getPageSelected();
+			iterator.updatePageList(pageListComment);
+			list = pageListComment.getPageItem(page);
+			iterator.setSelectPage(pageListComment.getCurrentPage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sProvider.close();
+		}
+		return list;
+	}
+	
 	public String[] getActionTollbar() {
 		return firstTollbar_;
 	}
@@ -260,11 +323,8 @@ public class UIQuestions extends UIContainer {
 		pageSelect = pageIterator.getPageSelected() ;
 		listQuestion_ = new ArrayList<Question>();
 		listQuestion_.addAll(this.pageList.getPage(pageSelect, null));
-		while(listQuestion_.isEmpty() && pageSelect > 1) {
-			listQuestion_.addAll(this.pageList.getPage(--pageSelect, null));
-			pageIterator.setSelectPage(pageSelect) ;
-		}
-		//pageIterator.setSelectPage(pageList.getPageJump());
+		pageSelect = this.pageList.getCurrentPage();
+		pageIterator.setSelectPage(pageSelect) ;
 		setIsModerators() ;
 	}
 
@@ -374,6 +434,7 @@ public class UIQuestions extends UIContainer {
 		return this.questionView_ ;
 	}
 
+	
 	private List<String> getQuestionLangauges(Question question){
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		try {
@@ -385,8 +446,9 @@ public class UIQuestions extends UIContainer {
 				quesLanguage.setLanguage(question.getLanguage()) ;
 				quesLanguage.setQuestion(question.getQuestion());
 				quesLanguage.setDetail(question.getDetail()) ;
-				quesLanguage.setAnswers(question.getAnswers()) ;
-				quesLanguage.setComments(question.getComments());
+//				TODO:
+//				quesLanguage.setAnswers(question.getAnswers()) ;
+//				quesLanguage.setComments(question.getComments());
 				
 				listQuestionLanguage.add(quesLanguage) ;
 
@@ -397,8 +459,9 @@ public class UIQuestions extends UIContainer {
 						question.setLanguage(questionLanguage.getLanguage()) ;
 						question.setQuestion(questionLanguage.getQuestion());
 						question.setDetail(questionLanguage.getDetail()) ;
-						question.setAnswers(questionLanguage.getAnswers()) ;
-						question.setComments(questionLanguage.getComments());
+//						TODO: 
+//						question.setAnswers(questionLanguage.getAnswers()) ;
+//						question.setComments(questionLanguage.getComments());
 					}
 				}
 			}
@@ -438,8 +501,8 @@ public class UIQuestions extends UIContainer {
 		}
 	}
 
-	public void setQuestionView(String questionid){
-		this.questionView_ = questionid ;
+	public void setQuestionView(String questionId){
+		this.questionView_ = questionId ;
 	}
 
 	public String getCategoryId(){
@@ -1070,8 +1133,9 @@ public class UIQuestions extends UIContainer {
 							uiQuestions.listQuestion_.get(i).setQuestion(uiQuestions.listQuestionLanguage.get(0).getQuestion()) ;
 							uiQuestions.listQuestion_.get(i).setDetail(uiQuestions.listQuestionLanguage.get(0).getDetail()) ;
 							uiQuestions.listQuestion_.get(i).setLanguage(uiQuestions.listQuestionLanguage.get(0).getLanguage()) ;
-							uiQuestions.listQuestion_.get(i).setAnswers(uiQuestions.listQuestionLanguage.get(0).getAnswers()) ;
-							uiQuestions.listQuestion_.get(i).setComments(uiQuestions.listQuestionLanguage.get(0).getComments()) ;
+//						TODO:
+//							uiQuestions.listQuestion_.get(i).setAnswers(uiQuestions.listQuestionLanguage.get(0).getAnswers()) ;
+//							uiQuestions.listQuestion_.get(i).setComments(uiQuestions.listQuestionLanguage.get(0).getComments()) ;
 							break ;
 						}
 					}
@@ -1350,9 +1414,9 @@ public class UIQuestions extends UIContainer {
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
 				Node node = faqService_.getQuestionNodeById(questions.questionView_, sessionProvider);
-				if(questions.language_ != null && questions.language_.trim().length() > 0){
+				if(language_ != null && language_.trim().length() > 0){
 					MultiLanguages multiLanguages = new MultiLanguages();
-					multiLanguages.deleteCommentQuestionLang(node, commentId, questions.language_, sessionProvider);
+					multiLanguages.deleteCommentQuestionLang(node, commentId, language_, sessionProvider);
 				} else {
 					faqService_.deleteComment(questions.questionView_, commentId, sessionProvider);
 				}
@@ -1385,10 +1449,10 @@ public class UIQuestions extends UIContainer {
 				MultiLanguages multiLanguages = new MultiLanguages();
 				Node questionNode = faqService_.getQuestionNodeById(questions.questionView_, sessionProvider);
 				Comment comment = null;
-				if(questions.language_ != null && questions.language_.trim().length() > 0 && 
-						!questionNode.getProperty("exo:language").getString().equals(questions.language_)){
-					comment = multiLanguages.getCommentById(questionNode, commentId, questions.language_);
-				} else comment = faqService_.getCommentById(questionNode, commentId);
+				if(language_ != null && language_.trim().length() > 0 && 
+						!questionNode.getProperty("exo:language").getString().equals(language_)){
+					comment = multiLanguages.getCommentById(questionNode, commentId, language_);
+				} else comment = faqService_.getCommentById(sessionProvider, questionNode.getName(), commentId);
 				
 				if(comment == null){
 					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -1408,10 +1472,10 @@ public class UIQuestions extends UIContainer {
 					answer.setUsersVoteAnswer(null);
 					answer.setActivateAnswers(true);
 					answer.setApprovedAnswers(true);
-					if(questions.language_ != null && questions.language_.trim().length() > 0 && 
-							!questionNode.getProperty("exo:language").getString().equals(questions.language_)){
-						multiLanguages.deleteCommentQuestionLang(questionNode, commentId, questions.language_, sessionProvider);
-						multiLanguages.saveAnswer(questionNode, answer, questions.language_, sessionProvider);
+					if(language_ != null && language_.trim().length() > 0 && 
+							!questionNode.getProperty("exo:language").getString().equals(language_)){
+						multiLanguages.deleteCommentQuestionLang(questionNode, commentId, language_, sessionProvider);
+						multiLanguages.saveAnswer(questionNode, answer, language_, sessionProvider);
 					} else {
 						faqService_.saveAnswer(questions.questionView_, answer, true, sessionProvider);
 						faqService_.deleteComment(questions.questionView_, commentId, sessionProvider);
@@ -1500,7 +1564,7 @@ public class UIQuestions extends UIContainer {
 			} 
 			sessionProvider.close();
 			UIVoteQuestion voteQuestion = popupContainer.addChild(UIVoteQuestion.class, null, null) ;
-			voteQuestion.setInfor(question, questions.language_, answerId, questions.faqSetting_);
+			voteQuestion.setInfor(question, language_, answerId, questions.faqSetting_);
 			popupContainer.setId("FAQVoteQuestion") ;
 			popupAction.activate(popupContainer, 300, 200) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
@@ -1598,13 +1662,23 @@ public class UIQuestions extends UIContainer {
 			String[] stringInput = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
 			int pos = Integer.parseInt(stringInput[0]) ;
 			language_ = stringInput[1] ;
+			SessionProvider sProvider = FAQUtils.getSystemProvider();
 			for(QuestionLanguage questionLanguage : uiQuestions.listQuestionLanguage) {
 				if(questionLanguage.getLanguage().equals(language_)) {
-					uiQuestions.listQuestion_.get(pos).setDetail(questionLanguage.getDetail());
-					uiQuestions.listQuestion_.get(pos).setQuestion(questionLanguage.getQuestion());
-					uiQuestions.listQuestion_.get(pos).setLanguage(questionLanguage.getLanguage());
-					uiQuestions.listQuestion_.get(pos).setAnswers(questionLanguage.getAnswers());
-					uiQuestions.listQuestion_.get(pos).setComments(questionLanguage.getComments());
+					Question question = uiQuestions.listQuestion_.get(pos);
+					question.setDetail(questionLanguage.getDetail());
+					question.setQuestion(questionLanguage.getQuestion());
+					question.setLanguage(questionLanguage.getLanguage());
+					String qsId = question.getId();
+					String dflg = faqService_.getQuestionById(qsId, sProvider).getLanguage();
+					if(!language_.equals(dflg)) {
+						uiQuestions.pathParentNode = Utils.LANGUAGE_HOME+"/"+language_;
+					} else {
+						uiQuestions.pathParentNode = "";
+					}
+//					TODO:
+//					uiQuestions.listQuestion_.get(pos).setAnswers(questionLanguage.getAnswers());
+//					uiQuestions.listQuestion_.get(pos).setComments(questionLanguage.getComments());
 					break ;
 				}
 			}
@@ -1615,7 +1689,8 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	static  public class ChangeStatusAnswerActionListener extends EventListener<UIQuestions> {
-		public void execute(Event<UIQuestions> event) throws Exception {
+		@SuppressWarnings("unchecked")
+    public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ; 
 			String[] stringInput = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
 			String questionId = stringInput[0];
@@ -1633,8 +1708,7 @@ public class UIQuestions extends UIContainer {
 									if(action.equals("Activate")) answer.setActivateAnswers(!answer.getActivateAnswers());
 									else answer.setApprovedAnswers(!answer.getApprovedAnswers());
 									MultiLanguages multiLanguages = new MultiLanguages();
-									multiLanguages.saveAnswer(faqService_.getQuestionNodeById(question.getId(), 
-																						sessionProvider), answer, language, sessionProvider);
+									multiLanguages.saveAnswer(faqService_.getQuestionNodeById(question.getId(), sessionProvider), answer, language, sessionProvider);
 									break;
 								}
 							}
@@ -1642,7 +1716,8 @@ public class UIQuestions extends UIContainer {
 						}
 					} 
 				} else {
-					for(Answer answer : question.getAnswers()){
+					List<Answer> answers = faqService_.getPageListAnswer(sessionProvider, question.getId()).getPageItem(0);
+					for(Answer answer : answers){
 						if(answer.getId().equals(answerId)){
 							if(action.equals("Activate")) answer.setActivateAnswers(!answer.getActivateAnswers());
 							else answer.setApprovedAnswers(!answer.getApprovedAnswers());

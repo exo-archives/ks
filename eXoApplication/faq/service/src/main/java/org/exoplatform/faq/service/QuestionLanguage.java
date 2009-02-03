@@ -32,6 +32,8 @@ public class QuestionLanguage {
   /** The language. */
   private String language = " " ;
   
+  private String id = "";
+  
   private Answer[] answers;
   
   private Comment[] comments;
@@ -97,6 +99,14 @@ public class QuestionLanguage {
 	public void setComments(Comment[] comments) {
 		this.comments = comments;
 	}
+
+	public String getId() {
+  	return id;
+  }
+
+	public void setId(String id) {
+  	this.id = id;
+  }
 }
 
 

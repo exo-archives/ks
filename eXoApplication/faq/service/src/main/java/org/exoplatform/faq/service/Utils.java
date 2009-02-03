@@ -31,6 +31,14 @@ import javax.jcr.Value;
  * Apr 10, 2008, 4:40:22 PM
  */
 public class Utils {
+	
+	final public static String QUESTION_HOME = "questions".intern() ;
+	final public static String CATEGORY_HOME = "catetories".intern() ;
+	final public static String ANSWER_HOME = "faqAnswerHome".intern();
+	final public static String COMMENT_HOME = "faqCommentHome".intern();
+	final public static String LANGUAGE_HOME = "languages".intern();
+	final public static String EXO_FAQQUESTIONHOME = "exo:faqQuestionHome".intern() ;
+	final public static String EXO_FAQCATEGORYHOME = "exo:faqCategoryHome".intern() ;
 	/**
 	 *  This method convert string to string[] split with comma
 	 * @param str
@@ -121,4 +129,18 @@ public class Utils {
     }
   }
 	
+	static public String getStandardId(String s) {
+		int i=0;
+		StringBuilder builder = new StringBuilder();
+		while(i < s.length()) {
+			int t = s.codePointAt(i);
+			if(t > 48 && t < 122){
+				builder.append(s.charAt(i)) ;
+			} else {
+				builder.append("id") ;
+			}
+			++i;
+		}
+		return builder.toString();
+  }
 }

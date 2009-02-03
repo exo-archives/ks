@@ -105,6 +105,7 @@ public class UIFAQPageIterator extends UIContainer {
       UIFAQPageIterator faqPageIterator = event.getSource() ;
       String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
       long maxPage = faqPageIterator.pageList.getAvailablePage() ;
+      System.out.println("\n\nmaxPage: " + maxPage + "\nstateClick: " + stateClick);
       long presentPage  = faqPageIterator.page ;
       if(stateClick.equalsIgnoreCase("next")) {
         if(presentPage < maxPage){

@@ -43,6 +43,7 @@ import org.exoplatform.faq.service.CategoryLanguage;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.value.DateValue;
 import org.exoplatform.services.jcr.impl.core.value.StringValue;
@@ -59,12 +60,6 @@ import org.exoplatform.services.jcr.impl.core.value.StringValue;
  */
 
 public class MultiLanguages {
-	final private static String LANGUAGE_HOME = "languages".intern();
-	final private static String ANSWER_HOME = "faqAnswerHome".intern();
-  final private static String COMMENT_HOME = "faqCommentHome".intern();
-	/** The Constant LANGUAGES. */
-	final static public String LANGUAGES = "languages" ;
-  
   /** The Constant EXO_LANGUAGE. */
   final static public String EXO_LANGUAGE = "exo:language" ;
   
@@ -230,9 +225,9 @@ public class MultiLanguages {
   	}
   	Node languagesNode = null ;
     try{
-    	languagesNode = questionNode.getNode(LANGUAGES) ;
+    	languagesNode = questionNode.getNode(Utils.LANGUAGE_HOME) ;
     }catch(Exception e) {
-    	languagesNode = questionNode.addNode(LANGUAGES, NTUNSTRUCTURED) ;
+    	languagesNode = questionNode.addNode(Utils.LANGUAGE_HOME, NTUNSTRUCTURED) ;
     }
     Node langNode = null ;
     try{
@@ -242,21 +237,21 @@ public class MultiLanguages {
     }
     langNode.setProperty("exo:name", language.getDetail()) ;
     langNode.setProperty("exo:title", language.getQuestion()) ;
-    
+    System.out.println("\n\n path LG: " + langNode.getPath());
     if(langNode.isNew())questionNode.getSession().save() ;
     else questionNode.save();
   }
   
   public void deleteAnswerQuestionLang(Node questionNode, String answerId, String language, SessionProvider sProvider) throws Exception{
-  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
-  	Node answerNode = languageNode.getNode(ANSWER_HOME).getNode(answerId);
+  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
+  	Node answerNode = languageNode.getNode(Utils.ANSWER_HOME).getNode(answerId);
   	answerNode.remove();
   	questionNode.save();
   }
   
   public void deleteCommentQuestionLang(Node questionNode, String commentId, String language, SessionProvider sProvider) throws Exception{
-  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
-  	Node commnetNode = languageNode.getNode(COMMENT_HOME).getNode(commentId);
+  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
+  	Node commnetNode = languageNode.getNode(Utils.COMMENT_HOME).getNode(commentId);
   	commnetNode.remove();
   	questionNode.save();
   }
@@ -264,7 +259,7 @@ public class MultiLanguages {
   public QuestionLanguage getQuestionLanguageByLanguage(Node questionNode, String language) throws Exception{
   	QuestionLanguage questionLanguage = new QuestionLanguage();
   	questionLanguage.setLanguage(language);
-  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
+  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
   	questionLanguage.setDetail(languageNode.getProperty("exo:name").getString());
   	questionLanguage.setQuestion(languageNode.getProperty("exo:title").getString());
   	
@@ -272,10 +267,10 @@ public class MultiLanguages {
   }
   
   public Comment getCommentById(Node questionNode, String commentId, String language) throws Exception{
-  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
+  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
   	try{
   		Comment comment = new Comment();
-  		Node commentNode = languageNode.getNode(COMMENT_HOME).getNode(commentId);
+  		Node commentNode = languageNode.getNode(Utils.COMMENT_HOME).getNode(commentId);
 			if(commentNode.hasProperty("exo:id")) comment.setId((commentNode.getProperty("exo:id").getValue().getString())) ;
 			if(commentNode.hasProperty("exo:comments")) comment.setComments((commentNode.getProperty("exo:comments").getValue().getString())) ;
 			if(commentNode.hasProperty("exo:commentBy")) comment.setCommentBy((commentNode.getProperty("exo:commentBy").getValue().getString())) ;  	
@@ -288,10 +283,10 @@ public class MultiLanguages {
   }
   
   public Answer getAnswerById(Node questionNode, String answerid, String language) throws Exception{
-  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(language);
+  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
   	Answer answer = new Answer();
   	try{
-  		Node answerNode = languageNode.getNode(ANSWER_HOME).getNode(answerid);
+  		Node answerNode = languageNode.getNode(Utils.ANSWER_HOME).getNode(answerid);
   		if(answerNode.hasProperty("exo:id")) answer.setId((answerNode.getProperty("exo:id").getValue().getString())) ;
     	if(answerNode.hasProperty("exo:responses")) answer.setResponses((answerNode.getProperty("exo:responses").getValue().getString())) ;
       if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
@@ -340,15 +335,15 @@ public class MultiLanguages {
   }
   
   public void saveAnswer(Node questionNode, Answer answer, String languge, SessionProvider sessionProvider) throws Exception{
-  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(languge);
+  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(languge);
   	if(!languageNode.isNodeType("mix:faqi18n")) {
   		languageNode.addMixin("mix:faqi18n") ;
   	}
   	Node answerHome = null;
   	try{
-  		answerHome = languageNode.getNode(ANSWER_HOME);
+  		answerHome = languageNode.getNode(Utils.ANSWER_HOME);
   	} catch (Exception e){
-  		answerHome = languageNode.addNode(ANSWER_HOME, NTUNSTRUCTURED);
+  		answerHome = languageNode.addNode(Utils.ANSWER_HOME, NTUNSTRUCTURED);
   	}
   	Node answerNode = null;
   	try{
@@ -375,7 +370,12 @@ public class MultiLanguages {
   }
   
   public void saveAnswer(Node quesNode, QuestionLanguage questionLanguage) throws Exception{
-  	Node quesLangNode = quesNode.getNode(LANGUAGES).getNode(questionLanguage.getLanguage());
+  	Node quesLangNode ;
+  	try {
+  		quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).getNode(questionLanguage.getLanguage());
+    } catch (Exception e) {
+    	quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).addNode(questionLanguage.getLanguage());
+    }
   	if(!quesLangNode.isNodeType("mix:faqi18n")) {
   		quesLangNode.addMixin("mix:faqi18n") ;
   	}
@@ -383,9 +383,9 @@ public class MultiLanguages {
   	Node answerNode;
   	Answer[] answers = questionLanguage.getAnswers();
   	try{
-  		answerHome = quesLangNode.getNode(ANSWER_HOME);
+  		answerHome = quesLangNode.getNode(Utils.ANSWER_HOME);
   	} catch (Exception e){
-  		answerHome = quesLangNode.addNode(ANSWER_HOME, NTUNSTRUCTURED);
+  		answerHome = quesLangNode.addNode(Utils.ANSWER_HOME, NTUNSTRUCTURED);
   	}
   	if(!answerHome.isNew()){
   		List<String> listNewAnswersId = new ArrayList<String>();
@@ -395,7 +395,7 @@ public class MultiLanguages {
     	NodeIterator nodeIterator = answerHome.getNodes();
     	while(nodeIterator.hasNext()){
     		answerNode = nodeIterator.nextNode();
-    		if(!listNewAnswersId.contains(answerNode.getProperty("exo:id").getString()))
+    		if(!listNewAnswersId.contains(answerNode.getName()))
     			answerNode.remove();
     	}
   	}
@@ -427,7 +427,7 @@ public class MultiLanguages {
   }
   
   public void saveComment(Node questionNode, Comment comment, String languge, SessionProvider sessionProvider) throws Exception{
-  	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(languge);
+  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(languge);
   	if(!languageNode.isNodeType("mix:faqi18n")) {
   		languageNode.addMixin("mix:faqi18n") ;
   	}
@@ -435,9 +435,9 @@ public class MultiLanguages {
   	Node commnetNode = null;
   	
   	try{
-  		commentHome = languageNode.getNode(COMMENT_HOME);
+  		commentHome = languageNode.getNode(Utils.COMMENT_HOME);
   	} catch (Exception e){
-  		commentHome = languageNode.addNode(COMMENT_HOME, NTUNSTRUCTURED);
+  		commentHome = languageNode.addNode(Utils.COMMENT_HOME, NTUNSTRUCTURED);
   	}
   	try{
   		commnetNode = commentHome.getNode(comment.getId());
@@ -482,8 +482,8 @@ public class MultiLanguages {
    */
   public void removeLanguage(Node questionNode, List<String> listLanguage) {
     try {
-      if(!questionNode.hasNode(LANGUAGES)) return ;
-      Node languageNode = questionNode.getNode(LANGUAGES) ;
+      if(!questionNode.hasNode(Utils.LANGUAGE_HOME)) return ;
+      Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME) ;
       NodeIterator nodeIterator = languageNode.getNodes();
       Node node = null ;
       while(nodeIterator.hasNext()) {
@@ -514,9 +514,9 @@ public class MultiLanguages {
   	}
   	Node languagesNode = null ;
     try{
-    	languagesNode = categoryNode.getNode(LANGUAGES) ;
+    	languagesNode = categoryNode.getNode(Utils.LANGUAGE_HOME) ;
     }catch(Exception e) {
-    	languagesNode = categoryNode.addNode(LANGUAGES, NTUNSTRUCTURED) ;
+    	languagesNode = categoryNode.addNode(Utils.LANGUAGE_HOME, NTUNSTRUCTURED) ;
     }
     Node langNode = null ;
     try{
@@ -572,8 +572,8 @@ public class MultiLanguages {
     Node languagesNode = null ;
     String defaultLanguage = getDefault(node) ;
     if(!node.isNodeType("mix:faqi18n")) node.addMixin("mix:faqi18n") ;
-    if(node.hasNode(LANGUAGES)) languagesNode = node.getNode(LANGUAGES) ;
-    else languagesNode = node.addNode(LANGUAGES, NTUNSTRUCTURED) ;
+    if(node.hasNode(Utils.LANGUAGE_HOME)) languagesNode = node.getNode(Utils.LANGUAGE_HOME) ;
+    else languagesNode = node.addNode(Utils.LANGUAGE_HOME, NTUNSTRUCTURED) ;
     if(!defaultLanguage.equals(language)){
       if(isDefault) {
         if(languagesNode.hasNode(defaultLanguage)) {
@@ -674,8 +674,8 @@ public class MultiLanguages {
     Node languagesNode = null ;
     String defaultLanguage = getDefault(node) ;
     Workspace ws = node.getSession().getWorkspace() ;
-    if(node.hasNode(LANGUAGES)) languagesNode = node.getNode(LANGUAGES) ;
-    else languagesNode = node.addNode(LANGUAGES, NTUNSTRUCTURED) ;
+    if(node.hasNode(Utils.LANGUAGE_HOME)) languagesNode = node.getNode(Utils.LANGUAGE_HOME) ;
+    else languagesNode = node.addNode(Utils.LANGUAGE_HOME, NTUNSTRUCTURED) ;
     if(!defaultLanguage.equals(language)){
       if(isDefault) {
         if(languagesNode.hasNode(defaultLanguage)) {
@@ -797,8 +797,8 @@ public class MultiLanguages {
     Node languagesNode = null ;
     Workspace ws = node.getSession().getWorkspace() ;
     String defaultLanguage = getDefault(node) ;
-    if(node.hasNode(LANGUAGES)) languagesNode = node.getNode(LANGUAGES) ;
-    else languagesNode = node.addNode(LANGUAGES, NTUNSTRUCTURED) ;
+    if(node.hasNode(Utils.LANGUAGE_HOME)) languagesNode = node.getNode(Utils.LANGUAGE_HOME) ;
+    else languagesNode = node.addNode(Utils.LANGUAGE_HOME, NTUNSTRUCTURED) ;
     if(!defaultLanguage.equals(language)){
       if(isDefault) {
         if(languagesNode.hasNode(defaultLanguage)) newLanguageNode = languagesNode.getNode(defaultLanguage) ;
@@ -848,8 +848,8 @@ public class MultiLanguages {
     Node languagesNode = null ;
     Workspace ws = node.getSession().getWorkspace() ;
     String defaultLanguage = getDefault(node) ;
-    if(node.hasNode(LANGUAGES)) languagesNode = node.getNode(LANGUAGES) ;
-    else languagesNode = node.addNode(LANGUAGES, NTUNSTRUCTURED) ;
+    if(node.hasNode(Utils.LANGUAGE_HOME)) languagesNode = node.getNode(Utils.LANGUAGE_HOME) ;
+    else languagesNode = node.addNode(Utils.LANGUAGE_HOME, NTUNSTRUCTURED) ;
     if(!defaultLanguage.equals(language)){
       if(isDefault) {
         if(languagesNode.hasNode(defaultLanguage)) newLanguageNode = languagesNode.getNode(defaultLanguage) ;
@@ -952,8 +952,8 @@ public class MultiLanguages {
     List<String> languages = new ArrayList<String>();
     String defaultLang = getDefault(node) ;
     if(defaultLang != null) languages.add(defaultLang) ;
-    if(node.hasNode(LANGUAGES)){
-      Node languageNode = node.getNode(LANGUAGES) ;
+    if(node.hasNode(Utils.LANGUAGE_HOME)){
+      Node languageNode = node.getNode(Utils.LANGUAGE_HOME) ;
       NodeIterator iter  = languageNode.getNodes() ;      
       while(iter.hasNext()) {
         languages.add(iter.nextNode().getName());
@@ -1031,10 +1031,10 @@ public class MultiLanguages {
    */
   public long getVoteTotal(Node node) throws Exception {
     long voteTotal = 0;
-    if(!node.hasNode(LANGUAGES) && node.hasProperty(VOTE_TOTAL_PROP)) {
+    if(!node.hasNode(Utils.LANGUAGE_HOME) && node.hasProperty(VOTE_TOTAL_PROP)) {
       return node.getProperty(VOTE_TOTAL_LANG_PROP).getLong() ;
     }
-    Node multiLanguages = node.getNode(LANGUAGES) ;
+    Node multiLanguages = node.getNode(Utils.LANGUAGE_HOME) ;
     voteTotal = node.getProperty(VOTE_TOTAL_LANG_PROP).getLong() ;
     NodeIterator nodeIter = multiLanguages.getNodes() ;
     String defaultLang = getDefault(node) ;
@@ -1079,8 +1079,8 @@ public class MultiLanguages {
     String defaultLanguage = getDefault(node) ;
     if(!defaultLanguage.equals(language)){
       Node languagesNode = null ;
-      if(node.hasNode(LANGUAGES)) languagesNode = node.getNode(LANGUAGES) ;
-      else languagesNode = node.addNode(LANGUAGES, NTUNSTRUCTURED) ;
+      if(node.hasNode(Utils.LANGUAGE_HOME)) languagesNode = node.getNode(Utils.LANGUAGE_HOME) ;
+      else languagesNode = node.addNode(Utils.LANGUAGE_HOME, NTUNSTRUCTURED) ;
       Node selectedLangNode = languagesNode.getNode(language) ;
       Node newLang = languagesNode.addNode(defaultLanguage) ;
       PropertyDefinition[] properties = node.getPrimaryNodeType().getPropertyDefinitions() ;
@@ -1193,7 +1193,7 @@ public class MultiLanguages {
    * @throws Exception the exception
    */
   public Node getLanguage(Node node, String language) throws Exception {
-  	if(node.hasNode(LANGUAGES + "/"+ language)) return node.getNode(LANGUAGES + "/"+ language) ;
+  	if(node.hasNode(Utils.LANGUAGE_HOME + "/"+ language)) return node.getNode(Utils.LANGUAGE_HOME + "/"+ language) ;
     return null;
   }
   

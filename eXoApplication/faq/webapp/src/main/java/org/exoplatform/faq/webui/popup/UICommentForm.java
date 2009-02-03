@@ -99,7 +99,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		SessionProvider sProvider = FAQUtils.getSystemProvider();
 		if(languageView.trim().length() < 1 || languageView.equals(question.getLanguage())) {
 			if(!commentId.equals("new")){
-				comment = faqService.getCommentById(faqService.getQuestionNodeById(question.getId(), sProvider), commentId);
+				comment = faqService.getCommentById(sProvider, question.getId(), commentId);
 				isAddNew = false;
 			} else {
 				comment = new Comment();

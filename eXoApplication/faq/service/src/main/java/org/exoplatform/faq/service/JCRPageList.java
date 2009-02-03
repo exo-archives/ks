@@ -18,8 +18,6 @@ package org.exoplatform.faq.service;
 
 import java.util.List;
 
-import org.exoplatform.commons.exception.ExoMessageException;
-
 /**
  * Abstract class JCRPageList provide functions for pagination when view
  * question content in web page.
@@ -34,7 +32,7 @@ abstract public class JCRPageList {
 	protected long availablePage_  = 1;
 	protected long currentPage_ = 1 ;
 	protected List<Question> currentListPage_ ;
-	protected List<Object> currentListObject_ ;
+	protected List currentListObject_ ;
 	protected List<Category> currentListCategory_;
 	protected List<FAQFormSearch> currentListResultSearch_ ;
 	protected List<Watch> currentListWatch_ ;
@@ -156,15 +154,24 @@ abstract public class JCRPageList {
 	 */
 	public List<Question> getPage(long page, String username) throws Exception   {
 		checkAndSetPage(page) ;
-		populateCurrentPage(page, username) ;
+		populateCurrentPage(currentPage_, username) ;
 		return currentListPage_ ;
 	}
 
+	// Created by Vu Duy Tu 
+	abstract protected void populateCurrentPageItem(long page) throws Exception   ;
+	@SuppressWarnings("unchecked")
+  public List getPageItem(long page) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageItem(currentPage_) ;
+		return currentListObject_ ;
+	}
+	
 	abstract protected void populateCurrentPageResultSearch(long page, String username) throws Exception   ;
 
 	public List<FAQFormSearch> getPageResultSearch(long page, String username) throws Exception   {
 		checkAndSetPage(page) ;
-		populateCurrentPageResultSearch(page, username) ;
+		populateCurrentPageResultSearch(currentPage_, username) ;
 		return currentListResultSearch_ ;
 	}
 
@@ -172,7 +179,7 @@ abstract public class JCRPageList {
 
 	public List<Category> getPageResultCategoriesSearch(long page, String username) throws Exception   {
 		checkAndSetPage(page) ;
-		populateCurrentPageCategoriesSearch(page, username) ;
+		populateCurrentPageCategoriesSearch(currentPage_, username) ;
 		return  currentListCategory_;
 	}
 
@@ -180,7 +187,7 @@ abstract public class JCRPageList {
 
 	public List<Question> getPageResultQuestionsSearch(long page, String username) throws Exception   {
 		checkAndSetPage(page) ;
-		populateCurrentPageQuestionsSearch(page, username) ;
+		populateCurrentPageQuestionsSearch(currentPage_, username) ;
 		return currentListPage_ ;
 	}
 
@@ -188,7 +195,7 @@ abstract public class JCRPageList {
 
 	public List<Object> getPageListCategoriesQuestions(long page, String username) throws Exception   {
 		checkAndSetPage(page) ;
-		populateCurrentPageCategoriesQuestionsSearch(page, username) ;
+		populateCurrentPageCategoriesQuestionsSearch(currentPage_, username) ;
 		return currentListObject_ ;
 	}
 
@@ -196,7 +203,7 @@ abstract public class JCRPageList {
 
 	public List<Watch> getPageListWatch(long page, String username) throws Exception   {
 		checkAndSetPage(page) ;
-		populateCurrentPageWatch(page, username) ;
+		populateCurrentPageWatch(currentPage_, username) ;
 		return currentListWatch_ ;
 	}
 	/**
@@ -222,9 +229,10 @@ abstract public class JCRPageList {
 	 * @throws Exception  if the index <code>page</code> is less than 0 or larger than max index
 	 */
 	protected void checkAndSetPage(long page) throws Exception {
-		if(page < 1 || page > availablePage_) {
-			Object[] args = { Long.toString(page), Long.toString(availablePage_) } ;
-			throw new ExoMessageException("PageList.page-out-of-range", args) ;
+		if(page < 0){
+			page = 1;
+		}else if(page > availablePage_) {
+			page = availablePage_;
 		}
 		currentPage_ =  page ;
 	}

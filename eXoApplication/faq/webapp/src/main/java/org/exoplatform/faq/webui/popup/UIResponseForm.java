@@ -32,6 +32,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -173,7 +174,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     }
   }
 
-	public void setQuestionId(Question question, String languageViewed, boolean cateIsApprovedAnswer){
+	@SuppressWarnings("unchecked")
+  public void setQuestionId(Question question, String languageViewed, boolean cateIsApprovedAnswer){
 		this.cateIsApprovedAnswer_ = cateIsApprovedAnswer;
 		listAnswers = new ArrayList<Answer>();
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
@@ -206,10 +208,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					inputQuestionDetail_.setValue(language.getDetail()) ;
 					questionDetail = language.getDetail();
 					questionContent = language.getQuestion();
-					if(language.getAnswers() != null && language.getAnswers().length > 0) {
-						inputResponseQuestion_.setValue(language.getAnswers()[0].getResponses()) ;
+//					TODO
+//					if(language.getAnswers() != null && language.getAnswers().length > 0) {
+//					}
+//					listAnswers.addAll(Arrays.asList(language.getAnswers()));
+					String questionId = question.getId();
+					if(!question.getLanguage().equals(languageIsResponsed)) {
+						questionId = questionId + "/" + Utils.LANGUAGE_HOME+"/"+languageIsResponsed;
 					}
-					listAnswers.addAll(Arrays.asList(language.getAnswers()));
+					listAnswers.addAll((List<Answer>)faqService.getPageListAnswer(sessionProvider, questionId).getPageItem(0));
+					if(listAnswers.size() > 0) {
+						inputResponseQuestion_.setValue(listAnswers.get(0).getResponses()) ;
+					}
 					if(listAnswers.isEmpty()){
 						listAnswers.add(new Answer(FAQUtils.getCurrentUser(), cateIsApprovedAnswer_));
 					} 

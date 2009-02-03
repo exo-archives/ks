@@ -662,9 +662,13 @@ public interface FAQService {
 	
 	public void saveComment(String questionId, Comment comment, boolean isNew, SessionProvider sProvider) throws Exception;
 	
-	public Comment getCommentById(Node questionNode, String commentId) throws Exception;
+	public Comment getCommentById(SessionProvider sProvider, String questionId, String commentId) throws Exception;
 	
 	public Answer getAnswerById(String questionId, String answerid, SessionProvider sProvider) throws Exception;
 	
 	public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception;
+	
+	public JCRPageList getPageListComment(SessionProvider sProvider, String questionId) throws Exception;
+
+	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId) throws Exception;
 }
