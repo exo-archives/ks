@@ -722,6 +722,10 @@
 	padding-left: 20px;
 }
 
+.UIFAQPortlet .UIResponse #QuestionRespone___Frame{
+	height: 280px;
+}
+
 /******************************	UI Add	***************************************/
 
 .UIFAQPortlet .UIAddCategory {

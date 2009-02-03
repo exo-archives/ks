@@ -793,7 +793,7 @@ public class UIQuestions extends UIContainer {
 			questionForm.setCategoryId(categoryId) ;
 			questionForm.refresh() ;
 			popupContainer.setId("AddQuestion") ;
-			popupAction.activate(popupContainer, 600, 450) ;
+			popupAction.activate(popupContainer, 600, 420) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1251,7 +1251,7 @@ public class UIQuestions extends UIContainer {
 			}
 			responseForm.setFAQSetting(question.faqSetting_);
 			popupContainer.setId("FAQResponseQuestion") ;
-			popupAction.activate(popupContainer, 720, 1000) ;
+			popupAction.activate(popupContainer, 720, 1070) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

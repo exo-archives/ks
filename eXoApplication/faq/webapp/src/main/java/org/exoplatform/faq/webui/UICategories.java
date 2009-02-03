@@ -651,7 +651,7 @@ public class UICategories extends UIContainer{
 			questionForm.setCategoryId(categoryId) ;
 			questionForm.refresh() ;
 			popupContainer.setId("AddQuestion") ;
-			popupAction.activate(popupContainer, 600, 400) ;
+			popupAction.activate(popupContainer, 600, 420) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
