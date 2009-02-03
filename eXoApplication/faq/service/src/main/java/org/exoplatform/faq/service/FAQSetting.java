@@ -26,6 +26,8 @@ package org.exoplatform.faq.service;
  * Apr 10, 2008, 2:07:25 PM
  */
 public class FAQSetting {
+	private boolean enableViewAvatar = false;
+	
 	private boolean enableAutomaticRSS = true;
 	
 	private boolean enanbleVotesAndComments = true;
@@ -252,5 +254,13 @@ public class FAQSetting {
 
 	public void setEnableAutomaticRSS(boolean enableAutomaticRSS) {
 		this.enableAutomaticRSS = enableAutomaticRSS;
+	}
+
+	public boolean isEnableViewAvatar() {
+		return enableViewAvatar;
+	}
+
+	public void setEnableViewAvatar(boolean enableViewAvatar) {
+		this.enableViewAvatar = enableViewAvatar;
 	}
 }

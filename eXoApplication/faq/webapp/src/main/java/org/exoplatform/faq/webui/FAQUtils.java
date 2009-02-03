@@ -349,6 +349,7 @@ public class FAQUtils {
 	public static void getPorletPreference(FAQSetting faqSetting) {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		faqSetting.setEnableViewAvatar(Boolean.parseBoolean(portletPref.getValue("enableViewAvatar", "")));
 		faqSetting.setEnableAutomaticRSS(Boolean.parseBoolean(portletPref.getValue("enableAutomaticRSS", "")));
 		faqSetting.setEnanbleVotesAndComments(Boolean.parseBoolean(portletPref.getValue("enanbleVotesAndComments", "")));
 		faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
@@ -392,6 +393,7 @@ public class FAQUtils {
 			portletPref.setValue("isDiscussForum", String.valueOf(setting.getIsDiscussForum()));
 			portletPref.setValue("pathNameCategoryForum", setting.getPathNameCategoryForum());
 			portletPref.setValue("enableAutomaticRSS", setting.isEnableAutomaticRSS() + "");
+			portletPref.setValue("enableViewAvatar", setting.isEnableViewAvatar() + "");
 			portletPref.setValue("enanbleVotesAndComments", setting.isEnanbleVotesAndComments() + "");
 			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
 			portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);

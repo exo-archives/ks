@@ -89,6 +89,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public static final String ASC = "asc".intern();
 	public static final String DESC = "desc".intern();
 	private final String ENABLE_RSS = "enableRSS";
+	private final String ENABLE_VIEW_AVATAR = "enableViewAvatar";
 	private static final String EMAIL_DEFAULT_ADD_QUESTION = "EmailAddNewQuestion";
 	private static final String EMAIL_DEFAULT_EDIT_QUESTION = "EmailEditQuestion";
 	private static final String DISCUSSION_TAB = "Discussion";
@@ -153,6 +154,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 																																	setChecked(faqSetting_.isEnanbleVotesAndComments()));
 			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_RSS, ENABLE_RSS, false)).
 																																	setChecked(faqSetting_.isEnableAutomaticRSS()));
+			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_VIEW_AVATAR, ENABLE_VIEW_AVATAR, false)).
+																																	setChecked(faqSetting_.isEnableViewAvatar()));
 			EmailTab.addChild(EmailAddNewQuestion);
 			EmailTab.addChild(EmailEditQuestion);
 			
@@ -253,6 +256,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 																								getChildById(settingForm.ENABLE_VOTE_COMMNET)).isChecked());
 				faqSetting.setEnableAutomaticRSS(((UIFormCheckBoxInput<Boolean>)displayTab.
 																								getChildById(settingForm.ENABLE_RSS)).isChecked());
+				faqSetting.setEnableViewAvatar(((UIFormCheckBoxInput<Boolean>)displayTab.
+																								getChildById(settingForm.ENABLE_VIEW_AVATAR)).isChecked());
 				
 				UIFormInputWithActions emailTab = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
 				String defaultAddnewQuestion = ((UIFormWYSIWYGInput)((UIFormInputWithActions)emailTab.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB))

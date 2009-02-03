@@ -670,5 +670,5 @@ public interface FAQService {
 	
 	public JCRPageList getPageListComment(SessionProvider sProvider, String questionId) throws Exception;
 
-	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId) throws Exception;
+	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, Boolean isSortByVote) throws Exception;
 }

@@ -731,8 +731,8 @@ public class FAQServiceImpl implements FAQService{
 		jcrData_.saveAnswer(questionId, answers, sProvider);
 	}
 
-	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId) throws Exception {
-	  return jcrData_.getPageListAnswer(sProvider, questionId);
+	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, Boolean isSortByVote) throws Exception {
+	  return jcrData_.getPageListAnswer(sProvider, questionId, isSortByVote);
   }
 
 	public JCRPageList getPageListComment(SessionProvider sProvider, String questionId) throws Exception {

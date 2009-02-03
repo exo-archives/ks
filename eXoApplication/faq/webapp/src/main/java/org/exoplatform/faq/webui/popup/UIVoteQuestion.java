@@ -111,9 +111,6 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIVoteQuestion> event) throws Exception {
 			UIVoteQuestion voteQuestion = event.getSource() ;
 			double markVote = Double.parseDouble(event.getRequestContext().getRequestParameter(OBJECTID));
-			
-			System.out.println("\n\n\n\n-----------> author vote for answr:" + markVote);
-			
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			MultiLanguages multiLanguages = new MultiLanguages();

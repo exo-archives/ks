@@ -585,16 +585,20 @@ public class JCRDataStorage {
     return answer;
   }
 	
-	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId) throws Exception{
+	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, Boolean isSortByVote) throws Exception{
 		try {
 			Node questionHome = getQuestionHome(sProvider, null) ;
 			Node answerHome = questionHome.getNode(questionId).getNode(Utils.ANSWER_HOME);
 			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()). 
-																	append("//element(*,exo:answer)").append("order by @exo:dateResponse ascending");
+																	append("//element(*,exo:answer)");
+			if(isSortByVote == null) queryString.append("order by @exo:dateResponse ascending");
+			else if(isSortByVote) queryString.append("order by @exo:marksVoteAnswer ascending");
+			else  queryString.append("order by @exo:marksVoteAnswer descending");
+			System.out.println("\n\n\n\n--------->queryString: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
-			QuestionPageList pageList = new QuestionPageList(answerHome.getNodes(), 10, queryString.toString(), true) ;
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList;
 		} catch (Exception e) {
 			return null;

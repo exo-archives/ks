@@ -126,7 +126,7 @@ public class UIQuestions extends UIContainer {
 	public List<Question> listQuestion_ =  null ;
 	private List<String> listCateId_ = new ArrayList<String>() ;
 	private boolean canEditQuestion = false ;
-	private boolean isSortDesc = true ;
+	private Boolean isSortAnswer = null ;
 	public String categoryId_ = null ;
 	private String parentId_ = null ;
 	public String questionView_ = "" ;
@@ -229,7 +229,7 @@ public class UIQuestions extends UIContainer {
 			if(pathParentNode.length() > 0) {
 				questionId = questionId + "/" + pathParentNode;
 			}
-			JCRPageList pageListAnswre = faqService_.getPageListAnswer(sProvider, questionId);
+			JCRPageList pageListAnswre = faqService_.getPageListAnswer(sProvider, questionId, isSortAnswer);
 			UIFAQPageIterator iterator ;
 			if(this.getChildById(IterId) == null) {
 				iterator = addChild(UIFAQPageIterator.class, null, IterId);
@@ -629,33 +629,6 @@ public class UIQuestions extends UIContainer {
 		return listResult ;
 	}
 	
-	private QuestionLanguage sortQuestionLanguage(QuestionLanguage language){
-		Answer answers[] = language.getAnswers();
-		Answer answer = null;
-		if(isSortDesc){
-			for(int i = 0; i < answers.length - 1; i ++){
-				for(int j = i + 1; j < answers.length; j ++){
-					if(answers[i].getMarksVoteAnswer() < answers[j].getMarksVoteAnswer()){
-						answer = answers[i];
-						answers[i] = answers[j];
-						answers[j] = answer;
-					}
-				}
-			}
-		} else {
-			for(int i = 0; i < answers.length - 1; i ++){
-				for(int j = i + 1; j < answers.length; j ++){
-					if(answers[i].getMarksVoteAnswer() > answers[j].getMarksVoteAnswer()){
-						answer = answers[i];
-						answers[i] = answers[j];
-						answers[j] = answer;
-					}
-				}
-			}
-		}
-		language.setAnswers(answers);
-		return language;
-	}
 
 	public Boolean checkUserWatch(String categoryId) throws Exception {
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
@@ -1104,12 +1077,10 @@ public class UIQuestions extends UIContainer {
 	static  public class SortAnswerActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
-			for(int i = 0; i < questions.listQuestionLanguage.size(); i ++){
-				questions.listQuestionLanguage.set(i, questions.sortQuestionLanguage(questions.listQuestionLanguage.get(i)));
-			}
-			questions.isSortDesc = !questions.isSortDesc;
-			questions.isChangeLanguage = true;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+			if(questions.isSortAnswer == null) questions.isSortAnswer = false;
+			else questions.isSortAnswer = !questions.isSortAnswer;
+			questions.setIsNotChangeLanguage();
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
 
@@ -1119,6 +1090,7 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
 			UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 			uiQuestions.isChangeLanguage = false ;
+			uiQuestions.isSortAnswer = null;
 			String strId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String questionId = new String() ;
 			Question question = new Question();
@@ -1717,7 +1689,7 @@ public class UIQuestions extends UIContainer {
 						}
 					} 
 				} else {
-					List<Answer> answers = faqService_.getPageListAnswer(sessionProvider, question.getId()).getPageItem(0);
+					List<Answer> answers = faqService_.getPageListAnswer(sessionProvider, question.getId(), uiQuestions.isSortAnswer).getPageItem(0);
 					for(Answer answer : answers){
 						if(answer.getId().equals(answerId)){
 							if(action.equals("Activate")) answer.setActivateAnswers(!answer.getActivateAnswers());
