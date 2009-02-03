@@ -16,6 +16,11 @@
  */
 package org.exoplatform.wiki.webui;
 
+
+import javax.portlet.PortletMode;
+import org.exoplatform.webui.application.WebuiApplication;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
@@ -32,7 +37,29 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 )
 public class UIWikiPortlet extends UIPortletApplication {
   public UIWikiPortlet() throws Exception {
+  	
   }
   
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
+  	PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
+    if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+    	// Check and remove edit component
+    	// add a component that has template is View mode HTML
+	    // addChild(UIFAQContainer.class, null, null) ;
+	    	
+    	
+    }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+    	
+    	// remove view component
+    	// Add edit component
+    	// UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
+		  // settingForm.setRendered(true);
+    	
+    	//NOTE: add this property to portlet.xml file under <supports> tag 
+    	// <portlet-mode>edit</portlet-mode> 
+		  
+    }
+    super.processRender(app, context) ;
+  }
 
 } 
