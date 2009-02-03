@@ -689,7 +689,7 @@ public class UIQuestions extends UIContainer {
 					Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 					if(question.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-						uiPopupAction.activate(uiPopupContainer, 540, 500) ;
+						uiPopupAction.activate(uiPopupContainer, 540, 400) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
 						category.setParentId(categoryId) ;
 					} else {
@@ -710,7 +710,7 @@ public class UIQuestions extends UIContainer {
 				}
 				sessionProvider.close();
 			} else {
-				uiPopupAction.activate(uiPopupContainer, 540, 320) ;
+				uiPopupAction.activate(uiPopupContainer, 540, 400) ;
 				uiPopupContainer.setId("AddCategoryForm") ;
 			}
 			category.init(true) ;

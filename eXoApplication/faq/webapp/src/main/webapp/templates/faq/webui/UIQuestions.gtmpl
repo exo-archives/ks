@@ -526,23 +526,24 @@
 											        	%>
 												        	<!-- action vote question -->
 												        	<% 
-												        	if(uicomponent.currentUser_ != null && uicomponent.currentUser_.trim().length() > 0 &&
-												        		 uicomponent.canVote(question)){
+												        	if(uicomponent.currentUser_ != null){
+												        		if(uicomponent.currentUser_.trim().length() > 0 && uicomponent.canVote(question)){
 											        	 %>
-													        	<td width="25">
-																			<a onclick="<%=uicomponent.event("VoteQuestion",question.getId())%>"
-																					title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
-																				<div class="VoteFAQ"><span></span></div>
-																			</a>
-																		</td>
-																<%} else {%>
-																		<td width="25">
-																			<a onclick="<%=uicomponent.event("UnVoteQuestion",question.getId())%>"
-																					title="<%=_ctx.appRes("UIQuestions.action.UnVoteQuestion")%>">
-																				<div class="VoteFAQ" style="filter: alpha(opacity: 50); -moz-opacity: 0.5;"><span></span></div>
-																			</a>
-																		</td>
-																<%}%>
+														        	<td width="25">
+																				<a onclick="<%=uicomponent.event("VoteQuestion",question.getId())%>"
+																						title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+																					<div class="VoteFAQ"><span></span></div>
+																				</a>
+																			</td>
+																<%	} else {%>
+																			<td width="25">
+																				<a onclick="<%=uicomponent.event("UnVoteQuestion",question.getId())%>"
+																						title="<%=_ctx.appRes("UIQuestions.action.UnVoteQuestion")%>">
+																					<div class="VoteFAQ" style="filter: alpha(opacity: 50); -moz-opacity: 0.5;"><span></span></div>
+																				</a>
+																			</td>
+																<%	}
+																	}%>
 																	<!-- action Sort answer by vote -->
 																	<td width="25">
 																		<a href="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>">

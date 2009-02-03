@@ -434,7 +434,7 @@ public class UICategories extends UIContainer{
 				}
 				sessionProvider.close();
 			} else {
-				uiPopupAction.activate(uiPopupContainer, 540, 320) ;
+				uiPopupAction.activate(uiPopupContainer, 540, 400) ;
 				uiPopupContainer.setId("AddCategoryForm") ;
 			}
 			category.init(true) ;
