@@ -12,19 +12,19 @@
     </node>
     <node>
       <uri>forum</uri>
-      <name>Forum</name>
+      <name>forum</name>
       <label>#{portal.classic.forum}</label>
       <page-reference>portal::classic::forum</page-reference>
     </node>
     <node>
       <uri>faq</uri>
-      <name>FAQ</name>
+      <name>faq</name>
       <label>#{portal.classic.faq}</label>
       <page-reference>portal::classic::faq</page-reference>
     </node>
     <node>
       <uri>tour</uri>
-      <name>Tour</name>
+      <name>tour</name>
       <label>#{portal.classic.tour}</label>
       <page-reference>portal::classic::tour</page-reference>
     </node>    

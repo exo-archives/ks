@@ -8,12 +8,7 @@
     <factory-id>Desktop</factory-id>
     <access-permissions>manager:/platform/administrators</access-permissions>
     <edit-permission>manager:/platform/administrators</edit-permission>
-    
-    <application location-x="100" location-y="150">
-      <instance-id>portal:/eXoWidgetWeb/WelcomeWidget/WelcomeWidget</instance-id>
-      <application-type>eXoWidget</application-type>
-    </application>
-    
+        
     <application>
       <instance-id>group#platform/administrators:/exoadmin/AccountPortlet/Account</instance-id>
       <title>New Account</title>

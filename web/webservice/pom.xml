@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>config</artifactId>
-    <version>trunk</version>
+    <version>1.1-SNAPSHOT</version>
   </parent> 
 
   <modelVersion>4.0.0</modelVersion>
@@ -24,11 +24,13 @@
       <artifactId>exo.core.component.security.core</artifactId>
       <version>${org.exoplatform.core.version}</version>
     </dependency>
-    <dependency>                                                                                                                         
-      <groupId>org.exoplatform.ws</groupId>                                                                                              
-      <artifactId>exo.ws.frameworks.json</artifactId>                                                                                    
-      <version>${org.exoplatform.ws.version}</version>                                                                                                           
+    
+    <dependency>
+      <groupId>org.exoplatform.ws</groupId>
+      <artifactId>exo.ws.frameworks.json</artifactId>
+      <version>${org.exoplatform.ws.version}</version>
     </dependency> 
+    
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.resources</artifactId>

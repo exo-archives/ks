@@ -11,12 +11,6 @@
     <show-max-window>true</show-max-window>
     
     <application>
-	    <instance-id>admin:/eXoWidgetWeb/WelcomeWidget/WelcomeWidget</instance-id>
-	    <application-type>eXoWidget</application-type>
-	    <title>Welcome Widget</title>
-	  </application>
-
-    <application>
       <instance-id>portal#webos:/web/SiteMapPortlet/SitemapPortlet/SiteMap</instance-id>    
       <title>Site Map</title>
     </application>

@@ -13,6 +13,7 @@
     <output-encoding>UTF-8</output-encoding>
     <input-encoding>UTF-8</input-encoding>
     <description>Default configuration for english locale</description>
+    <orientation>lt</orientation>    
   </locale-config>
 
   <locale-config>
@@ -20,6 +21,7 @@
     <output-encoding>UTF-8</output-encoding>
     <input-encoding>UTF-8</input-encoding>
     <description>Default configuration for the french locale</description>
+    <orientation>lt</orientation>    
   </locale-config>
 
   <locale-config>
@@ -27,6 +29,7 @@
     <output-encoding>UTF-8</output-encoding>
     <input-encoding>UTF-8</input-encoding>
     <description>Default configuration for the vitnamese locale</description>
+    <orientation>lt</orientation>    
   </locale-config>  
   
 </locales-config>

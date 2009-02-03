@@ -268,12 +268,12 @@
                     <field  name="membership"><string>member</string></field>
                   </object>
                 </value>    
-                <value>
+                <!--value>
                   <object type="org.exoplatform.services.organization.impl.NewUserConfig$JoinGroup">
                     <field  name="groupId"><string>/demo</string></field>
                     <field  name="membership"><string>member</string></field>
                   </object>
-                </value>                            
+                </value-->                            
               </collection>
             </field>
             <field  name="ignoredUser">
