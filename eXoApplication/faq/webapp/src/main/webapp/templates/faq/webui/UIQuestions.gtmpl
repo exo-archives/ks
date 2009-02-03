@@ -635,12 +635,10 @@
 											<div class="Response" id="SetWidthContent" style="padding-left:0px; _width: 98%;">
 												<%
 												if(question.getAnswers() != null && question.getAnswers().length > 0) {
-													int countResponse = 0;
 													String actionAnswer = "";
 													for(Answer answer in question.getAnswers()) {
 														res = answer.getResponses().replaceFirst("<p>", "").substring(0, answer.getResponses().lastIndexOf("</p>"))
 														if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
-															countResponse ++;
 															continue;
 														}
 														date = dateFormatter.format(answer.getDateResponse());
@@ -692,34 +690,47 @@
 															<%}%>
 														</div>
 														<div style="clear: left;"><span></span></div>
-														<table width="100%">
-															<tr>
-																<td style="white-space:nowrap;">
+														<div style="float: left;">
+																
+																<!-- ============================= View user who answered quesetion ============================ -->
+																<div style="white-space:nowrap; line-height: 22px; float: left;">
 																	<div style="color:gray;">
 																		<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedBy")%> :
 																		<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", answer.getResponseBy())%>" style="color:gray;">
 																			&nbsp; $responseBy <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> <font style="color:#721d95">$date</font>
 																		</a>
 																	</div>
-																</td>
+																</div>
+																
+																<!-- ============================= View mark vote answr ======================================== -->
+																<!-- ================= Question author vote =================== -->
 																<%
 																if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-																	if(uicomponent.currentUser_ != null && uicomponent.currentUser_.trim().length() > 0 &&
-																			uicomponent.canVoteAnswer(answer.getUsersVoteAnswer())){
-																	%>
-																		<td width="50px" align="left">
-																			<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + answer.getId())%>"
-																					title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
-																				<div class="VoteFAQ"><span></span></div>
-																			</a>
-																		</td>
-																	<%
-																	}
-																	%>
+																	if(question.getAuthor().equals(uicomponent.currentUser_)){
+																		if(answer.getMarksVoteAnswer() == null || answer.getMarksVoteAnswer() == 0){
+																%>
+																			<div width="50px" align="left" style="float: left;">
+																				<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + answer.getId())%>"
+																						title="<%=_ctx.appRes("UIQuestions.action.VoteAnser")%>">
+																					<div class="VoteFAQ"><span></span></div>
+																				</a>
+																			</div>
+																		<%
+																		} else {
+																		%>
+																			<div width="50px" align="left" style="float: left; filter: alpha(opacity: 50); -moz-opacity: 0.5;">
+																				<a href="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + answer.getId())%>"
+																						title="<%=_ctx.appRes("UIQuestions.action.VoteAnserAgain")%>">
+																					<div class="VoteFAQ"><span></span></div>
+																				</a>
+																			</div>
+																	
 																	<% 
+																		}
+																	}
 																	markVote =(Integer) answer.getMarksVoteAnswer();
 																	%>
-																	<td width="100%">
+																	<div style="width:130px; float: left;">
 																		<div class="RatingInfoContainer">
 																			<div class="OptionsContainer">
 																			<%
@@ -742,12 +753,33 @@
 																			%>
 																			</div>
 																		</div>
-																	</td>
+																	</div>
+																	
+																	<!-- ============================= user vote ================================ -->
+																	<%
+																	if(uicomponent.currentUser_ != null){
+																	%>
+																		<div align="left" style="width:200px; line-height: 22px; float: left;">
+																			<div style="width: 16px; heigth: 22px; float:left;">
+																				<a href="<%=uicomponent.event("VoteAnswer", answer.getId() + "/1")%>"
+																						title="+1">
+																					<div class="VoteAnswerUp" id="FAQVoteAnswerUp" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp', null)"><span></span></div>
+																				</a>
+																				
+																				<a href="<%=uicomponent.event("VoteAnswer", answer.getId() + "/-1")%>"
+																						title="-1">
+																					<div class="VoteAnswerDown" id="FAQVoteAnswerDown" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown', null)"><span></span></div>
+																				</a>
+																			</div>
+																			<div style="float: left; height: 22px; line-height: 22px; margin-left: 4px;">
+																				<%=answer.getMarkVotes()[0] - answer.getMarkVotes()[1]%>
+																			</div>
+																		</div>
+																	<%}%>
 																<%}%>
-																</tr>
-														</table>
-											<%		countResponse ++;
-													}
+														</div>
+														<div style="clear: left;"> <span></span></div>
+											<%	}
 												} else {
 											%>
 													<center><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%></center></b>

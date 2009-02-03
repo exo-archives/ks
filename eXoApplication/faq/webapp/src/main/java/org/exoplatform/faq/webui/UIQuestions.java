@@ -111,6 +111,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.ExportActionListener.class),
 				@EventConfig(listeners = UIQuestions.ImportActionListener.class),
 				@EventConfig(listeners = UIQuestions.RSSActionListener.class),
+				@EventConfig(listeners = UIQuestions.VoteAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.DiscussForumActionListener.class)
 		}
 )
@@ -969,6 +970,55 @@ public class UIQuestions extends UIContainer {
 			popupAction.activate(popupContainer, 560, 170) ;
 			exportForm.setRSSLink(rssLink);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static  public class VoteAnswerActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions questions = event.getSource() ;
+			String input[] = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
+			String answerId = input[0];
+			MultiLanguages multiLanguages = null;
+			Node questionNode = null;
+			long mark = Long.parseLong(input[1].trim());
+			SessionProvider sProvider = FAQUtils.getSystemProvider();
+			Answer answer = null;
+			if(questions.language_ == null || questions.language_.trim().length() < 1){
+				answer = faqService_.getAnswerById(questions.questionView_, answerId, sProvider);
+			} else {
+				multiLanguages = new MultiLanguages();
+				questionNode = faqService_.getQuestionNodeById(questions.questionView_, sProvider);
+				answer = multiLanguages.getAnswerById(questionNode, answerId, questions.language_);
+			}
+			long markVotes[] = answer.getMarkVotes();
+			List<String> listUserVoteAnswer = new ArrayList<String>();
+			if(answer.getUsersVoteAnswer() != null)listUserVoteAnswer.addAll(Arrays.asList(answer.getUsersVoteAnswer()));
+			String currentUser = FAQUtils.getCurrentUser() + "/";
+			if(!listUserVoteAnswer.contains(currentUser + mark)){
+				for(String str : listUserVoteAnswer){
+					if(str.contains(currentUser)){
+						long oldMark = Long.parseLong(str.split("/")[1].trim());
+						if(oldMark > 0) markVotes[0] --;
+						else markVotes[1] --;
+						listUserVoteAnswer.remove(str);
+						break;
+					}
+				}
+				if(mark > 0) markVotes[0] ++;
+				else markVotes[1] ++;
+				listUserVoteAnswer.add(currentUser + mark);
+				
+				answer.setMarkVotes(markVotes);
+				answer.setUsersVoteAnswer(listUserVoteAnswer.toArray(new String[]{}));
+				if(multiLanguages == null)
+					faqService_.saveAnswer(questions.questionView_, answer, false, sProvider);
+				else
+					multiLanguages.saveAnswer(questionNode, answer,questions.language_, sProvider);
+				sProvider.close();
+				questions.setIsNotChangeLanguage();
+			}
+			UIFAQContainer faqContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(faqContainer) ;
 		}
 	}
 

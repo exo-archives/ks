@@ -546,6 +546,19 @@ public class JCRDataStorage {
   	questionNode.save();
   }
   
+  private Value[] longToValues(Node answerNode, long[] marks){
+  	if(marks == null || marks.length < 1) return null;
+  	Value[] values = new Value[marks.length];
+  	try{
+	  	for(int i = 0; i < marks.length; i ++){
+	  		values[i] = answerNode.getSession().getValueFactory().createValue(marks[i]);
+	  	}
+  	} catch (Exception e){
+  		return null;
+  	}
+  	return values;
+  }
+  
   public void saveAnswer(String questionId, Answer answer, boolean isNew, SessionProvider sProvider) throws Exception{
   	Node quesNode = getQuestionNodeById(questionId, sProvider);
   	if(!quesNode.isNodeType("mix:faqi18n")) {
@@ -577,6 +590,7 @@ public class JCRDataStorage {
   	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
   	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
   	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+  	answerNode.setProperty("exo:MarkVotes", longToValues(quesNode, answer.getMarkVotes())) ;
   	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer());
   	
   	if(isNew) quesNode.getSession().save();
@@ -630,6 +644,7 @@ public class JCRDataStorage {
 	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
 	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
 	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+	  	answerNode.setProperty("exo:MarkVotes", longToValues(quesNode, answer.getMarkVotes())) ;
 	  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer());
 	  	if(answerNode.isNew()) quesNode.getSession().save();
 	  	else quesNode.save();
@@ -736,6 +751,7 @@ public class JCRDataStorage {
 	      if(answerNode.hasProperty("exo:responseBy")) answers[i].setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
 	      if(answerNode.hasProperty("exo:dateResponse")) answers[i].setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
 	      if(answerNode.hasProperty("exo:usersVoteAnswer")) answers[i].setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+	      if(answerNode.hasProperty("exo:MarkVotes")) answers[i].setMarkVotes(ValuesToLong(answerNode.getProperty("exo:MarkVotes").getValues())) ;
 	      if(answerNode.hasProperty("exo:marksVoteAnswer")) answers[i].setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
 	      if(answerNode.hasProperty("exo:approveResponses")) answers[i].setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
 	      if(answerNode.hasProperty("exo:activateResponses")) answers[i].setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
@@ -758,6 +774,7 @@ public class JCRDataStorage {
       if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
       if(answerNode.hasProperty("exo:dateResponse")) answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
       if(answerNode.hasProperty("exo:usersVoteAnswer")) answer.setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+      if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(ValuesToLong(answerNode.getProperty("exo:MarkVotes").getValues())) ;
       if(answerNode.hasProperty("exo:marksVoteAnswer")) answer.setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
       if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
       if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
@@ -1541,11 +1558,11 @@ public class JCRDataStorage {
 		return Str;
 	}
   
-  private double [] ValuesToDouble(Value[] Val) throws Exception {
-  	if(Val.length < 1) return new double[]{0} ;
-  	double[] d = new double[Val.length] ;
+  private long [] ValuesToLong(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new long[]{0} ;
+  	long[] d = new long[Val.length] ;
   	for(int i = 0; i < Val.length; ++i) {
-  		d[i] = Val[i].getDouble() ;
+  		d[i] = Val[i].getLong() ;
   	}
   	return d;
   }

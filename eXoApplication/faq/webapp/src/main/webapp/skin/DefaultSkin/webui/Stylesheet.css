@@ -1293,6 +1293,26 @@
 	height:20px;
 }
 
+.UIFAQPortlet .VoteAnswerUp {
+	background: url('background/VoteAnswerUp.gif') no-repeat center;
+	height: 8px;	width: 16px;
+	cursor: pointer;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	filter: alpha(opacity: 50); 
+	-moz-opacity: 0.5;
+}
+
+.UIFAQPortlet .VoteAnswerDown {
+	background: url('background/VoteAnswerDown.gif') no-repeat center;
+	height: 8px;	width: 16px;
+	cursor: pointer;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	filter: alpha(opacity: 50); 
+	-moz-opacity: 0.5;
+}
+
 .UIFAQPortlet .RatedVote {
 	float: left ;
 	background: url('background/SmallGreyStar.gif') no-repeat center;

@@ -110,11 +110,11 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 	static public class VoteAnswerActionListener extends EventListener<UIVoteQuestion> {
 		public void execute(Event<UIVoteQuestion> event) throws Exception {
 			UIVoteQuestion voteQuestion = event.getSource() ;
-			int number = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID));
-			String currentUser = FAQUtils.getCurrentUser();
+			double markVote = Double.parseDouble(event.getRequestContext().getRequestParameter(OBJECTID));
+			
+			System.out.println("\n\n\n\n-----------> author vote for answr:" + markVote);
+			
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			List<String> listUsersVoteAnswers = new ArrayList<String>();
-			double markVote = 0;
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			MultiLanguages multiLanguages = new MultiLanguages();
 			Answer answer =  null;
@@ -123,17 +123,8 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 																										voteQuestion.answerId_, voteQuestion.language_);
 			else
 				answer = faqService_.getAnswerById(voteQuestion.question_.getId(), voteQuestion.answerId_, sessionProvider);
-			if(answer.getUsersVoteAnswer() != null && answer.getUsersVoteAnswer().length > 0)
-				listUsersVoteAnswers.addAll(Arrays.asList(answer.getUsersVoteAnswer()));
-			markVote = answer.getMarksVoteAnswer();
 			
-			long totalVote = 0;
-			if(!listUsersVoteAnswers.isEmpty())
-				totalVote = listUsersVoteAnswers.size();
-			listUsersVoteAnswers.add(currentUser);
-			markVote =  (markVote * totalVote + number)/(totalVote + 1);
 			answer.setMarksVoteAnswer(markVote);
-			answer.setUsersVoteAnswer(listUsersVoteAnswers.toArray(new String[]{}));
 			if(voteQuestion.language_ == null || voteQuestion.language_.trim().length() < 1){
 				faqService_.saveAnswer(voteQuestion.question_.getId(), answer, false, sessionProvider);
 			} else {

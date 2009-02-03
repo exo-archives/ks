@@ -26,6 +26,9 @@
 	  	<propertyDefinition name="exo:usersVoteAnswer" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
 	  	</propertyDefinition>
+	  	<propertyDefinition name="exo:MarkVotes" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+	  	</propertyDefinition>
 	  	<propertyDefinition name="exo:postId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
 	  	</propertyDefinition>

@@ -297,6 +297,7 @@ public class MultiLanguages {
       if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
       if(answerNode.hasProperty("exo:dateResponse")) answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
       if(answerNode.hasProperty("exo:usersVoteAnswer")) answer.setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+      if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(ValuesToLong(answerNode.getProperty("exo:MarkVotes").getValues())) ;
       if(answerNode.hasProperty("exo:marksVoteAnswer")) answer.setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
       if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
       if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
@@ -315,6 +316,28 @@ public class MultiLanguages {
 		}
 		return Str;
 	}
+  
+  private long [] ValuesToLong(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new long[]{0} ;
+  	long[] d = new long[Val.length] ;
+  	for(int i = 0; i < Val.length; ++i) {
+  		d[i] = Val[i].getLong() ;
+  	}
+  	return d;
+  }
+  
+  private Value[] longToValues(Node answerNode, long[] marks){
+  	if(marks == null || marks.length < 1) return null;
+  	Value[] values = new Value[marks.length];
+  	try{
+	  	for(int i = 0; i < marks.length; i ++){
+	  		values[i] = answerNode.getSession().getValueFactory().createValue(marks[i]);
+	  	}
+  	} catch (Exception e){
+  		return null;
+  	}
+  	return values;
+  }
   
   public void saveAnswer(Node questionNode, Answer answer, String languge, SessionProvider sessionProvider) throws Exception{
   	Node languageNode = questionNode.getNode(LANGUAGE_HOME).getNode(languge);
@@ -336,6 +359,7 @@ public class MultiLanguages {
   	answerNode.setProperty("exo:responses", answer.getResponses()) ;
   	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
   	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+  	answerNode.setProperty("exo:MarkVotes", longToValues(questionNode, answer.getMarkVotes())) ;
   	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer()) ;
     if(answer.isNew()){
     	java.util.Calendar calendar = null ;
@@ -395,6 +419,7 @@ public class MultiLanguages {
 	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
 	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
 	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+	  	answerNode.setProperty("exo:MarkVotes", longToValues(quesNode, answer.getMarkVotes())) ;
 	  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer());
 	  	if(answerNode.isNew()) quesNode.getSession().save();
 	  	else quesNode.save();

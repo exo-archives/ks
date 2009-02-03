@@ -568,4 +568,15 @@ UIFAQPortlet.prototype.setDisableSelectbox = function(selectbox) {
 	selectbox.disabled = true;
 } ;
 
+UIFAQPortlet.prototype.voteAnswerUpDown = function(imageId, isVote){
+	var obj = document.getElementById(imageId);
+	if(isVote){
+		obj.style.filter = " alpha(opacity: 100)";
+		obj.style.MozOpacity="1";
+	} else {
+		obj.style.filter = " alpha(opacity: 40)";
+		obj.style.MozOpacity="0.4";
+	}
+}
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;

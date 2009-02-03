@@ -538,6 +538,7 @@ public class QuestionPageList extends JCRPageList {
 	      if(answerNode.hasProperty("exo:responseBy")) answers[i].setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
 	      if(answerNode.hasProperty("exo:dateResponse")) answers[i].setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
 	      if(answerNode.hasProperty("exo:usersVoteAnswer")) answers[i].setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+	      if(answerNode.hasProperty("exo:MarkVotes")) answers[i].setMarkVotes(ValuesToLong(answerNode.getProperty("exo:MarkVotes").getValues())) ;
 	      if(answerNode.hasProperty("exo:marksVoteAnswer")) answers[i].setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
 	      if(answerNode.hasProperty("exo:approveResponses")) answers[i].setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
 	      if(answerNode.hasProperty("exo:activateResponses")) answers[i].setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
@@ -639,6 +640,15 @@ public class QuestionPageList extends JCRPageList {
 		  Str[i] = Val[i].getString();
 		}
 		return Str;
+  }
+  
+  private long [] ValuesToLong(Value[] Val) throws Exception {
+  	if(Val.length < 1) return new long[]{0} ;
+  	long[] d = new long[Val.length] ;
+  	for(int i = 0; i < Val.length; ++i) {
+  		d[i] = Val[i].getLong() ;
+  	}
+  	return d;
   }
   
   private double [] ValuesToDoubles(Value[] Val) throws Exception {

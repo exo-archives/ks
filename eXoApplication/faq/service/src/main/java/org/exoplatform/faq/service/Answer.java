@@ -51,6 +51,9 @@ public class Answer {
   /** The users vote answer. */
   private String[] usersVoteAnswer;
   
+  /** The users vote answer. */
+  private long[] markVotes;
+  
   /** The marks vote answer. */
   private double marksVoteAnswer;
   
@@ -236,4 +239,14 @@ public class Answer {
 	public void setPostId(String postId) {
   	this.postId = postId;
   }
+
+	public long[] getMarkVotes() {
+		if(markVotes != null && markVotes.length > 0)
+			return markVotes;
+		else return new long[]{0, 0};
+	}
+
+	public void setMarkVotes(long[] markVotes) {
+		this.markVotes = markVotes;
+	}
 }
