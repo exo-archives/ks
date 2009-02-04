@@ -5,7 +5,7 @@
   	<owner-type>group</owner-type>
     <owner-id>platform/administrators</owner-id>
     <name>administration</name>
-    <factory-id>Desktop</factory-id>
+    <!--factory-id>Desktop</factory-id-->
     <access-permissions>manager:/platform/administrators</access-permissions>
     <edit-permission>manager:/platform/administrators</edit-permission>
         
@@ -15,7 +15,7 @@
       <show-info-bar>false</show-info-bar>
     </application>  
    
-    <application>
+    <!--application>
       <instance-id>group#platform/administrators:/exoadmin/OrganizationPortlet/Organization</instance-id>
       <title>Community Management</title>
       <show-info-bar>true</show-info-bar>
@@ -41,7 +41,7 @@
       <show-info-bar>true</show-info-bar>
       <show-application-state>true</show-application-state>
       <show-application-mode>true</show-application-mode>
-    </application>   
+    </application-->   
 
    </page>    
          

@@ -12,17 +12,17 @@
       <page-reference>group::platform/administrators::administration</page-reference>      
       
       <node>
-		    <uri>administration/applicationregistry</uri>
-		    <name>applicationregistry</name>
-		    <label>#{administration.application-registry}</label>
-		    <page-reference>group::platform/administrators::applicationRegistry</page-reference>
-	    </node>
-	    
-	    <node>
 		    <uri>administration/newAccount</uri>
 		    <name>newAccount</name>
 		    <label>#{administration.newAccount}</label>
 		    <page-reference>group::platform/administrators::newAccount</page-reference>
+	    </node>
+      
+      <node>
+		    <uri>administration/applicationregistry</uri>
+		    <name>applicationregistry</name>
+		    <label>#{administration.application-registry}</label>
+		    <page-reference>group::platform/administrators::applicationRegistry</page-reference>
 	    </node>
 	    
 	    <node>

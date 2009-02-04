@@ -12,19 +12,18 @@
       <page-reference>group::organization/management/executive-board::organization</page-reference>
       
       <node>
+	      <uri>organization/management</uri>
+	      <name>management</name>
+	      <label>#{organization.management}</label>
+	      <page-reference>group::organization/management/executive-board::management</page-reference>
+    	</node>
+      
+      <node>
 	      <uri>organization/newStaff</uri>
 	      <name>newStaff</name>
 	      <label>#{organization.newstaff}</label>
 	      <page-reference>group::organization/management/executive-board::newStaff</page-reference>
     	</node>
-    	
-    	<node>
-	      <uri>organization/management</uri>
-	      <name>management</name>
-	      <label>#{organization.management}</label>
-	      <page-reference>group::organization/management/executive-board::management</page-reference>
-    	</node>    	
-    </node>
-            
+    </node>            
   </page-nodes>    
 </node-navigation>
