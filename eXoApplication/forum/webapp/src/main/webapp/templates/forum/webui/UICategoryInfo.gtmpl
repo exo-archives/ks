@@ -31,7 +31,7 @@
 					 	<td class="text" style="border-top: 1px solid #c7c7c7;"><%=_ctx.appRes("UICategoryInfo.label.CurrentUsers")%> </td>
 		 			</tr-->
 					<tr class="OddRow">
-						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
+						<td style="width: 40px; padding: 0px; border-right: 1px solid #f4f4f4;"></td>
 					 	<td >
 							<div class="text"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> : $mostUserOnline</div>
 							<div class="text" style="padding-bottom: 5px;"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> : 
@@ -53,7 +53,7 @@
 					 	<td class="text"><%=_ctx.appRes("UICategoryInfo.label.ForumStatistics");%></td>
 		 			</tr>
 					<tr class="OddRow">
-						<td style="padding: 0px; border-right: 1px solid #f4f4f4;"></td>
+						<td style="width: 40px; padding: 0px; border-right: 1px solid #f4f4f4;"></td>
 					 	<td class="text">
 					 		<div class="text"><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics, 
 					 											<%=_ctx.appRes("UICategoryInfo.label.TotalPosts");%>: $posts, 

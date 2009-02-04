@@ -236,13 +236,15 @@ public class UIQuestions extends UIContainer {
 			}else{
 				iterator = getChildById(IterId);
 			}
-			pageListAnswre.setPageSize(6);
-			long page = iterator.getPageSelected();
-			iterator.updatePageList(pageListAnswre);
-			list = pageListAnswre.getPageItem(page);
-			iterator.setSelectPage(pageListAnswre.getCurrentPage());
+			if(pageListAnswre != null) {
+				pageListAnswre.setPageSize(6);
+				long page = iterator.getPageSelected();
+				iterator.updatePageList(pageListAnswre);
+				list = pageListAnswre.getPageItem(page);
+				iterator.setSelectPage(pageListAnswre.getCurrentPage());
+			}
     } catch (Exception e) {
-	    e.printStackTrace();
+	    
     } finally {
     	sProvider.close();
     }

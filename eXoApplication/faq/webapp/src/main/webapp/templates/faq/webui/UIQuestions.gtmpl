@@ -523,7 +523,7 @@
 																<tr>
 																	<td>
 																		<div class="LeftQuestionContainer" style="width: 99%;">
-																			<div class="$questionIcon" style="width: auto; height:auto; padding-left: 20px;">
+																			<div class="$questionIcon" style="width: auto; height:auto; float: auto; padding-left: 20px;">
 																				
 																				<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 																					

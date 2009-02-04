@@ -208,17 +208,16 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					inputQuestionDetail_.setValue(language.getDetail()) ;
 					questionDetail = language.getDetail();
 					questionContent = language.getQuestion();
-//					TODO
-//					if(language.getAnswers() != null && language.getAnswers().length > 0) {
-//					}
-//					listAnswers.addAll(Arrays.asList(language.getAnswers()));
+//				Vu Duy Tu
 					String questionId = question.getId();
 					if(!question.getLanguage().equals(languageIsResponsed)) {
-						questionId = questionId + "/" + Utils.LANGUAGE_HOME+"/"+languageIsResponsed;
+						questionId = questionId + "/" + Utils.LANGUAGE_HOME+"/"+language.getId();
 					}
 					try{
 						listAnswers.addAll((List<Answer>)faqService.getPageListAnswer(sessionProvider, questionId, null).getPageItem(0));
-					} catch(NullPointerException npe){}
+					}catch(Exception e){
+						
+					}
 					if(listAnswers.size() > 0) {
 						inputResponseQuestion_.setValue(listAnswers.get(0).getResponses()) ;
 					}
@@ -481,7 +480,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				try{
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					questionNode = faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;
-				
+					// Vu Duy Tu Save post Discuss Forum.
 					FAQSetting faqSetting = new FAQSetting();
 					FAQUtils.getPorletPreference(faqSetting);
 					if(faqSetting.getIsDiscussForum()) {

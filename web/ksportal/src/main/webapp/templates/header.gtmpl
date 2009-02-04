@@ -13,7 +13,8 @@
 	boolean isLogin = false ;
 	if(prContext.getAccessPath() == PortalRequestContext.PRIVATE_ACCESS) isLogin = true;
 	String userLogin =	Util.getPortalRequestContext().getRemoteUser();
-	String registerUri = path + "/public/register";
+	String registerUri = path + "/public/" + portalName + "/register";
+	if(isLogin) registerUri = path + "/private/" + portalName + "/register";
 %>
 <div class="UIBannerPortlet UIApplication">
 	<div class="ApplicationMinWidth">
@@ -45,7 +46,7 @@
 								</div>
 							</a>-->
 							<%if(isLogin) {%>
-								<a class="ActionButton" href="$signOutAction">
+								<a class="Logout ActionButton" onclick="eXo.portal.logout();" style="cursor: pointer;">
 									<div class="LeftButton">
 										<div class="RightButton">
 											<div class="CenterButton">Sign out</div>
@@ -69,4 +70,3 @@
 	 	</div>
 	</div>
 </div>
-

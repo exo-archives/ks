@@ -50,7 +50,6 @@ public class ForumServiceUtils {
 				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 		for(String str : userGroupMembership) {
-			System.out.println("\n\n\n\n--------->getUserPermission ~~~~> str:" + str);
 			if(str.indexOf("/") >= 0) {
 				if(str.indexOf(":") >= 0) { //membership
 					String[] array = str.split(":") ;
