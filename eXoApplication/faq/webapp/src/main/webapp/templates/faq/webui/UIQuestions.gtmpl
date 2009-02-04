@@ -189,6 +189,8 @@
 					String qId = question.getId() ;
 					linkQuestion=uicomponent.event("ViewQuestion", qId) ;
 					String questionIcon = "" ;
+					String colorViewQuestion = "";
+					if(!question.isActivated() || !question.isApproved()) colorViewQuestion = "gray";
 					if(question.getAnswers() != null && question.getAnswers().length > 0) {
 						questionIcon = "Question" ;
 					} else {
@@ -210,13 +212,13 @@
 											titleQuestion = questionContent ;
 											questionContent = FAQUtils.getSubString(questionContent, 140);
 										%>
-											<a class="ViewQuestionNotApproved" href="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
+											<a class="ViewQuestionNotApproved" style="color:$colorViewQuestion;" href="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
 												$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
 											</a>
 									<%} else {
 											titleQuestion = "";
 										%>
-											<a class="ViewQuestionNotApproved" href="$linkQuestion"> 
+											<a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion;"> 
 														$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
 											</a>
 									<%}
@@ -225,7 +227,7 @@
 									<%}%>
 											<div style="clear: left;"><span></span></div>
 										<% if(titleQuestion.trim().length() > 0) {%>
-											<div id="titleQuestion$questionId" class="questionTitle">
+											<div id="titleQuestion$questionId" class="questionTitle" style="color:$colorViewQuestion;">
 												$titleQuestion &nbsp;&nbsp;
 											</div>
 									<%}%>
@@ -355,8 +357,8 @@
 																<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)" style="float: left;">
 																	
 																	<!-- question content -->
-																	<div class="ViewQuestionNotApproved" style="max-width: 100%;">
-																		<a href="$linkQuestion"> 
+																	<div class="ViewQuestionNotApproved" style="max-width: 100%; color:$colorViewQuestion;">
+																		<a href="$linkQuestion" style="color:$colorViewQuestion;"> 
 																			$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
 																		</a>
 																		<%if(question.getDetail() != null && question.getDetail().trim().length() > 0){%>
