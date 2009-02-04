@@ -419,7 +419,6 @@
 	line-height:16px;
 	white-space:nowrap;
 	cursor: none;
-	padding:3px 0px 5px 5px;
 	filter: alpha(opacity: 50);
 	-moz-opacity: 0.5;
 }

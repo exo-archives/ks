@@ -680,7 +680,7 @@
 		<div class="TopLeftRightClickPopupMenu">
 			<div class="TopRightRightClickPopupMenu">
 				<div class="TopCenterRightClickPopupMenu"><span></span></div>
-				<div class="RightClickCustomItem" style="display: none;">Open</div>
+				<div class="RightClickCustomItem" style="display: none; height: 0px"><span></span></div>
 			</div>
 		</div>
 		<div class="MiddleLeftRightClickPopupMenu">
@@ -688,7 +688,7 @@
 				<div class="UIRightPopupMenuContainer">
 					<a href="" class="MenuItem AddBookmark">
 						<div class="ItemIcon AddLinkToBookIcon">
-								<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
+							<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
 						</div>
 					</a>
 					<a href="" class="MenuItem AddWatching">
