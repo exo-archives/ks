@@ -250,7 +250,7 @@ public class MultiLanguages {
   }
   
   public void deleteCommentQuestionLang(Node questionNode, String commentId, String language, SessionProvider sProvider) throws Exception{
-  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
+  	Node languageNode = getLanguageNodeByLanguage(questionNode, language);
   	Node commnetNode = languageNode.getNode(Utils.COMMENT_HOME).getNode(commentId);
   	commnetNode.remove();
   	questionNode.save();
@@ -259,7 +259,7 @@ public class MultiLanguages {
   public QuestionLanguage getQuestionLanguageByLanguage(Node questionNode, String language) throws Exception{
   	QuestionLanguage questionLanguage = new QuestionLanguage();
   	questionLanguage.setLanguage(language);
-  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
+  	Node languageNode = getLanguageNodeByLanguage(questionNode, language);
   	questionLanguage.setId(languageNode.getName());
   	questionLanguage.setLanguage(languageNode.getProperty("exo:language").getString());
   	questionLanguage.setDetail(languageNode.getProperty("exo:name").getString());
@@ -269,7 +269,7 @@ public class MultiLanguages {
   }
   
   public Comment getCommentById(Node questionNode, String commentId, String language) throws Exception{
-  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
+  	Node languageNode = getLanguageNodeByLanguage(questionNode, language);
   	try{
   		Comment comment = new Comment();
   		Node commentNode = languageNode.getNode(Utils.COMMENT_HOME).getNode(commentId);
@@ -341,7 +341,9 @@ public class MultiLanguages {
   	Node languageNode = null;
   	while(nodeIterator.hasNext()){
   		languageNode = nodeIterator.nextNode();
-  		if(languageNode.getProperty("exo:language").getString().equals(languge)) return languageNode;
+  		if(languageNode.getProperty("exo:language").getString().equals(languge)){
+  			return languageNode;
+  		}
   	}
   	return null;
   }
@@ -439,7 +441,7 @@ public class MultiLanguages {
   }
   
   public void saveComment(Node questionNode, Comment comment, String languge, SessionProvider sessionProvider) throws Exception{
-  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(languge);
+  	Node languageNode = getLanguageNodeByLanguage(questionNode, languge);
   	if(!languageNode.isNodeType("mix:faqi18n")) {
   		languageNode.addMixin("mix:faqi18n") ;
   	}

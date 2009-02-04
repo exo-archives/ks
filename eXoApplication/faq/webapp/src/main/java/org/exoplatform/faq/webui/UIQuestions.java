@@ -272,11 +272,8 @@ public class UIQuestions extends UIContainer {
 			iterator.updatePageList(pageListComment);
 			list = pageListComment.getPageItem(page);
 			iterator.setSelectPage(pageListComment.getCurrentPage());
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			sProvider.close();
-		}
+		} catch (Exception e) { }
+		sProvider.close();
 		return list;
 	}
 	

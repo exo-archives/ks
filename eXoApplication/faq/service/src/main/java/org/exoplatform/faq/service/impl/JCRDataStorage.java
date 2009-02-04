@@ -836,8 +836,8 @@ public class JCRDataStorage {
 			return pageList;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 	
 	private Comment getCommentByNode(Node commentNode) throws Exception {

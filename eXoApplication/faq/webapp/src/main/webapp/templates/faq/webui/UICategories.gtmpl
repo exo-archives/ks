@@ -108,7 +108,7 @@
 												<div class="MiddleRightRightClickPopupMenu">
 													<div class="UIRightPopupMenuContainer">
 														<%
-															if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate ) {
+															if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate || uicomponent.canEditQuestion) {
 																categoryAction = uicomponent.getActionCategory() ;
 															} else {
 																categoryAction = uicomponent.getActionCategoryWithUser() ;

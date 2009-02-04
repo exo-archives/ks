@@ -214,16 +214,19 @@
 										%>
 											<a class="ViewQuestionNotApproved" style="color:$colorViewQuestion;" href="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">
 												$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
+												<%if(!question.isApproved()) {%>
+														<font style="color: red;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</font>
+												<%}%>
 											</a>
 									<%} else {
 											titleQuestion = "";
 										%>
 											<a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion;"> 
 														$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
+														<%if(!question.isApproved()) {%>
+																<font style="color: red;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</font>
+														<%}%>
 											</a>
-									<%}
-										if(!question.isApproved()) {%>
-											<div class="NotApproved"><span></span></div>
 									<%}%>
 											<div style="clear: left;"><span></span></div>
 										<% if(titleQuestion.trim().length() > 0) {%>
@@ -815,7 +818,6 @@
 											
 											<!-- ============================== View question's commnets ============================================== -->
 											<%
-											if(question.getComments() != null && question.getComments().length > 0){
 												boolean canEditComment = false;
 											%>
 											<div class="Response">
@@ -889,7 +891,6 @@
 													<div style="clear: right;"><span></span></div>
 												</div>	
 											</div>
-										<%}%>
 												
 											<div class="AttachmentContent">
 												<%if(!question.getAttachMent().isEmpty()) {%>

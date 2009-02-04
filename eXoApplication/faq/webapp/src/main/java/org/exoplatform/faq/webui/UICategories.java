@@ -166,7 +166,8 @@ public class UICategories extends UIContainer{
 					try {
 						if(faqService_.getCategoryById(cateIdProcess, sessionProvider).getModeratorsCategory().contains(currentUser_)){
 							canEditQuestion = true ;
-							if(i < listCateId_.size() - 1) isModeratorSubCate = true;
+							//if(i < listCateId_.size() - 1) isModeratorSubCate = true;
+							if(i < listCateId_.size()) isModeratorSubCate = true;
 							break ;
 						}
 					} catch (Exception e) {
@@ -461,9 +462,6 @@ public class UICategories extends UIContainer{
 					uiCategoryForm.init(false);
 					uiCategoryForm.setCategoryValue(categoryId, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-					
-					System.out.println("\n\n\n\n--------------->edit category~~~>cateId:" + categoryId);
-					
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
