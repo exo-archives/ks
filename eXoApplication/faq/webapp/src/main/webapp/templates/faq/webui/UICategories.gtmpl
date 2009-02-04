@@ -37,7 +37,7 @@
 			long questionNotApproved = cateInfo[3] ;
 			%>
 			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.label.SubCategories"); %>: $numberOfSubCate</div>
-			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.title.Categories"); %>: $numberOfQuestion</div>
+			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.title.Questions"); %>: $numberOfQuestion</div>
 			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %>: $questionNotAnswer</div>
 			<div style="margin-top: 2px;"><%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %>: $questionNotApproved</div>
 		</div>

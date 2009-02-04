@@ -595,7 +595,6 @@ public class JCRDataStorage {
 			if(isSortByVote == null) queryString.append("order by @exo:dateResponse ascending");
 			else if(isSortByVote) queryString.append("order by @exo:marksVoteAnswer ascending");
 			else  queryString.append("order by @exo:marksVoteAnswer descending");
-			System.out.println("\n\n\n\n--------->queryString: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
