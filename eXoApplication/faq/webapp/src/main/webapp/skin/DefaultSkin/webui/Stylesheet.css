@@ -363,14 +363,12 @@
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer {
-	padding: 0px 0px 8px 8px;
-	background: #DBE7F9;
+	padding: 0px 0px 15px 8px;
+	background: #ebf2fb;
 	margin: 0px;
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .LeftQuestionContainer {
-	/*float: left;
-	width: 60%;*/
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .RightQuestionContainer {
@@ -552,7 +550,6 @@
 .UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
 	background: url('background/NotResponse.gif') no-repeat left 0px;
 	height: 16px ; width: 28px;
-	float: left;
 }
 
 .UIFAQPortlet .NotApproved {
@@ -569,10 +566,46 @@
 
 .UIFAQPortlet .ViewQuestionNotApproved {
 	display:table-cell;
-	float: left;
 	line-height:18px;
 	padding-right: 5px ;
-	max-width: 95%;
+}
+
+.UIFAQPortlet .ViewQuestionNotApproved .QuestionName {
+	font-weight: bold;
+	font-size: 16px;
+	color: #2e7b05;
+}
+
+.UIFAQPortlet .ViewQuestionNotApproved .QuestionDateTime {
+	white-space: nowrap; 
+	color:#721d95 ;
+}
+
+.UIFAQPortlet .LeftQuestionContainer .UIDetailContainer {
+	padding: 5px 0px;
+}
+
+.UIFAQPortlet .QuestionContainer .AuthorInfor {
+	margin: 5px auto 0px auto;
+	width: 120px;
+}
+
+.UIFAQPortlet .QuestionContainer .AuthorInfor .UserName {
+	font-size: 12px;
+	color: #2879a3;
+	font-weight: bold;
+}
+
+.UIFAQPortlet .QuestionContainer .AvatarContainer {
+	margin: 20px auto 0px auto;
+	border: solid 1px #7E7E7F;
+	padding: 3px;
+	width: 80px;
+}
+
+.UIFAQPortlet .QuestionContainer .AvatarContainer .ImageAvatar {
+	border: solid 1px #7E7E7F;
+	padding: 2px;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .questionTitle {
@@ -612,7 +645,6 @@
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Response {
-	/*background: url('background/DotLine.gif') repeat-x bottom;*/
 	padding-bottom: 4px;
 	padding-left: 10px ;
 	_width: 90%;
@@ -625,7 +657,6 @@
 }
 
 .UIFAQPortlet .ResponseContent .Response {
-	/*background: url('background/DotLine.gif') repeat-x bottom;*/
 	padding-bottom: 4px;
 	padding-left: 10px ;
 }
@@ -638,13 +669,11 @@
 }
 
 .UIFAQPortlet .ResponseContent .AttachmentContent {
-	/*background: url('background/DotLine.gif') repeat-x bottom;*/
 	padding-bottom: 4px;
 	padding-left: 10px ;
 }
 
 .UIFAQPortlet .ResponseContent .RelatedQuestions {
-	/*background: url('background/DotLine.gif') repeat-x bottom;*/
 	padding: 4px 0px;
 	padding-left: 10px ;
 }
@@ -1471,7 +1500,6 @@
 }
 
 .UIFAQPortlet .ResponseContent .RelatedQuestionsView {
-	/*background: url('background/DotLine.gif') repeat-x bottom;*/
 	padding: 4px 0px;
 }
 

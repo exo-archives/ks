@@ -203,8 +203,8 @@
 					questionContent = question.getQuestion() ;
 			%>
 						<div class="QuestionContainer" id="$qId">
-							<div class="$questionIcon"><span></span></div>
-								<div style="float: left; width: 85%; _width: 80%" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+							<div class="$questionIcon" style="float: left"><span></span></div>
+								<div style="width: 85%; _width: 80%" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 									<!-- question content -->
 										<%
 										String titleQuestion = "" ;
@@ -239,7 +239,7 @@
 												<div class="TopLeftRightClickPopupMenu">
 													<div class="TopRightRightClickPopupMenu">
 														<div class="TopCenterRightClickPopupMenu"><span></span></div>
-														<div class="RightClickCustomItem" style="display: none;">Open</div>
+														<div class="RightClickCustomItem" style="display: none; height: 0px;"><span></span></div>
 													</div>
 												</div>
 												
@@ -349,37 +349,51 @@
 										<div class="QuestionContainer" id="$qId">
 											<table style="_width: 98%;">
 												<tr>
+												<% if(uicomponent.viewAuthorInfor || uicomponent.faqSetting_.isEnableViewAvatar()){ %>
+													<td width="150px" height="100px;">
+													<%
+														if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+															String imgUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+													%>				
+														<div class="AvatarContainer">
+															<div class="ImageAvatar"><img width="74" src="$imgUrl" alt="Avatar"/></div>
+														</div>
+													<%}%>
+													<!-- view author's infor -->
+													<%
+														if(uicomponent.viewAuthorInfor){
+													%>
+														<div class="AuthorInfor" align="center">
+															<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
+																<span class="UserName"><%=FAQUtils.getFullName(question.getAuthor())%></span>
+															</a>
+															<br/><%=question.getEmail()%>
+														</div>
+													<%}%>
+													</td>
+												<%}%>
 													<td>
+
+														<div class="LeftQuestionContainer" style="width: 99%;">
+															<div class="$questionIcon" style="width: auto; height:auto; padding-left: 20px;">
 																
-														<div class="LeftQuestionContainer">
-															<div class="$questionIcon" style="width: auto; height:auto;padding-left: 20px;">
-																
-																<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)" style="float: left;">
+																<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
 																	
 																	<!-- question content -->
-																	<div class="ViewQuestionNotApproved" style="max-width: 100%; color:$colorViewQuestion;">
-																		<a href="$linkQuestion" style="color:$colorViewQuestion;"> 
-																			$questionContent &nbsp;&nbsp;<font style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</font>
+																	<div class="ViewQuestionNotApproved" align="justify">
+																		<a href="$linkQuestion" style="color:$colorViewQuestion;">
+																			<span class="QuestionName">$questionContent</span> &nbsp;<span class="QuestionDateTime">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</span>
 																		</a>
-																		<%if(question.getDetail() != null && question.getDetail().trim().length() > 0){%>
-																			<br/>
-																			<%=question.getDetail()%>
-																		<%}%>
-																		
-																		<!-- view author's infor -->
-																		<%
-																		if(uicomponent.viewAuthorInfor){
-																		%>
-																			<div style="padding-top: 5px;">
-																				<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>: 
-																				<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
-																					<%=FAQUtils.getFullName(question.getAuthor())%> ( <%=question.getEmail()%> )
-																				</a>
-																			</div>
-																		<%}%>
 																	</div>
-																	<div style="clear: left;"><span/></div>
 																	
+																</div>
+																
+																	<!-- ===================================== view Detail =============================== -->
+																<div class="UIDetailContainer">
+																	<%if(question.getDetail() != null && question.getDetail().trim().length() > 0){%>
+																		<%=question.getDetail()%>
+																	<%}%>
+																</div>
 																	
 																	<!-- ===================================== view answer bottom =============================== -->
 																	<%
@@ -413,7 +427,7 @@
 																				<div class="TopLeftRightClickPopupMenu">
 																					<div class="TopRightRightClickPopupMenu">
 																						<div class="TopCenterRightClickPopupMenu"><span></span></div>
-																						<div class="RightClickCustomItem" style="display: none;">Open</div>
+																						<div class="RightClickCustomItem" style="display: none;"><span></span></div>
 																					</div>
 																				</div>
 																				
@@ -480,13 +494,11 @@
 																	</div>
 																	<!-- finish action of this question -->
 																
-																</div>
-																
 															</div>
-															<div style="clear: left;"><span/></div>
 														</div>
-																
+													
 													</td>
+													
 													<td>
 														<!-- Action -->
 														<table>
@@ -761,30 +773,26 @@
 																	
 																	<!-- ============================= user vote ================================ -->
 																	<%
-																	actionVoteUp = "javaScript: alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "');";
-																	actionVoteDown = "javaScript: alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "');";
 																	if(uicomponent.currentUser_ != null){
-																		actionVoteUp = uicomponent.event("VoteAnswer", answer.getId() + "/1");
-																		actionVoteDown = uicomponent.event("VoteAnswer", answer.getId() + "/-1");
-																	}
 																	%>
 																		<div align="left" style="width:200px; line-height: 22px; float: left;">
 																			<div style="width: 16px; heigth: 22px; float:left;">
-																				<a href="$actionVoteUp"
+																				<a href="<%=uicomponent.event("VoteAnswer", answer.getId() + "/1")%>"
 																						title="+1">
-																					<div class="VoteAnswerUp" id="FAQVoteAnswerUp<%=answer.getId()%>" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp<%=answer.getId()%>', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp<%=answer.getId()%>', null)"><span></span></div>
+																					<div class="VoteAnswerUp" id="FAQVoteAnswerUp" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp', null)"><span></span></div>
 																				</a>
 																				
-																				<a href="$actionVoteDown"
+																				<a href="<%=uicomponent.event("VoteAnswer", answer.getId() + "/-1")%>"
 																						title="-1">
-																					<div class="VoteAnswerDown" id="FAQVoteAnswerDown<%=answer.getId()%>" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown<%=answer.getId()%>', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown<%=answer.getId()%>', null)"><span></span></div>
+																					<div class="VoteAnswerDown" id="FAQVoteAnswerDown" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown', null)"><span></span></div>
 																				</a>
 																			</div>
 																			<div style="float: left; height: 22px; line-height: 22px; margin-left: 4px;">
 																				<%=answer.getMarkVotes()[0] - answer.getMarkVotes()[1]%>
 																			</div>
 																		</div>
-															<%}%>
+																	<%}%>
+																<%}%>
 														</div>
 														<div style="clear: left;"> <span></span></div>
 												<%} %>

@@ -100,7 +100,7 @@
 											<div class="TopLeftRightClickPopupMenu">
 												<div class="TopRightRightClickPopupMenu">
 													<div class="TopCenterRightClickPopupMenu"><span></span></div>
-													<div class="RightClickCustomItem" style="display: none;">Open</div>
+													<div class="RightClickCustomItem" style="display: none; height: 0px;"><span></span></div>
 												</div>
 											</div>
 											
@@ -198,7 +198,7 @@
 											<div class="TopLeftRightClickPopupMenu">
 												<div class="TopRightRightClickPopupMenu">
 													<div class="TopCenterRightClickPopupMenu"><span></span></div>
-													<div class="RightClickCustomItem" style="display: none;">Open</div>
+													<div class="RightClickCustomItem" style="display: none; height: 0px;"><span></span></div>
 												</div>
 											</div>
 											
