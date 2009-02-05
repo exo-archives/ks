@@ -1398,7 +1398,7 @@ public class UIQuestions extends UIContainer {
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
 				Node node = faqService_.getQuestionNodeById(questions.questionView_, sessionProvider);
-				if(language_ != null && language_.trim().length() > 0){
+				if(language_ != null && language_.trim().length() > 0 && !language_.equals(node.getProperty("exo:language").getValue().getString())){
 					MultiLanguages multiLanguages = new MultiLanguages();
 					multiLanguages.deleteCommentQuestionLang(node, commentId, language_, sessionProvider);
 				} else {
