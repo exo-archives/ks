@@ -553,3 +553,7 @@
 	width:16px;
 	padding-top:30px;
 }
+
+.UIForumPortlet .UIGrid input.checkbox {
+	height:14px;
+}

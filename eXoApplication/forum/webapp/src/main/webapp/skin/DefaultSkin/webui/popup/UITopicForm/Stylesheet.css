@@ -24,7 +24,7 @@
 }
 
 .UITopicForm .HorizontalLayout .ThreadPermission .SelectUserIcon {
-	/*background: url('../skinIcons/16x16/icons/SmallUserIcon.gif') no-repeat;*/
+	background: url('/forum/skin/DefaultSkin/webui/skinIcons/16x16/icons/UserIcon.png') no-repeat;
 }
 
 .UITopicForm .HorizontalLayout .ThreadPermission .SelectMemberIcon {
