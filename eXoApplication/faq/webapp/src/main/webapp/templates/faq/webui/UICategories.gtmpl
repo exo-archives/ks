@@ -12,7 +12,6 @@
 	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
-	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate)
 		jsmanager.addJavascript('eXo.faq.UIFAQDragDrop.init("'+compId+'") ;') ;
 	String [] categoryAction;

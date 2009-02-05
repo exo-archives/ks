@@ -15,6 +15,7 @@
 	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
