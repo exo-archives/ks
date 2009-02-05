@@ -244,7 +244,7 @@ public class UIQuestions extends UIContainer {
 				iterator.setSelectPage(pageListAnswre.getCurrentPage());
 			}
     } catch (Exception e) {
-	    
+	    e.printStackTrace();
     } finally {
     	sProvider.close();
     }

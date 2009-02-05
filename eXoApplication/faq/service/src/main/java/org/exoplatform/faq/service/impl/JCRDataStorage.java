@@ -835,7 +835,6 @@ public class JCRDataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

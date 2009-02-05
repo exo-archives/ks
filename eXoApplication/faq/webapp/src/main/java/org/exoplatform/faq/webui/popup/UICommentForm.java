@@ -108,13 +108,13 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				isAddNew = true;
 			}
 		} else {
+			MultiLanguages multiLanguages = new MultiLanguages();
+			Node questionNode = faqService.getQuestionNodeById(question.getId(), sProvider);
+			QuestionLanguage questionLanguage = multiLanguages.getQuestionLanguageByLanguage(questionNode, languageView);
+			this.questionContent = questionLanguage.getQuestion();
+			this.questionDetail = questionLanguage.getDetail();
 			if(!commentId.equals("new")){
-				MultiLanguages multiLanguages = new MultiLanguages();
-				Node questionNode = faqService.getQuestionNodeById(question.getId(), sProvider);
 				comment = multiLanguages.getCommentById(questionNode, commentId, languageView);
-				QuestionLanguage questionLanguage = multiLanguages.getQuestionLanguageByLanguage(questionNode, languageView);
-				this.questionContent = questionLanguage.getQuestion();
-				this.questionDetail = questionLanguage.getDetail();
 				isAddNew = false;
 			} else {
 				comment = new Comment();

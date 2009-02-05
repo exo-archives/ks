@@ -662,9 +662,9 @@
 										<div class="ResponseContent">
 											<div class="Response" id="SetWidthContent" style="padding-left:0px; _width: 98%;">
 												<%
-												if(question.getAnswers() != null && question.getAnswers().length > 0) {
+												List answers = uicomponent.getPageListAnswer(question.getId());
+												if(answers != null && !answers.isEmpty()){
 													String actionAnswer = "";
-													List answers = uicomponent.getPageListAnswer(question.getId());
 													for(Answer answer in answers) {
 														res = answer.getResponses().replaceFirst("<p>", "").substring(0, answer.getResponses().lastIndexOf("</p>"))
 														if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
@@ -798,17 +798,20 @@
 																		
 																		<!-- ============================= user vote ================================ -->
 																		<%
-																		if(uicomponent.currentUser_ != null){
+																			String userVoteUpAnswer = "javaScript: alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
+																			String userVotedownAnswer = "javaScript: alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
+																			if(uicomponent.currentUser_ != null){
+																				userVoteUpAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/1");
+																				userVotedownAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/-1");
+																			}
 																		%>
 																				<div align="left" style="width:200px; line-height: 22px; float: left;">
 																					<div style="width: 16px; heigth: 22px; float:left;">
-																						<a href="<%=uicomponent.event("VoteAnswer", answer.getId() + "/1")%>"
-																								title="+1">
+																						<a href="$userVoteUpAnswer" title="+1">
 																							<div class="VoteAnswerUp" id="FAQVoteAnswerUp" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerUp', null)"><span></span></div>
 																						</a>
 																						
-																						<a href="<%=uicomponent.event("VoteAnswer", answer.getId() + "/-1")%>"
-																								title="-1">
+																						<a href="$userVotedownAnswer" title="-1">
 																							<div class="VoteAnswerDown" id="FAQVoteAnswerDown" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('FAQVoteAnswerDown', null)"><span></span></div>
 																						</a>
 																					</div>
@@ -817,7 +820,6 @@
 																					</div>
 																				</div>
 																		<%}%>
-																	<%}%>
 																	<div style="clear: left;"><span></span></div>
 															</div>
 															

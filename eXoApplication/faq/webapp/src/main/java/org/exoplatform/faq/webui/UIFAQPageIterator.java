@@ -83,12 +83,16 @@ public class UIFAQPageIterator extends UIContainer {
   }
 
   public List<Long> getInfoPage() throws Exception {
-    List<Long> temp = new ArrayList<Long>() ;
-    temp.add(pageList.getPageSize()) ;//so item/trang
-    temp.add(pageList.getCurrentPage()) ;//so trang hien tai
-    temp.add(pageList.getAvailable()) ;//tong so item
-    temp.add(pageList.getAvailablePage()) ;// so trang toi da
-    return temp ;
+  	try{
+	    List<Long> temp = new ArrayList<Long>() ;
+	    temp.add(pageList.getPageSize()) ;//so item/trang
+	    temp.add(pageList.getCurrentPage()) ;//so trang hien tai
+	    temp.add(pageList.getAvailable()) ;//tong so item
+	    temp.add(pageList.getAvailablePage()) ;// so trang toi da
+	    return temp ;
+  	} catch (NullPointerException npe){
+  		return null;
+  	}
   } 
   
   public void setSelectPage(long page) {
