@@ -211,7 +211,7 @@ public class UIQuestions extends UIContainer {
 			pageIterator = this.getChildById(OBJECT_ITERATOR);
 			pageIterator.updatePageList(pageList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			this.pageList = null ;
 			this.pageList.setPageSize(10);
 			pageIterator.updatePageList(this.pageList) ;

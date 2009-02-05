@@ -585,25 +585,25 @@
 	padding: 5px 0px;
 }
 
-.UIFAQPortlet .QuestionContainer .AuthorInfor {
+.UIFAQPortlet .ProfileContainer .AuthorInfor {
 	margin: 5px auto 0px auto;
 	width: 120px;
 }
 
-.UIFAQPortlet .QuestionContainer .AuthorInfor .UserName {
+.UIFAQPortlet .ProfileContainer .AuthorInfor .UserName {
 	font-size: 12px;
 	color: #2879a3;
 	font-weight: bold;
 }
 
-.UIFAQPortlet .QuestionContainer .AvatarContainer {
+.UIFAQPortlet .ProfileContainer .AvatarContainer {
 	margin: 20px auto 0px auto;
 	border: solid 1px #7E7E7F;
 	padding: 3px;
-	width: 80px;
+	width: 69px;
 }
 
-.UIFAQPortlet .QuestionContainer .AvatarContainer .ImageAvatar {
+.UIFAQPortlet .ProfileContainer .AvatarContainer .ImageAvatar {
 	border: solid 1px #7E7E7F;
 	padding: 2px;
 }
@@ -749,6 +749,19 @@
 .UIFAQPortlet .ResponseContent .ResponsActions .UIAction .IconButton {
 	line-height: 22px;
 	padding-left: 20px;
+}
+
+.UIFAQPortlet .ResponseContent .ResponseItemContainer {
+
+}
+
+.UIFAQPortlet .ResponseContent .ResponseItemContainer .ResponseItemContainerLeft {
+	float: left;
+	width: 150px;
+}
+
+.UIFAQPortlet .ResponseContent .ResponseItemContainer .ResponseItemContainerRight{
+	margin-left: 130px;
 }
 
 .UIFAQPortlet .UIResponse #QuestionRespone___Frame{

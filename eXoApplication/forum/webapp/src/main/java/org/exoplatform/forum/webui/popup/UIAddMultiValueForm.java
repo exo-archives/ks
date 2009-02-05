@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-	import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.ForumUtils;
