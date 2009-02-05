@@ -38,7 +38,7 @@
 						} 
 					} else {%>
 						<tr class="$classRow">
-							<td class="Tdbox" colspan="10"><div class="" ><%=_ctx.appRes("UIForumListSearch.label.NoMatches");%></div></td>
+							<td class="Tdbox" colspan="3"><div class="" ><%=_ctx.appRes("UIForumListSearch.label.NoMatches");%></div></td>
 						</tr>
 					<% } %> 
 					</tbody>
