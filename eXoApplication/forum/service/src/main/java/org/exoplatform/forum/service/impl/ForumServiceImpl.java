@@ -620,4 +620,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 	public void removeBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
 	  storage_.removeBanIPForum(sProvider, ip, forumId);
   }
+	
+	public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception{
+		storage_.registerListenerForCategory(sessionProvider, categoryId);
+	}
 }

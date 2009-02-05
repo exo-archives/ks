@@ -24,6 +24,8 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.impl.core.SessionFactory;
 
 public class StatisticEventListener implements EventListener{
 	private String workspace_ ;
@@ -47,7 +49,9 @@ public class StatisticEventListener implements EventListener{
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.NODE_ADDED){
 					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/")) ;
-					if(id.indexOf(Utils.TOPIC) > 0) {
+					if(id.contains("forumCategory")){
+						forumService.registerListenerForCategory(SessionProvider.createSystemProvider(), id.replaceFirst("/", ""));
+					} else if(id.indexOf(Utils.TOPIC) > 0) {
 						topicCount = topicCount + 1 ;
 					}else if(id.indexOf(Utils.POST) > 0){
 						postCount = postCount + 1 ;

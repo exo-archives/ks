@@ -165,7 +165,14 @@ public class JCRDataStorage {
 		try {
 			return appNode.getNode(Utils.FORUM_SERVICE);
 		} catch (PathNotFoundException e) {
-			return appNode.addNode(Utils.FORUM_SERVICE, "exo:forumHome");
+			Node forumHomeNode = appNode.addNode(Utils.FORUM_SERVICE, "exo:forumHome");
+//    Add observation
+    	String wsName = forumHomeNode.getSession().getWorkspace().getName() ;
+    	RepositoryImpl repo = (RepositoryImpl)forumHomeNode.getSession().getRepository() ;
+    	ObservationManager observation = forumHomeNode.getSession().getWorkspace().getObservationManager() ;
+    	StatisticEventListener addCategoryListener = new StatisticEventListener(wsName, repo.getName()) ;
+    	observation.addEventListener(addCategoryListener, Event.NODE_ADDED ,forumHomeNode.getPath(), false, null, null, false) ;
+			return forumHomeNode;
 		}
 	}
 	
@@ -391,16 +398,31 @@ public class JCRDataStorage {
 		if(catNode.isNew()){
 			catNode.getSession().save();
 //    Add observation
-    	String wsName = catNode.getSession().getWorkspace().getName() ;
+    	/*String wsName = catNode.getSession().getWorkspace().getName() ;
     	RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
     	ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
     	StatisticEventListener addQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
     	observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,catNode.getPath(), true, null, null, false) ;
     	StatisticEventListener removeQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
-    	observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
+    	observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;*/
 		} else {
 			catNode.save();
 		}
+	}
+	
+	public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception{
+		Node forumHomeNode = getForumHomeNode(sessionProvider);
+		Node catNode = forumHomeNode.getNode(categoryId);
+		if(!catNode.isNodeType("exo:forumCategory")) {
+			return;
+		}
+		String wsName = catNode.getSession().getWorkspace().getName() ;
+  	RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
+  	ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
+  	StatisticEventListener addQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
+  	observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,catNode.getPath(), true, null, null, false) ;
+  	StatisticEventListener removeQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
+  	observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
 	}
 
 	public Category removeCategory(SessionProvider sProvider, String categoryId) throws Exception {
