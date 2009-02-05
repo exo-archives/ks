@@ -243,7 +243,7 @@ public class MultiLanguages {
   }
   
   public void deleteAnswerQuestionLang(Node questionNode, String answerId, String language, SessionProvider sProvider) throws Exception{
-  	Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME).getNode(language);
+  	Node languageNode = getLanguageNodeByLanguage(questionNode, language);
   	Node answerNode = languageNode.getNode(Utils.ANSWER_HOME).getNode(answerId);
   	answerNode.remove();
   	questionNode.save();

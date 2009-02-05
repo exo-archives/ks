@@ -860,6 +860,7 @@ public class UICategories extends UIContainer{
 				uiCategories.faqService_.swapCategories(uiCategories.parentCateId_, objectIds[0], objectIds[1], sessionProvider);
 				uiCategories.resetListCate(sessionProvider);
 			} catch (Exception e) {
+				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(container) ;

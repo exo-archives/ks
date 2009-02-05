@@ -83,11 +83,11 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 //	} catch (NullPointerException e) {
 //		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //	}
-	if (contact.getAvatarUrl() == null ) {
-		return "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
-	} else {
-		return contact.getAvatarUrl();
-	}
+		if (contact.getAvatarUrl() == null || contact.getAvatarUrl().trim().length() < 1) {
+			return "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+		} else {
+			return contact.getAvatarUrl();
+		}
 	}
 	
 	public void setUser(User userName) {

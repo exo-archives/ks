@@ -2132,32 +2132,54 @@ public class JCRDataStorage {
 	public void swapCategories(String parentCateId, String cateId1, String cateId2, SessionProvider sessionProvider) throws Exception{
 		Node categoryHomeNode = getCategoryHome(sessionProvider, null);
 		Node parentCate = null;
-		if(parentCateId == null) parentCate = categoryHomeNode;
-		else parentCate = getCategoryNodeById(parentCateId, sessionProvider);
-		Node category1 = getCategoryNodeById(cateId1, sessionProvider);
-		long f = category1.getProperty("exo:index").getValue().getLong();
-		long t = getCategoryNodeById(cateId2, sessionProvider).getProperty("exo:index").getValue().getLong();
-		long l = 0;
-		if(f > t) l = 1;
-		else l = -1;
+		Node categoryNode1 = getCategoryNodeById(cateId1, sessionProvider);
+		Node categoryNode2 = getCategoryNodeById(cateId2, sessionProvider);
+		long f = categoryNode1.getProperty("exo:index").getValue().getLong();
+		long t = categoryNode2.getProperty("exo:index").getValue().getLong();
 		StringBuffer queryString = null;
-		queryString = new StringBuffer("/jcr:root").append(parentCate.getPath()).
+		QueryManager qm = categoryHomeNode.getSession().getWorkspace().getQueryManager();
+		NodeIterator iter = null;
+		Node cateNode = null;
+		if(!categoryNode1.getParent().equals(categoryNode2.getParent())) {
+			parentCate = categoryNode2.getParent();
+			queryString = new StringBuffer("/jcr:root").append(parentCate.getPath()).
+												append("//element(*,exo:faqCategory)[@exo:index >= ").append(t).append("]");
+			iter = qm.createQuery(queryString.toString(), Query.XPATH).execute().getNodes() ;
+			categoryNode1.setProperty("exo:index", categoryNode2.getProperty("exo:index").getValue().getLong());
+			categoryNode1.save();
+			while(iter.hasNext()) {
+				cateNode = iter.nextNode();
+				cateNode.setProperty("exo:index", cateNode.getProperty("exo:index").getValue().getLong() + 1);
+				cateNode.save();
+			}
+			if(parentCate.hasProperty("exo:id")){
+				moveCategory(cateId1, parentCate.getProperty("exo:id").getValue().getString(), sessionProvider);
+			} else {
+				moveCategory(cateId1, "null", sessionProvider);
+			}
+			parentCate.save();
+		}
+		else {
+			if(parentCateId == null) parentCate = categoryHomeNode;
+			else parentCate = getCategoryNodeById(parentCateId, sessionProvider);
+			long l = 0;
+			if(f > t) l = 1;
+			else l = -1;
+			queryString = new StringBuffer("/jcr:root").append(parentCate.getPath()).
 												append("//element(*,exo:faqCategory)[((@exo:index < ").append(f).
 												append(") and (@exo:index >= ").append(t).append(")) or ").
 												append("((@exo:index > ").append(f).
 												append(") and (@exo:index <= ").append(t).append("))]");
-		NodeIterator iter = null;
-		QueryManager qm = categoryHomeNode.getSession().getWorkspace().getQueryManager();
-		iter = qm.createQuery(queryString.toString(), Query.XPATH).execute().getNodes() ;
-		Node cateNode = null;
-		while(iter.hasNext()) {
-			cateNode = iter.nextNode();
-			cateNode.setProperty("exo:index", cateNode.getProperty("exo:index").getValue().getLong() + l);
-			cateNode.save();
+			iter = qm.createQuery(queryString.toString(), Query.XPATH).execute().getNodes() ;
+			while(iter.hasNext()) {
+				cateNode = iter.nextNode();
+				cateNode.setProperty("exo:index", cateNode.getProperty("exo:index").getValue().getLong() + l);
+				cateNode.save();
+			}
+			categoryNode1.setProperty("exo:index", t);
+			categoryNode1.save();
+			parentCate.save();
 		}
-		category1.setProperty("exo:index", t);
-		category1.save();
-		parentCate.save();
 	}
 	
 	protected void addNodeRSS(Node categoryNode, Node rssNode, RSSData data, boolean isNew) throws Exception {
