@@ -83,16 +83,17 @@ public class UIFAQPageIterator extends UIContainer {
   }
 
   public List<Long> getInfoPage() throws Exception {
-  	try{
-	    List<Long> temp = new ArrayList<Long>() ;
+    List<Long> temp = new ArrayList<Long>() ;
+    if(pageList != null) {
 	    temp.add(pageList.getPageSize()) ;//so item/trang
 	    temp.add(pageList.getCurrentPage()) ;//so trang hien tai
 	    temp.add(pageList.getAvailable()) ;//tong so item
 	    temp.add(pageList.getAvailablePage()) ;// so trang toi da
-	    return temp ;
-  	} catch (NullPointerException npe){
-  		return null;
-  	}
+    } else {
+    	temp.add((long)0) ; temp.add((long)1) ;
+    	temp.add((long)0) ; temp.add((long)1) ;
+    }
+    return temp ;
   } 
   
   public void setSelectPage(long page) {
@@ -109,7 +110,6 @@ public class UIFAQPageIterator extends UIContainer {
       UIFAQPageIterator faqPageIterator = event.getSource() ;
       String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
       long maxPage = faqPageIterator.pageList.getAvailablePage() ;
-      System.out.println("\n\nmaxPage: " + maxPage + "\nstateClick: " + stateClick);
       long presentPage  = faqPageIterator.page ;
       if(stateClick.equalsIgnoreCase("next")) {
         if(presentPage < maxPage){

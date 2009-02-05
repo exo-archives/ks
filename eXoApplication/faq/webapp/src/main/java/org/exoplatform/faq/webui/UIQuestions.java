@@ -135,7 +135,7 @@ public class UIQuestions extends UIContainer {
 	private String link_ ="";
 	private String pathParentNode = "";
 	private static	FAQService faqService_;
-
+	private static boolean isChangeLg = false;
 	public List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
 	public boolean isChangeLanguage = false ;
 	public List<String> listLanguage = new ArrayList<String>() ;
@@ -239,9 +239,13 @@ public class UIQuestions extends UIContainer {
 			if(pageListAnswre != null) {
 				pageListAnswre.setPageSize(6);
 				long page = iterator.getPageSelected();
+				if(isChangeLg) page = 1;
 				iterator.updatePageList(pageListAnswre);
 				list = pageListAnswre.getPageItem(page);
 				iterator.setSelectPage(pageListAnswre.getCurrentPage());
+			} else {
+				iterator.updatePageList(null);
+				iterator.setSelectPage(1);
 			}
     } catch (Exception e) {
 	    e.printStackTrace();
@@ -267,13 +271,20 @@ public class UIQuestions extends UIContainer {
 			}else{
 				iterator = getChildById(IterId);
 			}
-			pageListComment.setPageSize(6);
-			long page = iterator.getPageSelected();
-			iterator.updatePageList(pageListComment);
-			list = pageListComment.getPageItem(page);
-			iterator.setSelectPage(pageListComment.getCurrentPage());
+			if(pageListComment != null) {
+				pageListComment.setPageSize(6);
+				long page = iterator.getPageSelected();
+				if(isChangeLg) page = 1;
+				iterator.updatePageList(pageListComment);
+				list = pageListComment.getPageItem(page);
+				iterator.setSelectPage(pageListComment.getCurrentPage());
+			} else {
+				iterator.updatePageList(null);
+				iterator.setSelectPage(1);
+			}
 		} catch (Exception e) { }
 		sProvider.close();
+		isChangeLg = false;
 		return list;
 	}
 	
@@ -1660,9 +1671,7 @@ public class UIQuestions extends UIContainer {
 					} else {
 						uiQuestions.pathParentNode = "";
 					}
-//					TODO:
-//					uiQuestions.listQuestion_.get(pos).setAnswers(questionLanguage.getAnswers());
-//					uiQuestions.listQuestion_.get(pos).setComments(questionLanguage.getComments());
+					isChangeLg = true;
 					break ;
 				}
 			}

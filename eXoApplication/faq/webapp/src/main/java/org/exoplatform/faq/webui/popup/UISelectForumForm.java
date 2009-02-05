@@ -102,7 +102,8 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 	}
 
 	static public class SelectForumActionListener extends EventListener<UISelectForumForm> {
-		public void execute(Event<UISelectForumForm> event) throws Exception {
+		@SuppressWarnings("unchecked")
+    public void execute(Event<UISelectForumForm> event) throws Exception {
 			UISelectForumForm uiForm = event.getSource();
 			String forumId = event.getRequestContext().getRequestParameter(OBJECTID);
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
@@ -118,30 +119,33 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 				forumService.saveTopic(sProvider, uiForm.categoryId, forumId, topic, true, false, "");
 				faqService.savePathDiscussQuestion(uiForm.questionId, uiForm.categoryId+"/"+forumId+"/"+topic.getId(), sProvider);
 				Post post;
-				Answer[] AllAnswer = question.getAnswers();
-				if(AllAnswer != null && AllAnswer.length > 0) {
-					for (int i = 0; i < AllAnswer.length; i++) {
+				List<Answer> listAnswer = faqService.getPageListAnswer(sProvider, uiForm.questionId, false).getPageItem(0);
+				if(listAnswer != null && listAnswer.size() > 0) {
+					Answer[] AllAnswer = new Answer[listAnswer.size()];;
+					int i = 0;
+					for (Answer answer : listAnswer) {
 		        post = new Post();
 		        post.setIcon("IconsView");
 		        post.setName("Re: " + question.getQuestion());
-		        post.setMessage(AllAnswer[i].getResponses());
-		        post.setOwner(AllAnswer[i].getResponseBy());
+		        post.setMessage(answer.getResponses());
+		        post.setOwner(answer.getResponseBy());
 		        forumService.savePost(sProvider, uiForm.categoryId, forumId, topic.getId(), post, true, "");
-		        AllAnswer[i].setPostId(post.getId());
-		        System.out.println(AllAnswer[i].getPostId());
+		        answer.setPostId(post.getId());
+		        AllAnswer[i] = answer;
+		        ++i;
 	        }
 					faqService.saveAnswer(uiForm.questionId, AllAnswer, sProvider);
 				}
-				Comment[] comments = question.getComments();
-				for (int i = 0; i < comments.length; i++) {
+				List<Comment> listComment = faqService.getPageListComment(sProvider, uiForm.questionId).getPageItem(0);
+				for (Comment comment : listComment) {
 					post = new Post();
 					post.setIcon("IconsView");
 					post.setName("Re: " + question.getQuestion());
-					post.setMessage(comments[i].getComments());
-					post.setOwner(comments[i].getCommentBy());
+					post.setMessage(comment.getComments());
+					post.setOwner(comment.getCommentBy());
 					forumService.savePost(sProvider, uiForm.categoryId, forumId, topic.getId(), post, true, "");
-					comments[i].setPostId(post.getId());
-					faqService.saveComment(uiForm.questionId, comments[i], false, sProvider);
+					comment.setPostId(post.getId());
+					faqService.saveComment(uiForm.questionId, comment, false, sProvider);
 				}
       } catch (Exception e) {
 	      e.printStackTrace();

@@ -46,14 +46,12 @@ public class UIPrintPreviewForm extends UIForm	{
 	static public class SaveActionListener extends EventListener<UIPrintPreviewForm> {
     public void execute(Event<UIPrintPreviewForm> event) throws Exception {
 			UIPrintPreviewForm uiCategory = event.getSource() ;			
-			System.out.println("========> Save") ;
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UIPrintPreviewForm> {
     public void execute(Event<UIPrintPreviewForm> event) throws Exception {
 			UIPrintPreviewForm uiCategory = event.getSource() ;			
-			System.out.println("==========> Cancel") ;
 		}
 	}
 	
