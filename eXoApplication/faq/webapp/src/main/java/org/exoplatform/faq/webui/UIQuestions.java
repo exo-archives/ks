@@ -1544,7 +1544,7 @@ public class UIQuestions extends UIContainer {
 			Question question = null ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
-				question = faqService_.getQuestionById(questionId, sessionProvider) ;
+				question = faqService_.getQuestionById(questions.questionView_, sessionProvider) ;
 			} catch (javax.jcr.PathNotFoundException e) {
 				e.printStackTrace() ;
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -1557,13 +1557,35 @@ public class UIQuestions extends UIContainer {
 			} catch (Exception e) { 
 				e.printStackTrace() ;
 			} 
+			if(answerId != null){
+				UIVoteQuestion voteQuestion = popupContainer.addChild(UIVoteQuestion.class, null, null) ;
+				voteQuestion.setInfor(question, language_, answerId, questions.faqSetting_);
+				popupContainer.setId("FAQVoteQuestion") ;
+				popupAction.activate(popupContainer, 300, 200) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			} else {
+	    	int number = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID));
+	    	String currentUser = FAQUtils.getCurrentUser();
+	    	List<String> listUsers = new ArrayList<String>();
+	    	
+	    	if(question.getUsersVote() != null){
+	    		listUsers.addAll(Arrays.asList(question.getUsersVote()));
+	    	}
+	    	long totalVote = listUsers.size();
+	    	double markVote = (question.getMarkVote() * totalVote + number)/(totalVote + 1);
+	    	
+	    	listUsers.add(currentUser + "/" + number);
+	    	question.setMarkVote(markVote);
+	    	question.setUsersVote(listUsers.toArray(new String[]{}));
+	    	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	    	FAQUtils.getEmailSetting(questions.faqSetting_, false, false);
+	    	faqService_.saveQuestion(question, false, sessionProvider, questions.faqSetting_);
+	    	sessionProvider.close();
+	      questions.setIsNotChangeLanguage() ;
+	      event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
+			}
 			sessionProvider.close();
-			UIVoteQuestion voteQuestion = popupContainer.addChild(UIVoteQuestion.class, null, null) ;
-			voteQuestion.setInfor(question, language_, answerId, questions.faqSetting_);
-			popupContainer.setId("FAQVoteQuestion") ;
-			popupAction.activate(popupContainer, 300, 200) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 

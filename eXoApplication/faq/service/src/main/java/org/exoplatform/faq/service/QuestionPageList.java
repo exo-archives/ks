@@ -123,7 +123,7 @@ public class QuestionPageList extends JCRPageList {
       			language = languageIter.nextNode();
       			if(!language.hasNode(ANSWER_HOME) || language.getNode(ANSWER_HOME).getNodes().getSize() < 1) {
       				if(languages != null && languages.trim().length() > 0) languages += ",";
-      				languages += language.getName();
+      				languages += language.getProperty("exo:language").getString();
       			}
       		}
       	}
