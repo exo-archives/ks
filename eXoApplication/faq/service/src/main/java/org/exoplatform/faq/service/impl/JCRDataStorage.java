@@ -2209,7 +2209,11 @@ public class JCRDataStorage {
 				element = (Element) listNodes.item(i);
 				if(element.getElementsByTagName("guid").item(0).getChildNodes().item(0).getNodeValue().equals(questionId)) continue;
 				entry.setTitle(element.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-				entry.setLink(element.getElementsByTagName("link").item(0).getChildNodes().item(0).getNodeValue());
+				try{
+					entry.setLink(element.getElementsByTagName("link").item(0).getChildNodes().item(0).getNodeValue());
+				} catch (NullPointerException e){
+					entry.setLink(" ");
+				}
 				description = new SyndContentImpl();
 				description.setType("text/plain");
 				description.setValue(element.getElementsByTagName("description").item(0).getChildNodes().item(0).getNodeValue());
