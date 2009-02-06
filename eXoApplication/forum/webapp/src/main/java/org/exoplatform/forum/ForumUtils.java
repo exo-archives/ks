@@ -310,7 +310,13 @@ public class ForumUtils {
 	}
 	
 	public static String getLabel(String label, String key) {
-		return label.replaceFirst("<keyWord>", key) ;
+		if (isEmpty(key)) key = " ";
+		try {
+			return label.replaceFirst("<keyWord>", key) ;
+    } catch (Exception e) {
+	    label = label.substring(0, label.indexOf("<keyWord>") - 1);
+	    return label + "'" + key + "'";
+    }
 	}
 	
 	public static String[] getColor() {
