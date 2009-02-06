@@ -853,14 +853,35 @@
 													<table width="100%">
 														<tr>
 															<td>
-																<%=comment.getComments()%>
-																<div style="color:gray;">
-																	<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionCommentBy")%> :
-																	<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray;">
-																	&nbsp; <%=FAQUtils.getFullName(comment.getCommentBy())%> <%=_ctx.appRes(uicomponent.getName() + ".label." + "on")%> 
-																	<font style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></font>
-																	</a>
+															
+																<div class="ResponseItemContainer">
+																	<div class="ResponseItemContainerLeft">
+																	<!-- ============================= View user who answered quesetion ============================ -->
+																		<div style="padding-bottom: 10px">
+																			<div class="ProfileContainer">
+																				<%
+																				if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+																					String imgUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+																				%>				
+																				<div class="AvatarContainer" style="margin-top: 0px;">
+																					<div class="ImageAvatar"><img width="63" src="$imgUrl" alt="Avatar"/></div>
+																				</div>
+																				<%}%>
+																				<div class="AuthorInfor" align="center">
+																					<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray;">
+																						<span class="UserName"> <%=FAQUtils.getFullName(comment.getCommentBy())%> </span>
+																					</a>
+																				</div>
+																			</div>
+																		</div>
+																		
+																	</div>
+																	<div class="ResponseItemContainerRight">
+																		<%=comment.getComments()%>
+																		<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
+																	</div>
 																</div>
+
 															</td>
 															<%
 															if(canEditComment){

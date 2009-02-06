@@ -751,16 +751,16 @@
 	padding-left: 20px;
 }
 
-.UIFAQPortlet .ResponseContent .ResponseItemContainer {
+.UIFAQPortlet .ResponseItemContainer {
 
 }
 
-.UIFAQPortlet .ResponseContent .ResponseItemContainer .ResponseItemContainerLeft {
+.UIFAQPortlet .ResponseItemContainer .ResponseItemContainerLeft {
 	float: left;
-	width: 150px;
+	width: 130px;
 }
 
-.UIFAQPortlet .ResponseContent .ResponseItemContainer .ResponseItemContainerRight{
+.UIFAQPortlet .ResponseItemContainer .ResponseItemContainerRight{
 	margin-left: 130px;
 }
 
