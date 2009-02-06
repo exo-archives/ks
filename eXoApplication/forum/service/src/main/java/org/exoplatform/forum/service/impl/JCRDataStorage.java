@@ -4030,16 +4030,19 @@ public class JCRDataStorage {
 		Session session = getForumHomeNode(sessionProvider).getSession();
 		session.importXML(nodePath, is, typeImport);
 		session.save();
-		session.logout();
 		
-		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-    is = new ByteArrayInputStream(bdata) ;
-    Document doc = docBuilder.parse(is);
-    NodeList list = doc.getChildNodes() ;
-    String name = list.item(0).getAttributes().getNamedItem("sv:name").getTextContent() ;
-    updateImportedData(nodePath + "/" + name);
-    
+		Node parentNode = (Node)session.getItem(nodePath);
+		
+		if(parentNode.isNodeType("exo:forumHome")){
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+	    is = new ByteArrayInputStream(bdata) ;
+	    Document doc = docBuilder.parse(is);
+	    NodeList list = doc.getChildNodes() ;
+	    String name = list.item(0).getAttributes().getNamedItem("sv:name").getTextContent() ;
+	    updateImportedData(nodePath + "/" + name);
+		}
+    session.logout();
 	}
 
 	public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
