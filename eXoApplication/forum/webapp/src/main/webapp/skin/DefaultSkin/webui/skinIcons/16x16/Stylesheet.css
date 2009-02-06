@@ -448,3 +448,7 @@
 .UIForumPortlet .PostsHiddenIcon {
   background: url('icons/HiddenPostIcon.gif') no-repeat left center;
 }
+
+.UIForumPortlet .BanIpToolsIcon {
+  background: url('icons/BanIpToolsIcon.gif') no-repeat left center;
+}

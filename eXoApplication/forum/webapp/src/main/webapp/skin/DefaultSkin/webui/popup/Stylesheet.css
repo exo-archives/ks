@@ -26,6 +26,10 @@
   width: 150px;
 }
 
+.UIForumAdministrationForm .notifyEmailTab .FieldComponent {
+  width: 430px;
+}
+
 .UIForumAdministrationForm #notifyEmail___Frame{
   width: 430px;
   height: 250px;
