@@ -306,7 +306,6 @@
 													 		String link , itemLabel, classIcon, classDisable="";
 													 		String[] actionMenuForum = uicomponent.getActionMenuForum() ;
 													 		for(action in actionMenuForum) {
-													 		  if(action.equals("MoveForum") && userProfile.getUserRole() == 1) continue;
 														 		link = uicomponent.event(action,uicomponent.getName(),"topic") ;
 														 		itemLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 														 		if(action.length() < 12) classIcon = action + "Icon" ;

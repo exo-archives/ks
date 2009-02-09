@@ -323,7 +323,7 @@ public class ForumTransformHTML {
 				int clsIndex = b.indexOf("[/code]", tagIndex);
 				String text = b.substring(tagIndex + 6, clsIndex);
 				if(text == null || text.trim().length() == 0) continue;
-				String text_ = text.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&nbsp;", "&#32");
+				String text_ = text.replaceAll("&nbsp;", "&#32");
 				buffer = new StringBuffer();
 				buffer.append("<div>Code:</div><div class=\"ClassCode\">");
 				buffer.append("<pre>").append(text_).append("</pre></div>");

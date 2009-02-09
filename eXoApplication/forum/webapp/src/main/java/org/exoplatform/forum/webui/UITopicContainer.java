@@ -229,8 +229,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private String[] getActionMenuForum() throws Exception {
-		String []actions = {"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", 
+		String []actions ;
+		if(userProfile.getUserRole() == 0) actions = new String[]{"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", 
 				"MoveForum", "RemoveForum", "ExportForum", "WatchOption", "BanIpForumTools"};
+		else actions = new String[]{"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", 
+				"ExportForum", "WatchOption", "BanIpForumTools"};
 		return actions;
 	}
 

@@ -193,7 +193,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		UIFormStringInput editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT);
 		editReason.setRendered(false) ;
 		if(!ForumUtils.isEmpty(this.postId) && post != null) {
-			String message = ForumTransformHTML.enCodeHTML(post.getMessage()) ;
+			String message = post.getMessage();
+			System.out.println("\n\n mes1: " + message);
+			//message = ForumTransformHTML.enCodeHTML(message) ;
+			//System.out.println("\n\n mes2: " + message);
 			if(isQuote) {//quote
 				String title = "" ;
 				if(post.getName().indexOf(": ") > 0) title = post.getName() ;
@@ -201,7 +204,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(title)) ;
 				String value = "[QUOTE=" + post.getOwner() + "]" + message + "[/QUOTE]";
 				threadContent.getChild(UIFormWYSIWYGInput.class).setValue(value);
-				//getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).setDefaultValue(value) ;
 				getChild(UIFormInputIconSelector.class).setSelectedIcon(this.topic.getIcon());
 			} else if(isPP){
 				String title = this.topic.getTopicName() ;
