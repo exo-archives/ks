@@ -62,6 +62,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 /**
  * Created by The eXo Platform SARL
@@ -97,7 +98,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private UIFormStringInput inputAuthor = null ;
   private UIFormStringInput inputEmailAddress = null ;
   private UIFormStringInput inputQuestionContent = null ;
-  private UIFormTextAreaInput inputQuestionDetail = null ;
+  private UIFormWYSIWYGInput inputQuestionDetail = null ;
   private UIFormSelectBox selectLanguage = null;
   private UIFormCheckBoxInput<Boolean> inputIsApproved = null ;
   private UIFormCheckBoxInput<Boolean> inputIsActivated = null ;
@@ -192,8 +193,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       e.printStackTrace() ;
     }
     
-    inputQuestionDetail = new UIFormTextAreaInput(QUESTION_DETAIL, QUESTION_DETAIL, null) ;
-    inputQuestionDetail.setColumns(80) ;
+    inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, null, null, true) ;
+    //inputQuestionDetail.setColumns(80) ;
     if(!questionContents_.isEmpty()){
       String input = questionContents_.get(0) ;
       if(input!= null && input.indexOf("<p>") >=0 && input.indexOf("</p>") >= 0) {
@@ -533,7 +534,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       question_.setEmail(emailAddress) ;
       question_.setQuestion(questionForm.inputQuestionContent.getValue());
       try{
-      	question_.setDetail(questionForm.listQuestionDetail.get(questionForm.defaultLanguage_).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+      	question_.setDetail(questionForm.listQuestionDetail.get(questionForm.defaultLanguage_)) ;
       	question_.setQuestion(questionForm.listQuestionContent.get(questionForm.defaultLanguage_).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
       } catch(Exception e){
       	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
@@ -607,7 +608,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           				questionLanguage = new QuestionLanguage();
           				questionLanguage.setLanguage(questionForm.listLanguages.get(i));
           			}
-          			questionLanguage.setDetail(questionForm.listQuestionDetail.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          			questionLanguage.setDetail(questionForm.listQuestionDetail.get(questionForm.listLanguages.get(i))) ;
           			questionLanguage.setQuestion(questionForm.listQuestionContent.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           			multiLanguages.addLanguage(questionNode, questionLanguage) ;
           		}
@@ -625,7 +626,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           			if(questionForm.listLanguages.get(i).equals(questionForm.defaultLanguage_)) continue;
           			questionLanguage = new QuestionLanguage() ;
           			questionLanguage.setLanguage(questionForm.listLanguages.get(i)) ;
-          			questionLanguage.setDetail(questionForm.listQuestionDetail.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+          			questionLanguage.setDetail(questionForm.listQuestionDetail.get(questionForm.listLanguages.get(i))) ;
           			questionLanguage.setQuestion(questionForm.listQuestionContent.get(questionForm.listLanguages.get(i)).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
           			multiLanguages.addLanguage(questionNode, questionLanguage) ;
           		}

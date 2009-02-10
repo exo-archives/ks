@@ -694,7 +694,7 @@
 												if(answers != null && !answers.isEmpty()){
 													String actionAnswer = "";
 													for(Answer answer in answers) {
-														res = answer.getResponses().replaceFirst("<p>", "").substring(0, answer.getResponses().lastIndexOf("</p>"))
+														res = answer.getResponses();
 														if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 															continue;
 														}
@@ -729,11 +729,11 @@
 																<%
 																if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
 																%>
-																	<div>$res &nbsp;</div>
+																	<div style="padding: 3px;">$res</div>
 																<%
 																} else {
 																%>
-																	<div style="color: gray;">$res &nbsp;</div>
+																	<div style="color: gray;padding: 3px;">$res</div>
 																<%} %>
 																<div style="float: left; color:#721d95">$date</div>
 																<% if(uicomponent.canEditQuestion){%>

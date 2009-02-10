@@ -106,7 +106,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 	// form input :
 	private UIFormStringInput inputQuestionContent_ ;
-	private UIFormTextAreaInput inputQuestionDetail_ ;
+	private UIFormWYSIWYGInput inputQuestionDetail_ ;
 	private UIFormSelectBox questionLanguages_ ;
 	private UIFormWYSIWYGInput inputResponseQuestion_ ; 
 	private UIFormInputWithActions inputAttachment_ ; 
@@ -146,7 +146,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	public UIResponseForm() throws Exception {
 		isChildren_ = false ;
 		inputQuestionContent_ = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null) ;
-		inputQuestionDetail_ = new UIFormTextAreaInput(QUESTION_DETAIL, QUESTION_DETAIL, null) ;
+		inputQuestionDetail_ = new UIFormWYSIWYGInput(QUESTION_DETAIL, null, null, true) ;
 		inputResponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, null, null , true) ;
 
 		checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, false) ;
@@ -430,7 +430,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					question_.setAnswers(responseForm.listAnswers.toArray(new Answer[]{}));
 				} else {
 					question_.setQuestion(responseForm.listQuestionLanguage.get(0).getQuestion().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
-					question_.setDetail(responseForm.listQuestionLanguage.get(0).getDetail().replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+					question_.setDetail(responseForm.listQuestionLanguage.get(0).getDetail()) ;
 					question_.setAnswers(responseForm.listQuestionLanguage.get(0).getAnswers());
 				}
 
@@ -751,7 +751,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 								questionLanguage.setAnswers(responseForm.listAnswers.toArray(new Answer[]{})) ;
 							}
 						}
-						questionLanguage.setDetail(questionDetail.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+						questionLanguage.setDetail(questionDetail) ;
 						questionLanguage.setQuestion(questionContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
 						break ;
 					}

@@ -16,7 +16,7 @@
 					    if(field.getName().equals( uicomponent.QUESTION_DETAIL)){
 					%>
 							  <tr>
-							    <td class="FieldLabel" width="15%" align="right">
+							    <td class="FieldLabel" width="16%" align="right">
 							      <%=uicomponent.getLabel(field.getName()) %> : 
 							    </td>
 							    <td class="FieldComponent" style="padding-left: 4px; white-space:nowrap;">
@@ -28,7 +28,7 @@
 								String link = uicomponent.event("DeleteLanguage", "delete question");
 						%>
 								<tr>
-									<td class="FieldLabel" width="15%" align="right"><%=uicomponent.getLabel(field.getName()) %> : </td>
+									<td class="FieldLabel" width="16%" align="right"><%=uicomponent.getLabel(field.getName()) %> : </td>
 									<td class="FieldComponent" style="padding-left: 4px; white-space:nowrap;">
 										<div style="float:left;">
 											<div style="float: left;"><% uiform.renderField(field) %></div>
@@ -43,7 +43,7 @@
 								<tr>
 									<%fieldName = uicomponent.getLabel(field.getName());
 										if(!fieldName.equals(uicomponent.getId())) {%>												
-											<td class="FieldLabel" width="15%">
+											<td class="FieldLabel" width="16%">
 												<%=uicomponent.getLabel(field.getName()) %> : 
 											</td>
 											<td class="FieldComponent" style="white-space:normal;" width="85%">
@@ -61,7 +61,7 @@
 					%>
 						<!-- ============== Validation apporved and activate ============================ -->
 						<tr>
-							<td class="FieldLabel" width="15%">
+							<td class="FieldLabel" width="16%">
 								<%=_ctx.appRes("UIQuestionForm.label.Validation")%> :
 							</td>
 							<td class="FieldComponent" style="white-space:normal;" >
@@ -80,7 +80,7 @@
 					<%}%>
 					<!-- ======================= Attachment =========================== -->
 					<tr>
-						<td class="FieldLabel" width="15%">
+						<td class="FieldLabel" width="16%" style="white-space:nowrap;">
 							<%=_ctx.appRes("UIQuestionForm.label.Attachment")%> :
 						</td>
 						<td class="FieldComponent" style="white-space:normal;" >
