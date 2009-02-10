@@ -115,18 +115,17 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			MultiLanguages multiLanguages = new MultiLanguages();
 			Answer answer =  null;
-			if(voteQuestion.language_ != null && voteQuestion.language_.trim().length() > 0)
+			if(voteQuestion.language_ != null && voteQuestion.language_.trim().length() > 0 && 
+					!voteQuestion.language_.equals(voteQuestion.question_.getLanguage())){
 				answer = multiLanguages.getAnswerById(faqService_.getQuestionNodeById(voteQuestion.question_.getId(), sessionProvider),
 																										voteQuestion.answerId_, voteQuestion.language_);
-			else
-				answer = faqService_.getAnswerById(voteQuestion.question_.getId(), voteQuestion.answerId_, sessionProvider);
-			
-			answer.setMarksVoteAnswer(markVote);
-			if(voteQuestion.language_ == null || voteQuestion.language_.trim().length() < 1){
-				faqService_.saveAnswer(voteQuestion.question_.getId(), answer, false, sessionProvider);
-			} else {
+				answer.setMarksVoteAnswer(markVote);
 				multiLanguages.saveAnswer(faqService_.getQuestionNodeById(voteQuestion.question_.getId(), sessionProvider), 
 																	answer, voteQuestion.language_, sessionProvider);
+			} else {
+				answer = faqService_.getAnswerById(voteQuestion.question_.getId(), voteQuestion.answerId_, sessionProvider);
+				answer.setMarksVoteAnswer(markVote);
+				faqService_.saveAnswer(voteQuestion.question_.getId(), answer, false, sessionProvider);
 			}
 			sessionProvider.close();
 			UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
