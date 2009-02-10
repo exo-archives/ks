@@ -54,24 +54,16 @@
 		</div>
 		<div class="FAQContainer"  style="height: 290px; margin-bottom: 5px; overflow:auto;_width: 187px;">
 			<div class="UICategories">
-				<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupCategoriesRoot', '', null, null)">
-					<%
-						if(uicomponent.parentCateId_ != null){%>
-							<%if(uicomponent.categoryId_.equals(uicomponent.parentCateId_)){%>
-									<div>
-										<a href="<%=uicomponent.event("OpenCategory", uicomponent.backCateID_)%>">
-											<div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.backCateID_)%>">
-												<span></span>
-											</div>
-										</a>
-									</div>
-						 	<%} else {%>
-									<div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.backCateID_)%>">
+				<%
+					if(uicomponent.parentCateID_ != null || (uicomponent.parentCateID_ == null && uicomponent.categoryId_ != null)){%>
+							<div>
+								<a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
+									<div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
 										<span></span>
 									</div>
-							<%}%>
-					<%}%>
-				</div>
+								</a>
+							</div>
+				<%}%>
 				<div style="padding: 4px 0px 0px 0px;">
 				<%
 					List listCate = uicomponent.getListCate() ;

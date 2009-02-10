@@ -27,6 +27,7 @@ import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -222,6 +223,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 			uiQuestions.setCategories(categoryId) ;
 			uiQuestions.setIsNotChangeLanguage() ;
 	    UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+	    UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
 	    breadcumbs.setUpdataPath(null) ;
       String oldPath = "" ;
 	    List<String> listPath = faqService_.getCategoryPath(sessionProvider, categoryId) ;
@@ -231,6 +233,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	    String newPath = "FAQService"+oldPath ;
 	    uiQuestions.setPath(newPath) ;
 	    breadcumbs.setUpdataPath(newPath) ;
+			categories.setPathCategory(breadcumbs.getPaths());
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;

@@ -73,12 +73,10 @@ import org.exoplatform.webui.event.EventListener;
 )
 
 public class UICategories extends UIContainer{
-	private String backCateID_ = null;
+	private String parentCateID_ = null;
 	private String categoryId_ = null;
-	private String parentCateId_ = null;
 	private boolean isSwap = false;
 	public boolean isBack = false;
-	private String parentCateName = "";
 	private String currentName = "";
 	private String pathCategory = "";
 	private List<Category> listCate = new ArrayList<Category>() ;
@@ -123,12 +121,15 @@ public class UICategories extends UIContainer{
 	}
 
 	public void setPathCategory(String pathCategory){
-		if(pathCategory.indexOf("FAQService/") >= 0)
-			this.pathCategory = pathCategory.replace("FAQService/", "");
-		else
-			this.pathCategory = pathCategory.replace("FAQService", "");
-		this.categoryId_ = pathCategory.substring(pathCategory.lastIndexOf("/")+1, pathCategory.length());
-		if(this.categoryId_.equals("FAQService")) this.categoryId_ = null;
+		String[] listIds = pathCategory.split("/");
+		this.categoryId_ = listIds[listIds.length - 1];
+		if(listIds.length > 1){
+			if(listIds.length > 2)this.parentCateID_ = listIds[listIds.length - 2];
+			else this.parentCateID_ = null;
+		}else{
+			this.categoryId_ = null;
+			this.parentCateID_ = null;
+		}
 	}
 
 	private void setIsModerators(String currentUser_) {
@@ -203,32 +204,20 @@ public class UICategories extends UIContainer{
 	  return currentName;
   }
 	
-	public String getParentCateName() {
-		return parentCateName;
-	}
-	
 	@SuppressWarnings("unused")
 	private void setListCate() throws Exception {
 		if(!isSwap){
 			List<Category> newList = new ArrayList<Category>();
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			newList = faqService_.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
-			if(categoryId_ != null)currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
+			if(newList.isEmpty()) newList = faqService_.getSubCategories(this.parentCateID_, sessionProvider, faqSetting_);
+			if(categoryId_ != null) currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
 			else currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
-			if(!newList.isEmpty() || (parentCateId_!= null && parentCateId_.equals(categoryId_)) || isBack || 
-					(parentCateId_ == null && categoryId_ == null)){
+			if(!newList.isEmpty() || isBack){
 				this.listCate.clear();
 				listCate.addAll(newList);
 				String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
-				if(listId.length > 1) backCateID_ = listId[listId.length - 2];
-				else backCateID_ = listId[0];
-				if(backCateID_.equals("FAQService")){
-					parentCateName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
-				}
-				parentCateId_ = categoryId_;
-				if(parentCateId_ != null)parentCateName =	faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
-				else parentCateName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 			}
 			sessionProvider.close();
 			setIsModerators(FAQUtils.getCurrentUser());
@@ -251,7 +240,7 @@ public class UICategories extends UIContainer{
 	public void resetListCate(SessionProvider sProvider) throws Exception{
 		isSwap = true;
 		listCate.clear();
-		listCate.addAll(faqService_.getSubCategories(parentCateId_, sProvider, faqSetting_));
+		listCate.addAll(faqService_.getSubCategories(parentCateID_, sProvider, faqSetting_));
 		setIsModerators(FAQUtils.getCurrentUser());
 	}
 	
@@ -358,7 +347,7 @@ public class UICategories extends UIContainer{
 			questions.language_ = "";
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-			if(categoryId == null || !categoryId.equals("FAQService")){
+			if(categoryId != null && !categoryId.equals("FAQService")){
 				try {
 					questions.viewAuthorInfor = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider).isViewAuthorInfor() ;
 				} catch (Exception e) {
@@ -372,6 +361,7 @@ public class UICategories extends UIContainer{
 				}
 				questions.setCategoryId(categoryId) ;
 			} else {
+				categoryId = "FAQService";
 				questions.setCategoryId(null) ;
 				questions.viewAuthorInfor = false;
 			}
@@ -381,14 +371,18 @@ public class UICategories extends UIContainer{
 			if(oldPath != null && oldPath.trim().length() > 0) {
 				if(!oldPath.contains(categoryId)) {
 					String parentId = "";
-					if(uiCategories.parentCateId_ != null) parentId = uiCategories.parentCateId_;
-					else parentId = "FAQService";
-					if(oldPath.indexOf(parentId) < oldPath.lastIndexOf("/")){
-						oldPath = oldPath.substring(0, oldPath.lastIndexOf("/"));
+					if(oldPath.indexOf("/") > 0){
+						for(Category category : uiCategories.listCate){
+							if(category.getId().equals(oldPath.substring(oldPath.lastIndexOf("/")  + 1))){
+								oldPath = oldPath.substring(0, oldPath.lastIndexOf("/"));
+								break;
+							}
+						}
 					}
+					else oldPath = "FAQService";
 					questions.newPath_ = oldPath + "/" +categoryId ;
 					questions.setPath(questions.newPath_) ;
-					breadcumbs.setUpdataPath(oldPath + "/" +categoryId);
+					breadcumbs.setUpdataPath(questions.newPath_);
 				}else {
 					oldPath = oldPath.substring(0, oldPath.indexOf(categoryId) + categoryId.length());
 					breadcumbs.setUpdataPath(oldPath);
@@ -493,13 +487,13 @@ public class UICategories extends UIContainer{
 			try {
 				Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
 				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-					if (uiCategories.faqService_.getCategoryNodeById(uiCategories.parentCateId_, sessionProvider).hasNode(categoryId)) {
+					if (uiCategories.faqService_.getCategoryNodeById(uiCategories.parentCateID_, sessionProvider).hasNode(categoryId)) {
 						UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,550) ;	
 						uiPopupContainer.setId("FAQEditSubCategoryForm") ;
 						UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 						categoryForm.init(false) ;
 						//String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
-						categoryForm.setParentId(uiCategories.parentCateId_) ;
+						categoryForm.setParentId(uiCategories.parentCateID_) ;
 						categoryForm.setCategoryValue(categoryId, true) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 					} else {
@@ -857,7 +851,7 @@ public class UICategories extends UIContainer{
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				uiCategories.faqService_.swapCategories(uiCategories.parentCateId_, objectIds[0], objectIds[1], sessionProvider);
+				uiCategories.faqService_.swapCategories(uiCategories.parentCateID_, objectIds[0], objectIds[1], sessionProvider);
 				uiCategories.resetListCate(sessionProvider);
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -8,7 +8,7 @@
 	<div class="VoteFormContainer">
 		<div class="RatingInfoContainer">
 			<div class="OptionsContainer">
-				<div onmouseout="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('-1')">
+				<div onmouseout="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('-1', 'FAQStarVote')">
 				<%	
 				String action = "Vote";
 				if(uicomponent.answerId_ != null && uicomponent.answerId_.trim().length() > 0) action = "VoteAnswer";
@@ -16,7 +16,7 @@
 					String number = String.valueOf(i+1) ;
 					String onclick = uicomponent.event(action, number);
 				%>
-					<div id="FAQStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('$i')" onclick="$onclick" title=""><span></span></div>
+					<div id="FAQStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('$i', 'FAQStarVote')" onclick="$onclick" title=""><span></span></div>
 		 <%}%>
 		 		</div>
 				<div style="clear: left;"><span></span></div>

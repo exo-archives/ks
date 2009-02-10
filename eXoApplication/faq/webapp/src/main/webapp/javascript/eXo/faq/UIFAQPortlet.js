@@ -89,19 +89,19 @@ UIFAQPortlet.prototype.changeCustomView = function(change, hileTitle, showTitle)
 	uiNav.initScroll();
 };
 
-UIFAQPortlet.prototype.changeStarForVoteQuestion = function(i){
-	var objId = "startVote" + i;
+UIFAQPortlet.prototype.changeStarForVoteQuestion = function(i, id){
+	var objId = id + i;
 	var obj = document.getElementById(objId);
 	if(obj) obj.className = "OverVote";
 	
 	for(var j = 0; j <= i; j ++){
-		objId = "FAQStarVote" + j;
+		objId = id + j;
 		obj = document.getElementById(objId);
 		if(obj) obj.className = "OverVote";
 	}
 	
 	for(var j = i + 1; j < 5; j ++){
-		objId = "FAQStarVote" + j;
+		objId = id + j;
 		obj = document.getElementById(objId);
 		if(obj) obj.className = "RatedVote";
 	}
