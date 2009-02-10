@@ -218,26 +218,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 
   public void deActivate() throws Exception { }
   
-  public List<Category> getCategoryAddWatch() throws Exception {
-  	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-  	FAQService faqService = FAQUtils.getFAQService() ;
-  	List<Category> listCate = new ArrayList<Category>() ;
-  	List<Category> listAll = faqService.getAllCategories(sessionProvider) ;
-  	for(Category cate : listAll) {
-  		String categoryId = cate.getId() ;
-  		List<Watch> listWatch = faqService.getListMailInWatch(categoryId, sessionProvider).getAllWatch() ;
-  		if(listWatch.size()>0) {
-  			List<String> users = new ArrayList<String>() ;
-  			for(Watch watch : listWatch) {
-  				users.add(watch.getUser());
-  			}
-  			if(users.contains(FAQUtils.getCurrentUser())) listCate.add(cate) ;
-  		}
-  	}
-  	sessionProvider.close();
-  	return listCate ;
-  }
-  
   private String getSelectedTab(){
 	  return tabSelected;
   }
@@ -317,7 +297,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 600) ;
 			watchForm.setFAQSetting(settingForm.faqSetting_);
-			watchForm.setListCategory(settingForm.getCategoryAddWatch()) ;
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

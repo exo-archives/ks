@@ -455,6 +455,15 @@
 	margin: 0px 4px;
 }
 
+.UIFAQPortlet .EmailAddressIcon {
+	float: left;
+	background: url('background/Email_icons_007.gif') no-repeat left center;
+	height: 20px;
+	line-height: 20px;
+	margin-left: 16px;
+	padding: 5px 0px 5px 20px;
+}
+
 .UIFAQPortlet .QuestionSelect .QuestionContainer .PrintScrintFAQ {
 	float: right;
 	background: url('background/PrintScrintFAQ.gif') no-repeat left center;

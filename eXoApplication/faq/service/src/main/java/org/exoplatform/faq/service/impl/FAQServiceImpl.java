@@ -738,4 +738,8 @@ public class FAQServiceImpl implements FAQService{
 	public JCRPageList getPageListComment(SessionProvider sProvider, String questionId) throws Exception {
 	  return jcrData_.getPageListComment(sProvider, questionId);
   }
+	
+	public QuestionPageList getListCategoriesWatch(String userId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getListCategoriesWatch(userId, sProvider);
+	}
 }

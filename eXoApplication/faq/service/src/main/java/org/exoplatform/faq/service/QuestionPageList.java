@@ -18,7 +18,6 @@ package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -391,16 +390,46 @@ public class QuestionPageList extends JCRPageList {
   @Override
   protected void populateCurrentPageCategoriesSearch(long page, String username) throws Exception {
   	long pageSize = getPageSize();
-	  long position = 0;
-	  if(page == 1) position = 0;
-	  else {
-	  	position = (page - 1) * pageSize;
-	  }
-	  pageSize *= page ;
-	  currentListCategory_ = new ArrayList<Category>();
-	  for(int i = (int)position; i < pageSize && i < this.listCategories_.size(); i ++){
-	  	currentListCategory_.add(listCategories_.get(i));
-	  }
+  	long position = 0;
+  	if(!isQuery_){
+		  if(page == 1) position = 0;
+		  else {
+		  	position = (page - 1) * pageSize;
+		  }
+		  pageSize *= page ;
+		  currentListCategory_ = new ArrayList<Category>();
+		  for(int i = (int)position; i < pageSize && i < this.listCategories_.size(); i ++){
+		  	currentListCategory_.add(listCategories_.get(i));
+		  }
+  	} else {
+		  // get category for watches
+		  if(iter_ == null || !iter_.hasNext()) {
+	      Session session = getJCRSession() ;
+        QueryManager qm = session.getWorkspace().getQueryManager() ;
+        Query query = qm.createQuery(value_, Query.XPATH);
+        QueryResult result = query.execute();
+        iter_ = result.getNodes();
+	      session.logout() ;
+	    }
+    	setAvailablePage(iter_.getSize()) ;
+	    if(page == 1) position = 0;
+	    else {
+	      position = (page-1) * pageSize ;
+	    }
+	    currentListCategory_ = new ArrayList<Category>() ;
+    	iter_.skip(position) ;
+    	Category category = null;
+      for(int i = 0; i < pageSize; i ++) {
+        // add != null to fix bug 514
+        if(iter_ != null && iter_.hasNext()){
+        	category = getCategory(iter_.nextNode());
+        	currentListCategory_.add(category);
+        }else {
+          break ;
+        }
+      }
+	    iter_ = null ;    
+  	}
   }
 
 	/* (non-Javadoc)
@@ -699,34 +728,6 @@ public class QuestionPageList extends JCRPageList {
   		d[i] = Val[i].getLong() ;
   	}
   	return d;
-  }
-  
-  private double [] ValuesToDoubles(Value[] Val) throws Exception {
-  	if(Val.length < 1) return new double[]{} ;
-  	if(Val.length == 1) return new double[]{Val[0].getDouble()} ;
-  	double[] d = new double[Val.length] ;
-  	for(int i = 0; i < Val.length; ++i) {
-  		d[i] = Val[i].getDouble() ;
-  	}
-  	return d;
-  }
-  
-  /**
-   * Values to date.
-   * 
-   * @param Val the val
-   * 
-   * @return the date[]
-   * 
-   * @throws Exception the exception
-   */
-  private Date[] ValuesToDate(Value[] Val) throws Exception {
-  	if(Val.length < 1) return new Date[]{} ;
-  	Date[] dates = new Date[Val.length] ;
-  	for(int i = 0; i < Val.length; ++i) {
-  		dates[i] = Val[i].getDate().getTime() ;
-  	}
-  	return dates;
   }
   
   /**

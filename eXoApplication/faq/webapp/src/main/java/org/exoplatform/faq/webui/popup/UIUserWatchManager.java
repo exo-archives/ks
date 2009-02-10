@@ -64,19 +64,22 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	@SuppressWarnings("unused")
 	private JCRPageList pageListCate ;
 	private UIFAQPageIterator pageIteratorQues ;
+	private UIFAQPageIterator pageIteratorCates ;
 	private JCRPageList pageListQues ;
+	private JCRPageList pageListCates ;
 	private String LIST_QUESTIONS_WATCHED = "listQuestionsWatch";
 	private String LIST_CATES_WATCHED = "listCatesWatch";
 	private int tabSelect = 0;
+	private String emailAddress;
 	
 	@SuppressWarnings("unused")
 	private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
-	private List<Category> listCategory_ = new ArrayList<Category>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIUserWatchManager() throws Exception {
 		super("UIUswerWatchManager");
-		 addChild(UIFAQPageIterator.class, null, LIST_QUESTIONS_WATCHED) ;
-	    addChild(UIFAQPageIterator.class, null, LIST_CATES_WATCHED) ;
+		addChild(UIFAQPageIterator.class, null, LIST_QUESTIONS_WATCHED) ;
+	  addChild(UIFAQPageIterator.class, null, LIST_CATES_WATCHED) ;
+	  emailAddress = FAQUtils.getEmailUser(FAQUtils.getCurrentUser());
 		this.setActions(new String[]{"Cancel"}) ;
 	}
 	
@@ -84,8 +87,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	public void deActivate() throws Exception {}
 	
   
-	public void setListCategory(List<Category> listCategory){this.listCategory_ = listCategory;}
-  public List<Category> getListCategory() throws Exception {return listCategory_ ;}
+  public List<Category> getListCategory() throws Exception {return getListCategoriesWatch() ;}
 	
   public String getPathService(String categoryId) throws Exception {
   	String oldPath = "";
@@ -119,12 +121,46 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   }
   
   @SuppressWarnings("unused")
+  private List<Category> getListCategoriesWatch(){
+  	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+  	try{
+  		if(pageListCates == null){
+  			pageListCates = faqService_.getListCategoriesWatch(FAQUtils.getCurrentUser(), sessionProvider);
+  			pageListCates.setPageSize(5);
+  			pageIteratorCates = this.getChildById(LIST_CATES_WATCHED);
+  			pageIteratorCates.updatePageList(pageListCates);
+  		}
+  		
+  		long pageSelect = pageIteratorCates.getPageSelected() ;
+  		List<Category> listCategories = new ArrayList<Category>();
+  		try {
+  			listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(pageSelect, null)) ;
+  			if(listCategories.isEmpty()){
+  				UIFAQPageIterator pageIterator = null ;
+  				while(listCategories.isEmpty() && pageSelect > 1) {
+  					pageIterator = this.getChildById(LIST_CATES_WATCHED) ;
+  					listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(--pageSelect, null)) ;
+  					pageIterator.setSelectPage(pageSelect) ;
+  				}
+  			}
+  		} catch (Exception e) {
+  			e.printStackTrace();
+  		}
+  		
+  		return listCategories;
+  	}catch (Exception e){
+  		e.printStackTrace();
+  		return null;
+  	}
+  }
+  
+  @SuppressWarnings("unused")
 	private List<Question> getListQuestionsWatch(){
   	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
   	try{
   		if(pageListQues == null){
 	  		pageListQues = faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser(), sessionProvider);
-	  		pageListQues.setPageSize(3);
+	  		pageListQues.setPageSize(5);
 	  		pageIteratorQues = this.getChildById(LIST_QUESTIONS_WATCHED);
 	  		pageIteratorQues.updatePageList(pageListQues);
   		}
@@ -225,8 +261,6 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	        return ;
 	      }
 				faqService_.UnWatch(objectID, sessionProvider,FAQUtils.getCurrentUser()) ;
-				UISettingForm settingForm = uiPortlet.findFirstComponentOfType(UISettingForm.class) ;
-				if(settingForm.getCategoryAddWatch().size()>0) watchManager.setListCategory(settingForm.getCategoryAddWatch()) ;
 			} else {
 				try {
 					faqService_.getQuestionById(objectID, sessionProvider) ;

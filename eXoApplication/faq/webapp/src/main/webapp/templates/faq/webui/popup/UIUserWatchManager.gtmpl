@@ -57,7 +57,7 @@
 	            }
 	        		%>
 	        		<!-- manager for watch category -->
-      				<div class="UITabContent"  style="display: $display1;">
+      				<div class="UITabContent"  style="display: $display1; padding-bottom: 30px;">
 								<div class="UIForm">
 						 			<div class="UIHorizontalLayout">
 						 				<div class="UIPermissionManager">
@@ -66,7 +66,7 @@
 						 							<thead>
 						 								<tr>
 							 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
-							 								<th><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+							 								<th width="80"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
 						 								</tr>
 						 							</thead>
 						 							<tbody>
@@ -89,7 +89,7 @@
 						 										<td class="text" align="left"><a href="$link">$path</a></td>
 						 									<% } %>
 						 									<td style="width: 40px;" align="center">
-						 										<a href="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left;">
+						 										<a href="javaScript:void(0);" onclick="javaScript: if(confirm('<%=_ctx.appRes("UIUserWatchManager.msg.confirm-unwatch-category")%>')){$unWatch}" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left;">
 						 											<div class="DeleteWatchIcon" ></div>
 						 										</a>
 						 									</td>
@@ -106,7 +106,21 @@
 						 						</table>
 						 					</div>
 						 				</div>
+						 				
+						 				<%
+										totalPages = uicomponent.getTotalpages(uicomponent.LIST_CATES_WATCHED) ;
+					          if(totalPages > 1) {
+					          %>
+											<div style="overflow:auto;">
+												<% uicomponent.renderChild(uicomponent.LIST_CATES_WATCHED) ; %>
+											</div>
+									<%}%>
+						 				
 						 			</div>
+					 			</div>
+					 			<div style="margin:5px;">
+					 				<div style="font-weight: bold;"><%=_ctx.appRes("UIUserWatchManager.label.watchByEmail")%>:</div> 
+					 				<div class="EmailAddressIcon" style="color: gray; font-weight: bold;">$uicomponent.emailAddress</div>
 					 			</div>
  							</div>
  							
@@ -120,7 +134,7 @@
 						 							<thead>
 						 								<tr>
 							 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
-							 								<th><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+							 								<th width="80"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
 						 								</tr>
 						 							</thead>
 						 							<tbody>
@@ -161,7 +175,7 @@
 						 					</div>
 						 				</div>
 						 				<%
-										long totalPages = uicomponent.getTotalpages(uicomponent.LIST_QUESTIONS_WATCHED) ;
+										totalPages = uicomponent.getTotalpages(uicomponent.LIST_QUESTIONS_WATCHED) ;
 					          if(totalPages > 1) {
 					          %>
 											<div style="overflow:auto;">
