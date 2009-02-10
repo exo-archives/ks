@@ -1,0 +1,100 @@
+========================================================
+	    eXo KS 1.0 release notes
+========================================================
+
+ - Introduction:
+	eXo KS (Knowledge Suite) is a suite of collaborative applications oriented to knowledge management. 
+        Currently KS is constituted of :
+    		* Forum : A full featured message boards applications
+    		* FAQ   : A simple but powerfull Frequently Asked Questions application
+	KS 1.0 final release based on feature of RC5. KS 1.0 is provided with many RC5 bug fixes, function and UI improvements to make it better.
+
+- Notable changes:
+    	 + BBC effects with multiple tags.
+    	 + Show IP logging.
+    	 + New arrangment for Category and question in FAQ
+   	 + Enhance permlink
+   	 + Improve advance search form with new UI.
+   	 + Add advanced search in anonymous mode.
+   	 + Simplify FCK Editor
+   	 + Many bug fix and improvements to make better performance.
+ 
+- System Requirements:
+	 + Web Browser: IE6, IE7, FF2, FF3, Safari. Best for Frirefox 3 and IE7.
+	 + JVM: 1.5.xx
+	 + Application Server: Tomcat, JBoss, Jonas, Webshpere.
+	 + Building Tools: Maven 2.0.6 and up.
+
+ - How to upgrade:
+ To deploy KS 1.0 final you should update version of dependencies to:
+  	 + KERNEL:2.0.2
+  	 + CORE: 2.1.1
+  	 + WS: 1.2.1
+  	 + JCR: 1.9.3
+  	 + PC: 2.0.2
+  	 + PORTAL: 2.2
+
+ - Complete list of issues fixed in between RC5 and KS 1.0 final:
+
+  ** Bugs
+	* KS-1025  	Back button is shown unexpectedly  
+	* KS-1023 	IE 6: UI - space redundant between categories 
+	* KS-1022 	Answer question: cache error 
+	* KS-1021 	Answer 1 question: invalid message is shown 
+	* KS-1010 	photos preview need the user to scroll to be visible 
+	* KS-981 	reply to a thread cause an error when loggedin user don't have the right to reply 	
+	* KS-975 	Advanced Search: search result is not correctly in case search with blank keyword 	
+	* KS-970 	Tag 1 topic: unexpected page is shown 	
+	* KS-911 	IE 6, 7: Tool tips is shown invalidly. 
+	* KS-906 	forgotten debug output above Post reply button 	
+	* KS-898 	Advance search: Clear field button does not work 	
+	* KS-896 	Incorrect button for State and Status field. 	
+	* KS-894 	Lack of notice: the post is pending for approval 
+	* KS-867 	Minor UI glitches in French version 	
+	* KS-802 	Notification mail: no link is provided in special case
+  ** Improvements
+	* KS-1040 	Remove moderator column   	
+ 	* KS-980 	Icon and right click menu should considered 	
+ 	* KS-908 	enhance permlink 	
+	* KS-907 	permlink available for authenticated users 
+ 	* KS-903 	Add search for anonymous user 	
+	* KS-897 	No need to show state option in case search by normal user. 
+	* KS-895 	IP loging: Need to show IP of topic 	
+	* KS-868 	Default moderator for FAQ category 
+ 	* KS-866 	Simplify permlink 	
+ 	* KS-865 	Remove hard coded references to /portal from web\ksportal\src\main\webapp\templates\tour.gtmpl 	
+ 	* KS-864 	Remove hard coded references to /portal from web\ksportal\src\main\webapp\templates\sidebar.gtmpl 
+ 	* KS-863 	Remove hard coded references to /portal from web\ksportal\src\main\webapp\templates\header.gtmpl 	
+ 	* KS-861 	Simplified FCKEditor 	
+	* KS-809 	Send to friend: Should not require login to view question content 	
+	* KS-781 	View private message form: no need to show red border and remove scroll bar on IE 6 
+	* KS-768 	List questions under categories 	
+	* KS-719 	IE6: improve menu popup for good looking 	
+	* KS-714 	Print preview: Remove script menu popup 	
+	* KS-694 	Remove redundant space at menu popup 	
+	* KS-678 	Manage page- manage mail content- 'Get Default' function is required 	
+	* KS-671 	Dynamic feature is required for message alert in view question form 
+	* KS-648 	permlink: available for anonymous users only. 	
+	* KS-632 	In case no question, alert should be shown 	
+	* KS-608 	See also: Question link should be cut off 	
+	* KS-596 	Notification email: Forum link should be embeded in text 	
+	* KS-593 	Show status Icon for Select Forum form
+	* KS-589 	Show status Icon for Forum/Topic(s) at Search Result form 	
+	* KS-588 	In case there is no item in list, alert message should be shown 	
+	* KS-583 	Page index is required for Watch Manager form 	
+	* KS-546 	add Dutch (nl) and German (de) locales 
+	* KS-539 	Should NOT allow deleting the first post of 1 Thread 	
+	* KS-511 	User Management - Avoid reselecting action when selecting more Forums for " Moderator of" field 	
+	* KS-461 	Alert message should be shown to inform that why it is impossible to unlock thread in special case 	
+	* KS-356 	Can not select group from root when set right 
+	* KS-338 	in advance search form when you click search then form all page is reloaded 
+	* KS-331 	no send mail to all mails in watch manager 
+	* KS-255 	Search Result page: Page index is required
+
+ - Other resources and links:
+     Company site        http://www.exoplatform.com
+     Community JIRA      http://jira.exoplatform.org
+     Comminity site      http://www.exoplatform.org
+     Developers wiki     http://wiki.exoplatform.org
+     Documentation       http://docs.exoplatform.org 
+

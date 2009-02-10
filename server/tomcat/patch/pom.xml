@@ -17,11 +17,17 @@
     <resources>
 			<resource>
 				<directory>${exo.projects.directory.src}/portal/tags/2.2/server/tomcat/patch/src/main/tomcat</directory>
-				<excludes><exclude>conf/jaas.conf</exclude></excludes>
+				<excludes>
+          <exclude>conf/jaas.conf</exclude>
+          <exclude>EXO-README.txt</exclude>  
+        </excludes>
+        
 			</resource>  
 			<resource>
         <directory>src/main/tomcat</directory>
-        <includes><include>**/*</include></includes>
+        <includes>
+          <include>**/*</include>          
+        </includes>
       </resource>    
     </resources>
   </build>
