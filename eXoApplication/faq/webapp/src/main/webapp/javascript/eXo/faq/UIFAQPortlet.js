@@ -574,8 +574,8 @@ UIFAQPortlet.prototype.voteAnswerUpDown = function(imageId, isVote){
 		obj.style.filter = " alpha(opacity: 100)";
 		obj.style.MozOpacity="1";
 	} else {
-		obj.style.filter = " alpha(opacity: 40)";
-		obj.style.MozOpacity="0.4";
+		obj.style.filter = " alpha(opacity: 70)";
+		obj.style.MozOpacity="0.7";
 	}
 }
 

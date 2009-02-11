@@ -6,7 +6,7 @@
 }
 
 .UIFAQPortlet {
-	padding: 5px; height: 480px;
+	padding: 5px;
 	min-width: 600px;
 }
 
@@ -225,8 +225,6 @@
 	background: white;
 	border: 1px solid #c7c7c7;
 	border-top: 0px;
-	overflow: auto;
-	height: 380px; 
 	_width: 99.5%;
 }
 
@@ -317,6 +315,10 @@
 	margin: 8px 0px;
 	white-space: nowrap;
 	font-weight: bold;
+}
+
+.UIFAQPortlet .UIQuestions .FAQContainer {
+	min-height: 400px;
 }
 
 .UIFAQPortlet .UIQuestions .FAQContainer .UIFAQPopupCategory {
@@ -434,17 +436,15 @@
 
 .UIFAQPortlet .VoteFAQ {
 	float: right;
-	background: url('background/VoteIcon.gif') no-repeat left center;
+	background: url('background/VoteIcon.gif') no-repeat center;
 	width: 21px; height: 20px;
 	cursor: pointer;
-	margin: 0px 4px;
 }
-.UIFAQPortlet .QuestionSelect .QuestionContainer .SortAnswer {
-	float: right;
-	background: url('background/SortByVote.gif') no-repeat left center;
-	width: 21px; height: 20px;
+
+.UIFAQPortlet .QuestionSelect .ResponseItemContainer .SortAnswer {
+	background: url('background/SortByVote.gif') no-repeat center;
+	width: 20px; height: 20px;
 	cursor: pointer;
-	margin: 0px 4px;
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .LockSendToFriend {
@@ -552,13 +552,25 @@
 
 .UIFAQPortlet .FAQContainer .FAQContent .Question {
 	background: url('background/questionIcon.gif') no-repeat left 0px;
-	height: 16px ; width: 28px;
+	height: 16px ; width: 20px;
 	float: left;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .LeftQuestionContainer .Question {
+	background: none;
+	height: auto ; width: auto;
+	float: none;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .NotResponse {
 	background: url('background/NotResponse.gif') no-repeat left 0px;
-	height: 16px ; width: 28px;
+	height: 16px ; width: 20px;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .LeftQuestionContainer .NotResponse {
+	background: none;
+	height: auto ; width: auto;
+	float: none;	
 }
 
 .UIFAQPortlet .NotApproved {
@@ -607,14 +619,11 @@
 
 .UIFAQPortlet .ProfileContainer .AvatarContainer {
 	margin: 20px auto 0px auto;
-	border: solid 1px #7E7E7F;
-	padding: 3px;
-	width: 69px;
+	width: 65px;
 }
 
 .UIFAQPortlet .ProfileContainer .AvatarContainer .ImageAvatar {
 	border: solid 1px #7E7E7F;
-	padding: 2px;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .questionTitle {
@@ -649,13 +658,11 @@
 /******************************	Response	***************************************/
 
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseContent {
-	padding: 8px 8px 8px 26px;
+	padding: 8px 8px 8px 12px;
 	background: white;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Response {
-	padding-bottom: 4px;
-	padding-left: 10px ;
 	_width: 90%;
 }
 
@@ -663,11 +670,6 @@
 	padding-bottom: 4px;
 	padding-left: 10px ;
 	_width: 90%;
-}
-
-.UIFAQPortlet .ResponseContent .Response {
-	padding-bottom: 4px;
-	padding-left: 10px ;
 }
 
 .UIFAQPortlet .EditQuestionContent {
@@ -1349,23 +1351,20 @@
 }
 
 .UIFAQPortlet .VoteAnswerUp {
-	background: url('background/VoteAnswerUp.gif') no-repeat center;
-	height: 8px;	width: 16px;
+	background: url('background/concur.gif') no-repeat center;
+	height: 16px;	width: 16px;
 	cursor: pointer;
-	margin-top: 2px;
-	margin-bottom: 2px;
-	filter: alpha(opacity: 50); 
-	-moz-opacity: 0.5;
+	filter: alpha(opacity: 70); 
+	-moz-opacity: 0.7;
 }
 
 .UIFAQPortlet .VoteAnswerDown {
-	background: url('background/VoteAnswerDown.gif') no-repeat center;
-	height: 8px;	width: 16px;
+	background: url('background/oppose.gif') no-repeat bottom center;
+	height: 18px;	width: 16px;
 	cursor: pointer;
-	margin-top: 2px;
-	margin-bottom: 2px;
-	filter: alpha(opacity: 50); 
-	-moz-opacity: 0.5;
+	margin: 0px 5px;
+	filter: alpha(opacity: 70); 
+	-moz-opacity: 0.7;
 }
 
 .UIFAQPortlet .RatedVote {
