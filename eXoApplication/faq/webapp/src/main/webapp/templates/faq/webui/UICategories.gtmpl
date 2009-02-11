@@ -13,7 +13,8 @@
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 	if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate)
-		jsmanager.addJavascript('eXo.faq.UIFAQDragDrop.init("'+compId+'") ;') ;
+	jsmanager.addJavascript('eXo.faq.DragDrop.init("'+compId+'") ;') ;
+	jsmanager.addJavascript('eXo.faq.UIContextMenu.init("'+compId+'") ;') ;
 	String [] categoryAction;
 %>
 <div id="$uicomponent.id" style="padding: 0px 5px 2px 5px; line-height:28px;">
@@ -74,10 +75,11 @@
 						if(category.getId().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
 						else classCss = "FAQCategoryRight";
 				%>
-						<div id="<%=category.getId()%>" class="$classCss FAQCategory"  actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
-							<div  onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIFAQPopupCategories$i', '', null, null)">
+						<div class="FAQTmpCategory"><span></span></div>
+						<div id="<%=category.getId()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
+							<div unselectable="on">
 								
-								<a title="<%=category.getName()%>" href="<%=uicomponent.event("OpenCategory", category.getId())%>">
+								<a title="<%=category.getName()%>" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getId())%>">
 									<%=FAQUtils.getSubString(category.getName(), 20);%>
 								</a>
 								<%
@@ -96,7 +98,7 @@
 								%>
 								
 								<!-- action of this category -->
-								<div class="UIFAQPopupCategory" id="UIFAQPopupCategories$i" style="display: none; left: 50px;">
+								<div class="UIFAQPopupCategory" id="UIFAQPopupCategories$i" style="display: none;">
 									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
 										<div class="UIContextMenuContainer">
 																		
@@ -165,6 +167,7 @@
 						</div>
 				<%	i ++;
 					}%>
+				<div class="FAQTmpCategory"><span></span></div>
 			</div>
 			</div>
 		</div>

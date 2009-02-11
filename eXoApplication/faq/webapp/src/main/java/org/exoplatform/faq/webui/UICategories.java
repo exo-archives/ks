@@ -68,7 +68,8 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UICategories.ImportActionListener.class),
 				@EventConfig(listeners = UICategories.ChangeIndexActionListener.class),
 				@EventConfig(listeners = UICategories.RSSActionListener.class),
-				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class)
+				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
+				@EventConfig(listeners = UICategories.MoveCategoryIntoActionListener.class)
 		}
 )
 
@@ -878,6 +879,14 @@ public class UICategories extends UIContainer{
 			popupAction.activate(popupContainer, 560, 170) ;
 			exportForm.setRSSLink(rssLink);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	static	public class MoveCategoryIntoActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiCategories = event.getSource() ;
+			System.out.println("\n\n\n\n------------------->run move into  ");
+			String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
+			System.out.println("\n\n\n\n------------------->Source ID : " + objectIds[0] + " Target ID : " + objectIds[1]);
 		}
 	}
 }

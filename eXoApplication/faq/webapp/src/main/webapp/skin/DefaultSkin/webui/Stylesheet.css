@@ -278,30 +278,42 @@
 
 .UIFAQPortlet .UICategories .FAQCategoryRight {
 	background: url('background/BlackBorderRightArrow.gif') no-repeat left;
-	padding: 0px 0px 6px 28px;
-	height: 18px;
-	line-height: 18px;
+	padding: 0px 0px 4px 28px;
+	height: 16px;
+	line-height: 16px;
 	white-space: nowrap;
+	-moz-user-select:none;
+	cursor:pointer;
+}
+
+.UIFAQPortlet .UICategories .FAQCategoryRight a{
+	-moz-user-select:none;
 }
 
 .UIFAQPortlet .UICategories .FAQCategoryRightBlack {
 	background: url('background/BlackBorderRightBlack.gif') no-repeat left;
-	padding: 0px 0px 6px 28px;
-	height: 18px;
-	line-height: 18px;
+	padding: 0px 0px 4px 28px;
+	height: 16px;
+	line-height: 16px;
 	white-space: nowrap;
 	font-weight: bold;
+	-moz-user-select:none;
 }
 
 .UIFAQPortlet .UICategories .FAQTmpCategory {
-	background:none;
-	border: dotted 1px #cccccc;
+	height:8px;
 }
 
-.UIFAQPortlet .UICategories .FAQDnDCategory{
+.UIFAQPortlet .UICategories .FAQHighlightCategory {
+	height:20px;
+}
+
+.FAQDnDCategory{
 	position: absolute;
-	margin: 0px 0px 0px 0px;
-	border: solid 1px #cccccc;
+	padding:0px 0px 4px 20px;
+	line-height:14px;
+	height:14px;
+	border: solid 1px #333333;
 	background: #cccccc url('background/BlackBorderRightArrow.gif') no-repeat left;
 	-moz-opacity:0.5;
 	filter: Alpha(Opacity=50);

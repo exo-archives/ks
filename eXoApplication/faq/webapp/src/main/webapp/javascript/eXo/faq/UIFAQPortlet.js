@@ -13,32 +13,6 @@ UIFAQPortlet.prototype.checkCustomView = function(hileTitle, showTitle){
 	} else {
 		title.title = hileTitle;
 	}
-//	pCOOKIES = new Array();
-//	pCOOKIES = document.cookie.split('; ');
-//	var categories = document.getElementById('UICategories');
-//	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
-//	var buttomView = document.getElementById('FAQCustomView');
-//	var results = null;
-//	for(bb = 0; bb < pCOOKIES.length; bb++){
-//		NmeVal  = new Array();
-//		NmeVal  = pCOOKIES[bb].split('=');
-//		if(NmeVal[0] == "FAQCustomView"){
-//			results = unescape(NmeVal[1]);
-//		}
-//	}
-//	if(!results){
-//		categories.style.display = "block";
-//		document.cookie = "FAQCustomView=block";
-//		columnCategories.style.width = "200px";
-//		buttomView.className = "Icon CustomView";
-//	} else {
-//		if(results === "none"){
-//			categories.style.display = "none";
-//			columnCategories.style.width = "0px";
-//			buttomView.className = "Icon CustomViewRight";
-//		}
-//	}
-	//controlWorkSpace();
 };
 
 UIFAQPortlet.prototype.changeCustomView = function(change, hileTitle, showTitle){
@@ -55,36 +29,6 @@ UIFAQPortlet.prototype.changeCustomView = function(change, hileTitle, showTitle)
 		 title.title = hileTitle;
 	}
 	eXo.core.Browser.setCookie("FAQCustomView",columnCategories.style.display,1);
-//	pCOOKIES = new Array();
-//	pCOOKIES = document.cookie.split('; ');
-//	var categories = document.getElementById('UICategories');
-//	var columnCategories = document.getElementById('FAQViewCategoriesColumn');
-//	var buttomView = document.getElementById('FAQCustomView');
-//	var results = null;
-//	for(bb = 0; bb < pCOOKIES.length; bb++){
-//		NmeVal  = new Array();
-//		NmeVal  = pCOOKIES[bb].split('=');
-//		if(NmeVal[0] == "FAQCustomView"){
-//			results = unescape(NmeVal[1]);
-//		}
-//	}
-//	if(!results){
-//		categories.style.display = "block";
-//		document.cookie = "FAQCustomView=block";
-//		columnCategories.style.width = "200px";
-//	} else{
-//		if(results === "block"){
-//			 categories.style.display = "none";
-//			 document.cookie = "FAQCustomView=none";
-//			 columnCategories.style.width = "0px";
-//			 buttomView.className = "Icon CustomViewRight";
-//		}	else {
-//			categories.style.display = "block";
-//			document.cookie = "FAQCustomView=block";
-//			columnCategories.style.width = "200px";
-//			buttomView.className = "Icon CustomView";
-//		}
-//	} 
 	var uiNav = eXo.faq.UIFAQPortlet ;
 	uiNav.initScroll();
 };
@@ -341,7 +285,7 @@ UIFAQPortlet.prototype.loadScroll = function(e) {
       uiNav.scrollMgr.initArrowButton(button[0],"left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton") ;
       uiNav.scrollMgr.initArrowButton(button[1],"right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton") ;
     }
-		uiNav.scrollMgr.callback = uiNav.scrollCallback;
+	uiNav.scrollMgr.callback = uiNav.scrollCallback;
     uiNav.scrollManagerLoaded = true;	
     uiNav.initScroll() ;
   }
@@ -377,12 +321,15 @@ UIFAQPortlet.prototype.onClickSlidebarButton = function() {
 		}
 	}
 };
+
 UIFAQPortlet.prototype.reSizeImagesView = function() {
 	setTimeout('eXo.faq.UIFAQPortlet.setSizeImages(10, "SetWidthImageContent")', 1000);
 };
+
 UIFAQPortlet.prototype.reSizeImages = function() {
 	eXo.faq.UIFAQPortlet.setSizeImages(10, 'SetWidthContent');
 };
+
 UIFAQPortlet.prototype.setSizeImages = function(delta, classParant) { 
 	var widthContent = document.getElementById(classParant);
 	if(widthContent) {
@@ -437,121 +384,194 @@ UIFAQPortlet.prototype.FAQChangeHeightToAuto = function() {
 	}
 } ;
 
-DragDrop.prototype.onMouseMove = function(evt) {
-  eXo.core.Mouse.update(evt) ;
-	var dndEvent = eXo.core.DragDrop.dndEvent ;
-  dndEvent.backupMouseEvent = evt ;
-	var dragObject =  dndEvent.dragObject ;
-
-	var y = parseInt(dragObject.style.top) ;
-	var x = parseInt(dragObject.style.left) ;
-
-	dragObject.style["left"] =  x + eXo.core.Mouse.deltax + "px" ;
-	dragObject.style["top"]  =  y + eXo.core.Mouse.deltay + "px" ;
-	
-  if(eXo.core.DragDrop.dragCallback != null) {
-    var foundTarget = eXo.core.DragDrop.findDropableTarget(dndEvent, eXo.core.DragDrop.dropableTargets, evt) ;
-    var junkMove =  eXo.core.DragDrop.isJunkMove(dragObject, foundTarget) ;
-    dndEvent.update(foundTarget, junkMove) ;
-    eXo.core.DragDrop.dragCallback(dndEvent,evt) ;
-  }
-    
-	return false ;
-} ;
-
-eXo.faq.UIFAQDragDrop = {
+eXo.faq.DragDrop = {
+	dragObject : null,
+	targetClass: [],
 	init:function(compid){
 		var comp = document.getElementById(compid);
 		var elements = eXo.core.DOMUtil.findDescendantsByClass(comp,"div","FAQCategory");
 		var i = elements.length;
 		while(i--){
-			elements[i].onmousedown = this.initDnD;
+			elements[i].onmousedown = this.attach;
 		}
 	},
-	initDnD:function(evt){
-		eXo.core.EventManager.cancelEvent(evt);
+	attach: function(evt){
+		evt = evt || window.event;
 		if(eXo.core.EventManager.getMouseButton(evt) == 2) return ;
-		var dnd = eXo.core.DragDrop;
-		var faqDnd = eXo.faq.UIFAQDragDrop;
-		var targets = eXo.core.DOMUtil.findChildrenByClass(this.parentNode,"div","FAQCategory");
-		faqDnd.tmpNode = document.createElement("div");
-		faqDnd.tmpNode.innerHTML = "<span></span>";
-		faqDnd.tmpNode.className = this.className + " FAQTmpCategory";
-		faqDnd.tmpNode.style.width = (this.offsetWidth - 30) + "px";
-		faqDnd.insertAfter(this,faqDnd.tmpNode);
-		faqDnd.initTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
-		faqDnd.setPostion(this,evt);
-		dnd.init(targets,this,this,evt);
-		dnd.initCallback = eXo.faq.UIFAQDragDrop.initCallback;
-		dnd.dragCallback = eXo.faq.UIFAQDragDrop.dragCallback;
-		dnd.dropCallback = eXo.faq.UIFAQDragDrop.dropCallback;
-	},
-	initCallback:function(dndEvent){
-		
-	},
-	dragCallback:function(dndEvent,evt){
-		dndEvent.dragObject.style.left = eXo.faq.UIFAQDragDrop.constLeft;
-		if (dndEvent.foundTargetObject) {
-			eXo.faq.UIFAQDragDrop.insertNode(dndEvent.foundTargetObject,eXo.faq.UIFAQDragDrop.tmpNode,evt);
+		var dnd = eXo.faq.DragDrop;
+		var dragObject = this.cloneNode(true);	
+		dragObject.className  = "FAQDnDCategory";
+		dragObject.style.border  = "solid 1px #333333";
+		document.body.appendChild(dragObject);
+		dragObject.style.width = this.offsetWidth + "px";
+		dnd.rootNode = this;
+		dnd.mousePos = {x:evt.clientX,y:evt.clientY};
+		dnd.setup(dragObject,["FAQCategory","FAQBack","FAQTmpCategory"]);
+		dnd.dropCallback = function(dragObj,target){
+			eXo.core.DOMUtil.removeElement(dragObj);
+			if(this.lastTarget) this.lastTarget.style.border = "";
+			if(target && dnd.isMoved){
+				var action = this.getAction(this.dragObject,target);
+				if(!action) {
+					this.showElement();
+					return ;
+				}
+				eval(action);
+				
+			} else this.showElement();
+		}
+		dnd.dragCallback = function(dragObj,target){
+			if(dnd.lastTarget) {
+				dnd.lastTarget.style.border = "";
+				if(eXo.core.DOMUtil.hasClass(dnd.lastTarget,"FAQHighlightCategory")) eXo.core.DOMUtil.replaceClass(dnd.lastTarget,"FAQHighlightCategory","");
+			}
+			if(!target) return ;
+			dnd.lastTarget = target;
+			if(eXo.core.DOMUtil.hasClass(target,"FAQBack")) target.onclick();
+			if(eXo.core.DOMUtil.hasClass(target,"FAQTmpCategory"))  eXo.core.DOMUtil.addClass(dnd.lastTarget,"FAQHighlightCategory");
+			target.style.border = "dotted 1px #cccccc";
+			if(!dnd.hided) dnd.hideElement(dnd.rootNode);
+			
 		}
 	},
-	dropCallback:function(dndEvent){
-		var faqDnd = eXo.faq.UIFAQDragDrop;
-		var dragObj = dndEvent.dragObject;
-		var beforeObject = null;
-		var currentTop = eXo.core.Browser.findPosY(faqDnd.tmpNode);
-		if(eXo.core.Browser.isFF()) currentTop += 26;
-		eXo.core.DOMUtil.replaceClass(dragObj,"FAQDnDCategory","");
-		if(currentTop == faqDnd.initTop){
-			eXo.core.DOMUtil.removeElement(faqDnd.tmpNode);
-			dragObj.removeAttribute("style");
-			return ;
-		}else if(currentTop > faqDnd.initTop){
-			beforeObject = eXo.core.DOMUtil.findPreviousElementByTagName(eXo.faq.UIFAQDragDrop.tmpNode,"div");
-		}else{
-			beforeObject = eXo.core.DOMUtil.findNextElementByTagName(eXo.faq.UIFAQDragDrop.tmpNode,"div");
+	
+	setup: function(dragObject,targetClass){
+		this.dragObject = dragObject;
+		this.targetClass = targetClass;
+		document.onmousemove = eXo.faq.DragDrop.onDrag;
+		document.onmouseup = eXo.faq.DragDrop.onDrop;
+	},
+	
+	onDrag: function(evt){
+		var dnd = eXo.faq.DragDrop;
+		var dragObject = dnd.dragObject;
+		dragObject.style.left = eXo.core.Browser.findMouseXInPage(evt) + 2 + "px";
+		dragObject.style.top = eXo.core.Browser.findMouseYInPage(evt) + 2 + "px";
+		if(dnd.dragCallback) {
+			var target = dnd.findTarget(evt);
+			dnd.dragCallback(dragObject,target);
 		}
-		dragObj.parentNode.replaceChild(dragObj,faqDnd.tmpNode);
-		var actionLink = dragObj.getAttribute("actionLink");
-		actionLink = actionLink.replace("=objectId","="+dragObj.id +","+beforeObject.id);
-		eval(actionLink);
 	},
-	setPostion:function(obj,evt){
-		if(!isNaN(parseInt(obj.style.left))) return ;
-		var objX = eXo.core.Browser.findPosX(obj);
-		var objY = eXo.core.Browser.findPosY(obj);
-		var objWidth = obj.offsetWidth - 30;
-		var mouseX = eXo.core.Browser.findMouseXInPage(evt);
-		var mouseY = eXo.core.Browser.findMouseYInPage(evt);
-		obj.style.width = objWidth + "px";
-		eXo.core.DOMUtil.addClass(obj,"FAQDnDCategory");
-		var mouseRX = eXo.core.Browser.findMouseRelativeX(obj.offsetParent,evt);
-		var mouseRY = eXo.core.Browser.findMouseRelativeY(obj.offsetParent,evt);
-		objX = mouseX - objX;
-		if((eXo.core.Browser.browserType=="ie") && (document.getElementById("UIControlWorkspace")))
-			objX += document.getElementById("UIControlWorkspace").offsetWidth;
-		objY = mouseY - objY;
-		obj.style.left = (mouseRX - objX) + "px";
-		obj.style.top	 = (mouseRY - objY) + "px";
-		this.constLeft = (mouseRX - objX) + "px";
+	
+	onDrop: function(evt){
+		evt = evt || window.event;
+		var dnd = eXo.faq.DragDrop;
+		dnd.isMoved = true;
+		if(dnd.mousePos.x == evt.clientX && dnd.mousePos.y == evt.clientY) dnd.isMoved = false;
+		if(dnd.dropCallback) {
+			var target = dnd.findTarget(evt);
+			dnd.dropCallback(dnd.dragObject,target);
+		}
+		delete dnd.dragObject;
+		delete dnd.targetClass;
+		delete dnd.dragCallback;
+		delete dnd.hided;
+		delete dnd.rootNode;
+		document.onmousemove = null;
+		document.onmouseup = null;
 	},
-	insertNode: function(node,newNode,evt){
-		var nextElement = eXo.core.DOMUtil.findNextElementByTagName(node,(node.tagName).toString().toLowerCase());
-		if(nextElement && !this.getPos(node,evt)) node.parentNode.insertBefore(newNode,node);
-		else if(nextElement && this.getPos(node,evt)) node.parentNode.insertBefore(newNode,nextElement);
-		else node.parentNode.appendChild(newNode);
-		return newNode;
+	
+	findTarget: function(evt){
+		var targetClass = eXo.faq.DragDrop.targetClass;
+		var i = targetClass.length;
+		while(i--){
+			var target = eXo.core.EventManager.getEventTargetByClass(evt,targetClass[i]);
+			if(target) return target;
+		}
 	},
-	getPos: function(obj,evt){
-		var mouseY = eXo.core.Browser.findMouseRelativeY(obj.offsetParent,evt);
-		var posY = obj.offsetTop;
-		var delta = obj.offsetHeight/2;
-		if((mouseY - posY) < delta) return false;
-		return true;
+	hideElement: function(obj){
+		var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(obj,"div");
+		preElement.style.display = "none";
+		obj.style.display = "none";
+		this.hided = true;
 	},
-	insertAfter:function(orginalNode,node) {
-		if(orginalNode.nextSibling) orginalNode.parentNode.insertBefore(node,orginalNode.nextSibling);
-		else orginalNode.parentNode.appendChild(node);
+	showElement: function(){
+		var dnd = eXo.faq.DragDrop;
+		if(!dnd.rootNode) return ;
+		var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(dnd.rootNode,"div");
+		if(preElement) preElement.style.display = "";
+		dnd.rootNode.style.display = "";
+		if(dnd.lastTarget) {
+			dnd.lastTarget.style.border = "";
+			if(eXo.core.DOMUtil.hasClass(dnd.lastTarget,"FAQHighlightCategory")) eXo.core.DOMUtil.replaceClass(dnd.lastTarget,"FAQHighlightCategory","");
+		}
+	},
+	getAction: function(obj,target){
+		if(eXo.core.DOMUtil.hasClass(target,"FAQTmpCategory")){
+			var preElement = eXo.core.DOMUtil.findPreviousElementByTagName(target,"div");
+			if(!preElement) preElement = eXo.core.DOMUtil.findNextElementByTagName(target,"div");
+			if(obj.id == preElement.id) return false;
+			var actionLink = obj.getAttribute("actionLink");
+			actionLink = actionLink.replace("=objectId","="+obj.id +","+preElement.id);
+		}else if(eXo.core.DOMUtil.hasClass(target,"FAQCategory")){
+			var actionLink = obj.getAttribute("actionLink");
+			actionLink = actionLink.replace("=objectId","="+obj.id +","+target.id);
+			actionLink = actionLink.replace("ChangeIndex","MoveCategoryInto");
+		}
+		return actionLink;
+	}
+};
+
+eXo.faq.UIContextMenu = {
+	menus : [],
+	init: function(id){
+		var cont = document.getElementById(id);
+		this.classNames = new Array("FAQCategory");
+		eXo.core.EventManager.addEvent(cont,"contextmenu",this.show);
+	},
+	getMenu : function(evt) {
+		var element = this.getMenuElement(evt);
+		if(!element) return;
+		var menuId = element.getAttribute("ctxMenuId");
+		var menu = document.getElementById(menuId);
+		element.parentNode.appendChild(menu);
+		return menu;
+	},
+	getMenuElement : function(evt) {
+		var target = eXo.core.EventManager.getEventTarget(evt);
+		while(target){
+			var className = target.className;
+			if(!className) {
+				target = target.parentNode;
+				continue;
+			}
+			className = className.replace(/^\s+/g, "").replace(/\s+$/g, "");
+			var classArray = className.split(/[ ]+/g);
+			for (i = 0; i < classArray.length; i++) {
+				if (this.classNames.contains(classArray[i])) {
+					return target;
+				}
+			}
+			target = target.parentNode;
+		}
+		return null;
+	},
+	hideElement: function(){
+		var ln = eXo.core.DOMUtil.hideElementList.length ;
+		if (ln > 0) {
+			for (var i = 0; i < ln; i++) {
+				eXo.core.DOMUtil.hideElementList[i].style.display = "none" ;
+			}
+			eXo.core.DOMUtil.hideElementList.clear() ;
+		}
+	},
+	setPosition : function(obj,evt){		
+		var x  = eXo.core.Browser.getBrowserWidth() - eXo.core.Browser.findMouseXInPage(evt) - obj.offsetWidth;
+		var y = eXo.core.Browser.findMouseYInPage(evt);
+		obj.style.position = "absolute";
+		obj.style.display = "block";
+		obj.style.top =  y + "px";
+		obj.style.right = x + "px";
+	},
+	show: function(evt){
+		eXo.core.EventManager.cancelEvent(evt);
+		var ctx = eXo.faq.UIContextMenu;
+		var menu = ctx.getMenu(evt);
+		ctx.hideElement();
+		if(!menu) return;
+		ctx.setPosition(menu,evt);
+		eXo.core.DOMUtil.listHideElements(menu);
+		return false;
 	}
 };
 
