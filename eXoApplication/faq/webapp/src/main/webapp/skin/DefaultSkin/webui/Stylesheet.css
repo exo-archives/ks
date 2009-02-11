@@ -655,11 +655,54 @@
 	white-space:normal;
 	position:absolute;
 }
+
+.UIFAQPortlet .ButtomQuestion {
+	background: url('background/Buttomquestion.gif') repeat-x top left;
+	height: 10px;
+}
 /******************************	Response	***************************************/
 
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseContent {
 	padding: 8px 8px 8px 12px;
 	background: white;
+}
+
+.UIFAQPortlet .FAQContainer .ResponseContent .ResponseContainer{
+	border: solid 1px #b7b7b7;
+}
+
+.UIFAQPortlet .FAQContainer .ResponseContainer .TitleResponseContent{
+	background: url('background/TitleResponseContent.gif') repeat-x top left;
+	border: solid 1px #ffffff;
+	height: 37px;
+}
+
+.UIFAQPortlet .FAQContainer .TitleResponseContent .IconResponse {
+	background: url('background/TitleResponseContent.gif') repeat-x top left;
+	color: #5c5c5c; font-size: 18px;
+	line-height: 26px; padding-left: 20px;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .ResponseExternal {
+	padding: 5px 10px 10px 0px; 
+	background: url('background/BottomResponseContent.gif') repeat-x bottom left;
+}
+
+.UIFAQPortlet .FAQContainer .ResponseContainer .TitleCommentContent{
+	background: url('background/TitleResponseContent.gif') repeat-x top left;
+	border-top: solid 1px #ffffff;
+	border-bottom: solid 1px #ffffff;
+	height: 28px;
+}
+
+.UIFAQPortlet .FAQContainer .TitleCommentContent .IconComment {
+	background: url('background/TitleResponseContent.gif') repeat-x top left;
+	color: #5c5c5c; font-size: 18px;
+	line-height: 26px; padding-left: 20px;
+}
+
+.UIFAQPortlet .FAQContainer .FAQContent .CommentExternal {
+	padding: 0px; 
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Response {
@@ -673,7 +716,7 @@
 }
 
 .UIFAQPortlet .EditQuestionContent {
-	background:transparent url(background/SelectedEditTab.gif) no-repeat left center;
+	background: url('background/SelectedEditTab.gif') no-repeat left center;
 	width: 18px;
 	height: 18px;
 	float: left;
