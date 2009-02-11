@@ -34,7 +34,9 @@
 	    </div>
 	    
 	   <!-- ===================================== view all subcategories of root category ==================================== -->
-	   <%for(cate in uicomponent.getListCate()) {
+	   <%
+	   if(!uicomponent.getListCate().isEmpty()){
+	   	for(cate in uicomponent.getListCate()) {
 	   		stackCateid.push(cate.getCategory().getId()) ;
 	    	id ++ ;
 	    	i ++ ;
@@ -114,6 +116,7 @@
 	    	</div>
 	  	<%
 	    }
+	   }
 			%>
 		</div>
 		
