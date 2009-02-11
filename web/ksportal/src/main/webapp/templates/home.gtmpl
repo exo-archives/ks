@@ -7,6 +7,7 @@
 			<div class="PortletDecorationTL">
 				<div class="PortletDecorationTR">
 					<div class="PortletDecorationTC">
+					<span></span>
 					</div>
 				</div>
 			</div>
@@ -14,7 +15,6 @@
 				<div class="PortletDecorationMR">
 					<div class="HomePortletAdBackround">
 						<div class="AdImage__">
-	
 					<div class="HomeBackground">
 						<div class="HomeImageRight">
 							<div class="HomeImageLeft">
@@ -40,7 +40,7 @@
 															<div class="Label">It's time to open discussion with your</div>
 															<div class="Label">portal audience!</div>
 														</div>
-														<a href="$forumuri" style="float:right; width: 93px; height: 80px;"><span></span></a>
+														<a href="$forumuri" style="float:right; width: 93px; height: 80px;"></a>
 														<div style="clear: both;"><span></span></div>
 													</div>
 												</div>
@@ -73,7 +73,6 @@
 															<div class="Label">efficiently in FAQ.</div>
 														</div>
 														<a href="$faquri" style="float:right; width: 93px; height: 80px;">
-															<div><span></span></div>
 														</a>
 														<div style="clear: both;"><span></span></div>
 													</div>
@@ -86,7 +85,6 @@
 													<div class="CheckIcon">and many more!</div>
 												</div>
 												<div style="clear: left;"><span></span></div>
-													
 											</div>
 										</div>
 									</div>
@@ -102,6 +100,7 @@
 			<div class="PortletDecorationBL">
 				<div class="PortletDecorationBR">
 					<div class="PortletDecorationBC">
+					<span></span>
 					</div>
 				</div>
 			</div>

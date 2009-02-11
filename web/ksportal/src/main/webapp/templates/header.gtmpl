@@ -18,7 +18,6 @@
 %>
 <div class="UIBannerPortlet UIApplication">
 	<div class="ApplicationMinWidth">
-
 		<div class="MiddleBanner_">
 		 	<div class="BannerTitle_"><span></span></div>
 			<div class="LoginContainer">
@@ -30,13 +29,13 @@
 						<% }else { %>
 							<div class="TextAcount">Demo accounts: <span style="font-weight: bold;">demo/exo, admin/exo</span></div>
 						<% } %>
-								<a class="ActionButton"  href="$registerUri">
+							<div class="YourAccount">
 								<div class="LeftButton">
 									<div class="RightButton">
-										<div class="CenterButton">Your account</div>
+										<div class="CenterButton"><a class="ActionButton" href="$registerUri">Your account</a></div>
 									</div>
 								</div>
-								</a>
+							</div>	
 						<!--
 							<a class="ActionButton" onclick="$changeLanguageAction; return false;" href="#">
 								<div class="LeftButton">
@@ -46,21 +45,21 @@
 								</div>
 							</a>-->
 							<%if(isLogin) {%>
-								<a class="Logout ActionButton" onclick="eXo.portal.logout();" style="cursor: pointer;">
+								<div class="SignOut">
 									<div class="LeftButton">
 										<div class="RightButton">
-											<div class="CenterButton">Sign out</div>
+											<div class="CenterButton"><a class="Logout ActionButton" onclick="eXo.portal.logout();" style="cursor: pointer;">Sign out</a></div>
 										</div>
 									</div>
-								</a>
+								</div>
 							<% }else{ %>
-								<a class="ActionButton" onclick="$signInAction; return false;" href="#">
+								<div class="SignIn">
 									<div class="LeftButton">
 										<div class="RightButton">
-											<div class="CenterButton">Sign in</div>
+											<div class="CenterButton"><a class="ActionButton" onclick="$signInAction; return false;" href="#">Sign in</a></div>
 										</div>
 									</div>
-								</a>
+								</div>
 							<% } %>
 						</div>
 					</div>

@@ -76,20 +76,20 @@
 			String onclickEvt = uicomponent.event("SelectNode",	nav.getId() + "::" + node.getUri()) + ";return false;" ;
 			print """
 					<div class="MenuItem $tabStyleNavigation">
-						<a href="$pageURI" class="$arrowIcon" onclick="$onclickEvt" title="$title">
+						
 							<div class="ItemIcon" style="border-left: none;">
-									$label
+									<a href="$pageURI" class="$arrowIcon" onclick="$onclickEvt" title="$title">$label</a>
 							</div>
-						</a>
+						
 			""" ;
 		} else {
 			print """
 					<div class="MenuItem $tabStyleNavigation">
-						<a href="$pageURI" class="$arrowIcon" title="$title">
+						
 							<div class="ItemIcon">
-									$label
+									<a href="$pageURI" class="$arrowIcon" title="$title">$label</a>
 							</div>
-						</a>
+						
 			""" ;
 		}
 			

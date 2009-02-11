@@ -54,24 +54,46 @@
 	margin:0px 4px 0px 0px;
 }
 
-.UIBannerPortlet .MiddleBanner_ .ActionButton .LeftButton{
+.UIBannerPortlet .MiddleBanner_  .LeftButton{
 	background: url('DefaultSkin/background/LeftButton.gif') no-repeat left;
 	padding-left: 10px;
 }
 
-.UIBannerPortlet .MiddleBanner_ .ActionButton .RightButton{
+.UIBannerPortlet .MiddleBanner_  .RightButton{
 	background: url('DefaultSkin/background/RightButton.gif') no-repeat right;
 	padding-right: 9px;
 }
 
-.UIBannerPortlet .MiddleBanner_ .ActionButton .CenterButton{
+.UIBannerPortlet .MiddleBanner_  .CenterButton{
 	background: url('DefaultSkin/background/CenterButton.gif') repeat-x ;
 	line-height: 20px;
 	padding: 0px 8px;
+	height: 20px;
 	color:#025193;
 	font-weight: bold;
+	height: 20px;
 }
-
+.UIBannerPortlet .MiddleBanner_  .CenterButton a{
+	color: #025193;
+}
+.UIBannerPortlet .MiddleBanner_  .CenterButton a:hover{
+	color: #000;
+}
+.UIBannerPortlet .MiddleBanner_  .SignIn{
+	width: 76px;
+	float: left;
+	margin: 0px 7px;
+	}
+	
+.UIBannerPortlet .MiddleBanner_  .SignOut{
+	width: 86px;
+	float: left;
+	}
+.UIBannerPortlet .MiddleBanner_  .YourAccount{
+	width: 113px;
+	float: right;
+	margin: 0px 7px;
+	}
 /***************************************************************************************************/
 
 .UIHomePagePortlet {
@@ -241,6 +263,7 @@
 	background: #f1f1f1 url('DefaultSkin/background/DownloadButton.gif') no-repeat ;
 	width: 192px; height: 89px;
 	margin:0px 0px 8px 5px;
+	cursor: pointer;
 }
 
 .SideBar .ArowIcon{

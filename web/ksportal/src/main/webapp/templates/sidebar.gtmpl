@@ -10,14 +10,15 @@
 	<div class="PortletDecoration">
 		<div class="PortletDecorationTL">
 			<div class="PortletDecorationTR">
-				<div class="PortletDecorationTC">
+				<div class="PortletDecorationTC"><span></span>
 				</div>
 			</div>
 		</div>
 		<div class="PortletDecorationML">
 			<div class="PortletDecorationMR">
 				<div class="HomePortletAdBackround">
-					<a href="http://forge.objectweb.org/project/shownotes.php?release_id=2949"><div class="DownloadButton"><span></span></div></a>
+					<div class="DownloadButton">
+					<a href="http://forge.objectweb.org/project/shownotes.php?release_id=2949"></a></div>
 					<div class="ArowIcon">eXo KS is open source and FREE for download</div>
 					<div class="DotLine"><span></span></div>
 					<div class="VersionIcon"><span></span></div>
@@ -42,8 +43,8 @@
 		</div>
 		<div class="PortletDecorationBL">
 			<div class="PortletDecorationBR">
-				<div class="PortletDecorationBC">
-				</div>
+				<div class="PortletDecorationBC"><span></span></div>
 			</div>
 		</div>
+	</div>
 </div>
