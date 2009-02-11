@@ -69,7 +69,7 @@
 					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
 				  %>
 					<div class="SeparatorLine" style="float: right;">
-						<div class="ShareLink"><a href="$link" target="_blank" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
+						<div class="ShareLink"><a target="_blank" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
 					</div>	
 					<%}%>
 					<%

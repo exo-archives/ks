@@ -23,7 +23,7 @@
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
 						<div style="clear: right; height: 0px;"><span></span></div>
 					</div>
-					<table cellspacing="0" borderspacing="0" class="UIGrid">
+					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th style="width: 40px;"></th>

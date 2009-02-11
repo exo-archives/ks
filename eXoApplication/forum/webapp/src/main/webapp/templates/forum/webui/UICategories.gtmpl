@@ -58,8 +58,8 @@
 									<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 										<a actions="$link;" href="$url" class="ActionLink UICategoryTitle">$title</a>
 										<div style="position: relative;">
-											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
-												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block; font-weight:normal;">
+											<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; font-weight:normal;">
 													<div action="$actionBookmark" class="ClickPopupContent"></div>
 												</div>
 											</div>
@@ -67,22 +67,22 @@
 									</div>
 									 <% ++rCNB; %>
 								</div>
-								<div class="CollapseButton" title="Collapse"	onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-								<div style="clear: both;"><span></span></div>
+								<div class="CollapseButton" title="Collapse"	onclick="eXo.forum.UIForumPortlet.expandCollapse(this);"><span></span></div>
+								<div style="clear:both;"><span></span></div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="ContentContainer">
 					<div class="ForumList">
-						<table cellspacing="0" borderspacing="0" class="UIGrid">
+						<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 							<thead>
 								<tr>
-									<th style="width: 40px;"></th>
+									<th style="width:40px;"></th>
 									<th>Forums</th>
-									<th style="width: 30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
-									<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
-									<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
+									<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+									<th style="width:50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
+									<th style="width:50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -221,10 +221,10 @@
 													</div>
 												</div>
 													<% ++rCNB; %>
-												<div style="clear: left;"><span></span></div>
-												<div class="LastPostInfos">by&nbsp;<a style="color: #058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
+												<div style="clear:left;"><span></span></div>
+												<div class="LastPostInfos">by&nbsp;<a style="color:#058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
 											<%} else { %>	
-											<td class="Tdbox" style="height: 40px;">
+											<td class="Tdbox" style="height:40px;">
 													<%=_ctx.appRes("UICategory.label.availableTheard"); %>
 											<%} %>
 											</td>
@@ -248,28 +248,24 @@
 	<% } %>
 	</div>
 	<% //Begin RightClick Bookmark	%>
-	<div id="RightClickContainer"	style="display: none;">
-		<div class="RightClickCustomItem" style="display: none; height: 0px"><span></span></div>
+	<div id="RightClickContainer"	style="display:none; border:solid 1px red">
+		<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
 	<%if(uicomponent.userProfile.getUserRole() < 3){%>
 		<div class="TopLeftRightClickPopupMenu">
 			<div class="TopRightRightClickPopupMenu">
 				<div class="TopCenterRightClickPopupMenu"><span></span></div>
-				<div class="RightClickCustomItem" style="display: none; height: 0px"><span></span></div>
+				<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
 			</div>
 		</div>
 		<div class="MiddleLeftRightClickPopupMenu">
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
-					<a href="" class="MenuItem AddBookmark">
-						<div class="ItemIcon AddLinkToBookIcon" style="min-width: 62px;">
-								<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
+						<div class="ItemIcon AddLinkToBookIcon" style="min-width:62px;">
+								<a href="" class="MenuItem AddBookmark" style="display:block"><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 						</div>
-					</a>
-					<a href="" class="MenuItem AddWatching">
 						<div class="ItemIcon AddWatchingIcon">
-							<span><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></span>
+							<a href="" class="MenuItem AddWatching" style="display:block"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
 						</div>
-					</a>
 				</div>
 			</div>
 		</div>

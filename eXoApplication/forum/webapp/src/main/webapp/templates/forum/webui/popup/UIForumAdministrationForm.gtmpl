@@ -65,8 +65,8 @@
 								<div style="display: $display;" id="UITabContent" class="UITabContent">
 									<%if(tabconten.id.equals(uicomponent.IP_BAN_TAB)){%>
 										<center>
-											<div style="width: 400px;">
-												<div class="UIQuickSearchForm" style="padding-bottom: 10px;">
+											<div style="width:400px;">
+												<div class="UIQuickSearchForm" style="padding-bottom:10px;">
 													<div style="float: left;">
 														<%=_ctx.appRes("UIForumAdministrationForm.label.Filter")%>: &nbsp;
 														<% uiform.renderField(tabconten.getChildById(uicomponent.SEARCH_IP_BAN)) ;%>
@@ -115,7 +115,7 @@
 													</tbody>
 												</table>
 											</div>
-											<div style="overflow: auto; width: 400px;">
+											<div style="overflow:auto; width:400px;">
 											<% 
 												uiform.renderChild(uiform.BAN_IP_PAGE_ITERATOR);
 											%>
@@ -126,11 +126,11 @@
 											String linkReset = uicomponent.event("GetDefaultMail") ;
 											String titleReset = uicomponent.getLabel("TitleResetMail");
 									%>
-											<div style="float: left; white-space:nowrap; width: 95%;">
+											<div style="float:left; white-space:nowrap; width:95%;">
 												<%uiform.renderChild(tabconten.id) ;%>
 											</div>
 											<a href="$linkReset" title="$titleReset"><div class="Refresh"><span></span></div></a>
-											<div style="clear: left;"><span></span></div>
+											<div style="clear:left;"><span></span></div>
 									<%} else {
 											uiform.renderChild(tabconten.id) ; 
 										}
@@ -146,7 +146,7 @@
 																<% uiform.renderField(uiform.FIELD_ACTIVEABOUT_INPUT) ;%>
 															</div>
 															<div style="float:left; margin-left:10px; white-space:nowrap;"><%=_ctx.appRes("UIForumAdministrationForm.label.Day")%></div>
-															<div style="clear: left;"><span></span></div>
+															<div style="clear:left;"><span></span></div>
 														</td>
 													</tr>
 													<tr>

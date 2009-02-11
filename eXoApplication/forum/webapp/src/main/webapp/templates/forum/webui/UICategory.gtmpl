@@ -57,10 +57,10 @@
 						</div>
 						<div style="position: relative;">
 						<% /*Begin Popup Menu*/ %>
-							<div class="UIPopupCategory" style="display: none;top: auto">
+							<div class="UIPopupCategory" style="display:none; top:auto">
 								<div class="PopupCategoryDecorator">
 							
-									<div class="UIRightClickPopupMenu" style="display: block;">
+									<div class="UIRightClickPopupMenu" style="display:block;">
 										<div class="UIContextMenuContainer">
 											<div class="TopLeftRightClickPopupMenu">
 												<div class="TopRightRightClickPopupMenu">
@@ -69,7 +69,6 @@
 											</div>
 											<div class="MiddleLeftRightClickPopupMenu">
 												<div class="MiddleRightRightClickPopupMenu">
-										
 													<div class="UIRightPopupMenuContainer">
 														<%
 															for(action in uicomponent.getActions()) {
@@ -78,18 +77,21 @@
 																String link = uicomponent.event(action,uicomponent.id,"category") ;
 																if(!action.equals("RemoveForum")){
 														%>
-																 <a class="MenuItem" href="$link">	 
+																 	 
 																	<div class="ItemIcon $classIconItem">
+																	<a class="MenuItem" href="$link" style="display:block">
 																		<%=nameItem%>
+																		</a>
 																	</div>
-																 </a>
+																 
 														<%	} else {%>
-																	<a class="MenuItem" href="javaScript: void(0)"
-																		onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}">	 
+																	
 																		<div class="ItemIcon $classIconItem">
-																			<%=nameItem%>
+																			<a class="MenuItem" style="display:block"  href="javaScript: void(0)"
+																		onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}">	 
+																			<%=nameItem%>	</a>
 																		</div>
-															 		</a>
+															 	
 															<%}
 																if(action.equals("DeleteCategory")) { %>
 															 		<div class="LineMenu"><span></span></div>
@@ -149,7 +151,7 @@
 																<div class="ButtonLeft">
 																	<div class="ButtonRight">
 																		<div class="ButtonMiddle">
-																		 <a href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+																		 <a href="<%=uicomponent.event("SearchForm")%>" style="display:block"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 																		</div>
 																	</div>
 																</div>
@@ -157,11 +159,13 @@
 														</div>
 														<div style="clear: left;"><span></span></div>
 														<div class="LineMenu"><span></span></div>
-														<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>">	 
+															 
 															<div class="ItemIcon AdvancedSearchIcon">
+																<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>" style="display:block">
 																<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>
+																</a>
 															</div>
-														</a>
+														
 													</div>
 												</div>
 											</div>
@@ -184,7 +188,7 @@
 	</div>
 	<div class="ContentContainer">
 		<div class="ForumList">
-			<table cellspacing="0" borderspacing="0" class="UIGrid">
+			<table cellspacing="0" cellpadding="0" border="0"  class="UIGrid">
 				<thead>
 					<tr>
 						<th style="width: 40px;">&nbsp;</th>
@@ -372,19 +376,19 @@
 				<div class="RightClickCustomItem" style="display: none; height: 0px"><span></span></div>
 			</div>
 		</div>
-		<div class="MiddleLeftRightClickPopupMenu">
+		<div class="MiddleLeftRightClickPopupMenu" >
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
-					<a href="" class="MenuItem AddBookmark">
 						<div class="ItemIcon AddLinkToBookIcon">
-							<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
+							<a href="" class="MenuItem AddBookmark"><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
+							</a>
 						</div>
-					</a>
-					<a href="" class="MenuItem AddWatching">
+					
 						<div class="ItemIcon AddWatchingIcon">
-							<span><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></span>
+							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
+							</a>
 						</div>
-					</a>
+					
 				</div>
 			</div>
 		</div>

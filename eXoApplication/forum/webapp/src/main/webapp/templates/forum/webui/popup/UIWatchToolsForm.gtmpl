@@ -10,7 +10,7 @@
 					%>
 					<div style="clear: right;"><span></span></div>
 					</div>
-					<table cellspacing="0" borderspacing="0" class="UIGrid">
+					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th><%=_ctx.appRes("UIWatchToolsForm.label.Emails");%></th>

@@ -34,10 +34,8 @@
 										<div class="UITab NormalTabStyle">
 											<div class="$classCss">
 												<div class="LeftTab">
-													<div class="RightTab">
-														<a href="$href">
-															<div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
-														</a>
+													<div class="RightTab">														
+															<div class="MiddleTab"><a href="$href"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></a></div>														
 													</div>
 												</div>
 											</div>

@@ -16,8 +16,8 @@
 						<td>         
 							<div style="margin: 0px auto;" class="ActionContainer">
   							<div style="margin: auto;" class="OverflowContainer">          
-				        	<a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
-				        	<a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+				        	<a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
+				        	<a title="Delete Page" href="#" class="DeleteIcon"></a>		          
  								</div>
 							</div>
   					</td>
@@ -28,8 +28,8 @@
   					<td>         
 			        <div style="margin: 0px auto;" class="ActionContainer">
 			          <div style="margin: auto;" class="OverflowContainer">          
-			            <a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
-			            <a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+			            <a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
+			            <a title="Delete Page" href="#" class="DeleteIcon"></a>		          
 			          </div>
    						</div>
   					</td>
@@ -40,8 +40,8 @@
   					<td>         
 			        <div style="margin: 0px auto;" class="ActionContainer">
 			          <div style="margin: auto;" class="OverflowContainer">          
-			            <a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
-			            <a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+			            <a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
+			            <a title="Delete Page" href="#" class="DeleteIcon"></a>		          
 			          </div>
 			        </div>
 			      </td>
@@ -52,8 +52,8 @@
  						<td>         
 			        <div style="margin: 0px auto;" class="ActionContainer">
 			          <div style="margin: auto;" class="OverflowContainer">          
-			            <a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
-			            <a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+			            <a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
+			            <a title="Delete Page" href="#" class="DeleteIcon"></a>		          
 			          </div>
 			        </div>
 			      </td>
@@ -64,8 +64,8 @@
   					<td>         
 			        <div style="margin: 0px auto;" class="ActionContainer">
 			          <div style="margin: auto;" class="OverflowContainer">          
-			            <a title="Edit Page" href="#" class="EditInfoIcon"><span/></a>		          
-			            <a title="Delete Page" href="#" class="DeleteIcon"><span/></a>		          
+			            <a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
+			            <a title="Delete Page" href="#" class="DeleteIcon"></a>		          
 			          </div>
 			        </div>
 			      </td>
@@ -76,14 +76,14 @@
 				<div class="PageIteratorContainer">
  					<div class="RightPageIteratorBlock">
   					<a title="Back 10 pages" class="Icon DisableLastTopPageIcon"></a>        
-  					<a title="Previous Page" class="Icon DisableLastPageIcon"><span></span></a>
+  					<a title="Previous Page" class="Icon DisableLastPageIcon"></a>
 						<div class="Number">
 						  <a class="PageSelected" href="#">1</a>
 			        <a href="#">2</a>
 			        <a href="#">3</a>
 						</div>
 		    	  <a title="Next Page" class="Icon NextPageIcon" href="#"></a>
-		    	  <a title="Next 10 pages" class="Icon DisableNextTopPageIcon"><span></span></a>
+		    	  <a title="Next 10 pages" class="Icon DisableNextTopPageIcon"></a>
 		    		<div style="clear: left;"><span><span/></div>
 			  	</div>
 		  		<div class="LeftPageIteratorBlock">
@@ -120,14 +120,14 @@
   									<a href="#" class="ActionButton LightBlueStyle">
 				          	  <div class="ButtonLeft">
 				            	  <div class="ButtonRight">
-				              	  <div class="ButtonMiddle"> Save </div>
+				              	  <div class="ButtonMiddle">Save</div>
 				                </div>
 				              </div>
 				            </a>
 				            <a href="#" class="ActionButton LightBlueStyle">
 				          	  <div class="ButtonLeft">
 				            	  <div class="ButtonRight">
-				              	  <div class="ButtonMiddle"> Reset  </div>
+				              	  <div class="ButtonMiddle">Reset</div>
 					              </div>
 					            </div>
 					          </a>
@@ -147,14 +147,14 @@
   				<a href="#" class="ActionButton LightBlueStyle">
       	  	<div class="ButtonLeft">
         	  	<div class="ButtonRight">
-          	  	<div class="ButtonMiddle"> Ok </div>
+          	  	<div class="ButtonMiddle">Ok</div>
             	</div>
           	</div>
         	</a>
         	<a href="#" class="ActionButton LightBlueStyle">
       	  	<div class="ButtonLeft">
         	  	<div class="ButtonRight">
-          	  	<div class="ButtonMiddle"> Close  </div>
+          	  	<div class="ButtonMiddle">Close</div>
               </div>
             </div>
           </a>

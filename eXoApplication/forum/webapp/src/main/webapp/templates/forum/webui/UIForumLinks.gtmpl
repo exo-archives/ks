@@ -7,13 +7,13 @@
 	 	 uiform.setForumLinks() ;
 	 	 uiform.setUpdateForumLinks() ;
 	 %>
-		<div class="HorizontalLayout">
-			<div class="FormContainer" align="right">
-				<table class="UIFormGrid" align="right">
+		<div class="HorizontalLayout" >
+			<div class="FormContainer">
+				<table class="UIFormGrid">
 					<tbody>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</td>
-							<td width="242px;">
+							<td style="width:242px;">
 								<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
 							</td>
 							<td>
@@ -22,7 +22,8 @@
 										<div class="ButtonLeft">
 											<div class="ButtonRight">
 												<div class="ButtonMiddle">
-												 <a href="<%=uicomponent.event("Select")%>"><div style="padding: 0px 10px;"><%=_ctx.appRes("UIForumPortlet.label.Go");%></div></a>
+												 <div style="padding: 0px 10px;"><a href="<%=uicomponent.event("Select")%>">
+												 <%=_ctx.appRes("UIForumPortlet.label.Go");%></a></div>
 												</div>
 											</div>
 										</div>

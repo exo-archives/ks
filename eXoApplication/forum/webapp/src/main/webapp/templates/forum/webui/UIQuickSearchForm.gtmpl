@@ -1,4 +1,4 @@
-<div class="UIQuickSearchForm" style="width: 260px;" align="right">
+<div class="UIQuickSearchForm" style="width: 260px;">
   <% uiform.begin() %>  
 	<div class="SearchForm">
 		<a class="AdvancedSearch" title="<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"><span></span></a>

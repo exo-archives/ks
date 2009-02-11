@@ -5,8 +5,7 @@
 	<% uiform.begin() %>
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
-			<div class="TabPaneContent">
-				
+			<div class="TabPaneContent">				
 				<div class="WorkingArea">
 				 	<div class="UIHorizontalTabs">
 				 		<div class="LeftHorizontalTabs">
@@ -30,9 +29,11 @@
 												<div class="$classCss">
 													<div class="LeftTab">
 														<div class="RightTab">
-																<a href="$link">
-																	<div class="MiddleTab"><%=_ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
-																</a>
+																	<div class="MiddleTab">
+																	<a href="$link">
+																	<%=_ctx.appRes(uiform.id + ".label." + tabconten.id); %>
+																	</a>
+																	</div>
 														</div>
 													</div>
 												</div>
@@ -75,8 +76,7 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				
+				</div>				
 			</div>	
 		</div>	
 	</div>
@@ -92,7 +92,7 @@
 						<a href="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"> $actionLabel </div>
+									<div class="ButtonMiddle">$actionLabel</div>
 								</div>
 							</div>
 						</a>

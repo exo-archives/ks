@@ -25,7 +25,7 @@
 						<div class="UITabContentContainer">
 							<div id="UITabContent" class="UITabContent">
 								<div class="UITopicList">
-									<table cellspacing="0" borderspacing="0" id="" class="UIGrid">
+									<table cellspacing="0" cellpadding="0" border="0" id="" class="UIGrid">
 										<thead>
 											<tr>
 												<th style="width: 60px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>

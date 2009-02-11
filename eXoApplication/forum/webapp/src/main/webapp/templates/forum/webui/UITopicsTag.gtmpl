@@ -82,7 +82,7 @@
 													</div>
 													<div class="MiddleLeftRightClickPopupMenu">
 														<div class="MiddleRightRightClickPopupMenu">
-															<div class="UIRightPopupMenuContainer">
+															<div class="UIRightPopupMenuContainer"  style="border: solid 1px red">
 																<a class="MenuItem" href="<%=uicomponent.event("EditTag");%>">	 
 																	<div class="ItemIcon EditTopicIcon "><%=_ctx.appRes("UITopicsTag.label.EditTag");%></div>
 																</a>
@@ -120,7 +120,7 @@
 			
 			<div class="ContentContainer" id="UITopicContent">
 				<div class="UITopicList">
-					<table cellspacing="0" borderspacing="0" class="UIGrid">
+					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th style="width: 40px;">&nbsp;</th>

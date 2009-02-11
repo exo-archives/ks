@@ -65,11 +65,10 @@
 							<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 									<div class="IconButton LockIcon" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 							<% } else { %>
-								<a href="<%=uicomponent.event("AddTopic")%>">
-									<div class="IconButton AddTheradIcon"><span class="LabelIcon"></span>
-										<%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
+									<div class="IconButton AddTheradIcon">
+									<a href="<%=uicomponent.event("AddTopic")%>" class="LabelIcon" style="display:block;">
+										<%=_ctx.appRes("UITopicContainer.action.NewTheard");%></a>
 									</div>
-								</a>
 							<% } %>
 							</div>
 						</div>
@@ -90,7 +89,7 @@
 									<div class="TopCenterRightClickPopupMenu"><span></span></div>
 								</div>
 							</div>
-							<div class="MiddleLeftRightClickPopupMenu">
+							<div class="MiddleLeftRightClickPopupMenu" >
 								<div class="MiddleRightRightClickPopupMenu">
 									<div class="UIRightPopupMenuContainer" style="padding: 10px 15px;">
 										<div class="InputPage" style="float:left;">
@@ -101,7 +100,7 @@
 												<div class="ButtonLeft">
 													<div class="ButtonRight">
 														<div class="ButtonMiddle">
-														 <a href="<%=uicomponent.event("GoNumberPage","1")%>"><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
+														 <a href="<%=uicomponent.event("GoNumberPage","1")%>" ><%=_ctx.appRes("UIForumPortlet.label.GoPage");%></a>
 														</div>
 													</div>
 												</div>
@@ -158,7 +157,7 @@
 														<div class="TopCenterRightClickPopupMenu"><span></span></div>
 													</div>
 												</div>
-												<div class="MiddleLeftRightClickPopupMenu">
+												<div class="MiddleLeftRightClickPopupMenu" style="display:block;">
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer" id="ModerationMenu">
 														 <% 
@@ -175,19 +174,23 @@
 														 		}
 														 		if(!action.equals("SetDeleteTopic")){
 														 %> 
-																	<a class="MenuItem $classMenu" href="$link">	 
+																		 
 																		<div class="ItemIcon $classIcon">
+																		<a class="MenuItem $classMenu" href="$link" style="height:100%; width:100%">
 																			$itemLabel
+																			</a>
 																		</div>
-																	</a>
+																	
 														 <% 
 														 		} else {%>
-														 			<a class="MenuItem $classMenu" href="javaScript: void(0)"
-														 				onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">	 
+														 			
 																		<div class="ItemIcon $classIcon">
+																		<a class="MenuItem $classMenu" href="javaScript: void(0)"
+														 				onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">	 
 																			$itemLabel
+																			</a>
 																		</div>
-																	</a>
+																	
 														 	<%}
 														 } %>
 														</div>
@@ -247,12 +250,12 @@
 																</div>
 															</div>
 															<div style="clear: left;"><span></span></div>
-															<div class="LineMenu"><span></span></div>
-															<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>">	 
+															<div class="LineMenu"><span></span></div>	 
 																<div class="ItemIcon AdvancedSearchIcon">
+																<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>" >
 																	<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>
+																	</a>
 																</div>
-															</a>
 														</div>
 													</div>
 												</div>
@@ -295,12 +298,13 @@
 												<div class="MiddleLeftRightClickPopupMenu">
 													<div class="MiddleRightRightClickPopupMenu">
 														<div class="UIRightPopupMenuContainer">
-														<% if(!isLock && hasCreadTopic) { %>
-															<a class="MenuItem" href="<%=uicomponent.event("AddTopic")%>">	 
+														<% if(!isLock && hasCreadTopic) { %>	 
 																<div class="ItemIcon PostnewThreadIcon">
+																<a class="MenuItem" href="<%=uicomponent.event("AddTopic")%>">
 																	<%=_ctx.appRes(uicomponent.getName() + ".action.AddTopic");%>
+																	</a>
 																</div>
-															</a>
+															
 														 <% } 
 													 		boolean isView = false ;
 													 		String link , itemLabel, classIcon, classDisable="";
@@ -327,11 +331,11 @@
 														 			classDisable = "DisableMenuItem" ;
 														 		}
 														 %>
-																<a class="MenuItem $classDisable " href="$link">	 
 																	<div class="ItemIcon $classIcon">
+																	<a class="MenuItem $classDisable " href="$link">
 																		$itemLabel
+																		</a>
 																	</div>
-																</a>
 													 <% } %>
 														</div>
 													</div>
@@ -356,18 +360,31 @@
 			
 			<div class="ContentContainer" id="UITopicContent">
 				<div class="UITopicList">
-					<table cellspacing="0" borderspacing="0" class="UIGrid">
+					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th style="width: 40px;">&nbsp;</th>
 								<th style="width: 40px;">&nbsp;</th>
-								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
+								<th style="display:block;">
+								<div class="DownArrow1Icon"><a href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%>
+								</a></div>
+								</th>
 								<th style="width: 40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
-								<th style="width: 96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
+								<th style="width: 96px;">
+								<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
 								<th style="width: 40px;"><%=_ctx.appRes("UITopicContainer.label.Tag");%></th>
-								<th style="width: 130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></a></th>
-								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
-								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
+								<th style="width: 130px;">
+								<div class="DownArrow1Icon"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%>
+								</a>
+								</div></th>
+								<th style="width: 60px;">
+								<div class="DownArrow1Icon">
+								<a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
+								</div></th>
+								<th style="width: 60px;"><div class="DownArrow1Icon">
+								<a href="<%=uicomponent.event("SetOrderBy","viewCount");%>">
+									<%=_ctx.appRes("UITopicContainer.label.Views");%>
+								</a></div></th>
 								<% if(canEdit) { %>
 								<th style="width: 30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4"/></th>
 								<% } %>
@@ -611,11 +628,12 @@
 							<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 								<div class="IconButton LockIcon" title="Forum is Closed for Posting"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 							<% } else { %>
-								<a href="<%=uicomponent.event("AddTopic")%>">
-									<div class="IconButton AddTheradIcon"><span class="LabelIcon"></span>
+								
+									<div class="IconButton AddTheradIcon">
+										<a href="<%=uicomponent.event("AddTopic")%>" class="LabelIcon">
 										<%=_ctx.appRes("UITopicContainer.action.NewTheard");%>
-									</div>
-								</a>
+										</a>
+									</div>								
 							<% } %>
 							</div>
 						</div>
@@ -682,19 +700,18 @@
 				<div class="RightClickCustomItem" style="display: none; height: 0px"><span></span></div>
 			</div>
 		</div>
-		<div class="MiddleLeftRightClickPopupMenu">
+		<div class="MiddleLeftRightClickPopupMenu" >
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
-					<a href="" class="MenuItem AddBookmark">
+					
 						<div class="ItemIcon AddLinkToBookIcon">
-							<span><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></span>
+							<a href="" class="MenuItem AddBookmark"><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 						</div>
-					</a>
-					<a href="" class="MenuItem AddWatching">
+					
 						<div class="ItemIcon AddWatchingIcon">
-							<span><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></span>
+							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
 						</div>
-					</a>
+				
 				</div>
 			</div>
 		</div>
