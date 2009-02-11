@@ -354,7 +354,7 @@
 											<table style="_width:98%;">
 												<tr>
 												<% if(uicomponent.viewAuthorInfor || uicomponent.faqSetting_.isEnableViewAvatar()){ %>
-													<td width="138px" height="100px;">
+													<td width="140px" height="100px;">
 														<div class="ProfileContainer">
 														<%
 															if(uicomponent.faqSetting_.isEnableViewAvatar()) {
