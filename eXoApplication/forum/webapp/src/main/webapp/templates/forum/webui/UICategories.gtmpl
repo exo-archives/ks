@@ -61,7 +61,7 @@
 										<div style="position: relative;">
 											<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; font-weight:normal;">
-													<div action="$actionBookmark" class="ClickPopupContent"></div>
+													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 												</div>
 											</div>
 										</div>
@@ -196,7 +196,7 @@
 													<a actions="$link;" href="$url" style="$lineHeight" class="ForumTitle ActionLink">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
-															<div action="$actionBookmark" class="ClickPopupContent"></div>
+															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 														</div>
 													</div>
 												</div>
@@ -217,7 +217,7 @@
 										 			<a actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
-															<div action="$actionBookmark" class="ClickPopupContent"></div>
+															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 														</div>
 													</div>
 												</div>
@@ -261,11 +261,15 @@
 		<div class="MiddleLeftRightClickPopupMenu">
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
-						<div class="ItemIcon AddLinkToBookIcon" style="min-width:62px;">
-								<a href="" class="MenuItem AddBookmark" style="display:block"><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+						<div class="MenuItem AddBookmark" style="min-width:62px;">
+									<a class="ItemIcon AddLinkToBookIcon" href="" >
+									<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
+									</a>
 						</div>
-						<div class="ItemIcon AddWatchingIcon">
-							<a href="" class="MenuItem AddWatching" style="display:block"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+						<div class="MenuItem AddWatching">
+							<a class="ItemIcon AddWatchingIcon">
+							<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
+							</a>
 						</div>
 				</div>
 			</div>

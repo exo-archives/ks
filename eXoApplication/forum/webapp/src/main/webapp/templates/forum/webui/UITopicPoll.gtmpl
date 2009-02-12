@@ -83,17 +83,17 @@
 					<div class="SeparatorLine"><span></span></div>
 					<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<a href="<%=uicomponent.event("EditPoll")%>">
+							<div onclick="$link">
 								<div class="LeftOverButton">
 									<div class="RightOverButton">
 										<div class="CenterOverButton">
 											<div class="StatusIcon EditPollIcon">
-												<%=_ctx.appRes("UITopicPoll.label.EditPoll"); %>
+											<a href="<%=uicomponent.event("EditPoll")%>">	<%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
 											</div>
 										</div>
 									</div>
 								</div>
-							</a>
+							</div>
 						</div>
 					</div>
 				<% } %>
@@ -137,15 +137,19 @@
 														<table class="ActionContainer" align="center">
 															<tr>
 																<td align="center">
-																	<a href="<%=uicomponent.event("Vote")%>" class="ActionButton LightBlueStyle">
+																<div class="ActionButton LightBlueStyle">
+																	
 																		<div class="ButtonLeft">
 																			<div class="ButtonRight">
 																				<div class="ButtonMiddle">
+																				<a href="<%=uicomponent.event("Vote")%>">
 																					<%=_ctx.appRes("UITopicPoll.label.Votenow"); %>
+																					</a>
 																				</div>
 																			</div>
 																		</div>
-																	</a>
+																	
+																	</div>
 																</td>
 															</tr>
 														</table>
@@ -159,7 +163,7 @@
 								<% } else { %>
 								<div class="UITabContent">
 									<div class="ViewPollForm">
-										<table cellspacing="0" borderspacing="0" id="UIGrid" class="UIGrid">
+										<table cellspacing="0" border="0" cellpadding="0" id="UIGrid" class="UIGrid">
 											<thead>
 												<tr>
 													<th><%=_ctx.appRes("UITopicPoll.label.PollOptions"); %></th>
@@ -215,15 +219,17 @@
 												<table class="ActionContainer" align="center">
 													<tr>
 														<td align="center">
-															<a href="<%=uicomponent.event("VoteAgainPoll")%>" class="ActionButton LightBlueStyle">
+														<div onclick="$link" class="ActionButton LightBlueStyle">
 																<div class="ButtonLeft">
 																	<div class="ButtonRight">
 																		<div class="ButtonMiddle">
+																		<a href="<%=uicomponent.event("VoteAgainPoll")%>">
 																			<%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %>
+																			</a>
 																		</div>
 																	</div>
 																</div>
-															</a>
+															</div>
 														</td>
 													</tr>				 
 												</table>

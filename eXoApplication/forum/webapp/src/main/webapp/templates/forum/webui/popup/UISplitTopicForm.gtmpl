@@ -35,7 +35,7 @@
 			<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 			<div style="clear: right; height: 0px;"><span></span></div>
 		</div>
-		<table class="UIGrid" borderspacing="0" cellspacing="0">
+		<table class="UIGrid" border="0" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
 					<th width="30px"></th>

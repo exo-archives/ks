@@ -93,7 +93,7 @@
 			else alert = " " ;
 	%>
 		<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
-			<table class="TablePost" cellspacing="0" borderspacing="0">
+			<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
 				<tbody>
 					<tr>
 <!-- Start MemberContainer -->
@@ -120,7 +120,7 @@
 									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
 									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload"/>
+								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload" alt=""/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>

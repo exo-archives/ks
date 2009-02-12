@@ -47,7 +47,7 @@
 			</div>
 		</div>
 		<div class="ViewContainer">
-			<table class="TablePost" cellspacing="0" borderspacing="0">
+			<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
 				<tbody>
 					<tr>
 						<td class="MemberContainer">

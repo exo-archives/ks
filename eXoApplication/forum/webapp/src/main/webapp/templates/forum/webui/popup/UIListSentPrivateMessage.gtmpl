@@ -16,7 +16,7 @@
 		  <div style="clear: right; height: 0px;"><span></span></div>
 		<% } %>
 	</div>
-	<table cellspacing="0" class="UIGrid" id="PermissionInfo" borderspacing="0">
+	<table cellspacing="0" class="UIGrid" id="PermissionInfo" border="0" cellpadding="0">
 		<thead>
 			<tr>
 				<th><%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%></th>

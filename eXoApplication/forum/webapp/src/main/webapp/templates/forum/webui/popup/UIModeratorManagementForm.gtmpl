@@ -33,7 +33,7 @@
 				</div>
 				<div><span></span></div>
 		 
-				<table cellspacing="0" borderspacing="0" id="PermissionInfo" class="UIGrid">
+				<table cellspacing="0"border="0" cellpadding="0" id="PermissionInfo" class="UIGrid">
 					<thead>
 						<tr>
 							<th width="30%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>
@@ -170,13 +170,15 @@
 		<table class="ActionContainer" align="center">
 			<tr>
 				<td align="center">
-					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+				<div onclick="$link" class="ActionButton LightBlueStyle">
+					
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+								<div class="ButtonMiddle"><a href="<%=uicomponent.event("Close");%>"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a></div>
 							</div>
 						</div>
-					</a>
+					
+					</div>
 				</td>
 			</tr>
  		</table> 

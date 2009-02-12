@@ -33,7 +33,7 @@
 													link = uicomponent.event("SelectTab",""+i) ;
 												}
 									%>	
-										<div class="UITab NormalTabStyle">
+										<div class="UITab NormalTabStyle" style="border:solid 1px red">dfsfsfsf
 											<div class="$classCss">
 												<div class="LeftTab">
 													<div class="RightTab">

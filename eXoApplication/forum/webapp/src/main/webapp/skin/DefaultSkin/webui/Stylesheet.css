@@ -552,3 +552,14 @@
 	height:13px;
 	margin: 3px 0px 0px 0px;
 }
+
+/*********************Rightclick***************************/
+
+.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
+  color: orange;
+  background-color: transparent;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
+  display: block;
+}

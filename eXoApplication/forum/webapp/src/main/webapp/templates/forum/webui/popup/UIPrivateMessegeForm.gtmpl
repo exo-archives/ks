@@ -40,9 +40,9 @@
 											<div class="$classCss">
 												<div class="LeftTab">
 													<div class="RightTab">
-													<a href="$link">
-														<div class="MiddleTab"><%=tabconten;%></div>
-													</a>
+													
+														<div class="MiddleTab"><a href="$link"><%=tabconten;%></a></div>
+													
 													</div>
 												</div>
 											</div>
@@ -101,13 +101,15 @@
 													<tbody>
 														<tr>
 															<td align="center">
-																<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("SendPrivateMessage")%>">
+															<div class="ActionButton LightBlueStyle">
 																	<div class="ButtonLeft">
 																		<div class="ButtonRight">
-																			<div class="ButtonMiddle"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></div>
+																			<div class="ButtonMiddle"><a href="<%=uicomponent.event("SendPrivateMessage")%>"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%>
+																			</a>
+																			</div>
 																		</div>
 																	</div>
-																</a>
+																</div>
 															</td>
 														</tr>
 											 		</tbody>
@@ -159,21 +161,30 @@
 					<%
 							if(!uiform.isFullMessage()) {
 					%>
-						<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("SendPrivateMessage")%>">
+					<div class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></div>
+									<div class="ButtonMiddle">
+										<a href="<%=uicomponent.event("SendPrivateMessage")%>">
+											<%=_ctx.appRes("UIPrivateMessageForm.action.Send");%>
+										</a>
+									</div>
 								</div>
 							</div>
-						</a>
+							</div>
+						
 					<% } %>
-						<a class="ActionButton LightBlueStyle" href="<%=uicomponent.event("Close")%>">
+					<div onclick="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+									<div class="ButtonMiddle">
+										<a href="<%=uicomponent.event("Close")%>">
+											<%=_ctx.appRes("UIForumPortlet.label.Close");%>
+										</a>
+									</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					</td>
 				</tr>
 	 		</tbody>

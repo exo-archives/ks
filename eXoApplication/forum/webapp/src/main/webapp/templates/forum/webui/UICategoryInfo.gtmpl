@@ -24,7 +24,7 @@
 	</div>
 	<div class="ContentContainer">
 		<div class="ForumStatsList">
-			<table cellspacing="0" borderspacing="0" id="UIListUsers" class="UIGrid">
+			<table cellspacing="0px" cellpadding="0px" border="0px"  id="UIListUsers" class="UIGrid">
 				<tbody>
 					<!--tr>
 						<td style="width: 40px; border-right: 1px solid #ffffff; border-top: 1px solid #c7c7c7;"><div class="UserIcon"><span></span></div></td>

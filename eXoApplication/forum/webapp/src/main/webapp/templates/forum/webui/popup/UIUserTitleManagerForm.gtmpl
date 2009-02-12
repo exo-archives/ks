@@ -1,7 +1,7 @@
 <div class="UIUserTitleManagerForm">
 	<div class="UserManagementContainer">
 		<div class="UIUserTitleList">
-			<table cellspacing="0" borderspacing="0" id="UIGrid" class="UIGrid">
+			<table cellspacing="0" border="0" cellpadding="0" id="UIGrid" class="UIGrid">
   			<thead>
   				<tr>
   					<th>User Title</th>

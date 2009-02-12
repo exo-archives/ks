@@ -1814,25 +1814,13 @@
 	background: url('background/ThreadIcon.gif') no-repeat left;
 }
 
+/*********************Rightclick***************************/
 
+.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
+  color: orange;
+  background-color: transparent;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
+  display: block;
+}
