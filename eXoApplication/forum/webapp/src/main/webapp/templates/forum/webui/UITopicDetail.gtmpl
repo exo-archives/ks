@@ -6,6 +6,7 @@
 	import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.ForumSessionUtils; 
+	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
@@ -34,6 +35,7 @@
 	boolean isShowIP = uicomponent.getHasEnableIPLogging() ;
 	List posts = null;
 	UserProfile userProfile = null;
+	SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 	Forum forum = uicomponent.getForum() ;
 	if(forum == null) isNull = true;
 	Topic topic = null;
@@ -631,12 +633,12 @@
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
-									avatarUrl = uiform.getAvatarUrl(contact) ;
+									avatarUrl = uiform.getAvatarUrl(contact, sessionProvider) ;
 									String idAv = "avatar" + nb;
 									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
 									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload"/>
+								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" width="70px" onload="$onload"/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes(uiformId + ".label.JoinDate");%>: $joinDate</div>
@@ -1019,6 +1021,7 @@
 	</div>
 	<% }
 	uicomponent.setPostRules(isNull) ;
+	sessionProvider.close();
 	%>
 <%uiform.end()%>
 <% uicomponent.renderChild(UIPostRules.class) %>

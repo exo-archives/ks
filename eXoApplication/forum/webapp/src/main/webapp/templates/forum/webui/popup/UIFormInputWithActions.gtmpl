@@ -36,7 +36,48 @@
 									for(tabconten in uiform.getChildren()){
 								%>
 								<div style="display: $display;" id="UITabContent" class="UITabContent">
-									<% uiform.renderChild(tabconten.id) ; %>
+									<%
+									if(tabconten.id.equals("ForumUserProfile")){
+									%>
+										<table>
+											<%
+											for(tabChildConten in tabconten.getChildren()){
+												if(tabChildConten.id.equals("IsDisplayAvatar")){%>
+													<tr>
+														<td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
+												      <%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%> : 
+												    </td>
+												    <td class="FieldComponent" style="padding:2px 0px 3px 0px;">
+												    	<div>
+																<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin: 5px;"/>
+															</div>
+															<div align="left">
+																<a href="<%=uiform.event("Attachment")%>" style="color:blue;">
+																	[ <%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%> ]
+																</a>
+															</div>
+														</td>
+													</tr>
+												<%
+												}%>
+												<tr>
+													<td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
+											      <%=uicomponent.getLabel(tabChildConten.getName()) %> : 
+											    </td>
+											    <td class="FieldComponent" style="padding:2px 0px 3px 4px;">
+														<% uiform.renderField(tabChildConten) %>
+											    </td>
+										    </tr>
+											<%
+											}
+											%>
+										</table>
+									<%
+									} else {%>
+										<% uiform.renderChild(tabconten.id) ; %>
+									<%
+									}
+									%>
 								</div>
 								<% display = "none"; %>
 							<% } %>
@@ -48,6 +89,7 @@
 			</div>	
 		</div>	
 	</div>
+	<!-- =============================================== Action of this form ====================================================== -->
 	<div class="UIAction"> 
 		<table class="ActionContainer" align="center">
 			<tr>

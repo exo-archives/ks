@@ -41,12 +41,22 @@ if(!uicomponent.isEditPortlet_){
 												<a href="$linkWacth" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager"); %>" class="WatchUserManager">&nbsp;</a>
 											</td>
 										</tr>
+										<tr>
+											<td class="FieldLabel"><%=_ctx.appRes("UISettingForm.label.Avatar")%>:</td>
+											<td>
+													<img id="FAQUserAvatar" src="$uicomponent.avatarUrl" class="Img" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);" style="margin: 4px;"/>
+													<br/>
+													<a href="<%=uicomponent.event("ChangeAvatar")%>" style="color:blue;">
+														[ <%=_ctx.appRes("UISettingForm.action.ChangeAvatar")%> ]
+													</a>
+											</td>
+										</tr>
 									</tbody>
 								</table>
 				 		</div>
 				 	</form>
-				 	<div class="UIAction">
-						<table class="ActionContainer" align="center">
+			 	<div class="UIAction">
+			<table class="ActionContainer" align="center">
 				<tr>
 					<td align="center">
 				<% for(action in uicomponent.getActions()) {
@@ -66,7 +76,7 @@ if(!uicomponent.isEditPortlet_){
 					</td>
 				</tr>
 	 		</table> 
-					</div>
+		</div>
 			
 	<%uiform.end()%>
 </div><%

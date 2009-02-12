@@ -373,8 +373,9 @@ public class UICategories extends UIContainer{
 				if(!oldPath.contains(categoryId)) {
 					String parentId = "";
 					if(oldPath.indexOf("/") > 0){
+						String parentCateId = oldPath.substring(oldPath.lastIndexOf("/")  + 1);
 						for(Category category : uiCategories.listCate){
-							if(category.getId().equals(oldPath.substring(oldPath.lastIndexOf("/")  + 1))){
+							if(category.getId().equals(parentCateId)){
 								oldPath = oldPath.substring(0, oldPath.lastIndexOf("/"));
 								break;
 							}

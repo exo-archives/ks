@@ -153,8 +153,11 @@ public class UIForumActionBar extends UIContainer	{
 			UIForumActionBar uiActionBar = event.getSource() ;
 			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIForumUserSettingForm forumOptionForm = popupAction.createUIComponent(UIForumUserSettingForm.class, null, null) ;
-			popupAction.activate(forumOptionForm, 580, 360) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIForumUserSettingForm forumUserSettingForm = popupContainer.addChild(UIForumUserSettingForm.class, null, null) ;
+			popupContainer.setId("ForumUserSettingForm");
+			forumUserSettingForm.activate();
+			popupAction.activate(popupContainer, 580, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	

@@ -35,6 +35,7 @@ import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -741,5 +742,13 @@ public class FAQServiceImpl implements FAQService{
 	
 	public QuestionPageList getListCategoriesWatch(String userId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getListCategoriesWatch(userId, sProvider);
+	}
+	
+	public FileAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
+		return jcrData_.getUserAvatar(userName, sessionProvider);
+	}
+	
+	public void saveUserAvatar(String userId, FileAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
+	jcrData_.saveUserAvatar(userId, fileAttachment, sessionProvider);
 	}
 }

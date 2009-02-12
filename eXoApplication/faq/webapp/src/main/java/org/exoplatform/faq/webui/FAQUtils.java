@@ -16,6 +16,8 @@
  */
 package org.exoplatform.faq.webui;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,8 +33,11 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
+import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
@@ -122,7 +127,7 @@ public class FAQUtils {
   	return organizationService.getUserHandler().findUserByName(userId) ;
   }
 	
-	public static void setCommonContactInfor(String userId, CommonContact contact) throws Exception {
+	public static void setCommonContactInfor(String userId, CommonContact contact, FAQService faqService, DownloadService dservice) throws Exception {
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 		UserProfile profile = organizationService.getUserProfileHandler().findUserProfileByName(userId);
 		if(profile.getAttribute("user.bdate") != null)contact.setBirthday(profile.getAttribute("user.bdate"));
@@ -135,7 +140,14 @@ public class FAQUtils {
 		if(profile.getAttribute("user.business-info.telecom.mobile.number") != null)contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
 		if(profile.getAttribute("user.business-info.telecom.telephone.number") != null)contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
 		if(profile.getAttribute("user.business-info.online.uri") != null)contact.setWebSite(profile.getAttribute("user.business-info.online.uri"));
-		if(profile.getAttribute("user.other-info.avatar.url") != null)contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+		SessionProvider sessionProvider = getSystemProvider();
+		FileAttachment fileAttachment = faqService.getUserAvatar(userId, sessionProvider);
+		sessionProvider.close();
+		if(fileAttachment == null || fileAttachment.getSize() == 0){
+			if(profile.getAttribute("user.other-info.avatar.url") != null)contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
+		} else {
+			contact.setAvatarUrl(getFileSource(fileAttachment, dservice));
+		}
 	}
   
   @SuppressWarnings("unchecked")
@@ -445,6 +457,34 @@ public class FAQUtils {
 		} else {
 			Format formatter = new SimpleDateFormat(format);
 			return formatter.format(myDate);
+		}
+	}
+	
+	@SuppressWarnings("unused")  
+	private static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+		byte[] imageBytes = null;
+		if (input != null) {
+			imageBytes = new byte[input.available()];
+			input.read(imageBytes);
+			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
+			dresource.setDownloadName(fileName);
+			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+		}
+		return null;
+	}
+
+	public static String getFileSource(FileAttachment attachment, DownloadService dservice){
+		//DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		try {
+			InputStream input = attachment.getInputStream() ;
+			String fileName = attachment.getName() ;
+			if(fileName == null || fileName.trim().length() < 1)
+				fileName = "avatar." + attachment.getMimeType();
+			//String fileName = attachment.getNodeName() ;
+			return getFileSource(input, fileName, dservice);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 }

@@ -25,6 +25,8 @@ import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
+import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.user.ContactProvider;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
@@ -69,6 +71,16 @@ public class ForumSessionUtils {
   
   public static SessionProvider getSystemProvider() {
     return SessionProviderFactory.createSystemProvider();
+  }
+  
+  public static String getUserAvatarURL(String userName, ForumService forumService, SessionProvider sessionProvider, 
+  																			DownloadService dservice){
+  	try{
+	  	ForumAttachment attachment = forumService.getUserAvatar(userName, sessionProvider);
+	  	return ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
+  	} catch (Exception e){
+  		return null;
+  	}
   }
   
   public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {

@@ -19,6 +19,8 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
+import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.ks.common.user.ContactProvider;
@@ -46,6 +48,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	private CommonContact contact = null;
+	private FAQService faqService_ = null;
 	String[] lableProfile = null;
 	public User user_  ;
 
@@ -66,7 +69,7 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		if(contact == null) {
 			contact = new CommonContact() ;
 			try {
-				FAQUtils.setCommonContactInfor(userId, contact);
+				FAQUtils.setCommonContactInfor(userId, contact, faqService_, getApplicationComponent(DownloadService.class));
 			} catch (Exception e) {}
 		}
 		return contact;
@@ -90,8 +93,9 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		}
 	}
 	
-	public void setUser(User userName) {
+	public void setUser(User userName, FAQService faqService) {
 		this.user_ = userName ;
+		this.faqService_ = faqService;
 	}
 	public User getUser() throws Exception {
 		return user_;

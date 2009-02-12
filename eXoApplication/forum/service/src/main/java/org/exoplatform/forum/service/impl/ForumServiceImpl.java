@@ -41,6 +41,7 @@ import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
+import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPrivateMessage;
@@ -623,5 +624,13 @@ public class ForumServiceImpl implements ForumService, Startable{
 	
 	public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception{
 		storage_.registerListenerForCategory(sessionProvider, categoryId);
+	}
+	
+	public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
+		return storage_.getUserAvatar(userName, sessionProvider);
+	}
+	
+	public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
+		storage_.saveUserAvatar(userId, fileAttachment, sessionProvider);
 	}
 }

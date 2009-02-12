@@ -511,6 +511,15 @@ public class UIQuestions extends UIContainer {
 			return null;
 		}
 	}
+	
+	private String getAvatarUrl(String userId, SessionProvider sessionProvider){
+		String url = "";
+		try{
+			url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId, sessionProvider), getApplicationComponent(DownloadService.class));
+		} catch (Exception e){}
+		if(url != null && url.trim().length() > 0) return url;
+		return "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+	}
 
 	public void setQuestionView(String questionId){
 		this.questionView_ = questionId ;
@@ -814,7 +823,7 @@ public class UIQuestions extends UIContainer {
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 400) ;
+			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 480) ;
 			watchContainer.setIsRenderedContainer(1) ;
 			UISettingForm uiSetting = watchContainer.getChild(UISettingForm.class) ;
 			uiSetting.setFaqSetting(question.faqSetting_);
@@ -1289,7 +1298,7 @@ public class UIQuestions extends UIContainer {
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIViewUserProfile viewUserProfile = popupContainer.addChild(UIViewUserProfile.class, null, null) ;
 				popupContainer.setId("ViewUserProfile") ;
-				viewUserProfile.setUser(user) ;
+				viewUserProfile.setUser(user, question.faqService_) ;
 				popupAction.activate(popupContainer, 680, 350) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {

@@ -371,7 +371,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(ForumContact contact) throws Exception {
+	private String getAvatarUrl(ForumContact contact, SessionProvider sessionProvider) throws Exception {
 //		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 //		try {
 //			ContactAttachment attachment = contact.getAttachment() ; 
@@ -381,11 +381,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 //		} catch (NullPointerException e) {
 //			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //		}
-		if (contact.getAvatarUrl() == null ) {
-			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-		} else {
-			return contact.getAvatarUrl();
+		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, sessionProvider, dservice);
+		if(url == null || url.trim().length() < 1){
+			if (contact.getAvatarUrl() == null ) {
+				url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+			} else {
+				url = contact.getAvatarUrl();
+			}
 		}
+		return url;
 	}
 
 	@SuppressWarnings("unused")

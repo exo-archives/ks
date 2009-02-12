@@ -452,6 +452,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIAttachFileForm attachFileForm = uiChildPopup.activate(UIAttachFileForm.class, 500) ;
 			attachFileForm.updateIsTopicForm(false) ;
+			attachFileForm.setMaxField(5);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}

@@ -103,6 +103,7 @@ public class JCRDataStorage {
 	private String cateOfQuestion = "";
 	
 	final private static String FAQ_APP = "faqApp".intern() ;
+	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
 	final private static String USER_SETTING = "UserSetting".intern();
 	final private static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
@@ -198,6 +199,58 @@ public class JCRDataStorage {
 		}
 	}
 	
+	public FileAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
+		Node ksAvatarHomeNode = getKSUserAvatarHomeNode(sessionProvider);
+		FileAttachment attachment =	null;
+		if(ksAvatarHomeNode.hasNode(userName)){
+			Node node = ksAvatarHomeNode.getNode(userName);
+			Node nodeFile = null;
+			String workspace = "";
+			if(node.isNodeType("nt:file")) {
+				attachment = new FileAttachment() ;
+				nodeFile = node.getNode("jcr:content") ;
+				attachment.setId(node.getPath());
+				attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+				attachment.setNodeName(node.getName());
+				attachment.setName("avatar." + attachment.getMimeType());
+				workspace = node.getSession().getWorkspace().getName() ;
+				attachment.setWorkspace(workspace) ;
+				attachment.setPath("/" + workspace + node.getPath()) ;
+				try{
+					if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+					else attachment.setSize(0) ;
+				} catch (Exception e) {
+					attachment.setSize(0) ;
+					e.printStackTrace() ;
+					return null;
+				}
+			}
+			return attachment;
+		} else {
+			return attachment;
+		}
+	}
+	
+	public void saveUserAvatar(String userId, FileAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
+		Node ksAvatarHomeNode = getKSUserAvatarHomeNode(sessionProvider);
+		Node avatarNode = null;
+		if(ksAvatarHomeNode.hasNode(userId)) avatarNode = ksAvatarHomeNode.getNode(userId);
+		else avatarNode = ksAvatarHomeNode.addNode(userId, "nt:file");
+		try {
+			FAQServiceUtils.reparePermissions(avatarNode, "any");
+			Node nodeContent = null;
+			if (avatarNode.hasNode("jcr:content")) nodeContent = avatarNode.getNode("jcr:content");
+			else	nodeContent = avatarNode.addNode("jcr:content", "nt:resource") ;
+			nodeContent.setProperty("jcr:mimeType", fileAttachment.getMimeType());
+			nodeContent.setProperty("jcr:data", fileAttachment.getInputStream());
+			nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+		if(avatarNode.isNew()) ksAvatarHomeNode.getSession().save();
+		else ksAvatarHomeNode.save();
+	}
+	
 	private Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
 		Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)	;
 		try {
@@ -207,6 +260,17 @@ public class JCRDataStorage {
 			userApp.getSession().save() ;
 			return faqHome ;
 		}		
+	}
+	
+	private Node getKSUserAvatarHomeNode(SessionProvider sProvider) throws Exception{
+		Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)	;
+		try {
+			return	userApp.getNode(KS_USER_AVATAR) ;
+		} catch (PathNotFoundException ex) {
+			Node faqHome = userApp.addNode(KS_USER_AVATAR, NT_UNSTRUCTURED) ;
+			userApp.getSession().save() ;
+			return faqHome ;
+		}	
 	}
 	
 	private Node getQuestionHome(SessionProvider sProvider, String username) throws Exception {

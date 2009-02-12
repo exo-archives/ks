@@ -462,7 +462,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         return ;
       }
       
-      if(questionContent == null || questionContent.trim().length() < 1) {
+      if((questionContent == null || questionContent.trim().length() < 1) && 
+      		!questionForm.defaultLanguage_.equals(questionForm.lastLanguage_)) {
       	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
       	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-null", null, ApplicationMessage.WARNING)) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -661,16 +662,16 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-        String pathParentCategoryId = questions.getPathService(question_.getCategoryId()) ;
-        String parentCategoryId = null ;
-        if(pathParentCategoryId.lastIndexOf("/") > 0) parentCategoryId = pathParentCategoryId.substring(pathParentCategoryId.lastIndexOf("/")+1, pathParentCategoryId.length()) ;
-        if(questionNode!= null && questions.getCategoryId() != null && questions.getCategoryId().trim().length() > 0 &&
+       // String pathParentCategoryId = questions.getPathService(question_.getCategoryId()) ;
+       // String parentCategoryId = null ;
+        //if(pathParentCategoryId.lastIndexOf("/") > 0) parentCategoryId = pathParentCategoryId.substring(pathParentCategoryId.lastIndexOf("/")+1, pathParentCategoryId.length()) ;
+        /*if(questionNode!= null && questions.getCategoryId() != null && questions.getCategoryId().trim().length() > 0 &&
             !questions.getCategoryId().equals(question_.getCategoryId()) && !questions.getCategoryId().equals(parentCategoryId)) {
           UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
           Category category = fAQService_.getCategoryById(question_.getCategoryId(), sessionProvider) ;
           uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        }
+        }*/
       } else {
         UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
         UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
@@ -692,7 +693,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       UIQuestionForm questionForm = event.getSource() ;     
       UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
       UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      uiChildPopup.activate(UIAttachMentForm.class, 550) ;
+      UIAttachMentForm attachMentForm = uiChildPopup.activate(UIAttachMentForm.class, 550) ;
+      attachMentForm.setNumberUpload(5);
       event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
     }
   }

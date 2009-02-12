@@ -343,6 +343,7 @@ UIFAQPortlet.prototype.setSizeImages = function(delta, classParant) {
 	      var img =  new Image();
 	      img.src = images_[i].src;
 	      if(images_[i].className === "AttachmentFile") continue ;
+	      if(images_[i].className === "FAQAvatar") continue ;
 			  if(img.width > max) {
 					images_[i].style.width= max + "px" ;
 					images_[i].style.height = "auto" ;

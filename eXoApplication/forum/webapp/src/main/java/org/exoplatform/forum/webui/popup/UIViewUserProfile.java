@@ -17,11 +17,13 @@
 package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -110,11 +112,17 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 //	} catch (NullPointerException e) {
 //		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //	}
-	if (contact.getAvatarUrl() == null ) {
-		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-	} else {
-		return contact.getAvatarUrl();
-	}
+		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, sessionProvider, dservice);
+		if(url == null || url.trim().length() < 1){
+			if (contact.getAvatarUrl() == null ) {
+				url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+			} else {
+				url = contact.getAvatarUrl();
+			}
+		}
+		return url;
 	}
 	
 	@SuppressWarnings("unused")

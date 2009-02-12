@@ -22,6 +22,8 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletPreferences;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -68,6 +70,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 				@EventConfig(listeners = UISettingForm.ChildTabChangeActionListener.class),
 				@EventConfig(listeners = UISettingForm.ResetMailContentActionListener.class),
 				@EventConfig(listeners = UISettingForm.SelectCategoryForumActionListener.class),
+				@EventConfig(listeners = UISettingForm.ChangeAvatarActionListener.class),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
@@ -101,7 +104,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	private String []idPath = new String[]{"",""};
 	private boolean isResetMail = false;
 	private int indexOfTab = 0;
-	
+	private String avatarUrl ;
 	private String tabSelected = DISPLAY_TAB;
 	
 	public UISettingForm() throws Exception {
@@ -201,7 +204,19 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
 			
 			addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
+			
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			avatarUrl = FAQUtils.getFileSource(((FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class))
+																													.getUserAvatar(FAQUtils.getCurrentUser(), sessionProvider), 
+																					getApplicationComponent(DownloadService.class)) ;
+			if(avatarUrl == null || avatarUrl.trim().length() < 1)
+				avatarUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+			sessionProvider.close();
 		}
+	}
+	
+	public void setAvatarUrl(String url){
+		this.avatarUrl = url;
 	}
 	
 	public FAQSetting getFaqSetting() {
@@ -212,7 +227,9 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
   	this.faqSetting_ = faqSetting;
   }
   
-  public String[] getActions() { return new String[]{"Save", "Cancel"}; }
+  public String[] getActions() { 
+  	return new String[]{"Save", "Cancel"};
+  }
   
   public void activate() throws Exception { }
 
@@ -297,6 +314,19 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 600) ;
 			watchForm.setFAQSetting(settingForm.faqSetting_);
+		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class ChangeAvatarActionListener extends EventListener<UISettingForm> {
+		public void execute(Event<UISettingForm> event) throws Exception {
+			UISettingForm settingForm = event.getSource() ;
+			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIWatchContainer watchContainer = settingForm.getParent() ;
+			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
+			UIAttachMentForm attachMentForm = popupAction.activate(UIAttachMentForm.class, 550) ;
+			attachMentForm.setNumberUpload(1);
+			attachMentForm.setIsChangeAvatar(true);
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

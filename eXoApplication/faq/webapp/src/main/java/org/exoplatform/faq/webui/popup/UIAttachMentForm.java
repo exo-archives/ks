@@ -19,9 +19,15 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
+import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.impl.FAQServiceImpl;
+import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIWatchContainer;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -54,14 +60,23 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   private boolean response_ = false ;
   private static int numberUpload = 5 ;
   private static final String FILE_UPLOAD = "FileUpload" ;
-
+  private boolean isChangeAvatar = false;
+  
+  public void setIsChangeAvatar(boolean changeAvatar){
+  	this.isChangeAvatar = changeAvatar;
+  }
+  
+  public void setNumberUpload(int number){
+  	numberUpload = number;
+  	for(int i = 0 ; i < numberUpload; i ++) {
+      addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i)) ;
+    }
+  }
+  
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
   public UIAttachMentForm() {
-    for(int i = 0 ; i < numberUpload; i ++) {
-      addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i)) ;
-    }
     this.setRendered(false) ;
   }
   
@@ -117,7 +132,38 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
         responseForm.setListFileAttach(listFileAttachment) ;
         responseForm.refreshUploadFileList() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
-      } else {
+      } else if(attachMentForm.isChangeAvatar) {
+      	if(listFileAttachment.get(0).getMimeType().indexOf("image") < 0){
+      		UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
+          uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.fileIsNotImage", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+          return ;
+      	}
+      	if(listFileAttachment.get(0).getSize() >= (2 * 1048576)){
+      		UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
+          uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.avatar-upload-long", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+          return ;
+      	}
+      	FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+      	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+      	service.saveUserAvatar(FAQUtils.getCurrentUser(), listFileAttachment.get(0), sessionProvider);
+      	String avatarUrl = FAQUtils.getFileSource(((FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class))
+																																				.getUserAvatar(FAQUtils.getCurrentUser(), sessionProvider), 
+																									attachMentForm.getApplicationComponent(DownloadService.class)) ;
+				if(avatarUrl == null || avatarUrl.trim().length() < 1)
+					avatarUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+      	sessionProvider.close();
+      	UIWatchContainer watchContainer = attachMentForm.getAncestorOfType(UIWatchContainer.class);
+      	UISettingForm settingForm = watchContainer.getChild(UISettingForm.class);
+      	settingForm.setAvatarUrl(avatarUrl);
+      	event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer);
+      	
+      	UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
+      	popupAction.deActivate() ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      	return;
+      } else{
         UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
         if(questionForm == null) {
           UIFAQPortlet portlet = attachMentForm.getAncestorOfType(UIFAQPortlet.class) ;
@@ -137,11 +183,18 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   
   static public class CancelActionListener extends EventListener<UIAttachMentForm> {
     public void execute(Event<UIAttachMentForm> event) throws Exception {
-      UIAttachMentForm uiAttachMent = event.getSource() ;     
-      UIPopupContainer popupContainer = uiAttachMent.getAncestorOfType(UIPopupContainer.class) ;
-      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      UIAttachMentForm uiAttachMent = event.getSource() ;  
+      if(uiAttachMent.isChangeAvatar){
+      	UIWatchContainer popupContainer = uiAttachMent.getAncestorOfType(UIWatchContainer.class) ;
+      	UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+      	popupAction.deActivate() ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      } else {
+	      UIPopupContainer popupContainer = uiAttachMent.getAncestorOfType(UIPopupContainer.class) ;
+	      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+	      popupAction.deActivate() ;
+	      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      }
     }
   }
 }

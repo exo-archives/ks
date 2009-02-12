@@ -673,4 +673,8 @@ public interface FAQService {
 	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, Boolean isSortByVote) throws Exception;
 	
 	public QuestionPageList getListCategoriesWatch(String userId, SessionProvider sProvider) throws Exception ;
+	
+	public FileAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception;
+	
+	public void saveUserAvatar(String userId, FileAttachment fileAttachment, SessionProvider sessionProvider) throws Exception;
 }

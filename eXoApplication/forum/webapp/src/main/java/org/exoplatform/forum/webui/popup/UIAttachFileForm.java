@@ -19,9 +19,14 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BufferAttachment;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.impl.ForumServiceImpl;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.upload.UploadService;
@@ -55,12 +60,17 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 
 	final static public String FIELD_UPLOAD	 = "upload";
 	private boolean	           isTopicForm	 = true;
+	private boolean 					 isChangeAvatar_ = false;
 	private int	               maxField	     = 5;
 	private long	             maxSize	     = 0;
 
 	public UIAttachFileForm() throws Exception {
 		maxSize = ForumServiceImpl.maxUploadSize_ ;
 		setMultiPart(true) ;
+	}
+	
+	public void setMaxField(int maxField){
+		this.maxField = maxField;
 		int i = 0 ;
 		while(i++ < maxField) {
 			UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i)) ;
@@ -70,6 +80,10 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 
 	public void updateIsTopicForm(boolean isTopicForm) throws Exception {
 		this.isTopicForm = isTopicForm ;
+	}
+	
+	public void setIsChangeAvatar(boolean isChangeAvatar){
+		this.isChangeAvatar_ = isChangeAvatar;
 	}
 	
 	public void activate() throws Exception {}
@@ -130,6 +144,21 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 					topicForm.addToUploadFileList(file) ;
 				}
 				topicForm.refreshUploadFileList() ;
+			} else if(uiForm.isChangeAvatar_){
+				if(files.get(0).getMimeType().indexOf("image") < 0){
+          uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.fileIsNotImage", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+          return ;
+      	}
+				if(files.get(0).getSize() >= (2 * 1048576)){
+					uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.avatar-upload-long", null, ApplicationMessage.WARNING));
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return ;
+				}
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+				SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+				forumService.saveUserAvatar(ForumSessionUtils.getCurrentUser(), files.get(0), sessionProvider);
+				sessionProvider.close();
 			} else {
 				for (BufferAttachment file : files) {
 					postForm.addToUploadFileList(file) ;

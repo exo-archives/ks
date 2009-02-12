@@ -110,7 +110,8 @@ import org.w3c.dom.NodeList;
 public class JCRDataStorage {
 
 	private NodeHierarchyCreator nodeHierarchyCreator_;
-
+	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
+	
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
@@ -176,6 +177,17 @@ public class JCRDataStorage {
 		}
 	}
 	
+	private Node getKSUserAvatarHomeNode(SessionProvider sProvider) throws Exception{
+		Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)	;
+		try {
+			return	userApp.getNode(KS_USER_AVATAR) ;
+		} catch (PathNotFoundException ex) {
+			Node faqHome = userApp.addNode(KS_USER_AVATAR, "nt:unstructured") ;
+			userApp.getSession().save() ;
+			return faqHome ;
+		}	
+	}
+	
 	private Node getForumBanNode(SessionProvider sProvider) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		try {
@@ -201,6 +213,60 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			return userAdministration.addNode(Utils.USER_PROFILES, "exo:userProfiles");
 		}
+	}
+	
+
+	public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
+		Node ksAvatarHomnode = getKSUserAvatarHomeNode(sessionProvider);
+		List<ForumAttachment> attachments =	new ArrayList<ForumAttachment>();
+		if(ksAvatarHomnode.hasNode(userName)){
+			Node node = ksAvatarHomnode.getNode(userName);
+			Node nodeFile = null;
+			String workspace = "";
+			if(node.isNodeType("nt:file")) {
+				JCRForumAttachment attachment = new JCRForumAttachment();
+				nodeFile = node.getNode("jcr:content") ;
+				attachment.setId(node.getName());
+				attachment.setPathNode(node.getPath());
+				attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+				attachment.setName("avatar." + attachment.getMimeType());
+				workspace = node.getSession().getWorkspace().getName() ;
+				attachment.setWorkspace(workspace) ;
+				attachment.setPath("/" + workspace + node.getPath()) ;
+				try{
+					if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+					else attachment.setSize(0) ;
+					attachments.add(attachment);
+					return attachments.get(0);
+				} catch (Exception e) {
+					attachment.setSize(0) ;
+					e.printStackTrace() ;
+				}
+			}
+			return null;
+		} else {
+			return null;
+		}
+	}
+	
+	public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
+		Node ksAvatarHomnode = getKSUserAvatarHomeNode(sessionProvider);
+		Node avatarNode = null;
+		if(ksAvatarHomnode.hasNode(userId)) avatarNode = ksAvatarHomnode.getNode(userId);
+		else avatarNode = ksAvatarHomnode.addNode(userId, "nt:file");
+		try {
+			ForumServiceUtils.reparePermissions(avatarNode, "any");
+			Node nodeContent = null;
+			if (avatarNode.hasNode("jcr:content")) nodeContent = avatarNode.getNode("jcr:content");
+			else	nodeContent = avatarNode.addNode("jcr:content", "nt:resource") ;
+			nodeContent.setProperty("jcr:mimeType", fileAttachment.getMimeType());
+			nodeContent.setProperty("jcr:data", fileAttachment.getInputStream());
+			nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}
+		if(avatarNode.isNew()) ksAvatarHomnode.getSession().save();
+		else ksAvatarHomnode.save();
 	}
 
 

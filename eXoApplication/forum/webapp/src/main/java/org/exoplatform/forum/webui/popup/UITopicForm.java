@@ -553,6 +553,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIAttachFileForm attachFileForm = uiChildPopup.activate(UIAttachFileForm.class, 500) ;
 			attachFileForm.updateIsTopicForm(true) ;
+			attachFileForm.setMaxField(5);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}

@@ -56,7 +56,7 @@
 		<div class="FAQContainer"  style="height: 290px; margin-bottom: 5px; overflow:auto;_width: 187px;">
 			<div class="UICategories">
 				<%
-		     if(uicomponent.parentCateID_ != null || (uicomponent.parentCateID_ == null && uicomponent.categoryId_ != null)){%>
+		     if(uicomponent.parentCateID_ != null){%>
 		       <div>
 		         <div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
 			        <a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">

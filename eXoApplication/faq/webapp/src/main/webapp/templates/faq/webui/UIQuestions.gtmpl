@@ -7,6 +7,7 @@
 	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.webui.FAQUtils;
 	import org.exoplatform.faq.service.FileAttachment;
+	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 	
 	String compId = uicomponent.getId(); 
 	def rcontext = _ctx.getRequestContext();
@@ -333,6 +334,7 @@
 				<!-- ============================================== View Question which is selected ===================================== -->
 				<%} else {
 						List listQuestLanguage = uicomponent.getQuestionLangauges(question);
+						SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 						questionContent = question.getQuestion();
 						String responseBy = "..." ;
 						String date = "..." ;
@@ -358,10 +360,9 @@
 														<div class="ProfileContainer">
 														<%
 															if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-																String imgUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
 														%>				
 															<div class="AvatarContainer">
-																<div class="ImageAvatar"><img width="63" src="$imgUrl" alt="Avatar"/></div>
+																<div class="ImageAvatar"><img width="63" src="<%=uicomponent.getAvatarUrl(question.getAuthor(), sessionProvider)%>" alt="Avatar"/></div>
 															</div>
 														<%}%>
 														<!-- view author's infor -->
@@ -568,39 +569,38 @@
 																				</div>
 																					
 																					<!-- ===================================== view answer bottom =============================== -->
-																					<%
-																						if(uicomponent.canEditQuestion){
-																							 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action.AddAnswerQuestion"); 
-																							 String link = uicomponent.event("ResponseQuestion", question.getId());
-																					%>
-																							<div class="UIAction" align="center" style="padding:2px;"> 
-																								<table class="ActionContainer" align="center">
-																									<tr>
-																										<td align="center">
-																												<a href="$link" class="ActionButton LightBlueStyle">
-																													<div class="ButtonLeft">
-																														<div class="ButtonRight">
-																															<div class="ButtonMiddle"> $actionLabel </div>
-																														</div>
-																													</div>
-																												</a>
-																						<%
-																								actionLabel = _ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion"); 
-																								link = uicomponent.event("CommentQuestion", question.getId());
-																						%>
-																												<a href="$link" class="ActionButton LightBlueStyle">
-																													<div class="ButtonLeft">
-																														<div class="ButtonRight">
-																															<div class="ButtonMiddle"> $actionLabel </div>
-																														</div>
-																													</div>
-																												</a>
-																										</td>
-																									</tr>
-																								</table> 
-																							</div>
+																				<%
+																				if(uicomponent.currentUser_ != null){
+																				%>
+																					<div class="UIAction" align="center" style="padding:2px;"> 
+																						<table class="ActionContainer" align="center">
+																							<tr>
+																								<td align="center">
+																								<%
+																									if(uicomponent.canEditQuestion){
+																										 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action.AddAnswerQuestion"); 
+																										 String link = uicomponent.event("ResponseQuestion", question.getId());
+																								%>
+																										<a href="$link" class="ActionButton LightBlueStyle">
+																											<div class="ButtonLeft">
+																												<div class="ButtonRight">
+																													<div class="ButtonMiddle"> $actionLabel </div>
+																												</div>
+																											</div>
+																										</a>
+																								<%}%>
+																										<a href="<%=uicomponent.event("CommentQuestion", question.getId())%>" class="ActionButton LightBlueStyle">
+																											<div class="ButtonLeft">
+																												<div class="ButtonRight">
+																													<div class="ButtonMiddle"> <%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%> </div>
+																												</div>
+																											</div>
+																										</a>
+																									</td>
+																								</tr>
+																							</table> 
+																						</div>
 																					<%}%>
-																						
 																					<!-- action of this question -->
 																					<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none; left:50px;">
 																						<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
@@ -726,10 +726,9 @@
 																					<div class="ProfileContainer">
 																						<%
 																						if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-																							String imgUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
 																						%>				
 																						<div class="AvatarContainer" style="margin-top:0px;">
-																							<div class="ImageAvatar"><img width="63" src="$imgUrl" alt="Avatar"/></div>
+																							<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy(), sessionProvider)%>" width="63px" alt="Avatar"/></div>
 																						</div>
 																						<%}%>
 																						<div class="AuthorInfor" align="center">
@@ -937,11 +936,11 @@
 																			<div style="padding:10px 0px">
 																				<div class="ProfileContainer">
 																					<%
+																					System.out.println("\n\n\n\n------------> start view comment avatar");
 																					if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-																						String imgUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
 																					%>				
 																					<div class="AvatarContainer" style="margin-top:0px;">
-																						<div class="ImageAvatar"><img width="63" src="$imgUrl" alt="Avatar"/></div>
+																						<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy(), sessionProvider)%>" width="63" alt="Avatar"/></div>
 																					</div>
 																					<%}%>
 																					<div class="AuthorInfor" align="center">
@@ -951,7 +950,7 @@
 																					</div>
 																				</div>
 																			</div>
-																			
+																			<%System.out.println("\n\n\n\n------------> finish view comment avatar");%>
 																		</div>
 																		<div class="ResponseItemContainerRight">
 																			<%=comment.getComments()%>
@@ -1167,7 +1166,9 @@
 								</div>
 							
 						</div>
-					<%}%>
+					<%
+					sessionProvider.close();
+					}%>
 		<%		questionId ++ ;
 				}
 		%>

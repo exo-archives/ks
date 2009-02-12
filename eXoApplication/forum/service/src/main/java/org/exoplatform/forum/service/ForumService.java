@@ -912,4 +912,6 @@ public interface ForumService {
   public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception;
   public void updateStatisticCounts(long topicCoutn, long postCount) throws Exception  ;
   public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception;
+  public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception;
+  public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception;
 }
