@@ -1,12 +1,33 @@
 .UIForumPortlet {
 	min-height: 470px;
 	padding-bottom: 20px;
+	background: white;
+	border: 1px solid #b7b7b7;
+	margin: 7px;
 }
 
 *html .UIForumPortlet {
 	height: 470px;
 }
 
+.UIMaskWorkspace .UIForumPortlet {
+	min-height: 10px;
+	padding: 0px;
+	background: white;
+	margin: 0px;
+}
+
+.UIMaskWorkspace .UIForumPortlet .UIMoveTopicForm {
+	padding: 0px 10px;
+}
+
+.UIMaskWorkspace .UIForumPortlet .UIMovePostForm .UITree {
+	height: 215px;
+}
+
+.UIMaskWorkspace .UIForumPortlet .UIMovePostForm .NodeLabel {
+	line-height: 20px;
+}
 /**************************** UIQuickSearchForm **************************/
 .UIForumPortlet .UIQuickSearchForm .SearchForm {
 	padding: 3px 10px 0px 0px;
@@ -246,7 +267,6 @@
 .UIForumPortlet .ContentContainer .UIGrid th {
 	background: url(background/ForumTitleBar1x19.gif) repeat-x;
 	border: 1px solid #d2d4dc;
-	padding: 0px;
 }
 
 .UIForumPortlet .ContentContainer .UIGrid td {

@@ -16,6 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
@@ -24,9 +29,11 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.RequestContext;
+import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -51,6 +58,8 @@ public class UIForumPortlet extends UIPortletApplication {
 	private UserProfile userProfile = null;
 	private boolean enableIPLogging = false;
 	private boolean enableBanIP = false;
+	private List<String>invisibleForums = new ArrayList<String>();
+	private List<String>invisibleCategories = new ArrayList<String>();
 	public UIForumPortlet() throws Exception {
 		addChild(UIBreadcumbs.class, null, null) ;
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
@@ -61,13 +70,36 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 		loadPreferences();
 	}
-//
-//	@Override
-//	public void processDecode(WebuiRequestContext context) throws Exception {
-//		String objId = context.getRequestParameter(OBJECTID) ; 
-////		System.out.println("\n\n"+objId);
-//		super.processDecode(context);
-//	}
+	
+	 public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
+		 PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
+		 if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+	    	if(getChild(UIBreadcumbs.class) ==  null) {
+	    		if(getChild(UISettingEditModeForm.class) != null)
+	    			removeChild(UISettingEditModeForm.class);
+		    	addChild(UIBreadcumbs.class, null, null) ;
+		  		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
+		  		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
+		  		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
+		  		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
+		  		addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered) ;
+	    	}
+	    }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+	    	if(getChild(UISettingEditModeForm.class) == null) {
+	    		UISettingEditModeForm editModeForm = addChild(UISettingEditModeForm.class, null, null);
+	    		editModeForm.setUserProfile(getUserProfile());
+	    		if(getChild(UIBreadcumbs.class) != null) {
+		    		removeChild(UIBreadcumbs.class) ;
+		    		removeChild(UICategoryContainer.class) ;
+		    		removeChild(UIForumContainer.class) ;
+		    		removeChild(UITopicsTag.class) ;
+		    		removeChild(UISearchForm.class) ;
+		    		removeChild(UIForumLinks.class);
+	    		}
+	    	}
+	    }
+	    super.processRender(app, context) ;
+	 }
 	
 	public void updateIsRendered(String selected) throws Exception {
 		if(selected == ForumUtils.CATEGORIES) {
@@ -110,18 +142,36 @@ public class UIForumPortlet extends UIPortletApplication {
 		try {
 			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
 			enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
+			invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ""))) ;
+			invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", ""))) ;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	private List<String> getListInValus(String value) throws Exception {
+		List<String>list = new ArrayList<String>();
+		if(!ForumUtils.isEmpty(value)) {
+			list.addAll(Arrays.asList(ForumUtils.addStringToString(value, value)));
+		}
+		return list;
+	}
 		
-	public boolean isEnableIPLogging() {
-  	return enableIPLogging;
+	public List<String> getInvisibleForums() {
+  	return invisibleForums;
   }
 	
-	public boolean isEnableBanIp() {
-  	return enableBanIP;
+	public List<String> getInvisibleCategories() {
+  	return invisibleCategories;
   }
+
+	public boolean isEnableIPLogging() {
+		return enableIPLogging;
+	}
+	
+	public boolean isEnableBanIp() {
+		return enableBanIP;
+	}
 
 	public void renderPopupMessages() throws Exception {
 		UIPopupMessages popupMess = getUIPopupMessages();

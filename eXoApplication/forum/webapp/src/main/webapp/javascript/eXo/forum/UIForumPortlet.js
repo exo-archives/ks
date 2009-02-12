@@ -693,6 +693,20 @@ UIForumPortlet.prototype.createLink = function(cpId) {
 	}
 } ;
 
+UIForumPortlet.prototype.checkedNode = function(elm) {
+  var input = elm.getElementsByTagName("input")[0];
+  var DOMUtil = eXo.core.DOMUtil;
+  var parentNode = DOMUtil.findAncestorByClass(input,"Node") ;
+  var containerChild = DOMUtil.findFirstDescendantByClass(parentNode, "div", "ChildNodeContainer");
+  if(containerChild) {
+  	var checkboxes = containerChild.getElementsByTagName("input");
+  	for(var i = 0; i < checkboxes.length; ++i){
+  		if(input.checked)checkboxes[i].checked = true;
+  		else checkboxes[i].checked = false;
+  	}
+  }
+} ;
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
 
 eXo.forum.CheckBox = {

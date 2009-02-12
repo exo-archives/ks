@@ -138,6 +138,12 @@ public class UICategory extends UIForm	{
 		return this.category ;
 	}
 	
+	@SuppressWarnings("unused")
+	private boolean isShowForum(String id) {
+		if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums().contains(id)) return false;
+		else return true;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private List<Forum> getForumList() throws Exception {
 		if(this.isEditForum) {
@@ -154,14 +160,17 @@ public class UICategory extends UIForm	{
 			this.isEditForum = false ;
 			this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
 		}
+		List<Forum> listForum = new ArrayList<Forum>(); 
 		for(Forum forum : this.forums) {
-			if(getUIFormCheckBoxInput(forum.getId()) != null) {
-				getUIFormCheckBoxInput(forum.getId()).setChecked(false) ;
+			String forumId = forum.getId();
+			if(getUIFormCheckBoxInput(forumId) != null) {
+				getUIFormCheckBoxInput(forumId).setChecked(false) ;
 			}else {
-				addUIFormInput(new UIFormCheckBoxInput(forum.getId(), forum.getId(), false) );
+				addUIFormInput(new UIFormCheckBoxInput(forumId, forumId, false) );
 			}
+			if(isShowForum(forumId)) listForum.add(forum);
 		}
-		return this.forums;
+		return listForum;
 	}
 	
 	public void setIsEditCategory(boolean isEdit) {

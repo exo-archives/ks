@@ -336,4 +336,31 @@ public class ForumUtils {
 		return Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
 	}
 	
+	public static void savePortletPreference(String listCategoryId, String listForumId) throws Exception {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		portletPref.setValue("invisibleCategories", listCategoryId);
+		portletPref.setValue("invisibleForums", listForumId);
+		portletPref.store();
+  }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

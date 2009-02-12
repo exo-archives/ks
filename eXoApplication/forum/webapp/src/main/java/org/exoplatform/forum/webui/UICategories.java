@@ -104,7 +104,18 @@ public class UICategories extends UIContainer	{
 	public Map<String, Forum> getAllForum() { 
 		return AllForum ;
 	}
-		
+	
+	@SuppressWarnings("unused")
+  private boolean isShowCategory(String id) {
+		if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().contains(id)) return false;
+		else return true;
+	}
+
+	private boolean isShowForum(String id) {
+		if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums().contains(id)) return false;
+		else return true;
+	}
+	
 	private List<Category> getCategoryList() throws Exception {
 		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
@@ -141,12 +152,14 @@ public class UICategories extends UIContainer	{
 		}
 		mapListForum.put(categoryId, forumList) ;
 		String forumId ;
+		List<Forum> listForum = new ArrayList<Forum>(); 
 		for (Forum forum : forumList) {
 			forumId = forum.getId() ;
 			if(AllForum.containsKey(forumId)) AllForum.remove(forumId) ;
 			AllForum.put(forumId, forum) ;
+			if(isShowForum(forumId)){listForum.add(forum);}
 		}
-		return forumList;
+		return listForum;
 	}
 	
 	private Forum getForumById(String categoryId, String forumId) throws Exception {

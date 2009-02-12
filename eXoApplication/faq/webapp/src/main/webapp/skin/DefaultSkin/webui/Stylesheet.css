@@ -1519,6 +1519,11 @@
 	padding: 10px 14px 9px 4px;
 }
 
+.UIFAQPortlet .DiscussForum {
+	background: url('background/DiscussForum.gif') no-repeat left center;
+	padding: 10px 14px 9px 4px;
+}
+
 .UIFAQPortlet .WatchQuestionManager {
 	background: url('background/FAQYey.gif') no-repeat left center;
 	padding: 10px 14px 9px 4px;

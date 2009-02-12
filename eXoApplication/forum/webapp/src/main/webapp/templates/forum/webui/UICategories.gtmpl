@@ -37,9 +37,10 @@
 		<%
 			List categories = uicomponent.getCategoryList();
 			  for(category in categories) {
+				  String categoryId = category.getId();
+			  	if(!uicomponent.isShowCategory(categoryId)) continue ;
 				  if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
 					  String title = category.getCategoryName();
-					  String categoryId = category.getId();
 						if(uicomponent.userProfile.getUserRole() < 3){
 							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
 						} else {

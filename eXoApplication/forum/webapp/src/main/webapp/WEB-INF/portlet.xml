@@ -17,6 +17,7 @@
 		<supports>
 			<mime-type>text/html</mime-type>
 			<portlet-mode>help</portlet-mode>
+			<portlet-mode>edit</portlet-mode>
 		</supports>
 		<supported-locale>en</supported-locale>
 		<resource-bundle>locale.portlet.forum.ForumPortlet</resource-bundle>
@@ -38,6 +39,18 @@
 				<value>true</value> <!--true/false -->
 				<read-only>false</read-only>
 			</preference>
+			
+			<preference>
+				<name>invisibleCategories</name>
+				<value></value> <!--id categories -->
+				<read-only>false</read-only>
+			</preference>
+		 	<preference>
+				<name>invisibleForums</name>
+				<value></value> <!--id forums -->
+				<read-only>false</read-only>
+			</preference> 
+
 		</portlet-preferences>
 
 	</portlet>
