@@ -471,6 +471,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				String path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
+				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
 				link = link.replaceFirst("OBJECTID", path);
 				link = url + link;
 				question_.setLink(link) ;
@@ -486,6 +487,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					if(faqSetting.getIsDiscussForum()) {
 						String pathTopic = question_.getPathTopicDiscuss();
 						if(pathTopic != null && pathTopic.length() > 0) {
+							linkForum = linkForum.replaceFirst("OBJECTID", pathTopic);
+							linkForum = url + linkForum;
 							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 							String []ids = pathTopic.split("/");
 							Post post;
@@ -502,6 +505,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 											post.setIcon("ViewIcon");
 											question_.getAnswers()[i].setPostId(post.getId());
 											post.setMessage(question_.getAnswers()[i].getResponses());
+											post.setLink(linkForum);
 											forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
 										}else {
 											post.setMessage(question_.getAnswers()[i].getResponses());
@@ -513,6 +517,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 										post.setName("Re: " + question_.getQuestion());
 										post.setIcon("ViewIcon");
 										post.setMessage(question_.getAnswers()[i].getResponses());
+										post.setLink(linkForum);
 										forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
 										question_.getAnswers()[i].setPostId(post.getId());
 									}

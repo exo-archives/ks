@@ -171,33 +171,34 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				String path = "" ;
 				if(FAQUtils.isFieldEmpty(commentForm.question_.getId())) path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;
 				else path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;
+				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
 				link = link.replaceFirst("OBJECTID", path);
 				link = url + link;
+				
 				commentForm.question_.setLink(link) ;
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(comment != null && comment.trim().length() > 0 && validatorDataInput.fckContentIsNotEmpty(comment)){
 					commentForm.comment.setComments(comment);
-					
-					if(commentForm.isAddNew) {
-						Post post = new Post();
-						String pathTopic = commentForm.question_.getPathTopicDiscuss();
-						if(pathTopic != null && pathTopic.length() > 0) {
+					String pathTopic = commentForm.question_.getPathTopicDiscuss();
+					if(pathTopic != null && pathTopic.length() > 0) {
+						linkForum = linkForum.replaceFirst("OBJECTID", pathTopic);
+						linkForum = url + linkForum;
+						if(commentForm.isAddNew) {
+							Post post = new Post();
 							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 							String []ids = pathTopic.split("/");
 							post.setOwner(commentForm.currentUser_);
 							post.setIcon("ViewIcon");
 							post.setName("Re: " + commentForm.question_.getQuestion());
 							post.setMessage(comment);
+							post.setLink(linkForum);
 							try {
 								forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
-              } catch (Exception e) {
+	            } catch (Exception e) {
 	              e.printStackTrace();
-              }
-						}
-						commentForm.comment.setPostId(post.getId());
-					} else {
-						String pathTopic = commentForm.question_.getPathTopicDiscuss();
-						if(pathTopic != null && pathTopic.length() > 0) {
+	            }
+							commentForm.comment.setPostId(post.getId());
+						} else {
 							String postId = commentForm.comment.getPostId();
 							if(postId != null && postId.length() > 0) {
 								ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
@@ -212,6 +213,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 										post.setIcon("ViewIcon");
 										post.setName("Re: " + commentForm.question_.getQuestion());
 										commentForm.comment.setPostId(post.getId());
+										post.setLink(linkForum);
 									}else{
 										post.setModifiedBy(commentForm.currentUser_);
 									}

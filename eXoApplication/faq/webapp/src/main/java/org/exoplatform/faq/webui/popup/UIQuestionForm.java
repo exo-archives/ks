@@ -28,7 +28,6 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -61,7 +60,6 @@ import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 /**
@@ -567,7 +565,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 			link = link.replaceFirst("OBJECTID", path);
 			link = url + link;
       question_.setLink(link) ;
-      
       try{
         FAQUtils utils = new FAQUtils();
         boolean isNew = true;

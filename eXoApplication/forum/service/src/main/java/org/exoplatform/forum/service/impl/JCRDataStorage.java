@@ -1381,7 +1381,9 @@ public class JCRDataStorage {
 				}
 				newProfileNode.setProperty("exo:totalTopic", 1);
 			}
-			userProfileNode.getSession().save();
+			if(userProfileNode.isNew())
+				userProfileNode.getSession().save();
+			else userProfileNode.save();
 			sendNotification(forumHomeNode, forumNode, topic, null, defaultEmailContent, true);
 		} else {
 			topicNode = forumNode.getNode(topic.getId());

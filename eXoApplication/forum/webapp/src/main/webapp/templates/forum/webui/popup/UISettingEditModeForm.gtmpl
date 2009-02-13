@@ -6,7 +6,7 @@
 
 <div class="UIMovePostForm UIMoveTopicForm">
 	<% uiform.begin() %>
-	<div class="TitleMoveThreads"><%=_ctx.appRes("UISelectItemForum.label.ChooseDestinationForum");%>:</div>
+	<div class="TitleMoveThreads"><%=_ctx.appRes("UIForumPortlet.label.ChooseCategory-Forum");%>:</div>
 	<div class="UITree ScrollArea">
 		<div class="TreeContainer ParentNode">
 		<% 

@@ -424,6 +424,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewThread");	
 				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topic.getId())) ;
 				link = url + link;
+				System.out.println("\n\n Link by FAQ: " + link);
 				//
 				UserProfile userProfile = forumPortlet.getUserProfile();
 				String userName = userProfile.getUserId() ;
