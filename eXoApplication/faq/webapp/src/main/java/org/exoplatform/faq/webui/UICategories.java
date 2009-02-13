@@ -79,7 +79,7 @@ public class UICategories extends UIContainer{
 	private boolean isSwap = false;
 	public boolean isBack = false;
 	private String currentName = "";
-	private String pathCategory = "";
+	private boolean viewBackIcon = false;
 	private List<Category> listCate = new ArrayList<Category>() ;
 	private List<String> listCateId_ = new ArrayList<String>() ;
 	private List<Boolean> categoryModerators = new ArrayList<Boolean>() ;
@@ -211,7 +211,11 @@ public class UICategories extends UIContainer{
 			List<Category> newList = new ArrayList<Category>();
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			newList = faqService_.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
-			if(newList.isEmpty()) newList = faqService_.getSubCategories(this.parentCateID_, sessionProvider, faqSetting_);
+			viewBackIcon = true;
+			if(newList.isEmpty()) {
+				newList = faqService_.getSubCategories(this.parentCateID_, sessionProvider, faqSetting_);
+				viewBackIcon = false;
+			}
 			if(categoryId_ != null) currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
 			else currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
@@ -467,6 +471,7 @@ public class UICategories extends UIContainer{
 					return ;
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				//question.setIsNotChangeLanguage();
@@ -488,14 +493,18 @@ public class UICategories extends UIContainer{
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
 				Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
+				String parentCateId = null;
+				if(uiCategories.categoryId_ != null && uiCategories.parentCateID_ == null && uiCategories.viewBackIcon)
+					parentCateId = uiCategories.categoryId_;
+				else parentCateId = uiCategories.parentCateID_;
 				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-					if (uiCategories.faqService_.getCategoryNodeById(uiCategories.parentCateID_, sessionProvider).hasNode(categoryId)) {
+					if (uiCategories.faqService_.getCategoryNodeById(parentCateId, sessionProvider).hasNode(categoryId)) {
 						UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,550) ;	
 						uiPopupContainer.setId("FAQEditSubCategoryForm") ;
 						UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 						categoryForm.init(false) ;
 						//String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
-						categoryForm.setParentId(uiCategories.parentCateID_) ;
+						categoryForm.setParentId(parentCateId) ;
 						categoryForm.setCategoryValue(categoryId, true) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 					} else {

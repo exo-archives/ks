@@ -56,7 +56,8 @@
 		<div class="FAQContainer"  style="height: 290px; margin-bottom: 5px; overflow:auto;_width: 187px;">
 			<div class="UICategories">
 				<%
-		     if(uicomponent.parentCateID_ != null){%>
+		     if(uicomponent.parentCateID_ != null || 
+		     		(uicomponent.parentCateID_ == null && uicomponent.categoryId_ != null && uicomponent.viewBackIcon)){%>
 		       <div>
 		         <div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
 			        <a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
@@ -171,11 +172,6 @@
 			</div>
 			</div>
 		</div>
-	<%
-		if(uicomponent.pathCategory != null && uicomponent.pathCategory.trim().length() > 0) {
-	  	rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.FAQViewAllBranch('"+uicomponent.pathCategory+"');");
-	  }
-	%>
 	<!--
 	<div>
 		<div class="FAQToolbar">
