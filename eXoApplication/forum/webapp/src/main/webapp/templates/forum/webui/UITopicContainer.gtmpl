@@ -703,16 +703,16 @@
 	                <div class="MiddleLeftRightClickPopupMenu">
                         <div class="MiddleRightRightClickPopupMenu">
 	                                <div class="UIRightPopupMenuContainer">
-                                       <div class="MenuItem AddBookmark">
-                                          <a class="ItemIcon AddLinkToBookIcon">
+                                       <div class="ItemIcon AddLinkToBookIcon">
+                                          <a class="MenuItem AddBookmark" href="">
                                             <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
                                           </a>
 	                                     </div>
-	                                     <div class="MenuItem AddWatching">
-                                          <a href="" class="ItemIcon AddWatchingIcon">
+	                                     <div class="ItemIcon AddWatchingIcon">
+                                          <a href="" class="MenuItem AddWatching">
                                              <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
 	                                        </a>
-                                        </div>
+                                       </div>
 	                                </div>
 	                        </div>
  	                </div>

@@ -33,13 +33,11 @@
 													link = uicomponent.event("SelectTab",""+i) ;
 												}
 									%>	
-										<div class="UITab NormalTabStyle" style="border:solid 1px red">dfsfsfsf
+										<div class="UITab NormalTabStyle">
 											<div class="$classCss">
 												<div class="LeftTab">
 													<div class="RightTab">
-														<a href="$link">
-															<div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
-														</a>
+															<div class="MiddleTab" onclick="$link"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>													
 													</div>
 												</div>
 											</div>
@@ -67,11 +65,11 @@
 										<center>
 											<div style="width:400px;">
 												<div class="UIQuickSearchForm" style="padding-bottom:10px;">
-													<div style="float: left;">
+													<div style="float:left;">
 														<%=_ctx.appRes("UIForumAdministrationForm.label.Filter")%>: &nbsp;
 														<% uiform.renderField(tabconten.getChildById(uicomponent.SEARCH_IP_BAN)) ;%>
 													</div>
-													<div style="clear: left;"><span></span></div>
+													<div style="clear:left;"><span></span></div>
 												</div>
 												<table class="UIGrid" width="100%">
 													<tbody>
@@ -106,7 +104,7 @@
 																	[<a href="<%=uicomponent.event("Posts", ip)%>">
 																			<%=_ctx.appRes("UIForumAdministrationForm.label.Posts")%>
 																	 </a>]&nbsp;
-																	[<a style="color: red;" href="$unBanLink">
+																	[<a style="color:red;" href="$unBanLink">
 																			X
 																	 </a>]
 															</td>
@@ -129,7 +127,9 @@
 											<div style="float:left; white-space:nowrap; width:95%;">
 												<%uiform.renderChild(tabconten.id) ;%>
 											</div>
-											<a href="$linkReset" title="$titleReset"><div class="Refresh"><span></span></div></a>
+											<a href="$linkReset" title="$titleReset">
+											<div class="Refresh"><span></span></div>
+											</a>
 											<div style="clear:left;"><span></span></div>
 									<%} else {
 											uiform.renderChild(tabconten.id) ; 
@@ -165,13 +165,17 @@
 															 String actionLabel = _ctx.appRes("UIForumAdministrationForm.action.Run"); 
 															 String link = uiform.event("Run") ;
 														%>
-															 <a href="$link" class="ActionButton LightBlueStyle">
+															 <div onclick="$link" class="ActionButton LightBlueStyle">
 																 <div class="ButtonLeft">
 																	 <div class="ButtonRight">
-																	 	 <div class="ButtonMiddle">$actionLabel</div>
+																	 	 <div class="ButtonMiddle">
+																		 	 <a href="javascript:void(0);">
+																		 	 $actionLabel
+																		 	 </a>
+																	 	 </div>
 																	 </div>
 																 </div>
-															 </a>
+															 </div>
 														 </td>
 													</tr>
 										 		</table> 
@@ -190,7 +194,6 @@
 						</div>
 					</div>
 				</div>
-				
 			</div>	
 		</div>	
 	</div>
@@ -206,13 +209,17 @@
 						String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
 						String link = uiform.event(action) ;
 				%>
-					<a href="$link" class="ActionButton LightBlueStyle">
+					<div onclick="$link" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle">$actionLabel</div>
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">
+									$actionLabel
+									</a>
+								</div>
 							</div>
 						</div>
-					</a>
+					</div>
 				<%}%>
 				</td>
 			</tr>

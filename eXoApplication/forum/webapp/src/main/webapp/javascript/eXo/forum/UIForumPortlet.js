@@ -604,8 +604,8 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	for(var i = 0; i < popupContents.length; i++){
 		var action = popupContents[i].getAttribute('action');
 		if(action.indexOf(";") < 0){
-			itemmenuWatching.style.display ="none";
 			itemmenuBookMark.href= action ;
+			itemmenuWatching.parentNode.style.display ="none";
 		} else {
 			var actions = action.split(";");
 			itemmenuBookMark.href= actions[0] ;

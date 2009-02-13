@@ -39,13 +39,17 @@
 					 String onclick = "" ;
 					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
 				%>
-						<a href="$link" class="ActionButton LightBlueStyle">
+						<div onclick="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft" onclick="$onclick">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle">$actionLabel</div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">
+										$actionLabel
+										</a>
+									</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					<%}%>
 					</td>
 				</tr>

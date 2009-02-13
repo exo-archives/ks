@@ -151,13 +151,17 @@
             	</div>
           	</div>
         	</a>
-        	<a href="#" class="ActionButton LightBlueStyle">
+        	<div onclick="#" class="ActionButton LightBlueStyle">
       	  	<div class="ButtonLeft">
         	  	<div class="ButtonRight">
-          	  	<div class="ButtonMiddle">Close</div>
+          	  	<div class="ButtonMiddle">
+	          	  	<a href="javascript:void(0);">
+	          	  	Close
+	          	  	</a>
+          	  	</div>
               </div>
             </div>
-          </a>
+          </div>
   			</td>
 			</tr>
  	  </table>

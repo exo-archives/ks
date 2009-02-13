@@ -66,13 +66,17 @@
 					 String link = uicomponent.event(action) ;
 					 actionLabel.trim();
 				%>
-				<a href="$link" class="ActionButton LightBlueStyle">
+				<div onclick="$link" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle">$actionLabel</div>
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">
+									$actionLabel
+									</a>
+								</div>
 							</div>
 						</div>
-					</a>
+					</div>
 			<%}%>
 			</td>
 			</tr>

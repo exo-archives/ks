@@ -6,6 +6,10 @@
 	margin: 7px;
 }
 
+.UIForumPortlet a {
+	display: block;
+}
+
 *html .UIForumPortlet {
 	height: 470px;
 }
