@@ -633,7 +633,7 @@
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
-									avatarUrl = uiform.getAvatarUrl(contact, sessionProvider) ;
+									avatarUrl = uiform.getAvatarUrl(contact, post.getOwner(), sessionProvider) ;
 									String idAv = "avatar" + nb;
 									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
 									 ++nb;

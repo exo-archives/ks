@@ -371,7 +371,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(ForumContact contact, SessionProvider sessionProvider) throws Exception {
+	private String getAvatarUrl(ForumContact contact, String userId, SessionProvider sessionProvider) throws Exception {
 //		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 //		try {
 //			ContactAttachment attachment = contact.getAttachment() ; 
@@ -382,7 +382,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 //			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //		}
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, sessionProvider, dservice);
+		String url = ForumSessionUtils.getUserAvatarURL(userId, this.forumService, sessionProvider, dservice);
 		if(url == null || url.trim().length() < 1){
 			if (contact.getAvatarUrl() == null ) {
 				url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
