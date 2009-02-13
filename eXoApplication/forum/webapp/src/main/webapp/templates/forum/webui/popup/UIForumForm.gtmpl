@@ -49,9 +49,9 @@
 											<div class="$classCss">
 												<div class="LeftTab">
 													<div class="RightTab">
-													<a href="$link">
-														<div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
-													</a>
+														<div onclick="$link">
+															<div class="MiddleTab"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -74,7 +74,7 @@
 										if(uiform.getIsSelected(j))display =	"block";
 										else display = "none";
 								%>
-								<div style="display: $display;" id="UITabContent" class="UITabContent">
+								<div style="display:$display;" id="UITabContent" class="UITabContent">
 									<% uiform.renderChild(tabconten.id) ; %>
 								</div>
 							<% ++j;} %>
@@ -99,7 +99,7 @@
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
 										<a href="javascript:void(0);">
-										$actionLabel
+											$actionLabel
 										</a>
 									</div>
 								</div>

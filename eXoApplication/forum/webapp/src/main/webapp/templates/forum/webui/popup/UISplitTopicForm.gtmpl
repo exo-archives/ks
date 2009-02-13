@@ -10,20 +10,20 @@
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 %>
-<div class="UISplitTopicForm" style="padding: 10px;">
+<div class="UISplitTopicForm" style="padding:10px;">
 	<% uiform.begin() %>
 	<table class="ActionContainer" align="center">
 		<tr>
 			<td width="150px;" align="right">
-				<div class="label">	<%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%> :</div>
+				<div class="label"><%=_ctx.appRes(uiform.getName() + ".label.ParentThreadName");%> :</div>
 			</td>
 			<td>
-				<div class="label"> <strong><%=topic.getTopicName();%></strong> <div class="label">
+				<div class="label"><strong><%=topic.getTopicName();%></strong> <div class="label">
 			</td>
 		</tr>
 		<tr>
 			<td width="150px;" align="right">
-				<div class="label"> <%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>:</div>
+				<div class="label"><%=_ctx.appRes(uiform.getName() + ".label." + uiform.FIELD_SPLITTHREAD_INPUT);%>:</div>
 			</td>
 			<td>
 				<%uiform.renderChild(uiform.FIELD_SPLITTHREAD_INPUT);%>
@@ -31,18 +31,18 @@
 		</tr>
  	</table> 
 	<div class="ListPost">
-	  <div style="overflow:auto; margin: 2px 0px;">
+	  <div style="overflow:auto; margin:2px 0px;">
 			<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-			<div style="clear: right; height: 0px;"><span></span></div>
+			<div style="clear:right; height:0px;"><span></span></div>
 		</div>
 		<table class="UIGrid" border="0" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
 					<th width="30px"></th>
 					<th><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></th>
-					<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
-					<th width="80px"><%=_ctx.appRes("UIForumPortlet.label.CreatedBy");%></th>
-					<th width="40px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+					<th style="width:120px"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+					<th style="width:80px"><%=_ctx.appRes("UIForumPortlet.label.CreatedBy");%></th>
+					<th style="width:40px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -85,13 +85,17 @@
 					 String actionLabel = _ctx.appRes("UIAddTagForm.action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-				<a href="$link" class="ActionButton LightBlueStyle">
+				<div onclick="$link" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle">$actionLabel</div>
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">
+										$actionLabel
+									</a>
+								</div>
 							</div>
 						</div>
-					</a>
+					</div>
 				<%}%>
 				</td>
 			</tr>

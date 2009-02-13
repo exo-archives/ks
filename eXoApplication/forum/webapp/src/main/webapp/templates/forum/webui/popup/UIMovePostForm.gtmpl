@@ -34,7 +34,7 @@
 				<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
 		 		<div class="NodeSelected"><a>$categoryName</a></div> 
 				</div> 			
-				<div style="clear: left;"><span></span></div>
+				<div style="clear:left;"><span></span></div>
 				<div class="ChildNodeContainer ParentNode" style="$display">
 				<% 
 					for(forum in forums) {
@@ -60,7 +60,7 @@
 						<div class="NodeLabel"	onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'> 
 							<div><a>$forumName</a></div>
 						</div>
-						<div style="clear: left;"><span></span></div>
+						<div style="clear:left;"><span></span></div>
 						<div class="ChildNodeContainer" style="$display">
 							<%	
 								for(topic in topics) {
@@ -92,15 +92,17 @@
 			<tr>
 				<td align="center">
 				<% String link = uicomponent.event("Cancel") ; %>
-					<a href="$link" class="ActionButton LightBlueStyle">
+					<div onclick="$link" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
-									<%=_ctx.appRes("UIMoveForumForm.action.Cancel");%>
+									<a href="javascript:void(0);">
+										<%=_ctx.appRes("UIMoveForumForm.action.Cancel");%>
+									</a>
 								</div>
 							</div>
 						</div>
-					</a>
+					</div>
 				</td>
 			</tr>
  		</table> 

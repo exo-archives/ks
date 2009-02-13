@@ -60,13 +60,13 @@
 											if(uiform.getIsSelected(j))display =	"block";
 											else display = "none";
 								%>
-								<div style="display: $display;" id="UITabContent" class="UITabContent">
+								<div style="display:$display;" id="UITabContent" class="UITabContent">
 									<%if(tabconten.id.equals(uicomponent.IP_BAN_TAB)){%>
 										<center>
 											<div style="width:400px;">
 												<div class="UIQuickSearchForm" style="padding-bottom:10px;">
 													<div style="float:left;">
-														<%=_ctx.appRes("UIForumAdministrationForm.label.Filter")%>: &nbsp;
+														<%=_ctx.appRes("UIForumAdministrationForm.label.Filter")%>:&nbsp;
 														<% uiform.renderField(tabconten.getChildById(uicomponent.SEARCH_IP_BAN)) ;%>
 													</div>
 													<div style="clear:left;"><span></span></div>
@@ -117,7 +117,7 @@
 											<% 
 												uiform.renderChild(uiform.BAN_IP_PAGE_ITERATOR);
 											%>
-												<div style="clear: right;"><span></span></div>
+												<div style="clear:right;"><span></span></div>
 											</div>
 										</center>
 									<%}else if(tabconten.id.equals(uicomponent.FIELD_NOTIFYEMAIL_TAB)){

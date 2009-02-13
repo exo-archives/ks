@@ -29,11 +29,11 @@
 												<div class="$classCss">
 													<div class="LeftTab">
 														<div class="RightTab">
-																	<div class="MiddleTab">
-																	<a href="$link">
+															<div class="MiddleTab">
+																<a href="$link">
 																	<%=_ctx.appRes(uiform.id + ".label." + tabconten.id); %>
-																	</a>
-																	</div>
+																</a>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -42,7 +42,6 @@
 											i++ ;
 										}
 									%>
-										
 									</div>
 								</div>
 							</div>
@@ -58,7 +57,7 @@
 								if(uiform.tabIsSelected(j))display =	"block";
 								else {display = "none";}
 							%>
-									<div style="display: $display;" id="UITabContent" class="UITabContent">
+									<div style="display:$display;" id="UITabContent" class="UITabContent">
 										<% 
 											//uiform.renderChild(tabconten.id) ; 
 											tabconten.setRendered(true);
@@ -89,14 +88,14 @@
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-				<div onclick="$link" class="ActionButton LightBlueStyle">
-						
+						<div onclick="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><a href="javascript:void(0);">$actionLabel</a></div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">$actionLabel</a>
+									</div>
 								</div>
 							</div>
-						
 						</div>
 					<%}%>
 					</td>

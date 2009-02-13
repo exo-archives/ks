@@ -18,22 +18,34 @@
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
-					<div style="overflow:auto; margin: 2px 0px;">
+					<div style="overflow:auto; margin:2px 0px;">
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>
 					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
 							<tr>
-								<th width="40px"></th>
-								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div></a></th>
-								<th width="120px"><a href="<%=uicomponent.event("SetOrderBy","createdDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div></a></th>
+								<th style="width:40px"></th>
+								<th>
+									<div href="<%=uicomponent.event("SetOrderBy","name");%>">
+										<div class="DownArrow1Icon"  style="cursor:pointer">
+											<%=_ctx.appRes("UIPageListPostByUser.label.PostName");%>
+									</div>
+									</div>
+								</th>
+								<th width="120px">
+									<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
+										<div class="DownArrow1Icon" style="cursor:pointer">
+											<%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
+										</div>
+									</div>
+								</th>
 								<%if(isAdmin){ 
 								    if(isShowIP) {
 								%>
-									<th width="120px"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
+									<th style="width:120px; margin:0px auto;"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
 								<%  }%>
-									<th width="40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+									<th style="width:40px;"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
 								<%} %>
 							</tr>
 						</thead>
@@ -54,7 +66,9 @@
 									String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
 							%>
 								<tr class="$classRow">
-									<td class="Tdbox"><div class="ThreadStatusIcon $iconPost"><span></span></div></td>
+									<td class="Tdbox">
+										<div class="ThreadStatusIcon $iconPost"><span></span></div>
+									</td>
 									<td >
 										<div >
 											<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$titlePost" class="title">$postTitle</a>
@@ -71,10 +85,10 @@
 									String link_ = "javascript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost") + "'))" + uicomponent.event("DeletePostLink", post.getId());
 									%>
 										
-										<td class="Tdbox" align="center" style="padding-left:5px;">
-											<a href="$link_">
-												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
-											</a>
+										<td class="Tdbox">
+											<div onclick="$link_">
+												<div class="ItemIcon SetDeleteIcon" style="width:16px; height:16px; cursor:pointer;  margin:0 auto;"><span></span></div>
+											</div>
 										</td>
 									<%} %>
 					 			</tr>
@@ -83,7 +97,7 @@
 						 		%>
 						 			<tr>
 						 				<td colspan="5" align="center">
-						 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
+						 					<div style="margin:5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
 						 				</td>
 						 			</tr>
 						 		<%
@@ -93,7 +107,7 @@
 					</table>
 					<div style="overflow:auto;">
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>						
 				</div>
 			</div>

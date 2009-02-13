@@ -11,13 +11,13 @@
 	%>
 	<div id="UITabContent"  forumId="$forumId" class="UITabContent">
 	<center>
-		<div style="width: 400px; margin: auto;">
-			<div class="UIQuickSearchForm" style="padding: 10px 0px;">
-				<div style="float: left;">
-					<%=_ctx.appRes("UIForumAdministrationForm.label.Filter")%>: &nbsp;
+		<div style="width:400px; margin:auto;">
+			<div class="UIQuickSearchForm" style="padding:10px 0px;">
+				<div style="float:left;">
+					<%=_ctx.appRes("UIForumAdministrationForm.label.Filter")%>:&nbsp;
 					<% uiform.renderField(uicomponent.SEARCH_IP_BAN) ;%>
 				</div>
-				<div style="clear: left;"><span></span></div>
+				<div style="clear:left;"><span></span></div>
 			</div>
 			<table class="UIGrid" width="100%">
 				<tbody>
@@ -26,7 +26,7 @@
 						<th><span></span></th>
 					</tr>	
 					<tr background="#edf3ee">
-						<td class="FieldLabel" style="padding-left: 20px;">
+						<td class="FieldLabel" style="padding-left:20px;">
 							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;
 							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;
 							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT3) ;%>*&nbsp;
@@ -53,7 +53,7 @@
 								[<a href="<%=uicomponent.event("OpenPosts", ip)%>">
 										<%=_ctx.appRes("UIForumAdministrationForm.label.Posts")%>
 								 </a>]&nbsp;
-								[<a style="color: red;" href="$unBanLink">
+								[<a style="color:red;" href="$unBanLink">
 										X
 								 </a>]
 						</td>
@@ -62,11 +62,11 @@
 				</tbody>
 			</table>
 		</div>
-		<div style="overflow: auto; width: 400px;">
+		<div style="overflow:auto; width:400px;">
 		<% 
 			uiform.renderChild(uiform.BAN_IP_PAGE_ITERATOR);
 		%>
-			<div style="clear: right;"><span></span></div>
+			<div style="clear:right;"><span></span></div>
 		</div>
 	</center>
 	</div>
@@ -78,13 +78,17 @@
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-						<a href="$link" class="ActionButton LightBlueStyle">
+						<div onclick="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle">$actionLabel</div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">
+											$actionLabel
+										</a>
+									</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					<%}%>
 				</td>
 			</tr>

@@ -14,18 +14,18 @@
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
-					<div style="overflow:auto; margin: 2px 0px;">
+					<div style="overflow:auto; margin:2px 0px;">
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>
 					<table cellspacing="0" border="0" cellpadding="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
-								<th style="width: 50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.IsActive");%></th>
-								<th style="width: 66px;"><%=_ctx.appRes("UITopicDetail.label.LastPost");%></th>
-								<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Replies");%></th>
-								<th style="width: 80px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+								<th style="width:50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.IsActive");%></th>
+								<th style="width:66px;"><%=_ctx.appRes("UITopicDetail.label.LastPost");%></th>
+								<th style="width:40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Replies");%></th>
+								<th style="width:80px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -62,14 +62,14 @@
 								 	<td class="Tdbox" align="center"><div>$lastPostDate</div></td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">
-										<div class="ActionContainer" style="margin: 0px auto;">
+										<div class="ActionContainer" style="margin:0px auto;">
 											<div class="IconContent">
-												<a href="<%=uicomponent.event("ActiveTopic",topicId)%>" style="float: left;">
+												<div onclick="<%=uicomponent.event("ActiveTopic",topicId)%>" style="float:left; cursor:pointer;">
 													 <div class="Icon16x16 Topic${titleTp}Icon" title="$titleTp this Topic"><span></span></div>							
-												</a>
-												<a href="javascript:if(confirm('<%=_ctx.appRes("UITopicDetail.confirm.DeleteTopic");%>'))<%=uicomponent.event("DeleteTopic",topic.getPath())%>" style="float: left;">
+												</div>
+												<div onclick="javascript:if(confirm('<%=_ctx.appRes("UITopicDetail.confirm.DeleteTopic");%>'))<%=uicomponent.event("DeleteTopic",topic.getPath())%>" style="float:left; cursor:pointer;">
 													 <div class="Icon16x16 DeleteIcon" title="Delete this Thread"><span></span></div>							
-												</a>
+												</div>
 											</div>
 										</div>
 									</td>
@@ -79,7 +79,7 @@
 						 		%>
 						 		<tr>
 					 				<td colspan="5" align="center">
-					 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></b></div>
+					 					<div style="margin:5px 0px 10px 0px"><b><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></b></div>
 					 				</td>
 						 		</tr>
 					 		<%

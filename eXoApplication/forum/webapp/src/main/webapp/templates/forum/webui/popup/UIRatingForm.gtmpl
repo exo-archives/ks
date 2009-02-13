@@ -17,7 +17,7 @@
 				<div class="NormalVote" onclick="$onclick" title="$title"><span></span></div>
 			 <% i = i + 1;
 				 } %>
-				<div style="clear: left;"><span></span></div>
+				<div style="clear:left;"><span></span></div>
 			</div>
 		</div>
 			
@@ -25,15 +25,17 @@
 			<table align="center" class="ActionContainer">											 
 				<tr>
 					<td align="center">
-						<a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+						<div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<%=_ctx.appRes("UIRatingForm.action.Cancel"); %>
+										<a href="javascript:void(0);">
+											<%=_ctx.appRes("UIRatingForm.action.Cancel"); %>
+										</a>
 									</div>
 								</div>
 							</div>								
-						</a>
+						</div>
 					</td>
 				</tr>
 			</table>

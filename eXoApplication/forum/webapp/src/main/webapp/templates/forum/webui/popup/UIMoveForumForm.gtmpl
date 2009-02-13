@@ -17,10 +17,12 @@
 		%>
 			<div class="Node">
 			 	<div class="Icon CategoryNormalIcon"><span></span></div>
-			 	<div class="NodeLabel">
-			 		<div class="NodeSelected"><a href="$link">$categoryName</a></div>
-				</div>
-				<div style="clear: left;"><span></span></div>
+				 	<div class="NodeLabel">
+				 		<div class="NodeSelected">
+				 			<a href="$link">$categoryName</a>
+				 		</div>
+					</div>
+				<div style="clear:left;"><span></span></div>
 			</div>
 		<% } %>
 		 </div>
@@ -30,13 +32,17 @@
 		<table class="ActionContainer" align="center">
 			<tr>
 				<td align="center">
-					<a href="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+					<div onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></div>
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">
+										<%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%>
+									</a>
+								</div>
 							</div>
 						</div>
-					</a>
+					</div>
 				</td>
 			</tr>
  		</table>

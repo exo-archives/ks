@@ -6,18 +6,18 @@
 
 <div class="UIShowBookMarkForm">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="_width: 88%;">
-		  <div style="overflow: auto; padding-bottom: 2px;">
+		<div class="HorizontalLayout" style="_width:88%;">
+		  <div style="overflow:auto; padding-bottom:2px;">
 				<% 
 				  uiform.renderChild(uiform.BOOKMARK_ITERATOR);
 				%>
-				<div style="clear: right;"><span></span></div>
+				<div style="clear:right;"><span></span></div>
 			</div>
 			<table class="UIGrid">
 				<thead>
-					<th style="width: 35px;"></th>
+					<th style="width:35px;"></th>
 					<th><%=_ctx.appRes("UIShowBookMarkForm.label.linkName")%></th>
-					<th style="width: 40px;"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
+					<th style="width:40px;"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
 				</thead>
 				<tbody>
 					<%
@@ -39,12 +39,12 @@
 								//window.location.href=this.href;						
 					%>
 					<tr>
-						<td><div class="$icon" style="width: 24px;height: 24px;"><span></span></div></td>
+						<td><div class="$icon" style="width:24px;height:24px;"><span></span></div></td>
 						<td><a onmousedown="<%=uiform.event("OpenLink",linkPath);%>; return false;" href="$linkBm">$linkName</a></td>
 						<td>
-							<a href="<%=uiform.event("DeleteLink",links);%>">
+							<div onclick="<%=uiform.event("DeleteLink",links);%>" style="cursor:pointer; margin:0 auto; width:18px;">
 								<div class="DeleteIcon"><span></span></div>
-							</a>
+							</div>
 						</td>
 					</tr>
 					<%   }
@@ -60,13 +60,17 @@
 			<table class="ActionContainer" align="center">
 				<tr>
 					<td align="center">
-						<a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+						<div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><%=_ctx.appRes("UIShowBookMarkForm.label.Cancel");%></div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">
+											<%=_ctx.appRes("UIShowBookMarkForm.label.Cancel");%>
+										</a>
+									</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					</td>
 				</tr>
 	 		</table> 

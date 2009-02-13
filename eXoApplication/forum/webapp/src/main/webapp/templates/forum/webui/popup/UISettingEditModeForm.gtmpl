@@ -31,7 +31,7 @@
 			 	<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
 			 		<div class="NodeSelected"><a class="Cursor">$categoryName</a></div> 
 				</div> 			
-				<div style="clear: left;"><span></span></div>
+				<div style="clear:left;"><span></span></div>
 				<div class="ChildNodeContainer ParentNode" style="$display">
 				<% 
 					for(forum in forums) {
@@ -49,7 +49,7 @@
 						<div class="NodeLabel"> 
 							<div>$forumName</div>
 						</div>
-						<div style="clear: left;"><span></span></div>
+						<div style="clear:left;"><span></span></div>
 					</div>
 				<% } %>		
 				</div>
@@ -65,13 +65,17 @@
 				 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 				 String link = uicomponent.event(action) ;
 			%>
-					<a href="$link" class="ActionButton LightBlueStyle">
+					<div href="$link" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle"> $action</div>
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">
+										$action
+									</a
+								</div>
 							</div>
 						</div>
-					</a>
+					</div>
 				<%}%>
 				</td>
 			</tr>

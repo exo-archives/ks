@@ -14,18 +14,18 @@
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
-					<div style="overflow:auto; margin: 2px 0px;">
+					<div style="overflow:auto; margin:2px 0px;">
 						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>
 					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
 							<tr>
-								<th style="width: 40px;"></th>
-								<th style="width: 40px;"></th>
+								<th style="width:40px;"></th>
+								<th style="width:40px;"></th>
 								<th><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></th>
-								<th style="width: 50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Views");%></th>
-								<th style="width: 50px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+								<th style="width:50px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Views");%></th>
+								<th style="width:50px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -93,7 +93,7 @@
 					</table>
 					<div style="overflow:auto;">
 						<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>						
 				</div>
 			</div>
@@ -107,13 +107,17 @@
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-						<a href="$link" class="ActionButton LightBlueStyle">
+						<div onclick="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle">$actionLabel</div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">
+											$actionLabel
+										</a>
+										</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					<%}%>
 				</td>
 			</tr>

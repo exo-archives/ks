@@ -8,21 +8,21 @@
 	List sendmails = uicomponent.getPrivateMessageSendByUser() ;
 %>
 <div class="ForumMail Send" id="$uicomponent.id">
-	<div style="overflow:auto; margin: 2px 0px;">
+	<div style="overflow:auto; margin:2px 0px;">
 		<%
 			if(uicomponent.isRenderIterator()) {
 				uicomponent.renderChild(UIForumPageIterator.class) ; 
 		%>
-		  <div style="clear: right; height: 0px;"><span></span></div>
+		  <div style="clear:right; height:0px;"><span></span></div>
 		<% } %>
 	</div>
 	<table cellspacing="0" class="UIGrid" id="PermissionInfo" border="0" cellpadding="0">
 		<thead>
 			<tr>
 				<th><%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%></th>
-				<th width="120px"><%=_ctx.appRes("UIPrivateMessageForm.label.To");%></th>
-				<th width="120px"><%=_ctx.appRes("UIPrivateMessageForm.label.SendDate");%></th>
-				<th width="80px"><%=_ctx.appRes("UIPrivateMessageForm.label.Action");%></th>
+				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.To");%></th>
+				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.SendDate");%></th>
+				<th style="width:80px"><%=_ctx.appRes("UIPrivateMessageForm.label.Action");%></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -49,14 +49,14 @@
 				<td class="text">$fromUser</td>
 				<td class="text">$strFromDate</td>
 				<td>				 
-					<div class="ActionContainer" style="margin: 0px auto;">
+					<div class="ActionContainer" style="margin:0px auto; width:35px">
 						<div class="IconContent">
-							<a href="<%=uicomponent.event("ForwardMessage", mailId)%>" style="float: left;">
+							<div onclick="<%=uicomponent.event("ForwardMessage", mailId)%>" style="float:left; cursor:pointer;">
 								 <div class="Icon16x16 ViewProfileIcon" title="Forward Message"><span></span></div>							
-							</a>
-							<a href="<%=uicomponent.event("DeleteMessage", mailId)%>" style="float: left;">
+							</div>
+							<div onclick="<%=uicomponent.event("DeleteMessage", mailId)%>" style="float:left; cursor:pointer;">
 								 <div class="Icon16x16 DeleteIcon" title="Delete Message"><span></span></div>							
-							</a>
+							</div>
 						</div>
 					</div>
 				</td>
@@ -69,7 +69,7 @@
 		 <% } %>
 		</tbody>
 	</table>
-	<div style="overflow:auto; margin: 2px 0px;">
+	<div style="overflow:auto; margin:2px 0px;">
 		<%
 			if(uicomponent.isRenderIterator()) 
 				uicomponent.renderChild(UIForumPageIterator.class) ; 

@@ -19,22 +19,40 @@
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
-					<div style="overflow:auto; margin: 2px 0px;">
+					<div style="overflow:auto; margin:2px 0px;">
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>
 					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
 							<tr>
-								<th style="width: 40px;"></th>
-								<th style="width: 40px;"></th>
-								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
-								<th style="width: 96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
-								<th style="width: 130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></a></th>
-								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
-								<th style="width: 60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
+								<th style="width:40px;"></th>
+								<th style="width:40px;"></th>
+								<th>
+									<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
+										<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div>
+									</div>
+								</th>
+								<th style="width:96px;">
+									<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
+								</th>
+								<th style="width:130px;">
+									<div onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
+										<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div>
+									</div>
+								</th>
+								<th style="width:60px;">
+									<div onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
+										<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div>
+									</div>
+								</th>
+								<th style="width:60px;">
+									<div onclick="<%=uicomponent.event("SetOrderBy","viewCount");%>">
+										<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div>
+									</div>
+								</th>
 								<%if(isAdmin){ %>
-									<th style="width: 40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
+									<th style="width:40px;"><%=_ctx.appRes("UIPageListTopicByUser.label.Delete");%></th>
 								<%}%>
 							</tr>
 						</thead>
@@ -107,7 +125,7 @@
 										%>
 								 				<div class="VoteIcon $className"><span/></div>
 										 <% } %>
-							 					<div style="clear: left;"><span></span></div>
+							 					<div style="clear:left;"><span></span></div>
 				 							</div>
 					 					</div>
 									</td>
@@ -116,9 +134,9 @@
 									<td class="Tdbox" align="center">$postView</td>
 									<%if(isAdmin){ %>
 										<td class="Tdbox" align="center" style="padding-left:5px;">
-											<a href="<%=uicomponent.event("DeleteTopic", topicId)%>">
-												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
-											</a>
+											<div onclick="<%=uicomponent.event("DeleteTopic", topicId)%>">
+												<div class="ItemIcon SetDeleteIcon" style="width:16px; height:16px; cursor:pointer;"><span></span></div>
+											</div>
 										</td>
 									<%}%>
 					 			</tr>
@@ -127,7 +145,7 @@
 						 		%>
 						 		<tr>
 						 				<td colspan="8" align="center">
-						 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></b></div>
+						 					<div style="margin:5px 0px 10px 0px"><b><%=_ctx.appRes("UIForumPortlet.label.NoThread");%></b></div>
 						 				</td>
 						 			</tr>
 					 		<%
@@ -137,7 +155,7 @@
 					</table>
 					<div style="overflow:auto;">
 						<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>						
 				</div>
 			</div>

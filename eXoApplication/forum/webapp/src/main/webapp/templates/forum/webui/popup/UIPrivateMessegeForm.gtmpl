@@ -40,7 +40,9 @@
 											<div class="$classCss">
 												<div class="LeftTab">
 													<div class="RightTab">
-														<div class="MiddleTab"><a href="$link"><%=tabconten;%></a></div>
+														<div class="MiddleTab">
+															<a href="$link"><%=tabconten;%></a>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -62,7 +64,7 @@
 									 	 isDisplay = "none";
 									 }
 								%>
-								<div class="UITabContent" id="UITabContent" style="display: $isDisplay;">
+								<div class="UITabContent" id="UITabContent" style="display:$isDisplay;">
 									<div class="UIFormInputSet ForumUserProfile">
 										<% uicomponent.renderChild(UIListInBoxPrivateMessage.class) ; %>
 									</div>
@@ -73,7 +75,7 @@
 									 	 isDisplay = "none";
 									 }
 								%>
-								<div class="UITabContent" id="UITabContent" style="display: $isDisplay;">
+								<div class="UITabContent" id="UITabContent" style="display:$isDisplay;">
 									<div class="UIFormInputSet ForumUserProfile">
 										<% uicomponent.renderChild(UIListSentPrivateMessage.class) ; %>
 									</div>
@@ -84,7 +86,7 @@
 									 	 isDisplay = "none";
 									 }
 								%>
-								<div class="SendMessageTab UITabContent" id="UITabContent" style="display: $isDisplay;">
+								<div class="SendMessageTab UITabContent" id="UITabContent" style="display:$isDisplay;">
 									<div class="UIFormInputSet ForumUserProfile">
 										<div class="ForumMail Forwark">
 											<div class="HorizontalLayout">
@@ -99,12 +101,11 @@
 													<tbody>
 														<tr>
 															<td align="center">
-															<div class="ActionButton LightBlueStyle">
+																<div onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="ActionButton LightBlueStyle">
 																	<div class="ButtonLeft">
 																		<div class="ButtonRight">
 																			<div class="ButtonMiddle">
-																			<a href="<%=uicomponent.event("SendPrivateMessage")%>"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%>
-																			</a>
+																				<a href="javascript:void(0);"><%=_ctx.appRes("UIPrivateMessageForm.action.Send");%></a>
 																			</div>
 																		</div>
 																	</div>
@@ -160,24 +161,24 @@
 					<%
 							if(!uiform.isFullMessage()) {
 					%>
-					<div class="ActionButton LightBlueStyle">
+						<div onclick="<%=uicomponent.event("SendPrivateMessage")%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<a href="<%=uicomponent.event("SendPrivateMessage")%>">
+										<a href="javascript:void(0);">
 											<%=_ctx.appRes("UIPrivateMessageForm.action.Send");%>
 										</a>
 									</div>
 								</div>
 							</div>
-							</div>
+						</div>
 						
 					<% } %>
-					<div onclick="$link" class="ActionButton LightBlueStyle">
+						<div onclick="<%=uicomponent.event("Close")%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<a href="<%=uicomponent.event("Close")%>">
+										<a href="javascript:void(0);">
 											<%=_ctx.appRes("UIForumPortlet.label.Close");%>
 										</a>
 									</div>

@@ -20,9 +20,9 @@
 		 	<div class="UIForumContainer">
 				<div class="ContentContainer">
 					<div class="UITopicList">
-						<div style="overflow:auto; margin: 2px 0px;">
+						<div style="overflow:auto; margin:2px 0px;">
 							<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-							<div style="clear: right; height: 0px;"><span></span></div>
+							<div style="clear:right; height:0px;"><span></span></div>
 						</div>
 						<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 							<thead>
@@ -30,8 +30,8 @@
 									<th><span></span></th>
 									<th width="40px"></th>
 									<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div></a></th>
-									<th width="120px"><a href="<%=uicomponent.event("SetOrderBy","createdDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div></a></th>
-									<th width="40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
+									<th style="width:120px"><a href="<%=uicomponent.event("SetOrderBy","createdDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div></a></th>
+									<th style="width:40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -80,9 +80,9 @@
 										}
 										%>
 										<td class="Tdbox" align="center" style="padding-left:5px;">
-											<a href="$link_">
-												<div class="ItemIcon SetDeleteIcon" style="width: 16px; height:16px;"><span></span></div>
-											</a>
+											<div onclick="$link_">
+												<div class="ItemIcon SetDeleteIcon" style="width:16px; height:16px; cursor:pointer;"><span></span></div>
+											</div>
 										</td>
 						 			</tr>
 							 	<% i = i + 1;}
@@ -90,7 +90,7 @@
 							 		%>
 							 			<tr>
 							 				<td colspan="5" align="center">
-							 					<div style="margin: 5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
+							 					<div style="margin:5px 0px 10px 0px"><b><%=_ctx.appRes("UICategory.label.noPost");%></b></div>
 							 				</td>
 							 			</tr>
 							 		<%
@@ -100,7 +100,7 @@
 						</table>
 						<div style="overflow:auto;">
 							<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-							<div style="clear: right; height: 0px;"><span></span></div>
+							<div style="clear:right; height:0px;"><span></span></div>
 						</div>						
 					</div>
 				</div>
@@ -115,13 +115,17 @@
 	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
-	        		<a href="$link" class="ActionButton LightBlueStyle">
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
 		      	  	<div class="ButtonLeft">
 		        	  	<div class="ButtonRight">
-		          	  	<div class="ButtonMiddle">$actionLabel</div>
+		          	  	<div class="ButtonMiddle">
+			          	  	<a href="javascript:void(0);">
+			          	  		$actionLabel
+			          	  	</a>
+		          	  	</div>
 		            	</div>
 		          	</div>
-		        	</a>
+		        	</div>
 	          <%}%>
 	      	</td>
 				</tr>

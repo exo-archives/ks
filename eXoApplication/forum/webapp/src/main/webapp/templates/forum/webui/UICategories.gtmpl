@@ -31,16 +31,15 @@
 			uicomponent.renderChild(UIForumListSearch.class);
 		} else {
 	%>
-	
 		<div class="UIForumCategories">
 		<% // Start ForumCategory%>
 		<%
 			List categories = uicomponent.getCategoryList();
-			  for(category in categories) {
-				  String categoryId = category.getId();
-			  	if(!uicomponent.isShowCategory(categoryId)) continue ;
-				  if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
-					  String title = category.getCategoryName();
+				for(category in categories) {
+					String categoryId = category.getId();
+					if(!uicomponent.isShowCategory(categoryId)) continue ;
+					if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
+						String title = category.getCategoryName();
 						if(uicomponent.userProfile.getUserRole() < 3){
 							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId);
 						} else {
@@ -58,7 +57,7 @@
 								<div class="Title" title="$title">
 									<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 										<a actions="$link;" href="$url" class="ActionLink UICategoryTitle">$title</a>
-										<div style="position: relative;">
+										<div style="position:relative;">
 											<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; font-weight:normal;">
 													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
@@ -181,9 +180,9 @@
 										} else {
 											actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
 										}
-										String lineHeight = "line-height: 12px;";
+										String lineHeight = "line-height:12px;";
 										if(ForumUtils.isEmpty(forumDescription)) {
-											lineHeight = "line-height: 28px;";
+											lineHeight = "line-height:28px;";
 										}
 										link = uicomponent.event("OpenForumLink", ids);
 										url = uicomponent.url("OpenForumLink", ids);
@@ -192,15 +191,15 @@
 										<tr class="$classRow">
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 											<td>
-												<div style="float: left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+												<div style="float:left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 													<a actions="$link;" href="$url" style="$lineHeight" class="ForumTitle ActionLink">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
-													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
-														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+													<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 														</div>
 													</div>
 												</div>
-												<div style="clear: left;"><span></span></div>
+												<div style="clear:left;"><span></span></div>
 													<% ++rCNB; %>
 												<div class="ForumDescription">$forumDescription</div>
 											</td>
@@ -213,10 +212,10 @@
 											%>
 										 	<td>
 										 		<div class="LastPostIcon $topicNewPostIcon"><span></span></div>
-										 		<div style="float: left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+										 		<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 										 			<a actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
-													<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
-														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
+													<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 														</div>
 													</div>
@@ -261,16 +260,16 @@
 		<div class="MiddleLeftRightClickPopupMenu">
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
-						<div class="ItemIcon AddLinkToBookIcon" style="min-width:62px;">
-									<a class="MenuItem AddBookmark" href="" >
-									<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
-									</a>
-						</div>
-						<div class="ItemIcon AddWatchingIcon">
-							<a class="MenuItem AddWatching">
+					<div class="ItemIcon AddLinkToBookIcon" style="min-width:62px;">
+						<a class="MenuItem AddBookmark" href="" >
+							<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
+						</a>
+					</div>
+					<div class="ItemIcon AddWatchingIcon">
+						<a class="MenuItem AddWatching">
 							<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
-							</a>
-						</div>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>

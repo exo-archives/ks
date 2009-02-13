@@ -7,10 +7,12 @@
 	<% List tags = uicomponent.getAllTag(); %>
 	<div class="TagContent">
 		<div class="TagControlBar">
-			<div style="overflow: auto;">
+			<div style="overflow:auto;">
 				<div class="TagTitle">Tags</div>
-				<a class="TagIcon" href="<%=uicomponent.event("AddTag");%>"><div class="AddNewNodeIcon" title="Add new Tag"><span></span></div></a>
-				<div style="clear: both"><span></span></div>
+					<div class="TagIcon" onclick="<%=uicomponent.event("AddTag");%>">
+						<div class="AddNewNodeIcon" title="Add new Tag"><span></span></div>
+					</div>
+				<div style="clear:both"><span></span></div>
 			</div>
 		</div>
 		<div class="TagsList">
@@ -38,13 +40,17 @@
 					 String link = uicomponent.event(action) ;
 					 actionLabel.trim();
 				%>
-					<a href="$link" class="ActionButton LightBlueStyle">
+					<div onclick="$link" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle">$actionLabel</div>
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">
+										$actionLabel
+									</a>
+								</div>
 							</div>
 						</div>
-					</a>
+					</div>
 				<%}%>
 				</td>
 			</tr>

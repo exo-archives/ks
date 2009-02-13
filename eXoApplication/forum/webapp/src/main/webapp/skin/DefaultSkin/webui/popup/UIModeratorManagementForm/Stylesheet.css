@@ -30,6 +30,11 @@
 	padding: 14px;
 }
 
+.UIModeratorManagementForm .ManagementContent .UIGrid .ActionContainer {
+	width: 40px;
+	margin: 0px auto;
+}
+
 .UIModeratorManagementForm .ModeratorsManagement .HorizontalLayout {
 	border: none;
 }

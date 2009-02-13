@@ -15,25 +15,23 @@
 	<div class="UIComponentModerator">
 		<div class="ModeratorsManagementContainer">
 		
-			
 			<div class="ManagementContent">
-			
-				<div style="overflow: auto;">
-					<div style="margin: 2px 0px ;float: right; padding: 0px 0px 0px 14px;">
-						<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"><span></span></a>
+				<div style="overflow:auto;">
+					<div style="margin:2px 0px ;float:right; padding:0px 0px 0px 14px;">
+						<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"></a>
 						<div class="Input" style="float:right;">
 						<%	
 							uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
 						%>
 						</div>
-						<div class="Label" style="float:right; line-height: 20px;"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:&nbsp;</div>
-						<div style="clear: right;"><span></span></div>
+						<div class="Label" style="float:right; line-height:20px;"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:&nbsp;</div>
+						<div style="clear:right;"><span></span></div>
 					</div>
-					<div style="clear: right;"><span></span></div>
+					<div style="clear:right;"><span></span></div>
 				</div>
 				<div><span></span></div>
 		 
-				<table cellspacing="0"border="0" cellpadding="0" id="PermissionInfo" class="UIGrid">
+				<table cellspacing="0" border="0" cellpadding="0" id="PermissionInfo" class="UIGrid">
 					<thead>
 						<tr>
 							<th width="30%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>
@@ -63,16 +61,14 @@
 							<td class="text"><%=userRole;%></td>
 							<td class="text"><%=user.getIsBanned();%></td>
 							<td>				 
-								<div style="margin: 0px auto;" class="ActionContainer">
-									<div class="IconContent">
-										<a style="float:left" href="<%=uicomponent.event("EditProfile",user.getUserId());%>">
-											 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="Icon16x16 EditIcon"><span></span></div>							
-										</a>
-										<a style="float:left" href="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
-											 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="Icon16x16 ViewProfileIcon"><span></span></div>							
-										</a>
-										<div style="clear:left;"><span></span></div>
+								<div style="margin:0px auto;" class="ActionContainer">
+									<div style="float:left; cursor:pointer" onclick="<%=uicomponent.event("EditProfile",user.getUserId());%>">
+										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="Icon16x16 EditIcon"><span></span></div>							
 									</div>
+									<div style="float:left; cursor:pointer" onclick="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
+										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="Icon16x16 ViewProfileIcon"><span></span></div>							
+									</div>
+									<div style="clear:left;"><span></span></div>
 								</div>
 							</td>
 						</tr>
@@ -89,7 +85,7 @@
 		<div><span></span></div>
 		<div>
 			<% uicomponent.renderChild(UIForumPageIterator.class) ; %>
-			<div style="clear: right; height: 0px;"><span></span></div>
+			<div style="clear:right; height:0px;"><span></span></div>
 		</div>
 		<div><span></span></div>
 		<% if(uiform.getIsEdit()) { %>
@@ -131,7 +127,7 @@
 											for(tabconten in uiform.getChildren()){
 												if(tabconten.id.equals("ForumUserPageIterator") || tabconten.id.equals(uiform.FIELD_SEARCH_USER)) continue;
 										%>
-										<div style="display: $display;" id="UITabContent" class="UITabContent">
+										<div style="display:$display;" id="UITabContent" class="UITabContent">
 											<% uiform.renderChild(tabconten.id) ; %>
 										</div>
 										<% display = "none"; %>

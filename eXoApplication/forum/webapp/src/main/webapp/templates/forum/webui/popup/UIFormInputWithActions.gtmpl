@@ -35,7 +35,7 @@
 									String display =	"block";
 									for(tabconten in uiform.getChildren()){
 								%>
-								<div style="display: $display;" id="UITabContent" class="UITabContent">
+								<div style="display:$display;" id="UITabContent" class="UITabContent">
 									<%
 									if(tabconten.id.equals("ForumUserProfile")){
 									%>
@@ -45,11 +45,11 @@
 												if(tabChildConten.id.equals("IsDisplayAvatar")){%>
 													<tr>
 														<td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
-												      <%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%> : 
+												      <%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%> :
 												    </td>
 												    <td class="FieldComponent" style="padding:2px 0px 3px 0px;">
 												    	<div>
-																<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin: 5px;"/>
+																<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin:5px;"/>
 															</div>
 															<div align="left">
 																<a href="<%=uiform.event("Attachment")%>" style="color:blue;">
@@ -62,7 +62,7 @@
 												}%>
 												<tr>
 													<td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
-											      <%=uicomponent.getLabel(tabChildConten.getName()) %> : 
+											      <%=uicomponent.getLabel(tabChildConten.getName()) %> :
 											    </td>
 											    <td class="FieldComponent" style="padding:2px 0px 3px 4px;">
 														<% uiform.renderField(tabChildConten) %>
@@ -103,7 +103,7 @@
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
 									<a href="javascript:void(0);">
-									$actionLabel
+										$actionLabel
 									</a>
 									</div>
 								</div>

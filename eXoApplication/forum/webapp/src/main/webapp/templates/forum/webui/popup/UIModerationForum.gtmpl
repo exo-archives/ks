@@ -16,21 +16,21 @@
 					List objects = uicomponent.getListObject();
 					if(uicomponent.getIsShowIter()){ 
 				%>
-					<div style="overflow: auto;">
+					<div style="overflow:auto;">
 					  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>
 				<% } %>	
-					<div class="HorizontalLayout" style="margin-top: 3px;">
+					<div class="HorizontalLayout" style="margin-top:3px;">
 						<div class="UITabContentContainer">
 							<div id="UITabContent" class="UITabContent">
 								<div class="UITopicList">
 									<table cellspacing="0" cellpadding="0" border="0" id="" class="UIGrid">
 										<thead>
 											<tr>
-												<th style="width: 60px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
+												<th style="width:60px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
 												<th><%=_ctx.appRes("UIForumListSearch.label.NameItem");%></th>
-												<th style="width: 140px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
+												<th style="width:140px;"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -77,9 +77,9 @@
 						</div>
 					</div>
 				<% if(uicomponent.getIsShowIter()){ %>
-					<div style="overflow: auto;">
+					<div style="overflow:auto;">
 					  <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
-						<div style="clear: right; height: 0px;"><span></span></div>
+						<div style="clear:right; height:0px;"><span></span></div>
 					</div>
 				<% } %>					
 				</div>
@@ -95,12 +95,14 @@
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-				<div class="ActionButton LightBlueStyle">						
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle"><a href="$link" >$actionLabel</a></div>
+					<div onclick="$link" class="ActionButton LightBlueStyle">						
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">$actionLabel</a>
 								</div>
 							</div>
+						</div>
 					</div>
 					<%}%>
 				</td>

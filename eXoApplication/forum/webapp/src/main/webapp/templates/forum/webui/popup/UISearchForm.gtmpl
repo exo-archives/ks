@@ -33,10 +33,13 @@
 											<%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %>
 									</td>
 									<td class="FieldComponent FieldUserName" colspan="2">
-									  <%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
-									  <a href="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>">
-									    <img class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
-									  </a>
+										<div style="float: left">
+									  	<%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
+									  </div>
+									  <div onclick="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float: left; cursor:pointer; width:16px;">
+									    <img alt="" class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+									  </div>
+									  <div style="clear:left;"><span></span></div>
 									</td>
 							</tr>
 							<%  
@@ -47,9 +50,11 @@
 											<%=_ctx.appRes("UISearchForm.label.Status");%>
 									</td>
 									<td class="FieldComponent" colspan="2">
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%></div><div style="float:left; padding-left: 5px; width: 65px;"><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %></div>
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%></div><div style="float:left; padding-left: 5px;"><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %></div>
-									  <div style="clear: left;"><span></span></div>
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISLOCK_CHECKBOX);%></div>
+									  <div style="float:left; padding-left:5px; width:65px;"><%=uicomponent.getLabel(uiform.FIELD_ISLOCK_CHECKBOX); %></div>
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISUNLOCK_CHECKBOX);%></div>
+									  <div style="float:left; padding-left:5px;"><%=uicomponent.getLabel(uiform.FIELD_ISUNLOCK_CHECKBOX); %></div>
+									  <div style="clear:left;"><span></span></div>
 									</td>
 							</tr>
 							<%  
@@ -60,9 +65,9 @@
 											<%=_ctx.appRes("UISearchForm.label.State");%>
 									</td>
 									<td class="FieldComponent" colspan="2">
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%></div><div style="float:left; padding-left: 5px; width: 65px;"><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %></div>
-									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%></div><div style="float:left; padding-left: 5px;"><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %></div>
-									  <div style="clear: left;"><span></span></div>
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISOPEN_CHECKBOX);%></div><div style="float:left; padding-left:5px; width:65px;"><%=uicomponent.getLabel(uiform.FIELD_ISOPEN_CHECKBOX); %></div>
+									  <div style="float:left;"><%uiform.renderField(uiform.FIELD_ISCLOSED_CHECKBOX);%></div><div style="float:left; padding-left:5px;"><%=uicomponent.getLabel(uiform.FIELD_ISCLOSED_CHECKBOX); %></div>
+									  <div style="clear:left;"><span></span></div>
 									</td>
 							</tr>
 							<%} 
@@ -73,19 +78,21 @@
 											<%=_ctx.appRes("UISearchForm.label.FromDateCreated");%>
 									</td>
 									<td class="FieldComponent FieldCalendar">
-											<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATED); %></div><div style="float:left; padding-left: 5px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
-											<div style="clear: left;"><span></span></div>
+										<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATED); %></div>
+										<div style="float:left; padding-left:5px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
+										<div style="clear:left;"><span></span></div>
 									</td>
 									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATED); %></td>
 							</tr>
 							<% if(uiform.getIsSearchTopic()){ %>
 							<tr>
 									<td class="FieldLabel">
-											<%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%>
+										<%=_ctx.appRes("UISearchForm.label.FromDateCreatedLastPost");%>
 									</td>
 									<td class="FieldComponent FieldCalendar">
-											<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %></div><div style="float:left; padding-left: 5px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
-											<div style="clear: left;"><span></span></div>
+										<div style="float:left;"><%uiform.renderField(uiform.FROMDATECREATEDLASTPOST); %></div>
+										<div style="float:left; padding-left:5px;"><%=_ctx.appRes("UISearchForm.label.ToDateCreated");%></div>
+										<div style="clear:left;"><span></span></div>
 									</td>
 									<td class="FieldComponent FieldCalendar"><%uiform.renderField(uiform.TODATECREATEDLASTPOST); %></td>
 							</tr>
@@ -98,7 +105,6 @@
 									</td>
 									<td class="FieldComponent FieldCalendar" colspan="2">
 									  <%uiform.renderField(uiform.FIELD_POSTCOUNTMIN_SLIDER); %>
-
 	   							</td>
 							</tr>
 							<%}  
@@ -144,19 +150,20 @@
 					<td align="center">
 				<% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-					 String link = "href=\"" + uicomponent.event(action) + "\"";
+					 String link = uicomponent.event(action);
 					 String onclick = "" ;
+					 String style = "";
 					 if(action.indexOf("ResetField") >= 0) {
 					   onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
-					   link = "style=\"cursor:pointer;\"";
+					   link = "";
 					 }
 				%>
-						<div onclick="$link" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft" onclick="$onclick">
+						<div style="cursor:pointer;" onclick="$link; $onclick; return;" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
 										<a href="javascript:void(0);">
-										$actionLabel
+											$actionLabel
 										</a>
 									</div>
 								</div>

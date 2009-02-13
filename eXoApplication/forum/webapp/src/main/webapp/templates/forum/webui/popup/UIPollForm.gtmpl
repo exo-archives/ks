@@ -6,7 +6,7 @@
 					<tbody>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_QUESTION_INPUT)%>:</td>
-							<td class="FieldComponent" style="width: 400px;">
+							<td class="FieldComponent" style="width:400px;">
 								<div class="QuestionInput">
 								<% uiform.renderChild(uicomponent.FIELD_QUESTION_INPUT) %>
 								</div>
@@ -33,7 +33,7 @@
 					<tbody>
 						<tr>
 							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</td>
-							<td class="FieldComponent" style="width: 60px;">
+							<td class="FieldComponent" style="width:60px;">
 								<div class="TimeOutInput">
 									<% uiform.renderChild(uicomponent.FIELD_TIMEOUT_INPUT) %>
 								</div>
@@ -71,7 +71,7 @@
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
 									<a href="javascript:void(0);">
-									$actionLabel
+										$actionLabel
 									</a>
 								</div>
 							</div>

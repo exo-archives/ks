@@ -551,11 +551,11 @@
 																		String tagNameTitle = tag.getName() ;
 																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
 																%>
-																			<a class="MenuItem" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
+																			<div class="MenuItem" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
 																				<div class="ItemIcon TagIcon ${color}TagIcon">
 																					<span>$tagName</span>
 																				</div>
-																			</a>
+																			</div>
 																<% } %>
 																	</div>
 																</div>
