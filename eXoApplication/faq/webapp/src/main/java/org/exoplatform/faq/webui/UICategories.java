@@ -906,7 +906,8 @@ public class UICategories extends UIContainer{
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
 				Category category = uiCategories.faqService_.getCategoryById(destCategoryId, sessionProvider);
-				List<String> usersOfNewCateParent = Arrays.asList(category.getModerators()) ;
+				List<String> usersOfNewCateParent = new ArrayList<String>();
+				usersOfNewCateParent.addAll(Arrays.asList(category.getModerators())) ;
 				boolean canMove = false;
 				if(uiCategories.faqSetting_.isAdmin() || uiCategories.canEditQuestion){
 					canMove = true;
