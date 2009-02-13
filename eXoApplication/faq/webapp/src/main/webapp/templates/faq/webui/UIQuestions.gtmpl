@@ -906,6 +906,84 @@
 												<%}%>
 												</div>
 												
+												<!-- ============================== View attachment files ============================================== -->
+												<%if(!question.getAttachMent().isEmpty()) {%>
+													<div class="AttachmentContent">
+														<div style="margin-top:5px; margin-bottom:5px;">
+															<%
+																for(FileAttachment fileAttachment :question.getAttachMent()){
+																	String fileName = fileAttachment.getName();
+																	long fileSize = fileAttachment.getSize();
+																	if(fileSize > 0){
+																		String size = uicomponent.convertSize(fileSize);
+																		String dataPath = "" ;
+																		String fileStream = "" ;
+																		try{
+																			dataPath = fileAttachment.getDataPath();
+																			fileStream = fileAttachment.getInputStream();
+																		} catch(Exception e) {
+																			dataPath = "null" ;
+																			fileStream = "null" ;
+																		}
+																		String fileType = fileAttachment.getMimeType();
+																		String fileWorkSpace = fileAttachment.getWorkspace();
+																		ValidatorDataInput validate = new ValidatorDataInput();
+																		String linkImage = uicomponent.getFileSource(fileAttachment);
+																		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
+																		if(validate.isImage(fileName)) {
+																			String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath();
+																	%>
+																			<div style="float:left; margin:10px 0px 0px 10px;" id="divId${fileName}">
+																				<div class="Image">
+																					<a href="javaScript:void(0);" onclick="eXo.faq.UIFAQPortlet.showPicture(this); ">
+																						<img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile">
+																					</a>
+																				</div>
+																				<div style="clear:left;"><span></span></div>
+														 						<div class="LabelBox">
+															 						<div style="line-height:20px;">
+																 						<div class="Size AttachmentLabel" style="color:#1052b5;">
+																 							<%
+																 								downloadAtt = uicomponent.event("DownloadAttach");
+																 							%>
+							 																<a onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+																 								$fileName
+																 							</a>
+																 						</div>
+																 						&nbsp;- <font style="color:gray;font-size:11px;">$size</font>
+																 					</div>
+															 						<div style="clear:left;"><span></span></div>
+															 					</div>
+														 					</div>
+																	<%} else { %>
+																			<div class="LabelBox" style="margin:10px 0px 0px 5px; line-height:20px;">
+																			<div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;">
+																				<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+																					$fileName
+																				</a>
+																			</div>
+																			&nbsp;-&nbsp; <font style="color:gray;">$size</font> &nbsp;
+																			<div style="clear:left;"><span></span></div>
+																		</div>
+																	<%}
+																	} else {
+																	%>
+																		<div class="LabelBox" style="margin:10px 10px 0px 5px;">
+																			<div class="FalseIcon" style="padding-left:15px;">
+																				<a style="color:red;" href="javaScript:void(0)">
+																					<%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%>
+																				</a>
+																			</div>
+																			<div style="clear:left;"><span></span></div>
+																		</div>
+																	<%
+																	}
+																}%>
+															</div>
+															<div style="clear:left;"><span></span></div>
+														</div>
+												<%}%>
+												
 												<!-- ============================== View question's commnets ============================================== -->
 												<%
 													boolean canEditComment = false;
@@ -932,7 +1010,7 @@
 																<td>
 																
 																		<div class="ResponseItemContainerLeft">
-																		<!-- ============================= View user who answered quesetion ============================ -->
+																		<!-- ============================= View user who comment for quesetion ============================ -->
 																			<div style="padding:10px 0px">
 																				<div class="ProfileContainer">
 																					<%
@@ -1009,86 +1087,7 @@
 														<div style="clear:right;"><span></span></div>
 													</div>	
 												</div>
-													
-												<div class="AttachmentContent">
-													<%if(!question.getAttachMent().isEmpty()) {%>
-														<div style="margin-top:5px; margin-bottom:5px;">
-															<%
-																for(FileAttachment fileAttachment :question.getAttachMent()){
-																	String fileName = fileAttachment.getName();
-																	long fileSize = fileAttachment.getSize();
-																	if(fileSize > 0){
-																		String size = uicomponent.convertSize(fileSize);
-																		String dataPath = "" ;
-																		String fileStream = "" ;
-																		try{
-																			dataPath = fileAttachment.getDataPath();
-																			fileStream = fileAttachment.getInputStream();
-																		} catch(Exception e) {
-																			dataPath = "null" ;
-																			fileStream = "null" ;
-																		}
-																		String fileType = fileAttachment.getMimeType();
-																		String fileWorkSpace = fileAttachment.getWorkspace();
-																		ValidatorDataInput validate = new ValidatorDataInput();
-																		String linkImage = uicomponent.getFileSource(fileAttachment);
-																		String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
-																		if(validate.isImage(fileName)) {
-																			String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath();
-																	%>
-																			<div style="float:left; margin:10px 0px 0px 10px;" id="divId${fileName}">
-																				<div class="Image">
-																					<a href="javaScript:void(0);" onclick="eXo.faq.UIFAQPortlet.showPicture(this); ">
-																						<img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile">
-																					</a>
-																				</div>
-																				<div style="clear:left;"><span></span></div>
-														 						<div class="LabelBox">
-															 						<div style="line-height:20px;">
-																 						<div class="Size AttachmentLabel" style="color:#1052b5;">
-																 							<%
-																 								downloadAtt = uicomponent.event("DownloadAttach");
-																 							%>
-							 																<a onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-																 								$fileName
-																 							</a>
-																 						</div>
-																 						&nbsp;- <font style="color:gray;font-size:11px;">$size</font>
-																 					</div>
-															 						<div style="clear:left;"><span></span></div>
-															 					</div>
-														 					</div>
-																	<%} else { %>
-																			<div class="LabelBox" style="margin:10px 0px 0px 5px; line-height:20px;">
-																			<div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;">
-																				<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-																					$fileName
-																				</a>
-																			</div>
-																			&nbsp;-&nbsp; <font style="color:gray;">$size</font> &nbsp;
-																			<div style="clear:left;"><span></span></div>
-																		</div>
-																	<%}
-																	} else {
-																	%>
-																		<div class="LabelBox" style="margin:10px 10px 0px 5px;">
-																			<div class="FalseIcon" style="padding-left:15px;">
-																				<a style="color:red;" href="javaScript:void(0)">
-																					<%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%>
-																				</a>
-																			</div>
-																			<div style="clear:left;"><span></span></div>
-																		</div>
-																	<%
-																	}
-																}%>
-														</div>
-													<%} else {%>
-															&nbsp;
-													<%}%>
-													<div style="clear:left;"><span></span></div>
-												</div>
-											
+												
 												<%String questionRelationById = "" ;
 													String cateRelaId = "" ;
 													String quesRelaId = "" ;
