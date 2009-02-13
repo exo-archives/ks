@@ -63,6 +63,10 @@
 	padding-right:16px;
 }
 
-.UIForumPortlet .UICategory .ContentContainer .UIGrid td{
-	border: solid 1px red;
+.UIForumPortlet .UICategory .ContentContainer .UIGrid th{
+	line-height: 17px;
+}
+
+.UIForumPortlet .UITopicContainer .UIGrid th{
+	line-height: 17px;
 }

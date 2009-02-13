@@ -297,14 +297,14 @@
 																	if(pathDiscuss == null || pathDiscuss.length() <= 0){
 															%>
 																		<a class="MenuItem" href="javascript:void(0);" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>">
-																			<div class="ItemIcon" style="padding:3px 0px 5px 5px;">
+																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
 																				<div style="padding-left:20px;white-space:nowrap;"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></div>
 																			</div>
 																		</a>
 																		
 															<%	} else { %>
 																		<div class="MenuItem" title="<%= _ctx.appRes("UIQuestions.title.QuestionIsDiscussed"); %>">
-																			<div class="DisableMenuItem" style="padding:3px 0px 5px 5px;">
+																			<div class="DisableMenuItem DiscussForum" style="padding:3px 0px 5px 5px;">
 																				<div style="padding-left:20px;white-space:nowrap;"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></div>
 																			</div>
 																		</div>
@@ -441,6 +441,25 @@
 																						<div class="$SendToFriend"><span></span></div>
 																					</a>
 																				</td>
+																				<!-- action Discuss -->
+																			<%
+																				if(uicomponent.isDiscussForum()) {
+																					String pathDiscuss = question.getPathTopicDiscuss();
+																					if(pathDiscuss == null || pathDiscuss.length() <= 0){
+																			%>
+																				<td width="25">
+																					<div onclick="javaScript:<%=uicomponent.event("DiscussForum", question.getId())%>" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+																						<div class="DiscussForum"><span></span></div>
+																					</div>
+																				</td>
+																			<%  } else {%>
+																				<td width="25">
+																					<div title="<%=_ctx.appRes("UIQuestions.title.QuestionIsDiscussed");%>"">
+																						<div class="DisableMenuItem DiscussForum" style="margin-left: 0px"><span></span></div>
+																					</div>
+																				</td>
+																			<%	}
+																				} %>
 																			</tr>
 																		</table>
 																		<div style="clear:left;"><span></span></div>

@@ -75,6 +75,7 @@
 }
 
 .UIFAQPortlet a {
+	display: block;
 	color: #000000;
 }
 
@@ -1522,6 +1523,7 @@
 .UIFAQPortlet .DiscussForum {
 	background: url('background/DiscussForum.gif') no-repeat left center;
 	padding: 10px 14px 9px 4px;
+	cursor: pointer;
 }
 
 .UIFAQPortlet .WatchQuestionManager {
@@ -1791,9 +1793,11 @@
 }
 
 .UIFAQPortlet .UIListCategoryForumForm .IconCategory {
+	float: none;
 	padding-left: 26px;
 	width: auto;
 	line-height: 18px;
+	margin: 2px;
 }
 
 .UIFAQPortlet .DisableMenuItem {
@@ -1801,6 +1805,7 @@
 	line-height:16px;
 	white-space:nowrap;
 	cursor: none;
+	margin: 0px 0px 0px 7px;
 	filter: alpha(opacity: 50);
 	-moz-opacity: 0.5;
 }

@@ -395,7 +395,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
       } catch (ClassCastException e) {
       	UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ; 
       	UIListCategoryForumForm listCateForm = popupAction.createUIComponent(UIListCategoryForumForm.class, null, null) ;
-      	popupAction.activate(listCateForm, 400, 500);
+      	popupAction.activate(listCateForm, 400, 400);
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {
       	e.printStackTrace();
