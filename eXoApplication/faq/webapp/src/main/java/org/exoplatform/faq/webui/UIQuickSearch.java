@@ -66,11 +66,11 @@ public class UIQuickSearch  extends UIForm {
 		String currentUser = FAQUtils.getCurrentUser() ;
 		FAQUtils.getPorletPreference(faqSetting_);
 		if(currentUser != null && currentUser.trim().length() > 0){
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
-				if(faqService_.isAdminRole(currentUser)) faqSetting_.setIsAdmin("TRUE");
+				if(faqService_.isAdminRole(currentUser, sessionProvider)) faqSetting_.setIsAdmin("TRUE");
 				else faqSetting_.setIsAdmin("FALSE");
 			}
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			faqService_.getUserSetting(sessionProvider, currentUser, faqSetting_);
 			sessionProvider.close();
 		} else {

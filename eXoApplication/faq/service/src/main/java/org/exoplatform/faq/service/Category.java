@@ -36,8 +36,8 @@ public class Category {
   private long index;
   private String name ;
   private String description ;
-  private boolean isModerateQuestions = true ;
-  private boolean isModerateAnswers = true ;
+  private boolean isModerateQuestions = false ;
+  private boolean isModerateAnswers = false ;
   private boolean viewAuthorInfor = false;
   private String[] moderators ;
   private Date createdDate ;

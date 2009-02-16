@@ -149,18 +149,21 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			categoryId_ = categoryId ; 
 			oldName_ = cat.getName() ;
 			index_ = cat.getIndex();
-			getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
+			if(oldName_ != null && oldName_.trim().length() > 0) getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
+			else getUIStringInput(FIELD_NAME_INPUT).setValue("Root") ;
 			getUIStringInput(FIELD_INDEX_INPUT).setValue(String.valueOf(index_)) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription()) ;
 			getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions()) ;
 			getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).setChecked(cat.isModerateAnswers()) ;
 			getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).setChecked(cat.isViewAuthorInfor()) ;
 			String moderator = "";
-			for(String str : cat.getModerators()) {
-				if( moderator!= null && moderator.trim().length() >0 ) moderator += "," ;
-				moderator += str ;
-			}    
-			getUIStringInput(FIELD_MODERATOR_INPUT).setValue(moderator) ;
+			if(cat.getModerators() != null && cat.getModerators().length > 0)
+				for(String str : cat.getModerators()) {
+					if( moderator!= null && moderator.trim().length() >0 ) moderator += "," ;
+					moderator += str ;
+				}    
+			if(moderator.trim().length() > 0)getUIStringInput(FIELD_MODERATOR_INPUT).setValue(moderator) ;
+			else getUIStringInput(FIELD_MODERATOR_INPUT).setValue(FAQUtils.getCurrentUser()) ;
 		}
 	}
 
@@ -266,69 +269,74 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setViewAuthorInfor(viewAuthorInfor);
 			cat.setIndex(index);
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
-			String parentCate = uiCategory.getParentId() ;
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			if(parentCate != null && parentCate.length() > 0) {
-				/*----modified by Mai Van Ha----*/
-				List<String> listUser = new ArrayList<String>() ;
-				listUser.addAll(Arrays.asList(users)) ;
-				try {
-					Category category = faqService_.getCategoryById(parentCate, sessionProvider) ;
-					for(String user : category.getModerators()) {
-						if(!listUser.contains(user)) {
-							listUser.add(user) ;
+			if(uiCategory.categoryId_ != null){
+				String parentCate = uiCategory.getParentId() ;
+				if(parentCate != null && parentCate.length() > 0) {
+					/*----modified by Mai Van Ha----*/
+					List<String> listUser = new ArrayList<String>() ;
+					listUser.addAll(Arrays.asList(users)) ;
+					try {
+						Category category = faqService_.getCategoryById(parentCate, sessionProvider) ;
+						for(String user : category.getModerators()) {
+							if(!listUser.contains(user)) {
+								listUser.add(user) ;
+							}
 						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+						uiApp.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
+						uiContainer.updateIsRender(true) ;
+						questions.setCategories(null) ;
+						breadcumbs.setUpdataPath("FAQService");
+						faqPortlet.cancelAction() ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+						sessionProvider.close();
+						return ;
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
-					uiContainer.updateIsRender(true) ;
-					questions.setCategories(null) ;
-					breadcumbs.setUpdataPath("FAQService");
-					faqPortlet.cancelAction() ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
-				}
-				cat.setModerators(listUser.toArray(new String[]{})) ;
-				/*-----End---------------------*/
-				try {
-					if(uiCategory.categoryId_.length() > 0) {
-						cat.setId(uiCategory.categoryId_) ;
+					cat.setModerators(listUser.toArray(new String[]{})) ;
+					/*-----End---------------------*/
+					try {
+						if(uiCategory.categoryId_.length() > 0) {
+							cat.setId(uiCategory.categoryId_) ;
+						}
+						faqService_.saveCategory(parentCate, cat, isAddNew_, sessionProvider);
+						faqPortlet.cancelAction() ;
+					} catch(RuntimeException e){
+						throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
+					} catch (Exception e) {
+						uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
+								ApplicationMessage.INFO)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						//questions.setCategories() ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+						sessionProvider.close();
+						return ; 
+					} finally {
+						sessionProvider.close();
 					}
-					faqService_.saveCategory(parentCate, cat, isAddNew_, sessionProvider);
-					faqPortlet.cancelAction() ;
-				} catch(RuntimeException e){
-					throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
-				} catch (Exception e) {
-					uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.error-registry", null,
-							ApplicationMessage.INFO)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					//questions.setCategories() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ; 
-				} finally {
-					sessionProvider.close();
+					return ;
 				}
-				//questions.setCategories() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				return ;
+			} else {
+				isAddNew_ = false;
 			}
-
+			
 			cat.setModerators(users) ;
 			try {
-				if(uiCategory.categoryId_.length() > 0) {
+				if(uiCategory.categoryId_ != null && uiCategory.categoryId_.length() > 0) {
 					cat.setId(uiCategory.categoryId_) ;
-				} 
+				} if(uiCategory.categoryId_ == null) cat.setId(null);
 				faqService_.saveCategory(null, cat, isAddNew_, sessionProvider);
 				faqPortlet.cancelAction() ;
 
 			} catch(RuntimeException e){
+				e.printStackTrace();
 				throw new MessageException(new ApplicationMessage("UICateforyForm.sms.user-same-name", new String[] {name}, ApplicationMessage.WARNING)) ;
 			} catch (Exception e) {
 				e.printStackTrace();

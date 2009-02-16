@@ -648,8 +648,8 @@ public class FAQServiceImpl implements FAQService{
 		return jcrData_.getMessageInfo(name) ;
 	}
 	
-	public boolean isAdminRole(String userName) throws Exception {
-	  return jcrData_.isAdminRole(userName);
+	public boolean isAdminRole(String userName, SessionProvider sessionProvider) throws Exception {
+	  return jcrData_.isAdminRole(userName, sessionProvider);
   }
 	
 	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {

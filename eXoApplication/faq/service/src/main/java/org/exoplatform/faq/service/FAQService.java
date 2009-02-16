@@ -617,7 +617,7 @@ public interface FAQService {
    * @return	return <code>true</code> if user is addmin and <code>false</code> if opposite
    * @throws Exception
    */
-  public boolean isAdminRole(String userName) throws Exception ;
+  public boolean isAdminRole(String userName, SessionProvider sessionProvider) throws Exception ;
   
   /**
    * Adds the plugin.

@@ -79,7 +79,6 @@ public class UICategories extends UIContainer{
 	private String parentCateID_ = null;
 	private String categoryId_ = null;
 	private boolean isSwap = false;
-	public boolean isBack = false;
 	private String currentName = "";
 	private boolean viewBackIcon = false;
 	private List<Category> listCate = new ArrayList<Category>() ;
@@ -218,19 +217,16 @@ public class UICategories extends UIContainer{
 				newList = faqService_.getSubCategories(this.parentCateID_, sessionProvider, faqSetting_);
 				viewBackIcon = false;
 			}
-			if(categoryId_ != null) currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
-			else currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
+			currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
+			if(currentName == null || currentName.trim().length() < 1) currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
-			if(!newList.isEmpty() || isBack){
-				this.listCate.clear();
-				listCate.addAll(newList);
-				String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
-			}
+			this.listCate.clear();
+			listCate.addAll(newList);
+			String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
 			sessionProvider.close();
 			setIsModerators(FAQUtils.getCurrentUser());
 		}
 		isSwap = false;
-		isBack = false;
 	}
 	
 	public String getRSSLink(String cateId){
@@ -354,23 +350,23 @@ public class UICategories extends UIContainer{
 			questions.language_ = "";
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-			if(categoryId != null && !categoryId.equals("FAQService")){
-				try {
+			try {
+				if(categoryId != null && !categoryId.equals("FAQService")){
 					questions.viewAuthorInfor = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider).isViewAuthorInfor() ;
-				} catch (Exception e) {
-					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					questions.setIsNotChangeLanguage();
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
+					questions.setCategoryId(categoryId) ;
+				} else {
+					questions.viewAuthorInfor = uiCategories.faqService_.getCategoryById(null, sessionProvider).isViewAuthorInfor() ;;
+					questions.setCategoryId(null) ;
+					categoryId = "FAQService";
 				}
-				questions.setCategoryId(categoryId) ;
-			} else {
-				categoryId = "FAQService";
-				questions.setCategoryId(null) ;
-				questions.viewAuthorInfor = false;
+			} catch (Exception e) {
+				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				questions.setIsNotChangeLanguage();
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+				sessionProvider.close();
+				return ;
 			}
 			sessionProvider.close();
 			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;

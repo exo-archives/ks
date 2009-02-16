@@ -113,7 +113,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private List<String> listLanguages = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
   private Map<String, QuestionLanguage> mapLanguageNode_ = new HashMap<String, QuestionLanguage>() ;
-  private String categoryId_ = null ;
+  private String categoryId_ = "" ;
   private String questionId_ = null ;
   private String defaultLanguage_ = "" ;
   private String lastLanguage_ = "";
@@ -238,7 +238,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   public void setQuestionId(Question question){
   	List<QuestionLanguage> questionLanguages = new ArrayList<QuestionLanguage>();
     questionId_ = question.getId() ;
-    categoryId_ = null ;
+    categoryId_ = "" ;
     SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     try {
       question_ = question ;
@@ -505,7 +505,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         question_ = new Question() ;
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
-        if(questionForm.categoryId_ != null){
+        if(questionForm.categoryId_ == null || questionForm.categoryId_.trim().length() < 1){
 	        try{
 	          questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, sessionProvider).isModerateQuestions() ;
 	        } catch(Exception exception){

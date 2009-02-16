@@ -168,11 +168,14 @@ public class JCRDataStorage {
 		return false;
 	}
 	
-	public boolean isAdminRole(String userName) throws Exception {
+	public boolean isAdminRole(String userName, SessionProvider sessionProvider) throws Exception {
 		try {
 			for(int i = 0; i < rulesPlugins_.size(); ++i) {
 				List<String> list = new ArrayList<String>();
 				list.addAll(rulesPlugins_.get(i).getRules(this.ADMIN_));
+				Node cateHomeNode = getCategoryHome(sessionProvider, null);
+				if(cateHomeNode.hasProperty("exo:moderators")) 
+					list.addAll(Arrays.asList(ValuesToStrings(cateHomeNode.getProperty("exo:moderators").getValues()))) ;
 				if(list.contains(userName)) return true;
 				return this.hasPermission(list, getAllGroupAndMembershipOfUser(userName));
 			}
@@ -1280,12 +1283,14 @@ public class JCRDataStorage {
 	
 	@SuppressWarnings("static-access")
 	private void saveCategory(Node categoryNode, Category category) throws Exception {
-		categoryNode.setProperty("exo:id", category.getId()) ;
-		categoryNode.setProperty("exo:index", category.getIndex()) ;
+		if(category.getId() != null){
+			categoryNode.setProperty("exo:id", category.getId()) ;
+			categoryNode.setProperty("exo:index", category.getIndex()) ;
+			categoryNode.setProperty("exo:createdDate", GregorianCalendar.getInstance()) ;
+		}
 		categoryNode.setProperty("exo:name", category.getName()) ;
 		categoryNode.setProperty("exo:description", category.getDescription()) ;
 		//cal.setTime(category.getCreatedDate()) ;
-		categoryNode.setProperty("exo:createdDate", GregorianCalendar.getInstance()) ;
 		categoryNode.setProperty("exo:moderators", category.getModerators()) ;
 		categoryNode.setProperty("exo:isModerateQuestions", category.isModerateQuestions()) ;
 		categoryNode.setProperty("exo:viewAuthorInfor", category.isViewAuthorInfor()) ;
@@ -1440,17 +1445,19 @@ public class JCRDataStorage {
 				catNode.save() ;
 			}
 			setIndexCategory(parentCategory, qm);
-		} else {
+		} else{
 			Node catNode ;
 			if(isAddNew) {
 				catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
-			} else 
-				catNode = categoryHome.getNode(cat.getId()) ;
+			} else {
+				 if(cat.getId() != null) catNode = categoryHome.getNode(cat.getId()) ;
+				 else catNode = getCategoryHome(sProvider, null);
+			}
 			saveCategory(catNode, cat) ;
 			if(categoryHome.isNew()) categoryHome.getSession().save();
 			else categoryHome.save();
 			setIndexCategory(categoryHome, qm);
-		} 	
+		}
 	}
 	
 	public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception {
