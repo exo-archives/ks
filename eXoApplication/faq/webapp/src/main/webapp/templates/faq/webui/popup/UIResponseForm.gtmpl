@@ -127,10 +127,12 @@
 												display="block";
 											} else {
 												String isEditQuestion = uicomponent.event("ViewEditQuestion", "");
+												String questionDetail = uicomponent.getValue(field.getName()) ;
+												questionDetail = org.exoplatform.faq.webui.ForumTransformHTML.convertCodeHTML(questionDetail);
 											%>
 												<div style="float:left; width: 100%">
 													<div class="ViewQuestionNotApproved" style="white-space:normal; float: left;">
-														<%=uicomponent.getValue(field.getName())%>
+														<span>$questionDetail</span>
 													</div>
 													<%
 													if(field.getName().equals("QuestionTitle")){

@@ -840,6 +840,19 @@
 	height: 280px;
 }
 
+.UIFAQPortlet .UIResponse .QuestionDetail {
+	margin: 5px 0px 10px 5px;
+	white-space:normal;
+}
+
+.UIFAQPortlet .UIResponse .QuestionDetail p {
+	margin: 0px;
+}
+
+.UIFAQPortlet .UIResponse .ViewQuestionNotApproved p {
+	margin: 0px;
+}
+
 /******************************	UI Add	***************************************/
 
 .UIFAQPortlet .UIAddCategory {
@@ -1803,6 +1816,7 @@
 	width: auto;
 	line-height: 18px;
 	margin: 2px;
+	display: block;
 }
 
 .UIFAQPortlet .DisableMenuItem {

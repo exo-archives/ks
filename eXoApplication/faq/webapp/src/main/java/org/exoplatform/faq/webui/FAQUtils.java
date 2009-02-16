@@ -487,4 +487,9 @@ public class FAQUtils {
 			return null;
 		}
 	}
+	
+	public static String convertLinkToForum(String s){
+		s = s.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("DiscussForum", "ChangePath");
+		return s;
+	}
 }

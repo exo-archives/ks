@@ -38,6 +38,7 @@
 								Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
 							 	date = formatter.format(answer.getDateResponse());
 								response = answer.getResponses();
+								response = org.exoplatform.faq.webui.ForumTransformHTML.convertCodeHTML(response);
 								%> 
 								<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
 								<div class="Response" id="SetWidthImageContent" style="width: 97%;">$response</div>

@@ -37,7 +37,13 @@
 								<div style="margin: 5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Detail")%>: </div>
 							</td>
 							<td style="white-space:nowrap;">
-								<div style="margin: 5px 0px 10px 5px;white-space:normal;"><%=uicomponent.questionDetail%></div>
+								<div class="QuestionDetail">
+								<%
+									String questionDetail = uicomponent.questionDetail ;
+									questionDetail = org.exoplatform.faq.webui.ForumTransformHTML.convertCodeHTML(questionDetail);
+								%>
+									<span>$questionDetail</span>
+								</div>
 							</td>
 						</tr>
 						<tr>
