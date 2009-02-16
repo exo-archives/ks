@@ -17,7 +17,7 @@ import org.exoplatform.services.organization.User;
                   <div class="QuickSet">
                     <div class="SearchTitle"><%=_ctx.appRes(uicomponent.id+ ".label.user-search") %>:</div>
                     <% uiform.renderField(uiform.USER_SEARCH) %>
-                    <a class="SearchIcon" href="<%=uicomponent.event("SearchUser")%>" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"><span></span></a>
+                    <a class="SearchIcon" href="<%=uicomponent.event("SearchUser")%>" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"></a>
                   </div>  
                 </div>
                 <div class="AddressesGroup">

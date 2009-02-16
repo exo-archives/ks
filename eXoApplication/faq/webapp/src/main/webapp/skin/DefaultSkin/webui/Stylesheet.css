@@ -8,6 +8,9 @@
 .UIFAQPortlet {
 	padding: 5px;
 	min-width: 600px;
+	background-color: #fff;
+	margin: 3px 0px 0px 5px;
+	border: solid 1px #b7b7b7;
 }
 
 /******************************************** UIBreadcumbs ****************************************/
@@ -67,6 +70,7 @@
 /**************************** UIFAQPortlet FAQToolBar *********************************/
 .UIFAQPortlet .UIQuestions {
 	margin-top: 5px;
+	height: 100%;
 }
 
 .UIFAQPortlet .FAQToolbar {
@@ -331,6 +335,7 @@
 
 .UIFAQPortlet .UIQuestions .FAQContainer {
 	min-height: 400px;
+	width: 99.8% !importan;
 }
 
 .UIFAQPortlet .UIQuestions .FAQContainer .UIFAQPopupCategory {
@@ -698,6 +703,7 @@
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseExternal {
 	padding: 5px 10px 10px 0px; 
 	background: url('background/BottomResponseContent.gif') repeat-x bottom left;
+	width: 98.6% !important;
 }
 
 .UIFAQPortlet .FAQContainer .ResponseContainer .TitleCommentContent{
@@ -718,7 +724,7 @@
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .Response {
-	_width: 90%;
+	_width: 100%;
 }
 
 .UIFAQPortlet .FAQContainer .FAQContent .RelationContent {

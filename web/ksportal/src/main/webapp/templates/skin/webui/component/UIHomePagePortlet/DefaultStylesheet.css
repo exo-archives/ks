@@ -97,7 +97,7 @@
 /***************************************************************************************************/
 
 .UIHomePagePortlet {
-	padding: 4px 0px 4px 4px;
+	padding: 1px 0px 4px 4px;
 }
 
 .UIHomePagePortlet .TryNowIcon{
@@ -213,7 +213,7 @@
 
 .UIHomePagePortlet .Decorator .ForumLabel .Label {
 	line-height: 20px;
-	width: 90%;
+	width: auto;
 	overflow: hidden;
 	white-space: nowrap;
 }
@@ -237,7 +237,7 @@
 
 .UIHomePagePortlet .Decorator .FAQLabel .Label {
 	line-height: 20px;
-	width: 90%;
+	width: auto;
 	overflow: hidden;
 	white-space: nowrap;
 }
@@ -255,7 +255,7 @@
 /***************************************************************************************************/
 
 .SideBar {
-	padding: 8px;
+	padding: 3px;
 }
 
 

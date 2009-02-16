@@ -6,7 +6,7 @@
 		<table>
 			<tbody>
 				<tr>
-					<td>
+					<td style="width:60%">
 						<div style="overflow: hidden; padding-left: 5px;">
 							<%  
 								if(uicomponent.getBreadcumbs().size() > 1){

@@ -58,7 +58,7 @@
 								if(isDisplayAvatar) {
 									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
-								<img id="ImgAvatar" src="$avatarUrl" class="Img" width="70px" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
+								<img id="ImgAvatar" src="$avatarUrl" class="Img" alt="" width="70px" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
 								<% } %>
 								<div class="Rank">$userTitle</div>
 								<div class="InfoMember">
@@ -132,13 +132,17 @@
 		<table class="ActionContainer" align="center">
 			<tr>
 				<td align="center">
-					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+					<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);">
+										<%=_ctx.appRes("UIForumPortlet.label.Close");%>
+									</a>
+								</div>
 							</div>
 						</div>
-					</a>
+					</div>
 				</td>
 			</tr>
  		</table> 
