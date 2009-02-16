@@ -20,14 +20,14 @@
 				  		String priviousPage = _ctx.appRes(uicomponent.getName() + ".label.PreviousPage") ;
 				  %>
 				    <a title="$firstPage" class="Icon LastTopPageIcon" href="<%=uicomponent.event("GoPage","first")%>"></a>        
-				    <a title="$priviousPage" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"><span></span></a>
+				    <a title="$priviousPage" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"></a>
 				  <% } %>
 				  <% 
 				  	for(number in uicomponent.getTotalpage()) {
 				  		if(number.equals(selected)) {
 				  %>
 						  <div class="Number">
-						    <a class="PageSelected" style="color: #0183f1;"><b>$number</b></a>
+						    <a class="PageSelected" style="color: #0183f1; font-weight:bold;">$number</a>
 						  </div>
 				  	<%} else {%>
 						  <div class="Number">
@@ -39,8 +39,8 @@
 				  		String nextPage = _ctx.appRes(uicomponent.getName() + ".label.NextPage") ;
 				  		String lastPage = _ctx.appRes(uicomponent.getName() + ".label.LastPage");
 				  %>  
-				    <a title="$nextPage" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"><span></span></a>
-				    <a title="$lastPage" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"><span></span></a>
+				    <a title="$nextPage" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"></a>
+				    <a title="$lastPage" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"></a>
 				  <% } else { %>  
 				    <div class="Icon DisableNextPageIcon"><span></span></div>
 				    <div class="Icon DisableNextTopPageIcon"><span></span></div>

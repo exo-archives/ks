@@ -604,7 +604,7 @@
 
 .UIFAQPortlet .ViewQuestionNotApproved {
 	display:table-cell;
-	line-height:18px;
+	line-height:12px;
 	padding-right: 5px ;
 }
 
@@ -1824,6 +1824,18 @@
 	background: url('background/ThreadIcon.gif') no-repeat left;
 }
 
+@media print {
+	.UIFAQPortlet .UIAction {
+		display:none ;
+	}
+}
+@media print {
+.UIAction .PrintAction {
+	display:none ;
+	}
+}
+														
+
 /*********************Rightclick***************************/
 
 .UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
@@ -1834,3 +1846,5 @@
 .UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
   display: block;
 }
+
+
