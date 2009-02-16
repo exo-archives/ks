@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
+import javax.jcr.observation.EventListener;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
@@ -912,6 +913,7 @@ public interface ForumService {
   public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception;
   public void updateStatisticCounts(long topicCoutn, long postCount) throws Exception  ;
   public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception;
+  public void unRegisterListenerForCategory(String path) throws Exception ;
   public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception;
   public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception;
 }

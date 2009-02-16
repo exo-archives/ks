@@ -45,6 +45,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
+import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -80,6 +81,7 @@ import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.conf.CategoryData;
+import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.PostData;
@@ -117,6 +119,7 @@ public class JCRDataStorage {
 	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	private List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
+	protected Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
 
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator;
@@ -144,7 +147,39 @@ public class JCRDataStorage {
 			defaultPlugins_.add((InitializeForumPlugin)plugin) ;
 		}		
 	}
-
+	
+	public void initCategoryListener() {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		listeners_.clear() ;
+		try{
+			Node forumHome = getForumHomeNode(sProvider) ;
+			ObservationManager observation = forumHome.getSession().getWorkspace().getObservationManager() ;
+			String wsName = forumHome.getSession().getWorkspace().getName() ;
+			String repoName = ((RepositoryImpl)forumHome.getSession().getRepository()).getName() ;
+			if(!listeners_.containsKey(forumHome.getPath())) {
+				CategoryEventListener categoryListener = new CategoryEventListener(wsName, repoName) ;
+				observation.addEventListener(categoryListener, Event.NODE_ADDED + Event.NODE_REMOVED ,forumHome.getPath(), false, null, null, false) ;
+	    	listeners_.put(forumHome.getPath(), categoryListener) ;
+			}
+			NodeIterator iter = forumHome.getNodes();
+			while(iter.hasNext()) {
+				Node catNode = iter.nextNode() ;
+				if(catNode.isNodeType("exo:forumCategory")) {
+					if (!listeners_.containsKey(catNode.getPath())) {
+						StatisticEventListener sListener = new StatisticEventListener(wsName, repoName) ;
+						observation.addEventListener(sListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
+						listeners_.put(catNode.getPath(), sListener) ;						
+					}
+				}
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally{
+			sProvider.close() ;	
+		}
+	}
+	
 	public boolean isAdminRole(String userName) throws Exception {
 		try {
 			String []strings = new String[]{};
@@ -167,12 +202,6 @@ public class JCRDataStorage {
 			return appNode.getNode(Utils.FORUM_SERVICE);
 		} catch (PathNotFoundException e) {
 			Node forumHomeNode = appNode.addNode(Utils.FORUM_SERVICE, "exo:forumHome");
-//    Add observation
-    	String wsName = forumHomeNode.getSession().getWorkspace().getName() ;
-    	RepositoryImpl repo = (RepositoryImpl)forumHomeNode.getSession().getRepository() ;
-    	ObservationManager observation = forumHomeNode.getSession().getWorkspace().getObservationManager() ;
-    	StatisticEventListener addCategoryListener = new StatisticEventListener(wsName, repo.getName()) ;
-    	observation.addEventListener(addCategoryListener, Event.NODE_ADDED ,forumHomeNode.getPath(), false, null, null, false) ;
 			return forumHomeNode;
 		}
 	}
@@ -463,34 +492,42 @@ public class JCRDataStorage {
 		catNode.setProperty("exo:userPrivate", category.getUserPrivate());
 		if(catNode.isNew()){
 			catNode.getSession().save();
-//    Add observation
-    	/*String wsName = catNode.getSession().getWorkspace().getName() ;
-    	RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
-    	ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
-    	StatisticEventListener addQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
-    	observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,catNode.getPath(), true, null, null, false) ;
-    	StatisticEventListener removeQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
-    	observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;*/
 		} else {
 			catNode.save();
 		}
 	}
 	
-	public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception{
+	public void registerListenerForCategory(SessionProvider sessionProvider, String path) throws Exception{
 		Node forumHomeNode = getForumHomeNode(sessionProvider);
-		Node catNode = forumHomeNode.getNode(categoryId);
-		if(!catNode.isNodeType("exo:forumCategory")) {
-			return;
-		}
-		String wsName = catNode.getSession().getWorkspace().getName() ;
-  	RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
-  	ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
-  	StatisticEventListener addQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
-  	observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,catNode.getPath(), true, null, null, false) ;
-  	StatisticEventListener removeQuestionListener = new StatisticEventListener(wsName, repo.getName()) ;
-  	observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
+		String id = path.substring(path.lastIndexOf("/") + 1) ;
+		Node catNode = forumHomeNode.getNode(id);
+		if(catNode.isNodeType("exo:forumCategory")) {
+			if(!listeners_.containsKey(catNode.getPath())) {
+				String wsName = catNode.getSession().getWorkspace().getName() ;
+		  	RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
+		  	ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
+		  	StatisticEventListener statisticEventListener = new StatisticEventListener(wsName, repo.getName()) ;
+		  	observation.addEventListener(statisticEventListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
+		  	listeners_.put(catNode.getPath(), statisticEventListener); 
+	  	}
+		}		
 	}
-
+ 	
+	public void unRegisterListenerForCategory(String path) throws Exception{
+ 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+ 		try {
+ 			if(listeners_.containsKey(path)) {
+ 				ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
+ 				obserManager.removeEventListener((StatisticEventListener)listeners_.get(path)) ;
+ 				listeners_.remove(path) ;
+ 			} 	 					
+		}catch(Exception e){
+			e.printStackTrace() ;
+		}finally{
+			sProvider.close() ;
+		}
+	}
+	
 	public Category removeCategory(SessionProvider sProvider, String categoryId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		try {
@@ -500,10 +537,12 @@ public class JCRDataStorage {
 
 			categoryNode.remove();
 			forumHomeNode.save();
+			
 			return category;
-		} catch (PathNotFoundException e) {
-			return null;
+		} catch(Exception e) {
+			e.printStackTrace() ;
 		}
+		return null ;
 	}
 
 	public List<Forum> getForums(SessionProvider sProvider, String categoryId, String strQuery) throws Exception {
@@ -1499,7 +1538,6 @@ public class JCRDataStorage {
 			queryLastTopic(sProvider, srcForumNode.getPath());
 			// Topic Move
 			Node topicNode = (Node) forumHomeNode.getSession().getItem(newTopicPath);
-			System.out.println("\n\n =====>move: " + destForumPath.substring(destForumPath.lastIndexOf("/")));
 			topicNode.setProperty("exo:path", destForumPath.substring(destForumPath.lastIndexOf("/")));
 			long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
 			// Forum add Topic (destForum)
@@ -1861,9 +1899,8 @@ public class JCRDataStorage {
 					} else {
 						if (post.getIsApproved()) {
 							// set InfoPost for Topic
-							if (!post.getIsHidden()) {
-								forumNode.setProperty("exo:postCount", forumPostCount);
-	
+							if (!post.getIsHidden() && post.getUserPrivate().length != 2) {
+								forumNode.setProperty("exo:postCount", forumPostCount);	
 								topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 								topicNode.setProperty("exo:postCount", topicPostCount);
 								topicNode.setProperty("exo:lastPostDate", calendar);
@@ -2276,7 +2313,6 @@ public class JCRDataStorage {
 			forumHomeNode.getSession().getWorkspace().move(post.getPath(), newPostPath);
 			// Node Post move
 			postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
-			System.out.println("\n\n=====>movepost: " + destTopicPath.substring(destTopicPath.lastIndexOf(Utils.FORUM), destTopicPath.lastIndexOf("/")));
 			postNode.setProperty("exo:path", destTopicPath.substring(destTopicPath.lastIndexOf(Utils.FORUM), destTopicPath.lastIndexOf("/")));
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			if (isCreatNewTopic && count == 0) {
@@ -3491,7 +3527,6 @@ public class JCRDataStorage {
 				}
 			}
 			queryString.append("]");
-//			System.out.println("\n\npath: " + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -3540,7 +3575,6 @@ public class JCRDataStorage {
 		eventQuery.setPath(path);
 		String type = eventQuery.getType();
 		String queryString = eventQuery.getPathQuery();
-		// System.out.println("\n\npath: " + queryString);
 		Query query = qm.createQuery(queryString, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
@@ -4292,6 +4326,20 @@ public class JCRDataStorage {
 				if(count < 0) count = 0 ;
 				forumStatisticNode.setProperty("exo:postCount", count) ;
 			}
+			forumStatisticNode.save() ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}	finally{
+			sysProvider.close() ;
+		}
+	}
+	public void updateStatisticCounts1(String absPath) throws Exception {
+		SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node forumHomeNode = getForumHomeNode(sysProvider);
+			Node forumStatisticNode = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
+			
+			
 			forumStatisticNode.save() ;
 		}catch(Exception e) {
 			e.printStackTrace() ;

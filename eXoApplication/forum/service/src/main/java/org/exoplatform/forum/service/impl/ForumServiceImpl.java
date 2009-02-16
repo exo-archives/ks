@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.observation.EventListener;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -99,11 +100,14 @@ public class ForumServiceImpl implements ForumService, Startable{
 
   public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
   	storage_.addInitialDataPlugin(plugin) ;
+  	System.out.println("\n\n====> Data plugin") ;
   }
   
   public void start() {
+  	System.out.println("\n\n====> Service started") ;
   	SessionProvider systemSession = SessionProvider.createSystemProvider() ;
   	try{
+  		storage_.initCategoryListener() ;
   		updateForumStatistic(systemSession);  		
   	}catch (Exception e) {
   		e.printStackTrace() ;  		
@@ -624,6 +628,10 @@ public class ForumServiceImpl implements ForumService, Startable{
 	
 	public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception{
 		storage_.registerListenerForCategory(sessionProvider, categoryId);
+	}
+	
+	public void unRegisterListenerForCategory(String path) throws Exception{
+		storage_.unRegisterListenerForCategory(path) ;
 	}
 	
 	public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
