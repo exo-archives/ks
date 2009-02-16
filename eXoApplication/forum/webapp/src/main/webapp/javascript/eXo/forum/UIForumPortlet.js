@@ -707,6 +707,19 @@ UIForumPortlet.prototype.checkedNode = function(elm) {
   }
 } ;
 
+UIForumPortlet.prototype.checkedChildNode = function(elm) {
+  var input = elm.getElementsByTagName("input")[0]; 
+  if(input){
+  	if(input.checked == false){
+  		var DOMUtil = eXo.core.DOMUtil;
+	  	var parentCheckBoxNode = elm.parentNode.parentNode.parentNode;
+	  	var parentCheckBox = DOMUtil.findFirstDescendantByClass(parentCheckBoxNode, "div", "ParentCheckBox");
+	  	var parentInput = parentCheckBox.getElementsByTagName("input")[0];
+	  	if(parentInput.checked) parentInput.checked = false;
+  	}
+  }
+} ;
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
 
 eXo.forum.CheckBox = {

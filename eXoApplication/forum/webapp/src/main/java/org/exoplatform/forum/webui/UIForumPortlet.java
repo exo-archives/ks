@@ -136,9 +136,11 @@ public class UIForumPortlet extends UIPortletApplication {
 		getChild(UISearchForm.class).setRendered(isSearchRendered) ;
 	}
 	
-	private void loadPreferences() throws Exception {
+	public void loadPreferences() throws Exception {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		invisibleCategories.clear();
+		invisibleForums.clear();
 		try {
 			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
 			enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));

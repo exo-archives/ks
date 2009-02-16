@@ -3,7 +3,6 @@
 	import org.exoplatform.forum.service.Forum;
 	import org.exoplatform.forum.service.Utils ;
 %>
-
 <div class="UIMovePostForm UIMoveTopicForm">
 	<% uiform.begin() %>
 	<div class="TitleMoveThreads"><%=_ctx.appRes("UIForumPortlet.label.ChooseCategory-Forum");%>:</div>
@@ -26,7 +25,7 @@
 				if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
 		%>
 			<div class="Node $iconClass">
-				<div onclick='eXo.forum.UIForumPortlet.checkedNode(this);' style="float:left; padding-top:4px;"><%uicomponent.renderChild(category.getId())%></div>
+				<div class="ParentCheckBox" onclick='eXo.forum.UIForumPortlet.checkedNode(this);' style="float:left; padding-top:4px;"><%uicomponent.renderChild(category.getId())%></div>
 			 	<div class="Icon CategoryNormalIcon"><span></span></div>	
 			 	<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
 			 		<div class="NodeSelected"><a class="Cursor">$categoryName</a></div> 
@@ -44,7 +43,7 @@
 						if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
 				%>
 					<div class="Node">
-						<div style="float:left; padding-top:3px;"><%uicomponent.renderChild(forum.getId())%></div>
+						<div onclick='eXo.forum.UIForumPortlet.checkedChildNode(this);' style="float:left; padding-top:3px;"><%uicomponent.renderChild(forum.getId())%></div>
 						<div class="Icon $classForumIcon"><span></span></div>
 						<div class="NodeLabel"> 
 							<div>$forumName</div>
@@ -65,13 +64,11 @@
 				 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 				 String link = uicomponent.event(action) ;
 			%>
-					<div href="$link" class="ActionButton LightBlueStyle">
+					<div onclick="$link" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">
-										$action
-									</a
+									<a href="javascript:void(0);">$actionLabel</a
 								</div>
 							</div>
 						</div>

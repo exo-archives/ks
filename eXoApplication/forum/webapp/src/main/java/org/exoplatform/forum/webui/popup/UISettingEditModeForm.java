@@ -47,10 +47,16 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
  * Feb 2009 - 03:59:49
  */
 
-@ComponentConfig(lifecycle = UIFormLifecycle.class, template = "app:/templates/forum/webui/popup/UISettingEditModeForm.gtmpl", events = { @EventConfig(listeners = UISettingEditModeForm.SaveActionListener.class) })
+@ComponentConfig(
+		lifecycle = UIFormLifecycle.class, 
+		template = "app:/templates/forum/webui/popup/UISettingEditModeForm.gtmpl", 
+		events = { 
+			@EventConfig(listeners = UISettingEditModeForm.SaveActionListener.class) 
+		}
+)
 public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile;
-	private static boolean isSave = false;
+	private boolean isSave = false;
 	private static List<String>listCategoryinv = new ArrayList<String>();
 	private static List<String>listforuminv = new ArrayList<String>() ;
 	public UISettingEditModeForm() {
@@ -58,8 +64,8 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 
 	public void setUserProfile(UserProfile userProfile) {
 		this.userProfile = userProfile;
+		this.isSave = false;
 	}
-	
 	private List<String> getListInValus(String value) throws Exception {
 		List<String>list = new ArrayList<String>();
 		if(!ForumUtils.isEmpty(value)) {
@@ -92,7 +98,9 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		} finally {
 			sProvider.close();
 		}
-		if(!isSave) listCategoryinv = ((UIForumPortlet)this.getParent()).getInvisibleCategories();
+		if(!isSave) {
+			listCategoryinv = ((UIForumPortlet)this.getParent()).getInvisibleCategories();
+		}
 		for (Category category : categoryList) {
 			String categoryId = category.getId();
 			boolean isCheck = false;
@@ -100,7 +108,9 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 			if (getUIFormCheckBoxInput(categoryId) != null) {
 				getUIFormCheckBoxInput(categoryId).setChecked(isCheck);
 			} else {
-				addUIFormInput(new UIFormCheckBoxInput(categoryId, categoryId, isCheck));
+				UIFormCheckBoxInput boxInput = new UIFormCheckBoxInput(categoryId, categoryId, isCheck);
+				boxInput.setChecked(isCheck);
+				addUIFormInput(boxInput);
 			}
 		}
 		return categoryList;
@@ -129,7 +139,9 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 			if (getUIFormCheckBoxInput(forumId) != null) {
 				getUIFormCheckBoxInput(forumId).setChecked(isCheck);
 			} else {
-				addUIFormInput(new UIFormCheckBoxInput(forumId, forumId, isCheck));
+				UIFormCheckBoxInput boxInput = new UIFormCheckBoxInput(forumId, forumId, isCheck);
+				boxInput.setChecked(isCheck);
+				addUIFormInput(boxInput);
 			}
 		}
 		return forumList;
@@ -158,9 +170,10 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 			UIApplication uiApp = editModeForm.getAncestorOfType(UIApplication.class) ;
 			try {
 				ForumUtils.savePortletPreference(listCategoryId, listForumId);
-				isSave = true;
+				editModeForm.isSave = true;
 				listCategoryinv = editModeForm.getListInValus(listCategoryId);
 				listforuminv = editModeForm.getListInValus(listForumId);
+				((UIForumPortlet)editModeForm.getParent()).loadPreferences();
 				Object[] args = { "" };
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", args, ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
