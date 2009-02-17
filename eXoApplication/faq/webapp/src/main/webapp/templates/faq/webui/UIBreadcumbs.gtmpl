@@ -7,7 +7,7 @@
 			<tbody>
 				<tr>
 					<td style="width:60%">
-						<div style="overflow: hidden; padding-left: 5px;">
+						<div style="overflow:hidden; padding-left:5px;">
 							<%  
 								if(uicomponent.getBreadcumbs().size() > 1){
 							%>
@@ -43,7 +43,7 @@
 									} %>
 						  <% t = t + 1 ;
 						  } %>
-						  <div style="clear: left"><span></span></div>
+						  <div style="clear:left"><span></span></div>
 						  <% } %>
 						 </div>
 				  </td>
@@ -51,7 +51,7 @@
 						<div class="SearchForm">
 							<%uicomponent.renderChild(uicomponent.QUICK_SEARCH) ;%>
 						</div>
-						<div style="clear: right;"><span></span></div>
+						<div style="clear:right;"><span></span></div>
 					</td>
 		 		</tr>
 		 	</tbody>

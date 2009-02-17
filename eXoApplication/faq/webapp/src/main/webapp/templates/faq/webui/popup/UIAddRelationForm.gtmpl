@@ -18,15 +18,15 @@
     int id = 0 ;
    %>
    	<div class="FAQCategoryTreeView" id="FAQCate$i">
-			<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+			<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
 				<%=_ctx.appRes("UIAddRelationForm.title.RootCategory")%>
 			</a>
 		</div>
-		<div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
-			<div style="margin-top: 10px; display: block;" id="FAQViewChild$i">
+		<div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQViewChild$i">
+			<div style="margin-top:10px; display:block;" id="FAQViewChild$i">
 	    <%
 	      for(Question question : uicomponent.getQuestions(null)) {%>
-		    	<div id="FAQCate$i" style="margin: 5px;">
+		    	<div id="FAQCate$i" style="margin:5px;">
 		        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 		    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
 					</div>
@@ -42,12 +42,12 @@
 	    	i ++ ;
 	      if(i == 1) {%>
 					<div class="FAQCategoryTreeView" id="FAQCate$i">
-						<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+						<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 					</div>
-					<div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
-						<div style="margin-top: 10px;" id="FAQViewChild$i">
+					<div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQViewChild$i">
+						<div style="margin-top:10px;" id="FAQViewChild$i">
 			    	<%for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
-					    	<div id="FAQCate$i" style="margin: 5px;">
+					    	<div id="FAQCate$i" style="margin:5px;">
 					        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 					    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
 								</div>
@@ -59,13 +59,13 @@
 	        if(sub == 0) {%>
 	        	</div>
 	        	<div class="FAQCategoryTreeView">
-								<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+								<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 						</div>
-						<div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
-		   				<div style="margin-top: 10px;" id="FAQViewChild$i">
+						<div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQViewChild$i">
+		   				<div style="margin-top:10px;" id="FAQViewChild$i">
 		    <%
 		          for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
-					    	<div id="FAQCate$i" style="margin: 5px;">
+					    	<div id="FAQCate$i" style="margin:5px;">
 					        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 					    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
 								</div>
@@ -76,14 +76,14 @@
 	    <%
 	        } else if(sub > 0) {%>
 						<div class="FAQCategoryTreeView">
-				    	<div id="FAQCate$i" style=" overflow-x: auto;">
-				    		<a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+				    	<div id="FAQCate$i" style=" overflow-x:auto;">
+				    		<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 				    	</div>
 				    </div>
-					  <div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
-					    <div style="margin-top: 10px;" id="FAQViewChild$i">
+					  <div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQViewChild$i">
+					    <div style="margin-top:10px;" id="FAQViewChild$i">
 			    		<%for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
-						    	<div id="FAQCate$i" style="margin: 5px;">
+						    	<div id="FAQCate$i" style="margin:5px;">
 						        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 						    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
 									</div>
@@ -95,13 +95,13 @@
 	    				</div>
 	     		<%}%>
 					 <div class="Icon FAQCategoryTreeView">
-						 <a href="javaScript: void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
+						 <a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')"><%= cate.getCategory().getName();%></a>
 					 </div>
-					 <div style=" display: none; padding-left: 30px ; margin-top: 10px;" id="FAQViewChild$i">
-						 <div style="margin-top: 10px;" id="FAQViewChild$i">
+					 <div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQViewChild$i">
+						 <div style="margin-top:10px;" id="FAQViewChild$i">
 		     		<%for(Question question : uicomponent.getQuestions(stackCateid.pop())) {
 		            stringBuffer.append( question.getQuestion()) ;%>
-								<div id="FAQCate$i" style="margin: 5px;">
+								<div id="FAQCate$i" style="margin:5px;">
 							    	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 										<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
 								</div>
@@ -123,20 +123,22 @@
 	
 	<!-- Action of this form -->
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer" style="text-align:center">
 				<tr>
-					<td align="center">
+					<td>
 	        <% for(action in uicomponent.getActions()) { 
 	        	 	String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           	String link = uicomponent.event(action) ;
 	        %>
-	        		<a href="$link" class="ActionButton LightBlueStyle">
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
 		      	  	<div class="ButtonLeft">
 		        	  	<div class="ButtonRight">
-		          	  	<div class="ButtonMiddle"> $actionLabel </div>
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);">$actionLabel</a>
+		          	  	</div>
 		            	</div>
 		          	</div>
-		        	</a>
+		        	</div>
           <%}%>
 	      	</td>
 				</tr>

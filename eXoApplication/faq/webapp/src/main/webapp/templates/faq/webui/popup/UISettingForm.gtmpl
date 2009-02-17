@@ -38,13 +38,13 @@ if(!uicomponent.isEditPortlet_){
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.user-watch-manager"); %></td>
 											<% String linkWacth =uicomponent.event("UserWatchManager") ; %>
 											<td>
-												<a href="$linkWacth" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager"); %>" class="WatchUserManager">&nbsp;</a>
+												<a href="$linkWacth" title="<%= _ctx.appRes("UISettingForm.title.user-watch-manager"); %>" class="WatchUserManager"></a>
 											</td>
 										</tr>
 										<tr>
 											<td class="FieldLabel"><%=_ctx.appRes("UISettingForm.label.Avatar")%>:</td>
 											<td>
-													<img id="FAQUserAvatar" src="$uicomponent.avatarUrl" class="Img" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);" style="margin: 4px;"/>
+													<img id="FAQUserAvatar" src="$uicomponent.avatarUrl" class="Img" alt="" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);" style="margin:4px;"/>
 													<br/>
 													<a href="<%=uicomponent.event("ChangeAvatar")%>" style="color:blue;">
 														[ <%=_ctx.appRes("UISettingForm.action.ChangeAvatar")%> ]
@@ -56,22 +56,24 @@ if(!uicomponent.isEditPortlet_){
 				 		</div>
 				 	</form>
 			 	<div class="UIAction">
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer" style="text-align:center">
 				<tr>
-					<td align="center">
+					<td>
 				<% for(action in uicomponent.getActions()) {
 						 if(action.indexOf("Values") > 0) continue ; 
 						 if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
 						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 						 String link = uicomponent.event(action) ;
 				%>
-						<a href="$link" class="ActionButton LightBlueStyle">
+						<div onclick="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle">$actionLabel </div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">$actionLabel</a>
+									</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					<%}%>
 					</td>
 				</tr>
@@ -82,7 +84,7 @@ if(!uicomponent.isEditPortlet_){
 </div><%
 } else {
 %>
-<div class="UISettingForm $uicomponent.id" style="padding: 4px;">
+<div class="UISettingForm $uicomponent.id" style="padding:4px;">
 	<div class="UITabPane">
 		<div style="padding:2px;">
 			<div class="WorkingArea">
@@ -137,7 +139,7 @@ if(!uicomponent.isEditPortlet_){
 								String display = "none" ;
 								if(formInput.getId().equals(selTabId)) display="block" ;
 						%>
-								<div class="UITabContent"	style="display: $display;">
+								<div class="UITabContent"	style="display:$display;">
 								<%if(formInput.getId().equals(uicomponent.SET_DEFAULT_EMAIL_TAB)){%>
 										
 										<div>
@@ -186,7 +188,7 @@ if(!uicomponent.isEditPortlet_){
 															else displayChild = "none" ;
 															i ++;
 													%>
-															<div class="UITabContent"	style="display: $displayChild; padding:5px;">
+															<div class="UITabContent"	style="display:$displayChild; padding:5px;">
 																<table>
 																<%//uicomponent.renderUIComponent(uiFormInput);
 																	for(childForm in uiFormInput.getChildren()) {%>
@@ -198,9 +200,9 @@ if(!uicomponent.isEditPortlet_){
 																				<div style="float:left;">
 																					<%uicomponent.renderUIComponent(childForm);%>
 																				</div>
-																				<a href="$actionReset" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
+																				<div onclick="$actionReset" style="cursor:pointer;" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
 																					<div class="refreshMail"><span></span></div>
-																				</a>
+																				</div>
 																			</td>
 																		</tr>
 																<%}%>
@@ -222,23 +224,23 @@ if(!uicomponent.isEditPortlet_){
 				
 				
 				<div class="UIAction">
-					<table class="ActionContainer" align="center">
+					<table class="ActionContainer" style="text-algin:center">
 						<tr>
-				 	 		<td align="center">
+				 	 		<td>
 								<%for(action in uicomponent.getActions()) { 
 									if(uicomponent.isEditPortlet_ && action.indexOf("Cancel") >= 0) continue ; 
 									String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action);
 									String link = uicomponent.event(action) ;
 								%>
-								<a href="$link" class="ActionButton LightBlueStyle">
+								<div onclick="$link" class="ActionButton LightBlueStyle">
 									<div class="ButtonLeft">
 										<div class="ButtonRight">
 											<div class="ButtonMiddle">
-											 $actionLabel
+											 <a href="javascript:void(0);">$actionLabel</a>
 											</div>
 										</div>
 									</div>
-								</a>
+								</div>
 								<%}%>
 			 			</td>
 						</tr>

@@ -45,15 +45,15 @@
 				    <div class="Icon DisableNextPageIcon"><span></span></div>
 				    <div class="Icon DisableNextTopPageIcon"><span></span></div>
 				  <% } %>
-				    <div style="clear: left;"><span></span></div>
+				    <div style="clear:left;"><span></span></div>
 				  </div>
 				  <div class="LeftPageIteratorBlock">
 				  	<div class="TotalPages">Total pages:</div>
 				  	<div class="PagesTotalNumber"><%=max_page%></div>
-				  	<div style="clear: left;"><span></span></div>
+				  	<div style="clear:left;"><span></span></div>
 				  </div>
 			  </div>
-			  <div style="clear: right;"><span></span></div>
+			  <div style="clear:right;"><span></span></div>
 			</div>
 	<%
 		}

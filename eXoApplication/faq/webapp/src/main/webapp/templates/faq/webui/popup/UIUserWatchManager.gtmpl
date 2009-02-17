@@ -4,7 +4,7 @@
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
  %>
-<div class="UIUserWatchManager $uicomponent.id" style="padding: 8px;">
+<div class="UIUserWatchManager $uicomponent.id" style="padding:8px;">
 		
 		<div class="UITabPane">
 			<div style="padding:2px;">
@@ -57,16 +57,16 @@
 	            }
 	        		%>
 	        		<!-- manager for watch category -->
-      				<div class="UITabContent"  style="display: $display1; padding-bottom: 30px;">
+      				<div class="UITabContent" style="display:$display1; padding-bottom:30px;">
 								<div class="UIForm">
 						 			<div class="UIHorizontalLayout">
 						 				<div class="UIPermissionManager">
 						 					<div class="UIPermissionInfo">
-						 						<table class="UIGrid" cellspacing="0" borderspacing="0">
+						 						<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
 						 							<thead>
 						 								<tr>
 							 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
-							 								<th width="80"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+							 								<th style="width:80px"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
 						 								</tr>
 						 							</thead>
 						 							<tbody>
@@ -84,14 +84,14 @@
 						 											String title = path ;
 						 											path = uicomponent.getSubString(path,120)
 						 									 %>
-						 										<td class="text" align="left"><a title="$title" href="$link">$path</a></td>
+						 										<td class="text" style="text-align:left"><a title="$title" href="$link">$path</a></td>
 						 									<% } else { %>
-						 										<td class="text" align="left"><a href="$link">$path</a></td>
+						 										<td class="text" style="text-align:left"><a href="$link">$path</a></td>
 						 									<% } %>
-						 									<td style="width: 40px;" align="center">
-						 										<a href="javaScript:void(0);" onclick="javaScript: if(confirm('<%=_ctx.appRes("UIUserWatchManager.msg.confirm-unwatch-category")%>')){$unWatch}" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left;">
+						 									<td style="width:40px;">
+						 										<div onclick="javaScript: if(confirm('<%=_ctx.appRes("UIUserWatchManager.msg.confirm-unwatch-category")%>')){$unWatch}" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left; cursor:pointer;">
 						 											<div class="DeleteWatchIcon" ></div>
-						 										</a>
+						 										</div>
 						 									</td>
 						 								</tr>
 						 								<% 
@@ -99,7 +99,7 @@
 						 								} else {
 						 									   %>
 						 										 <tr class="EvenRow">
-																		<td class="Tdbox" colspan="2" align="center"><div class="" ><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %> </div></td>
+																		<td class="Tdbox" colspan="2" style="text-align:center"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
 									  						</tr>
 														<% } %>
 						 							</tbody>
@@ -119,57 +119,56 @@
 						 			</div>
 					 			</div>
 					 			<div style="margin:5px;">
-					 				<div style="font-weight: bold;"><%=_ctx.appRes("UIUserWatchManager.label.watchByEmail")%>:</div> 
-					 				<div class="EmailAddressIcon" style="color: gray; font-weight: bold;">$uicomponent.emailAddress</div>
+					 				<div style="font-weight:bold;"><%=_ctx.appRes("UIUserWatchManager.label.watchByEmail")%>:</div> 
+					 				<div class="EmailAddressIcon" style="color:gray; font-weight:bold;">$uicomponent.emailAddress</div>
 					 			</div>
  							</div>
  							
  							<!-- manager for watch question -->
- 							<div class="UITabContent"  style="display: $display2;">
+ 							<div class="UITabContent"  style="display:$display2;">
  								<div class="UIForm">
 						 			<div class="UIHorizontalLayout">
 						 				<div class="UIPermissionManager">
 						 					<div class="UIPermissionInfo">
-						 						<table class="UIGrid" cellspacing="0" borderspacing="0">
+						 						<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
 						 							<thead>
 						 								<tr>
 							 								<th><%= _ctx.appRes("UIUserWatchManager.label.pathCategory"); %></th>
-							 								<th width="80"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
+							 								<th style="width:80px"><%= _ctx.appRes("UIUserWatchManager.label.action"); %></th>
 						 								</tr>
 						 							</thead>
 						 							<tbody>
 						 							<% 
 						 							List<Question> listQuestion = uicomponent.getListQuestionsWatch() ;
-						 							if(listCate.size() > 0){
+						 							if(listQuestion != null && listQuestion.size() > 0){
 						 								for(Question question : listQuestion ) {
 						 									questionID = question.getId() ;
 						 									questionContent = question.getQuestion();
 						 									String unWatch = uicomponent.event("UnWatch", questionID);
 						 									String link = uicomponent.event("Link", questionID);
 						 							 %>
-						 								<tr>
+						 									<tr>
 						 									<% if(questionContent.length() > 120) {
 						 											String title = path ;
 						 											questionContent = uicomponent.getSubString(questionContent,120)
 						 									 %>
-						 										<td class="text" align="left"><a title="$title" href="$link">$questionContent</a></td>
+						 											<td class="text" style="text-align:left;"><a title="$title" href="$link">$questionContent</a></td>
 						 									<% } else { %>
-						 										<td class="text" align="left"><a href="$link">$questionContent</a></td>
+						 												<td class="text" style="text-align:left;"><a href="$link">$questionContent</a></td>
 						 									<% } %>
-						 									<td style="width: 40px;" align="center">
-						 										<a href="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left;">
+						 									<td style="width:40px;" align="center">
+						 										<div onclick="$unWatch" title="<%= _ctx.appRes("UIUserWatchManager.title.un-watch"); %>" style="float:left;">
 						 											<div class="DeleteWatchIcon" ></div>
-						 										</a>
+						 										</div>
 						 									</td>
 						 								</tr>
-						 								<% 
-						 									}
-						 								} else {
-						 									   %>
+					 								<% 
+					 									}
+					 								} else {%>
 						 										 <tr class="EvenRow">
-																		<td class="Tdbox" colspan="2" align="center"><div class="" ><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %> </div></td>
+																		<td class="Tdbox" colspan="2" style="text-algin:center;"><%= _ctx.appRes("UIUserWatchManager.title.no-matches"); %></td>
 									  						</tr>
-														<% } %>
+											<% } %>
 						 							</tbody>
 						 						</table>
 						 					</div>
@@ -190,16 +189,18 @@
 					</div>
 					
 					<div class="UIAction">
-			    	<table class="ActionContainer" align="center">
+			    	<table class="ActionContainer" style="text-align:center">
 						  <tr>
-							  <td align="center">
-					    		<a href="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+							  <td>
+					    		<div onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
 						  	  	<div class="ButtonLeft">
 						    	  	<div class="ButtonRight">
-						      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></div>
+						      	  	<div class="ButtonMiddle">
+						      	  		<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></a>
+					      	  		</div>
 						        	</div>
 						      	</div>
-					    		</a>
+					    		</div>
 				      	</td>
 							</tr>
 			 	  </table>

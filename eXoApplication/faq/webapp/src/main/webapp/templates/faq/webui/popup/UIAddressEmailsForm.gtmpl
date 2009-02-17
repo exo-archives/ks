@@ -13,19 +13,19 @@ import org.exoplatform.services.organization.User;
           <div class="LeftBar">
             <div class="RightBar">
               <div class="MiddleBar">
-                <div class="UISearchForm">
+                <div class="UISearchForm" style="float:left">
                   <div class="QuickSet">
                     <div class="SearchTitle"><%=_ctx.appRes(uicomponent.id+ ".label.user-search") %>:</div>
                     <% uiform.renderField(uiform.USER_SEARCH) %>
                     <a class="SearchIcon" href="<%=uicomponent.event("SearchUser")%>" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"></a>
-                  </div>  
+                  </div>
                 </div>
                 <div class="AddressesGroup">
-                  <div class="AddressLabel"><%=_ctx.appRes(uicomponent.id+ ".label.addresses-from-group") %> :</div>
-                    <% uiform.renderField(uiform.USER_GROUP) %>                   
-                  <div style="clear: left"><span></span></div>
+                  <div class="AddressLabel" style="float:left; padding-left:10px;"><b><%=_ctx.appRes(uicomponent.id+ ".label.addresses-from-group") %> :</b></div>
+                  <div style="float:left; margin-left:10px;"><% uiform.renderField(uiform.USER_GROUP) %></div>
+                  <div style="clear:left"><span></span></div>
                 </div>
-                <div style="clear: both"><span></span></div>
+                <div style="clear:both"><span></span></div>
               </div>
             </div>
           </div>
@@ -36,16 +36,16 @@ import org.exoplatform.services.organization.User;
     <div class="AddressContainer">
       <div class="ListAddress">
 
-        <table cellspacing="0" borderspacing="0" id="UIListUsers" class="UIGrid">
+        <table cellspacing="0" border="0" cellpadding="0" id="UIListUsers" class="UIGrid">
             <thead>
               <tr>
-                <th style="width: 20px;" class="BorderAddress"><input type="checkbox" class="checkbox" value="4" /></th>
+                <th style="width:20px;" class="BorderAddress"><input type="checkbox" class="checkbox" value="4" /></th>
                 <th class="BorderAddress">
                   <div class="BlueDownArrowIcon">
                     <div class="Label"><%=_ctx.appRes(uicomponent.id+ ".label.name") %></div>
                   </div>
                 </th>
-                <th style="width: 48%;" >
+                <th style="width:48%;" >
                   <div class="BlueDownArrowIcon">
                     <div class="Label"><%=_ctx.appRes(uicomponent.id+ ".label.email") %></div>
                   </div>
@@ -77,25 +77,29 @@ import org.exoplatform.services.organization.User;
   </div>
   
   <div class="UIAction"> 
-    <table class="ActionContainer" align="center">
+    <table class="ActionContainer" style="text-align:center">
       <tr>
-        <td align="center"> 
+        <td> 
       
-         <a href="<%=uicomponent.event("Add")%>" class="ActionButton LightBlueStyle">
+         <div onclick="<%=uicomponent.event("Add")%>" class="ActionButton LightBlueStyle">
             <div class="ButtonLeft">
               <div class="ButtonRight">
-                <div class="ButtonMiddle"> <%=_ctx.appRes(uicomponent.id+ ".label.add-address") %> </div>
+                <div class="ButtonMiddle">
+                	<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.id+ ".label.add-address") %></a>
+                </div>
               </div>
             </div>
-          </a>
-          <a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+          </div>
+          <div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
 
             <div class="ButtonLeft">
               <div class="ButtonRight">
-                <div class="ButtonMiddle"> <%=_ctx.appRes(uicomponent.id+ ".label.cancel") %> </div>
+                <div class="ButtonMiddle">
+                	<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.id+ ".label.cancel") %></a>
+                </div>
               </div>
             </div>
-          </a>
+          </div>
         </td>
       </tr>
     </table>

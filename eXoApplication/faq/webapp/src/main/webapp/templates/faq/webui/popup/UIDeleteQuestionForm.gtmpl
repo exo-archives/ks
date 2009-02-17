@@ -1,10 +1,8 @@
 <div class="FAQUIDeleteQuestionForm">
 	<% uiform.begin() %>
-		<div style="margin: 10px 10px 10px 10px;background-color:#F3F3F3; border: 1px solid #E6F3F3; _width:90%;">
-			<div style="margin: 5px 2px 10px 2px;">
-				<center><font size="2px">
-					<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "reallyDeleteQuestion")%></b>
-				</font></center>
+		<div style="margin:10px 10px 10px 10px;background-color:#F3F3F3; border:1px solid #E6F3F3; _width:90%;">
+			<div style="margin:5px 2px 10px 2px; text-align:center;font-size:2; font-weight:bold;">
+				<%=_ctx.appRes(uicomponent.getName() + ".label." + "reallyDeleteQuestion")%>
 			</div>
 			<%
 			String author = uicomponent.getAuthor() ;
@@ -13,38 +11,48 @@
 			%>
 			<table>
 				<tr>
-					<td align="right" width="15%"> 
-						<div style="margin: 5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Author")%>: </div>
+					<td style="text-align:right; width:15%"> 
+						<div style="margin:5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Author")%>:</div>
 					</td>
-					<td><div style="margin: 5px 10px 5px 2px;"> $author </div></td>
+					<td><div style="margin:5px 10px 5px 2px;">$author</div></td>
 				</tr>
 				<tr>
-					<td align="right" width="15%"> <div style="margin: 5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Email")%>: </div></td>
-					<td> <div style="margin: 5px 10px 5px 2px;">$email </div></td>
+					<td style="text-align:right; width:15%">
+						<div style="margin:5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Email")%>:</div>
+					</td>
+					<td>
+						<div style="margin:5px 10px 5px 2px;">$email</div>
+					</td>
 				</tr>
 				<tr>
-					<td align="right" width="15%"> <div style="margin: 5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%>: </div></td>
-					<td> <div style="margin: 5px 10px 5px 2px;">$content </div></td>
+					<td  style="text-align:right; width:15%">
+						<div style="margin:5px 10px 5px 2px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%>:</div>
+					</td>
+					<td>
+						<div style="margin:5px 10px 5px 2px;">$content</div>
+					</td>
 				</tr>
 			</table>
 			
 		</div>
 		
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer" style="text-align:center">
 				<tr>
-					<td align="center">
+					<td>
 	        <% for(action in uicomponent.getActions()) { 
 	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
-	        		<a href="$link" class="ActionButton LightBlueStyle">
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
 		      	  	<div class="ButtonLeft">
 		        	  	<div class="ButtonRight">
-		          	  	<div class="ButtonMiddle"> $actionLabel </div>
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);">$actionLabel</a>
+		          	  	</div>
 		            	</div>
 		          	</div>
-		        	</a>
+		        	</div>
           <%}%>
 	      	</td>
 				</tr>

@@ -1,7 +1,7 @@
 <div class="UISelectLanguageForm">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" style="margin: 10px 10px 10px 10px;background-color:#F3F3F3;">
-			<table style="margin: 10px 0px 10px 0px;">
+		<div class="HorizontalLayout" style="margin:10px 10px 10px 10px;background-color:#F3F3F3;">
+			<table style="margin:10px 0px 10px 0px;">
 				<%
 				List selectedList = uicomponent.getListSelected() ;
 				String[] localedLanguage = uicomponent.getLocaledLanguage() ;
@@ -20,14 +20,14 @@
 							</div>
 						</td>
 						<td width="45%">
-							<div style="float:left; margin-left: 5px; height: 20px;">
+							<div style="float:left; margin-left:5px; height:20px;">
 								<a title="$language" href="<%=uicomponent.event("SelectedLanguage",language);%>">
 									$language
 								</a>
 							</div>
 						</td>
 						<td width="45%">
-							<div style="float:right; margin-right: 10px;">
+							<div style="float:right; margin-right:10px;">
 								$localed
 							</div>
 						</td>

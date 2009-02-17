@@ -5,22 +5,22 @@
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.FAQUtils;
 %>
-<div class="ResultSearchQuestion $uicomponent.id" style="padding: 8px;">
+<div class="ResultSearchQuestion $uicomponent.id" style="padding:8px;">
 		<% uiform.begin() %>
 		<div class="UIForm">
 					<div class="TitleMoveThreads"><%= _ctx.appRes("ResultSearchQuestion.title.resultQuestion"); %></div>
  					<div class="UIHorizontalLayout">
  							<div class="UIPermissionManager">
  								<div class="UIPermissionInfo">
- 									<table class="UIGrid" cellspacing="0" borderspacing="0">
+ 									<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
  										<thead>
  											<tr>
- 												<th><%= _ctx.appRes("ResultSearchQuestion.title.icon"); %></th>
+ 												<th style="width:18px"><%= _ctx.appRes("ResultSearchQuestion.title.icon"); %></th>
  												<th><%= _ctx.appRes("ResultSearchQuestion.title.author"); %></th>
  												<th><%= _ctx.appRes("ResultSearchQuestion.title.email"); %></th>
  												<th><%= _ctx.appRes("ResultSearchQuestion.title.question"); %></th>
  												<th><%= _ctx.appRes("ResultSearchQuestion.title.create-date"); %></th>
- 												<th><%= _ctx.appRes("ResultSearchQuestion.title.action"); %></th>
+ 												<th style="width:20px"><%= _ctx.appRes("ResultSearchQuestion.title.action"); %></th>
  											</tr>
  										</thead>
  										<tbody>
@@ -44,24 +44,26 @@
 											}
  										 %>
 	 											<tr class="EvenRow">
-	 												<td class="text" style="width: 30px;" align="center"><div class="$icon"><span></span></div></td>
-	 												<td class="text" align="left"><%= author%></td>
-	 												<td class="text" align="left"><%= (email != null) ? email: ""%></td>
+	 												<td class="text" style="width:30px; text-align:center;">
+	 													<div class="$icon"><span></span></div>
+ 													</td>
+	 												<td class="text" style="text-align:left"><%= author%></td>
+	 												<td class="text" style="text-align:left"><%= (email != null) ? email: ""%></td>
 	 												<%
 													if(questionContent.length()>50) {
 														String title = questionContent ;
 														title = FAQUtils.getTitle(title) ; 
 														questionContent = FAQUtils.getSubString(questionContent,50) ;
 													%>
-													<td class="text" align="left"><a href="$view" title="$title">$questionContent</a></td>
+													<td class="text" style="text-align:left"><a href="$view" title="$title">$questionContent</a></td>
 													<%
 													} else {
 													%>
-													<td class="text" align="left"><a href="$view">$questionContent</a></td>
+													<td class="text" style="text-align:left"><a href="$view">$questionContent</a></td>
 													<%}%>
-	 												<td class="text" align="center"><%=date%></td>
-	 												<td style="width: 30px;" align="center">
- 														<a href="$link"><div class="CheckIcon" style="margin: 0px auto;"></div></a>
+	 												<td class="text" style="text-align:center"><%=date%></td>
+	 												<td style="width: 30px; text-align:center; cursor:pointer">
+ 														<div onclick="$link"><div class="CheckIcon" style="margin:0px auto;"></div></div>
  													</td>
 	 											</tr>
  												<% 
@@ -69,7 +71,9 @@
  											} else {
  										 %>
  										 <tr class="EvenRow">
-												<td class="Tdbox" colspan="6" align="center"><div><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div></td>
+												<td class="Tdbox" colspan="6" style="text-align:center">
+													<div><%= _ctx.appRes("ResultSearch.title.no-matches"); %></div>
+												</td>
 			  							</tr>
 										<% } %> 
  									</tbody>

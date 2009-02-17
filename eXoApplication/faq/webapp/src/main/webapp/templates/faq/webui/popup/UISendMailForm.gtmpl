@@ -3,7 +3,9 @@
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table class="UIFormGrid">
-					<tbody>	
+					<tbody>
+						<tr>
+							<td>
 						<% 
 						String name = "" ;
 						String display = "block" ;
@@ -19,81 +21,79 @@
 										display = "block" ;
 									}
 								%>
-									<div id="div$name" style="display: $display; width: 100%;  float: left; margin: 5px 0px 5px 5px;">
-										<div class="FieldLabel" style="width: 100px; float: left;">
+									<div id="div$name" style="display:$display; width:100%; float:left; margin:5px 0px 5px 5px;">
+										<div class="FieldLabel" style="width:100px; float:left;">
 											<%
 											if(!fieldName.equals(uicomponent.getId())) {
 												name = input.getName();
 												if(name.equals("To")){
 													String linkActionTo = uicomponent.event("To") ;
 												%>
-												<div style="float: right; margin-right: 5px; ">
-													<a href="$linkActionTo" style="text-decoration: underline;">
-														$fieldName 
-													</a>:
+												<div style="float:right; margin-right:5px;">
+													<a href="$linkActionTo" style="text-decoration:underline;">$fieldName</a>:
 												</div>
 											<%
 											} else if(name.equals("AddCc")){
 													String linkActionCc = uicomponent.event("Cc") ;
 												%>
-												<div style="float: right; margin-right: 5px; ">
-													<a href="$linkActionCc" style="text-decoration: underline;">
-														$fieldName 
-													</a>:
+												<div style="float:right; margin-right:5px;">
+													<a href="$linkActionCc" style="text-decoration:underline;">$fieldName</a>:
 												</div>
 											<%
 											} else if(name.equals("AddBcc")){
 													String linkActionBcc= uicomponent.event("Bcc") ;
 												%>
-												<div style="float: right; margin-right: 5px; ">
-													<a href="$linkActionBcc" style="text-decoration: underline;">
-														$fieldName 
-													</a>:
+												<div style="float:right; margin-right:5px;">
+													<a href="$linkActionBcc" style="text-decoration:underline;">$fieldName</a>:
 												</div>
 											<%
 											} else {
 											%>
-											<div style="float: right; margin-right: 5px;">$fieldName : </div>
+											<div style="float:right; margin-right:5px;">$fieldName: </div>
 											<%
 											} 
 										}
 											 %>
 										</div>
-										<div class="FieldComponent" style="width: auto; float: left;">
-											<div style="float: left">
+										<div class="FieldComponent" style="width:auto; float:left;">
+											<div style="float:left">
 												<% uiform.renderField(input) %>
 												<%if(input.getName().equals("To")){%>
-													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddCc')"> <%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
-													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddBcc')"> <%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
+													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddCc')"><%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
+													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddBcc')"><%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
 												<%}%>
 											</div>
 										</div>
 									</div>
-									<div style="clear: left"><span></span> </div>
+									<div style="clear:left"><span></span></div>
 							<%}
 							}
 						}
 						%>
-						</tbody>
+							</td>
+						</tr>
+					</tbody>
 				</table>
 			</div>
 		</div>	
 			<div class="UIAction"> 
-				<table class="ActionContainer" align="center">
+				<table class="ActionContainer" style="text-align:center">
 					<tr>
-						<td align="center">
+						<td>
 		        <%for(action in uicomponent.getActions()) { 
         		 		if(action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
 		        	 	String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		           	String link = uicomponent.event(action) ;
 		        %>
-		        		<a href="$link" class="ActionButton LightBlueStyle">
+		        		<div onclick="$link" class="ActionButton LightBlueStyle">
 			      	  	<div class="ButtonLeft">
 			        	  	<div class="ButtonRight">
-			          	  	<div class="ButtonMiddle"> $actionLabel </div>
+			          	  	<div class="ButtonMiddle">
+			          	  		<a href="javascript:void(0);">$actionLabel</a>
+			          	  	</div>
 			            	</div>
 			          	</div>
-			        	</a>
+			        	</div>
 		          <%}%>
 		      	</td>
 					</tr>

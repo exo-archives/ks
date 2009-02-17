@@ -5,21 +5,21 @@
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.webui.FAQUtils;
 %>
-<div class="ResultSearchCategory $uicomponent.id" style="padding: 8px;">
+<div class="ResultSearchCategory $uicomponent.id" style="padding:8px;">
 		<% uiform.begin() %>
 		<div class="UIForm">
 					<div class="TitleMoveThreads"><%= _ctx.appRes("ResultSearchCategory.title.resultCategory"); %></div>
  					<div class="UIHorizontalLayout">
  							<div class="UIPermissionManager">
  								<div class="UIPermissionInfo">
- 									<table class="UIGrid" cellspacing="0" borderspacing="0">
+ 									<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
  										<thead>
  											<tr>
- 												<th><%= _ctx.appRes("ResultSearchCategory.title.icon"); %></th>
+ 												<th style="width:20px"><%= _ctx.appRes("ResultSearchCategory.title.icon"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.category"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.description"); %></th>
  												<th><%= _ctx.appRes("ResultSearchCategory.title.created-date"); %></th>
- 												<th><%= _ctx.appRes("ResultSearchCategory.title.action"); %></th>
+ 												<th style="width:20px"><%= _ctx.appRes("ResultSearchCategory.title.action"); %></th>
  											</tr>
  										</thead>
  										<tbody>
@@ -35,7 +35,7 @@
 												String link = uicomponent.event("Link", categoryId);
  										 	%>
 	 											<tr class="EvenRow"> 
-	 												<td class="text" style="width: 30px;" align="center"><div class="FAQCategorySearch"><span></span></div></td>
+	 												<td class="text" style="width:30px; text-align:center"><div class="FAQCategorySearch"><span></span></div></td>
 		 											<%
 													if(categoryName.length()>70) {
 														String title = categoryName ;
@@ -54,16 +54,16 @@
 															titledescrip = FAQUtils.getTitle(titledescrip) ;
 															description = FAQUtils.getSubString(description, 25);
 															%> 
-															<td class="text" align="left"><a title="$titledescrip">$description</a></td>
+															<td class="text" style="text-algin:left"><a title="$titledescrip">$description</a></td>
 															<%  } else { %>
-															<td class="text" align="left"><%=description%></td>
+															<td class="text" style="text-algin:left"><%=description%></td>
 															<% }
 	 												 } else { %>
-	 												<td class="text" align="left"><%=""%></td>
+	 												<td class="text" style="text-algin:left"><%=""%></td>
 	 												<% } %>
 	 												<td class="text" align="center"><%=date%></td>
-	 												<td style="width: 30px;" align="center">
- 														<a href="$link"><div class="CheckIcon" style="margin: 0px auto;"></div></a>
+	 												<td style="width:30px; cursor:pointer; text-align:center">
+ 														<div onclick="$link"><div class="CheckIcon" style="margin:0px auto; cursor:pointer;"></div></div>
  													</td>
 	 											</tr>
  												<% 

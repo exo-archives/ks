@@ -16,10 +16,10 @@
 					    if(field.getName().equals( uicomponent.QUESTION_DETAIL)){
 					%>
 							  <tr>
-							    <td class="FieldLabel" width="16%" align="right">
+							    <td class="FieldLabel" style="width:16%; text-align:right">
 							      <%=uicomponent.getLabel(field.getName()) %> : 
 							    </td>
-							    <td class="FieldComponent" style="padding-left: 4px; white-space:nowrap;">
+							    <td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
 										<% uiform.renderField(field) %>
 							    </td>
 							  </tr>
@@ -28,27 +28,27 @@
 								String link = uicomponent.event("DeleteLanguage", "delete question");
 						%>
 								<tr>
-									<td class="FieldLabel" width="16%" align="right"><%=uicomponent.getLabel(field.getName()) %> : </td>
-									<td class="FieldComponent" style="padding-left: 4px; white-space:nowrap;">
+									<td class="FieldLabel" style="width:16%; text-align:right"><%=uicomponent.getLabel(field.getName()) %> : </td>
+									<td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
 										<div style="float:left;">
-											<div style="float: left;"><% uiform.renderField(field) %></div>
-											<a href="javaScript: void(0);" onclick="javaScript: if(confirm('<%=(_ctx.appRes("UIQuestionForm.msg.DeleteQuestionInLanguage") + uicomponent.lastLanguage_)%>')){$link}">
-												<div class="DustBinIcon"><span></span></div>
-											</a>
-										</div>
-										<div style="clear: left;"><span></span></div>
+											<div style="float:left;"><% uiform.renderField(field) %></div>
+												<div onclick="javaScript:if(confirm('<%=(_ctx.appRes("UIQuestionForm.msg.DeleteQuestionInLanguage") + uicomponent.lastLanguage_)%>')){$link}" style="float:left">
+													<div class="DustBinIcon"><span></span></div>
+												</div>
+											</div>
+										<div style="clear:left;"><span></span></div>
 									</td>
 								</tr>
 						<%} else {%>
 								<tr>
 									<%fieldName = uicomponent.getLabel(field.getName());
 										if(!fieldName.equals(uicomponent.getId())) {%>												
-											<td class="FieldLabel" width="16%">
+											<td class="FieldLabel" style="width:16%">
 												<%=uicomponent.getLabel(field.getName()) %> : 
 											</td>
-											<td class="FieldComponent" style="white-space:normal;" width="85%">
+											<td class="FieldComponent" style="white-space:normal; width:85%;">
 													<% uiform.renderField(field) %>
-													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress") || field.getName().equals("QuestionTitle")) {%> * <%}%><br>
+													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress") || field.getName().equals("QuestionTitle")) {%> * <%}%><br/>
 											</td>
 									<%} else {%>
 											<td class="FieldComponent" colspan="2"><% uiform.renderField(field) %></td>
@@ -61,16 +61,16 @@
 					%>
 						<!-- ============== Validation apporved and activate ============================ -->
 						<tr>
-							<td class="FieldLabel" width="16%">
+							<td class="FieldLabel" style="width:16%;">
 								<%=_ctx.appRes("UIQuestionForm.label.Validation")%> :
 							</td>
-							<td class="FieldComponent" style="white-space:normal;" >
-								<div style="float: left;">
-									<div style="float: left; padding: 0px 4px 0px 4px;">
+							<td class="FieldComponent" style="white-space:normal;">
+								<div style="float:left;">
+									<div style="float:left; padding:0px 4px 0px 4px;">
 										<%uiform.renderChild(uicomponent.IS_APPROVED);%>
 										<%=_ctx.appRes("UIQuestionForm.label.IsApproved")%>
 									</div>
-									<div style="float: left; padding: 0px 4px 0px 4px;">
+									<div style="float:left; padding:0px 4px 0px 4px;">
 										<%uiform.renderChild(uicomponent.IS_ACTIVATED);%>
 										<%=_ctx.appRes("UIQuestionForm.label.IsActivated")%>
 									</div>
@@ -80,10 +80,10 @@
 					<%}%>
 					<!-- ======================= Attachment =========================== -->
 					<tr>
-						<td class="FieldLabel" width="16%" style="white-space:nowrap;">
+						<td class="FieldLabel" style="white-space:nowrap; width:16%;">
 							<%=_ctx.appRes("UIQuestionForm.label.Attachment")%> :
 						</td>
-						<td class="FieldComponent" style="white-space:normal;" >
+						<td class="FieldComponent" style="white-space:normal;">
 							<%
 							if(!uicomponent.getListFile().isEmpty()) {
 								String name = "" ;
@@ -98,15 +98,15 @@
 						     %>
 					     		<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon" style="white-space:normal;">
 					     			$name &nbsp;&nbsp;&nbsp;
-										[<a href="$link"><font color="#058EE6" font-size="12px">
+										[<a href="$link" style="color:#058EE6; font-size:12px">
 											<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
-										</font></a>]
+										</a>]
 									</div>
 					    <%}
 							} ;
 							%>
-							<a style="padding-left: 5px; color: blue;" href="<%=uicomponent.event("Attachment")%>">
-								<i><u><%=_ctx.appRes("UIQuestionForm.label.AttachAFile")%></u></i>
+							<a style="padding-left:5px; color:blue; font-style:italic; text-decoration:underline" href="<%=uicomponent.event("Attachment")%>">
+								<%=_ctx.appRes("UIQuestionForm.label.AttachAFile")%>
 							</a>
 						</td>
 					</tr>
@@ -116,21 +116,23 @@
 		</div>
 		
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer" style="text-align:center">
 				<tr>
-					<td align="center">
+					<td>
 	        <% for(action in uicomponent.getActions()) { 
 	        		 if(action.indexOf("Remove") >= 0) continue ; 
 	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
-	        		<a href="$link" class="ActionButton LightBlueStyle">
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
 		      	  	<div class="ButtonLeft">
 		        	  	<div class="ButtonRight">
-		          	  	<div class="ButtonMiddle"> $actionLabel </div>
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);">$actionLabel</a>
+		          	  	</div>
 		            	</div>
 		          	</div>
-		        	</a>
+		        	</div>
 	          <%}%>
 	      	</td>
 				</tr>
