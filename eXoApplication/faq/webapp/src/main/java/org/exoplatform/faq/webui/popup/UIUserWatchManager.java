@@ -86,8 +86,15 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+
+	public int getTabSelect() {
+  	return tabSelect;
+  }
+
+	public String getEmailAddress() {
+  	return emailAddress;
+  }
 	
-  
   public List<Category> getListCategory() throws Exception {return getListCategoriesWatch() ;}
 	
   public String getPathService(String categoryId) throws Exception {

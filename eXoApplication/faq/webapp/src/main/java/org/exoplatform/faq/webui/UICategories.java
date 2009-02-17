@@ -373,7 +373,6 @@ public class UICategories extends UIContainer{
 			String oldPath = breadcumbs.getPaths() ;
 			if(oldPath != null && oldPath.trim().length() > 0) {
 				if(!oldPath.contains(categoryId)) {
-					String parentId = "";
 					if(oldPath.indexOf("/") > 0){
 						String parentCateId = oldPath.substring(oldPath.lastIndexOf("/")  + 1);
 						for(Category category : uiCategories.listCate){

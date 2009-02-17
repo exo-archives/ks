@@ -66,6 +66,7 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 	public UISelectForumForm() {
 	}
 	
+  @SuppressWarnings("unused")
   private void setLink(String link_) { link = link_;}
 
 	public void activate() throws Exception {	}

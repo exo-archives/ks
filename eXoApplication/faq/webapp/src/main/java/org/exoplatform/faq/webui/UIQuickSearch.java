@@ -79,7 +79,8 @@ public class UIQuickSearch  extends UIForm {
 		this.setSubmitAction(this.event("Search")) ;
 	}
 
-	public List<FAQFormSearch> getResultListQuickSearch(List<FAQFormSearch> formSearchs) throws Exception {
+	@SuppressWarnings("unchecked")
+  public List<FAQFormSearch> getResultListQuickSearch(List<FAQFormSearch> formSearchs) throws Exception {
 		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		String currentUser = FAQUtils.getCurrentUser() ;

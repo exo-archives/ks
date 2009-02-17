@@ -66,7 +66,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	private String languageSelected = null;
 	private Question question_ = new Question();
 	private Comment comment = new Comment();
-	private String questionContent = new String();
+  private String questionContent = new String();
 	private String questionDetail = new String();
 	private String currentUser_ = "";
 	private final String TITLE_USERNAME = "UserName";
@@ -84,6 +84,13 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		this.addChild((new UIFormStringInput(TITLE_USERNAME, TITLE_USERNAME, currentUser_)).setEditable(false));
 		this.addChild(new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, null, true));
 	}
+	
+	public String getQuestionContent() {
+  	return questionContent;
+  }
+	public String getQuestionDetail() {
+  	return questionDetail;
+  }
 	
 	public void setInfor(Question question, String commentId, FAQSetting faqSetting, String languageView) throws Exception{
 		if(languageView.trim().length() > 0) languageSelected = languageView;
@@ -255,5 +262,4 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-	
 }

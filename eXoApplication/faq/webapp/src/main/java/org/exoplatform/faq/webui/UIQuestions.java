@@ -1081,13 +1081,13 @@ public class UIQuestions extends UIContainer {
 			SessionProvider sProvider = FAQUtils.getSystemProvider();
 			Answer answer = null;
 			try{
-				if(questions.language_ == null || questions.language_.trim().length() < 1 || 
+				if(language_ == null || language_.trim().length() < 1 || 
 						language_.equals(faqService_.getQuestionById(questions.questionView_, sProvider).getLanguage())){
 					answer = faqService_.getAnswerById(questions.questionView_, answerId, sProvider);
 				} else {
 					multiLanguages = new MultiLanguages();
 					questionNode = faqService_.getQuestionNodeById(questions.questionView_, sProvider);
-					answer = multiLanguages.getAnswerById(questionNode, answerId, questions.language_);
+					answer = multiLanguages.getAnswerById(questionNode, answerId, language_);
 				}
 				long markVotes[] = answer.getMarkVotes();
 				List<String> listUserVoteAnswer = new ArrayList<String>();
@@ -1112,7 +1112,7 @@ public class UIQuestions extends UIContainer {
 					if(multiLanguages == null)
 						faqService_.saveAnswer(questions.questionView_, answer, false, sProvider);
 					else
-						multiLanguages.saveAnswer(questionNode, answer,questions.language_, sProvider);
+						multiLanguages.saveAnswer(questionNode, answer,language_, sProvider);
 					sProvider.close();
 					questions.setIsNotChangeLanguage();
 				}
@@ -1342,7 +1342,7 @@ public class UIQuestions extends UIContainer {
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIViewUserProfile viewUserProfile = popupContainer.addChild(UIViewUserProfile.class, null, null) ;
 				popupContainer.setId("ViewUserProfile") ;
-				viewUserProfile.setUser(user, question.faqService_) ;
+				viewUserProfile.setUser(user, faqService_) ;
 				popupAction.activate(popupContainer, 680, 350) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {

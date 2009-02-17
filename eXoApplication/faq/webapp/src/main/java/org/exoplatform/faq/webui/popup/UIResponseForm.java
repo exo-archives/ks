@@ -58,7 +58,6 @@ import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 
@@ -135,7 +134,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private int posOfResponse = 0;
 	private boolean cateIsApprovedAnswer_ = true;
 	
-	private long currentDate = new Date().getTime();
+	@SuppressWarnings("unused")
+  private long currentDate = new Date().getTime();
 
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
@@ -364,7 +364,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		listRelationQuestion.clear() ;
 	}
 
-	private boolean compareTowArraies(String[] array1, String[] array2){
+	@SuppressWarnings("unused")
+  private boolean compareTowArraies(String[] array1, String[] array2){
 		List<String> list1 = new ArrayList<String>();
 		list1.addAll(Arrays.asList(array1));
 		int count = 0;
@@ -375,7 +376,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		return false;
 	}
 	
-	private double[] getMarkVoteAnswer(List<Double> listMarkResponse){
+	@SuppressWarnings("unused")
+  private double[] getMarkVoteAnswer(List<Double> listMarkResponse){
 		double[] markVoteResponse = new double[listMarkResponse.size()];
 		int i = 0;
 		for(Double d : listMarkResponse){
@@ -404,7 +406,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				if(!validatorDataInput.fckContentIsNotEmpty(questionDetail)) questionDetail = " ";
 
 				String responseQuestionContent = responseForm.inputResponseQuestion_.getValue() ;
-				java.util.Date date = new java.util.Date();
 				if(responseQuestionContent != null && responseQuestionContent.trim().length() >0 && validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
 						if(!responseForm.listAnswers.isEmpty() && responseForm.listAnswers.size() > 0){
 							responseForm.listAnswers.get(responseForm.posOfResponse).setResponses(responseQuestionContent);
@@ -671,7 +672,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				String pos = event.getRequestContext().getRequestParameter(OBJECTID);
 				UIFormWYSIWYGInput formWYSIWYGInput = responseForm.getChildById(RESPONSE_CONTENT);
 				String responseContent = formWYSIWYGInput.getValue();
-				java.util.Date date = new java.util.Date();
 				String user = FAQUtils.getCurrentUser();
 				if(pos.equals("New")){
 					ValidatorDataInput validatorDataInput = new ValidatorDataInput();
@@ -734,7 +734,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				}
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(!validatorDataInput.fckContentIsNotEmpty(questionDetail)) questionDetail = " ";
-				java.util.Date date = new java.util.Date();
 				String user = FAQUtils.getCurrentUser();
 				for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
 					if(questionLanguage.getLanguage().equals(responseForm.languageIsResponsed)) {

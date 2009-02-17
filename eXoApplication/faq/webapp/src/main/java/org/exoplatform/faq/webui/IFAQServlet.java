@@ -50,7 +50,6 @@ public class IFAQServlet extends HttpServlet {
     try{
       String portalName = arrayInfo[1] ;
       String categoryId = arrayInfo[2] ;
-      StringBuffer fileName = new StringBuffer() ;
       PortalContainer pcontainer = getPortalContainer(portalName) ;
       PortalContainer.setInstance(pcontainer) ;
       FAQService faqService = (FAQService)pcontainer.getComponentInstanceOfType(FAQService.class) ;

@@ -24,10 +24,8 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIFAQPortlet;

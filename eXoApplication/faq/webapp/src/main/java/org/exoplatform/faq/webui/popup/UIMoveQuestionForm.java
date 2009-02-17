@@ -93,7 +93,8 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 		return this.listCate ;
 	}
 	
-	private void setLink(String url){
+	@SuppressWarnings("unused")
+  private void setLink(String url){
 		this.link = url;
 	}
 

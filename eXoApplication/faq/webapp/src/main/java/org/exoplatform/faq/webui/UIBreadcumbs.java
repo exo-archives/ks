@@ -101,7 +101,8 @@ public class UIBreadcumbs extends UIContainer {
 	}
 
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
-		public void execute(Event<UIBreadcumbs> event) throws Exception {
+		@SuppressWarnings("static-access")
+    public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs uiBreadcums = event.getSource() ;			
 			String paths = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet faqPortlet = uiBreadcums.getAncestorOfType(UIFAQPortlet.class) ;

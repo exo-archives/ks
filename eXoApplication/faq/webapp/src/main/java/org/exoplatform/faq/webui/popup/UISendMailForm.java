@@ -26,7 +26,6 @@ import javax.mail.internet.InternetAddress;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
-import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
@@ -136,7 +135,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       name = FAQUtils.getFullName(userName) ;
       email = FAQUtils.getEmailUser(userName) ;
     }
-    String quest = question.getQuestion().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
     languageIsResponsed = question.getLanguage() ;
     QuestionLanguage questionLanguage = new QuestionLanguage() ;
     questionLanguage.setId(question.getId());
@@ -382,7 +380,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
         	 sendMailForm.languageIsResponsed = language ;
         	 contenQuestion =  questionLanguage.getQuestion() ;
         	 Answer[] answers = questionLanguage.getAnswers() ;
-        	 Comment[] comments = questionLanguage.getComments();
            String content = "" ;
            if(answers == null || answers.length < 1) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
           	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
