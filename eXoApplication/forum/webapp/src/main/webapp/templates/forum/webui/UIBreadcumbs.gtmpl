@@ -71,7 +71,7 @@
 					<div class="SeparatorLine" style="float: right;">
 						<div class="ShareLink">
 						
-						<a onclick="window.open(this.href); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
+						<a onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
 					</div>	
 					<%}%>
 					<%

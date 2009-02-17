@@ -34,6 +34,7 @@
 	width:0px;
 }
 
+/**************************** Fix UIRightClickPopupMenu *********************************/
 *html .UIForumPortlet  .SearchPopup .UIRightClickPopupMenu .UIRightPopupMenuContainer {
 	width:170px;
 }
@@ -62,7 +63,6 @@
 *html .UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
 	width:60px;
 }
-/**************************** Fix UIRightClickPopupMenu *********************************/
 .UIForumPortlet .ContentAction .UIRightClickPopupMenu .ItemIcon:hover {
 	background-color:#DEE4F2;
 }
@@ -83,6 +83,15 @@
 
 .Vista .UIForumPortlet .UIRightClickPopupMenu {
 	width:180px;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
+  color: orange;
+  background-color: transparent;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
+  display: block;
 }
 
 /**************************** UIActionForum *********************************/
@@ -569,15 +578,4 @@
 .UIForumPortlet .UIGrid input.checkbox {
 	height:13px;
 	margin: 3px 0px 0px 0px;
-}
-
-/*********************Rightclick***************************/
-
-.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
-  color: orange;
-  background-color: transparent;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
-  display: block;
 }

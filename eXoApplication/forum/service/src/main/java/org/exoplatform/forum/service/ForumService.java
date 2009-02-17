@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
-import javax.jcr.observation.EventListener;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;

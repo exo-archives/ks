@@ -1306,9 +1306,14 @@ public class JCRDataStorage {
 	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		List<String>userIdsp = new ArrayList<String>();
+		long topicCount = 0;
+		long postCount = 0;
+		Node forumNode = null;
 		try {
 			String topicPath = topics.get(0).getPath();
-			Node forumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
+			forumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
+			topicCount = forumNode.getProperty("exo:topicCount").getLong();
+			topicCount = forumNode.getProperty("exo:postCount").getLong();
 			if(forumNode.hasProperty("exo:moderators")) {
 				userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
 			}
@@ -1368,16 +1373,24 @@ public class JCRDataStorage {
 				default:
 					break;
 				}
-				if(topicNode.isNew()){
-					topicNode.getSession().save();
-				} else {
-					topicNode.save();
+				if(type == 3 || type == 5) {
+					topicCount = topicCount + 1;
+					postCount = postCount + (topicNode.getProperty("exo:postCount").getLong()+1);
 				}
 				if (type != 2 && type != 4 && type < 7) {
 					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
 				}
 			} catch (PathNotFoundException e) {
 			}
+		}
+		if(type == 3 || type == 5) {
+			forumNode.setProperty("exo:topicCount", topicCount);
+			forumNode.setProperty("exo:postCount", postCount);
+		}
+		if(forumNode.isNew()){
+			forumNode.getSession().save();
+		} else {
+			forumNode.save();
 		}
 	}
 
@@ -1403,8 +1416,10 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:path", forumId);
 			// TODO: Thinking for update forum and user profile by node observation?
 			// setTopicCount for Forum and userProfile
-			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1;
-			forumNode.setProperty("exo:topicCount", newTopicCount);
+			if(!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+				long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1;
+				forumNode.setProperty("exo:topicCount", newTopicCount);
+			}
 			Node userProfileNode = getUserProfileHome(sProvider);
 			Node newProfileNode;
 			try {
@@ -1447,7 +1462,7 @@ public class JCRDataStorage {
 		topicNode.setProperty("exo:voteRating", topic.getVoteRating());
 		topicNode.setProperty("exo:numberAttachments", topic.getNumberAttachment());
 		// forumNode.save() ;
-		if(forumNode.isNew()) {
+		if(isNew) {
 			forumNode.getSession().save();
 		} else {
 			forumNode.save();
@@ -1883,13 +1898,13 @@ public class JCRDataStorage {
 					if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 						// set InfoPost for Topic
 						if (!post.getIsHidden()) {
-							forumNode.setProperty("exo:postCount", forumPostCount);
 							topicNode.setProperty("exo:postCount", topicPostCount);
 							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 							topicNode.setProperty("exo:lastPostDate", calendar);
 							topicNode.setProperty("exo:lastPostBy", post.getOwner());
 						}
 						if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+							forumNode.setProperty("exo:postCount", forumPostCount);
 							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 							sendAlertJob = false;
 						} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
