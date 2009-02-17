@@ -35,7 +35,7 @@
 	    
 	   <!-- ===================================== view all subcategories of root category ==================================== -->
 	   <%
-	   if(!uicomponent.getListCate().isEmpty()){
+	   if(uicomponent.getListCate() != null && !uicomponent.getListCate().isEmpty()){
 	   	for(cate in uicomponent.getListCate()) {
 	   		stackCateid.push(cate.getCategory().getId()) ;
 	    	id ++ ;
@@ -111,17 +111,14 @@
 	        }
 	      }
 	    }%>
+	    </div>
 	    <%
 	    for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
 	    	</div>
 	  	<%
-	    }
-	   }
-			%>
+	    }%>
+	<%}%>
 		</div>
-		
-		</div>
-	
 	</div>
 	
 	<!-- Action of this form -->
