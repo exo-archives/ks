@@ -1029,10 +1029,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			if(!ForumUtils.isEmpty(topicId)) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try{
-					Topic topic = topicContainer.getTopicByAll(topicId);
 					StringBuffer buffer = new StringBuffer();
-					buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//")
-					.append(topicContainer.categoryId).append("/").append(topicContainer.forumId).append("/").append(topicId) ;
+					if(topicId.equals("forum")) {
+						buffer.append("ForumNormalIcon//").append(topicContainer.forum.getForumName()).append("//")
+						.append(topicContainer.categoryId).append("/").append(topicContainer.forumId);
+					}else {
+						Topic topic = topicContainer.getTopicByAll(topicId);
+						buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//")
+						.append(topicContainer.categoryId).append("/").append(topicContainer.forumId).append("/").append(topicId) ;
+					}
 					String userName = topicContainer.userProfile.getUserId() ;
 					topicContainer.forumService.saveUserBookmark(sProvider, userName, buffer.toString(), true) ;
 					UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
@@ -1048,7 +1053,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer topicContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			path = topicContainer.categoryId+"/"+topicContainer.forumId+"/"+path ;
+			if(path.equals("forum")){
+				path = topicContainer.categoryId+"/"+topicContainer.forumId ;
+			} else {
+				path = topicContainer.categoryId+"/"+topicContainer.forumId+"/"+path ;
+			}
 			UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;

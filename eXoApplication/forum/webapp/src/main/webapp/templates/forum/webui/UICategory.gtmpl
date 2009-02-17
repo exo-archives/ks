@@ -142,7 +142,7 @@
 											</div>
 											<div class="MiddleLeftRightClickPopupMenu">
 												<div class="MiddleRightRightClickPopupMenu">
-													<div class="UIRightPopupMenuContainer">
+													<div class="UIRightPopupMenuContainer" style="min-width:175px;">
 														<div class="InputPage" style="float:left;">
 															<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 														</div>
@@ -181,6 +181,20 @@
 							</div>
 						</div>
 					</div>
+				<%if(uicomponent.userProfile.getUserRole() < 3){%>
+					<div class="UIActionForum" style="float:right; padding: 4px 5px 0px 0px">
+						<div class="NormalButtom">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+									 <a style="display:block;" href="<%=uicomponent.event("AddBookMark","category//"+categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>&nbsp;</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<% } %>	
+					
 					<div style="clear: both;"><span></span></div>
 				</div>
 			</div>

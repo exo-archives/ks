@@ -486,6 +486,31 @@
 								<% /*End Popup Menu*/ %>
 							</div>
 						<% } %>	
+						
+						<%if(uicomponent.userProfile.getUserRole() < 3){%>
+							<div class="UIActionForum" style="float:right; padding: 4px 5px 0px 0px">
+								<div class="NormalButtom">
+									<div class="ButtonLeft">
+										<div class="ButtonRight">
+											<div class="ButtonMiddle">
+											 <a style="display:block;" href="<%=uicomponent.event("AddBookMark")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>&nbsp;</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="UIActionForum" style="float:right; padding: 4px 5px 0px 0px">
+								<div class="NormalButtom">
+									<div class="ButtonLeft">
+										<div class="ButtonRight">
+											<div class="ButtonMiddle">
+											 <a style="display:block;" href="<%=uicomponent.event("AddWatching")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>&nbsp;</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						<% } %>	
 							<div style="clear: right;"><span></span></div>
 						</div>
 					</div>

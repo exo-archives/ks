@@ -41,6 +41,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.user.ForumContact;
+import org.exoplatform.forum.webui.popup.UIAddWatchingForm;
 import org.exoplatform.forum.webui.popup.UIMovePostForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
@@ -135,7 +136,9 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class),
 			@EventConfig(listeners = UITopicDetail.AdvancedSearchActionListener.class),
 			@EventConfig(listeners = UITopicDetail.BanIPAllForumActionListener.class),
-			@EventConfig(listeners = UITopicDetail.BanIPThisForumActionListener.class)
+			@EventConfig(listeners = UITopicDetail.BanIPThisForumActionListener.class),
+			@EventConfig(listeners = UITopicDetail.AddBookMarkActionListener.class),
+			@EventConfig(listeners = UITopicDetail.AddWatchingActionListener.class)
 		}
 )
 public class UITopicDetail extends UIForumKeepStickPageIterator {
@@ -1465,6 +1468,40 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				return;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+		}
+	}
+	
+	static public class AddBookMarkActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource();
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				Topic topic = topicDetail.getTopic();
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//")
+				.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topic.getId()) ;
+				String userName = topicDetail.userProfile.getUserId() ;
+				topicDetail.forumService.saveUserBookmark(sProvider, userName, buffer.toString(), true) ;
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateUserProfileInfo() ;
+			} catch (Exception e) {
+				sProvider.close();
+			}
+		}
+	}
+
+	static public class AddWatchingActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource();
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topicDetail.topicId) ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
+			addWatchingForm.initForm() ;
+			addWatchingForm.setPathNode(buffer.toString());
+			popupAction.activate(addWatchingForm, 425, 250) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 }
