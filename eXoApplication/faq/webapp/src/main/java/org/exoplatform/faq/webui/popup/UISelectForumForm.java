@@ -143,7 +143,7 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 				forumService.saveTopic(sProvider, uiForm.categoryId, forumId, topic, true, false, "");
 				faqService.savePathDiscussQuestion(uiForm.questionId, path, sProvider);
-				Post post;
+				Post post = new Post();
 				List<Answer> listAnswer = faqService.getPageListAnswer(sProvider, uiForm.questionId, false).getPageItem(0);
 				if(listAnswer != null && listAnswer.size() > 0) {
 					Answer[] AllAnswer = new Answer[listAnswer.size()];;
@@ -160,7 +160,9 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 		        AllAnswer[i] = answer;
 		        ++i;
 	        }
-					faqService.saveAnswer(uiForm.questionId, AllAnswer, sProvider);
+					if(AllAnswer != null && AllAnswer.length > 0) {
+						faqService.saveAnswer(uiForm.questionId, AllAnswer, sProvider);
+					}
 				}
 				List<Comment> listComment = faqService.getPageListComment(sProvider, uiForm.questionId).getPageItem(0);
 				for (Comment comment : listComment) {

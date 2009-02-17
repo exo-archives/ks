@@ -315,9 +315,9 @@
 																			</div>
 																		</div>
 															<%	}
-																if(uicomponent.isDiscussForum()) {
-																	String pathDiscuss = question.getPathTopicDiscuss();
-																	if(pathDiscuss == null || pathDiscuss.length() <= 0){
+																	if(uicomponent.isDiscussForum()) {
+																		String pathDiscuss = question.getPathTopicDiscuss();
+																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
 															%>
 																		<div class="MenuItem" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>">
 																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
@@ -326,22 +326,39 @@
 																				</div>
 																			</div>
 																		</div>
-																		
 															<%	
-																	} else { 
-																		String link = uicomponent.url("DiscussForum", pathDiscuss);
-																		link = FAQUtils.convertLinkToForum(link);
+																		} else { 
+																			String link = uicomponent.url("DiscussForum", pathDiscuss);
+																			link = FAQUtils.convertLinkToForum(link);
 															%>
 																		<div class="MenuItem">
 																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;">
 																				<div style="padding-left:20px;white-space:nowrap; display:block">
-																					<a href="$link" target="_blank" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																					<a  onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 																				</div>
 																			</div>
 																		</div>
-															<%	}
-																}
-															}%>
+															<%		}
+																	}
+																} else {
+																	if(uicomponent.isDiscussForum()) {
+																		String pathDiscuss = question.getPathTopicDiscuss();
+																		if(pathDiscuss != null && pathDiscuss.length() > 0){
+																			String link = uicomponent.url("DiscussForum", pathDiscuss);
+																			link = FAQUtils.convertLinkToForum(link);
+															%>
+																		<div class="MenuItem">
+																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;">
+																				<div style="padding-left:20px;white-space:nowrap; display:block">
+																					<a  onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																				</div>
+																			</div>
+																		</div>
+															<%		}
+																	}
+																}	%>
+															
+															
 														</div>
 													</div>
 												</div>
@@ -479,14 +496,17 @@
 																					if(pathDiscuss == null || pathDiscuss.length() <= 0){
 																			%>
 																				<td style="width:25px">
-																					<div onclick="javaScript:<%=uicomponent.event("DiscussForum", question.getId())%>" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+																					<div onclick="<%=uicomponent.event("DiscussForum", question.getId())%>" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="DiscussForum"><span></span></div>
 																					</div>
 																				</td>
-																			<%	} else {%>
+																			<%	} else {
+																						String link = uicomponent.url("DiscussForum", pathDiscuss);
+																						link = FAQUtils.convertLinkToForum(link);
+																			%>
 																				<td style="width:25px">
-																					<div title="<%=_ctx.appRes("UIQuestions.title.QuestionIsDiscussed");%>"">
-																						<div class="DisableMenuItem DiscussForum" style="margin-left: 0px"><span></span></div>
+																					<div onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+																						<div class="MenuItem DiscussForum" style="margin-left: 0px"><span></span></div>
 																					</div>
 																				</td>
 																			<%	}

@@ -1849,16 +1849,35 @@
 	}
 }
 														
-
 /*********************Rightclick***************************/
 
-.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
-  color: orange;
-  background-color: transparent;
+.UIFAQPortlet .QuoteContent {
+	padding: 10px;
 }
 
-.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
-  display: block;
+.UIFAQPortlet .Classquote {
+	background: #ededf7;
+	border: 1px solid #d8d8d8;
+	padding: 6px 6px 6px 15px;
+	margin: 2px 0px;
+}
+
+.UIFAQPortlet .ClassCode {
+  background: #ededed;
+	border: 1px inset #7b7b7b;
+	margin: 5px;
+	overflow: auto;
+	max-width: 530px;
+}
+
+*html .UIFAQPortlet .ClassCode {
+	width: 530px;
+}
+
+.UIFAQPortlet .ClassCode pre {
+  padding: 5px;
+  margin: 0px;
+  text-decoration: none;
 }
 
 
