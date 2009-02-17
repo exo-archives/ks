@@ -460,13 +460,18 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         return ;
       }
       
-      if((questionContent == null || questionContent.trim().length() < 1) && 
+      /*if((questionContent == null || questionContent.trim().length() < 1) && 
       		!questionForm.defaultLanguage_.equals(questionForm.lastLanguage_)) {
+      	if(questionForm.listLanguages.contains(questionForm.lastLanguage_)){
+      		questionForm.listLanguages.remove(questionForm.lastLanguage_);
+      		questionForm.listQuestionDetail.remove(questionForm.lastLanguage_);
+      		questionForm.listQuestionContent.remove(questionForm.lastLanguage_);
+      	}
       	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
       	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.question-null", null, ApplicationMessage.WARNING)) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
       	return ;
-      }
+      }*/
       
       MultiLanguages multiLanguages = new MultiLanguages() ;
       
