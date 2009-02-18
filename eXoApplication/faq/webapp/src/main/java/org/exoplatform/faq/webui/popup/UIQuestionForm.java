@@ -43,7 +43,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.portal.webui.workspace.UIPortalApplication;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
@@ -598,6 +597,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
  									topic.setModifiedBy(FAQUtils.getCurrentUser());
  									topic.setTopicName(question_.getQuestion());
  									topic.setDescription(question_.getDetail());
+ 									topic.setIsWaiting(true);
  									forumService.saveTopic(sessionProvider, ids[0], ids[1], topic, false, false, "");
  								}
               } catch (Exception e) {

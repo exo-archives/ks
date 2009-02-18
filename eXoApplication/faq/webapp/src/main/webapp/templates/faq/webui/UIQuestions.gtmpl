@@ -315,6 +315,8 @@
 																			</div>
 																		</div>
 															<%	}
+																} 
+																if(uicomponent.currentUser_ != null) {
 																	if(uicomponent.isDiscussForum()) {
 																		String pathDiscuss = question.getPathTopicDiscuss();
 																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
@@ -327,9 +329,14 @@
 																			</div>
 																		</div>
 															<%	
-																		} else { 
-																			String link = uicomponent.url("DiscussForum", pathDiscuss);
-																			link = FAQUtils.convertLinkToForum(link);
+																		} 
+																	}
+																} 
+																if(uicomponent.isDiscussForum()) {
+																	String pathDiscuss = question.getPathTopicDiscuss();
+																	if(pathDiscuss != null && pathDiscuss.length() > 0){
+																		String link = uicomponent.url("DiscussForum", pathDiscuss);
+																		link = FAQUtils.convertLinkToForum(link);
 															%>
 																		<div class="MenuItem">
 																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;">
@@ -338,27 +345,9 @@
 																				</div>
 																			</div>
 																		</div>
-															<%		}
-																	}
-																} else {
-																	if(uicomponent.isDiscussForum()) {
-																		String pathDiscuss = question.getPathTopicDiscuss();
-																		if(pathDiscuss != null && pathDiscuss.length() > 0){
-																			String link = uicomponent.url("DiscussForum", pathDiscuss);
-																			link = FAQUtils.convertLinkToForum(link);
+															<%	} 
+																} 
 															%>
-																		<div class="MenuItem">
-																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;">
-																				<div style="padding-left:20px;white-space:nowrap; display:block">
-																					<a onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
-																				</div>
-																			</div>
-																		</div>
-															<%		}
-																	}
-																}	%>
-															
-															
 														</div>
 													</div>
 												</div>

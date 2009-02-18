@@ -199,6 +199,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 							post.setName("Re: " + commentForm.question_.getQuestion());
 							post.setMessage(comment);
 							post.setLink(linkForum);
+							post.setIsApproved(false);
 							try {
 								forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
 	            } catch (Exception e) {
@@ -224,6 +225,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 									}else{
 										post.setModifiedBy(commentForm.currentUser_);
 									}
+									post.setIsApproved(false);
 									post.setMessage(comment);
 									forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, isNew, "");
 	              } catch (Exception e) {

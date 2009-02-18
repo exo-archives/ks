@@ -507,8 +507,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 											question_.getAnswers()[i].setPostId(post.getId());
 											post.setMessage(question_.getAnswers()[i].getResponses());
 											post.setLink(linkForum);
+											post.setIsApproved(false);
 											forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
 										}else {
+											//post.setIsApproved(false);
 											post.setMessage(question_.getAnswers()[i].getResponses());
 											forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, false, "");
 										}
@@ -519,6 +521,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 										post.setIcon("ViewIcon");
 										post.setMessage(question_.getAnswers()[i].getResponses());
 										post.setLink(linkForum);
+										post.setIsApproved(false);
 										forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
 										question_.getAnswers()[i].setPostId(post.getId());
 									}

@@ -24,6 +24,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -140,11 +141,16 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 				topic.setIcon("IconsView");
 				topic.setIsModeratePost(true);
 				topic.setLink(link);
+				topic.setIsWaiting(true);
 				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 				forumService.saveTopic(sProvider, uiForm.categoryId, forumId, topic, true, false, "");
 				faqService.savePathDiscussQuestion(uiForm.questionId, path, sProvider);
 				Post post = new Post();
-				List<Answer> listAnswer = faqService.getPageListAnswer(sProvider, uiForm.questionId, false).getPageItem(0);
+				JCRPageList pageList = faqService.getPageListAnswer(sProvider, uiForm.questionId, false);
+				List<Answer> listAnswer ;
+				if(pageList != null) {
+					listAnswer = pageList.getPageItem(0);
+				} else listAnswer = null;
 				if(listAnswer != null && listAnswer.size() > 0) {
 					Answer[] AllAnswer = new Answer[listAnswer.size()];;
 					int i = 0;
@@ -155,6 +161,7 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 		        post.setMessage(answer.getResponses());
 		        post.setOwner(answer.getResponseBy());
 		        post.setLink(link);
+		        post.setIsApproved(false);
 		        forumService.savePost(sProvider, uiForm.categoryId, forumId, topic.getId(), post, true, "");
 		        answer.setPostId(post.getId());
 		        AllAnswer[i] = answer;
@@ -164,7 +171,11 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 						faqService.saveAnswer(uiForm.questionId, AllAnswer, sProvider);
 					}
 				}
-				List<Comment> listComment = faqService.getPageListComment(sProvider, uiForm.questionId).getPageItem(0);
+				pageList = faqService.getPageListComment(sProvider, uiForm.questionId);
+				List<Comment> listComment ;
+				if(pageList != null) {
+					listComment = pageList.getPageItem(0);
+				} else listComment = new ArrayList<Comment>();
 				for (Comment comment : listComment) {
 					post = new Post();
 					post.setIcon("IconsView");
@@ -172,6 +183,7 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 					post.setMessage(comment.getComments());
 					post.setOwner(comment.getCommentBy());
 					post.setLink(link);
+					post.setIsApproved(false);
 					forumService.savePost(sProvider, uiForm.categoryId, forumId, topic.getId(), post, true, "");
 					comment.setPostId(post.getId());
 					faqService.saveComment(uiForm.questionId, comment, false, sProvider);
