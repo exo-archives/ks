@@ -9,7 +9,7 @@
 						uicomponent.setLink(url);
 						%>
 						<tr>
-							<td style="white-space:nowrap;" align="right"><div style="margin: 5px 5px 0px 0px;">
+							<td style="white-space:nowrap;" align="right"><div style="margin:5px 5px 0px 0px;">
 								<%=_ctx.appRes(uicomponent.getName() + ".title.Author")%> : </div>
 							</td>
 							<td>
@@ -18,23 +18,23 @@
 						</tr>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
-								<div style="margin: 5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Language")%>: </div>
+								<div style="margin:5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Language")%>: </div>
 							</td>
 							<td style="white-space:nowrap;">
-								<div style="margin: 5px 0px 10px 5px;white-space:normal;"><%=uicomponent.languageSelected%></div>
+								<div style="margin:5px 0px 10px 5px;white-space:normal;"><%=uicomponent.languageSelected%></div>
 							</td>
 						</tr>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
-								<div style="margin: 5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Question")%>: </div>
+								<div style="margin:5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Question")%>: </div>
 							</td>
 							<td style="white-space:nowrap;">
-								<div style="margin: 5px 0px 10px 5px;white-space:normal;"><%=uicomponent.questionContent%></div>
+								<div style="margin:5px 0px 10px 5px;white-space:normal;"><%=uicomponent.questionContent%></div>
 							</td>
 						</tr>
 						<tr>
 							<td style="white-space:nowrap;" align="right">
-								<div style="margin: 5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Detail")%>: </div>
+								<div style="margin:5px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Detail")%>: </div>
 							</td>
 							<td style="white-space:nowrap;">
 								<div class="QuestionDetail">
@@ -47,7 +47,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td style="white-space:nowrap;" align="right"><div style="margin: 0px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Comment")%>: </div></td>
+							<td style="white-space:nowrap;" align="right"><div style="margin:0px 5px 0px 0px;"><%=_ctx.appRes(uicomponent.getName() + ".title.Comment")%>: </div></td>
 							<td><% uiform.renderChild(uicomponent.COMMENT_CONTENT) %></td>
 						</tr>
 					</tbody>
@@ -55,20 +55,22 @@
 			</div>
 			
 			<div class="UIAction"> 
-				<table class="ActionContainer" align="center">
+				<table class="ActionContainer" style="text-align:center">
 					<tr>
 						<td align="center">
 		        <% for(action in uicomponent.getActions()) { 
 		        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 		           String link = uicomponent.event(action) ;
 		        %>
-		        		<a href="$link" class="ActionButton LightBlueStyle">
+		        		<div onclick="$link" class="ActionButton LightBlueStyle">
 			      	  	<div class="ButtonLeft">
 			        	  	<div class="ButtonRight">
-			          	  	<div class="ButtonMiddle"> $actionLabel </div>
+			          	  	<div class="ButtonMiddle">
+			          	  		<a href="javascript:void(0);">$actionLabel</a>
+			          	  	</div>
 			            	</div>
 			          	</div>
-			        	</a>
+			        	</div>
 		          <%}%>
 		      	</td>
 					</tr>

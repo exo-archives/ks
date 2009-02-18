@@ -62,7 +62,7 @@
 													<td class="text" style="text-align:left"><a href="$view">$questionContent</a></td>
 													<%}%>
 	 												<td class="text" style="text-align:center"><%=date%></td>
-	 												<td style="width: 30px; text-align:center; cursor:pointer">
+	 												<td style="width:30px; text-align:center; cursor:pointer">
  														<div onclick="$link"><div class="CheckIcon" style="margin:0px auto;"></div></div>
  													</td>
 	 											</tr>

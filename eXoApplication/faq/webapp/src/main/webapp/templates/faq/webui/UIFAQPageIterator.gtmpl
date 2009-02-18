@@ -27,7 +27,7 @@
 				  		if(number.equals(selected)) {
 				  %>
 						  <div class="Number">
-						    <a class="PageSelected" style="color: #0183f1; font-weight:bold;">$number</a>
+						    <a class="PageSelected" style="color:#0183f1; font-weight:bold;">$number</a>
 						  </div>
 				  	<%} else {%>
 						  <div class="Number">

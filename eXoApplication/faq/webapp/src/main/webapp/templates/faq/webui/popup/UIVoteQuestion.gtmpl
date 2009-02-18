@@ -24,18 +24,18 @@
 		</div>
 			
 		<div class="UIAction"> 								
-			<table align="center" class="ActionContainer">											 
+			<table class="ActionContainer">											 
 				<tr>
 					<td align="center">
-						<a href="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+						<div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<%=_ctx.appRes("UIVoteQuestion.action.Cancel"); %>
+										<a href="javascript:void(0);"><%=_ctx.appRes("UIVoteQuestion.action.Cancel"); %></a>
 									</div>
 								</div>
 							</div>								
-						</a>
+						</div>
 					</td>
 				</tr>
 			</table>

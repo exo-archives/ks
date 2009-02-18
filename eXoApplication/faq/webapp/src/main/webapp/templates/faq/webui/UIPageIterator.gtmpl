@@ -14,7 +14,7 @@
 	    <%if( currentPage - 1 > 0 ){%>        
 	    	  <a href="<%=uicomponent.event("ShowPage","${currentPage - 1}")%>" class="Icon LastPageIcon" title="<%=_ctx.appRes("UIPageIterator.label.previous")%>"></a>
 	    <% } else {%>
-	    	  <a class="Icon DisableLastPageIcon" title="<%=_ctx.appRes("UIPageIterator.label.previous")%>"><span></span></a>
+	    	  <a class="Icon DisableLastPageIcon" title="<%=_ctx.appRes("UIPageIterator.label.previous")%>"></a>
 	    <%}%>
 	    <div class="Number">
 	      <%

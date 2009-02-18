@@ -1,4 +1,4 @@
-<div class="UIWatchManager $uicomponent.id" style="padding: 8px;">
+<div class="UIWatchManager $uicomponent.id" style="padding:8px;">
 		<% uiform.begin() %>
 		<div class="UIForm">
  			<div class="UIHorizontalLayout">
@@ -9,7 +9,7 @@
  								<tr>
 	 								<th><%= _ctx.appRes("UIWatchManager.label.user"); %></th>
 	 								<th><%= _ctx.appRes("UIWatchManager.label.email"); %></th>
-	 								<th><%= _ctx.appRes("UIWatchManager.label.action"); %></th>
+	 								<th style="width:85px;"><%= _ctx.appRes("UIWatchManager.label.action"); %></th>
  								</tr>
  							</thead>
  							<tbody>
@@ -36,31 +36,31 @@
 	 									
 	 							 %>
 		 								<tr>
-		 									<td valign="top" lign="left">$user</td>
-		 									<td valign="top" lign="left">
+		 									<td valign="top" align="left">$user</td>
+		 									<td valign="top" align="left">
 		 										<% 
 		 										for(String str : email.split(",")){%>
-		 											<div style="margin-bottom: 3px;">$str</div>
+		 											<div style="margin-bottom:3px;">$str</div>
 		 									<%}
 		 										%>
 		 									</td>
-		 									<td style="width: 90px;" align="center" valign="top">
+		 									<td align="center" valign="top">
 		 										<%
 		 										if(uicomponent.questionID_ == null ){
 						 							String linkCurrent = uicomponent.event("Link", categoryId)
 						 						%>
-			 										<a href="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" style="float:left;">
-			 											<div class="LinkWatchIcon" ></div>
-			 										</a>
+			 										<div onclick="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" style="float:left; cursor:pointer;">
+			 											<div class="LinkWatchIcon"><span></span></div>
+			 										</div>
 		 										<%
 		 										}
 		 										%>
-		 										<a href="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" style="float:left;">
-		 											<div class="EditWatchIcon" ></div>
-		 										</a>
-		 										<a href="$linkDelete" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" style="float:left;">
-		 											<div class="DeleteWatchIcon" ></div>
-		 										</a>
+		 										<div onclick="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" style="float:left; cursor:pointer;">
+		 											<div class="EditWatchIcon"><span></span></div>
+		 										</div>
+		 										<div onclick="$linkDelete" title="<%= _ctx.appRes("UIWatchManager.title.delete-watch"); %>" style="float:left; cursor:pointer;">
+		 											<div class="DeleteWatchIcon"><span></span></div>
+		 										</div>
 		 									</td>
 		 								</tr>
 	 								<% 
@@ -68,7 +68,7 @@
 	 								} else {
 	 									   %>
 		 							<tr class="EvenRow">
-										<td class="Tdbox" colspan="3" align="center"><div class="" ><%= _ctx.appRes("UIWatchManager.title.no-matches"); %> </div></td>
+										<td class="Tdbox" colspan="3" align="center"><%= _ctx.appRes("UIWatchManager.title.no-matches"); %></td>
 		  						</tr>
 								<%}%>
  							</tbody>
@@ -79,7 +79,7 @@
 					   %>
  							<div style="overflow:auto;">
 								<% uicomponent.renderChild(uicomponent.LIST_EMAILS_WATCH) ; %>
-								<div style="clear: both;"><span></span></div>
+								<div style="clear:both;"><span></span></div>
 							</div>
 					<% } %>
  					</div>
@@ -87,16 +87,18 @@
  			</div>
  		</div>
 		<div class="UIAction">
-    	<table class="ActionContainer" align="center">
+    	<table class="ActionContainer" style="text-align:center">
 			  <tr>
 				  <td align="center">
-		    		<a href="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
+		    		<div onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">
 			  	  	<div class="ButtonLeft">
 			    	  	<div class="ButtonRight">
-			      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></div>
+			      	  	<div class="ButtonMiddle">
+				      	  	<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Cancel");%></a>
+			      	  	</div>
 			        	</div>
 			      	</div>
-		    		</a>
+		    		</div>
 	      	</td>
 				</tr>
  	  </table>

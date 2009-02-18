@@ -183,7 +183,7 @@
 	
 
   <div class="UIAction">
-    <table class="ActionContainer" align="center">
+    <table class="ActionContainer" style="text-align:center">
 		  <tr>
 			  <td align="center">
 	    		<div onclick="<%=uicomponent.event("Cancel");%>" class="ActionButton LightBlueStyle">

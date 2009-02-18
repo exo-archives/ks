@@ -15,11 +15,13 @@
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.reSizeImagesView();");
  %>
 <div class="UIPopupViewQuestion">
-	<div><% uiform.begin() %></div>
+	<% uiform.begin() %>
 	<%uicomponent.renderChildren() ;%>
 	<div class= "ViewQuestion">
 		<table class="UIFormGridTableForm">
-			<tbody>	
+			<tbody>
+				<tr>
+					<td>
 				<% 
  						Question question = uicomponent.getViewQuestion() ; 
 						String qId = question.getId();
@@ -29,8 +31,8 @@
 						String response = "<center><b>" + _ctx.appRes("UIPopupViewQuestion.title.not-answer")+ "</center></b>" ;
 				%>
 				<div class="ResponseContent">
-					<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b></div>
-					<div class="Response" style="width: 97%;">$content</div>
+					<div style="width:97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionContent")%> : </b></div>
+					<div class="Response" style="width:97%;">$content</div>
 					<% 
 					if(question.getAnswers() != null && question.getAnswers().length > 0) {
 							for(Answer answer in question.getAnswers()) {
@@ -40,10 +42,10 @@
 								response = answer.getResponses();
 								response = org.exoplatform.faq.webui.ForumTransformHTML.convertCodeHTML(response);
 								%> 
-								<div style="width: 97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
-								<div class="Response" id="SetWidthImageContent" style="width: 97%;">$response</div>
+								<div style="width:97%;"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionResponsedContent")%> : </b></div>
+								<div class="Response" id="SetWidthImageContent" style="width:97%;">$response</div>
 								<div class=" ResponsActions">
-									<div style="margin-left: 10px; color:gray;"><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %>
+									<div style="margin-left:10px; color:gray;"><%= _ctx.appRes("UIPopupViewQuestion.label.response-by"); %>
 										$responseBy , $date
 									</div>
 								</div>
@@ -54,9 +56,9 @@
 					<%
 					if(!question.getAttachMent().isEmpty()) {
 					%>
-					<div style="width: 97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
+					<div style="width:97%;"><b><%= _ctx.appRes("UIPopupViewQuestion.label.file-attached"); %></b></div>
 					<div class="AttachmentContent">
-						<div style="margin-top: 5px; margin-bottom: 5px;">
+						<div style="margin-top:5px; margin-bottom:5px;">
 							<%
 								for(FileAttachment fileAttachment : question.getAttachMent()){
 							    String fileName = fileAttachment.getName() ;
@@ -80,13 +82,13 @@
 								    if(validate.isImage(fileName)) {
 								      String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath() ;
 							    %>
-							    	<div  style="float: left; margin-left: 5px;" id="divId${fileName}">
+							    	<div  style="float:left; margin-left:5px;" id="divId${fileName}">
 								    	<div class="Image">
-								    		<a href="javaScript:void(0);" onclick="eXo.faq.UIFAQPortlet.showPicture(this); ">
-													<img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile">
-												</a>
+								    		<div onclick="eXo.faq.UIFAQPortlet.showPicture(this);" style="cursor:pointer">
+													<img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile" alt=""/>
+												</div>
 								    	</div>
-					 						<div style="clear: left;"><span></span></div>
+					 						<div style="clear:left;"><span></span></div>
 					 						<div class="LabelBox">
 						 						<div style="line-height:20px;">
 							 						<div class="Size AttachmentLabel" style="color:#1052b5;">
@@ -97,45 +99,45 @@
 							 								$fileName
 							 							</a>
 							 						</div>
-							 						&nbsp;- <font style="color:gray;font-size:11px;">$size</font>
+							 						&nbsp;- <span style="color:gray;font-size:11px;">$size</span>
 							 					</div>
-						 						<div style="clear: left;"><span></span></div>
+						 						<div style="clear:left;"><span></span></div>
 						 					</div>
 					 					</div>
 						    <%} else {
 						    %>
 						    		<div class="LabelBox">
-											<div class="AttachmentIcon FileAttachmentIcon" style="width: auto; height: auto;">
+											<div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;">
 												<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
 													$fileName
 												</a>
 											</div>
-											<div style="clear: left;"><span></span></div>
+											<div style="clear:left;"><span></span></div>
 											<div class="Size"><%= _ctx.appRes("UIPopupViewQuestion.label.size"); %> $size</div>
 										</div>
 						    <%}
 						    } else {
 						    	%>
-						    		<div class="LabelBox" style="margin: 10px 10px 0px 5px;">
-							    		<div class="FalseIcon" style="padding-left: 15px;">
-							    			<a style="color: red;" href="javaScript: void(0)">
+						    		<div class="LabelBox" style="margin:10px 10px 0px 5px;">
+							    		<div class="FalseIcon" style="padding-left:15px;">
+							    			<a style="color:red;" href="javaScript: void(0)">
 							    				<%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%>
 							    			</a>
 							    		</div>
-							    		<div style="clear: left;"><span></span></div>
+							    		<div style="clear:left;"><span></span></div>
 						    		</div>
 						    	<%
 						    	}
 						  	} %>
 						  	</div>
-				  	<div style="clear: left;"><span></span></div>
+				  	<div style="clear:left;"><span></span></div>
 					</div>
 			  	<%
 			  	}%>
 					<%
 					if(question.getRelations() != null && question.getRelations().length > 0){
 					%>
-						<div class="RelatedQuestionsView"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br>
+						<div class="RelatedQuestionsView"><b><%= _ctx.appRes("UIPopupViewQuestion.label.related-question"); %></b><br/>
 							<%String questionRelationById = "" ;
 								String cateRelaId = "" ;
 								String quesRelaId = "" ;
@@ -156,30 +158,34 @@
 											quesRelaCont = FAQUtils.getSubString(quesRelaCont, 50); 
 										}
 							%>
-										&nbsp; <div title="$title">- $quesRelaCont<br></div>
+										&nbsp; <div title="$title">- $quesRelaCont<br/></div>
 							<% 	}
 								}%>
 						</div>
 					<%
 					}%>
-					</div>
-				</tbody>
-			</table>
-		</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 		<div class="UIAction">
-    	<table class="ActionContainer" align="center">
+    	<table class="ActionContainer" style="text-align:center">
 			  <tr>
 				  <td align="center">
-		    		<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+		    		<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
 			  	  	<div class="ButtonLeft">
 			    	  	<div class="ButtonRight">
-			      	  	<div class="ButtonMiddle"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></div>
+			      	  	<div class="ButtonMiddle">
+			      	  		<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Close");%></a>
+		      	  		</div>
 			        	</div>
 			      	</div>
-		    		</a>
+		    		</div>
 	      	</td>
 				</tr>
  	  </table>
 	</div>
-	<div><%uiform.end()%></div>
+	<%uiform.end()%>
 </div>

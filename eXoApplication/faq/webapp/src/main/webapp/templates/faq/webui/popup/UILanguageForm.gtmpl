@@ -9,9 +9,9 @@
 				for(String language : uicomponent.getListLanguage()) {
 					String localed = localedLanguage[i] ;
 				%>
-					<tr width="25px">
-						<td width="10%">
-							<div style="float:right ; vertical-align:bottom;">
+					<tr style="width:25px">
+						<td style="width:10%">
+							<div style="float:right; vertical-align:bottom;">
 							<% if(selectedList.contains(language)) { %>
 								<div class="Langguage"><span></span></div>
 							<% } else { %>
@@ -19,14 +19,14 @@
 							<% } %>
 							</div>
 						</td>
-						<td width="45%">
+						<td style="width:45%">
 							<div style="float:left; margin-left:5px; height:20px;">
 								<a title="$language" href="<%=uicomponent.event("SelectedLanguage",language);%>">
 									$language
 								</a>
 							</div>
 						</td>
-						<td width="45%">
+						<td style="width:45%">
 							<div style="float:right; margin-right:10px;">
 								$localed
 							</div>
@@ -39,7 +39,7 @@
 			</table>
 		</div>
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer" style="text-align:center">
 				<tr>
 					<td align="center">
 	        <% for(action in uicomponent.getActions()) { 
@@ -47,13 +47,15 @@
 	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
-	        		<a href="$link" class="ActionButton LightBlueStyle">
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
 		      	  	<div class="ButtonLeft">
 		        	  	<div class="ButtonRight">
-		          	  	<div class="ButtonMiddle"> $actionLabel </div>
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);">$actionLabel</a>
+		          	  	</div>
 		            	</div>
 		          	</div>
-		        	</a>
+		        	</div>
           <%}%>
 	      	</td>
 				</tr>

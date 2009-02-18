@@ -9,7 +9,7 @@
 <div class="UIMoveQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
 	<div class="TitleMoveThreads"><%=_ctx.appRes(uicomponent.getName() + ".label." + "MoveQuestionTo")%>:</div>
-	  <div class="ViewQuestionsAtMove" style="margin:5px 0px 5px 0px ; padding-top:10px;">
+	  <div class="ViewQuestionsAtMove" style="margin:5px 0px 5px 0px; padding-top:10px;">
 			<div style="margin-left:30px;">
 				<%
 				String url = uicomponent.url("Cancel", "OBJECTID") ;
@@ -26,7 +26,7 @@
 					</a>
 				</div>
 				<div style="clear:left;"><span></span></div>
-    		<div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQRootChildren">
+    		<div style="display:none; padding-left:30px; margin-top:10px;" id="FAQRootChildren">
 			   	<%
 			   	if(listCate!= null && !listCate.isEmpty()){
 				    int n = listCate.size() ;

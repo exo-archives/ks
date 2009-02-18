@@ -15,25 +15,27 @@
 				 String forumName = forum.getForumName();
 			%>
 			<div class="ItemCategory">
-				<a href="<%=uicomponent.event("SelectForum", forum.getId());%>"><div class="ForumIcon IconCategory">$forumName</div></a>
+				<div onclick="<%=uicomponent.event("SelectForum", forum.getId());%>" style="cursor:pointer;">
+					<div class="ForumIcon IconCategory">$forumName</div>
+				</div>
 			</div>
 			<%} %>
 			</div>
 		</div>
 	</div>
 	<div class="UIAction">
-	  <table class="ActionContainer" align="center">
+	  <table class="ActionContainer" style="text-align:center">
 	  	<tr>
 	 	 		<td align="center">
-					<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+					<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
 					  <div class="ButtonLeft">
 						  <div class="ButtonRight">
 						    <div class="ButtonMiddle">
-					       Close
+					       	<a href="javascript:void(0);">Close</a>
 						    </div>
 					    </div>
 						</div>
-					</a>
+					</div>
 	   		</td>
 	  	</tr>
 	  </table>
