@@ -43,10 +43,12 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.portal.webui.workspace.UIPortalApplication;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -304,12 +306,17 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   public void setCategoryId(String categoryId) {
     this.categoryId_ = categoryId ;
     questionId_ = null ;
-    LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
+    /*LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
     for(Object object:configService.getLocalConfigs()) {      
       LocaleConfig localeConfig = (LocaleConfig)object ;
       Locale locale = localeConfig.getLocale() ;
       defaultLanguage_ = locale.getDefault().getDisplayLanguage() ;
-    }
+      
+    }*/
+    
+    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+    defaultLanguage_ = context.getLocale().getDisplayLanguage();
+    
     if(!listLanguages.isEmpty())
       listLanguages.clear() ;
     listLanguages.add(defaultLanguage_) ;
