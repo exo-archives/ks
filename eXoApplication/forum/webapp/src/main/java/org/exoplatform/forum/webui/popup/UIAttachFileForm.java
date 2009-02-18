@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.impl.ForumServiceImpl;

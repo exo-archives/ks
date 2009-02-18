@@ -107,6 +107,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public void setMode(boolean isMode) {this.isMode = isMode;}
 	
 	public void initForm() throws Exception {
+		String email = ForumSessionUtils.getUserByUserId(ForumSessionUtils.getCurrentUser()).getEmail();
 		List<Category> categorys = forumService.getCategories(ForumSessionUtils.getSystemProvider());
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		for (Category category :categorys) {
@@ -133,6 +134,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormStringInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_TEXTAREA, FIELD_DESCRIPTION_TEXTAREA, null);
 		UIFormTextAreaInput notifyWhenAddPost = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE, null);
 		UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
+		notifyWhenAddPost.setValue(email);
+		notifyWhenAddTopic.setValue(email);
 		
 		UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE, FIELD_MODERATOR_MULTIVALUE, null);
 		UIFormTextAreaInput viewer = new UIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE, FIELD_VIEWER_MULTIVALUE, null) ;

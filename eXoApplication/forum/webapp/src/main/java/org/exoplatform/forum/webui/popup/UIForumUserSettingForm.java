@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -25,16 +24,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.jcr.PathNotFoundException;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -224,7 +219,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		return calendar.getTime() ;
 	}
 	
-	private String getAvatarUrl(){
+	@SuppressWarnings("unused")
+  private String getAvatarUrl(){
 		String url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 		try {

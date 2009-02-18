@@ -1055,6 +1055,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			if(path.equals("forum")){
 				path = topicContainer.categoryId+"/"+topicContainer.forumId ;
+				topicContainer.isUpdate = true;
 			} else {
 				path = topicContainer.categoryId+"/"+topicContainer.forumId+"/"+path ;
 			}

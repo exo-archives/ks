@@ -610,7 +610,7 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 			var actions = action.split(";");
 			itemmenuBookMark.href= actions[0] ;
 			itemmenuWatching.href= actions[1] ;
-			itemmenuWatching.style.display ="block";
+			itemmenuWatching.parentNode.style.display ="block";
 		}
 		popupContents[i].innerHTML = popupContainer.innerHTML;
 	}
