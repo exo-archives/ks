@@ -67,6 +67,6 @@
 	height: 200px ;	width: 457px; 
 }
 
-.UIForumPortlet .UIPostForm #MessageContent___Frame {
-	width: 457px; 
+.UIForumPortlet .UITopicForm .UIForm .UIFormGrid td.FieldComponent {
+	width: 700px;
 }

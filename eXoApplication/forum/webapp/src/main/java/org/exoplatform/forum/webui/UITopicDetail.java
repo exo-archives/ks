@@ -536,7 +536,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			postForm.setMod(topicDetail.isMod) ;
 			
 			popupContainer.setId("UIAddPostContainer") ;
-			popupAction.activate(popupContainer, 700, 460) ;
+			popupAction.activate(popupContainer, 900, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -677,7 +677,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				postForm.updatePost(postId, false, false, post) ;
 				postForm.setMod(topicDetail.isMod) ;
 				popupContainer.setId("UIEditPostContainer") ;
-				popupAction.activate(popupContainer, 700, 460) ;
+				popupAction.activate(popupContainer, 900, 460) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };
@@ -715,7 +715,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				postForm.updatePost(postId, true, false, post) ;
 				postForm.setMod(topicDetail.isMod);
 				popupContainer.setId("UIQuoteContainer") ;
-				popupAction.activate(popupContainer, 750, 500) ;
+				popupAction.activate(popupContainer, 900, 500) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };
@@ -738,7 +738,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				postForm.updatePost(postId, false, true, post) ;
 				postForm.setMod(topicDetail.isMod) ;
 				popupContainer.setId("UIPrivatePostContainer") ;
-				popupAction.activate(popupContainer, 700, 460) ;
+				popupAction.activate(popupContainer, 900, 460) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };
@@ -758,7 +758,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			topicForm.setUpdateTopic(topicDetail.topic, true) ;
 			topicForm.setMod(topicDetail.isMod) ;
 			popupContainer.setId("UIEditTopicContainer") ;
-			popupAction.activate(popupContainer, 700, 460) ;
+			popupAction.activate(popupContainer, 900, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			topicDetail.isEditTopic = true ;
 		}
