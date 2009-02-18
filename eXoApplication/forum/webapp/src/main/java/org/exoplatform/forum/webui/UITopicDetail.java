@@ -715,7 +715,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				postForm.updatePost(postId, true, false, post) ;
 				postForm.setMod(topicDetail.isMod);
 				popupContainer.setId("UIQuoteContainer") ;
-				popupAction.activate(popupContainer, 700, 460) ;
+				popupAction.activate(popupContainer, 750, 500) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };

@@ -1,7 +1,7 @@
 <%	
 	import org.exoplatform.webui.form.UIFormInputIconSelector ;
 %>
-<div class="UIPostForm UITopicForm">
+<div class="UIPostForm UITopicForm" style="padding:5px;width:auto;">
 	<% uiform.begin() %>
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
