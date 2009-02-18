@@ -14,8 +14,8 @@
   					<td class="text">Junior Member</td>
 						<td class="text">3</td>
 						<td>         
-							<div style="margin: 0px auto;" class="ActionContainer">
-  							<div style="margin: auto;" class="OverflowContainer">          
+							<div style="margin:0px auto;" class="ActionContainer">
+  							<div style="margin:auto;" class="OverflowContainer">          
 				        	<a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
 				        	<a title="Delete Page" href="#" class="DeleteIcon"></a>		          
  								</div>
@@ -26,8 +26,8 @@
 					  <td class="text">Great Member</td>
 						<td class="text">3</td>
   					<td>         
-			        <div style="margin: 0px auto;" class="ActionContainer">
-			          <div style="margin: auto;" class="OverflowContainer">          
+			        <div style="margin:0px auto;" class="ActionContainer">
+			          <div style="margin:auto;" class="OverflowContainer">          
 			            <a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
 			            <a title="Delete Page" href="#" class="DeleteIcon"></a>		          
 			          </div>
@@ -38,8 +38,8 @@
 					  <td class="text">Senior Member</td>
 						<td class="text">3</td>
   					<td>         
-			        <div style="margin: 0px auto;" class="ActionContainer">
-			          <div style="margin: auto;" class="OverflowContainer">          
+			        <div style="margin:0px auto;" class="ActionContainer">
+			          <div style="margin:auto;" class="OverflowContainer">          
 			            <a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
 			            <a title="Delete Page" href="#" class="DeleteIcon"></a>		          
 			          </div>
@@ -50,8 +50,8 @@
 					  <td class="text">Special Member</td>
 						<td class="text">3</td>
  						<td>         
-			        <div style="margin: 0px auto;" class="ActionContainer">
-			          <div style="margin: auto;" class="OverflowContainer">          
+			        <div style="margin:0px auto;" class="ActionContainer">
+			          <div style="margin:auto;" class="OverflowContainer">          
 			            <a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
 			            <a title="Delete Page" href="#" class="DeleteIcon"></a>		          
 			          </div>
@@ -62,8 +62,8 @@
 					  <td class="text">Super Member</td>
 						<td class="text">3</td>
   					<td>         
-			        <div style="margin: 0px auto;" class="ActionContainer">
-			          <div style="margin: auto;" class="OverflowContainer">          
+			        <div style="margin:0px auto;" class="ActionContainer">
+			          <div style="margin:auto;" class="OverflowContainer">          
 			            <a title="Edit Page" href="#" class="EditInfoIcon"></a>		          
 			            <a title="Delete Page" href="#" class="DeleteIcon"></a>		          
 			          </div>
@@ -84,18 +84,18 @@
 						</div>
 		    	  <a title="Next Page" class="Icon NextPageIcon" href="#"></a>
 		    	  <a title="Next 10 pages" class="Icon DisableNextTopPageIcon"></a>
-		    		<div style="clear: left;"><span><span/></div>
+		    		<div style="clear:left;"><span><span/></div>
 			  	</div>
 		  		<div class="LeftPageIteratorBlock">
 			  		<div class="TotalPages">Total pages:</div>
 			  		<div class="PagesTotalNumber">3</div>
-			  		<div style="clear: left;"><span></span></div>
+			  		<div style="clear:left;"><span></span></div>
 		  		</div>
 	  		</div>
-			  <div style="clear: right;"><span></span></div>
+			  <div style="clear:right;"><span></span></div>
 			</div>
 		</div>
-		<div style="clear: left;"><span></span></div>
+		<div style="clear:left;"><span></span></div>
 		<div class="AddUserManagement">
 		  <div class="UIFormWithTitle UIMembershipTypeForm">
 				<div class="TitleBar">Add User Title</div>
@@ -114,23 +114,23 @@
 	      			</tbody>
 	      		</table>
       			<div class="UIAction"> 
-					    <table class="ActionContainer" align="center">
+					    <table class="ActionContainer" style="text-align:center">
 							  <tr>
 								  <td align="center">
-  									<a href="#" class="ActionButton LightBlueStyle">
+  									<div onclick="#" class="ActionButton LightBlueStyle">
 				          	  <div class="ButtonLeft">
 				            	  <div class="ButtonRight">
 				              	  <div class="ButtonMiddle">Save</div>
 				                </div>
 				              </div>
-				            </a>
-				            <a href="#" class="ActionButton LightBlueStyle">
+				            </div>
+				            <div onclick="#" class="ActionButton LightBlueStyle">
 				          	  <div class="ButtonLeft">
 				            	  <div class="ButtonRight">
 				              	  <div class="ButtonMiddle">Reset</div>
 					              </div>
 					            </div>
-					          </a>
+					          </div>
   								</td>
 								</tr>
  	            </table>
@@ -141,22 +141,24 @@
  		</div>
 	</div>
 	<div class="UIAction"> 
-    <table class="ActionContainer" align="center">
+    <table class="ActionContainer">
 		  <tr>
 			  <td align="center">
-  				<a href="#" class="ActionButton LightBlueStyle">
+  				<div onclick="#" class="ActionButton LightBlueStyle">
       	  	<div class="ButtonLeft">
         	  	<div class="ButtonRight">
-          	  	<div class="ButtonMiddle">Ok</div>
+          	  	<div class="ButtonMiddle">
+          	  		<a  href="javascript:void(0);">Ok</a>
+      	  		</div>
             	</div>
           	</div>
-        	</a>
+        	</div>
         	<div onclick="#" class="ActionButton LightBlueStyle">
       	  	<div class="ButtonLeft">
         	  	<div class="ButtonRight">
           	  	<div class="ButtonMiddle">
 	          	  	<a href="javascript:void(0);">
-	          	  	Close
+	          	  		Close
 	          	  	</a>
           	  	</div>
               </div>

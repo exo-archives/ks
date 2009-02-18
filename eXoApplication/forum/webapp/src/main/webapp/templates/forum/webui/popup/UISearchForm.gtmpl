@@ -33,7 +33,7 @@
 											<%=uicomponent.getLabel(uiform.FIELD_SEARCHUSER_INPUT); %>
 									</td>
 									<td class="FieldComponent FieldUserName" colspan="2">
-										<div style="float: left">
+										<div style="float:left">
 									  	<%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
 									  </div>
 									  <div onclick="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float: left; cursor:pointer; width:16px;">
@@ -145,7 +145,7 @@
 			</div>
 		</div>
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer">
 				<tr>
 					<td align="center">
 				<% for(action in uicomponent.getActions()) { 

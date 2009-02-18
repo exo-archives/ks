@@ -42,10 +42,10 @@
 								key = uicomponent.getCurrentGroup().getId()+"/"+user ;
 							} 
 					%>
-							<div class="$rowCssClass" style="while-space: normal;">
-								<div class="ItemIcon" style="width: 10px; float: left;"><span></span></div>
-									<a href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>	
-									<div style="clear: left"><span></span></div>													 
+							<div class="$rowCssClass" style="while-space:normal;">
+								<div class="ItemIcon" style="width:10px; float:left;"><span></span></div>
+								<a href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>	
+								<div style="clear:left"><span></span></div>													 
 							</div>
 					<%}
 					} else if (uicomponent.isSelectGroup()){
@@ -55,10 +55,10 @@
 							even = !even ;
 							key = "/" + user ;		
 					%>
-							<div class="$rowCssClass" style="while-space: normal;">
-								<div class="ItemIcon" style="width: 10px; float:left;"><span></span></div>
-									<a href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>	
-									<div style="clear: left"><span></span></div>													 
+							<div class="$rowCssClass" style="while-space:normal;">
+								<div class="ItemIcon" style="width:10px; float:left;"><span></span></div>
+								<a href="<%=uicomponent.event('SelectMembership',key)%>">$user</a>	
+								<div style="clear:left"><span></span></div>													 
 							</div>
 					<%}		
 					
@@ -68,6 +68,6 @@
 				
 			</div>
 		</div>
-		<div style="clear: left"><span></span></div>
+		<div style="clear:left"><span></span></div>
 	</div>
 </div> 		

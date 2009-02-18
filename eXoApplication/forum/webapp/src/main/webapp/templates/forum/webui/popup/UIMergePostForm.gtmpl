@@ -42,7 +42,7 @@
 		  </div>
 	  </div>
 		<div class="UIAction"> 
-	    <table class="ActionContainer" align="center">
+	    <table class="ActionContainer" style="text-align:center">
 			  <tr>
 				  <td align="center">
   					<div onclick="$link" class="ActionButton LightBlueStyle">

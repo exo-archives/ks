@@ -25,7 +25,7 @@
 		</div>
 		
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer">
 				<tr>
 					<td align="center">
 	        <% for(action in uicomponent.getActions()) { 

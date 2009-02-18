@@ -18,7 +18,7 @@
 			<div class="PortletDecorationMR">
 				<div class="HomePortletAdBackround">
 					<div class="DownloadButton">
-						<a href="http://forge.objectweb.org/project/shownotes.php?release_id=2949"></a>
+						<a href="http://forge.objectweb.org/project/shownotes.php?release_id=2949" style="display:block; width:192px; height:89px"></a>
 					</div>
 					<div class="ArowIcon">eXo KS is open source and FREE for download</div>
 					<div class="DotLine"><span></span></div>

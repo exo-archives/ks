@@ -58,7 +58,7 @@
 					<div class="Node $iconClass">
 						<div class="Icon $classForumIcon"><span></span></div>
 						<div class="NodeLabel"	onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'> 
-							<div><a>$forumName</a></div>
+							<a>$forumName</a>
 						</div>
 						<div style="clear:left;"><span></span></div>
 						<div class="ChildNodeContainer" style="$display">
@@ -75,7 +75,7 @@
 								<div class="Node">
 									<div class="Icon $classForumIcon"><span></span></div>
 									<div class="NodeLabel"> 
-										<div><a href="$link" title="$titlePost">$topicName</a></div>
+										<a href="$link" title="$titlePost">$topicName</a>
 									</div>
 								</div>
 							 <% } %>
@@ -88,7 +88,7 @@
 		 </div>	
 	</div>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
 				<% String link = uicomponent.event("Cancel") ; %>

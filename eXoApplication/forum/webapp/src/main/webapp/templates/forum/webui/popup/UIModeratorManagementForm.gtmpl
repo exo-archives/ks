@@ -34,10 +34,10 @@
 				<table cellspacing="0" border="0" cellpadding="0" id="PermissionInfo" class="UIGrid">
 					<thead>
 						<tr>
-							<th width="30%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>
-							<th width="25%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserTitle");%></th>
-							<th width="15%"><%=_ctx.appRes("UIModeratorManagementForm.label.UserRole");%></th>
-							<th width="12%"><%=_ctx.appRes("UIModeratorManagementForm.label.IsBanned");%></th>
+							<th style="width:30%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserName");%></th>
+							<th style="width:25%"><%=_ctx.appRes("UIModeratorManagementForm.label.ForumUserTitle");%></th>
+							<th style="width:15%"><%=_ctx.appRes("UIModeratorManagementForm.label.UserRole");%></th>
+							<th style="width:12%"><%=_ctx.appRes("UIModeratorManagementForm.label.IsBanned");%></th>
 							<th><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 						</tr>
 					</thead>
@@ -133,7 +133,7 @@
 										<% display = "none"; %>
 									<% } %>
 										<div class="UIAction"> 
-											<table class="ActionContainer" align="center">
+											<table class="ActionContainer" style="text-align:center">
 												<tr>
 										<% for(action in uiform.getActions()) { 
 												 if(action.equals("Cancel") || action.equals("Save")) {
@@ -143,9 +143,7 @@
 															<div class="ButtonLeft">
 																<div class="ButtonRight">
 																	<div class="ButtonMiddle">
-																		<a href="javascript:void(0);">
-																		<%=_ctx.appRes(uicomponent.getName() + ".action." + action);%>
-																		</a>
+																		<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + action);%></a>
 																	</div>
 																</div>
 															</div>
@@ -167,13 +165,15 @@
 		<% } %>
 	</div>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
-					<div class="ActionButton LightBlueStyle">
+					<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle"><a href="<%=uicomponent.event("Close");%>"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a></div>
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="Button NormalButton"	onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+		<div class="Button NormalButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
 			<div class="ButtonL">
 				<div class="ButtonR">
 					<div class="ButtonC">
@@ -23,7 +23,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="Button NormalButton"	onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
+		<div class="Button NormalButton" onclick="showContent(this)" onmouseover="onMouseOverButton(this)" onmouseout="onMouseOutButton(this)">
 			<div class="ButtonL">
 				<div class="ButtonR">
 					<div class="ButtonC">
@@ -32,11 +32,11 @@
 				</div>
 			</div>
 		</div>
-		<a href="$registerUri">
+		
 			<div class="SignUpButton">
-				<div>Sign up Now</div>
+				<a href="$registerUri" style="color:#fff">Sign up Now</a>
 			</div>
-		</a>
+	
 	</div>
 	<div class="RightKSGuidedTour">
 		<div class="ContentTour KSGuidedTour1" style="display:block;">
@@ -94,7 +94,7 @@
 				<tr>
 					<td>
 						<div class="H4">
-							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt=""/>
 						</div>
 					</td>
 					<td>
@@ -107,7 +107,7 @@
 							<div class="TitleBarML">
 								<div class="TitleBarMR">
 									<div class="TitleBarMC">
-										<div style="width: 80%;margin: auto;">
+										<div style="width:80%; margin:auto;">
 											Domain experts can <strong>moderate</strong> and <strong>organize</strong> the knowledge
 										</div>
 									</div>
@@ -149,7 +149,7 @@
 					</td>
 					<td>
 						<div class="H5">
-							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt=""/>
 						</div>
 					</td>
 				</tr>
@@ -171,7 +171,7 @@
 				<tr>
 					<td>
 						<div class="H1">
-							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+							<img class="ImageKS" alt="" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 						</div>
 					</td>
 					<td>
@@ -226,7 +226,7 @@
 					</td>
 					<td>
 						<div class="H2">
-							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt=""/>
 						</div>
 					</td>
 				</tr>
@@ -235,7 +235,7 @@
 				<tr>
 					<td>
 						<div class="H3">
-							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+							<img class="ImageKS" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt=""/>
 						</div>
 					</td>
 					<td>
@@ -248,7 +248,7 @@
 							<div class="TitleBarML">
 								<div class="TitleBarMR">
 									<div class="TitleBarMC">
-										<div style="width: 80%;margin: auto;">
+										<div style="width:80%; margin:auto;">
 											It is <strong>easy to find</strong> anything with categories, bookmarks, watch, search, notifications and tags
 										</div>
 									</div>
@@ -265,7 +265,7 @@
 			</table>
 		</div>
 	</div>
-	<div style="clear: left;"><span></span></div>
+	<div style="clear:left;"><span></span></div>
 </div>
 <script type="text/javascript">
  	var parent_ = document.getElementById('UIKSGuidedTour');

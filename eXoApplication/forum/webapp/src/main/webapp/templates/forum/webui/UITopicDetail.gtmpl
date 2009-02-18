@@ -86,15 +86,14 @@
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
 							<% if(isCanReply) { %>
-									<a href="<%=uicomponent.event("AddPost")%>">
+									<div onclick="<%=uicomponent.event("AddPost")%>">
 										<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
 											<%=_ctx.appRes(uiformId + ".action.AddPost");%>
 										</div>
-									</a>
+									</div>
 							<% } else { %>
 									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
 							<% } %>
-								</a>
 							</div>
 						</div>
 					</div>
@@ -106,7 +105,7 @@
 			<% /*Begin Popup Menu*/ %>
 			<div style="position: relative; ">
 				<div id="goPage1" class="UIPopupCategory" style="display: none; ">
-					<div class="UIRightClickPopupMenu" style="display: block; left: -75px;">
+					<div class="UIRightClickPopupMenu" style="display: block; left:-75px;">
 						<div class="UIContextMenuContainer">
 							<div class="TopLeftRightClickPopupMenu">
 								<div class="TopRightRightClickPopupMenu">
@@ -202,28 +201,27 @@
 																if(isView) {
 																	if(action.equals("DeletePost")){
 																%>
-																		<a class="MenuItem" href="javaScript: void(0)"
-														 					onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeletePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckPost")%>')){$link;}">	 
+																		<div class="MenuItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicDetail', '', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeletePost")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckPost")%>')){$link;}">	 
 																			<div class="ItemIcon $classIcon">
-																				$itemLabel
+																				<a  href="javaScript: void(0)">$itemLabel</a>
 																			</div>
-																		</a>
+																		</div>
 																<%
 																	} else {
 																%>
-																	<a class="MenuItem" href="$link">
+																	<div class="MenuItem" onclick="$link">
 																		<div class="ItemIcon $classIcon">
-																			$itemLabel
+																			<a href="javaScript: void(0)">$itemLabel</a>
 																		</div>
-																	</a>
+																	</div>
 																<%}
 																} else {
 																%>
-																	<a class="DisableMenuItem" href="javaScript: void(0)">
+																	<div class="DisableMenuItem" onclick="javaScript: void(0)">
 																		<div class="ItemIcon $classIcon">
 																			$itemLabel
 																		</div>
-																	</a>
+																	</div>
 																<%}
 															}
 															%>
@@ -247,33 +245,33 @@
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-									<a href="<%=uicomponent.event("AddTagTopic")%>">
+									<div onclick="<%=uicomponent.event("AddTagTopic")%>">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon TagIcon">
-														<%=_ctx.appRes(uiformId + ".label.Tag");%>
+														<a href="javaScript: void(0)"<%=_ctx.appRes(uiformId + ".label.Tag");%></a>
 													</div>
 												</div>
 											</div>
 										</div>
-									</a>
+									</div>
 								</div>
 							</div>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-									<a href="<%=uicomponent.event("RatingTopic")%>">
+									<div onclick="<%=uicomponent.event("RatingTopic")%>">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon VoteIcon">
-														<%=_ctx.appRes(uiformId + ".label.VoteThread");%>
+														<a href="javaScript: void(0)"<%=_ctx.appRes(uiformId + ".label.VoteThread");%></a>
 													</div>
 												</div>
 											</div>
 										</div>
-									</a>
+									</div>
 								</div>
 							</div>
 						<%}%>
@@ -320,11 +318,11 @@
 																</div>
 																<div style="clear: left;"><span></span></div>
 																<div class="LineMenu"><span></span></div>
-															<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>">	 
+															<div class="MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">	 
 																<div class="ItemIcon AdvancedSearchIcon">
-																	<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>
+																	<a  href="javaScript: void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 																</div>
-															</a>
+															</div>
 															</div>
 														</div>
 													</div>
@@ -356,7 +354,7 @@
 								</div>
 								<% /*Begin Popup Menu*/ %>
 								<div style="position: relative;">
-									<div class="UIPopupCategory" style="display: none; ">
+									<div class="UIPopupCategory" style="display:none; ">
 										<div class="UIRightClickPopupMenu" style="display: block;">
 											<div class="UIContextMenuContainer">
 											
@@ -418,11 +416,11 @@
 																			</div>
 																		</div>
 													 		<% } else { %>
-																			<a class="MenuItem" href="$link">	 
+																			<div class="MenuItem" onclick="$link">	 
 																				<div class="ItemIcon $classIcon">
-																					$itemLabel
+																					<a href="javaScript: void(0)">$itemLabel</a>
 																				</div>
-																			</a>
+																			</div>
 																<% } %>
 															<% } 
 															 } else {
@@ -462,11 +460,11 @@
 																 		<% if(isApprove) { %>
 														 						<div class="LineMenu"><span></span></div>
 														 				<% } %>
-																			<a class="MenuItem" href="$link">	 
+																			<div class="MenuItem" onclick="$link">	 
 																				<div class="ItemIcon $classIcon">
-																				<%=itemLabel%>
+																					<a href="javaScript: void(0)"><%=itemLabel%></a>
 																				</div>
-																			</a>
+																			</div>
 																<% } 
 																 }	
 															 } %>
@@ -504,7 +502,7 @@
 									<div class="ButtonLeft">
 										<div class="ButtonRight">
 											<div class="ButtonMiddle">
-											 <a style="display:block;" href="<%=uicomponent.event("AddWatching")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>&nbsp;</a>
+											 	<a style="display:block;" href="<%=uicomponent.event("AddWatching")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>&nbsp;</a>
 											</div>
 										</div>
 									</div>
@@ -590,8 +588,8 @@
 				if(isAnd) alert = alert + "!</span>) "
 				else alert = " " ;
 		%>
-		<div class="ContentContainer" id="$postId" style="margin: 2px 0px 0px 0px;">
-			<table class="TablePost" cellspacing="0" borderspacing="0">
+		<div class="ContentContainer" id="$postId" style="margin:2px 0px 0px 0px;">
+			<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
 				<tbody>
 					<tr>
 <!-- Start MemberContainer -->
@@ -608,10 +606,10 @@
 								<div class="MemberName">
 									<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
 									<div class="Name">$owner</div>
-									<div class="ContentAction" style="float: left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+									<div class="ContentAction" style="float:left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 										<div class="Action" style="float: none;"><span></span></div>
-										<div style="position: relative;">
-											<div class="UIPopupCategory" style="display: none; left: 2px; top:-2px; ">
+										<div style="position:relative;">
+											<div class="UIPopupCategory" style="display:none; left:2px; top:-2px; ">
 												<div class="UIRightClickPopupMenu" style="display: block;">
 													<div class="UIContextMenuContainer">											
 														<div class="TopLeftRightClickPopupMenu">
@@ -633,9 +631,11 @@
 																			if(viewAction.equals("ViewPublicUserInfo")) classIcon = "ViewProfileIcon" ;
 																			else classIcon = "IconsView" ;
 																	%>
-																			<a class="MenuItem" href="$linkView">
-																				<div class="ItemIcon $classIcon" style="padding-left: 20px;">$itemLabelView</div>
-																			</a>
+																			<div class="MenuItem" onclick="$linkView">
+																				<div class="ItemIcon $classIcon" style="padding-left: 20px;">
+																					<a href="javaScript: void(0)">$itemLabelView</a>
+																				</div>
+																			</div>
 																	<%
 																		}
 																	%>
@@ -652,7 +652,7 @@
 											</div>
 										</div>
 									</div>
-									<div style="clear: left;"><span></span></div>
+									<div style="clear:left;"><span></span></div>
 								</div>
 										
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
@@ -663,7 +663,7 @@
 									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
 									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" width="70px" onload="$onload"/>
+								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" width="70px" onload="$onload" alt=""/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes(uiformId + ".label.JoinDate");%>: $joinDate</div>
@@ -699,27 +699,27 @@
 							
 							<div class="PostViewHeader">
 							<% if(canEdit) {%>
-								<div class="PostViewTitle" style="float: left;">
+								<div class="PostViewTitle" style="float:left;">
 									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
 									<div class="PostTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>: $createdDate </div>
 								</div>
-								<div class="CheckPost" style="float: right;">
+								<div class="CheckPost" style="float:right;">
 								<%  
 								   if(isShowIP) {
 								     String ip = post.getRemoteAddr();
 								     if(ip != null && ip.length() > 0) {
-								     String link2= "href=\"" + uicomponent.event("BanIPThisForum", ip) + "\"";
-								     String title1 = "Ban IP: "+ip+" this Forum";
-								     if(uicomponent.isIPBaned(ip)){
-								   	   title1 = "IP: " +ip+ " is baned this Forum."
-								   	   link2 ="";
-								     }
+									     String link2= uicomponent.event("BanIPThisForum", ip);
+									     String title1 = "Ban IP: "+ip+" this Forum";
+									     if(uicomponent.isIPBaned(ip)){
+									   	   title1 = "IP: " +ip+ " is baned this Forum."
+									   	   link2 ="javaScript:void(0);";
+									     }
 								%>
 									<div class="IPIcon" title="IP: $ip" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
 										<% /*Begin Popup Menu*/ %>
-										<div style="position: relative;">
-											<div class="UIPopupCategory SearchPopup" style="display: none; ">
-												<div class="UIRightClickPopupMenu" style="display: block; left: -40px;">
+										<div style="position:relative;">
+											<div class="UIPopupCategory SearchPopup" style="display:none;">
+												<div class="UIRightClickPopupMenu" style="display:block; left:-40px;">
 													<div class="UIContextMenuContainer">
 														<div class="TopLeftRightClickPopupMenu">
 															<div class="TopRightRightClickPopupMenu">
@@ -728,22 +728,22 @@
 														</div>
 														<div class="MiddleLeftRightClickPopupMenu">
 															<div class="MiddleRightRightClickPopupMenu">
-																<div class="UIRightPopupMenuContainer" style="width: 140px; min-width: 140px;">
+																<div class="UIRightPopupMenuContainer" style="width:140px; min-width:140px;">
 																	<div class="LineMenu"><span></span></div>
-																	<a title="$title1" class="MenuItem" $link2>	 
-																		<div class="ItemIcon">
-																			<%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%>
+																		<div title="$title1" class="MenuItem" onclick="$link2">	 
+																			<div class="ItemIcon">
+																				<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
+																			</div>
 																		</div>
-																	</a>
 																	<% 
 																		if(userProfile.getUserRole() == 0) {
 																		String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "'))" + uicomponent.event("BanIPAllForum", ip); 
 																	%>
-																	<a class="MenuItem" href="$link">	 
+																	<div class="MenuItem" onclick="$link">	 
 																		<div class="ItemIcon">
-																			<%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%>
+																			<a href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.label.BanIPAllForum")%></a>
 																		</div>
-																	</a>
+																	</div>
 																	<% } %>
 																</div>
 															</div>
@@ -773,7 +773,7 @@
 										<input onclick="eXo.forum.UIForumPortlet.checkedPost(this);" type="checkbox" class="checkbox" value="false" name="$postId" $isChecked/>
 									</div>
 									<%}  %>
-									<div style="clear: left;"><span></span></div>
+									<div style="clear:left;"><span></span></div>
 								</div>
 								<div style="clear: both;"><span></span></div>
 								<% } else { %>
@@ -793,7 +793,7 @@
 						<% } else { %>
 							<div class="PostContentNote">
 						<% } %>
-								<div style="padding-top: 8px" id="$idMessage">$message</div>
+								<div style="padding-top:8px" id="$idMessage">$message</div>
 							</div>
 							<% if(hasAttachment) {%>
 							<div class="AttachmentContainer">
@@ -812,18 +812,20 @@
 										<% if(typeFile.indexOf("image") >= 0) {
 										   String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +attachment.getPath() ;
 										%>
-											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;"/></div> 
+											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt=""/></div> 
 						 					<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 						 						<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
 						 						<div style="clear: left;"><span></span></div>
 						 						<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
 						 						<div class="Action">
-						 							<div class="Icon MaxView"  onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes(uiformId + ".action.View");%></div>
-						 							<div class="Icon Download"><a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes(uiformId + ".action.Download");%></a></div>
+						 							<div class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes(uiformId + ".action.View");%></div>
+						 							<div class="Icon Download">
+						 								<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes(uiformId + ".action.Download");%></a>
+					 								</div>
 						 						</div>
 						 					</div>
-							 				<div style="clear: left;"><span></span></div>
+							 				<div style="clear:left;"><span></span></div>
 									<% }else { 
 												String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
 									%>
@@ -832,13 +834,13 @@
 												<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
 													$fileName
 												</a>
-												<div style="clear: left;"><span/></div>
+												<div style="clear:left;"><span><span/></div>
 												<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
 										</div>
 									<% } %>
 									</div>
 								<% } %>
-									<div style="clear: left;"><span/></div>
+									<div style="clear:left;"><span><span/></div>
 								</div>
 							</div>
 							<% } %>
@@ -887,9 +889,9 @@
 												<div class="ButtonLeft">
 													<div class="ButtonRight">
 														<div class="ButtonMiddle">
-															<a href="$actionLink">
+															<div onclick="$actionLink">
 																<div class="IconButton ${action}PostIcon" title="$title"><span class="LabelIcon"></span>$label</div>
-															</a>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -925,9 +927,9 @@
 <!-- End PostsInThreadContainer -->
 	<div class="ButtomAndPageListContainer">
 	<% if(isCanReply) { %>
-		<div class="UIActionForum" style="float: left;">
+		<div class="UIActionForum" style="float:left;">
 	<% } else { %>
-		<div class="LockActionForum UIActionForum" style="float: left;">
+		<div class="LockActionForum UIActionForum" style="float:left;">
 	<% } %>
 			<div class="ActionButton">
 				<div class="NormalStyle">
@@ -935,15 +937,14 @@
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
 							<% if(isCanReply) { %>
-									<a href="<%=uicomponent.event("AddPost")%>">
+									<div onclick="<%=uicomponent.event("AddPost")%>">
 										<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
 											<%=_ctx.appRes(uicomponent.getName() + ".action.AddPost");%>
 										</div>
-									</a>
+									</div>
 							<% } else { %>
 									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
 							<% } %>
-								</a>
 							</div>
 						</div>
 					</div>
@@ -951,11 +952,11 @@
 			</div>
 		</div>
 		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
-			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
+			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
-			<div style="position: relative;">
-				<div id="goPage2" class="UIPopupCategory" style="display: none; ">
-					<div class="UIRightClickPopupMenu" style="display: block; left: -75px;">
+			<div style="position:relative;">
+				<div id="goPage2" class="UIPopupCategory" style="display:none;">
+					<div class="UIRightClickPopupMenu" style="display:block; left:-75px;">
 						<div class="UIContextMenuContainer">
 							<div class="TopLeftRightClickPopupMenu">
 								<div class="TopRightRightClickPopupMenu">
@@ -999,43 +1000,47 @@
 	</div>
 <% if(isCanReply){ %>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tbody>
-			<tr>
-				<div class="ForumCategory ForumQuickReply">
-					<div class="ForumToolbar">
-						<div class="LeftBar">
-							<div class="RightBar">
-								<div class="CenterBar">
-									<div class="Title"><%=_ctx.appRes(uiformId + ".title.ForumQuickReply");%></div>
-									<div class="CollapseButton" title="Expand category" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-									<div style="clear: both;"><span></span></div>
+				<tr>
+					<td>
+						<div class="ForumCategory ForumQuickReply">
+							<div class="ForumToolbar">
+								<div class="LeftBar">
+									<div class="RightBar">
+										<div class="CenterBar">
+											<div class="Title"><%=_ctx.appRes(uiformId + ".title.ForumQuickReply");%></div>
+											<div class="CollapseButton" title="Expand category" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+											<div style="clear:both;"><span></span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="ContentContainer">
+								<div class="ForumList">
+									<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
+									<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
+								</div>
+								<div class="ActionContent">
+							<% for(action in uicomponent.getActions()) { 
+									 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+									 String link = uicomponent.event(action) ;
+							%>
+									<div onclick="$link" class="ActionButton LightBlueStyle">
+										<div class="ButtonLeft">
+											<div class="ButtonRight">
+												<div class="ButtonMiddle">
+													<a href="javascript:void(0);">$actionLabel</a>
+												</div>
+											</div>
+										</div>
+									</div>
+							<%}%>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="ContentContainer">
-						<div class="ForumList">
-							<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
-							<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
-						</div>
-						<div class="ActionContent">
-					<% for(action in uicomponent.getActions()) { 
-							 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-							 String link = uicomponent.event(action) ;
-					%>
-							<a href="$link" class="ActionButton LightBlueStyle">
-								<div class="ButtonLeft">
-									<div class="ButtonRight">
-										<div class="ButtonMiddle">$actionLabel</div>
-									</div>
-								</div>
-							</a>
-					<%}%>
-						</div>
-					</div>
-				</div>
-			</tr>
+					</td>
+				</tr>
 			</tbody>
  		</table> 
 	</div>

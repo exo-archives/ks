@@ -22,7 +22,7 @@
 				<th><%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%></th>
 				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.To");%></th>
 				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.SendDate");%></th>
-				<th style="width:80px"><%=_ctx.appRes("UIPrivateMessageForm.label.Action");%></th>
+				<th style="width:40px"><%=_ctx.appRes("UIPrivateMessageForm.label.Action");%></th>
 			</tr>
 		</thead>
 		<tbody>

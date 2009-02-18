@@ -49,9 +49,9 @@
 												    </td>
 												    <td class="FieldComponent" style="padding:2px 0px 3px 0px;">
 												    	<div>
-																<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin:5px;"/>
+																<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin:5px;" alt=""/>
 															</div>
-															<div align="left">
+															<div style="text-align:left">
 																<a href="<%=uiform.event("Attachment")%>" style="color:blue;">
 																	[ <%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%> ]
 																</a>
@@ -102,9 +102,9 @@
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-									<a href="javascript:void(0);">
-										$actionLabel
-									</a>
+										<a href="javascript:void(0);">
+											$actionLabel
+										</a>
 									</div>
 								</div>
 							</div>
