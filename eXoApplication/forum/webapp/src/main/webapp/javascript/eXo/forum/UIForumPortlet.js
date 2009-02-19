@@ -683,7 +683,8 @@ UIForumPortlet.prototype.executeLink = function(evt) {
 	return false;
 } ;
 
-UIForumPortlet.prototype.createLink = function(cpId) {
+UIForumPortlet.prototype.createLink = function(cpId,isAjax) {
+	if(!isAjax || isAjax === 'false') return ;
   var comp = document.getElementById(cpId);
 	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a","ActionLink");
 	var i = uiCategoryTitle.length;

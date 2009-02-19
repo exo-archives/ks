@@ -5,6 +5,7 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	
 	uicomponent.setUserProfile();
+	uicomponent.setIsUseAjax();
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.core.JSON') ;
@@ -47,12 +48,21 @@
 						namePath = namePath.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
 						if(t+1 < uicomponent.getMaxPath()) {
 				%>
-					<a href="$link" title="$namePath" onmousedown="$event; return false;" class="Selected">$name</a>
+					<%if(uicomponent.useAjax || t == 0){%>
+							<a href="$link" title="$namePath" onmousedown="$event; return false;" class="Selected">$name</a>
+					<%} else {%>
+							<a href="$link" title="$namePath" class="Selected">$name</a>
+					<%}%>
+					
 					<div class="RightArrowIcon"><span></span></div>
 				 <% } else {
 				 		 	if(uicomponent.isLink()) {
 				 %>
-					<a href="$link" title="$namePath" onmousedown="$event; return false;" class="Selected">$name</a>
+				 	<%if(uicomponent.useAjax){%>
+							<a href="$link" title="$namePath" onmousedown="$event; return false;" class="Selected">$name</a>
+					<%} else {%>
+							<a href="$link" title="$namePath" class="Selected">$name</a>
+					<%}%>
 					<% 	} else{ %>				 
 					<div title="$namePath" class="Selected">$name</div>
 				 <%		

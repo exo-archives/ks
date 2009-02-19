@@ -104,6 +104,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 	}
 )
 public class UITopicContainer extends UIForumKeepStickPageIterator {
+	private boolean useAjax = true;
 	private ForumService forumService ;
 	private String forumId = "";
 	private String categoryId = "";
@@ -146,6 +147,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
+	
+
+	private void setIsUseAjax(){
+		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
+	}
 	
 	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs) throws Exception {
 		this.forumId = forumId ;
@@ -403,7 +409,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum) ;
 			topicForm.setMod(uiTopicContainer.isModerator) ;
 			popupContainer.setId("UIAddTopicContainer") ;
-			popupAction.activate(popupContainer, 900, 460) ;
+			popupAction.activate(popupContainer, 680, 460) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

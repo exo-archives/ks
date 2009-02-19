@@ -38,6 +38,8 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -285,16 +287,40 @@ public class JCRDataStorage {
 			faqServiceHome.save() ;
 			
 			//		Add observation
-			String wsName = faqServiceHome.getSession().getWorkspace().getName() ;
-			RepositoryImpl repo = (RepositoryImpl)faqServiceHome.getSession().getRepository() ;
-			RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
-			ObservationManager observation = faqServiceHome.getSession().getWorkspace().getObservationManager() ;
-			observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,questionHome.getPath(), true, null, null, false) ;
-			RSSEventListener addQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
-			observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,questionHome.getPath(), false, null, null, false) ;
-			RSSEventListener removeQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
-			observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,questionHome.getPath(), false, null, null, false) ;
+			addListennerForNode(questionHome);
 			return questionHome ;
+		}
+	}
+	
+	protected void addListennerForNode(Node node) throws Exception{
+		String wsName = node.getSession().getWorkspace().getName() ;
+		RepositoryImpl repo = (RepositoryImpl)node.getSession().getRepository() ;
+		RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
+		ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
+		observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,node.getPath(), true, null, null, false) ;
+		RSSEventListener addQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+		observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,node.getPath(), false, null, null, false) ;
+		RSSEventListener removeQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+		observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,node.getPath(), false, null, null, false) ;
+	}
+	
+	public void checkEvenListen() throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node questionHomeNode = getQuestionHome(sProvider, null);
+		ObservationManager observation = questionHomeNode.getSession().getWorkspace().getObservationManager() ;
+		EventListenerIterator listenerIterator = observation.getRegisteredEventListeners();
+		if(listenerIterator.hasNext()){
+			return;
+		} else {
+			/*String wsName = questionHomeNode.getSession().getWorkspace().getName() ;
+			RepositoryImpl repo = (RepositoryImpl)questionHomeNode.getSession().getRepository() ;
+			RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
+			observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,questionHomeNode.getPath(), true, null, null, false) ;
+			RSSEventListener addQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+			observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,questionHomeNode.getPath(), false, null, null, false) ;
+			RSSEventListener removeQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+			observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,questionHomeNode.getPath(), false, null, null, false) ;*/
+			addListennerForNode(questionHomeNode);
 		}
 	}
 	
@@ -2317,6 +2343,7 @@ public class JCRDataStorage {
 	}
 	
 	public void generateRSS(String path, int typeEvent) throws Exception	{
+		
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		String feedType = "rss_2.0";
 		boolean isNew = false;
@@ -2329,6 +2356,7 @@ public class JCRDataStorage {
 			SyndContent description;
 			Node categoryNode = null;
 			Node RSSNode = null;
+			
 			if(typeEvent != EVENT_REMOVE) {
 				Node addedQuestion = (Node)faqHome.getSession().getItem(path) ;
 				int lop = 0;

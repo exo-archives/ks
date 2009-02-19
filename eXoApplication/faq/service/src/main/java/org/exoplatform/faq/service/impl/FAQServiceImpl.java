@@ -45,6 +45,7 @@ import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.mail.Message;
+import org.picocontainer.Startable;
 
 /**
  * Created by The eXo Platform SARL
@@ -52,7 +53,7 @@ import org.exoplatform.services.mail.Message;
  *          hung.nguyen@exoplatform.com
  * Mar 04, 2008  
  */
-public class FAQServiceImpl implements FAQService{	
+public class FAQServiceImpl implements FAQService, Startable{	
   
 	public static final int CATEGORY = 1 ;
 	public static final int QUESTION = 2 ;
@@ -751,4 +752,15 @@ public class FAQServiceImpl implements FAQService{
 	public void saveUserAvatar(String userId, FileAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
 	jcrData_.saveUserAvatar(userId, fileAttachment, sessionProvider);
 	}
+
+	public void start() {
+		// TODO Auto-generated method stub
+		try{
+			jcrData_.checkEvenListen();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void stop() {}
 }

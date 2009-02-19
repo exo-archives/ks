@@ -80,7 +80,7 @@
 						<div id="<%=category.getId()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
 							<div unselectable="on">
 								
-								<a title="<%=category.getName()%>" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getId())%>">
+								<a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getId())%>">
 									<%=FAQUtils.getSubString(category.getName(), 20);%>
 								</a>
 								<%

@@ -305,13 +305,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   public void setCategoryId(String categoryId) {
     this.categoryId_ = categoryId ;
     questionId_ = null ;
-    /*LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
-    for(Object object:configService.getLocalConfigs()) {      
-      LocaleConfig localeConfig = (LocaleConfig)object ;
-      Locale locale = localeConfig.getLocale() ;
-      defaultLanguage_ = locale.getDefault().getDisplayLanguage() ;
-      
-    }*/
     
     WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
     defaultLanguage_ = context.getLocale().getDisplayLanguage();
@@ -516,22 +509,21 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         question_ = new Question() ;
         question_.setCategoryId(questionForm.getCategoryId()) ;
         question_.setRelations(new String[]{}) ;
-        if(questionForm.categoryId_ == null || questionForm.categoryId_.trim().length() < 1){
-	        try{
-	          questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, sessionProvider).isModerateQuestions() ;
-	        } catch(Exception exception){
-	          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-	          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
-	          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-	          
-	          UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
-	          UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-	          popupAction.deActivate() ;
-	          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	          return;
-	        }
-        } else {
-        	questionIsApproved = true;
+        
+        System.out.println("\n\n\n\n-------------> categoryId: " + questionForm.categoryId_);
+        
+        try{
+          questionIsApproved = !fAQService_.getCategoryById(questionForm.categoryId_, sessionProvider).isModerateQuestions() ;
+        } catch(Exception exception){
+          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+          
+          UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+          UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+          popupAction.deActivate() ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+          return;
         }
         question_.setCreatedDate(date) ;
         question_.setApproved(questionIsApproved) ;

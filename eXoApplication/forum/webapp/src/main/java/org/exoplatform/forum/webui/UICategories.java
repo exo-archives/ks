@@ -68,10 +68,15 @@ public class UICategories extends UIContainer	{
 	public final String FORUM_LIST_SEARCH = "forumListSearch";
 	private boolean isGetForumList = false ;
 	private boolean isRenderChild = false ;
+	private boolean useAjax = true;
 	private UserProfile userProfile ;
 	public UICategories() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
+	}
+	
+	private void setIsUseAjax(){
+		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
 	}
 	
 	public void setIsRenderChild(boolean isRenderChild) {

@@ -16,7 +16,8 @@
 <% 
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('"+uicomponent.id+"') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"') ;") ;
+	uicomponent.setIsUseAjax();
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax+"') ;") ;
 	String categoryId = category.getId();
 	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
@@ -277,7 +278,7 @@
 								if(topicNewPost.getIsClosed()) {
 									if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-										urlLastPost = uicomponent.url("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+										urlLastPost = uicomponent.url("OpenLastTopicLink", (path+'/'+topicId)) ;
 										urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 									} else {
 										openLinkLastPost = "javascript:void(0)";
@@ -287,7 +288,7 @@
 									if(forum.getIsModerateTopic()) {
 										if(topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin){
 											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-											urlLastPost = uicomponent.url("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+											urlLastPost = uicomponent.url("OpenLastTopicLink", (path+'/'+topicId)) ;
 											urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 										} else {
 											openLinkLastPost = "javascript:void(0)";
@@ -295,7 +296,7 @@
 										}
 									} else {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-										urlLastPost = uicomponent.url("OpenLastTopicLink", (forumId+'/'+topicId)) ;
+										urlLastPost = uicomponent.url("OpenLastTopicLink", (path+'/'+topicId)) ;
 										urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 									}
 								}
@@ -323,14 +324,20 @@
 								lineHeight = "line-height:28px;";
 							}
 							String link = uicomponent.event("OpenForumLink", forumId);
-							String url = uicomponent.url("OpenForumLink", forumId);
+							String url = uicomponent.url("OpenForumLink", path);
 							url = ForumSessionUtils.getBreadcumbUrl(url, uicomponent.id, "OpenForumLink" );
 					%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 									<td >
-										<div style="float:left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-											<a style="$lineHeight" actions="$link;" href="$url" class="ActionLink ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+										<div style="float:left" oncontextmenu="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+											
+											<%if(uicomponent.useAjax){%>
+													<a style="$lineHeight" actions="$link;" href="$url" class="ActionLink ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+											<%} else {%>
+													<a style="$lineHeight" href="$url" class="ActionLink ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+											<%}%>
+											
 											<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
@@ -350,8 +357,14 @@
 						 %>
 									<td >
 								 		<div class="LastPostIcon $topicNewPostIcon"><span></span></div>
-								 		<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-								 			<a actions="$openLinkLastPost" href="$urlLastPost" title="$titleTopic" class="ActionLink LastPostTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+								 		<div style="float: left;" oncontextmenu="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+								 			
+								 			<%if(uicomponent.useAjax){%>
+										 			<a actions="$openLinkLastPost" href="$urlLastPost" title="$titleTopic" class="ActionLink LastPostTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+											<%} else {%>
+										 			<a href="$urlLastPost" title="$titleTopic" class="ActionLink LastPostTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
+											<%}%>
+								 			
 											<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>

@@ -8,12 +8,15 @@
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
 	import org.exoplatform.forum.webui.UITopicContainer ;	
 	import org.exoplatform.web.application.JavascriptManager;
+	
+	uicomponent.setIsUseAjax();
+	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax+"') ;") ;
 	Forum forum = uicomponent.getForum() ;
 	if(forum != null)  {
 	uicomponent.initPage() ;
@@ -496,8 +499,14 @@
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
-												<a actions="$link;" href="$url" title="$titlePost" class="ActionLink $title">$topicTitle</a>
+											<div style="float:left;" oncontextmenu="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+												
+												<%if(uicomponent.useAjax){%>
+														<a actions="$link;" href="$url" title="$titlePost" class="ActionLink $title">$topicTitle</a>
+												<%} else {%>
+														<a href="$url" title="$titlePost" class="ActionLink $title">$topicTitle</a>
+												<%}%>
+												
 												<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
 													<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 														<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>

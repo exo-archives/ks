@@ -58,6 +58,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private UserProfile userProfile = null;
 	private boolean enableIPLogging = false;
 	private boolean enableBanIP = false;
+	private boolean useAjax = true;
 	private List<String>invisibleForums = new ArrayList<String>();
 	private List<String>invisibleCategories = new ArrayList<String>();
 	public UIForumPortlet() throws Exception {
@@ -142,6 +143,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		invisibleCategories.clear();
 		invisibleForums.clear();
 		try {
+			useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ""));
 			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
 			enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
 			invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ""))) ;
@@ -173,6 +175,10 @@ public class UIForumPortlet extends UIPortletApplication {
 	
 	public boolean isEnableBanIp() {
 		return enableBanIP;
+	}
+	
+	public boolean isUseAjax(){
+		return useAjax;
 	}
 
 	public void renderPopupMessages() throws Exception {

@@ -19,6 +19,9 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
@@ -30,6 +33,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -56,12 +60,23 @@ import org.exoplatform.webui.form.UIForm;
 
 public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
+	private String homeCategoryName = "";
 	private FAQSetting faqSetting_ ;
 	@SuppressWarnings("unused")
 	private static List<String> listCateSelected = new ArrayList<String>() ;
 	private List<Cate> listCate = new ArrayList<Cate>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-	public UIMoveCategoryForm() throws Exception {}
+	public UIMoveCategoryForm() throws Exception {
+		SessionProvider sProvider = FAQUtils.getSystemProvider();
+		Node homeNode = faqService_.getCategoryNodeById(null, sProvider);
+		if(homeNode.hasProperty("exo:name")) homeCategoryName = homeNode.getProperty("exo:name").getString();
+		else{
+			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+			ResourceBundle res = context.getApplicationResourceBundle() ;
+			homeCategoryName = res.getString("UIAddRelationForm.title.RootCategory");
+		}
+		sProvider.close();
+	}
 
 	public String getCategoryID() { return categoryId_; }
 	public void setCategoryID(String s) { categoryId_ = s ; }

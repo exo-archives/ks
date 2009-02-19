@@ -29,6 +29,12 @@
 	
 		<portlet-preferences>
 			<preference>
+				<name>useAjax</name>
+				<value>true</value> <!--true/false -->
+				<read-only>false</read-only>
+			</preference>
+			
+			<preference>
 				<name>enableIPLogging</name>
 				<value>true</value> <!--true/false -->
 				<read-only>false</read-only>

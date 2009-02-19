@@ -22,7 +22,7 @@
 		    <div class="Icon FAQCategoryViewMove"><span></span></div>
 		    <div id="FAQCateRoot" style="float:left">
 					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQRootChildren')" ondblclick="$link">
-						<%=_ctx.appRes("UIAddRelationForm.title.RootCategory")%>
+						<%=uicomponent.homeCategoryName%>
 					</a>
 				</div>
 				<div style="clear:left;"><span></span></div>

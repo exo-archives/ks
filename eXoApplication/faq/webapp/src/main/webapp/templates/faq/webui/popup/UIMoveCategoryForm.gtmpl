@@ -14,7 +14,7 @@
 	  <div class="ViewCategoryToSelect" style="margin:5px 0px 5px 0px ; padding-top:10px;">
 			<div class="Icon FAQCategoryViewMove"><span></span></div>
 			<div id="" style="float:left">
-				<a href="javaScript: void(0)" ondblclick="$linkRoot"><%= _ctx.appRes("UIMoveFAQForm.title.root"); %></a>
+				<a href="javaScript: void(0)" ondblclick="$linkRoot"><%=uicomponent.homeCategoryName%></a>
 			</div>
 			<div style="clear:left;"><span></span></div>
 			<div style="margin-left:30px;">

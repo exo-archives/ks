@@ -86,6 +86,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 )
 public class UICategory extends UIForm	{
+	private boolean useAjax = true;
 	private UserProfile userProfile ;
 	private String categoryId ;
 	private Category category ;
@@ -104,6 +105,11 @@ public class UICategory extends UIForm	{
 	private UserProfile getUserProfile() throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		return this.userProfile ;
+	}
+	
+
+	private void setIsUseAjax(){
+		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
 	}
 	
 	public void update(Category category, List<Forum> forums) throws Exception {
