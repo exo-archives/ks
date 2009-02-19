@@ -1313,7 +1313,7 @@ public class JCRDataStorage {
 			String topicPath = topics.get(0).getPath();
 			forumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
 			topicCount = forumNode.getProperty("exo:topicCount").getLong();
-			topicCount = forumNode.getProperty("exo:postCount").getLong();
+			postCount = forumNode.getProperty("exo:postCount").getLong();
 			if(forumNode.hasProperty("exo:moderators")) {
 				userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
 			}
@@ -1416,7 +1416,7 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:path", forumId);
 			// TODO: Thinking for update forum and user profile by node observation?
 			// setTopicCount for Forum and userProfile
-			if(!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+			if(!forumNode.getProperty("exo:isModerateTopic").getBoolean() && !topic.getIsWaiting()) {
 				long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1;
 				forumNode.setProperty("exo:topicCount", newTopicCount);
 			}
@@ -1944,7 +1944,10 @@ public class JCRDataStorage {
 					sendAlertJob = true;
 				}
 			}
-			sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
+			try {
+				sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
+      } catch (Exception e) {
+      }
 			if(isNew && defaultEmailContent.length() == 0) sendAlertJob = false; // initDefaulDate
 			if(sendAlertJob) {
 				List<String>userIdsp = new ArrayList<String>();
@@ -1983,49 +1986,74 @@ public class JCRDataStorage {
 		}
 		List<String> listUser = new ArrayList<String>();
 		List<String> emailList = new ArrayList<String>();
+		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+		Node userProfileHome = getUserProfileHome(sProvider);
+		int count = 0;
 		if(post == null) {
-			if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
-				// set Category Private
-				Node categoryNode = node.getParent() ;
-				if(categoryNode.hasProperty("exo:userPrivate"))
-					listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
-
-				if (!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
-					List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
-					int i = 0;
-					for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
-						if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
-							emailList.add(emails.get(i));
+			while (true) {
+				if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
+					// set Category Private
+					Node categoryNode ;
+					if(node.isNodeType("exo:forum")) categoryNode =  node;
+					else categoryNode = node.getParent() ;
+					if(categoryNode.hasProperty("exo:userPrivate"))
+						listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
+	
+					if (!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
+						List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+						int i = 0;
+						for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
+							if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
+								emailList.add(emails.get(i));
+							}
+							i++;
 						}
-						i++;
+					} else {
+						emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
 					}
-				} else {
-					emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
 				}
-			}
-			if (node.hasProperty("exo:notifyWhenAddTopic")) {
-				emailList.addAll(ValuesToList(node.getProperty("exo:notifyWhenAddTopic").getValues()));
-			}
-			if (emailList.size() > 0) {
-				Message message = new Message();
-				message.setMimeType("text/html");
-				message.setSubject("eXo Forum Watching Notification!");
-				
-				String content_ = node.getProperty("exo:name").getString();
-				content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
-				content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
-				content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-				content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
-				Date createdDate = topic.getCreatedDate();
-				Format formatter = new SimpleDateFormat("HH:mm");
-				content_ =  StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
-				formatter = new SimpleDateFormat("MM/dd/yyyy");
-				content_ =  StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-				content_ =  StringUtils.replace(content_, "$POSTER", topic.getOwner());
-				content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
-				
-				message.setBody(content_);
-				sendEmailNotification(emailList, message);
+				if (node.hasProperty("exo:notifyWhenAddTopic")) {
+					emailList.addAll(ValuesToList(node.getProperty("exo:notifyWhenAddTopic").getValues()));
+				}
+				if (emailList.size() > 0) {
+					Message message = new Message();
+					message.setMimeType("text/html");
+					String owner = topic.getOwner();
+					try {
+						Node userNode = userProfileHome.getNode(owner);
+						String email = userNode.getProperty("exo:email").getString();
+						String fullName = userNode.getProperty("exo:fullName").getString();
+		        if(email != null && email.length() > 0) {
+		        	message.setFrom(fullName + " <" + email + ">");
+		        }
+	        } catch (Exception e) {
+	        }
+					String content_ = node.getProperty("exo:name").getString();
+					if(node.isNodeType("exo:forum")){
+						message.setSubject("eXo Forum Watching Notification in Forum: " + content_);
+						content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
+						content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+					} else {
+						message.setSubject("eXo Forum Watching Notification in Category: " + content_);
+						content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
+						content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
+					}
+					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Topic");
+					content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
+					Date createdDate = topic.getCreatedDate();
+					Format formatter = new SimpleDateFormat("HH:mm");
+					content_ =  StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					formatter = new SimpleDateFormat("MM/dd/yyyy");
+					content_ =  StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ =  StringUtils.replace(content_, "$POSTER", topic.getOwner());
+					content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+					
+					message.setBody(content_);
+					sendEmailNotification(emailList, message);
+				}
+				if(node.isNodeType("exo:forumCategory") || count > 1) break;
+				++ count;
+				node = node.getParent();
 			}
 		} else {
 			if (!node.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
@@ -2033,6 +2061,7 @@ public class JCRDataStorage {
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
 				Node forumNode = node.getParent();
+				Node categoryNode = forumNode.getParent() ;
 				boolean isSend = false;
 				if(post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
 					isSend = true;
@@ -2047,7 +2076,6 @@ public class JCRDataStorage {
 							listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:viewer").getValues()));
 						}
 						// set Category Private
-						Node categoryNode = forumNode.getParent() ;
 						if(categoryNode.hasProperty("exo:userPrivate"))
 							listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
 						if(!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
@@ -2112,14 +2140,66 @@ public class JCRDataStorage {
 						emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
 					}
 				}
+				
+				List<String>emailListCategory = new ArrayList<String>();
+				if (categoryNode.isNodeType("exo:forumWatching") && isSend) {
+					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
+						List<String> emails = ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues());
+						int i = 0;
+						for (String user : ValuesToList(categoryNode.getProperty("exo:userWatching").getValues())) {
+							if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
+								emailListCategory.add(emails.get(i));
+							} 
+							i++;
+						}
+					} else {
+						emailListCategory.addAll(ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues()));
+					}
+				}
+				
+				String email = "";
+				String fullName = "";
+				String owner =post.getOwner();
+				try {
+					Node userNode = userProfileHome.getNode(owner);
+					email = userNode.getProperty("exo:email").getString();
+					fullName = userNode.getProperty("exo:fullName").getString();
+				} catch (Exception e) {
+				}
+				String content_ = "";
 				if (emailList.size() > 0) {
 					Message message = new Message();
+					if(email != null && email.length() > 0) {
+						message.setFrom(fullName + " <" + email + ">");
+					}
 					message.setMimeType("text/html");
-					message.setSubject("eXo Thread Watching Notification!");
-					
-					String content_ = node.getProperty("exo:name").getString();
+					content_ = node.getProperty("exo:name").getString();
+					message.setSubject("eXo Forum Watching Notification in Topic: " +  content_);
 					content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
 					content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
+					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Post");
+					content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					Date createdDate = post.getCreatedDate();
+					Format formatter = new SimpleDateFormat("HH:mm");
+					content_ =  StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					formatter = new SimpleDateFormat("MM/dd/yyyy");
+					content_ =  StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ =  StringUtils.replace(content_, "$POSTER", owner);
+					content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					
+					message.setBody(content_);
+					sendEmailNotification(emailList, message);
+				}
+				if (emailListForum.size() > 0) {
+					Message message = new Message();
+					if(email != null && email.length() > 0) {
+						message.setFrom(fullName + " <" + email + ">");
+					}
+					message.setMimeType("text/html");
+					String forumName = forumNode.getProperty("exo:name").getString();
+					message.setSubject("eXo Forum Watching Notification in Forum: " +  forumName);
+					content_ =  StringUtils.replace(content, "$OBJECT_NAME", forumName);
+					content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Post");
 					content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 					Date createdDate = post.getCreatedDate();
@@ -2131,15 +2211,19 @@ public class JCRDataStorage {
 					content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content_);
-					sendEmailNotification(emailList, message);
+					sendEmailNotification(emailListForum, message);
 				}
-				if (emailListForum.size() > 0) {
+				if (emailListCategory.size() > 0) {
 					Message message = new Message();
+					if(email != null && email.length() > 0) {
+						message.setFrom(fullName + " <" + email + ">");
+					}
+					System.out.println("\n send email Category: " + emailListCategory.size());
 					message.setMimeType("text/html");
-					message.setSubject("eXo Forum Watching Notification!");
-					
-					content =  StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
-					content =  StringUtils.replace(content, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+					String categoryName = categoryNode.getProperty("exo:name").getString();
+					message.setSubject("eXo Forum Watching Notification in Category: " +  categoryName);
+					content =  StringUtils.replace(content, "$OBJECT_NAME", categoryName);
+					content =  StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
 					content =  StringUtils.replace(content, "$ADD_TYPE", "Post");
 					content =  StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 					Date createdDate = post.getCreatedDate();
@@ -2151,7 +2235,7 @@ public class JCRDataStorage {
 					content =  StringUtils.replace(content, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content);
-					sendEmailNotification(emailListForum, message);
+					sendEmailNotification(emailListCategory, message);
 				}
 			}
 		}
@@ -3629,9 +3713,8 @@ public class JCRDataStorage {
 	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String> values, String currentUser) throws Exception {
 		Node watchingNode = null;
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		String string = forumHomeNode.getPath();
 		if (path.indexOf(forumHomeNode.getName()) < 0)
-			path = string + "/" + path;
+			path = forumHomeNode.getPath() + "/" + path;
 		try {
 			watchingNode = (Node) forumHomeNode.getSession().getItem(path);
 			// add watching for node

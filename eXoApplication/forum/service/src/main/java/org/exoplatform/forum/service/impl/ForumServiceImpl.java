@@ -172,7 +172,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   		Calendar cal = storage_.getGreenwichMeanTime() ;
   		profile.setProperty("exo:userId", user.getUserName()) ;
   		profile.setProperty("exo:lastLoginDate", cal) ;
-  		//profile.setProperty("exo:lastPostDate", cal) ;
+  		profile.setProperty("exo:email", user.getEmail()) ;
+  		profile.setProperty("exo:fullName", user.getFullName()) ;
   		cal.setTime(user.getCreatedDate()) ;
   		profile.setProperty("exo:joinedDate", cal) ;  		
   		if(isAdminRole(user.getUserName())) {

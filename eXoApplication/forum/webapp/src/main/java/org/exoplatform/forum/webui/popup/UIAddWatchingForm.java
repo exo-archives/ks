@@ -58,6 +58,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 	final static public String EMAIL_ADDRESS = "emails" ;
 	public static final String USER_NAME = "userName" ; 
 	private String path = "";
+	private String type = "";
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(EMAIL_ADDRESS,EMAIL_ADDRESS) ;
 	public UIAddWatchingForm() throws Exception {
 		UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
@@ -86,6 +87,10 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 	public void setPathNode(String path) {
 		this.path = path ;
 	}
+
+	public void setType(String type) {this.type = type ;}
+	public String getType() { return type;}
+	
 	private void initMultiValuesField(List<String> list) throws Exception {
 		if( uiFormMultiValue != null ) removeChildById(EMAIL_ADDRESS);
 		uiFormMultiValue = createUIComponent(UIFormMultiValueInputSet.class, null, null) ;
@@ -144,7 +149,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			//event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}
 	}
 	

@@ -1337,7 +1337,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					topicDetail.getUserInfo(userName).setTotalPost(postCount);
 					topicDetail.getUserInfo(userName).setLastPostDate(ForumUtils.getInstanceTempCalendar().getTime()) ;
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
-				} catch (PathNotFoundException e) {
+				} catch (PathNotFoundException e) {e.printStackTrace();
 					sProvider.close();
 					String[] args = new String[] { } ;
 					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
@@ -1493,6 +1493,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	static public class AddWatchingActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource();
+			topicDetail.isEditTopic = true;
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topicDetail.topicId) ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;

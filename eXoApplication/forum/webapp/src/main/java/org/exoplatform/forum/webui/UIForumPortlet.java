@@ -219,7 +219,8 @@ public class UIForumPortlet extends UIPortletApplication {
 			}else {
 				userProfile = forumService.getDefaultUserProfile(sProvider, userId, null) ;
 			}
-			userProfile.setEmail(ForumSessionUtils.getUserByUserId(userId).getEmail());
+			if(!ForumUtils.isEmpty(userId))
+				userProfile.setEmail(ForumSessionUtils.getUserByUserId(userId).getEmail());
 		}finally {
 			sProvider.close();
 		}				
